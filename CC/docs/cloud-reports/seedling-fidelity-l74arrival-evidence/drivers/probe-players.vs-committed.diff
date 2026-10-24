@@ -1,0 +1,21 @@
+--- scripts/procgen/probe-seedling-chaser-mobiles.mjs	2026-10-12 22:23:36.820365319 +0000
++++ /tmp/claude-0/-home-user-Archipelago-CC/84150dfc-8a1f-5429-bb3f-6de83eb3af04/scratchpad/wt/scripts/procgen/zz-probe-players.mjs	2026-10-12 22:37:36.691263749 +0000
+@@ -147,7 +147,7 @@
+             const o = r.value.observation;
+             const ch = run ? (run.entities('chasers') ?? []) : [];
+             col[o.t] = {
+-                px: o.x, py: o.y,
++                px: o.x, py: o.y, level: run?.level, phits: run ? (run.ledger('playerHits') ?? []).length : 0,
+                 bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer,
+                     removed: c.removed === true,
+                     swordSpin: c.swordSpin, swordSpinning: c.swordSpinning,
+@@ -235,7 +235,8 @@
+     for (const d of disagreements.slice(0, 12)) console.log(`      ${d}`);
+     if (disagreements.length > 12) console.log(`      … ${disagreements.length - 12} more`);
+     if (OUT) {
+-        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows,
++        const players = samples.map((f) => ({ t: tickOf(f), game: { level: f.status.level, x: playerOf(f).x, y: playerOf(f).y, hits: f.status.hits }, model: col[tickOf(f)] ? { level: col[tickOf(f)].level, x: col[tickOf(f)].px, y: col[tickOf(f)].py, hits: col[tickOf(f)].phits } : null }));
++        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows, players,
+             ...(CAMERA ? { cameras: samples.map((f) => [tickOf(f), f.status.camera]) } : {}) }, null, 1)}\n`);
+         console.log(`wrote ${OUT}`);
+     }

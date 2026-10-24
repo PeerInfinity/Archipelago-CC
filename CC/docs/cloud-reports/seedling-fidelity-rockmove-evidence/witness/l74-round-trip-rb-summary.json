@@ -1,0 +1,65 @@
+[
+ {
+  "arm": "remove+button",
+  "set_id": "seedling-vanilla-record-2be42fc5",
+  "game": {
+   "obs": 481,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    },
+    {
+     "t": 40,
+     "from": 74,
+     "to": 73,
+     "at": {
+      "x": 72,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 73,
+    "x": 72,
+    "y": 44.949999999999996
+   },
+   "cleared": []
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    },
+    {
+     "t": 40,
+     "from": 74,
+     "to": 73,
+     "at": {
+      "x": 72,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 73,
+    "x": 72,
+    "y": 44.949999999999996
+   }
+  }
+ }
+]

@@ -8,9 +8,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ProcgenMazeWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -60,7 +57,7 @@
         ],
         "locations": [
           {
-            "name": "region_0_1__key_red_pickup__5_3",
+            "name": "region_0_1__key_red_pickup__6_3",
             "id": 1000,
             "access_rule": {
               "rule": "True_"
@@ -148,10 +145,13 @@
             }
           },
           {
-            "name": "region_1_1__key_green_pickup__3_4",
+            "name": "region_1_1__key_green_pickup__2_3",
             "id": 1003,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "key_red"
+              }
             },
             "item": {
               "name": "key_green",
@@ -184,6 +184,13 @@
                   }
                 }
               ]
+            }
+          },
+          {
+            "name": "region_0_1",
+            "connected_region": "region_0_1",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
@@ -271,10 +278,13 @@
             }
           },
           {
-            "name": "region_1_2__key_orange_pickup__5_1",
+            "name": "region_1_2__key_orange_pickup__4_1",
             "id": 1006,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "key_yellow"
+              }
             },
             "item": {
               "name": "key_orange",
@@ -453,6 +463,27 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "region_2_3",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "key_blue"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "key_purple"
+                  }
+                }
+              ]
+            }
           }
         ],
         "locations": [
@@ -524,7 +555,7 @@
             }
           },
           {
-            "name": "region_1_4__key_yellow_pickup__6_4",
+            "name": "region_1_4__key_yellow_pickup__3_4",
             "id": 1014,
             "access_rule": {
               "rule": "True_"
@@ -715,16 +746,20 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
-      "region_0_1__key_red_pickup__5_3": "key_red",
+      "region_0_1__key_red_pickup__6_3": "key_red",
       "region_0_1__key_yellow_pickup__3_3": "key_yellow",
       "region_1_1__key_red_pickup__3_3": "key_red",
-      "region_1_1__key_green_pickup__3_4": "key_green",
+      "region_1_1__key_green_pickup__2_3": "key_green",
       "region_0_2__victory_pickup__7_4": "victory",
       "region_1_2__key_yellow_pickup__6_1": "key_yellow",
-      "region_1_2__key_orange_pickup__5_1": "key_orange",
+      "region_1_2__key_orange_pickup__4_1": "key_orange",
       "region_3_2__key_red_pickup__1_4": "key_red",
       "region_3_2__key_blue_pickup__2_4": "key_blue",
       "region_2_3__key_blue_pickup__3_2": "key_blue",
@@ -732,7 +767,7 @@
       "region_3_3__key_green_pickup__2_1": "key_green",
       "region_3_3__key_purple_pickup__1_2": "key_purple",
       "region_1_4__key_red_pickup__5_5": "key_red",
-      "region_1_4__key_yellow_pickup__6_4": "key_yellow",
+      "region_1_4__key_yellow_pickup__3_4": "key_yellow",
       "region_2_4__key_green_pickup__3_4": "key_green",
       "region_2_4__key_orange_pickup__6_1": "key_orange"
     }
@@ -743,7 +778,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_2_2": {
@@ -852,7 +886,7 @@
               "side": "E",
               "exitName": "exit_1",
               "targetRegion": "region_3_3",
-              "targetExitId": null,
+              "targetExitId": "region_2_3",
               "isBackExit": false,
               "isTeleporter": false
             },
@@ -984,10 +1018,10 @@
               "locationName": "region_1_2__key_yellow_pickup__6_1"
             },
             {
-              "x": 5,
+              "x": 4,
               "y": 1,
               "id": "key_orange",
-              "locationName": "region_1_2__key_orange_pickup__5_1"
+              "locationName": "region_1_2__key_orange_pickup__4_1"
             }
           ],
           "obstacleLib": {},
@@ -1069,10 +1103,10 @@
               "locationName": "region_1_1__key_red_pickup__3_3"
             },
             {
-              "x": 3,
-              "y": 4,
+              "x": 2,
+              "y": 3,
               "id": "key_green",
-              "locationName": "region_1_1__key_green_pickup__3_4"
+              "locationName": "region_1_1__key_green_pickup__2_3"
             }
           ],
           "obstacleLib": {},
@@ -1277,7 +1311,7 @@
               "side": "S",
               "exitName": "exit_1",
               "targetRegion": "region_0_2",
-              "targetExitId": null,
+              "targetExitId": "region_0_1",
               "isBackExit": false,
               "isTeleporter": false
             },
@@ -1307,10 +1341,10 @@
           ],
           "items": [
             {
-              "x": 5,
+              "x": 6,
               "y": 3,
               "id": "key_red",
-              "locationName": "region_0_1__key_red_pickup__5_3"
+              "locationName": "region_0_1__key_red_pickup__6_3"
             },
             {
               "x": 3,
@@ -1363,6 +1397,17 @@
               "exitName": "region_3_2",
               "targetRegion": "region_3_2",
               "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_2_3",
+              "x": 0,
+              "y": 2,
+              "side": "W",
+              "exitName": "region_2_3",
+              "targetRegion": "region_2_3",
+              "targetExitId": "exit_1",
               "isBackExit": true,
               "isTeleporter": false
             }
@@ -1445,10 +1490,10 @@
               "locationName": "region_1_4__key_red_pickup__5_5"
             },
             {
-              "x": 6,
+              "x": 3,
               "y": 4,
               "id": "key_yellow",
-              "locationName": "region_1_4__key_yellow_pickup__6_4"
+              "locationName": "region_1_4__key_yellow_pickup__3_4"
             }
           ],
           "obstacleLib": {},
@@ -1497,6 +1542,17 @@
               "targetExitId": "exit_1",
               "isBackExit": true,
               "isTeleporter": false
+            },
+            {
+              "exit_id": "region_0_1",
+              "x": 5,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_0_1",
+              "targetRegion": "region_0_1",
+              "targetExitId": "exit_1",
+              "isBackExit": true,
+              "isTeleporter": false
             }
           ],
           "obstacles": [],
@@ -1531,12 +1587,14 @@
     }
   },
   "procgen_metadata": {
-    "driver": "grid-growth",
-    "stop_reason": "pool_empty",
-    "region_count": 10,
-    "grid_dims": {
-      "width": 4,
-      "height": 5
+    "1": {
+      "driver": "grid-growth",
+      "stop_reason": "pool_empty",
+      "region_count": 10,
+      "grid_dims": {
+        "width": 4,
+        "height": 5
+      }
     }
   },
   "sphere_log": [
@@ -1557,7 +1615,6 @@
             "resolved_items": {}
           },
           "new_accessible_locations": [
-            "region_1_2__key_orange_pickup__5_1",
             "region_1_2__key_yellow_pickup__6_1",
             "region_2_3__key_blue_pickup__3_2",
             "region_3_2__key_blue_pickup__2_4",
@@ -1584,27 +1641,6 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_orange": 1
-            },
-            "resolved_items": {
-              "key_orange": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_1_2__key_orange_pickup__5_1"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "key_yellow": 1
             },
             "resolved_items": {
@@ -1612,14 +1648,9 @@
             }
           },
           "new_accessible_locations": [
-            "region_0_2__victory_pickup__7_4",
-            "region_1_1__key_green_pickup__3_4",
-            "region_1_1__key_red_pickup__3_3"
+            "region_1_2__key_orange_pickup__4_1"
           ],
-          "new_accessible_regions": [
-            "region_0_2",
-            "region_1_1"
-          ],
+          "new_accessible_regions": [],
           "sphere_locations": [
             "region_1_2__key_yellow_pickup__6_1"
           ]
@@ -1628,7 +1659,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.3",
+      "sphere_index": "0.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1651,7 +1682,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.4",
+      "sphere_index": "0.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1672,7 +1703,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.5",
+      "sphere_index": "0.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1693,7 +1724,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.6",
+      "sphere_index": "0.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1704,13 +1735,8 @@
               "key_green": 1
             }
           },
-          "new_accessible_locations": [
-            "region_0_1__key_red_pickup__5_3",
-            "region_0_1__key_yellow_pickup__3_3"
-          ],
-          "new_accessible_regions": [
-            "region_0_1"
-          ],
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
           "sphere_locations": [
             "region_3_3__key_green_pickup__2_1"
           ]
@@ -1719,7 +1745,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.7",
+      "sphere_index": "0.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1731,13 +1757,10 @@
             }
           },
           "new_accessible_locations": [
-            "region_1_4__key_red_pickup__5_5",
-            "region_1_4__key_yellow_pickup__6_4",
             "region_2_4__key_green_pickup__3_4",
             "region_2_4__key_orange_pickup__6_1"
           ],
           "new_accessible_regions": [
-            "region_1_4",
             "region_2_4"
           ],
           "sphere_locations": [
@@ -1753,16 +1776,29 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "key_red": 1
+              "key_orange": 1
             },
             "resolved_items": {
-              "key_red": 1
+              "key_orange": 1
             }
           },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
+          "new_accessible_locations": [
+            "region_0_1__key_red_pickup__6_3",
+            "region_0_1__key_yellow_pickup__3_3",
+            "region_0_2__victory_pickup__7_4",
+            "region_1_1__key_green_pickup__2_3",
+            "region_1_1__key_red_pickup__3_3",
+            "region_1_4__key_red_pickup__5_5",
+            "region_1_4__key_yellow_pickup__3_4"
+          ],
+          "new_accessible_regions": [
+            "region_0_1",
+            "region_0_2",
+            "region_1_1",
+            "region_1_4"
+          ],
           "sphere_locations": [
-            "region_0_1__key_red_pickup__5_3"
+            "region_1_2__key_orange_pickup__4_1"
           ]
         }
       }
@@ -1770,132 +1806,6 @@
     {
       "type": "state_update",
       "sphere_index": "1.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_yellow": 1
-            },
-            "resolved_items": {
-              "key_yellow": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_0_1__key_yellow_pickup__3_3"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.3",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "victory": 1
-            },
-            "resolved_items": {
-              "victory": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_0_2__victory_pickup__7_4"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_green": 1
-            },
-            "resolved_items": {
-              "key_green": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_1_1__key_green_pickup__3_4"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.5",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_red": 1
-            },
-            "resolved_items": {
-              "key_red": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_1_1__key_red_pickup__3_3"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_red": 1
-            },
-            "resolved_items": {
-              "key_red": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_1_4__key_red_pickup__5_5"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.7",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "key_yellow": 1
-            },
-            "resolved_items": {
-              "key_yellow": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "region_1_4__key_yellow_pickup__6_4"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1916,7 +1826,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.9",
+      "sphere_index": "1.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1937,7 +1847,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.10",
+      "sphere_index": "1.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1952,6 +1862,153 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "region_2_4__key_orange_pickup__6_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__key_red_pickup__6_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_yellow": 1
+            },
+            "resolved_items": {
+              "key_yellow": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_1__key_yellow_pickup__3_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "victory": 1
+            },
+            "resolved_items": {
+              "victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_0_2__victory_pickup__7_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_green": 1
+            },
+            "resolved_items": {
+              "key_green": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__key_green_pickup__2_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__key_red_pickup__3_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_red": 1
+            },
+            "resolved_items": {
+              "key_red": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_4__key_red_pickup__5_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "key_yellow": 1
+            },
+            "resolved_items": {
+              "key_yellow": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_4__key_yellow_pickup__3_4"
           ]
         }
       }

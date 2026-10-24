@@ -88,7 +88,7 @@ export async function testMetaGameProgressBarIntegration(testController) {
       () => {
         const menuRegion = Array.from(document.querySelectorAll('.region-block'))
           .find(block => block.textContent.includes('Menu'));
-        return menuRegion !== null;
+        return menuRegion !== undefined; // find() misses with undefined
       },
       'Menu region block displayed',
       10000,
@@ -532,7 +532,7 @@ export async function testMetaGamePanelUI(testController) {
       () => {
         const menuRegion = Array.from(document.querySelectorAll('.region-block'))
           .find(block => block.textContent.includes('Menu'));
-        return menuRegion !== null;
+        return menuRegion !== undefined; // find() misses with undefined
       },
       'Menu region block displayed for modified test',
       10000,
@@ -732,7 +732,9 @@ registerTest({
   description: 'Tests the metaGame module with progress bar integration using progressBarTest.js configuration',
   testFunction: testMetaGameProgressBarIntegration,
   category: 'Meta Game',
-  //enabled: true,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
 });
 
 registerTest({
@@ -741,5 +743,7 @@ registerTest({
   description: 'Tests the metaGame panel UI elements including dropdown selection, configuration loading, and JSON editing',
   testFunction: testMetaGamePanelUI,
   category: 'Meta Game',
-  //enabled: true,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
 });

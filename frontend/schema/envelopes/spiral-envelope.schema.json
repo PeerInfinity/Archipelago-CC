@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "spiral-envelope (envelope_version 1)",
+  "description": "A serialized spiral-envelope. Fields marked \"x-visibility\": \"internal\" are resume state whose shape may change without a version bump; read the public ones.",
+  "type": "object",
+  "required": [
+    "kind",
+    "envelope_version",
+    "completed",
+    "config"
+  ],
+  "properties": {
+    "kind": {
+      "const": "spiral-envelope",
+      "description": "Which mode wrote this envelope.",
+      "x-visibility": "public"
+    },
+    "envelope_version": {
+      "const": 1,
+      "description": "The envelope format version (bumped when an envelope written now could not be read by the code that wrote it).",
+      "x-visibility": "public"
+    },
+    "config": {
+      "type": [
+        "object"
+      ],
+      "description": "The resolved world config (seed, regionSize, quotas, pools, …).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "compileIn": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The compile inputs (seed, loop mode, completion item).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "completed": {
+      "type": [
+        "integer"
+      ],
+      "description": "Index into SPIRAL_STEPS of the last step run; -1 = none.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "arrange": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The spiral arrangement: sequence, cells, startCell, gridDims, items.",
+      "x-visibility": "public",
+      "x-step": "arrange"
+    },
+    "rng": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The rng position after the shuffle and deal.",
+      "x-visibility": "internal",
+      "x-step": "arrange"
+    },
+    "content": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The generated content dataset (jta), or null.",
+      "x-visibility": "public",
+      "x-step": "content"
+    },
+    "regions": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The built regions: stats, startCell, goalItem (public) and the tagged Grid encoding (grid, internal).",
+      "x-visibility": "public",
+      "x-step": "regions",
+      "properties": {
+        "grid": {
+          "x-visibility": "internal"
+        }
+      }
+    },
+    "compile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The compiled result: rulesJson.",
+      "x-visibility": "public",
+      "x-step": "compile"
+    }
+  },
+  "additionalProperties": false
+}

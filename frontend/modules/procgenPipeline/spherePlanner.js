@@ -1,6 +1,6 @@
 /**
- * Sphere planner — build-order step 1 of the sphere-driven growth
- * driver (NewDocs/plans/procedural-generation/sphere-driven-growth.md).
+ * Sphere planner — step 1 of the sphere-driven growth driver
+ * (docs/json/developer/procgen/sphere-growth.md).
  *
  * A pure function: item pool + parameters → a sphere plan, the
  * item→sphere assignment that drives wave growth AND doubles as the

@@ -1,0 +1,103 @@
+/**
+ * ⛓ SEEDLING SWIM S2 D2 — the atlas door census, pinned to the COMMITTED
+ * playthrough atlas and tape roster. A restamped atlas (the analyzer re-run, a
+ * sub-region split) or a new water-armed swim tape moves these rows: re-measure
+ * with `node scripts/procgen/census-seedling-atlas-doors.mjs` and re-pin by name.
+ */
+import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { describe, it, expect } from 'vitest';
+
+import { censusAtlasDoors, swimWitnesses, ruleLabel, SWIM_ITEM } from './seedlingAtlasDoorCensus.js';
+import { ITEM_FOR_TAG } from '../../frontend/modules/seedlingDemo/seedlingAtlasDerivation.js';
+
+const ROOT = fileURLToPath(new URL('../../', import.meta.url));
+const readJson = (rel) => JSON.parse(readFileSync(ROOT + rel, 'utf8'));
+const ATLAS = readJson('frontend/modules/flashPanel/atlases/seedling-playthrough.json');
+const TAPE_DIR = 'frontend/modules/seedlingDemo/fixtures/tapes/';
+const TAPES = readdirSync(ROOT + TAPE_DIR).filter((f) => f.endsWith('.json') && f !== 'index.json')
+    .map((file) => ({ file, tape: readJson(TAPE_DIR + file) }));
+const SWIM_TAGS = Object.entries(ITEM_FOR_TAG).filter(([, item]) => item === SWIM_ITEM).map(([tag]) => tag);
+
+describe('census-seedling-atlas-doors — the committed playthrough atlas', () => {
+    const { witness, noSwim } = swimWitnesses(TAPES, SWIM_TAGS);
+    const c = censusAtlasDoors(ATLAS, { witness, noSwim });
+
+    it('the swim tags are read off ITEM_FOR_TAG, not typed', () => {
+        expect(SWIM_TAGS.sort()).toEqual(['conch', 'feather']);
+    });
+
+    // ⛓ SWIM T4 D4 — the one-sided locks restamped the atlas (ae833c1e -> 0faa7fee): L12's two-way
+    // `Or(Swim, Red Key)` row split into two one-way rows, so +1 internal exit and +1 swim row.
+    // ⛓ RULES (A) — restamped again (0faa7fee -> e5d9f89e): +9 return rows through the OPENED
+    // one-sided locks (286 -> 295). None of them is a swim row, so 217 holds — but L12's
+    // r0c37 -> r0c19 is now Or(Swim, And(Red Key, reached r0c19)), so plain Has(Swim) is 180 -> 179.
+    // ⛓ RULES logical-links — restamped (bbddca3d -> aeb590c4): the physics model SEALED the five True_
+    // hand rows (L0, L12, L66, L93 x2), and three pockets they alone reached were pruned (L66 r1c2, L93
+    // r1c0/r1c13): 189 -> 186 sub-regions, 295 -> 289 internal exits. L93's r1c0 <-> r1c13 Has(Swim) row
+    // joined two of those pockets, so swim 217 -> 216, plain Has(Swim) 179 -> 178, and L93 is no swim level.
+    // ⛓ RULES burnable-trees — restamped (aeb590c4 -> 0cdaf2c2): the burnable tree claims its 2x2 hitbox, so
+    // L12 (r42c29), L37 (r12c6), L40 (r48c54) and L44 (r6c4) split along their trees: 186 -> 190 sub-regions,
+    // 289 -> 295 internal exits. Swim 216 -> 218: L12's r0c19 <-> r42c29 Has(Swim) is new (+2) and L12's
+    // r0c19 -> r0c37 loses its Swim half (its water way now runs past the tree); plain Has(Swim) 178 -> 179.
+    // ⛓ RULES patched-set — restamped (0cdaf2c2 -> 78d22cb4): L110's pit CHAINS (its fall fires L0's
+    // stairs mid-descent) and now exits to level_2 (3,2), not level_0. Boundary exits only; every count holds.
+    // ⛓ RULES re-closing locks — restamped (78d22cb4 -> b3ac708a): a grouped lock only a plain Button opens is
+    // entered only from a side that can work the button this visit, so L15/L16/L28/L39/L41/L71 split at theirs:
+    // 52 -> 54 regions with a subgraph, 190 -> 198 sub-regions, 295 -> 304 internal exits. L15's arrival column
+    // reaches its button only by swimming: plain Has(Swim) 179 -> 181, swim 218 -> 220.
+    // ⛓ RULES footprints — restamped (b3ac708a -> 5af7f784): every footprint is the model's hitbox. TreeLarge's
+    // (L94) became its mask's 10x12 bounding box, the model seals the way past it, and the five water pockets behind
+    // it (no members) are pruned with their 20 swim rows; L43's BossTotem splits r13c7 off (+1 sub-region, +1 row):
+    // 198 -> 195 sub-regions, 304 -> 286 internal exits, swim 220 -> 200 (Has(Swim) 181 -> 166, Has(Swim, 2)
+    // 33 -> 28), and L94 is no swim level.
+    // ⛓ RULES obstacle-events — restamped (5af7f784 -> ae491163): L0's door to L1 is charged the rock its model
+    // pocket opens through (one boundary exit rule); every count holds.
+    // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
+    // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
+    it('115 regions, 52 carry a subgraph: 194 sub-regions, 288 internal exits, 201 of them need Progressive Swim', () => {
+        // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
+        //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
+        // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
+        //   kill is a location, ⚖ 2026-10-19 "All 7 bosses"), so 114 -> 115 regions (L69 has no subgraph); the seven
+        //   boss locations and the Wand-priced totem crossing move no other count.
+        // ⛓ rules-l32-rock-move — restamped (db4c2681 -> 0c2152f7): the delivered set moves L32's Bob-arena rock
+        //   (64,128) -> (88,128), and Bob's two locations stand on its tile ([4,8] -> [5,8]); no count moves.
+        // ⛓ rules-r4b-followup — restamped (0c2152f7 -> 832cd44f): a pit's landing is read off the pit tile's CENTRE
+        //   (`Tile.as:103`; witnessed on p4g), so L70's pit lands on L69 (3,8), not (3,7); no count moves.
+        // ⛓ rules-block-path — restamped (832cd44f -> 7660a339): a re-closing lock's entry is priced by the
+        // block paths that hold its button (L15/L16/L41), so three analyzer rows gain a rule.
+        // ⛓ rules-rope-events — restamped (7660a339 -> 78124631): a rope cut is an event, and L16's rope-silenced
+        // arrow lanes charge it, so L16 splits (+3 sub-regions: r1c9, r3c7, r6c8) and its crossings, with L28's lock
+        // now entered from r1c18 too, give +6 internal exits; no swim count moves.
+        // ⛓ rules-l39 — restamped (78124631 -> 9570dca8): a rope's whole RUN is solid until cut, so L39 splits at its
+        // corridor (r25c9, +1 sub-region, +1 internal exit); a Pulser is a static Solid, so the empty pocket each
+        // pulser tile made behind its fire block is gone (L38 and L107 2 -> 0 sub-regions, -1 exit each; L40 6 -> 5
+        // sub-regions, 9 -> 6 exits): 54 -> 52 with a subgraph, 198 -> 194, 292 -> 288; no swim count moves.
+        expect(c.atlasId).toBe('seedling-9570dca8');
+        // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
+        // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
+        // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 52, 194, 288, 201]);
+        expect(c.swimLevels).toHaveLength(21);
+        expect(c.byRule.slice(0, 2)).toEqual([
+            { rule: 'Has(Progressive Swim)', count: 165 },
+            { rule: 'Has(Progressive Swim, 2)', count: 28 },
+        ]);
+    });
+
+    // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above). ⛓ RULES footprints: 17 -> 16, L94 neither.
+    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 16 are BOT-UNCERTIFIED', () => {
+        expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
+        expect(c.uncertifiedLevels).toHaveLength(16);
+        expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
+        // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
+        expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);
+    });
+
+    it('ruleLabel spells nested rules in one line', () => {
+        expect(ruleLabel({ rule: 'Has', args: { item_name: SWIM_ITEM, count: 2 } })).toBe('Has(Progressive Swim, 2)');
+        expect(ruleLabel(null)).toBe('(none)');
+    });
+});

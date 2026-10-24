@@ -7,16 +7,24 @@
  * verification on fresh outputs without going through the browser, and
  * for scripted regression on the procgen pipeline itself.
  *
- * Defaults match `frontend/modules/procgenPipeline/procgenPipelineUI.js`'s
- * DEFAULT_PARAMS and DEFAULT_SCENARIO so the no-arg invocation produces
- * a rules.json equivalent to what a user gets by clicking "Generate"
- * with the panel's defaults.
+ * The flags' defaults are this file's own DEFAULTS, copied by hand — nothing
+ * holds them to the panel. They were copied from the panel's DEFAULT_PARAMS
+ * (now in `frontend/modules/procgenPipeline/presetRun.js`) and DEFAULT_SCENARIO
+ * (`procgenPipelineUI.js`), but the engine keeps defaults of its own that this
+ * CLI does not surface: `growMaze`'s `growthParams.stopOnPoolEmpty` became
+ * default-false in `78d7a8ef38` (region quotas) and the CLI had no flag for it,
+ * so the same command silently grew past the empty pool from then on
+ * (APWORLD SUBSTRATE CHANGE §43, trap 1501). `--stop-on-pool-empty` hands it
+ * back; left off, the run is byte-identical to the flagless CLI. The
+ * procgen_maze presets' recipe (`generate_all_templates.sh`) needs it.
  *
  * Usage:
  *   scripts/utils/generate-procgen-rules.js
  *   scripts/utils/generate-procgen-rules.js --seed 1 --out frontend/downloads/AP_1_rules.json
  *   scripts/utils/generate-procgen-rules.js --grid-width 4 --grid-height 4 \
  *       --items key_red:3,key_blue:1 --obstacles door_red:3,door_blue:1
+ *   scripts/utils/generate-procgen-rules.js --seed 1 --grid-width 3 --grid-height 2 \
+ *       --stop-on-pool-empty
  */
 
 import fs from 'fs';
@@ -27,7 +35,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
-// Mirrors procgenPipelineUI's DEFAULT_PARAMS / DEFAULT_SCENARIO.
+// Copied from the panel's DEFAULT_PARAMS / DEFAULT_SCENARIO (see the docblock).
 const DEFAULTS = {
     seed: 1,
     gridWidth: 3,
@@ -39,6 +47,9 @@ const DEFAULTS = {
     walkerTrials: 15,
     maxItemsPerRegion: 2,
     maxRegions: null,
+    // growMaze's own default (growthParams.stopOnPoolEmpty = false): growth
+    // runs on to an empty frontier, later regions built with empty item plans.
+    stopOnPoolEmpty: false,
     items: { victory: 1, key_red: 2 },
     obstacles: { door_red: 2 },
     out: null,  // Resolved below to frontend/downloads/AP_<seed>_rules.json
@@ -84,11 +95,19 @@ function parseArgs(argv) {
         '--obstacles': 'obstacles',
         '--out': 'out',
     };
+    // Flags that take no value.
+    const booleanFlagToKey = {
+        '--stop-on-pool-empty': 'stopOnPoolEmpty',
+    };
     for (let i = 0; i < argv.length; i++) {
         const flag = argv[i];
         if (flag === '-h' || flag === '--help') {
             printHelp();
             process.exit(0);
+        }
+        if (booleanFlagToKey[flag]) {
+            args[booleanFlagToKey[flag]] = true;
+            continue;
         }
         const key = flagToKey[flag];
         if (!key) throw new Error(`Unknown argument: ${flag}`);
@@ -125,6 +144,9 @@ Options:
   --walker-trials <int>         Walker trials per proposal (default: ${DEFAULTS.walkerTrials})
   --max-items-per-region <int>  Item budget per region (default: ${DEFAULTS.maxItemsPerRegion})
   --max-regions <int|null>      Cap on regions built (default: null = grid-bounded)
+  --stop-on-pool-empty          End growth the moment the item pool is empty
+                                (default: off — grow on to an empty frontier,
+                                later regions itemless; growMaze's default)
   --items <spec>                Item pool, e.g. 'key_red:2,key_blue:1'
                                 (default: 'key_red:2')
   --obstacles <spec>            Obstacle pool, e.g. 'door_red:2,door_blue:1'
@@ -164,6 +186,7 @@ async function main() {
     console.log(`  walker_success_pct    = ${args.minSuccessPct}-${args.maxSuccessPct} (trials=${args.walkerTrials})`);
     console.log(`  max_items_per_region  = ${args.maxItemsPerRegion}`);
     console.log(`  max_regions           = ${args.maxRegions == null ? 'null' : args.maxRegions}`);
+    console.log(`  stop_on_pool_empty    = ${args.stopOnPoolEmpty}`);
     console.log(`  items                 = ${JSON.stringify(args.items)}`);
     console.log(`  obstacles             = ${JSON.stringify(args.obstacles)}`);
     console.log(`  out                   = ${args.out}`);
@@ -182,6 +205,7 @@ async function main() {
         growthParams: {
             maxItemsPerRegion: args.maxItemsPerRegion,
             maxRegions: args.maxRegions ?? null,
+            stopOnPoolEmpty: args.stopOnPoolEmpty,
         },
     });
 

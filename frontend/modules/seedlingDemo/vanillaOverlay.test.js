@@ -1,0 +1,483 @@
+/**
+ * seedlingDemo/vanillaOverlay — **THE VANILLA AUTHORED OVERLAY** (EDITOR v3
+ * slice E5; plan §27.6, §34).
+ *
+ * ⛓⛓ WHAT IS GATED HERE, AND WHAT IS NOT.
+ *
+ * `scripts/procgen/make-seedling-vanilla-overlay.mjs` LIFTS the committed
+ * playthrough atlas's 41 locations and 5 authored access rules into a D1
+ * overlay document, and PRINTS what it cannot express. The rows below gate the
+ * lift itself — that every row it writes really did go through the adapter,
+ * that the entity it picked is the derivation's own answer and not the first
+ * one on the tile, and that the "cannot express" census is a MEASUREMENT of the
+ * atlas rather than a paragraph.
+ *
+ */
+
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { freeEdgesOf } from '../procgenCore/setEditorCore.js';
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
+import { TILE_SIZE } from './levelWorld.js';
+import { parseOelLevel } from './procgenLevelOel.js';
+import { tileOf } from './seedlingAtlasDerivation.js';
+import { emptyOverlay } from './seedlingSetOverlay.js';
+import {
+    createSeedlingSetAdapter, createSetSession, deriveAtlasOf, setRecord,
+} from './seedlingSetAdapter.js';
+import { reportOf } from './watchSetEditor.js';
+
+const {
+    buildOverlayText, cannotExpress, foldLifted, liftVanillaOverlay,
+} = await import('../../../scripts/procgen/make-seedling-vanilla-overlay.mjs');
+
+const ATLAS = JSON.parse(readFileSync(fileURLToPath(
+    new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
+
+const DEPS = Object.freeze({
+    parseOel: parseOelLevel,
+    tileSize: TILE_SIZE,
+    tileTypeForPlacement,
+    rulesSchema: loadRulesSchema(),
+    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+});
+
+/** ⛓ ONE lift for the whole file — it parses the 116-room map extract. */
+const LIFT = liftVanillaOverlay();
+
+/**
+ * ⛓ THE ATLAS'S OWN ROSTERS, so no row below pins a number this file also owns.
+ * A lift that lost a location must be RED, which it cannot be against a literal
+ * somebody updated to match it.
+ */
+const ATLAS_LOCATIONS = ATLAS.regions.flatMap((r) => r.locations ?? []);
+const ATLAS_RULES = ATLAS.regions
+    .flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule))
+    .concat(ATLAS_LOCATIONS.filter((l) => l.access_rule));
+/** The lifted rows whose atlas TILE holds more than one entity. */
+const AMBIGUOUS = (() => {
+    const rooms = LIFT.set.rooms.map((r) => r.source.record);
+    return LIFT.rows.filter((r) => (rooms[r.level].entities ?? [])
+        .filter((e) => String(tileOf(e, TILE_SIZE)) === String(r.atlasLoc.tile)).length > 1);
+})();
+
+describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
+    it(`expresses every one of the atlas's ${ATLAS_LOCATIONS.length} locations and `
+        + `${ATLAS_RULES.length - 6} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
+        const atlasLocations = ATLAS_LOCATIONS;
+        const atlasRules = ATLAS_RULES;
+
+        expect(LIFT.unjoined).toEqual([]);
+        expect(LIFT.refused).toEqual([]);
+        expect(LIFT.expressed.filter((o) => o.op === 'mark-location'))
+            .toHaveLength(atlasLocations.length);
+        // ⚠ ALL BUT THREE. The three are exit rules pinned to a SUB-REGION, and
+        //   they are in the cannot-express census by name. ⛓ RULES burnable-trees:
+        //   1 -> 3 — L3's door inside the ghost rock and L30's pit under the rock are
+        //   charged their solid, and both sit in a split level; L12's D7 door moved
+        //   r0c37 -> r42c29 (the tree at 480,640 walls r42c29 off).
+        //   ⛓ RULES game-truth-gaps: 4 -> 6 — L58's two doors back into the L57 arena carry its kill, and L58
+        //   is a split level.
+        expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
+            .toHaveLength(atlasRules.length - 6);
+        expect(LIFT.cannotRules).toEqual([
+            // ⛓ RULES obstacle-events: L0's door to L1 is charged the rock under the house (split level)
+            { region: 'level_0', exit_id: 'out_teleporter_80_96', sub_region: 'r8c0' },
+            { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
+            { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c29' },
+            { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
+            { region: 'level_58', exit_id: 'out_teleporter_48_112', sub_region: 'r4c1' },
+            { region: 'level_58', exit_id: 'out_teleporter_64_112', sub_region: 'r6c5' },
+        ]);
+    });
+
+    /**
+     * ⛔⛔ **THE ENTITY IS THE DERIVATION'S ANSWER, NOT THE TILE'S FIRST
+     * OCCUPANT.** A D1 location addresses `{type, x, y}` in PIXELS; the atlas
+     * carries only a TILE. Five of the 41 sit on a tile holding more than one
+     * entity, so a by-tile join would silently mark a `<cover>` or a `<wire>`.
+     */
+    it(`resolves the ${AMBIGUOUS.length} ambiguous tiles through \`entityForLedgerRow\`, `
+        + 'and every tile agrees', () => {
+        // ⛔ THE EXPECTATION IS THE ATLAS'S OWN COUNT, never a pin on the
+        //    roster's own length — a lift that lost a row must be red, and a
+        //    row asserting `LIFT.rows.length === LIFT.rows.length` is not.
+        expect(LIFT.rows).toHaveLength(ATLAS_LOCATIONS.length);
+        expect(LIFT.rows.filter((r) => !r.tileAgrees)).toEqual([]);
+
+        expect(AMBIGUOUS.map((r) => `${r.level}:${r.entity.type}`).sort()).toEqual([
+            // ⛓ R4b (rules-boss-locations): L32's boss rock carries TWO rows now, the Fire drop and the Times kill.
+            // ⛓ rules-l32-rock-move: and neither is ambiguous any more — the delivered rock (88,128) is off the
+            //   stairs' tile, so its atlas tile [5,8] holds the rock alone. Both rows say the patch moved them:
+            '115:seed', '38:chest', '40:chest', '67:bosskey',
+        ].sort());
+        expect(LIFT.rows.filter((r) => r.deliveredEntity).map((r) => [r.id, r.entity, r.deliveredEntity])).toEqual([
+            ['fire@L32', { type: 'fallrocklarge', x: 64, y: 128 }, { type: 'fallrocklarge', x: 88, y: 128 }],
+            ['times@L32', { type: 'fallrocklarge', x: 64, y: 128 }, { type: 'fallrocklarge', x: 88, y: 128 }],
+        ]);
+    });
+
+    /**
+     * ⛓ THE CENSUS IS A MEASUREMENT. Every count is recomputed here off the
+     * atlas by a DIFFERENT expression than the script's, so a census that
+     * drifted from the document it describes goes red rather than staying
+     * eloquent.
+     */
+    it('prints what it cannot express, by CATEGORY, with every count read off the atlas', () => {
+        const census = cannotExpress(LIFT);
+        expect(census.map((c) => c.category)).toEqual([
+            'sub-region graphs',
+            'internal exits',
+            'boundary exits pinned to a sub-region',
+            'exit rules pinned to a sub-region',
+            'locations pinned to a sub-region',
+            'per-region annotations',
+            'the never-enter ruling',
+            'the room -> region map',
+            'location names that had to be disambiguated',
+        ]);
+        const count = (name) => census.find((c) => c.category === name).count;
+
+        let subgraphs = 0; let internal = 0; let subExits = 0; let subLocs = 0; let annotated = 0;
+        for (const r of ATLAS.regions) {
+            if (r.subgraph) subgraphs += 1;
+            if (r.annotations) annotated += 1;
+            internal += (r.subgraph?.internal_exits ?? []).length;
+            for (const e of r.exits ?? []) if (e.sub_region !== undefined) subExits += 1;
+            for (const l of r.locations ?? []) if (l.sub_region !== undefined) subLocs += 1;
+        }
+        expect(count('sub-region graphs')).toBe(subgraphs);
+        expect(count('internal exits')).toBe(internal);
+        expect(count('boundary exits pinned to a sub-region')).toBe(subExits);
+        expect(count('locations pinned to a sub-region')).toBe(subLocs);
+        expect(count('per-region annotations')).toBe(annotated);
+        expect(count('exit rules pinned to a sub-region')).toBe(LIFT.cannotRules.length);
+        // 116 rooms in the set, 113 regions in the committed atlas.
+        expect(count('the never-enter ruling'))
+            .toBe(LIFT.set.rooms.length - new Set(ATLAS.regions.map((r) => r.map_ref)).size);
+        expect(count('the room -> region map')).toBe(0);
+        // ⛔⛔ THE ONE COUNT PINNED AS A LITERAL, AND E6a IS WHY. Every other row
+        //    here compares the census against the ATLAS, so a lift that lost
+        //    something goes red. This one had no second source — it was
+        //    `toBe(LIFT.disambiguated)`, the script's own number compared to
+        //    itself ([[feedback_fixed_point_is_not_correctness]]). It was 16
+        //    while uniqueness was global; E6a made it ZERO, and zero is the
+        //    claim worth gating: a re-tightened law, or a producer that started
+        //    suffixing again, moves it off 0 and the row says so.
+        expect(count('location names that had to be disambiguated')).toBe(0);
+        expect(LIFT.disambiguated).toBe(0);
+        // …and every category says WHY, because a count with no reason is a
+        // number a reader cannot act on.
+        expect(census.every((c) => c.why.length > 40)).toBe(true);
+    });
+
+    /**
+     * ⛔⛔ **NEITHER `neverEnter` NOR `regions` IS IN THE FIXTURE, AND SINCE
+     * EDITOR v3 E6a THE REASON HAS CHANGED.** It used to be that NO OP WROTE
+     * EITHER, so a document built by folding ops through the adapter could not
+     * carry them. `set-overlay-field` writes both now — and the lift still
+     * authors neither, because the RULING IS THE PRODUCER'S (§34.3):
+     * `NEVER_ENTER_LEVELS` is a hand ruling in
+     * `make-seedling-playthrough-rules.mjs` about rooms whose exit is created
+     * on death, not a fact readable off the committed atlas; and `regions` has
+     * nothing to lift at all, since every one of the atlas's regions is exactly
+     * one room.
+     *
+     * ⇒ the row is UNMOVED and its meaning is not: it now pins a CHOICE rather
+     * than a limitation, and a lift that started authoring either would have to
+     * come here and say why.
+     */
+    it('carries no `neverEnter` and no `regions` — the lift does not author them', () => {
+        expect(LIFT.overlay.neverEnter).toBeUndefined();
+        expect(LIFT.overlay.regions).toBeUndefined();
+        expect(Object.keys(LIFT.overlay).sort())
+            .toEqual(['overlay_id', 'provenance', 'rooms', 'schema_version']);
+    });
+
+    /**
+     * ⛔⛔ **THE ROW THE VANILLA CORPUS CANNOT PROVIDE.** "A lift the adapter
+     * refuses is a lift the script REPORTS, not writes" is the whole safety
+     * property of this script — and NOTHING in the vanilla lift is refused, so
+     * the mutant for it (delete the `catch`, push every op into `expressed`)
+     * came back GREEN over the corpus. A fixture only gates a change it can
+     * DISTINGUISH, so the mechanism is driven here with an op the adapter
+     * really does refuse.
+     *
+     * ⛓ THE REFUSAL IS A REAL ONE: `mark-location` refuses an entity the room
+     * does not hold at exactly those pixels, and it says so by name.
+     */
+    it('REPORTS a refused lift instead of writing it, and keeps the ops around it', () => {
+        const adapter = createSeedlingSetAdapter(DEPS);
+        const base = setRecord(LIFT.set, emptyOverlay());
+        const good = LIFT.expressed.filter((o) => o.op === 'mark-location').slice(0, 2);
+        const impossible = {
+            op: 'mark-location',
+            room: good[0].room,
+            entity: { type: good[0].entity.type, x: 99991, y: 99993 },
+            name: 'A Location On Nothing',
+            vanilla_item: 'Progressive Sword',
+        };
+
+        const out = foldLifted(adapter, base, [good[0], impossible, good[1]]);
+        expect(out.refused).toHaveLength(1);
+        expect(out.refused[0].op).toBe(impossible);
+        expect(out.refused[0].why).toMatch(/holds no <.*> at \(99991, 99993\)/);
+        // ⛔ AND THE REFUSED ROW IS NOT IN THE DOCUMENT.
+        const names = Object.values(out.record.overlay.rooms)
+            .flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(names).not.toContain('A Location On Nothing');
+        // ⛔ AND THE OPS AFTER IT SURVIVED — one fold per op, so a bad lift
+        //    costs exactly itself rather than truncating the document.
+        expect(out.expressed).toEqual([good[0], good[1]]);
+        expect(names).toContain(good[1].name);
+    });
+
+    it('is IDEMPOTENT — two builds are byte-equal and carry one stamped id', () => {
+        const a = buildOverlayText();
+        const b = buildOverlayText();
+        expect(a.text).toBe(b.text);
+        expect(a.overlay.overlay_id).toBe(b.overlay.overlay_id);
+        expect(a.overlay.overlay_id).toMatch(/^seedling-vanilla-overlay-[0-9a-f]{8}$/);
+    });
+});
+
+/**
+ * ── WHAT THE OVERLAY IS WORTH, ON THE REAL 116 ───────────────────────────────
+ *
+ * ⛔⛔ **§27.6 PREDICTED THE FREE-EDGE COUNT WOULD DROP. IT RISES, AND THAT IS
+ * THE RIGHT ANSWER.** `freeEdgesOf` counts LOGIC OBLIGATIONS — every compiled
+ * edge with no rule, and a LOCATION is one of those edges. Authoring 41
+ * locations therefore creates 41 obligations, of which vanilla's own logic
+ * discharges 3; the two liftable exit rules discharge 2 of the 334 doors. The
+ * overlay does not make the world smaller, it makes what is UNSTATED visible.
+ */
+/**
+ * ── THE COMMITTED FIXTURE ────────────────────────────────────────────────────
+ *
+ * ⛔ THE BYTES, NOT THE VERDICT. `--check` already exits non-zero on drift, so
+ * a row that only ran it would be asserting an exit code
+ * ([[feedback_identity_moves_while_verdict_stays_green]]). These read the file
+ * and compare it to a fresh build in-process, then run the CLI so that the
+ * two answers are known to agree.
+ */
+describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
+    const fixturePath = fileURLToPath(
+        new URL('./fixtures/seedling-vanilla-overlay.json', import.meta.url));
+
+    it('is byte-equal to a fresh build, and the SIZE is a measured literal', () => {
+        const committed = readFileSync(fixturePath, 'utf8');
+        expect(committed).toBe(buildOverlayText().text);
+        /**
+         * ⛓⛓ **A SECOND SOURCE FOR THE SAME FILE.** The line above is a FIXED
+         * POINT — it says the committed bytes agree with a build, which stays
+         * true after BOTH move together ([[feedback_fixed_point_is_not_correctness]]).
+         * The byte count is the outside number: E6a measured 8,863 B after the
+         * `(LNN)` suffixes came off, down from E5's 9,149 B, and a change that
+         * moves the document has to come here and say so.
+         */
+        // ⛓ RULES (B): 8,863 -> 9,819 B — the two LavaBoss arena door rules (L82, L96) lift.
+        // ⛓ RULES burnable-trees: 9,819 -> 10,737 B — five doors inside an item-gated solid lift
+        //   (L24 x2 and L32's two pits: Fire; L34: a wand).
+        // ⛓ RULES kill-locks: 10,737 -> 11,173 B — L98's stairs under its kill-lock lift as a rule.
+        // ⛓ RULES game-truth-gaps: 11,173 -> 12,077 B — the L57 arena's two expressible door rules lift (L56's pit
+        //   in, the mouth out; L58's two doors in sit in a split level and cannot).
+        // ⛓ R4b (rules-boss-locations): 12,077 -> 15,730 B — the seven boss locations (each with its kill guard)
+        //   and the L69 arena's two door rules (L70's pit in, the Lights' exit out) lift.
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(15730);
+        // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-ce861fd8');
+        // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
+        expect(committed).not.toMatch(/Chest \(L\d/);
+    });
+
+    it('carries the stamped id the build computes, and 48 locations over its rooms (41 + R4b\'s 7 bosses)', () => {
+        const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
+        expect(committed.overlay_id).toBe(LIFT.overlay.overlay_id);
+        expect(Object.values(committed.rooms)
+            .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
+        expect(Object.values(committed.rooms)
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(24); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills
+        // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
+        //    own law since E6a, asserted on the artifact rather than only on the
+        //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
+        //    measures that rather than leaving it to prose.
+        for (const [index, room] of Object.entries(committed.rooms)) {
+            const names = (room.locations ?? []).map((l) => l.name);
+            expect(new Set(names).size, `room ${index}`).toBe(names.length);
+        }
+    });
+
+    /**
+     * ⛔⛔⛔ **THE ROW E6a EXISTS FOR — THE DIVERGENCE §34.4 REPORTED IS GONE,
+     * AND THIS IS THE MEASUREMENT RATHER THAN THE CLAIM** (trap 778).
+     *
+     * E5 could not reproduce the playthrough's AP names: sixteen rooms hold a
+     * location the playthrough calls `Chest`, `mark-location` asked the
+     * AUTHORED name to be unique across the whole SET, so the lift wrote
+     * `Chest (L38)` and the derived name read `Level 038 - Chest (L38)`. That
+     * count was REPORTED as a census category and nothing gated it.
+     *
+     * Uniqueness is (room, name) since E6a, the labels lift verbatim, and the
+     * DERIVED names of the committed fixture now equal the playthrough atlas's
+     * location names AS A SET. ⛓ Driven from the FIXTURE ON DISK through the
+     * real `deriveAtlasOf`, not from the in-process lift: the artifact is what
+     * `#editLoadVanilla` loads, and a producer that drifted from its own output
+     * would still pass a row that only asked the lift.
+     *
+     * ⛔ AS A SET, not as a list: `deriveAtlasOf` walks the rooms in index
+     * order and the atlas's regions are the analyzer's order
+     * ([[feedback_grouping_reorders_so_assert_the_set]]).
+     *
+     * ⚠ `seedling-playthrough.json` is READ, never rebuilt — its md5 is pinned
+     * here so a row that started agreeing because the OTHER side moved is
+     * impossible.
+     */
+    it('⛔⛔ the DERIVED names of the committed fixture EQUAL the playthrough atlas\'s, as a set', async () => {
+        const { createHash } = await import('node:crypto');
+        const playthroughPath = fileURLToPath(
+            new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url));
+        // ⛓ SWIM T4 D4 re-pinned this (1c4836d1… -> e5f12454…): the one-sided locks moved internal
+        //   exits and the content hash only; locations, boundary exits and sub-regions are unchanged.
+        // ⛓ RULES (A) re-pinned it again (e5f12454… -> bc710e63): the nine return rows through the
+        //   opened one-sided locks — internal exits and the content hash only, as before.
+        // ⛓ RULES (B) once more (bc710e63… -> 5c600bcd): L82 wired (its pit and door arrivals)
+        //   and its two doors charged — exits, connections and the hash; no location moves.
+        // ⛓ RULES logical-links (5c600bcd… -> 9e791548): the model-sealed True_ rows dropped, three pockets
+        //   pruned, L0's stairs bound to r8c0 — internal exits, sub-regions and two exit bindings; no location moves.
+        // ⛓ RULES burnable-trees (9e791548… -> d43eee56): the tree's 2x2 footprint splits L12/L37/L40/L44 and
+        //   eight doors inside an item-gated solid are charged — sub-regions, internal exits, exit bindings and
+        //   rules; the L12 chest moves r0c37 -> r42c29 (behind its tree). The location SET is unchanged.
+        // ⛓ RULES patched-set (d43eee56… -> 81742e21): L110's chained pit exits to level_2 (3,2), not level_0 —
+        //   one exit pair and one connection; no location moves.
+        // ⛓ RULES re-closing locks (81742e21… -> ec818c86): six levels split at a button-only lock — sub-regions,
+        //   internal exits and two location bindings (L39, L41 totem parts); no name changes.
+        // ⛓ RULES footprints (ec818c86… -> 85ba46d2): every footprint is the model's hitbox — L43's BossTotem
+        //   splits r13c7 off (the L40 doors and the Wand), L94's pockets behind TreeLarge are pruned; no location moves.
+        // ⛓ RULES obstacle-events (85ba46d2… -> d9578b1f): L0's door to L1 charged the rock its model pocket
+        //   opens through — one exit rule; no location moves (the events live in the rules, not the atlas).
+        // ⛓ RULES kill-locks (d9578b1f… -> 5405098b): a decided kill-lock's rule is its room's bodies' — four
+        //   exit rules widen (Wand | Dark Shield) and L98's stairs under the lock are charged; no location moves.
+        // ⛓ RULES game-truth-gaps (5405098b… -> 404dd367): L57 lifted from never-enter — its region, L56's pit,
+        //   L58's two doors and the mouth, each charged the arena's kill; no location moves.
+        // ⛓ R4b rules-boss-locations (404dd367… -> f3b3365a): seven boss locations (Owl, Shieldspire, Times,
+        //   Tentacled Beast, Totem of Lacste, Lights, King of Fire), L69 lifted from never-enter (its region, L70's
+        //   pit, the Lights' exit), and the BossTotem crossing priced on the Wand. The names gain the seven.
+        // ⛓ rules-l32-rock-move (f3b3365a… -> 85e0ef9e): the delivered set moves Bob's rock (64,128) -> (88,128), and
+        //   L32's two locations (Bob Boss, Times) stand on it: tile [4,8] -> [5,8]. No name, rule or exit moves.
+        // ⛓ rules-r4b-followup (85e0ef9e… -> bdcc2651): a pit lands from the pit tile's CENTRE (`Tile.as:103`), so
+        //   L70's pit exit is out_pit_3_8 -> in_pit_L70_3_8 (it was (3,7)). No name, rule or location moves.
+        // ⛓ rules-block-path (bdcc2651… -> 63fa26d6): a re-closing lock's entry is priced by the block paths that
+        //   hold its button, so L15 r1c5->r1c9, L16 r1c1->r4c21 and L41 r4c15->r7c15 gain rules. No name, exit or
+        //   location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-rope-events (63fa26d6… -> 1c38afee): a rope cut is an event; L16 splits at its silenced lanes
+        //   (r1c9, r3c7, r6c8) and L28's lock is entered from both sides once the rope's rock holds the button; a rope
+        //   is cut by Fire too (⚖ 2026-10-21). No location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-l39 (1c38afee… -> 32dd7cf1): a rope's whole run is solid until cut (L39 splits at its corridor),
+        //   a Pulser is a static Solid (L38/L40/L107 lose their pulser pockets), and L39's chain is a lock RUN priced
+        //   Fire. No location moves (the overlay fixture rewrites byte-identical).
+        expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
+            .toBe('32dd7cf16b15ae1848f39ff47b77604d');
+
+        const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
+        const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
+        const derived = atlas.regions.flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        const playthrough = ATLAS_LOCATIONS.map((l) => l.name);
+
+        expect(derived).toHaveLength(48);   // ⛓ R4b: 41 + the seven boss kills
+        expect(new Set(derived).size).toBe(48);
+        expect([...new Set(derived)].sort()).toEqual([...new Set(playthrough)].sort());
+        // ⛓ THE NUMBER §37 QUOTES: how many derived names the playthrough does
+        //   not have. E5's answer was 16; E6a's is 0.
+        expect(derived.filter((n) => !new Set(playthrough).has(n))).toEqual([]);
+        // ⛔ NOT VACUOUS: the sixteen `Chest`es really are in there, one per room.
+        expect(derived.filter((n) => n.endsWith(' - Chest'))).toHaveLength(16);
+    }, 120000);
+
+    it('`--check` agrees with the committed bytes', async () => {
+        const { execFileSync } = await import('node:child_process');
+        const script = fileURLToPath(
+            new URL('../../../scripts/procgen/make-seedling-vanilla-overlay.mjs', import.meta.url));
+        const out = execFileSync(process.execPath, [script, '--check'], { encoding: 'utf8' });
+        expect(out).toContain('OK: frontend/modules/seedlingDemo/fixtures/'
+            + 'seedling-vanilla-overlay.json matches a fresh build');
+        // ⛔ AND THE COMPARE IS NOT BYPASSED: the same run over a mutated
+        //    document must be able to FAIL, which is what the mutant list
+        //    drives — here the row pins that `--check` printed a COMPARISON
+        //    rather than the report alone.
+        expect(out).not.toContain('report only');
+    }, 120000);
+});
+
+describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
+    const reportWith = (overlay) => {
+        const session = createSetSession(
+            createSeedlingSetAdapter(DEPS), setRecord(LIFT.set, overlay),
+            { base: { kind: 'set', set_id: LIFT.set.set_id } });
+        return reportOf(session, DEPS, { compileRegionAtlas, validateRegionAtlas });
+    };
+
+    // ⛓ RULES (B): 332 -> 330 — the LavaBoss arena's two doors (L82 out, L96 in) lift as rules too.
+    // ⛓ RULES burnable-trees: 330 -> 325 — five doors inside an item-gated solid lift as rules (L24 x2, L32 x2, L34).
+    // ⛓ RULES kill-locks: 325 -> 324 — L98's stairs under its kill-lock lift as a rule.
+    // ⛓ RULES game-truth-gaps: 324 -> 322 — the L57 arena's two expressible doors (L56's pit, the mouth).
+    // ⛓ R4b: 322 -> 320 — the L69 arena's two doors (L70's pit in, the Lights' exit out); the locations 38 -> 38:
+    //   seven more (the bosses), each guarded by its kill, so none of them is free.
+    it('moves 334 free exits + 0 locations to 320 + 38, and the export stays ALLOWED', () => {
+        const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
+        const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
+
+        expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
+        expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
+        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(320);
+        expect(after.filter((e) => e.kind === 'location')).toHaveLength(38);
+
+        /**
+         * ⛓ THE DOORS THAT STOPPED BEING FREE ARE THE LIFTED EXIT
+         * RULES — not two the compiler happened to drop.
+         *
+         * ⚠ THE NAME IS THE COMPILER'S, NOT THE DERIVATION'S. A free edge is
+         * read off the COMPILED rules, where an exit is named
+         * `level_113 -> level_115` (and `#2` for the second door between the
+         * same pair) — the atlas's `out_teleporter_112_0` never appears there.
+         * So the row asserts the PAIR, which is the compiled document's own
+         * vocabulary, and the exit ids are asserted on the atlas below.
+         */
+        const gone = before.filter((e) => e.kind === 'exit')
+            .filter((e) => !after.some((a) => a.region === e.region && a.name === e.name));
+        expect(gone).toHaveLength(14); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock; game-truth-gaps: + L56's pit, the mouth; R4b: + L70's pit, the Lights' exit
+        expect(gone.map((e) => e.name).sort()).toEqual([
+            'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_24 -> level_12', 'level_24 -> level_12 #2',
+            'level_32 -> level_30 #2', 'level_32 -> level_30 #3', 'level_34 -> level_12 #2',
+            'level_56 -> level_57', 'level_57 -> level_58', 'level_69 -> level_36', 'level_70 -> level_69',
+            'level_82 -> level_96', 'level_96 -> level_82', 'level_98 -> level_99',
+        ].sort());
+        const ruled = reportWith(LIFT.overlay).atlas.regions
+            .flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule)
+                .map((e) => `${r.region_id} ${e.exit_id}`));
+        expect(ruled.sort())
+            .toEqual(['level_113 out_teleporter_112_0', 'level_113 out_teleporter_128_0',
+                'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
+                'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
+                'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
+                'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_8',
+                'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
+        // …and the ten locations that are NOT free are the ten the
+        //   playthrough guards (⛓ R4b: the three, + the seven boss kills).
+        const guarded = LIFT.rows.filter((r) => r.atlasLoc.access_rule);
+        expect(guarded).toHaveLength(10);
+        expect(after.filter((e) => e.kind === 'location')).toHaveLength(48 - guarded.length);
+    });
+
+    it('gives the vanilla set 48 locations (R4b: 41 + 7 bosses) and an ALLOWED rules.json export', () => {
+        const report = reportWith(LIFT.overlay);
+        expect(report.atlas.regions.reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
+        expect(report.download.rules.allowed).toBe(true);
+        expect(report.download.rules.why).toBeNull();
+    });
+});

@@ -1,0 +1,330 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js --mode=test-substrates --batch=feature-checks --port=8220 --wait-for-box=600
+
+# box lock: TAKEN by npm test test-substrates batch=feature-checks (browser, pid 1128516) — head 34399ab2c, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - machine: load 0.75 across 8 cpus
+  - mode: test-substrates
+  - flavour: unbundled
+PW DEBUG: URL: http://localhost:8220/frontend/?mode=test-substrates&testBatch=feature-checks
+BROWSER LOG (log): [Loader] Using unbundled mode (local development)
+PW DEBUG: Page navigation complete (load).
+PW DEBUG: Waiting for tests to start (__playwrightTestsStarted__ flag)...
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [02:45:27.561] [INFO] [INIT_STEP] Module import and registration phase started
+BROWSER LOG (info): [02:45:30.094] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [02:45:30.097] [INFO] [INIT_STEP] Golden Layout initialization started
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+BROWSER LOG (info): [02:45:30.414] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [02:45:30.417] [INFO] [INIT_STEP] Module initialization phase started (62 modules)
+BROWSER LOG (info): [02:45:30.472] [INFO] [INIT_STEP] Module initialization phase completed (62 modules)
+BROWSER LOG (info): [02:45:30.473] [INFO] [INIT_STEP] Module post-initialization phase started (4 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [02:45:30.527] [INFO] [INIT_STEP] Module post-initialization phase completed (4 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (log): [flash-placeholder] page ready; __swfBridge contract exposed
+BROWSER LOG (log): Loading game from: idleLoops_substrate inChallenge: undefined
+BROWSER LOG (log): Challenge Mode: 0 In Challenge: false
+BROWSER LOG (log): JSHandle@node SVGRect
+BROWSER LOG (warning): Expected element missing or wrong type! rngModeInput [, , ] null
+BROWSER LOG (warning): Expected element missing or wrong type! plannerTargetsInput [, , ] null
+BROWSER LOG (log): Updating prestige values from load
+BROWSER LOG (info): [tasw-bridge] Connected to host
+BROWSER LOG (info): [tasw-bridge] initial rebuildWorld attempt at connect
+BROWSER LOG (info): [omsi-bridge] omsi-loops in managed mode (host-driven clock)
+BROWSER LOG (info): [jta-bridge] JtA in managed mode (loop paused)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (info): [omsi-bridge] connected to host; appReady sent
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+BROWSER LOG (info): [jta-bridge] connected to host; appReady sent
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: flash:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [mazeLabBridge] procgenLab: maze bridge connected as procgenLab-maze-1
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: runner:loadRegion
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: noiz2sa:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [watchBridge] procgenLab: seedling bridge connected as procgenLab-seedling-2
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: bounce:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+PW DEBUG: Tests started (or already complete/errored).
+PW DEBUG: Waiting for tests to complete (__playwrightTestsComplete__ flag)...
+BROWSER LOG (log): [tutorial-walk-timing] storage-panel-mode-key: open-storage 0.3s, refresh 0.0s
+[PROGRESS 1/3] feature-check-storage-panel-mode-key PASSED 0.7s
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [02:45:39.549] [WARN] [inventoryUI] [InventoryUI stateManager:ready] Item/group data not available. Attempting to fetch/initialize now as a fallback.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room overworld_start__r8c0
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=overworld_start__r8c0
+BROWSER LOG (log): [js runtime] vanilla map loaded — 116 level(s)
+BROWSER LOG (log): [js runtime] boot level 0 at (80, 128) — the game's own first frame (Main.as:51)
+BROWSER LOG (log): [js runtime] boot level 0 at (160, 288) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 6 at (32, 16) — teleport (new Game)
+BROWSER LOG (warning): [region atlas] the game moved from level 0 to level 6, which region "overworld_start__r8c0" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+BROWSER LOG (warning): [02:45:40.976] [WARN] [flashPanelSeedlingGlue] [region atlas] the game moved from level 0 to level 6, which region "overworld_start__r8c0" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+BROWSER LOG (log): [js runtime] bot: waiting → door (14, 2) in level 6 (paused)
+BROWSER LOG (log): [js runtime] bot: walking → door (14, 2) in level 6
+BROWSER LOG (log): [js runtime] solving reach-exit in level 6 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → door (14, 2) in level 6 — solving… (budget 640 work units)
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] solved reach-exit in level 6: 294 tick(s), verbs bait, walk (replay 55 ms over 34 tick(s), solve 245 ms, worker; pass dashless)
+BROWSER LOG (log): [js runtime] bot: walking → door (14, 2) in level 6
+BROWSER LOG (log): [tutorial-walk-timing] seedling-solve-progress-auto-show: settings 0.0s, load 0.4s, listening 0.0s, shown 2.6s, hidden 0.3s, restore 0.0s
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Menu
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Overworld
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+[PROGRESS 2/3] feature-check-seedling-solve-progress-auto-show PASSED 3.9s
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room level_0__r8c0
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (info): [tasw-bridge] world built: 255 rooms, current=level_0__r8c0
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] vanilla map loaded — 116 level(s)
+BROWSER LOG (log): [js runtime] boot level 0 at (80, 128) — the game's own first frame (Main.as:51)
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — an item flag changed
+BROWSER LOG (log): [js runtime] bot: idle
+BROWSER LOG (log): [js runtime] level set seedling-ap-record-00bb3872 mounted — 116 real room(s)
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 12 at (16, 80) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 12 at (16, 80) — teleport (new Game)
+BROWSER LOG (log): [js runtime] bot: waiting → door (27, 22) in level 12 (paused)
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12
+BROWSER LOG (log): [js runtime] solving reach-exit in level 12 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12 — solving… (budget 640 work units)
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] solved reach-exit in level 12: 561 tick(s), verbs walk (replay 70 ms over 38 tick(s), solve 485 ms, worker; pass dashless, full stopped at its deadline (sword-dash))
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] level 12 → 33 through the teleporter at (432, 352)
+BROWSER LOG (log): [js runtime] bot: done → door (27, 22) in level 12
+BROWSER LOG (log): [js runtime] boot level 33 at (32, 48) — teleport (new Game)
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — an item flag changed
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Menu
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] boot level 0 at (16, 128) — an item flag changed
+BROWSER LOG (info): [tasw-bridge] world built: 255 rooms, current=level_0__r8c0
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] boot level 12 at (16, 80) — teleport (new Game)
+BROWSER LOG (log): [js runtime] boot level 12 at (16, 80) — teleport (new Game)
+BROWSER LOG (log): [js runtime] bot: waiting → door (27, 22) in level 12
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12
+BROWSER LOG (log): [js runtime] solving reach-exit in level 12 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12 — solving… (budget 640 work units)
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] solved reach-exit in level 12: 328 tick(s), verbs walk (replay 10 ms over 29 tick(s), solve 2665 ms, worker; pass full)
+BROWSER LOG (log): [js runtime] bot: walking → door (27, 22) in level 12
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (log): [js runtime] level 12 → 33 through the teleporter at (432, 352)
+BROWSER LOG (log): [js runtime] bot: done → door (27, 22) in level 12
+BROWSER LOG (log): [js runtime] boot level 33 at (32, 48) — teleport (new Game)
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Menu
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (log): [tutorial-walk-timing] seedling-dash-window: settings 0.0s, load 5.8s, listening 0.1s, sword 2.4s, stage-cut 9.1s, cut 1.4s, walk-cut 18.7s, window-0 0.1s, reload 4.7s, listening-full 0.1s, sword-full 1.4s, stage-full 3.8s, full 2.9s, walk-full 11.2s, restore 4.5s
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (info): [tasw-bridge] world built: 255 rooms, current=level_0__r8c0
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[PROGRESS 3/3] feature-check-seedling-dash-window PASSED 71.2s
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Menu
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room Overworld
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Test results saved to: <worktree>/test-results/in-app-tests/test-results-2026-10-16T02-46-54.json
+PW DEBUG: ===== IN-APP RESULTS: 3 row(s) =====
+  PASSED feature-check-storage-panel-mode-key 0.7s
+  PASSED feature-check-seedling-solve-progress-auto-show 3.9s
+  PASSED feature-check-seedling-dash-window 71.2s
+  totals: 3 run · 3 passed · 0 failed · 3 enabled · 0 not run
+  test files: 0 failed to import
+  page: 6 console error(s) (each printed as a BROWSER LOG line), 0 uncaught exception(s)
+  handler errors (subscribers that threw inside the event bus): 0 in the log, 0 counted by the page's event bus
+  full results (every row's conditions, logs, timestamps): <worktree>/test-results/in-app-tests/test-results-2026-10-16T02-46-54.json
+PW DEBUG: =========================================
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+PW DEBUG: No detailed spoiler test results found in window.__spoilerTestResults__.
+PW DEBUG: All Playwright assertions passed.
+  ✓  1 test_json/e2e/app.spec.js:72:3 › Application End-to-End Tests › run in-app tests and check results (1.5m)
+
+  1 passed (1.5m)

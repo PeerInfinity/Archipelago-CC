@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, ClassVar
 from typing_extensions import override
 
 from BaseClasses import Item, ItemClassification, Region, Tutorial
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 from worlds.AutoWorld import WebWorld, World
 
 from .constants import GAME_NAME, Area
@@ -92,7 +92,7 @@ class ToemWorld(RuleWorldMixin, World):  # pyright: ignore[reportUnsafeMultipleI
             if group not in logic_groups:
                 continue
 
-            for location_name in location_names:
+            for location_name in sorted(location_names):
                 self.create_location(location_name)
 
         if self.options.include_basto:

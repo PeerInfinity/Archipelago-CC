@@ -1,0 +1,74 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m16 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 89279[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m withStrikeEtaFloor sets and restores it, also on a throw[32m 18[2mms[22m[39m
+     [32m✓[39m ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED[32m 1[2mms[22m[39m
+     [32m✓[39m the tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one[32m 0[2mms[22m[39m
+     [32m✓[39m a knocked-back start: an axis faster than the cap bounds the walk at its own speed[32m 0[2mms[22m[39m
+     [32m✓[39m ice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED[32m 0[2mms[22m[39m
+     [32m✓[39m a waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk[32m 0[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 3659[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 5326[2mms[22m[39m
+     [32m✓[39m ships at 16, and the switch reads it[32m 0[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 4746[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 6402[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ the walk: three ghost landings on spinner@880,848, the kill at t1616 (OFF's walk, G1's witness, kills at t2114), and the chaser's three hits[32m 3[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 1564[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ THE GAME AGREES: its rows of the killed Spinner (position, hits, hits_timer) are the model's at every sampled tick, and it reaches hits 4[32m 7[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key[39m[33m 67540[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 179500[2mms[22m[39m
+     [32m✓[39m is ON by default and opted out by `SEEDLING_GHOST_KILL_RUNG=0`; the wrapper restores it[32m 18[2mms[22m[39m
+     [32m✓[39m `killRungPresses`: OFF only the sword; ON also the ghost sword, and only where `derivePressKill` admits it (`GHOST_SPINNER_PRESS` ON)[32m 7[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ the walk's every press and landing is the ghost sword's, and it kills both spinners[32m 1[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ THE GAME AGREES: its rows of the two killed Spinners (position, hits, hits_timer) are the model's at every sampled tick, and each reaches hits 4[32m 14[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 1876[2mms[22m[39m
+[31m     [31m×[31m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key[39m[33m 177582[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js[2m > [22mhammer-g1-l40-ghostkill — the kill rung's ghost press kill, on the game (hammer-phase G1, D2)[2m > [22m⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key
+[31m[1mAssertionError[22m: expected 1216 to be 2195 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 2195[39m
+[31m+ 1216[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js:[2m147:35[22m[39m
+    [90m145| [39m        [35mconst[39m on [33m=[39m [34msolveA[39m([35mtrue[39m)[33m;[39m
+    [90m146| [39m        [34mexpect[39m(on[33m.[39mmessage)[33m.[39mnot[33m.[39m[34mtoContain[39m([33mGATE[39m)[33m;[39m
+    [90m147| [39m        [34mexpect[39m(on[33m.[39mperTick[33m.[39mlength)[33m.[39m[34mtoBe[39m([34m2195[39m)[33m;[39m
+    [90m   | [39m                                  [31m^[39m
+    [90m148| [39m        expect(on.perTick.map((k) => [...k].sort())).toEqual(w.keys.sl…
+    [90m149| [39m    }[33m,[39m [34m900_000[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mhammer-sf-l40-strikefloor — the strike the admissible floor lets the scan see, on the game (hammer-phase SF, D1)[2m > [22m⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key
+[31m[1mAssertionError[22m: expected 778 to be 1629 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1629[39m
+[31m+ 778[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m290:32[22m[39m
+    [90m288| [39m            }
+    [90m289| [39m        })[33m;[39m
+    [90m290| [39m        [34mexpect[39m(perTick[33m.[39mlength)[33m.[39m[34mtoBe[39m([34m1629[39m)[33m;[39m
+    [90m   | [39m                               [31m^[39m
+    [90m291| [39m        expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice…
+    [90m292| [39m    }[33m,[39m [34m900_000[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m20 passed[39m[22m[90m (22)[39m
+[2m   Start at [22m 06:00:09
+[2m   Duration [22m 189.45s[2m (transform 6.09s, setup 0ms, import 17.85s, tests 268.78s, environment 0ms)[22m
+

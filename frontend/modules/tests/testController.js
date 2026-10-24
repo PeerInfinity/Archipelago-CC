@@ -170,6 +170,47 @@ export class TestController {
     this.callbacks.completeTest(this.testId, overallPassStatus);
   }
 
+  /**
+   * Starvation evidence for a poll that timed out.
+   *
+   * A timeout on its own cannot distinguish "the condition never became
+   * true" from "this page barely got scheduled" — the difference between
+   * a real defect and a machine under load, which otherwise costs a
+   * stash-and-control rerun to tell apart. A poll that ran its full
+   * expected iteration count on schedule was STUCK; one that ran a
+   * fraction of them, or shows a gap far larger than its interval, was
+   * STARVED. Both readings are generic: they need no knowledge of what
+   * the test was waiting for.
+   */
+  _pollTimeoutEvidence(stats, timeoutMs, intervalMs) {
+    const expected = Math.max(1, Math.floor(timeoutMs / intervalMs));
+    const elapsedMs = Date.now() - stats.startTime;
+    const ratio = stats.polls / expected;
+
+    // Three distinct readings, and the order matters. A slow checkFn
+    // starves the loop just as effectively as machine load does, but it
+    // is the test's own doing — blaming contention for it sends the
+    // reader hunting the wrong problem. Under-execution is the strong
+    // starvation signal; a large max gap alone is not (a single boot-time
+    // hiccup delays one poll without denying the condition its chances).
+    let verdict;
+    if (stats.checkMs > elapsedMs * 0.5) {
+      verdict = `CHECK-BOUND (the condition function itself consumed `
+        + `${(stats.checkMs / 1000).toFixed(1)}s of the ${(elapsedMs / 1000).toFixed(1)}s budget)`;
+    } else if (ratio < 0.5) {
+      verdict = 'STARVED (the page did not get scheduled — app work on the '
+        + 'main thread, or machine contention; not necessarily the code under test)';
+    } else {
+      verdict = 'STUCK (the poll ran its expected iterations; the condition '
+        + 'genuinely never became true)';
+    }
+
+    const errors = stats.checkErrors > 0 ? `, checkFn errors: ${stats.checkErrors}` : '';
+    return `${stats.polls}/${expected} polls in ${(elapsedMs / 1000).toFixed(1)}s `
+      + `(max gap ${stats.maxGapMs}ms vs ${intervalMs}ms interval, `
+      + `checkFn ${(stats.checkMs / 1000).toFixed(1)}s)${errors} — ${verdict}`;
+  }
+
   // New method: pollForCondition
   async pollForCondition(checkFn, description, timeoutMs, intervalMs) {
     const logPrefix = this.testId ? `[${this.testId}] ` : '';
@@ -177,19 +218,31 @@ export class TestController {
       `${logPrefix}Polling for condition: \"${description}\" (timeout: ${timeoutMs}ms, interval: ${intervalMs}ms)...`
     );
     const startTime = Date.now();
+    const stats = {
+      startTime, polls: 0, maxGapMs: 0, checkErrors: 0,
+      checkMs: 0, lastPollAt: startTime,
+    };
 
     return new Promise((resolve) => {
       const intervalId = setInterval(async () => {
+        const now = Date.now();
+        stats.polls += 1;
+        stats.maxGapMs = Math.max(stats.maxGapMs, now - stats.lastPollAt);
+        stats.lastPollAt = now;
+
         let conditionMet = false;
+        const checkStartedAt = Date.now();
         try {
           conditionMet = await checkFn();
         } catch (e) {
+          stats.checkErrors += 1;
           this.log(
             `${logPrefix}Error in checkFn for condition "${description}": ${e}`,
             'error'
           );
           // Continue polling until timeout
         }
+        stats.checkMs += Date.now() - checkStartedAt;
 
         if (conditionMet) {
           clearInterval(intervalId);
@@ -198,7 +251,8 @@ export class TestController {
         } else if (Date.now() - startTime > timeoutMs) {
           clearInterval(intervalId);
           this.log(
-            `${logPrefix}Timeout polling for condition: \"${description}\".`,
+            `${logPrefix}Timeout polling for condition: \"${description}\". `
+              + this._pollTimeoutEvidence(stats, timeoutMs, intervalMs),
             'warn'
           );
           resolve(false);
@@ -213,20 +267,32 @@ export class TestController {
       `${logPrefix}Polling for value: \"${description}\" (timeout: ${timeoutMs}ms, interval: ${intervalMs}ms)...`
     );
     const startTime = Date.now();
+    const stats = {
+      startTime, polls: 0, maxGapMs: 0, checkErrors: 0,
+      checkMs: 0, lastPollAt: startTime,
+    };
 
     return new Promise((resolve) => {
       const intervalId = setInterval(async () => {
+        const now = Date.now();
+        stats.polls += 1;
+        stats.maxGapMs = Math.max(stats.maxGapMs, now - stats.lastPollAt);
+        stats.lastPollAt = now;
+
         let result = null;
         let errorOccurred = false;
+        const checkStartedAt = Date.now();
         try {
           result = await checkFn();
         } catch (e) {
+          stats.checkErrors += 1;
           this.log(
             `${logPrefix}Error in checkFn for value "${description}": ${e}`,
             'error'
           );
           errorOccurred = true;
         }
+        stats.checkMs += Date.now() - checkStartedAt;
 
         // Resolve if a truthy result is found (and no error occurred)
         if (!errorOccurred && result) {
@@ -236,7 +302,8 @@ export class TestController {
         } else if (Date.now() - startTime > timeoutMs) {
           clearInterval(intervalId);
           this.log(
-            `${logPrefix}Timeout polling for value: \"${description}\".`,
+            `${logPrefix}Timeout polling for value: \"${description}\". `
+              + this._pollTimeoutEvidence(stats, timeoutMs, intervalMs),
             'warn'
           );
           resolve(null); // Resolve with null on timeout or if result remains null/falsy

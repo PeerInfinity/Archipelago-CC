@@ -19,9 +19,9 @@ Modules are listed in their load priority order.
 
 Core modules cannot be disabled (their checkboxes are grayed out).
 
-## Reordering
+## Load Order
 
-Use the **up/down arrows** to change a module's load priority. This affects the order in which modules process events and can influence which module handles a given action first.
+The panel shows the load priority but cannot change it; the order comes from the module configuration (`frontend/module-configs/modules.json`). It affects the order in which modules process events and can influence which module handles a given action first.
 
 ## Adding External Modules
 

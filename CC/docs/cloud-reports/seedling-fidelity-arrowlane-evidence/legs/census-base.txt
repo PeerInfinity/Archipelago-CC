@@ -1,0 +1,58 @@
+survey 4 4 SOLVED 255 
+survey 5 5 SOLVED 403 
+survey 8 8 SOLVED 827 
+survey 18 16 SOLVED 124 
+survey 26 16 SOLVED 655 
+survey 37 16 SOLVED 655 
+survey 132 67 REFUSED None solverBot(survey-step-132) collect (48,64) stance (ladder-routed: no corridor from (216,120) to a stance that can collect bosskey@48,64 — 10 walkable 
+leg 68 level_4 <- in_L5_80_16 -> exit:out_stairsdown_64_16 done
+leg 205 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_7_3 failed
+leg 215 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_3 failed
+leg 227 level_17 <- in_pit_L16_7_3 -> exit:out_stairsup_32_48 done
+leg 79 level_7 <- in_L6_224_32 -> exit:out_stairsdown_192_32 done
+leg 206 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3 failed
+leg 216 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_9_3 failed
+leg 229 level_17 <- in_pit_L16_8_3 -> exit:out_stairsup_32_48 done
+leg 505 level_59 <- in_L60_0_80 -> exit:out_teleporter_0_128 done
+leg 69 level_5__r1c1 <- in_L12_96_240 -> exit:out_stairsup_16_16 crossed
+leg 60 level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_128_48 done
+leg 70 level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112 done
+leg 85 level_8 <- in_L9_144_0 -> exit:out_stairsup_144_32 failed
+leg 207 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_9_3 failed
+leg 217 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_4 failed
+leg 231 level_17 <- in_pit_L16_9_3 -> exit:out_stairsup_32_48 done
+leg 71 level_5__r1c5 <- in_L4_64_16 -> exit:out_stairsup_80_16 done
+leg 81 level_7 <- in_L8_144_32 -> exit:out_stairsdown_192_32 done
+leg 199 level_15__r1c9 <- in_L16_16_64 -> exit:out_stairsdown_144_16 done
+leg 208 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_4 failed
+leg 218 level_16__r4c21 <- in_L18_16_16 -> exit:out_stairsup_352_80 done
+leg 233 level_17 <- in_pit_L16_8_4 -> exit:out_stairsup_32_48 done
+leg 517 level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128 done
+leg 176 level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240 done
+leg 74 level_6 <- in_L5_48_112 -> exit:out_teleporter_32_0 done
+leg 203 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_2 failed
+leg 213 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_9_2 failed
+leg 219 level_17 <- in_L16_112_64 -> exit:out_stairsup_32_48 done
+leg 72 level_5__r1c5 <- in_L6_32_0 -> exit:out_teleporter_48_112 done
+leg 201 level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsdown_112_64 failed
+leg 211 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_7_2 failed
+leg 73 level_5__r1c5 <- in_L6_32_0 -> exit:out_stairsup_80_16 done
+leg 87 level_9 <- in_L8_96_192 -> exit:out_teleporter_144_0 done
+leg 202 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_7_2 failed
+leg 212 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_2 failed
+leg 89 level_9 <- in_L10_48_96 -> exit:out_teleporter_144_0 done
+leg 200 level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsup_16_64 done
+leg 209 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64 failed
+leg 221 level_17 <- in_pit_L16_7_2 -> exit:out_stairsup_32_48 done
+leg 235 level_18__r1c1 <- in_L16_352_80 -> exit:out_stairsdown_16_16 done
+leg 509 level_59 <- in_L67_224_112 -> exit:out_teleporter_0_128 done
+leg 593 level_67__r6c11 <- in_L59_0_128 -> exit:out_teleporter_224_112 done
+leg 66 level_4 <- in_L3_128_48 -> exit:out_stairsdown_64_16 done
+leg 210 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsdown_112_64 failed
+leg 223 level_17 <- in_pit_L16_8_2 -> exit:out_stairsup_32_48 done
+leg 57 level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_128_48 done
+leg 67 level_4 <- in_L5_80_16 -> exit:out_teleporter_0_16 failed
+leg 204 level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_9_2 failed
+leg 214 level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_7_3 failed
+leg 225 level_17 <- in_pit_L16_9_2 -> exit:out_stairsup_32_48 done
+leg 513 level_59 <- in_L95_32_0 -> exit:out_teleporter_0_128 done

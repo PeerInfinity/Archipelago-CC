@@ -1,0 +1,48 @@
+# r9-solve-18 at seam.time 9940 (committed residue 40); HAMMER_ESCAPE ON; HAMMER_ESCAPE_FALLBACK ON; HAMMER_APPROACH OFF; HAMMER_FIGHT ON; 45 residue(s)
+r 0  SOLVE                   349     5.6s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26189 max26189 left0 {}
+r 1  SOLVE                   349     4.6s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26243 max26243 left0 {}
+r 2  SOLVE                   349     4.5s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26221 max26221 left0 {}
+r 3  SOLVE                   349     4.7s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26563 max26563 left0 {}
+r 4  SOLVE                   349     5.3s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26550 max26550 left0 {}
+r 5  SOLVE                   373     6.3s  digest 3933407635c5 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x29624 max29624 left0 {}
+r 6  SOLVE                   351     5.0s  digest 3258bb5bc99f stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x27496 max27496 left0 {}
+r 7  SOLVE                   364     5.4s  digest b7e15b03243a stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x29009 max29009 left0 {}
+r 8  SOLVE                   361     5.5s  digest 7903154f0dcd stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31347 max31347 left0 {}
+r 9  SOLVE                   350     5.7s  digest 34a7d05b5e87 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31555 max31555 left0 {}
+r10  SOLVE                   351     5.5s  digest e75aa7854ff0 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31518 max31518 left0 {}
+r11  SOLVE                   342     5.6s  digest 714d2c2e6c9e stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31344 max31344 left0 {}
+r12  SOLVE                   345     5.7s  digest 429fabce5dd0 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31338 max31338 left0 {}
+r13  SOLVE                   346     6.3s  digest 3ef169e19f41 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x35012 max35012 left0 {}
+r14  SOLVE                   349     5.8s  digest c38784d9b3f0 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x32406 max32406 left0 {}
+r15  SOLVE                   362     5.9s  digest 01fc70f0ca61 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x33242 max33242 left0 {}
+r16  SOLVE                   362     5.8s  digest 595251115d2b stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31263 max31263 left0 {}
+r17  SOLVE                   349     5.7s  digest 23c0c96b92cb stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x29611 max29611 left0 {}
+r18  SOLVE                   395     8.2s  digest 1d98aec3b38b stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x39068 max39068 left0 {}
+r19  SOLVE                   411     7.5s  digest d4c0586a457c stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x37013 max37013 left0 {}
+r20  SOLVE                   368     7.5s  digest 4d73224f599c stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x39708 max39708 left0 {}
+r21  SOLVE                   403     6.9s  digest 86f15e8c3cbd stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x37731 max37731 left0 {}
+r22  SOLVE                   362     6.5s  digest 4b8b489f989b stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x34103 max34103 left0 {}
+r23  SOLVE                   366     5.8s  digest 054c1efbec59 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x33787 max33787 left0 {}
+r24  SOLVE                   373     8.8s  digest fdd4c32a4685 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x42981 max42981 left0 {}
+r25  SOLVE                   365     9.0s  digest c69b91eac682 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x40973 max40973 left0 {}
+r26  SOLVE                   351     6.5s  digest 489a2db51b79 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x31494 max31494 left0 {}
+r27  SOLVE                   391     2.3s  digest 917808b90926 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x15643 max15643 left0 {}
+r28  SOLVE                   385    11.4s  digest f46d9c8e0f4a stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x54079 max54079 left0 {}
+r29  SOLVE                   368     8.7s  digest 16c8a2fdf7ab stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x38116 max38116 left0 {}
+r30  SOLVE                   389     2.4s  digest 2ea3dc6027a5 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x15236 max15236 left0 {}
+r31  SOLVE                   389     2.3s  digest 7522b939303d stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x15523 max15523 left0 {}
+r32  SOLVE                   375     6.1s  digest 570638d4a863 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x35571 max35571 left0 {}
+r33  SOLVE                   368     4.7s  digest 79b6e95405eb stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x28857 max28857 left0 {}
+r34  SOLVE                   372     8.5s  digest 6796057f7cf1 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x40603 max40603 left0 {}
+r35  SOLVE                   363     5.0s  digest ca58a457f598 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x29718 max29718 left0 {}
+r36  SOLVE                   353     5.0s  digest cfa3e1b57442 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x27618 max27618 left0 {}
+r37  SOLVE                   347     4.5s  digest d3a16a50140b stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x27417 max27417 left0 {}
+r38  SOLVE                   366     4.7s  digest 0a18ef954295 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x28774 max28774 left0 {}
+r39  SOLVE                   350     4.8s  digest 186311903075 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x25058 max25058 left0 {}
+r40  SOLVE                   342     3.5s  digest d3cc1620058a stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x21243 max21243 left0 {}
+r41  SOLVE                   344     5.0s  digest 7b9e4597e653 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26625 max26625 left0 {}
+r42  SOLVE                   349     4.7s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26629 max26629 left0 {}
+r43  SOLVE                   349     4.6s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26342 max26342 left0 {}
+r44  SOLVE                   349     4.7s  digest 0a7b84b3de39 stalls 0 escapes 0 fellBack 0/0 hits 0 fight 1/1 x26329 max26329 left0 {}
+
+# 45/45 solve; lengths by residue: 349 349 349 349 349 373 351 364 361 350 351 342 345 346 349 362 362 349 395 411 368 403 362 366 373 365 351 391 385 368 389 389 375 368 372 363 353 347 366 350 342 344 349 349 349

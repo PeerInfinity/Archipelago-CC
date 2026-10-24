@@ -1,0 +1,32 @@
+{
+ "id": 626,
+ "ok": false,
+ "ms": 4409,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 1955
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 2452
+  }
+ ],
+ "keys": [
+  "ok",
+  "kind",
+  "message",
+  "pass",
+  "contactFidelity",
+  "passes"
+ ],
+ "kind": "refusal",
+ "message": "levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately under `Game.freezeObjects` \u2014 so the press would do nothing at all. Press outside the freeze.",
+ "forcedRung": []
+}

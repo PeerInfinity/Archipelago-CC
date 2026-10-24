@@ -7,15 +7,15 @@ rule replacements without requiring manual configuration.
 Supported patterns:
 1. Simple attribute access:
    def _game_setting(self, player): return self.multiworld.worlds[player].setting_name
-   -> {'type': 'setting_value', 'setting': 'setting_name'}
+   -> {'type': 'world_attribute', 'attribute': 'setting_name'}
 
 2. Negated attribute access:
    def _game_not_setting(self, player): return not self.multiworld.worlds[player].setting_name
-   -> {'type': 'not', 'operand': {'type': 'setting_value', 'setting': 'setting_name'}}
+   -> {'type': 'not', 'operand': {'type': 'world_attribute', 'attribute': 'setting_name'}}
 
 3. Boolean option value access:
    def _game_option(self, player): return bool(self.multiworld.worlds[player].options.option_name.value)
-   -> {'type': 'setting_value', 'setting': 'option_name'}
+   -> {'type': 'option_value', 'option': 'option_name'}
 
 4. All elements pass check pattern:
    def _game_all_check(self, player):

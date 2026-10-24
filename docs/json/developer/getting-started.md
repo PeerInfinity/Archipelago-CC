@@ -349,6 +349,31 @@ general_options:
 - `extend_sphere_log_to_all_locations: false` (minimal) – Only logs progression-critical spheres for faster testing
 - `extend_sphere_log_to_all_locations: true` (full) – Logs all locations including non-progression items for comprehensive validation
 
+### 5. (Optional) Initialise the Seedling Source Submodule
+
+Some Seedling tests and extractors under `scripts/procgen/` read the game's AS3 source. That source is the `vendor/seedling` submodule (the `PeerInfinity/Seedling` fork, pinned at the commit the bot build was compiled from). A clone made without its submodules leaves the directory empty, and those tools then refuse or skip by name. To fill it:
+
+```bash
+# From the repository root.
+git submodule update --init vendor/seedling
+```
+
+### Working in a git worktree
+
+Concurrent work runs in separate git worktrees. Create one with the script, not with a bare `git worktree add`:
+
+```bash
+# From the primary tree, with its virtual environment active
+source .venv/bin/activate
+scripts/dev/new-worktree.sh <name>        # --dry-run prints the plan; --help lists the steps
+```
+
+A worktree **shares** the primary tree's Python environment: you activate the primary's `.venv` (`source <primary>/.venv/bin/activate`, printed at the end of the script's output) rather than creating or copying one in each worktree.
+
+A worktree gets its **own** copies of the two gitignored files that steps 3 and 4 above create, because the script runs those steps inside it: `Players/Templates/` and a `host.yaml` set to `minimal-spoilers`, which matches the export settings the committed presets were generated with (`.github/workflows/generate-presets.yml`). With them, `Generate.py` and the roundtrip gates that call it run in the worktree. If the script finds no Python that can run `Generate.py` (for example, no virtual environment is active), it still creates the worktree and prints the three commands to run by hand.
+
+A preset regenerated in a worktree therefore matches the committed one. For example, the quick-reference `Generate.py --weights_file_path "Templates/Adventure.yaml" --multi 1 --seed 1` reproduces the committed Adventure rules, sphere log and spoiler byte for byte, and changes only the two binary game files beside them (`.archipelago` and `.apadvn`, which the run rewrites with different bytes); revert those with `git checkout -- frontend/presets` unless you mean to update the preset. Under `full-spoilers` the same command rewrites the sphere log and the spoiler (`extend_sphere_log_to_all_locations` logs every location), which is a difference in settings, not a stale preset.
+
 ## Next Steps
 
 You are now ready to start developing. Refer to the following documents for more detailed information:

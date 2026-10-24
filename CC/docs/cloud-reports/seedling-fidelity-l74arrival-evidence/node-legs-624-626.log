@@ -1,0 +1,19 @@
+=== leg 624 ARM=0
+{"id": 624, "ok": false, "ms": 7062, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) — chaser:lavarunner@208,96 (inside leash 80 (d=9.5), box grown 1.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is t
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 2421}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 4640}]
+=== leg 624 ARM=1
+{"id": 624, "ok": false, "ms": 7020, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) — chaser:lavarunner@208,96 (inside leash 80 (d=9.5), box grown 1.5 px/tick x 0 + pad 0). Slice 2 has NO DODGE POLICY (kickoff §4: combat is slice 3); sensing and refusing loudly is t
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 2420}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 4599}]
+=== leg 625 ARM=0
+{"id": 625, "ok": false, "ms": 101, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately under `Game.freezeObjects` — so the press would do nothing at all. Press outside the freeze.
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 86}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 15}]
+=== leg 625 ARM=1
+{"id": 625, "ok": false, "ms": 188, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | solverBot(wasm-arrival-solve): no corridor for goal reach-exit toward (296,152) in level 74. Obstacle: pickup:darkshield (darkshield@48,32); also on the frontier: fallrock@288,144. Strategy 'collect' failed to apply. Planner said: A* start tile (18,8) in level 74 — for (296,141) — is not walkable: p
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 103}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 84}]
+=== leg 626 ARM=0
+{"id": 626, "ok": false, "ms": 7, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | solverBot: goals[0] must be an object
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 5}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 1}]
+=== leg 626 ARM=1
+{"id": 626, "ok": false, "ms": 7, "ticks": null, "verbs": null, "end": null, "kind": "refusal"} | solverBot: goals[0] must be an object
+passes [{"pass": "dashless", "ok": false, "kind": "refusal", "ticks": null, "ms": 6}, {"pass": "full", "ok": false, "kind": "refusal", "ticks": null, "ms": 1}]
+DONE

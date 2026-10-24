@@ -12,8 +12,7 @@
  *     (panel mounted before a preset is picked, or preset has no
  *     sphere log).
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackBotUI } from './playbackBotUI.js';
@@ -25,6 +24,14 @@ import { PathFinder } from '../shared/pathfinder.js';
 // constructor runs before the module's initialize() has wired up
 // PlaybackBotPanel.moduleApis. Mirrors the workaround in mazeRoomUI.
 import eventBus from '../../app/core/eventBus.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { blockKeyOf, resolveQueueBlocks } from '../loops/blockIdentity.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { mountChecksLine } from '../commonUI/checksLine.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -41,6 +48,16 @@ export class PlaybackBotPanel {
         // getRulesJson injection to look up per-region substrate from
         // preset_sidecars.
         this._cachedRulesJson = null;
+        // The loaded slot's player id (rules.json's per-player blocks, e.g. `exporter[p].return_to_menu`).
+        this._cachedPlayerId = null;
+        // ⛓ MINI VIEW (modules/miniPanels) — the panel shrunk to one row: the bot's five buttons, its status
+        // line, the checks line when Checks rides here, and ⤢ to expand. The rest stays built but hidden, so
+        // expanding is instant and the run is untouched.
+        this._mini = false;
+        this._miniExtras = null;
+        this._miniChecks = null;
+        this._miniChecksLine = null;
+        this._onExpand = null;
 
         if (typeof document === 'undefined') {
             this.rootElement = null;
@@ -88,6 +105,7 @@ export class PlaybackBotPanel {
 
         this._mountBot();
         this._render();
+        this._placeMiniExtras();
 
         // Re-render on sphere-log load events so the empty-state
         // placeholder swaps for the bot UI when the user picks a
@@ -125,6 +143,7 @@ export class PlaybackBotPanel {
             // the parsed payload around — getRawJsonDataSource()
             // returns just the source filename.
             this._cachedRulesJson = data?.rawJsonData ?? null;
+            this._cachedPlayerId = data?.selectedPlayerInfo?.playerId ?? null;
             this._bot?.reset?.();
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', onRawJsonLoaded, 'playbackBot');
@@ -139,7 +158,9 @@ export class PlaybackBotPanel {
         // substrate lookups silently come up empty. No reset() here:
         // the bot is freshly constructed, there's no stale state.
         if (!this._cachedRulesJson) {
-            this._cachedRulesJson = getLastRawJsonData()?.rawJsonData ?? null;
+            const last = getLastRawJsonData();
+            this._cachedRulesJson = last?.rawJsonData ?? null;
+            this._cachedPlayerId = last?.selectedPlayerInfo?.playerId ?? null;
         }
     }
 
@@ -162,10 +183,68 @@ export class PlaybackBotPanel {
 
     getBot() { return this._bot; }
 
+    isMiniMode() { return this._mini; }
+
+    /** The mini row sizes itself to this element's natural height. */
+    getMiniContentElement() { return this.rootElement; }
+
+    /** Show the mini view (or the full one). `onExpand` is what the mini view's ⤢ button calls. */
+    setMiniMode(on, { onExpand = null } = {}) {
+        if (!this.rootElement) return;
+        this._mini = !!on;
+        if (onExpand) this._onExpand = onExpand;
+        this.rootElement.classList.toggle('pb-mini', this._mini);
+        if (this._mini) this._ensureMiniExtras();
+        this._placeMiniExtras();
+    }
+
+    /** Show the checks line inside the mini row (Checks on while the bot is mini). */
+    setMiniChecks(on) {
+        if (!this.rootElement) return;
+        this._ensureMiniExtras();
+        if (on && !this._miniChecksLine) {
+            this._miniChecksLine = mountChecksLine(this._miniChecks, {
+                bus: eventBus, stateManager, moduleName: 'playbackBot',
+            });
+        } else if (!on && this._miniChecksLine) {
+            this._miniChecksLine.dispose();
+            this._miniChecksLine = null;
+            this._miniChecks.textContent = '';
+        }
+        this._miniChecks.hidden = !on;
+    }
+
+    _ensureMiniExtras() {
+        if (this._miniExtras) return;
+        const extras = document.createElement('div');
+        extras.className = 'pb-mini-extras';
+        const checks = document.createElement('span');
+        checks.className = 'pb-mini-checks';
+        checks.hidden = true;
+        const expand = document.createElement('button');
+        expand.type = 'button';
+        expand.className = 'pb-mini-expand';
+        expand.textContent = '⤢';
+        expand.title = 'Expand: back to the full Playback Bot panel';
+        expand.addEventListener('click', () => this._onExpand?.());
+        extras.append(checks, expand);
+        this._miniExtras = extras;
+        this._miniChecks = checks;
+    }
+
+    /** The extras ride last in the root (after the bot and any placeholder); re-placed after each render. */
+    _placeMiniExtras() {
+        if (this._miniExtras && this.rootElement && this.rootElement.lastChild !== this._miniExtras) {
+            this.rootElement.appendChild(this._miniExtras);
+        }
+    }
+
     onPanelShow() {}
     onPanelResize() {}
 
     destroy() {
+        this._miniChecksLine?.dispose();
+        this._miniChecksLine = null;
         for (const off of this._sphereDataSubscriptions) {
             try { off(); } catch (_e) { /* noop */ }
         }
@@ -193,7 +272,105 @@ export class PlaybackBotPanel {
             // stale snapshot and rejects routes through regions that
             // were just unlocked by the previous sphere's item.
             stateManagerProxy: stateManager,
+            getPlayerId: () => this._cachedPlayerId ?? '1',
+            // ⛓ RETURN TO MENU — a RESTART step takes the Menu panel's own Restart (the button's path).
+            restart: () => centralRegistry.getPublicFunction?.('menuPanel', 'restart')?.() ?? null,
+            // ⛓ DIRECT PLAY — the bot's own checks and moves for plain regions, published like a click.
+            publish: (eventName, payload) => PlaybackBotPanel.moduleApis?.dispatcher
+                ?.publish?.(eventName, payload, { initialTarget: 'bottom' }),
+            getCurrentRegion: () => centralRegistry.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+            isLoopModeActive: () => !!centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.(),
+            loopRunnerDeps: this._loopRunnerDeps(),
+            timer: this._timerDeps(),
         });
+    }
+
+    /**
+     * ⛓ TARGET SOURCE 'reachable' — the timer module's TimerLogic, as the bot drives it (Play = Begin, Step = Quick
+     * Check). Null when the timer module is not loaded: the bot then offers the sphere log only.
+     */
+    _timerDeps() {
+        const getLogic = centralRegistry.getPublicFunction?.('timer', 'getTimerLogic');
+        if (typeof getLogic !== 'function') return null;
+        const logic = () => getLogic() ?? null;
+        return {
+            begin: () => logic()?.begin(),
+            stop: () => logic()?.stop(),
+            quickCheck: async () => !!(await logic()?.determineAndDispatchQuickCheck()),
+            isRunning: () => !!logic()?.isRunning(),
+            onRunningChanged: (fn) => {
+                const onStarted = () => fn(true);
+                const onStopped = () => fn(false);
+                eventBus.subscribe('timer:started', onStarted, 'playbackBot');
+                eventBus.subscribe('timer:stopped', onStopped, 'playbackBot');
+                return () => {
+                    eventBus.unsubscribe?.('timer:started', onStarted, 'playbackBot');
+                    eventBus.unsubscribe?.('timer:stopped', onStopped, 'playbackBot');
+                };
+            },
+        };
+    }
+
+    /**
+     * ⛓ LOOP MODE (loop-mode-bot S3) — what the bot's LoopModeRunner reads from the live game: the Loops module,
+     * gameState, discovery, and the rules evaluated against the latest snapshot. Generic over any rules.json.
+     */
+    _loopRunnerDeps() {
+        const api = (mod, fn) => centralRegistry.getPublicFunction?.(mod, fn) ?? null;
+        let discoveryActive = false;
+        settingsManager.getSetting?.('moduleSettings.discovery.enableDiscoveryMode', false)
+            ?.then?.((v) => { discoveryActive = !!v; })?.catch?.(() => {});
+        const onDiscoveryMode = (data) => {
+            if (typeof data?.active === 'boolean') discoveryActive = data.active;
+        };
+        eventBus.subscribe('discovery:modeChanged', onDiscoveryMode, 'playbackBot');
+        this._sphereDataSubscriptions.push(() => eventBus.unsubscribe?.('discovery:modeChanged', onDiscoveryMode, 'playbackBot'));
+        const regionOf = (name) => stateManager?.getStaticData?.()?.regions?.get?.(name) ?? null;
+        const ruleHolds = (rule) => {
+            if (rule === undefined || rule === null) return true;
+            const staticData = stateManager?.getStaticData?.();
+            const snapshot = stateManager?.getLatestStateSnapshot?.();
+            if (!staticData || !snapshot) return false;
+            try { return evaluateRule(rule, createSnapshotInterface(snapshot, staticData)) === true; } catch { return false; }
+        };
+        return {
+            getLoopState: () => api('loops', 'getLoopState')?.() ?? null,
+            getGameState: () => api('gameState', 'getState')?.() ?? null,
+            getStartRegion: () => api('loops', 'getLoopStartRegion')?.() ?? null,
+            exitsOf: (region) => (regionOf(region)?.exits ?? [])
+                .filter((e) => e?.name && e.connected_region && ruleHolds(e.access_rule))
+                .map((e) => ({ name: e.name, to: e.connected_region })),
+            locationsOf: (region) => (regionOf(region)?.locations ?? []).map((l) => l?.name).filter(Boolean),
+            isLocationCheckable: (name) => {
+                const snapshot = stateManager?.getLatestStateSnapshot?.();
+                return !!snapshot && !(snapshot.checkedLocations ?? []).includes(name)
+                    && snapshot.locationReachability?.[name] === 'reachable';
+            },
+            discovery: discoveryStateSingleton,
+            isDiscoveryActive: () => discoveryActive,
+            isSubstrateRegion: (region) => {
+                const pid = String(this._cachedPlayerId ?? '1');
+                return !!this._cachedRulesJson?.preset_sidecars?.[pid]?.[region];
+            },
+            queueBlocks: () => {
+                const loopState = api('loops', 'getLoopState')?.();
+                return loopState ? resolveQueueBlocks(loopState.getActionQueue()).visits : [];
+            },
+            blockKeyOf,
+            supportsQueueAction: (region, actionType) => {
+                const substrate = api('procgenPlayer', 'getRegionInfo')?.(region)?.substrate;
+                if (!substrate) return true;    // AP-native: everything (loopBlockBuilder's rule)
+                return substrateRegistry.get(substrate)?.loopSupport?.queueActions?.includes(actionType) ?? false;
+            },
+            regionOfLocation: (name) => {
+                const loc = stateManager?.getStaticData?.()?.locations?.get?.(name);
+                return loc?.parent_region ?? loc?.region ?? null;
+            },
+            subscribe: (eventName, handler) => {
+                eventBus.subscribe(eventName, handler, 'playbackBot');
+                return () => eventBus.unsubscribe?.(eventName, handler, 'playbackBot');
+            },
+        };
     }
 
     _render() {
@@ -211,6 +388,9 @@ export class PlaybackBotPanel {
 
     _renderEmptyOverlay() {
         const hasLog = this._hasSphereLog();
+        // Without a sphere log the bot can still check any reachable location (its timer source): keep it
+        // visible then, with the placeholder as a note above it.
+        const usable = hasLog || !!this._bot?.hasTimer?.();
         const botEl = this._bot?.getElement();
 
         // Detach previous placeholder if any.
@@ -227,7 +407,7 @@ export class PlaybackBotPanel {
             if (botEl.parentNode !== this.rootElement) {
                 this.rootElement.appendChild(botEl);
             }
-            botEl.style.display = hasLog ? '' : 'none';
+            botEl.style.display = usable ? '' : 'none';
         }
 
         if (!hasLog) {
@@ -236,11 +416,14 @@ export class PlaybackBotPanel {
             placeholder.innerHTML = `
                 <div class="playback-bot-empty-state-heading">No sphere log loaded.</div>
                 <div class="playback-bot-empty-state-body">
-                    Open the Presets panel and pick a preset with a sphere log to begin.
+                    Generate a world in the Procgen Pipeline and press Load into frontend, or pick a preset with a sphere log in the Presets panel, to begin.
+                    ${usable ? 'Without one, set <b>Check next</b> to <b>Any reachable location</b>: it needs no sphere log.' : ''}
                 </div>
             `;
-            this.rootElement.appendChild(placeholder);
+            if (usable && botEl) this.rootElement.insertBefore(placeholder, botEl);
+            else this.rootElement.appendChild(placeholder);
             this._emptyEl = placeholder;
         }
+        this._placeMiniExtras();
     }
 }

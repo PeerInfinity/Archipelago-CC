@@ -1,0 +1,36 @@
+chain [2,8,14] force 2
+walk axis: steady speed 1.1770 px/t, one window's best gain 47.600 px (start 59) = 40.44 t
+walk diag: steady speed 1.6978 px/t, one window's best gain 51.597 px (start 57) = 30.39 t
+stair axis: steady speed 0.5770 px/t, one window's best gain 55.600 px (start 23) = 96.36 t
+water axis: steady speed 0.4500 px/t, one window's best gain 15.000 px (start 20) = 33.33 t
+ice axis: steady 1.4425 px/t, gain 816.000 px = 565.68 t
+ice diag: steady 2.0797 px/t, gain 852.525 px = 409.92 t
+stair diag: steady 0.8512 px/t, gain 45.570 px = 53.54 t
+walk diag per-axis 1.2005
+
+ms 0.8 axis: per-axis steady 1.1743, lead 1.051, window gain 48.800
+ms 0.8 diag: per-axis steady 1.2002, lead 1.268, window gain 37.876
+ms 0.45 axis: per-axis steady 0.6995, lead 0.496, window gain 44.100
+ms 0.45 diag: per-axis steady 0.6704, lead 0.516, window gain 33.103
+ms 0.4 axis: per-axis steady 0.5757, lead 0.199, window gain 56.400
+ms 0.4 diag: per-axis steady 0.6002, lead 0.419, window gain 32.742
+ms 0.225 axis: per-axis steady 0.2250, lead 0.000, window gain 39.000
+ms 0.225 diag: per-axis steady 0.2250, lead 0.000, window gain 27.577
+{
+  V: 1.2002087974950562,
+  G: 56.400000000001,
+  lead: 1.2676978046026974,
+  cutPx: 293.7084133161396
+}
+
+== ctest (stride / reach over horizons)
+300 stride 1.195884 C 49.623 {"ms":0.8,"d":1,"v0":0.9999999999999999,"ch":3,"s":1,"t":41} 0.8/1/1.17433/1.17579 0.8/2/1.19588/1.20100 0.4/1/0.57433/0.57500 0.4/2/0.59855/0.60077
+600 stride 1.198046 C 49.532 {"ms":0.8,"d":1,"v0":0.9999999999999999,"ch":3,"s":1,"t":41} 0.8/1/1.17433/1.17541 0.8/2/1.19805/1.19992 0.4/1/0.57500/0.57500 0.4/2/0.59938/0.60029
+1200 stride 1.199038 C 49.490 {"ms":0.8,"d":1,"v0":0.9999999999999999,"ch":3,"s":1,"t":41} 0.8/1/1.17500/1.17521 0.8/2/1.19904/1.20009 0.4/1/0.57500/0.57500 0.4/2/0.60004/0.60040
+2400 stride 1.200021 C 49.449 {"ms":0.8,"d":1,"v0":0.9999999999999999,"ch":3,"s":1,"t":28} 0.8/1/1.17500/1.17510 0.8/2/1.20002/1.20028 0.4/1/0.57500/0.57500 0.4/2/0.60002/0.60026
+
+== gtest2 (one window gain vs the same walk, by horizon)
+horizon 2 periods: G 48.800 {"ms":0.8,"d":1,"pre":[2,8,14],"s":107,"t":27}
+horizon 3 periods: G 48.800 {"ms":0.8,"d":1,"pre":[2,8,14],"s":107,"t":27}
+horizon 5 periods: G 48.800 {"ms":0.8,"d":1,"pre":[2,8,14],"s":107,"t":27}
+horizon 8 periods: G 48.800 {"ms":0.8,"d":1,"pre":[2,8,14],"s":107,"t":27}

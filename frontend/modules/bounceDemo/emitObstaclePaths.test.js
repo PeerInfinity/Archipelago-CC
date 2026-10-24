@@ -11,7 +11,7 @@ import { createRng } from '../shared/rng.js';
 import { EXPERIMENTAL_GEOMETRY } from './generator.js';
 
 // Phase 3 of the obstacles-along-paths refactor
-// (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md):
+// (the obstacles-along-paths refactor plan):
 // bounce reasons in obstacles end-to-end. emitObstaclePaths turns a goal's
 // derived minimal ability sets + authored terms into the shared
 // paths-and-obstacles vocabulary; the FAITHFULNESS invariant is that those

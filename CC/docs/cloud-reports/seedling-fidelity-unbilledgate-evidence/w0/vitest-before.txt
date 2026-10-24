@@ -1,0 +1,2 @@
+bounded vitest BEFORE at 926cc2a86f: 136 files, 4136 tests; sorted 'status<TAB>file > fullName' md5 (boxLock row re-run solo: its first red was this session's scratch probe copy in scripts/procgen, removed):
+42e3201868069d35e754a69dfa68f3fc

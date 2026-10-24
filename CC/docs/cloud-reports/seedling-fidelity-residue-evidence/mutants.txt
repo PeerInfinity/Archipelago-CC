@@ -1,0 +1,86 @@
+== a1
+     ✓ ships OFF, behind `drillTimedPass` (ON) 2ms
+     × ON: from the L25 arrival to the L26 door — SOLVED 182 t, 0 hits, the exit a certified pass of 111 t 6650ms
+     × ON: from the L25 arrival to the L25 door — SOLVED 134 t, 0 hits, the exit a certified pass of 63 t 828ms
+     ✓ ON: from the L26 arrival to the L26 door — REFUSED at the cut by name: the one stand that holds leaves no way out  15631ms
+     ✓ ON: from the L26 arrival to the L25 door — REFUSED at the cut by name: the one stand that holds leaves no way out  16705ms
+     ✓ OFF (byte-identical): the exit after the cut refuses at its first gate — the residue TIMEDPASS named  354ms
+     ✓ ON: a cut with no exit after it plans what OFF plans (no way out is asked) — L25, 70 t  680ms
+     ✓ ON: a Sword run is untouched — the exit walk after the kill and the cut is OFF's, tick for tick  587ms
+     ✓ residue-l28-fire-l25-exit-l26: recorded on the default build, hit-free, and across the door 6ms
+     ✓ residue-l28-fire-l25-exit-l25: recorded on the default build, hit-free, and across the door 1ms
+     ✓ residue-l28-fire-l25-exit-l26: the model (both keys ON) reproduces the game on every sampled tick 87ms
+     ✓ residue-l28-fire-l25-exit-l25: the model (both keys ON) reproduces the game on every sampled tick 67ms
+     × residue-l28-fire-l25-exit-l26: the solver still plans the recorded tape 6531ms
+     × residue-l28-fire-l25-exit-l25: the solver still plans the recorded tape 742ms
+     ✓ every exit witness file exists 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 11 passed | 9 skipped (24)
+== a2
+     ✓ ships OFF, behind `drillTimedPass` (ON) 2ms
+     × ON: from the L25 arrival to the L26 door — SOLVED 182 t, 0 hits, the exit a certified pass of 111 t 815ms
+     × ON: from the L25 arrival to the L25 door — SOLVED 134 t, 0 hits, the exit a certified pass of 63 t 547ms
+     × ON: from the L26 arrival to the L26 door — REFUSED at the cut by name: the one stand that holds leaves no way out 15144ms
+     × ON: from the L26 arrival to the L25 door — REFUSED at the cut by name: the one stand that holds leaves no way out 14952ms
+     ✓ OFF (byte-identical): the exit after the cut refuses at its first gate — the residue TIMEDPASS named  431ms
+     ✓ ON: a cut with no exit after it plans what OFF plans (no way out is asked) — L25, 70 t  920ms
+     ✓ ON: a Sword run is untouched — the exit walk after the kill and the cut is OFF's, tick for tick  627ms
+     ✓ residue-l28-fire-l25-exit-l26: recorded on the default build, hit-free, and across the door 2ms
+     ✓ residue-l28-fire-l25-exit-l25: recorded on the default build, hit-free, and across the door 1ms
+     ✓ residue-l28-fire-l25-exit-l26: the model (both keys ON) reproduces the game on every sampled tick 93ms
+     ✓ residue-l28-fire-l25-exit-l25: the model (both keys ON) reproduces the game on every sampled tick 55ms
+     × residue-l28-fire-l25-exit-l26: the solver still plans the recorded tape 997ms
+     × residue-l28-fire-l25-exit-l25: the solver still plans the recorded tape 406ms
+     ✓ every exit witness file exists 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  6 failed | 9 passed | 9 skipped (24)
+== a3
+ ✓ frontend/modules/seedlingDemo/fidelityResidue.test.js (24 tests | 9 skipped) 60732ms
+     ✓ ON: from the L25 arrival to the L26 door — SOLVED 182 t, 0 hits, the exit a certified pass of 111 t  12332ms
+     ✓ ON: from the L25 arrival to the L25 door — SOLVED 134 t, 0 hits, the exit a certified pass of 63 t  1053ms
+     ✓ ON: from the L26 arrival to the L26 door — REFUSED at the cut by name: the one stand that holds leaves no way out  16828ms
+     ✓ ON: from the L26 arrival to the L25 door — REFUSED at the cut by name: the one stand that holds leaves no way out  16185ms
+     ✓ OFF (byte-identical): the exit after the cut refuses at its first gate — the residue TIMEDPASS named  391ms
+     ✓ ON: a cut with no exit after it plans what OFF plans (no way out is asked) — L25, 70 t  950ms
+     ✓ ON: a Sword run is untouched — the exit walk after the kill and the cut is OFF's, tick for tick  614ms
+     ✓ residue-l28-fire-l25-exit-l26: the solver still plans the recorded tape  11315ms
+     ✓ residue-l28-fire-l25-exit-l25: the solver still plans the recorded tape  919ms
+      Tests  15 passed | 9 skipped (24)
+== b1
+     ✓ ships OFF 18ms
+     ✓ the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60  939ms
+     ✓ WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing  565ms
+     ✓ OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal  1652ms
+     ✓ ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58  1862ms
+     ✓ at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick  4708ms
+     ✓ is recorded on the default build; the game holds the player still for the drown and kills it at t2202 2ms
+     × ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row 179ms
+     ✓ OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named 144ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 8 passed | 15 skipped (24)
+== b2
+     ✓ ships OFF 2ms
+     ✓ the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60  985ms
+     × WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing 593ms
+     ✓ OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal  1798ms
+     × ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58 1960ms
+     ✓ at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick  4156ms
+     ✓ is recorded on the default build; the game holds the player still for the drown and kills it at t2202 1ms
+     ✓ ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row 207ms
+     ✓ OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named 230ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 7 passed | 15 skipped (24)
+== b3
+     ✓ ships OFF 2ms
+     ✓ the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60  927ms
+     ✓ WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing  664ms
+     ✓ OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal  1811ms
+     × ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58 1831ms
+     ✓ at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick  4255ms
+     ✓ is recorded on the default build; the game holds the player still for the drown and kills it at t2202 1ms
+     ✓ ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row 182ms
+     ✓ OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named 264ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 8 passed | 15 skipped (24)
+== b2 (the seed-15 solve's refusal, node)
+REFUSED solverBot(seed) reach-exit (96,64)->L58: the player DROWNED in whirlpool#78 at run tick 2207 in level 57 — ... a walk that died is refused, not re-planned from the respawn {kind: whirlpool, id: whirlpool#78}

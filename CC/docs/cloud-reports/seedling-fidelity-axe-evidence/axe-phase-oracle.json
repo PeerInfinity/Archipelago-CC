@@ -1,0 +1,1636 @@
+{
+  "source": "probe-seedling-axe-phase.mjs --record (seedling fidelity AXE D1)",
+  "build": "seedling_bot_ap_p4f",
+  "hypothesis": "H0: obs T is tested by update T + 1 − V",
+  "arms": [
+    {
+      "arm": "axe-phase-l61-a-south",
+      "axe": {
+        "id": "spinningaxe@64,144",
+        "cx": 72,
+        "cy": 152,
+        "rate": 5
+      },
+      "boot": {
+        "level": 61,
+        "x": 64,
+        "y": 164
+      },
+      "V": 0,
+      "stood": {
+        "x": 72,
+        "y": 172
+      },
+      "gameFirstMove": 53,
+      "gameRowThen": {
+        "level": 61,
+        "y": 172,
+        "x": 76.57962913144534,
+        "t": 53
+      },
+      "hits": 1,
+      "predictions": {
+        "0": {
+          "f": 53,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "1": {
+          "f": 52,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "2": {
+          "f": 51,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "3": {
+          "f": 50,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "-3": {
+          "f": 56,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "-2": {
+          "f": 55,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        },
+        "-1": {
+          "f": 54,
+          "u": 53,
+          "arm": "blade",
+          "deg": 265
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 160
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 151182986
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 80,
+          "x": 34
+        },
+        "game_time": 8769,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 1,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 172,
+        "x": 116.26295349746154,
+        "level": 61,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 20,
+        "buffered": 0,
+        "tick_count": 160,
+        "tick": 160,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    },
+    {
+      "arm": "axe-phase-l61-a-north",
+      "axe": {
+        "id": "spinningaxe@64,144",
+        "cx": 72,
+        "cy": 152,
+        "rate": 5
+      },
+      "boot": {
+        "level": 61,
+        "x": 64,
+        "y": 124
+      },
+      "V": 0,
+      "stood": {
+        "x": 72,
+        "y": 132
+      },
+      "gameFirstMove": 17,
+      "gameRowThen": {
+        "level": 61,
+        "y": 132,
+        "x": 67.42037086855466,
+        "t": 17
+      },
+      "hits": 1,
+      "predictions": {
+        "0": {
+          "f": 17,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "1": {
+          "f": 16,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "2": {
+          "f": 15,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "3": {
+          "f": 14,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "-3": {
+          "f": 20,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "-2": {
+          "f": 19,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        },
+        "-1": {
+          "f": 18,
+          "u": 17,
+          "arm": "blade",
+          "deg": 85
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 160
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 1432048133
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 56,
+          "x": 0
+        },
+        "game_time": 8774,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 1,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 132,
+        "x": 27.73704650253847,
+        "level": 61,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 20,
+        "buffered": 0,
+        "tick_count": 160,
+        "tick": 160,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    },
+    {
+      "arm": "axe-phase-l61-b-south",
+      "axe": {
+        "id": "spinningaxe@160,80",
+        "cx": 168,
+        "cy": 88,
+        "rate": 7
+      },
+      "boot": {
+        "level": 61,
+        "x": 160,
+        "y": 100
+      },
+      "V": 0,
+      "stood": {
+        "x": 168,
+        "y": 108
+      },
+      "gameFirstMove": 38,
+      "gameRowThen": {
+        "level": 61,
+        "y": 108,
+        "x": 172.50528258147577,
+        "t": 38
+      },
+      "hits": 1,
+      "predictions": {
+        "0": {
+          "f": 38,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "1": {
+          "f": 37,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "2": {
+          "f": 36,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "3": {
+          "f": 35,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "-3": {
+          "f": 41,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "-2": {
+          "f": 40,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        },
+        "-1": {
+          "f": 39,
+          "u": 38,
+          "arm": "blade",
+          "deg": 266
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 160
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 2061144109
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 30,
+          "x": 80
+        },
+        "game_time": 8773,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 1,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 108,
+        "x": 210.84508646656383,
+        "level": 61,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 20,
+        "buffered": 0,
+        "tick_count": 160,
+        "tick": 160,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    },
+    {
+      "arm": "axe-phase-l61-door",
+      "axe": {
+        "id": "spinningaxe@64,144",
+        "cx": 72,
+        "cy": 152,
+        "rate": 5
+      },
+      "boot": {
+        "level": 60,
+        "x": 140,
+        "y": 80
+      },
+      "V": 10,
+      "stood": {
+        "x": 63.29999999999998,
+        "y": 168
+      },
+      "gameFirstMove": 57,
+      "gameRowThen": {
+        "level": 61,
+        "y": 171.3587572106361,
+        "x": 66.65875721063608,
+        "t": 57
+      },
+      "hits": 0,
+      "predictions": {
+        "0": {
+          "f": 57,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "1": {
+          "f": 56,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "2": {
+          "f": 55,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "3": {
+          "f": 54,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "-3": {
+          "f": 60,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "-2": {
+          "f": 59,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        },
+        "-1": {
+          "f": 58,
+          "u": 47,
+          "arm": "blade",
+          "deg": 235
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 1,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 1,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 200
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 478066157
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 80,
+          "x": 0
+        },
+        "game_time": 8851,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 0,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 168,
+        "x": 24,
+        "level": 61,
+        "saw_input_refused": true,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 60,
+        "buffered": 0,
+        "tick_count": 200,
+        "tick": 200,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    },
+    {
+      "arm": "axe-phase-l61-door-east",
+      "axe": {
+        "id": "spinningaxe@160,80",
+        "cx": 168,
+        "cy": 88,
+        "rate": 7
+      },
+      "boot": {
+        "level": 63,
+        "x": 20,
+        "y": 96
+      },
+      "V": 10,
+      "stood": {
+        "x": 183.46736795434794,
+        "y": 109.76476440200267
+      },
+      "gameFirstMove": 53,
+      "gameRowThen": {
+        "level": 61,
+        "y": 109.76476440200267,
+        "x": 187.99889173416312,
+        "t": 53
+      },
+      "hits": 0,
+      "predictions": {
+        "0": {
+          "f": 53,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "1": {
+          "f": 52,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "2": {
+          "f": 51,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "3": {
+          "f": 50,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "-3": {
+          "f": 56,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "-2": {
+          "f": 55,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        },
+        "-1": {
+          "f": 54,
+          "u": 43,
+          "arm": "blade",
+          "deg": 301
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 1,
+            "down": 1,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 1,
+            "down": 1,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 199
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 66030152
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 25,
+          "x": 80
+        },
+        "game_time": 8848,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 0,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 104,
+        "x": 216,
+        "level": 61,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 60,
+        "buffered": 0,
+        "tick_count": 199,
+        "tick": 199,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    },
+    {
+      "arm": "axe-phase-l101-west",
+      "axe": {
+        "id": "spinningaxe@80,224",
+        "cx": 88,
+        "cy": 232,
+        "rate": -5
+      },
+      "boot": {
+        "level": 101,
+        "x": 60,
+        "y": 224
+      },
+      "V": 0,
+      "stood": {
+        "x": 68,
+        "y": 232
+      },
+      "gameFirstMove": 34,
+      "gameRowThen": {
+        "level": 101,
+        "y": 227.55153689607044,
+        "x": 68,
+        "t": 34
+      },
+      "hits": 0,
+      "predictions": {
+        "0": {
+          "f": 34,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "1": {
+          "f": 33,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "2": {
+          "f": 32,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "3": {
+          "f": 31,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "-3": {
+          "f": 37,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "-2": {
+          "f": 36,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        },
+        "-1": {
+          "f": 35,
+          "u": 34,
+          "arm": "blade",
+          "deg": -170
+        }
+      },
+      "matches": [
+        0
+      ],
+      "status": {
+        "input": {
+          "release_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "press_totals": {
+            "right": 0,
+            "up": 0,
+            "left": 0,
+            "down": 0,
+            "primary": 0,
+            "secondary": 0,
+            "inventory": 0,
+            "inventory2": 0
+          },
+          "held": [],
+          "released": [],
+          "pressed": [],
+          "t": 160
+        },
+        "seam": {
+          "why": "",
+          "partial": false,
+          "latched": true
+        },
+        "slash": {
+          "hits": 0,
+          "tests": 0
+        },
+        "menu_state": 0,
+        "rng": {
+          "hooks": true,
+          "split": false,
+          "seed": 418414780,
+          "cosmetic_state": 605713666,
+          "state": 1710005547
+        },
+        "save": {
+          "has_all_seal_parts": false,
+          "has_all_totem_parts": false,
+          "seal_parts": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "keys": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          "totem_parts": [
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        "pins": {
+          "dead_frames": true,
+          "sound": true
+        },
+        "sound_pin": {
+          "channels": [
+            {
+              "playing": false,
+              "frames": 0,
+              "len_frames": 0
+            }
+          ],
+          "set": "Swim"
+        },
+        "camera": {
+          "shake": 0,
+          "y": 153,
+          "x": 0
+        },
+        "game_time": 8790,
+        "frozen_timer": 0,
+        "hits_timer": 0,
+        "hits": 0,
+        "drown_timer": 0,
+        "equips": [],
+        "inventory_slots": [
+          0
+        ],
+        "secondary": 0,
+        "primary": 0,
+        "saw_auto_advance": 0,
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "persistence": [
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 5
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 1,
+            "level": 8
+          },
+          {
+            "cleared": true,
+            "tag": 0,
+            "level": 10
+          }
+        ],
+        "grants": [],
+        "menu": false,
+        "cutscene": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": false,
+          "hasDarkSuit": false,
+          "hasSpear": false,
+          "hasFeather": false,
+          "canSwim": false,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": false,
+          "hasDarkShield": false,
+          "hasShield": false,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "y": 232,
+        "x": 68,
+        "level": 101,
+        "saw_input_refused": false,
+        "receive_input": true,
+        "noclip": false,
+        "dead_frames": 40,
+        "buffered": 0,
+        "tick_count": 160,
+        "tick": 160,
+        "error": "",
+        "frozen": false,
+        "held": false,
+        "finished": true,
+        "arm": {
+          "armed_at": 8587,
+          "pending": false
+        },
+        "armed": false,
+        "loaded": true
+      },
+      "error": ""
+    }
+  ],
+  "agreeingOffsets": [
+    0
+  ]
+}

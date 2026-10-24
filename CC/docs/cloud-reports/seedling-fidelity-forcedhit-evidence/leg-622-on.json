@@ -1,0 +1,175 @@
+{
+ "id": 622,
+ "ok": true,
+ "ms": 2093,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": true,
+   "kind": null,
+   "ticks": 4,
+   "ms": 1127
+  },
+  {
+   "pass": "full",
+   "ok": true,
+   "kind": null,
+   "ticks": 4,
+   "ms": 965
+  }
+ ],
+ "keys": [
+  "ok",
+  "plan",
+  "pass",
+  "contactFidelity",
+  "passes"
+ ],
+ "solution": [
+  [
+   "up"
+  ],
+  [
+   "up"
+  ],
+  [
+   "down",
+   "right"
+  ],
+  [
+   "down",
+   "right"
+  ]
+ ],
+ "planKeys": [
+  "solution",
+  "expected",
+  "equipsAt",
+  "equipItems",
+  "verbs",
+  "replayMs",
+  "solveMs",
+  "prefixLength",
+  "dashMode",
+  "deadline",
+  "pass",
+  "contactFidelity",
+  "passes"
+ ],
+ "forced": [],
+ "forcedHits": null,
+ "ticks": 4,
+ "verbs": [
+  "forced-hit"
+ ],
+ "end": {
+  "level": 74,
+  "x": 296,
+  "y": 136,
+  "deaths": 0
+ },
+ "forcedRung": [
+  {
+   "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+   "at": {
+    "level": 73,
+    "x": 72,
+    "y": 24,
+    "tick": 0
+   },
+   "proof": {
+    "proven": true,
+    "depth": 2,
+    "nodes": 1332,
+    "leaves": 1296,
+    "alphabet": 36,
+    "minHits": 1
+   },
+   "outcome": "billed",
+   "candidate": "corridor-unarmed",
+   "billed": [
+    {
+     "t": 2,
+     "level": 73,
+     "source": "chaser",
+     "id": "lavarunner@72,24",
+     "hits": 1
+    }
+   ],
+   "ticks": 4,
+   "keys": [
+    [
+     "up"
+    ],
+    [
+     "up"
+    ],
+    [
+     "down",
+     "right"
+    ],
+    [
+     "down",
+     "right"
+    ]
+   ],
+   "rejected": [],
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   }
+  },
+  {
+   "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+   "at": {
+    "level": 73,
+    "x": 72,
+    "y": 24,
+    "tick": 0
+   },
+   "proof": {
+    "proven": true,
+    "depth": 2,
+    "nodes": 1332,
+    "leaves": 1296,
+    "alphabet": 36,
+    "minHits": 1
+   },
+   "outcome": "billed",
+   "candidate": "corridor-unarmed",
+   "billed": [
+    {
+     "t": 2,
+     "level": 73,
+     "source": "chaser",
+     "id": "lavarunner@72,24",
+     "hits": 1
+    }
+   ],
+   "ticks": 4,
+   "keys": [
+    [
+     "up"
+    ],
+    [
+     "up"
+    ],
+    [
+     "down",
+     "right"
+    ],
+    [
+     "down",
+     "right"
+    ]
+   ],
+   "rejected": [],
+   "damage": {
+    "hits": 0,
+    "hitsTimer": 0,
+    "directionFace": -1
+   }
+  }
+ ]
+}

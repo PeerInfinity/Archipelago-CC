@@ -1,0 +1,9 @@
+# box lock: TAKEN by probe-seedling-dash-window.mjs (browser, pid 13295) — head adf5e854c, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the tape ran to its end on the game
+PASS: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 1695 sampled tick(s) of 1696
+ROW arrows: 0 of 1695 sampled tick(s) differ
+FAIL: the drained stream is the model's, tick for tick — tick 658 differs: expected (x=744.2596783699775, y=742.494712313261, level=40), got (x=743.4521998545429, y=739.991362714723, level=40) [dx=-0.8074785154345818, dy=-2.503349598537966]
+ROW game: hits 0, hits_timer 0, level 40, slash {"hits":40,"tests":20}, cleared [{"tag":1,"level":0},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":3,"level":12},{"tag":1,"level":19},{"tag":0,"level":30},{"tag":2,"level":30},{"tag":0,"level":31},{"tag":8,"level":39}]
+wrote /tmp/claude-0/-home-user-Archipelago-CC/7ab4ddbb-3ffa-5d06-91ee-6935e4e4988c/scratchpad/game-dash.json
+1 CHECK(S) FAILED

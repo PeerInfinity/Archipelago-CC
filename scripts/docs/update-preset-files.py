@@ -7,6 +7,7 @@ game entry so the frontend can display test status.
 
 import argparse
 import json
+import re
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -538,7 +539,15 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
 
 
 def update_placement_flags(preset_files: Dict[str, Any], presets_dir: str) -> int:
-    """Scan rules.json files for is_vanilla/is_canonical and add to folder entries in preset_files.
+    """Copy each slot's is_vanilla/is_canonical/preset_label from rules.json onto its games[i] entry.
+
+    rules F3 (⚖ user 2026-10-10, ruling A): the flags and the button label are
+    per SLOT — `rules.json` holds them as `{"<p>": value}` maps — so they live on
+    the folder's `games[i]` entry for player `p` (as `is_vanilla`,
+    `is_canonical`, `label`), never at folder level. A folder-level copy is
+    moved onto a ONE-slot folder's `games[0]` (a hand-registered label, e.g.
+    `register-preset.py --label`) and dropped from a multi-slot folder (no
+    all/any rule picks a slot). The rules.json maps are the truth for the flags.
 
     Returns the number of folders updated.
     """
@@ -550,31 +559,37 @@ def update_placement_flags(preset_files: Dict[str, Any], presets_dir: str) -> in
         for folder_name, folder_data in folders.items():
             if not isinstance(folder_data, dict):
                 continue
-            # Skip if already has both flags checked
-            if 'is_vanilla' in folder_data or 'is_canonical' in folder_data:
-                continue
-            # Find the rules.json file in this folder
+            games = [g for g in folder_data.get('games', []) if isinstance(g, dict)]
+            before = json.dumps(folder_data)
+            # A folder-level copy (the pre-F3 shape) moves to the one slot, or goes.
+            for key in ('is_vanilla', 'is_canonical', 'label'):
+                if key in folder_data:
+                    value = folder_data.pop(key)
+                    if len(games) == 1 and key not in games[0]:
+                        games[0][key] = value
+            # The combined document (not a `_P<n>` slice) holds every slot's map.
             files = folder_data.get('files', [])
-            rules_file = next((f for f in files if f.endswith('_rules.json')), None)
-            if not rules_file:
-                continue
-            rules_path = os.path.join(presets_dir, game_id, folder_name, rules_file)
-            if not os.path.exists(rules_path):
-                continue
-            try:
-                with open(rules_path, 'r') as f:
-                    rules_data = json.load(f)
-                changed = False
-                if rules_data.get('is_vanilla'):
-                    folder_data['is_vanilla'] = True
-                    changed = True
-                if rules_data.get('is_canonical'):
-                    folder_data['is_canonical'] = True
-                    changed = True
-                if changed:
-                    updated_count += 1
-            except (json.JSONDecodeError, IOError):
-                pass
+            rules_file = next((f for f in files if f.endswith('_rules.json')
+                               and not re.search(r'_P[0-9]+_rules\.json$', f)), None)
+            rules_path = os.path.join(presets_dir, game_id, folder_name, rules_file) if rules_file else None
+            if rules_path and os.path.exists(rules_path):
+                try:
+                    with open(rules_path, 'r') as f:
+                        rules_data = json.load(f)
+                except (json.JSONDecodeError, IOError):
+                    rules_data = {}
+                for entry in games:
+                    slot = str(entry.get('player'))
+                    for flag in ('is_vanilla', 'is_canonical'):
+                        if (rules_data.get(flag) or {}).get(slot):
+                            entry[flag] = True
+                        else:
+                            entry.pop(flag, None)
+                    slot_label = (rules_data.get('preset_label') or {}).get(slot)
+                    if slot_label:
+                        entry['label'] = slot_label
+            if json.dumps(folder_data) != before:
+                updated_count += 1
     return updated_count
 
 

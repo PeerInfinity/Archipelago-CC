@@ -33,9 +33,11 @@ export const moduleInfo = {
   name: 'editor',
   title: 'Editor',
   componentType: 'editorPanel',
+  docs: 'docs/json/user/modules/editor.md',
   icon: '✏️',
   column: 2, // Middle column,
-  description: 'Text Editor panel.',
+  category: 'Data and Configuration Panels',
+  description: 'View or edit the loaded rules, game snapshot, mode data or a JSON panel export as plain text, then Apply.',
   requires: ['editorCore'],
 };
 

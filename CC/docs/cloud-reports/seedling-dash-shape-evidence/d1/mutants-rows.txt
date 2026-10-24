@@ -1,0 +1,12 @@
+K+1 :: seedling DB (i) — DASH_LEG_PRECHECK: a corridor past the bound by more than the margin is not scanned > ON, the 235-tick corridor still scans, exactly as OFF; the 236-tick one refuses by name with nothing scanned
+K+1 :: seedling DB — the three switches ship OFF, and `with…` restores them > the margin is 40 over the agreement bound 195: 235 is the longest undashed leg scanned
+K-1 :: seedling DB (i) — DASH_LEG_PRECHECK: a corridor past the bound by more than the margin is not scanned > ON, the 235-tick corridor still scans, exactly as OFF; the 236-tick one refuses by name with nothing scanned
+K-1 :: seedling DB — the three switches ship OFF, and `with…` restores them > the margin is 40 over the agreement bound 195: 235 is the longest undashed leg scanned
+>= :: seedling DB (i) — DASH_LEG_PRECHECK: a corridor past the bound by more than the margin is not scanned > ON, the 235-tick corridor still scans, exactly as OFF; the 236-tick one refuses by name with nothing scanned
+>= :: seedling DB — the three switches ship OFF, and `with…` restores them > the margin is 40 over the agreement bound 195: 235 is the longest undashed leg scanned
+dashed-walk :: seedling DB (i) — DASH_LEG_PRECHECK: a corridor past the bound by more than the margin is not scanned > ON, the 235-tick corridor still scans, exactly as OFF; the 236-tick one refuses by name with nothing scanned
+noswing-every-mode :: seedling DB (ii) — DASH_NO_SWING_PREFIX: `all` without the swing-only prefix > ON, `all` lacks [0] and keeps every longer prefix, for either weapon; `full` and `none` are unchanged
+keep-other-site :: seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted > ON, a trip at another site keeps nothing and drops nothing: the dash scan runs whole
+keep-uncertified :: seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted > ON, a trip after k accepted windows ships exactly those k; OFF drops them all
+keep-inflight-best :: seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted > ON, a trip after k accepted windows ships exactly those k; OFF drops them all
+keep-zero :: seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted > ON, a trip before any window is accepted still refuses `deadline` (at the entry, and at the first preview)

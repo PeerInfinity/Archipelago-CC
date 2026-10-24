@@ -39,6 +39,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { findUncreditedSphereZeroItems } from '../stateManager/core/sphereZeroCredit.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { profiler } from '../shared/profiler.js';
@@ -215,17 +216,44 @@ export class EventProcessor {
     let comparisonResult = false;
     let allChecksPassed = true; // Assume true until a check fails
     let newlyAddedItems = []; // Declare at function scope to be accessible in return statement
+    // Set when the failure has a more specific cause than "the comparison
+    // didn't match" — currently only a player-slice mismatch, which is
+    // otherwise indistinguishable from a genuine accessibility diff.
+    let failureDetail = null;
 
     switch (eventType) {
       case 'state_update': {
+        // A multiworld sphere log carries one slice per player. If the
+        // player we loaded has no slice, every comparison below degenerates
+        // into empty-vs-populated and surfaces as a bare "comparison failed
+        // for event type 'state_update'". Say what actually went wrong.
+        const havePlayerId = Number.isFinite(this.playerId) && this.playerId > 0;
+        if (havePlayerId && event.player_data && !event.player_data[this.playerIdKey]) {
+          const available = Object.keys(event.player_data);
+          failureDetail =
+            `sphere log has no player_data for player ${this.playerIdKey} — ` +
+            `available players: [${available.join(', ') || 'none'}]. ` +
+            `The loaded rules and the sphere log disagree about which player is being tested.`;
+          this.logCallback('error', `Sphere ${event.sphere_index}: ${failureDetail}`);
+          allChecksPassed = false;
+          break;
+        }
+
         // Get sphere data from sphereState (which handles both verbose and incremental formats)
         const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
 
         if (!sphereData) {
+          const knownPlayers = event.player_data
+            ? Object.keys(event.player_data).join(', ')
+            : 'unknown';
           this.logCallback(
             'warn',
-            `Could not get sphere data from sphereState for index ${this.currentLogIndex}. Skipping comparison.`
+            `Could not get sphere data from sphereState for index ${this.currentLogIndex} ` +
+              `(current player ${this.playerIdKey}; players in this log entry: ${knownPlayers}). Skipping comparison.`
           );
+          failureDetail =
+            `sphereState returned no data for sphere index ${this.currentLogIndex} ` +
+            `(player ${this.playerIdKey}; players in the log: ${knownPlayers})`;
           allChecksPassed = false;
           break;
         }
@@ -333,6 +361,26 @@ export class EventProcessor {
               // Wait for state to stabilize after adding starting items
               await stateManager.pingWorker('sphere_0_starting_items_added', 10000);
               this.logCallback('info', 'Starting items added successfully.');
+            }
+
+            // Credit what sphere 0's log inventory holds beyond the starting items (items the
+            // world computed from them), so later deltas land on the right base.
+            // See sphereZeroCredit.js.
+            const sphere0Interface = createSnapshotInterface(
+              await stateManager.getFullSnapshot(),
+              stateManager.getStaticData()
+            );
+            const uncredited = findUncreditedSphereZeroItems(
+              inventory_from_log,
+              (itemName) => sphere0Interface.countItem(itemName),
+              useResolvedItems ? accumulatorTargets : new Set()
+            );
+            if (Object.keys(uncredited).length > 0) {
+              this.logCallback('info', `Crediting sphere 0 items beyond the starting items: ${JSON.stringify(uncredited)}`);
+              for (const [itemName, count] of Object.entries(uncredited)) {
+                await stateManager.addItemToInventory(itemName, count);
+              }
+              await stateManager.pingWorker('sphere_0_computed_items_added', 10000);
             }
           } else {
             if (this.verboseMode) {
@@ -857,9 +905,11 @@ export class EventProcessor {
     if (!allChecksPassed) {
       this.logCallback(
         'error',
-        `Test failed at step ${
-          this.currentLogIndex + 1
-        }: Comparison failed for event type '${eventType}'.`
+        failureDetail
+          ? `Test failed at step ${this.currentLogIndex + 1}: ${failureDetail}`
+          : `Test failed at step ${
+              this.currentLogIndex + 1
+            }: Comparison failed for event type '${eventType}'.`
       );
     }
 

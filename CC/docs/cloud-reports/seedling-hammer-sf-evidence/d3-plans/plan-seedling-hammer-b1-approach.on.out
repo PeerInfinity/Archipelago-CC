@@ -1,0 +1,9 @@
+PASS: ⛓ the clock is at residue 40, moved by -45 from the committed 40 — seam.time 9940 → 9895
+FAIL: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 476 ticks
+FAIL: ⛓⛓ with it ON the walk is shorter, and every strike it pressed was planned in space-time — 654 ticks; 6 planned strike(s), 5 search(es) found one
+PASS: ⛓ and every press still has an escape out of its own landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":654,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed hammer-b1-l18-approach40 is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-b1-l18-approach40: 654 ticks (OFF 476), residue 40, 6 planned strike(s) at index 29/1/31/15/31/39, 6 escape(s), {18,0}@605
+
+3 CHECK(S) FAILED

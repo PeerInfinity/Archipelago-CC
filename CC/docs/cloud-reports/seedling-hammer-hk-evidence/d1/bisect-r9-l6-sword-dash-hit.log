@@ -1,0 +1,24 @@
+# bad: [5c4b07628a2cdbbce13e1919c9423918c62b73ce] frontier(rules watcher-event): re-pin sources (AP_1 4dd5ccc8 -> 06146e66, sphere-order c268dc4c -> 7591263d)
+# good: [55eea9ac391bb46b41c182de883f70bb8dd199d4] fix(procgen): four planners omit parseTape's default `hold: false` — their --check is byte-identical again
+git bisect start '5c4b07628a' '55eea9ac39'
+# bad: [4c0438f75f57bc46469eab5dd37d70a332bb4689] docs(cloud-report): seedling-fidelity-encounters2 — the live Bob Boss divergence is the panel's clearing write; a pickup's item lands a frame late (switch OFF)
+git bisect bad 4c0438f75f57bc46469eab5dd37d70a332bb4689
+# bad: [654812404771e9ad48abd33b1a2cebb5336b76ce] chore(frontier): re-pin campaign-frontier sources on rules-lock-events (AP_1 rules 0538d10a → ebd8e2a1)
+git bisect bad 654812404771e9ad48abd33b1a2cebb5336b76ce
+# bad: [11831268838fc20178cd10e31ffac990d2c6add1] feat(seedling): PROXIMITY D3 — the live ice turret's contact is billed; `brave` crosses its range
+git bisect bad 11831268838fc20178cd10e31ffac990d2c6add1
+# bad: [f58e3e2ae5e42e1a70b2e85558a38c4d791f1a71] docs(procgen): flash.md § Wasm playback — the tape ships equips; the slot order check; E/F witness rows; reference regenerated
+git bisect bad f58e3e2ae5e42e1a70b2e85558a38c4d791f1a71
+# bad: [2c4f1e0b7ac3b8c307c5ba5d17587c3d7283b430] seedling fidelity DASHFLIP D4: the chain's L18 residue (42 -> 40), the bot log, the reference regenerated
+git bisect bad 2c4f1e0b7ac3b8c307c5ba5d17587c3d7283b430
+# good: [ff7fa3a4aaa1ddb1dd4acaf30d24ac651f399a9d] probe(seedling): probe-seedling-wasm-midroom-replan — M measures botHold mid-tape + the item write; D is the remote-item witness
+git bisect good ff7fa3a4aaa1ddb1dd4acaf30d24ac651f399a9d
+# good: [1af1abb827f4841d9d5fc9d06b454c606aa95c78] seedling fidelity DASH D2: a dash buys four hit tests (gated OFF)
+git bisect good 1af1abb827f4841d9d5fc9d06b454c606aa95c78
+# good: [8c657c2559aa8c13fce7af6cd68df9d360413af6] seedling fidelity DASH: two roster pins the new fixtures owe
+git bisect good 8c657c2559aa8c13fce7af6cd68df9d360413af6
+# bad: [99fd021509cb8c7683ec76c7a8ea362af1066be9] seedling fidelity DASHFLIP D1: the game's dash window ON (DASH_WINDOW_ROSTER_WIDE = true)
+git bisect bad 99fd021509cb8c7683ec76c7a8ea362af1066be9
+# good: [6712043cf083a71b690d730a105e2ddff2ac38df] seedling fidelity DASH: the report
+git bisect good 6712043cf083a71b690d730a105e2ddff2ac38df
+# first bad commit: [99fd021509cb8c7683ec76c7a8ea362af1066be9] seedling fidelity DASHFLIP D1: the game's dash window ON (DASH_WINDOW_ROSTER_WIDE = true)

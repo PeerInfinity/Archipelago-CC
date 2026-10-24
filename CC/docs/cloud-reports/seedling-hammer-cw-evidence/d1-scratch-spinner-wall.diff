@@ -1,0 +1,15 @@
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 477e746..c9950a9 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -11310,6 +11310,10 @@ export function createLevelRun({
+             // (the BobSoldier's) is stopped by the turret only once it is a Solid corpse.
+             out.push({ id: t.id, rect: iceTurretRect(t), solidLatch: t.solid === true });
+         }
++        // CW SCRATCH: CW_SPINNER_BLOCKS=1 — a live Spinner ("Enemy" type) is a wall to a chaser whose list has "Enemy"
++        if (globalThis.process?.env?.CW_SPINNER_BLOCKS === '1') {
++            for (const s of (spinnerRectsNow() ?? [])) out.push({ id: s.id, rect: s.rect });
++        }
+         return out;
+     }
+ 

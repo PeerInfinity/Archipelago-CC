@@ -1,0 +1,19 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { levelSourceFromAtlas } = await import(`${R}/atlasSource.js`);
+const { DEFAULT_TOLERANCE } = await import(`${R}/botDriverV1.js`);
+const sb = await import(`${R}/solverBot.js`);
+const { createRunForStaging } = await import(`${R}/tapeRunner.js`);
+const SWEEP = JSON.parse(readFileSync(`${R}/fixtures/dash-shape/sweep-478-l52.json`, 'utf8'));
+const src = levelSourceFromAtlas({ levels: SWEEP.records });
+const mk = () => createRunForStaging(SWEEP.staging, src, { scratchPersistence: SWEEP.scratchPersistence });
+const r0 = mk(); console.log('start', r0.state.x, r0.state.y, 'goal', JSON.stringify(SWEEP.solverGoal).slice(0, 200));
+const ys = process.argv.slice(2).map(Number);
+for (let x = Number(ys[0]); x <= Number(ys[1]); x += Number(ys[2] ?? 1)) {
+    const run = mk(); const wps = [{ x, y: Number(ys[3] ?? r0.state.y) }];
+    const strike = sb.strikePolicyFor(run, { dashPlan: null, dashMode: 'all', iframeLapse: true });
+    const w = sb.previewWalk(run, wps, DEFAULT_TOLERANCE, { strike });
+    const legs = sb.dashLegRuns(w.samples, run.state);
+    const l = legs[legs.length - 1];
+    console.log(x, 'trunc', w.truncated?.kind ?? null, 'n', l.n, 'span', l.span.toFixed(1), 'path', l.path.toFixed(1), 'line', l.line.toFixed(1), 'still', l.still, 'floor', sb.dashLegFloor(l), 'verdict', (sb.withDashLegPrecheck(true, () => sb.dashLegPrecheck(run, w)) ?? 'scan').slice(0, 60));
+}

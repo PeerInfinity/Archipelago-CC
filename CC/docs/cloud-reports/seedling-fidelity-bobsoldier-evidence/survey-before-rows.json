@@ -1,0 +1,82 @@
+[
+ {
+  "step": 50,
+  "level": 30,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-50) collect (64,64) stance (ladder-routed: no corridor from (72,24) to a stance that can collect torchpickup@64,64 — 22 walkable candidate(s) in range, 21 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32): applied 4 strategies for one goal [keylock(bosslock@64,32), keylock(bosslock@64,32), keylock(bosslock@64,32), keylock(bosslock@64,32)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.",
+  "replay": null,
+  "family": "unclassified — see the refusal text"
+ },
+ {
+  "step": 52,
+  "level": 30,
+  "verdict": "SOLVED",
+  "ticks": 204,
+  "refusal": null,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 22,
+   "transitions": [
+    "undefined->undefined@204"
+   ],
+   "earnedClears": [
+    "{30,0}"
+   ]
+  },
+  "family": null
+ },
+ {
+  "step": 61,
+  "level": 40,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-61): no corridor for goal collect-placement toward (664,520) in level 40. Obstacle: solid:pushableblockfire (pushableblockfire@576,576); also on the frontier: iceturret@472,400, chest@880,816, totempart@160,640, wandlock@480,560, dungeonspire@336,576, dungeonspire@304,576. Strategy 'shove' failed to apply. Planner said: no walkable tile path in level 40 from tile (30,56) to (41,32). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+  "replay": null,
+  "family": "VERB-APPLY — the 'shove' strategy IS registered and did not apply here"
+ },
+ {
+  "step": 82,
+  "level": 40,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-82): no corridor for goal collect-placement toward (72,136) in level 40. Obstacle: pickup:totempart (totempart@160,640); also on the frontier: pushableblockfire@576,576, chest@880,816, wandlock@448,432, dungeonspire@304,576, dungeonspire@336,576, wandlock@480,560. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 40 from tile (30,56) to (4,8). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+  "replay": null,
+  "family": "VERB-APPLY — the 'collect' strategy IS registered and did not apply here"
+ },
+ {
+  "step": 84,
+  "level": 40,
+  "verdict": "SOLVED",
+  "ticks": 70,
+  "refusal": null,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 42,
+   "transitions": [
+    "undefined->undefined@70"
+   ],
+   "earnedClears": []
+  },
+  "family": null
+ },
+ {
+  "step": 132,
+  "level": 40,
+  "verdict": "SOLVED",
+  "ticks": 172,
+  "refusal": null,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 43,
+   "transitions": [
+    "undefined->undefined@172"
+   ],
+   "earnedClears": []
+  },
+  "family": null
+ }
+]

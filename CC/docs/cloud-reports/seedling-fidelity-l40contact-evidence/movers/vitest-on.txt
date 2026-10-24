@@ -1,0 +1,10 @@
+
+ Test Files  2 failed | 70 passed (72)
+      Tests  2 failed | 2503 passed | 1 skipped (2506)
+   Start at  20:24:19
+   Duration  761.21s (transform 11.13s, setup 0ms, import 79.54s, tests 1419.65s, environment 12ms)
+
+JSON report written to /tmp/claude-0/-home-user-Archipelago-CC/c23ac379-8125-5180-a86f-96127ed60ce2/scratchpad/on-vitest.json
+rc=1
+ FAIL  scripts/procgen/lintGateLabels.test.js > ⛔ the allowlist — a NEW typed count reds, an old one is named > every finding on the tree today is one the allowlist already knows
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON

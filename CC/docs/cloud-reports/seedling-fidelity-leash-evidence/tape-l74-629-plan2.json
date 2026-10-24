@@ -1,0 +1,318 @@
+{
+ "game": "seedling",
+ "name": "leash-l74-629-plan",
+ "boot": {
+  "level": 74,
+  "x": 16,
+  "y": 128
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 307,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 82,
+   "to": 93
+  },
+  {
+   "key": "down",
+   "from": 93,
+   "to": 94
+  },
+  {
+   "key": "up",
+   "from": 94,
+   "to": 96
+  },
+  {
+   "key": "down",
+   "from": 98,
+   "to": 101
+  },
+  {
+   "key": "up",
+   "from": 102,
+   "to": 104
+  },
+  {
+   "key": "right",
+   "from": 108,
+   "to": 148
+  },
+  {
+   "key": "left",
+   "from": 148,
+   "to": 149
+  },
+  {
+   "key": "up",
+   "from": 151,
+   "to": 176
+  },
+  {
+   "key": "left",
+   "from": 176,
+   "to": 177
+  },
+  {
+   "key": "primary",
+   "from": 177,
+   "to": 178
+  },
+  {
+   "key": "right",
+   "from": 178,
+   "to": 180
+  },
+  {
+   "key": "left",
+   "from": 185,
+   "to": 199
+  },
+  {
+   "key": "right",
+   "from": 200,
+   "to": 202
+  },
+  {
+   "key": "up",
+   "from": 209,
+   "to": 210
+  },
+  {
+   "key": "primary",
+   "from": 210,
+   "to": 211
+  },
+  {
+   "key": "primary",
+   "from": 231,
+   "to": 232
+  },
+  {
+   "key": "primary",
+   "from": 233,
+   "to": 234
+  },
+  {
+   "key": "up",
+   "from": 231,
+   "to": 240
+  },
+  {
+   "key": "primary",
+   "from": 239,
+   "to": 240
+  },
+  {
+   "key": "down",
+   "from": 240,
+   "to": 242
+  },
+  {
+   "key": "up",
+   "from": 242,
+   "to": 245
+  },
+  {
+   "key": "down",
+   "from": 245,
+   "to": 246
+  },
+  {
+   "key": "primary",
+   "from": 251,
+   "to": 252
+  },
+  {
+   "key": "left",
+   "from": 248,
+   "to": 254
+  },
+  {
+   "key": "up",
+   "from": 248,
+   "to": 254
+  },
+  {
+   "key": "primary",
+   "from": 253,
+   "to": 254
+  },
+  {
+   "key": "right",
+   "from": 254,
+   "to": 256
+  },
+  {
+   "key": "down",
+   "from": 254,
+   "to": 256
+  },
+  {
+   "key": "left",
+   "from": 256,
+   "to": 257
+  },
+  {
+   "key": "up",
+   "from": 256,
+   "to": 257
+  },
+  {
+   "key": "right",
+   "from": 257,
+   "to": 258
+  },
+  {
+   "key": "down",
+   "from": 257,
+   "to": 258
+  },
+  {
+   "key": "left",
+   "from": 258,
+   "to": 259
+  },
+  {
+   "key": "up",
+   "from": 258,
+   "to": 259
+  },
+  {
+   "key": "right",
+   "from": 259,
+   "to": 260
+  },
+  {
+   "key": "down",
+   "from": 259,
+   "to": 260
+  },
+  {
+   "key": "left",
+   "from": 260,
+   "to": 261
+  },
+  {
+   "key": "up",
+   "from": 260,
+   "to": 261
+  },
+  {
+   "key": "right",
+   "from": 264,
+   "to": 265
+  },
+  {
+   "key": "down",
+   "from": 264,
+   "to": 265
+  },
+  {
+   "key": "up",
+   "from": 269,
+   "to": 270
+  },
+  {
+   "key": "down",
+   "from": 270,
+   "to": 271
+  },
+  {
+   "key": "up",
+   "from": 271,
+   "to": 272
+  },
+  {
+   "key": "down",
+   "from": 272,
+   "to": 273
+  },
+  {
+   "key": "up",
+   "from": 273,
+   "to": 274
+  },
+  {
+   "key": "down",
+   "from": 274,
+   "to": 275
+  },
+  {
+   "key": "up",
+   "from": 275,
+   "to": 276
+  },
+  {
+   "key": "right",
+   "from": 269,
+   "to": 278
+  },
+  {
+   "key": "down",
+   "from": 276,
+   "to": 278
+  },
+  {
+   "key": "primary",
+   "from": 278,
+   "to": 279
+  },
+  {
+   "key": "primary",
+   "from": 287,
+   "to": 288
+  },
+  {
+   "key": "primary",
+   "from": 296,
+   "to": 297
+  },
+  {
+   "key": "primary",
+   "from": 305,
+   "to": 306
+  }
+ ],
+ "tape_version": 8
+}

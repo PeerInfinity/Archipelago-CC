@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+# DS lab analysis (scratch). python3 -I ds-analyze.py <batch.jsonl> <captures dir> [<merged rows.jsonl>] [--tag=]
+import json, sys, os, glob, statistics as st
+from collections import Counter, defaultdict
+
+out = sys.argv[1]; capdir = sys.argv[2]
+merged = sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith('--') else None
+TAG = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--tag=')), '')
+FPS = 30.0
+
+rows = {}
+for l in open(out):
+    r = json.loads(l)
+    if (r.get('tag') or '') != TAG: continue
+    rows[(r['id'], r['i'], r['window'])] = r
+
+live = {}
+keys = {}
+for f in glob.glob(os.path.join(capdir, '**', 'requests-*.jsonl'), recursive=True):
+    for l in open(f):
+        d = json.loads(l)
+        keys[d['id']] = d.get('key')
+        for q in d['requests']:
+            live[(d['id'], q['i'])] = q.get('result')
+
+def full_status(r):
+    ps = r.get('passes') or []
+    f = [p for p in ps if p['pass'] == 'full']
+    if not f: return 'not-run'
+    f = f[0]
+    if f.get('kind') == 'skipped': return 'skipped'
+    if f.get('limit'): return 'cut-' + f['limit'] + ('-ok' if f.get('ok') else '')
+    if f.get('ok'): return 'solved'
+    return 'refused'
+
+def work_of(r, name):
+    for p in r.get('passes') or []:
+        if p['pass'] == name: return p.get('work')
+    return None
+
+def strip(p):
+    return {k: p.get(k) for k in ('pass', 'ok', 'kind', 'ticks', 'work', 'deadline', 'limit')}
+
+# ── faithfulness at window 85 against the page's own answer
+same = 0; diff = []; nolive = 0; errs = []
+for (i_d, i_i, w), r in rows.items():
+    if w != 85: continue
+    if 'error' in r: errs.append((i_d, i_i, r['error'][:160])); continue
+    L = live.get((i_d, i_i))
+    if not L: nolive += 1; continue
+    a = [strip(p) for p in r['passes']]; b = [strip(p) for p in L.get('passes') or []]
+    if a == b and r.get('work') == L.get('work'): same += 1
+    else: diff.append((i_d, i_i, a, b, r.get('work'), L.get('work')))
+print(f'FAITHFUL@85: {same} requests equal the page answer (passes: ok/kind/ticks/work/deadline/limit, and total work); '
+      f'{len(diff)} differ; {nolive} without a live answer; {len(errs)} errors')
+for d in diff[:20]: print('  DIFF', d)
+for e in errs[:20]: print('  ERR', e)
+errs0 = [(k, r['error'][:160]) for k, r in rows.items() if k[2] == 0 and 'error' in r]
+print(f'ERRORS@0: {len(errs0)}'); [print('  ', e) for e in errs0[:20]]
+
+# ── per request: 85 vs 0
+pairs = []
+for (i_d, i_i, w), r85 in rows.items():
+    if w != 85 or 'error' in r85: continue
+    r0 = rows.get((i_d, i_i, 0))
+    if not r0 or 'error' in r0: continue
+    t85 = (r85.get('shipped') or {}).get('ticks'); t0 = (r0.get('shipped') or {}).get('ticks')
+    pairs.append(dict(id=i_d, i=i_i, key=keys.get(i_d), s85=full_status(r85), s0=full_status(r0),
+        ship85=(r85.get('shipped') or {}).get('pass'), ship0=(r0.get('shipped') or {}).get('pass'),
+        t85=t85, t0=t0, ok85=r85['ok'], ok0=r0['ok'], w85=r85.get('work'), w0=r0.get('work'), ms85=r85['ms'], ms0=r0['ms'],
+        dl=work_of(r85, 'dashless'), f85=work_of(r85, 'full'), f0=work_of(r0, 'full'),
+        dash0=sum(c['units'] for c in r0.get('dashCalls', []) if c['pass'] == 'full'),
+        dash85=sum(c['units'] for c in r85.get('dashCalls', []) if c['pass'] == 'full'),
+        dashms0=sum(c['ms'] for c in r0.get('dashCalls', []) if c['pass'] == 'full')))
+print(f'\nPAIRS: {len(pairs)} requests with both windows')
+print('full pass @85:', dict(Counter(p['s85'] for p in pairs)))
+print('full pass @0 :', dict(Counter(p['s0'] for p in pairs)))
+print('transitions  :', dict(Counter((p['s85'], p['s0']) for p in pairs)))
+gain = [p for p in pairs if p['t85'] and p['t0'] and p['t0'] < p['t85']]
+lose = [p for p in pairs if (p['t85'] and p['t0'] and p['t0'] > p['t85']) or (p['ok85'] and not p['ok0'])]
+same_t = [p for p in pairs if p['t85'] == p['t0'] and p['ok85'] == p['ok0']]
+print(f'ticks: gain {len(gain)} · lose/regress {len(lose)} · unchanged {len(same_t)} · other {len(pairs)-len(gain)-len(lose)-len(same_t)}')
+tot_saved = sum(p['t85'] - p['t0'] for p in gain)
+tot_extra_ms = sum(p['ms0'] - p['ms85'] for p in pairs)
+tot_extra_units = sum((p['w0'] or 0) - (p['w85'] or 0) for p in pairs)
+print(f'TOTAL: ticks saved {tot_saved} ({tot_saved/FPS:.1f} s at 30 fps) · extra units {tot_extra_units} · extra node wall {tot_extra_ms/1000:.1f} s '
+      f'(all {len(pairs)} requests); over the gainers only: extra units {sum(p["w0"]-p["w85"] for p in gain)}, extra wall {sum(p["ms0"]-p["ms85"] for p in gain)/1000:.1f} s')
+print('\nGAINERS (id:i  t85→t0  saved  units 85→0  dash units@0  wall ms 85→0  net s at 30fps (saved/30 − extra wall))')
+for p in sorted(gain, key=lambda p: -(p['t85'] - p['t0'])):
+    net = (p['t85'] - p['t0']) / FPS - (p['ms0'] - p['ms85']) / 1000
+    print(f"  {p['id']}:{p['i']}  {p['t85']}→{p['t0']}  {p['t85']-p['t0']}  {p['w85']}→{p['w0']}  {p['dash0']}  {p['ms85']}→{p['ms0']}  {net:+.2f}  [{p['s85']}] {(p['key'] or '')[:60]}")
+print('\nLOSERS / REGRESSIONS')
+for p in lose: print('  ', {k: p[k] for k in ('id', 'i', 't85', 't0', 's85', 's0', 'ok85', 'ok0', 'w85', 'w0', 'ms85', 'ms0')}, (p['key'] or '')[:60])
+# extra cost on requests that gained nothing
+nogain = [p for p in pairs if p not in gain]
+print(f"\nNO-GAIN requests: {len(nogain)}; their extra units {sum((p['w0'] or 0)-(p['w85'] or 0) for p in nogain)}, extra wall {sum(p['ms0']-p['ms85'] for p in nogain)/1000:.1f} s")
+big = sorted(nogain, key=lambda p: -(p['ms0'] - p['ms85']))[:15]
+for p in big: print('  ', {k: p[k] for k in ('id', 'i', 't85', 't0', 's85', 's0', 'w85', 'w0', 'ms85', 'ms0', 'dash0')}, (p['key'] or '')[:60])
+json.dump(pairs, open(out + f'.pairs{TAG}.json', 'w'))

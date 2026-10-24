@@ -1,0 +1,17 @@
+const T = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+import { readFileSync } from 'node:fs';
+const { parseTape } = await import(T + 'tapeFormat.js'); const { createLevelRun } = await import(T + 'levelRun.js');
+const { atlasLevelSource } = await import(T + 'levelSource.js'); const { ROLES } = await import(T + 'levelWorld.js');
+const sb = await import(T + 'solverBot.js');
+const t = parseTape(JSON.parse(readFileSync(T + 'fixtures/tapes/r9-solve-0.json', 'utf8')));
+const mk = () => createLevelRun({ levelSource: atlasLevelSource(), boot: t.boot, noclip: false, noHazards: t.noHazards, noDamage: false, grants: t.grants, persistence: t.persistence, despawn: [], equips: t.equips, pins: t.pins ?? [], save: t.save ?? null, rng: t.rng ?? null, seam: t.seam ?? null, roles: ROLES });
+const wps = [{ x: 136, y: 200 }, { x: 136, y: 184 }, { x: 72, y: 184 }, { x: 72, y: 200 }, { x: 40, y: 200 }];
+const plan = () => sb.planSwordDash(mk(), wps, { tolerance: 1 });
+console.log('untripped', JSON.stringify((({ baseline, ticks, scanned }) => ({ baseline, ticks, scanned }))(plan())));
+console.log('asks\tkeep OFF ticks\tkeep ON ticks\twindows kept');
+for (const n of [1, 5, 10, 20, 30, 40, 50, 60, 64]) {
+  const c = () => { let k = 0; return { shouldStop: () => ++k > n }; };
+  const off = sb.withDashKeepPartial(false, () => sb.withSolveDeadline(c(), plan));
+  const on = sb.withDashKeepPartial(true, () => sb.withSolveDeadline(c(), plan));
+  console.log(`${n}\t${off.ticks ?? 'drop (237)'}\t${on.ticks ?? 'drop (237)'}\t${(on.windows ?? []).length}`);
+}

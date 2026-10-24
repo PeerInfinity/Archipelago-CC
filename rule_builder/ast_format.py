@@ -91,6 +91,9 @@ def parse_ast_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
     elif rule_type == 'or':
         return _parse_or(data, world_cls)
 
+    elif rule_type == 'count_true':
+        return _parse_count_true(data, world_cls)
+
     elif rule_type == 'not':
         return _parse_not(data, world_cls)
 
@@ -274,6 +277,30 @@ def _parse_and(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "R
         return children[0]
 
     return And(*children)
+
+
+def _parse_count_true(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":
+    """Parse a count_true rule: {"type": "count_true", "conditions": [...], "count": N}.
+
+    count_true ("at least N of the conditions are true") is the AST-format twin of
+    the Rule Builder AtLeast rule, so it parses straight into AtLeast. AtLeast's own
+    resolution collapses the trivial cases (count<=0 -> True_, count==1 -> Or,
+    count==len -> And, count>len -> False_).
+    """
+    from rule_builder import AtLeast, True_, False_
+
+    conditions = data.get('conditions', [])
+    count = data.get('count', 0)
+
+    children = [parse_ast_rule(cond, world_cls) for cond in conditions]
+
+    if isinstance(count, int):
+        if count <= 0:
+            return True_()
+        if not children or count > len(children):
+            return False_()
+
+    return AtLeast(count, *children)
 
 
 def _parse_or(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -> "Rule[Any]":

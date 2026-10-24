@@ -12,6 +12,8 @@ The exporter produces two main output formats:
 - **Rules JSON** — A complete JSON export of rules, regions, items, locations, and options. Available in Rule Builder format (default) or Archipelago-CC AST format.
 - **Pickle** — A compressed `dill` pickle of the entire `MultiWorld` object, preserving lambdas and closures directly. Faster to load since no regeneration is needed.
 
+For worlds created by the frontend's [procgen pipeline](../docs/json/developer/procgen/architecture.md), the base handler also re-injects the procgen-specific top-level keys (`preset_sidecars`, `procgen_metadata`, `loop_costs` — all three per-player maps, each package's file merged under its exporting player) from the world package's `_worldgen_*.json` sidecar files, so a multiworld export of a generated world stays playable in the frontend ([The Python round-trip](../docs/json/developer/procgen/architecture.md#the-python-round-trip)). It does the same for the page blocks `flash_panel` and `region_atlas`. The upstream Seedling world ships no package files, so its `flash_panel` comes from `games/unofficial/seedling.py`, which reads the shared wiring `frontend/modules/procgenPipeline/flashPanelWiring.json`.
+
 ## Usage
 
 The exporter runs automatically during seed generation when enabled in `host.yaml`. No manual invocation is needed for normal use.
@@ -59,6 +61,8 @@ export_game_rules(
     rules_json_format="rule_builder"  # or "ast" or "both"
 )
 ```
+
+**Format fallback.** If `rule_builder` or `both` is requested and the Rule Builder output cannot be produced — the converter (`exporter/converter`) or the extended `rule_builder` fails to import, or conversion raises — the exporter still writes the rules in **AST format** (kept deliberately). It is never silent: (1) a log line names the requested and written format and the cause (exception type, message and raising `file:line`; an import failure's full traceback is logged once per process) — at ERROR, except an import-time fallback on a compiled install, which is expected and logs at WARNING (its traceback at DEBUG); a conversion error is always ERROR; (2) every slot's `exporter["<player>"]` block in the file gets a `format_fallback` record `{requested, written, reason, rule_builder_output}` (`rule_builder_output: "dropped"` when `both` lost its Rule Builder half; the `_rules-ast.json` is still written) — declared in `frontend/schema/rules.schema.json` and absent on a normal export; (3) a `Generate.py` run ends with `WARNING: N rules file(s) written in ast instead of <requested>: <paths>`. On a compiled Archipelago install, where the extended Rule Builder cannot load, this fallback is expected on every run (hence WARNING there; the record and the summary line are unchanged). Implementation: `exporter/format_fallback.py`.
 
 ## Pickle Export
 
@@ -197,6 +201,29 @@ python -m exporter.converter --python "state.has('Sword')" --to-json
 - Archipelago-CC ↔ Rule Builder format
 
 See `converter/README.md` for detailed usage.
+
+⚠ `converter/` is a lighter, separate re-implementation. For the conversion an
+export actually performs, use `script_api.py` below.
+
+### Script API (`script_api.py`)
+
+Python source ⇄ the rules.json `helpers` format, through the production code
+paths: `python_to_helpers(source)` runs this analyzer the way an export runs it
+on a worldgen `Rules.py` (calls between the script's functions stay
+`{"type": "helper"}` references; parameters and defaults become
+`params`/`defaults`), and `helpers_to_python(helpers, rules=None)` runs
+world_generator's helper codegen (a rules document supplies the option
+definitions — without them an option reads back as a world attribute). Both
+return `{helpers|code, warnings, errors}`.
+
+The frontend runs it under Pyodide (`frontend/modules/helperScript/`), serving
+only the files `scripts/build/helper-script-files.mjs` lists, so that subset
+must import nothing outside the standard library — no `BaseClasses`, `worlds`,
+`Utils`, or `exporter.exporter` (hence the lazy `exporter/__init__.py`).
+`test/test_exporter_script_api.py` holds it to that under `python -I -S`.
+
+⚠ `python_to_helpers` IMPORTS the source (the analyzer reads functions through
+`inspect`), so its top-level statements run.
 
 ### Game Handlers (`games/`)
 

@@ -1,0 +1,23 @@
+== M1 witchGrantsReport ignores the slot (predict: the :50 unit row FAILS; the solver rows pass)
+     × `Witch.doneTalking` (:50): the wand and the slot, never the sword held 10ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 21 passed (22)
+restored a461cb6f7a5d4c5e5ca78b9cd9f63f52  -
+== M2 the death writes no {32,3} (predict: both fresh rows FAIL — the fight never ends on the report)
+     × fresh, Fire from the server: the fight anyway, {32,3} then {32,4}, no grant, no {31,29}; burn, pit 6252ms
+     × fresh, NO Fire: the fight and both reports, then the burn is refused BY NAME (a precondition) 5962ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 20 passed (22)
+restored 1145a34e39b5ae874c07356f8f5c694d  -
+== M3 the build does not read the R4 slots (predict: build ON, both revisits, killed-at-entry, both-reported, the room executor, witch slot-cleared FAIL)
+     × ON: the build accepts them (the arena rock and the Witch read them); other slots stay orphans 15ms
+     × reads the staging: held by default, cleared by a staged row; any other slot throws by name 177ms
+     × revisit, {32,3} cleared and {32,4} held: the fallen rock's first frame adds the FIRE, no boss, no playerPosition 2ms
+     × revisit, both reported: the fallen rock adds NOTHING 1ms
+     × killed at entry, drop held (rock fallen): no fight, the Fire collected, {32,4}; burn, pit 2ms
+     × both reported, tree burned: `already`, then the pit; nothing spawns 1ms
+     × the executor is the ROOM's: any AP item at L32 is Bob's encounter ON; OFF it is refused by the drop 2ms
+     × slot cleared (staged): `already`, no tick; the build accepts {12,1} 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  8 failed | 14 passed (22)
+restored 1fb708f265be3937d5ccbaa834937928  -

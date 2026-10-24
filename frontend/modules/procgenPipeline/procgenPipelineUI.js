@@ -4,23 +4,21 @@
  * collapsible compiled-rules JSON block.
  */
 
-import { setPanelInstance, getModuleApis } from './index.js';
+import { setPanelInstance, getModuleApis, PROCGEN_PIPELINE_LOAD_RULES } from './index.js';
 import eventBus from '../../app/core/eventBus.js';
 import {
-    growMaze,
-    arrangeShuffledSpiral,
+    growMazeAsync,
     rebuildSphereTopology,
     buildRulesJson,
     stringifyRulesJson,
     getRegionExits,
-    reRollSphereRegion,
+    regionExitSides,
     buildRegionContract,
     buildTopDownRegionContract,
-    moveSphereRegion,
-    swapSphereRegions,
-    moveSphereExitSide,
-    swapSphereExitSides,
+    sphereRebuildRefusal,
     Grid,
+    DEFAULT_SUBSTRATE_ID,
+    discoveryModeConfig,
 } from './procgenPipelineEngine.js';
 // The sphere-growth pipeline steps + envelope serde live in the shared
 // runner now; the panel delegates each step to it (no drift with the CLI).
@@ -28,192 +26,102 @@ import {
     SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
     serializeEnvelope, importSphereEnvelope, detectCompleted,
     resolveSpheresPerBatch, truncateSphereWorld, appendSphere,
+    SPHERE_EDIT_BINDING, sphereNodeKey, sphereUndoStep,
 } from './sphereSteps.js';
 // The top-down pipeline steps live in their own shared runner (same pattern as
 // sphereSteps): layout → realise (streamed) → finalize → compile.
 import {
     TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, buildTopDownEnvelope,
+    TD_EDIT_BINDING, topDownUndoStep,
 } from './topDownSteps.js';
+// The layout editor's gestures are RECORDED OPS on the envelope, not in-place
+// mutations: the panel pushes an edit (which applies it) and the step runner
+// replays it after the step that produces the artifact it addresses, so the
+// same world comes back from `config + seed + edits` in the panel, the CLI and
+// a re-run — and undo is a pop. See layoutEdits.js.
 import {
-    TILE_WALL, getTile, getObstacle, getItem,
-} from '../mazeRoom/mazeRoomEngine.js';
+    pushLayoutEdit, popLayoutEdit, describeLayoutEdit, layoutEditStage,
+    reRollCountFor,
+} from './layoutEdits.js';
+// The shuffled-spiral pipeline steps live in their own shared runner too (same
+// harness as sphere/top-down): ① arrange → ② content [no-op] → ③ regions →
+// ④ compile. Running all four reproduces the monolithic arrangeShuffledSpiral +
+// buildRulesJson byte-for-byte (check-spiral-byteidentity.mjs).
 import {
-    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
-    isObstacleCleared, getItemRenderHints,
-} from '../shared/procgen/library.js';
+    SPIRAL_STEPS, runSpiralStep, nextSpiralStep, newSpiralEnvelope,
+} from './spiralSteps.js';
+// ⛓ APWORLD EDITOR HUB H3 — the composite map moved out. The GRID, the
+// connection lines, the stub cell, the generic box and the click geometry are
+// `procgenCore/compositeMapRenderer.js`; each substrate's own cell is its
+// registry `compositeMap.drawRegion` declaration. ⛔ THIS PANEL NO LONGER
+// IMPORTS `mazeRoom/` AT ALL — the maze painter's `TILE_WALL`/`getTile` went
+// with it to `mazeRoom/mazeCompositeMap.js`.
+import {
+    TILE_PX, drawCompositeMap, resolveExitTilePositions,
+    canvasPointOf, cellAtPoint,
+} from '../procgenCore/compositeMapRenderer.js';
+import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { regionRealiserKind } from '../procgenCore/substratePredicates.js';
+import { substrateCards } from '../procgenCore/substrateCapabilities.js';
+import { entriesInSubstrateOrder, inSubstrateOrder } from '../procgenCore/substrateOrder.js';
 import {
-    defaultProcgenParams, activeSubstrateIds,
-    collectSphereGrowthPrep, assembleRegionParams,
-} from './sphereConfigHooks.js';
-import { getRegionEditor } from './regionEditors.js';
+    REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
+} from '../procgenCore/regionGenerationForm.js';
+import { activeSubstrateIds } from './sphereConfigHooks.js';
+import { CONCEPTS, isConceptRow, realisationsOf } from '../procgenCore/concepts.js';
+// ⛓ PROCGEN PIPELINE PRESETS P0 — every mode's run is ASSEMBLED in presetRun.js
+// (pure functions of a panel-shaped state); the methods below that used to build
+// a config in place are one-line callers over `this`, and the headless preset
+// row calls the same functions.
+import {
+    panelDefaultParams, sourceSizedParams, pinnedGridKeys, TOPDOWN_GRID_KEYS,
+    TOPDOWN_GRID_INPUT_MAX, GRID_GROWTH_INPUT_MAX,
+    effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
+    activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
+    substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
+    sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
+    buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
+} from './presetRun.js';
+import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
+import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
+import {
+    SHIPPED_PRESETS, capturePresetState, applyPresetState,
+    getPresetById, loadUserPresets, saveUserPreset, deleteUserPreset,
+    restoredActivePresetId, groupShippedPresets, LS_PRESETS_KEY,
+} from './presetDefs.js';
+// Region-library (F3/F5) — the headless loader core (fetch/parse/validate served
+// + ad-hoc libraries; selection → spiral config) plus the identity stamper the
+// F5 capture-and-download path needs. All DOM/persistence chrome lives here.
+import {
+    loadServedIndex, loadServedLibrary, parseRegionLibrary,
+    serializeLibrarySelection, resolveLibrarySelection,
+} from './regionLibraryLoader.js';
+import { stampLibraryIdentity, REGION_LIBRARY_SCHEMA_VERSION } from './regionLibraryValidator.js';
+import { reportStorageWriteFailure } from '../../app/core/storageQuota.js';
 
 const LS_KEY = 'procgenPipeline_params';
 // View preferences (toggle states etc.) live under a separate key so
 // they don't churn the saved scenario state on every render.
 const LS_VIEW_KEY = 'procgenPipeline_view';
-const TILE_PX = 14;
-
-const COLORS = {
-    floor: '#2a2a2a',
-    wall: '#000000',
-    // Same §5 palette as mazeRoomUI — keep the two views consistent.
-    entrance: '#3aa85a',
-    exit: '#3aa85a',
-    exitBlocked: '#d04040',
-    locationBlocked: '#d04040',
-    grid: '#1a1a1a',
-    cellBorder: '#3a3a50',
-    emptyCell: '#141414',
-    // Text-adventure cells: warm parchment tint so they stand apart
-    // from the dark maze cells at a glance, without losing the cell
-    // border / exit / blocked palette.
-    textAdventureBg: '#3a3326',
-    textAdventureFg: '#f0e6c8',
-    textAdventureFgDim: '#a89d80',
-    genericBg: '#2a2a3a',
-};
-
-/**
- * Resolve a list of exits to their tile (x, y) inside the cell.
- *
- * Substrates whose adapter populates per-exit tile coords (current maze
- * + text-adventure path) round-trip their `(x, y)` verbatim. Future
- * substrates that omit them get an even distribution along their wall,
- * keyed by `side` (N/S/E/W). Mixing both modes per region is fine.
- *
- * Returns `[{ exit, x, y }, …]` in the input order.
- */
-export function resolveExitTilePositions(exits, regionSize) {
-    // Accept either the on-disk Array shape (sidecar JSON) or the
-    // in-memory Map shape (after deserializeWorld), since both paths
-    // feed _drawRegion. Normalize to a plain array.
-    let list;
-    if (Array.isArray(exits)) list = exits;
-    else if (exits && typeof exits.values === 'function') list = [...exits.values()];
-    else return [];
-    if (list.length === 0) return [];
-    const result = [];
-    const bySide = { N: [], S: [], E: [], W: [] };
-    for (const exit of list) {
-        const hasXY = Number.isFinite(exit?.x) && Number.isFinite(exit?.y);
-        if (hasXY) {
-            result.push({ exit, x: exit.x, y: exit.y });
-        } else if (exit?.side && bySide[exit.side]) {
-            bySide[exit.side].push({ exit, slotIndex: result.length });
-            result.push(null);
-        } else {
-            result.push(null);
-        }
-    }
-    const lastX = regionSize.width - 1;
-    const lastY = regionSize.height - 1;
-    for (const side of ['N', 'S', 'E', 'W']) {
-        const queue = bySide[side];
-        if (queue.length === 0) continue;
-        const horizontal = (side === 'N' || side === 'S');
-        const span = horizontal ? regionSize.width : regionSize.height;
-        // Even distribution: slot k of N gets the (k+1)/(N+1) fraction
-        // of the span (avoids landing on the corners).
-        for (let i = 0; i < queue.length; i++) {
-            const frac = (i + 1) / (queue.length + 1);
-            const along = Math.max(0, Math.min(span - 1, Math.round(frac * (span - 1))));
-            let x; let y;
-            if (side === 'N') { x = along; y = 0; }
-            else if (side === 'S') { x = along; y = lastY; }
-            else if (side === 'W') { x = 0; y = along; }
-            else { x = lastX; y = along; }
-            const { exit, slotIndex } = queue[i];
-            result[slotIndex] = { exit, x, y };
-        }
-    }
-    return result.filter(Boolean);
-}
-
-/**
- * Truncate `text` with an ellipsis so it fits within `maxPx` using the
- * canvas's currently-set font. No-op if the text already fits.
- */
-export function fitTextToWidth(ctx, text, maxPx) {
-    if (!text) return '';
-    if (ctx.measureText(text).width <= maxPx) return text;
-    const ellipsis = '…';
-    let lo = 0;
-    let hi = text.length;
-    while (lo < hi) {
-        const mid = (lo + hi + 1) >> 1;
-        if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxPx) lo = mid;
-        else hi = mid - 1;
-    }
-    return lo > 0 ? text.slice(0, lo) + ellipsis : ellipsis;
-}
-
-const DEFAULT_PARAMS = {
-    seed: 1,
-    gridWidth: 3,
-    gridHeight: 3,
-    regionWidth: 8,
-    regionHeight: 6,
-    maxItemsPerRegion: 2,
-    maxRegions: null,
-    // Quota-mode start-region override. 'auto' (or empty) lets
-    // pickSubstrate choose via the active quota / mix chain. Setting
-    // it to a specific substrate id pins the start region's
-    // substrate; in quota mode that pick still counts against the
-    // substrate's quota.
-    startSubstrate: 'auto',
-    // When true, growMaze ends the moment the item pool is empty.
-    // When false (default), growth continues and later regions are
-    // built with empty item plans — useful in quota mode where the
-    // user wants a fixed region count regardless of items left.
-    stopOnPoolEmpty: false,
-    // How the bidirectional post-pass reconciles cross-branch
-    // asymmetric exit pairs. 'add' (default) inserts a reciprocal
-    // back-exit on the target region; 'remove' drops the one-way
-    // forward exit.
-    asymmetricExits: 'add',
-    // Loop-mode toggle (Phase 2/3 of loop-mode-substrate-integration).
-    // When on, buildRulesJson computes a loop_costs sidecar AND every
-    // region's playable_payload gets manaEnabled=true so substrates
-    // deduct mana on movement / location checks at runtime.
-    enableLoopMode: false,
-    // Region XP effect mode stamped on every loop_costs region entry
-    // when enableLoopMode is on. 'cost' (default) discounts mana cost
-    // proportionally to XP level; 'speed' / 'both' are reserved for v2;
-    // 'none' disables the XP discount. See Phase 7.
-    regionXpEffect: 'cost',
-    // Hazard module (maze content modules Phase 2). When enabled,
-    // every region gets `count` hazards placed by hazardPathGen +
-    // applyHazardModule in the procgen pipeline. Disabled by default
-    // — existing presets stay hazard-free unless the caller opts in.
-    enableHazards: false,
-    hazardCount: 3,
-    hazardMaxConsecutiveFails: 10,
-    hazardWallOverlapAllowed: false,
-    // Sphere-growth mode parameters (sphere-driven-growth.md). The
-    // planner assigns the scenario items to `sphereCount` spheres;
-    // fillerCount adds itemless regions; revisitPercent is the chance
-    // a wave's attachment lands on an older region instead of the
-    // frontier (the "come back with the new item" texture).
-    sphereCount: 3,
-    fillerCount: 0,
-    revisitPercent: 25,
-    // null = "all spheres in one batch" (byte-identical default). A positive
-    // integer < sphereCount grows the middle phases sphere-major in batches
-    // (Phase 2). Phase 1 only carries the knob; no visible control yet.
-    spheresPerBatch: null,
-    // Substrate-specific params (e.g. bounce's fall behavior / physics
-    // profile / braid layout) are NOT here — each substrate declares its
-    // own defaults via the registry `defaultProcgenParams` hook, merged
-    // in by _defaultParams(). See bounceProcgenParams.js.
-};
+// F5 "working library" (regions captured from the ③ view, pending export) —
+// its own key so a capture doesn't churn the main params bundle.
+const LS_WORKING_LIBRARY_KEY = 'procgenPipeline_workingLibrary';
+// DEFAULT_PARAMS moved to presetRun.js (the headless row merges presets over it too).
 
 const REGION_XP_EFFECT_OPTIONS = [
     { value: 'cost', label: 'Cost', disabled: false },
     { value: 'speed', label: 'Speed (v2)', disabled: true },
     { value: 'both', label: 'Both (v2)', disabled: true },
     { value: 'none', label: 'None', disabled: false },
+];
+
+const DISCOVERY_MODE_OPTIONS = [
+    { value: 'follow', label: 'Same as loop mode' },
+    { value: 'on', label: 'On' },
+    { value: 'off', label: 'Off' },
 ];
 
 const DEFAULT_SCENARIO = {
@@ -225,6 +133,30 @@ const DEFAULT_SCENARIO = {
     items: { victory: 1, key_red: 1, key_blue: 1 },
     obstacles: { door_red: 1, door_blue: 1 },
 };
+
+/**
+ * ⛓⛓ PRESET SIDECARS M1 — **THE PLAYER SLOT BOTH OF THIS PANEL'S ROUTES BUILD.**
+ * Neither route is told a slot, so each takes its own default: top-down's
+ * `_buildTDEnvelope` passes none to `layoutTopDown` (`playerId = '1'`) and
+ * `buildTopDownEnvelope` reads `starting_items['1']` / `items['1']`; the sphere
+ * import reaches `rebuildEnvelopeFromRulesJson` with none (`'1'`); and
+ * `_applyGridDimsFromSource` sizes the grid off `regions['1']`. So the
+ * hand-off answer speaks about THIS slot, whichever slot the hub sent — an
+ * answer about slot 3's regions would describe a world the buttons do not
+ * build. Named here, once, so the answer and its rows read one value; making
+ * the routes build the carried slot is a pipeline feature, not this constant.
+ */
+export const HANDOFF_REALISED_SLOT = '1';
+
+/**
+ * ⛓ M1 — **THE TOP-DOWN ROUTE'S COST**, the clause the hand-off answer adds to
+ * "TOP-DOWN FROM THIS": `layoutTopDown` rebuilds every region from the
+ * `regions` block and never reads a sidecar, so the payloads a reader hands
+ * over are not the ones the pipeline produces. The hub's door says the same
+ * (`DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor.note`).
+ */
+export const HANDOFF_TOPDOWN_COST = 'which REGENERATES every sidecar payload from the regions '
+    + 'block (new room geometry) — the payloads handed over are not kept';
 
 /**
  * Group library entries by which of the selected substrates declare
@@ -247,6 +179,9 @@ const DEFAULT_SCENARIO = {
  *                                          // when nothing is selected)
  *   }
  *
+ * A concept row (`concepts.isConceptRow`, added by the world's concept list)
+ * is supported by an entry that lists its `feature` OR realises its concept.
+ *
  * When `selectedEntries` is empty, every entry falls into `unsupported`
  * (there's no selection to compare against). The UI hides the
  * unsupported group behind a toggle, so the empty-selection default is
@@ -268,9 +203,14 @@ export function groupLibraryByFeature(allEntries, selectedEntries) {
     const specificMap = new Map();
     for (const entry of allEntries) {
         const feature = entry.def.feature;
+        // ⛓ T0b — a row the WORLD'S concept list added (`isConceptRow`) is
+        // also supported by every entry that REALISES that concept, so no
+        // entry has to list `CONCEPT_ITEMS_FEATURE` for its concepts' items.
+        const concept = isConceptRow(entry.def) ? entry.def.concept : null;
         const supporters = selectedEntries
-            .filter((s) => Array.isArray(s.supportedFeatures)
+            .filter((s) => (Array.isArray(s.supportedFeatures)
                 && s.supportedFeatures.includes(feature))
+                || (concept !== null && Object.hasOwn(realisationsOf(s), concept)))
             .map((s) => s.id)
             .sort();
         if (supporters.length === selectedEntries.length) {
@@ -289,87 +229,6 @@ export function groupLibraryByFeature(allEntries, selectedEntries) {
     groups.substrateSpecific = [...specificMap.values()]
         .sort((a, b) => a.label.localeCompare(b.label));
     return groups;
-}
-
-/**
- * Reconstruct a Grid + composite-view payload from a rules.json that
- * carries `preset_sidecars`. Returns the same shape `growMaze` /
- * `topDownFromRulesJson` produce as their `result` (subset of
- * fields — poolRemaining is unknown post-hoc), so the existing
- * _renderGrid / _renderStats paths can paint it without further
- * branching. Returns null if the input has no procgen data, or if no
- * registered substrate can deserialize any of the regions.
- *
- * Pure function — exported for testing.
- */
-export function reconstructResultFromSidecars(rulesJson) {
-    const sidecarsByPlayer = rulesJson?.preset_sidecars;
-    if (!sidecarsByPlayer || typeof sidecarsByPlayer !== 'object') return null;
-    // v1 single-player: pick the first player. (Per-player composite
-    // views would need a player picker in the panel; deferred.)
-    const playerKeys = Object.keys(sidecarsByPlayer);
-    if (playerKeys.length === 0) return null;
-    const playerSidecars = sidecarsByPlayer[playerKeys[0]];
-    const regionEntries = Object.entries(playerSidecars ?? {});
-    if (regionEntries.length === 0) return null;
-
-    let maxGx = 0;
-    let maxGy = 0;
-    let maxW = 0;
-    let maxH = 0;
-    for (const [, sc] of regionEntries) {
-        const cell = sc?.grid_cell;
-        if (cell) {
-            if (cell.gx > maxGx) maxGx = cell.gx;
-            if (cell.gy > maxGy) maxGy = cell.gy;
-        }
-        const payload = sc?.playable_payload || {};
-        if (payload.width > maxW) maxW = payload.width;
-        if (payload.height > maxH) maxH = payload.height;
-    }
-    if (maxW === 0 || maxH === 0) return null;
-
-    const grid = new Grid({ width: maxGx + 1, height: maxGy + 1 });
-    let placed = 0;
-    let teleporters = 0;
-    for (const [region_id, sc] of regionEntries) {
-        if (!sc?.grid_cell) continue;
-        const substrateId = sc.substrate ?? 'maze';
-        const adapter = substrateRegistry.get(substrateId);
-        if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
-        const world = adapter.deserializeWorld(sc.playable_payload);
-        if (world?.exits) {
-            for (const e of world.exits.values()) {
-                if (e.isTeleporter) teleporters += 1;
-            }
-        }
-        grid.placeRegion(sc.grid_cell, {
-            region_id,
-            substrate: substrateId,
-            render_hint: sc.render_hint ?? substrateId,
-            playable_payload: world,
-            grow_telemetry: sc.grow_telemetry ?? null,
-        });
-        placed += 1;
-    }
-    if (placed === 0) return null;
-
-    const meta = rulesJson.procgen_metadata ?? {};
-    return {
-        grid,
-        regionSize: { width: maxW, height: maxH },
-        stats: {
-            regionsBuilt: placed,
-            regionsSkipped: 0,
-            stopReason: meta.stop_reason ?? null,
-            teleportersPlaced: teleporters,
-        },
-        poolRemaining: null,
-        // Marker for the renderers that this view came from a loaded
-        // rules.json rather than a fresh pipeline run, so labels can
-        // signal that and we don't claim a fresh-generation pool stat.
-        fromLoadedPreset: true,
-    };
 }
 
 // Sphere-growth runs as a stepped pipeline. The tree build (2 Build tree)
@@ -395,6 +254,18 @@ const TOPDOWN_STEP_RUN_LABELS = [
     'Run 1 Layout', 'Run 2 Realise', 'Run 3 Finalize', 'Run 4 Compile',
 ];
 const TOPDOWN_LAST_STEP = TOPDOWN_STEP_LABELS.length - 1; // 3
+
+// Shuffled-spiral's four steps. Same `completed` index convention (0..3; -1 =
+// not started). ② Content is a no-op for every current substrate (JtA's dataset
+// lands there in Part 3) — there is no editing surface, so its block renders a
+// "no content substrate" note.
+const SPIRAL_STEP_LABELS = [
+    '1 Arrange', '2 Content', '3 Regions', '4 Compile',
+];
+const SPIRAL_STEP_RUN_LABELS = [
+    'Run 1 Arrange', 'Run 2 Content', 'Run 3 Regions', 'Run 4 Compile',
+];
+const SPIRAL_LAST_STEP = SPIRAL_STEP_LABELS.length - 1; // 3
 
 export class ProcgenPipelineUI {
     static moduleApis = null;
@@ -424,6 +295,27 @@ export class ProcgenPipelineUI {
         // region counts. 'mix' → weighted-random sampling per region.
         // Top-down driver always uses the mix.
         this.substrateMode = 'quotas';
+        // Region-library (F3) working selection: the RESOLVED docs the user has
+        // ticked/loaded, each { source:'served'|'adhoc', file?, library, count }.
+        // Persistence rides the hybrid shape (regionLibraryLoader
+        // serializeLibrarySelection); served refs re-fetch on load into this list.
+        this.regionLibraries = [];
+        // Persisted `libraries` refs awaiting the async resolve kicked off by a
+        // load/preset-apply. Held so a save during the (ms-long) fetch window
+        // round-trips the untouched refs instead of clobbering them with an
+        // empty regionLibraries. Cleared once resolution lands. See
+        // _serializedLibraries / _setPersistedLibraries / _resolveRegionLibraries.
+        this._pendingLibraryRefs = null;
+        // Cached served-library index (region_library_files.json). null = not yet
+        // fetched; [] = fetched-but-empty. _renderRegionLibrariesSubsection kicks
+        // the fetch on first render and re-renders when it lands.
+        this._servedLibraryIndex = null;
+        this._servedLibraryError = null;
+        this._servedLibraryFetching = false;
+        // F5 capture: a session "working library" of regions saved from the ③
+        // view / region editor, exportable as a committable library JSON file.
+        // Persisted under LS_WORKING_LIBRARY_KEY.
+        this.workingLibrary = { entries: [] };
         // View preference: when true, the Library subsection shows an
         // "Unsupported by selected substrates" group with library
         // entries no selected substrate declares. Default off so
@@ -465,12 +357,17 @@ export class ProcgenPipelineUI {
         this.useLoadedRules = true;
         this.useLoadedSphereLog = true;
         this.result = null;
+        // A world loaded into the app, reconstructed for the map (see `result`).
+        this.loadedMap = null;
         // Sphere-growth stepped-pipeline state (null until step 1 runs).
         // See _stepPlan / _renderSphereSteps. Session-only (not persisted).
         this._stepState = null;
         // Top-down stepped-pipeline state (null until step 1 Layout runs).
         // See _stepTDLayout / _renderTopDownSteps. Session-only.
         this._tdState = null;
+        // Shuffled-spiral stepped-pipeline state (null until step 1 Arrange runs).
+        // See _stepSpiralArrange / _renderSpiralSteps. Session-only.
+        this._spiralState = null;
         // 2b Topology view mode: 'tree' (indented directory tree) or 'flat'
         // (numerical index order). Session-only view preference.
         this._topologyView = 'tree';
@@ -490,11 +387,34 @@ export class ProcgenPipelineUI {
         // line under the message) — e.g. sphere-growth quota fallback.
         this.warning = '';
 
+        // Preset drop-down state: the user's saved presets (from the
+        // dedicated presets localStorage key) and which preset the panel
+        // currently reflects. null = "Custom". Any edit gesture clears
+        // the selection (every change handler saves via
+        // _saveToLocalStorage, which resets it unless the save came from
+        // a preset apply).
+        this.userPresets = loadUserPresets(localStorage);
+        this.activePresetId = null;
+        // ⛓ F1: the grid keys (`gridWidth`/`gridHeight`) the user typed into
+        // since the grid was last sized automatically — a top-down "Save as…"
+        // keeps (pins) only these (`capturePresetState`). Reset by every
+        // automatic sizing to the active preset's pinned keys (the axes it
+        // left alone), so re-saving a pinned preset keeps its pin. NOT
+        // persisted: every reload re-derives it from the restored active
+        // preset, and the reload's source adoption resizes every other axis
+        // (so a Custom hand-edit is gone from the inputs too).
+        this._handEditedGridKeys = new Set();
+
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'procgen-pipeline-panel';
+        // ⛓ T1 — the live instance on its element, as the APWorld hub's own
+        //   (`apworldEditorUI.js`): the in-app row that drives this panel's
+        //   top-down reads the compiled document off it.
+        this.rootElement.__panel = this;
         setPanelInstance(this);
         this._loadFromLocalStorage();
         this._loadViewFromLocalStorage();
+        this._loadWorkingLibraryFromLocalStorage();
         // Subscribe through the raw eventBus so the panel sees raw-
         // json-loaded events even when constructed before the module's
         // initialize() has wired up apis. Same workaround the maze
@@ -509,12 +429,14 @@ export class ProcgenPipelineUI {
             if (this.useLoadedRules) this._applyLoadedRules();
             // If the loaded rules.json carries preset_sidecars,
             // reconstruct a Grid so the composite-view canvas paints
-            // all regions side-by-side. A subsequent local Generate
-            // overwrites this.result, so the user always sees the
-            // most recent state. We avoid clobbering an in-progress
-            // local generation result on top.
+            // all regions side-by-side (`loadedMap`). The panel's own
+            // generation (`this.result`) is KEPT: the map shows whichever
+            // came last, the exports always act on the generation.
             const reconstructed = reconstructResultFromSidecars(data.rawJsonData);
-            if (reconstructed) this.result = reconstructed;
+            if (reconstructed) this._showLoaded(reconstructed);
+            // ⛓ C1 — a region its substrate refused is not drawn; say which.
+            const refusedNote = refusedRegionsNote(reconstructed);
+            if (refusedNote) this.message = refusedNote;
             this.render();
         };
         eventBus.subscribe('stateManager:rawJsonDataLoaded', handler, 'procgenPipeline');
@@ -532,6 +454,32 @@ export class ProcgenPipelineUI {
             eventBus.unsubscribe('sphereState:dataLoaded', sphereLogHandler, 'procgenPipeline');
             eventBus.unsubscribe('sphereState:dataCleared', sphereLogHandler, 'procgenPipeline');
         };
+        /**
+         * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE WORKING-COPY HAND-OFF.**
+         * `procgenPipeline:loadRules {jsonData, source}` is the door the hub's
+         * `procgen_metadata` row opens: a panel in the SAME app needs no lab
+         * protocol (H4c's rule), just `ui:activatePanel` and a named event.
+         *
+         * ⛔ **IT IS NOT `stateManager:rawJsonDataLoaded`, AND THAT DISTINCTION
+         * IS THE ⚖.** The handler above adopts whatever the APP has loaded —
+         * APPLIED state. This one adopts a WORKING COPY that exists only in the
+         * editor's session and may never be applied at all (plan §1: *"Linked
+         * editors open from the WORKING COPY"*). So it turns the "Use
+         * currently-loaded rules.json" checkbox OFF: leaving it on would let the
+         * next app-wide load silently replace the document the person handed
+         * over, with no gesture of theirs in between.
+         */
+        const handoffHandler = (ev) => {
+            if (!ev?.jsonData) return;
+            // ⛓ M1 — `player`, the slot the hub had selected, rides along so
+            //   the answer can say when it is NOT the slot the routes build.
+            this._adoptHandoffRules(ev.jsonData, typeof ev.source === 'string' ? ev.source : null,
+                ev.player ?? null);
+        };
+        eventBus.subscribe(PROCGEN_PIPELINE_LOAD_RULES, handoffHandler, 'procgenPipeline');
+        this._unsubHandoff = () => eventBus.unsubscribe(
+            PROCGEN_PIPELINE_LOAD_RULES, handoffHandler, 'procgenPipeline',
+        );
         this.render();
     }
 
@@ -541,6 +489,7 @@ export class ProcgenPipelineUI {
     destroy() {
         if (this._unsubRawJsonLoaded) { this._unsubRawJsonLoaded(); this._unsubRawJsonLoaded = null; }
         if (this._unsubSphereLog) { this._unsubSphereLog(); this._unsubSphereLog = null; }
+        if (this._unsubHandoff) { this._unsubHandoff(); this._unsubHandoff = null; }
         setPanelInstance(null);
     }
     onPanelShow() { this.render(); }
@@ -548,11 +497,12 @@ export class ProcgenPipelineUI {
 
     render() {
         this.rootElement.innerHTML = '';
-        // Mode toggle and the Generate-button row stay unwrapped — they
-        // anchor the panel and shouldn't be foldable. Everything else
-        // is wrapped in an accordion section so users can hide
-        // sections they aren't actively using. Per-section state lives
-        // in this.collapsedSections.
+        // Preset bar, mode toggle and the Generate-button row stay
+        // unwrapped — they anchor the panel and shouldn't be foldable.
+        // Everything else is wrapped in an accordion section so users
+        // can hide sections they aren't actively using. Per-section
+        // state lives in this.collapsedSections.
+        this.rootElement.appendChild(this._renderPresetBar());
         this.rootElement.appendChild(this._renderModeToggle());
         // Scenario Pool: Substrates subsection always visible; Library
         // and Counts subsections grid-growth-only (the scenario pool
@@ -578,6 +528,11 @@ export class ProcgenPipelineUI {
         if (this.mode === 'topDown' && this._tdState) {
             this.rootElement.appendChild(this._renderCollapsibleSection(
                 'topdown-pipeline', 'Top-down pipeline', this._renderTopDownSteps(),
+            ));
+        }
+        if (this.mode === 'shuffledSpiral' && this._spiralState) {
+            this.rootElement.appendChild(this._renderCollapsibleSection(
+                'spiral-pipeline', 'Spiral pipeline', this._renderSpiralSteps(),
             ));
         }
         this.rootElement.appendChild(this._renderCollapsibleSection(
@@ -637,6 +592,200 @@ export class ProcgenPipelineUI {
         return wrap;
     }
 
+    // --- Preset bar ---
+
+    /**
+     * Drop-down at the top of the panel selecting a shipped or user
+     * preset (presetDefs.js). Selecting one is an explicit gesture: it
+     * overwrites the panel setup, auto-saves, and re-renders — no
+     * confirm. Any subsequent edit flips the selection back to
+     * "Custom" (via _saveToLocalStorage clearing activePresetId).
+     */
+    _renderPresetBar() {
+        const section = document.createElement('div');
+        section.className = 'procgen-pipeline-presets';
+        const title = document.createElement('div');
+        title.className = 'procgen-pipeline-section-title';
+        title.textContent = 'Preset';
+        section.appendChild(title);
+
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-presets-row';
+
+        const select = document.createElement('select');
+        select.className = 'procgen-pipeline-preset-select';
+        const customOpt = document.createElement('option');
+        customOpt.value = '';
+        customOpt.textContent = 'Custom';
+        select.appendChild(customOpt);
+        const addGroup = (label, presets) => {
+            if (presets.length === 0) return;
+            const group = document.createElement('optgroup');
+            group.label = label;
+            for (const p of presets) {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.label;
+                if (p.description) opt.title = p.description;
+                group.appendChild(opt);
+            }
+            select.appendChild(group);
+        };
+        // Shipped presets grouped by pipeline mode (⚖ user 2026-09-16, Q3).
+        for (const [label, presets] of groupShippedPresets(SHIPPED_PRESETS)) addGroup(label, presets);
+        addGroup('User', this.userPresets);
+        select.value = this.activePresetId ?? '';
+        // A stale persisted id (e.g. the preset was deleted) falls back
+        // to Custom rather than showing a blank control.
+        if (select.value !== (this.activePresetId ?? '')) select.value = '';
+        select.addEventListener('change', () => {
+            if (select.value) {
+                this._applyPreset(select.value);
+            } else {
+                this.activePresetId = null;
+                this._saveToLocalStorage();
+                this.render();
+            }
+        });
+        row.appendChild(select);
+
+        row.appendChild(this._btn('Save as…', () => {
+            const label = window.prompt('Preset name:');
+            if (label == null) return;
+            let saved;
+            try {
+                saved = saveUserPreset(
+                    localStorage, label,
+                    capturePresetState({ ...this, libraries: this._serializedLibraries() },
+                        { handEditedGridKeys: [...this._handEditedGridKeys] }),
+                );
+            } catch (e) {
+                // A full origin used to throw out of this click handler (plan §37.7.5).
+                reportStorageWriteFailure({ key: LS_PRESETS_KEY, error: e, owner: 'Procgen Pipeline presets' });
+                this.message = `ERROR: preset "${label.trim()}" was NOT saved: ${e.message}`;
+                this.render();
+                return;
+            }
+            if (!saved) {
+                this.message = 'ERROR: preset name must contain letters or digits.';
+                this.render();
+                return;
+            }
+            this.userPresets = saved.presets;
+            this.activePresetId = saved.id;
+            this._saveToLocalStorage({ fromPreset: true });
+            this.message = `Preset "${label.trim()}" saved.`;
+            this.render();
+        }));
+
+        const isUserPreset = (this.activePresetId ?? '').startsWith('user:');
+        const deleteBtn = this._btn('Delete', () => {
+            const preset = getPresetById(this.activePresetId, this.userPresets);
+            if (!preset) return;
+            if (!window.confirm(`Delete preset "${preset.label}"?`)) return;
+            try {
+                this.userPresets = deleteUserPreset(localStorage, preset.id);
+            } catch (e) {
+                reportStorageWriteFailure({ key: LS_PRESETS_KEY, error: e, owner: 'Procgen Pipeline presets' });
+                this.message = `ERROR: preset "${preset.label}" was NOT deleted: ${e.message}`;
+                this.render();
+                return;
+            }
+            this.activePresetId = null;
+            this._saveToLocalStorage();
+            this.message = `Preset "${preset.label}" deleted.`;
+            this.render();
+        });
+        deleteBtn.disabled = !isUserPreset;
+        deleteBtn.title = isUserPreset
+            ? 'Delete the selected user preset'
+            : 'Only user presets can be deleted';
+        row.appendChild(deleteBtn);
+
+        const resetBtn = this._btn('Reset panel', () => this._resetPanel());
+        resetBtn.classList.add('procgen-pipeline-reset-panel');
+        resetBtn.title = 'Put the whole setup back as a fresh panel has it: sphere growth, default parameters '
+            + 'and scenario, no substrates or libraries chosen, preset Custom. Saved presets are kept.';
+        row.appendChild(resetBtn);
+
+        section.appendChild(row);
+        return section;
+    }
+
+    /**
+     * Overwrite the panel setup with a preset and auto-save. Clears
+     * the generation result and stepped-pipeline state — a preset is a
+     * "fresh setup" gesture, so stale step envelopes from the previous
+     * params must not survive it.
+     */
+    _applyPreset(id) {
+        const preset = getPresetById(id, this.userPresets);
+        if (!preset) return;
+        const next = applyPresetState(preset.state, {
+            defaults: this._defaultParams(),
+            hasSubstrate: (sid) => substrateRegistry.has(sid),
+            current: this,
+        });
+        // ⛓ C2: a top-down preset's grid follows the present source on every
+        // axis the preset does not pin — the rule buildRunFromState applies to
+        // the same bundle headless. (applyPresetState rebuilds params from the
+        // defaults, 3×3, which alone discarded the grid adoption had derived.)
+        this.params = next.mode === 'topDown' && this.topDownSource
+            ? sourceSizedParams(next.params, this.topDownSource,
+                { pinned: pinnedGridKeys(preset.state?.params) })
+            : next.params;
+        this._handEditedGridKeys = new Set(pinnedGridKeys(preset.state?.params));
+        this.scenario = next.scenario;
+        this.substrateMix = next.substrateMix;
+        this.substrateQuotas = next.substrateQuotas;
+        this.substrateMode = next.substrateMode;
+        this.mode = next.mode;
+        this._setPersistedLibraries(next.libraries);
+        this.result = null;
+        this._stepState = null;
+        this._tdState = null;
+        this._spiralState = null;
+        this.warning = '';
+        this.activePresetId = id;
+        this._saveToLocalStorage({ fromPreset: true });
+        this.message = `Preset "${preset.label}" applied.`;
+        this.render();
+    }
+
+    /**
+     * "Reset panel": the whole setup back to a fresh panel's (the constructor's
+     * defaults) and auto-saved, the result and any stepped run dropped. User
+     * presets are kept. (⚖ the user, 2026-10-10: a tutorial that changes the
+     * panel ends by resetting it — so it needs one control that does.) Unlike
+     * the Parameters section's "Reset Defaults", which resets only the
+     * parameters and the scenario.
+     */
+    _resetPanel() {
+        this.mode = 'sphereGrowth';
+        this.params = this._defaultParams();
+        this._handEditedGridKeys = new Set();
+        this.scenario = {
+            items: { ...DEFAULT_SCENARIO.items },
+            obstacles: { ...DEFAULT_SCENARIO.obstacles },
+        };
+        this.substrateMix = {};
+        this.substrateQuotas = {};
+        this.substrateMode = 'quotas';
+        this._setPersistedLibraries([]);
+        this.useLoadedRules = true;
+        this.useLoadedSphereLog = true;
+        this._applyLoadedRules();
+        this.result = null;
+        this._stepState = null;
+        this._tdState = null;
+        this._spiralState = null;
+        this.warning = '';
+        this.activePresetId = null;
+        this._saveToLocalStorage();
+        this.message = 'Panel reset to its defaults.';
+        this.render();
+    }
+
     // --- Mode toggle ---
 
     _renderModeToggle() {
@@ -684,6 +833,88 @@ export class ProcgenPipelineUI {
     // Adopt the frontend's currently-loaded rules.json as the top-down source
     // (the "Use currently-loaded rules.json" checkbox / the rawJsonDataLoaded
     // event when that box is checked). No-op when nothing is loaded yet.
+    /**
+     * ⛓⛓⛓ H5 — **ADOPT A HANDED-OVER DOCUMENT, AND SAY WHAT CAN BE DONE WITH
+     * IT.** Three answers, and each one is DERIVED rather than typed:
+     *
+     *   · **"append a sphere"** — `sphereRebuildRefusal` (the engine's own
+     *     precondition check, sharing the exact strings
+     *     `rebuildEnvelopeFromRulesJson` throws) returns null, so
+     *     `importSphereEnvelope` would reconstruct an append-ready envelope.
+     *   · **"top-down from this"** — it would not, but the document names
+     *     regions for this slot, which is all `layoutTopDown` reads. ⛔ The
+     *     engine's refusal is QUOTED in the sentence rather than summarised:
+     *     "zone world" is one of four reasons and the other three are not it.
+     *   · **nothing** — no regions for the slot, so neither driver has an
+     *     input. Named, not silent.
+     *
+     * ⛔ The mode is switched to `topDown` because that is the mode whose
+     * source picker SHOWS the adopted document; a panel that adopted a document
+     * into a picker the person cannot see would be reporting an intake nobody
+     * could act on.
+     */
+    _adoptHandoffRules(jsonData, source, carriedPlayer = null) {
+        this.useLoadedRules = false;
+        this.topDownSource = jsonData;
+        this.topDownSourceLabel = source ? `hand-off (${source})` : 'hand-off';
+        this._applyGridDimsFromSource(jsonData);
+        this.mode = 'topDown';
+        // ⛓ M1 — the painted map is UNCHANGED: the document's first sidecar
+        //   slot, which is slot 1 wherever the document carries one. A
+        //   per-player export that carries only its own slot (the four-player
+        //   fixture's P2–P4) paints that slot, and there the answer says
+        //   nothing can be built for slot 1.
+        const reconstructed = reconstructResultFromSidecars(jsonData);
+        if (reconstructed) this._showLoaded(reconstructed);
+        this.message = this._handoffAnswer(jsonData, carriedPlayer);
+        this.render();
+    }
+
+    /**
+     * ⛓ The sentence `_adoptHandoffRules` prints — separated so a row can ask
+     * for it without driving a render.
+     *
+     * ⛓⛓ PRESET SIDECARS M1 — **IT SPEAKS ABOUT THE SLOT THE ROUTES BUILD**
+     * (`HANDOFF_REALISED_SLOT`), never the slot the hub had selected: that one
+     * (`carriedPlayer`, the hand-off payload's `player`) is NAMED first when it
+     * differs, with both region counts, so a reader who sent slot 3 learns the
+     * buttons build slot 1 before reading what they would build. No slot
+     * carried, or the same slot ⇒ the sentence H5 printed. And the top-down
+     * answer names its COST (`HANDOFF_TOPDOWN_COST`).
+     *
+     * @param {object} jsonData the handed-over document
+     * @param {string|number|null} [carriedPlayer] the slot the hand-off came from
+     */
+    _handoffAnswer(jsonData, carriedPlayer = null) {
+        const playerId = HANDOFF_REALISED_SLOT;
+        const countOf = (slot) => {
+            const regions = jsonData?.regions?.[slot];
+            return regions && typeof regions === 'object' ? Object.keys(regions).length : 0;
+        };
+        const regionCount = countOf(playerId);
+        const refusal = sphereRebuildRefusal(jsonData, { playerId });
+        const carried = carriedPlayer == null ? null : String(carriedPlayer);
+        const adopted = `Adopted ${this.topDownSourceLabel}`;
+        const lead = carried !== null && carried !== playerId
+            ? `${adopted}, sent from player ${carried} (${countOf(carried)} source regions) — but `
+                + `both of this panel's routes build player slot ${playerId} only, so this is `
+                + `about player ${playerId}: `
+            : null;
+        if (!refusal) {
+            return `${lead ?? `${adopted}: `}this is a sphere-grown world — `
+                + 'you can APPEND A SPHERE to it (Load envelope / rules.json in sphere mode), '
+                + `or realise it top-down (${regionCount} source regions).`;
+        }
+        if (regionCount > 0) {
+            return `${lead ?? `${adopted}: `}TOP-DOWN FROM THIS `
+                + `(${regionCount} source regions), ${HANDOFF_TOPDOWN_COST}. `
+                + `It cannot be appended to — ${refusal}`;
+        }
+        return `${lead ?? `${adopted}, but `}NOTHING can be built from it: it names `
+            + `no regions for player ${playerId}, so top-down has no source, and it cannot be `
+            + `appended to either — ${refusal}`;
+    }
+
     _applyLoadedRules() {
         if (!this.loadedRulesJson) return;
         this.topDownSource = this.loadedRulesJson;
@@ -901,6 +1132,14 @@ export class ProcgenPipelineUI {
         // Top: Substrates (always visible — every mode needs them).
         section.appendChild(this._renderSubstratesSubsection());
 
+        // Region libraries (F3/F6d) — pre-built regions loaded from JSON as
+        // `library:<id>` content sources. Shuffled-spiral (maze + bounce, F4) and
+        // sphere-growth (bounce-only overlay gates, F6a). Sphere mode disables
+        // non-bounce libraries in the served list (see _renderServedLibraryRow).
+        if (this.mode === 'shuffledSpiral' || this.mode === 'sphereGrowth') {
+            section.appendChild(this._renderRegionLibrariesSubsection());
+        }
+
         // Bottom: Library + Counts. Shown for the modes that build
         // regions from a scenario pool. Top-down's items come from
         // its source rules.json, not the pool, so it skips.
@@ -938,7 +1177,11 @@ export class ProcgenPipelineUI {
         leftHeader.textContent = 'Substrates (click to add)';
         left.appendChild(leftHeader);
 
-        const registered = substrateRegistry.getAll();
+        // ⛓ REGISTRATION ORDER RO2 — in the user's substrate order.
+        const registered = entriesInSubstrateOrder(substrateRegistry.getAll());
+        // ⛓ SUBSTRATE CHART S4 — every row shows the entry's label and carries
+        //   its capability card as the hover; the rows are computed ONCE here.
+        const cards = substrateCards(registered);
         if (registered.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'procgen-pipeline-scenario-empty';
@@ -946,7 +1189,7 @@ export class ProcgenPipelineUI {
             left.appendChild(empty);
         } else {
             for (const entry of registered) {
-                left.appendChild(this._renderSubstrateLibraryRow(entry));
+                left.appendChild(this._renderSubstrateLibraryRow(entry, cards.get(entry.id)));
             }
         }
 
@@ -966,7 +1209,7 @@ export class ProcgenPipelineUI {
             right.appendChild(empty);
         } else {
             for (const id of selectedIds) {
-                right.appendChild(this._renderSubstrateSelectedRow(id, dict[id]));
+                right.appendChild(this._renderSubstrateSelectedRow(id, dict[id], cards.get(id)));
             }
             if (isQuotas) {
                 const total = selectedIds.reduce(
@@ -993,6 +1236,437 @@ export class ProcgenPipelineUI {
         }
 
         return wrap;
+    }
+
+    // ── Region libraries (F3) — pre-built regions loaded from JSON ───
+    // Left column: served libraries (index-driven checkboxes) + an ad-hoc file
+    // loader. Right column: the working selection with per-library region counts.
+    // Everything mutates this.regionLibraries (resolved docs) + _saveToLocalStorage.
+    _renderRegionLibrariesSubsection() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-region-libraries';
+
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-scenario-subheader';
+        header.textContent = 'Region libraries (pre-built regions from JSON)';
+        header.title = 'Load committed or ad-hoc libraries of pre-built maze/bounce '
+            + 'regions; each ticked library becomes a content source with its own region count.';
+        wrap.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'procgen-pipeline-scenario-grid';
+
+        // Left: available (served list + ad-hoc file load).
+        const left = document.createElement('div');
+        left.className = 'procgen-pipeline-scenario-library';
+        const leftHeader = document.createElement('div');
+        leftHeader.className = 'procgen-pipeline-scenario-subheader';
+        leftHeader.textContent = 'Available (tick to add)';
+        left.appendChild(leftHeader);
+        left.appendChild(this._renderServedLibraryList());
+        left.appendChild(this._renderAdhocLibraryLoader());
+
+        // Right: selected libraries (count + remove).
+        const right = document.createElement('div');
+        right.className = 'procgen-pipeline-scenario-selected';
+        const rightHeader = document.createElement('div');
+        rightHeader.className = 'procgen-pipeline-scenario-subheader';
+        rightHeader.textContent = 'Selected libraries';
+        right.appendChild(rightHeader);
+        if (this.regionLibraries.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = this._pendingLibraryRefs ? '(resolving…)' : '(none selected)';
+            right.appendChild(empty);
+        } else {
+            for (const w of this.regionLibraries) {
+                right.appendChild(this._renderSelectedLibraryRow(w));
+            }
+        }
+
+        grid.appendChild(left);
+        grid.appendChild(right);
+        wrap.appendChild(grid);
+
+        // Library-scoped substrate params (e.g. the maze pack's connection
+        // strictness, region-library F6c) — sphere mode only: each substrate a
+        // selected sphere library realises renders its own controls via the
+        // registry `renderLibraryProcgenParams` hook (mazeProcgenParams.js).
+        if (this.mode === 'sphereGrowth') {
+            for (const id of sphereLibrarySubstrateIds(this.regionLibraries)) {
+                const hook = substrateRegistry.get(id)?.renderLibraryProcgenParams;
+                if (typeof hook !== 'function') continue;
+                const node = hook({ params: this.params, onChange: () => this._saveToLocalStorage() });
+                if (node) wrap.appendChild(node);
+            }
+        }
+
+        // F5 — capture regions from the last generation into a working library,
+        // downloadable as a committable library JSON file.
+        wrap.appendChild(this._renderLibraryCaptureArea());
+        return wrap;
+    }
+
+    // F5 capture UI: a "capture from last generation" list (one Save button per
+    // region in this.result.grid) + the working-library summary with Download /
+    // Clear. Self-contained in this section so capture + export live together.
+    _renderLibraryCaptureArea() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-library-capture';
+
+        const header = document.createElement('div');
+        header.className = 'procgen-pipeline-scenario-subheader';
+        header.textContent = 'Capture to library (from last generation)';
+        header.title = 'Save a generated region into a working library, then download '
+            + 'it as a committable region-library JSON.';
+        wrap.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'procgen-pipeline-scenario-grid';
+
+        // Left: regions available to capture.
+        const left = document.createElement('div');
+        left.className = 'procgen-pipeline-scenario-library';
+        const regions = this.result?.grid ? [...this.result.grid.allRegions()] : [];
+        const capturable = regions.filter((r) => {
+            const sub = substrateRegistry.get(r?.substrate);
+            return sub && typeof sub.captureLibraryEntry === 'function';
+        });
+        if (capturable.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = regions.length
+                ? '(no capturable regions in the last generation)'
+                : '(generate a world to capture regions)';
+            left.appendChild(empty);
+        } else {
+            for (const region of capturable) {
+                left.appendChild(this._renderCaptureRegionRow(region));
+            }
+        }
+
+        // Right: the working library + Download / Clear.
+        const right = document.createElement('div');
+        right.className = 'procgen-pipeline-scenario-selected';
+        const rightHeader = document.createElement('div');
+        rightHeader.className = 'procgen-pipeline-scenario-subheader';
+        const n = this.workingLibrary.entries.length;
+        rightHeader.textContent = `Working library (${n} entr${n === 1 ? 'y' : 'ies'})`;
+        right.appendChild(rightHeader);
+        if (n === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'procgen-pipeline-scenario-empty';
+            empty.textContent = '(nothing captured yet)';
+            right.appendChild(empty);
+        } else {
+            for (const entry of this.workingLibrary.entries) {
+                const row = document.createElement('div');
+                row.className = 'procgen-pipeline-selected-row';
+                const name = document.createElement('span');
+                name.className = 'procgen-pipeline-selected-name';
+                name.textContent = `${entry.entry_id} (${entry.substrate})`;
+                name.title = `${entry.exit_sides?.join(',') ?? ''} · ${entry.location_slots ?? 0} slots`;
+                row.appendChild(name);
+                const rm = document.createElement('button');
+                rm.className = 'procgen-pipeline-btn-small';
+                rm.textContent = '×';
+                rm.title = 'Remove from working library';
+                rm.addEventListener('click', () => this._removeCapturedEntry(entry.entry_id));
+                row.appendChild(rm);
+                right.appendChild(row);
+            }
+            const btnRow = document.createElement('div');
+            btnRow.style.cssText = 'display:flex;gap:6px;margin-top:4px;';
+            btnRow.appendChild(this._btn('Download working library', () => this._downloadWorkingLibrary()));
+            btnRow.appendChild(this._btn('Clear', () => this._clearWorkingLibrary()));
+            right.appendChild(btnRow);
+        }
+
+        grid.appendChild(left);
+        grid.appendChild(right);
+        wrap.appendChild(grid);
+        return wrap;
+    }
+
+    _renderCaptureRegionRow(region) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-library-row';
+        const name = document.createElement('span');
+        name.style.cssText = 'flex:1;';
+        name.textContent = `${region.region_id} (${region.substrate})`;
+        row.appendChild(name);
+        const save = this._btn('Save to library ▸', () => this._captureRegionToLibrary(region));
+        save.title = 'Serialize this region into the working library';
+        row.appendChild(save);
+        return row;
+    }
+
+    // Serialize a live region into the working library via its substrate's
+    // captureLibraryEntry hook, revalidating the captured entry against its own
+    // payload before adding (a re-capture of the same entry_id replaces).
+    _captureRegionToLibrary(region) {
+        const sub = substrateRegistry.get(region?.substrate);
+        if (!sub || typeof sub.captureLibraryEntry !== 'function') {
+            this.warning = `Substrate "${region?.substrate}" has no library capture hook.`;
+            this.render();
+            return;
+        }
+        try {
+            const entry = sub.captureLibraryEntry(region);
+            const check = typeof sub.validateLibraryEntry === 'function'
+                ? sub.validateLibraryEntry(entry) : { errors: [] };
+            if (check.errors?.length) {
+                this.warning = `Capture rejected: ${check.errors.join('; ')}`;
+                this.render();
+                return;
+            }
+            this.workingLibrary.entries = this.workingLibrary.entries
+                .filter((e) => e.entry_id !== entry.entry_id);
+            this.workingLibrary.entries.push(entry);
+            this.warning = '';
+            const persisted = this._saveWorkingLibraryToLocalStorage();
+            const total = this.workingLibrary.entries.length;
+            this.message = `Captured "${entry.entry_id}" → working library `
+                + `(${total} entr${total === 1 ? 'y' : 'ies'})${persisted ? '' : ' — in this page only, NOT saved'}.`;
+            this.render();
+        } catch (e) {
+            this.warning = `Capture failed: ${e.message}`;
+            this.render();
+        }
+    }
+
+    _removeCapturedEntry(entryId) {
+        this.workingLibrary.entries = this.workingLibrary.entries.filter((e) => e.entry_id !== entryId);
+        this._saveWorkingLibraryToLocalStorage();
+        this.render();
+    }
+
+    _clearWorkingLibrary() {
+        this.workingLibrary = { entries: [] };
+        this._saveWorkingLibraryToLocalStorage();
+        this.render();
+    }
+
+    // Stamp a content-hash identity onto the working entries and download a valid
+    // region-library document (committable to frontend/region-libraries/ + indexed).
+    _downloadWorkingLibrary() {
+        if (!this.workingLibrary.entries.length) return;
+        const doc = {
+            schema_version: REGION_LIBRARY_SCHEMA_VERSION,
+            name: 'Captured Library',
+            description: 'Regions captured from the procgen pipeline.',
+            entries: JSON.parse(JSON.stringify(this.workingLibrary.entries)),
+        };
+        stampLibraryIdentity(doc);
+        this._downloadText(JSON.stringify(doc, null, 2), `${doc.library_id}.json`);
+        this.message = `Downloaded working library "${doc.library_id}" `
+            + `(${doc.entries.length} entries).`;
+        this.render();
+    }
+
+    _renderServedLibraryList() {
+        const box = document.createElement('div');
+        this._ensureServedLibraryIndex();
+        const note = (txt) => {
+            const n = document.createElement('div');
+            n.className = 'procgen-pipeline-scenario-empty';
+            n.textContent = txt;
+            return n;
+        };
+        if (this._servedLibraryError) {
+            box.appendChild(note(`(served index error: ${this._servedLibraryError})`));
+            return box;
+        }
+        if (this._servedLibraryIndex === null) {
+            box.appendChild(note('(loading served libraries…)'));
+            return box;
+        }
+        if (this._servedLibraryIndex.length === 0) {
+            box.appendChild(note('(no served libraries)'));
+            return box;
+        }
+        for (const idx of this._servedLibraryIndex) {
+            box.appendChild(this._renderServedLibraryRow(idx));
+        }
+        return box;
+    }
+
+    _renderServedLibraryRow(idx) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-library-row';
+        const selected = this.regionLibraries.some(
+            (w) => w.source === 'served' && w.file === idx.file);
+        // Sphere-growth places any sphere-capable substrate (bounce F6a, runner +
+        // maze F6c). Disable a served library in sphere mode only when NONE of its
+        // declared substrates is sphere-capable — such a pack would be filtered out
+        // of the sphere config anyway (and throw in resolveSphereLibrarySources if
+        // it slipped through). Unknown substrates (older index without the field)
+        // stay enabled — the generate-time filter is the real guard.
+        const incompatible = this._sphereModeLibraryDisabled(idx.substrates);
+        const label = document.createElement('label');
+        label.style.cssText = `flex:1;display:flex;align-items:center;gap:4px;`
+            + `${incompatible ? 'opacity:0.5;cursor:not-allowed;' : 'cursor:pointer;'}`;
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = selected;
+        cb.disabled = incompatible;
+        cb.className = 'procgen-pipeline-served-library-cb';
+        cb.dataset.file = idx.file;
+        cb.addEventListener('change', () => this._toggleServedLibrary(idx, cb.checked));
+        label.appendChild(cb);
+        const subs = (idx.substrates ?? []).join(', ');
+        const n = idx.entry_count;
+        label.appendChild(document.createTextNode(
+            `${idx.name ?? idx.file} — ${n ?? '?'} entr${n === 1 ? 'y' : 'ies'}`
+            + `${subs ? ` (${subs})` : ''}`
+            + `${incompatible ? ' — not sphere-capable' : ''}`));
+        label.title = incompatible
+            ? 'No entry in this pack is sphere-capable (its substrate lacks the sphere placement hook).'
+            : (idx.description ?? '');
+        row.appendChild(label);
+        return row;
+    }
+
+    // Whether a library with the given declared substrates is unusable in the
+    // current mode. Sphere-growth places any sphere-capable substrate (bounce,
+    // runner, maze — F6a/F6c), so a pack is disabled only when its KNOWN substrate
+    // list has NONE that is sphere-capable. Any other mode (shuffled-spiral) accepts
+    // maze + bounce. An empty/undefined list is treated as unknown (not disabled) —
+    // the config-time capability filter is authoritative.
+    _sphereModeLibraryDisabled(substrates) {
+        if (this.mode !== 'sphereGrowth') return false;
+        return Array.isArray(substrates) && substrates.length > 0
+            && !substrates.some((s) => this._substrateSphereCapable(s));
+    }
+
+    _renderAdhocLibraryLoader() {
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-field';
+        const label = document.createElement('label');
+        label.textContent = 'Load file';
+        label.title = 'Load an ad-hoc region-library JSON (validated + restamped on load).';
+        wrap.appendChild(label);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json,application/json';
+        input.className = 'procgen-pipeline-library-file';
+        input.addEventListener('change', () => {
+            const file = input.files?.[0];
+            if (file) this._loadAdhocLibraryFile(file);
+            input.value = '';
+        });
+        wrap.appendChild(input);
+        return wrap;
+    }
+
+    _renderSelectedLibraryRow(w) {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-selected-row';
+        const name = document.createElement('span');
+        name.className = 'procgen-pipeline-selected-name';
+        const tag = w.source === 'adhoc' ? ' [ad-hoc]' : '';
+        // A selected library with no sphere-capable entry contributes nothing in
+        // sphere mode — mark it so the user isn't surprised it's absent from the
+        // grown world. Still counts for shuffled-spiral.
+        const unusedInSphere = this.mode === 'sphereGrowth' && !this._librarySphereCapable(w.library);
+        name.textContent = `${w.library.name ?? w.library.library_id}${tag}`
+            + `${unusedInSphere ? ' — not used (not sphere-capable)' : ''}`;
+        name.title = `${w.library.library_id} · ${w.library.entries.length} entries`;
+        if (unusedInSphere) name.style.opacity = '0.5';
+        row.appendChild(name);
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = 1; input.max = 999; input.step = 1;
+        input.value = w.count;
+        input.className = 'procgen-pipeline-count-input';
+        input.title = 'Spiral regions to fill from this library (repetition allowed once its entries run out).';
+        input.addEventListener('change', () => {
+            const v = parseInt(input.value, 10);
+            w.count = Number.isFinite(v) && v > 0 ? v : 1;
+            this._saveToLocalStorage();
+            this.render();
+        });
+        row.appendChild(input);
+
+        const rm = document.createElement('button');
+        rm.className = 'procgen-pipeline-btn-small';
+        rm.textContent = '×';
+        rm.title = 'Remove this library';
+        rm.addEventListener('click', () => this._removeLibrary(w));
+        row.appendChild(rm);
+        return row;
+    }
+
+    // Lazily fetch the served index once; re-render when it lands. Errors leave an
+    // empty index + a surfaced message (the ad-hoc loader still works offline).
+    _ensureServedLibraryIndex() {
+        if (this._servedLibraryIndex !== null || this._servedLibraryFetching) return;
+        this._servedLibraryFetching = true;
+        loadServedIndex(window.fetch.bind(window), this._libraryBasePath())
+            .then((libs) => { this._servedLibraryIndex = libs; this._servedLibraryError = null; })
+            .catch((e) => { this._servedLibraryIndex = []; this._servedLibraryError = e.message; })
+            .finally(() => { this._servedLibraryFetching = false; this.render(); });
+    }
+
+    // A user gesture is authoritative over any in-flight restore, so clear
+    // _pendingLibraryRefs (the pre-resolve raw refs) whenever the working list is
+    // edited — persistence then serializes the live regionLibraries.
+    async _toggleServedLibrary(idx, checked) {
+        if (!checked) {
+            this.regionLibraries = this.regionLibraries.filter(
+                (w) => !(w.source === 'served' && w.file === idx.file));
+            this._pendingLibraryRefs = null;
+            this._saveToLocalStorage();
+            this.render();
+            return;
+        }
+        if (this.regionLibraries.some((w) => w.source === 'served' && w.file === idx.file)) return;
+        const res = await loadServedLibrary(window.fetch.bind(window), idx.file, {
+            basePath: this._libraryBasePath(),
+        });
+        if (!res.ok) {
+            this.warning = `Region library '${idx.file}': ${res.errors.join('; ')}`;
+            this.render();
+            return;
+        }
+        this.regionLibraries.push({ source: 'served', file: idx.file, library: res.library, count: 1 });
+        this._pendingLibraryRefs = null;
+        this.warning = res.warnings?.length ? `Region library '${idx.file}': ${res.warnings.join('; ')}` : '';
+        this._saveToLocalStorage();
+        this.render();
+    }
+
+    async _loadAdhocLibraryFile(file) {
+        try {
+            const text = await file.text();
+            const res = parseRegionLibrary(text, { restamp: true });
+            if (!res.ok) {
+                this.warning = `Ad-hoc library '${file.name}': ${res.errors.join('; ')}`;
+                this.render();
+                return;
+            }
+            // A re-load of the same document replaces the prior working entry.
+            this.regionLibraries = this.regionLibraries.filter(
+                (w) => w.library.library_id !== res.library.library_id);
+            this.regionLibraries.push({ source: 'adhoc', library: res.library, count: 1 });
+            this._pendingLibraryRefs = null;
+            this.message = `Loaded ad-hoc library '${res.library.name ?? res.library.library_id}' `
+                + `(${res.library.entries.length} entries).`;
+            this.warning = res.warnings?.length ? res.warnings.join('; ') : '';
+            this._saveToLocalStorage();
+            this.render();
+        } catch (e) {
+            this.warning = `Ad-hoc library '${file.name}': ${e.message}`;
+            this.render();
+        }
+    }
+
+    _removeLibrary(w) {
+        this.regionLibraries = this.regionLibraries.filter((x) => x !== w);
+        this._pendingLibraryRefs = null;
+        this._saveToLocalStorage();
+        this.render();
     }
 
     _renderSubstrateModeToggle() {
@@ -1087,17 +1761,7 @@ export class ProcgenPipelineUI {
      * edits a numeric input.
      */
     _activeSubstrateDict() {
-        // Shuffled-spiral and sphere-growth always use fixed
-        // per-substrate counts; the mix dict is meaningless there.
-        // Grid-growth honors the mode toggle. Top-down (no toggle)
-        // keeps the legacy mix dict.
-        if (this.mode === 'shuffledSpiral' || this.mode === 'sphereGrowth') {
-            return this.substrateQuotas;
-        }
-        if (this.mode === 'gridGrowth' && this.substrateMode === 'quotas') {
-            return this.substrateQuotas;
-        }
-        return this.substrateMix;
+        return activeSubstrateDict(this);
     }
 
     // Completion-condition item for the emitted rules.json. Scenario
@@ -1108,16 +1772,7 @@ export class ProcgenPipelineUI {
     // invisible to the scenario pool). Null when neither contributes —
     // buildRulesJson then keeps the scaffold's constant-true default.
     _resolveVictoryItemId() {
-        const lib = this._mergedItemLib();
-        const fromScenario = Object.entries(this.scenario.items)
-            .find(([id, count]) => count > 0 && lib[id]?.is_victory)?.[0];
-        if (fromScenario) return fromScenario;
-        for (const [id, count] of Object.entries(this._activeSubstrateDict())) {
-            if (!(Number(count) > 0)) continue;
-            const victoryItem = substrateRegistry.get(id)?.victoryItem;
-            if (victoryItem) return victoryItem;
-        }
-        return null;
+        return resolveVictoryItemId(this);
     }
 
     /**
@@ -1128,14 +1783,7 @@ export class ProcgenPipelineUI {
      * itemLib handed to the sphere grower / rules.json compiler.
      */
     _mergedItemLib() {
-        const merged = { ...DEFAULT_ITEMS };
-        const dict = this._activeSubstrateDict();
-        for (const [id, count] of Object.entries(dict)) {
-            if (!(Number(count) > 0)) continue;
-            const extra = substrateRegistry.get(id)?.libraryItems;
-            if (extra) Object.assign(merged, extra);
-        }
-        return merged;
+        return mergedItemLib(this);
     }
 
     /**
@@ -1145,7 +1793,7 @@ export class ProcgenPipelineUI {
      * defaults via the registry so the panel stays substrate-agnostic.
      */
     _defaultParams() {
-        return defaultProcgenParams(DEFAULT_PARAMS);
+        return panelDefaultParams();
     }
 
     /**
@@ -1158,35 +1806,31 @@ export class ProcgenPipelineUI {
     }
 
     /**
-     * Gather each active substrate's pre-plan contributions via its
-     * optional `prepareSphereGrowth` hook: starting items, sphere-1
-     * reservations (exclusiveSpheres), canonical-placement locks, item
-     * pool removals (itemPoolDelta, applied in place to `itemPool`),
-     * regionParams additions, and a UI note. Substrates without the
-     * hook contribute nothing.
+     * ⛓ A substrate's NAME as a picker row shows it (substrate chart S4): the
+     * entry's label, the id in a muted `<small>` after it (a reader who knows
+     * ids still finds them). `card` is `substrateCards(…).get(id)` — absent for
+     * an id no entry registers, which then reads as the bare id.
      */
-    _collectSphereGrowthPrep({ activeIds, itemPool, quotas, startSubstrate, seed }) {
-        return collectSphereGrowthPrep({
-            activeIds, itemPool, quotas, startSubstrate, seed, params: this.params,
-        });
+    _substrateNameEl(className, id, card) {
+        const name = document.createElement('span');
+        name.className = className;
+        name.dataset.substrateId = id;
+        name.textContent = card?.label ?? id;
+        if (card && card.label !== id) {
+            const small = document.createElement('small');
+            small.className = 'procgen-pipeline-substrate-id';
+            small.textContent = id;
+            name.append(' ', small);
+        }
+        return name;
     }
 
-    /**
-     * Merge each active substrate's `buildRegionParams` hook output into
-     * one regionParams object. `mode` is 'sphere' | 'topDown'. `extra`
-     * (e.g. the pre-plan hook's regionParams contribution) wins last.
-     */
-    _assembleRegionParams(activeIds, mode, extra = {}) {
-        return assembleRegionParams({ activeIds, mode, params: this.params, extra });
-    }
-
-    _renderSubstrateLibraryRow(entry) {
+    _renderSubstrateLibraryRow(entry, card) {
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-library-row procgen-pipeline-library-row-substrate';
-        const name = document.createElement('span');
-        name.className = 'procgen-pipeline-library-name';
-        name.textContent = entry.id;
-        row.appendChild(name);
+        row.dataset.substrateId = entry.id;
+        if (card) row.title = card.text;
+        row.appendChild(this._substrateNameEl('procgen-pipeline-library-name', entry.id, card));
 
         // Disabled-look when already in the active dict; clicking
         // again is a no-op rather than an increment, which would
@@ -1205,13 +1849,13 @@ export class ProcgenPipelineUI {
         return row;
     }
 
-    _renderSubstrateSelectedRow(id, value) {
+    _renderSubstrateSelectedRow(id, value, card) {
         const dict = this._activeSubstrateDict();
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-selected-row';
-        const name = document.createElement('span');
-        name.className = 'procgen-pipeline-selected-name';
-        name.textContent = id;
+        row.dataset.substrateId = id;
+        const name = this._substrateNameEl('procgen-pipeline-selected-name', id, card);
+        if (card) name.title = card.text;
         row.appendChild(name);
 
         const input = document.createElement('input');
@@ -1254,8 +1898,7 @@ export class ProcgenPipelineUI {
 
         // Left: library (click to add). Entries are grouped by which
         // selected substrates declare each entry's `feature`. See
-        // NewDocs/plans/procedural-generation/library-feature-filtering.md
-        // for the design.
+        // the library feature-filtering design.
         const left = document.createElement('div');
         left.className = 'procgen-pipeline-scenario-library';
         const leftHeader = document.createElement('div');
@@ -1399,6 +2042,43 @@ export class ProcgenPipelineUI {
 
     // --- Parameters ---
 
+    /**
+     * ⛓ CONCEPT LIBRARY T1 — the world's concept list (`params.concepts`), one
+     * checkbox per concept in `CONCEPTS`, table order. A substrate that declares
+     * a realisation of a ticked concept may show a planned gate as it
+     * (`conceptSelection.selectRealisation`); none ticked (the default) builds
+     * exactly the world it always did.
+     */
+    _renderConceptsField() {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-field procgen-pipeline-concepts';
+        const label = document.createElement('label');
+        label.textContent = 'Concepts';
+        label.title = 'The concepts this world may show a planned gate as (a guardian that needs the '
+            + 'sword, water that needs swim). A concept changes the picture, never the logic. None '
+            + 'ticked = the world as before.';
+        row.appendChild(label);
+        const chosen = new Set(Array.isArray(this.params.concepts) ? this.params.concepts : []);
+        for (const id of Object.keys(CONCEPTS)) {
+            const opt = document.createElement('label');
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.value = id;
+            box.checked = chosen.has(id);
+            box.addEventListener('change', () => {
+                const now = new Set(Array.isArray(this.params.concepts) ? this.params.concepts : []);
+                if (box.checked) now.add(id); else now.delete(id);
+                // table order, whatever order the boxes were ticked in
+                this.params.concepts = Object.keys(CONCEPTS).filter((c) => now.has(c));
+                this._saveToLocalStorage();
+            });
+            opt.appendChild(box);
+            opt.appendChild(document.createTextNode(` ${id}`));
+            row.appendChild(opt);
+        }
+        return row;
+    }
+
     _renderParams() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-params';
@@ -1413,15 +2093,19 @@ export class ProcgenPipelineUI {
         // think they take effect.
         const showGridDims = this.mode !== 'shuffledSpiral'
             && this.mode !== 'sphereGrowth';
+        // ⛓ C2: top-down's grid follows its source (up to 26 for the largest
+        // committed one), so its cap is not grid growth's.
+        const gridInputMax = this.mode === 'topDown' ? TOPDOWN_GRID_INPUT_MAX : GRID_GROWTH_INPUT_MAX;
         const fields = [
             { key: 'seed',              label: 'Seed',             min: 0 },
             ...(showGridDims ? [
-                { key: 'gridWidth',     label: 'Grid width',       min: 1, max: 10 },
-                { key: 'gridHeight',    label: 'Grid height',      min: 1, max: 10 },
+                { key: 'gridWidth',     label: 'Grid width',       min: 1, max: gridInputMax },
+                { key: 'gridHeight',    label: 'Grid height',      min: 1, max: gridInputMax },
             ] : []),
-            { key: 'regionWidth',       label: 'Region width',     min: 2, max: 40 },
-            { key: 'regionHeight',      label: 'Region height',    min: 2, max: 40 },
-            { key: 'maxItemsPerRegion', label: 'Max items/region', min: 0, max: 10 },
+            // The per-REGION rows (region size, max items) are the shared
+            // generation form's (procgenCore/regionGenerationForm.js); drawn
+            // here, in the grid, for every substrate at once.
+            ...REGION_GENERATION_FIELDS,
             ...(this.mode === 'sphereGrowth' ? [
                 { key: 'sphereCount',   label: 'Spheres',          min: 1, max: 20 },
                 { key: 'fillerCount',   label: 'Filler regions',   min: 0, max: 50 },
@@ -1437,34 +2121,13 @@ export class ProcgenPipelineUI {
             ] : []),
         ];
 
+        const gridKeys = Object.values(TOPDOWN_GRID_KEYS);
         for (const f of fields) {
-            const row = document.createElement('div');
-            row.className = 'procgen-pipeline-field';
-            const label = document.createElement('label');
-            label.textContent = f.label;
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.value = this.params[f.key] ?? '';
-            if (f.min !== undefined) input.min = f.min;
-            if (f.max !== undefined) input.max = f.max;
-            if (f.placeholder) input.placeholder = f.placeholder;
-            if (f.title) { input.title = f.title; label.title = f.title; }
-            input.addEventListener('change', () => {
-                // Nullable fields collapse to null (shown as the placeholder)
-                // both on an empty box AND when the spinner steps down to 0 —
-                // so "Spheres/batch" toggles 1 ⇄ all from the up/down arrows.
-                if (f.nullable && (input.value === '' || parseInt(input.value, 10) <= 0)) {
-                    this.params[f.key] = null;
-                    input.value = '';
-                } else {
-                    const v = parseInt(input.value, 10);
-                    if (Number.isFinite(v)) this.params[f.key] = v;
-                }
+            grid.appendChild(bagIntegerField(this.params, f, () => {
+                // ⛓ F1: a typed grid axis is the user's, so a top-down save keeps it.
+                if (gridKeys.includes(f.key)) this._handEditedGridKeys.add(f.key);
                 this._saveToLocalStorage();
-            });
-            row.appendChild(label);
-            row.appendChild(input);
-            grid.appendChild(row);
+            }));
         }
         section.appendChild(grid);
 
@@ -1494,6 +2157,8 @@ export class ProcgenPipelineUI {
         xpEffectRow.appendChild(xpEffectLabel);
         xpEffectRow.appendChild(xpEffectSelect);
         section.appendChild(xpEffectRow);
+
+        section.appendChild(this._renderConceptsField());
 
         // Stop-on-pool-empty toggle. When on, growMaze ends the
         // moment the item pool is exhausted; when off (default),
@@ -1557,6 +2222,8 @@ export class ProcgenPipelineUI {
         loopModeLabel.title = 'Embed loop_costs in rules.json and turn on per-region mana deduction';
         const loopModeInput = document.createElement('input');
         loopModeInput.type = 'checkbox';
+        // The bag key it edits, as the number boxes carry it (a tutorial handle).
+        loopModeInput.dataset.paramKey = 'enableLoopMode';
         loopModeInput.checked = !!this.params.enableLoopMode;
         loopModeInput.addEventListener('change', () => {
             this.params.enableLoopMode = !!loopModeInput.checked;
@@ -1565,6 +2232,34 @@ export class ProcgenPipelineUI {
         loopModeRow.appendChild(loopModeLabel);
         loopModeRow.appendChild(loopModeInput);
         section.appendChild(loopModeRow);
+
+        // Discovery mode, separate from loop mode. 'Same as loop mode'
+        // (default) writes nothing into the world: it comes up in Discovery
+        // mode exactly when it is in loop mode. 'On' / 'Off' write the
+        // rules.json discovery_mode block, so a saved world reopens the same.
+        const discoveryRow = document.createElement('div');
+        discoveryRow.className = 'procgen-pipeline-field procgen-pipeline-discovery-mode';
+        const discoveryLabel = document.createElement('label');
+        discoveryLabel.textContent = 'Discovery mode';
+        discoveryLabel.title = 'Same as loop mode: Discovery is on exactly while loop mode is. '
+            + 'On: in loop mode, as with loop mode; without it, walking into a region reveals it. '
+            + 'Off: no Discovery, and Loops can plan through every region.';
+        const discoverySelect = document.createElement('select');
+        discoverySelect.dataset.paramKey = 'discoveryMode';
+        for (const opt of DISCOVERY_MODE_OPTIONS) {
+            const optEl = document.createElement('option');
+            optEl.value = opt.value;
+            optEl.textContent = opt.label;
+            discoverySelect.appendChild(optEl);
+        }
+        discoverySelect.value = this.params.discoveryMode ?? 'follow';
+        discoverySelect.addEventListener('change', () => {
+            this.params.discoveryMode = discoverySelect.value;
+            this._saveToLocalStorage();
+        });
+        discoveryRow.appendChild(discoveryLabel);
+        discoveryRow.appendChild(discoverySelect);
+        section.appendChild(discoveryRow);
 
         // Per-substrate parameter subsections — one per selected
         // substrate that declares panel parameters (maze: hazards;
@@ -1595,17 +2290,54 @@ export class ProcgenPipelineUI {
 
     // --- Actions + stats ---
 
+    /**
+     * ⛓ THE PANEL'S OWN GENERATION — `{ grid, rulesJson, stats, … }` from Run
+     * all / a step's Compile, or null. Only a generation sets it; a world LOADED
+     * into the app is `loadedMap` instead. Until tutorial-bugs (2026-10-10) any
+     * world load replaced this with a sidecar reconstruction that has no
+     * rulesJson, so the exports vanished and "Run all" on a complete sphere
+     * pipeline lost its result. Setting it also brings the map back to it.
+     */
+    get result() { return this._result ?? null; }
+
+    set result(value) {
+        this._result = value;
+        this._showingLoadedMap = false;
+    }
+
+    /** Paint a loaded world's map (`reconstructResultFromSidecars`) without touching the generation. */
+    _showLoaded(reconstructed) {
+        this.loadedMap = reconstructed;
+        this._showingLoadedMap = true;
+    }
+
+    /** What the map and its stats line show: the loaded world if it came last, else the generation. */
+    _mapResult() {
+        return (this._showingLoadedMap && this.loadedMap) ? this.loadedMap : this.result;
+    }
+
     _renderActions() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-actions';
+        // ⛓ When a loadable world last appeared — a new result.rulesJson, by
+        // Run all or by a single step — drawn on the actions row: a tutorial
+        // step's done check compares it with when the step began, so the
+        // previous run's "Pipeline complete" cannot pass for this one's
+        // (tutorialContext.js `sinceStep`).
+        const rules = this.result?.rulesJson ?? null;
+        if (rules && rules !== this._stampedRulesJson) this.lastGeneratedAt = Date.now();
+        this._stampedRulesJson = rules;
+        section.dataset.generatedAt = String(this.lastGeneratedAt ?? 0);
         const sphere = this.mode === 'sphereGrowth';
         const topDown = this.mode === 'topDown';
+        const spiral = this.mode === 'shuffledSpiral';
         const completed = this._stepState?.completed ?? -1;
         const tdCompleted = this._tdState?.completed ?? -1;
+        const spiralCompleted = this._spiralState?.completed ?? -1;
 
         // Step indicator (stepped modes): the step chips take the full first
         // row; the Run buttons sit on their own row below.
-        if (sphere || topDown) {
+        if (sphere || topDown || spiral) {
             const ind = this._renderStepIndicator();
             ind.style.flexBasis = '100%';
             section.appendChild(ind);
@@ -1621,7 +2353,9 @@ export class ProcgenPipelineUI {
             : (sphere
                 ? (completed >= 0 && completed < SPHERE_LAST_STEP ? 'Run all (finish)' : 'Run all')
                 : (topDown && tdCompleted >= 0 && tdCompleted < TOPDOWN_LAST_STEP
-                    ? 'Run all (finish)' : 'Generate'));
+                    ? 'Run all (finish)'
+                    : (spiral && spiralCompleted >= 0 && spiralCompleted < SPIRAL_LAST_STEP
+                        ? 'Run all (finish)' : 'Generate')));
         gen.disabled = this.isGenerating;
         gen.addEventListener('click', () => this._runGeneration());
 
@@ -1731,6 +2465,28 @@ export class ProcgenPipelineUI {
                 btnRow.appendChild(this._btn('Reset', () => this._resetTDSteps()));
             }
             section.appendChild(btnRow);
+        } else if (spiral) {
+            // Shuffled-spiral mode: a Run-next button row beside the primary
+            // (Generate / Run all), mirroring top-down over the four spiral steps.
+            const btnRow = document.createElement('div');
+            btnRow.className = 'procgen-pipeline-btn-row';
+            btnRow.style.flexBasis = '100%';
+            btnRow.appendChild(gen);
+
+            const nextStep = this._spiralState ? nextSpiralStep(this._spiralState) : 'arrange';
+            const nextIdx = nextStep ? SPIRAL_STEPS.indexOf(nextStep) : -1;
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'procgen-pipeline-btn';
+            nextBtn.textContent = nextIdx >= 0
+                ? SPIRAL_STEP_RUN_LABELS[nextIdx] : 'Pipeline complete';
+            nextBtn.disabled = this.isGenerating || nextIdx < 0;
+            nextBtn.addEventListener('click', () => this._runSpiralStepNext());
+            btnRow.appendChild(nextBtn);
+
+            if (this._spiralState) {
+                btnRow.appendChild(this._btn('Reset', () => this._resetSpiralSteps()));
+            }
+            section.appendChild(btnRow);
         } else {
             section.appendChild(gen);
         }
@@ -1751,8 +2507,10 @@ export class ProcgenPipelineUI {
 
         // Post-generation export actions, shown next to Generate once
         // a result is available. Hidden until then to keep the panel
-        // uncluttered before there's anything to export.
-        if (this.result) {
+        // uncluttered before there's anything to export. They act on the
+        // panel's OWN generation, never on a loaded world's map (`loadedMap`,
+        // which has no rulesJson).
+        if (this.result?.rulesJson) {
             const json = stringifyRulesJson(this.result.rulesJson);
             const seedName = this.result.rulesJson?.seed_name || String(this.params.seed);
             const filename = `AP_${seedName}_rules.json`;
@@ -1761,7 +2519,14 @@ export class ProcgenPipelineUI {
                 e.preventDefault();
                 this._loadIntoFrontend(this.result.rulesJson, loadBtn);
             });
-            const editBtn = this._btn('Edit in APWorld Editor', (e) => {
+            /**
+             * ⛓ H4c — **ONE SPELLING, SIX DOORS.** "Open in APWorld Editor" is
+             * what the Presets screen (H2), the marking tool, both lab pages and
+             * the bounce editor say; this button said "Edit in" and was one of
+             * the two that did. The label is the reader's only clue that these
+             * are the same door from six places.
+             */
+            const editBtn = this._btn('Open in APWorld Editor', (e) => {
                 e.preventDefault();
                 this._editInApworldEditor(this.result.rulesJson, editBtn);
             });
@@ -1802,8 +2567,12 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;';
         const topDown = this.mode === 'topDown';
-        const labels = topDown ? TOPDOWN_STEP_LABELS : SPHERE_STEP_LABELS;
-        const completed = (topDown ? this._tdState?.completed : this._stepState?.completed) ?? -1;
+        const spiral = this.mode === 'shuffledSpiral';
+        const labels = topDown ? TOPDOWN_STEP_LABELS
+            : spiral ? SPIRAL_STEP_LABELS : SPHERE_STEP_LABELS;
+        const completed = (topDown ? this._tdState?.completed
+            : spiral ? this._spiralState?.completed
+                : this._stepState?.completed) ?? -1;
         labels.forEach((label, i) => {
             const chip = document.createElement('span');
             const done = i <= completed;
@@ -2411,6 +3180,15 @@ export class ProcgenPipelineUI {
         label.textContent = `#${node.index} w${node.wave}`
             + `${node.isFiller ? ' (filler)' : ''}`
             + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
+        const editStatus = this._editStatusOf(region);
+        if (editStatus) {
+            const flag = document.createElement('span');
+            flag.className = 'procgen-pipeline-edit-status';
+            flag.textContent = editStatus.flagged ? ' ⚠ edited, uncertified' : ' ✎ edited';
+            flag.title = editStatus.text;
+            if (editStatus.flagged) flag.style.color = '#d04040';
+            label.appendChild(flag);
+        }
         row.appendChild(label);
 
         // Per-region substrate override. Unlike the 2b topology dropdown (scoped
@@ -2419,15 +3197,25 @@ export class ProcgenPipelineUI {
         const subSel = document.createElement('select');
         subSel.className = 'procgen-pipeline-region-substrate';
         subSel.dataset.index = String(node.index);
-        subSel.title = 'Substrate for this region (manual override — not limited by the quota mix)';
-        const subOpts = this._sphereCapableSubstrates();
+        // ⛓ REGISTRATION ORDER RO2 — the options in the user's substrate order.
+        const subOpts = inSubstrateOrder(this._sphereCapableSubstrates());
         const list = subOpts.includes(node.substrate) ? subOpts : [...subOpts, node.substrate];
+        // ⛓ SUBSTRATE CHART S4 — each option shows the label (its VALUE stays the
+        //   id) and carries its card; the select's own hover is the CHOSEN
+        //   substrate's card above the override sentence (a closed select's
+        //   title is the one hover every browser shows).
+        const cards = substrateCards(substrateRegistry.getAll());
         for (const id of list) {
             const opt = document.createElement('option');
-            opt.value = id; opt.textContent = id;
+            opt.value = id;
+            opt.textContent = cards.get(id)?.label ?? id;
+            if (cards.has(id)) opt.title = cards.get(id).text;
             if (id === node.substrate) opt.selected = true;
             subSel.appendChild(opt);
         }
+        const overrideSentence = 'Substrate for this region (manual override — not limited by the quota mix)';
+        const chosen = cards.get(node.substrate);
+        subSel.title = chosen ? `${chosen.text}\n\n${overrideSentence}` : overrideSentence;
         subSel.addEventListener('change', () => this._changeRegionSubstrate(node, subSel.value));
         row.appendChild(subSel);
 
@@ -2438,19 +3226,28 @@ export class ProcgenPipelineUI {
         const reroll = this._btn('Re-roll 🎲', () => this._reRollRegion(region, node));
         reroll.title = "Regenerate this region's interior on a new seed (keeps exits/locations)";
         row.appendChild(reroll);
+
+        // F5 — capture this region into the working library (substrates with a
+        // captureLibraryEntry hook only; the working library exports from the
+        // Region libraries section).
+        if (typeof substrateRegistry.get(region?.substrate)?.captureLibraryEntry === 'function') {
+            const save = this._btn('Save to library ▸', () => this._captureRegionToLibrary(region));
+            save.title = 'Serialize this region into the working library (Region libraries section)';
+            row.appendChild(save);
+        }
         return row;
     }
 
     // Registered substrates sphere growth can realise: procedural
     // (generateRegionCore) or spec-targeted zone (generateZoneForSpecs[Gen]). NOT
     // limited to the quota mix, so a per-region override can pick any usable
-    // substrate. Excludes zone-count-only (jta) and opaque (flash) substrates,
-    // which the grow loop rejects.
+    // substrate. Excludes zone-count-only (omsi) and opaque (flash) substrates,
+    // which the grow loop rejects. The test is procgenCore's
+    // regionRealiserKind — the hub's Initialise targets and the capability
+    // chart ask the same function.
     _sphereCapableSubstrates() {
         return substrateRegistry.getAll()
-            .filter((s) => typeof s.generateRegionCore === 'function'
-                || typeof s.generateZoneForSpecs === 'function'
-                || typeof s.generateZoneForSpecsGen === 'function')
+            .filter((s) => regionRealiserKind(s) !== null)
             .map((s) => s.id);
     }
 
@@ -2463,12 +3260,12 @@ export class ProcgenPipelineUI {
     // stitching — stays consistent (the reason maze isn't safe to re-roll alone).
     _changeRegionSubstrate(node, value) {
         if (!node || value === node.substrate) return;
-        node.substrate = value;
-        // _invalidateFrom clears this.message, so set it AFTER and re-render.
-        this._invalidateFrom(3);
-        this.message = `Region #${node.index} substrate → ${value}. `
-            + 'Re-run 3 Build regions to apply.';
-        this.render();
+        // A RECORDED op staged at ②c (the node it writes is ②b's, which is
+        // where an undo rewinds to). The old body — mutate + _invalidateFrom(3)
+        // — is exactly what the binding + the derived stage now do.
+        this._recordEdit({
+            op: 'set-substrate', region_id: sphereNodeKey(node), substrate: value,
+        });
     }
 
     // Look up the tree node backing a grid region (by region_id), so a launch
@@ -2490,12 +3287,78 @@ export class ProcgenPipelineUI {
             return;
         }
         const nd = node ?? this._nodeForRegion(region);
+        const writeBack = (editedRegion) => this._onRegionEdited(region, editedRegion, nd);
+        const st = this._stepState;
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, {
+                ...(st?.growConfig?.itemLib ? { baseItemLib: st.growConfig.itemLib } : {}),
+                itemPool: Object.keys(this.scenario?.items ?? {}),
+            }, writeBack);
+        }
         const contract = this._buildRegionContract(region, nd);
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEdited(region, editedRegion, nd),
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
+    }
+
+    // ⛓ A `kind: 'lab'` editor (maze, Seedling) takes a SET DOCUMENT, not a
+    // region: the substrate's own `regionRoundTrip` builds it and reads the save
+    // back (pipelineRoomEdit.js — the declaration the APWorld editor's Edit ▸
+    // uses), and `writeBack` gets a live region descriptor exactly as a panel
+    // editor's save hands one. Every refusal on the way is SHOWN.
+    async _openLabRoom(region, ctxOpts, writeBack) {
+        let opened;
+        try {
+            opened = await openPipelineRoom(region, ctxOpts);
+        } catch (err) {
+            opened = { ok: false, why: err.message };
+        }
+        if (!opened.ok) return this._showEditRefusal(opened.why);
+        this._labRoomHandle?.close?.();
+        this._labRoomHandle = null;
+        const handle = await openRoomEditor(region.substrate, {
+            ...opened.session,
+            onSave: (saved) => {
+                this._labRoomHandle = null;
+                regionFromPipelineSave(opened, saved).then(
+                    (out) => (out.error ? this._showEditRefusal(out.error, 'Save') : writeBack(out.region)),
+                    (err) => this._showEditRefusal(err.message, 'Save'),
+                );
+            },
         });
+        if (!this._reportEditDoor(handle, region)) return;
+        this._labRoomHandle = handle;
+        this.message = `Editing "${region.region_id}" in the ${region.substrate} lab. `
+            + 'Save there (close the room) to write it back here.';
+        this.warning = '';
+        this.render();
+    }
+
+    // ⛓ A `kind: 'panel'` door (bounce), through the ONE opener: its panel is
+    // created when the layout has none (⚖ region-editor-launch Q1).
+    async _openPanelRoom(region, session) {
+        let handle;
+        try {
+            handle = await openRoomEditor(region.substrate, session);
+        } catch (err) {
+            handle = { ok: false, why: err.message };
+        }
+        return this._reportEditDoor(handle, region);
+    }
+
+    // ⛔ The door's refusal is a RETURN VALUE (labRoomEditor's `{ok:false, why}`);
+    // one returned to nobody is a button that does nothing and says nothing.
+    // Answers true when the door opened (or answers nothing — a panel door).
+    _reportEditDoor(handle, region) {
+        if (handle && handle.ok === false) {
+            this._showEditRefusal(handle.why);
+            return false;
+        }
+        return true;
+    }
+
+    _showEditRefusal(why, what = 'Edit') {
+        this.message = '';
+        this.warning = `${what} refused: ${why}`;
+        this.render();
     }
 
     // Reconstruct the realiser contract for a region from its node + the tree:
@@ -2519,7 +3382,7 @@ export class ProcgenPipelineUI {
         // — items at this region's own wave are gated behind reaching it, so
         // they're not yet held). Computed independently of the substrate contract
         // below so it survives even if buildRegionContract throws. See §5 of
-        // NewDocs/plans/procedural-generation/sphere-growth-apworld-integration.md.
+        // the sphere-growth apworld-integration design.
         if (node && st?.plan) {
             base.expectedItems = (st.plan.spheres ?? [])
                 .slice(0, node.wave ?? 0)
@@ -2549,74 +3412,64 @@ export class ProcgenPipelineUI {
     // backstop).
     _reRollRegion(region, node = null) {
         const st = this._stepState;
-        const grid = st?.grow?.grid;
-        const tree = st?.tree;
         const nd = node ?? this._nodeForRegion(region);
-        if (!grid || !tree || !nd) {
+        if (!st?.grow?.grid || !st.tree || !nd) {
             this.message = 'Re-roll unavailable — re-run from 3 first.';
             this.warning = '';
             this.render();
             return;
         }
-        const count = (this._rerollCounts ??= new Map());
-        const n = (count.get(nd.region_id) ?? 0) + 1;
-        count.set(nd.region_id, n);
-        const seed = ((st.cfg.seed * 7919) ^ this._hashStr(nd.region_id)) + n * 104729 | 0;
-        try {
-            reRollSphereRegion(grid, nd, tree, {
-                seed,
-                regionSize: st.growConfig.regionSize,
-                regionParams: st.growConfig.regionParams,
-                assumeBidirectional: st.growConfig.growthParams?.assumeBidirectional ?? true,
-            });
-            // _invalidateFrom clears this.message, so set it AFTER and re-render.
-            this._invalidateFrom(4);
-            this.message = `Re-rolled "${nd.region_id}" (seed ${seed}). `
-                + 'Re-run 4 Compile to recheck the oracle.';
-            this.render();
-        } catch (err) {
-            this.message = `Re-roll failed: ${err.message}`;
-            this.warning = '';
-            this.render();
-        }
-    }
-
-    _hashStr(s) {
-        let h = 0;
-        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-        return h;
+        // `n` comes from the RECORDING, not a session counter: that is what
+        // makes the re-roll reproducible from `config + seed + edits` and what
+        // makes undo rewind the count. The seed derivation itself was already
+        // pure in (seed, region_id, n) — only its location was this file.
+        const key = sphereNodeKey(nd);
+        this._recordEdit({
+            op: 're-roll', region_id: key, n: reRollCountFor(st.edits, key) + 1,
+        });
     }
 
     // Write-back from an editor save (pipeline mode): splice the edited region
     // into the live grid and invalidate 4 only (the user re-runs Compile; the
     // oracle is the backstop). Leaves the logical tree untouched.
+    // ⛓ region-editor-launch S2 — an edited region's flag, as its substrate
+    // declares it (`regionEditStatus`), or null. The panel names no substrate.
+    _editStatusOf(region) {
+        try {
+            return substrateRegistry.get(region?.substrate)?.regionEditStatus?.(region?.playable_payload) ?? null;
+        } catch {
+            return null;
+        }
+    }
+
     _onRegionEdited(origRegion, editedRegion, node) {
         const st = this._stepState;
         const grid = st?.grow?.grid;
-        if (!grid || !editedRegion) return;
         const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
-        if (!cell) return;
+        // ⛔ Said, not dropped: a Save that arrives after a re-run cleared the
+        //   grid (or moved the region) would otherwise vanish without a word.
+        if (!grid || !editedRegion || !cell || grid.getRegion(cell)?.region_id !== origRegion.region_id) {
+            return this._showEditRefusal(`"${origRegion.region_id}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(4);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
             + 'Re-run 4 Compile to recheck the oracle.';
+        this.warning = status?.flagged ? `⚠ ${editedRegion.region_id}: ${status.text}` : '';
         this.render();
     }
 
     // Hit-test a click on the composite grid canvas → the region at that cell
-    // (or null outside the grid). Maps client px → canvas px (CSS may scale the
-    // canvas), then to grid cell using the same TILE_PX × regionSize layout
-    // _drawGrid paints with.
+    // (or null outside the grid). ⛓ H3: the client-px → canvas-px → cell
+    // mapping is the RENDERER's (`canvasPointOf` / `cellAtPoint`), so a click
+    // and a pixel cannot drift apart — this was one of two identical inline
+    // copies of it here, and the hub's Map tab is a third reader.
     _gridRegionAt(canvas, grid, regionSize, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
-        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
-        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
-        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
-        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
-        return grid.getRegion({ gx, gy });
+        const cell = this._cellCoordsAt(canvas, grid, regionSize, evt);
+        return cell ? grid.getRegion(cell) : null;
     }
 
     _renderCompileFeedback(compile) {
@@ -2629,6 +3482,18 @@ export class ProcgenPipelineUI {
             : `✗ oracle mismatch: ${oracleErrors[0]}`;
         oracle.style.cssText = ok ? 'color:#3aa85a;' : 'color:#d04040;';
         wrap.appendChild(oracle);
+        // ⛓ region-editor-launch S2 — an edited region its substrate flags is
+        //   REPORTED here: the sphere oracle checks the plan, not the room.
+        const flagged = Object.entries(rulesJson.preset_sidecars ?? {}).flatMap(([, sidecars]) =>
+            Object.entries(sidecars ?? {}).map(([id, e]) => [id, this._editStatusOf(e)]))
+            .filter(([, status]) => status?.flagged);
+        for (const [id, status] of flagged) {
+            const line = document.createElement('div');
+            line.className = 'procgen-pipeline-edit-flag';
+            line.textContent = `⚠ ${id}: ${status.text}`;
+            line.style.cssText = 'color:#d04040;';
+            wrap.appendChild(line);
+        }
         const regionCount = Object.keys(rulesJson.regions ?? {}).length;
         const hasLog = Array.isArray(rulesJson.sphere_log) && rulesJson.sphere_log.length > 0;
         const counts = document.createElement('div');
@@ -2641,8 +3506,9 @@ export class ProcgenPipelineUI {
     _renderStats() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-stats';
-        if (!this.result) return section;
-        const { stats, poolRemaining, fromLoadedPreset } = this.result;
+        const shown = this._mapResult();
+        if (!shown) return section;
+        const { stats, poolRemaining, fromLoadedPreset } = shown;
         const parts = [];
         if (fromLoadedPreset) {
             parts.push(`loaded preset · regions ${stats.regionsBuilt}`);
@@ -2686,9 +3552,22 @@ export class ProcgenPipelineUI {
             // Live stepped grid: visible from 1 Layout onward (stubs fill in as 2
             // realises), before 4 Compile sets this.result.
             grid = td.layout.grid;
-            regionSize = td.regionSize ?? this.result?.regionSize;
-        } else if (this.result) {
-            ({ grid, regionSize } = this.result);
+            // uniformSize is what layoutTopDown ACTUALLY placed — it widens the
+            // requested base to the per-axis max over all regions so shared
+            // walls line up. Drawing (and hit-testing exit squares) with the
+            // base would put every click in the wrong cell on a widened world.
+            regionSize = td.layout.uniformSize ?? td.regionSize ?? this.result?.regionSize;
+        } else if (this.mode === 'shuffledSpiral' && this._spiralState?.regions?.grid) {
+            // Live stepped grid: visible from 3 Regions onward, before 4 Compile
+            // sets this.result. The pool/regionSize aren't on the envelope, so
+            // fall back to the current params for the cell size. Display-only:
+            // spiral regions are structural (not hand-edited), so no interactive
+            // Move/Edit this pass (matches the old one-shot spiral map).
+            grid = this._spiralState.regions.grid;
+            regionSize = this.result?.regionSize
+                ?? { width: this.params.regionWidth, height: this.params.regionHeight };
+        } else if (this._mapResult()) {
+            ({ grid, regionSize } = this._mapResult());
         }
         if (!grid || !regionSize) {
             const hint = document.createElement('div');
@@ -2706,7 +3585,7 @@ export class ProcgenPipelineUI {
         const interactive = (this.mode === 'sphereGrowth' && this._stepState?.tree)
             || (this.mode === 'topDown' && (this._tdState?.completed ?? -1) >= 2);
         // Both modes now offer the full editor set (top-down Edit Region routes to
-        // _editRegionTD; Move Region / Move Exits to _applyGridEditTD).
+        // _editRegionTD; Move Region / Move Exits to the recorded-edit path).
         const modes = [['edit', 'Edit Region'], ['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']];
         if (interactive && !modes.some(([v]) => v === this._mapMode)) {
             this._mapMode = modes[0][0];
@@ -2734,6 +3613,10 @@ export class ProcgenPipelineUI {
             canvas.addEventListener('click', (e) => this._onMapClick(canvas, grid, regionSize, e));
         }
         section.appendChild(canvas);
+        // The recorded-edit history + Undo. Shown whenever the map is editable
+        // (or an edit is already recorded), so the count is readable headless.
+        const st2 = this.mode === 'topDown' ? this._tdState : this._stepState;
+        if (interactive || st2?.edits?.length) section.appendChild(this._renderEditHistory());
         return section;
     }
 
@@ -2771,14 +3654,8 @@ export class ProcgenPipelineUI {
 
     // Grid cell {gx,gy} under a canvas click (or null outside the grid).
     _cellCoordsAt(canvas, grid, regionSize, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        const cx = (evt.clientX - rect.left) * (canvas.width / rect.width);
-        const cy = (evt.clientY - rect.top) * (canvas.height / rect.height);
-        const gx = Math.floor(cx / (regionSize.width * TILE_PX));
-        const gy = Math.floor(cy / (regionSize.height * TILE_PX));
-        if (gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return null;
-        return { gx, gy };
+        const hit = cellAtPoint(grid, regionSize, canvasPointOf(canvas, evt));
+        return hit ? { gx: hit.gx, gy: hit.gy } : null;
     }
 
     _onMapClick(canvas, grid, regionSize, evt) {
@@ -2815,20 +3692,14 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
-        this._applyGridEdit(
-            (g) => (here ? swapSphereRegions(g, from, cell) : moveSphereRegion(g, from, cell)),
-            here ? 'Swapped the two regions.' : 'Moved the region.',
-        );
+        this._recordEdit(here
+            ? { op: 'swap-regions', a: from, b: cell }
+            : { op: 'move-region', from, to: cell });
     }
 
     // Canvas-backing pixel under a click (null if the canvas isn't laid out).
     _canvasPx(canvas, evt) {
-        const rect = canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) return null;
-        return {
-            cx: (evt.clientX - rect.left) * (canvas.width / rect.width),
-            cy: (evt.clientY - rect.top) * (canvas.height / rect.height),
-        };
+        return canvasPointOf(canvas, evt);
     }
 
     // The exit whose green square contains the within-cell pixel (wx, wy), or null.
@@ -2850,9 +3721,12 @@ export class ProcgenPipelineUI {
         return Object.keys(d).reduce((a, b) => (d[b] < d[a] ? b : a));
     }
 
-    // Move Exits: first click selects an exit/entrance green square; second
-    // click (a side of the same region) moves it to that side, or swaps it with
-    // the exit already there. Zone (bounce) regions only.
+    // Move Exits: first click selects an exit/entrance green square; the second
+    // click ON ANOTHER EXIT'S SQUARE swaps the two, and a click anywhere else in
+    // the region moves the exit to the nearest side — the op then says whether an
+    // occupied side takes it (⛓ PIPELINE RELAYOUT R2: nothing is resolved by side
+    // here, so a second exit on a side is never silently turned into a swap).
+    // Only a region whose substrate declares `exitSides` (`regionExitSides`).
     _mapClickMoveExit(canvas, grid, regionSize, evt, cell) {
         const px = this._canvasPx(canvas, evt);
         if (!px) return;
@@ -2864,8 +3738,9 @@ export class ProcgenPipelineUI {
         if (!this._mapSel || this._mapSel.kind !== 'exit') {
             const region = grid.getRegion(cell);
             if (!region) return;
-            if (!region.playable_payload?.params?.sidePortals) {
-                this.message = 'Move Exits: bounce/zone regions only (this region has no side portals).';
+            const sides = regionExitSides(region);
+            if (sides.refusal) {
+                this.message = `Move Exits: ${sides.refusal}.`;
                 this.render();
                 return;
             }
@@ -2889,456 +3764,153 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
+        const clicked = this._exitAtPx(grid.getRegion(cell), regionSize, wx, wy);
+        if (clicked && clicked.exit_id !== sel.exitId) {
+            this._recordEdit({ op: 'swap-exit-sides', cell, exitA: sel.exitId, exitB: clicked.exit_id });
+            return;
+        }
         const newSide = this._nearestSide(wx, wy, regionSize);
-        if (newSide === sel.side) {
+        if (clicked || newSide === sel.side) {
             this.message = 'Move Exits: same side — cancelled.';
             this.render();
             return;
         }
-        const region = grid.getRegion(cell);
-        const exits = getRegionExits(region);
-        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-        const occupant = list.find((e) => e.exit_id !== sel.exitId && e.side === newSide);
-        this._applyGridEdit(
-            (g) => (occupant
-                ? swapSphereExitSides(g, cell, sel.exitId, occupant.exit_id, regionSize)
-                : moveSphereExitSide(g, cell, sel.exitId, newSide, regionSize)),
-            occupant
-                ? `Swapped exits ${sel.exitId} ↔ ${occupant.exit_id}.`
-                : `Moved exit ${sel.exitId} to side ${newSide}.`,
-        );
+        this._recordEdit({ op: 'move-exit-side', cell, exitId: sel.exitId, side: newSide });
     }
 
-    // Run a grid-layout edit, then keep st.grow.startCell pointing at the start
-    // region (a move/swap may relocate it — the oracle reads from startCell),
-    // invalidate 4, and re-render. _invalidateFrom clears this.message, so the
-    // confirmation is set AFTER it.
-    _applyGridEdit(fn, okMsg) {
-        if (this.mode === 'topDown') { this._applyGridEditTD(fn, okMsg); return; }
-        const st = this._stepState;
-        const grid = st?.grow?.grid;
-        if (!grid) return;
-        const startId = grid.getRegion(st.grow.startCell)?.region_id;
+    // Record a layout edit and apply it. The gesture's effect is immediate
+    // (the map changes on the click); the RECORDING is what makes it survive a
+    // re-run, an export, the CLI and an undo — see layoutEdits.js.
+    //
+    // Everything downstream is DERIVED from the op's stage in the mode's
+    // binding, so this one method serves all six gestures and the four
+    // write-back depths the two modes used to spell out by hand:
+    // `_invalidateFrom(steps.indexOf(stage))` reproduces the old
+    // `_invalidateFrom(4)` / `_invalidateFromTD(2)` / `_invalidateFrom(3)` /
+    // `_invalidateFromTD(0)` exactly, because the stage tables ARE those depths.
+    //
+    // The binding also re-points the start cell (sphere: from the root tree
+    // node; top-down: from layout.actualStartName) and, on sphere, resyncs
+    // every tree node's `cell` — which the panel never did, so a re-roll after
+    // a move used to target the node's OLD cell.
+    _recordEdit(edit) {
+        const td = this.mode === 'topDown';
+        const st = td ? this._tdState : this._stepState;
+        const binding = td ? TD_EDIT_BINDING : SPHERE_EDIT_BINDING;
+        const steps = td ? TOPDOWN_STEPS : SPHERE_STEPS;
+        if (!st) return false;
+        let stage;
         try {
-            fn(grid);
-            if (startId) {
-                const sr = grid.allRegions().find((r) => r.region_id === startId);
-                if (sr) st.grow.startCell = sr.cell;
-            }
-            this._invalidateFrom(4);
-            this.message = `${okMsg} Re-run 4 Compile to recheck the oracle.`;
-            this.render();
+            stage = layoutEditStage(edit, binding);
         } catch (err) {
             this.message = `Edit failed: ${err.message}`;
+            this.warning = '';
             this.render();
+            return false;
         }
-    }
-
-    // Top-down layout edit. Operates on the FINALIZED grid (st.finalize.grid ===
-    // st.layout.grid), which the move helper re-stitches via relayoutSphereGrid
-    // (rebuilding teleporters + re-deriving forward targets), then invalidates 4
-    // ONLY (_invalidateFromTD(2) → completed=2, compile dropped, finalize kept).
-    // We deliberately do NOT re-run 3: finalizeTopDown reads the now-stale
-    // cellsByName and would double-apply back-exits, whereas 4 Compile reads only
-    // the grid. The start region may relocate on a move/swap, so re-point
-    // finalize.startCell at it (buildRulesJson reads from startCell).
-    _applyGridEditTD(fn, okMsg) {
-        const st = this._tdState;
-        const grid = st?.finalize?.grid ?? st?.layout?.grid;
-        if (!grid) return;
-        const startCell = st.finalize?.startCell ?? st.layout?.startCell;
-        const startId = startCell ? grid.getRegion(startCell)?.region_id : null;
-        try {
-            fn(grid);
-            if (startId && st.finalize) {
-                const sr = grid.allRegions().find((r) => r.region_id === startId);
-                if (sr) st.finalize.startCell = sr.cell;
-            }
-            this._invalidateFromTD(2);
-            this.message = `${okMsg} Re-run 4 Compile to recompile.`;
+        const r = pushLayoutEdit(st, edit, binding);
+        if (!r.ok) {
+            this.message = `Edit failed: ${r.error}`;
+            this.warning = '';
             this.render();
-        } catch (err) {
-            this.message = `Edit failed: ${err.message}`;
+            return false;
+        }
+        const idx = steps.indexOf(stage);
+        // _invalidateFrom* clears this.message, so the confirmation is set AFTER.
+        if (td) this._invalidateFromTD(idx);
+        else this._invalidateFrom(idx);
+        const next = steps[idx + 1];
+        this.message = `${r.description}. Re-run from ${next ?? 'compile'} to apply.`;
+        this.render();
+        return true;
+    }
+
+    // Undo = pop the last recorded edit and re-run from the step that PRODUCES
+    // the artifact it mutated (`sphereUndoStep` / `topDownUndoStep`). The edit
+    // is never inverted — determinism is the guarantee, so N edits followed by
+    // N undos reproduce the never-edited world byte for byte.
+    //
+    // The undo step is NOT always the replay stage: a top-down layout edit
+    // replays after ③ but the grid it moves regions on is built by ①, so it
+    // rewinds to ①. Sphere's ③ builds its own grid, so there the two coincide.
+    _undoLastEdit() {
+        const td = this.mode === 'topDown';
+        const st = td ? this._tdState : this._stepState;
+        const binding = td ? TD_EDIT_BINDING : SPHERE_EDIT_BINDING;
+        const steps = td ? TOPDOWN_STEPS : SPHERE_STEPS;
+        if (!st?.edits?.length) {
+            this.message = 'Nothing to undo.';
+            this.warning = '';
             this.render();
-        }
-    }
-
-    _drawGrid(canvas, grid, regionSize) {
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = COLORS.emptyCell;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        for (let gy = 0; gy < grid.height; gy++) {
-            for (let gx = 0; gx < grid.width; gx++) {
-                const region = grid.getRegion({ gx, gy });
-                const offX = gx * regionSize.width * TILE_PX;
-                const offY = gy * regionSize.height * TILE_PX;
-                if (!region) {
-                    ctx.strokeStyle = COLORS.cellBorder;
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(offX + 0.5, offY + 0.5,
-                        regionSize.width * TILE_PX - 1, regionSize.height * TILE_PX - 1);
-                    continue;
-                }
-                this._drawRegion(ctx, region, offX, offY, regionSize);
-            }
-        }
-
-        // Cell borders so regions are visually distinct.
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.lineWidth = 1;
-        for (let gx = 0; gx <= grid.width; gx++) {
-            ctx.beginPath();
-            ctx.moveTo(gx * regionSize.width * TILE_PX + 0.5, 0);
-            ctx.lineTo(gx * regionSize.width * TILE_PX + 0.5, canvas.height);
-            ctx.stroke();
-        }
-        for (let gy = 0; gy <= grid.height; gy++) {
-            ctx.beginPath();
-            ctx.moveTo(0, gy * regionSize.height * TILE_PX + 0.5);
-            ctx.lineTo(canvas.width, gy * regionSize.height * TILE_PX + 0.5);
-            ctx.stroke();
-        }
-
-        this._drawConnections(ctx, grid, regionSize);
-
-        // Highlight the pending selection: the whole cell (Move Region) or the
-        // selected exit's green square (Move Exits).
-        const sel = this._mapSel;
-        const cw = regionSize.width * TILE_PX;
-        const ch = regionSize.height * TILE_PX;
-        if (sel?.kind === 'exit') {
-            const region = grid.getRegion(sel.cell);
-            const placed = region
-                ? resolveExitTilePositions(getRegionExits(region) ?? [], regionSize)
-                : [];
-            const hit = placed.find((p) => p?.exit?.exit_id === sel.exitId);
-            if (hit) {
-                ctx.strokeStyle = '#ffd24a';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(
-                    sel.cell.gx * cw + hit.x * TILE_PX - 1.5,
-                    sel.cell.gy * ch + hit.y * TILE_PX - 1.5,
-                    TILE_PX + 3, TILE_PX + 3,
-                );
-            }
-        } else if (sel && this._mapMode === 'moveRegion') {
-            const { gx, gy } = sel.cell;
-            ctx.strokeStyle = '#ffd24a';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(gx * cw + 1.5, gy * ch + 1.5, cw - 3, ch - 3);
-        }
-    }
-
-    // Thin yellow lines linking each exit's green square to its paired
-    // entrance's green square (the reciprocal exit in the target region, found
-    // via targetExitId). Usually the two sit adjacent so the line is tiny, but
-    // for teleporter links (regions placed apart) it shows the connection. Drawn
-    // last so the lines sit on top of the cells.
-    _drawConnections(ctx, grid, regionSize) {
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        // Global green-square center for every (region_id, exit_id).
-        const centers = new Map();
-        for (const region of grid.allRegions()) {
-            const cell = region.cell;
-            if (!cell) continue;
-            const placed = resolveExitTilePositions(getRegionExits(region) ?? [], regionSize);
-            for (const p of placed) {
-                if (!p?.exit?.exit_id) continue;
-                centers.set(`${region.region_id} ${p.exit.exit_id}`, {
-                    px: cell.gx * cellW + (p.x + 0.5) * TILE_PX,
-                    py: cell.gy * cellH + (p.y + 0.5) * TILE_PX,
-                });
-            }
-        }
-        ctx.strokeStyle = '#e6c84a';
-        ctx.lineWidth = 3;
-        const drawn = new Set();
-        for (const region of grid.allRegions()) {
-            const exits = getRegionExits(region);
-            const list = Array.isArray(exits) ? exits : [...(exits?.values?.() ?? [])];
-            for (const exit of list) {
-                if (!exit?.targetRegion || !exit?.targetExitId) continue;
-                const fromKey = `${region.region_id} ${exit.exit_id}`;
-                const toKey = `${exit.targetRegion} ${exit.targetExitId}`;
-                const pairKey = fromKey < toKey ? `${fromKey}|${toKey}` : `${toKey}|${fromKey}`;
-                if (drawn.has(pairKey)) continue;
-                drawn.add(pairKey);
-                const a = centers.get(fromKey);
-                const b = centers.get(toKey);
-                if (!a || !b) continue;
-                ctx.beginPath();
-                ctx.moveTo(a.px, a.py);
-                ctx.lineTo(b.px, b.py);
-                ctx.stroke();
-            }
-        }
-    }
-
-    _drawRegion(ctx, region, offX, offY, regionSize) {
-        const hint = region?.render_hint ?? region?.substrate ?? 'maze';
-        const payload = region?.playable_payload;
-        // Stub region: placed in 1 Layout (top-down) but not yet realised in 2,
-        // so it has no playable_payload. Draw a labelled placeholder instead of
-        // dispatching to a substrate drawer (which assumes a payload).
-        if (!payload) {
-            this._drawStubRegion(ctx, region, offX, offY, regionSize);
             return;
         }
-        if (hint === 'text_adventure') {
-            this._drawTextAdventureRegion(ctx, region, offX, offY, regionSize);
-        } else if (hint === 'maze') {
-            this._drawMazeRegion(ctx, payload, offX, offY);
-        } else {
-            this._drawGenericRegion(ctx, region, offX, offY, regionSize);
-        }
+        const popped = popLayoutEdit(st, binding);
+        const from = (td ? topDownUndoStep : sphereUndoStep)(popped.edit);
+        if (td) this._invalidateFromTD(steps.indexOf(from) - 1);
+        else this._invalidateFrom(steps.indexOf(from) - 1);
+        this.message = `Undid: ${describeLayoutEdit(popped.edit)} — `
+            + `re-run from ${from} to apply (${st.edits.length} edit`
+            + `${st.edits.length === 1 ? '' : 's'} left).`;
+        this.render();
     }
 
-    // A region placed but not yet realised (top-down 1 Layout → 2 Realise).
-    // Muted fill + the region_id so the live grid is viewable mid-pipeline.
-    _drawStubRegion(ctx, region, offX, offY, regionSize) {
-        const w = regionSize.width * TILE_PX;
-        const h = regionSize.height * TILE_PX;
-        ctx.fillStyle = COLORS.emptyCell;
-        ctx.fillRect(offX, offY, w, h);
-        ctx.strokeStyle = COLORS.cellBorder;
-        ctx.setLineDash([4, 3]);
-        ctx.lineWidth = 1;
-        ctx.strokeRect(offX + 1.5, offY + 1.5, w - 3, h - 3);
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#888';
-        ctx.font = '10px monospace';
-        ctx.fillText(String(region?.region_id ?? '?').slice(0, 12), offX + 4, offY + 14);
+    // The recorded-edit history, with UNDO. This is the layout editor's first
+    // visible memory: before B-d an edit existed only as a difference between
+    // the map and what the seed produces.
+    _renderEditHistory() {
+        const st = this.mode === 'topDown' ? this._tdState : this._stepState;
+        const edits = st?.edits ?? [];
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-edit-history';
+        wrap.style.cssText = 'margin-top:6px;font-size:11px;';
+        const head = document.createElement('div');
+        head.style.cssText = 'display:flex;align-items:center;gap:8px;color:#999;';
+        const label = document.createElement('span');
+        label.className = 'procgen-pipeline-edit-count';
+        label.textContent = `Recorded edits: ${edits.length}`;
+        head.appendChild(label);
+        if (edits.length) {
+            const undo = this._btn('Undo ↶', () => this._undoLastEdit());
+            undo.className = `${undo.className ?? ''} procgen-pipeline-edit-undo`.trim();
+            undo.title = 'Drop the last recorded edit and re-run from its step';
+            head.appendChild(undo);
+        }
+        wrap.appendChild(head);
+        for (let i = 0; i < edits.length; i += 1) {
+            const row = document.createElement('div');
+            row.className = 'procgen-pipeline-edit-row';
+            row.dataset.index = String(i);
+            row.style.cssText = 'font-family:monospace;color:#bbb;padding:1px 0;';
+            row.textContent = `${i + 1}. ${describeLayoutEdit(edits[i])}`;
+            wrap.appendChild(row);
+        }
+        return wrap;
     }
 
-    _drawMazeRegion(ctx, world, offX, offY) {
-        const obsLib = world.obstacleLib ?? DEFAULT_OBSTACLES;
-        const itemLib = world.itemLib ?? DEFAULT_ITEMS;
-        // Composite view doesn't have a player inventory — gates
-        // always render closed here. (The maze panel's playable view
-        // is the right place to see them open as the player picks up
-        // keys.)
-        const inventory = new Set();
-
-        // Tile base layer
-        for (let y = 0; y < world.height; y++) {
-            for (let x = 0; x < world.width; x++) {
-                const tile = getTile(world, x, y);
-                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-                ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-            }
+    /**
+     * ⛓⛓ THE COMPOSITE MAP, DRAWN BY THE SHARED RENDERER (H3). This method WAS
+     * 380 lines — the grid, the connections, a hand-written
+     * `render_hint === 'maze' / 'text_adventure'` dispatch and the two painters
+     * those branches named. All of it is now
+     * `procgenCore/compositeMapRenderer.js` plus a `compositeMap.drawRegion`
+     * declaration in each substrate's own library (⚖ user: map rendering is
+     * DECLARED per substrate, never hardcoded).
+     *
+     * ⛓ The panel's `_mapSel`/`_mapMode` become the renderer's `selection`:
+     * an exit selection outlines that exit's square, and a Move-Region
+     * selection outlines the whole cell — exactly the two cases the old code
+     * had, with the mode test that distinguished them kept HERE, where the
+     * modes live.
+     */
+    _drawGrid(canvas, grid, regionSize) {
+        const sel = this._mapSel;
+        let selection = null;
+        if (sel?.kind === 'exit') {
+            selection = { kind: 'exit', cell: sel.cell, exitId: sel.exitId };
+        } else if (sel && this._mapMode === 'moveRegion') {
+            selection = { kind: 'region', cell: sel.cell };
         }
-
-        // Quick lookup from tile coords to the exit at that position.
-        const exitAt = new Map();
-        for (const e of world.exits.values()) {
-            exitAt.set(`${e.x},${e.y}`, e);
-        }
-
-        // §5 rendering pass — same shape as mazeRoomUI._drawWorld.
-        for (let y = 0; y < world.height; y++) {
-            for (let x = 0; x < world.width; x++) {
-                const key = `${x},${y}`;
-                const obstacleId = world.obstacles.get(key);
-                const obstacle = obstacleId ? obsLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, inventory, obsLib);
-                const exit = exitAt.get(key);
-                const isExit = !!exit;
-                const isEntrance = (x === world.entrance.x && y === world.entrance.y);
-                const itemId = world.items.get(key);
-
-                if (isExit) {
-                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
-                    ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-                }
-                if (obstacle && !isLogicGate) {
-                    const color = obstacle.color ?? '#b84040';
-                    ctx.fillStyle = color;
-                    ctx.fillRect(offX + x * TILE_PX + 2, offY + y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                }
-                if (itemId) {
-                    const hints = getItemRenderHints(itemId, itemLib);
-                    const cx = offX + x * TILE_PX + TILE_PX / 2;
-                    const cy = offY + y * TILE_PX + TILE_PX / 2;
-                    ctx.fillStyle = hints.color;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                    if (hints.label) {
-                        ctx.save();
-                        ctx.fillStyle = '#000';
-                        ctx.font = `bold ${Math.floor(TILE_PX * 0.55)}px sans-serif`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(hints.label, cx, cy);
-                        ctx.restore();
-                    }
-                    if (isLogicGate && gateClosed) {
-                        ctx.strokeStyle = COLORS.locationBlocked;
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                    }
-                }
-                if (isEntrance && !isExit) {
-                    ctx.strokeStyle = COLORS.entrance;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(offX + x * TILE_PX + 1, offY + y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-            }
-        }
-    }
-
-    _drawTextAdventureRegion(ctx, region, offX, offY, regionSize) {
-        const payload = region?.playable_payload ?? {};
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        const obsLib = payload.obstacleLib ?? DEFAULT_OBSTACLES;
-        const inventory = new Set();
-
-        ctx.fillStyle = COLORS.textAdventureBg;
-        ctx.fillRect(offX, offY, cellW, cellH);
-
-        const placedExits = resolveExitTilePositions(payload.exits, regionSize);
-        for (const { x, y } of placedExits) {
-            const obstacleId = payload.obstacles?.get?.(`${x},${y}`);
-            const obstacle = obstacleId ? obsLib[obstacleId] : null;
-            const isLogicGate = obstacle?.clear_set_type === 'rule';
-            const gateClosed = isLogicGate
-                && !isObstacleCleared(obstacleId, inventory, obsLib);
-            ctx.fillStyle = gateClosed ? COLORS.exitBlocked : COLORS.exit;
-            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-        }
-
-        if (payload.entrance && Number.isFinite(payload.entrance.x) && Number.isFinite(payload.entrance.y)) {
-            const ex = payload.entrance.x;
-            const ey = payload.entrance.y;
-            const onExit = placedExits.some(({ x, y }) => x === ex && y === ey);
-            if (!onExit) {
-                ctx.strokeStyle = COLORS.entrance;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(offX + ex * TILE_PX + 1, offY + ey * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-            }
-        }
-
-        // Items live in two parallel Maps keyed by "x,y": payload.items
-        // (Map → itemId) and payload.itemLocationNames (Map → AP name).
-        // Skip items whose location name didn't make it through serialization.
-        const locationNames = [];
-        const lockedLocations = new Set();
-        const items = payload.items;
-        const itemLocationNames = payload.itemLocationNames;
-        if (items && typeof items.entries === 'function') {
-            for (const [posKey] of items) {
-                const locationName = itemLocationNames?.get?.(posKey);
-                if (!locationName) continue;
-                locationNames.push(locationName);
-                const obstacleId = payload.obstacles?.get?.(posKey);
-                const obstacle = obstacleId ? obsLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, inventory, obsLib);
-                if (gateClosed) lockedLocations.add(locationName);
-            }
-        }
-
-        const padX = 6;
-        const padY = 6;
-        const headerSize = 11;
-        const lineSize = 10;
-        const lineGap = 2;
-        let textY = offY + padY;
-
-        ctx.save();
-        ctx.fillStyle = COLORS.textAdventureFg;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
-
-        ctx.font = `bold ${headerSize}px sans-serif`;
-        const heading = region?.region_id ?? region?.name ?? '(region)';
-        const headingLine = fitTextToWidth(ctx, heading, cellW - padX * 2);
-        if (headingLine && textY + headerSize <= offY + cellH - padY) {
-            ctx.fillText(headingLine, offX + padX, textY);
-            textY += headerSize + lineGap;
-        }
-
-        ctx.font = `${lineSize}px sans-serif`;
-        const summary = `${locationNames.length} location${locationNames.length === 1 ? '' : 's'}`;
-        if (textY + lineSize <= offY + cellH - padY) {
-            ctx.fillText(summary, offX + padX, textY);
-            textY += lineSize + lineGap;
-        }
-
-        const maxY = offY + cellH - padY;
-        let truncated = 0;
-        for (let i = 0; i < locationNames.length; i++) {
-            const name = locationNames[i];
-            const remaining = locationNames.length - i;
-            if (textY + lineSize > maxY) {
-                truncated = remaining;
-                break;
-            }
-            // Last visible slot may need to host a "+N more" instead.
-            const isLastSlot = textY + lineSize * 2 + lineGap > maxY;
-            if (isLastSlot && remaining > 1) {
-                ctx.fillStyle = COLORS.textAdventureFgDim;
-                ctx.fillText(`+${remaining} more`, offX + padX, textY);
-                truncated = 0;
-                textY += lineSize + lineGap;
-                break;
-            }
-            const prefix = lockedLocations.has(name) ? '\u{1F512} ' : '• ';
-            ctx.fillStyle = lockedLocations.has(name) ? COLORS.locationBlocked : COLORS.textAdventureFg;
-            ctx.fillText(fitTextToWidth(ctx, prefix + name, cellW - padX * 2), offX + padX, textY);
-            textY += lineSize + lineGap;
-        }
-        if (truncated > 0) {
-            ctx.fillStyle = COLORS.textAdventureFgDim;
-            ctx.fillText(`+${truncated} more`, offX + padX, textY);
-        }
-        ctx.restore();
-    }
-
-    _drawGenericRegion(ctx, region, offX, offY, regionSize) {
-        const cellW = regionSize.width * TILE_PX;
-        const cellH = regionSize.height * TILE_PX;
-        ctx.fillStyle = COLORS.genericBg;
-        ctx.fillRect(offX, offY, cellW, cellH);
-
-        const exits = getRegionExits(region) ?? [];
-        const placedExits = resolveExitTilePositions(exits, regionSize);
-        ctx.fillStyle = COLORS.exit;
-        for (const { x, y } of placedExits) {
-            ctx.fillRect(offX + x * TILE_PX, offY + y * TILE_PX, TILE_PX, TILE_PX);
-        }
-
-        ctx.save();
-        ctx.fillStyle = COLORS.textAdventureFg;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        const label = region?.substrate ?? region?.render_hint ?? '?';
-        // Zone-based substrates carry a numeric index in
-        // playable_payload (currently just JtA's jtaZone). Surface it
-        // here so the shuffled-spiral preview shows zone ordering at
-        // a glance; procedural substrates render unchanged.
-        const zoneIdx = region?.playable_payload?.jtaZone;
-        const hasZone = typeof zoneIdx === 'number';
-        const cx = offX + cellW / 2;
-        if (hasZone) {
-            ctx.font = `bold ${Math.max(14, Math.floor(cellH * 0.25))}px sans-serif`;
-            ctx.fillText(`Zone ${zoneIdx}`, cx, offY + cellH / 2 - 6);
-            ctx.font = '10px sans-serif';
-            ctx.fillText(`(${label})`, cx, offY + cellH / 2 + 12);
-        } else {
-            ctx.font = '10px sans-serif';
-            ctx.fillText(`(${label})`, cx, offY + cellH / 2);
-        }
-        ctx.restore();
+        drawCompositeMap(canvas, grid, regionSize, { selection });
     }
 
     // --- rules.json export ---
@@ -3405,7 +3977,8 @@ export class ProcgenPipelineUI {
         setTimeout(restore, 1200);
     }
 
-    // §2.2 handoff: hand the generated world straight to the APWorld Editor and
+    // §2.2 handoff ("Open in APWorld Editor"): hand the generated world straight
+    // to the APWorld Editor and
     // bring it forward. We deliberately do NOT use the global files:jsonLoaded
     // here: a full app load triggers the substrate panels to self-activate (on
     // their loadRegion) and steal focus from the editor. The dedicated
@@ -3413,7 +3986,7 @@ export class ProcgenPipelineUI {
     // adopts it immediately if open, or drains the stash on mount — so nothing
     // else moves. procgen_metadata rides along untouched (editor preserves it, §2.1).
     _editInApworldEditor(rulesJson, button) {
-        const restore = () => { button.textContent = 'Edit in APWorld Editor'; };
+        const restore = () => { button.textContent = 'Open in APWorld Editor'; };
         const eventBus = this.apis?.eventBus;
         if (!eventBus || typeof eventBus.publish !== 'function') {
             button.textContent = 'No eventBus';
@@ -3460,12 +4033,21 @@ export class ProcgenPipelineUI {
         // In the stepped modes the step runners own this.result (a "Run all"
         // that just finishes an in-progress pipeline must not wipe it);
         // other modes clear it up front.
-        const midSphere = this.mode === 'sphereGrowth' && this._stepState;
+        // A COMPLETE sphere pipeline re-generates, as the other stepped modes
+        // do: before 2026-10-10 "Run all" on one was a no-op, which kept a
+        // result another load had already replaced (a world loaded from the
+        // Presets panel swaps in a map reconstructed from its sidecars, with no
+        // rulesJson) — the Guided Tour taken twice found nothing to load.
+        const midSphere = this.mode === 'sphereGrowth' && this._stepState
+            && nextSphereStep(this._stepState) !== null;
         // Mid-pipeline = an incomplete top-down run we're finishing; a COMPLETE
         // (or absent) one means Generate re-generates, so clear its result.
         const midTopDown = this.mode === 'topDown' && this._tdState
             && nextTopDownStep(this._tdState) !== null;
-        if (!midSphere && !midTopDown) this.result = null;
+        const midSpiral = this.mode === 'shuffledSpiral' && this._spiralState
+            && nextSpiralStep(this._spiralState) !== null;
+        if (!midSphere && !midTopDown && !midSpiral) this.result = null;
+        if (this.mode === 'sphereGrowth' && !midSphere) this._stepState = null; // re-plan (1) from the current params
         this.render();
 
         try {
@@ -3473,14 +4055,16 @@ export class ProcgenPipelineUI {
                 // async: yields per region so the progress indicator repaints
                 await this._runTopDownAll();
             } else if (this.mode === 'shuffledSpiral') {
-                this._runShuffledSpiral();
+                await this._runSpiralAll();
             } else if (this.mode === 'sphereGrowth') {
                 // async: yields to the event loop between regions and
                 // generate-and-test attempts so the progress indicator
                 // below the Generate button can repaint
                 await this._runSphereGrowth();
             } else {
-                this._runGridGrowth();
+                // async: streams a region/regionDone event per built region
+                // (growMazeAsync) so the indicator repaints as the maze grows
+                await this._runGridGrowth();
             }
         } catch (e) {
             this.message = `ERROR: ${e.message}`;
@@ -3543,7 +4127,10 @@ export class ProcgenPipelineUI {
                 ? ` · attempt ${s.attempt.attempt}/${s.attempt.attempts}` : '';
             // sphere is sphere-mode-only; top-down regions carry no wave.
             const sphereBit = r.sphere != null ? `, sphere ${r.sphere}` : '';
-            lines.push(`Building region ${r.index + 1}/${s.totalRegions} — `
+            // Grid-growth's total is emergent (null) — omit the "/N" denominator
+            // and the regions-remaining line, which only the plan-driven modes know.
+            const totalBit = s.totalRegions ? `/${s.totalRegions}` : '';
+            lines.push(`Building region ${r.index + 1}${totalBit} — `
                 + `${r.region_id} (${r.substrate}${sphereBit}, `
                 + `${r.placements} placement${r.placements === 1 ? '' : 's'})${attempt}`);
             let spheresBit = '';
@@ -3551,12 +4138,18 @@ export class ProcgenPipelineUI {
                 const spheresLeft = Math.max(0, s.totalSpheres - r.sphere);
                 spheresBit = `${spheresLeft} sphere${spheresLeft === 1 ? '' : 's'} · `;
             }
-            const regionsLeft = s.totalRegions - r.index;
-            lines.push(`Remaining: ${spheresBit}`
-                + `${regionsLeft} region${regionsLeft === 1 ? '' : 's'} · `
-                + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            if (s.totalRegions) {
+                const regionsLeft = s.totalRegions - r.index;
+                lines.push(`Remaining: ${spheresBit}`
+                    + `${regionsLeft} region${regionsLeft === 1 ? '' : 's'} · `
+                    + `${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            } else {
+                lines.push(`${r.placements} placement${r.placements === 1 ? '' : 's'} in current region`);
+            }
         } else if (s.phase) {
-            lines.push(`Finalizing: ${s.phase} · ${s.doneRegions}/${s.totalRegions} regions built`);
+            const builtBit = s.totalRegions
+                ? `${s.doneRegions}/${s.totalRegions}` : `${s.doneRegions}`;
+            lines.push(`Finalizing: ${s.phase} · ${builtBit} regions built`);
         } else if (s.totalRegions) {
             lines.push(s.totalSpheres
                 ? `Planned: ${s.totalSpheres} spheres, ${s.totalRegions} regions`
@@ -3568,46 +4161,25 @@ export class ProcgenPipelineUI {
         this._progressEl.textContent = lines.join('\n');
     }
 
-    _runGridGrowth() {
-        const { seed, gridWidth, gridHeight, regionWidth, regionHeight,
-            maxItemsPerRegion, maxRegions, startSubstrate,
-            stopOnPoolEmpty, asymmetricExits } = this.params;
-        const useQuotas = this.substrateMode === 'quotas';
-        const quotas = useQuotas ? this._effectiveSubstrateQuotas() : null;
-        const mix = !useQuotas ? this._effectiveSubstrateMix() : null;
-        const { grid, pool, stats, startCell } = growMaze({
-            gridDims: { width: gridWidth, height: gridHeight },
-            regionSize: { width: regionWidth, height: regionHeight },
-            itemPool: { ...this.scenario.items },
-            obstaclePool: { ...this.scenario.obstacles },
-            seed,
-            regionParams: {},
-            growthParams: {
-                maxItemsPerRegion,
-                maxRegions: maxRegions ?? null,
-                stopOnPoolEmpty: !!stopOnPoolEmpty,
-                asymmetricExits: asymmetricExits === 'remove' ? 'remove' : 'add',
-                ...(quotas ? { substrateQuotas: quotas } : {}),
-                ...(mix ? { substrateMix: mix } : {}),
-                ...(startSubstrate && startSubstrate !== 'auto'
-                    ? { startSubstrate } : {}),
-            },
-            hazardOpts: this._effectiveHazardOpts(),
-        });
-        // Auto-completion-condition item — scenario is_victory item or
-        // a selected substrate's declared victoryItem (see
-        // _resolveVictoryItemId). Opt-out: drop all such items.
-        const victoryItemId = this._resolveVictoryItemId();
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: victoryItemId,
-            procgenMetadata: {
-                driver: 'grid-growth',
-                stop_reason: stats.stopReason,
-            },
-        });
+    async _runGridGrowth() {
+        const { regionWidth, regionHeight } = this.params;
+        const run = buildGridRun(this);
+        // Live progress: grid-growth streams a region/regionDone event per built
+        // region (drained by growMazeAsync with a setTimeout(0) yield so the
+        // indicator repaints as the maze grows). The region count is emergent,
+        // so totalRegions stays null — the panel shows "Building region N" with
+        // no denominator (unlike the plan-driven sphere/top-down modes).
+        this._progressState = {
+            startedAt: performance.now(), totalRegions: 0, totalSpheres: 0,
+            doneRegions: 0, region: null, attempt: null, phase: null,
+            timings: [], lastEvent: null, lastAt: 0,
+        };
+        const grown = await growMazeAsync(run.grow, (ev) => this._onGenerationProgress(ev));
+        const { grid, pool, stats } = grown;
+        // Auto-completion-condition item — scenario is_victory item or a
+        // selected substrate's declared victoryItem (resolveVictoryItemId,
+        // folded into run.compile). Opt-out: drop all such items.
+        const rulesJson = compileGridRun(run, grown);
         this.result = {
             grid,
             regionSize: { width: regionWidth, height: regionHeight },
@@ -3617,46 +4189,176 @@ export class ProcgenPipelineUI {
         };
     }
 
-    _runShuffledSpiral() {
-        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
-            startSubstrate } = this.params;
-        const quotas = this._effectiveSubstrateQuotas();
-        if (!quotas) {
-            throw new Error('shuffled-spiral requires at least one substrate '
-                + 'with a positive quota (set Substrate allocation to Quotas)');
-        }
-        const { grid, pool, stats, startCell } = arrangeShuffledSpiral({
-            regionSize: { width: regionWidth, height: regionHeight },
-            itemPool: { ...this.scenario.items },
-            obstaclePool: { ...this.scenario.obstacles },
-            seed,
-            regionParams: {},
-            growthParams: {
-                substrateQuotas: quotas,
-                maxItemsPerRegion,
-                ...(startSubstrate && startSubstrate !== 'auto'
-                    ? { startSubstrate } : {}),
-            },
-            hazardOpts: this._effectiveHazardOpts(),
-        });
-        const victoryItemId = this._resolveVictoryItemId();
-        const rulesJson = buildRulesJson(grid, {
-            startCell, seed,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            completionConditionItem: victoryItemId,
-            procgenMetadata: {
-                driver: 'shuffled-spiral',
-                stop_reason: stats.stopReason,
-            },
-        });
+    // ── Shuffled spiral as a 4-step pipeline ────────────────────────
+    // ① Arrange → ② Content (no-op today) → ③ Regions → ④ Compile. Each step
+    // can run on its own ("Run next step") or the lot at once ("Run all" =
+    // _runSpiralAll). The steps delegate to spiralSteps.js — the same shared
+    // runner the headless `spiral-step` CLI uses — so the stepped panel output
+    // is byte-identical to the monolithic arrangeShuffledSpiral + buildRulesJson.
+    // State lives on this._spiralState (null until ① runs); see _renderSpiralSteps.
+
+    // Build a fresh spiral envelope from the panel's current params + scenario.
+    // The { config, compileIn } pair is EXACTLY what the old one-shot fed
+    // arrangeShuffledSpiral + buildRulesJson (regionParams: the in-quota
+    // substrates' buildRegionParams hooks since seedling generated G3; JtA's
+    // dataset config lands on ② content in Part 3), so byte-identity holds.
+    _buildSpiralEnvelope() {
+        return newSpiralEnvelope(buildSpiralRun(this, { resolvedLibraries: this.regionLibraries }));
+    }
+
+    // --- spiral step runners (delegate to spiralSteps) ---
+    // Spiral's step runners are synchronous (no per-region streaming like
+    // sphere/top-down), so — unlike those modes — the handlers need no
+    // _progressState / onProgress wiring. arrange/content/regions/compile run
+    // instantly.
+
+    async _stepSpiralArrange() {
+        await runSpiralStep('arrange', this._spiralState);
+    }
+
+    // ② Content — a no-op for every current substrate (byte-identical). No
+    // editing surface; _renderSpiralSteps shows a "no content substrate" note.
+    async _stepSpiralContent() {
+        await runSpiralStep('content', this._spiralState);
+    }
+
+    async _stepSpiralRegions() {
+        await runSpiralStep('regions', this._spiralState);
+    }
+
+    // ④ Compile — the panel owns the this.result it shows. poolRemaining:null
+    // (matches top-down; the pool is kept off the envelope, so the "pool
+    // remaining" stat is dropped in stepped mode — the stats renderer branches
+    // cleanly on null).
+    async _stepSpiralCompile() {
+        const st = this._spiralState;
+        await runSpiralStep('compile', st);
         this.result = {
-            grid,
-            regionSize: { width: regionWidth, height: regionHeight },
-            stats,
-            poolRemaining: pool.snapshot(),
-            rulesJson,
+            grid: st.regions.grid,
+            regionSize: {
+                width: this.params.regionWidth, height: this.params.regionHeight,
+            },
+            stats: st.regions.stats,
+            poolRemaining: null,
+            rulesJson: st.compile.rulesJson,
         };
+    }
+
+    // Advance one spiral step (button: Run next step). Starts the pipeline
+    // (① Arrange) when none is running, then follows nextSpiralStep.
+    _advanceSpiralStep() {
+        if (!this._spiralState) { this._spiralState = this._buildSpiralEnvelope(); }
+        const byName = {
+            arrange: () => this._stepSpiralArrange(),
+            content: () => this._stepSpiralContent(),
+            regions: () => this._stepSpiralRegions(),
+            compile: () => this._stepSpiralCompile(),
+        };
+        const step = nextSpiralStep(this._spiralState);
+        return step ? byName[step]?.() : undefined;
+    }
+
+    // "Run all" — run from the current point to completion (driven by
+    // _runGeneration, which owns isGenerating + the surrounding render).
+    async _runSpiralAll() {
+        // Fresh run when there's no pipeline OR the previous one is complete
+        // (Generate re-generates); otherwise continue the in-progress one.
+        if (!this._spiralState || nextSpiralStep(this._spiralState) === null) {
+            this._spiralState = this._buildSpiralEnvelope();
+        }
+        while (nextSpiralStep(this._spiralState)) {
+            // eslint-disable-next-line no-await-in-loop
+            await this._advanceSpiralStep();
+        }
+    }
+
+    // "Run next step" button — its own guard + render (the Generate path in
+    // _runGeneration wraps "Run all").
+    async _runSpiralStepNext() {
+        if (this.isGenerating) return;
+        this.isGenerating = true;
+        this.render();
+        try {
+            await this._advanceSpiralStep();
+        } catch (e) {
+            this.message = `ERROR: ${e.message}`;
+        }
+        this.isGenerating = false;
+        this.render();
+    }
+
+    // "Reset" button — drop the spiral pipeline so ① re-runs from current params.
+    _resetSpiralSteps() {
+        this._spiralState = null;
+        this.result = null;
+        this.message = '';
+        this.warning = '';
+        this.render();
+    }
+
+    // Content of the "Spiral pipeline" section: read-only feedback per completed
+    // step (② Content is a no-op note — no editing surface this pass).
+    _renderSpiralSteps() {
+        const wrap = document.createElement('div');
+        const st = this._spiralState;
+        if (!st) return wrap;
+        if (st.completed >= 0 && st.arrange) {
+            wrap.appendChild(this._renderStepBlock('1 Arrange — spiral placement plan',
+                this._renderSpiralArrangeFeedback(st.arrange)));
+        }
+        if (st.completed >= 1) {
+            wrap.appendChild(this._renderStepBlock('2 Content — per-zone dataset',
+                this._renderSpiralContentFeedback()));
+        }
+        if (st.completed >= 2 && st.regions) {
+            wrap.appendChild(this._renderStepBlock('3 Regions — spiral-walk region synthesis',
+                this._renderSpiralRegionsFeedback(st.regions)));
+        }
+        if (st.completed >= 3 && st.compile) {
+            wrap.appendChild(this._renderStepBlock('4 Compile',
+                this._renderSpiralCompileFeedback(st.compile)));
+        }
+        return wrap;
+    }
+
+    _renderSpiralArrangeFeedback(arrange) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const seq = arrange.sequence ?? [];
+        const counts = {};
+        for (const s of seq) counts[s] = (counts[s] ?? 0) + 1;
+        const bySub = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(', ') || 'none';
+        const dims = arrange.gridDims;
+        wrap.textContent = `Planned ${seq.length} region${seq.length === 1 ? '' : 's'} `
+            + `from center: ${bySub}${dims ? ` · grid ${dims.width}×${dims.height}` : ''}`;
+        return wrap;
+    }
+
+    _renderSpiralContentFeedback() {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#999;';
+        wrap.textContent = 'No content substrate — nothing to synthesise (no-op).';
+        return wrap;
+    }
+
+    _renderSpiralRegionsFeedback(regions) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const stats = regions.stats ?? {};
+        const counts = stats.substrateCounts ?? {};
+        const bySub = Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(', ') || 'none';
+        wrap.textContent = `Realised ${stats.regionsBuilt ?? 0} region(s): ${bySub} · `
+            + `stop: ${stats.stopReason}`;
+        return wrap;
+    }
+
+    _renderSpiralCompileFeedback(compile) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'font-size:12px;color:#bbb;';
+        const rj = compile.rulesJson;
+        const regionCount = Object.keys(rj.regions?.[HANDOFF_REALISED_SLOT] ?? {}).length;
+        wrap.textContent = `driver ${rj.procgen_metadata?.[HANDOFF_REALISED_SLOT]?.driver} · ${regionCount} regions`;
+        return wrap;
     }
 
     // ── Sphere growth as a 4-step pipeline ──────────────────────────
@@ -3669,30 +4371,32 @@ export class ProcgenPipelineUI {
     // The shared, frozen-at-1 config every step reads (so a later param
     // tweak doesn't silently change a pipeline mid-run — Reset/re-Plan
     // to pick up new params).
+    // Can a substrate host a sphere-growth library node? True when its registry
+    // adapter provides the requirement-aware instantiateLibraryEntryForSpecs hook
+    // (bounce F6a, runner + maze F6c). This is the exact predicate the engine's
+    // resolveSphereLibrarySources uses, so the panel filter and the engine agree.
+    _substrateSphereCapable(name) {
+        return substrateSphereCapable(name);
+    }
+
+    // Does a resolved library document carry at least one sphere-capable entry?
+    // (F6c broadened this from bounce-only to any zone/tile substrate wired for
+    // sphere placement.) A pack with none contributes nothing to a sphere world.
+    _librarySphereCapable(library) {
+        return librarySphereCapable(library);
+    }
+
+    // The selected libraries usable as SPHERE content sources: the sphere-capable
+    // subset of the shared this.regionLibraries. A pack with no sphere-capable
+    // entry would throw in resolveSphereLibrarySources, so it is dropped here (and
+    // disabled in the served list). Returns [] when nothing sphere-capable is
+    // selected, so library-less sphere worlds take no new code path (byte-inert).
+    _sphereRegionLibraries() {
+        return sphereRegionLibraries(this.regionLibraries);
+    }
+
     _buildSphereConfig() {
-        const { seed, regionWidth, regionHeight, maxItemsPerRegion,
-            sphereCount, fillerCount, revisitPercent, spheresPerBatch,
-            startSubstrate } = this.params;
-        const startSub = (startSubstrate && startSubstrate !== 'auto') ? startSubstrate : null;
-        const quotas = this._effectiveSubstrateQuotas();
-        return {
-            seed,
-            regionWidth, regionHeight,
-            maxItemsPerRegion,
-            sphereCount: sphereCount ?? 3,
-            fillerCount: fillerCount ?? 0,
-            revisitPercent: revisitPercent ?? 25,
-            spheresPerBatch: spheresPerBatch ?? null,
-            startSub,
-            quotas,
-            activeIds: this._activeSubstrateIds(quotas, startSub),
-            itemLib: this._mergedItemLib(),
-            itemPool: { ...this.scenario.items },
-            victoryItemId: this._resolveVictoryItemId(),
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-            hazardOpts: this._effectiveHazardOpts(),
-        };
+        return buildSphereConfig(this, this.regionLibraries);
     }
 
     // Step 1 — pre-plan contributions, then delegate the planSpheres + draft
@@ -3701,22 +4405,19 @@ export class ProcgenPipelineUI {
     // resolved `config` onward is the runner's, so the panel and the headless
     // CLI share ONE implementation of the pipeline wiring.
     async _stepPlan() {
-        const cfg = this._buildSphereConfig();
-        const itemPool = { ...cfg.itemPool };
-        // Each active substrate may grant starting items, reserve
-        // sphere-1 pickups, lock placements, remove pool items, or add
-        // regionParams BEFORE planning (bounce's free arrow — the hook
-        // mutates itemPool via its delta). The driver stays agnostic.
-        const prep = this._collectSphereGrowthPrep({
-            activeIds: cfg.activeIds, itemPool, quotas: cfg.quotas,
-            startSubstrate: cfg.startSub, seed: cfg.seed,
-        });
+        // cfg, the substrates' pre-plan contributions (each active substrate may
+        // grant starting items, reserve sphere-1 pickups, lock placements, remove
+        // pool items, or add regionParams BEFORE planning — the hook mutates
+        // itemPool via its delta), the post-prep pool and the runner's flat config:
+        // ONE assembly, shared with the headless preset row (presetRun.js).
+        const { cfg, prep, itemPool, config } = buildSphereRun(
+            this, { resolvedLibraries: this.regionLibraries });
         this._stepState = {
             completed: -1, cfg, prep,
             // The resolved, flat config the runner consumes (built from cfg +
             // prep; itemPool is POST-prep). regionParams is assembled now so
             // it's stable across edits.
-            config: this._configFromCfgPrep(cfg, prep, itemPool),
+            config,
             poolSize: Object.keys(itemPool).length,
             // Pipeline outputs (filled by the runner step-by-step). growConfig
             // is panel-only — derived from config+plan for the 3-editing
@@ -3731,32 +4432,6 @@ export class ProcgenPipelineUI {
         this.message = '';
         this.warning = '';
         await runStep('plan', this._stepState); // builds draft, completed = 0
-    }
-
-    // cfg + prep → the runner's flat resolved config. `itemPool` is the
-    // POST-prep pool the plan is built from (prep may have removed items).
-    _configFromCfgPrep(cfg, prep, itemPool) {
-        return {
-            seed: cfg.seed,
-            regionSize: { width: cfg.regionWidth, height: cfg.regionHeight },
-            itemLib: cfg.itemLib,
-            regionParams: this._assembleRegionParams(cfg.activeIds, 'sphere', prep.regionParams),
-            hazardOpts: cfg.hazardOpts,
-            maxItemsPerRegion: cfg.maxItemsPerRegion,
-            fillerCount: cfg.fillerCount,
-            revisitRatio: cfg.revisitPercent / 100,
-            substrateQuotas: cfg.quotas ?? null,
-            startSubstrate: cfg.startSub ?? null,
-            sphereCount: cfg.sphereCount,
-            spheresPerBatch: cfg.spheresPerBatch ?? null,
-            victoryItem: cfg.victoryItemId ?? null,
-            exclusiveSpheres: prep.exclusiveSpheres ?? {},
-            startingItems: prep.startingItems ?? [],
-            lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
-            enableLoopMode: cfg.enableLoopMode,
-            regionXpEffect: cfg.regionXpEffect ?? 'cost',
-            itemPool,
-        };
     }
 
     // Step 2a — Allocate (delegated). Also populates the panel-only
@@ -3815,7 +4490,7 @@ export class ProcgenPipelineUI {
                 + (st.prep.note ? ` — ${st.prep.note}` : '');
         if (stats.quotaFallbacks > 0) {
             this.warning = `WARNING: substrate quotas exhausted — ${stats.quotaFallbacks} `
-                + `region(s) fell back to 'maze' (the plan needs ${stats.regionsBuilt} `
+                + `region(s) fell back to '${DEFAULT_SUBSTRATE_ID}' (the plan needs ${stats.regionsBuilt} `
                 + 'regions). Raise the quotas for a pure-substrate world.';
         }
         this.result = {
@@ -4056,6 +4731,10 @@ export class ProcgenPipelineUI {
             totalNodes: st.totalNodes ?? null,
             dims: st.dims ?? null,
             startCell: st.startCell ?? null,
+            // The recorded layout edits — WHY this world differs from its seed.
+            // ⚠ This mapping ENUMERATES the envelope's fields, so a new one has
+            // to be added here or it silently never leaves the panel.
+            edits: st.edits ?? null,
         };
         return serializeEnvelope(env);
     }
@@ -4077,6 +4756,7 @@ export class ProcgenPipelineUI {
         this.params.startSubstrate = config.startSubstrate ?? 'auto';
         this.params.enableLoopMode = !!config.enableLoopMode;
         this.params.regionXpEffect = config.regionXpEffect ?? 'cost';
+        this.params.discoveryMode = config.discoveryMode ?? 'follow';
         if (config.substrateQuotas) this.substrateQuotas = { ...config.substrateQuotas };
         if (config.itemPool) this.scenario.items = { ...config.itemPool };
         this._saveToLocalStorage();
@@ -4087,7 +4767,7 @@ export class ProcgenPipelineUI {
     //
     // Accepts two shapes (§2.3):
     //   • a serialized envelope (has a `config` block) — deserialised verbatim;
-    //   • a finalized sphere-growth rules.json (has `procgen_metadata`, no
+    //   • a finalized sphere-growth rules.json (has `procgen_metadata[slot]`, no
     //     `config`) — reconstructed into an append-ready envelope via
     //     rebuildEnvelopeFromRulesJson. This is what the APWorld Editor emits,
     //     so an edited world can be grown further without a saved envelope.
@@ -4095,7 +4775,7 @@ export class ProcgenPipelineUI {
     //     clear message (no path extractor — append from a saved envelope).
     _applyImportedEnvelope(rawJson) {
         const { env, fromRulesJson: isRulesJson } = importSphereEnvelope(
-            rawJson, { itemLib: DEFAULT_ITEMS, obstacleLib: DEFAULT_OBSTACLES });
+            rawJson, { itemLib: DEFAULT_ITEMS, obstacleLib: DEFAULT_OBSTACLES, playerId: HANDOFF_REALISED_SLOT });
         const config = env.config;
         if (!config || !config.regionSize) {
             throw new Error(isRulesJson
@@ -4121,11 +4801,12 @@ export class ProcgenPipelineUI {
             victoryItemId: config.victoryItem ?? null,
             enableLoopMode: !!config.enableLoopMode,
             regionXpEffect: config.regionXpEffect ?? 'cost',
+            ...discoveryModeConfig(config.discoveryMode),
             hazardOpts: config.hazardOpts ?? null,
         };
         const prep = {
             startingItems: config.startingItems ?? [],
-            lockedCanonicalItems: config.lockedCanonicalItems ?? [],
+            pinnedCanonicalItems: config.pinnedCanonicalItems ?? [],
             exclusiveSpheres: config.exclusiveSpheres ?? {},
             regionParams: config.regionParams ?? {},
             note: '',
@@ -4160,6 +4841,10 @@ export class ProcgenPipelineUI {
             totalNodes: env.totalNodes ?? null,
             dims: env.dims ?? null,
             startCell: env.startCell ?? null,
+            // Recorded layout edits ride back in (same enumeration caveat as
+            // _envelopeFromStepState): a loaded envelope keeps its history, so
+            // Undo works on a world this session did not edit.
+            edits: env.edits ?? null,
             seconds: 0,
         };
         // A complete envelope lights up the post-gen export buttons + views.
@@ -4209,23 +4894,10 @@ export class ProcgenPipelineUI {
     // engine opts + compile inputs); the panel just resolves the UI-state inputs
     // (mix, regionParams via the substrate hooks, hazardOpts, sphere log).
     _buildTDEnvelope() {
-        const { seed, gridWidth, gridHeight, regionWidth, regionHeight } = this.params;
-        const mix = this._effectiveSubstrateMix();
-        const { entries: sphereLog } = this._resolveTopDownSphereLog();
-        const activeIds = Object.entries(mix ?? {})
-            .filter(([, w]) => Number(w) > 0).map(([id]) => id);
-        return buildTopDownEnvelope({
-            source: this.topDownSource,
-            seed,
-            gridDims: { width: gridWidth, height: gridHeight },
-            regionSizeBase: { width: regionWidth, height: regionHeight },
-            substrateMix: mix,
-            regionParams: this._assembleRegionParams(activeIds, 'topDown'),
-            hazardOpts: this._effectiveHazardOpts(),
-            sphereLog,
-            enableLoopMode: !!this.params.enableLoopMode,
-            regionXpEffect: this.params.regionXpEffect ?? 'cost',
-        });
+        return buildTopDownEnvelope(buildTopDownRun(this, {
+            topDownSource: this.topDownSource,
+            sphereLog: this._resolveTopDownSphereLog().entries,
+        }));
     }
 
     // --- top-down step runners (delegate to topDownSteps) ---
@@ -4263,12 +4935,32 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         await runTopDownStep('compile', st,
             { onProgress: (ev) => this._onGenerationProgress(ev) });
-        const { rulesJson, enriched, attributionWarnings } = st.compile;
+        const {
+            rulesJson, enriched, attributionWarnings, menuWarnings, ruleItemWarnings, sphereLogRefusal,
+        } = st.compile;
         if (enriched && attributionWarnings?.length) {
             this.message = `${this.message ? `${this.message} · ` : ''}`
                 + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
                 + `${attributionWarnings.slice(0, 3).join('; ')}`
                 + `${attributionWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // ⛓ M1 — a source Menu exit whose target the grid did not place.
+        if (menuWarnings?.length) {
+            this.message = `${this.message ? `${this.message} · ` : ''}`
+                + `Menu: ${menuWarnings.length} exit(s) dropped — `
+                + `${menuWarnings.slice(0, 3).join('; ')}`
+                + `${menuWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // ⛓ B1 — a rule naming an item neither the pool nor the source defines.
+        if (ruleItemWarnings?.length) {
+            this.message = `${this.message ? `${this.message} · ` : ''}`
+                + `rule items: ${ruleItemWarnings.length} undefined — `
+                + `${ruleItemWarnings.slice(0, 3).join('; ')}`
+                + `${ruleItemWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // No embedded sphere log: rules an inventory cannot decide.
+        if (sphereLogRefusal) {
+            this.message = `${this.message ? `${this.message} · ` : ''}no sphere log — ${sphereLogRefusal}`;
         }
         this.result = {
             grid: st.finalize.grid,
@@ -4417,10 +5109,9 @@ export class ProcgenPipelineUI {
             if (id === cur) opt.selected = true;
             sel.appendChild(opt);
         }
-        sel.addEventListener('change', () => {
-            layout.substrateByRegion[name] = sel.value;
-            this._invalidateFromTD(0);
-        });
+        sel.addEventListener('change', () => this._recordEdit({
+            op: 'set-substrate', region_id: name, substrate: sel.value,
+        }));
         row.appendChild(sel);
         return row;
     }
@@ -4493,16 +5184,11 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
-        const counts = (this._tdRerollCounts ??= new Map());
-        const n = (counts.get(name) ?? 0) + 1;
-        counts.set(name, n);
-        layout.subSeedByRegion[name] = (layout.subSeedByRegion[name]
-            ^ (0x9e3779b9 + n * 0x55555555)) >>> 0;
-        // _invalidateFromTD clears this.message, so set it AFTER it.
-        this._invalidateFromTD(0);
-        this.message = `Re-rolled "${name}" (sub-seed bump #${n}). `
-            + 'Re-run from 2 Realise to apply — only this region + its descendants change.';
-        this.render();
+        // `n` from the RECORDING (see _reRollRegion). The bump itself is the
+        // same expression, now in layoutEdits.js so the replay shares it.
+        this._recordEdit({
+            op: 're-roll', region_id: name, n: reRollCountFor(this._tdState.edits, name) + 1,
+        });
     }
 
     // Edit ▸ (top-down) — open the per-region geometry editor for a bounce/zone
@@ -4527,6 +5213,13 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
+        const writeBack = (editedRegion) => this._onRegionEditedTD(regionId, editedRegion);
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, {
+                itemPool: Object.keys(st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {}),
+                expectedItems: [...(st.compileIn?.startingItems ?? [])],
+            }, writeBack);
+        }
         const regionParams = st.opts?.regionParams ?? {};
         let contract;
         try {
@@ -4545,11 +5238,7 @@ export class ProcgenPipelineUI {
             st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {},
         );
         contract.expectedItems = [...(st.compileIn?.startingItems ?? [])];
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEditedTD(regionId, editedRegion),
-        });
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
     }
 
     // Write-back from a top-down region editor save: splice the edited region into
@@ -4560,11 +5249,16 @@ export class ProcgenPipelineUI {
         const layout = this._tdState?.layout;
         const grid = layout?.grid;
         const cell = layout?.cellsByName?.get?.(regionId);
-        if (!grid || !cell || !editedRegion) return;
+        if (!grid || !cell || !editedRegion || grid.getRegion(cell)?.region_id !== regionId) {
+            return this._showEditRefusal(`"${regionId}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${regionId}". Re-run from 3 Finalize to apply.`;
+        this.warning = status?.flagged ? `⚠ ${regionId}: ${status.text}` : '';
         this.render();
     }
 
@@ -4595,9 +5289,9 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'font-size:12px;color:#bbb;';
         const rj = compile.rulesJson;
-        const regionCount = Object.keys(rj.regions?.['1'] ?? {}).length;
+        const regionCount = Object.keys(rj.regions?.[HANDOFF_REALISED_SLOT] ?? {}).length;
         const hasLog = Array.isArray(rj.sphere_log) && rj.sphere_log.length > 0;
-        wrap.textContent = `driver ${rj.procgen_metadata?.driver} · ${regionCount} regions · `
+        wrap.textContent = `driver ${rj.procgen_metadata?.[HANDOFF_REALISED_SLOT]?.driver} · ${regionCount} regions · `
             + `sphere_log ${hasLog ? 'embedded' : 'absent'} · full rules.json in Compiled output below`;
         return wrap;
     }
@@ -4605,19 +5299,21 @@ export class ProcgenPipelineUI {
     // Auto-size the grid to fit the source rules.json's region count.
     // Top-down places one grid cell per non-Menu region (plus extra
     // for teleporter targets that can't fit adjacent), so a square
-    // grid sized to ceil(sqrt(N * 1.5)) gives BFS room to lay out
+    // grid sized by `gridDimsForSource` (`topDownGridSide`) gives BFS room to lay out
     // without immediately falling back to teleporters. Floor at the
     // panel's defaults so a small source doesn't shrink the grid.
+    // ⛓ C2: the ONE rule (`sourceSizedParams`), shared with the preset apply
+    // and the headless `buildRunFromState`; an axis the ACTIVE preset pins
+    // keeps its value (so a reload, which restores the persisted grid and then
+    // re-adopts the source, keeps a pinned preset's grid). Assigned in place:
+    // the rendered grid inputs hold this.params.
     _applyGridDimsFromSource(rulesJson) {
-        const regions = rulesJson?.regions?.['1'] ?? {};
-        const count = Object.keys(regions).length;
-        if (count === 0) return;
-        const dim = Math.max(
-            DEFAULT_PARAMS.gridWidth,
-            Math.ceil(Math.sqrt(count * 1.5)),
-        );
-        this.params.gridWidth = dim;
-        this.params.gridHeight = dim;
+        const active = getPresetById(this.activePresetId, this.userPresets);
+        const pinned = pinnedGridKeys(active?.state?.params);
+        Object.assign(this.params, sourceSizedParams(this.params, rulesJson, { pinned }));
+        // ⛓ F1: the grid was just sized automatically; only the pinned axes
+        // (left alone) still count as the user's.
+        this._handEditedGridKeys = new Set(pinned);
     }
 
     // --- helpers ---
@@ -4642,9 +5338,7 @@ export class ProcgenPipelineUI {
      * here is a belt-and-suspenders guard for stale localStorage.
      */
     _effectiveSubstrateMix() {
-        const positive = Object.entries(this.substrateMix).filter(([, w]) => w > 0);
-        if (positive.length === 0) return null;
-        return Object.fromEntries(positive);
+        return effectiveSubstrateMix(this.substrateMix);
     }
 
     /**
@@ -4653,9 +5347,7 @@ export class ProcgenPipelineUI {
      * Used only in grid-growth quotas mode.
      */
     _effectiveSubstrateQuotas() {
-        const positive = Object.entries(this.substrateQuotas).filter(([, q]) => q > 0);
-        if (positive.length === 0) return null;
-        return Object.fromEntries(positive);
+        return effectiveSubstrateQuotas(this.substrateQuotas);
     }
 
     /**
@@ -4664,143 +5356,39 @@ export class ProcgenPipelineUI {
      * disabled — both engine entries treat null as "no hazards."
      */
     _effectiveHazardOpts() {
-        if (!this.params.enableHazards) return null;
-        const count = Math.max(0, Math.floor(this.params.hazardCount ?? 0));
-        if (count === 0) return null;
-        return {
-            enabled: true,
-            count,
-            maxConsecutiveFails: Math.max(1, Math.floor(this.params.hazardMaxConsecutiveFails ?? 10)),
-            wallOverlapAllowed: !!this.params.hazardWallOverlapAllowed,
-        };
+        return effectiveHazardOpts(this.params);
     }
 
     /**
-     * Sub-fields rendered when enableHazards is on. Three controls:
-     * count per region, max consecutive placement failures before
-     * stopping, and wall-overlap toggle. Collected inside a single
-     * container so the parent renderer can show/hide them as a unit.
-     */
-    _renderHazardSubFields() {
-        const wrap = document.createElement('div');
-        wrap.className = 'procgen-pipeline-hazard-fields';
-
-        const countRow = document.createElement('div');
-        countRow.className = 'procgen-pipeline-field';
-        const countLabel = document.createElement('label');
-        countLabel.textContent = 'Hazards per region';
-        countLabel.title = 'Target hazard count for each region (0 disables)';
-        const countInput = document.createElement('input');
-        countInput.type = 'number';
-        countInput.min = '0';
-        countInput.step = '1';
-        countInput.value = String(this.params.hazardCount ?? 0);
-        countInput.addEventListener('change', () => {
-            const v = Math.max(0, Math.floor(Number(countInput.value) || 0));
-            this.params.hazardCount = v;
-            this._saveToLocalStorage();
-        });
-        countRow.appendChild(countLabel);
-        countRow.appendChild(countInput);
-        wrap.appendChild(countRow);
-
-        const failRow = document.createElement('div');
-        failRow.className = 'procgen-pipeline-field';
-        const failLabel = document.createElement('label');
-        failLabel.textContent = 'Max consecutive fails';
-        failLabel.title = 'Stop early after this many failed placement attempts in a row';
-        const failInput = document.createElement('input');
-        failInput.type = 'number';
-        failInput.min = '1';
-        failInput.step = '1';
-        failInput.value = String(this.params.hazardMaxConsecutiveFails ?? 10);
-        failInput.addEventListener('change', () => {
-            const v = Math.max(1, Math.floor(Number(failInput.value) || 1));
-            this.params.hazardMaxConsecutiveFails = v;
-            this._saveToLocalStorage();
-        });
-        failRow.appendChild(failLabel);
-        failRow.appendChild(failInput);
-        wrap.appendChild(failRow);
-
-        const overlapRow = document.createElement('div');
-        overlapRow.className = 'procgen-pipeline-field';
-        const overlapLabel = document.createElement('label');
-        overlapLabel.textContent = 'Allow wall overlap';
-        overlapLabel.title = 'Hazard paths may include wall tiles (still must contain ≥1 floor tile)';
-        const overlapInput = document.createElement('input');
-        overlapInput.type = 'checkbox';
-        overlapInput.checked = !!this.params.hazardWallOverlapAllowed;
-        overlapInput.addEventListener('change', () => {
-            this.params.hazardWallOverlapAllowed = !!overlapInput.checked;
-            this._saveToLocalStorage();
-        });
-        overlapRow.appendChild(overlapLabel);
-        overlapRow.appendChild(overlapInput);
-        wrap.appendChild(overlapRow);
-
-        return wrap;
-    }
-
-    /**
-     * Per-substrate parameter subsections inside Parameters. Each
-     * substrate renders its own controls via the registry
-     * `renderProcgenParams` hook (bounce — bounceProcgenParams.js);
-     * maze's panel-owned params stay local for now. Substrates without
-     * either render nothing. Empty selection falls back to maze —
-     * matching the engine's substrate default.
+     * Per-substrate parameter subsections inside Parameters: one shared
+     * per-region generation form per active substrate
+     * (`procgenCore/regionGenerationForm.js`, apworld substrate R1), which
+     * draws the entry's registry `renderProcgenParams` hook
+     * (bounceProcgenParams.js, runnerProcgenParams.js, mazeProcgenParams.js)
+     * under its subheader; substrates without it render nothing but the
+     * form's empty wrapper (`data-procgen-params="none"`). The generic
+     * per-region rows are drawn once, in the grid, so each form is called
+     * with `generic: false`. Same bag, same onChange: the params, their keys
+     * and every run path are unchanged. An empty selection falls back to the
+     * engine's default substrate (DEFAULT_SUBSTRATE_ID) — the substrate the
+     * engine builds with when nothing is selected, so its subsection shows
+     * then.
      */
     _renderSubstrateParamSections() {
         const wrap = document.createElement('div');
-        const localRenderers = {
-            maze: () => this._renderMazeParams(),
-        };
         const dict = this._activeSubstrateDict();
         let ids = Object.keys(dict).filter((id) => Number(dict[id]) > 0).sort();
-        if (ids.length === 0) ids = ['maze'];
+        if (ids.length === 0) ids = [DEFAULT_SUBSTRATE_ID];
         for (const id of ids) {
-            const hook = substrateRegistry.get(id)?.renderProcgenParams;
-            let node = null;
-            if (typeof hook === 'function') {
-                node = hook({ params: this.params, onChange: () => this._saveToLocalStorage() });
-            } else if (localRenderers[id]) {
-                node = localRenderers[id]();
-            }
-            if (!node) continue;
-            const header = document.createElement('div');
-            header.className = 'procgen-pipeline-scenario-subheader';
-            header.textContent = `${id} parameters`;
-            wrap.appendChild(header);
-            wrap.appendChild(node);
-        }
-        return wrap;
-    }
-
-    _renderMazeParams() {
-        const wrap = document.createElement('div');
-        // Hazard authoring (maze content modules Phase 2e). When
-        // enabled, a follow-up group shows count + max-fails +
-        // wall-overlap inputs. Toggle triggers re-render so the
-        // sub-fields appear / disappear in place.
-        const hazardRow = document.createElement('div');
-        hazardRow.className = 'procgen-pipeline-field';
-        const hazardLabel = document.createElement('label');
-        hazardLabel.textContent = 'Enable hazards';
-        hazardLabel.title = 'Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region';
-        const hazardInput = document.createElement('input');
-        hazardInput.type = 'checkbox';
-        hazardInput.checked = !!this.params.enableHazards;
-        hazardInput.addEventListener('change', () => {
-            this.params.enableHazards = !!hazardInput.checked;
-            this._saveToLocalStorage();
-            this.render();
-        });
-        hazardRow.appendChild(hazardLabel);
-        hazardRow.appendChild(hazardInput);
-        wrap.appendChild(hazardRow);
-
-        if (this.params.enableHazards) {
-            wrap.appendChild(this._renderHazardSubFields());
+            // The generic per-region rows are already in the grid above
+            // (`generic: false`); the form adds the entry's own knobs under
+            // its subheader, or nothing for an entry without the hook.
+            wrap.appendChild(renderRegionGenerationForm({
+                substrateId: id,
+                params: this.params,
+                onChange: () => this._saveToLocalStorage(),
+                generic: false,
+            }));
         }
         return wrap;
     }
@@ -4811,22 +5399,41 @@ export class ProcgenPipelineUI {
      * Pass `showFeedback: true` to also flash a 'Saved.' message and
      * re-render — the explicit Save Params button uses that mode;
      * per-keystroke handlers don't, to avoid render churn.
+     *
+     * Every save is an edit gesture, so it flips the preset drop-down
+     * back to "Custom" — except saves issued BY a preset apply/save,
+     * which pass `fromPreset: true` to keep their selection.
      */
-    _saveToLocalStorage({ showFeedback = false } = {}) {
+    _saveToLocalStorage({ showFeedback = false, fromPreset = false } = {}) {
+        if (!fromPreset) {
+            this.activePresetId = null;
+            // Change handlers save without re-rendering (render churn),
+            // so flip the drop-down to Custom surgically.
+            const sel = this.rootElement?.querySelector('.procgen-pipeline-preset-select');
+            if (sel && sel.value !== '') sel.value = '';
+        }
+        let serialized = '';
         try {
-            localStorage.setItem(LS_KEY, JSON.stringify({
+            const libraries = this._serializedLibraries();
+            serialized = JSON.stringify({
                 params: this.params,
                 scenario: this.scenario,
                 substrateMix: this.substrateMix,
                 substrateQuotas: this.substrateQuotas,
                 substrateMode: this.substrateMode,
                 mode: this.mode,
-            }));
+                activePresetId: this.activePresetId,
+                // Region-library selection (hybrid persistence). Omitted when
+                // empty so bundles that never touch libraries stay unchanged.
+                ...(libraries.length ? { libraries } : {}),
+            });
+            localStorage.setItem(LS_KEY, serialized);
             if (showFeedback) {
                 this.message = 'Saved.';
                 this.render();
             }
         } catch (e) {
+            reportStorageWriteFailure({ key: LS_KEY, value: serialized, error: e, owner: 'Procgen Pipeline' });
             this.message = `ERROR: ${e.message}`;
             this.render();
         }
@@ -4837,35 +5444,30 @@ export class ProcgenPipelineUI {
             const s = localStorage.getItem(LS_KEY);
             if (!s) return;
             const parsed = JSON.parse(s);
-            if (parsed.params) this.params = { ...this._defaultParams(), ...parsed.params };
-            if (parsed.scenario) {
-                this.scenario = {
-                    items: { ...(parsed.scenario.items ?? {}) },
-                    obstacles: { ...(parsed.scenario.obstacles ?? {}) },
-                };
-            }
-            // Drop entries for substrates that aren't currently
-            // registered (e.g. saved before a substrate module was
-            // removed). Same filter for mix and quotas dicts.
-            const filterDict = (raw) => {
-                const out = {};
-                if (raw && typeof raw === 'object') {
-                    for (const [id, v] of Object.entries(raw)) {
-                        if (substrateRegistry.has(id) && v > 0) out[id] = v;
-                    }
-                }
-                return out;
-            };
-            this.substrateMix = filterDict(parsed.substrateMix);
-            this.substrateQuotas = filterDict(parsed.substrateQuotas);
-            if (parsed.substrateMode === 'quotas' || parsed.substrateMode === 'mix') {
-                this.substrateMode = parsed.substrateMode;
-            }
-            if (parsed.mode === 'gridGrowth' || parsed.mode === 'topDown'
-                    || parsed.mode === 'shuffledSpiral'
-                    || parsed.mode === 'sphereGrowth') {
-                this.mode = parsed.mode;
-            }
+            // The persisted bundle has the same shape as a preset's
+            // state, so restore shares the preset normalisation path:
+            // params merged over defaults, quota/mix dicts filtered to
+            // registered substrates, mode/substrateMode validated.
+            const next = applyPresetState(parsed, {
+                defaults: this._defaultParams(),
+                hasSubstrate: (id) => substrateRegistry.has(id),
+                current: this,
+            });
+            this.params = next.params;
+            this.scenario = next.scenario;
+            this.substrateMix = next.substrateMix;
+            this.substrateQuotas = next.substrateQuotas;
+            this.substrateMode = next.substrateMode;
+            this.mode = next.mode;
+            this._setPersistedLibraries(next.libraries);
+            // Keep the preset selection across refreshes — but only if
+            // the id still resolves (the preset may have been deleted).
+            this.activePresetId = restoredActivePresetId(
+                parsed.activePresetId, this.userPresets,
+            );
+            // ⛓ F1: a restore is an automatic sizing too (see the constructor).
+            this._handEditedGridKeys = new Set(pinnedGridKeys(
+                getPresetById(this.activePresetId, this.userPresets)?.state?.params));
         } catch (e) {
             // ignore
         }
@@ -4895,6 +5497,90 @@ export class ProcgenPipelineUI {
             }));
         } catch (e) {
             // ignore
+        }
+    }
+
+    // ── Region-library persistence (F3, hybrid) ─────────────────────
+    // The panel's live model is this.regionLibraries (resolved docs). Persistence
+    // uses the hybrid serialize/resolve helpers in regionLibraryLoader. See the
+    // _pendingLibraryRefs comment in the constructor for the async-window handling.
+
+    // The persisted `libraries` array. Before an in-flight resolve lands,
+    // _pendingLibraryRefs holds the untouched refs so a save round-trips them
+    // rather than clobbering with an empty regionLibraries; otherwise serialize
+    // the live working docs.
+    _serializedLibraries() {
+        if (this._pendingLibraryRefs) return this._pendingLibraryRefs;
+        return serializeLibrarySelection(this.regionLibraries);
+    }
+
+    // App-relative base for served-library fetches, mirroring presetUI's
+    // './presets/…' (the app is served from /frontend/, so './' resolves against
+    // the document URL to /frontend/region-libraries/…).
+    _libraryBasePath() {
+        return './';
+    }
+
+    // Adopt a persisted `libraries` array from a load/preset-apply: stash the raw
+    // refs, blank the working list, and (if non-empty) kick the async resolve.
+    _setPersistedLibraries(refs) {
+        const arr = Array.isArray(refs) ? refs : [];
+        this._pendingLibraryRefs = arr.length ? arr : null;
+        this.regionLibraries = [];
+        if (arr.length) this._resolveRegionLibraries(arr);
+    }
+
+    // Re-fetch served refs + revalidate inline ad-hoc docs into resolved working
+    // entries. A newer _setPersistedLibraries (different refs identity) supersedes
+    // an in-flight resolve. Drift/missing surfaces on the panel warning line.
+    async _resolveRegionLibraries(refs) {
+        try {
+            const { resolved, errors, warnings } = await resolveLibrarySelection(refs, {
+                fetchImpl: window.fetch.bind(window),
+                basePath: this._libraryBasePath(),
+            });
+            if (this._pendingLibraryRefs !== refs) return; // superseded
+            this.regionLibraries = resolved;
+            this._pendingLibraryRefs = null;
+            const notes = [...errors, ...warnings];
+            if (notes.length) this.warning = `Region libraries: ${notes.join(' · ')}`;
+            this.render();
+        } catch (e) {
+            if (this._pendingLibraryRefs === refs) this._pendingLibraryRefs = null;
+            this.warning = `Region libraries: ${e.message}`;
+            this.render();
+        }
+    }
+
+    _loadWorkingLibraryFromLocalStorage() {
+        try {
+            const s = localStorage.getItem(LS_WORKING_LIBRARY_KEY);
+            if (!s) return;
+            const parsed = JSON.parse(s);
+            if (parsed && Array.isArray(parsed.entries)) {
+                this.workingLibrary = { entries: parsed.entries };
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    /**
+     * Persist the working library. Returns true when it was written; on a
+     * failure (a full origin) it reports it and returns false, so a capture
+     * never claims a success the next reload would take back (plan §37.7.5).
+     */
+    _saveWorkingLibraryToLocalStorage() {
+        let serialized = '';
+        try {
+            serialized = JSON.stringify(this.workingLibrary);
+            localStorage.setItem(LS_WORKING_LIBRARY_KEY, serialized);
+            return true;
+        } catch (e) {
+            reportStorageWriteFailure({ key: LS_WORKING_LIBRARY_KEY, value: serialized, error: e, owner: 'Procgen Pipeline working library' });
+            this.warning = `The working library was NOT saved in the browser (${e.message}); `
+                + 'it will be lost on reload. Free space in the Storage panel, then capture again.';
+            return false;
         }
     }
 }

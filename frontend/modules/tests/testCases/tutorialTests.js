@@ -1,0 +1,568 @@
+/**
+ * In-app tests for the Tutorial panel (enrolled in the test-substrates roster:
+ * the guided tour needs the Region Graph, which test-regression's
+ * modules-nograph.json does not load).
+ *
+ * ⛓ Expectations are read off the tutorial DATA (content/index.js) and the
+ * live layout, never typed: a new step in a tutorial is a new condition here.
+ *
+ * ⚖ RULED (the user, 2026-09-26): every row SETS the state it expects at its
+ * start and cleans up after itself — the panel back on its list, merged, the
+ * settings and the layout's active tabs as they were, and (the tour row) the
+ * world that was loaded before it.
+ */
+import { registerTest } from '../testRegistry.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
+import settingsManager from '../../../app/core/settingsManager.js';
+import eventBus from '../../../app/core/eventBus.js';
+import { TUTORIALS } from '../../tutorials/content/index.js';
+import { FEATURE_CHECKS } from '../../tutorials/content/checks/index.js';
+import { DEFAULT_DONE_TIMEOUT_MS, TRACKS, panelSteps, terminalStep, validateTutorial } from '../../tutorials/tutorialShape.js';
+import { ratchetVerdict, walkTutorial } from '../../tutorials/tutorialWalk.js';
+import {
+    COMPONENT_TYPE, CONTROLS, DEFAULTS, MODULE_ID, TutorialUI, sectionPath,
+} from '../../tutorials/tutorialUI.js';
+import { TUTORIAL_STACK_ID, componentItems, isSplit, mergeBack } from '../../tutorials/tutorialLayout.js';
+import {
+    CURSOR_CLASS, OUTLINE_CLASS, hideCursor, performAction, setOutline, waitFor,
+} from '../../tutorials/tutorialExecutor.js';
+import { buildContext } from '../../tutorials/tutorialContext.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
+
+const CATEGORY = 'Tutorials';
+const WALK_CATEGORY = 'Tutorial walks';
+/**
+ * A track whose walk rows run in a batch of their own (testBatches.js): the
+ * procgen walks generate worlds and play them to the end, and together they
+ * outgrew the tutorials batch's budget (81 % of it on 2026-10-10).
+ */
+const WALK_CATEGORY_BY_TRACK = Object.freeze({
+    procgen: 'Tutorial walks: procgen',
+    // 2026-10-10: the tracker walks took the tutorials batch to 88 % of its budget.
+    tracker: 'Tutorial walks: tracker',
+    // The Seedling walks boot the wasm game (WebGPU) — a batch of their own.
+    seedling: 'Tutorial walks: seedling',
+});
+/**
+ * Walks that play long enough to need a batch of their own, whatever their
+ * track. 2026-10-12: the procgen walks reached 96 % of their batch's budget,
+ * and the loop-mode ones play the longest (loops restart).
+ */
+const WALK_CATEGORY_BY_TUTORIAL = Object.freeze({
+    'procgen-loop-mode-jta': 'Tutorial walks: procgen loops',
+    'procgen-loop-mode-everything': 'Tutorial walks: procgen loops',
+    // ⚖ The user, 2026-10-15: S4 plays to its 180 s bot-plays timeout every run, and
+    // beside seedling-bot's 420 s first-checks worst case it overran tutorials-seedling's budget.
+    'seedling-whole-game': 'Tutorial walks: seedling whole game',
+});
+const walkCategory = (tutorial) => WALK_CATEGORY_BY_TUTORIAL[tutorial.id] ?? WALK_CATEGORY_BY_TRACK[tutorial.track] ?? WALK_CATEGORY;
+const walkId = (id) => `tutorial-walk-${id}`;
+/** ⚖ 2026-10-15: feature checks (content/checks/index.js) walk in a manual batch of their own, feature-checks. */
+const CHECK_CATEGORY = 'Feature checks';
+const checkId = (id) => `feature-check-${id}`;
+const MOUNT_TIMEOUT_MS = 10000;
+const POLL_MS = 100;
+const TOUR_ID = 'guided-tour';
+/** The retired Resume record (⚖ 2026-10-19). */
+const PROGRESS_SETTING = `moduleSettings.${MODULE_ID}.progress`;
+
+/** The live panel, opened if it is closed, back on its list and merged, its settings at `settings`. */
+async function freshPanel(tc, settings) {
+    if (!TutorialUI.instance) {
+        try { await performAction({ activate: { panel: COMPONENT_TYPE } }, { eventBus }); } catch { /* reported below */ }
+    }
+    const ok = await tc.pollForCondition(() => TutorialUI.instance, 'the Tutorial panel to be mounted', MOUNT_TIMEOUT_MS, POLL_MS);
+    tc.reportCondition('the Tutorial panel is mounted', Boolean(ok));
+    if (!ok) return null;
+    const ui = TutorialUI.instance;
+    // ⛓ The instance exists even when the layout factory REFUSED it (the
+    // constructor ran first), so a row that drove `ui.root` passed against a
+    // detached panel. Assert it is the element its tab shows.
+    tc.reportCondition('the panel is mounted in its Golden Layout tab',
+        Boolean(ui.root.isConnected && ui.item()?.container?.element?.contains(ui.root)));
+    await ui.ready;
+    if (ui.tutorial) ui.exit();
+    mergeBack(ui.item());
+    for (const [k, v] of Object.entries(settings)) await settingsManager.updateModuleSetting(MODULE_ID, k, v);
+    await ui._loadSettings();
+    ui.render();
+    return ui;
+}
+
+/** The module's settings as they are now, to put back in `finally`. */
+async function savedSettings() {
+    const out = {};
+    for (const k of Object.keys(DEFAULTS)) {
+        out[k] = await settingsManager.getSetting(`moduleSettings.${MODULE_ID}.${k}`, DEFAULTS[k] ?? null);
+    }
+    return out;
+}
+
+async function restore(ui, settings) {
+    if (ui?.tutorial) ui.exit();
+    if (ui) mergeBack(ui.item());
+    setOutline(null);
+    hideCursor();
+    for (const [k, v] of Object.entries(settings)) await settingsManager.updateModuleSetting(MODULE_ID, k, v);
+    await ui?._loadSettings?.();
+    ui?.render?.();
+}
+
+/** Every stack's active component, to put back afterwards. */
+function activeTabs() {
+    const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+    return items.filter((it) => it.isStack).map((stack) => [stack, stack.getActiveComponentItem?.()]);
+}
+
+function restoreActiveTabs(saved) {
+    for (const [stack, item] of saved) {
+        if (item && item.parentItem === stack && stack.getActiveComponentItem?.() !== item) stack.setActiveComponentItem(item, false);
+    }
+}
+
+// ── rows ─────────────────────────────────────────────────────────────────
+
+async function tutorialPanelListsEveryTutorial(tc) {
+    const settings = await savedSettings();
+    const ui = await freshPanel(tc, {});
+    if (!ui) return tc.getOverallResult();
+    try {
+        for (const { tutorial } of TUTORIALS) {
+            let valid = true;
+            try { validateTutorial(tutorial); } catch (e) { valid = false; tc.log?.(e.message); }
+            tc.reportCondition(`tutorial ${tutorial.id} has the tutorial shape`, valid);
+        }
+        for (const { tutorial } of FEATURE_CHECKS) {
+            let valid = true;
+            try { validateTutorial(tutorial, { check: true }); } catch (e) { valid = false; tc.log?.(e.message); }
+            tc.reportCondition(`feature check ${tutorial.id} has the feature-check shape`, valid);
+        }
+        // Where each card belongs (⚖ 2026-10-10, 2026-10-14, 2026-10-15): ready
+        // ones in a section per track, then Needs a terminal and In progress
+        // (each a subsection per track), and the developer track — in that
+        // order, every section collapsed as the panel loads.
+        ui.collapseAll();
+        const all = TUTORIALS.map((e) => e.tutorial);
+        const order = Object.keys(TRACKS);
+        const byTrack = (list) => order.flatMap((k) => list.filter((t) => t.track === k));
+        const where = (t) => (TRACKS[t.track].collapsed ? 'developer' : t.status);
+        const checks = FEATURE_CHECKS.map((e) => e.tutorial);
+        const expected = [...['ready', 'terminal', 'in-progress', 'developer']
+            .flatMap((w) => byTrack(all.filter((t) => where(t) === w))), ...checks].map((t) => t.id);
+        const cards = [...ui.root.querySelectorAll('.tut-card')].map((c) => c.dataset.tutorialId);
+        tc.reportCondition(`the list shows one card per tutorial, grouped by track, then the feature checks (${cards.join(', ')})`,
+            JSON.stringify(cards) === JSON.stringify(expected));
+        for (const t of [...all, ...checks]) {
+            const card = ui.root.querySelector(`.tut-card[data-tutorial-id="${t.id}"]`);
+            const chain = [];
+            for (let d = card?.closest('details'); d; d = d.parentElement?.closest('details')) chain.unshift(d);
+            const want = sectionPath(t);
+            tc.reportCondition(`${t.id} (${t.status}, track ${t.track ?? 'none: a feature check'}) sits in ${want.join(' › ')}, collapsed`,
+                JSON.stringify(chain.map((d) => d.dataset.section)) === JSON.stringify(want) && chain.every((d) => !d.open));
+        }
+        tc.reportCondition('a status section holds subsections, not cards',
+            [`.${CONTROLS.terminal}`, `.${CONTROLS.drafts}`].every((sel) => {
+                const box = ui.root.querySelector(sel);
+                return !box || ![...box.children].some((c) => c.matches('.tut-card'));
+            }));
+        tc.reportCondition('every card has a Start button',
+            [...ui.root.querySelectorAll('.tut-card')].every((c) => c.querySelector(`.${CONTROLS.start}`)));
+        tc.reportCondition('the list links to Quick Launch', Boolean(ui.root.querySelector(`.${CONTROLS.quickLaunch}`)));
+    } finally {
+        await restore(ui, settings);
+    }
+    return tc.getOverallResult();
+}
+
+/**
+ * ⚖ 2026-10-15: every section is collapsible and starts collapsed; one opened
+ * stays open across re-renders; leaving a tutorial opens the sections that
+ * hold it. ⚖ 2026-10-19: no Resume across a reload — nothing is recorded,
+ * and a record stored before is deleted.
+ */
+async function tutorialSectionsCollapse(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    try {
+        ui.collapseAll();
+        const sections = () => [...ui.root.querySelectorAll('details[data-section]')];
+        tc.reportCondition(`every section is collapsed (${sections().length} sections)`,
+            sections().length > 0 && sections().every((d) => !d.open));
+        const tour = TUTORIALS.find((e) => e.tutorial.id === TOUR_ID).tutorial;
+        const [outer] = sectionPath(tour);
+        const summary = () => ui.root.querySelector(`details[data-section="${outer}"] > summary`);
+        summary()?.click();
+        // `toggle` is dispatched as a task: wait for the panel to have heard it, not just for `open`.
+        const isOpen = () => ui.root.querySelector(`details[data-section="${outer}"]`)?.open === true;
+        tc.reportCondition(`clicking ${outer}'s heading opens it`,
+            Boolean(await waitFor(() => isOpen() && ui.openSections.has(outer), 2000)));
+        ui.render();
+        tc.reportCondition('… and it stays open when the list redraws', isOpen());
+        summary()?.click();
+        tc.reportCondition('clicking it again closes it',
+            Boolean(await waitFor(() => !isOpen() && !ui.openSections.has(outer), 2000)));
+
+        // A subsection: the first status section that has one.
+        const sub = ui.root.querySelector('details[data-section] details[data-section]');
+        tc.reportCondition('a status section has track subsections', Boolean(sub));
+        if (sub) {
+            const key = sub.dataset.section;
+            sub.parentElement.closest('details').querySelector(':scope > summary').click();
+            sub.querySelector(':scope > summary').click();
+            const subOpen = () => ui.root.querySelector(`details[data-section="${key}"]`)?.open === true;
+            tc.reportCondition(`its subsection ${key} opens`,
+                Boolean(await waitFor(() => subOpen() && ui.openSections.has(key), 2000)));
+            ui.render();
+            tc.reportCondition('… and stays open when the list redraws', subOpen());
+            ui.collapseAll();
+            tc.reportCondition('collapseAll closes every section', sections().every((d) => !d.open));
+        }
+
+        ui.start(TOUR_ID, 1);
+        ui.exit();
+        const path = sectionPath(tour);
+        tc.reportCondition(`leaving ${TOUR_ID} opens ${path.join(' › ')}, and only that`, sections()
+            .every((d) => d.open === path.includes(d.dataset.section)));
+        ui.collapseAll();
+        const stored = () => settingsManager.getSetting(PROGRESS_SETTING, undefined);
+        tc.reportCondition('starting and leaving a tutorial records no progress', await stored() === undefined);
+        tc.reportCondition('the toolbar holds only Quick Launch',
+            ui.root.querySelectorAll('.tut-toolbar button').length === 1);
+        await settingsManager.updateModuleSetting(MODULE_ID, 'progress', { id: TOUR_ID, index: 2 });
+        await ui._deleteRetiredProgress();
+        tc.reportCondition('a progress record stored before is deleted', await stored() === undefined);
+    } finally {
+        await restore(ui, settings);
+        ui?.collapseAll();
+        restoreActiveTabs(tabs);
+    }
+    return tc.getOverallResult();
+}
+
+async function tutorialStartSplitsAndMergeRestores(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    try {
+        const item = ui.item();
+        tc.reportCondition('the Tutorial panel has a Golden Layout tab', Boolean(item));
+        if (!item) return tc.getOverallResult();
+        const home = item.parentItem;
+        tc.reportCondition('before a tutorial starts, the panel shares its stack (the default layout is not split)',
+            home.contentItems.length > 1);
+
+        ui.root.querySelector(`.tut-card[data-tutorial-id="${TOUR_ID}"] .${CONTROLS.start}`)?.click();
+        const split = await tc.pollForCondition(() => isSplit(ui.item()), 'Start to split the column', MOUNT_TIMEOUT_MS, POLL_MS);
+        tc.reportCondition('Start moves the panel into a stack of its own', Boolean(split));
+        const bottom = ui.item().parentItem;
+        const column = bottom.parent;
+        tc.reportCondition(`that stack is ${TUTORIAL_STACK_ID}, in a column, under the stack it came from`,
+            bottom.id === TUTORIAL_STACK_ID && column?.isColumn
+            && column.contentItems.indexOf(home) === column.contentItems.indexOf(bottom) - 1);
+        tc.reportCondition('the stack it came from keeps its other tabs', home.contentItems.length >= 1 && !home.contentItems.includes(ui.item()));
+
+        ui.root.querySelector(`.${CONTROLS.layout}`)?.click();
+        tc.reportCondition('Merge puts the panel back into the stack it came from', ui.item()?.parentItem === home);
+        tc.reportCondition('… and the column is gone (that stack is a child of the row again)', home.parent?.isRow === true);
+
+        ui.root.querySelector(`.${CONTROLS.layout}`)?.click();
+        tc.reportCondition('Split splits it again', isSplit(ui.item()));
+
+        ui.root.querySelector(`.${CONTROLS.exit}`)?.click();
+        tc.reportCondition('All tutorials goes back to the list and merges', ui.item()?.parentItem === home && !ui.tutorial
+            && Boolean(ui.root.querySelector('.tut-card')));
+    } finally {
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+    }
+    return tc.getOverallResult();
+}
+
+async function tutorialCursorAndOutlineReachTabs(tc) {
+    const tabs = activeTabs();
+    let sawCursor = false;
+    const observer = new MutationObserver(() => {
+        if (document.querySelector(`.${CURSOR_CLASS}`)) sawCursor = true;
+    });
+    observer.observe(document.body, { childList: true });
+    try {
+        // A tab that has spilled into its stack's ▾ list — the path a person finds hardest.
+        const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+        const hidden = items.find((it) => it.isComponent && it.tab?.element?.closest('.lm_tabdropdown_list')
+            && it.parentItem.getActiveComponentItem() !== it);
+        tc.reportCondition('some stack has a tab in its overflow list (the default layout overflows)', Boolean(hidden));
+        if (hidden) {
+            await performAction({ activate: { panel: hidden.componentType, title: hidden.title } },
+                { animate: true, moveMs: 60, eventBus });
+            tc.reportCondition(`the animated cursor appeared while reaching ${hidden.title}`, sawCursor);
+            tc.reportCondition(`${hidden.title}, reached through the ▾ list, is its stack's active tab`,
+                hidden.parentItem.getActiveComponentItem() === hidden);
+            tc.reportCondition('the ▾ list is closed again', !hidden.parentItem.element
+                .querySelector('.lm_tabdropdown_list')?.offsetParent);
+        }
+        hideCursor();
+
+        // An ACTIVE tab is always drawn in its header (GL never moves it to the ▾ list).
+        const shown = items.find((it) => it.isComponent && it.parentItem?.getActiveComponentItem?.() === it);
+        const tab = shown?.tab?.element;
+        setOutline(() => tab);
+        const outline = document.querySelector(`.${OUTLINE_CLASS}`);
+        const o = outline?.getBoundingClientRect();
+        const t = tab?.getBoundingClientRect();
+        tc.reportCondition('the outline is drawn around its target', Boolean(o && t && o.width > 0
+            && o.left <= t.left && o.top <= t.top && o.right >= t.right && o.bottom >= t.bottom));
+        setOutline(null);
+        tc.reportCondition('setOutline(null) removes it', !document.querySelector(`.${OUTLINE_CLASS}`));
+    } finally {
+        observer.disconnect();
+        setOutline(null);
+        hideCursor();
+        restoreActiveTabs(tabs);
+    }
+    return tc.getOverallResult();
+}
+
+async function tutorialGuidedTourPlaysEveryStep(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ctx = buildContext({ eventBus });
+    const before = ctx.rulesSource();
+    const ui = await freshPanel(tc, { autoAdvance: true, autoAdvanceDelayMs: 50, animateCursor: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    const tour = TUTORIALS.find((e) => e.tutorial.id === TOUR_ID).tutorial;
+    const steps = panelSteps(tour);
+    const budget = steps.reduce((n, { step }) => n + (step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS), 0);
+    try {
+        ui.start(TOUR_ID);
+        ui.root.querySelector(`.${CONTROLS.play}`)?.click();
+        tc.reportCondition('Play is running', ui.playing);
+        const ended = await tc.pollForCondition(() => !ui.playing, 'Play to finish the tour', budget, 250);
+        tc.reportCondition(`Play ended (status: "${ui.status}")`, Boolean(ended));
+        for (const { step, index } of steps) {
+            tc.reportCondition(`step ${index + 1} ${step.id} is done`, ui.doneSteps.has(step.id));
+        }
+        tc.reportCondition('the panel says Finished on the last step', ui.status === 'Finished.' && ui.isLast());
+    } finally {
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+        if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
+            try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
+        }
+    }
+    return tc.getOverallResult();
+}
+
+async function tutorialUrlRequestStartsTheTutorial(tc) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    try {
+        const n = panelSteps(TUTORIALS.find((e) => e.tutorial.id === TOUR_ID).tutorial).length;
+        const step = Math.min(4, n);
+        // Another tab forward first, so "brought forward" is observable.
+        const item = ui.item();
+        const sibling = item?.parentItem?.contentItems.find((c) => c !== item);
+        if (sibling) item.parentItem.setActiveComponentItem(sibling, false);
+        const started = await ui.startRequest({ id: TOUR_ID, index: step - 1 });
+        tc.reportCondition(`?tutorial=${TOUR_ID}&tutorialStep=${step} starts the tutorial`, started && ui.tutorial?.id === TOUR_ID);
+        tc.reportCondition(`… at step ${step} (the panel reads "Step ${step} of ${n}")`,
+            ui.root.querySelector(`.${CONTROLS.position}`)?.textContent === `Step ${step} of ${n}`);
+        tc.reportCondition('… with the panel forward, in a stack of its own', isSplit(ui.item())
+            && ui.item().parentItem.getActiveComponentItem() === ui.item());
+        ui.exit();
+        const unknown = await ui.startRequest({ id: 'no-such-tutorial', index: 0 });
+        tc.reportCondition('an unknown id starts nothing and the list names it', !unknown && !ui.tutorial
+            && (ui.root.querySelector(`.${CONTROLS.list} .${CONTROLS.status}`)?.textContent ?? '').includes('no-such-tutorial'));
+    } finally {
+        ui.notice = null;
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+    }
+    return tc.getOverallResult();
+}
+
+/**
+ * A tutorial's WALK row: every step performed with the panel's Do it (an
+ * outside step: its stand-in), each `done` waited for, and the result graded
+ * by the ratchet against the tutorial's record (tutorialWalk.js).
+ */
+async function tutorialWalkRow(tc, tutorial) {
+    const settings = await savedSettings();
+    const tabs = activeTabs();
+    const ctx = buildContext({ eventBus });
+    const before = ctx.rulesSource();
+    const pipelineSetup = readPipelineSetup();
+    const modulesBefore = moduleStates();
+    const loopModeBefore = loopModeActive();
+    const ui = await freshPanel(tc, { autoAdvance: false, animateCursor: false, showOutline: false });
+    if (!ui) return tc.getOverallResult();
+    // A bot step plays at test speed (botTestSpeed.js); the person's saved settings are untouched.
+    const restoreSpeed = await startAppBotTestSpeed();
+    try {
+        ui.start(tutorial.id);
+        // Each step's own time (its action + its done wait), so a doneTimeoutMs margin is measured, not assumed.
+        const stepStarts = [];
+        const outcome = await walkTutorial(tutorial, {
+            onStep: ({ index, step }) => { stepStarts.push({ id: step.id, at: performance.now() }); ui._goTo(index); },
+            perform: async () => {
+                if (!(await ui.doIt())) throw new Error(ui.lastError?.message ?? ui.status);
+            },
+            standIn: ({ step }) => step.standIn(ui.ctx),
+            waitDone: async ({ step }) => {
+                if (!step.done || ui.doneSteps.has(step.id)) return true;
+                // A `failed` state ends the wait at once, with the app's own words.
+                let failed = null;
+                const ok = await waitFor(async () => {
+                    if (ui.doneSteps.has(step.id) || await step.done(ui.ctx)) return true;
+                    failed = step.failed ? (await step.failed(ui.ctx)) || null : null;
+                    return Boolean(failed);
+                }, step.doneTimeoutMs ?? DEFAULT_DONE_TIMEOUT_MS, 250);
+                if (failed) throw new Error(`the app shows it cannot finish: ${failed}`);
+                return Boolean(ok);
+            },
+        });
+        if (outcome.end !== 'complete') {
+            // What the app showed when the walk ended, so a red row needs no rerun to read.
+            const bot = document.querySelector('.playback-bot .playback-bot-status')?.textContent.trim();
+            tc.log?.(`walk ended at ${outcome.stepId}: panel status "${ui.status}"; rulesSource ${JSON.stringify(ui.ctx.rulesSource())}`
+                + (bot ? `; Playback Bot status "${bot}"` : ''));
+        }
+        const walkEnd = performance.now();
+        const timings = stepStarts.map(({ id, at }, i) => `${id} ${(((stepStarts[i + 1]?.at ?? walkEnd) - at) / 1000).toFixed(1)}s`);
+        const timingLine = `[tutorial-walk-timing] ${tutorial.id}: ${timings.join(', ')}`;
+        tc.log?.(timingLine);
+        console.log(timingLine);
+        const verdict = ratchetVerdict(tutorial, outcome);
+        tc.log?.(`${tutorial.id}: ${verdict.message}`);
+        tc.reportCondition(`${tutorial.id} — ${verdict.message}`, verdict.ok);
+    } finally {
+        await restoreSpeed();
+        // A walk that ended early never reached its own restore step (a feature check's ctx.setSetting).
+        try { await ui.ctx.restoreSettings(); } catch (e) { tc.log?.(`could not restore the step settings: ${e.message}`); }
+        await restore(ui, settings);
+        restoreActiveTabs(tabs);
+        restorePipelineSetup(pipelineSetup, tc);
+        await restoreModules(modulesBefore, tc);
+        await restoreLoopMode(loopModeBefore, tc);
+        if (typeof before === 'string' && before.startsWith('./presets/') && ctx.rulesSource() !== before) {
+            try { await ctx.loadRulesPath(before); } catch (e) { tc.log?.(`could not reload ${before}: ${e.message}`); }
+        }
+        ctx.dispose();
+    }
+    return tc.getOverallResult();
+}
+
+// The generator games' tutorials switch modules on in the Modules panel and
+// off again at their end — but a walk that stops early never reaches the end.
+// A row switches off what it found off.
+function moduleStates() {
+    const all = window.moduleManagerApi?.getAllModuleStates?.() ?? {};
+    return Object.fromEntries(Object.entries(all).map(([id, st]) => [id, st?.enabled === true]));
+}
+
+async function restoreModules(before, tc) {
+    for (const [id, on] of Object.entries(moduleStates())) {
+        if (on && before[id] === false) {
+            try { await window.moduleManagerApi.disableModule(id); } catch (e) { tc.log?.(`could not switch ${id} off: ${e.message}`); }
+        }
+    }
+}
+
+// The Loop-mode tutorial enters Loop mode and leaves it at its end — a walk
+// that stops early leaves it on, and the next row's world plays under it.
+function loopModeActive() {
+    try { return centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true; } catch { return false; }
+}
+
+async function restoreLoopMode(before, tc) {
+    if (before || !loopModeActive()) return;
+    eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    if (!await waitFor(() => !loopModeActive(), 5000)) tc.log?.('could not leave Loop mode');
+}
+
+// The Procgen Pipeline auto-saves its setup, and the procgen tutorials change
+// it (and end with its Reset panel). A row puts back what the page had.
+const PIPELINE_SETUP_KEY = 'procgenPipeline_params';
+
+function readPipelineSetup() {
+    try { return localStorage.getItem(PIPELINE_SETUP_KEY); } catch { return null; }
+}
+
+function restorePipelineSetup(saved, tc) {
+    try {
+        if (readPipelineSetup() === saved) return;
+        if (saved === null) localStorage.removeItem(PIPELINE_SETUP_KEY);
+        else localStorage.setItem(PIPELINE_SETUP_KEY, saved);
+        const panel = document.querySelector('.procgen-pipeline-panel')?.__panel;
+        if (panel) {
+            panel._loadFromLocalStorage();
+            panel.render();
+        }
+    } catch (e) {
+        tc.log?.(`could not restore the Procgen Pipeline's setup: ${e.message}`);
+    }
+}
+
+const TESTS = [
+    ['tutorial-panel-lists-every-tutorial', 'Tutorial: the list shows every tutorial',
+        'Every tutorial in content/index.js passes the shape validator and has a card, in order, inside the collapsed '
+        + 'sections sectionPath names, with a Start button; the list links to Quick Launch.',
+        tutorialPanelListsEveryTutorial],
+    ['tutorial-sections-collapse', 'Tutorial: every list section is collapsible and starts collapsed',
+        'Every section and subsection is closed; a heading click opens one and it stays open across a redraw (a track '
+        + 'subsection too); leaving a tutorial opens just the sections that hold it; no progress is recorded (no '
+        + 'Resume across a reload), and a record stored before is deleted.',
+        tutorialSectionsCollapse],
+    ['tutorial-start-splits-and-merge-restores', 'Tutorial: Start splits the column, Merge restores it',
+        'The panel shares its stack until a tutorial starts; Start moves it into tutorial-stack under the stack it came '
+        + 'from; Merge puts it back and the column collapses; Split splits again; All tutorials merges and shows the list.',
+        tutorialStartSplitsAndMergeRestores],
+    ['tutorial-cursor-and-outline-reach-tabs', 'Tutorial: the cursor reaches an overflowed tab; the outline follows its target',
+        'Activates a tab that sits in its stack\'s ▾ overflow list with the animated cursor (the cursor appears, the tab '
+        + 'becomes active, the list closes); the outline is drawn around a tab and removed.',
+        tutorialCursorAndOutlineReachTabs],
+    ['tutorial-url-request-starts-the-tutorial', 'Tutorial: ?tutorial=<id>&tutorialStep=<n> starts it',
+        'The request a ?tutorial= URL makes (startRequest; the parser is a unit row) brings the panel forward, starts the '
+        + 'tutorial at the 1-based step and splits; an unknown id starts nothing and the list names it.',
+        tutorialUrlRequestStartsTheTutorial],
+    ['tutorial-guided-tour-plays-every-step', 'Tutorial: Play performs every step of the Guided Tour',
+        'Starts the Guided Tour and presses Play (auto-advance, no animation): every step the panel walks (read off the '
+        + 'tutorial data) is performed and its done check turns true, ending on "Finished.". Reloads the world loaded before.',
+        tutorialGuidedTourPlaysEveryStep],
+];
+
+for (const [id, name, description, testFunction] of TESTS) {
+    registerTest({
+        id,
+        name,
+        description,
+        testFunction,
+        category: CATEGORY,
+        enabled: false, // runs where a roster enrols it (the substrates config)
+    });
+}
+
+// One walk row per tutorial, and per feature check (tutorials.test.js checks the roster enrols each).
+const walkRows = [
+    ...TUTORIALS.map(({ tutorial }) => ({ tutorial, id: walkId(tutorial.id), kind: 'Tutorial walk', category: walkCategory(tutorial) })),
+    ...FEATURE_CHECKS.map(({ tutorial }) => ({ tutorial, id: checkId(tutorial.id), kind: 'Feature check', category: CHECK_CATEGORY })),
+];
+for (const { tutorial, id, kind, category } of walkRows) {
+    const fn = `walk_${tutorial.id.replace(/-/g, '_')}`;
+    registerTest({
+        id,
+        name: `${kind}: ${tutorial.title}`,
+        description: `Performs every step of "${tutorial.title}" with Do it (outside steps: their stand-in) and grades `
+            + `the result by its record (${tutorial.status === 'ready' ? 'ready: every step must work'
+                : tutorial.status === 'terminal' ? `needs a terminal: it must stop at ${terminalStep(tutorial)?.step.id}`
+                    : `in progress: firstFailingStep ${tutorial.firstFailingStep ?? 'null'}`}). Reloads the world loaded before.`,
+        // Named per row: the registry tells test functions apart by name.
+        testFunction: { [fn]: (tc) => tutorialWalkRow(tc, tutorial) }[fn],
+        category,
+        enabled: false,
+    });
+}

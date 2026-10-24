@@ -1,0 +1,21 @@
+PASS: both switches OFF, (224,80): the staging REFUSES at the gate after the keylock (the survey's step-52 text) — solverBot(survey-step-52) reach-exit (64,0)->L22: the danger map forbids (71.77489816433159,50.115857077274356) — chaser:bobsoldier@48,80 (the BobSoldier's 8x8 body, bare, one forecast tick on (its sw
+PASS: l30keylock-pit224-before: the model replays it — TWO hits on the key line (a sword, then the body), still in L30, bobsoldier@48,80 alive — hits [t173 sword, t193 chaser], level 30, body (73.04,55.10) h2
+PASS: l30keylock-pit224-before: the tape round-trips through the tape format
+PASS: the committed l30keylock-pit224-before is what this script produces today — byte-identical
+PASS: both switches OFF, (224,80): REFUSED, and the walk it drove was hit on the key line — solverBot(survey-step-52) reach-exit (64,0)->L22: the danger map forbids (71.77489816433159,50.115857077274356) — chaser — hits 2
+PASS: KEYLOCK_WAIT_PRICED alone, (224,80): no walk is hit (a solve or a refusal before the wait) — SOLVED 309 t
+PASS: both switches ON, (224,80): the staging SOLVES
+PASS: l30keylock-pit224: the plan kills the BobSoldier by the chaser arm inside the forecast's bound, then opens the lock — stance (88,120), dwell 26/57 t; keylock from t247
+PASS: l30keylock-pit224: the model replays it — zero hits, the crossing into L22 — hits 0, ends {"level":22,"x":104,"y":184}
+PASS: l30keylock-pit224: the tape round-trips through the tape format
+PASS: the committed l30keylock-pit224 is what this script produces today — byte-identical
+PASS: both switches OFF, (240,80): REFUSED, and the walk it drove was hit on the key line — solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock: bosslock@64,32 did not open inside its own derived bound of — hits 3
+PASS: KEYLOCK_WAIT_PRICED alone, (240,80): no walk is hit (a solve or a refusal before the wait) — REFUSED: solverBot(survey-step-52) reach-exit (64,0)->L22 -> keylock stance (bosslock@64,32): the combat ladder is EXHAUSTED. The corridor passes thr
+PASS: both switches ON, (240,80): the staging SOLVES
+PASS: l30keylock-pit240: the plan kills the BobSoldier by the chaser arm inside the forecast's bound, then opens the lock — stance (88,120), dwell 31/62 t; keylock from t261
+PASS: l30keylock-pit240: the model replays it — zero hits, the crossing into L22 — hits 0, ends {"level":22,"x":104,"y":184}
+PASS: l30keylock-pit240: the tape round-trips through the tape format
+PASS: the committed l30keylock-pit240 is what this script produces today — byte-identical
+
+all checks green
+exit 0 at 00:44:04

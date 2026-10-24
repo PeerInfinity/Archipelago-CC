@@ -4,8 +4,24 @@
       "path": "./modules/modules/index.js",
       "enabled": false
     },
+    "quickLaunch": {
+      "path": "./modules/quickLaunch/index.js",
+      "enabled": false
+    },
+    "miniPanels": {
+      "path": "./modules/miniPanels/index.js",
+      "enabled": false
+    },
+    "checksPanel": {
+      "path": "./modules/checksPanel/index.js",
+      "enabled": false
+    },
     "json": {
       "path": "./modules/json/index.js",
+      "enabled": false
+    },
+    "storagePanel": {
+      "path": "./modules/storagePanel/index.js",
       "enabled": false
     },
     "events": {
@@ -22,10 +38,6 @@
     },
     "timer": {
       "path": "./modules/timer/index.js",
-      "enabled": false
-    },
-    "timerPanel": {
-      "path": "./modules/timerPanel/index.js",
       "enabled": false
     },
     "inventory": {
@@ -132,10 +144,6 @@
       "path": "./modules/spoilerChecklist/index.js",
       "enabled": false
     },
-    "textAdventureSubstrate": {
-      "path": "./modules/textAdventureSubstrate/index.js",
-      "enabled": false
-    },
     "tests": {
       "path": "./modules/tests/index.js",
       "enabled": true
@@ -166,10 +174,6 @@
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": false
-    },
-    "mazeGameDataPanel": {
-      "path": "./modules/mazeGameDataPanel/index.js",
       "enabled": false
     },
     "jtaGameDataPanel": {
@@ -227,12 +231,15 @@
   },
   "loadPriority": [
     "modules",
+    "quickLaunch",
+    "miniPanels",
+    "checksPanel",
     "json",
+    "storagePanel",
     "events",
     "stateManager",
     "client",
     "timer",
-    "timerPanel",
     "inventory",
     "editorCore",
     "editor",
@@ -259,7 +266,6 @@
     "spoilerTest",
     "sphereState",
     "spoilerChecklist",
-    "textAdventureSubstrate",
     "tests",
     "progressBar",
     "progressBarPanel",
@@ -268,7 +274,6 @@
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "mazeGameDataPanel",
     "jtaGameDataPanel",
     "jtaCostDebugger",
     "windowAdapter",

@@ -1,0 +1,36 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-l38-fade-door",
+  "description": "⛓ THE FADE PROBE, HALF TWO — the same forty-odd ticks with ONE DOOR in them. Boots into L38's NORTH room (which no walk can reach without the chest) and holds UP into `teleporter@144,0 -> L39`. 39 dead frames against the boot probe's 20 ⇒ this door costs NINETEEN, not the 20 `swimSoundClock.LOAD_DEAD_FRAMES` carries. Both halves together are what let `r5-totem-entrance`'s 370 be attributed: 39 of load and 331 of ceremony, which is `CEREMONY_DEAD_FRAMES.total` EXACTLY — 150 of `Pickup.specialTimer` and 181 of a `SealController` nobody had ever driven.",
+  "boot": {
+    "level": 38,
+    "x": 144,
+    "y": 16
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 38,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [],
+  "tick_count": 60,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 25
+    }
+  ]
+}

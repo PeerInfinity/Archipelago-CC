@@ -1,0 +1,13 @@
+maze byte-identity                             246dfbceff75c1cc27fdb347469a77d7
+acceptance batch                               76602ae80b1671b9630cd62e57ec44db
+empty pairs c3                                 4937da806072ceddebca4f317617c36a
+empty pairs c6                                 430573e9aa483a45b49d5041eb0f8915
+carved pairs c4                                b9d2185d33c68dc2d3efcd8feb089272
+ENEMY census default                           30bcc49ca8ae998fe24600ac647ae1a4
+guard census (elements)                        a6d18d49ae256c321d175f45ec76dccc
+AREA census default    [*]                     02b22525a2f36abf8657d996f89b79db
+killgate s2            [*]                     006b063920a079dae670765d2b968c95
+killgate s5            [*]                     7d4cb820c71a476abfb89a10b6d1ece6
+killgate s9            [*]                     49e23d85e2b7b9561385513d82833882
+level pre-sword s1     [*]                     e28c1e5d6522dcca4682c44e7333a32f
+level post-sword s1    [*]                     fb1a59e5433e71fea436db1ea4b2ae57

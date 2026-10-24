@@ -1,0 +1,9 @@
+acceptance: 23 records, 19 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+c3: 102 records, 100 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+c4: 138 records, 116 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+c6: 170 records, 160 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+enemy: 2 records, 2 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+killgate-s2: 9 records, 9 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+killgate-s5: 9 records, 9 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+killgate-s9: 9 records, 9 solved OFF, 0 differ (verdict|ticks) in chooser/chooserorder/c1
+TOTAL 462 records, 424 solved OFF, 0 differ

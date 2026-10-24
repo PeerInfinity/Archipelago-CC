@@ -1,26 +1,28 @@
 /**
- * textAdventureSubstrateWrapper — phase 1 of the substrate-wrapper
- * experiment. Mounts an iframe panel that loads the synthetic
- * archipelago-naive text-adventure engine. An in-iframe bridge.js
- * translates host AP state into engine API calls.
+ * textAdventureSubstrateWrapper — the iframe-hosted text-adventure
+ * substrate (the enabled 'text_adventure' path). Mounts an iframe
+ * panel that loads the synthetic Archipelago-naive text-adventure
+ * engine; an in-iframe bridge.js translates host AP state into engine
+ * API calls. Supersedes the deprecated direct-panel
+ * textAdventureSubstrate/, which registers the same substrate id and is
+ * now disabled in every mode config, ?mode=textadventure included.
  *
- * This module deliberately coexists with textAdventureSubstrate/ for
- * phase 1. It does NOT yet register a substrate registry entry — that
- * comes in phase 2 once the bridge can deserialize procgen sidecars.
- *
- * See NewDocs/plans/procedural-generation/textadventure-engine-spec.md
- * for the engine contract.
+ * See docs/json/developer/procgen/text-adventure.md.
  */
 
-import { TextAdventureSubstrateWrapperPanel, PANEL_SHOWN_EVENT } from './textAdventureSubstrateWrapperPanel.js';
+import {
+    TextAdventureSubstrateWrapperPanel,
+    PANEL_SHOWN_EVENT,
+    INITIAL_STATE_EVENT,
+} from './textAdventureSubstrateWrapperPanel.js';
 import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
-import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
+import { TextAdventurePlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
-import { startTextAdventureRecorder } from './recorder.js';
+import { pickAutoLoadCustomDataUrl } from './customData.js';
 
 const SETTINGS_DEFAULTS = Object.freeze({
     messageHistoryLimit: 10,
@@ -56,33 +58,6 @@ export function getTextAdventureSubstrateWrapperSettings() { return _settings; }
 let _customData = null;
 export function getCustomData() { return _customData; }
 
-// Resolve a setting value to a fetch URL. Bare names map to the
-// conventional ./modules/shared/customData/<name>_textadventure.json
-// path; anything with a slash or protocol is treated as a literal URL;
-// empty returns null. Mirrors the original substrate so users can
-// migrate their settings unchanged.
-function resolveCustomDataUrl(value) {
-    if (!value || typeof value !== 'string') return null;
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-    if (trimmed.includes('/') || /^[a-z]+:/i.test(trimmed)) return trimmed;
-    return customDataUrlForGame(trimmed);
-}
-
-function customDataUrlForGame(gameName) {
-    if (!gameName || typeof gameName !== 'string') return null;
-    const slug = gameName.trim().toLowerCase();
-    if (!slug) return null;
-    return `./modules/shared/customData/${slug}_textadventure.json`;
-}
-
-function pickAutoLoadCustomDataUrl(rulesJson, playerId, settingValue) {
-    const explicit = resolveCustomDataUrl(settingValue);
-    if (explicit) return explicit;
-    const gameName = rulesJson?.world?.[playerId]?.game;
-    return customDataUrlForGame(gameName);
-}
-
 async function fetchAndCacheCustomData(url) {
     if (!url) { _customData = null; return; }
     try {
@@ -96,18 +71,16 @@ async function fetchAndCacheCustomData(url) {
 
 export const moduleInfo = {
     name: 'textAdventureSubstrateWrapper',
-    title: 'Text Adventure (wrapper)',
+    title: 'Text Adventure Substrate',
     componentType: 'textAdventureSubstrateWrapperPanel',
     icon: '📜',
     column: 3,
-    description:
-        'Parallel text-adventure renderer driven by the synthetic engine. '
-        + 'Phase 1: standalone rules.json playback only. Coexists with '
-        + 'textAdventureSubstrate; intended to eventually replace it.',
+    category: 'Procgen Substrate Panels',
+    description: 'Shows each region as prose with clickable exits and locations; you can also type commands like go or check.',
+    docs: 'docs/json/user/modules/textAdventure.md',
     requires: ['stateManager', 'gameState', 'discovery', 'iframeAdapter'],
 };
 
-const INITIAL_STATE_EVENT = 'textAdventureSubstrateWrapper:initialState';
 
 // Singleton PlaybackProxy — created in initialize() once the eventBus
 // is available. The substrate registry entry's getPlaybackController
@@ -140,13 +113,8 @@ export function register(registrationApi) {
     // Panel-shown event published by the panel's onShow lifecycle.
     // Bridge subscribes and refocuses the engine's command input.
     registrationApi.registerEventBusPublisher(PANEL_SHOWN_EVENT);
-    // Substrate-internal recording channel. Bridge publishes one
-    // event per engine command (move / examine / explore); the
-    // saved-queue recorder subscribes.
-    registrationApi.registerEventBusPublisher('textAdventure:commandRecorded');
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
     registrationApi.registerEventBusSubscriberIntent('textAdventure:loadRegion');
-    registrationApi.registerEventBusSubscriberIntent('textAdventure:commandRecorded');
     // Procgen mode detection — subscribe to rawJsonDataLoaded to spot
     // preset_sidecars and forward the substrate's sidecar-region set
     // to the bridge so it can filter Menu / other non-sidecar regions
@@ -260,8 +228,9 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 
     // Build the host-side PlaybackProxy. Returned by the substrate
     // registry entry's getPlaybackController; publishes control events
-    // that the in-iframe playbackBridge subscribes to.
-    _playbackProxy = new PlaybackProxy({ eventBus });
+    // that the in-iframe playbackBridge subscribes to. Its `perform` is
+    // what the loops Bot block drives.
+    _playbackProxy = new TextAdventurePlaybackProxy({ eventBus });
 
     // Mana display + deduction wiring. Publishes a header-info event
     // the bridge subscribes to; deducts mana on observed user actions
@@ -271,12 +240,10 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     // don't leave us with a null current region.
     initManaWiring({ eventBus, dispatcher });
 
-    // Saved-queue recorder — subscribes to textAdventure:loadRegion
-    // and textAdventure:commandRecorded; persists a SavedQueue to
-    // savedQueueStore on every region exit. Lives for the module's
-    // lifetime; this module isn't unloaded mid-session, so the
-    // returned stop() is captured but not currently invoked.
-    startTextAdventureRecorder({ eventBus });
+    // M3b: no substrate recorder. The text adventure is a coarse-only
+    // substrate — every performed action is queue-grade, so loops
+    // observes and captures Record-mode visits host-side and the block
+    // interior itself is the recording (loop-recording.md).
 
     // Reload settings on change and re-broadcast initialState so the
     // bridge applies them. Cheap (small payload, idempotent for

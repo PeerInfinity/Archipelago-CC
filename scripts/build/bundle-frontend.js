@@ -65,6 +65,13 @@ const buildOptions = {
   // Keep dynamic imports for code splitting potential
   splitting: false,
 
+  // Node built-ins referenced only behind runtime env branches (e.g. the
+  // omsi unlockPool loader's `await import('node:fs')` on its non-browser
+  // path). esbuild resolves even dynamic literal specifiers at build time;
+  // marking them external leaves the import in place, where the browser
+  // path never executes it.
+  external: ['node:fs'],
+
   // Log level
   logLevel: 'info',
 
@@ -89,12 +96,22 @@ const filesToCopy = [
     src: path.join(frontendDir, 'modules/stateManager/stateManagerWorker.js'),
     dest: path.join(distDir, 'stateManagerWorker.js'),
   },
+  {
+    src: path.join(frontendDir, 'modules/jtaBalance/balanceWorker.js'),
+    dest: path.join(distDir, 'modules/jtaBalance/balanceWorker.js'),
+  },
+  // APWorld Editor's Region generation → Generate ▸ (APWORLD SUBSTRATE CHANGE R2).
+  {
+    src: path.join(frontendDir, 'modules/apworldEditor/regionRegenerateWorker.js'),
+    dest: path.join(distDir, 'modules/apworldEditor/regionRegenerateWorker.js'),
+  },
 ];
 
 // Copy required files to dist
 function copyFilesToDist() {
   for (const { src, dest } of filesToCopy) {
     if (fs.existsSync(src)) {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.copyFileSync(src, dest);
       console.log(`   Copied: ${path.basename(src)}`);
     } else {
@@ -149,6 +166,27 @@ function validateBundledModules() {
 }
 
 /**
+ * Validates that init-bundled.js statically imports every test case file that
+ * testDiscovery.js's TEST_CASE_FILES imports unbundled (bundledTestCases.js).
+ * A missing file means a bundled run lacks those rows; the vitest fails on it,
+ * the build only warns (a deploy is not blocked by the test roster).
+ */
+async function validateBundledTestCases() {
+  const { bundledTestCaseDrift } = await import('./bundledTestCases.js');
+  const { missing, extra } = bundledTestCaseDrift({ frontendDir });
+  if (missing.length === 0 && extra.length === 0) {
+    console.log('✅ init-bundled.js imports every test case file testDiscovery.js lists.');
+    return;
+  }
+  console.warn('');
+  console.warn('⚠️  WARNING: init-bundled.js and testDiscovery.js list different test case files:');
+  for (const f of missing) console.warn(`   - missing from init-bundled.js: ${f}`);
+  for (const f of extra) console.warn(`   - not in TEST_CASE_FILES: ${f}`);
+  console.warn('   A bundled run lacks the rows of a missing file. Keep the two lists equal.');
+  console.warn('');
+}
+
+/**
  * Validates that no module config JSON files still contain 'requires' entries.
  * The requires field should only exist in each module's moduleInfo export.
  */
@@ -190,6 +228,7 @@ async function build() {
     // Validate module coverage before building
     console.log('🔍 Validating bundled module coverage...');
     validateBundledModules();
+    await validateBundledTestCases();
     validateNoRequiresInConfigs();
 
     // Copy required files (workers, etc.)

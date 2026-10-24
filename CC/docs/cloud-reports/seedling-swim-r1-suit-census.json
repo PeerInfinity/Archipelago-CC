@@ -1,0 +1,164 @@
+[
+ {
+  "level": 6,
+  "boot": {
+   "level": 6,
+   "x": 32,
+   "y": 16
+  },
+  "from": "5:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 8,
+  "boot": {
+   "level": 8,
+   "x": 144,
+   "y": 48
+  },
+  "from": "7:stairsdown",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 14,
+  "boot": {
+   "level": 14,
+   "x": 160,
+   "y": 64
+  },
+  "from": "13:stairsdown",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": null
+ },
+ {
+  "level": 16,
+  "boot": {
+   "level": 16,
+   "x": 32,
+   "y": 64
+  },
+  "from": "15:stairsdown",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 7,
+  "refusal": null
+ },
+ {
+  "level": 17,
+  "boot": {
+   "level": 17,
+   "x": 48,
+   "y": 48
+  },
+  "from": "16:stairsdown",
+  "ticks": 145,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": {
+   "t": 145,
+   "text": "levelRun: whether bob bob@192,80 is on screen at tick 144 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out."
+  }
+ },
+ {
+  "level": 18,
+  "boot": {
+   "level": 18,
+   "x": 16,
+   "y": 32
+  },
+  "from": "16:stairsup",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": null
+ },
+ {
+  "level": 25,
+  "boot": {
+   "level": 25,
+   "x": 128,
+   "y": 32
+  },
+  "from": "22:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": null
+ },
+ {
+  "level": 26,
+  "boot": {
+   "level": 26,
+   "x": 128,
+   "y": 32
+  },
+  "from": "25:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 36,
+  "boot": {
+   "level": 36,
+   "x": 32,
+   "y": 112
+  },
+  "from": "12:teleporter",
+  "ticks": 733,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 733,
+   "text": "levelRun: the `enemy` hit (sandtrap@80,80) at tick 733 in level 36 — playerHit: `hasDarkSuit` retaliates INTO the attacker when the call passes `e` (`e.hit(darkSuitForce, …, \"Suit\")`) and not when it passes `null` — and this source has not declared which it is (`byEnemy`). Refused by name rather than guessed: the answer decides whether an enemy takes damage."
+  }
+ },
+ {
+  "level": 91,
+  "boot": {
+   "level": 91,
+   "x": 16,
+   "y": 128
+  },
+  "from": "89:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 93,
+  "boot": {
+   "level": 93,
+   "x": 112,
+   "y": 256
+  },
+  "from": "87:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 98,
+  "boot": {
+   "level": 98,
+   "x": 112,
+   "y": 176
+  },
+  "from": "93:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ }
+]

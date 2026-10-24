@@ -1,0 +1,4 @@
+     × the model's death fenceposts are the game's: die t102–t132, destroy t133, gone t144 204ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: t102: expected false to be true // Object.is equality
+      Tests  1 failed | 7 skipped (8)

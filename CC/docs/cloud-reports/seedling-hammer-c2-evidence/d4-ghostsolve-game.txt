@@ -1,0 +1,13 @@
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 336 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+FAIL: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 274 comparison(s), worst |Δ| 1.4210854715202004e-14
+      t 104: game has 1 Spinner row(s), the model 2
+      t 171: game has 0 Spinner row(s), the model 1
+wrote CC/docs/cloud-reports/seedling-hammer-c2-evidence/d4-ghostsolve-bodies.json
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the tape ran to its end on the game
+PASS: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 337 sampled tick(s) of 337
+ROW arrows: 0 of 337 sampled tick(s) differ
+PASS: the drained stream is the model's, tick for tick — 337 observations, transitions [{"t":336,"from_level":18,"to_level":19}]
+ROW game: hits 0, hits_timer 0, level 19, slash {"hits":153,"tests":76}, cleared [{"tag":0,"level":3},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":0,"level":11},{"tag":0,"level":15},{"tag":2,"level":15},{"tag":3,"level":15},{"tag":0,"level":16},{"tag":3,"level":16},{"tag":4,"level":16},{"tag":6,"level":16},{"tag":7,"level":16},{"tag":29,"level":17},{"tag":0,"level":18}]
+ALL CHECKS PASSED

@@ -1,0 +1,121 @@
+[
+ {
+  "arm": "vanilla",
+  "set_id": "seedling-vanilla-record-eb8cc643",
+  "game": {
+   "obs": 201,
+   "transitions": [],
+   "final": {
+    "t": 200,
+    "level": 43,
+    "x": 93.94999999999999,
+    "y": 344
+   },
+   "cleared": [
+    {
+     "tag": 0,
+     "level": 43
+    },
+    {
+     "tag": 1,
+     "level": 43
+    },
+    {
+     "tag": 2,
+     "level": 43
+    },
+    {
+     "tag": 3,
+     "level": 43
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 200,
+    "level": 43,
+    "x": 93.94999999999999,
+    "y": 344
+   }
+  }
+ },
+ {
+  "arm": "remove3",
+  "set_id": "seedling-vanilla-record-f02439e8",
+  "game": {
+   "obs": 201,
+   "transitions": [],
+   "final": {
+    "t": 200,
+    "level": 43,
+    "x": 237.30000000000004,
+    "y": 344
+   },
+   "cleared": [
+    {
+     "tag": 0,
+     "level": 43
+    },
+    {
+     "tag": 1,
+     "level": 43
+    },
+    {
+     "tag": 2,
+     "level": 43
+    },
+    {
+     "tag": 3,
+     "level": 43
+    }
+   ]
+  },
+  "model": {
+   "refused": "level 43: the tape clears tag(s) 1, 2, 3, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a derivation error, not a harmless extra. (Entities that read persistence here: 0.)"
+  }
+ },
+ {
+  "arm": "move3",
+  "set_id": "seedling-vanilla-record-28328ef7",
+  "game": {
+   "obs": 201,
+   "transitions": [],
+   "final": {
+    "t": 200,
+    "level": 43,
+    "x": 125.5,
+    "y": 344
+   },
+   "cleared": [
+    {
+     "tag": 0,
+     "level": 43
+    },
+    {
+     "tag": 1,
+     "level": 43
+    },
+    {
+     "tag": 2,
+     "level": 43
+    },
+    {
+     "tag": 3,
+     "level": 43
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 200,
+    "level": 43,
+    "x": 125.5,
+    "y": 344
+   }
+  }
+ }
+]

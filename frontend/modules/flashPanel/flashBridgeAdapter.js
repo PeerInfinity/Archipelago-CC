@@ -27,6 +27,15 @@
  * global entry points can dispatch to the right instance.
  */
 
+import { pollUntil } from './pollUntil.js';
+import { thresholdFillSlots } from './fillThreshold.js';
+
+/**
+ * A method-call item write (`_setIfMissing`) is re-sent after this many queue
+ * ticks while the game's readout still lacks it (one tick = one game frame).
+ */
+export const METHOD_RETRY_TICKS = 30;
+
 const adapters = new Map(); // flashObjectId -> adapter
 
 function ensureGlobalEntryPoints() {
@@ -70,6 +79,10 @@ export class FlashBridgeAdapter {
 
     this.attached = false;
     this.bridgeConfigured = false;
+
+    // Optional `(property, value) => void` installed by a host-side consumer
+    // of raw BridgeGeneric reports (see _onStateChanged).
+    this.onStateReport = null;
 
     // Lookup maps built from the game config
     this.apItemIdToFlash = {};
@@ -128,6 +141,39 @@ export class FlashBridgeAdapter {
 
     this.unsubscribeHandles = [];
 
+    /**
+     * ⛓⛓ **AP LOCATIONS THE HOST OWNS** (EDITOR INTEGRATION M1, H6).
+     *
+     * When the room holds an `APItem` instead of a Seedling pickup, the
+     * location is answered by `seedlingCheckBinding` off the game's own
+     * `pendingCheck` report — and the `Main.*` flag for that item is then
+     * written by NOBODY but this bridge, on the AP server's `ReceivedItems`.
+     * The property path below must therefore stand down on those locations:
+     * left armed, an echo it happens to miss reads as a player pickup, checks
+     * the location a SECOND time and queues an undo that takes the granted
+     * item straight back.
+     *
+     * ⛔ A SET, NOT A DELETE. Empty by default: an adapter nobody told about
+     * a placement behaves exactly as it always has. (⛓ R4b part 2: the two
+     * encounters, `fire@L32` and `darksword@L12`, are table rows now — the
+     * `bossreport` build reports them at a fixed address and grants nothing,
+     * so their property-path names are host-owned too.)
+     */
+    this.hostOwnedLocations = new Set();
+    /** ⛓ R4b part 2 — the slot's `slot_data` (`setSlotData`); null = none known. */
+    this.slotData = null;
+
+    /**
+     * ⛓⛓ **THE DELIVERY GATE** (Seedling mid-room replan). Optional
+     * `(inventoryCounts) => inventoryCounts` installed by a host-side driver
+     * (the wasm Playback Bot's engine, while it drives): every push writes the
+     * inventory IT returns, so a delivery it holds back reaches the game only
+     * when it says so — at a point where the driver can replan around it.
+     * null (the default, and whenever no driver drives) = the inventory as it
+     * stands, exactly as before.
+     */
+    this.itemGate = null;
+
     this._buildLookups(config);
     adapters.set(flashObjectId, this);
     ensureGlobalEntryPoints();
@@ -177,14 +223,14 @@ export class FlashBridgeAdapter {
     return document.getElementById(this.flashObjectId);
   }
 
+  // The loop is `pollUntil`'s (F3); WHAT is waited for and WHAT the refusal
+  // says are this transport's. No cancellation: a real-Flash <object> is not
+  // replaced under a running wait the way the wasm iframe is.
   async waitForBridge(maxMs) {
-    const start = Date.now();
-    while (Date.now() - start < maxMs) {
+    return pollUntil(() => {
       const el = this._getFlash();
-      if (el && typeof el.wireCheck === 'function') return el;
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    throw new Error(`bridge did not become ready within ${maxMs}ms`);
+      return el && typeof el.wireCheck === 'function' ? el : null;
+    }, { maxMs, timeoutMessage: `bridge did not become ready within ${maxMs}ms` });
   }
 
   configureBridge() {
@@ -223,6 +269,26 @@ export class FlashBridgeAdapter {
   /**
    * Queue a teleport based on the game config's `teleport` block
    * and the given parameter values.
+   *
+   * ⛔ DE-SCOPED FOR STATIC EXIT LAYOUT (Seedling, plan §4.6, Phase 5b).
+   * A randomized set's exits are DATA in the set's own rooms; this call
+   * must not be used to redirect a transition after the fact. Two
+   * reasons, the second structural:
+   *
+   *   · Seedling's recipe is `new Game($level,$x,$y)` assigned to
+   *     `FP.world` — the same constructor and the same assignment
+   *     `Teleporter.update()` has already performed, so a corrected exit
+   *     builds two worlds;
+   *   · `Teleporter.update()` sets the STATIC `Game.sign` on the line
+   *     after its own `new Game`, and this recipe does not touch it. So
+   *     a replacement world announces the region of the room the player
+   *     did NOT go to, and there is nowhere in this capability to fix
+   *     that. Exits-as-data is not merely cheaper; it is the only
+   *     mechanism that can get the sign right.
+   *
+   * Still in scope: the debug region/location jump UI, the region
+   * atlas's arrival warp, and DYNAMIC re-linking mid-run (an AP item
+   * that re-wires exits), which no static bundle can express.
    *
    * Two teleport invocation modes are supported:
    *
@@ -374,6 +440,21 @@ export class FlashBridgeAdapter {
   _onStateChanged(property, value) {
     this.gameState[property] = value;
 
+    // Raw report hook for host-side consumers that are not about AP
+    // locations — today the region-atlas glue, which reads level /
+    // playerPositionX / playerPositionY. Deliberately at the TOP: the echo
+    // and first-read suppressions below exist for location detection and
+    // would swallow reports this consumer must see (it does its own
+    // baseline and echo handling, on its own terms). Never let a consumer
+    // throw into the bridge's report path.
+    if (this.onStateReport) {
+      try {
+        this.onStateReport(property, value);
+      } catch (e) {
+        this.log(`onStateReport handler threw: ${e.message}`, 'error');
+      }
+    }
+
     // Any stateChanged at all proves the bridge is successfully
     // reading Main.* properties, which only happens after
     // SAVE_FILE is initialized. Flip the write gate the first
@@ -425,6 +506,13 @@ export class FlashBridgeAdapter {
       this.log(`stateChanged (player action): ${property} = ${value}`);
     }
     if (locFlash && value === true) {
+      // ⛔ H6 OWNS THIS ONE. The room holds an APItem that grants nothing, so
+      // this report cannot be a player pickup — it is our own write coming
+      // back. No undo (it would revoke the granted item) and no second check.
+      if (this._isHostOwned(locFlash)) {
+        this.log(`stateChanged for "${locFlash}" ignored — AP placement owns that location`);
+        return;
+      }
       // Undo: take the game-given item back so the AP item can arrive clean
       const propDef = this._findPropertyDef(property);
       if (propDef) {
@@ -438,6 +526,26 @@ export class FlashBridgeAdapter {
 
       this._dispatchLocationCheck(locFlash);
     }
+  }
+
+  /**
+   * H6 hands these in (through the glue). Names are AP location names — the
+   * same vocabulary `flashLocationToApName` produces — so the comparison is
+   * against what would actually be dispatched, not against a flash name that
+   * may or may not map.
+   */
+  setHostOwnedLocations(names) {
+    this.hostOwnedLocations = names instanceof Set ? names : new Set(names ?? []);
+    if (this.hostOwnedLocations.size > 0) {
+      this.log(`AP placement owns ${this.hostOwnedLocations.size} location(s) — `
+        + 'the property path stands down on those (no undo, no second check)');
+    }
+  }
+
+  /** Is this flash location answered by the host's placement table instead? */
+  _isHostOwned(flashName) {
+    const apName = this.flashLocationToApName[flashName];
+    return !!apName && this.hostOwnedLocations.has(apName);
   }
 
   _dispatchLocationCheck(flashName) {
@@ -478,7 +586,7 @@ export class FlashBridgeAdapter {
     // Only compute property writes once the game has initialized
     // enough to accept them. Before then, the bridge will throw
     // #1009 on every write attempt and flood its log.
-    const writes = this.gameReady ? this._buildItemWritesFromInventory() : [];
+    const writes = this.gameReady ? this._setIfMissing(this._buildItemWritesFromInventory()) : [];
     const undoForThisTick = this.gameReady ? this.undoQueue : [];
     if (this.gameReady) this.undoQueue = [];
 
@@ -512,19 +620,39 @@ export class FlashBridgeAdapter {
    */
   _buildItemWritesFromInventory() {
     const snapshot = this.stateManager.getLatestStateSnapshot?.();
-    const inventoryCounts = snapshot?.inventory || {};
+    let inventoryCounts = snapshot?.inventory || {};
+    // ⛓ The delivery gate: a driver may hold a delivery back (see `itemGate`).
+    if (this.itemGate) {
+      try { inventoryCounts = this.itemGate(inventoryCounts) ?? inventoryCounts; } catch (e) { this.log(`item gate threw: ${e?.message ?? e}`); }
+    }
+    return this._itemWritesFor(inventoryCounts);
+  }
 
+  /**
+   * ⛓ The property writes an inventory maps to (the gate's question: "would
+   * the game see this delivery?"). `quiet` skips the inventory-change log line.
+   */
+  _itemWritesFor(inventoryCounts, { quiet = false } = {}) {
     // Classify each owned item into flash items, expanding progressives
     // and fusions using the same logic as flash-ap-api.
-    const flashItems = this._inventoryToFlashItems(inventoryCounts);
+    const flashItems = this._inventoryToFlashItems(inventoryCounts, { quiet });
 
     const writes = [];
     const addAccum = {}; // property -> { def, total }
 
+    const fillCounts = {};
     for (const flashName of flashItems) {
       const def = this.flashItemDefs[flashName];
       if (!def) continue;
 
+      if (def.fill) {
+        fillCounts[flashName] = (fillCounts[flashName] || 0) + 1;
+        continue;
+      }
+      if (def.method) {
+        writes.push(this._methodWriteFor(def));
+        continue;
+      }
       if (def.op === 'add') {
         const key = def.property;
         if (!addAccum[key]) addAccum[key] = { def, total: 0 };
@@ -536,6 +664,10 @@ export class FlashBridgeAdapter {
           value: def.value,
         });
       }
+    }
+
+    for (const flashName in fillCounts) {
+      writes.push(...this._fillWritesFor(this.flashItemDefs[flashName], fillCounts[flashName]));
     }
 
     for (const key in addAccum) {
@@ -555,11 +687,23 @@ export class FlashBridgeAdapter {
     //
     // Only clear properties that map to an item (have a flashItemDef
     // somewhere) — we don't touch things like hitsMax that are op:add.
+    //
+    // ⛔ NEVER ON A HOST-OWNED LOCATION. A clearing write is an undo by
+    // another name, and the property path already stands down there (see
+    // `hostOwnedLocations`). Seedling's two encounters (`hasFire` at L32,
+    // `hasDarkSword` at L12) were the GAME's own grant before the `bossreport`
+    // build: while their AP item was still on its way (or held by the
+    // delivery gate), clearing them took the drop back mid-room — the L32 burn
+    // never fired and the walk stopped at the pit mouth (fidelity ENCOUNTERS2:
+    // a `hasFire = false` write at t840 reproduces CI's t932 divergence to the
+    // bit). ⛓ R4b part 2: they are host-owned table rows now, so they still
+    // stand down here.
     const writtenProperties = new Set(writes.map((w) => w.property));
     for (const loc of (this.config.locations || [])) {
       const propDef = this._findPropertyDef(loc.property);
       if (!propDef) continue;
       if (writtenProperties.has(loc.property)) continue;
+      if (this._isHostOwned(loc.flash_name)) continue;
       writes.push({
         'class': propDef['class'],
         property: loc.property,
@@ -570,7 +714,162 @@ export class FlashBridgeAdapter {
     return writes;
   }
 
-  _inventoryToFlashItems(inventoryCounts) {
+  /**
+   * ⛓ A METHOD-CALL ITEM: an item the game holds behind a SETTER FUNCTION, not
+   * a settable static (Seedling's keys: `Main.hasKeySet(i, true)` — `hasKey`
+   * is a function and `keyMask` a getter, so a property write lands nowhere).
+   * The def names the call (`class` alias, `method`, `args`) and the readout
+   * that says the game already holds it (`observed: {property, bit}`); the
+   * write carries both, plus any declared `save_array` / `index` (the staging
+   * channel a host-side driver mirrors it into). The bridge's `method_call`
+   * reads only `path` / `method` / `args` — the rest is stripped before it is
+   * queued (`_setIfMissing`).
+   */
+  _methodWriteFor(def) {
+    const cls = this.config.classes?.[def['class']]?.name ?? def['class'];
+    const w = {
+      invocation: 'method_call',
+      path: [{ 'class': cls }],
+      method: def.method,
+      args: [...(def.args || [])],
+    };
+    if (def.observed) w.observed = { ...def.observed };
+    if (def.save_array) { w.save_array = def.save_array; w.index = def.index; }
+    return w;
+  }
+
+  /**
+   * ⛓ SEAL DELIVERY — A FILL ITEM: a FUNGIBLE item the game holds as N slots of a save array behind a setter
+   * (Seedling's Seal: `Main.hasSealPartSet(slot, identity)` into the ordered log `hasSealPart`; its Totem
+   * Shard: `Main.hasTotemPartSet(index, true)`). The def's `fill` names the rule (`log`: slot = ordinal, the
+   * value an identity; `set`: the value is `fill.value`), the slot count, and the per-slot READOUT
+   * (`observed` + the slot number: a declared `path_reads` name) whose `empty` value means "not held".
+   * `count` copies declare slots 0..count-1 here, with the slot as the identity / index; `_setIfMissing`
+   * re-resolves each against the game's readouts (the missing ones only, the smallest unheld value).
+   * ⛓ R4b part 2 — a fill that names `required` (a `slot_data` key: Seedling's `!seal` → `seals_required`) is a
+   * THRESHOLD fill (`fillThreshold.thresholdFillSlots`): its last slot waits for the Nth copy, and no copy writes
+   * past `slots`. No such key in the slot data (an old preset) = the plain `min(count, slots)`.
+   */
+  _fillWritesFor(def, count) {
+    const f = def.fill;
+    const n = thresholdFillSlots(count, f.slots, this._fillRequired(f));
+    const out = [];
+    for (let k = 0; k < n; k++) {
+      const w = this._methodWriteFor({ ...def, args: [k, f.rule === 'log' ? k : f.value] });
+      w.fill = { rule: f.rule, slot: k, of: n, slots: f.slots, observed: f.observed, empty: f.empty, value: f.value };
+      if (def.save_array) { w.save_array = def.save_array; w.index = k; }
+      out.push(w);
+    }
+    return out;
+  }
+
+  /**
+   * ⛓ R4b part 2 — the copies a threshold fill's last slot waits for: `slot_data[fill.required]` when it is an
+   * integer, else null (the plain fill).
+   */
+  _fillRequired(f) {
+    if (typeof f?.required !== 'string') return null;
+    const v = this.slotData?.[f.required];
+    return Number.isInteger(v) ? v : null;
+  }
+
+  /**
+   * ⛓ R4b part 2 — the loaded slot's `slot_data` (the rules' `world[<player>].slot_data`; what the server's
+   * `Connected` packet carries). Read by threshold fills (`_fillRequired`). null = none known.
+   */
+  setSlotData(slotData) {
+    this.slotData = slotData && typeof slotData === 'object' ? { ...slotData } : null;
+  }
+
+  /**
+   * ⛓ SEAL DELIVERY — `_setIfMissing` for one fill def's writes (all of one `method`): the game's per-slot
+   * readouts say what it holds; ONLY the missing ones are written, each with the SMALLEST value not held
+   * (a log never repeats an identity; a set's missing index). ⛔ NEVER BLIND: a slot with no readout yet
+   * (`gameState` lacks it) writes nothing. ⛔ NEVER A CLEAR: a held slot — AP's or the game's own pickup — is
+   * never written. A set holds `of` when its true count reaches it, a log when its first `of` slots are filled.
+   */
+  _resolveFill(group) {
+    const f = group[0].fill;
+    const want = f.of;
+    const read = [];
+    for (let i = 0; i < f.slots; i++) {
+      const v = this.gameState[`${f.observed}${i}`];
+      if (v === undefined || v === null) {
+        if (!this._fillBlindLogged?.[f.observed]) {
+          (this._fillBlindLogged ??= {})[f.observed] = true;
+          this.log(`fill item ${group[0].method}: no game readout ${f.observed}${i} — nothing written (never blind)`);
+        }
+        return [];
+      }
+      read.push(v);
+    }
+    const held = (v) => v !== f.empty && v !== false && !(f.rule === 'log' && v === -1);
+    const out = [];
+    const taken = new Set();
+    if (f.rule === 'log') {
+      let filled = 0;
+      while (filled < read.length && held(read[filled])) filled++;
+      for (let i = 0; i < filled; i++) taken.add(read[i]);
+      for (let slot = filled; slot < want; slot++) {
+        let id = 0;
+        while (taken.has(id)) id++;
+        taken.add(id);
+        out.push({ ...group[0], args: [slot, id], fill: { ...f, slot } });
+      }
+    } else {
+      read.forEach((v, i) => { if (held(v)) taken.add(i); });
+      for (let have = taken.size; have < want; have++) {
+        let idx = 0;
+        while (taken.has(idx)) idx++;
+        taken.add(idx);
+        out.push({ ...group[0], args: [idx, f.value], fill: { ...f, slot: idx } });
+      }
+    }
+    return out;
+  }
+
+  /**
+   * ⛓ THE MERGE RULE FOR METHOD-CALL ITEMS — `SET_IF_MISSING`: a call is queued
+   * only while the game's `observed` readout lacks it (a key the game holds,
+   * from AP or picked up in play, is never written again), and never more than
+   * once per `METHOD_RETRY_TICKS` while its echo is outstanding. Nothing is
+   * ever CLEARED: an item that leaves the inventory leaves the game as it is
+   * (the game's own pickups must survive). Property writes pass unchanged.
+   */
+  _setIfMissing(writes) {
+    this._methodSentAt = this._methodSentAt || {};
+    // ⛓ SEAL DELIVERY — fill writes are resolved per def against the game's readouts first (`_resolveFill`).
+    const fills = new Map();
+    const plain = [];
+    for (const w of writes) {
+      if (w.invocation === 'method_call' && w.fill) {
+        const k = `${w.path?.[0]?.['class']}.${w.method}`;
+        if (!fills.has(k)) fills.set(k, []);
+        fills.get(k).push(w);
+      } else plain.push(w);
+    }
+    const resolved = [];
+    for (const group of fills.values()) resolved.push(...this._resolveFill(group));
+    const out = [];
+    for (const w of [...plain, ...resolved]) {
+      if (w.invocation !== 'method_call') { out.push(w); continue; }
+      // A fill write retries per SLOT (its value is re-chosen from the readouts each tick).
+      const id = w.fill ? `${w.path?.[0]?.['class']}.${w.method}[${w.fill.slot}]`
+        : `${w.path?.[0]?.['class']}.${w.method}(${(w.args || []).join(',')})`;
+      const obs = w.observed;
+      if (obs) {
+        const v = Number(this.gameState[obs.property]);
+        if (Number.isFinite(v) && ((v >> obs.bit) & 1) === 1) { delete this._methodSentAt[id]; continue; }
+      }
+      const at = this._methodSentAt[id];
+      if (at !== undefined && this._queueTickCount - at < METHOD_RETRY_TICKS) continue;
+      this._methodSentAt[id] = this._queueTickCount;
+      out.push({ invocation: w.invocation, path: w.path, method: w.method, args: w.args });
+    }
+    return out;
+  }
+
+  _inventoryToFlashItems(inventoryCounts, { quiet = false } = {}) {
     const result = [];
     const progressiveCounts = {};
     const fusionFlags = {};
@@ -582,7 +881,7 @@ export class FlashBridgeAdapter {
       .filter((n) => (inventoryCounts[n] || 0) > 0)
       .sort();
     const ownedKey = ownedNames.join('|');
-    if (ownedKey !== this._lastOwnedKey) {
+    if (!quiet && ownedKey !== this._lastOwnedKey) {
       this._lastOwnedKey = ownedKey;
       this.log(`inventory changed (${ownedNames.length} owned): ${ownedNames.join(', ') || '(empty)'}`);
       const unknown = ownedNames.filter((n) => this._apNameToFlash(n) === null);
@@ -601,7 +900,9 @@ export class FlashBridgeAdapter {
       if (!flashName) continue;
 
       for (let i = 0; i < count; i++) {
-        if (flashName[0] !== '!') {
+        if (flashName[0] !== '!' || this.flashItemDefs[flashName]?.fill) {
+          // ⛓ SEAL DELIVERY — a FILL item (`fill` def: Seedling's Seal, Totem Shard) is counted copy by copy;
+          // `_itemWritesFor` turns the count into slot writes.
           result.push(flashName);
         } else {
           const progChain = this.config.progressive_items?.[flashName];
@@ -649,6 +950,30 @@ export class FlashBridgeAdapter {
     }
 
     return result;
+  }
+
+  /**
+   * ⛓ The delivery gate's handle for a driver: install / clear the gate, ask
+   * what an inventory would write, read the live inventory, and push NOW
+   * (rather than at the next tick) once a held delivery is let through.
+   */
+  setItemGate(gate) {
+    this.itemGate = typeof gate === 'function' ? gate : null;
+  }
+
+  liveInventory() {
+    return { ...(this.stateManager.getLatestStateSnapshot?.()?.inventory || {}) };
+  }
+
+  /**
+   * ⛓ DELIVERY TICK — is `locationName` in the state manager's checked set (the snapshot that also carries the
+   * check's item)? null = no snapshot to read.
+   */
+  isLocationChecked(locationName) {
+    const checked = this.stateManager?.getLatestStateSnapshot?.()?.checkedLocations;
+    if (checked instanceof Set) return checked.has(locationName);
+    if (!Array.isArray(checked)) return null;
+    return checked.includes(locationName);
   }
 
   _apNameToFlash(apName) {

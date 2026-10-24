@@ -1,5 +1,17 @@
 name: Test ALTTP Spoiler & Frontend Regression
 
+# Two kinds of job (slice tests-batch-split, 2026-10-09):
+#   - test-alttp-and-regression: the ALTTP spoiler test + the regression roster
+#     on both boots;
+#   - substrates: one PARALLEL matrix job per ON-PUSH test-substrates batch.
+#     The batch list is not written here: the `batches` job reads it off
+#     frontend/modules/tests/testBatches.js (every batch not marked
+#     `manual: true`), so a new batch joins push by its own definition. Each
+#     batch is its own job, so one batch's red cannot skip another (on main
+#     before this, a red `fast` step skipped the `apworld` step after it), and
+#     each races its own 600 s in-app budget (AUTO_START_TIMEOUT_MS).
+#   Manual batches run in test-substrates-manual.yml.
+
 on:
   # Run on push to main branch
   push:
@@ -27,28 +39,24 @@ on:
 jobs:
   test-alttp-and-regression:
     name: Test ALTTP Spoiler & Frontend Regression
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -65,7 +73,14 @@ jobs:
       - name: Run ModuleUpdate
         run: |
           source .venv/bin/activate
-          python ModuleUpdate.py --yes
+          # ModuleUpdate installs every world's requirements with `--upgrade`, so an upstream world's loose
+          # floor (worlds/tloz: `bsdiff4>=1.2.2`) pulls a new release past the root pin (`bsdiff4==1.2.6`);
+          # the next step's `Launcher.py --update_settings` then meets a VersionConflict, asks "press enter
+          # to install it" and dies on EOF. Hold every exact root pin as a pip constraint (derived from
+          # requirements.txt, so it never duplicates a version) for the world installs and for later steps.
+          grep -E '^[A-Za-z0-9_.-]+==[^ #]+' requirements.txt | sed 's/[[:space:]]*#.*//' > "$RUNNER_TEMP/root-pins.txt"
+          echo "PIP_CONSTRAINT=$RUNNER_TEMP/root-pins.txt" >> "$GITHUB_ENV"
+          PIP_CONSTRAINT="$RUNNER_TEMP/root-pins.txt" python ModuleUpdate.py --yes
 
       - name: Generate template files
         run: |
@@ -79,7 +94,7 @@ jobs:
           python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -90,7 +105,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -123,17 +138,151 @@ jobs:
         run: |
           npm test -- --mode=test-regression
 
-      - name: Run substrate tests
+      # The same roster on the BUNDLED boot (frontend/dist/bundle.js) — what a
+      # deployed site serves first. `--bundled` builds the bundle itself before
+      # Playwright starts; its results file is flavour-stamped, so it lands in
+      # test-results/ beside the unbundled one without being compared to it.
+      - name: Run regression tests (bundled boot)
         run: |
-          npm test -- --mode=test-substrates
+          npm test -- --mode=test-regression --bundled
 
+      # always(), not !cancelled(): a job cancelled at its cap is exactly the
+      # run whose passing steps' results are worth keeping — under !cancelled()
+      # the upload was skipped and nothing uploaded for two weeks.
       - name: Upload test results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results
           path: |
             scripts/output/
             docs/json/developer/test-results/
             test-results/
+          retention-days: 7
+
+  # The on-push batch list, read off testBatches.js. No submodules.
+  # ⛓ ci-manual-moves (user ruling 2026-10-21): a batch with `pushPaths`
+  # (apworld) runs on a push only when a pushed path hits its filter — its
+  # globs plus a derived import closure, which needs `npm ci` (esbuild).
+  # FAIL-OPEN: a PR, a dispatch, an unreadable or truncated compare runs it.
+  batches:
+    name: On-push substrate batches
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: List the on-push batches
+        id: list
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo ALL > /tmp/changed.txt
+          if [ "$EVENT" = push ]; then
+            base="$BEFORE"
+            case "$base" in ''|0000000000000000000000000000000000000000) base="$SHA~1" ;; esac
+            if files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+              n=$(printf '%s\n' "$files" | grep -c . || true)
+              if [ "$n" -lt 300 ]; then printf '%s\n' "$files" > /tmp/changed.txt; fi
+              echo "$n changed file(s) in $base...$SHA"
+            else
+              echo "could not list the changes ($base...$SHA): every batch runs"
+            fi
+          fi
+          list=$(node scripts/test/list-test-batches.js --on-push --changed=/tmp/changed.txt)
+          echo "On-push batches: $list"
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
+  substrates:
+    name: Substrate tests — ${{ matrix.batch }} batch
+    needs: batches
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
+    # Sized so the in-app runner's own 600 s budget fires first; the setup
+    # below is the bot-walks job's (no Python venv: the in-app substrate tests
+    # read only the committed presets and the submodules).
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: ${{ fromJSON(needs.batches.outputs.list) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v6.1.0
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          npx playwright install chromium
+
+      - name: Run substrate tests (${{ matrix.batch }} batch)
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          npm test -- --mode=test-substrates --batch="$BATCH"
+
+      # Grades the run just made against its in-app budget
+      # (scripts/test/check-batch-headroom.js): fails on NEVER STARTED / CUT OFF
+      # rows or a span over budget, annotates a WARNING past the headroom
+      # fraction — so a batch creeping up on its budget is named before it
+      # starts dropping its tail. !cancelled(): a red run is exactly the one
+      # whose headroom is worth reading.
+      - name: Budget headroom (${{ matrix.batch }} batch)
+        if: ${{ !cancelled() }}
+        env:
+          BATCH: ${{ matrix.batch }}
+        run: |
+          node scripts/test/check-batch-headroom.js --mode=test-substrates --batch="$BATCH"
+
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: test-results-${{ matrix.batch }}
+          path: |
+            test-results/
+            playwright-report.json
           retention-days: 7

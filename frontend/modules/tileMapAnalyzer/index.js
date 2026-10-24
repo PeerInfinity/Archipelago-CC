@@ -3,8 +3,6 @@
 // TileMapAnalyzer module — registers the panel component and exposes
 // shared module accessors. The panel itself owns all of the analysis
 // logic; this file is the registration shell.
-//
-// Plan: NewDocs/plans/tile-map-analyzer.md
 
 import { TileMapAnalyzerUI } from './tileMapAnalyzerUI.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -24,7 +22,8 @@ export const moduleInfo = {
   componentType: 'tileMapAnalyzer',
   icon: '🗺️',
   column: 2,
-  description: 'Analyzes a tile-based Flash game\'s map data and emits an Archipelago rules.json.',
+  category: 'Procgen Infrastructure Panels',
+  description: 'Draws Robot Wants Kitty\'s tile map, computes what\'s reachable with chosen abilities, and exports rules.json.',
 };
 
 let thisModuleId = moduleInfo.name;

@@ -5,14 +5,19 @@
  *
  * Each saved queue is the player's action sequence from entering a
  * region to leaving it through an exit, plus mana-tracking metadata
- * (entry / exit / min-during-visit). Recording is always-on: every
- * region visit either matches an existing queue (exact match on
- * arrival exit, departure exit, action sequence) and is discarded, or
- * is appended as a new entry.
+ * (entry / exit / min-during-visit).
  *
- * Per-region capacity is capped (FIFO eviction by recordedAt). The
- * cap is exposed as a named constant so it can be retuned in one
- * place.
+ * As of M2 (Record mode), a saved queue carries a persistent RECORDING
+ * TAG `(region, arrivalExitId, ordinal)` — see blockIdentity.js. The
+ * region is implicit in the bucket key; the entry stores `arrivalExitId`
+ * and `ordinal`. Re-recording a block REPLACES the entry with the
+ * matching tag (never appends a second same-tag entry); entries with
+ * OTHER tags are retained as FIFO history (fodder for the future
+ * chooser). A byte-identical re-record (same tag + same departure +
+ * same actions) is a no-op ('duplicate').
+ *
+ * Per-region capacity is capped (FIFO eviction by recordedAt) across
+ * distinct tags. The cap is a named constant so it retunes in one place.
  *
  * Storage: a single localStorage key holding a flat map keyed by
  * `${rulesHash}|${substrate}|${region}` → SavedQueue[].
@@ -22,8 +27,19 @@
  *     regionName,         // string
  *     substrate,          // string ('maze', 'text_adventure', ...)
  *     arrivalExitId,      // string or 'entrance' for the start region
+ *     ordinal,            // number — Nth block sharing (region, arrival);
+ *                         //   part of the recording tag. Legacy entries
+ *                         //   without one read as 0.
  *     departureExitId,    // string or null if the visit didn't exit
- *     actions,            // substrate-native action array
+ *     actions,            // substrate-native action array; EMPTY for a
+ *                         //   coarse substrate's annotations-only entry
+ *                         //   and for a SUMMARY entry (M5)
+ *     annotations,        // M4: {items: {key: {net, min}}, xp: {net}} —
+ *                         //   deltas from block start, or null/absent
+ *     summary,            // M5: {durationSeconds, checks: string[],
+ *                         //   costedActions: [...]} — the NET RESULT of a
+ *                         //   summary substrate's visit (runner, bounce).
+ *                         //   Absent for coarse / fine-grained entries.
  *     manaAtEntry,        // number — currentMana when the visit began
  *     manaAtExit,         // number — currentMana when the visit ended
  *     manaMin,            // number — lowest currentMana reached during visit
@@ -33,6 +49,8 @@
  *     name,               // synthesized 'auto: <arrival>→<departure>'
  *   }
  */
+
+import { validateEntry } from '../shared/actionQueue/actionTypes.js';
 
 const STORAGE_KEY = 'loops:savedQueues:v1';
 
@@ -55,8 +73,24 @@ function loadCache() {
         if (!raw) return _cache;
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
+            let dropped = 0;
             for (const [k, v] of Object.entries(parsed)) {
-                if (Array.isArray(v)) _cache.set(k, v);
+                if (!Array.isArray(v)) continue;
+                const kept = v.filter((entry) => {
+                    if (!isLegacyMazeRecording(entry)) return true;
+                    dropped++;
+                    return false;
+                });
+                _cache.set(k, kept);
+            }
+            if (dropped > 0) {
+                try {
+                    console.warn(
+                        `[savedQueueStore] dropped ${dropped} maze recording`
+                        + `${dropped === 1 ? '' : 's'} in the pre-actionQueue`
+                        + " shape (actions carry 'type', not 'actionType')",
+                    );
+                } catch { /* no console in some hosts */ }
             }
         }
     } catch (err) {
@@ -65,6 +99,30 @@ function loadCache() {
         _cache = new Map();
     }
     return _cache;
+}
+
+/**
+ * A maze recording written BEFORE slice Q-b, in the retired maze-private
+ * vocabulary (`{type:'move', dir}` rather than `{actionType:'move', actionId}`).
+ *
+ * The user ruled there is no backward compatibility to maintain for saved maze
+ * queues, so such an entry is DISCARDED on read rather than upgraded — no
+ * upgrade code, no version dance, and the store key stays `v1`. Keyed on the
+ * PRESENCE of the old `type` field, never on a version the entry does not have.
+ * jta and omsi entries are already actionQueue-shaped and are not the maze's to
+ * drop, so the substrate stamp gates the whole test.
+ *
+ * @param {object} entry - a stored SavedQueue
+ * @returns {boolean}
+ */
+function isLegacyMazeRecording(entry) {
+    if (!entry || typeof entry !== 'object') return false;
+    if (entry.substrate !== 'maze') return false;
+    if (!Array.isArray(entry.actions) || entry.actions.length === 0) return false;
+    const first = entry.actions[0];
+    return !!first && typeof first === 'object'
+        && typeof first.type === 'string'
+        && typeof first.actionType !== 'string';
 }
 
 function persistCache() {
@@ -86,10 +144,88 @@ function actionsEqual(a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
 }
 
-function isDuplicate(existing, candidate) {
+/**
+ * Refuse a malformed actionQueue-vocabulary recording, by field name.
+ *
+ * A recording whose FIRST action carries a string `actionType` is in the
+ * shared actionQueue vocabulary (jta, omsi, and — after the maze migration —
+ * the maze); every one of its actions must then be a legal entry. Without this
+ * a recording with no `actionType` or a fractional `loops` is stored happily
+ * and replays as garbage (plan §23.1 Q6). A recording in some OTHER vocabulary
+ * is not this function's business and passes through untouched.
+ * @param {object[]} actions
+ * @returns {string|null} the problem, or null when there is none
+ */
+function actionQueueProblem(actions) {
+    const first = actions[0];
+    if (!first || typeof first !== 'object' || typeof first.actionType !== 'string') return null;
+    for (let i = 0; i < actions.length; i++) {
+        const problem = validateEntry(actions[i]);
+        if (problem) {
+            const message = `savedQueueStore.saveQueue: action ${i} — ${problem}`;
+            try { console.warn(message); } catch { /* no console in some hosts */ }
+            return message;
+        }
+    }
+    return null;
+}
+
+/** Same persistent recording tag: (arrivalExitId, ordinal). Region is
+ * implicit in the bucket. Legacy entries without an ordinal read as 0. */
+function sameTag(existing, candidate) {
     return existing.arrivalExitId === candidate.arrivalExitId
+        && (existing.ordinal ?? 0) === (candidate.ordinal ?? 0);
+}
+
+/**
+ * Byte-identical recording — same tag AND same departure AND same actions
+ * AND the same annotations AND the same summary. Annotations matter to the
+ * comparison because a COARSE substrate's entry (M4 slice 4) is
+ * ACTIONS-LESS: two successive coarse recordings of the same block always
+ * agree on `actions: []` and a null departure, so without this a re-record
+ * with a different economy would read as a duplicate and the stale
+ * annotations would survive. The `summary` field (M5) is ACTIONS-LESS for
+ * the same reason and needs the same treatment: a re-record of a summary
+ * block that took a different amount of time — the thing Playback prices
+ * off — must not read as a duplicate.
+ */
+function isDuplicate(existing, candidate) {
+    return sameTag(existing, candidate)
         && existing.departureExitId === candidate.departureExitId
-        && actionsEqual(existing.actions, candidate.actions);
+        && actionsEqual(existing.actions, candidate.actions)
+        && JSON.stringify(existing.annotations ?? null) === JSON.stringify(candidate.annotations ?? null)
+        && JSON.stringify(existing.summary ?? null) === JSON.stringify(candidate.summary ?? null);
+}
+
+/**
+ * Whether a stored entry holds a PLAYABLE recording. savedQueueStore is the
+ * universal recording+metadata envelope (M4), so an entry may legitimately
+ * carry annotations with NO actions — that is how a coarse-only substrate
+ * (text adventure) stores its economy, its recording being the block's own
+ * interior. Such an entry must never bind to a Playback block or count as
+ * "a recording exists" in the UI.
+ */
+export function hasPlayableRecording(entry) {
+    return Array.isArray(entry?.actions) && entry.actions.length > 0;
+}
+
+/**
+ * Whether a stored entry holds a SUMMARY recording (M5) — the net result of
+ * a summary substrate's visit (runner, bounce): how long it took, which
+ * checks it performed, which explicitly-costed actions it ran. A summary
+ * entry is deliberately ACTIONS-LESS (`actions: []`), so
+ * `hasPlayableRecording` is false for it: it is not a replayable script and
+ * must never bind to a fine-grained Playback block. This is its parallel
+ * guard — the one summary Playback and the ● indicator read.
+ *
+ * `durationSeconds` is the required field: it is what replay-time repricing
+ * multiplies the region's current drain rate by, so an entry without it is
+ * not a usable summary regardless of what else it carries.
+ */
+export function hasSummaryRecording(entry) {
+    const s = entry?.summary;
+    return !!s && typeof s === 'object' && !Array.isArray(s)
+        && Number.isFinite(s.durationSeconds);
 }
 
 /**
@@ -104,43 +240,71 @@ export function getSavedQueues(rulesHash, regionName, substrate) {
 }
 
 /**
+ * Look up the single saved queue matching a recording tag, or null.
+ * The region + substrate select the bucket; (arrivalExitId, ordinal)
+ * select the entry. Returns a defensive copy. Used for auto-restore at
+ * block creation.
+ */
+export function getSavedQueueByTag(rulesHash, regionName, substrate, arrivalExitId, ordinal = 0) {
+    if (!rulesHash || !regionName || !substrate) return null;
+    const cache = loadCache();
+    const bucket = cache.get(bucketKey(rulesHash, regionName, substrate));
+    if (!bucket) return null;
+    const match = bucket.find(
+        (e) => e.arrivalExitId === arrivalExitId && (e.ordinal ?? 0) === ordinal,
+    );
+    return match ? { ...match } : null;
+}
+
+/**
  * Save a queue. Returns:
- *   'saved'     — the queue was appended (and possibly evicted the oldest)
- *   'duplicate' — an existing queue with identical (arrival, departure,
- *                 actions) was already stored; the new one was dropped
+ *   'saved'     — the queue was stored (new tag, or REPLACED the existing
+ *                 entry with the same tag); FIFO may have evicted the oldest
+ *   'duplicate' — a byte-identical entry (same tag + departure + actions)
+ *                 was already stored; nothing changed
  *   'invalid'   — required fields missing; nothing happened
  *
- * The caller supplies most fields; `recordedAt` and `name` are filled
- * in here so callers don't have to keep them in sync.
+ * Re-recording a block (same tag, different content) REPLACES the prior
+ * recording — there is at most one entry per (arrivalExitId, ordinal) tag
+ * per bucket. Entries with other tags are retained (FIFO history).
+ *
+ * The caller supplies most fields; `ordinal` defaults to 0, and
+ * `recordedAt` / `name` are filled in here so callers stay in sync.
  */
 export function saveQueue(rulesHash, queue) {
     if (!rulesHash || !queue || !queue.regionName || !queue.substrate || !Array.isArray(queue.actions)) {
         return 'invalid';
     }
+    if (actionQueueProblem(queue.actions)) return 'invalid';
     const cache = loadCache();
     const key = bucketKey(rulesHash, queue.regionName, queue.substrate);
     const bucket = cache.get(key) ?? [];
 
-    if (bucket.some((existing) => isDuplicate(existing, queue))) {
+    const candidate = { ordinal: 0, ...queue };
+
+    if (bucket.some((existing) => isDuplicate(existing, candidate))) {
         return 'duplicate';
     }
 
     const enriched = {
-        ...queue,
-        recordedAt: queue.recordedAt ?? Date.now(),
+        ...candidate,
+        recordedAt: candidate.recordedAt ?? Date.now(),
         name:
-            queue.name
-            ?? `auto: ${queue.arrivalExitId ?? '?'}→${queue.departureExitId ?? '?'}`,
+            candidate.name
+            ?? `auto: ${candidate.arrivalExitId ?? '?'}→${candidate.departureExitId ?? '?'}`,
     };
 
-    bucket.push(enriched);
+    // Replace-on-tag: drop any prior recording of the same block (same tag,
+    // different content). Other-tag entries are retained as FIFO history.
+    const next = bucket.filter((existing) => !sameTag(existing, enriched));
+    next.push(enriched);
     // FIFO eviction by recordedAt — oldest first. The just-saved entry
     // is always the newest, so trimming from the front drops the oldest.
-    bucket.sort((a, b) => (a.recordedAt ?? 0) - (b.recordedAt ?? 0));
-    while (bucket.length > SAVED_QUEUE_PER_REGION_LIMIT) {
-        bucket.shift();
+    next.sort((a, b) => (a.recordedAt ?? 0) - (b.recordedAt ?? 0));
+    while (next.length > SAVED_QUEUE_PER_REGION_LIMIT) {
+        next.shift();
     }
-    cache.set(key, bucket);
+    cache.set(key, next);
     persistCache();
     return 'saved';
 }
@@ -154,10 +318,40 @@ export function clearForRegion(rulesHash, regionName, substrate) {
 }
 
 // Test-only — drop all stored queues and the in-memory cache.
+/**
+ * Test-only — drop the in-memory cache WITHOUT touching storage, so the next
+ * read goes through `loadCache`'s parse path (where the legacy-maze filter
+ * lives). `_testOnly_clearAll` cannot serve: it clears storage too.
+ */
+export function _testOnly_resetCache() {
+    _cache = null;
+}
+
 export function _testOnly_clearAll() {
     _cache = new Map();
     persistCache();
     if (typeof localStorage !== 'undefined') {
         try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     }
+}
+
+/**
+ * Test-only — the stored map exactly as it is in storage (the raw string, or
+ * null when the key is absent). With `_testOnly_restoreRaw` it lets an in-app
+ * row that records queues put the person's saved queues back as it found them
+ * (modules/tests/savedQueueIsolation.js; plan §37.7.4).
+ */
+export function _testOnly_snapshotRaw() {
+    if (typeof localStorage === 'undefined') return null;
+    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+}
+
+/** Test-only — put the raw string back (null removes the key) and drop the in-memory cache. */
+export function _testOnly_restoreRaw(raw) {
+    _cache = null;
+    if (typeof localStorage === 'undefined') return;
+    try {
+        if (raw === null) localStorage.removeItem(STORAGE_KEY);
+        else localStorage.setItem(STORAGE_KEY, raw);
+    } catch { /* ignore */ }
 }

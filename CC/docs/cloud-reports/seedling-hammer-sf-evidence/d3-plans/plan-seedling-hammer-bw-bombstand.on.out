@@ -1,0 +1,14 @@
+FAIL: OFF (MOVING_WAIT ON): the press kill's stand takes bombpusher@112,128#7 on t1157's ledger row — []
+FAIL: ⛓ ON: the solve runs past the press kill's first landing (it stops on #10's blast on bob@272,112, the unstaged "Enemy" arm) — 1248 executed; levelRun: the Explosion of bombpusher@112,128#9 at (267, 118) on tick 1248 in level 40 reaches the chaser bob@272,112 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-6
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:12345
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                          ^
+
+Error: levelRun: the Explosion of bombpusher@112,128#9 at (267, 118) on tick 1248 in level 40 reaches the chaser bob@272,112 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-65`) is not staged on a bomb's blast (seedling-fidelity-bombpusher). Refused by name.
+    at drainBombBlastsNow (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:12345:27)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:19902:21)
+    at bombStandAccount (file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:85:31)
+    at async main (file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:139:15)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:107:36
+
+Node.js v22.22.0

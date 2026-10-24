@@ -1,0 +1,61 @@
+# every static site whose kind RK2 moved (RK2 instrument: whole argument text, literals joined): line, before -> after, head
+773	other -> precondition	'a crusher in this room is CHARGING; the ordering search plans from parks, and a body in motion is not one.'
+788	other -> unmodelled	`the ordering search found ${found.ordering.length} charge(s) in ${plan.length} chain(s) [${plan.map((p) => `${p.chain.id} ${p.chain.charges.join('')} (${p.chai
+882	other -> diverged	`${label}: the player never comes to rest outside every live lane.`
+1060	other -> diverged	`${what}: the encounter has run ${ENCOUNTER_MAX_TICKS} ticks without the drop.', { goal, obstacle: { kind: 'encounter', id: `encounter@${goal.at.x},${goal.at.y}
+1215	other -> diverged	`${what}: the drop is not complete — hasFire ${run.progress('inventory')?.hasFire}, writes [${writes.join(', ')}].`, { goal }
+1230	does-not-apply -> precondition	`${what}: the inventory has no Fire slot (slots [${slots}]).`, { goal }
+1315	other -> precondition	`${what}: the Witch adds the dark sword only for a player holding the WAND (`Witch.doneTalking`: `Main.hasWand && !Main.hasDarkSword`); this run holds none, so 
+1346	other -> diverged	`${what}: the walk rests at (${run.state.x},${run.state.y}), outside ${witch.id}'s talk circle.`, { goal, obstacle: { kind: 'encounter', id: witch.id } }
+1360	other -> diverged	`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword (${run.ledger('witchEvents').map((r) => r.what).join(', ') || 'no Witch event'}).`, { go
+1369	other -> diverged	`${what}: the Witch's dialogue closed (${close.cause}) and added nothing.`, { goal }
+1679	does-not-apply -> precondition	`${ctx.what}: ${resolved.tree} cannot be burned by this run — ${resolved.rejected[0].why}`
+1732	other -> diverged	`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a fire press from there reaches [${reach.trees.join(', ')}] and [${reach.others.join(
+1742	does-not-apply -> precondition	`${ctx.what}: the inventory has no Fire slot.`
+1908	does-not-apply -> precondition	`${ctx.what}: ${resolved.lock} cannot be opened by this run — ${resolved.rejected[0].why}`
+1937	other -> diverged	`${ctx.what}: the lean came to rest at (${run.state.x},${run.state.y}) facing ${run.direction}, and a shot from there stops on ${shot.event ? shot.event.id : 'n
+1944	does-not-apply -> precondition	`${ctx.what}: the inventory has no Wand slot.`
+2148	other -> diverged	`${resolved.watcher}'s dialogue was still open after ${TALK_PAGE_MAX} tick(s) (page ${watcher().page} of ${watcher().pages}).`
+2220	does-not-apply -> precondition	`solverBot: approach ${door.id} in level ${run.level} — the door cannot open in this state: ${why.join('; and ')}. The game plays the SealController's ceremony 
+6015	does-not-apply -> precondition	'this room holds no sword, so `set slashing`\'s outer gate refuses every press and no schedule can buy a single pixel'
+8903	does-not-apply -> precondition	`${ctx.what}: ${resolved.target.id} cannot be pushed by this run — ${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.target.id } }
+9037	other -> diverged	`${p.blockId} is ${l0 ? 'GONE' : 'not in the run'} before the thrust.`
+9047	other -> diverged	`still frozen after ${i} ticks.`
+9051	other -> diverged	`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is pinned against something in the facing direction.'
+9055	other -> diverged	`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${p.dir} from there misses ${p.blockId} at (${l0.rect.x},${l0.rect.y}) — a
+9074	other -> diverged	`${SPEAR_PRESS_BOUND} ticks after the thrust (tick ${pressTick}) ${p.blockId} is ${!l || l.removed ? 'GONE' : `at (${l.rect.x},${l.rect.y})`}, not ${p.destroys 
+12791	other -> exhausted	`${ctx.what}: the ceiling's column is still falling (${inFlight()} arrow(s) in flight) and NO reachable cell within four tiles of the button is both off ${weapo
+12903	does-not-apply -> precondition	`${ctx.what}: the kill work order has no weapon — ${resolved.rejected?.[0]?.why ?? 'no reason recorded'}${tail}`, { goal: ctx.goal, obstacle: { kind: 'kill-lock
+13094	other -> exhausted	`${ctx.what}: the ceiling removed every body it could and [${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so `Game.totalEnemies()` never reach
+13129	other -> unmodelled	`${ctx.what}: every counted body is gone and the run's own kill-lock ledger (`chaserKillLockOpens`) recorded NOTHING — so nothing computed the consequence and t
+13320	other -> unmodelled	`${ctx.what}: the count waits on ${id} and this run does not step it`, { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick
+13636	other -> diverged	`the facing tap left the player at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}), where the thrust misses ${id}`
+13641	other -> unmodelled	`${near} could walk into the thrust's rect during its repeats (T+1/T+3/T+5 on the game, `presses.SPEAR_HIT_TICKS_UNMODELLED`): the game can hit a latched body t
+13808	other -> diverged	`the player does not settle at ${id}'s ${side.key} stance (gap ${gapNow().toFixed(2)} px, velocity (${run.state.vx},${run.state.vy}), slashTimer ${slashTimer()}
+13819	other -> danger	`${id} fires a spit before the kill at every wait up to ${STATIC_SWORD_WAIT_MAX} ticks from the ${side.key} side (${plan.why}), and the run carries no shield to
+14054	other -> exhausted	`${ctx.what}: the chaser arm removed every body it could and [${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so `Game.totalEnemies()` never re
+14066	other -> unmodelled	`${ctx.what}: every counted body is gone and the run's own kill-lock ledger (`chaserKillLockOpens`) recorded NOTHING — so nothing computed the consequence and t
+14949	error -> unmodelled	`${ctx.what}: every counted body is dead and the run's own kill-lock ledger (`spinnerKillLockOpens`) recorded NOTHING — so nothing computed the consequence and 
+15527	does-not-apply -> precondition	`${ctx.what}: ${resolved.lock} needs a key this run does not hold. The key is a SUB-ORDER — a `collect-placement` goal the macro layer owes — and inventing a st
+15891	does-not-apply -> precondition	`${ctx.what}: ${resolved.lock} needs \`Player.${resolved.need}\`, which this run does not hold — ${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: 
+16319	does-not-apply -> precondition	`${ctx.what}: ${resolved.rock} cannot be broken by this run — ${resolved.rejected[0].why}`
+19213	does-not-apply -> bound	`${what}: ${identified.obstacle.id}'s stance is reachable only once ${p.id} is discharged (${p.via}: ${p.why}), and redeeming it would be link ${link} of an ope
+19227	does-not-apply -> precondition	`${what}: ${identified.obstacle.id}'s stance needs ${p.id} discharged first (${p.via}: ${p.why}), and ${p.id} has ${strategy ? `strategy '${strategy}', which is
+19260	does-not-apply -> precondition	`${what}: ${identified.obstacle.id}'s stance needs ${p.id} discharged first (${p.via}: ${p.why}), strategy '${strategy}' is SELECTED and REGISTERED for it, and 
+19596	other -> exhausted	`${body.id}: the walk to its light stance re-entered the same light arm at tick ${perTick.length} with nothing spent between, so a second walk would be the firs
+19651	other -> diverged	`${what} -> light: still frozen after ${i} ticks.`, { goal }
+20523	does-not-apply -> precondition	`${ropeId} silences [${silencer.traps.join(', ')}] (group t=${silencer.group}), but the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${
+20948	does-not-apply -> precondition	`${target.id} is a live Spinner whose removal the run OBSERVES (the `spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the run's \`primary\` sl
+21046	other -> does-not-apply	'the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run ste
+21184	does-not-apply -> precondition	`${hunt.why} — but this run holds no sword, so `set slashing`\'s outer gate refuses every press.'
+21874	other -> bound	`${what}: applied ${applied.length} strategies for one goal [${applied.join(', ')}] and the corridor still does not plan. A policy that keeps clearing obstacles
+22226	other -> diverged	`${what}: reached the exit aim without a transition — the trigger did not fire from the certified corridor.', { goal }
+22412	other -> exhausted	`${whatExit}: hazard-floor — every way off ${id}'s rect crosses ${floors.join(' or ')} the run cannot stand on (${need}); without that, closed — the run stands 
+22432	other -> precondition	`${whatExit}: inside-solid — the run stands LATCHED on ${id} in level ${run.level} with its box INSIDE ${inside.join(', ')}: no direction moves it (every step-o
+22438	other -> exhausted	`${whatExit}: closed — the run stands LATCHED on ${id} in level ${run.level} (`Teleporter.check()` latched it on the arrival frame) and no standable cell next t
+22591	other -> precondition	`${name}: arrival-inside-solid — the run's box at (${run.state.x},${run.state.y}) in level ${run.level} is INSIDE ${ids.join(', ')} and no cardinal hold moves i
+22809	does-not-apply -> precondition	'prerequisite', `the presser ${pid}'s stance is reachable only once ${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: ${resolved.prerequi
+22883	does-not-apply -> precondition	'cannot-act', `'${strategy}' cannot act on ${id} with this run's bag — ${resolved.rejected?.[0]?.why ?? 'the resolver said held: false'}`
+22887	does-not-apply -> precondition	'prerequisite', `'${strategy}''s stance is reachable only once ${resolved.prerequisite.id} is discharged (${resolved.prerequisite.via}: ${resolved.prerequisite.
+23205	other -> bound	`${what}: cleared ${guard} obstacle(s) and the placement is STILL inside ${blocker.id}.`, { goal, obstacle: blocker }
+23286	other -> unmodelled	`${what}: strategy '${resolved.strategy}' is selected and NOT registered this slice.', { goal, considered: resolved.rejected, }

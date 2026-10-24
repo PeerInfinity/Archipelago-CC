@@ -1,0 +1,28 @@
+=== leg 529
+walk       n=306 "crossed" | axe(168,88) r7: reach 14..68 (55t) spread 8.77 minHits 1 cleanStalls[0]  | axe(72,152) r5: reach 217..286 (70t) spread 5.09 minHits 0 cleanStalls[17] 29,30,31,32,33,34,35,36
+dash+0     n=400 "crossed" | axe(168,88) r7: reach 8..27 (20t) spread 4.48 minHits 0 cleanStalls[19] 0,1,2,20,23,38,39,40 | axe(72,152) never in reach
+dash+4     n=400 "crossed" | axe(168,88) r7: reach 10..31 (22t) spread 4.72 minHits 0 cleanStalls[17] 18,35,36,37,38,39,40,41 | axe(72,152) never in reach
+dash+8     n=514 "crossed" | axe(168,88) r7: reach 12..30 (19t) spread 4.33 minHits 0 cleanStalls[21] 8,14,19,34,35,36,37,38 | axe(72,152) r5: reach 431..494 (64t) spread 4.55 minHits 0 cleanStalls[23] 31,32,33,34,35,36,37,38
+dash+12    n=400 "crossed" | axe(168,88) r7: reach 14..34 (21t) spread 4.61 minHits 0 cleanStalls[18] 31,32,33,34,35,36,37,38 | axe(72,152) never in reach
+dash+16    n=457 "crossed" | axe(168,88) r7: reach 14..38 (25t) spread 5.11 minHits 0 cleanStalls[18] 1,13,29,30,31,32,33,34 | axe(72,152) r5: reach 188..435 (248t) spread 20.54 minHits 5 cleanStalls[0] 
+=== leg 597
+walk       n=343 "crossed" | axe(264,152) r7: reach 15..145 (131t) spread 20.50 minHits 1 cleanStalls[0] 
+dash+0     n=400 "crossed" | axe(264,152) r7: reach 9..399 (391t) spread 49.42 minHits 10 cleanStalls[0] 
+dash+4     n=516 "crossed" | axe(264,152) r7: reach 11..227 (217t) spread 30.92 minHits 2 cleanStalls[0] 
+dash+8     n=648 "crossed" | axe(264,152) r7: reach 12..451 (440t) spread 58.28 minHits 8 cleanStalls[0] 
+dash+12    n=400 "crossed" | axe(264,152) r7: reach 15..399 (385t) spread 48.80 minHits 11 cleanStalls[0] 
+dash+16    n=400 "crossed" | axe(264,152) r7: reach 15..399 (385t) spread 48.75 minHits 9 cleanStalls[0] 
+=== leg 630
+walk       n=347 "crossed" | axe(88,152) r-6: reach 76..205 (130t) spread 18.23 minHits 2 cleanStalls[0] 
+dash+0     n=629 "crossed" | axe(88,152) r-6: reach 55..493 (439t) spread 50.56 minHits 8 cleanStalls[0] 
+dash+4     n=400 "crossed" | axe(88,152) never in reach
+dash+8     n=400 "crossed" | axe(88,152) never in reach
+dash+12    n=666 "crossed" | axe(88,152) r-6: reach 407..530 (124t) spread 17.58 minHits 2 cleanStalls[0] 
+dash+16    n=668 "crossed" | axe(88,152) r-6: reach 351..537 (187t) spread 24.15 minHits 3 cleanStalls[0] 
+=== leg 754
+walk       n=345 "crossed" | axe(88,232) r-5: reach 151..251 (101t) spread 11.24 minHits 2 cleanStalls[0] 
+dash+0     n=400 "crossed" | axe(88,232) r-5: reach 53..399 (347t) spread 29.71 minHits 7 cleanStalls[0] 
+dash+4     n=551 "crossed" | axe(88,232) r-5: reach 56..455 (400t) spread 37.31 minHits 9 cleanStalls[0] 
+dash+8     n=551 "crossed" | axe(88,232) r-5: reach 53..455 (403t) spread 37.59 minHits 10 cleanStalls[0] 
+dash+12    n=400 "crossed" | axe(88,232) r-5: reach 58..399 (342t) spread 29.42 minHits 7 cleanStalls[0] 
+dash+16    n=427 "crossed" | axe(88,232) r-5: reach 64..274 (211t) spread 20.89 minHits 4 cleanStalls[0] 

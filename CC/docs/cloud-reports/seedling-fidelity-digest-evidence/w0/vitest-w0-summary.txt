@@ -1,0 +1,8 @@
+     ✓ a trip at `crusher-fork` refuses the bait verb by name  4526ms
+
+ Test Files  14 passed (14)
+      Tests  684 passed (684)
+   Start at  21:20:42
+   Duration  70.19s (transform 7.97s, setup 0ms, import 21.16s, tests 167.93s, environment 2ms)
+
+rc=0

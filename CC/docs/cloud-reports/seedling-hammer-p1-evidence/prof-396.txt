@@ -1,0 +1,42 @@
+total s 42.663443
+-- inclusive top (solver functions)
+   30.9 s  72.4%  solveSegmentDeadlined solverBot.js:16575
+   30.9 s  72.4%  solveSegment solverBot.js:16566
+   30.9 s  72.3%  solveSegmentUnder solverBot.js:16623
+   30.9 s  72.3%  walkTo solverBot.js:19797
+   30.9 s  72.3%  walkToUnder solverBot.js:19271
+   29.5 s  69.2%  planSwordDash solverBot.js:5515
+   29.4 s  69.0%  evaluateAt solverBot.js:5672
+   29.3 s  68.6%  previewFor solverBot.js:5582
+   29.2 s  68.4%  previewWalk solverBot.js:4725
+   12.9 s  30.4%  step levelRun.js:7713
+    7.0 s  16.3%  step levelRun.js:16583
+    4.8 s  11.3%  combatBefore solverBot.js:4885
+    4.5 s  10.6%  decide strikePolicy.js:837
+    3.5 s   8.2%  strikeCandidates strikePolicy.js:226
+    2.0 s   4.8%  (anon) levelRun.js:7908
+    1.7 s   3.9%  bodies levelRun.js:7957
+    1.2 s   2.8%  (anon) levelRun.js:7961
+    0.9 s   2.0%  move levelRun.js:7743
+    0.8 s   1.9%  sweep levelRun.js:7762
+    0.8 s   1.8%  blocked levelRun.js:7746
+    0.6 s   1.3%  advance levelRun.js:17203
+    0.5 s   1.1%  advance solverBot.js:16800
+    0.4 s   1.0%  slashPressForecast combatVerbs.js:542
+    0.4 s   0.9%  probeCorridor solverBot.js:17562
+-- self top
+   11.2 s  26.2%  (garbage collector) :0
+    6.5 s  15.2%  step levelRun.js:7713
+    3.3 s   7.7%  strikeCandidates strikePolicy.js:226
+    2.1 s   4.8%  previewWalk solverBot.js:4725
+    2.0 s   4.7%  (anon) levelRun.js:7908
+    1.6 s   3.7%  solidCandidates levelWorld.js:3997
+    1.5 s   3.4%  collidesSolid levelWorld.js:6268
+    1.3 s   3.0%  shieldBumpTouches bobBossFight.js:379
+    1.2 s   2.8%  chaserStep chasers.js:626
+    1.1 s   2.7%  (anon) levelRun.js:7961
+    1.0 s   2.4%  liveRectOf levelWorld.js:4297
+    0.9 s   2.1%  nearestTileScanIndexed levelWorld.js:3883
+    0.9 s   2.0%  step playerPhysicsV2.js:870
+    0.5 s   1.2%  assertNormalizedLiveOpts levelWorld.js:3797
+    0.5 s   1.1%  decide strikePolicy.js:837

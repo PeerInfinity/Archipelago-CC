@@ -26,7 +26,7 @@ class OptionNormalizationMixin:
         these string constants need to be converted to their numeric equivalents.
 
         This method walks through helper definitions, finds comparisons where:
-        - One side is a `setting_value` for a Choice option
+        - One side is an `option_value` for a Choice option
         - The other side contains string constants
 
         And converts those string constants to their numeric values using the option's name_lookup.
@@ -68,35 +68,27 @@ class OptionNormalizationMixin:
 
             node_type = node.get('type') or node.get('rule')
 
-            # Handle comparisons - check if one side is an option_value/setting_value for a Choice option
+            # Handle comparisons - check if one side is an option_value for a Choice option
             if node_type == 'compare':
                 left = node.get('left', {})
                 right = node.get('right', {})
                 op = node.get('op', '==')
 
-                # Check if left is an option_value or setting_value for a Choice option
+                # Check if left is an option_value for a Choice option
                 left_option = None
                 left_type = left.get('type', '') if isinstance(left, dict) else ''
                 if left_type == 'option_value':
                     option = left.get('option', '')
                     if option in option_reverse_lookups:
                         left_option = option
-                elif left_type == 'setting_value':  # Legacy support
-                    setting = left.get('setting', '')
-                    if setting in option_reverse_lookups:
-                        left_option = setting
 
-                # Check if right is an option_value or setting_value for a Choice option
+                # Check if right is an option_value for a Choice option
                 right_option = None
                 right_type = right.get('type', '') if isinstance(right, dict) else ''
                 if right_type == 'option_value':
                     option = right.get('option', '')
                     if option in option_reverse_lookups:
                         right_option = option
-                elif right_type == 'setting_value':  # Legacy support
-                    setting = right.get('setting', '')
-                    if setting in option_reverse_lookups:
-                        right_option = setting
 
                 # NEW: Handle case where option was resolved to a raw integer constant
                 # and compared to a string option name (e.g., 0 == "vanilla")
@@ -226,7 +218,7 @@ class OptionNormalizationMixin:
 
             node_type = node.get('type') or node.get('rule')
 
-            # Handle comparisons - check if one side is an option_value/setting_value for a Choice option
+            # Handle comparisons - check if one side is an option_value for a Choice option
             if node_type in ('compare', 'Compare'):
                 # Handle both formats: {left, right} and {args: {left, right}}
                 args = node.get('args', node)
@@ -234,7 +226,7 @@ class OptionNormalizationMixin:
                 right = args.get('right', {})
                 op = args.get('op', '==')
 
-                # Check if left is an option_value or setting_value for a Choice option
+                # Check if left is an option_value for a Choice option
                 left_option = None
                 left_type = left.get('type') or left.get('rule') if isinstance(left, dict) else None
                 if left_type in ('option_value', 'OptionValue'):
@@ -242,13 +234,8 @@ class OptionNormalizationMixin:
                     option = left_args.get('option', '')
                     if option in option_reverse_lookups:
                         left_option = option
-                elif left_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
-                    left_args = left.get('args', left)
-                    setting = left_args.get('setting', '')
-                    if setting in option_reverse_lookups:
-                        left_option = setting
 
-                # Check if right is an option_value or setting_value for a Choice option
+                # Check if right is an option_value for a Choice option
                 right_option = None
                 right_type = right.get('type') or right.get('rule') if isinstance(right, dict) else None
                 if right_type in ('option_value', 'OptionValue'):
@@ -256,11 +243,6 @@ class OptionNormalizationMixin:
                     option = right_args.get('option', '')
                     if option in option_reverse_lookups:
                         right_option = option
-                elif right_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
-                    right_args = right.get('args', right)
-                    setting = right_args.get('setting', '')
-                    if setting in option_reverse_lookups:
-                        right_option = setting
 
                 # NEW: Handle case where option was resolved to a raw integer constant
                 # and compared to a string option name (e.g., 0 == "vanilla")
@@ -475,11 +457,6 @@ class OptionNormalizationMixin:
                     option = left_args.get('option', '')
                     if option in option_lookups:
                         left_option = option
-                elif left_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
-                    left_args = left.get('args', left)
-                    setting = left_args.get('setting', '')
-                    if setting in option_lookups:
-                        left_option = setting
 
                 right_option = None
                 right_type = right.get('type') or right.get('rule')
@@ -488,11 +465,6 @@ class OptionNormalizationMixin:
                     option = right_args.get('option', '')
                     if option in option_lookups:
                         right_option = option
-                elif right_type in ('setting_value', 'AST_setting_value', 'SettingValue'):  # Legacy
-                    right_args = right.get('args', right)
-                    setting = right_args.get('setting', '')
-                    if setting in option_lookups:
-                        right_option = setting
 
                 if 'args' in node:
                     result = dict(node)

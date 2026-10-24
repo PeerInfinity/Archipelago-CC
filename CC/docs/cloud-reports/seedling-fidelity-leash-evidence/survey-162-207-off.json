@@ -1,0 +1,67 @@
+[
+ {
+  "step": 162,
+  "level": 74,
+  "verdict": "SOLVED",
+  "ticks": 321,
+  "refusal": null,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 48,
+     "y": 32
+    },
+    "why": "Level 074 - Darkshield (sphere 8.4) \u2192 Progressive Shield",
+    "location": "Level 074 - Darkshield"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 16,
+     "y": 144
+    },
+    "why": "teleporter@16,144 \u2192 L75"
+   }
+  ],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 75,
+   "transitions": [
+    "undefined->undefined@321"
+   ],
+   "earnedClears": [
+    "{74,0}"
+   ]
+  },
+  "ms": 746
+ },
+ {
+  "step": 207,
+  "level": 104,
+  "verdict": "SOLVED",
+  "ticks": 268,
+  "refusal": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 0,
+     "y": 16
+    },
+    "why": "teleporter@0,16 \u2192 L105"
+   }
+  ],
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 105,
+   "transitions": [
+    "undefined->undefined@268"
+   ],
+   "earnedClears": []
+  },
+  "ms": 1370
+ }
+]

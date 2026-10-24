@@ -1,0 +1,218 @@
+/**
+ * THE SOLVER'S IMPORT DOOR — every simulation symbol the Seedling solver
+ * family imports, re-exported from ONE module (engine-prep slice C2).
+ *
+ * The solver family (`solverBot.js`, `director.js` and the files they pull in
+ * that the simulation does not: the list is `family` in
+ * `scripts/procgen/seedling-solver-surface.json`) reaches the simulation two
+ * ways: through the run object `createLevelRun` returns, and through static
+ * imports. This module is the second way's single door. A family file
+ * imports a simulation symbol from here, never from the simulation module
+ * that defines it.
+ *
+ * What it is NOT:
+ *   - not a wrapper: every line is `export { … } from './<module>.js'`, so a
+ *     name imported through the door is the very binding the defining module
+ *     exports (live, same identity) and a solve is byte-identical either way;
+ *   - not the contract: `seedling-solver-surface.json` is. It classes each
+ *     symbol `physics` or `seedling` and names the family files that use it;
+ *     the comment over each block below is that row set summarised
+ *     (`<module> — <family files> · <class split>`).
+ *
+ * The rules, gated by `scripts/procgen/seedlingSolverSurface.test.js`:
+ *   - a family file may import a `seedlingDemo` module only if it is another
+ *     family file or this one;
+ *   - this module exports only what some family file imports (an unused
+ *     export is RED "must be RETIRED"), and imports only simulation modules.
+ *
+ * Adding a symbol: the contract table row comes first. Add the export here,
+ * import it in the family file, run `node
+ * scripts/procgen/census-seedling-solver-surface.mjs --write`, then read the
+ * symbol's definition and fill in the new row's class, form and why
+ * (docs/json/developer/procgen/seedling-solver-surface.md § The import door).
+ *
+ * ⚠ One rename: `burnableTree.js` and `breakableRocks.js` both export a
+ * `WAIT_AFTER_PRESS_TICKS`, and they are different numbers for different
+ * mechanics (a rock's shatter window against a tree's burn animation). The
+ * door exports the rock's under its own name and the tree's pair under the
+ * `BURN_` names `botDriverV2.js` already gave them.
+ */
+
+// activators.js — botDriverV2, solverBot · seedling 10
+export {
+    fallRocksArmedBy, groupResponders, KEY_RESPONDERS, keyLineTouches, localPublish, opensOnKeyTick,
+    opensOnTick, RESPONDERS, TOUCH_RESPONDERS, touchApproachKey,
+} from './activators.js';
+// arrowTrap.js — dangerMap, solverBot · seedling 6
+export { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowRect, arrowTrapFires, stepArrow } from './arrowTrap.js';
+// bobBossFight.js — solverBot · seedling 1 (hammer-phase B2: the fight forbids a shield bump)
+export { bobBossRockArms, shieldBumpTouches } from './bobBossFight.js';
+// breakableRocks.js — botDriverV2, solverBot · seedling 3
+export { assertWaitCovers, rockBreaksUnder, WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
+// bridges.js — botDriverV2 · seedling 1
+export { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
+// burnableTree.js — botDriverV2 · seedling 2
+export {
+    HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE_TICKS, WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS_TICKS,
+} from './burnableTree.js';
+// camera.js — encounters · physics 2
+export { SCREEN_H, SCREEN_W } from './camera.js';
+// ⛓ fidelity ROPESTANCE: a rope stance keeps out of an UNSTEPPED drill's run range (`solverBot.ropeStanceAdmit`).
+export { DRILL } from './drill.js';
+// chasers.js — dangerMap, solverBot · seedling 4
+export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
+// ⛓ CEREMONYSHOVE D3: which class a shield's bump moves (`ceremonyBesideLiveBody`'s priced question).
+export { chaserKnocksBack } from './chasers.js';
+// ⛓ fidelity LAPSECOST D2: the Flyer's drop, for `dangerMap.chaserDanger`.
+export { chaserDropOf } from './chasers.js';
+
+// ⛓ seedling-fidelity-bulb D3: the Bulb's drop death — which classes have one, and the tile under a centre.
+export { hasDropDeath, tileUnder } from './bulb.js';
+
+// ⛓ seedling-fidelity-bulb D3: the contact-fidelity switches (`bulbLive` gates the kill veto's needs).
+export { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ seedling-fidelity-bombpusher D3: the lobber's own stepping, for the danger map's WAIT arm.
+export { BOMB, stepBomb, stepBombPusher } from './bombPusher.js';
+// ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`CONTACT_FIDELITY.apReportBosses`, OFF).
+export { BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL } from './apReportBosses.js';
+// chest.js — botDriverV2, solverBot · seedling 3
+export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
+// combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
+export {
+    contactPricing, contactRect, ENEMY_CLASSES, KILL_CADENCE_FLOOR, KILL_LOCK_TAGS, KILL_LOCK_TSET,
+    plannerContactFree, pressesFor, stepBoundFor,
+} from './combat.js';
+// combatVerbs.js — botDriverV2, solverBot, strikePolicy · seedling 11
+export {
+    DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD, SLASH_ANIM_TICKS, SLASH_DASH_FORCE,
+    SLASH_SCALE_NORMAL, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
+} from './combatVerbs.js';
+// crusher.js — botDriverV2, crusherBait · seedling 5
+export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from './crusher.js';
+// endingChain.js — strikePolicy · seedling 1
+export { TALK_RANGE } from './endingChain.js';
+// dialogue.js — solverBot · fidelity YETI D3 (the Yeti's second tag, L58's portal)
+export { YETI_PORTAL_TAG } from './dialogue.js';
+// enemyDamage.js — solverBot, strikePolicy · seedling 3
+export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled,
+    removalTicksAfterHit } from './enemyDamage.js';
+// ⛓ hammer-phase C1: the static sword arm's switch and death table
+export { STATIC_SWORD_ARM, STATIC_SWORD_DEATH } from './enemyDamage.js';
+// killLockBodies.js — solverBot · seedling 1
+export { KILLLOCK_BODIES } from './killLockBodies.js';
+// fireVerb.js — botDriverV2 · seedling 2
+export { FIRE_WINDOW, fireRect } from './fireVerb.js';
+// ghostSword.js — solverBot · seedling 2
+// ⛓⛓⛓ seedling-fidelity-ghostsword: the ghost swing's switch and its one named refusal, for the break verb's row.
+export {
+    GHOSTSWORD_PRESS, ghostSwingRefusal,
+    // ⛓ seedling-fidelity-ghostmotion: the ghost swing's own release clock and dash chain.
+    GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
+} from './ghostSword.js';
+// ghostSpinnerPress.js — solverBot · seedling 3
+// ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (its switch, the sword's row, the chooser).
+export {
+    GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
+    // ⛓⛓⛓ hammer-phase D: the approach's and the fight's per-weapon row (behind `GHOST_SEARCH_BUCKETS`, OFF).
+    searchPressFor,
+    // ⛓⛓⛓ hammer-phase G1: the kill rung's weapon gate (behind `GHOST_KILL_RUNG`, ON since the user's flip).
+    killRungPresses,
+} from './ghostSpinnerPress.js';
+// pressKillCost.js — solverBot · seedling 6
+// ⛓⛓⛓ hammer-phase P1: the press kill's cost switch and the by-value key it compares (copy, compare, refuse).
+export {
+    PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
+    // ⛓⛓⛓ hammer-phase P2: the strike scan's sibling switch, its instrument and the scan's row index.
+    STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (its switch and instrument, OFF).
+    PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
+    // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
+    REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
+} from './pressKillCost.js';
+// igneousLava.js — dangerMap · seedling 3 (fidelity IGNEOUS: the type-31 tile's render clock)
+export { igneousInRange, igneousRendersToLava, stepIgneousRender } from './igneousLava.js';
+// iceTurret.js — botDriverV2 · seedling 2
+export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
+// ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.
+export { TURRET_SPIT } from './turret.js';
+// ⛓ hammer-phase C1: the static sword arm's turret mini-forecast (`staticSwordShotFree`)
+export { stepTurret } from './turret.js';
+// levelRun.js — botDriverV2, solverBot · physics 1, seedling 1
+export { canonicalDigestText, createLevelRun } from './levelRun.js';
+
+// ⛓ K2PREP: `Game.worldFrame`, the Spritemap step and the lava chain — simulation since `levelRun` steps the chain
+// (`lavaChain.js`); `hazards.js` imports them here and re-exports them (the beam, the axe, the danger map).
+export {
+    LAVA_CHAIN, TIME_PER_FRAME, createLavaChainState, lavaChainRect, rectTouchesBox, spritemapPlay, spritemapUpdate,
+    stepLavaChain, worldFrame,
+} from './lavaChain.js';
+// ⛓ fidelity BEAMTOWER: `BeamTower.as` — simulation since `levelRun` steps the tower (`beamTower.js`); `hazards.js`
+// imports it here and re-exports it (the danger map's beam, the LADDER2 probes).
+export {
+    BEAM_TOWER, beamAnimSpeed, beamIsBeaming, beamRect, createBeamTower, stepBeamTower,
+} from './beamTower.js';
+// ⛓ fidelity SPINNINGAXE: the spinning axe's geometry — simulation since `levelRun` steps the axe's player arm
+// (`spinningAxe.js`); `hazards.js` imports it here and re-exports it (the danger map, the solver, the axe probes).
+export { axeCanReach, axeHitsPlayer, axeLine, collideLinePlayer, SPINNING_AXE } from './spinningAxe.js';
+// ⛓ fidelity LIGHTS D3: the L69 fight's own step functions — simulation since `levelRun` steps the fight
+// (`lightBoss.js`); `lightsVerb.js` forecasts a clone of the run's fight with them.
+export {
+    LIGHT_BOSS, SPEAR_FORCE as LIGHTS_SPEAR_FORCE, cloneLightsFight, lightBossFlierHit, lightBossRect,
+    stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot, stepLightsController,
+} from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the shield's shove on a flier, forecast as the run steps it.
+export { lightsShieldBump } from './lightBoss.js';
+// levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
+export {
+    assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
+    RELAXED_ROLES, TILE_SIZE, withTileWrites,
+} from './levelWorld.js';
+// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 12
+export {
+    applyFriction, applyInput, DEFAULT_FRICTION, groundTerrain, HITBOX, knockbackImpulse, MOVE_SPEEDS,
+    SLIDING_SPEED, spawnFromBoot, step, sweepAxis, WALK_SPEED,
+} from './playerPhysicsV1.js';
+// playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 2, physics 3
+export { fallDestination, hazardFlagsFor, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
+// presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
+export {
+    auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
+    slashReachFor, slashRect, SPEAR_HIT_TICKS, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
+    swordWindowStep, UP,
+} from './presses.js';
+// ⛓ fidelity SPEARRECT: the spear's rect and its test as the game runs them (`spearGameTest`), for the spear stances.
+export { pressRectTouches, spearHitRect } from './presses.js';
+// ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
+export { auditPress, PRESS_ARM_POLICY } from './presses.js';
+// pull.js — solverBot · seedling 2
+export { pullModelled, pullsDrainingInto } from './pull.js';
+// pulser.js — solverBot · seedling 3
+export { PULSER, pulsePushes, pulserCycle } from './pulser.js';
+
+// ⛓ SEEDLING FIDELITY LADDER2: the placed grenade's fuse and blast (`dangerMap.grenadeDanger`).
+export { PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade } from './placedGrenade.js';
+// pushables.js — solverBot · seedling 2
+export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
+// shieldBossFight.js — solverBot · seedling 4
+export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule } from './shieldBossFight.js';
+// ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb's own transcriptions — the switch, the window, the spawn, the
+// shot's step (the preview) and the MagicalLock's open offset.
+export { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
+export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
+export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
+// ⛓ seedling-fidelity-bosskills D3: the tentacle's body and its swipe, for `tentacleBeastPolicy`.
+export { tentacleRect, tentacleSwipeRect } from './tentacleBeast.js';
+// ⛓ fidelity BOSSFORK D1b: the beast's anims and their length, for the wait on the mouth (`awaitTentacleMouth`).
+export { TENTACLE_BEAST_ANIMS } from './tentacleBeast.js';
+// ⛓ seedling-fidelity-residue D-B: a whirlpool's clock, box and pull radius, for `dangerMap.whirlpoolDanger`.
+export { WHIRLPOOL, whirlpoolRect } from './tentacleBeast.js';
+export { animTicks } from './chasers.js';
+// spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
+export {
+    enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,
+} from './spinner.js';
+// tapeFormat.js — botDriverV1, botDriverV2, decisionTrace · seedling 1, physics 7
+export {
+    assertTapeWithinRuntimeBudget, coerceTerrainState, GAME_VISIBLE_DROPS, heldKeysAt, INVENTORY_ITEM_IDS,
+    KEY_CODES, KEY_NAMES, LEVEL_COUNT, requiredTapeVersion, serializeTape,
+} from './tapeFormat.js';

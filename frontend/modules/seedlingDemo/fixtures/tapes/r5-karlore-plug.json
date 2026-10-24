@@ -1,0 +1,67 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-karlore-plug",
+  "description": "THE HEADLINE PAIR, arm 1 of 2 — `fire` WITHHELD. Identical to `r5-karlore-fire` in every field but `grants` — the plan is the FIRE arm's, and this arm simply runs it without the item. `Karlore.added()` removes himself only `if (Player.hasFire)`, so with the boolean false the NPC is built, `NPC`'s constructor gives him `type = \"Solid\"` and his own `setHitbox(16,16,8,8)` fills tile (7,17) — and a flood from the arrival reaches TWO tiles with him there against 138 without. The walk PINS with its box top flush against y = 288. Without this arm, \"the fire arm walked north\" is not evidence that anything was ever in the way.",
+  "boot": {
+    "level": 47,
+    "x": 208,
+    "y": 136
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 61,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 41
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "down",
+      "from": 41,
+      "to": 42
+    },
+    {
+      "key": "up",
+      "from": 42,
+      "to": 43
+    },
+    {
+      "key": "down",
+      "from": 43,
+      "to": 44
+    },
+    {
+      "key": "up",
+      "from": 44,
+      "to": 45
+    }
+  ]
+}

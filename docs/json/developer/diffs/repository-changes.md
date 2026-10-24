@@ -118,6 +118,7 @@ The following 26 files have been modified from the upstream version:
 
 ### Core Files (see diff-files/core-files.diff)
 ```
+Main.py
 settings.py
 ```
 
@@ -125,6 +126,8 @@ settings.py
 ```
 .gitattributes
 .github/workflows/codeql-analysis.yml
+.github/workflows/scan-build.yml
+.github/workflows/unittests.yml
 .gitignore
 pytest.ini
 README.md
@@ -174,7 +177,11 @@ worlds/yoshisisland/__init__.py
 ### Core Files
 - **settings.py** - `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section. Required for romless world patches.
 
-Note: `BaseClasses.py`, `Main.py`, `Utils.py`, `CommonClient.py`, and `Launcher.py` now match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches (installed at runtime by the JSON Tools Installer).
+- **Main.py** - Two small fork fixes, neither needed by the JSON export:
+  - In the hostable-zip loop, JSON Tools artifacts (`_rules.json`, `_rules-ast.json`, `_sphere_log.jsonl`, `.pkl.gz`, `_pickle_meta.json`) are kept out of the seed `.zip`. A stock WebHost rejects an upload containing them.
+  - Each sphere is iterated in `(player, address)` order when building `multidata["spheres"]`, so the same seed produces the same `.archipelago` bytes. See [Non-Deterministic Sphere Sets](../../upstream-bugs/core/nondeterministic-sphere-sets.md).
+
+Note: `BaseClasses.py`, `Utils.py`, `CommonClient.py`, and `Launcher.py` match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches (installed at runtime by the JSON Tools Installer).
 
 ### World Implementations (skip_required_files support)
 Modified world implementations to support generation without ROM files:
@@ -189,7 +196,6 @@ Modified world implementations to support generation without ROM files:
 - Yoshi's Island (yoshisisland)
 
 ### Test Files
-- **test/general/test_implemented.py** - Added "The Messenger" and "Overcooked! 2" to `excluded_games` in `test_slot_data` to prevent flaky fill failures. These original worlds have tight access rules that cause `FillError` with certain random seeds when the fill algorithm's item ordering creates an unresolvable deadlock.
 - **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variants (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions)
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic
 - **test/general/test_rule_builder.py** - Added ~600 lines of evaluation tests for fork-only Rule Builder rule types: CountItem, CountFromList, Compare, Arithmetic, MinValue, MaxValue, WeightedSum, and more

@@ -6,9 +6,11 @@ Contains the rules generator and rule analysis utilities.
 import re
 from typing import Dict, List, Optional, Set
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from ._template_option_effects import option_count_bindings
+from .constants import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, HelperData
+from ._unknown_kind import UnknownRuleKindError
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule, ANALYZER_RUNTIME_TYPES
 from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
@@ -141,7 +143,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
 
     Returns True if the rule contains:
     - Block statements (loops, assignments, etc.) that aren't AST_block
-    - Dynamic references (setting_value, placement_lookup, etc.) that need
+    - Dynamic references (option_value, placement_lookup, etc.) that need
       runtime access to world options/attributes
 
     Note: Most rule types including helpers, not, compare, and conditional
@@ -166,10 +168,9 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # Dynamic references need lambda to generate proper runtime access patterns
     # These are evaluated to constants in Rule Builder but should be preserved
     # as dynamic option/attribute access for proper re-export
-    # - setting_value: legacy setting access
     # - placement_lookup: location_item_name() calls require state
     # - option_value: world options require state.multiworld access
-    if rule_type in ('setting_value', 'placement_lookup', 'option_value'):
+    if rule_type in ('placement_lookup', 'option_value'):
         return True
 
     # AST format dynamic references also need lambda
@@ -178,7 +179,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
         return True
 
     # AST_function_call may need lambda, but not if the function is a Rule Builder rule
@@ -225,6 +226,74 @@ def _rule_needs_lambda(rule: dict) -> bool:
     return False
 
 
+def make_helper_generator(
+    game_name: str,
+    metadata,
+    helpers: Dict[str, HelperData],
+    placements: Optional[Dict[str, str]] = None,
+) -> HelperCodeGenerator:
+    """A HelperCodeGenerator configured for ``helpers``: known names, option
+    definitions (without them an option reads back as a world attribute) and
+    each helper's params/param_mappings/defaults."""
+    helper_generator = HelperCodeGenerator(
+        game_name,
+        resolved_values=metadata.resolved_values,
+        option_definitions=metadata.option_definitions
+    )
+    helper_generator.set_known_helpers(set(helpers.keys()))
+    helper_generator.set_placements(placements or {})
+
+    # Build helper data dict with param_mappings for AST_capability resolution
+    helper_data_dict = {}
+    for helper_name, helper_obj in helpers.items():
+        helper_data_dict[helper_name] = {
+            'params': helper_obj.params,
+            'param_mappings': helper_obj.param_mappings,
+            'defaults': helper_obj.defaults,
+        }
+    helper_generator.set_helper_data(helper_data_dict)
+    return helper_generator
+
+
+def generate_helper_functions(helper_generator: HelperCodeGenerator, helpers: Dict[str, HelperData]) -> List[str]:
+    """The Python source of each helper function, in ``helpers`` order.
+
+    Shared by ``generate_rules_py`` and ``exporter.script_api.helpers_to_python``
+    (helpers JSON -> Python in the browser), so the two cannot drift.
+    """
+    # Pre-scan all helper bodies for NamedTuple types
+    # This is needed so constructor calls can be resolved before code generation
+    for helper_data in helpers.values():
+        if helper_data.body:
+            helper_generator.prescan_for_namedtuples(helper_data.body)
+
+    return [
+        helper_generator.generate_helper_function(
+            helper_name,
+            helper_data.params,
+            helper_data.body,
+            helper_data.defaults
+        )
+        for helper_name, helper_data in helpers.items()
+    ]
+
+
+def render_helpers_section(helper_generator: HelperCodeGenerator, helper_functions: List[str]) -> str:
+    """The helper section of a Rules.py: NamedTuple classes, then the functions.
+
+    Called AFTER every other expression has been generated — rule expressions
+    can register NamedTuple types too, and the class list must include them.
+    """
+    if not helper_functions:
+        return ''
+    # Generate NamedTuple class definitions if any were encountered
+    namedtuple_classes = helper_generator.generate_namedtuple_classes()
+    if namedtuple_classes:
+        section = '\n\n# NamedTuple types for helper functions\n' + namedtuple_classes + '\n'
+        return section + '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+    return '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+
 def generate_rules_py(data: ExtractedData) -> str:
     """Generate Rules.py file content.
 
@@ -257,6 +326,7 @@ def generate_rules_py(data: ExtractedData) -> str:
 
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
+    rule_builder_generator.option_count_bindings = option_count_bindings(data.metadata.option_effects)
 
     # Build set of obtainable items (in pool, canonical placements, or starting inventory)
     # Used to detect unsatisfiable Has rules referencing virtual/computed items
@@ -298,23 +368,7 @@ def generate_rules_py(data: ExtractedData) -> str:
             entrance_connections[exit_name] = exit_data.target_region
     rule_builder_generator.set_entrance_connections(entrance_connections)
 
-    helper_generator = HelperCodeGenerator(
-        game_name,
-        resolved_values=data.metadata.resolved_values,
-        option_definitions=data.metadata.option_definitions
-    )
-    helper_generator.set_known_helpers(set(data.helpers.keys()))
-    helper_generator.set_placements(data.original_placements)
-
-    # Build helper data dict with param_mappings for AST_capability resolution
-    helper_data_dict = {}
-    for helper_name, helper_obj in data.helpers.items():
-        helper_data_dict[helper_name] = {
-            'params': helper_obj.params,
-            'param_mappings': helper_obj.param_mappings,
-            'defaults': helper_obj.defaults,
-        }
-    helper_generator.set_helper_data(helper_data_dict)
+    helper_generator = make_helper_generator(game_name, data.metadata, data.helpers, data.original_placements)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
@@ -332,22 +386,7 @@ def generate_rules_py(data: ExtractedData) -> str:
                 break
 
     # Generate helper functions
-    helper_functions = []
-    if has_helpers:
-        # Pre-scan all helper bodies for NamedTuple types
-        # This is needed so constructor calls can be resolved before code generation
-        for helper_data in data.helpers.values():
-            if helper_data.body:
-                helper_generator.prescan_for_namedtuples(helper_data.body)
-
-        for helper_name, helper_data in data.helpers.items():
-            func_code = helper_generator.generate_helper_function(
-                helper_name,
-                helper_data.params,
-                helper_data.body,
-                helper_data.defaults
-            )
-            helper_functions.append(func_code)
+    helper_functions = generate_helper_functions(helper_generator, data.helpers)
 
     # Collect all rules
     entrance_rules = []
@@ -440,6 +479,8 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
     return {rule_expr}
 {func_name}._internal_function = True
 ''')
+                    except UnknownRuleKindError:
+                        raise  # loud, not the always-true fallback below (lossy mode never raises)
                     except Exception as e:
                         defeat_rule_functions.append(f'''
 def {func_name}(state: "CollectionState", player: int) -> bool:
@@ -449,15 +490,7 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
 ''')
 
     # Build helper section
-    helpers_section = ''
-    if helper_functions:
-        # Generate NamedTuple class definitions if any were encountered
-        namedtuple_classes = helper_generator.generate_namedtuple_classes()
-        if namedtuple_classes:
-            helpers_section = '\n\n# NamedTuple types for helper functions\n' + namedtuple_classes + '\n'
-            helpers_section += '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
-        else:
-            helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+    helpers_section = render_helpers_section(helper_generator, helper_functions)
 
     # Add defeat rule functions after helpers
     if defeat_rule_functions:
@@ -544,7 +577,12 @@ def _setup_dungeon_bosses(multiworld, player: int) -> None:
     # Build import section
     imports_section = ''
     if rule_builder_imports:
-        imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
+        imports_section = f'\nfrom ._ext import {rule_builder_imports_str}\n'
+
+    # world[p].option_effects: a count read from the world's own option
+    if rule_builder_generator.used_option_classes:
+        imports_section += ('from rule_builder.field_resolvers import FromOption\n'
+                            f'from .Options import {", ".join(sorted(rule_builder_generator.used_option_classes))}\n')
 
     # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''

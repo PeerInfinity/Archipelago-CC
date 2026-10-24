@@ -1,0 +1,309 @@
+{
+    "game": "seedling",
+    "name": "ladder2-l75-chain",
+    "boot": {
+        "level": 75,
+        "x": 64,
+        "y": 16
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": true,
+            "hasDarkSuit": false,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 387,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 49,
+            "to": 57
+        },
+        {
+            "key": "up",
+            "from": 57,
+            "to": 58
+        },
+        {
+            "key": "down",
+            "from": 58,
+            "to": 59
+        },
+        {
+            "key": "up",
+            "from": 59,
+            "to": 60
+        },
+        {
+            "key": "down",
+            "from": 60,
+            "to": 61
+        },
+        {
+            "key": "left",
+            "from": 65,
+            "to": 76
+        },
+        {
+            "key": "right",
+            "from": 76,
+            "to": 77
+        },
+        {
+            "key": "left",
+            "from": 77,
+            "to": 79
+        },
+        {
+            "key": "right",
+            "from": 81,
+            "to": 84
+        },
+        {
+            "key": "left",
+            "from": 85,
+            "to": 87
+        },
+        {
+            "key": "down",
+            "from": 91,
+            "to": 157
+        },
+        {
+            "key": "up",
+            "from": 157,
+            "to": 158
+        },
+        {
+            "key": "down",
+            "from": 158,
+            "to": 159
+        },
+        {
+            "key": "up",
+            "from": 159,
+            "to": 160
+        },
+        {
+            "key": "down",
+            "from": 160,
+            "to": 161
+        },
+        {
+            "key": "right",
+            "from": 165,
+            "to": 205
+        },
+        {
+            "key": "left",
+            "from": 205,
+            "to": 206
+        },
+        {
+            "key": "right",
+            "from": 206,
+            "to": 207
+        },
+        {
+            "key": "down",
+            "from": 211,
+            "to": 238
+        },
+        {
+            "key": "up",
+            "from": 239,
+            "to": 241
+        },
+        {
+            "key": "left",
+            "from": 245,
+            "to": 272
+        },
+        {
+            "key": "right",
+            "from": 272,
+            "to": 273
+        },
+        {
+            "key": "left",
+            "from": 273,
+            "to": 274
+        },
+        {
+            "key": "right",
+            "from": 276,
+            "to": 277
+        },
+        {
+            "key": "down",
+            "from": 279,
+            "to": 290
+        },
+        {
+            "key": "up",
+            "from": 290,
+            "to": 291
+        },
+        {
+            "key": "down",
+            "from": 291,
+            "to": 293
+        },
+        {
+            "key": "up",
+            "from": 295,
+            "to": 297
+        },
+        {
+            "key": "left",
+            "from": 301,
+            "to": 312
+        },
+        {
+            "key": "right",
+            "from": 312,
+            "to": 313
+        },
+        {
+            "key": "left",
+            "from": 313,
+            "to": 314
+        },
+        {
+            "key": "right",
+            "from": 314,
+            "to": 315
+        },
+        {
+            "key": "left",
+            "from": 315,
+            "to": 316
+        },
+        {
+            "key": "down",
+            "from": 320,
+            "to": 347
+        },
+        {
+            "key": "up",
+            "from": 349,
+            "to": 351
+        },
+        {
+            "key": "right",
+            "from": 355,
+            "to": 366
+        },
+        {
+            "key": "left",
+            "from": 366,
+            "to": 367
+        },
+        {
+            "key": "right",
+            "from": 367,
+            "to": 369
+        },
+        {
+            "key": "left",
+            "from": 371,
+            "to": 374
+        },
+        {
+            "key": "right",
+            "from": 375,
+            "to": 377
+        },
+        {
+            "key": "down",
+            "from": 381,
+            "to": 387
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY LADDER2 — route step 162 (L75 → L71): down past three chains on one phase, then `spinningaxe@80,144`, to `teleporter@64,224`. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1, 2, 3, 4], items [canSwim, hasDarkShield, hasDarkSword, hasFeather, hasFire, hasShield, hasSpear, hasTorch, hasWand]). The solver's own plan: 387 t, equips []; the DODGE rung: PHASE arm: stall 34 t at walk-offset 15 (partial: the walk then meets spinningaxe@80,144). Authored by scripts/procgen/plan-seedling-ladder2-witness.mjs."
+}

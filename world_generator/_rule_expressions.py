@@ -5,6 +5,8 @@ Rule expression mixin — complex expression conversion methods.
 import logging
 from typing import Any, Dict, List, Set, Tuple, Optional
 
+from ._unknown_kind import unknown_kind, unobtainable_item
+
 from ._codegen_utils import (
     is_placement_lookup,
     extract_placement_location,
@@ -61,17 +63,23 @@ class RuleExpressionMixin:
             # - Phantom items used as permanent blocks (e.g., Messenger's closed portal items)
             # - Event items that are never created (e.g., Landstalker's event_visited_tibor
             #   when teleport_tree_requirements != clear_tibor)
+            # The generated world can never hold such an item, so False_() is exact, not a
+            # placeholder: recorded by name in both modes, never raised.
             if (self.obtainable_items is not None
                     and item_name
                     and item_name not in self.obtainable_items
                     and isinstance(count, int) and count > 0):
-                import sys
-                print(f"LOSSY FALLBACK: Has('{item_name}', {count}) references unobtainable item, "
-                      f"using False_() (never accessible) as fallback", file=sys.stderr)
                 self.required_imports.add('False_')
-                return 'False_()'
+                return unobtainable_item('Has', item_name, 'False_()')
 
             self.required_imports.add('Has')
+
+            # world[p].option_effects `item_count`: this Has reads its count from the world's own option.
+            option_class = getattr(self, 'option_count_bindings', {}).get((item_name, count)) \
+                if isinstance(count, int) else None
+            if option_class:
+                self.used_option_classes.add(option_class)
+                return f'Has({repr(item_name)}, FromOption({option_class}))'
 
             # If count is a complex expression (dict), pass it as a rule reference
             if isinstance(count, dict):
@@ -215,6 +223,25 @@ class RuleExpressionMixin:
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
 
+        if rb_rule == 'AtLeast':
+            # AtLeast(count, *children): true when at least `count` children pass.
+            # count lives at the rule root (mirroring And/Or children), with an
+            # args fallback for the AST-exporter shape.
+            count = rule.get('count', args.get('count') if isinstance(args, dict) else None)
+            if isinstance(count, dict):
+                count = self._convert_compare_operand(count)
+            # Trivial collapses mirror rule_builder's AtLeast.from_resolved.
+            if isinstance(count, int) and count <= 0:
+                return self._make_bool_constant(True)
+            if not children or (isinstance(count, int) and count > len(children)):
+                return self._make_bool_constant(False)
+            child_exprs = [self._convert_rule(child) for child in children]
+            # If any child returns None (needs lambda mode), propagate that signal.
+            if any(expr is None for expr in child_exprs):
+                return None
+            self.required_imports.add('AtLeast')
+            return f'AtLeast({count}, {", ".join(child_exprs)})'
+
         if rb_rule == 'Not':
             # Not can have child in children list or in args.condition
             if children:
@@ -259,6 +286,14 @@ class RuleExpressionMixin:
             self.required_imports.add('HasAllCounts')
             # HasAllCounts expects a dict of {item_name: count}
             return f'HasAllCounts({repr(items)})'
+
+        if rb_rule == 'HasAnyCount':
+            items = args.get('item_counts', args.get('items', {}))
+            if not items:
+                # match state.has_any_count
+                return self._make_bool_constant(False)
+            self.required_imports.add('HasAnyCount')
+            return f'HasAnyCount({repr(items)})'
 
         if rb_rule == 'HasGroup':
             group = args.get('item_name_group', args.get('group', ''))
@@ -343,7 +378,7 @@ class RuleExpressionMixin:
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
 
-        if rb_rule == 'EntranceAccessRule':
+        if rb_rule in ('EntranceAccessRule', 'EntranceAccessRuleCall'):
             # EntranceAccessRule looks up an entrance's access_rule and evaluates it
             # This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
             # is called with potentially a fake pearl state
@@ -390,14 +425,6 @@ class RuleExpressionMixin:
                 'right': args.get('right', {})
             }
             return self._convert_binary_op(binary_op_rule)
-
-        if rb_rule == 'SettingValue':
-            # Convert Rule Builder format SettingValue (legacy)
-            setting_rule = {
-                'type': 'setting_value',
-                'setting': args.get('setting', '')
-            }
-            return self._convert_setting_value(setting_rule)
 
         if rb_rule == 'OptionValue':
             # Convert Rule Builder format OptionValue to OptionValue Rule
@@ -500,6 +527,22 @@ class RuleExpressionMixin:
         # Handle AST_prog_item_count rule (for state counter items like coins)
         # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
         # to CountItem(" coins") for use in Compare expressions
+        # MinValue / MaxValue (rule_builder's own names): {"left": ..., "right": ...}
+        if rb_rule in ('MinValue', 'MaxValue'):
+            self.required_imports.add(rb_rule)
+            left_code = self._convert_arithmetic_operand(args.get('left', 0))
+            right_code = self._convert_arithmetic_operand(args.get('right', 0))
+            return f'{rb_rule}({left_code}, {right_code})'
+
+        # CountFromList: the cumulative count of a list of items
+        if rb_rule == 'CountFromList':
+            items = args.get('item_names', args.get('items', []))
+            self.required_imports.add('CountFromList')
+            return f'CountFromList({", ".join(repr(item) for item in items)})'
+
+        if rb_rule == 'AST_weighted_count_true':
+            return self._convert_weighted_count_true(args)
+
         if rb_rule == 'AST_prog_item_count':
             key = args.get('key', '')
             return self._make_count_item(key)
@@ -511,7 +554,7 @@ class RuleExpressionMixin:
 
         # Handle AST_group_count rule (from AST format, counts items in a group)
         # This comes from state.count_group() calls in access rules
-        if rb_rule == 'AST_group_count':
+        if rb_rule in ('AST_group_count', 'group_count'):
             group = args.get('group', '')
             self.required_imports.add('CountGroup')
             return f'CountGroup({repr(group)})'
@@ -555,9 +598,33 @@ class RuleExpressionMixin:
             # Otherwise treat as a setting reference and resolve to constant
             return self._resolve_setting_to_bool(name, default=False)
 
-        # Unknown Rule Builder rule - return True_() as placeholder
+        # Unknown Rule Builder rule: loud (⚖ D3); lossy mode keeps the True_() placeholder
+        placeholder = unknown_kind('rule_builder chain', rb_rule, 'True_()')
         self.required_imports.add('True_')
-        return 'True_()'
+        return placeholder
+
+    def _convert_weighted_count_true(self, rule: Dict[str, Any]) -> Optional[str]:
+        """weighted_count_true (either format): the weights of the true conditions sum to >= count.
+
+        An integer weight w is the condition counted w times, i.e. AtLeast over repeated children
+        (AtLeast does not de-duplicate). A non-integer weight or count has no codegen path.
+        """
+        count = rule.get('count', 0)
+        weighted = rule.get('weighted_conditions', [])
+        if not (isinstance(count, int) and all(
+                isinstance(pair, (list, tuple)) and len(pair) == 2
+                and isinstance(pair[1], int) and pair[1] >= 0 for pair in weighted)):
+            return unknown_kind('weighted_count_true', 'weighted_count_true (non-integer weight or count)', 'True_()')
+        if count <= 0:
+            return self._make_bool_constant(True)
+        children = [cond for cond, weight in weighted for _ in range(weight)]
+        if count > len(children):
+            return self._make_bool_constant(False)
+        child_exprs = [self._convert_rule(child) for child in children]
+        if any(expr is None for expr in child_exprs):
+            return None
+        self.required_imports.add('AtLeast')
+        return f'AtLeast({count}, {", ".join(child_exprs)})'
 
     def _convert_compare_operand(self, operand: Any) -> str:
         """Convert a compare operand to Python code.
@@ -641,32 +708,6 @@ class RuleExpressionMixin:
                 return result
             elif len(max_args) == 1:
                 return self._convert_arithmetic_operand(max_args[0])
-            return '0'
-
-        if rb_rule == 'SettingValue':
-            # Handle SettingValue in Compare operand - preserve numeric value
-            # Unlike _convert_setting_value which converts to boolean rules,
-            # Compare operands need the actual numeric value for arithmetic comparisons
-            setting = rb_args.get('setting', '')
-            if setting in self.settings:
-                value = self.settings[setting]
-                # For numeric settings in Compare context, return the raw value
-                if isinstance(value, (int, float)):
-                    return repr(value)
-                # For boolean-like settings, convert to True_/False_
-                if isinstance(value, bool):
-                    self.required_imports.add('True_' if value else 'False_')
-                    return 'True_()' if value else 'False_()'
-                if isinstance(value, str):
-                    if value.lower() == 'true':
-                        self.required_imports.add('True_')
-                        return 'True_()'
-                    elif value.lower() == 'false':
-                        self.required_imports.add('False_')
-                        return 'False_()'
-                # Other values (strings, etc.) - return as string literal
-                return repr(value)
-            # Unknown setting - return 0 as safe fallback
             return '0'
 
         if rb_rule == 'OptionValue':
@@ -801,12 +842,6 @@ class RuleExpressionMixin:
                             arg_strs.append(repr(arg.get('args', {}).get('value')))
                         elif arg.get('type') == 'constant':
                             arg_strs.append(repr(arg.get('value')))
-                        elif arg.get('rule') == 'SettingValue':
-                            setting = arg.get('args', {}).get('setting', '')
-                            if setting in self.settings:
-                                arg_strs.append(repr(self.settings[setting]))
-                            else:
-                                arg_strs.append('None')
                         else:
                             # For other complex expressions, try to convert
                             arg_strs.append(self._convert_arithmetic_operand(arg))
@@ -882,18 +917,6 @@ class RuleExpressionMixin:
                 return 'None'
             # For other names, return as variable reference
             return name
-
-        # Handle Rule Builder format SettingValue in arithmetic operand
-        if rb_rule == 'SettingValue':
-            rb_args = operand.get('args', {})
-            setting = rb_args.get('setting', '')
-            if setting in self.settings:
-                value = self.settings[setting]
-                # For numeric settings in arithmetic context, return the raw value
-                if isinstance(value, (int, float)):
-                    return repr(value)
-            # Unknown or non-numeric setting - return 0 as safe fallback
-            return '0'
 
         # Handle Rule Builder format OptionValue in arithmetic operand
         if rb_rule == 'OptionValue':

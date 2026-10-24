@@ -48,7 +48,17 @@ class GameMetadata:
     resolved_values: Dict[str, Any] = field(default_factory=dict)  # Resolved values from seed (options + world attributes)
     option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
+    # The slot's exporter[player_id].assume_bidirectional_exits (rules F1): None = the
+    # document states none (the frontend auto-detects); the generated world carries a
+    # bool back to its export as a class attribute.
+    assume_bidirectional_exits: Optional[bool] = None
+    # The slot's exporter[player_id].return_to_menu (rules return-to-menu): True = returning to the menu is always
+    # possible (the runtime's Restart warps to the start); None = the document states none (absent = false).
+    return_to_menu: Optional[bool] = None
     original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
+    # world[player_id].option_effects: what the world's OWN options do to its pool and rules (see
+    # _template_option_effects.py). OPT-IN: a document without the block generates exactly as before.
+    option_effects: List[Dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -193,13 +203,14 @@ class ExtractedData:
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
     completion_condition: Optional[Dict[str, Any]] = None  # Analyzed completion condition rule
-    # Whether locked_placements carry authored always-lock intent. True for
-    # procgen-emitted rules.json (procgen_metadata present): locked:true means
-    # "place via place_locked_item even for non-event items" (e.g. the bounce
-    # start-stack arrow). False for original-world exports, where locked merely
-    # records generation-time placement (e.g. Lufia II Iris treasures) and
-    # non-event locked items must stay randomizable — see b891b9cda.
-    honor_locked_placements: bool = False
+    # location -> item for locations marked `pinned: true`: authored always-place
+    # intent (place_locked_item on EVERY seed, even for a non-event item — e.g.
+    # the procgen bounce start-stack arrow). Distinct from locked_placements:
+    # `locked` keeps Archipelago's meaning (the item was placed locked at the
+    # exporting generation, e.g. Lufia II Iris treasures, ALTTP dungeon items),
+    # so a non-event locked item stays randomizable — see b891b9cda and
+    # topdown-locked-items R1, which retired procgen's use of `locked` for this.
+    pinned_placements: Dict[str, str] = field(default_factory=dict)
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -220,8 +231,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     # Get world class name with priority:
     # 1. world.{player}.world_class_name (authoritative, new format)
     # 2. exporter.{player}.world_class_name (legacy)
-    # 3. world_classes (older legacy)
-    # 4. derive from game name (fallback)
+    # 3. derive from game name (fallback)
     #
     # Track original_world_class_name to preserve during game name override
     # This is set when the class name comes from the source export (not derived)
@@ -232,15 +242,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         # Try exporter section (legacy)
         original_world_class_name = exporter_data.get('world_class_name')
         world_class_name = original_world_class_name
-
-    if not world_class_name:
-        # Try top-level world_classes (older legacy)
-        world_classes = json_data.get('world_classes', {})
-        if world_classes:
-            # Get the world class for the specified player, or fall back to first available
-            world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
-            # Also set original_world_class_name since this came from the source export
-            original_world_class_name = world_class_name
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"
@@ -279,7 +280,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     # Extract game options (for generating dynamic fill_slot_data)
     game_options = world_data.get('options', {})
 
-    # Extract resolved values for evaluating option_value/world_attribute/setting_value nodes
+    # Extract resolved values for evaluating option_value/world_attribute nodes
     # This flat dict merges values from three sources:
     # 1. game_options (from world_data.options) - user-configurable options
     # 2. Top-level world_data attributes - game-specific values with correct types
@@ -302,7 +303,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
             resolved_values[k] = v
 
     # Merge top-level attributes from world_data
-    skip_keys = INTERNAL_SETTINGS | {'options', 'option_definitions', 'dungeons', 'shops', 'game'}
+    skip_keys = INTERNAL_SETTINGS | {'options', 'option_definitions', 'option_effects', 'dungeons', 'shops', 'game'}
     for k, v in world_data.items():
         if k not in skip_keys:
             resolved_values[k] = v
@@ -330,33 +331,23 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         game_options=game_options,
         resolved_values=resolved_values,
         option_definitions=option_definitions,
-        # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
-        use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
+        use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False),
+        assume_bidirectional_exits=exporter_data.get('assume_bidirectional_exits'),
+        return_to_menu=exporter_data.get('return_to_menu'),
         # Track original world class name from exporter (preserved during game name override)
         original_world_class_name=original_world_class_name,
+        option_effects=list(world_data.get('option_effects', []) or []),
     )
 
 
 def _determine_classification(item_data: Dict[str, Any]) -> str:
     """Determine item classification from JSON data.
 
-    First checks for the new 'classification' field, then falls back to
-    legacy boolean flags for backwards compatibility.
+    `classification` is the one shape (rules S6: the boolean
+    advancement/useful/trap flags are refused by the schema, and every
+    committed preset carries the string). An item without one is filler.
     """
-    # New format: direct classification string
-    if 'classification' in item_data:
-        return item_data['classification']
-
-    # Legacy format: boolean flags (for backwards compatibility)
-    if item_data.get('event', False):
-        return 'progression'
-    if item_data.get('trap', False):
-        return 'trap'
-    if item_data.get('advancement', False):
-        return 'progression'
-    if item_data.get('useful', False):
-        return 'useful'
-    return 'filler'
+    return item_data.get('classification', 'filler')
 
 
 def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:
@@ -419,11 +410,13 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict, canonical_placement_advancements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict,
+        canonical_placement_advancements dict, pinned_placements dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
+    pinned_placements: Dict[str, str] = {}
     canonical_placement_advancements: Dict[str, bool] = {}  # location -> is_advancement
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
@@ -473,8 +466,13 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
+                # `pinned` stays an extra attribute too (set on the generated
+                # Location), so the exporter writes it back and a re-derived
+                # world keeps the pin.
+                if loc_info.get('pinned') is True and item_name:
+                    pinned_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements, canonical_placement_advancements
+    return locations, original_placements, locked_placements, canonical_placement_advancements, pinned_placements
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -1073,14 +1071,20 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
             'option_definitions',
             'world_directory',
             'assume_bidirectional_exits',
+            'return_to_menu',
             'use_resolved_items',
             'use_auto_indirect_conditions',
             'player_name',  # Read-only property on base World class
             'web',  # Handled by WebWorld class (theme, tutorials)
+            'option_effects',  # _template_option_effects' input, not an attribute
         }
 
         for key, value in world_data.items():
             if key in skip_settings:
+                continue
+            # An option_effects world's slot_data is fill_slot_data's (read off the options), not an attribute.
+            # Only there: the older packages carry it as an attribute too, and stay byte-identical.
+            if key == 'slot_data' and world_data.get('option_effects'):
                 continue
             # Only include complex types (dicts, lists) or specific primitives
             # that are likely game-specific computed attributes
@@ -1347,7 +1351,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements, canonical_placement_advancements = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, canonical_placement_advancements, pinned_placements = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
@@ -1359,15 +1363,12 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Get canonical placements from JSON (vanilla/original item locations)
     canonical_placements = extract_canonical_placements(json_data, player_id=player_id)
 
-    # Check if placements are vanilla (match original non-randomized game)
-    is_vanilla = json_data.get('is_vanilla', False)
+    # Check if placements are vanilla (match original non-randomized game).
+    # rules F3: a per-player map — THIS slot's flag, never another slot's.
+    is_vanilla = bool(json_data.get('is_vanilla', {}).get(player_id, False))
 
-    # Procgen-emitted rules.json marks locked locations as authored intent
-    # (always place via place_locked_item, even non-events).
-    honor_locked_placements = bool(json_data.get('procgen_metadata'))
-
-    # Get preset label for frontend display (e.g., "canth s4")
-    preset_label = json_data.get('preset_label', '')
+    # Get this slot's preset label for frontend display (e.g., "canth s4"; rules F3: per-player)
+    preset_label = json_data.get('preset_label', {}).get(player_id, '')
 
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
     progression_mapping = extract_progression_mapping(json_data, player_id=player_id)
@@ -1469,5 +1470,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         world_attributes=world_attributes,
         dungeons=dungeons,
         completion_condition=completion_condition,
-        honor_locked_placements=honor_locked_placements,
+        pinned_placements=pinned_placements,
     )

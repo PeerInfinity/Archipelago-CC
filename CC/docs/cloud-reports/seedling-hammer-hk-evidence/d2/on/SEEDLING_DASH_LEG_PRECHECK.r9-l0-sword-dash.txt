@@ -1,0 +1,90 @@
+PASS: ⛓⛓⛓ the schedule is `DASH_CHAIN`'s own — three dashes, and the game has never been asked about any of them — dashes at k = 2, 8, 14 (DASH_CHAIN.at = 2, 8, 14)
+PASS: ⛓ the opening press is an ORDINARY swing — outcome = slash
+PASS: ⛓⛓ each dash names 2 and NO direction — the impulse is DEFERRED to the velocity `useItem` reads — [{"force":2},{"force":2},{"force":2}]
+PASS: ⛓ …and the player never leaves the corridor's own line — every dash resolved ALONG TRAVEL and NOTHING across it — y 216 -> 216 over 36 ticks
+PASS: ⛔ the press inside a dash's own animation is SWALLOWED, and costs nothing — k = 4: outcome swallowed, impulse null
+PASS: ⛔⛔ the press at k = SLASH_TIMER_MAX is an ORDINARY SWING — the dash did NOT refresh the timer — k = 20: outcome slash. A model that refreshed `slashTimer` on a dash would read a live window here and DASH.
+PASS: ⛓⛓⛓ each dash is followed by a run of steps decaying by EXACTLY 0.25 px/tick — the game-checkable signature — t5: 3.150 2.900 2.650 2.400 2.150 | t11: 3.650 3.400 3.150 2.900 2.650 | t17: 4.150 3.900 3.650 3.400 3.150
+PASS: ⛓ …and the impulse itself is the jump PLUS the friction that preceded it — t5: 1.750 = 2 - 0.25; t11: 1.750 = 2 - 0.25; t17: 1.750 = 2 - 0.25
+PASS: ⛔ the corridor stayed OPEN — no wall pinned the claim — travelled 80.50 px from x 184
+PASS: ⛔ the player took no hits and never left the room — 0 hit(s), 0 transition(s)
+PASS: ⛓ the committed tape is what this script produces today — byte-identical
+
+## r9-l0-sword-dash: 36 ticks, opening press at 3, 3 dash(es) at k = 2/8/14, 1 swallowed, travel 80.50 px
+
+## THE SEALED TRAJECTORY — the model's per-tick answer, before the game sees it
+  t=  3 SLASH     x 187.250 -> 188.100  (d 0.850)  vx 0.850
+  t=  4           x 188.100 -> 189.500  (d 1.400)  vx 1.400
+  t=  5 DASH      x 189.500 -> 192.650  (d 3.150)  vx 3.150
+  t=  6           x 192.650 -> 195.550  (d 2.900)  vx 2.900
+  t=  7 SWALLOWED x 195.550 -> 198.200  (d 2.650)  vx 2.650
+  t=  8           x 198.200 -> 200.600  (d 2.400)  vx 2.400
+  t=  9           x 200.600 -> 202.750  (d 2.150)  vx 2.150
+  t= 10           x 202.750 -> 204.650  (d 1.900)  vx 1.900
+  t= 11 DASH      x 204.650 -> 208.300  (d 3.650)  vx 3.650
+  t= 12           x 208.300 -> 211.700  (d 3.400)  vx 3.400
+  t= 13           x 211.700 -> 214.850  (d 3.150)  vx 3.150
+  t= 14           x 214.850 -> 217.750  (d 2.900)  vx 2.900
+  t= 15           x 217.750 -> 220.400  (d 2.650)  vx 2.650
+  t= 16           x 220.400 -> 222.800  (d 2.400)  vx 2.400
+  t= 17 DASH      x 222.800 -> 226.950  (d 4.150)  vx 4.150
+  t= 18           x 226.950 -> 230.850  (d 3.900)  vx 3.900
+  t= 19           x 230.850 -> 234.500  (d 3.650)  vx 3.650
+  t= 20           x 234.500 -> 237.900  (d 3.400)  vx 3.400
+  t= 21           x 237.900 -> 241.050  (d 3.150)  vx 3.150
+  t= 22           x 241.050 -> 243.950  (d 2.900)  vx 2.900
+  t= 23 SLASH     x 243.950 -> 246.600  (d 2.650)  vx 2.650
+  t= 24           x 246.600 -> 249.000  (d 2.400)  vx 2.400
+  t= 25           x 249.000 -> 251.150  (d 2.150)  vx 2.150
+  t= 26           x 251.150 -> 253.050  (d 1.900)  vx 1.900
+  t= 27           x 253.050 -> 254.700  (d 1.650)  vx 1.650
+  t= 28           x 254.700 -> 256.100  (d 1.400)  vx 1.400
+  t= 29           x 256.100 -> 257.250  (d 1.150)  vx 1.150
+  t= 30           x 257.250 -> 258.150  (d 0.900)  vx 0.900
+  t= 31           x 258.150 -> 259.600  (d 1.450)  vx 1.450
+  t= 32           x 259.600 -> 260.800  (d 1.200)  vx 1.200
+  t= 33           x 260.800 -> 261.750  (d 0.950)  vx 0.950
+  t= 34           x 261.750 -> 263.250  (d 1.500)  vx 1.500
+  t= 35           x 263.250 -> 264.500  (d 1.250)  vx 1.250
+PASS: ⛓ the opening press is an ORDINARY swing at a standstill, and moves nothing — outcome slash, dx 0
+PASS: ⛓⛓⛓ the press at k = 2 is the DASH ARM, taken from a DEAD STOP with the direction key STARTING that same tick — outcome dash, pre-tick vx 0, held - then primary+right
+PASS: ⛓⛓⛓ …and that tick moves WALK_SPEED + 2 = 2.8 px — the GAME's own t=114 digit on r9-solve-3 — dx 2.800 (walk 0.8 + force 2). Before R9 slice 12e″ this model moved 0.800 here — the walk alone.
+PASS: ⛓⛓ …and what follows is the impulse's own −0.25/tick decay, with the key RELEASED so nothing else is in it — 2.800 2.550 2.300 2.050 1.800
+PASS: ⛔⛔⛔ THE CONTROL: the press at k = 14 is the DASH ARM too, at rest with NO direction key — and it moves the player by NOTHING — outcome dash, held primary, pre-tick vx 0, dx 0. THIS is the zero-length no-op, and it is the case the GAME is inert in too.
+PASS: ⛓ the two presses differ by ONE KEY and by exactly the impulse — 2.800 vs 0.000
+PASS: ⛔ the corridor stayed OPEN and the line stayed straight — no wall pinned the claim and nothing moved across travel — (184, 216) -> (201.05000000000013, 216)
+PASS: ⛔ the player took no hits and never left the room — 0 hit(s), 0 transition(s)
+PASS: ⛓ the committed r9-l0-sword-dash-rest is what this script produces today — byte-identical
+
+## r9-l0-sword-dash-rest: 27 ticks · swing k=0 · DASH k=2 (key STARTING, from rest) · at rest again by k=14 · CONTROL dash k=14 (no key)
+
+## THE SEALED TRAJECTORY — the model's per-tick answer, BEFORE the game sees it. A differing digit under `--win --record` is a STOP, not a re-record.
+  t=  0 primary       SLASH      x 184.000 -> 184.000  (d 0.000)  vx 0.000
+  t=  1 -                        x 184.000 -> 184.000  (d 0.000)  vx 0.000
+  t=  2 primary+right DASH       x 184.000 -> 186.800  (d 2.800)  vx 2.800
+  t=  3 -                        x 186.800 -> 189.350  (d 2.550)  vx 2.550
+  t=  4 -                        x 189.350 -> 191.650  (d 2.300)  vx 2.300
+  t=  5 -                        x 191.650 -> 193.700  (d 2.050)  vx 2.050
+  t=  6 -                        x 193.700 -> 195.500  (d 1.800)  vx 1.800
+  t=  7 -                        x 195.500 -> 197.050  (d 1.550)  vx 1.550
+  t=  8 -                        x 197.050 -> 198.350  (d 1.300)  vx 1.300
+  t=  9 -                        x 198.350 -> 199.400  (d 1.050)  vx 1.050
+  t= 10 -                        x 199.400 -> 200.200  (d 0.800)  vx 0.800
+  t= 11 -                        x 200.200 -> 200.750  (d 0.550)  vx 0.550
+  t= 12 -                        x 200.750 -> 201.050  (d 0.300)  vx 0.300
+  t= 13 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 14 primary       DASH       x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 15 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 16 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 17 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 18 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 19 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 20 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 21 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 22 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 23 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 24 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 25 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+  t= 26 -                        x 201.050 -> 201.050  (d 0.000)  vx 0.000
+
+all checks green

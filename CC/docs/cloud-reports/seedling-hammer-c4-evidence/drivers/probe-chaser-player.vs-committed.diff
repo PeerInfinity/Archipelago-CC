@@ -1,0 +1,45 @@
+--- /home/user/Archipelago-CC/scripts/procgen/probe-seedling-chaser-mobiles.mjs	2026-10-11 23:14:06.442969340 +0000
++++ drv/probe-chaser-player.mjs	2026-10-11 23:20:47.716430752 +0000
+@@ -27,10 +27,10 @@
+ import { readFileSync, writeFileSync } from 'node:fs';
+ import { dirname, join } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+-import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+-import { takeBoxLockOrExit } from './boxLock.js';
+-import { assertLogicOnlyChannel } from './seedlingChannel.js';
+-import { argvHelp, isEntryPoint } from './argvHelp.js';
++import { HEADLESS_LOGIC_ONLY_ARGS } from '/home/user/Archipelago-CC/scripts/procgen/headlessChromium.js';
++import { takeBoxLockOrExit } from '/home/user/Archipelago-CC/scripts/procgen/boxLock.js';
++import { assertLogicOnlyChannel } from '/home/user/Archipelago-CC/scripts/procgen/seedlingChannel.js';
++import { argvHelp, isEntryPoint } from '/home/user/Archipelago-CC/scripts/procgen/argvHelp.js';
+ 
+ argvHelp(import.meta.url);
+ 
+@@ -62,7 +62,7 @@
+     takeBoxLockOrExit({ name: 'probe-seedling-chaser-mobiles.mjs', kind: 'browser' });
+ 
+     const HERE = dirname(fileURLToPath(import.meta.url));
+-    const REPO = join(HERE, '..', '..');
++    const REPO = '/home/user/Archipelago-CC';
+     const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+     const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+     const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
+@@ -147,7 +147,7 @@
+             const o = r.value.observation;
+             const ch = run ? (run.entities('chasers') ?? []) : [];
+             col[o.t] = {
+-                px: o.x, py: o.y,
++                px: o.x, py: o.y, level: run?.level, phits: run ? (run.ledger('playerHits') ?? []).length : 0,
+                 bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer,
+                     removed: c.removed === true,
+                     swordSpin: c.swordSpin, swordSpinning: c.swordSpinning,
+@@ -235,7 +235,8 @@
+     for (const d of disagreements.slice(0, 12)) console.log(`      ${d}`);
+     if (disagreements.length > 12) console.log(`      … ${disagreements.length - 12} more`);
+     if (OUT) {
+-        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows,
++        const players = samples.map((f) => ({ t: tickOf(f), game: { level: f.status.level, x: playerOf(f).x, y: playerOf(f).y, hits: f.status.hits, hits_timer: f.status.hits_timer }, model: col[tickOf(f)] ? { level: col[tickOf(f)].level, x: col[tickOf(f)].px, y: col[tickOf(f)].py, hits: col[tickOf(f)].phits } : null }));
++        writeFileSync(OUT, `${JSON.stringify({ tape: TAPE ?? FILE, class: CLASS, page: PAGE_NAME, calibrated, fits, compared, worst, disagreements, rows, players,
+             ...(CAMERA ? { cameras: samples.map((f) => [tickOf(f), f.status.camera]) } : {}) }, null, 1)}\n`);
+         console.log(`wrote ${OUT}`);
+     }

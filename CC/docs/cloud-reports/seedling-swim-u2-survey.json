@@ -1,0 +1,2739 @@
+{
+  "generator": "scripts/procgen/survey-seedling-route.mjs",
+  "route": {
+    "generator": "scripts/procgen/survey-seedling-route.mjs",
+    "sources": {
+      "ap_rules": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+      "atlas": "frontend/modules/flashPanel/atlases/seedling-map.json",
+      "spheres": "frontend/modules/flashPanel/atlases/seedling-sphere-order.json"
+    },
+    "legs": [
+      {
+        "sphere": "0.1",
+        "goal": "Level 010 - Sword",
+        "item": "Progressive Sword",
+        "from": "level_0__r8c0",
+        "to": "level_10",
+        "itemsHeld": [],
+        "regions": [
+          "level_0__r8c0",
+          "level_0__r1c6",
+          "level_2",
+          "level_3__r0c4",
+          "level_4",
+          "level_5__r1c5",
+          "level_6",
+          "level_7",
+          "level_8",
+          "level_9",
+          "level_10"
+        ],
+        "levels": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "alternatives": [
+          {
+            "banned": "level_0__r1c6",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_2",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_3__r0c4",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_4",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_5__r1c5",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_6",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_7",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_8",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_9",
+            "forced": true,
+            "levels": null
+          }
+        ]
+      },
+      {
+        "sphere": "1.2",
+        "goal": "Level 019 - Boss Key 0",
+        "item": "Red Key",
+        "from": "level_10",
+        "to": "level_19__r5c5",
+        "itemsHeld": [
+          "Progressive Sword"
+        ],
+        "regions": [
+          "level_10",
+          "level_11",
+          "level_3__r8c6",
+          "level_3__r0c4",
+          "level_2",
+          "level_0__r8c0",
+          "level_13",
+          "level_14",
+          "level_15__r1c5",
+          "level_16",
+          "level_18__r1c1",
+          "level_18__r7c10",
+          "level_19__r5c5"
+        ],
+        "levels": [
+          10,
+          11,
+          3,
+          2,
+          0,
+          13,
+          14,
+          15,
+          16,
+          18,
+          19
+        ],
+        "alternatives": [
+          {
+            "banned": "level_11",
+            "forced": false,
+            "levels": [
+              10,
+              9,
+              8,
+              7,
+              6,
+              5,
+              4,
+              3,
+              2,
+              0,
+              13,
+              14,
+              15,
+              16,
+              18,
+              19
+            ],
+            "regions": [
+              "level_10",
+              "level_9",
+              "level_8",
+              "level_7",
+              "level_6",
+              "level_5__r1c5",
+              "level_4",
+              "level_3__r0c4",
+              "level_2",
+              "level_0__r8c0",
+              "level_13",
+              "level_14",
+              "level_15__r1c5",
+              "level_16",
+              "level_18__r1c1",
+              "level_18__r7c10",
+              "level_19__r5c5"
+            ]
+          },
+          {
+            "banned": "level_3__r0c4",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_2",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_0__r8c0",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_13",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_14",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_15__r1c5",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_16",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_18__r1c1",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_18__r7c10",
+            "forced": true,
+            "levels": null
+          }
+        ]
+      },
+      {
+        "sphere": "2.1",
+        "goal": "Level 020 - Shield",
+        "item": "Progressive Shield",
+        "from": "level_19__r5c5",
+        "to": "level_20__r1c4",
+        "itemsHeld": [
+          "Progressive Sword",
+          "Red Key"
+        ],
+        "regions": [
+          "level_19__r5c5",
+          "level_19__r3c3",
+          "level_19__r1c1",
+          "level_20__r1c4"
+        ],
+        "levels": [
+          19,
+          20
+        ],
+        "alternatives": [
+          {
+            "banned": "level_19__r3c3",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_19__r1c1",
+            "forced": true,
+            "levels": null
+          }
+        ]
+      },
+      {
+        "sphere": "1.4",
+        "goal": "Level 029 - Boss Key 1",
+        "item": "Green Key",
+        "from": "level_20__r1c4",
+        "to": "level_29__r2c2",
+        "itemsHeld": [
+          "Progressive Sword",
+          "Red Key",
+          "Progressive Shield"
+        ],
+        "regions": [
+          "level_20__r1c4",
+          "level_20__r3c1",
+          "level_13",
+          "level_0__r8c0",
+          "level_0__r11c19",
+          "level_12__r0c19",
+          "level_12__r0c37",
+          "level_21",
+          "level_22",
+          "level_29__r2c2"
+        ],
+        "levels": [
+          20,
+          13,
+          0,
+          12,
+          21,
+          22,
+          29
+        ],
+        "alternatives": [
+          {
+            "banned": "level_20__r3c1",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_13",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_0__r8c0",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_0__r11c19",
+            "forced": false,
+            "levels": [
+              20,
+              13,
+              0,
+              89,
+              87,
+              88,
+              12,
+              21,
+              22,
+              29
+            ],
+            "regions": [
+              "level_20__r1c4",
+              "level_20__r3c1",
+              "level_13",
+              "level_0__r8c0",
+              "level_0__r1c6",
+              "level_0__r2c13",
+              "level_89__r11c12",
+              "level_87__r1c3",
+              "level_88",
+              "level_12__r0c19",
+              "level_12__r0c37",
+              "level_21",
+              "level_22",
+              "level_29__r2c2"
+            ]
+          },
+          {
+            "banned": "level_12__r0c19",
+            "forced": false,
+            "levels": [
+              20,
+              13,
+              0,
+              89,
+              87,
+              44,
+              37,
+              12,
+              21,
+              22,
+              29
+            ],
+            "regions": [
+              "level_20__r1c4",
+              "level_20__r3c1",
+              "level_13",
+              "level_0__r8c0",
+              "level_0__r1c6",
+              "level_0__r2c13",
+              "level_89__r11c12",
+              "level_87__r1c3",
+              "level_44__r4c2",
+              "level_37__r0c18",
+              "level_12__r0c37",
+              "level_21",
+              "level_22",
+              "level_29__r2c2"
+            ]
+          },
+          {
+            "banned": "level_12__r0c37",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_21",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_22",
+            "forced": true,
+            "levels": null
+          }
+        ]
+      },
+      {
+        "sphere": "2.2",
+        "goal": "Level 032 - Bob Boss",
+        "item": "Fire",
+        "from": "level_29__r2c2",
+        "to": "level_32",
+        "itemsHeld": [
+          "Progressive Sword",
+          "Red Key",
+          "Progressive Shield",
+          "Green Key"
+        ],
+        "regions": [
+          "level_29__r2c2",
+          "level_31__r5c24",
+          "level_31__r24c10",
+          "level_30__r2c10",
+          "level_30__r8c13",
+          "level_32"
+        ],
+        "levels": [
+          29,
+          31,
+          30,
+          32
+        ],
+        "alternatives": [
+          {
+            "banned": "level_31__r5c24",
+            "forced": false,
+            "levels": [
+              29,
+              22,
+              25,
+              26,
+              27,
+              28,
+              30,
+              32
+            ],
+            "regions": [
+              "level_29__r2c2",
+              "level_22",
+              "level_25",
+              "level_26__r2c4",
+              "level_27",
+              "level_28__r1c18",
+              "level_30__r2c10",
+              "level_30__r8c13",
+              "level_32"
+            ]
+          },
+          {
+            "banned": "level_30__r2c10",
+            "forced": true,
+            "levels": null
+          },
+          {
+            "banned": "level_30__r8c13",
+            "forced": true,
+            "levels": null
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "level": 0,
+        "visit": 1,
+        "arrival": {
+          "x": 80,
+          "y": 128
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 256,
+              "y": 272
+            },
+            "why": "stairsdown@256,272 → L2"
+          }
+        ],
+        "crossesTo": 2,
+        "boot": {
+          "kind": "true-start",
+          "source": "r8-solve-1",
+          "note": "r8-solve-1's committed v8 boot block, verbatim (it boots at L0@80,128)"
+        },
+        "known": "r8-solve-1"
+      },
+      {
+        "step": 2,
+        "level": 2,
+        "visit": 1,
+        "arrival": {
+          "x": 48,
+          "y": 32
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 48,
+              "y": 96
+            },
+            "why": "teleporter@48,96 → L3"
+          }
+        ],
+        "crossesTo": 3,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-2",
+          "note": "r8-solve-2's committed v8 boot block, verbatim (it boots at L2@48,32)"
+        },
+        "known": "r8-solve-2"
+      },
+      {
+        "step": 3,
+        "level": 3,
+        "visit": 1,
+        "arrival": {
+          "x": 64,
+          "y": 16
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 128,
+              "y": 48
+            },
+            "why": "teleporter@128,48 → L4"
+          }
+        ],
+        "crossesTo": 4,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-3",
+          "note": "r8-solve-3's committed v8 boot block, verbatim (it boots at L3@64,16)"
+        },
+        "known": "r8-solve-3"
+      },
+      {
+        "step": 4,
+        "level": 4,
+        "visit": 1,
+        "arrival": {
+          "x": 16,
+          "y": 16
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 64,
+              "y": 16
+            },
+            "why": "stairsdown@64,16 → L5"
+          }
+        ],
+        "crossesTo": 5,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-4",
+          "note": "r8-solve-4's committed v8 boot block, verbatim (it boots at L4@16,16)"
+        },
+        "known": "r8-solve-4"
+      },
+      {
+        "step": 5,
+        "level": 5,
+        "visit": 1,
+        "arrival": {
+          "x": 80,
+          "y": 32
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 48,
+              "y": 112
+            },
+            "why": "teleporter@48,112 → L6"
+          }
+        ],
+        "crossesTo": 6,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-5",
+          "note": "r8-solve-5's committed v8 boot block, verbatim (it boots at L5@80,32)"
+        },
+        "known": "r8-solve-5"
+      },
+      {
+        "step": 6,
+        "level": 6,
+        "visit": 1,
+        "arrival": {
+          "x": 32,
+          "y": 16
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 224,
+              "y": 32
+            },
+            "why": "stairsup@224,32 → L7"
+          }
+        ],
+        "crossesTo": 7,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-6",
+          "note": "r8-solve-6's committed v8 boot block, verbatim (it boots at L6@32,16)"
+        },
+        "known": "r8-solve-6"
+      },
+      {
+        "step": 7,
+        "level": 7,
+        "visit": 1,
+        "arrival": {
+          "x": 32,
+          "y": 32
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 192,
+              "y": 32
+            },
+            "why": "stairsdown@192,32 → L8"
+          }
+        ],
+        "crossesTo": 8,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-7",
+          "note": "r8-solve-7's committed v8 boot block, verbatim (it boots at L7@32,32)"
+        },
+        "known": "r8-solve-7"
+      },
+      {
+        "step": 8,
+        "level": 8,
+        "visit": 1,
+        "arrival": {
+          "x": 144,
+          "y": 48
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 96,
+              "y": 192
+            },
+            "why": "teleporter@96,192 → L9"
+          }
+        ],
+        "crossesTo": 9,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-8",
+          "note": "r8-solve-8's committed v8 boot block, verbatim (it boots at L8@144,48)"
+        },
+        "known": "r8-solve-8"
+      },
+      {
+        "step": 9,
+        "level": 9,
+        "visit": 1,
+        "arrival": {
+          "x": 144,
+          "y": 16
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 16,
+              "y": 0
+            },
+            "why": "teleporter@16,0 → L10"
+          }
+        ],
+        "crossesTo": 10,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-9",
+          "note": "r8-solve-9's committed v8 boot block, verbatim (it boots at L9@144,16)"
+        },
+        "known": "r8-solve-9"
+      },
+      {
+        "step": 10,
+        "level": 10,
+        "visit": 1,
+        "arrival": {
+          "x": 48,
+          "y": 80
+        },
+        "goals": [
+          {
+            "kind": "collect-placement",
+            "placement": {
+              "x": 48,
+              "y": 48
+            },
+            "why": "Level 010 - Sword (sphere 0.1) → Progressive Sword"
+          },
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 48,
+              "y": 16
+            },
+            "why": "stairsup@48,16 → L11"
+          }
+        ],
+        "crossesTo": 11,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-10",
+          "note": "r8-solve-10's committed v8 boot block, verbatim (it boots at L10@48,80)"
+        },
+        "known": "r8-solve-10"
+      },
+      {
+        "step": 11,
+        "level": 11,
+        "visit": 1,
+        "arrival": {
+          "x": 32,
+          "y": 64
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 32,
+              "y": 0
+            },
+            "why": "teleporter@32,0 → L3"
+          }
+        ],
+        "crossesTo": 3,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 boot block, verbatim (it boots at L11@32,64)"
+        },
+        "known": "r8-solve-11"
+      },
+      {
+        "step": 12,
+        "level": 3,
+        "visit": 2,
+        "arrival": {
+          "x": 96,
+          "y": 128
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 64,
+              "y": 0
+            },
+            "why": "teleporter@64,0 → L2"
+          }
+        ],
+        "crossesTo": 2,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L3@96,128 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 13,
+        "level": 2,
+        "visit": 2,
+        "arrival": {
+          "x": 48,
+          "y": 80
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 48,
+              "y": 16
+            },
+            "why": "stairsup@48,16 → L0"
+          }
+        ],
+        "crossesTo": 0,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L2@48,80 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 14,
+        "level": 0,
+        "visit": 2,
+        "arrival": {
+          "x": 256,
+          "y": 256
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 32,
+              "y": 192
+            },
+            "why": "stairsdown@32,192 → L13"
+          }
+        ],
+        "crossesTo": 13,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L0@256,256 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 15,
+        "level": 13,
+        "visit": 1,
+        "arrival": {
+          "x": 64,
+          "y": 128
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 32,
+              "y": 32
+            },
+            "why": "stairsdown@32,32 → L14"
+          }
+        ],
+        "crossesTo": 14,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L13@64,128 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 16,
+        "level": 14,
+        "visit": 1,
+        "arrival": {
+          "x": 160,
+          "y": 64
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 32,
+              "y": 64
+            },
+            "why": "stairsdown@32,64 → L15"
+          }
+        ],
+        "crossesTo": 15,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L14@160,64 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 17,
+        "level": 15,
+        "visit": 1,
+        "arrival": {
+          "x": 48,
+          "y": 64
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 144,
+              "y": 16
+            },
+            "why": "stairsdown@144,16 → L16"
+          }
+        ],
+        "crossesTo": 16,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L15@48,64 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 18,
+        "level": 16,
+        "visit": 1,
+        "arrival": {
+          "x": 32,
+          "y": 64
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 352,
+              "y": 80
+            },
+            "why": "stairsup@352,80 → L18"
+          }
+        ],
+        "crossesTo": 18,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L16@32,64 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 19,
+        "level": 18,
+        "visit": 1,
+        "arrival": {
+          "x": 16,
+          "y": 32
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 176,
+              "y": 112
+            },
+            "why": "teleporter@176,112 → L19"
+          }
+        ],
+        "crossesTo": 19,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L18@16,32 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": "r8-solve-18"
+      },
+      {
+        "step": 20,
+        "level": 19,
+        "visit": 1,
+        "arrival": {
+          "x": 16,
+          "y": 144
+        },
+        "goals": [
+          {
+            "kind": "collect-placement",
+            "placement": {
+              "x": 96,
+              "y": 64
+            },
+            "why": "Level 019 - Boss Key 0 (sphere 1.2) → Red Key"
+          },
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 16,
+              "y": 96
+            },
+            "why": "stairsup@16,96 → L20"
+          }
+        ],
+        "crossesTo": 20,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-d2-19",
+          "note": "r8-d2-19's committed v8 boot block, verbatim (it boots at L19@16,144)"
+        },
+        "known": "r8-d2-19"
+      },
+      {
+        "step": 21,
+        "level": 20,
+        "visit": 1,
+        "arrival": {
+          "x": 192,
+          "y": 64
+        },
+        "goals": [
+          {
+            "kind": "collect-placement",
+            "placement": {
+              "x": 112,
+              "y": 48
+            },
+            "why": "Level 020 - Shield (sphere 2.1) → Progressive Shield"
+          },
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 16,
+              "y": 48
+            },
+            "why": "stairsup@16,48 → L13"
+          }
+        ],
+        "crossesTo": 13,
+        "boot": {
+          "kind": "committed",
+          "source": "r8-d2-20",
+          "note": "r8-d2-20's committed v8 boot block, verbatim (it boots at L20@192,64)"
+        },
+        "known": "r8-d2-20"
+      },
+      {
+        "step": 22,
+        "level": 13,
+        "visit": 2,
+        "arrival": {
+          "x": 96,
+          "y": 48
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 64,
+              "y": 144
+            },
+            "why": "stairsup@64,144 → L0"
+          }
+        ],
+        "crossesTo": 0,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L13@96,48 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 23,
+        "level": 0,
+        "visit": 3,
+        "arrival": {
+          "x": 48,
+          "y": 192
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 304,
+              "y": 176
+            },
+            "why": "teleporter@304,176 → L12"
+          }
+        ],
+        "crossesTo": 12,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L0@48,192 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 24,
+        "level": 12,
+        "visit": 1,
+        "arrival": {
+          "x": 16,
+          "y": 80
+        },
+        "goals": [
+          {
+            "kind": "reach-pit",
+            "pit": {
+              "tx": 36,
+              "ty": 43,
+              "x": 576,
+              "y": 688
+            },
+            "why": "pit@576,688 (out_pit_5_5, tile 36,43) → L21"
+          }
+        ],
+        "crossesTo": 21,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@16,80 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 25,
+        "level": 21,
+        "visit": 1,
+        "arrival": {
+          "x": 80,
+          "y": 80
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 80,
+              "y": 160
+            },
+            "why": "teleporter@80,160 → L22"
+          }
+        ],
+        "crossesTo": 22,
+        "arrivalVia": "pit@576,688 (out_pit_5_5, tile 36,43)",
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L21@80,80 — R8 slice 8's construction for r8-solve-18; the arrival is a PIT landing (pit@576,688 (out_pit_5_5, tile 36,43)), staged on the ground at the fall's ctor args rather than as the ceiling descent"
+        },
+        "known": null
+      },
+      {
+        "step": 26,
+        "level": 22,
+        "visit": 1,
+        "arrival": {
+          "x": 96,
+          "y": 16
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 192,
+              "y": 64
+            },
+            "why": "teleporter@192,64 → L29"
+          }
+        ],
+        "crossesTo": 29,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L22@96,16 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 27,
+        "level": 29,
+        "visit": 1,
+        "arrival": {
+          "x": 16,
+          "y": 224
+        },
+        "goals": [
+          {
+            "kind": "collect-placement",
+            "placement": {
+              "x": 112,
+              "y": 64
+            },
+            "why": "Level 029 - Boss Key 1 (sphere 1.4) → Green Key"
+          },
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 112,
+              "y": 32
+            },
+            "why": "stairsdown@112,32 → L31"
+          }
+        ],
+        "crossesTo": 31,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L29@16,224 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 28,
+        "level": 31,
+        "visit": 1,
+        "arrival": {
+          "x": 384,
+          "y": 112
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 160,
+              "y": 384
+            },
+            "why": "stairsup@160,384 → L30"
+          }
+        ],
+        "crossesTo": 30,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L31@384,112 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 29,
+        "level": 30,
+        "visit": 1,
+        "arrival": {
+          "x": 176,
+          "y": 48
+        },
+        "goals": [
+          {
+            "kind": "reach-exit",
+            "exit": {
+              "x": 224,
+              "y": 160
+            },
+            "why": "stairsup@224,160 → L32"
+          }
+        ],
+        "crossesTo": 32,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L30@176,48 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      },
+      {
+        "step": 30,
+        "level": 32,
+        "visit": 1,
+        "arrival": {
+          "x": 72,
+          "y": 120
+        },
+        "goals": [
+          {
+            "kind": "collect-placement",
+            "placement": {
+              "x": 64,
+              "y": 128
+            },
+            "why": "Level 032 - Bob Boss (sphere 2.2) → Fire"
+          }
+        ],
+        "crossesTo": null,
+        "boot": {
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L32@72,120 — R8 slice 8's construction for r8-solve-18"
+        },
+        "known": null
+      }
+    ],
+    "alternative": {
+      "levels": [
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        0,
+        13,
+        14,
+        15,
+        16,
+        18,
+        19
+      ],
+      "avoids": [
+        "level_11",
+        "level_3__r8c6"
+      ],
+      "steps": [
+        {
+          "step": "A1",
+          "level": 0,
+          "visit": 1,
+          "arrival": {
+            "x": 80,
+            "y": 128
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 256,
+                "y": 272
+              },
+              "why": "stairsdown@256,272 → L2"
+            }
+          ],
+          "crossesTo": 2,
+          "boot": {
+            "kind": "true-start",
+            "source": "r8-solve-1",
+            "note": "r8-solve-1's committed v8 boot block, verbatim (it boots at L0@80,128)"
+          }
+        },
+        {
+          "step": "A2",
+          "level": 2,
+          "visit": 1,
+          "arrival": {
+            "x": 48,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 48,
+                "y": 96
+              },
+              "why": "teleporter@48,96 → L3"
+            }
+          ],
+          "crossesTo": 3,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-2",
+            "note": "r8-solve-2's committed v8 boot block, verbatim (it boots at L2@48,32)"
+          }
+        },
+        {
+          "step": "A3",
+          "level": 3,
+          "visit": 1,
+          "arrival": {
+            "x": 64,
+            "y": 16
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 128,
+                "y": 48
+              },
+              "why": "teleporter@128,48 → L4"
+            }
+          ],
+          "crossesTo": 4,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-3",
+            "note": "r8-solve-3's committed v8 boot block, verbatim (it boots at L3@64,16)"
+          }
+        },
+        {
+          "step": "A4",
+          "level": 4,
+          "visit": 1,
+          "arrival": {
+            "x": 16,
+            "y": 16
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 64,
+                "y": 16
+              },
+              "why": "stairsdown@64,16 → L5"
+            }
+          ],
+          "crossesTo": 5,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-4",
+            "note": "r8-solve-4's committed v8 boot block, verbatim (it boots at L4@16,16)"
+          }
+        },
+        {
+          "step": "A5",
+          "level": 5,
+          "visit": 1,
+          "arrival": {
+            "x": 80,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 48,
+                "y": 112
+              },
+              "why": "teleporter@48,112 → L6"
+            }
+          ],
+          "crossesTo": 6,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-5",
+            "note": "r8-solve-5's committed v8 boot block, verbatim (it boots at L5@80,32)"
+          }
+        },
+        {
+          "step": "A6",
+          "level": 6,
+          "visit": 1,
+          "arrival": {
+            "x": 32,
+            "y": 16
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 224,
+                "y": 32
+              },
+              "why": "stairsup@224,32 → L7"
+            }
+          ],
+          "crossesTo": 7,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-6",
+            "note": "r8-solve-6's committed v8 boot block, verbatim (it boots at L6@32,16)"
+          }
+        },
+        {
+          "step": "A7",
+          "level": 7,
+          "visit": 1,
+          "arrival": {
+            "x": 32,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 192,
+                "y": 32
+              },
+              "why": "stairsdown@192,32 → L8"
+            }
+          ],
+          "crossesTo": 8,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-7",
+            "note": "r8-solve-7's committed v8 boot block, verbatim (it boots at L7@32,32)"
+          }
+        },
+        {
+          "step": "A8",
+          "level": 8,
+          "visit": 1,
+          "arrival": {
+            "x": 144,
+            "y": 48
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 96,
+                "y": 192
+              },
+              "why": "teleporter@96,192 → L9"
+            }
+          ],
+          "crossesTo": 9,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-8",
+            "note": "r8-solve-8's committed v8 boot block, verbatim (it boots at L8@144,48)"
+          }
+        },
+        {
+          "step": "A9",
+          "level": 9,
+          "visit": 1,
+          "arrival": {
+            "x": 144,
+            "y": 16
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 16,
+                "y": 0
+              },
+              "why": "teleporter@16,0 → L10"
+            }
+          ],
+          "crossesTo": 10,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-9",
+            "note": "r8-solve-9's committed v8 boot block, verbatim (it boots at L9@144,16)"
+          }
+        },
+        {
+          "step": "A10",
+          "level": 10,
+          "visit": 1,
+          "arrival": {
+            "x": 48,
+            "y": 80
+          },
+          "goals": [
+            {
+              "kind": "collect-placement",
+              "placement": {
+                "x": 48,
+                "y": 48
+              },
+              "why": "Level 010 - Sword (sphere 0.1) → Progressive Sword"
+            },
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 48,
+                "y": 96
+              },
+              "why": "teleporter@48,96 → L9"
+            }
+          ],
+          "crossesTo": 9,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-solve-10",
+            "note": "r8-solve-10's committed v8 boot block, verbatim (it boots at L10@48,80)"
+          }
+        },
+        {
+          "step": "A11",
+          "level": 9,
+          "visit": 2,
+          "arrival": {
+            "x": 16,
+            "y": 16
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 144,
+                "y": 0
+              },
+              "why": "teleporter@144,0 → L8"
+            }
+          ],
+          "crossesTo": 8,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L9@16,16 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A12",
+          "level": 8,
+          "visit": 2,
+          "arrival": {
+            "x": 96,
+            "y": 176
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 144,
+                "y": 32
+              },
+              "why": "stairsup@144,32 → L7"
+            }
+          ],
+          "crossesTo": 7,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L8@96,176 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A13",
+          "level": 7,
+          "visit": 2,
+          "arrival": {
+            "x": 176,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 16,
+                "y": 32
+              },
+              "why": "stairsdown@16,32 → L6"
+            }
+          ],
+          "crossesTo": 6,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L7@176,32 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A14",
+          "level": 6,
+          "visit": 2,
+          "arrival": {
+            "x": 208,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 32,
+                "y": 0
+              },
+              "why": "teleporter@32,0 → L5"
+            }
+          ],
+          "crossesTo": 5,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L6@208,32 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A15",
+          "level": 5,
+          "visit": 2,
+          "arrival": {
+            "x": 48,
+            "y": 96
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 80,
+                "y": 16
+              },
+              "why": "stairsup@80,16 → L4"
+            }
+          ],
+          "crossesTo": 4,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L5@48,96 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A16",
+          "level": 4,
+          "visit": 2,
+          "arrival": {
+            "x": 64,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 0,
+                "y": 16
+              },
+              "why": "teleporter@0,16 → L3"
+            }
+          ],
+          "crossesTo": 3,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L4@64,32 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A17",
+          "level": 3,
+          "visit": 2,
+          "arrival": {
+            "x": 112,
+            "y": 48
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 64,
+                "y": 0
+              },
+              "why": "teleporter@64,0 → L2"
+            }
+          ],
+          "crossesTo": 2,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L3@112,48 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A18",
+          "level": 2,
+          "visit": 2,
+          "arrival": {
+            "x": 48,
+            "y": 80
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 48,
+                "y": 16
+              },
+              "why": "stairsup@48,16 → L0"
+            }
+          ],
+          "crossesTo": 0,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L2@48,80 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A19",
+          "level": 0,
+          "visit": 2,
+          "arrival": {
+            "x": 256,
+            "y": 256
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 32,
+                "y": 192
+              },
+              "why": "stairsdown@32,192 → L13"
+            }
+          ],
+          "crossesTo": 13,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L0@256,256 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A20",
+          "level": 13,
+          "visit": 1,
+          "arrival": {
+            "x": 64,
+            "y": 128
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 32,
+                "y": 32
+              },
+              "why": "stairsdown@32,32 → L14"
+            }
+          ],
+          "crossesTo": 14,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L13@64,128 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A21",
+          "level": 14,
+          "visit": 1,
+          "arrival": {
+            "x": 160,
+            "y": 64
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 32,
+                "y": 64
+              },
+              "why": "stairsdown@32,64 → L15"
+            }
+          ],
+          "crossesTo": 15,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L14@160,64 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A22",
+          "level": 15,
+          "visit": 1,
+          "arrival": {
+            "x": 48,
+            "y": 64
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 144,
+                "y": 16
+              },
+              "why": "stairsdown@144,16 → L16"
+            }
+          ],
+          "crossesTo": 16,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L15@48,64 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A23",
+          "level": 16,
+          "visit": 1,
+          "arrival": {
+            "x": 32,
+            "y": 64
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 352,
+                "y": 80
+              },
+              "why": "stairsup@352,80 → L18"
+            }
+          ],
+          "crossesTo": 18,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L16@32,64 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A24",
+          "level": 18,
+          "visit": 1,
+          "arrival": {
+            "x": 16,
+            "y": 32
+          },
+          "goals": [
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 176,
+                "y": 112
+              },
+              "why": "teleporter@176,112 → L19"
+            }
+          ],
+          "crossesTo": 19,
+          "boot": {
+            "kind": "staged",
+            "source": "r8-solve-11",
+            "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L18@16,32 — R8 slice 8's construction for r8-solve-18"
+          }
+        },
+        {
+          "step": "A25",
+          "level": 19,
+          "visit": 1,
+          "arrival": {
+            "x": 16,
+            "y": 144
+          },
+          "goals": [
+            {
+              "kind": "collect-placement",
+              "placement": {
+                "x": 96,
+                "y": 64
+              },
+              "why": "Level 019 - Boss Key 0 (sphere 1.2) → Red Key"
+            },
+            {
+              "kind": "reach-exit",
+              "exit": {
+                "x": 16,
+                "y": 96
+              },
+              "why": "stairsup@16,96 → L20"
+            }
+          ],
+          "crossesTo": 20,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-d2-19",
+            "note": "r8-d2-19's committed v8 boot block, verbatim (it boots at L19@16,144)"
+          }
+        },
+        {
+          "step": "A26",
+          "level": 20,
+          "visit": 1,
+          "arrival": {
+            "x": 192,
+            "y": 64
+          },
+          "goals": [
+            {
+              "kind": "collect-placement",
+              "placement": {
+                "x": 112,
+                "y": 48
+              },
+              "why": "Level 020 - Shield (sphere 2.1) → Progressive Shield"
+            }
+          ],
+          "crossesTo": null,
+          "boot": {
+            "kind": "committed",
+            "source": "r8-d2-20",
+            "note": "r8-d2-20's committed v8 boot block, verbatim (it boots at L20@192,64)"
+          }
+        }
+      ]
+    }
+  },
+  "rows": [
+    {
+      "step": 22,
+      "level": 13,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L13@96,48 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 13,
+          "x": 96,
+          "y": 48
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 64,
+            "y": 144
+          },
+          "why": "stairsup@64,144 → L0"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-22-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-22-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 48,
+      "traceRows": 1,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 48
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 0,
+        "transitions": [
+          "undefined->undefined@48"
+        ],
+        "earnedClears": []
+      },
+      "ms": 128,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 2,
+      "family": null
+    },
+    {
+      "step": 23,
+      "level": 0,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L0@48,192 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 0,
+          "x": 48,
+          "y": 192
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 304,
+            "y": 176
+          },
+          "why": "teleporter@304,176 → L12"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-23-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-23-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 229,
+      "traceRows": 2,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 229
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 12,
+        "transitions": [
+          "undefined->undefined@229"
+        ],
+        "earnedClears": [
+          "{0,1}"
+        ]
+      },
+      "ms": 838,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 3,
+      "family": null
+    },
+    {
+      "step": 24,
+      "level": 12,
+      "verdict": "TIMEOUT",
+      "refusal": null,
+      "ms": 180018,
+      "timeoutSeconds": 180,
+      "stderr": "",
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@16,80 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 12,
+          "x": 16,
+          "y": 80
+        }
+      },
+      "goals": [
+        {
+          "kind": "reach-pit",
+          "pit": {
+            "tx": 36,
+            "ty": 43,
+            "x": 576,
+            "y": 688
+          },
+          "why": "pit@576,688 (out_pit_5_5, tile 36,43) → L21"
+        }
+      ],
+      "visit": 1,
+      "clock": {
+        "gameTime": null,
+        "refusal": "not measured — the child was killed"
+      },
+      "family": null
+    },
+    {
+      "step": 25,
+      "level": 21,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L21@80,80 — R8 slice 8's construction for r8-solve-18; the arrival is a PIT landing (pit@576,688 (out_pit_5_5, tile 36,43)), staged on the ground at the fall's ctor args rather than as the ceiling descent",
+        "block": {
+          "level": 21,
+          "x": 80,
+          "y": 80
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 80,
+            "y": 160
+          },
+          "why": "teleporter@80,160 → L22"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-25-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-25-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 26,
+      "traceRows": 1,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 26
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 22,
+        "transitions": [
+          "undefined->undefined@26"
+        ],
+        "earnedClears": []
+      },
+      "ms": 55,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
+      "step": 26,
+      "level": 22,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L22@96,16 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 22,
+          "x": 96,
+          "y": 16
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 192,
+            "y": 64
+          },
+          "why": "teleporter@192,64 → L29"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-26-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-26-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 89,
+      "traceRows": 1,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 89
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 29,
+        "transitions": [
+          "undefined->undefined@89"
+        ],
+        "earnedClears": []
+      },
+      "ms": 172,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
+      "step": 27,
+      "level": 29,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L29@16,224 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 29,
+          "x": 16,
+          "y": 224
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "placement": {
+            "x": 112,
+            "y": 64
+          },
+          "why": "Level 029 - Boss Key 1 (sphere 1.4) → Green Key"
+        },
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 112,
+            "y": 32
+          },
+          "why": "stairsdown@112,32 → L31"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-27-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-27-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 383,
+      "traceRows": 4,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 383
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 31,
+        "transitions": [
+          "undefined->undefined@383"
+        ],
+        "earnedClears": []
+      },
+      "ms": 335,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
+      "step": 28,
+      "level": 31,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L31@384,112 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 31,
+          "x": 384,
+          "y": 112
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0,
+            1
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            },
+            {
+              "step": 27,
+              "item": "Green Key",
+              "grants": "save.keys[1]"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 160,
+            "y": 384
+          },
+          "why": "stairsup@160,384 → L30"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-28-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-28-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 336,
+      "traceRows": 2,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 336
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 30,
+        "transitions": [
+          "undefined->undefined@336"
+        ],
+        "earnedClears": [
+          "{31,0}"
+        ]
+      },
+      "ms": 547,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
+      "step": 29,
+      "level": 30,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L30@176,48 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 30,
+          "x": 176,
+          "y": 48
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0,
+            1
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            },
+            {
+              "step": 27,
+              "item": "Green Key",
+              "grants": "save.keys[1]"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 224,
+            "y": 160
+          },
+          "why": "stairsup@224,160 → L32"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-29-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-29-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 210,
+      "traceRows": 2,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 210
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 32,
+        "transitions": [
+          "undefined->undefined@210"
+        ],
+        "earnedClears": [
+          "{30,2}"
+        ]
+      },
+      "ms": 356,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
+      "step": 30,
+      "level": 32,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L32@72,120 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 32,
+          "x": 72,
+          "y": 120
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            0,
+            1
+          ],
+          "items": [
+            "hasShield"
+          ],
+          "latched": [
+            "hasSword"
+          ],
+          "from": [
+            {
+              "step": 10,
+              "item": "Progressive Sword",
+              "grants": "latched hasSword"
+            },
+            {
+              "step": 20,
+              "item": "Red Key",
+              "grants": "save.keys[0]"
+            },
+            {
+              "step": 21,
+              "item": "Progressive Shield",
+              "grants": "seam.items.hasShield"
+            },
+            {
+              "step": 27,
+              "item": "Green Key",
+              "grants": "save.keys[1]"
+            }
+          ]
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "collect-placement",
+          "placement": {
+            "x": 64,
+            "y": 128
+          },
+          "why": "Level 032 - Bob Boss (sphere 2.2) → Fire"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-30-boot.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "REFUSED",
+      "refusal": "solverBot(survey-step-30): collect-placement (64,128) resolves to NOTHING in level 32 — no chest and no pickup stands there. A goal about an absent thing is a macro-layer error, said here rather than walked at.",
+      "ticks": null,
+      "traceRows": null,
+      "replans": null,
+      "passes": null,
+      "declarations": null,
+      "replay": null,
+      "ms": 2,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": "unclassified — see the refusal text"
+    }
+  ]
+}

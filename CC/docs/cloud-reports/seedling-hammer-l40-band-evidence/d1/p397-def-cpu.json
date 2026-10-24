@@ -1,0 +1,410 @@
+{
+ "what": "397/i0",
+ "seamTime": 5129,
+ "budgetWork": 640,
+ "upgradeWindowWork": 85,
+ "fidelity": "defaults",
+ "ok": false,
+ "kind": "refusal",
+ "work": 156,
+ "ticks": null,
+ "answer": "5a55f5b8",
+ "message": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 88696,
+   "work": 78
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 100519,
+   "work": 78
+  }
+ ],
+ "wallMs": 189217,
+ "points": 30367,
+ "sites": {
+  "segment": 2,
+  "goal": 2,
+  "walk": 158,
+  "heartbeat": 3047,
+  "preview": 27144,
+  "climb": 2,
+  "rung": 10,
+  "done": 2
+ },
+ "wallAfterSiteMs": {
+  "preview": 147125,
+  "heartbeat": 34107,
+  "walk": 6604,
+  "rung": 1000,
+  "start": 89,
+  "done": 28,
+  "goal": 21,
+  "segment": 12,
+  "climb": 9
+ },
+ "topPairs": {
+  "preview→preview": {
+   "n": 24082,
+   "ms": 103532,
+   "maxMs": 246
+  },
+  "preview→heartbeat": {
+   "n": 2996,
+   "ms": 40694,
+   "maxMs": 144
+  },
+  "heartbeat→preview": {
+   "n": 3026,
+   "ms": 33697,
+   "maxMs": 134
+  },
+  "walk→walk": {
+   "n": 88,
+   "ms": 3422,
+   "maxMs": 110
+  },
+  "preview→walk": {
+   "n": 66,
+   "ms": 2899,
+   "maxMs": 1101
+  },
+  "walk→preview": {
+   "n": 35,
+   "ms": 1353,
+   "maxMs": 309
+  },
+  "walk→heartbeat": {
+   "n": 31,
+   "ms": 1321,
+   "maxMs": 377
+  },
+  "rung→heartbeat": {
+   "n": 1,
+   "ms": 544,
+   "maxMs": 544
+  },
+  "walk→done": {
+   "n": 2,
+   "ms": 502,
+   "maxMs": 290
+  },
+  "rung→preview": {
+   "n": 1,
+   "ms": 386,
+   "maxMs": 386
+  },
+  "heartbeat→heartbeat": {
+   "n": 19,
+   "ms": 361,
+   "maxMs": 80
+  },
+  "start→segment": {
+   "n": 1,
+   "ms": 89,
+   "maxMs": 89
+  },
+  "rung→rung": {
+   "n": 8,
+   "ms": 71,
+   "maxMs": 39
+  },
+  "heartbeat→walk": {
+   "n": 2,
+   "ms": 49,
+   "maxMs": 29
+  },
+  "done→segment": {
+   "n": 1,
+   "ms": 28,
+   "maxMs": 28
+  }
+ },
+ "segments": [
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 78
+   },
+   "work": {
+    "shouldStop": 78,
+    "ticks": 1987,
+    "previews": 13572,
+    "previewStates": 784361,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverBotError"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1523
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  },
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 78
+   },
+   "work": {
+    "shouldStop": 78,
+    "ticks": 1987,
+    "previews": 13572,
+    "previewStates": 784361,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverBotError"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 3047
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  }
+ ],
+ "cpu": {
+  "totalMs": 189220,
+  "inclusive": {
+   "(root) ": 100,
+   "(anon) lb-prof.mjs": 75.6,
+   "withSolveProgress solveProgress.js": 75.6,
+   "solveAnytime jsRuntimeSolver.js": 75.6,
+   "settleSolve jsRuntimeSolver.js": 75.6,
+   "solveFromTape jsRuntimeSolver.js": 75.6,
+   "(anon) jsRuntimeSolver.js": 75.6,
+   "progressSegment solveProgress.js": 75.6,
+   "solveSegment solverBot.js": 75.6,
+   "solveSegmentDeadlined solverBot.js": 75.6,
+   "(anon) solverBot.js": 75.6,
+   "refusingByName solverBot.js": 75.6,
+   "withSolveDeadline solverBot.js": 75.6,
+   "solveSegmentUnder solverBot.js": 75.6,
+   "progressRun solveProgress.js": 75.6,
+   "walkTo solverBot.js": 75.6,
+   "walkToUnder solverBot.js": 75.6,
+   "climbLadder solverBot.js": 75,
+   "climbLadderUnder solverBot.js": 75,
+   "execute solverBot.js": 74.2,
+   "execKillByPress solverBot.js": 74.2,
+   "execKillByPressOnce solverBot.js": 74.2,
+   "deriveStrike solverBot.js": 56.7,
+   "nextNow solverBot.js": 56,
+   "previewWalk solverBot.js": 50.5,
+   "step levelRun.js": 46.1,
+   "(garbage collector) ": 24.4,
+   "moveNow solverBot.js": 13.9,
+   "noStrikeMove solverBot.js": 13.9,
+   "refuge solverBot.js": 13.9,
+   "refugeNow solverBot.js": 13.9,
+   "deriveRefuge solverBot.js": 13.8,
+   "collidesSolid levelWorld.js": 12.5,
+   "chaserStep chasers.js": 12.3,
+   "step playerPhysicsV2.js": 10.3,
+   "move levelRun.js": 10.1,
+   "sweep levelRun.js": 10,
+   "blocked levelRun.js": 8.7,
+   "clearOfHammersAt solverBot.js": 8.5,
+   "step playerPhysicsV1.js": 6.8
+  },
+  "self": {
+   "(garbage collector) ": 24.4,
+   "step levelRun.js": 9.8,
+   "clearOfHammersAt solverBot.js": 6.5,
+   "previewWalk solverBot.js": 4.7,
+   "solidCandidates levelWorld.js": 4.1,
+   "onScreen camera.js": 4,
+   "deriveRefuge solverBot.js": 3.8,
+   "(anon) levelRun.js": 3.8,
+   "collidesSolid levelWorld.js": 3.6,
+   "rect levelWorld.js": 3,
+   "blocked levelRun.js": 2.6,
+   "liveRectOf levelWorld.js": 2.5,
+   "assertNormalizedLiveOpts levelWorld.js": 1.8,
+   "get jsRuntimeSolver.js": 1.7,
+   "shieldBumpTouches bobBossFight.js": 1.7,
+   "chaserStep chasers.js": 1.6,
+   "nearestTileScanIndexed levelWorld.js": 1.5,
+   "step playerPhysicsV2.js": 1.5,
+   "sweep levelRun.js": 1.2,
+   "chaserDanger dangerMap.js": 0.8,
+   "dangerAt dangerMap.js": 0.7,
+   "(anon) levelWorld.js": 0.6,
+   "(anon) dangerMap.js": 0.5,
+   "gameTimeAt levelRun.js": 0.5,
+   "staticEnemyDanger dangerMap.js": 0.5,
+   "playerShieldRect bobBossFight.js": 0.5,
+   "chaserBoxAt chasers.js": 0.5,
+   "step playerPhysicsV1.js": 0.4,
+   "(anon) solverBot.js": 0.4,
+   "collideLineSolid crusher.js": 0.4,
+   "deriveStrike solverBot.js": 0.4,
+   "chaseImpulse chasers.js": 0.4,
+   "chooseHeld botDriverV1.js": 0.4,
+   "progressPreview solveProgress.js": 0.3,
+   "updateTeleporters playerPhysicsV2.js": 0.3,
+   "collideLineSolid levelRun.js": 0.3,
+   "rectsOverlap levelWorld.js": 0.3,
+   "solidBoxesForMover levelWorld.js": 0.3,
+   "plannerObstacleAt botDriverV2.js": 0.3,
+   "spinnerBodiesNow levelRun.js": 0.2
+  }
+ }
+}

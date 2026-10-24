@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { TEST_FRONTEND_URL } from '../../scripts/test/testServer.js';
 import fs from 'fs';
 import net from 'net';
 import { spawn, exec } from 'child_process';
@@ -196,7 +197,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     // Build URL with autoConnect, game, and seed parameters
     // Add runningSingleClientTest=true for single client mode
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}&runningSingleClientTest=true`;
+    const url1 = `${TEST_FRONTEND_URL}?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}&runningSingleClientTest=true`;
 
     console.log('='.repeat(60));
     console.log('Starting single client timer test...');
@@ -320,8 +321,8 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     // Add autoConnect, server, playerName, game, and seed parameters
     // NOTE: Both clients use the same playerName because the seed only has one slot
     // The server treats the second connection as a reconnection to the same slot
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
-    const url2 = `http://localhost:8000/frontend/?mode=test-multiclient-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    const url1 = `${TEST_FRONTEND_URL}?mode=test-multiclient-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    const url2 = `${TEST_FRONTEND_URL}?mode=test-multiclient-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
 
     console.log('='.repeat(60));
     console.log('Starting multiclient timer test...');

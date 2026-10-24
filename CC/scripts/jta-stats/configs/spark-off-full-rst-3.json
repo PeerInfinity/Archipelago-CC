@@ -1,0 +1,13 @@
+{
+  "name": "spark-off-full-rst-3",
+  "options": {
+    "modOverrides": {
+      "threshold_perk_affordable_resets": 3,
+      "threshold_perk_unaffordable_resets": 3,
+      "threshold_progression_resets": 3,
+      "threshold_unlocker_resets": 3
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

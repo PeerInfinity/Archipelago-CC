@@ -3,10 +3,10 @@ Helper expression mixin — all _expr_* handler methods and expression utility w
 """
 
 import math
-import sys
 from typing import Any, Dict, List, Set, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from ._unknown_kind import unknown_helper
+from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
     is_placement_lookup,
@@ -261,41 +261,6 @@ class HelperExpressionMixin:
 
         return []
 
-    def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access an option or world attribute at runtime.
-
-        Instead of resolving to constants at generation time, generate code that
-        accesses the value at runtime. This allows the exporter to recognize the
-        pattern and convert it back to a setting_value rule.
-
-        For options (defined in option_definitions):
-            state.multiworld.worlds[player].options.<name>
-        For world attributes (not in option_definitions):
-            state.multiworld.worlds[player].<name>
-
-        These patterns are recognized by the exporter's _is_world_options_pattern().
-        """
-        setting = expr.get('setting', '')
-
-        # Check if this is an option or a world attribute
-        is_option = setting in self.option_definitions
-
-        # Build the base path
-        if is_option:
-            base_path = f'state.multiworld.worlds[player].options.{setting}'
-        else:
-            base_path = f'state.multiworld.worlds[player].{setting}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
-
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option or world attribute at runtime.
 
@@ -499,6 +464,16 @@ class HelperExpressionMixin:
             count_expr = '1'
 
         return f'state.has({item_expr}, player, {count_expr})'
+
+    def _expr_weighted_count_true(self, expr: Dict[str, Any]) -> str:
+        """Generate the weights of the true conditions summed, compared with count."""
+        count = expr.get('count', 0)
+        count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+        terms = []
+        for condition, weight in expr.get('weighted_conditions', []):
+            weight_expr = self._generate_expression(weight) if isinstance(weight, dict) else str(weight)
+            terms.append(f'({weight_expr} if ({self._generate_expression(condition)}) else 0)')
+        return f'(({" + ".join(terms) or "0"}) >= {count_expr})'
 
     def _expr_group_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has_group() call."""
@@ -897,16 +872,8 @@ class HelperExpressionMixin:
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{class_name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - return True as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown helpers are typically progression checks that evaluate to true
-        # under default/normal game settings
-        print(
-            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
-            f"using True (always accessible) as fallback",
-            file=sys.stderr
-        )
-        return 'True'
+        # Unknown helper name: loud (rule-node F1); lossy mode keeps the always-true placeholder
+        return unknown_helper('helper body', name, 'True')
 
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
@@ -1057,13 +1024,6 @@ class HelperExpressionMixin:
         """Generate attribute access expression."""
         obj_expr = expr.get('object', {})
         attr = expr.get('attr', '')
-
-        # Special case: when accessing .value on a setting_value, the setting_value
-        # is already resolved to its actual value, so just return it directly.
-        # This handles cases like world.options.goal.value where we captured the
-        # setting as setting_value and now just need the numeric/boolean value.
-        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
-            return self._generate_expression(obj_expr)
 
         # Special case: when accessing param.value where param is a helper function parameter
         # (e.g., card_region.value), return just the parameter name since enum values are

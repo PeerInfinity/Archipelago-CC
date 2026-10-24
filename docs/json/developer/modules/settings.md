@@ -10,8 +10,8 @@
 - `frontend/modules/settings/index.js`: The module's entry point for registration.
 - `frontend/modules/settings/settingsUI.js`: The UI class that renders the settings editor panel.
 - `frontend/app/core/settingsManager.js`: The core service that this module interacts with. It manages loading, storing, and updating the settings object.
-- `frontend/settings.json`: The file containing the default values for all application settings.
-- `frontend/settings.schema.json`: A JSON Schema file that defines the structure, types, and constraints for the settings object.
+- `frontend/settings/settings.json`: The file containing the default values for all application settings.
+- `frontend/settings/settings.schema.json`: A JSON Schema file that defines the structure, types, and constraints for the settings object.
 
 #### Responsibilities
 

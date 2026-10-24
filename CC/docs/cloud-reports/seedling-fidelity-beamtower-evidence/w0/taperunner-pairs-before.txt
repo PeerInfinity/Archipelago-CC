@@ -1,0 +1,612 @@
+passed	createTapeStepper — the resume run a resumed window needs no levelSource — it stages nothing
+passed	createTapeStepper — the resume run ⛓ the resumed window CONTINUES the run rather than staging its own
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased a malformed row is refused by name rather than silently dropped
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased ⛓ the row lands at the REBASED tick, not the tape-local one
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased ⛔ NO DATA PATH: `stagingFromTape` cannot spell it
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased ⛔ a DUPLICATE of a row still pending is refused, and names its tick
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased ⛔ a row the world ALREADY HOLDS is refused — two writers of one slot
+passed	createTapeStepper — the resume run ⛓⛓ addTimedClears — a later window's FORWARD declarations, rebased ⛔⛔ WITHOUT it the resumed window THROWS — `undeclaredKillLock`
+passed	createTapeStepper — the resume run ⛓⛓⛓ [r8-solve-18, r8-d2-19, r8-d2-20] on ONE run IS the headline r8-d2, tick for tick
+passed	createTapeStepper — the resume run ⛓⛓⛓ the stepper's run IS the given run — even with a levelSource in hand
+passed	fixture behaviour each tape was written to exercise collide-up-rock: the engine holds VELOCITY into the wall it is pinned against
+passed	fixture behaviour each tape was written to exercise diagonal-run: covers ~sqrt(2)x the ground of the axis-aligned run
+passed	fixture behaviour each tape was written to exercise direction-flip: ends left of the spawn
+passed	fixture behaviour each tape was written to exercise friction-stop: comes to an exact, complete stop
+passed	fixture behaviour each tape was written to exercise shuffle-stop: two full accelerate/decelerate cycles, ending near home
+passed	fixture behaviour each tape was written to exercise straight-run: velocity overshoots the 0.8 cap
+passed	fixture differential axe-l48-reach-l49: JS stream matches the real game recording, exactly
+passed	fixture differential axe-l61-reach-l62: JS stream matches the real game recording, exactly
+passed	fixture differential axe-l61-reach-l63: JS stream matches the real game recording, exactly
+passed	fixture differential axe-l71-reach-l76: JS stream matches the real game recording, exactly
+passed	fixture differential bobsoldier-corpse: JS stream matches the real game recording, exactly
+passed	fixture differential bobsoldier-kill: JS stream matches the real game recording, exactly
+passed	fixture differential bobsoldier-sword: JS stream matches the real game recording, exactly
+passed	fixture differential bobsoldier2-l30-dash-stance: JS stream matches the real game recording, exactly
+passed	fixture differential bobsoldier2-l30-torch: JS stream matches the real game recording, exactly
+passed	fixture differential burn-l24-reach-exit: JS stream matches the real game recording, exactly
+passed	fixture differential burn-l44-reach-exit: JS stream matches the real game recording, exactly
+passed	fixture differential cancross-l16-sword-none: JS stream matches the real game recording, exactly
+passed	fixture differential collide-up-rock: JS stream matches the real game recording, exactly
+passed	fixture differential cross-level-leg: JS stream matches the real game recording, exactly
+passed	fixture differential crusher-l42-round-trip: JS stream matches the real game recording, exactly
+passed	fixture differential dash-l16-sword-all: JS stream matches the real game recording, exactly
+passed	fixture differential diagonal-run: JS stream matches the real game recording, exactly
+passed	fixture differential diagonal-run: byte-identical on the v1 engine too
+passed	fixture differential direction-flip: JS stream matches the real game recording, exactly
+passed	fixture differential direction-flip: byte-identical on the v1 engine too
+passed	fixture differential enc-l12-witch: JS stream matches the real game recording, exactly
+passed	fixture differential enc-l32-fallen-door: JS stream matches the real game recording, exactly
+passed	fixture differential enc-l32-fire-return: JS stream matches the real game recording, exactly
+passed	fixture differential enc-l32-live-arrival: JS stream matches the real game recording, exactly
+passed	fixture differential every fixture is backed by an ORACLE recording, not a bootstrap
+passed	fixture differential f1-l5-lock-removal: JS stream matches the real game recording, exactly
+passed	fixture differential f1-l5-open-lock-bait: JS stream matches the real game recording, exactly
+passed	fixture differential f1c-l18-lock-removal: JS stream matches the real game recording, exactly
+passed	fixture differential f1c-l18-phase42: JS stream matches the real game recording, exactly
+passed	fixture differential f4-l8-sandtraps: JS stream matches the real game recording, exactly
+passed	fixture differential f6-l17-reentry: JS stream matches the real game recording, exactly
+passed	fixture differential f6-l2-reentry: JS stream matches the real game recording, exactly
+passed	fixture differential f6-l20-reentry: JS stream matches the real game recording, exactly
+passed	fixture differential f7-l16-reentry: JS stream matches the real game recording, exactly
+passed	fixture differential f7-l16-walkin: JS stream matches the real game recording, exactly
+passed	fixture differential friction-stop: JS stream matches the real game recording, exactly
+passed	fixture differential friction-stop: byte-identical on the v1 engine too
+passed	fixture differential frontier3-l62-door-niche: JS stream matches the real game recording, exactly
+passed	fixture differential frontier3-l87-pocket: JS stream matches the real game recording, exactly
+passed	fixture differential ghostmotion-l102-axis: JS stream matches the real game recording, exactly
+passed	fixture differential ghostmotion-l102-diag: JS stream matches the real game recording, exactly
+passed	fixture differential ghostsword-l3-rock: JS stream matches the real game recording, exactly
+passed	fixture differential ghostsword-l3-rockghost: JS stream matches the real game recording, exactly
+passed	fixture differential ghostsword-l30-bobsoldier: JS stream matches the real game recording, exactly
+passed	fixture differential grant-sword-room: JS stream matches the real game recording, exactly
+passed	fixture differential hammer-a-l18-escape15: JS stream matches the real game recording, exactly
+passed	fixture differential hammer-a-l18-escape21: JS stream matches the real game recording, exactly
+passed	fixture differential hammer-b1-l18-approach40: JS stream matches the real game recording, exactly
+passed	fixture differential hammer-b2-l18-fight40: JS stream matches the real game recording, exactly
+passed	fixture differential hammer-c2-l18-ghostspinner: JS stream matches the real game recording, exactly
+passed	fixture differential has fixtures on disk, and NONE of them is pending any more
+passed	fixture differential hazard-boot-pit: JS stream matches the real game recording, exactly
+passed	fixture differential hazard-walk-water: JS stream matches the real game recording, exactly
+passed	fixture differential l12keyline-134-round: JS stream matches the real game recording, exactly
+passed	fixture differential l14-swordless-detour: JS stream matches the real game recording, exactly
+passed	fixture differential l30keylock-pit224-before: JS stream matches the real game recording, exactly
+passed	fixture differential l30keylock-pit224: JS stream matches the real game recording, exactly
+passed	fixture differential l30keylock-pit240: JS stream matches the real game recording, exactly
+passed	fixture differential l40button-l41-part0: JS stream matches the real game recording, exactly
+passed	fixture differential l40button-l42-part0: JS stream matches the real game recording, exactly
+passed	fixture differential l71-button-lock: JS stream matches the real game recording, exactly
+passed	fixture differential l71-hold-101-shut: JS stream matches the real game recording, exactly
+passed	fixture differential l71-hold-102-open: JS stream matches the real game recording, exactly
+passed	fixture differential l71-lock-shut: JS stream matches the real game recording, exactly
+passed	fixture differential l71-shieldlock-open: JS stream matches the real game recording, exactly
+passed	fixture differential l71-shieldlock-shut: JS stream matches the real game recording, exactly
+passed	fixture differential ladder2-l104-beam: JS stream matches the real game recording, exactly
+passed	fixture differential ladder2-l59-grenade: JS stream matches the real game recording, exactly
+passed	fixture differential pit-fall-83: JS stream matches the real game recording, exactly
+passed	fixture differential pit-fall-chain-85: JS stream matches the real game recording, exactly
+passed	fixture differential prox-l29-key-return: JS stream matches the real game recording, exactly
+passed	fixture differential prox-l38-chest: JS stream matches the real game recording, exactly
+passed	fixture differential prox-l38-reach-l39: JS stream matches the real game recording, exactly
+passed	fixture differential prox-l40-turret-contact: JS stream matches the real game recording, exactly
+passed	fixture differential prox-l40-turret-volley: JS stream matches the real game recording, exactly
+passed	fixture differential pushblock-l65-reach-l63: JS stream matches the real game recording, exactly
+passed	fixture differential pushblock-l65-reach-l68: JS stream matches the real game recording, exactly
+passed	fixture differential pushblock-l65-sword-press: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-shield-bobboss: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-shield-kill: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-shield-spinner: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-suit-bob: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-suit-kill: JS stream matches the real game recording, exactly
+passed	fixture differential r1-dark-suit-spinner: JS stream matches the real game recording, exactly
+passed	fixture differential r2-terrain-killlock: JS stream matches the real game recording, exactly
+passed	fixture differential r2-two-teleporters: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-1-sword-shield: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-2-feather: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-3-darksword-torch: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-4-spear: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-5-darkshield: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-6-darksuit: JS stream matches the real game recording, exactly
+passed	fixture differential r2-walk-full: JS stream matches the real game recording, exactly
+passed	fixture differential r2-wallflyer-contact: JS stream matches the real game recording, exactly
+passed	fixture differential r2-wallflyer-suit: JS stream matches the real game recording, exactly
+passed	fixture differential r3-bobboss-death: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-darkshield: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-darksuit: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-feather: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-shield: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-spear: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-sword: JS stream matches the real game recording, exactly
+passed	fixture differential r3-collect-torch: JS stream matches the real game recording, exactly
+passed	fixture differential r3-drown: JS stream matches the real game recording, exactly
+passed	fixture differential r3-lava: JS stream matches the real game recording, exactly
+passed	fixture differential r3-pit-death: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-1-sword: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-2-feather: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-3-torch: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-4-spear: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-5-darkshield: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-6-darksuit: JS stream matches the real game recording, exactly
+passed	fixture differential r3-walk-full: JS stream matches the real game recording, exactly
+passed	fixture differential r4-iceturret-bobs: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-1-sword: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-2-feather: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-3-torch: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-4-approach: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-5-spear: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-6-health: JS stream matches the real game recording, exactly
+passed	fixture differential r4-walk-full: JS stream matches the real game recording, exactly
+passed	fixture differential r5-bobboss-arm: JS stream matches the real game recording, exactly
+passed	fixture differential r5-bobboss-fire-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-bobboss-fire: JS stream matches the real game recording, exactly
+passed	fixture differential r5-bosskey-leg: JS stream matches the real game recording, exactly
+passed	fixture differential r5-bosskey-lock-shut: JS stream matches the real game recording, exactly
+passed	fixture differential r5-contact-control-off: JS stream matches the real game recording, exactly
+passed	fixture differential r5-contact-control-on: JS stream matches the real game recording, exactly
+passed	fixture differential r5-d5-conch: JS stream matches the real game recording, exactly
+passed	fixture differential r5-feather: JS stream matches the real game recording, exactly
+passed	fixture differential r5-karlore-fire: JS stream matches the real game recording, exactly
+passed	fixture differential r5-karlore-plug: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l37-burn-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l37-burn: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l38-fade-boot: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l38-fade-door: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-join-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-join: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-part0-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-part0: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-part1: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-part5-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l40-part5: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l41-part3-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l41-part3: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l42-part4-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l42-part4: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l43-wand-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l43-wand: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l60-kill-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-l60-kill: DIVERGES from the model, which is the claim
+passed	fixture differential r5-press-delay-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-press-delay: JS stream matches the real game recording, exactly
+passed	fixture differential r5-press-glide: JS stream matches the real game recording, exactly
+passed	fixture differential r5-press-repeat: JS stream matches the real game recording, exactly
+passed	fixture differential r5-shaft-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-shaft: JS stream matches the real game recording, exactly
+passed	fixture differential r5-swim-cross: JS stream matches the real game recording, exactly
+passed	fixture differential r5-swim-drown: JS stream matches the real game recording, exactly
+passed	fixture differential r5-swim-latch: JS stream matches the real game recording, exactly
+passed	fixture differential r5-totem-entrance-control: JS stream matches the real game recording, exactly
+passed	fixture differential r5-totem-entrance: JS stream matches the real game recording, exactly
+passed	fixture differential r5-waterfall-climb: JS stream matches the real game recording, exactly
+passed	fixture differential r5-waterfall-shut: JS stream matches the real game recording, exactly
+passed	fixture differential r6-contact-pair-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-contact-pair-heart: JS stream matches the real game recording, exactly
+passed	fixture differential r6-contact-pair-live: JS stream matches the real game recording, exactly
+passed	fixture differential r6-contact-pair-standing: JS stream matches the real game recording, exactly
+passed	fixture differential r6-final-door-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-final-door: JS stream matches the real game recording, exactly
+passed	fixture differential r6-owl-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-owl-kill: JS stream matches the real game recording, exactly
+passed	fixture differential r6-seed-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-seed-credits: JS stream matches the real game recording, exactly
+passed	fixture differential r6-shield-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-shield-kill: JS stream matches the real game recording, exactly
+passed	fixture differential r6-totem-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-totem-kill: JS stream matches the real game recording, exactly
+passed	fixture differential r6-watcher-blood-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-watcher-blood: JS stream matches the real game recording, exactly
+passed	fixture differential r6-watcher-control: JS stream matches the real game recording, exactly
+passed	fixture differential r6-watcher-talk: JS stream matches the real game recording, exactly
+passed	fixture differential r7-act2-5: JS stream matches the real game recording, exactly
+passed	fixture differential r7-act2-6: JS stream matches the real game recording, exactly
+passed	fixture differential r7-act2-full: JS stream matches the real game recording, exactly
+passed	fixture differential r7-ends-meet-1: JS stream matches the real game recording, exactly
+passed	fixture differential r7-ends-meet-2: JS stream matches the real game recording, exactly
+passed	fixture differential r7-ends-meet-full: JS stream matches the real game recording, exactly
+passed	fixture differential r8-d2-19: JS stream matches the real game recording, exactly
+passed	fixture differential r8-d2-20: JS stream matches the real game recording, exactly
+passed	fixture differential r8-d2: JS stream matches the real game recording, exactly
+passed	fixture differential r8-hammer-arm: JS stream matches the real game recording, exactly
+passed	fixture differential r8-hammer-control: JS stream matches the real game recording, exactly
+passed	fixture differential r8-l18-spinner-press: JS stream matches the real game recording, exactly
+passed	fixture differential r8-l6-bob-contact: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-10: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-11: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-18: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-1: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-20: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-2: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-3: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-4: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-5: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-6: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-7: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-8: JS stream matches the real game recording, exactly
+passed	fixture differential r8-solve-9: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l0-sword-dash-rest: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l0-sword-dash: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l6-bob-press: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l6-harmless-control: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l6-harmless-press: JS stream matches the real game recording, exactly
+passed	fixture differential r9-l6-sword-dash-hit: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-0-v3: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-0: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-11: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-12: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-13-v2: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-13: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-14: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-15: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-16: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-18: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-19: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-20: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-21: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-22: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-29: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-2: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-30: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-31: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-32: JS stream matches the real game recording, exactly
+passed	fixture differential r9-solve-3: JS stream matches the real game recording, exactly
+passed	fixture differential return-l15-conch: JS stream matches the real game recording, exactly
+passed	fixture differential return-l15-reentry-unclear: JS stream matches the real game recording, exactly
+passed	fixture differential return-l15-reentry: JS stream matches the real game recording, exactly
+passed	fixture differential return-l15-walkin: JS stream matches the real game recording, exactly
+passed	fixture differential robust-l16-l18-sword-conch: JS stream matches the real game recording, exactly
+passed	fixture differential robust-l16-sword-idle1: JS stream matches the real game recording, exactly
+passed	fixture differential shuffle-stop: JS stream matches the real game recording, exactly
+passed	fixture differential shuffle-stop: byte-identical on the v1 engine too
+passed	fixture differential slots-l24-burn-cut-110: JS stream matches the real game recording, exactly
+passed	fixture differential slots-l24-burn-cut-80: JS stream matches the real game recording, exactly
+passed	fixture differential slots-l24-burn-fencepost: JS stream matches the real game recording, exactly
+passed	fixture differential slots-l24-burn-fire-first: JS stream matches the real game recording, exactly
+passed	fixture differential slots-l24-fire-first: JS stream matches the real game recording, exactly
+passed	fixture differential stance-l46-chest: JS stream matches the real game recording, exactly
+passed	fixture differential stance-l48-chest: JS stream matches the real game recording, exactly
+passed	fixture differential stance-l48-keylock-north: JS stream matches the real game recording, exactly
+passed	fixture differential stance-l48-keylock-open: JS stream matches the real game recording, exactly
+passed	fixture differential stance-l48-keylock-south: JS stream matches the real game recording, exactly
+passed	fixture differential statue-press: JS stream matches the real game recording, exactly
+passed	fixture differential straight-run: JS stream matches the real game recording, exactly
+passed	fixture differential straight-run: byte-identical on the v1 engine too
+passed	fixture differential swim-u5-bobboss-encounter: JS stream matches the real game recording, exactly
+passed	fixture differential thread-the-gap: JS stream matches the real game recording, exactly
+passed	fixture differential transition-west-return: JS stream matches the real game recording, exactly
+passed	fixture differential transition-west-return: the engine derives BOTH crossings itself
+passed	fixture differential u10-puncher-dwell-refused: JS stream matches the real game recording, exactly
+passed	fixture differential u10-puncher-dwell: JS stream matches the real game recording, exactly
+passed	fixture differential u11-dark-shield-bob: JS stream matches the real game recording, exactly
+passed	fixture differential u11-dark-shield-puncher: JS stream matches the real game recording, exactly
+passed	fixture differential u11-facing-knockback: JS stream matches the real game recording, exactly
+passed	fixture differential u11-facing-puncher: JS stream matches the real game recording, exactly
+passed	fixture differential u12-pull-carry: JS stream matches the real game recording, exactly
+passed	fixture differential u12-pull-cross: JS stream matches the real game recording, exactly
+passed	fixture differential u14-moonrock-beam: JS stream matches the real game recording, exactly
+passed	fixture differential u14-moonrock-set: JS stream matches the real game recording, exactly
+passed	fixture differential u15-turret-shield: JS stream matches the real game recording, exactly
+passed	fixture differential u15-turret-spit: JS stream matches the real game recording, exactly
+passed	fixture differential u7-puncher-kill: JS stream matches the real game recording, exactly
+passed	fixture differential u7-puncher-punch: JS stream matches the real game recording, exactly
+passed	fixture differential u9-shield-bob-shove: JS stream matches the real game recording, exactly
+passed	fixture differential u9-shield-bob-standing: JS stream matches the real game recording, exactly
+passed	fixture differential u9-shield-puncher: JS stream matches the real game recording, exactly
+passed	fixture differential wall-slide: JS stream matches the real game recording, exactly
+passed	fixture differential wallflyer-kill-flight: JS stream matches the real game recording, exactly
+passed	fixture differential wallflyer-kill: JS stream matches the real game recording, exactly
+passed	fixture differential wallflyer-shield-bump: JS stream matches the real game recording, exactly
+passed	fixture differential watcher-l114-silent: JS stream matches the real game recording, exactly
+passed	fixture differential watcher-l114-talk: JS stream matches the real game recording, exactly
+passed	fixture differential watcher-l37-reach-l38: JS stream matches the real game recording, exactly
+passed	fixture differential watcher-l37-reach-l44: JS stream matches the real game recording, exactly
+passed	fixture differential watcher-l37-silent-lean: JS stream matches the real game recording, exactly
+passed	guards re-validates the tape it is handed
+passed	guards refuses a collision tape when no geometry was injected
+passed	guards runs the same collision tape once geometry IS injected
+passed	record-then-act indexing REFUSES a boot the baked-in build cannot take
+passed	record-then-act indexing carries the level on every observation
+passed	record-then-act indexing emits no transitions for a run that crosses no level
+passed	record-then-act indexing emits tick_count + 1 observations
+passed	record-then-act indexing handles a tape with no inputs at all
+passed	record-then-act indexing observation 0 is the spawn, half a tile in from the boot args
+passed	the incremental stepping face (watch page) axe-l48-reach-l49: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) axe-l61-reach-l62: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) axe-l61-reach-l63: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) axe-l71-reach-l76: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) bobsoldier-corpse: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) bobsoldier-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) bobsoldier-sword: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) bobsoldier2-l30-dash-stance: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) bobsoldier2-l30-torch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) burn-l24-reach-exit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) burn-l44-reach-exit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) cancross-l16-sword-none: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) collide-up-rock: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) cross-level-leg: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) crusher-l42-round-trip: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) dash-l16-sword-all: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) diagonal-run: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) direction-flip: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) enc-l12-witch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) enc-l32-fallen-door: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) enc-l32-fire-return: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) enc-l32-live-arrival: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f1-l5-lock-removal: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f1-l5-open-lock-bait: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f1c-l18-lock-removal: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f1c-l18-phase42: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f4-l8-sandtraps: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f6-l17-reentry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f6-l2-reentry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f6-l20-reentry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f7-l16-reentry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) f7-l16-walkin: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) friction-stop: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) frontier3-l62-door-niche: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) frontier3-l87-pocket: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ghostmotion-l102-axis: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ghostmotion-l102-diag: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ghostsword-l3-rock: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ghostsword-l3-rockghost: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ghostsword-l30-bobsoldier: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) grant-sword-room: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hammer-a-l18-escape15: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hammer-a-l18-escape21: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hammer-b1-l18-approach40: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hammer-b2-l18-fight40: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hammer-c2-l18-ghostspinner: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hands the viewer the state and geometry the STREAM cannot carry
+passed	the incremental stepping face (watch page) hazard-boot-pit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) hazard-walk-water: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l12keyline-134-round: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l14-swordless-detour: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l30keylock-pit224-before: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l30keylock-pit224: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l30keylock-pit240: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l40button-l41-part0: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l40button-l42-part0: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-button-lock: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-hold-101-shut: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-hold-102-open: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-lock-shut: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-shieldlock-open: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) l71-shieldlock-shut: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ladder2-l104-beam: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) ladder2-l59-grenade: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) pit-fall-83: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) pit-fall-chain-85: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) prox-l29-key-return: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) prox-l38-chest: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) prox-l38-reach-l39: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) prox-l40-turret-contact: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) prox-l40-turret-volley: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) pushblock-l65-reach-l63: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) pushblock-l65-reach-l68: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) pushblock-l65-sword-press: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-shield-bobboss: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-shield-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-shield-spinner: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-suit-bob: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-suit-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r1-dark-suit-spinner: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-terrain-killlock: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-two-teleporters: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-1-sword-shield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-2-feather: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-3-darksword-torch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-4-spear: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-5-darkshield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-6-darksuit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-walk-full: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-wallflyer-contact: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r2-wallflyer-suit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-bobboss-death: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-darkshield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-darksuit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-feather: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-shield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-spear: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-sword: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-collect-torch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-drown: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-lava: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-pit-death: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-1-sword: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-2-feather: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-3-torch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-4-spear: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-5-darkshield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-6-darksuit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r3-walk-full: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-iceturret-bobs: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-1-sword: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-2-feather: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-3-torch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-4-approach: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-5-spear: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-6-health: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r4-walk-full: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-bobboss-arm: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-bobboss-fire-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-bobboss-fire: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-bosskey-leg: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-bosskey-lock-shut: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-contact-control-off: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-contact-control-on: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-d5-conch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-feather: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-karlore-fire: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-karlore-plug: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l37-burn-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l37-burn: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l38-fade-boot: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l38-fade-door: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-join-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-join: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-part0-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-part0: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-part1: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-part5-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l40-part5: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l41-part3-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l41-part3: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l42-part4-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l42-part4: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l43-wand-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l43-wand: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l60-kill-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-l60-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-press-delay-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-press-delay: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-press-glide: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-press-repeat: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-shaft-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-shaft: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-swim-cross: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-swim-drown: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-swim-latch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-totem-entrance-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-totem-entrance: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-waterfall-climb: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r5-waterfall-shut: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-contact-pair-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-contact-pair-heart: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-contact-pair-live: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-contact-pair-standing: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-final-door-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-final-door: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-owl-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-owl-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-seed-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-seed-credits: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-shield-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-shield-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-totem-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-totem-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-watcher-blood-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-watcher-blood: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-watcher-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r6-watcher-talk: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-act2-5: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-act2-6: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-act2-full: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-ends-meet-1: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-ends-meet-2: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r7-ends-meet-full: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-d2-19: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-d2-20: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-d2: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-hammer-arm: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-hammer-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-l18-spinner-press: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-l6-bob-contact: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-10: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-11: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-18: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-1: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-20: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-2: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-3: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-4: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-5: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-6: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-7: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-8: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r8-solve-9: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l0-sword-dash-rest: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l0-sword-dash: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l6-bob-press: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l6-harmless-control: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l6-harmless-press: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-l6-sword-dash-hit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-0-v3: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-0: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-11: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-12: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-13-v2: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-13: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-14: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-15: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-16: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-18: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-19: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-20: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-21: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-22: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-29: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-2: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-30: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-31: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-32: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) r9-solve-3: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) return-l15-conch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) return-l15-reentry-unclear: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) return-l15-reentry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) return-l15-walkin: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) robust-l16-l18-sword-conch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) robust-l16-sword-idle1: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) shuffle-stop: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) slots-l24-burn-cut-110: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) slots-l24-burn-cut-80: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) slots-l24-burn-fencepost: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) slots-l24-burn-fire-first: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) slots-l24-fire-first: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) stance-l46-chest: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) stance-l48-chest: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) stance-l48-keylock-north: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) stance-l48-keylock-open: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) stance-l48-keylock-south: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) statue-press: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) straight-run: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) swim-u5-bobboss-encounter: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) thread-the-gap: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) transition-west-return: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u10-puncher-dwell-refused: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u10-puncher-dwell: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u11-dark-shield-bob: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u11-dark-shield-puncher: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u11-facing-knockback: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u11-facing-puncher: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u12-pull-carry: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u12-pull-cross: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u14-moonrock-beam: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u14-moonrock-set: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u15-turret-shield: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u15-turret-spit: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u7-puncher-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u7-puncher-punch: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u9-shield-bob-shove: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u9-shield-bob-standing: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) u9-shield-puncher: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) validates EAGERLY, when the stepper is made rather than advanced
+passed	the incremental stepping face (watch page) wall-slide: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) wallflyer-kill-flight: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) wallflyer-kill: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) wallflyer-shield-bump: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) watcher-l114-silent: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) watcher-l114-talk: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) watcher-l37-reach-l38: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) watcher-l37-reach-l44: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) watcher-l37-silent-lean: stepping to completion == runTape, byte for byte
+passed	the incremental stepping face (watch page) yields tick_count + 1 times, ending on the disarm tick
+passed	the physics profile on the run (engine prep A2) buildStagedTape's stampProfile opt-in default: no profile, no despawn, the v8 floor — the bytes every solve emits today
+passed	the physics profile on the run (engine prep A2) buildStagedTape's stampProfile opt-in opted in: a v13 tape whose profile validates and which the game never sees
+passed	the physics profile on the run (engine prep A2) runTape's result carries profileStamp(), a valid v13 profile block
+passed	the physics profile on the run (engine prep A2) the stepper's done value is where it lives, so stepping to completion still equals runTape
+passed	the physics profile on the run (engine prep A2) ⛔ the observation STREAM keeps its shape: {ticks, transitions} and nothing else
+passed	v2 slice 0: what the collision + transition recordings pin collide-up-rock: X never moves, so any x drift in a stream is a defect
+passed	v2 slice 0: what the collision + transition recordings pin collide-up-rock: collision does NOT zero velocity — the proof is a delayed creep
+passed	v2 slice 0: what the collision + transition recordings pin collide-up-rock: the stop lands MID-PIXEL, on the sub-pixel sweep step
+passed	v2 slice 0: what the collision + transition recordings pin collide-up-rock: the sweep stops the player DEAD at a solid entity
+passed	v2 slice 0: what the collision + transition recordings pin the recorded transitions are the DERIVED ones, written at record time
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: HELD KEYS survive the world swap
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: arrival is exactly (playerx+8, playery+8)
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: no intermediate observation on the crossing tick
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: the anti-ping-pong latch never engages
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: the arriving Player is FRESH — velocity is reset
+passed	v2 slice 0: what the collision + transition recordings pin transition-west-return: the tape crosses levels and comes back
+passed	version 2 tapes FAILS by name on a grant for a level the run never entered
+passed	version 2 tapes applies a boot-level grant and reports it at tick 0
+passed	version 2 tapes carries the relaxations through to the engine
+passed	version 2 tapes refuses grants on the v1 engine rather than dropping them
+passed	version 2 tapes walks water when the tape disables it, and dies loudly when it does not
+passed	⛔ no gate imports the tolerance comparator frontend/modules/seedlingDemo/tapeRunner.test.js does not import observationTolerance

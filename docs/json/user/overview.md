@@ -1,10 +1,14 @@
 # Overview: What Is This?
 
-The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
+The Archipelago JSON Export Tools project generates new [Archipelago](https://archipelago.gg/) worlds in the browser and provides an advanced tracker for existing multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
+
+**New to Archipelago itself?** Start with the **[Introduction to Archipelago](../intro/introduction-to-archipelago.md)**.
+
+**Want to see the highlights first?** Take the **[Guided Tour](./guided-tour.md)** — ten minutes in the live demo, nothing to install — or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 
 **Ready to get started?** See the **[Quick Start Guide](./quick-start.md)** for step-by-step instructions.
 
-**Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
+**Try the Live Demo:** the **[Development Version](https://peerinfinity.github.io/Archipelago-CC/)** (includes procedural generation) or the **[Stable Version](https://peerinfinity.github.io/Archipelago/)** (an older snapshot: tracking only)
 
 ## What Does It Do?
 
@@ -100,16 +104,18 @@ This project also includes an enhanced version of [Universal Tracker](https://gi
 Beyond standard tracking, the frontend supports several alternate game modes:
 
 - **[Loops](../features/loops.md):** An incremental/idle game mode where you queue actions, spend mana, and earn XP across loops to optimize your way through the randomizer.
-- **[Maze Metagame](../features/maze-metagame.md):** Layers A-Mazing-Idle on top of tracking — solve mazes before you can check locations or move to new regions.
 - **Text Adventure:** Play through the randomizer as a text-based adventure game.
+
+## Procedural Generation
+
+The frontend can also **generate** randomizer worlds, not just track them. The [Procgen Pipeline](../features/procgen.md) builds complete multi-region worlds where each region is a small playable game — a grid maze, a Doodle-Jump-style platformer, a text adventure, a run of scenes from the Noiz2sa shoot-'em-up, a room of the recompiled Flash game *Seedling*, freely mixed — with access rules derived from the actual gameplay. Generated worlds use the same `rules.json` format as exported games, so they work with every tracking feature, can run in loop mode, and can even be converted into real Archipelago worlds for multiworld play. Start with [For Players](../intro/for-players.md) or [For World Builders](../intro/for-world-builders.md).
 
 ## New APWorlds
 
 This project includes several custom Archipelago worlds:
 
-- **[MetaMath](../../worlds/metamath/docs/README.md):** Turns mathematical proofs from the MetaMath database into playable Archipelago worlds. Each proof step is a location, each proven statement is an item.
+- **[MetaMath](../../../worlds/metamath/docs/README.md):** Turns mathematical proofs from the MetaMath database into playable Archipelago worlds. Each proof step is a location, each proven statement is an item.
 - **[DepGraph](../features/depgraph.md):** Converts any directed acyclic graph (tech trees, skill trees, to-do lists) into a playable world.
-- **[Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md):** Archipelago integration for the incremental/idle game, with automatic cost rebalancing for randomized perk placement. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)
 
 ## How Synchronization Works
 
@@ -123,7 +129,7 @@ Some panels include buttons to manually check locations, which sends the check c
 
 ## What's Next?
 
-This tracker is under active development. The core tracking functionality is working, with additional features in progress. See the [Project Roadmap](../project-roadmap.md) for planned features and current priorities.
+This tracker is under active development. The core tracking functionality is working, with additional features in progress.
 
 ## Further Reading
 

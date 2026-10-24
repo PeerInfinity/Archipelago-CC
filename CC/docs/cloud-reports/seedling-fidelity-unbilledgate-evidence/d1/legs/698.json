@@ -1,0 +1,1 @@
+{"id":698,"key":"level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0","level":88,"goal":"level_88 -> level_87__r1c3 #2","ms":854,"ok":true,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"ms":304},{"pass":"full","ok":true,"kind":null,"ticks":379,"ms":549}],"ticks":379,"verbs":["walk"],"end":{"level":87,"x":440,"y":312,"deaths":0}}

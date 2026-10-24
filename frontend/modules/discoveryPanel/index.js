@@ -18,9 +18,11 @@ export const moduleInfo = {
   name: 'discoveryPanel',
   title: 'Discovery',
   componentType: 'discoveryPanel',
+  docs: 'docs/json/user/modules/discoveryPanel.md',
   icon: '🔍',
   column: 2, // Middle column
-  description: 'Discovery mode settings and discovered items display.',
+  category: 'Game Mode Panels',
+  description: 'Discovery mode: hide the regions, locations and exits you have not found yet, and choose how they are found.',
   requires: ['discovery'],
 };
 

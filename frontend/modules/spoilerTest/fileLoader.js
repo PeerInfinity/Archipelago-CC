@@ -28,6 +28,110 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 const logger = createUniversalLogger('testSpoilerUI:FileLoader');
 
 /**
+ * ⛓⛓ **DERIVE THE SPHERE-LOG SIDECAR FROM THE RULESET PATH** — extracted from
+ * `attemptAutoLoad` (EDITOR v3 E1c) so the derivation can be ASKED a question
+ * without a network. It was already the only thing in that method that could be
+ * wrong on its own; a `.json.gz` ruleset name proved it, by deriving
+ * `…_rules.json_sphere_log.jsonl` and logging about an extension.
+ *
+ * @param {string} rulesetPath e.g. `presets/alttp/AP_1/AP_1_rules.json`
+ * @returns {string|null} the `_sphere_log.jsonl` beside it, or null
+ */
+export function deriveSphereLogPath(rulesetPath) {
+  if (!rulesetPath) return null;
+  let logPath;
+  // Remove leading "./" if present to avoid fetch issues
+  const cleanedRulesetPath = rulesetPath.startsWith('./')
+    ? rulesetPath.substring(2)
+    : rulesetPath;
+
+  const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
+  const directoryPath =
+    lastSlashIndex === -1
+      ? ''
+      : cleanedRulesetPath.substring(0, lastSlashIndex);
+  const rulesFilename =
+    lastSlashIndex === -1
+      ? cleanedRulesetPath
+      : cleanedRulesetPath.substring(lastSlashIndex + 1);
+
+  /**
+   * ⛓ EDITOR v3 E1c — **A `.gz` IS STRIPPED BEFORE THE SUFFIX TEST**, and
+   * that is the MINIMAL change the measurement asked for. Without it,
+   * `AP_1_rules.json.gz` misses the `_rules.json` branch, falls through the
+   * `.json` branch (which does not match either) to the ERROR branch, and
+   * derives `AP_1_rules.json_sphere_log.jsonl` — a sidecar path that cannot
+   * exist, produced with a log line about an extension rather than about the
+   * sidecar. ⛔ The sidecar is NOT gzipped by this: only the ruleset name
+   * loses its `.gz`, because the two files are compressed independently.
+   */
+  const rulesBaseName = rulesFilename.endsWith('.gz')
+    ? rulesFilename.slice(0, -'.gz'.length)
+    : rulesFilename;
+  let baseNameForLog;
+  if (rulesBaseName.endsWith('_rules.json')) {
+    baseNameForLog = rulesBaseName.substring(
+      0,
+      rulesBaseName.length - '_rules.json'.length
+    );
+
+    // Check if this is a multiworld player-specific rules file (contains _P{number})
+    // For example: "AP_14089154938208861744_P1_rules.json" should become "AP_14089154938208861744"
+    // Pattern: _P followed by digits
+    const multiworldPlayerPattern = /_P\d+$/;
+    if (multiworldPlayerPattern.test(baseNameForLog)) {
+      baseNameForLog = baseNameForLog.replace(multiworldPlayerPattern, '');
+      logger.info(
+        `Detected multiworld player-specific rules file. Base name for log: "${baseNameForLog}"`
+      );
+    }
+  } else if (rulesBaseName.endsWith('.json')) {
+    baseNameForLog = rulesBaseName.substring(
+      0,
+      rulesBaseName.length - '.json'.length
+    );
+    logger.warn(
+      `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not end with "_rules.json". Using "${baseNameForLog}" as base for log file (by removing .json).`
+    );
+  } else {
+    // If no .json extension, this is unexpected for a rules file path
+    baseNameForLog = rulesBaseName;
+    logger.error(
+      `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not have a .json extension. This might lead to an incorrect log path. Using "${baseNameForLog}" as base.`
+    );
+  }
+
+  if (directoryPath) {
+    // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_sphere_log.jsonl"
+    logPath = `${directoryPath}/${baseNameForLog}_sphere_log.jsonl`;
+  } else {
+    // If rulesetPath was "bar_rules.json", logPath becomes "./bar_sphere_log.jsonl"
+    logPath = `./${baseNameForLog}_sphere_log.jsonl`;
+  }
+  logger.info(`Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`);
+  return logPath;
+}
+
+/**
+ * ⛓ **THE `.jsonl` STAYS AUTHORITATIVE; AN EMBEDDED `sphere_log` IS THE
+ * FALLBACK.** `attemptAutoLoad` fetches the derived `_sphere_log.jsonl` first,
+ * exactly as before, and reads the loaded ruleset's embedded `sphere_log` only
+ * when that fetch fails. Measured 2026-10-01 over the committed presets: 178
+ * ship only a `.jsonl`, 35 only embed (every `procgen_topdown`, `procgen_maze`,
+ * the `seedling_*` and omsi/jta test presets), and NONE do both — so the order
+ * decides nothing today, and a `.jsonl` preset loads byte-for-byte as before.
+ * (The app's sphereState loads embedded-first; the two agree while no preset
+ * carries both.) Before this, an embedding preset's "Load Suggested Log" ended
+ * at the `.jsonl` 404.
+ *
+ * @param {string} rulesetPath
+ * @returns {string} the label an embedded log is loaded under (its "path")
+ */
+export function embeddedSphereLogLabel(rulesetPath) {
+  return `${rulesetPath}#sphere_log`;
+}
+
+/**
  * Handles loading and parsing of spoiler log files from various sources.
  *
  * Supports both auto-loading from derived URLs and manual file selection.
@@ -72,70 +176,17 @@ export class FileLoader {
    * @param {string} currentLogPath - Currently loaded log path (to prevent duplicates)
    * @param {Array|null} currentLogData - Currently loaded log data (to verify data exists)
    * @param {string|null} isLoadingLogPath - Path currently being loaded (to prevent concurrent loads)
+   * @param {Array|null} [embeddedLog] - the loaded rules.json's top-level `sphere_log`, if it has one
+   *   (see {@link embeddedSphereLogLabel} for when it is read)
    * @returns {Promise<Object>} Result object with success, logData, logPath, and optional error properties
    */
-  async attemptAutoLoad(rulesetPath, currentLogPath, currentLogData, isLoadingLogPath) {
+  async attemptAutoLoad(rulesetPath, currentLogPath, currentLogData, isLoadingLogPath, embeddedLog = null) {
     logger.debug('attemptAutoLoad called', { rulesetPath, currentLogPath, hasData: !!(currentLogData && currentLogData.length), isLoadingLogPath });
 
     // Derive log path from ruleset path
     let logPath;
     if (rulesetPath) {
-      // Remove leading "./" if present to avoid fetch issues
-      const cleanedRulesetPath = rulesetPath.startsWith('./')
-        ? rulesetPath.substring(2)
-        : rulesetPath;
-
-      const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
-      const directoryPath =
-        lastSlashIndex === -1
-          ? ''
-          : cleanedRulesetPath.substring(0, lastSlashIndex);
-      const rulesFilename =
-        lastSlashIndex === -1
-          ? cleanedRulesetPath
-          : cleanedRulesetPath.substring(lastSlashIndex + 1);
-
-      let baseNameForLog;
-      if (rulesFilename.endsWith('_rules.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '_rules.json'.length
-        );
-
-        // Check if this is a multiworld player-specific rules file (contains _P{number})
-        // For example: "AP_14089154938208861744_P1_rules.json" should become "AP_14089154938208861744"
-        // Pattern: _P followed by digits
-        const multiworldPlayerPattern = /_P\d+$/;
-        if (multiworldPlayerPattern.test(baseNameForLog)) {
-          baseNameForLog = baseNameForLog.replace(multiworldPlayerPattern, '');
-          logger.info(
-            `Detected multiworld player-specific rules file. Base name for log: "${baseNameForLog}"`
-          );
-        }
-      } else if (rulesFilename.endsWith('.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '.json'.length
-        );
-        logger.warn(
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not end with "_rules.json". Using "${baseNameForLog}" as base for log file (by removing .json).`
-        );
-      } else {
-        // If no .json extension, this is unexpected for a rules file path
-        baseNameForLog = rulesFilename;
-        logger.error(
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not have a .json extension. This might lead to an incorrect log path. Using "${baseNameForLog}" as base.`
-        );
-      }
-
-      if (directoryPath) {
-        // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_sphere_log.jsonl"
-        logPath = `${directoryPath}/${baseNameForLog}_sphere_log.jsonl`;
-      } else {
-        // If rulesetPath was "bar_rules.json", logPath becomes "./bar_sphere_log.jsonl"
-        logPath = `./${baseNameForLog}_sphere_log.jsonl`;
-      }
-      logger.info(`Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`);
+      logPath = deriveSphereLogPath(rulesetPath);
     } else {
       logger.warn(
         'Cannot attempt auto-load: rulesetPath is undefined or invalid for logPath generation.'
@@ -163,7 +214,9 @@ export class FileLoader {
 
     // Check 2: Is this exact log path already loaded and processed successfully?
     // Must verify BOTH path match AND that data exists and has content
-    if (currentLogPath === logPath && currentLogData && currentLogData.length > 0) {
+    const embeddedLabel = embeddedSphereLogLabel(rulesetPath);
+    if ((currentLogPath === logPath || currentLogPath === embeddedLabel)
+        && currentLogData && currentLogData.length > 0) {
       logger.info(
         `Spoiler log for ${logPath} is already loaded and processed. No need to reload.`
       );
@@ -181,6 +234,9 @@ export class FileLoader {
 
       const response = await fetch(logPath);
       if (!response.ok) {
+        const embedded = this._embeddedResult(embeddedLog, rulesetPath,
+          `${logPath}: ${response.status} ${response.statusText}`);
+        if (embedded) return embedded;
         logger.warn(
           `Failed to fetch spoiler log from ${logPath}: ${response.status} ${response.statusText}`
         );
@@ -215,6 +271,8 @@ export class FileLoader {
         logPath
       };
     } catch (error) {
+      const embedded = this._embeddedResult(embeddedLog, rulesetPath, `${logPath}: ${error.message}`);
+      if (embedded) return embedded;
       logger.warn(
         `Failed to auto-load or process spoiler log from ${logPath}. Error: ${error.message}`
       );
@@ -225,6 +283,36 @@ export class FileLoader {
         error: `Auto-load failed: ${error.message}`
       };
     }
+  }
+
+  /**
+   * The EMBEDDED fallback: a rules.json may carry its sphere log as a
+   * top-level `sphere_log` array (procgen output — `buildRulesJson` embeds
+   * it, and no `_sphere_log.jsonl` is written beside it). Its entries are
+   * the `.jsonl`'s line records, one per element.
+   *
+   * @param {Array|null} embeddedLog the rules.json's `sphere_log`
+   * @param {string} rulesetPath for the label
+   * @param {string} fileMiss why the `.jsonl` was not used (logged)
+   * @returns {Object|null} an attemptAutoLoad result, or null when there is
+   *   no non-empty embedded log (the caller then reports the file miss)
+   * @private
+   */
+  _embeddedResult(embeddedLog, rulesetPath, fileMiss) {
+    if (!Array.isArray(embeddedLog) || embeddedLog.length === 0) return null;
+    const rawContent = embeddedLog.map((e) => JSON.stringify(e)).join('\n');
+    const parsedResult = this._parseLogText(rawContent, embeddedSphereLogLabel(rulesetPath));
+    if (!parsedResult.success) return null;
+    logger.info(
+      `No sphere-log file (${fileMiss}); using the ruleset's embedded sphere_log (${parsedResult.logData.length} events).`
+    );
+    return {
+      success: true,
+      logData: parsedResult.logData,
+      rawContent,
+      logPath: embeddedSphereLogLabel(rulesetPath),
+      embedded: true
+    };
   }
 
   /**

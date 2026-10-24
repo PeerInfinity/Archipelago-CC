@@ -1,0 +1,38 @@
+// DK: one window's displacement gain on open floor, from the transcription's own functions (friction, input, impulse).
+const R = process.argv[2];
+const p1 = await import(`${R}/frontend/modules/seedlingDemo/playerPhysicsV1.js`);
+const cv = await import(`${R}/frontend/modules/seedlingDemo/combatVerbs.js`);
+const { applyFriction, applyInput, knockbackImpulse, WALK_SPEED, DEFAULT_FRICTION, STAIR_SPEED, WATER_SPEED, WATER_FRICTION } = p1;
+const F = cv.SLASH_DASH_FORCE; const chain = cv.DASH_CHAIN.at;
+function run(held, ms, f, dashTicks, T) {
+    let v = { x: 0, y: 0 }; let x = 0, y = 0; const pos = [];
+    for (let t = 0; t < T; t += 1) {
+        v = applyFriction(v, f); v = applyInput(v, held, ms);
+        if (dashTicks.has(t)) { const d = knockbackImpulse(v.x, v.y, F); v = { x: v.x + d.dvx, y: v.y + d.dvy }; }
+        x += v.x; y += v.y; pos.push(Math.hypot(x, y));
+    }
+    return pos;
+}
+console.log('chain', JSON.stringify(chain), 'force', F);
+for (const [name, held, ms, f] of [['walk axis', new Set(['right']), WALK_SPEED, DEFAULT_FRICTION], ['walk diag', new Set(['right', 'down']), WALK_SPEED, DEFAULT_FRICTION],
+    ['stair axis', new Set(['right']), STAIR_SPEED, DEFAULT_FRICTION], ['water axis', new Set(['right']), WATER_SPEED, WATER_FRICTION]]) {
+    const T = 400; const base = run(held, ms, f, new Set(), T);
+    const v = (base[T - 1] - base[T - 101]) / 100;
+    let best = 0; let bestStart = 0;
+    for (let s = 20; s < 60; s += 1) {
+        const d = run(held, ms, f, new Set(chain.map((k) => s + k)), T);
+        const gain = d[T - 1] - base[T - 1];
+        if (gain > best) { best = gain; bestStart = s; }
+    }
+    // the most ticks one window saves on a long straight leg: ticks to cover the base distance, dashed vs not
+    console.log(`${name}: steady speed ${v.toFixed(4)} px/t, one window's best gain ${best.toFixed(3)} px (start ${bestStart}) = ${(best / v).toFixed(2)} t`);
+}
+const { SLIDING_SPEED, SLIDING_FRICTION } = p1;
+for (const [name, held, ms, f] of [['ice axis', new Set(['right']), SLIDING_SPEED, SLIDING_FRICTION], ['ice diag', new Set(['right', 'down']), SLIDING_SPEED, SLIDING_FRICTION], ['stair diag', new Set(['right', 'down']), STAIR_SPEED, DEFAULT_FRICTION]]) {
+    const T = 800; const base = run(held, ms, f, new Set(), T);
+    const v = (base[T - 1] - base[T - 101]) / 100; let best = 0;
+    for (let s = 20; s < 80; s += 1) { const d = run(held, ms, f, new Set(chain.map((k) => s + k)), T); best = Math.max(best, d[T - 1] - base[T - 1]); }
+    console.log(`${name}: steady ${v.toFixed(4)} px/t, gain ${best.toFixed(3)} px = ${(best / v).toFixed(2)} t`);
+}
+// per-axis component of the diagonal steady speed
+{ const T = 400; let v = { x: 0, y: 0 }; let x = 0; const xs = []; for (let t = 0; t < T; t += 1) { v = applyFriction(v, DEFAULT_FRICTION); v = applyInput(v, new Set(['right', 'down']), WALK_SPEED); x += v.x; xs.push(x); } console.log('walk diag per-axis', ((xs[T - 1] - xs[T - 101]) / 100).toFixed(4)); }

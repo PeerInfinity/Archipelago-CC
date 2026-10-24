@@ -1,0 +1,10 @@
+{
+  "name": "spark-off-full-spark-on",
+  "options": {
+    "modOverrides": {
+      "award_spark_on_discovery": true
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

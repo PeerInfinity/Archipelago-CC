@@ -210,8 +210,10 @@ class JTAWorld(World):
         """Run cost adjustment after sphere log is generated.
 
         Called by the export hook after generate_output and create_playthrough
-        have both completed, so both the gamedata JSON and sphere log exist
-        in output_directory.
+        have both completed, so both the gamedata JSON and the sphere log exist.
+        The gamedata lives in output_directory (where generate_output wrote it);
+        the sphere log is written to Archipelago's output directory instead, so
+        that it never ends up inside the hostable ZIP.
         """
         if self.options.vanilla_placement.value:
             return  # Vanilla: costs already written by generate_output
@@ -220,8 +222,11 @@ class JTAWorld(World):
 
         player_base = self.multiworld.get_out_file_name_base(self.player)
         gamedata_path = os.path.join(output_directory, f"{player_base}_gamedata.json")
+        sphere_log_dir = getattr(
+            self.multiworld, "temp_dir_for_sphere_log", None
+        ) or output_directory
         sphere_log_path = os.path.join(
-            output_directory, f"{filename_base}_sphere_log.jsonl"
+            sphere_log_dir, f"{filename_base}_sphere_log.jsonl"
         )
         costs_path = os.path.join(output_directory, f"{player_base}_costs.json")
 

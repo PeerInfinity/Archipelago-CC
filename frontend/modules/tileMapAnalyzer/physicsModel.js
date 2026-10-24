@@ -1,8 +1,6 @@
 // frontend/modules/tileMapAnalyzer/physicsModel.js
 //
-// Trajectory simulators for the robotkitty physics model. See
-// NewDocs/plans/tile-map-analyzer-physics-model.md and
-// NewDocs/reference/tile-map-analyzer-reachability.md.
+// Trajectory simulators for the robotkitty physics model.
 //
 // Physics constants come from xplor.Player (decompiled Player.as):
 //   PLAYER_RUN_SPEED = 80  px/s   (maxVelocity.x)

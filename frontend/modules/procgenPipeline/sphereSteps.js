@@ -45,6 +45,8 @@ import {
     wireSphereWaves,
     placeSphereTreeItems,
     realiseSphereBatchGen,
+    resolveSphereLibrarySources,
+    resolveSphereAtlasSources,
     compactSphereTree,
     buildRulesJson,
     serializeGrid,
@@ -53,6 +55,10 @@ import {
     stitchGrid,
     wallOffUnusedExits,
     rebuildEnvelopeFromRulesJson,
+    recordedConceptsOf,
+    reRollSphereRegion,
+    getRegionExits,
+    parentExitIdTowardChild,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
@@ -60,6 +66,28 @@ import {
     computeItemSpheres,
     compareSpheresToPlan,
 } from './spherePlanner.js';
+// Generic stepped-pipeline machinery — the driver/resume/serde skeleton shared
+// with top-down (and spiral). This module supplies the sphere DESCRIPTOR; the
+// harness drives it. Aliased on import because sphere's public export names
+// (runStep, serializeEnvelope, …) intentionally match the generic ones. See
+// steppedPipeline.js for the descriptor + codec contract.
+import {
+    runStep as runStepGeneric,
+    runToStep as runToStepGeneric,
+    detectCompleted as detectCompletedGeneric,
+    resumeEnvelope as resumeEnvelopeGeneric,
+    newEnvelope as newEnvelopeGeneric,
+    serializeEnvelope as serializeEnvelopeGeneric,
+    deserializeEnvelope as deserializeEnvelopeGeneric,
+    invalidateFromStep as invalidateFromStepGeneric,
+    editsBehindStep as editsBehindStepGeneric,
+    FIELD_VISIBILITY,
+    envelopeSchema,
+} from './steppedPipeline.js';
+// Recorded layout edits — the op vocabulary + replay. This module supplies the
+// SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
+import { deriveSphereRerollSeed, reRollCountFor } from './layoutEdits.js';
+import { unplacedGoalSentence } from '../procgenCore/goalItem.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPHERE_STEPS = Object.freeze([
@@ -79,10 +107,8 @@ export const SPHERE_STEPS = Object.freeze([
  *
  * null / undefined / 0 / negative / ≥ totalSpheres all normalise to
  * `totalSpheres` ("one batch = all spheres", the byte-identical default). A
- * value in [1, totalSpheres) is that batch size.
- *
- * Phase 1 only threads + normalises the knob; the batch loop that consumes it
- * lands in Phase 2 (see NewDocs/plans/procedural-generation/per-sphere-batching.md).
+ * value in [1, totalSpheres) is that batch size. See
+ * docs/json/developer/procgen/sphere-growth.md.
  */
 export function resolveSpheresPerBatch(spheresPerBatch, totalSpheres) {
     const n = Number(spheresPerBatch);
@@ -102,6 +128,7 @@ export function growConfigFrom(config, plan) {
         itemLib: config.itemLib,
         seed: config.seed,
         hazardOpts: config.hazardOpts,
+        consumableTileOpts: config.consumableTileOpts,
         regionParams: config.regionParams ?? {},
         growthParams: {
             spherePlan: plan,
@@ -109,6 +136,17 @@ export function growConfigFrom(config, plan) {
             fillerCount: config.fillerCount,
             revisitRatio: config.revisitRatio,
             ...(config.substrateQuotas ? { substrateQuotas: config.substrateQuotas } : {}),
+            // Pre-built content sources: each selected region library rides its
+            // document on substrateConfig['library:<id>'].libraryDoc (F6d) and
+            // each selected region-ATLAS pool on substrateConfig['<game>'].atlasDoc
+            // (region-atlas Phase 6), consumed by the engine's
+            // resolveSphereLibrarySources / resolveSphereAtlasSources. Absent
+            // unless one is selected, so worlds with neither stay byte-identical.
+            ...(config.substrateConfig ? { substrateConfig: config.substrateConfig } : {}),
+            // Region-atlas Phase 6 (slice 2): the sorter's pre-decided
+            // placements, produced BEFORE the plan reaches any driver (the plan
+            // it mutates is the oracle, so it has to be augmented first).
+            ...(config.atlasAssignments ? { atlasAssignments: config.atlasAssignments } : {}),
             ...(config.startSubstrate ? { startSubstrate: config.startSubstrate } : {}),
             // Carried for any standalone batched driver consumer; the step
             // runner reads env.config.spheresPerBatch directly to drive its
@@ -314,12 +352,29 @@ async function stepRegions(env, { onProgress = null } = {}) {
     const batchStart = env.grow?.grid ? (env.batchStart ?? 0) : 0;
     const {
         regionSize, itemLib = DEFAULT_ITEMS, obstacleLib = DEFAULT_OBSTACLES,
-        regionParams = {}, hazardOpts = null,
+        regionParams = {}, hazardOpts = null, consumableTileOpts = null,
     } = growConfig;
     const { teleporterMinGap = 2, assumeBidirectional = true } = growConfig.growthParams;
 
     const rng = createRng(0);
     rng.setState((env.regionsRng ?? env.rng).s); // post-②b position
+
+    // Region-library content sources (F6d): resolve the `library:<id>` quotas into
+    // stateful sources (prefer-least-used counter). Built ONCE per grow so the
+    // counter persists across sphere-major batches (mirrors growSpheresBatchedGen);
+    // rebuilt on a batch-0 (re)start so an edit re-run realises from a clean state.
+    // Empty {} when no library is selected → non-library nodes take no new path
+    // (byte-inert). Not serialisable (holds closures) — survives in-memory step
+    // runs; a cross-process CLI resume simply rebuilds it, same as the counter reset
+    // that a fresh process implies.
+    if (batchStart === 0 || !env.librarySources) {
+        env.librarySources = {
+            ...resolveSphereLibrarySources(
+                growConfig.growthParams?.substrateQuotas, growConfig),
+            ...resolveSphereAtlasSources(
+                growConfig.growthParams?.substrateQuotas, growConfig),
+        };
+    }
 
     // Size the grid from the CURRENT allocation (deterministic — matches
     // growSpheresGen's auto-size for the unedited tree). Recomputing here rather
@@ -375,8 +430,10 @@ async function stepRegions(env, { onProgress = null } = {}) {
         obstacleLib,
         regionParams,
         hazardOpts,
+        consumableTileOpts,
         assumeBidirectional,
         stats,
+        librarySources: env.librarySources,
     });
     let r = gen.next();
     while (!r.done) {
@@ -424,7 +481,7 @@ function stepCompile(env) {
         seed: c.seed,
         itemLib: c.itemLib,
         startingItems,
-        lockedCanonicalItems: c.lockedCanonicalItems ?? [],
+        pinnedCanonicalItems: c.pinnedCanonicalItems ?? [],
         // A starting item is placed at no location, so the compiled pool
         // doesn't carry it — backfill its definition (ids 999↓ stay clear
         // of the compiled pool's upward numbering).
@@ -435,17 +492,35 @@ function stepCompile(env) {
         } : {}),
         enableLoopMode: c.enableLoopMode,
         regionXpEffect: c.regionXpEffect,
+        discoveryMode: c.discoveryMode ?? 'follow',
+        procgenParams: c.procgenParams ?? null,
         completionConditionItem: c.victoryItem,
         procgenMetadata: {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,
             sphere_plan: env.plan,
+            // The recorded hand edits, as PROVENANCE: without them a compiled
+            // world carries the edited grid and no record of WHY it differs
+            // from its seed. Omitted when nothing was edited, so every
+            // unedited world's metadata is byte-identical to before.
+            // ⚠ NOT re-armed by rebuildEnvelopeFromRulesJson: the rebuilt grid
+            // comes from preset_sidecars, which already carry every edit, and
+            // the placement round-trips through sphere_tree's (now resynced)
+            // node cells. Re-arming would double-apply on the next re-run.
+            ...(env.edits?.length ? { edits: env.edits } : {}),
             // Compact abstract tree (no grid) so a new sphere can be wired onto
             // this finished world straight from rules.json (Phase 4 append).
             ...(env.tree ? { sphere_tree: compactSphereTree(env.tree) } : {}),
+            // ⛓ T0b — the world's concept list, so a rebuild realises its
+            // appended gates as the concepts (omitted when it names none).
+            ...recordedConceptsOf(c.regionParams),
         },
     });
     const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), env.plan);
+    // The goal invariant (⚖ 2026-10-11): completion names an item some location
+    // holds — else the world could never be beaten.
+    const unplaced = unplacedGoalSentence(rulesJson);
+    if (unplaced) throw new Error(`sphere growth: ${unplaced}`);
     env.compile = { rulesJson, oracleErrors };
     env.completed = 5;
     return env;
@@ -467,9 +542,7 @@ const RUNNERS = {
  * resolve to the (same, mutated) env.
  */
 export async function runStep(stepName, env, opts = {}) {
-    const runner = RUNNERS[stepName];
-    if (!runner) throw new Error(`runStep: unknown step '${stepName}'`);
-    return runner(env, opts);
+    return runStepGeneric(stepName, env, opts, SPHERE_DESCRIPTOR);
 }
 
 // The plan's wave count, read from env.plan (post-①) or the draft (post-plan,
@@ -505,15 +578,7 @@ export function nextSphereStep(env) {
  * they run; resume the returned env to continue the loop. Returns the env.
  */
 export async function runToStep(env, toStep = 'compile', opts = {}) {
-    if (SPHERE_STEPS.indexOf(toStep) < 0) throw new Error(`runToStep: unknown step '${toStep}'`);
-    let step = nextSphereStep(env);
-    while (step) {
-        // eslint-disable-next-line no-await-in-loop
-        await runStep(step, env, opts);
-        if (step === toStep) break;
-        step = nextSphereStep(env);
-    }
-    return env;
+    return runToStepGeneric(env, toStep, opts, SPHERE_DESCRIPTOR);
 }
 
 // --- envelope (de)serialisation ---------------------------------------
@@ -532,50 +597,52 @@ function deserializeNode(nd) {
     return { ...nd, usedSides: new Set(nd.usedSides ?? []) };
 }
 
+// The non-plain artifacts, as harness codecs (declaration order = decode order;
+// see steppedPipeline.js). `tree.nodes` aliases env.nodes — dropped on encode,
+// re-aliased to the decoded nodes on decode (nodes is declared first, so
+// out.nodes is ready). grow.grid is a Grid; each node's usedSides is a Set; the
+// cross-batch `placed` is a Set of grid node indices.
+const SPHERE_CODECS = {
+    nodes: {
+        encode: (nodes) => nodes.map(serializeNode),
+        decode: (nodes) => nodes.map(deserializeNode),
+    },
+    tree: {
+        encode: (tree) => ({
+            substrateCounts: tree.substrateCounts,
+            quotaFallbacks: tree.quotaFallbacks,
+        }),
+        decode: (tree, out) => ({
+            nodes: out.nodes, // re-alias the decoded nodes
+            substrateCounts: tree.substrateCounts,
+            quotaFallbacks: tree.quotaFallbacks,
+        }),
+    },
+    grow: {
+        encode: (grow) => (grow.grid ? { ...grow, grid: serializeGrid(grow.grid) } : grow),
+        decode: (grow) => (grow.grid ? { ...grow, grid: deserializeGrid(grow.grid) } : grow),
+    },
+    placed: {
+        encode: (placed) => (placed instanceof Set ? [...placed] : placed),
+        decode: (placed) => new Set(placed),
+    },
+};
+
 /** Live envelope → JSON-safe plain object. */
 export function serializeEnvelope(env) {
-    const out = { ...env };
-    if (env.nodes) out.nodes = env.nodes.map(serializeNode);
-    if (env.tree) {
-        // tree.nodes aliases env.nodes — don't double-emit; rebuild the
-        // alias on deserialize.
-        out.tree = {
-            substrateCounts: env.tree.substrateCounts,
-            quotaFallbacks: env.tree.quotaFallbacks,
-        };
-    }
-    if (env.grow?.grid) {
-        out.grow = { ...env.grow, grid: serializeGrid(env.grow.grid) };
-    }
-    if (env.placed) {
-        out.placed = env.placed instanceof Set ? [...env.placed] : env.placed;
-    }
-    return out;
+    return serializeEnvelopeGeneric(env, SPHERE_DESCRIPTOR);
 }
 
 /** JSON-safe plain object (from serializeEnvelope) → live envelope. */
 export function deserializeEnvelope(obj) {
-    const env = { ...obj };
-    if (obj.nodes) env.nodes = obj.nodes.map(deserializeNode);
-    if (obj.tree) {
-        env.tree = {
-            nodes: env.nodes, // re-alias the decoded nodes
-            substrateCounts: obj.tree.substrateCounts,
-            quotaFallbacks: obj.tree.quotaFallbacks,
-        };
-    }
-    if (obj.grow?.grid) {
-        env.grow = { ...obj.grow, grid: deserializeGrid(obj.grow.grid) };
-    }
-    if (obj.placed) env.placed = new Set(obj.placed);
-    return env;
+    return deserializeEnvelopeGeneric(obj, SPHERE_DESCRIPTOR);
 }
 
 /**
  * Produce a live, resumable envelope from EITHER shape a user can load (§2.3):
  *   • a serialized envelope (has a `config` block) → deserializeEnvelope;
- *   • a finalized sphere-growth rules.json (has `procgen_metadata`, no
- *     `config`) → rebuildEnvelopeFromRulesJson, which reconstructs an
+ *   • a finalized sphere-growth rules.json (has `procgen_metadata[opts.playerId ?? '1']`,
+ *     no `config`) → rebuildEnvelopeFromRulesJson, which reconstructs an
  *     append-ready envelope from sphere_tree/sphere_plan + preset_sidecars.
  *     This is what the APWorld Editor emits, so an edited world can be grown
  *     further without a saved envelope. Procedural substrates only — a zone
@@ -585,16 +652,210 @@ export function deserializeEnvelope(obj) {
  * Returns { env, fromRulesJson } so callers can label the source.
  */
 export function importSphereEnvelope(rawJson, opts = {}) {
-    const fromRulesJson = !rawJson?.config && !!rawJson?.procgen_metadata;
+    const fromRulesJson = !rawJson?.config && !!rawJson?.procgen_metadata?.[opts.playerId ?? '1'];
     const env = fromRulesJson
         ? rebuildEnvelopeFromRulesJson(rawJson, opts)
         : deserializeEnvelope(rawJson);
     return { env, fromRulesJson };
 }
 
+
+// --- recorded layout edits: the SPHERE binding -------------------------
+//
+// WHICH STEP EACH EDIT REPLAYS AFTER — measured against the panel's own
+// write-back depths (procgenPipelineUI.js), which are the facts about which
+// pass reads stale data:
+//
+//   op                stage        panel's invalidation      why
+//   ---------------   ----------   -----------------------   -------------------
+//   move-region       regions      _invalidateFrom(4)        the grid is ③'s
+//   swap-regions      regions      _invalidateFrom(4)        output; ④ reads only
+//   move-exit-side    regions      _invalidateFrom(4)        the grid, so the edit
+//   swap-exit-sides   regions      _invalidateFrom(4)        lands between ③ and ④
+//   re-roll           regions      _invalidateFrom(4)        re-realises ONE region
+//                                                            in place, on the grid
+//   set-substrate     items        _invalidateFrom(3)        writes node.substrate,
+//                                                            then ③ re-realises ALL
+//
+// UNDO is a different question from replay: an edit is un-done by dropping it
+// and RE-RUNNING the step that PRODUCES the artifact it mutated. For five of the
+// six that is the same step it replays after (③ builds the grid from scratch
+// when `grow` is dropped). `set-substrate` is the exception: it replays after ②c
+// but ②c does not rebuild the node it wrote to — ②b does — so undoing it re-runs
+// from `topology`.
+//
+// IDENTITY. Sphere edits name their target `#<node index>`, not the
+// `region_<gx>_<gy>` id: the canonical id is derived from the CELL a node lands
+// on, which only exists after ③, whereas `set-substrate` must apply BEFORE ③.
+// The index is stable across a re-run (②b is deterministic from the seed) and is
+// exactly what the panel already shows the user ("Region #3"). The re-roll's SEED
+// still hashes the node's live `region_id` at apply time, so the seed a replay
+// derives is bit-for-bit the one the panel's own expression produced.
+// (Top-down names regions by their SOURCE name — see topDownSteps.js.)
+
+const SPHERE_EDIT_STAGES = Object.freeze({
+    'move-region': 'regions',
+    'swap-regions': 'regions',
+    'move-exit-side': 'regions',
+    'swap-exit-sides': 'regions',
+    're-roll': 'regions',
+    'set-substrate': 'items',
+});
+
+// Steps to RE-RUN when an edit is undone; defaults to the op's stage.
+const SPHERE_UNDO_FROM = Object.freeze({ 'set-substrate': 'topology' });
+
+/** The recorded identity of a sphere tree node. */
+export function sphereNodeKey(node) {
+    return `#${node.index}`;
+}
+
+function resolveSphereNode(env, key) {
+    const index = Number(String(key).replace(/^#/, ''));
+    const node = Number.isInteger(index) ? (env.nodes ?? [])[index] : null;
+    if (!node) throw new Error(`no tree node '${key}' (run 2b Topology first)`);
+    return node;
+}
+
+// Re-point the envelope's start cell and RESYNC the tree from the grid after a
+// layout change. Both halves are load-bearing, and both were MEASURED against a
+// silent corruption the panel could produce before B-d.
+//
+//  • `node.cell` feeds buildNodeRealiserSpecs and compactSphereTree, and nothing
+//    updated it on a move. A re-roll after a MOVE threw "Grid.replaceRegion:
+//    cell (2,3) is empty"; after a SWAP it replaced the region that had moved
+//    INTO the stale cell — duplicating one region_id and losing another, with
+//    no error. And compactSphereTree wrote the stale cell, so an edited world
+//    rebuilt (rebuildEnvelopeFromRulesJson) at its PRE-edit placement.
+//
+//  • `node.side` is the side of the PARENT's exit that leads to this node, and
+//    buildNodeRealiserSpecs reads it BOTH ways: as each child's exit side when
+//    it re-realises a region, and as `parentRegion.exits_placed.find(e => e.side
+//    === node.side)` — which throws when it misses. An exit-side edit moved the
+//    grid's exit and left the tree's `side` behind, so a later re-roll rebuilt
+//    the region at the TREE's sides and silently REVERTED the edit. Measured:
+//    invisible while parent and child are geographically adjacent (stitchGrid
+//    re-resolves by adjacency), but after a swap they are teleporter-linked and
+//    the teleporter is keyed by SIDE — the forward link dies and the sphere
+//    oracle reports "sphere count mismatch: computed 1, planned 3".
+//
+// The side is recovered from the parent's forward exit whose `targetRegion` is
+// this node — the link relayoutSphereGrid has just re-derived — rather than from
+// the exit's id, which encodes the side it was BORN on.
+function sphereAfterLayout(env, grid) {
+    const cellById = new Map(grid.allRegions()
+        .map((r) => [r.region_id, { gx: r.cell.gx, gy: r.cell.gy }]));
+    let rootCell = null;
+    const nodes = env.nodes ?? [];
+    for (const node of nodes) {
+        const cell = node.region_id ? cellById.get(node.region_id) : null;
+        if (!cell) continue;
+        node.cell = { ...cell };
+        if (node.parent == null) rootCell = cell;
+    }
+    for (const node of nodes) {
+        if (node.parent == null || !node.region_id) continue;
+        const parentRegion = grid.getRegion(nodes[node.parent]?.cell ?? {});
+        if (!parentRegion) continue;
+        const exits = getRegionExits(parentRegion);
+        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+        const fwd = list.find((e) => !e.isBackExit && e.targetRegion === node.region_id);
+        if (fwd?.side) node.side = fwd.side;
+    }
+    if (env.grow && rootCell) env.grow.startCell = { ...rootCell };
+}
+
+function sphereReRoll(env, edit) {
+    const grid = env.grow?.grid;
+    if (!grid) throw new Error('re-roll: no grown grid (run 3 Build regions first)');
+    const node = resolveSphereNode(env, edit.region_id);
+    const growConfig = growConfigFrom(env.config, env.plan);
+    reRollSphereRegion(grid, node, env.tree, {
+        // The panel's own expression, from the module that owns it. `n` comes
+        // from the RECORDING (reRollCountFor at push time), so a replay of the
+        // same list derives the same seed and undo rewinds the count.
+        seed: deriveSphereRerollSeed(env.config.seed, node.region_id, edit.n),
+        regionSize: growConfig.regionSize,
+        regionParams: growConfig.regionParams,
+        assumeBidirectional: growConfig.growthParams?.assumeBidirectional ?? true,
+    });
+    return `Re-rolled "${node.region_id}" (#${edit.n})`;
+}
+
+function sphereSetSubstrate(env, edit) {
+    const node = resolveSphereNode(env, edit.region_id);
+    node.substrate = edit.substrate;
+    return `Region ${edit.region_id} substrate → ${edit.substrate}`;
+}
+
+/**
+ * The sphere edit binding (see layoutEdits.js). `replayReady` is the batch gate:
+ * sphere loops ②a→②b→②c→③ per batch, so without it a `move-region` would replay
+ * after EVERY batch's ③ and the second attempt would find its source cell empty.
+ * An edit replays once — on the pass that runs its step for the LAST time.
+ */
+export const SPHERE_EDIT_BINDING = {
+    mode: 'sphere',
+    stages: SPHERE_EDIT_STAGES,
+    undoFrom: SPHERE_UNDO_FROM,
+    grid: (env) => env.grow?.grid ?? null,
+    regionSize: (env) => growConfigFrom(env.config, env.plan).regionSize,
+    afterLayout: sphereAfterLayout,
+    reRoll: sphereReRoll,
+    setSubstrate: sphereSetSubstrate,
+    replayReady: (env, stepName) => {
+        const total = env.plan?.spheres?.length ?? 0;
+        if (!total) return true;
+        const batchStart = env.batchStart ?? 0;
+        // ③ advances batchStart, so after the LAST ③ it has reached `total`.
+        // (A NARROWER gate — "and that ③ actually advanced the loop, rather than
+        // re-running a finished one" — was written, then DELETED: no test could
+        // discriminate it, because re-running ③ over an already-complete loop
+        // throws inside the runner BEFORE any replay is reached. See the
+        // "fails the SAME way it did before B-d" row.)
+        if (stepName === 'regions') return batchStart >= total;
+        // The pre-③ steps run BEFORE that advance, so the last pass is the one
+        // whose batch reaches the end.
+        return batchStart + resolveSpheresPerBatch(env.config?.spheresPerBatch, total) >= total;
+    },
+};
+
+/** The step to re-run when `edit` is undone (its stage unless overridden). */
+export function sphereUndoStep(edit) {
+    return SPHERE_UNDO_FROM[edit?.op] ?? SPHERE_EDIT_STAGES[edit?.op] ?? null;
+}
+
+/** How many times this node has already been re-rolled in the recording. */
+export function sphereReRollCount(env, node) {
+    return reRollCountFor(env?.edits, sphereNodeKey(node));
+}
+
+// Which envelope fields each step WRITES — the drop map the generic
+// invalidateFromStep uses to roll a step (and everything after it) back so it
+// re-runs from clean inputs. Mirrors each runner's own resets; ③'s entry is the
+// load-bearing one (it takes a carry-forward path whenever it finds a grid).
+const SPHERE_DROP_OUTPUTS = {
+    plan: (e) => { e.draft = null; },
+    allocate: (e) => {
+        e.plan = null; e.startingItems = null; e.opts = null;
+        e.allocation = null; e.rng = null;
+        e.totalNodes = null; e.dims = null; e.startCell = null;
+    },
+    topology: (e) => {
+        e.nodes = null; e.substrateCounts = null; e.quotaFallbacks = null;
+        e.regionsRng = null; e.topologyWarnings = [];
+    },
+    items: (e) => { e.tree = null; },
+    regions: (e) => {
+        e.grow = null; e.placed = null; e.librarySources = null;
+        e.batchStart = 0; e.prevCount = 0;
+    },
+    compile: (e) => { e.compile = null; },
+};
+
 /** A fresh, empty envelope for the given resolved config block. */
 export function newEnvelope(config) {
-    return { config, completed: -1 };
+    return newEnvelopeGeneric({ config });
 }
 
 // Whether each step's OUTPUT is present in an envelope. Used to derive the
@@ -611,6 +872,70 @@ const STEP_OUTPUT_PRESENT = {
     compile: (e) => !!e.compile?.rulesJson,
 };
 
+// The sphere mode descriptor — the whole per-mode surface the harness needs.
+// nextStep is the batch-aware loop (nextSphereStep); everything else is the
+// step list, runners, presence probes, and the non-plain artifact codecs.
+/**
+ * ⛓ EVERY TOP-LEVEL FIELD a serialized sphere envelope may carry (§5au item
+ * 9; the contract is THE FIELDS in steppedPipeline.js). `step` is the first
+ * step that writes the field; the schema under `frontend/schema/envelopes/`
+ * is generated from this table.
+ */
+export const SPHERE_ENVELOPE_FIELDS = Object.freeze({
+    config: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The resolved world config the steps run on (seed, regionSize, item pool, quotas, sphere count, …).' },
+    completed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Index into SPHERE_STEPS of the last step run; -1 = none.' },
+    edits: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'Recorded layout edits, replayed after the step each one belongs to.' },
+    draft: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'plan', about: 'The drafted spheres: what each sphere holds before allocation.' },
+    rng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'The main rng position, threaded between steps.' },
+    topologyWarnings: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: 'plan', about: 'Topology warnings from the last topology step.' },
+    placed: { type: 'array', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'Node indices already placed on the grid (batch bookkeeping).' },
+    prevCount: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'Node count before the current batch (batch bookkeeping).' },
+    batchStart: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'The first wave of the next batch (batch cursor).' },
+    plan: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'The sphere plan: seed and per-sphere contents.' },
+    startingItems: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Items the player starts with.' },
+    allocation: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Regions and fillers per wave.' },
+    opts: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'allocate', about: 'The runner options derived from config.' },
+    totalNodes: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'allocate', about: 'Node count the topology will reach.' },
+    dims: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Grid dimensions {width, height}.' },
+    startCell: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'The start cell {gx, gy}.' },
+    nodes: { type: 'array', visibility: FIELD_VISIBILITY.INTERNAL, step: 'topology', about: 'The topology nodes (aliased by tree.nodes).' },
+    substrateCounts: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'topology', about: 'Regions per substrate.' },
+    quotaFallbacks: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: 'topology', about: 'How many regions fell back from their quota substrate.' },
+    regionsRng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'topology', about: 'The regions rng position.' },
+    tree: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'items', about: 'The item tree over the nodes.' },
+    grow: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'regions', internalKeys: ['grid'], about: 'The grown world: stats and startCell (public) and the tagged Grid encoding (grid, internal).' },
+    librarySources: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'regions', about: 'Library-source bookkeeping for library quotas.' },
+    compile: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'compile', about: 'The compiled result: rulesJson and oracleErrors.' },
+});
+
+const SPHERE_DESCRIPTOR = {
+    kind: 'sphere-envelope',
+    steps: SPHERE_STEPS,
+    runners: RUNNERS,
+    present: STEP_OUTPUT_PRESENT,
+    codecs: SPHERE_CODECS,
+    nextStep: nextSphereStep,
+    editBinding: SPHERE_EDIT_BINDING,
+    dropOutputs: SPHERE_DROP_OUTPUTS,
+    fields: SPHERE_ENVELOPE_FIELDS,
+};
+
+/** The JSON Schema of a serialized envelope of this mode (from its `fields`). */
+export const sphereEnvelopeSchema = () => envelopeSchema(SPHERE_DESCRIPTOR);
+
+/**
+ * Roll the envelope back so `stepName` (and everything after it) re-runs — the
+ * undo path: pop the edit, invalidate from `sphereUndoStep(edit)`, resume.
+ */
+export function invalidateSphereFrom(env, stepName) {
+    return invalidateFromStepGeneric(env, stepName, SPHERE_DESCRIPTOR);
+}
+
+/** Recorded edits a run starting at `firstStep` will NOT replay (see the generic). */
+export function sphereEditsBehind(env, firstStep) {
+    return editsBehindStepGeneric(env, firstStep, SPHERE_DESCRIPTOR);
+}
+
 /**
  * Derive the `completed` index (last CONTIGUOUSLY-finished step) from which
  * step outputs are present in `env`. Returns -1 when nothing is present (so
@@ -619,12 +944,7 @@ const STEP_OUTPUT_PRESENT = {
  * stale and will be overwritten when the pipeline runs forward.
  */
 export function detectCompleted(env) {
-    let n = 0;
-    for (const step of SPHERE_STEPS) {
-        if (STEP_OUTPUT_PRESENT[step](env)) n += 1;
-        else break;
-    }
-    return n - 1;
+    return detectCompletedGeneric(env, SPHERE_DESCRIPTOR);
 }
 
 /**
@@ -633,8 +953,7 @@ export function detectCompleted(env) {
  * `env.completed` from data presence first.
  */
 export async function resumeEnvelope(env, toStep = 'compile', opts = {}) {
-    env.completed = detectCompleted(env);
-    return runToStep(env, toStep, opts);
+    return resumeEnvelopeGeneric(env, toStep, opts, SPHERE_DESCRIPTOR);
 }
 
 // --- sphere append ----------------------------------------------------
@@ -664,12 +983,25 @@ export function truncateSphereWorld(env, keepWaves) {
     const grid = env.grow?.grid;
     for (let i = cut; i < nodes.length; i++) {
         const nd = nodes[i];
-        if (grid && nd.cell && grid.hasRegion(nd.cell)) grid.removeRegion(nd.cell);
-        if (grid && nd.isTeleporter && nd.parent != null) {
+        if (grid && nd.cell && grid.hasRegion(nd.cell)) {
+            // A dropped region takes its own exits' teleporter entries with it
+            // (read BEFORE it leaves the grid — Grid.deleteTeleportersOf says why).
+            grid.deleteTeleportersOf(nd.cell);
+            grid.removeRegion(nd.cell);
+        }
+        if (grid && nd.isTeleporter && nd.parent != null && nd.parent < cut) {
+            // A KEPT parent: keyed by EXIT, drop only the parent exit that led to
+            // THIS node, so a surviving same-side sibling keeps its teleporter.
+            // (A dropped parent's entries went with its region above.)
             const parent = nodes[nd.parent];
-            if (parent?.cell) {
-                grid.teleporters.delete(`${parent.cell.gx},${parent.cell.gy}:${nd.side}`);
-            }
+            const parentRegion = parent?.cell ? grid.getRegion(parent.cell) : null;
+            const exitId = parentRegion ? parentExitIdTowardChild(parentRegion, nd) : null;
+            // ⛓ C1 (2026-09-14): `exitId` null with a kept parent is UNREACHED by
+            // the driver — 0 of 15 kept-parent teleporter children over 16 dense
+            // maze sphere worlds × every kept-wave count (the parent is realised
+            // with one forward exit per child, on the child's side, at it). It
+            // deletes nothing rather than guess an exit on that side.
+            if (exitId != null) grid.deleteTeleporter(parent.cell, exitId);
         }
     }
     env.nodes = nodes.slice(0, cut);

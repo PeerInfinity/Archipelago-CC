@@ -1,0 +1,16 @@
+PREDICTED (written before any mutant ran) — fidelityCrusherPress.test.js
+a1 pressGoalFor's matcher returns [] (the press goal never fires)      -> red: "ON: the PRESS goal", "ON: the shield swing and three chains", "the solver still plans the recorded tape" (3)
+a2 refineStrategy's shield arm dropped (the rock stays a bare `break`) -> red: "ON: the shield swing and three chains" (a `break` row), "the solver still plans the recorded tape" (2)
+a3 the stance walk's `undashed` dropped                                 -> red: "ON: the shield swing and three chains" (chain 1's fork: already CHARGING), "the solver still plans the recorded tape" (2)
+a4 choreographyFor never reads BAIT_CHOREOGRAPHIES_L41                  -> red: "the L41 rows are R5's chains", "ON: the shield swing…", "the solver still plans…" (3)
+b1 hitlessWitness never returns a verdict                               -> red: "ON: … ONE fork", "ON: a room that hits every input … (nodes + 9)", "ON: a witness that is hit is no verdict" (3)
+b2 the witness ignores hits (every candidate reads hitless)             -> red: "ON: a room that hits every input …", "ON: a witness that is hit is no verdict" (2)
+
+MEASURED (copy + edit + run + restore, worktree at the slice's code)
+a1 4 red — the three predicted + "the L41 rows are R5's chains …" (it takes its chains from the press search: a cascade not predicted)
+a2 2 red — as predicted
+a3 2 red — as predicted
+a4 3 red — as predicted
+b1 2 red — "ON: … ONE fork" and "ON: a witness that is hit …"; NOT "… proven exactly as OFF" (predicted red: the witness forks are still counted, nodes = OFF + 9, so that row cannot see the mutant — prediction wrong)
+b2 2 red — as predicted
+all six restored (cmp clean)

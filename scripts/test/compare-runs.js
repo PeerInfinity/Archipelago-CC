@@ -1,0 +1,292 @@
+#!/usr/bin/env node
+
+/**
+ * Compare two in-app test runs and print what changed.
+ *
+ * Answers the question that otherwise costs a stash-and-control rerun:
+ * "is this red new, or was it red before my change too?" Reads the
+ * per-run JSON that app.spec.js writes to test-results/in-app-tests/,
+ * which survives across runs (Playwright's cleanup is scoped to
+ * test-results/playwright/ — see known issue #9 in
+ * CC/cloud-environment-issues.md).
+ *
+ * Usage:
+ *   node scripts/test/compare-runs.js                 # newest two runs
+ *   node scripts/test/compare-runs.js <prev> <curr>   # explicit files
+ *   node scripts/test/compare-runs.js --list          # what is on disk
+ *
+ * Runs of different FLAVOURS (`npm test -- --bundled` vs the default
+ * unbundled boot) are never diffed: they boot in a different order, so a
+ * difference between them is not a regression (exit 2, naming both).
+ *
+ * Exit code is 1 when the current run has failures the previous run did
+ * not, so it can gate a script; 0 otherwise.
+ */
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+const RESULTS_DIR = path.join(process.cwd(), 'test-results', 'in-app-tests');
+// A duration change is only worth printing if it is both a large factor
+// and a large absolute move — otherwise every sub-second test is an
+// "outlier" the moment the machine hiccups.
+const OUTLIER_FACTOR = 2.0;
+const OUTLIER_MIN_DELTA_MS = 5000;
+
+function runFiles() {
+    if (!fs.existsSync(RESULTS_DIR)) return [];
+    return fs.readdirSync(RESULTS_DIR)
+        .filter((f) => f.startsWith('test-results-') && f.endsWith('.json'))
+        .sort()                       // ISO timestamps sort chronologically
+        .map((f) => path.join(RESULTS_DIR, f));
+}
+
+function load(file) {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const byId = new Map();
+    for (const t of data.testDetails || []) byId.set(t.id, t);
+    // `mode`/`batch`/`testIds` are absent from runs recorded before they were
+    // stamped.
+    return {
+        file,
+        mode: data.mode || null,
+        batch: data.batch || null,
+        testIds: data.testIds || null,
+        // Absent = recorded before the flavour was stamped, when the harness
+        // could only drive the unbundled boot (it had no --bundled), so
+        // 'unbundled' is what those runs were, not a guess.
+        flavour: data.flavour || 'unbundled',
+        // Stamped by run-tests.js since it takes the box lock: the head the run
+        // froze, and whether the tree moved under it. Absent = not recorded.
+        frozen: data.frozen || null,
+        treeMoved: data.treeMoved ?? null,
+        summary: data.summary || {},
+        // Test files that threw on import (slice C6): their rows are absent,
+        // so the per-row diff below cannot see them. Absent = recorded before
+        // the field existed.
+        importFailures: data.importFailures || [],
+        byId,
+    };
+}
+
+/**
+ * Human label for a run's identity. Names the batch as well as the mode: two
+ * runs of the same mode but different batches have deliberately different
+ * rosters, and a warning that printed only the mode would read as though the
+ * baseline matched.
+ */
+function identity(run) {
+    return `${run.mode}${run.batch ? `/${run.batch}` : ''}`
+        + `${run.testIds ? ` --test=${run.testIds}` : ''}`
+        + `${run.flavour === 'bundled' ? ' --bundled' : ''}`;
+}
+
+function label(run) {
+    if (!run.mode) return 'unknown (recorded before mode stamping)';
+    return `"${identity(run)}"`;
+}
+
+function describe(run) {
+    const s = run.summary;
+    const mode = run.mode ? `[${identity(run)}] ` : `[${run.flavour}] `;
+    const moved = run.treeMoved ? ' ⚠ TREE MOVED' : '';
+    const imports = run.importFailures.length
+        ? ` · ${run.importFailures.length} test file(s) FAILED TO IMPORT` : '';
+    return `${mode}${path.basename(run.file)} — ${s.passedCount ?? '?'}/${s.totalRun ?? '?'} passed${imports}${moved}`;
+}
+
+/**
+ * A run whose tree moved under it measured no single head: its reds and its
+ * greens may belong to either side of the move, so a diff against it is not
+ * attributable. Say so for each such run rather than letting it read as clean.
+ */
+function movedTreeWarnings(runs) {
+    return runs.filter((r) => r.treeMoved).map((r) =>
+        `WARNING: THE TREE MOVED UNDER ${path.basename(r.file)} (frozen head `
+        + `${r.frozen?.head?.slice(0, 10) ?? '?'}) — its results belong to no single head; `
+        + 're-run on a settled tree before attributing a difference to it.');
+}
+
+/**
+ * Pick the run to compare the newest one against: the most recent
+ * EARLIER run of the same mode. Comparing across modes is the wrong
+ * question — the rosters barely overlap, so the real signal drowns in
+ * "added"/"removed" lines.
+ */
+function pickBaseline(files) {
+    const current = load(files[files.length - 1]);
+    const earlier = files.slice(0, -1).reverse().map(load);
+
+    // Pass 1: the newest earlier run KNOWN to be the same mode AND batch AND
+    // id selection. Batch must match too: a `fast` batch deliberately omits the
+    // quarantined categories, so diffing it against a full run of the same mode
+    // reports every quarantined test as REMOVED — the same false alarm the mode
+    // stamp exists to prevent. `--test=` narrows harder still, to a roster of
+    // one, and the eight solo runs of a flake triage must compare against each
+    // other rather than against the full run that prompted them.
+    const sameMode = earlier.find(
+        (r) => r.mode && current.mode && r.mode === current.mode
+            && r.batch === current.batch && r.testIds === current.testIds
+            && r.flavour === current.flavour
+    );
+    if (sameMode) return { prev: sameMode, curr: current, warning: null };
+
+    // Pass 2: nothing stamped matches. Runs recorded before mode
+    // stamping carry no mode at all, so the newest earlier run is a
+    // guess — usable, but say so: an unrelated mode's roster shows up as
+    // wholesale added/removed lines and reads like a catastrophe.
+    // Never across flavours, not even as a guess: see crossFlavourRefusal.
+    const sameFlavour = earlier.filter((r) => r.flavour === current.flavour);
+    if (sameFlavour.length > 0) {
+        const guess = sameFlavour[0];
+        return {
+            prev: guess,
+            curr: current,
+            warning: `baseline is ${label(guess)}, current is ${label(current)}`
+                + ' — roster differences below may be spurious.',
+        };
+    }
+    return null;
+}
+
+/**
+ * The refusal for a bundled-vs-unbundled pair, or null when they match. A
+ * bundled run and an unbundled one boot in a different order (trap 1426: only
+ * the bundled boot overlapped rows), so their difference answers "which boot"
+ * — never "did my change regress" — and a diff would read as the latter.
+ */
+function crossFlavourRefusal(prev, curr) {
+    if (prev.flavour === curr.flavour) return null;
+    const a = (flavour) => (flavour === 'unbundled' ? 'an unbundled' : `a ${flavour}`);
+    return `REFUSED: ${path.basename(prev.file)} is ${a(prev.flavour)} run and `
+        + `${path.basename(curr.file)} is ${a(curr.flavour)} run — a difference between `
+        + 'flavours is not a regression. Compare two runs of the same flavour '
+        + '(`npm test -- --bundled …` for the bundled boot).';
+}
+
+function main() {
+    const args = process.argv.slice(2);
+
+    if (args[0] === '--list') {
+        const files = runFiles();
+        if (files.length === 0) {
+            console.log(`No run results in ${RESULTS_DIR}`);
+            return 0;
+        }
+        for (const f of files) console.log(describe(load(f)));
+        return 0;
+    }
+
+    let prev;
+    let curr;
+    if (args.length >= 2) {
+        prev = load(args[0]);
+        curr = load(args[1]);
+    } else {
+        const files = runFiles();
+        if (files.length < 2) {
+            console.error(
+                `Need two runs to compare; found ${files.length} in ${RESULTS_DIR}.`
+            );
+            return 2;
+        }
+        const picked = pickBaseline(files);
+        if (!picked) {
+            const last = load(files[files.length - 1]);
+            console.error(
+                `No earlier ${last.flavour} run of ${label(last)} to compare against. `
+                + 'Run that mode again, or pass two files explicitly.'
+            );
+            return 2;
+        }
+        ({ prev, curr } = picked);
+        if (picked.warning) console.log(`WARNING: ${picked.warning}\n`);
+    }
+
+    const refusal = crossFlavourRefusal(prev, curr);
+    if (refusal) {
+        console.error(refusal);
+        return 2;
+    }
+
+    console.log(`previous: ${describe(prev)}`);
+    console.log(`current:  ${describe(curr)}`);
+    console.log('');
+    const movedWarnings = movedTreeWarnings([prev, curr]);
+    for (const w of movedWarnings) console.log(w);
+    if (movedWarnings.length > 0) console.log('');
+
+    const newFailures = [];
+    const fixed = [];
+    const added = [];
+    const removed = [];
+    const slower = [];
+
+    for (const [id, t] of curr.byId) {
+        const before = prev.byId.get(id);
+        if (!before) {
+            added.push(`${id} (${t.status})`);
+            continue;
+        }
+        if (t.status === 'failed' && before.status !== 'failed') {
+            const conds = (t.conditions || [])
+                .filter((c) => c.status === 'failed')
+                .map((c) => c.description);
+            newFailures.push(`${id}${conds.length ? ` — ${conds[0]}` : ''}`);
+        } else if (before.status === 'failed' && t.status === 'passed') {
+            fixed.push(id);
+        }
+        if (t.durationMs != null && before.durationMs != null) {
+            const delta = t.durationMs - before.durationMs;
+            if (delta > OUTLIER_MIN_DELTA_MS
+                    && t.durationMs > before.durationMs * OUTLIER_FACTOR) {
+                slower.push(
+                    `${id}: ${(before.durationMs / 1000).toFixed(1)}s → ${(t.durationMs / 1000).toFixed(1)}s`
+                );
+            }
+        }
+    }
+    for (const id of prev.byId.keys()) {
+        if (!curr.byId.has(id)) removed.push(id);
+    }
+
+    const importedBefore = new Set(prev.importFailures.map((f) => f.file));
+    const importedNow = new Set(curr.importFailures.map((f) => f.file));
+    for (const f of curr.importFailures) {
+        if (!importedBefore.has(f.file)) newFailures.push(`test file failed to import: ${f.file} — ${f.error}`);
+    }
+    for (const file of importedBefore) {
+        if (!importedNow.has(file)) fixed.push(`test file imports again: ${file}`);
+    }
+
+    const section = (title, items) => {
+        if (items.length === 0) return;
+        console.log(`${title} (${items.length}):`);
+        for (const i of items) console.log(`  ${i}`);
+        console.log('');
+    };
+
+    section('NEW FAILURES', newFailures);
+    section('FIXED', fixed);
+    section('ADDED (not in the previous run)', added);
+    section('REMOVED (absent from this run)', removed);
+    section('SLOWER', slower);
+
+    if (newFailures.length === 0 && fixed.length === 0
+            && added.length === 0 && removed.length === 0 && slower.length === 0) {
+        console.log('No differences in status, roster, or duration.');
+    }
+
+    // A test that is red in BOTH runs is not a regression, but silence
+    // about it would read as "all green" — say it explicitly.
+    const stillFailing = [...curr.byId.values()]
+        .filter((t) => t.status === 'failed' && prev.byId.get(t.id)?.status === 'failed')
+        .map((t) => t.id);
+    if (stillFailing.length > 0) {
+        console.log(`Still failing in both runs (${stillFailing.length}): ${stillFailing.join(', ')}`);
+    }
+
+    return newFailures.length > 0 ? 1 : 0;
+}
+
+process.exit(main());

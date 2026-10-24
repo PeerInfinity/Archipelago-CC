@@ -1,0 +1,13 @@
+import { readFileSync } from 'node:fs';
+const T = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { levelSourceFromAtlas } = await import(T + 'atlasSource.js');
+const { solveAnytime } = await import(T + 'jsRuntimeSolver.js');
+const f = JSON.parse(readFileSync(T + 'fixtures/dash-shape/sweep-478-l52.json', 'utf8'));
+const levelSource = levelSourceFromAtlas({ levels: f.records });
+const base = { staging: f.staging, perTick: [], live: f.live, solverGoal: f.solverGoal, name: f.from.name,
+  scratchPersistence: f.scratchPersistence, equips: null, budgetWork: f.budgetWork, upgradeWindowWork: null, levelSource };
+for (const extra of [{}, { dashLegPrecheck: true }, { dashShape: { legPrecheck: true, noSwingPrefix: true, keepPartial: true } },
+  { DASH_LEG_PRECHECK: true }, { SEEDLING_DASH_LEG_PRECHECK: '1' }]) {
+  const a = solveAnytime({ ...base, ...extra });
+  console.log(JSON.stringify(extra), 'work', a.work, 'ticks', a.ok ? a.plan.solution.length : null, 'full', JSON.stringify(a.passes.find((p) => p.pass === 'full')));
+}

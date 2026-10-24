@@ -1,0 +1,108 @@
+{
+    "game": "seedling",
+    "name": "stance-l48-keylock-north",
+    "boot": {
+        "level": 48,
+        "x": 16,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 200,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 44
+        },
+        {
+            "key": "down",
+            "from": 56,
+            "to": 196
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — route step 102 (L48) in the SHUT state: from the west (L53) door the player walks east and leans DOWN into `bosslock@48,144` holding key 3 for 140 ticks. `BossLock.update` opens only on a player box on the row under the lock (y 161), so the lean pins the box against the lock's TOP and nothing opens (no `keyTimer`, no fade): from this side the lock is sealed while its flag holds. The survey's staging (`r8-solve-11`'s committed block re-pointed at L48 (16,112), keys [0, 1, 2, 3], items [hasShield, hasFire, canSwim, hasTorch]). Hand-authored keys: 200 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
+}

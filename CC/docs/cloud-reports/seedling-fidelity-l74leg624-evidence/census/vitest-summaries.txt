@@ -1,0 +1,7 @@
+total 3035 passed 3035 failed 0 files 75 md5 7cc72973c54e4c069c00d58f5730fe22
+tapeRunner 611 86af85259c2ab3a51b1f0ebb409743f4
+vt-off3: total 3243 passed 3243 failed 0 files 86 md5 d764cdf334f4ee708805ad014d6c7b09 tapeRunner 611 86af85259c2ab3a51b1f0ebb409743f4 
+vt-lapse2: total 3243 passed 3191 failed 50 files 86 md5 5bd3d81f411335be198227c725c30973 tapeRunner 611 86af85259c2ab3a51b1f0ebb409743f4 
+vt-postfall: total 3243 passed 3208 failed 34 files 86 md5 6b4be25d5e3fc803ed7713a7d03db420 tapeRunner 611 86af85259c2ab3a51b1f0ebb409743f4 
+vt-sbt: total 3243 passed 3212 failed 29 files 86 md5 0b22d73c7d50c0773a852aff9916df75 tapeRunner 611 86af85259c2ab3a51b1f0ebb409743f4 
+note: vt-postfall/vt-sbt ran before the surface/constants --write and the contactFidelity pin (their OFF baseline is vt-off: 31 reds, the same census rows); movers are the diff against that baseline (census/bounded-movers-on.json)

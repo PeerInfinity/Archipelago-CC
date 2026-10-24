@@ -1,0 +1,5 @@
+# box lock: TAKEN by probe-seedling-u9-shield-mobiles.mjs (browser, pid 8373) — head ea80fef4d, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 1794 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: the Bob's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 21528 comparison(s), worst |Δ| 0
+wrote /tmp/claude-0/-home-user-Archipelago-CC/c23ac379-8125-5180-a86f-96127ed60ce2/scratchpad/d3/game-w1-bob.json

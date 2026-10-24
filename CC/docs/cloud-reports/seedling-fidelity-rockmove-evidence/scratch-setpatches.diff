@@ -1,0 +1,51 @@
+diff --git a/frontend/modules/seedlingDemo/seedlingSetPatches.js b/frontend/modules/seedlingDemo/seedlingSetPatches.js
+index 0bd3db38..4011ab77 100644
+--- a/frontend/modules/seedlingDemo/seedlingSetPatches.js
++++ b/frontend/modules/seedlingDemo/seedlingSetPatches.js
+@@ -150,9 +150,30 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
+  * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
+  * ready for the user's choice.
+  */
++
++const scratchRemove = (id, level, x, y, tset, tag) => Object.freeze({ id, level, op: 'remove',
++    match: Object.freeze({ type: 'fallrock', x, y, attrs: Object.freeze({ tset, tag }) }), why: 'ROCKMOVE scratch' });
++const scratchMove = (id, level, x, y, tset, tag, to) => Object.freeze({ ...scratchRemove(id, level, x, y, tset, tag), op: 'move', to });
++const SCRATCH_MOVES = [
++    scratchMove('l29-fallrock-moved', 29, 112, 112, '0', '0', { x: 128, y: 112 }),
++    scratchMove('l43-fallrock-2-moved', 43, 96, 336, '0', '2', { x: 128, y: 336 }),
++    scratchMove('l43-fallrock-1-moved', 43, 192, 336, '0', '1', { x: 160, y: 336 }),
++    scratchMove('l43-fallrock-3-moved', 43, 176, 384, '0', '3', { x: 160, y: 368 }),
++];
++const SCRATCH_ALL = [
++    scratchRemove('l29-fallrock-removed', 29, 112, 112, '0', '0'),
++    scratchRemove('l39-fallrock-removed', 39, 144, 624, '6', '10'),
++    scratchRemove('l43-fallrock-2-removed', 43, 96, 336, '0', '2'),
++    scratchRemove('l43-fallrock-1-removed', 43, 192, 336, '0', '1'),
++    scratchRemove('l43-fallrock-3-removed', 43, 176, 384, '0', '3'),
++    scratchRemove('l74-fallrock-removed', 74, 288, 144, '0', '2'),
++];
++const SCRATCH = (process.env.ROCKMOVE_MOVE ? [...SCRATCH_MOVES, ...SCRATCH_ALL.filter((r) => /l39|l74/.test(r.id))] : SCRATCH_ALL).filter((r) => (process.env.ROCKMOVE_ONLY ?? '').split(',').filter(Boolean).every(() => true)
++    && (!process.env.ROCKMOVE_ONLY || process.env.ROCKMOVE_ONLY.split(',').includes(r.id)));
+ export const SEEDLING_SET_PATCHES = Object.freeze([
+     PATCH_MOONROCK_REMOVED,
+     PATCH_L37_FALLROCK_REMOVED,
++    ...SCRATCH,
+ ]);
+ 
+ const sameAttrs = (have, want) => Object.entries(want)
+@@ -207,6 +228,15 @@ function applyOne(patch, record) {
+             applied: true,
+         };
+     }
++    if (patch.op === 'move') {
++        if (before.length === 0) {
++            if (entities.some((e) => e.type === patch.match.type && Number(e.x) === patch.to.x && Number(e.y) === patch.to.y
++                && sameAttrs(e.attrs, patch.match.attrs))) return { record, applied: false };
++            fail(`seedlingSetPatches: ${patch.id} — neither BEFORE nor AFTER in level ${patch.level}`);
++        }
++        if (before.length > 1) fail(`seedlingSetPatches: ${patch.id} — ${before.length} matches`);
++        return { record: { ...record, entities: entities.map((e) => (e === before[0] ? { ...e, x: patch.to.x, y: patch.to.y } : e)) }, applied: true };
++    }
+     return fail(`seedlingSetPatches: ${patch.id} has an unknown op ${JSON.stringify(patch.op)}`);
+ }
+ 

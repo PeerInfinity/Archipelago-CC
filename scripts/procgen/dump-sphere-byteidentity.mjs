@@ -16,6 +16,10 @@ import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanne
 
 // Serialize a grid's regions deterministically: region object minus the
 // runtime Map (exits), which we render as a sorted array.
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {
@@ -57,7 +61,7 @@ function bounceOnly() {
     });
     const rulesJson = buildRulesJson(grid, {
         startCell, seed: 1, embedSphereLog: false,
-        completionConditionItem: 'Victory', lockedCanonicalItems: ['Right arrow'],
+        completionConditionItem: 'Victory', pinnedCanonicalItems: ['Right arrow'],
     });
     return { grid: dumpGrid(grid), rulesJson, stats };
 }

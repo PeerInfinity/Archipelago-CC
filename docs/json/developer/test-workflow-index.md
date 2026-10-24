@@ -11,9 +11,10 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Workflow | File | Trigger | Description |
 |----------|------|---------|-------------|
-| Unit Tests | `unittests.yml` | push, PR | Python pytest (`pytest -n auto`) |
-| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | JS Vitest (`npm run test:unit`) |
-| Test ALTTP & Regression | `test-templates.yml` | push (main), PR | Spoiler test + frontend regression |
+| Unit Tests | `unittests.yml` | push, PR, dispatch | Python pytest (`pytest -n auto`); the Windows/macOS legs only on a PR or a `full_matrix` dispatch |
+| JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | Parallel jobs: JS Vitest (`npm run test:unit` + `test:unit:slow`), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
+| Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests, one parallel job per on-push batch (`testBatches.js`) with a budget-headroom check each |
+| Substrate tests — manual batches | `test-substrates-manual.yml` | dispatch | The manual substrate batches (`bot-walks`, `noiz2sa`, `runner`; `manual: true` in `testBatches.js`), one or `all` |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | dispatch | UT fuzz across all modes, 10-way parallel split |
 | Test UT Fuzzer (Single Game) | `test-ut-fuzz-single-game.yml` | dispatch | Single-game UT fuzz |
@@ -52,7 +53,9 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
-| `run-tests.js` | `test-templates.yml`, `test-all-sequential.yml` | Called via `npm test` |
+| `run-tests.js` | `test-templates.yml`, `test-substrates-manual.yml`, `test-all-sequential.yml` | Called via `npm test` |
+| `list-test-batches.js` | `test-templates.yml`, `test-substrates-manual.yml` | Prints the on-push / manual / dispatchable batches (`testBatches.js`) as the jobs' matrix; `--changed=` drops a `pushPaths` batch no pushed path hits |
+| `check-batch-headroom.js` | `test-templates.yml`, `test-substrates-manual.yml` | Grades each batch run against its in-app budget: fails on NEVER STARTED / CUT OFF rows or a span over budget, warns past `HEADROOM_WARN_FRACTION` |
 | `analyze-test-results.js` | **No workflow** | Post-hoc analysis of Playwright results |
 | `test-health-check.js` | **No workflow** | Environment sanity check |
 | `test-seed-range.js` | **No workflow** | Seed range generation test |
@@ -67,6 +70,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Vitest benchmarks | `npm run bench` | **No workflow** | Performance benchmarks |
 | Playwright (spoilers) | `npm test -- --mode=test-spoilers` | `test-templates.yml` + others | Invoked indirectly by Python test scripts |
 | Playwright (regression) | `npm test -- --mode=test-regression` | `test-templates.yml` | push/PR trigger |
+| Playwright (substrates, on-push batches) | `npm test -- --mode=test-substrates --batch=<fast\|seedling-js\|apworld>` | `test-templates.yml` | push/PR trigger |
+| Playwright (substrates, manual batches) | `npm test -- --mode=test-substrates --batch=<bot-walks\|noiz2sa\|runner>` | `test-substrates-manual.yml` | manual only |
 | Playwright (multiclient) | `npm run test:multiclient` | `test-all-sequential.yml` | dispatch only |
 | Health check | `npm run test:health` | **No workflow** | |
 | Full suite | `npm run test:full-suite` | **No workflow** | Compound: health + tests + analysis |
@@ -75,6 +80,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
+| `scripts/rules/ruleKindCensus.test.js` | `unittests_frontend.yml` (vitest) | Cross-layer rule-node kind census: [rule-kind-registry.md](reference/rule-kind-registry.md) |
+| `test/general/test_rule_kind_vocab.py` | `unittests.yml` (pytest) | The census's Python vocabulary snapshot is fresh |
 | `sync-rule-docs.py` | **No workflow** | Rule types documentation coverage |
 | `sync-rule-tests.py` | **No workflow** | Rule types test coverage |
 | `sync-script-docs.py` | **No workflow** | Script documentation coverage |

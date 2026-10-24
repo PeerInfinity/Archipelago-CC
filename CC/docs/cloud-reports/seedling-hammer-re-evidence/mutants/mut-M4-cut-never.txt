@@ -1,0 +1,45 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerRefugeCut.test.js [2m([22m[2m6 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 6234[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 2[2mms[22m[39m
+     [32m✓[39m withRefugeEtaCut sets and restores it, also on a throw[32m 2[2mms[22m[39m
+     [32m✓[39m the cut stops at the (eta + 1)-th sample, never at the eta-th (a tie still arrives)[32m 1[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF writes nothing to the instrument [33m 1727[2mms[22m[39m
+[31m     [31m×[31m at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised[39m[33m 3607[2mms[22m[39m
+[31m     [31m×[31m t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)[39m[33m 891[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerRefugeCut.test.js[2m > [22mREFUGE_ETA_CUT — staging A with the ghost (G1's witness walk)[2m > [22mat the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised
+[31m[1mAssertionError[22m: expected 0 to be greater than 0[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerRefugeCut.test.js:[2m96:43[22m[39m
+    [90m 94| [39m        [34mexpect[39m(seen[33m.[39m[34mevery[39m((s) [33m=>[39m s[[34m1[39m] [33m!==[39m [35mnull[39m))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m 95| [39m        [34mexpect[39m([33mREFUGE_ETA_CUT_COUNTS[39m[33m.[39mpreviews)[33m.[39m[34mtoBe[39m([34m12[39m [33m*[39m [33mTICKS[39m[33m.[39mlength)[33m;[39m
+    [90m 96| [39m        [34mexpect[39m([33mREFUGE_ETA_CUT_COUNTS[39m[33m.[39mcut)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m 97| [39m    }[33m,[39m [34m180_000[39m)[33m;[39m
+    [90m 98| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerRefugeCut.test.js[2m > [22mREFUGE_ETA_CUT — with BW's PRESS_KILL_BOMBS ON (leg 381's MOVINGWAIT witness walk)[2m > [22mt1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)
+[31m[1mAssertionError[22m: expected 0 to be greater than 0[39m
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerRefugeCut.test.js:[2m121:47[22m[39m
+    [90m119| [39m            const on = withRefugeEtaCut(true, () => deriveRefuge(run, …
+    [90m120| [39m            [34mexpect[39m(on)[33m.[39m[34mtoEqual[39m(off)[33m;[39m
+    [90m121| [39m            [34mexpect[39m([33mREFUGE_ETA_CUT_COUNTS[39m[33m.[39mcut)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                                              [31m^[39m
+    [90m122| [39m            // ⚠ the instrument the switch names: two of OFF's refused…
+    [90m123| [39m            // their previews before the bombs are asked (a refused ca…
+[90m [2m❯[22m withPressKillBombs frontend/modules/seedlingDemo/pressKillCost.js:[2m317:21[22m[39m
+[90m [2m❯[22m frontend/modules/seedlingDemo/hammerRefugeCut.test.js:[2m112:27[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 19:01:53
+[2m   Duration [22m 9.32s[2m (transform 2.11s, setup 0ms, import 2.90s, tests 6.23s, environment 0ms)[22m
+

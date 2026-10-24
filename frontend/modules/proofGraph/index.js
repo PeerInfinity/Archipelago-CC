@@ -24,9 +24,11 @@ export const moduleInfo = {
   name: 'proofGraph',
   title: 'Proof Graph',
   componentType: 'proofGraphPanel',
+  docs: 'docs/json/user/modules/proofGraph.md',
   icon: '\u{1F517}', // link emoji
   column: 3,
-  description: 'Reconstruct proof dependency edges in a graph puzzle.',
+  category: 'Non-procgen Games',
+  description: 'Drag arrows between MetaMath proof steps to rebuild their dependencies, then check the steps that turn green.',
   requires: ['stateManager'],
 };
 

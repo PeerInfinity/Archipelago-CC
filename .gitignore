@@ -299,16 +299,11 @@ test1/
 test2/
 test3/
 test4/
-frontend/modules/mazeGame-iframe/
 .git.disabled/
 worlds/apworld_manager/
 worlds_disabled/
 custom_worlds_disabled/
-iframe_games/journey-to-ascension-backup/
-iframe_games/journey-to-ascension-modified/
 iframe_games/omsi-loops/
-iframe_games/journey-to-ascension/build/
-iframe_games/journey-to-ascension/node_modules/
 fuzz_output/
 test_dumps/
 grid-growth-dump.json
@@ -326,3 +321,37 @@ rule_builder_modified/
 frontend/modules/bounceDemo/djReal/*.swf
 frontend/modules/bounceDemo/djReal/runtime/Doodle_Jump_loader.*
 
+
+# Transient workspace of scripts/procgen/check-jta-locations-roundtrip.mjs.
+# Under JTA_RT_KEEP=1 (how CC/scripts/jta-stats/sweep-ap-seeds.mjs drives it)
+# the generated world + preset survive the run on purpose, so they must never
+# be picked up by a `git add -A` that lands mid-sweep.
+scripts/procgen/.jta-roundtrip-rules.json
+scripts/procgen/.jta-roundtrip-templates/
+worlds/jta_loctest_roundtrip_worldgen/
+frontend/presets/jta_loctest_roundtrip_worldgen/
+
+# ⛓ RETIRED 2026-08-19 — frontend/modules/flashPanel/wasm/ used to be ignored
+# here (hand-copied SWFRecomp artifacts). It is now the SUBMODULE
+# PeerInfinity/seedling-wasm, so it must NOT be ignored: the whole point is
+# that GitHub Pages and CI check the builds out at that exact path. The
+# submodule carries its own .gitignore — a WHITELIST — under which historical
+# builds sitting in the same directory stay untracked and locally reachable
+# by SEEDLING_PAGE=<name>. See frontend/modules/flashPanel/README.md.
+
+# ⛓ The procgen documents staged into the Pages artifact by
+# .github/workflows/deploy-gh-pages.yml (`docs.html` fetches them from a
+# site-root-relative path, and only `frontend/` is published). ⛔ Build output,
+# never a source: the documents live in docs/json/developer/procgen/.
+frontend/docs/
+
+# ⛓ world_generator staged into the Pages artifact by the same workflow (the
+# apworld editor's `⭳ .apworld` fetches it from the site root). ⛔ Build output;
+# the source is world_generator/ at the repo root.
+frontend/world_generator/
+
+# ⛓ the exporter's helper-script subset, staged into the Pages artifact by the
+# same workflow (`node scripts/build/helper-script-files.mjs --stage`; the rule
+# converter's Exact mode fetches it from the site root). ⛔ Build output; the
+# source is exporter/ at the repo root.
+frontend/exporter/

@@ -28,6 +28,8 @@ Parameters are processed during application initialization and can override conf
 | `focusPanel` | Focus specific panel(s) | `?focusPanel=inventoryPanel,regionsPanel` |
 | `movePanel` | Move panel(s) to specific stack(s) | `?movePanel=loopsPanel:left-stack` |
 | `loadModule` | Load external module(s) by URL | `?loadModule=https://example.com/module/index.js` |
+| `tutorial` | Start a tutorial in the Tutorial panel | `?tutorial=guided-tour` |
+| `tutorialStep` | …at this step (1-based) | `?tutorial=guided-tour&tutorialStep=4` |
 
 ## Supported Parameters
 
@@ -138,7 +140,7 @@ These parameters work together to load the correct game rules from preset files.
 **Details:**
 - The mode parameter determines which configuration is loaded from `frontend/modes.json`
 - Each mode can specify different rules files, module configurations, layout presets, and settings
-- If no mode is specified, the application will use the last active mode from localStorage or fall back to "default"
+- If no mode is specified, the application will use the last active mode from localStorage or fall back to "default" — while `generalSettings.autoLoadMode` is on (the default, `frontend/app/mode/modePersistenceDefaults.js`); with it off, always "default"
 - Mode detection occurs early in the initialization process
 
 ### `reset`
@@ -245,6 +247,24 @@ These parameters control automatic connection to an Archipelago server.
 - If a panel is in a tabbed stack, it will be brought to the front
 - Each panel is activated in whichever stack contains it (order in the URL does not matter)
 
+#### `tutorial` / `tutorialStep`
+
+**Purpose:** Open the Tutorial panel on a tutorial when the app opens — the link a guide gives its readers.
+
+**Usage:** `?tutorial=<id>` or `?tutorial=<id>&tutorialStep=<n>`
+
+**Valid Values:** a tutorial's `id` (`frontend/modules/tutorials/content/index.js` lists them; today `guided-tour`). `tutorialStep` is 1-based, as the panel numbers its steps; missing, zero or not a number means step 1.
+
+**Examples:**
+- `?game=procgen_maze&seed=1&tutorial=guided-tour` — load the tour's world and start the Guided Tour (the link in the [Guided Tour](../../user/guided-tour.md) guide)
+- `?tutorial=guided-tour&tutorialStep=8` — start it at step 8
+
+**Details:**
+- The panel is brought forward and starts the tutorial as if *Start* had been pressed: on the desktop layout it moves into a stack of its own under the one it was in (see the [Tutorial panel guide](../../user/modules/tutorials.md)).
+- Read once per page load; closing and reopening the panel later does not restart it.
+- If the panel had been closed, it is reopened.
+- An unknown id leaves the panel on its list, with a note naming the id.
+
 #### `movePanel`
 
 **Purpose:** Move one or more panels to specific layout stacks on application load. Panels are moved before `panel` activation occurs, so the two parameters can be combined.
@@ -290,16 +310,15 @@ These parameters control automatic connection to an Archipelago server.
 
 **Usage:** `?iframe=<shortname>` or `?iframe=<url>`
 
-**Valid Values:** A shortname from the known pages list (`textadventure`, `iframebase`, `mazegame`, `jta`) or a full URL.
+**Valid Values:** A shortname from the known pages list (`iframebase`) or a full URL.
 
 **Examples:**
-- `?iframe=jta` - Load Journey to Ascension in an iframe
-- `?iframe=mazegame` - Load A-Mazing-Idle in an iframe
-- `?iframe=jta&useWindow=1` - Load JTA in a separate browser window instead
+- `?iframe=iframebase` - Load the Iframe Base page in an iframe
+- `?iframe=iframebase&useWindow=1` - Load it in a separate browser window instead
 
 **Details:**
 - Resolved via `knownIframePages.js` shortname lookup, or passed through as a URL
-- Falls back to the `iframeAutoLoad` setting from mode settings (e.g., `settings-jta.json` has `"iframeAutoLoad": "jta"`)
+- Falls back to the `iframeAutoLoad` setting from mode settings (e.g. `"iframeAutoLoad": "iframebase"` in a mode's settings file)
 - Publishes `iframe:loadUrl` (or `window:loadUrl` when `useWindow=1`)
 - Loading happens after the panel manager initializes, with a 500ms delay
 - **Dev-host only:** `?iframe=` is a local-testing affordance. It is honored
@@ -316,13 +335,10 @@ These parameters control automatic connection to an Archipelago server.
 **Usage:** `?useWindow=1`
 
 **Examples:**
-- `?iframe=jta&useWindow=1` - Load JTA in a separate window
-- `?mode=jta&useWindow=1` - JTA mode with game in a separate window (via `iframeAutoLoad`)
-- `?metagame=mazegame&useWindow=1` - Maze metagame with mazes opening in separate windows
+- `?iframe=iframebase&useWindow=1` - Load the Iframe Base page in a separate window
 
 **Details:**
 - Works with both `?iframe=` parameter and `iframeAutoLoad` setting
-- Also affects metagame configurations: maze challenges open/close in separate windows instead of switching iframe panel tabs
 - The same HTML pages work in both iframe and window contexts thanks to the unified AdapterClient
 - **Dev-host only:** like `?iframe=`, the `?useWindow=` URL parameter is
   honored only on dev hosts and is ignored elsewhere.
@@ -333,12 +349,12 @@ These parameters control automatic connection to an Archipelago server.
 
 **Usage:** `?metagame=<shortname>`
 
-**Valid Values:** `mazegame`, `mazegameloops`
+**Valid Values:** `progressbar`
 
 **Examples:**
-- `?metagame=mazegame` - Standard maze challenges
-- `?metagame=mazegameloops` - Loops-compatible maze challenges
-- `?metagame=mazegame&useWindow=1` - Maze challenges in separate windows
+- `?metagame=progressbar` - The progress-bar test scenario
+
+The Meta Game module is deprecated (2026-10-11) and disabled in every launch mode, so the parameter does nothing unless the mode's module config enables `metaGame` and `metaGamePanel` again.
 
 ---
 
@@ -471,6 +487,7 @@ URL parameters are processed in multiple locations during initialization:
 | `frontend/app/mode/modeDataLoader.js` | `rules`, `game`, `seed`, `player` |
 | `frontend/app/initialization/index.js` | `mode`, `focusPanel`, `movePanel`, `loadModule`, `iframe`, `useWindow`, `metagame` |
 | `frontend/modules/client/index.js` | `autoConnect`, `server`, `playerName` |
+| `frontend/modules/tutorials/tutorialUrl.js` | `tutorial`, `tutorialStep` |
 | `frontend/modules/shared/adapterClient.js` | `windowId`, `iframeId`, `clientId`, `windowName`, `iframeName`, `heartbeatInterval`, `hostOrigin` |
 | `frontend/modules/tests/testLogic.js` | `mode`, `testOrderSeed` |
 

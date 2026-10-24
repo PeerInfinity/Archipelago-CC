@@ -1740,9 +1740,7 @@
         "groups": [
           "coins"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "type": "coins",
         "max_count": 999999
       },
@@ -1752,9 +1750,7 @@
         "groups": [
           "coins"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "type": "coins",
         "max_count": 999999
       }
@@ -1960,7 +1956,7 @@
           {
             "name": "Guide de configuration MultiWorld",
             "description": "Un guide pour configurer DLCQuest sur votre PC.",
-            "language": "Fran\u00e7ais",
+            "language": "Français",
             "file_name": "setup_fr.md",
             "link": "setup/fr",
             "authors": [

@@ -14,6 +14,7 @@ from .expression_resolver import ExpressionResolver
 from .binary_ops import BinaryOpProcessor
 from .ast_visitors import ASTVisitorMixin
 from exporter.constants import MAX_ANALYZER_OPERATIONS
+from .utils import PLAYER_PARAMS_KEY
 
 
 class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
@@ -128,8 +129,9 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         # Check for direct 'state', 'player', 'world', or 'self' names
         if isinstance(arg_node, ast.Name):
             name = arg_node.id
+            is_player = name == 'player' or name in self.closure_vars.get(PLAYER_PARAMS_KEY, ())
             # 'self' represents the world object in methods, treat it same as 'world'
-            return (name == 'state', name == 'player', name in ('world', 'self'))
+            return (name == 'state', is_player, name in ('world', 'self'))
 
         # Check for attribute access like 'world.player', 'self.player', etc.
         if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
@@ -204,6 +206,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             Dictionary mapping parameter names to their resolved values
         """
         param_mapping = {}
+        player_params = set()
 
         try:
             if not callable(func) or not hasattr(func, '__code__'):
@@ -226,6 +229,11 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
                 if param_name in ('state', 'player'):
                     logging.debug(f"_build_parameter_mapping: Skipping special parameter '{param_name}'")
                     continue
+
+                # A parameter that receives the player under another name is the player
+                # inside the callee (its value is still mapped below, like `player`'s).
+                if self._is_state_or_player_or_world_arg(arg_node, arg_result)[1]:
+                    player_params.add(param_name)
 
                 # Try to resolve the argument to a concrete value
                 resolved_value = None
@@ -274,6 +282,9 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         except Exception as e:
             logging.error(f"Error building parameter mapping: {e}")
 
+        # Overwrite an inherited key too: the caller's aliases are not the callee's.
+        if player_params or PLAYER_PARAMS_KEY in self.closure_vars:
+            param_mapping[PLAYER_PARAMS_KEY] = frozenset(player_params)
         logging.debug(f"_build_parameter_mapping: Final mapping: {param_mapping}")
         return param_mapping
 

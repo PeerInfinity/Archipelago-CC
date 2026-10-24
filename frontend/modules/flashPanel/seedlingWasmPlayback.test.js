@@ -1,0 +1,2144 @@
+/**
+ * seedlingWasmPlayback — solver-walk W2: the ENGINE behind the controller's
+ * wasm branch.
+ *
+ * The game is a FAKE whose reads are W1's RECORDED arrivals
+ * (`seedlingDemo/fixtures/wasm-arrival-p4g.json`): `botSeam` answers the
+ * baseline until the forced re-arrival's teleport "lands", then the recorded
+ * arrival's `beginEntry`; `botStatus`/`readState` are the recorded reads with
+ * the tape flags (`held`, `armed`, `finished`) the verbs set. The SOLVE is
+ * real (the in-place service over the vanilla map); the drain replays the
+ * plan's own expected rows. The live witness is
+ * `scripts/procgen/probe-seedling-wasm-playback.mjs`.
+ */
+
+import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { ADOPT_WAIT_MS, ARRIVAL_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { LATCH_FRAME_BOUND, SHIPPED_RNG, SOLVE_RETRY_BUDGET_FACTOR, TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
+import { ANYTIME_PASSES, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK } from '../seedlingDemo/jsRuntimeSolver.js';
+import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
+import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
+import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
+import { AXE_DODGE_ASK_PER_PREVIEW } from '../seedlingDemo/solverBot.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { AXE_DODGE_ASK_PER_PREVIEW_DEFAULT, applyAxeDodgeAsk, formatAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
+import { DASH_ONLY_WINDOW, applyDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
+import { DASH_SHAPE_DEFAULTS, applyDashShape, dashShapeRead } from '../seedlingDemo/dashShapeHook.js';
+import { LOAD_FADE_FRAMES } from '../seedlingDemo/gameClock.js';
+import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(HERE, '../../..');
+const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals;
+const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
+const HOUSE = 86;
+const byLabel = (prefix, level) => RECORDED.find((a) => a.label.startsWith(prefix) && a.status.level === level);
+const A = byLabel('A ', HOUSE);
+const C = byLabel('C ', HOUSE);
+const CHEST = { kind: 'location', level: HOUSE, tag: 0, entityType: 'chest', name: 'Starting House - Chest' };
+const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
+
+/** Manual timers: `run()` drains what is due, in order. */
+function manualTimers() {
+    let q = [];
+    let id = 0;
+    return {
+        setTimeout(fn, ms) { q.push({ id: ++id, fn, ms }); return id; },
+        clearTimeout(h) { q = q.filter((t) => t.id !== h); },
+        run(max = 5000) {
+            let n = 0;
+            while (q.length && n < max) { const t = q.shift(); t.fn(); n += 1; }
+            return n;
+        },
+        get pending() { return q.length; },
+    };
+}
+
+/** A game whose reads are a recorded arrival's. */
+function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
+    midSpanOnFirstPlan = null, unwatched = null, realSeam = false, arrivalFade = LOAD_FADE_FRAMES, freezeDeadPerPoll = 0 } = {}) {
+    const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
+    const g = {
+        // ⛓ W8 — `unwatched`: the room ran since ITS begin record before the bot drove (the cold start),
+        // `{elapsed, mobiles, patch, begin}` = game frames since that begin, the botMobiles rows, botStatus overrides.
+        be: unwatched ? { ...arrival.seam.beginEntry, ...(unwatched.begin ?? {}) } : baseline,
+        unwatched,
+        get be0() { return { ...arrival.seam.beginEntry, ...(unwatched?.begin ?? {}) }; },
+        botMobiles() { g.calls.push('botMobiles'); return unwatched ? JSON.stringify({ tick: 0, mobiles: unwatched.mobiles, pods: [] }) : undefined; },
+        held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
+        // ⛓ FREEZE LATCH (§5.89) — `freezeDeadPerPoll`: the dead frames the game runs between two reads of a freeze
+        // not yet latched (0 = a game whose clock stands still); reported as `dead_frames` when set
+        dead: 0,
+        // ⛓ SEAM OFFSET (§5.82) — the clock a FREEZE holds the arrival at: its begin record + the fade's dead frames
+        // (`arrivalFade`: LOAD_FADE_FRAMES pinned, one fewer per render an unpinned fade ran before the freeze loaded)
+        heldClock: null,
+        latchFreeze() { g.held = !!g.tape.hold; g.heldClock = g.held && !g.unwatched ? arrival.seam.beginEntry['save.time'] + arrivalFade : null; },
+        calls: [], tapes: [], stalls: stallDrains, cleared: null,
+        land() { g.be = arrival.seam.beginEntry; },
+        botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false, ...(g.sinceBegin ? { sinceBegin: g.sinceBegin } : {}) }); },
+        botStatus() {
+            g.calls.push('botStatus');
+            // ⛓ W8c — an unwatched room may script itself read by read (the new game's ceremony)
+            if (g.unwatched?.tick) g.unwatched.tick(g.unwatched);
+            if (g.armed && g.tape?.tick_count === 0 && ++g.freezePolls > freezeLatchesAfter) {
+                g.armed = false; g.finished = true; g.latchFreeze();
+            } else if (g.armed && g.tape?.tick_count === 0) g.dead += freezeDeadPerPoll;
+            return JSON.stringify({ ...arrival.status,
+                // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
+                game_time: (g.unwatched ? (g.be ?? g.be0)['save.time'] + g.unwatched.elapsed : g.held && g.heldClock !== null ? g.heldClock
+                    : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
+                ...(g.unwatched?.patch ?? {}),
+                ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
+                ...(g.midSpan ? g.midSpan : {}),
+                // ⛓ W7 — where the last drained row left the player (a held end is read against the shadow)
+                ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
+                // ⛓ STAGEDHITS CONSUMER — the game's own `{hits, hits_timer}` when a row sets them (the recording's are 0/0)
+                ...(g.damage ?? {}),
+                ...(freezeDeadPerPoll ? { dead_frames: g.dead } : {}),
+                held: g.held, armed: g.armed, finished: g.finished, error: '' });
+        },
+        // ⛓ W8c — `freezeObjects` (games/seedling.json): false unless the unwatched room says otherwise
+        readState() { return JSON.stringify({ freezeObjects: false, ...arrival.state, ...(g.unwatched?.state ?? {}), pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
+        // ⛓ W8c — the active set's start level (the new-game arm resolves a −1 begin record to it)
+        botLevelSet() { return JSON.stringify({ start_level: g.unwatched?.startLevel ?? 0 }); },
+        // ⛓ §5.19 — `realSeam`: as the game does, a tape load CLEARS the begin record and a reset leaves it alone.
+        botLoadTape(json) { g.calls.push('botLoadTape'); g.tape = JSON.parse(json); g.tapes.push(g.tape); if (realSeam) g.be = null; return 'ok'; },
+        botStart() {
+            g.calls.push('botStart');
+            g.seq += g.tape.persistence.length;
+            g.held = false;
+            g.heldClock = null;
+            if (g.tape.tick_count === 0) {
+                if (freezeLatchesAfter > 0) { g.armed = true; g.finished = false; } else { g.armed = false; g.finished = true; g.latchFreeze(); }
+            } else { g.armed = true; g.finished = false; }
+            return 'ok';
+        },
+        // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
+        // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
+        botReset() { g.calls.push('botReset'); g.held = false; g.heldClock = null; g.armed = false; g.midSpan = null; if (!realSeam) g.be = baseline; g.pos = null; return 'ok'; },
+        botDrain() {
+            g.calls.push('botDrain');
+            if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
+            // A SealController-class freeze: the armed tape counts dead frames, so NO rows drain.
+            if (g.stalls > 0) { g.stalls -= 1; return JSON.stringify({ ticks: [] }); }
+            const ticks = g.drainRows;
+            g.drainRows = null;
+            if (clearedAfterDrain) g.cleared = clearedAfterDrain;
+            // The first plan still mid-span when its rows drain (the W3 key-release row): armed, at `tick`.
+            if (midSpanOnFirstPlan && g.tapes.length === 2) { g.midSpan = midSpanOnFirstPlan; return JSON.stringify({ ticks, transitions: [] }); }
+            // ⛓ W7 — a tape declared `hold` latches HELD at its finish, the player where its last row is.
+            g.armed = false; g.finished = true; g.held = !!g.tape.hold; g.pos = ticks.at(-1) ?? g.pos;
+            return JSON.stringify({ ticks, transitions: [] });
+        },
+    };
+    return g;
+}
+
+/**
+ * An in-place solve service that hands the fake game the plan's rows to drain —
+ * through `perturb(rows, attempt)` (attempt 0 = the first solve), the W3
+ * divergence injector.
+ */
+function capturingService(game, perturb = (rows) => rows, editPlan = null) {
+    // ⛓ WG — the produce service: a solver request solves, a `producer: 'walker'` one walks.
+    const inner = createInPlaceProduceService();
+    const seen = [];
+    return {
+        seen,
+        start(request, opts) {
+            const h = inner.start(request);
+            if (h.result.ok && editPlan) h.result.plan = editPlan(h.result.plan);
+            // ⛓ RETRY ATTEMPT — what the playback TOLD the service this start is (`opts.attempt`)
+            seen.push({ request, result: h.result, attempt: opts?.attempt });
+            if (h.result.ok) {
+                game.drainRows = perturb(h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y })),
+                    seen.length - 1);
+            }
+            return { ...h, startedAt: 0 };
+        },
+        warm() {}, dispose() {},
+    };
+}
+
+function engineOver(arrival, opts = {}) {
+    const game = fakeGame(arrival, opts.game);
+    const timers = manualTimers();
+    const teleports = [];
+    const windows = [];
+    const notes = [];
+    const failures = [];
+    const failExtras = [];
+    const dones = [];
+    const service = capturingService(game, opts.perturb, opts.editPlan);
+    let t = 0;
+    const swap = { state: opts.swap ?? null };
+    const engine = createWasmPlayback({
+        getGame: () => game,
+        getSwapState: opts.noGlue ? undefined : () => swap.state,
+        ...(opts.pushSwap ? { pushSwapNow: () => { game.calls.push('pushSwap'); return opts.pushSwap(swap); } } : {}),
+        getWin: () => opts.win ?? null,
+        teleport: (p) => { teleports.push(p); opts.onTeleport?.(swap); if (opts.land !== false) game.land(); return true; },
+        getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
+        records: opts.records ?? RECORDS, generated: opts.generated ?? false, producer: opts.producer ?? null, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
+        ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
+        ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
+        ...(opts.getAxeDodgeAskPerPreview ? { getAxeDodgeAskPerPreview: opts.getAxeDodgeAskPerPreview } : {}),
+        ...(opts.getDashOnlyWindow ? { getDashOnlyWindow: opts.getDashOnlyWindow } : {}),
+        ...(opts.getDashShape ? { getDashShape: opts.getDashShape } : {}),
+        ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
+        onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
+    });
+    return { engine, game, timers, teleports, windows, notes, failures, failExtras, dones, service, swap };
+}
+
+describe('the engine serves a goal at an arrival (fake game over the recorded reads, real solve)', () => {
+    it('chest on a fresh room: forced re-arrival at the SPAWN (the cold start) → freeze (zero-tick, hold) → solve → plan tape ⛓ W7 ending HELD → drained → done, the room held', () => {
+        const e = engineOver(A);
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.teleports).toEqual([{ level: HOUSE, x: A.state.playerPositionX, y: A.state.playerPositionY }]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.seam])).toEqual([[0, true, null],
+            [e.service.seen[0].result.plan.solution.length, true, null]]);
+        expect(e.service.seen[0].request.scratchPersistence).toBe(true);
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['chest', 'walk']);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0].divergence).toBeNull();
+        expect(e.dones[0].drained).toBe(e.dones[0].ticks + 1);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
+        expect(e.notes.at(-1)).toBeNull();
+        // ⛓ W7 — a location plan ends HELD: the room is the engine's, its recipe = the arrival + the plan's keys
+        expect(e.dones[0].heldEnd).toBe(true);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: e.dones[0].ticks, plans: 1 } });
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.game.held).toBe(true);
+    });
+
+    it('door after the chest (C): both tapes re-declare the earned chest; each botStart\'s window goes to the binding', () => {
+        const e = engineOver(C);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        for (const t of e.game.tapes) {
+            expect(t.persistence.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: HOUSE, tag: 0 }]);
+            expect(t.save.seal_parts).toEqual([C.status.save.seal_parts[0]]);
+        }
+        // ⛓ R4b part 2 — each window carries the tape's own declarations (the reconcile's exclusion list)
+        expect(e.windows.map(({ from, to }) => ({ from, to }))).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        e.windows.forEach((w, i) => expect(w.declared).toEqual(e.game.tapes[i].persistence));
+        expect(e.dones[0].expectedEnd.level).not.toBe(HOUSE);
+    });
+
+    it('a solve that beats the fade waits for the freeze to LATCH before shipping (never botStart over an armed tape)', () => {
+        const e = engineOver(A, { game: { freezeLatchesAfter: 3 } });
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.calls.filter((c) => c === 'botStart')).toHaveLength(2);
+        expect(e.game.freezePolls).toBeGreaterThan(3);
+        expect(e.dones).toHaveLength(1);
+    });
+});
+
+/**
+ * ⛓ FREEZE LATCH (§5.89) — the latch wait is PROGRESS-AWARE. CI run 38994029714, shard 9 (a ~5× slow runner):
+ * six legs failed "the arrival's freeze never latched … within 15 s", and the 5×-throttled repro shows why — two
+ * polls in 60–98 s, the game ONE frame on between them: the page spent the wall clock running the room's first
+ * frame, the poll ran after the deadline, and the latch was a frame away. A wall clock (`wall`, advanced per read
+ * of a freeze not yet latched) stands in for the slow page here; ⛔ the GAME's clock is never faked — the fake game
+ * reports the frames it ran (`freezeDeadPerPoll`).
+ */
+describe('⛓ FREEZE LATCH (§5.89) — the latch wait fails on a STILL game, never on a slow page', () => {
+    // ⛓ W8's untouched house (its describe's own reads): the adoption arm
+    const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
+    const unwatched = () => ({ elapsed: 200, mobiles: [PLAYER], patch: {} });
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    /** An engine whose wall clock moves `msPerRead` on each read of a freeze still pending. */
+    function slowPage(msPerRead, game, opts = {}) {
+        let wall = 0;
+        const e = engineOver(A, { ...opts, now: () => wall, game });
+        const read = e.game.botStatus;
+        e.game.botStatus = () => {
+            if (e.game.armed && e.game.tape?.tick_count === 0 && !e.game.held) wall += msPerRead;
+            return read();
+        };
+        return e;
+    }
+    it('a slow page: 20 s of wall between reads, the game a frame on each time → WAITED, latched, solved, done', () => {
+        const e = slowPage(20000, { freezeLatchesAfter: 4, freezeDeadPerPoll: 1 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        const [w] = e.engine.stats.latchWaits;
+        expect(w).toMatchObject({ kind: 'arrival', outcome: 'held', stillMs: 0 });
+        expect(w.waitedMs).toBeGreaterThan(ARRIVAL_WAIT_MS);
+        expect(w.moves).toBeGreaterThan(0);
+    });
+    it('a STILL game (the clock never moves) fails by name once the polls saw it still for ARRIVAL_WAIT_MS', () => {
+        const e = slowPage(1000, { freezeLatchesAfter: 1e6, freezeDeadPerPoll: 0 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the arrival's freeze never latched in level ${HOUSE} — the game's clock stood still for ${ARRIVAL_WAIT_MS / 1000} s`]);
+        const [w] = e.engine.stats.latchWaits;
+        expect(w).toMatchObject({ kind: 'arrival', outcome: 'timeout', moves: 0, frames: 0 });
+        expect(w.stillMs).toBeGreaterThan(ARRIVAL_WAIT_MS);
+        expect(w.waitedMs).toBeLessThan(ARRIVAL_WAIT_MS + 2000);
+    });
+    it('a game that RUNS but never latches fails by name past LATCH_FRAME_BOUND frames (the wall clock not the bound)', () => {
+        const e = slowPage(10, { freezeLatchesAfter: 1e6, freezeDeadPerPoll: 1 });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the arrival's freeze never latched in level ${HOUSE} after ${LATCH_FRAME_BOUND + 1} game frames (the bound is ${LATCH_FRAME_BOUND})`]);
+        expect(e.engine.stats.latchWaits[0]).toMatchObject({ outcome: 'timeout', frames: LATCH_FRAME_BOUND + 1 });
+    });
+    it('the ADOPTION\'s latch waits the same way: a slow page whose game runs is adopted, never failed by the wall', () => {
+        const e = slowPage(20000, { unwatched: unwatched(), freezeLatchesAfter: 3, freezeDeadPerPoll: 1 }, { swap: CLEAR });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats.latchWaits[0]).toMatchObject({ kind: 'adoption', outcome: 'held' });
+    });
+    it('the ADOPTION\'s latch on a still game fails by name', () => {
+        const e = slowPage(1000, { unwatched: unwatched(), freezeLatchesAfter: 1e6 }, { swap: CLEAR });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([`the adoption's freeze never latched in level ${HOUSE} — the game's clock stood still for ${ARRIVAL_WAIT_MS / 1000} s`]);
+    });
+});
+
+describe('⛓ SEAM OFFSET (§5.82) — a held arrival\'s first solve is staged on the clock its plan\'s tick 0 sees', () => {
+    const BEGIN = A.seam.beginEntry['save.time'];
+    /** The request's tick-0 clock (the shadow's) and the GAME's, at the plan's ship (the room held). */
+    const clocks = (e) => ({
+        request: e.service.seen[0].request.staging.seam.time,
+        model: replayTape({ staging: e.service.seen[0].request.staging, perTick: [], levelSource: e.service.seen[0].request.levelSource,
+            scratchPersistence: true }).gameTime,
+        game: e.engine.stats.shipClock[0].game,
+    });
+
+    it('a PINNED fade (20 dead frames): the request is the arrival\'s staging unchanged (shift 0), and its tick 0 IS the game\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(clocks(e)).toEqual({ request: BEGIN - 1, model: BEGIN + LOAD_FADE_FRAMES, game: BEGIN + LOAD_FADE_FRAMES });
+        expect(e.engine.stats.arrivalClock).toEqual([{ level: HOUSE, begin: BEGIN - 1, model: BEGIN + LOAD_FADE_FRAMES,
+            live: BEGIN + LOAD_FADE_FRAMES, shift: 0, refusal: null }]);
+        expect(e.engine.stats.shipClock[0].gap).toBe(1 + LOAD_FADE_FRAMES);
+    });
+
+    it.each([19, 18, 22])('a fade of %i dead frames (an unpinned render band): the request\'s tick-0 clock is moved ONTO the game\'s', (fade) => {
+        const e = engineOver(A, { game: { arrivalFade: fade } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(clocks(e)).toEqual({ request: BEGIN - 1 + fade - LOAD_FADE_FRAMES, model: BEGIN + fade, game: BEGIN + fade });
+        expect(e.engine.stats.arrivalClock.map((r) => r.shift)).toEqual([fade - LOAD_FADE_FRAMES]);
+        // the gap the ship clock reads is the model's own again, whatever the fade cost
+        expect(e.engine.stats.shipClock[0].gap).toBe(1 + LOAD_FADE_FRAMES);
+        // the freeze (the game's tape) declares no seam: the clock is never written
+        expect(e.game.tapes.every((t) => t.seam === null)).toBe(true);
+    });
+
+    it('the solve WAITS for the freeze to latch (no request until the room is held), then reads the clock once', () => {
+        const e = engineOver(A, { game: { freezeLatchesAfter: 4, arrivalFade: 19 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.freezePolls).toBeGreaterThan(4);
+        expect(e.engine.stats.arrivalClock).toHaveLength(1);
+        expect(clocks(e)).toEqual({ request: BEGIN - 2, model: BEGIN + 19, game: BEGIN + 19 });
+    });
+
+    it('a continuation in the held room replays from the SAME corrected clock (the room keeps it; no second read)', () => {
+        const e = engineOver(A, { game: { arrivalFade: 19 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.service.seen).toHaveLength(2);
+        expect(e.service.seen[1].request.staging.seam.time).toBe(BEGIN - 2);
+        expect(e.engine.stats.arrivalClock).toHaveLength(1);
+    });
+});
+
+describe('the mid-room policy and the queue', () => {
+    it('a goal while a plan tape plays is QUEUED, then ⛓ W7 served as a CONTINUATION from the held end (no second teleport)', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        // Run up to the plan's ship, then ask for the door while it plays.
+        for (let i = 0; i < 400 && e.engine.status().phase !== 'playing'; i++) e.timers.run(1);
+        expect(e.engine.status().phase).toBe('playing');
+        expect(e.engine.walkTo(DOOR)).toEqual({ ok: true, action: 'queue' });
+        expect(e.engine.status().queued).toEqual(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1); // the cold start only
+        const chest = e.service.seen[0].result.plan;
+        const door = e.service.seen[1];
+        expect(door.request.perTick).toHaveLength(chest.solution.length); // the chest's keys = the prefix
+        expect(door.result.ok).toBe(true);
+        expect(door.result.plan.prefixLength).toBe(chest.solution.length);
+        expect(e.engine.stats).toMatchObject({ continuations: 1, forced: 1, forcedBy: { 'cold-start': 1 } });
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: chest.solution.length, equal: true })]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        // the door's tape is UN-held (its crossing must reach the glue) and boots the same arrival
+        expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.boot.level])).toEqual([[0, true, HOUSE],
+            [chest.solution.length, true, HOUSE], [door.result.plan.solution.length, false, HOUSE]]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation, d.prefix])).toEqual([[CHEST.name, false, 0], [DOOR.name, true, chest.solution.length]]);
+        expect(e.dones[1].expectedEnd.level).not.toBe(HOUSE);
+    });
+
+    it('⛓ PERSISTENCE on the reuse path: the continuation declares the LIVE table (the chest its plan opened), not the arrival\'s', () => {
+        // Every host tape boots this level at its spawn, so `botStart` REUSES the live world (no build): the opened chest
+        // stays open whatever the tape declares, and a stale declaration would only RESTORE its flag in the table
+        // (`probe-seedling-persistence-rebuild.mjs`, the reuse path). So the continuation must declare what the game holds.
+        const e = engineOver(A, { game: { clearedAfterDrain: [{ level: HOUSE, tag: 0 }] } });
+        e.engine.walkTo(CHEST);
+        for (let i = 0; i < 400 && e.engine.status().phase !== 'playing'; i++) e.timers.run(1);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        const declared = e.game.tapes.map((t) => t.persistence.map(({ level, tag }) => `${level}:${tag}`));
+        expect(declared).toEqual([[], [], [`${HOUSE}:0`]]);
+        expect(e.game.tapes.every((t) => t.boot.level === HOUSE && t.boot.x === A.state.playerPositionX && t.boot.y === A.state.playerPositionY))
+            .toBe(true);
+    });
+
+    it('a goal in ANOTHER room waits for the crossing; no arrival within the window → failed by name', () => {
+        const e = engineOver(A);
+        e.game.readState = () => JSON.stringify({ ...A.state, level: 0 });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-arrival' });
+        expect(e.teleports).toEqual([]);
+        e.timers.run(100000);
+        expect(e.failures[0]).toMatch(/no arrival in level 86 within 15 s/);
+    });
+});
+
+describe('named refusals and failures', () => {
+    it('⛓ W5 — LEVEL 0 is ACCEPTED (W1–W4 refused it for the moonrock): a goal there waits for its arrival', () => {
+        const e = engineOver(A);
+        const r = e.engine.walkTo({ kind: 'exit', level: 0, tiles: [[1, 1]], name: 'x' });
+        expect(r.ok).toBe(true);
+        expect(r.reason ?? '').not.toMatch(/moonrock/);
+        expect(e.game.calls).not.toContain('botStart');
+    });
+
+    it('an arrival read AFTER a stepped tick is not staged (game_time ≠ the begin record\'s save.time)', () => {
+        const e = engineOver(A, { game: { gameTimeSkew: 1 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures[0]).toMatch(/read after a stepped tick/);
+        expect(e.game.calls).not.toContain('botStart');
+    });
+
+    it('the solver\'s refusal (C: the chest is already open) RELEASES the freeze (botReset) and fails by name', () => {
+        const e = engineOver(C);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\)/);
+        expect(e.game.calls.filter((c) => c === 'botStart')).toHaveLength(1);
+        expect(e.game.calls).toContain('botReset');
+    });
+
+    it('⛓ WAVE-6 CONSUMER — a refusal carrying an `obstacle` (`arrival-inside-solid` + `wayOut`) fails WITH it, as data; one without carries none', () => {
+        const OBSTACLE = { kind: 'arrival-inside-solid', id: 'breakablerock@288,176', solids: ['breakablerock@288,176'],
+            at: { level: 0, x: 296, y: 184 }, wayOut: [{ kind: 'restart', via: 'seedlingStartSpawn', why: 'w' },
+                { kind: 'another-route', level: 0, arrivals: [{ from: 2, door: 'stairs@48,16', at: { x: 264, y: 264 } }] }] };
+        for (const obstacle of [OBSTACLE, null]) {
+            const e = engineOver(A);
+            e.service.start = (request) => {
+                e.service.seen.push({ request });
+                const result = { ok: false, kind: 'refusal', pass: 'dashless', message: 'solverBot(x): arrival-inside-solid — …',
+                    ...(obstacle ? { obstacle } : {}),
+                    passes: [{ pass: 'dashless', ok: false, kind: 'refusal', ticks: null }, { pass: 'full', ok: false, kind: 'skipped', ticks: null }] };
+                return { settled: true, started: true, startedAt: 0, result, provisional: result, answered: 1, passes: result.passes, cancel() {} };
+            };
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.failures.length > 0, 20000);
+            expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\): solverBot\(x\): arrival-inside-solid/);
+            expect(e.failExtras[0]).toEqual(obstacle ? { obstacle } : null);
+            expect(e.engine.stats.history.at(-1).obstacle ?? null).toEqual(obstacle);
+        }
+    });
+
+    it('⛓ WAVE-6 CONSUMER — the plan\'s new optional fields pass through: verbs `pulse`/`brave`, `fineLatticeWalks`, an `axe-dodge` deadline', () => {
+        const e = engineOver(A, { editPlan: (plan) => ({ ...plan, verbs: [...plan.verbs, 'brave', 'pulse'].sort(),
+            fineLatticeWalks: [{ tick: 0, what: 'walk', aim: { x: 1, y: 1 }, waypoints: [], refused: 'r' }],
+            deadline: { tripped: true, first: 'axe-dodge', sites: { 'axe-dodge': 1 } } }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.notes.some((n) => /\(brave,chest,pulse,walk; dashless pass\)/.test(n ?? ''))).toBe(true);
+    });
+
+    it('stop() mid-play releases our tape (botReset) and records the leg as stopped with what drained', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(DOOR);
+        for (let i = 0; i < 400 && e.engine.status().phase !== 'playing'; i++) e.timers.run(1);
+        e.engine.stop();
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        const h = e.engine.stats.history.at(-1);
+        expect(h.outcome).toBe('stopped');
+        expect(h.phase).toBe('playing');
+        expect(h.drained).toBe(h.ticks + 1);
+        expect(e.engine.status().phase).toBe('idle');
+    });
+});
+
+/** W3's injector: from tick `at` on, the game stands `dx` px right of the plan (a key the tape never pressed). */
+const pushRight = (at = 5, dx = 2) => (rows) => rows.map((r) => (r.t >= at ? { ...r, x: r.x + dx } : r));
+
+describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded, then FAILED by name', () => {
+    it('ONE injected divergence recovers: the leg is recorded diverged, the room re-entered at the arrival\'s spawn, re-solved, done', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0].recoveries).toBe(1);
+        expect(e.dones[0].divergence).toBeNull(); // the recovered tape played on plan
+        const spawnAt = { level: HOUSE, x: A.state.playerPositionX, y: A.state.playerPositionY };
+        expect(e.teleports).toEqual([spawnAt, spawnAt]);
+        expect(e.service.seen).toHaveLength(2);
+        const h = e.engine.stats.history;
+        expect(h.map((x) => x.outcome)).toEqual(['diverged', 'done']);
+        expect(h[0].divergence).toMatchObject({ t: 5, got: { x: h[0].divergence.expected.x + 2 } });
+        expect(e.engine.stats).toMatchObject({ divergences: 1, recoveries: 1, forced: 2, solves: 2, ships: 2 });
+        // freeze + plan per attempt, every one bracketed; the diverged tape was RELEASED before the teleport
+        expect(e.engine.stats.hostStarts.map((x) => x.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
+        const i = e.game.calls.indexOf('botReset');
+        expect(i).toBeGreaterThan(e.game.calls.indexOf('botStart'));
+        expect(e.notes.some((n) => /recovery 1\/3/.test(n ?? ''))).toBe(true);
+    });
+
+    it('a PERSISTENT divergence fails BY NAME after 3 recoveries (4 plans played), the tape released, nothing more started', () => {
+        // ⛓ W4 — a NEW divergence each attempt (tick 5, 6, 7, 8): an exact repeat fails sooner (next row)
+        const e = engineOver(A, { perturb: (rows, attempt) => pushRight(5 + attempt)(rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the game left the plan 4 times on Starting House - Chest in level 86 \(gave up after 3 forced re-arrivals, the bound is 3\); last at tick 8/);
+        expect(e.teleports).toHaveLength(4);
+        expect(e.service.seen).toHaveLength(4);
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'diverged', 'diverged', 'failed']);
+        expect(e.engine.stats.history.at(-1).recoveries).toBe(3);
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.timers.pending).toBe(0); // no silent wait left behind
+    });
+
+    it('⛓ W4 — an EXACT repeat (same tick, same game row) fails BY NAME after 2 plans (1 forced re-arrival), not 4', () => {
+        const e = engineOver(A, { perturb: pushRight() });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the game left the plan on Starting House - Chest in level 86 at the SAME tick with the SAME game row 2 times in a row \(gave up after 1 forced re-arrival: .*\); at tick 5: expected .*, game /);
+        expect(e.teleports).toHaveLength(2);
+        expect(e.service.seen).toHaveLength(2);
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'failed']);
+        expect(e.engine.stats.history.at(-1).recoveries).toBe(1);
+        expect(e.engine.stats).toMatchObject({ divergences: 2, recoveries: 1, forced: 2, ships: 2 });
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.timers.pending).toBe(0);
+    });
+
+    it('⛓ W4 — the repeat memory is PER GOAL: the next goal\'s first divergence (the same tick and row) recovers', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt === 0 || attempt === 2 ? pushRight()(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toHaveLength(1);
+        e.engine.stop(); // ⛓ W7 — a paused bot hands the room back; the next goal is a cold start again
+        e.game.be = { ...e.game.be, 'save.time': 0 };
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        // goal 2's first plan (attempt 2) diverges exactly as goal 1's did — a recovery, not a repeat
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'done', 'diverged', 'done']);
+    });
+
+    it('the bound is PER GOAL: the next goal starts with a fresh count', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt < 3 ? pushRight(5 + attempt)(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones[0].recoveries).toBe(3); // 3 spent, the 4th plan on plan: done, not failed
+        expect(e.failures).toEqual([]);
+        e.game.be = { ...e.game.be, 'save.time': 0 };
+        e.engine.walkTo(DOOR);
+        expect(e.engine.status().recoveries).toBe(0);
+    });
+
+    it('a SealController-class FREEZE (no rows drain for a while) is NOT a divergence', () => {
+        const e = engineOver(A, { game: { stallDrains: 40 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats).toMatchObject({ divergences: 0, recoveries: 0, forced: 1 });
+        expect(e.game.stalls).toBe(0);
+    });
+
+    it('a divergence AFTER the goal\'s clear landed ends the leg done (re-solving would meet "already open"), tape released', () => {
+        const e = engineOver(A, { perturb: pushRight(), game: { clearedAfterDrain: [{ level: HOUSE, tag: 0 }] } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0].divergence).toMatchObject({ t: 5 });
+        expect(e.dones[0].recoveries).toBe(0);
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.calls.at(-1)).toBe('botReset');
+    });
+
+    it('a recovery RELEASES the keys the diverged plan held mid-span (keydown+keyup pairs on the canvas, right after botReset); a person\'s key is left alone', () => {
+        const events = [];
+        class KeyboardEvent { constructor(type, init) { Object.assign(this, init, { type }); } }
+        let e = null;
+        const canvas = { dispatchEvent: (ev) => { events.push({ type: ev.type, code: ev.code, after: e.game.calls.length }); return true; } };
+        const win = { KeyboardEvent, document: { querySelector: (q) => (q === 'canvas' ? canvas : null) } };
+        e = engineOver(A, { win, perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows),
+            game: { midSpanOnFirstPlan: { tick: 10, input: { held: ['right', 'up'] } } } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toHaveLength(1);
+        const plan = e.service.seen[0].result.plan.solution;
+        expect([...plan[9]]).toContain('up'); // at tick 10 the tape holds solution[9]
+        expect([...plan[9]]).not.toContain('right');
+        expect(events.map((x) => `${x.type}:${x.code}`)).toEqual(['keydown:ArrowUp', 'keyup:ArrowUp']);
+        expect(e.game.calls[events[0].after - 1]).toBe('botReset');
+        expect(e.engine.stats.keyReleases).toEqual([['up']]);
+    });
+});
+
+// ── ⛓ W7 — the room kept still between goals: held ends, continuations, the arrival hold ─────────
+
+/** Run the manual timers in small slices until `pred()` (the arrival watch reschedules itself at 0 ms forever). */
+/**
+ * ⛓ ANYTIME / O2 → DETERMINISTIC BUDGET — script the engine's solves by attempt number (1-based), each a
+ * worker's SETTLED answer (the cut is the answer's, never the clock's):
+ *   `'cut'`                  every pass cut at the work budget (a ⏱ refusal, nothing answered);
+ *   `{plan: 'dashless'}`     the dashless pass's REAL plan, the full pass cut at the budget;
+ *   `{decline: <answer>}`    the dashless pass DECLINED (not cut), the full pass cut at the budget;
+ *   `'hang'` / `{hang: 'dashless'}`  a worker that never answers (the dashless plan landed as provisional).
+ * Anything else solves for real.
+ */
+const CUT_MSG = 'the block-route search hit `deadline` ⏱ DEADLINE: …';
+const cutRow = (pass) => ({ pass, ok: false, kind: 'refusal', ticks: null, deadline: 'block-route', limit: 'budget' });
+const cutAnswer = (pass) => ({ ok: false, kind: 'refusal', pass, message: CUT_MSG, deadline: { tripped: true, first: 'block-route', sites: { 'block-route': 1 } } });
+function scriptSolves(e, script) {
+    const inner = e.service.start;
+    let n = 0;
+    e.service.start = (request, opts) => {
+        n += 1;
+        const step = script[n];
+        if (!step) return inner(request, opts);
+        e.service.seen.push({ request, scripted: step, attempt: opts?.attempt });
+        const names = (request.passes ?? ANYTIME_PASSES).map((p) => p.pass);
+        const settle = (result, answered) => ({ settled: true, started: true, startedAt: 0, result, provisional: result, answered,
+            passes: result.passes ?? [], cancel() {} });
+        if (step === 'cut') return settle({ ...cutAnswer(names.at(-1)), passes: names.map(cutRow) }, 0);
+        if (step.plan === 'dashless') {
+            const r = inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result;
+            const passes = [...r.passes, cutRow('full')];
+            return settle({ ...r, passes, plan: { ...r.plan, passes } }, 1);
+        }
+        if (step.decline) return settle({ ...step.decline, passes: [{ pass: 'dashless', ok: false, kind: 'refusal', ticks: null }, cutRow('full')] }, 1);
+        const provisional = step.hang === 'dashless' ? inner({ ...request, passes: [ANYTIME_PASSES[0]] }).result : null;
+        const h = { settled: false, started: true, startedAt: 0, result: null, provisional, answered: provisional ? 1 : 0, passes: [],
+            cancel() { h.settled = true; h.cancelled = true; } };
+        e.service.seen.at(-1).handle = h;
+        return h;
+    };
+}
+
+function runUntil(e, pred, max = 4000) {
+    for (let i = 0; i < max && !pred(); i++) e.timers.run(1);
+    return pred();
+}
+/** A service whose plans are edited per attempt (`edit(plan, attempt)`), over the capturing one. */
+function editingService(game, edit) {
+    const inner = capturingService(game);
+    return {
+        seen: inner.seen,
+        start(request, opts) {
+            const h = inner.start(request, opts);
+            if (h.result.ok) edit(h.result.plan, inner.seen.length - 1);
+            return h;
+        },
+        warm() {}, dispose() {},
+    };
+}
+
+describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its WORK budget: the earlier plan, the held retry, the knob, the backstop', () => {
+    const R = SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR;
+    it('a later pass CUT at the work budget leaves the earlier pass\'s PLAN, which PLAYS (no retry, no re-arrival): named by its pass, `expired`', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: { plan: 'dashless' } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 20000);
+        expect(e.failures).toEqual([]);
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: true, retries: 0, budgets: [SOLVER_BUDGET_WORK] });
+        expect(e.engine.stats).toMatchObject({ expiries: 1, provisionalPlays: 1, retries: 0, backstops: 0, passes: { dashless: 1 } });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
+        expect(e.teleports).toHaveLength(1); // the cold start only
+        expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'done', pass: 'dashless', expired: true });
+        expect(e.dones[0].passes.map((r) => [r.pass, r.limit ?? null])).toEqual([['dashless', null], ['full', 'budget']]);
+    });
+
+    it('a solve that answers within its budget is named by the pass that won (the house, no sword: dashless; full SKIPPED)', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: false, retries: 0 });
+        expect(e.dones[0].passes.map((r) => [r.pass, r.kind])).toEqual([['dashless', null], ['full', 'skipped']]);
+        expect(e.notes.some((n) => /\(chest,walk; dashless pass\)/.test(n ?? ''))).toBe(true);
+    });
+
+    it(`every pass cut, nothing answered → a HELD RETRY at ${SOLVE_RETRY_BUDGET_FACTOR}× the units (no botReset, no teleport: the freeze still holds the room), and its plan plays`, () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 80000);
+        expect(e.failures).toEqual([]);
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', expired: false, retries: 1, budgets: [SOLVER_BUDGET_WORK, R] });
+        expect(e.engine.stats).toMatchObject({ expiries: 1, retries: 1, provisionalPlays: 0, backstops: 0 });
+        expect(e.game.calls).not.toContain('botReset');
+        expect(e.teleports).toHaveLength(1);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
+        // nothing had answered: the retry runs every pass again, under the RETRY's units
+        expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
+        expect(e.service.seen[1].request.budgetWork).toBe(R);
+        expect(e.notes.some((n) => new RegExp(`solving again, the room held… \\(budget ${R} work units, retry 1\\)`).test(n ?? ''))).toBe(true);
+    });
+
+    it('⛓ RETRY ATTEMPT — the playback TELLS the service which attempt each start is: the first as retry 0, the held retry as retry 1 with both budgets (metadata: the request is not where it rides)', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen.map((s) => s.attempt)).toEqual([
+            { retry: 0, budgets: [SOLVER_BUDGET_WORK] }, { retry: 1, budgets: [SOLVER_BUDGET_WORK, R] }]);
+        for (const s of e.service.seen) {
+            expect(Object.keys(s.request)).not.toContain('attempt');
+            expect(Object.keys(s.request)).not.toContain('progressAttempt');
+        }
+        // a copy each time: the playback's own `budgets` growing later does not rewrite what an earlier start was told
+        expect(e.service.seen[0].attempt.budgets).toEqual([SOLVER_BUDGET_WORK]);
+    });
+
+    it('the retry RESUMES at the first unanswered pass: a dashless DECLINE, full cut → the retry asks FULL only', () => {
+        const e = engineOver(A);
+        const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'no corridor (dashless)' };
+        scriptSolves(e, { 1: { decline: declined } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 1 || e.failures.length > 0, 80000);
+        expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['full']);
+        // the house holds no sword: the full pass is skipped, so the dashless decline is the answer — said, by name
+        expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\): no corridor \(dashless\)/);
+    });
+
+    it('the retry is cut too → the walk ends BY NAME with both work budgets; the room is released', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.failures).toEqual([`the solver ran out of ${SOLVER_BUDGET_WORK}, then ${R} work units on its held retry on location in level 86: ${CUT_MSG}`]);
+        expect(e.engine.stats).toMatchObject({ expiries: 2, retries: 1, backstops: 0 });
+        expect(e.game.calls).toContain('botReset');
+        expect(e.engine.status().phase).toBe('idle');
+    });
+
+    it('…and a pass that DECLINED (not cut) leads the failure: the decline, not the budget', () => {
+        const e = engineOver(A);
+        const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'combat ladder exhausted' };
+        scriptSolves(e, { 1: { decline: declined }, 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.failures[0]).toBe('the solver declined Starting House - Chest in level 86 (pass dashless): combat ladder exhausted '
+            + `— and the solver ran out of ${SOLVER_BUDGET_WORK}, then ${R} work units on its held retry on location in level 86`);
+    });
+
+    it('⛓ AXE_DODGE HOOK — the knob (`getAxeDodgeAskPerPreview`, the setting) reaches the solve: an off-default value is applied to the model at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
+        const off = formatAxeDodgeAsk(!AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+        let knob = off;
+        try {
+            const e = engineOver(A, { getAxeDodgeAskPerPreview: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.axeDodgeAskPerPreview).toBe(!AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+            knob = 'default';
+            const d = engineOver(A, { getAxeDodgeAskPerPreview: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.axeDodgeAskPerPreview).toBeUndefined();
+            expect(AXE_DODGE_ASK_PER_PREVIEW.enabled).toBe(AXE_DODGE_ASK_PER_PREVIEW_DEFAULT);
+        } finally { applyAxeDodgeAsk(null); }
+    });
+
+    // ⛓ dash flip (the user, 2026-10-16): the switch ships ON, so the off-default knob value is `off`.
+    it('⛓ DASH-ONLY WINDOW — the knob (`getDashOnlyWindow`, the setting) reaches the solve: `off` is applied to the engine\'s own instance at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
+        let knob = 'off';
+        try {
+            const e = engineOver(A, { getDashOnlyWindow: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.dashOnlyWindow).toBe(false);
+            knob = 'default';
+            const d = engineOver(A, { getDashOnlyWindow: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.dashOnlyWindow).toBeUndefined();
+            expect(DASH_ONLY_WINDOW.enabled).toBe(true);
+        } finally { applyDashOnlyWindow(null); }
+    });
+
+    it('⛓ DASH-SHAPE STAMP — the knob (`getDashShape`, the three settings) reaches the solve: each `on` / `off` is applied to the engine\'s own instance at the solve\'s start, the solve runs inside solverBot\'s scopes, and its answer carries the shape READ; all `default` stamps nothing', () => {
+        // ⛓ dash flip (the user, 2026-10-16): legPrecheck and keepPartial ship ON, so their off-default value is `off`.
+        let knob = { legPrecheck: 'off', noSwingPrefix: 'default', keepPartial: 'off' };
+        try {
+            const e = engineOver(A, { getDashShape: () => knob });
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.service.seen.length > 0, 20000);
+            expect(e.service.seen[0].result.dashShape).toEqual({ legPrecheck: false, noSwingPrefix: false, keepPartial: false });
+            knob = { legPrecheck: 'default', noSwingPrefix: 'on', keepPartial: 'default' };
+            const n = engineOver(A, { getDashShape: () => knob });
+            n.engine.walkTo(CHEST);
+            runUntil(n, () => n.service.seen.length > 0, 20000);
+            expect(n.service.seen[0].result.dashShape).toEqual({ legPrecheck: true, noSwingPrefix: true, keepPartial: true });
+            knob = { legPrecheck: 'default', noSwingPrefix: 'default', keepPartial: 'default' };
+            const d = engineOver(A, { getDashShape: () => knob });
+            d.engine.walkTo(CHEST);
+            runUntil(d, () => d.service.seen.length > 0, 20000);
+            expect(d.service.seen[0].result.dashShape).toBeUndefined();
+            expect(dashShapeRead()).toEqual(DASH_SHAPE_DEFAULTS);
+        } finally { applyDashShape({}); }
+    });
+
+    it('⛓ O3 — the knob (`getBudgetWork`, the setting) is the budget: read at each solve, shown, and what is cut', () => {
+        let knob = 30;
+        const e = engineOver(A, { getBudgetWork: () => knob });
+        expect(e.engine.budgetWork).toBe(30);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 20000);
+        expect(e.failures[0]).toMatch(new RegExp(`^the solver ran out of 30, then ${30 * SOLVE_RETRY_BUDGET_FACTOR} work units on its held retry`));
+        expect(e.service.seen.map((x) => x.request.budgetWork)).toEqual([30, 30 * SOLVE_RETRY_BUDGET_FACTOR]);
+        expect(e.notes.some((n) => /solving… \(budget 30 work units\)/.test(n ?? ''))).toBe(true);
+        knob = null; // unset → the engine's own budget, which setBudgetWork moves
+        expect(e.engine.budgetWork).toBe(SOLVER_BUDGET_WORK);
+        e.engine.setBudgetWork(800);
+        expect(e.engine.budgetWork).toBe(800);
+        knob = 'junk';
+        expect(e.engine.budgetWork).toBe(800);
+    });
+
+    it('every solver request carries its WORK budget and upgrade window (no ms); the retry carries the factor, and a dashless refusal CUT by its deadline (not answered) runs again', () => {
+        let windowKnob = 25;
+        const e = engineOver(A, { getUpgradeWindowWork: () => windowKnob });
+        expect(e.engine.upgradeWindowWork).toBe(25);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen[0].request).toMatchObject({ budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 25 });
+        expect(e.service.seen[1].request).toMatchObject({ budgetWork: R, upgradeWindowWork: 25 });
+        expect(e.service.seen[0].request.budgetMs).toBeUndefined();
+        expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
+        windowKnob = 0; // 0: the whole budget
+        expect(e.engine.upgradeWindowWork).toBeNull();
+        windowKnob = null; // unset: the engine's own window
+        expect(e.engine.upgradeWindowWork).toBe(SOLVER_UPGRADE_WINDOW_WORK);
+        const d = engineOver(A);
+        d.engine.walkTo(CHEST);
+        d.timers.run();
+        expect(d.service.seen[0].request).toMatchObject({ budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: SOLVER_UPGRADE_WINDOW_WORK });
+    });
+
+    it('⛔ the clock never retries: a worker that never answers gets ONE request, then the BACKSTOP\'s named failure', () => {
+        const e = engineOver(A, { backstopMs: 5000 });
+        scriptSolves(e, { 1: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen).toHaveLength(1);
+        expect(e.failures).toEqual([`the solve exceeded the backstop on this machine (5 s) on location in level 86 (terminated; the solve's own budget is ${SOLVER_BUDGET_WORK} work units)`]);
+        expect(e.engine.stats).toMatchObject({ backstops: 1, retries: 0, expiries: 0 });
+        expect(e.service.seen[0].handle.cancelled).toBe(true);
+        expect(e.game.calls).toContain('botReset');
+    });
+
+    it('⛔ the BACKSTOP never plays the plan in hand: a provisional dashless plan + a worker that never settles → failed by name, no plan tape', () => {
+        const e = engineOver(A, { backstopMs: 5000 });
+        scriptSolves(e, { 1: { hang: 'dashless' } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0 || e.dones.length > 0, 80000);
+        expect(e.dones).toEqual([]);
+        expect(e.failures[0]).toMatch(/^the solve exceeded the backstop on this machine/);
+        expect(e.engine.stats).toMatchObject({ backstops: 1, provisionalPlays: 0 });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze']);
+    });
+    it('⛓ SHOULD-STOP — a plan whose pass tripped its deadline is named: the done row\'s `deadline`, the pass row, the playing note', () => {
+        const deadline = { tripped: true, first: 'sword-dash', sites: { 'sword-dash': 1 } };
+        const e = engineOver(A, { editPlan: (plan) => ({ ...plan, deadline,
+            passes: [{ pass: 'dashless', ok: true, kind: null }, { pass: 'full', ok: true, kind: null, deadline: 'sword-dash' }] }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', deadline });
+        expect(e.dones[0].passes[1]).toEqual({ pass: 'full', ok: true, kind: null, deadline: 'sword-dash' });
+        expect(e.notes.some((n) => /; dashless pass; full stopped at its deadline \(sword-dash\)\)/.test(n ?? ''))).toBe(true);
+    });
+});
+
+describe('W7 — continuations from a held room, and their named fallbacks', () => {
+    it('the X-SPLIT rule: the chest plan ends holding X, the door\'s continuation opens on X → NOT shipped; a forced re-arrival (x-split) serves it', () => {
+        const e = engineOver(A);
+        const svc = editingService(e.game, (plan, attempt) => {
+            if (attempt === 0) plan.solution[plan.solution.length - 1].add('primary');
+            if (attempt === 1) plan.solution[0].add('primary');
+        });
+        e.service.start = svc.start;
+        e.service.seen = svc.seen;
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['x-split']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/X-split rule/);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'x-split': 1 });
+        // the refused continuation was never shipped: freeze, chest plan, (re-arrival) freeze, door plan
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
+        expect(e.dones[1]).toMatchObject({ continuation: false });
+    });
+
+    it('a continuation the solver DECLINES falls back (named), never a failure: a 2nd chest goal in the held room (the model says "already open")', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.history.map((h) => [h.outcome, h.kind ?? null])).toEqual([['done', null], ['fallback', 'continuation-declined'], ['done', null]]);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/declined .*\(refusal\)/);
+        expect(e.engine.stats.forced).toBe(2);
+    });
+
+    it('⛓ RECALIBRATE — a CONTINUATION solved under its work budget (the worker\'s own `solveAnytime`) asks the FINE sites: at 1 unit it is cut at `walk`, named, not answered — the held retry runs it again (4 units: its 2 `walk` asks) and its plan is served; never a divergence', () => {
+        let knob = null;
+        const e = engineOver(A, { getBudgetWork: () => knob });
+        // A BUDGETED in-process service for the continuation: the worker's call (`solveAnytime` keeps the request's
+        // budget) and the service's `answered` rule (a pass cut by its deadline is not answered).
+        const inner = e.service.start;
+        e.service.start = (request) => {
+            if (knob === null) return inner(request);
+            const { passes = ANYTIME_PASSES, source, ...tape } = request;
+            const result = solveAnytime({ ...tape, levelSource: tape.levelSource ?? levelSourceFromAtlas(source.records) }, { passes });
+            e.service.seen.push({ request, result });
+            let answered = 0;
+            for (const r of result.passes) { if (!r.ok && r.deadline) break; answered += 1; }
+            if (result.ok) e.game.drainRows = result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y }));
+            return { settled: true, started: true, startedAt: 0, result, provisional: result, answered, passes: result.passes, cancel() {} };
+        };
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        knob = 1;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
+        const cont = e.service.seen.slice(1);
+        expect(cont[0].request.perTick.length).toBeGreaterThan(0); // a continuation: the held room's shipped keys
+        expect(cont[0].request.budgetWork).toBe(1);
+        expect(cont[0].result.passes[0]).toMatchObject({ pass: 'dashless', ok: false, deadline: 'walk', limit: 'budget' });
+        expect(cont[0].result.message).toMatch(/was reached at the `walk` site/);
+        expect(cont[1].request).toMatchObject({ budgetWork: SOLVE_RETRY_BUDGET_FACTOR, perTick: cont[0].request.perTick });
+        expect(cont[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']); // the cut pass was not answered
+        expect(cont[1].result.passes[0]).toMatchObject({ pass: 'dashless', ok: true, work: 2 });
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.dones[1]).toMatchObject({ continuation: true, retries: 1, budgets: [1, SOLVE_RETRY_BUDGET_FACTOR] });
+        expect(e.engine.stats.divergences ?? 0).toBe(0);
+    });
+
+    it('a continuation CUT at its work budget — ⛓ O2 and on its held retry too — falls back (continuation-budget)', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 2: 'cut', 3: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['continuation-budget']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(new RegExp(`ran out of ${SOLVER_BUDGET_WORK}, then ${SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR} work units on its held retry`));
+        expect(e.engine.stats.retries).toBe(1);
+    });
+
+    it('⛓ O2 — a continuation cut at its budget whose HELD RETRY answers is served by it: no fallback, the room never released', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 80000);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.dones[1]).toMatchObject({ continuation: true, retries: 1, budgets: [SOLVER_BUDGET_WORK, SOLVER_BUDGET_WORK * SOLVE_RETRY_BUDGET_FACTOR] });
+        expect(e.teleports).toHaveLength(1); // the cold start only
+    });
+
+    it('a HELD game that is not the shadow is the STOP condition: named, logged, never solved past (shadow-mismatch → the fallback)', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.game.pos = { ...e.game.pos, x: e.game.pos.x + 0.05 };
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.continuations).toBe(0); // nothing was solved from the bad staging
+        expect(e.service.seen).toHaveLength(2); // chest at the cold start, door at the re-arrival
+    });
+
+    it('⛓ DELIVERY DEFERRAL — a held game whose SPAWN PAIR the shadow does not hold is not the shadow (the tape would rebuild the room): shadow-mismatch', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        const live = e.game.readState;
+        e.game.readState = () => JSON.stringify({ ...JSON.parse(live()), playerPositionX: A.state.playerPositionX + 8 });
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/playerPosition/);
+        expect(e.engine.stats.continuations).toBe(0);
+    });
+
+    it('stop() RELEASES a held room (a held room ignores the keyboard): botReset, the room dropped, idle', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.game.held).toBe(true);
+        e.engine.stop();
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.game.held).toBe(false);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', room: null, driving: false });
+        expect(e.timers.run()).toBe(0); // no guard left ticking
+    });
+
+    it('⛓ ARRIVAL JITTER — a QUEUED teleport that releases a held room is PUSHED in the release\'s own turn (botReset, then the push: the released room runs no timer\'s share)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        const i = e.game.calls.lastIndexOf('pushSwap');
+        expect(i).toBeGreaterThan(0);
+        expect(e.game.calls.slice(e.game.calls.lastIndexOf('botReset'), i + 1)).toEqual(['botReset', 'pushSwap']);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'release' }]);
+    });
+    it('⛓ ARRIVAL JITTER — stop() with the glue\'s teleport QUEUED (the bot stops on that region move) pushes it in stop\'s own turn, after the release', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        e.engine.stop(); // before any guard tick sees the queue
+        expect(e.game.calls.slice(-2)).toEqual(['botReset', 'pushSwap']);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 'stop' }]);
+        expect(e.engine.stats.releasedForSwap).toBe(0);
+    });
+    it('⛓ ARRIVAL JITTER — stop() on a PARKED substrate pushes nothing (its game is not the AP region\'s)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: ['parked'], queued: 1, pushedOn: null, pushes: 0 };
+        e.engine.stop();
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('⛓ ARRIVAL JITTER — the goal\'s OWN arrival sampler (a forced re-arrival in flight) pushes a teleport the glue queued behind a landing (`sample`)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, land: false, pushSwap: () => true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.swapPushes).toEqual([]); // nothing was queued with our own teleport
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        e.game.sinceBegin = { stepped: 0 };
+        e.game.be = { ...A.seam.beginEntry, 'begin.level': 0, 'save.time': A.seam.beginEntry['save.time'] - 3 };
+        e.timers.run(3);
+        expect(e.engine.stats.swapPushes).toEqual([{ level: 0, time: A.seam.beginEntry['save.time'] - 3, late: false, pushed: true, at: 'sample' }]);
+    });
+    it('⛓ ARRIVAL JITTER — stop() with nothing queued pushes nothing', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.stop();
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('⛓ ARRIVAL JITTER — the forced re-arrival\'s OWN teleport is pushed the moment it is queued (`re-arrival`)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, land: false,
+            onTeleport: (swap) => { swap.state = { ...swap.state, queued: 1 }; }, pushSwap: (swap) => { swap.state = { ...swap.state, queued: 0, pushes: swap.state.pushes + 1 }; return true; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.game.calls.at(-1)).toBe('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([{ level: HOUSE, time: null, late: false, pushed: true, at: 're-arrival' }]);
+    });
+    it('⛓ ARRIVAL JITTER — a release for a MARK alone (nothing queued) pushes nothing', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 }, pushSwap: () => true });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: ['bounce from level 86'], queued: 0, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        expect(e.game.calls).not.toContain('pushSwap');
+        expect(e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('a swap the glue asks for WHILE a room is held (a raced redirect) is let through: released, the room dropped, watching', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        expect(e.game.calls).toContain('botReset');
+        expect(e.game.held).toBe(false);
+        expect(e.engine.status()).toMatchObject({ room: null, arriving: true });
+    });
+});
+
+describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s three arms', () => {
+    /**
+     * A door plan from A (un-held), then the crossing: begin record B1 (the game's own door) lands with
+     * `swapAtB1`, then the redirect's landing (A's begin again) with the glue clear. `gameTimeFromBegin`:
+     * each begin record is read in its own frame, so only the glue query can refuse B1.
+     */
+    function crossing(swapAtB1) {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', arriving: true, room: null });
+        e.game.pos = null; // the crossing landed: the player stands at the new room's arrival
+        const B1 = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        e.swap.state = swapAtB1(B1);
+        e.game.be = B1;
+        e.timers.run(50);
+        const atB1 = { blocked: [...e.engine.stats.holdBlocked], held: e.engine.stats.held };
+        e.swap.state = { marks: [], queued: 0, pushedOn: B1, pushes: 1 };
+        e.game.be = A.seam.beginEntry;
+        runUntil(e, () => e.engine.status().phase === 'held');
+        return { e, atB1 };
+    }
+    const heldAfter = ({ e, atB1 }) => {
+        expect(atB1.held).toBe(1); // the cold start's arrival only — B1 was NOT held
+        expect(e.engine.stats.held).toBe(2); // the redirect's landing WAS
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 }, arriving: false });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze']);
+    };
+    it('arm 1 — a binding MARK (bounce / cross-level arrival / external door / parked) refuses B1', () => {
+        const r = crossing(() => ({ marks: ['arrival teleport to level 86'], queued: 0, pushedOn: null, pushes: 0 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/waits on a swap/)]);
+        heldAfter(r);
+    });
+    it('arm 2 — a teleport QUEUED in the adapter refuses B1 (the measured case: the redirect pushed ~0.4 s after the door)', () => {
+        const r = crossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/queued for the game/)]);
+        heldAfter(r);
+    });
+    it('arm 3 — a teleport PUSHED while B1 was live refuses B1 (its swap lands next)', () => {
+        const r = crossing((B1) => ({ marks: [], queued: 0, pushedOn: { ...B1 }, pushes: 1 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/pushed to the game after this arrival/)]);
+        heldAfter(r);
+    });
+    /**
+     * ⛓ ARRIVAL JITTER — arm 2 is the door's own landing with the redirect still in the adapter's queue. The
+     * engine PUSHES it in the very turn it read B1 (the door's room is not held — a hold blocks the swap — so
+     * every frame until the 100 ms push timer fired used to run it, `Game.time` ticking a wall-clock share).
+     */
+    function pushedCrossing(swapAtB1, sinceBegin) {
+        const pushed = [];
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            pushSwap: (swap) => { pushed.push(swap.state); const went = (swap.state?.queued ?? 0) > 0; if (went) swap.state = { ...swap.state, queued: 0, pushedOn: e.game.be, pushes: (swap.state.pushes ?? 0) + 1 }; return went; } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        const B1 = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        e.swap.state = swapAtB1(B1);
+        e.game.be = B1;
+        e.game.sinceBegin = sinceBegin;
+        const mark = e.game.calls.length;
+        e.timers.run(1); // ONE timer turn: the watch's sample of B1
+        const turn = e.game.calls.slice(mark);
+        const atB1 = { blocked: [...e.engine.stats.holdBlocked], held: e.engine.stats.held, pushes: e.engine.stats.swapPushes, turn, pushed };
+        e.timers.run(50);
+        // The redirect lands: whatever the push sent (or the 100 ms timer would have) has left the queue.
+        e.swap.state = { marks: [], queued: 0, pushedOn: B1, pushes: (e.swap.state?.pushes ?? 0) + (e.swap.state?.queued ? 1 : 0) };
+        e.game.be = A.seam.beginEntry;
+        e.game.sinceBegin = undefined;
+        runUntil(e, () => e.engine.status().phase === 'held');
+        return { e, atB1 };
+    }
+    it('⛓ ARRIVAL JITTER — arm 2 (a teleport QUEUED): B1 is refused AND the queue is PUSHED in the turn B1 was read, before any other bridge call; one `swapPushes` row, not late', () => {
+        const r = pushedCrossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/queued for the game/)]);
+        expect(r.atB1.turn).toEqual(['botSeam', 'pushSwap']); // the sample, then the push: nothing in between
+        expect(r.atB1.pushes).toEqual([{ level: A.seam.beginEntry['begin.level'], time: A.seam.beginEntry['save.time'] - 7, late: false, pushed: true, at: 'door' }]);
+        heldAfter(r);
+        expect(r.e.engine.stats.swapPushes).toHaveLength(1); // the redirect's own landing pushes nothing
+    });
+    it('⛓ ARRIVAL JITTER — a B1 the watch saw only after the door\'s room STEPPED is still pushed, and named `late`', () => {
+        const r = pushedCrossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 1 });
+        expect(r.atB1.pushes).toEqual([expect.objectContaining({ late: true, pushed: true })]);
+        heldAfter(r);
+    });
+    it('⛓ ARRIVAL JITTER — a binding MARK beside the queued teleport (a cross-level arrival\'s echo) still pushes; PARKED and a push already stamped on B1 push NOTHING', () => {
+        const m = pushedCrossing(() => ({ marks: ['arrival teleport to level 86'], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(m.atB1.turn).toEqual(['botSeam', 'pushSwap']);
+        expect(m.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/waits on a swap/)]);
+        const k = pushedCrossing(() => ({ marks: ['parked'], queued: 1, pushedOn: null, pushes: 0 }), { stepped: 0 });
+        expect(k.atB1.turn).not.toContain('pushSwap');
+        expect(k.e.engine.stats.swapPushes).toEqual([]);
+        const p = pushedCrossing((B1) => ({ marks: [], queued: 1, pushedOn: { ...B1 }, pushes: 1 }), { stepped: 0 });
+        expect(p.atB1.turn).not.toContain('pushSwap');
+        expect(p.e.engine.stats.swapPushes).toEqual([]);
+    });
+    it('an engine built WITHOUT the glue query holds no arrival between goals (a redirect cannot be ruled out); its location end is still held', () => {
+        const e = engineOver(A, { noGlue: true });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', arriving: false });
+        e.game.pos = null;
+        e.game.be = { ...A.seam.beginEntry, 'rng.gameplay': 3 };
+        e.timers.run(200);
+        expect(e.engine.stats.held).toBe(1); // the cold start only
+        expect(e.timers.pending).toBe(0); // no watch running
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2);
+        expect(e.dones[1].heldEnd).toBe(true);
+    });
+    it('a glue that answers NOTHING never lets an arrival be held between goals', () => {
+        const r = (() => {
+            const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+            e.game.gameTimeFromBegin = true;
+            e.engine.walkTo(DOOR);
+            runUntil(e, () => e.dones.length === 1);
+            e.game.pos = null;
+            e.swap.state = null;
+            e.game.be = { ...A.seam.beginEntry, 'rng.gameplay': 4 };
+            e.timers.run(50);
+            return e;
+        })();
+        expect(r.engine.stats.held).toBe(1);
+        expect(r.engine.stats.holdBlocked.at(-1).why).toMatch(/answered no swap state/);
+    });
+    it('no redirect (the glue clear) → the door\'s own arrival IS held; the next goal there is solved from it with no teleport', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        e.game.be = JSON.parse(JSON.stringify(A.seam.beginEntry));
+        e.game.be['rng.gameplay'] = 2; // a NEW record, read in its own frame
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.stats.held).toBe(2);
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'continue' });
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1); // the cold start only
+        expect(e.dones[1]).toMatchObject({ continuation: false, heldEnd: true });
+    });
+});
+
+// ── ⛓ WG → §5.36 — GENERATED rooms: the mounted set is the level source, the SOLVER the producer ──────
+
+const GEN_RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4g.json').arrivals;
+const GEN_SET = assembleGeneratedSeedlingSet(readJson('frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'),
+    { selfPlayer: 1 }).set;
+const GEN_RECORDS = mountedRecordsOf(GEN_SET);
+const [G_A0, G_B0, G_C1] = GEN_RECORDED;
+const KEY_BLUE = { kind: 'location', level: 0, tag: 0, name: 'region_0_0__key_blue_pickup' };
+const EXIT_0 = { kind: 'exit', level: 0, tile: [8, 1], name: 'exit_0' };
+const PARK = { kind: 'exit', level: 1, tile: [6, 3], name: 'exit_1' };
+/** What `loadWasmPlaybackEngine({levelSet})` builds: the mounted set, labelled `generated` — a SOLVER engine (⛓ §5.36). */
+const genEngine = (arrival, opts = {}) => engineOver(arrival, { ...opts, records: GEN_RECORDS, generated: true });
+
+describe('§5.36 — a GENERATED room is a SOLVER room (the recorded p4e arrivals on seedling_generated_room)', () => {
+    it('A0 the apitem: forced re-arrival → freeze → the SOLVER\'s plan (F2 `apitem`, 266 ticks, from the mounted set) → shipped → the room HELD at its end', () => {
+        const e = genEngine(G_A0);
+        expect([e.engine.generated, e.engine.producer, e.engine.status().producer]).toEqual([true, 'solver', 'solver']);
+        expect(e.engine.walkTo(KEY_BLUE)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.teleports).toEqual([{ level: 0, x: G_A0.state.playerPositionX, y: G_A0.state.playerPositionY }]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const req = e.service.seen[0].request;
+        // ⛔ never the walker: a solver request (its passes and budget), the goal mapped to `collect-placement`
+        expect(req.producer).toBeUndefined();
+        expect(req).toMatchObject({ solverGoal: { kind: 'collect-placement', placement: { x: 64, y: 16 } }, scratchPersistence: true,
+            budgetWork: SOLVER_BUDGET_WORK });
+        expect(req.source.records).toBe(GEN_RECORDS);
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['apitem']);
+        // ⛓ W7 — a solver room's location plan ENDS HELD (a generated room too, now)
+        expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.seam, t.persistence.length])).toEqual([[0, true, null, 0],
+            [266, true, null, 0]]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', ticks: 266, divergence: null, recoveries: 0, heldEnd: true });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
+        expect(e.engine.status().phase).toBe('held');
+        expect(e.notes.some((n) => /walking a tape…/.test(n ?? ''))).toBe(false);
+    });
+
+    it('A0 then the door, IN the held room: a CONTINUATION (no second teleport), the crossing to room 1', () => {
+        const e = genEngine(G_A0);
+        e.engine.walkTo(KEY_BLUE);
+        e.timers.run();
+        expect(e.engine.walkTo(EXIT_0)).toEqual({ ok: true, action: 'continue' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.dones[1]).toMatchObject({ producer: 'solver', continuation: true });
+        expect(e.dones[1].expectedEnd.level).toBe(1);
+    });
+
+    it('B0 the door after the apitem: both tapes re-declare the EARNED apitem clear {0,0} exactly; the solver\'s walk crosses to room 1', () => {
+        const e = genEngine(G_B0);
+        e.engine.walkTo(EXIT_0);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        for (const t of e.game.tapes) expect(t.persistence.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: 0, tag: 0 }]);
+        expect(e.windows.map(({ from, to }) => ({ from, to }))).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        e.windows.forEach((w, i) => expect(w.declared).toEqual(e.game.tapes[i].persistence));
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['walk']);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver', ticks: 7 });
+        expect(e.dones[0].expectedEnd.level).toBe(1);
+    });
+
+    it('C1 room 1 (entered by the crossing): the parking door, a clear in ANOTHER level declared as the game holds it', () => {
+        const e = genEngine(G_C1);
+        e.engine.walkTo(PARK);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.game.tapes.at(-1).boot.level).toBe(1);
+        expect(e.dones[0]).toMatchObject({ producer: 'solver' });
+        expect(e.dones[0].expectedEnd.level).toBe(2);
+    });
+
+    it('W3 on a generated room\'s solver plan: ONE divergence recovers (re-entered, re-solved, done); a PERSISTENT one fails by name after 3 (⛓ W4: an exact repeat after 1)', () => {
+        const once = genEngine(G_A0, { perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows) });
+        once.engine.walkTo(KEY_BLUE);
+        once.timers.run();
+        expect(once.failures).toEqual([]);
+        expect(once.engine.stats.history.map((x) => [x.outcome, x.producer])).toEqual([['diverged', 'solver'], ['done', 'solver']]);
+        expect(once.dones[0].recoveries).toBe(1);
+        const always = genEngine(G_A0, { perturb: (rows, attempt) => pushRight(5 + attempt)(rows) });
+        always.engine.walkTo(KEY_BLUE);
+        always.timers.run();
+        expect(always.failures).toHaveLength(1);
+        expect(always.failures[0]).toMatch(/the game left the plan 4 times on region_0_0__key_blue_pickup in level 0 \(gave up after 3 forced re-arrivals, the bound is 3\)/);
+        expect(always.timers.pending).toBe(0);
+        const same = genEngine(G_A0, { perturb: pushRight() });
+        same.engine.walkTo(KEY_BLUE);
+        same.timers.run();
+        expect(same.failures).toHaveLength(1);
+        expect(same.failures[0]).toMatch(/at the SAME tick with the SAME game row 2 times in a row/);
+        expect(same.timers.pending).toBe(0);
+    });
+
+    it('⛔ a goal the solver has no goal for: the freeze is RELEASED and the goal fails BY NAME — never handed to the walker', () => {
+        const e = genEngine(G_A0);
+        e.engine.walkTo({ kind: 'location', level: 0, tag: 7, name: 'nowhere' });
+        e.timers.run();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the solver has no goal for nowhere: the location names no entity of the room/);
+        expect(e.service.seen.filter((x) => x.request.producer)).toEqual([]);
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.game.tapes).toHaveLength(1); // the freeze only — no plan shipped
+    });
+
+    it('⛔ a SOLVER DECLINE in a generated room fails the goal by name (the solver\'s reason) — no walker fall-back', () => {
+        // The swim room's apitem across water, bare (measured: the solver's "no corridor"; the walker never reached it either).
+        const swimSet = assembleGeneratedSeedlingSet(readJson('frontend/presets/seedling_generated_swim/AP_1/AP_1_rules.json'), { selfPlayer: 1 }).set;
+        const swimRecords = mountedRecordsOf(swimSet);
+        const at = swimSet.start;
+        const arrival = structuredClone(G_A0);
+        arrival.status.level = at.level;
+        arrival.state.playerPositionX = at.x;
+        arrival.state.playerPositionY = at.y;
+        arrival.status.x = at.x + 8;
+        arrival.status.y = at.y + 8;
+        arrival.status.persistence_cleared = [];
+        arrival.seam.beginEntry.level = at.level;
+        arrival.seam.beginEntry.x = at.x;
+        arrival.seam.beginEntry.y = at.y;
+        const e = engineOver(arrival, { records: swimRecords, generated: true });
+        e.engine.walkTo({ kind: 'location', level: 0, tag: 0, name: 'region_3_2__loc_0' });
+        e.timers.run();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the solver declined region_3_2__loc_0 in level 0 \(refusal\): .*no corridor for goal collect-placement/);
+        expect(e.service.seen.filter((x) => x.request.producer)).toEqual([]);
+        expect(e.dones).toEqual([]);
+    });
+
+    it('the walker producer is an INSTRUMENT (`producer: \'walker\'`, the divergence sweep): W2\'s flow, the walker\'s 220-tick tape — and nothing else is one', () => {
+        const e = engineOver(G_A0, { records: GEN_RECORDS, generated: true, producer: 'walker' });
+        expect([e.engine.producer, e.engine.status().producer]).toEqual(['walker', 'walker']);
+        e.engine.walkTo(KEY_BLUE);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.service.seen[0].request).toMatchObject({ producer: 'walker', goal: KEY_BLUE });
+        expect(e.dones[0]).toMatchObject({ producer: 'walker', ticks: 220 });
+        expect(e.notes.some((n) => /walking a tape…/.test(n ?? ''))).toBe(true);
+        expect(() => engineOver(G_A0, { records: GEN_RECORDS, producer: 'step-off' })).toThrow(/no tape producer "step-off"/);
+    });
+
+    it('a level the mounted set does not hold is refused synchronously, naming the mounted set', () => {
+        const e = genEngine(G_A0);
+        expect(e.engine.walkTo({ kind: 'exit', level: 9, tile: [1, 1] })).toEqual({ ok: false,
+            reason: 'the mounted generated set has no level 9 to solve' });
+        expect(e.teleports).toEqual([]);
+    });
+
+    it('loadWasmPlaybackEngine({levelSet}) builds a GENERATED engine from the set — a SOLVER engine (⛓ §5.36) — no map document is fetched', async () => {
+        let fetched = 0;
+        const engine = await loadWasmPlaybackEngine({ levelSet: GEN_SET, baseUrl: 'http://x/', fetchImpl: () => { fetched += 1; },
+            getGame: () => null, teleport: () => false, solveService: createInPlaceProduceService() });
+        expect([engine.generated, engine.producer, engine.status().producer]).toEqual([true, 'solver', 'solver']);
+        expect(fetched).toBe(0);
+        engine.dispose();
+    });
+});
+
+describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks"', () => {
+    const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
+    const unwatched = (o = {}) => ({ elapsed: 200, mobiles: [PLAYER], patch: {}, ...o });
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    const adoptOver = (o = {}, opts = {}) => engineOver(A, { swap: CLEAR, ...opts, game: { unwatched: unwatched(o), ...(opts.game ?? {}) } });
+    /** The refusal a mutated read earns: the named clause, and W2's cold-start re-arrival serves the goal. */
+    function refusedBy(e, clause) {
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual([clause]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.tapes).toEqual([]);
+    }
+
+    it('the house, unwatched, nobody touched it: ADOPTED — held where it stands, the chest solved as a continuation from "arrival + 1 idle tick", 0 teleports', () => {
+        const e = adoptOver();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, continuations: 1, held: 1, adoptRefused: [] });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        expect(e.game.tapes[0]).toMatchObject({ tick_count: 0, hold: true, seam: null });
+        // The held check ran against the shadow after ONE idle tick, and matched.
+        // …read only once the adoption's freeze LATCHED (W7's invariant: the held check reads a held game).
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
+        expect(e.service.seen[0].request.perTick).toEqual([new Set()]);
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['chest', 'walk']);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0]).toMatchObject({ continuation: true, prefix: 1, divergence: null, heldEnd: true });
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 1 + e.dones[0].ticks } });
+    });
+
+    /**
+     * ⛓ WALK IDENTITY (a) — the adoption's clock is the LIVE one. The room ran `elapsed` frames past its begin
+     * record before the bot drove; the begin-staged shadow models "arrival + 1 idle tick" (begin + 21 by the
+     * model's clock). Once the freeze HOLDS, the held `game_time` is read and the staging shifted so the shadow's
+     * clock after its prefix IS the game's: the continuation's request carries it, and the ship's `shipClock` gap
+     * is the held arrivals' constant (21), not 21 + (elapsed − 22).
+     */
+    it.each([[200], [60]])('⛓ WALK IDENTITY — adopted %i frames after the begin record: the shadow is put on the HELD clock (gap 21, as a held arrival)', (elapsed) => {
+        const e = adoptOver({ elapsed });
+        const begin = A.seam.beginEntry['save.time'];
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const live = begin + elapsed;
+        expect(e.engine.stats.adoptClock).toEqual([{ level: HOUSE, begin: begin - 1, model: begin + 21, live, shift: live - (begin + 21), refusal: null }]);
+        // The solve ran on the live clock: its staging's seam.time + the model's boot (21) + the 1-tick prefix = the held clock.
+        expect(e.service.seen[0].request.staging.seam.time).toBe(live - 22);
+        expect(e.engine.stats.shipClock).toEqual([expect.objectContaining({ name: 'wasm-continue-location-86', staged: live - 22, prefix: 1, game: live, gap: 21 })]);
+        expect(e.engine.room.staging.seam.time).toBe(live - 22);
+    });
+
+    it('⛓ WALK IDENTITY — a held clock BEHIND the adopted shadow cannot be put on it: released, and the named cold-start re-arrival serves the goal', () => {
+        const box = {};
+        const e = adoptOver({ tick: (w) => { if (box.game?.held) w.elapsed = 10; } });
+        box.game = e.game;
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        const begin = A.seam.beginEntry['save.time'];
+        expect(e.engine.stats.adoptClock).toEqual([expect.objectContaining({ live: begin + 10, model: begin + 21, shift: null,
+            refusal: expect.stringMatching(/is BEHIND the adopted shadow/) })]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.calls).toContain('botReset');
+    });
+
+    /**
+     * ⛓ §5.19 — a TRANSIENT clause (`ADOPT_TRANSIENT_CLAUSES`) WAITS, bounded: the goal answers `await-adoption`,
+     * nothing is recorded or teleported while it waits, and only a clause that outlives `ADOPT_WAIT_MS` is recorded
+     * and spends the cold-start re-arrival (named).
+     */
+    function waitedOutBy(e, clause) {
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        expect(e.engine.status().phase).toBe('adopt-wait');
+        expect(e.engine.stats.adoptRefused).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        e.timers.run(20000);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual([clause]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.notes.some((n) => n?.includes(`waited ${ADOPT_WAIT_MS / 1000} s on "${clause}"`))).toBe(true);
+    }
+    it('clause BEGIN — the begin record names another level (a swap pending) and never lands → WAITED, then not adopted (named)', () => {
+        waitedOutBy(adoptOver({ begin: { 'begin.level': 0 } }), 'begin');
+    });
+    it('clause TAPE — a tape is armed (the room is somebody\'s) → not adopted', () => {
+        refusedBy(adoptOver({ patch: { arm: { pending: true, armed_at: -1 } } }), 'tape');
+    });
+    it('clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)', () => {
+        waitedOutBy(adoptOver({ elapsed: 30 }), 'fade');
+    });
+    it('⛓ §5.19 — clause FADE is TRANSIENT: the measured skip-intro case (36 frames, needs > 48) WAITS for the fade, then ADOPTS — 0 forced, nothing refused', () => {
+        const e = adoptOver({ elapsed: 36, tick: (w) => { w.elapsed += 4; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ §5.19 — a PERMANENT clause refusing while a transient one is waited on is recorded AT ONCE (no wait-out)', () => {
+        const e = adoptOver({ elapsed: 36, tick: (w) => { w.elapsed += 4; if (w.elapsed > 44) w.patch = { x: 57.5 }; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.timers.run(3);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['position']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+    });
+    it('⛓ §5.19 — the begin record OUR tape load cleared is read back: adopt, stop, adopt again — 0 forced (the vanilla-map D sequence)', () => {
+        const e = adoptOver({}, { game: { realSeam: true } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.game.be).toBe(null); // the adoption's freeze tape cleared it, as the game's botLoadTape does
+        e.engine.stop();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.stats).toMatchObject({ adopted: 2, forced: 0, forcedBy: {}, adoptRefused: [] });
+    });
+    it('⛓ §5.19 — …but not after a teleport was PUSHED since (its swap lands a new room): the begin clause waits for it', () => {
+        const e = adoptOver({}, { game: { realSeam: true } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.engine.stop();
+        e.swap.state = { ...CLEAR, pushes: 1 };
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.game.be = A.seam.beginEntry; // the pushed swap lands
+        e.timers.run();
+        expect(e.engine.stats).toMatchObject({ adopted: 2, forced: 0, adoptRefused: [] });
+    });
+    it('clause INVENTORY — the player has something to USE (hidden slash/wand state) → not adopted', () => {
+        // (the sword held too: ⛓ SLOTS CONSUMER — the staging stages the slot array, and a slot without its item refuses `staging`)
+        refusedBy(adoptOver({ patch: { inventory_slots: [0], items: { ...A.status.items, hasSword: true } } }), 'inventory');
+    });
+    it('clause PLAYER-STATE — i-frames still running → not adopted', () => {
+        refusedBy(adoptOver({ patch: { hits_timer: 12 } }), 'player-state');
+    });
+    it('clause PLAYER-STATE — …and i-frames running with a hit too: the timer still refuses (the shadow would depend on N)', () => {
+        refusedBy(adoptOver({ patch: { hits: 1, hits_timer: 12 } }), 'player-state');
+    });
+    it('⛓ STAGEDHITS CONSUMER — the player carries a HIT (i-frame over): ADOPTED, its `player_damage` staged from botStatus, the held check equal', () => {
+        // ⛔ the mutant (the adoption still refuses `hits`) fails HERE: refused `player-state`, the cold-start re-arrival
+        const e = adoptOver({ patch: { hits: 2, hits_timer: 0 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, continuations: 1, adoptRefused: [], fallbacks: [] });
+        expect(e.engine.room.staging.player_damage).toEqual({ hits: 2, hits_timer: 0 });
+        expect(e.service.seen[0].request.staging.player_damage).toEqual({ hits: 2, hits_timer: 0 });
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true })]);
+        // the shipped tape never carries it (the game keeps its own `Player`)
+        for (const t of e.game.tapes) expect(t).not.toHaveProperty('player_damage');
+    });
+    it('⛓ STAGEDHITS CONSUMER — a room with NO hits stages no `player_damage` (the staging is the one before)', () => {
+        const e = adoptOver();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.room.staging).not.toHaveProperty('player_damage');
+        expect(e.service.seen[0].request.staging).not.toHaveProperty('player_damage');
+    });
+    it('clause MOBILES — a Mobile besides the player → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [PLAYER, { cls: 'Enemies::Bob', x: 10, y: 10, vx: 0, vy: 0, anim: 'stand' }] }), 'mobiles');
+    });
+    it('clause TIMED — a timed puzzlement in the room record (combat.PUZZLEMENT_HAZARDS) → not adopted', () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'spinningaxe', x: 80, y: 48 }] });
+        refusedBy(adoptOver({}, { records }), 'timed');
+    });
+    it('clause VELOCITY — the player is still moving → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [{ ...PLAYER, vx: 0.5 }] }), 'velocity');
+    });
+    it('clause POSITION — the player is not where the arrival\'s shadow stands → not adopted', () => {
+        refusedBy(adoptOver({ patch: { x: 57.5 } }), 'position');
+    });
+    it('clause FACING — back on the spawn, v = 0, but turned (the measured right-then-left person) → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [{ ...PLAYER, anim: 'side-stand' }] }), 'facing');
+    });
+    it('the GLUE has a redirect in flight → not adopted (as for a held arrival)', () => {
+        refusedBy(adoptOver({}, { swap: { marks: [], queued: 1, pushedOn: null, pushes: 0 } }), 'glue');
+    });
+    it('the held check waits for the adoption\'s freeze to LATCH (a freeze still armed is polled, never checked against)', () => {
+        const e = engineOver(A, { swap: CLEAR, game: { unwatched: unwatched(), freezeLatchesAfter: 3 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.status().phase).toBe('adopting');
+        expect(e.engine.stats.heldChecks).toEqual([]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
+        expect(e.dones).toHaveLength(1);
+    });
+    // ⛓ W8b — an admitted inert NPC (introchar) beside the house spawn: oel (64,48) → the entity at (72,56), 16 px from (56,56).
+    const INTRO = { cls: 'NPCs::IntroCharacter', x: 72, y: 56, vx: 0, vy: 0, type: 'Solid', destroy: false, collidable: true, anim: '' };
+    const withIntro = () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'introchar', x: 64, y: 48, attrs: { text: 'hello', tag: '-1' } }] });
+        return records;
+    };
+    it('⛓ W8b — an admitted inert NPC whose talk circle holds the spawn: ADOPTED, the circle recorded, spent once the plan leaves it', () => {
+        const e = adoptOver({ mobiles: [INTRO, PLAYER] }, { records: withIntro() });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.status().room).toMatchObject({ talkCircles: 1 });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [], fallbacks: [] });
+        expect(e.engine.status().room).toMatchObject({ talkCircles: 0 });
+        // The adoption's reads are recorded like an arrival's (the staging, taken late).
+        expect(e.engine.arrivalReads.map((r) => r.status.level)).toEqual([HOUSE]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.service.seen[0].result.plan.solution.some((k) => new Set(k).has('primary'))).toBe(false);
+    });
+    it('⛓ W8b — …a plan that presses X before leaving that circle → the named adopt-talk fallback (a forced re-arrival), never shipped', () => {
+        const e = adoptOver({ mobiles: [INTRO, PLAYER] }, { records: withIntro(),
+            editPlan: (plan) => ({ ...plan, solution: plan.solution.map((k, i) => (i === 0 ? [...k, 'primary'] : k)) }) });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        for (let i = 0; i < 200 && !e.engine.stats.fallbacks.length; i++) e.timers.run(1);
+        expect(e.engine.stats.fallbacks).toEqual([expect.objectContaining({ kind: 'adopt-talk', why: expect.stringMatching(/X \(primary\) at tick 0, .*talked/) })]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'adopt-talk': 1 });
+        expect(e.game.tapes.map((t) => t.tick_count)).toEqual([0]); // the adoption's freeze only — the plan never shipped
+    });
+    it('an engine WITHOUT the glue query adopts nothing (W7\'s rule) — the cold start re-arrives, no clause recorded', () => {
+        const e = adoptOver({}, { noGlue: true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats).toMatchObject({ adopted: 0, adoptRefused: [], forcedBy: { 'cold-start': 1 } });
+    });
+
+    // ── ⛓ W8c — the new-game arm's cold start (`seedling_playthrough`, plan §5.15) ─────────────────────────
+    /** A game window whose canvas hands each dispatched key event to `onKey`. */
+    const fakeWin = (onKey) => {
+        class KeyboardEvent { constructor(type, o) { Object.assign(this, o, { type }); } }
+        const canvas = { dispatchEvent(ev) { onKey(ev); return true; } };
+        return { KeyboardEvent, document: { querySelector: (q) => (q === 'canvas' ? canvas : null) } };
+    };
+    /**
+     * The house standing in for the arm's room: begin.level −1, the set's start = the house; the cutscene runs for
+     * `cutsceneReads` botStatus reads, then the tutorial's freeze holds until an arrow (unless `stubborn`); every
+     * read is one frame (`Game.time` +1).
+     */
+    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {}, begin = { 'begin.level': -1 } } = {}) {
+        const keys = [];
+        let reads = 0;
+        const u = unwatched({ begin, startLevel, state: { freezeObjects: true },
+            patch: { cutscene: [true, false, false, false], receive_input: false },
+            tick: (w) => {
+                reads += 1;
+                w.elapsed += 1;
+                if (endsCutscene && reads === cutsceneReads) w.patch = { cutscene: [false, false, false, false], receive_input: true, ...patchAfter };
+            } });
+        const win = fakeWin((ev) => {
+            keys.push([ev.type, ev.key]);
+            if (!stubborn && ev.type === 'keydown' && ev.key === 'ArrowRight') u.state.freezeObjects = false;
+        });
+        const e = engineOver(A, { swap: CLEAR, win, ...opts, game: { unwatched: u } });
+        return { ...e, keys, u };
+    }
+
+    it('⛓ W8c — the new game\'s room: the −1 record resolved, the cutscene WAITED OUT, the tutorial dismissed by ONE arrow pair, then ADOPTED — 0 teleports', () => {
+        const e = newGameOver();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        expect(e.engine.status().phase).toBe('ceremony');
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [], continuations: 1, keyReleases: [] });
+        expect(e.engine.stats.dismissed).toEqual([expect.objectContaining({ level: HOUSE, key: 'right' })]);
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        // ⛓ WIND CUTSCENE — the −1 record's scene is the arm's own ceremony, not a leak.
+        expect(e.engine.stats.sceneLeaks).toEqual([]);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
+        // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
+        expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — the wind scene showing under a RESOLVED record (the explicit start\'s level, no −1) is WAITED OUT, not re-arrived into', () => {
+        // Measured on tutorial-walk-procgen-seedling: begin.level 0, cutscene[0] true, receive_input false. A re-arrival
+        // replays the static scene: the plan's tick 1 is dead and the divergence repeats exactly, so the goal failed.
+        const e = newGameOver({ begin: { 'begin.level': HOUSE } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        // ⛓ WIND CUTSCENE — and it is COUNTED, by name, once: a resolved record never owns the scene (a leak).
+        expect(e.engine.stats.sceneLeaks).toEqual([expect.objectContaining({ level: HOUSE, begin: HOUSE })]);
+        expect(e.engine.stats.timeline.filter((r) => r.e === 'scene-leak')).toHaveLength(1);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ CUTSCENE UNDER ANY RECORD — a long scene re-says how far into its bounded wait it is (a same-words stall reader sees it move)', () => {
+        let t = 0;
+        const e = newGameOver({ begin: { 'begin.level': HOUSE }, cutsceneReads: 40, opts: { now: () => (t += 1000) } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        const waits = e.notes.filter((n) => /opening cutscene .* s of at most 180 s$/.test(n ?? ''));
+        expect(waits.length).toBeGreaterThan(1);
+        expect(new Set(waits).size).toBe(waits.length);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ began: 'cutscene', adopted: true })]);
+    });
+    it('⛓ W8c — …the adoption is the room\'s staging under the RESOLVED level, and its recorded reads restage (W5\'s probe)', () => {
+        const e = newGameOver();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.room.level).toBe(HOUSE);
+        expect(e.engine.room.staging.boot.level).toBe(HOUSE);
+        // Recorded RESOLVED: `stagingFromWasmArrival` refuses a record whose level is not the game's.
+        expect(e.engine.arrivalReads.at(-1).seam.beginEntry).toMatchObject({ 'begin.level': HOUSE, 'save.time': e.u.elapsed > 0 ? expect.any(Number) : null });
+    });
+    it('⛓ W8c — THE WINDOW: the scene just ended and its Help is still QUEUED (no freeze yet) → not adopted; the Help surfaces a frame later and is dismissed', () => {
+        const keys = [];
+        let reads = 0;
+        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel: HOUSE, state: { freezeObjects: false },
+            // read 1 = the walkTo's, read 2 = the ceremony's first poll (quiet), read 3 = the Help's first update
+            tick: (w) => { reads += 1; w.elapsed += 1; if (reads === 3) w.state.freezeObjects = true; } });
+        const win = fakeWin((ev) => { keys.push([ev.type, ev.key]); if (ev.type === 'keydown') u.state.freezeObjects = false; });
+        const e = engineOver(A, { swap: CLEAR, win, game: { unwatched: u } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {} });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ began: 'none', adopted: true })]);
+        expect(e.engine.stats.dismissed).toHaveLength(1);
+        expect(e.failures).toEqual([]);
+    });
+    it('⛓ W8c — a new game\'s room long past its ceremony: quiet for CEREMONY_QUIET_FRAMES, then ADOPTED, nothing pressed', () => {
+        const keys = [];
+        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel: HOUSE, state: { freezeObjects: false }, tick: (w) => { w.elapsed += 1; } });
+        const e = engineOver(A, { swap: CLEAR, win: fakeWin((ev) => keys.push(ev.type)), game: { unwatched: u } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(keys).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, dismissed: [] });
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ W8c — the glue query is asked with the record AS LATCHED (−1): a teleport pushed on it blocks the adoption', () => {
+        const e = newGameOver();
+        e.swap.state = { ...CLEAR, pushedOn: { ...A.seam.beginEntry, 'begin.level': -1 }, pushes: 1 };
+        e.engine.walkTo(CHEST);
+        e.timers.run(300);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['glue']);
+    });
+    it('⛓ W8c — a Help an arrow does NOT dismiss (the freeze outlives the fade) → the named cold-start re-arrival, one press only', () => {
+        const e = newGameOver({ stubborn: true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run(200);
+        expect(e.keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.notes.some((n) => /outlived the arrow/.test(n ?? ''))).toBe(true);
+    });
+    it('⛓ W8c — a ceremony that never ends within CEREMONY_WAIT_MS → the named cold-start re-arrival', () => {
+        let t = 0;
+        const e = newGameOver({ endsCutscene: false, opts: { now: () => (t += 10000) } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run(100);
+        expect(e.keys).toEqual([]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.notes.some((n) => /did not end within 180 s/.test(n ?? ''))).toBe(true);
+    });
+    it('⛓ W8c — after the ceremony the clauses still rule: a player who moved → refused POSITION, the named cold-start re-arrival', () => {
+        const e = newGameOver({ patchAfter: { x: 70 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run(200);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['position']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ adopted: false })]);
+    });
+    it('⛓ W8c — a −1 record whose set starts ELSEWHERE is not resolved → refused BEGIN, no ceremony, no key', () => {
+        const e = newGameOver({ startLevel: 0 });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['begin']);
+        expect(e.keys).toEqual([]);
+        expect(e.engine.stats.ceremonies).toEqual([]);
+    });
+    it('⛓ W8c — clause FREEZE: an ordinary cold start under a freeze botStatus cannot show → refused, and NOTHING is pressed (only the arm\'s tutorial is)', () => {
+        const keys = [];
+        const e = engineOver(A, { swap: CLEAR, win: fakeWin((ev) => keys.push(ev.type)), game: { unwatched: unwatched({ state: { freezeObjects: true } }) } });
+        refusedBy(e, 'freeze');
+        expect(keys).toEqual([]);
+    });
+});
+
+/**
+ * ⛓ WALK IDENTITY (b) — `engine.legEnd()`: the Playback Bot's Restart asks the engine before it stops it. Null
+ * when no tape is PLAYING (the room is frozen or ours to release at a fixed clock); else a promise that resolves
+ * once the playing tape leaves `playing` — its held end — or, bounded, `timedOut`.
+ */
+describe('⛓ WALK IDENTITY — engine.legEnd(): a Restart waits for the playing tape', () => {
+    const untilPhase = (e, want, max = 400) => {
+        for (let i = 0; i < max && e.engine.status().phase !== want; i += 1) e.timers.run(1);
+        return e.engine.status().phase;
+    };
+    it('nothing playing (idle) → null; a PLAYING chest tape → resolves at its HELD end, never before', async () => {
+        const e = engineOver(A);
+        expect(e.engine.legEnd()).toBeNull();
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const resets = e.game.calls.filter((c) => c === 'botReset').length;
+        let settled = null;
+        const p = e.engine.legEnd();
+        expect(p).toBeInstanceOf(Promise);
+        p.then((r) => { settled = r; });
+        await Promise.resolve();
+        expect(settled).toBeNull();
+        e.timers.run();
+        const r = await p;
+        expect(r).toMatchObject({ ended: true, phase: 'held' });
+        expect(e.engine.status().phase).toBe('held');
+        // The wait itself released nothing: no botReset was spent on it.
+        expect(e.game.calls.filter((c) => c === 'botReset').length).toBe(resets);
+        // Held now → null: the bot restarts at once.
+        expect(e.engine.legEnd()).toBeNull();
+    });
+    it('a tape that never ends (its drain stalls) → resolves timedOut after the wait (the bot names the cut)', async () => {
+        const e = engineOver(A, { game: { stallDrains: 1e9 } });
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const p = e.engine.legEnd({ waitMs: 50 });
+        for (let i = 0; i < 200; i += 1) e.timers.run(1);
+        expect(await p).toMatchObject({ ended: false, timedOut: true, phase: 'playing' });
+    });
+    it('a stop while waiting resolves it (the leg left `playing`)', async () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        expect(untilPhase(e, 'playing')).toBe('playing');
+        const p = e.engine.legEnd();
+        e.engine.stop();
+        e.timers.run();
+        expect(await p).toMatchObject({ ended: true, phase: 'idle' });
+    });
+});
+
+/**
+ * ⛓ WALK IDENTITY — `engine.expectArrival()`: a Restart's start hop lands in a room the stopped engine did not
+ * cause. Armed, the watch HOLDS that landing (staged at its own begin record), so the bot's next goal there is
+ * served from the held arrival, whichever turn it comes in — never the cold start's adoption / re-arrival.
+ */
+describe('⛓ WALK IDENTITY — engine.expectArrival(): the Restart\'s start-hop arrival is held at its landing', () => {
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    it('armed after a stop, the landing is HELD before any goal; the goal then solves from it (0 forced, 0 teleports)', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        expect(e.engine.expectArrival()).toBe(true);
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        e.game.land();
+        e.timers.run(20);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'continue' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ forced: 0, forcedBy: {}, adopted: 0, expectedArrivals: 1, held: 1 });
+        expect(e.service.seen[0].request.name).toBe('wasm-location-86');
+    });
+    /**
+     * ⛓ RESTART HOLD (§5.51) — the ORDER measured on CI (3/10 B runs, the L19 Restart, whose route opens on a logical
+     * link): the watch is armed, ticks over the un-landed room, then the hop LANDS and the bot's goal comes IN THAT SAME
+     * TURN, before the watch's next tick (`begin` → `await-arrival`, the arming kept). Re-basing the watch there took the
+     * landing as its baseline: never seen, never held, and 15 s later the `no-held-arrival` fallback re-entered a room
+     * that had run unheld (a wall-clock `seam.time` + `rng.seed`). The kept watch reads the seam in begin's own turn.
+     */
+    it('⛓ RESTART HOLD — the landing and the goal in ONE turn (before the watch ticks): the landing is HELD, staged at its own begin record', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        expect(e.engine.expectArrival()).toBe(true);
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        e.game.land();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-arrival' });
+        expect(e.engine.status()).toMatchObject({ room: { level: HOUSE } });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ forced: 0, forcedBy: {}, fallbacks: [], expectedArrivals: 1, held: 1 });
+        expect(e.engine.stats.arrivalWatch.map((r) => r.at)).toEqual(['expect', 'walkTo', 'begin-keep', 'seen', 'held']);
+        expect(e.engine.stats.arrivalWatch.at(-1).landed).toBe(`${HOUSE}@${A.seam.beginEntry['save.time']}`);
+        expect(e.service.seen[0].request.staging.seam.time).toBe(e.engine.room.staging.seam.time);
+    });
+    it('⛓ RESTART HOLD — the fallback stays, NAMED: an expected arrival that never lands in the goal\'s room within the wait', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.stop();
+        e.engine.expectArrival();
+        e.game.be = null;
+        expect(e.engine.walkTo(CHEST).action).toBe('await-arrival');
+        e.timers.run(20000);
+        expect(e.engine.stats.forcedBy).toEqual({ 'no-held-arrival': 1 });
+        expect(e.engine.stats.fallbacks[0]).toMatchObject({ kind: 'no-held-arrival', why: `no held arrival in level ${HOUSE} within 15 s` });
+        expect(e.engine.stats.arrivalWatch.map((r) => r.at)).toContain('fallback');
+    });
+    it('NOT armed (today\'s race lost): the same landing before the goal is a cold start (the control)', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.game.land();
+        e.timers.run(20);
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.engine.walkTo(CHEST).action).not.toBe('continue');
+    });
+    it('refused while a goal is in flight, and by an engine without the glue query', () => {
+        const e = engineOver(A, { swap: CLEAR });
+        e.engine.walkTo(CHEST);
+        expect(e.engine.expectArrival()).toBe(false);
+        expect(engineOver(A, { noGlue: true }).engine.expectArrival()).toBe(false);
+    });
+});
+
+/**
+ * ⛓ RNG-SPLIT STAGING — every live staging path stages the window's split as the SHIPPED tape declares it
+ * (`SHIPPED_RNG`: `botStart` writes `Rng.split` unconditionally), never `botStatus().rng.split` — the ECHO of the
+ * last tape's `Bot.rngSplit`. The recorded reads ARE the trap (every one echoes `split: false`), so a staging that
+ * read the echo stages false and every row below reds. The cosmetic state rides the same rule (a split `botStart`
+ * re-seeds it to the declared 0); the seed is the begin record's (the shipped tape writes none).
+ */
+describe('⛓ RNG-SPLIT STAGING — the arrival, hold, adoption and continuation stagings carry SHIPPED_RNG\'s split, never the echo', () => {
+    // ⛓ FP REQUEST — everything but the seed, so an `fp` key on ANY path reds the row: fp is FlashPunk's LCG —
+    // waterfall particles only — not solver input, and it is never staged (the begin record keeps it).
+    const rngOf = (staging) => { const { seed: _seed, ...rest } = staging.rng; return rest; };
+    const WANT = { split: SHIPPED_RNG.split, cosmetic: SHIPPED_RNG.cosmetic };
+    it('the fixture is the trap: every recorded botStatus echoes split false while the shipped tape declares true', () => {
+        expect(SHIPPED_RNG.split).toBe(true);
+        for (const a of RECORDED) expect(a.status.rng.split).toBe(false);
+    });
+    it('the ARRIVAL (the cold start\'s freeze): the solve\'s staging and the held room\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(rngOf(e.service.seen[0].request.staging)).toEqual(WANT);
+        expect(e.service.seen[0].request.staging.rng.seed).toBe(A.seam.beginEntry['rng.gameplay']);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+        for (const t of e.game.tapes) expect(t.rng).toMatchObject({ split: SHIPPED_RNG.split });
+    });
+    it('the CONTINUATION from the held room: its request\'s staging', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.dones[1].continuation).toBe(true);
+        expect(rngOf(e.service.seen[1].request.staging)).toEqual(WANT);
+    });
+    it('the HOLD of the arrival after an exit plan: the held room\'s staging', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        e.game.be = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.stats.held).toBe(2);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+    });
+    it('the ADOPTION of an unwatched room: the continuation request\'s staging (the adopted clock shift keeps it)', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            game: { unwatched: { elapsed: 200, mobiles: [{ cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' }], patch: {} } } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(rngOf(e.service.seen[0].request.staging)).toEqual(WANT);
+        expect(rngOf(e.engine.room.staging)).toEqual(WANT);
+    });
+});
+
+/**
+ * ⛓ FORCED-HIT CONSUMER — a plan that billed a forced crossing (`solveSegment`'s optional `forcedHits` / `damage`)
+ * carries both into the engine's history and notes. ⛓ STAGEDHITS CONSUMER — a CONTINUATION in the same world after
+ * it is SERVED (the §5.66 interim guard retired): its shadow RE-BILLS the prefix's hits, and the held check asks the
+ * game's `{hits, hits_timer}` against it (`stagedHitsMismatch`) — a game that differs is the `shadow-mismatch` STOP,
+ * named with both. The plans are the real solver's, edited to bill a hit (the house has no forced crossing, so the
+ * shadow's damage is 0/0 and the game's is set per row).
+ *
+ * MUTANTS (run during development, each red by name here):
+ *   s1 the §5.66 guard restored (a continuation after a billed hit refused → the forced re-arrival)
+ *        → '…SERVED (no re-arrival)…' and '…the game\'s hits differ…' red (the guard answers before the held check)
+ *   s2 the held damage check removed (`stagedHitsMismatch` not asked)  → '…the game\'s hits differ…' red
+ *   g3 the fields dropped from the history rows (`solvedBy`)           → the three engine rows that read a done row red
+ */
+describe('⛓ FORCED-HIT CONSUMER — the plan\'s forced crossings, and the continuation after them', () => {
+    const ROW = { tick: 0, what: 'chaser:lavarunner@72,24', proof: { proven: true, depth: 2, nodes: 1332, minHits: 1 },
+        billed: [{ t: 2, level: HOUSE, source: 'chaser', id: 'lavarunner@72,24', hits: 1 }], candidate: 'corridor-unarmed', ticks: 4,
+        damage: { hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' } };
+    const billing = (hits) => (plan) => ({ ...plan, verbs: [...new Set([...plan.verbs, 'forced-hit'])].sort(),
+        forcedHits: [{ ...ROW, damage: { ...ROW.damage, hits } }], damage: hits ? { ...ROW.damage, hits } : { hits: 0, lastHitAt: null, id: null } });
+
+    it('a plan with NO forced crossing carries neither field — its history rows are today\'s', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        for (const s of e.service.seen) expect(Object.keys(s.result.plan)).not.toEqual(expect.arrayContaining(['forcedHits']));
+        for (const s of e.service.seen) expect(s.result.plan).not.toHaveProperty('damage');
+        for (const h of e.engine.stats.history) { expect(h).not.toHaveProperty('forcedHits'); expect(h).not.toHaveProperty('damage'); }
+        expect(e.notes.some((n) => /forced hit/.test(n ?? ''))).toBe(false);
+    });
+
+    it('a forced hit in the held room, then a goal in the SAME world, the game\'s hits = the shadow\'s → the continuation is SERVED (no re-arrival)', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        // the forced plan's fields reached the history row and the note
+        expect(e.dones[0]).toMatchObject({ forcedHits: [expect.objectContaining({ candidate: 'corridor-unarmed' })],
+            damage: { hits: 1, lastHitAt: 2, id: 'lavarunner@72,24' } });
+        expect(e.notes.some((n) => /forced hit: 1 hit\(s\) billed over 1 crossing\(s\), the player ends on 1 hit\(s\) \(last lavarunner@72,24 at t2\)/.test(n ?? ''))).toBe(true);
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.stats.continuations).toBe(1);
+        // solved ON from the held room: freeze, the forced plan, the door as a continuation over its shipped prefix
+        expect(e.service.seen[1].request.perTick.length).toBe(e.dones[0].ticks);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: true })]);
+        expect(e.dones[1]).toMatchObject({ continuation: true });
+        // the continuation stages no `player_damage`: the replay re-bills (staging the live hits would bill twice)
+        expect(e.service.seen[1].request.staging).not.toHaveProperty('player_damage');
+    });
+
+    it('…the game\'s hits differ from the shadow\'s → the held check STOPS (`shadow-mismatch`), named with both `{hits, hits_timer}`', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.game.damage = { hits: 1, hits_timer: 0 }; // the game took a hit the shadow's replay never billed
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.fallbacks[0].why).toBe('the held game is not the shadow (shadow {"hits":0,"hits_timer":0}, game {"hits":1,"hits_timer":0})');
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
+        expect(e.engine.stats.continuations).toBe(0);
+        // the same i-frame row: a hits_timer the shadow does not hold is a mismatch too
+        const f = engineOver(A);
+        f.engine.walkTo(CHEST);
+        runUntil(f, () => f.engine.status().phase === 'held');
+        f.game.damage = { hits: 0, hits_timer: 7 };
+        f.engine.walkTo(DOOR);
+        runUntil(f, () => f.dones.length === 2 || f.failures.length > 0);
+        expect(f.engine.stats.fallbacks.map((x) => x.kind)).toEqual(['shadow-mismatch']);
+        expect(f.engine.stats.fallbacks[0].why).toMatch(/game \{"hits":0,"hits_timer":7\}/);
+    });
+
+    it('…but NOT when the forced crossing left 0 hits in this world: the continuation is served', () => {
+        const e = engineOver(A, { editPlan: (plan) => (e.service.seen.length === 0 ? billing(0)(plan) : plan) });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.dones[0].damage).toEqual({ hits: 0, lastHitAt: null, id: null });
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+    });
+
+    it('…and NOT after a DOOR: a DOOR replaces the room (a new Player, 0 hits) — the next room\'s continuation is served', () => {
+        // the door plan bills (a crossing that hits on its way out); the landing is held; the chest is solved from that
+        // arrival and the door after it is a CONTINUATION in the new world — never refused for the old world's hit
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 },
+            editPlan: (plan) => (e.service.seen.length === 0 ? billing(1)(plan) : plan) });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.dones[0].damage).toMatchObject({ hits: 1 });
+        e.game.pos = null; // the crossing landed: the player stands at the new room's arrival
+        e.game.be = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 3 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks).toEqual([]);
+        expect(e.engine.stats.continuations).toBe(1);
+        expect(e.dones.map((d) => d.continuation)).toEqual([false, false, true]);
+    });
+});
+
+describe('⛓ L74 SILENT STALL — a throw the room build makes is a NAMED failure, never a dead timer chain', () => {
+    // The live case (CI sweep 38185510484, leg `level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144` with L74 tag 2
+    // staged): the arrival was HELD (`wasm-hold-74` shipped), then the model refused the room the game is in — the clear
+    // list names a non-arena `fallrock` (`levelWorld`'s "A clear list must never name it", a LevelWorldError) — and the
+    // throw left the engine's 0 ms timer callback: a pageerror, the phase stuck at `await-arrival`, no deadline read
+    // again, and the leg TIMED OUT at 90 s with no plan and no reason. Here: the house with a fallrock whose tag the
+    // game reports cleared — the same model refusal, at the same seam.
+    const ROCK_TAG = 9;
+    const withRock = () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'fallrock', x: 16, y: 16, attrs: { tset: '0', tag: String(ROCK_TAG) } }] });
+        return records;
+    };
+
+    // ⛓ fidelity FLIP14: the room build's fallrock refusal is `fallRockPostFall`'s OFF arm (⚖ ON since the wave-14
+    // flip, user 2026-10-12: ON the rock is built fallen and nothing throws), so this control runs OFF, whole.
+    it('the held arrival\'s room build throws → onFailed carries the MODEL\'s refusal text; the engine is idle, no timer left', () => withContactFidelity({ fallRockPostFall: false }, () => {
+        const e = engineOver(A, { records: withRock() });
+        e.game.cleared = [{ level: HOUSE, tag: ROCK_TAG }];
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        // ⛔ the mutant (the throw escapes the timer) fails HERE, by name: the run itself throws the model's error
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the model refused to build level 86 from the arrival/);
+        expect(e.failures[0]).toMatch(/clears tag 9, which is a "fallrock" at \(16,16\).*A clear list must never name it/);
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'failed' });
+        expect(e.timers.pending).toBe(0);
+    }));
+
+    it('any OTHER throw inside an engine timer callback is a named failure too (the safety net under every scheduler)', () => {
+        const e = engineOver(A);
+        let thrown = false;
+        e.service.start = () => { thrown = true; throw new Error('the solve service is gone'); };
+        e.engine.walkTo(CHEST);
+        expect(() => runUntil(e, () => e.failures.length > 0)).not.toThrow();
+        expect(thrown).toBe(true);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the wasm playback engine threw in .*: the solve service is gone/);
+        expect(e.engine.status().phase).toBe('idle');
+    });
+});

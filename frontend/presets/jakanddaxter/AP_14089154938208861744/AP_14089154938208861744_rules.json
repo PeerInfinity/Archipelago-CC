@@ -9287,6 +9287,37 @@
   },
   "helpers": {
     "1": {
+      "can_cross_long_gap": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Roll"
+              },
+              {
+                "type": "item_check",
+                "item": "Roll Jump"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Jump"
+              },
+              {
+                "type": "item_check",
+                "item": "Jump Kick"
+              }
+            ]
+          }
+        ]
+      },
       "can_fight": {
         "type": "or",
         "conditions": [
@@ -9325,6 +9356,230 @@
               {
                 "type": "item_check",
                 "item": "Crouch Uppercut"
+              }
+            ]
+          }
+        ]
+      },
+      "can_jump_blockers": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Jump"
+              },
+              {
+                "type": "item_check",
+                "item": "Jump Kick"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Crouch"
+              },
+              {
+                "type": "item_check",
+                "item": "Crouch Jump"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Punch"
+              },
+              {
+                "type": "item_check",
+                "item": "Punch Uppercut"
+              }
+            ]
+          }
+        ]
+      },
+      "can_jump_farther": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Jump"
+              },
+              {
+                "type": "item_check",
+                "item": "Jump Kick"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Punch"
+              },
+              {
+                "type": "item_check",
+                "item": "Punch Uppercut"
+              }
+            ]
+          }
+        ]
+      },
+      "can_jump_higher": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Double Jump"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Crouch"
+              },
+              {
+                "type": "item_check",
+                "item": "Crouch Jump"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Crouch"
+              },
+              {
+                "type": "item_check",
+                "item": "Crouch Uppercut"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Punch"
+              },
+              {
+                "type": "item_check",
+                "item": "Punch Uppercut"
+              }
+            ]
+          }
+        ]
+      },
+      "can_jump_stairs": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Double Jump"
+          },
+          {
+            "type": "item_check",
+            "item": "Jump Dive"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Crouch"
+              },
+              {
+                "type": "item_check",
+                "item": "Crouch Jump"
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Crouch"
+              },
+              {
+                "type": "item_check",
+                "item": "Crouch Uppercut"
+              }
+            ]
+          }
+        ]
+      },
+      "can_triple_jump": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Double Jump"
+          },
+          {
+            "type": "item_check",
+            "item": "Jump Kick"
+          }
+        ]
+      },
+      "can_uppercut_and_jump_logs": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Double Jump"
+              },
+              {
+                "type": "item_check",
+                "item": "Jump Kick"
+              }
+            ]
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Crouch"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Crouch Uppercut"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Punch"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Punch Uppercut"
+                  }
+                ]
               }
             ]
           }

@@ -1,0 +1,9 @@
+FAIL: ⛓⛓ the open-lock arrival DECLINES, and by the new name — it solved
+FAIL: ⛓ one body is left, bob@16,80, alive with two hits — [["bob@96,16",104,24,0],["bob@112,48",120,56,0]]
+PASS: ⛓ and the player took no hit — []
+PASS: ⛓⛓ the tape replays the solve run exactly (player and every body, every tick) — 90 ticks
+wrote frontend/modules/seedlingDemo/fixtures/tapes/f1-l5-open-lock-bait.json
+## f1-l5-open-lock-bait: 90 ticks
+
+2 CHECK(S) FAILED
+exit 1 at 00:43:53

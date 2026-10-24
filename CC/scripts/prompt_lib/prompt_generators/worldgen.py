@@ -626,7 +626,6 @@ grep -rn "FIELD_NAME" world_generator/
 
 Some differences are acceptable and should be added to the ignore list in `scripts/test/compare_rules_json.py`:
 - Fields that are WorldGen-specific (like `randomize_items`)
-- Fields that use generated values (like `world_classes`)
 - Metadata that varies between exports
 
 If the difference is expected, update `is_canonical_difference()` in `compare_rules_json.py`.
@@ -636,7 +635,10 @@ If the difference is expected, update `is_canonical_difference()` in `compare_ru
 1. **World class names**: The original world has a different class name than what WorldGen generates
    - Original: `ChocolateChipCookiesWorld`
    - WorldGen: `BakingAdventureWorld` (derived from display name)
-   - **Fix**: Add `world_classes` to the ignored differences
+   - **Fix**: already handled — `is_canonical_difference()` ignores
+     `world.1.world_class_name` when WorldGen omits it. (The top-level
+     `world_classes` key this used to name was DELETED from the schema and from
+     every carrier on 2026-09-08; do not add it back.)
 
 2. **Option definitions**: WorldGen adds options (like `randomize_items`) not in original
    - **Fix**: Add to ignored differences or don't export in worldgen

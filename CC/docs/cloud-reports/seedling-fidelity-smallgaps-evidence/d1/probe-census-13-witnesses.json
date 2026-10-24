@@ -1,0 +1,260 @@
+[
+ {
+  "witness": "bulb-l77-lava",
+  "ticks": 212,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    140,
+    20,
+    40
+   ]
+  ]
+ },
+ {
+  "witness": "bulb-l77-placed",
+  "ticks": 110,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ]
+  ]
+ },
+ {
+  "witness": "forcedhit-l73-622-plan",
+  "ticks": 4,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ]
+  ]
+ },
+ {
+  "witness": "k2prep-l75-chain-lavarunner",
+  "ticks": 388,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    196,
+    20,
+    40
+   ],
+   [
+    303,
+    40,
+    60
+   ],
+   [
+    342,
+    60,
+    80
+   ]
+  ]
+ },
+ {
+  "witness": "k2prep-l75-grenade-armed-clear-lavarunner",
+  "ticks": 201,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    31,
+    20,
+    40
+   ],
+   [
+    62,
+    40,
+    60
+   ],
+   [
+    93,
+    60,
+    80
+   ],
+   [
+    124,
+    80,
+    100
+   ],
+   [
+    155,
+    100,
+    120
+   ],
+   [
+    186,
+    120,
+    140
+   ]
+  ]
+ },
+ {
+  "witness": "k2prep-l75-grenade-lavarunner",
+  "ticks": 201,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    187,
+    20,
+    40
+   ]
+  ]
+ },
+ {
+  "witness": "l74arrival-624-on-plan",
+  "ticks": 332,
+  "firstPollNotBot": [
+   1
+  ],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    1,
+    20,
+    195
+   ]
+  ]
+ },
+ {
+  "witness": "l74arrival-door-l73",
+  "ticks": 131,
+  "firstPollNotBot": [
+   5
+  ],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    4,
+    20,
+    40
+   ],
+   [
+    5,
+    40,
+    215
+   ]
+  ]
+ },
+ {
+  "witness": "l74leg624-postfall-reentry",
+  "ticks": 71,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    58,
+    20,
+    40
+   ]
+  ]
+ },
+ {
+  "witness": "leash-l73-622-up-lavarunner",
+  "ticks": 4,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ]
+  ]
+ },
+ {
+  "witness": "leash-l74-629-on-plan-game",
+  "ticks": 308,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    278,
+    20,
+    169
+   ]
+  ]
+ },
+ {
+  "witness": "leash-l74-629-pin-lavarunner",
+  "ticks": 161,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ]
+  ]
+ },
+ {
+  "witness": "staticladder-k2-step190-lavarunner",
+  "ticks": 667,
+  "firstPollNotBot": [],
+  "lastPollNotBot": [],
+  "deadSpansInsideTick": [
+   [
+    0,
+    0,
+    20
+   ],
+   [
+    307,
+    20,
+    351
+   ]
+  ]
+ }
+]

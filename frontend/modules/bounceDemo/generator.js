@@ -1,6 +1,6 @@
 /**
- * Bounce Demo level generator — build-order step 7, the first shipped
- * milestone (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Bounce Demo level generator
+ * (docs/json/developer/procgen/bounce.md).
  *
  * Generate-and-test (Cloudberry-style): `generateLevel` PROPOSES a
  * platform arrangement for a target requirement ("this level needs
@@ -240,8 +240,7 @@ function sameSets(minimalSets, want) {
 
 // ── Obstacle primitives ─────────────────────────────────────────────
 //
-// One GEOMETRY TEMPLATE per ability gap (topdown-bounce-obstacle-refactor
-// .md Phase 3). Each primitive is keyed by its ability and carries the
+// One GEOMETRY TEMPLATE per ability gap. Each primitive is keyed by its ability and carries the
 // shared obstacle id (BOUNCE_OBSTACLE_ID_BY_ABILITY) so the obstacle id is
 // the single through-line: this template's geometry is what the verifier
 // proves gates the ability, and what the emitter records as the path's
@@ -477,8 +476,7 @@ export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
 // ── Multi-target generation (sphere-driven growth, step 2) ──────────
 //
 // generateLevelFromSpecs targets SEVERAL goals with DIFFERENT
-// requirements in one level — the prefix-graded chain from
-// NewDocs/plans/procedural-generation/sphere-driven-growth.md: the
+// requirements in one level — the prefix-graded chain: the
 // climb realises the nested requirement chain as gate segments, each
 // goal attaches at its rung, and a goal's derived rule is the prefix
 // of gates below it (plus its own drift arrow, for branch exits).
@@ -1799,7 +1797,7 @@ const ALL_FREE_ABILITIES = Object.freeze({
 //    emitter (minimalSetsToRule / emitObstaclePaths) reproduces the gate.
 function* generateBraidFromSpecsGen({
     id, exitSpecs, pickupSpecs = [], seed = 1, attempts = 8, jitter = 0, braidWidth, decorChance = {},
-    freeArrow = 'right', platformRows = 0, C, G,
+    freeArrow = 'right', soleFreeArrow = false, platformRows = 0, C, G,
 }) {
     const seen = new Set();
     const norm = (s, what) => {
@@ -1811,7 +1809,15 @@ function* generateBraidFromSpecsGen({
     const exits = exitSpecs.map((s) => norm(s, 'exit'));
     if (!exits.length) throw new Error('braid: at least one exit spec required');
     const pickups = (pickupSpecs ?? []).map((s) => norm(s, 'pickup'));
-    const gated = [...exits, ...pickups].some((g) => g.req.length > 0);
+    // ⛓ tutorial-bugs (2026-10-10): a world that holds ONLY its free arrow
+    // (`soleFreeArrow`, sphere growth) takes the gated path even when every
+    // requirement is empty. Regime 1 below verifies with BOTH arrows held — the
+    // top-down world's — so in a sphere world it passed a zone whose pickup sat
+    // on the gated side and emitted `True_` for it (Maze + bounce sphere seed 1,
+    // region_3_1: loc_0 needs Left, the world has no Left arrow). The gated
+    // path's verifier treats only `freeArrow` as held and requires every
+    // derived set to equal its requirement — here, [] for all.
+    const gated = soleFreeArrow || [...exits, ...pickups].some((g) => g.req.length > 0);
     // Regime-2 structural validation runs ONCE (spec-level, non-retryable) so a
     // decline (unsupported gate, both arrows, non-nested) throws immediately.
     const plan = gated ? planBraidGatedChain(exits, pickups) : null;
@@ -1943,6 +1949,9 @@ export function* generateLevelFromSpecsGen({
     // it, and the verifier treats it as free. Default 'right' for tests; the
     // pipeline threads the world's actual pick.
     freeArrow = 'right',
+    // true: the player holds ONLY freeArrow (sphere growth) — an all-free braid
+    // still takes the gated path (generateBraidFromSpecsGen).
+    soleFreeArrow = false,
     // Extra PLAIN climb rungs added per region AFTER the gating content
     // (gated braid only) — distributed across the requirement segments to make
     // levels taller and push the hardest exit to the summit. 0 = no change.
@@ -1960,7 +1969,8 @@ export function* generateLevelFromSpecsGen({
         const can = braidCanRealiseSpecs(exitSpecs, pickupSpecs);
         if (can.ok) {
             return yield* generateBraidFromSpecsGen({
-                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, freeArrow, platformRows, C, G,
+                id, exitSpecs, pickupSpecs, seed, attempts, jitter, braidWidth, decorChance, freeArrow, soleFreeArrow,
+                platformRows, C, G,
             });
         }
         console.warn(`bounce: region '${id}' has gates outside the braid vocabulary `

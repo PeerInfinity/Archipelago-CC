@@ -1,0 +1,409 @@
+/**
+ * substrateRegistryPanelLibrary — the view-model over FIXTURE entries and a
+ * FIXTURE snapshot (not the real ones: the real registry moves, and a test
+ * pinned to it would be a second snapshot). The fixture snapshot is built with
+ * the same shaper the generator uses, then one cell and one column are
+ * changed so both drift directions and a field drift exist.
+ */
+import { describe, expect, it } from 'vitest';
+
+import { cellOf, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
+import {
+    applyColumnControls, describeRegistry, driftIsEmpty, FEATURE_SEPARATOR, featureRowsOf, fullValueText, GLYPH, MATRIX_KINDS,
+    matrixCell, matrixOf, PLAIN_LEGEND, plainCellText, plainOf, reorderIds, ROW_KINDS, snapshotExpandable, THREW_PREFIX,
+    UNSNAPSHOTTED_GROUP, uncoveredLine,
+} from './substrateRegistryPanelLibrary.js';
+import {
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, applyLiveAnswer, capabilityRows,
+    cardOf, cardText, uncoveredFields,
+} from '../procgenCore/substrateCapabilities.js';
+import { DEFAULT_MODE, MODES } from './substrateRegistryPanelUI.js';
+
+const controller = { play() {}, stop() {} };
+
+const alpha = {
+    id: 'alpha',
+    label: 'Alpha',
+    gate: null,
+    getPlaybackController: () => controller,
+    sharing: { items: { getTypes: () => ['coin', 'gem'] } },
+    features: ['a', 'b'],
+    fresh: true, // the fixture snapshot has no row for this
+};
+const beta = {
+    id: 'beta',
+    label: 'Beta',
+    getPlaybackController: () => null,
+    sharing: { items: { types: ['wood'] } },
+    features: ['a'],
+};
+const gamma = { id: 'gamma' }; // live only
+
+/** A snapshot the way the generator would write it for [alpha, beta, ghost],
+ *  minus `fresh`, with beta's `features` recorded as it USED to be. */
+function fixtureSnapshot() {
+    const ghost = { id: 'ghost', label: 'Ghost' };
+    const entries = [alpha, beta, ghost].map(({ fresh, ...rest }) => rest);
+    const names = fieldNamesOf(entries, new Set(['sharing', 'sharing.items']));
+    const rows = shapeRows(entries, names).map((r) => ({ ...r }));
+    const feat = rows.find((r) => r.name === 'features');
+    feat.cells = feat.cells.map((c) => (c.id === 'beta' ? { id: 'beta', ...cellOf(['a', 'x']) } : c));
+    const identity = ['id', 'label'];
+    return {
+        columns: entries.map((e) => ({
+            id: e.id, label: e.label, fields: Object.keys(e).length, registeredBy: `lib/${e.id}.js`,
+        })),
+        groups: [
+            { title: 'Identity', rows: identity },
+            { title: 'Everything else', rows: names.filter((n) => !identity.includes(n)) },
+        ],
+        rows,
+    };
+}
+
+describe('describeRegistry', () => {
+    const snap = fixtureSnapshot();
+    const vm = describeRegistry([alpha, beta, gamma], snap);
+
+    it('expands exactly the parents the snapshot expanded', () => {
+        expect([...snapshotExpandable(snap)].sort()).toEqual(['sharing', 'sharing.items']);
+        expect(vm.rows.map((r) => r.name)).toContain('sharing.items.getTypes');
+        expect(vm.rows.map((r) => r.name)).toContain('sharing.items.types');
+    });
+
+    it('columns are the LIVE entries, in live order, registeredBy from the snapshot or null', () => {
+        expect(vm.columns).toEqual([
+            { id: 'alpha', label: 'Alpha', fields: 7, registeredBy: 'lib/alpha.js' },
+            { id: 'beta', label: 'Beta', fields: 5, registeredBy: 'lib/beta.js' },
+            { id: 'gamma', label: null, fields: 1, registeredBy: null },
+        ]);
+        expect(vm.snapshotCount).toBe(3);
+    });
+
+    it('groups are the snapshot\'s, in order, plus one for the field it has no row for', () => {
+        expect(vm.groups.map((g) => g.title)).toEqual(['Identity', 'Everything else', UNSNAPSHOTTED_GROUP]);
+        expect(vm.groups[2].rows).toEqual(['fresh']);
+    });
+
+    it('null is a VALUE and a function is a function', () => {
+        const gate = vm.rows.find((r) => r.name === 'gate').cells[0];
+        expect(gate).toMatchObject({ present: true, type: 'null' });
+        expect(fullValueText(gate)).toEqual({ text: 'null', note: false });
+        const fn = vm.rows.find((r) => r.name === 'getPlaybackController').cells[0];
+        expect(fullValueText(fn)).toEqual({ text: 'function', note: false });
+        expect(fullValueText(cellOf([]))).toEqual({ text: 'empty', note: true });
+        expect(fullValueText(cellOf(undefined))).toEqual({ text: '—', note: true });
+        expect(fullValueText(cellOf({ b: 1, a: 1 }))).toEqual({ text: '{a, b}', note: false });
+        expect(fullValueText(cellOf('s'))).toEqual({ text: '"s"', note: false });
+    });
+
+    it('the callable answers: controller, null, absent; a provider and a static list', () => {
+        expect(vm.answers).toEqual({
+            alpha: { playbackController: 'controller', itemTypes: ['coin', 'gem'] },
+            beta: { playbackController: 'null', itemTypes: ['wood'] },
+            gamma: { playbackController: 'absent', itemTypes: 'absent' },
+        });
+    });
+
+    it('drift in BOTH id directions and the moved fields, entry by entry in live order', () => {
+        expect(vm.drift.liveOnly).toEqual(['gamma']);
+        expect(vm.drift.snapshotOnly).toEqual(['ghost']);
+        expect(vm.drift.fields).toEqual([
+            { name: 'fresh', id: 'alpha', snapshot: '—', live: 'yes' },
+            { name: 'features', id: 'beta', snapshot: 'a, x', live: 'a' },
+        ]);
+        expect(driftIsEmpty(vm.drift)).toBe(false);
+    });
+
+    it('a registry that matches its snapshot has an EMPTY drift', () => {
+        const same = describeRegistry([beta], {
+            columns: [{ id: 'beta', label: 'Beta', fields: 5, registeredBy: null }],
+            groups: [],
+            rows: shapeRows([beta], fieldNamesOf([beta], new Set())),
+        });
+        expect(driftIsEmpty(same.drift)).toBe(true);
+    });
+
+    it('a callable that THROWS is an answer, not a crash — through the injected call', () => {
+        const thrown = describeRegistry([alpha, gamma], snap, {
+            call: () => { throw new Error('not mounted\nstack'); },
+        });
+        expect(thrown.answers.alpha).toEqual({
+            playbackController: `${THREW_PREFIX}not mounted`,
+            itemTypes: `${THREW_PREFIX}not mounted`,
+        });
+        // An entry with nothing to call never reaches `call`.
+        expect(thrown.answers.gamma).toEqual({ playbackController: 'absent', itemTypes: 'absent' });
+    });
+
+    it('the injected call sees every callable, and its return is the answer', () => {
+        const seen = [];
+        const faked = describeRegistry([alpha], snap, {
+            call: (fn) => { seen.push(fn); return seen.length === 1 ? 7 : null; },
+        });
+        expect(seen).toHaveLength(2);
+        expect(faked.answers.alpha).toEqual({ playbackController: 'returned number', itemTypes: 'returned null' });
+    });
+});
+
+describe('the matrix mode', () => {
+    const { yes, no, number, count } = MATRIX_KINDS;
+
+    it('matrixCell: one kind per cellOf TYPE, the title says which ✗ it is', () => {
+        const kinds = (v) => { const m = matrixCell(cellOf(v)); return [m.kind, m.text]; };
+        expect(kinds(undefined)).toEqual([no, GLYPH.no]);
+        expect(kinds(null)).toEqual([yes, GLYPH.yes]);
+        expect(kinds(() => 1)).toEqual([yes, GLYPH.yes]);
+        expect(kinds('s')).toEqual([yes, GLYPH.yes]);
+        expect(kinds({ a: 1 })).toEqual([yes, GLYPH.yes]);
+        expect(kinds(true)).toEqual([yes, GLYPH.yes]);
+        expect(kinds(false)).toEqual([no, GLYPH.no]);
+        expect(kinds(30)).toEqual([number, '30']);
+        expect(kinds(['a', 'b', 'c'])).toEqual([count, '3']);
+        expect(kinds([])).toEqual([count, '0']);
+        expect(matrixCell(cellOf(undefined)).title).toMatch(/^absent/);
+        expect(matrixCell(cellOf(false)).title).toMatch(/^false/);
+        expect(matrixCell(cellOf(null)).title).toBe('null');
+        expect(matrixCell(cellOf(['a', 'b'])).title).toBe('a, b');
+    });
+
+    /** Rows the way describeRegistry makes them (it adds `allStrings`). */
+    const rowsOf = (entries) => describeRegistry(entries, { columns: [], groups: [], rows: [] }).rows;
+    const row = (entries, name) => rowsOf(entries).find((r) => r.name === name);
+
+    it('featureRowsOf: the SORTED union across entries, ✓ where the entry holds it', () => {
+        const feats = featureRowsOf(row([{ id: 'p', f: ['b', 'a'] }, { id: 'q', f: ['c', 'a'] }, { id: 'r' }], 'f'));
+        expect(feats.map((f) => f.name)).toEqual(['a', 'b', 'c'].map((e) => `f${FEATURE_SEPARATOR}${e}`));
+        expect(feats.every((f) => f.parent === 'f')).toBe(true);
+        expect(feats.map((f) => f.cells.map((c) => c.text).join(''))).toEqual([
+            GLYPH.yes + GLYPH.yes + GLYPH.no, GLYPH.yes + GLYPH.no + GLYPH.no, GLYPH.no + GLYPH.yes + GLYPH.no]);
+        expect(feats[0].cells[2].title).toMatch(/^absent/);
+    });
+
+    it('featureRowsOf: an array of non-strings is NOT expanded', () => {
+        expect(featureRowsOf(row([{ id: 'p', f: [1, 2] }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: ['a'] }, { id: 'q', f: [{ x: 1 }] }], 'f'))).toEqual([]);
+    });
+
+    it('featureRowsOf: a null cell beside arrays still expands; the null column is all ✗', () => {
+        const feats = featureRowsOf(row([{ id: 'p', f: ['a', 'b'] }, { id: 'n', f: null }], 'f'));
+        expect(feats).toHaveLength(2);
+        for (const f of feats) {
+            expect(f.cells[1]).toMatchObject({ id: 'n', kind: no, text: GLYPH.no });
+            expect(f.cells[1].title).toMatch(/null/);
+        }
+    });
+
+    it('featureRowsOf: no arrays (or only nulls, or a mixed row) — nothing to expand', () => {
+        expect(featureRowsOf(row([{ id: 'p', f: true }, { id: 'q', f: false }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: null }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: ['a'] }, { id: 'q', f: 'a' }], 'f'))).toEqual([]);
+        expect(featureRowsOf(row([{ id: 'p', f: [] }], 'f'))).toEqual([]);
+    });
+
+    it('matrixOf: groups in vm.groups order, each feature row directly after its parent', () => {
+        const vm = describeRegistry([alpha, beta, gamma], fixtureSnapshot());
+        const m = matrixOf(vm);
+        expect(m.columns).toBe(vm.columns);
+        expect(m.groups.map((g) => g.title)).toEqual(vm.groups.map((g) => g.title));
+        const names = m.groups.flatMap((g) => g.rows.map((r) => r.name));
+        const i = names.indexOf('features');
+        expect(names.slice(i, i + 3)).toEqual(['features', `features${FEATURE_SEPARATOR}a`,
+            `features${FEATURE_SEPARATOR}b`]);
+        const flat = m.groups.flatMap((g) => g.rows);
+        expect(flat.filter((r) => r.kind === ROW_KINDS.field).map((r) => r.name))
+            .toEqual(vm.groups.flatMap((g) => g.rows));
+        // Every feature row's parent is the nearest field row above it.
+        let lastField = null;
+        for (const r of flat) {
+            if (r.kind === ROW_KINDS.field) lastField = r.name;
+            else expect(r.parent).toBe(lastField);
+        }
+        expect(flat.filter((r) => r.kind === ROW_KINDS.feature).map((r) => r.parent))
+            .toEqual(['features', 'features', 'sharing.items.types']);
+        const feat = flat.find((r) => r.name === 'features');
+        expect(feat.cells.map((c) => c.text)).toEqual(['2', '1', GLYPH.no]);
+    });
+});
+
+describe('the column controls', () => {
+    const vm = describeRegistry([alpha, beta, gamma], fixtureSnapshot());
+    const m = matrixOf(vm);
+    const ids = (x) => x.columns.map((c) => c.id);
+    const rows = (x) => x.groups.flatMap((g) => g.rows);
+    /** Every row's cells, as the ids they belong to. */
+    const cellIds = (x) => rows(x).map((r) => r.cells.map((c) => c.id).join(','));
+
+    it('reorderIds: the order\'s live ids first, then the unnamed ids in input order', () => {
+        expect(reorderIds(['a', 'b', 'c'])).toEqual(['a', 'b', 'c']);
+        expect(reorderIds(['a', 'b', 'c'], ['c', 'a'])).toEqual(['c', 'a', 'b']);
+        expect(reorderIds(['a', 'b', 'c'], ['ghost', 'b', 'b'])).toEqual(['b', 'a', 'c']);
+        expect(reorderIds([], ['a'])).toEqual([]);
+    });
+
+    it('the default controls are the identity', () => {
+        const out = applyColumnControls(m);
+        expect(out).toEqual(m);
+        expect(out).not.toBe(m);
+        expect(applyColumnControls(m, { hidden: new Set(), order: [] })).toEqual(m);
+    });
+
+    it('hiding one id shrinks the columns and EVERY row\'s cells together, feature rows included', () => {
+        const hidden = ids(m)[0];
+        const out = applyColumnControls(m, { hidden: new Set([hidden]) });
+        const kept = ids(m).filter((id) => id !== hidden);
+        expect(ids(out)).toEqual(kept);
+        expect(rows(out).length).toBe(rows(m).length);
+        expect(rows(out).some((r) => r.kind === ROW_KINDS.feature)).toBe(true);
+        for (const r of rows(out)) expect(r.cells.map((c) => c.id)).toEqual(kept);
+    });
+
+    it('reordering moves each row\'s cells with its column', () => {
+        const order = [...ids(m)].reverse();
+        const out = applyColumnControls(m, { order });
+        expect(ids(out)).toEqual(order);
+        for (const [i, r] of rows(out).entries()) {
+            const before = rows(m)[i];
+            expect(r.name).toBe(before.name);
+            expect(r.cells).toEqual(order.map((id) => before.cells.find((c) => c.id === id)));
+        }
+    });
+
+    it('a stale id in order is dropped; a live id missing from order appends in input order', () => {
+        const [first, second, third] = ids(m);
+        const out = applyColumnControls(m, { order: ['ghost-no-longer-live', third] });
+        expect(ids(out)).toEqual([third, first, second]);
+        expect(new Set(cellIds(out))).toEqual(new Set([[third, first, second].join(',')]));
+    });
+
+    it('hiding everything leaves the rows with no cells', () => {
+        const out = applyColumnControls(m, { hidden: new Set(ids(m)) });
+        expect(out.columns).toEqual([]);
+        expect(rows(out).every((r) => r.cells.length === 0)).toBe(true);
+    });
+
+    it('the input matrix is not mutated', () => {
+        const before = structuredClone(m);
+        applyColumnControls(m, { hidden: new Set([ids(m)[1]]), order: [...ids(m)].reverse() });
+        expect(m).toEqual(before);
+    });
+});
+
+describe('the plain mode (plainOf)', () => {
+    /* ⛓ delta keys its sides (E3 → partial) and records a visit (L3 ✓), so the
+     * fixture population holds every kind: gamma has no L3 → L4 reads n/a. */
+    const delta = {
+        id: 'delta',
+        label: 'Delta',
+        exitSides: { keys: ['params.sidePortals'], relabel: () => {} },
+        loopSupport: { record: true, playback: true },
+    };
+    const entries = [alpha, beta, gamma, delta];
+    const snap = fixtureSnapshot();
+    const vm = describeRegistry(entries, snap);
+    const rows = capabilityRows(entries);
+    const p = plainOf(vm, rows);
+    const cellAt = (plain, rowId, id) => plain.groups.flatMap((g) => g.rows)
+        .find((r) => r.id === rowId).cells.find((c) => c.id === id);
+
+    it('one group per capability group that has rows, in order; every capability row, in order', () => {
+        expect(p.groups.map((g) => g.id)).toEqual(CAPABILITY_GROUPS.map((g) => g.id));
+        expect(p.groups.flatMap((g) => g.rows.map((r) => r.id))).toEqual(rows.map((r) => r.id));
+        for (const g of p.groups) for (const r of g.rows) expect(r.cells.map((c) => c.id)).toEqual(entries.map((e) => e.id));
+    });
+
+    it('each cell is its mark then its text, the kind the vocabulary answered', () => {
+        for (const r of rows) {
+            for (const c of r.cells) {
+                const drawn = cellAt(p, r.id, c.id);
+                expect(drawn.kind, `${r.id} × ${c.id}`).toBe(c.kind);
+                expect(drawn.text.startsWith(CELL_MARKS[c.kind]), `${r.id} × ${c.id}`).toBe(true);
+            }
+        }
+    });
+
+    it('⛓ T0b — P6 draws generically: ✓ and the concept list for an entry that realises concepts, ✗ elsewhere', () => {
+        const epsilon = {
+            id: 'epsilon', label: 'Epsilon',
+            conceptRealisations: { sword: { tier: 'mechanic' }, water: {
+                tier: 'skin', placements: { gate: { effect: 'requires', needs: ['swim'] } } } },
+        };
+        const withConcepts = [...entries, epsilon];
+        const q = plainOf(describeRegistry(withConcepts, snap), capabilityRows(withConcepts));
+        expect(cellAt(q, 'P6', 'epsilon')).toMatchObject({
+            kind: CELL_KINDS.YES, text: `${CELL_MARKS[CELL_KINDS.YES]} 2 concepts: sword (mechanic), water (skin)`,
+        });
+        expect(cellAt(q, 'P6', 'alpha')).toMatchObject({ kind: CELL_KINDS.NO, text: CELL_MARKS[CELL_KINDS.NO] });
+    });
+
+    it('a partial cell: ◐ and its degree', () => {
+        expect(cellAt(p, 'E3', 'delta')).toMatchObject({
+            kind: CELL_KINDS.PARTIAL, text: `${CELL_MARKS[CELL_KINDS.PARTIAL]} ${CELL_WORDING.onePerSide}`,
+        });
+    });
+
+    it('an n/a cell: the mark alone, and its hover still names the fields read', () => {
+        const c = cellAt(p, 'L4', 'gamma');
+        expect(c).toMatchObject({ kind: CELL_KINDS.NA, text: CELL_MARKS[CELL_KINDS.NA] });
+        expect(c.title).toContain('takeLastRecording = ');
+    });
+
+    it('a live overlay: the answer refines the text, the hover carries the raw answer, the kind stays', () => {
+        /* P2 declares no live answer since S3 — its cells are the declaration's alone */
+        expect(cellAt(p, 'P2', 'alpha')).toMatchObject({ kind: CELL_KINDS.YES, text: CELL_MARKS[CELL_KINDS.YES] });
+        expect(cellAt(p, 'P2', 'alpha').title).not.toContain('live playbackController');
+        expect(cellAt(p, 'P2', 'beta').text).toBe(CELL_MARKS[CELL_KINDS.YES]);
+        expect(cellAt(p, 'P2', 'gamma')).toMatchObject({ kind: CELL_KINDS.NO, text: CELL_MARKS[CELL_KINDS.NO] });
+        expect(cellAt(p, 'L10', 'alpha').text)
+            .toBe(`${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.itemTypes(2)}: coin, gem`);
+        expect(cellAt(p, 'L10', 'alpha').title).toContain('live itemTypes = coin, gem');
+    });
+
+    it('a hidden column is never produced; a reordered column moves in the header AND every row', () => {
+        const q = plainOf(vm, rows, { hidden: new Set(['beta']), order: ['delta', 'alpha'] });
+        expect(q.columns.map((c) => c.id)).toEqual(['delta', 'alpha', 'gamma']);
+        for (const g of q.groups) for (const r of g.rows) expect(r.cells.map((c) => c.id)).toEqual(['delta', 'alpha', 'gamma']);
+        expect(cellAt(q, 'E3', 'delta').kind).toBe(CELL_KINDS.PARTIAL);
+    });
+
+    it('the column hover is the card: label, then one line per ✓ / ◐ statement', () => {
+        const d = p.columns.find((c) => c.id === 'delta');
+        const lines = d.title.split('\n');
+        expect(lines[0]).toBe('Delta');
+        expect(lines.some((l) => l.includes(rows.find((r) => r.id === 'E3').statement))).toBe(true);
+        expect(p.columns.find((c) => c.id === 'gamma').label).toBe('gamma');
+    });
+
+    it('the column hover is the vocabulary\'s cardText (lifted by S4) — the S2 wording, byte for byte', () => {
+        /* ⛓ the rule S2 wrote inline, restated here as the pin: a lift that changed a byte reds this */
+        const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+        const statementOf = new Map(CAPABILITY_STATEMENTS.map((st) => [st.id, st]));
+        const live = rows.map((r) => ({ ...r, cells: r.cells.map((c) => applyLiveAnswer(c, statementOf.get(r.id),
+            statementOf.get(r.id).live ? vm.answers[c.id]?.[statementOf.get(r.id).live] : undefined)) }));
+        for (const col of p.columns) {
+            const card = cardOf(entries.find((e) => e.id === col.id), live);
+            const s2 = [card.label, ...card.lines.map((l) => `${groupLabel.get(l.group)} — ${l.statement}`
+                + `${l.text ? `: ${l.text}` : ''}`)].join('\n');
+            expect(col.title, col.id).toBe(s2);
+            expect(col.title, col.id).toBe(cardText(card));
+        }
+    });
+
+    it('the uncovered fields are measured against the view-model\'s field universe', () => {
+        expect(p.uncovered).toEqual(uncoveredFields(vm.rows.map((r) => r.name), rows));
+        expect(p.uncovered).toContain('features');
+        expect(uncoveredLine(1)).toBe('1 registry field no statement reads yet');
+    });
+
+    it('the legend names every mark; plainCellText is mark-only without text', () => {
+        for (const m of Object.values(CELL_MARKS)) expect(PLAIN_LEGEND).toContain(m);
+        expect(plainCellText({ kind: CELL_KINDS.NA, text: null })).toBe(CELL_MARKS[CELL_KINDS.NA]);
+    });
+});
+
+describe('the mode the panel opens in (substrate chart S3, ⚖ plan §6′.1 item 1)', () => {
+    it('DEFAULT_MODE is Plain, and a mode the bar draws a button for', () => {
+        expect(DEFAULT_MODE).toBe(MODES.plain);
+        expect(Object.values(MODES)).toContain(DEFAULT_MODE);
+    });
+});

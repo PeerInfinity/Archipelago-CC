@@ -1,0 +1,6 @@
+# box lock: TAKEN by probe-seedling-u9-shield-mobiles.mjs (browser, pid 14161) — head adf5e854c, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 1626 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+FAIL: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 8124 comparison(s), worst |Δ| 0
+      t 1628: game has 4 Spinner row(s), the model 5
+wrote /tmp/claude-0/-home-user-Archipelago-CC/7ab4ddbb-3ffa-5d06-91ee-6935e4e4988c/scratchpad/w-bodies.json

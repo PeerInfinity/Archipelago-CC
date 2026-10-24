@@ -1,0 +1,114 @@
+{
+    "game": "seedling",
+    "name": "sealdoor-l113-clear",
+    "boot": {
+        "level": 113,
+        "x": 64,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 114,
+            "tag": 0,
+            "note": "the Watcher's dialogue — what `r6-watcher-talk` earns, declared here"
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    },
+    "rng": {
+        "seed": 0,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": null,
+    "tick_count": 148,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 24
+        },
+        {
+            "key": "left",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "right",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "right",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "left",
+            "from": 31,
+            "to": 32
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 67
+        },
+        {
+            "key": "down",
+            "from": 69,
+            "to": 72
+        },
+        {
+            "key": "up",
+            "from": 73,
+            "to": 75
+        },
+        {
+            "key": "right",
+            "from": 79,
+            "to": 91
+        },
+        {
+            "key": "up",
+            "from": 79,
+            "to": 91
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY SEALDOOR — sweep leg 806's goal (`L113 flag 0: finaldoor@112,0 cleared`, the clear-tag {113,0}) from the L112 arrival (64,128): the solver walks to its stance, holds toward the door's entity point (128,16) into the 32 px circle — the SealController's 181 DEAD frames on the trigger tick — \"open\" plays on the next tick, the hold is released, and the run waits out the 56-tick animation and the one-tick `updateLists` fencepost until the wall is gone and `{113,0}` is written. Staged from `r6-final-door`'s game-recorded block re-pointed at (64,128). The solver's own plan (`sealDoorApproach` ON): 148 t. Authored by scripts/procgen/plan-seedling-sealdoor-witness.mjs."
+}

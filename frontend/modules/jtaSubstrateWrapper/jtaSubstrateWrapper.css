@@ -15,3 +15,39 @@
     border: none;
     background-color: #1e1e1e;
 }
+
+/* Dataset import/export toolbar (rider D-b): one slim row above the game. */
+.jtasw-dataset-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    background-color: #252526;
+    border-bottom: 1px solid #3c3c3c;
+    font-size: 12px;
+}
+
+.jtasw-dataset-toolbar button {
+    background-color: #3c3c3c;
+    color: #d4d4d4;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.jtasw-dataset-toolbar button:hover {
+    background-color: #4a4a4a;
+}
+
+.jtasw-dataset-status {
+    color: #9cdcfe;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jtasw-dataset-status-error {
+    color: #f48771;
+}

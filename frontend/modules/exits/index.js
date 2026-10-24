@@ -18,9 +18,11 @@ export const moduleInfo = {
   name: 'exits',
   title: 'Exits',
   componentType: 'exitsPanel',
+  docs: 'docs/json/user/modules/exits.md',
   icon: '🚪',
   column: 3, // Right column,
-  description: 'Exits display panel.',
+  category: 'Tracker Panels',
+  description: 'Every exit as a card with its from/to regions, rule and traversability; click one to take it.',
   requires: ['stateManager', 'commonUI'],
 };
 

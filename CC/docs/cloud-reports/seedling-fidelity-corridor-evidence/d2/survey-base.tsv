@@ -1,0 +1,222 @@
+1	L0	SOLVED	183		
+2	L2	SOLVED	47		
+3	L3	SOLVED	245		
+4	L4	SOLVED	255		
+5	L5	SOLVED	403		
+6	L6	SOLVED	294		
+7	L7	SOLVED	146		
+8	L8	SOLVED	827		
+9	L9	SOLVED	122		
+10	L10	SOLVED	83		
+11	L11	SOLVED	97		
+12	L3	SOLVED	152		
+13	L2	SOLVED	23		
+14	L0	SOLVED	145		
+15	L13	SOLVED	36		
+16	L14	SOLVED	103		
+17	L15	SOLVED	456		
+18	L16	SOLVED	124		
+19	L17	SOLVED	132		
+20	L0	SOLVED	196		
+21	L86	SOLVED	101		
+22	L0	SOLVED	203		
+23	L13	SOLVED	36		
+24	L14	SOLVED	103		
+25	L15	SOLVED	456		
+26	L16	SOLVED	655		
+27	L18	SOLVED	363		
+28	L19	SOLVED	568		
+29	L0	SOLVED	275		
+30	L12	SOLVED	328		
+31	L36	REFUSED			solverBot(survey-step-31) chest (64,48) stance: the re-planned corridor failed too — solverBot(survey-step-31) chest (64,48) stance waypoint
+32	L12	SOLVED	311		
+33	L0	SOLVED	198		
+34	L13	SOLVED	36		
+35	L14	SOLVED	103		
+36	L15	SOLVED	456		
+37	L16	SOLVED	655		
+38	L18	SOLVED	363		
+39	L19	SOLVED	687		
+40	L20	SOLVED	560		
+41	L13	SOLVED	48		
+42	L0	SOLVED	201		
+43	L12	SOLVED	2364		
+44	L21	SOLVED	26		
+45	L22	SOLVED	113		
+46	L25	REFUSED			solverBot(survey-step-46) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) — a pickup in a solid is an obstacle, not a stanc
+47	L22	SOLVED	201		
+48	L29	SOLVED	379		
+49	L31	SOLVED	336		
+50	L30	SOLVED	395		
+51	L32	SOLVED	1056		
+52	L30	SOLVED	320		
+53	L22	SOLVED	406		
+54	L21	SOLVED	31		
+55	L23	SOLVED	11		
+56	L24	SOLVED	124		
+57	L12	REFUSED			solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too — solverBot(survey-step-57) chest (320,816) stance wayp
+58	L37	SOLVED	316		
+59	L38	SOLVED	371		
+60	L37	SOLVED	332		
+61	L44	SOLVED	212		
+62	L45	SOLVED	239		
+63	L46	SOLVED	208		
+64	L47	SOLVED	204		
+65	L48	SOLVED	330		
+66	L49	REFUSED			solverBot(survey-step-66) collect (32,80) stance: the re-planned corridor failed too — solverBot(survey-step-66) collect (32,80) stance wayp
+67	L0	SOLVED	74		
+68	L13	SOLVED	36		
+69	L14	SOLVED	117		
+70	L15	SOLVED	326		
+71	L14	SOLVED	55		
+72	L13	SOLVED	48		
+73	L0	SOLVED	169		
+74	L12	SOLVED	953		
+75	L37	SOLVED	314		
+76	L38	SOLVED	480		
+77	L39	REFUSED			solverBot(survey-step-77): no corridor for goal collect-placement toward (88,24) in level 39. Obstacle: solid:rope (rope@96,384). No strateg
+78	L40	REFUSED			solverBot(survey-step-78): no corridor for goal collect-placement toward (664,520) in level 40. Obstacle: solid:pushableblockfire (pushableb
+79	L0	SOLVED	199		
+80	L12	SOLVED	953		
+81	L37	SOLVED	36		
+82	L44	SOLVED	120		
+83	L45	SOLVED	358		
+84	L46	SOLVED	1352		
+85	L47	SOLVED	300		
+86	L48	SOLVED	681		
+87	L49	REFUSED			solverBot(survey-step-87): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'coll
+88	L50	SOLVED	608		
+89	L51	SOLVED	378		
+90	L52	REFUSED			solverBot(survey-step-90): no corridor for goal reach-exit toward (8,56) in level 52. Obstacle: no-corridor. No strategy row exists for this
+91	L55	SOLVED	73		
+92	L52	SOLVED	429		
+93	L56	SOLVED	262		
+94	L57	NO-EDGE			the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources 
+95	L58	NO-ARRIVAL			the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources 
+96	L46	SOLVED	342		
+97	L45	SOLVED	360		
+98	L44	SOLVED	92		
+99	L87	SOLVED	148		
+100	L88	REFUSED			solverBot(survey-step-100) reach-exit (96,304)->L12: the re-planned corridor failed too — solverBot(survey-step-100) reach-exit (96,304)->L1
+101	L12	SOLVED	208		
+102	L95	SOLVED	490		
+103	L59	SOLVED	150		
+104	L60	SOLVED	530		
+105	L61	SOLVED	284		
+106	L62	REFUSED			solverBot(survey-step-106) reach-exit (112,64)->L64: the combat ladder is EXHAUSTED. The corridor passes through danger at (124.2,225.9) — e
+107	L64	REFUSED			levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Gam
+108	L62	SOLVED	290		
+109	L61	SOLVED	303		
+110	L60	REFUSED			solverBot(survey-step-110) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world a
+111	L59	SOLVED	150		
+112	L95	SOLVED	511		
+113	L12	SOLVED	249		
+114	L88	SOLVED	476		
+115	L87	SOLVED	205		
+116	L89	REFUSED			solverBot(survey-step-116): no corridor for goal collect-placement toward (168,88) in level 89. Obstacle: pickup:feather (feather@160,96); a
+117	L90	SOLVED	137		
+118	L89	SOLVED	639		
+119	L87	SOLVED	250		
+120	L44	SOLVED	149		
+121	L37	SOLVED	522		
+122	L38	SOLVED	359		
+123	L39	REFUSED			solverBot(survey-step-123): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row 
+124	L40	REFUSED			solverBot(survey-step-124) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 
+125	L41	REFUSED			solverBot: bait crusher@240,64 in level 41 — the ordering search found nothing: no ordering of charges opens the aim AND keeps the cell the 
+126	L40	SOLVED	70		
+127	L42	SOLVED	1294		
+128	L0	SOLVED	199		
+129	L12	SOLVED	274		
+130	L95	SOLVED	490		
+131	L59	SOLVED	143		
+132	L67	REFUSED			solverBot(survey-step-132) collect (48,64) stance (ladder-routed: no corridor from (216,120) to a stance that can collect bosskey@48,64 — 10
+133	L59	SOLVED	131		
+134	L95	SOLVED	511		
+135	L12	SOLVED	957		
+136	L37	SOLVED	314		
+137	L38	SOLVED	359		
+138	L39	REFUSED			solverBot(survey-step-138): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row 
+139	L40	SOLVED	172		
+140	L43	REFUSED			solverBot(survey-step-140) collect (144,224): walked at wand@144,224 for 400 ticks without touching it; stalled at (151.60972585315935,231.4
+141	L37	SOLVED	234		
+142	L12	SOLVED	1705		
+143	L95	SOLVED	490		
+144	L59	SOLVED	150		
+145	L60	SOLVED	497		
+146	L61	SOLVED	296		
+147	L63	SOLVED	504		
+148	L65	SOLVED	546		
+149	L68	REFUSED			solverBot(survey-step-149): no corridor for goal collect-placement toward (8,8) in level 68. Obstacle: pickup:health (health@16,16). Strateg
+150	L65	SOLVED	233		
+151	L63	REFUSED			solverBot(survey-step-151): no corridor for goal reach-exit toward (132,268) in level 63. Obstacle: solid:pushableblockspear (pushableblocks
+152	L61	REFUSED			solverBot(survey-step-152) reach-exit (0,160)->L60: the combat ladder is EXHAUSTED. The corridor passes through danger at (170.8,104.0) — ha
+153	L60	REFUSED			solverBot(survey-step-153) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world a
+154	L59	SOLVED	150		
+155	L95	SOLVED	511		
+156	L12	REFUSED			solverBot(survey-step-156) reach-exit (32,848)->L83: applied 4 strategies for one goal [chest(chest@320,816), touch(shieldlocknorm@288,704),
+157	L83	SOLVED	85		
+158	L84	REFUSED			solverBot(survey-step-158): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for thi
+159	L85	SOLVED	18		
+160	L71	REFUSED			solverBot(survey-step-160) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the wor
+161	L75	REFUSED			solverBot(survey-step-161) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) — haz
+162	L74	SOLVED	321		
+163	L75	SOLVED	366		
+164	L71	SOLVED	327		
+165	L76	SOLVED	519		
+166	L77	REFUSED			solverBot(survey-step-166): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,1
+167	L78	REFUSED			solverBot(survey-step-167): no corridor for goal reach-exit toward (40,8) in level 78. Obstacle: proximity-hazard:lavatrap (lavatrap@144,48)
+168	L79	REFUSED			solverBot(survey-step-168) collect (40,152) stance: the re-planned corridor failed too — solverBot(survey-step-168) collect (40,152) stance 
+169	L78	SOLVED	392		
+170	L77	SOLVED	475		
+171	L76	SOLVED	434		
+172	L71	SOLVED	193		
+173	L82	REFUSED			solverBot(survey-step-173): no corridor for goal reach-exit toward (152,8) in level 82. Obstacle: solid:lavaboss (lavaboss@112,48). No strat
+174	L96	SOLVED	5		
+175	L97	SOLVED	5		
+176	L37	SOLVED	780		
+177	L12	SOLVED	1269		
+178	L95	SOLVED	490		
+179	L59	SOLVED	150		
+180	L60	SOLVED	497		
+181	L61	SOLVED	296		
+182	L63	REFUSED			solverBot(survey-step-182) chest (224,80) stance: the re-planned corridor failed too — solverBot(survey-step-182) chest (224,80) stance wayp
+183	L61	REFUSED			solverBot(survey-step-183) reach-exit (0,160)->L60: the combat ladder is EXHAUSTED. The corridor passes through danger at (170.8,104.0) — ha
+184	L60	REFUSED			solverBot(survey-step-184) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world a
+185	L59	SOLVED	150		
+186	L95	SOLVED	511		
+187	L12	REFUSED			solverBot(survey-step-187) reach-exit (32,848)->L83: applied 4 strategies for one goal [chest(chest@320,816), touch(shieldlocknorm@288,704),
+188	L83	SOLVED	85		
+189	L84	REFUSED			solverBot(survey-step-189): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for thi
+190	L85	SOLVED	18		
+191	L71	REFUSED			solverBot(survey-step-191) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the 
+192	L80	SOLVED	633		
+193	L71	SOLVED	171		
+194	L82	REFUSED			solverBot(survey-step-194): no corridor for goal reach-exit toward (152,8) in level 82. Obstacle: solid:lavaboss (lavaboss@112,48). No strat
+195	L96	SOLVED	5		
+196	L97	SOLVED	5		
+197	L37	SOLVED	767		
+198	L44	SOLVED	86		
+199	L87	SOLVED	223		
+200	L93	REFUSED			solverBot(survey-step-200): no corridor for goal reach-exit toward (120,88) in level 93. Obstacle: solid:dungeonspire (dungeonspire@128,240)
+201	L98	REFUSED			solverBot(survey-step-201) chest (160,32) stance: the re-planned corridor failed too — solverBot(survey-step-201) chest (160,32) stance wayp
+202	L99	REFUSED			solverBot(survey-step-202) reach-exit (48,96)->L100 -> kill: the count is still waiting on [lavarunner@192,64, lavarunner@160,32, lavarunner
+203	L100	REFUSED			the teleporter at (288,96) in level 100 stands ON a PIT tile (18,6). Walking into it fires the trigger and the pit edge in the same tick, an
+204	L101	REFUSED			solverBot(survey-step-204) reach-exit (48,96)->L102: the combat ladder is EXHAUSTED. The corridor passes through danger at (101.5,216.1) — h
+205	L102	SOLVED	16		
+206	L103	REFUSED			solverBot(survey-step-206) reach-exit (0,64)->L104: the combat ladder is EXHAUSTED. The corridor passes through danger at (103.3,247.6) — ha
+207	L104	SOLVED	261		
+208	L105	SOLVED	300		
+209	L106	SOLVED	185		
+210	L101	REFUSED			solverBot(survey-step-210) reach-exit (144,96)->L102 -> wand: magicallockfire@112,48 cannot be opened by this run — magicallockfire@112,48 i
+211	L102	SOLVED	20		
+212	L107	REFUSED			solverBot(survey-step-212) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor pass
+213	L108	REFUSED			solverBot(survey-step-213): no corridor for goal reach-exit toward (232,232) in level 108. Obstacle: proximity-hazard:lavatrap (lavatrap@128
+214	L109	SOLVED	158		
+215	L101	REFUSED			solverBot(survey-step-215) reach-exit (104,24)->L110 -> wand: magicallockfire@96,48 cannot be opened by this run — magicallockfire@96,48 nee
+216	L110	SOLVED	173		
+217	L2	SOLVED	26		
+218	L3	SOLVED	82		
+219	L111	SOLVED	112		
+220	L112	REFUSED			solverBot(survey-step-220): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on
+221	L113	REFUSED			solverBot(survey-step-221): no corridor for goal reach-exit toward (120,8) in level 113. Obstacle: solid:finaldoor (finaldoor@112,0); also o
+222	L115	SOLVED	173		

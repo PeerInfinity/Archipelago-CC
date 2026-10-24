@@ -10,7 +10,7 @@ Inspired by idle games like [Idle Loops](https://stopsign.github.io/idleLoops/),
 
 ### Core Loop
 
-1. You start each loop in the Menu region with full mana
+1. You start each loop in the Menu region with full mana — the [Menu panel](../modules/menuPanel.md) is that region's substrate, and its Restart is how you return there outside loop mode
 2. Queue actions: move to regions, explore undiscovered areas, check locations
 3. Actions execute automatically, each consuming mana based on its cost
 4. When mana runs out, the loop resets: mana refills, position resets, queue restarts
@@ -20,9 +20,44 @@ Inspired by idle games like [Idle Loops](https://stopsign.github.io/idleLoops/),
 
 | Action | Description | Base Cost |
 |--------|-------------|-----------|
-| **Move to Region** | Navigate to an adjacent region | Region's move cost (from cost data, or 50 default) |
-| **Explore Region** | Discover locations and exits in a region | 2x the region's move cost |
-| **Check Location** | Check a location for items | Per-location cost (from cost data, or 100 default) |
+| **Move to Region** | Navigate to an adjacent region | Region's move cost (from cost data, or `DEFAULT_REGION_COST` = 50) |
+| **Move OUT OF A START REGION** | The Menu hop — leaving the region the game starts in | `START_REGION_MOVE_COST` = **0**, free BY RULE |
+| **Explore Region** | Discover locations and exits in a region | `DEFAULT_EXPLORE_MULTIPLIER` (2) × the region's move cost |
+| **Check Location** | Check a location for items | Per-location cost (from cost data, or `DEFAULT_LOCATION_COST` = 10) |
+
+⚖ **The start-region row is a RULE, not a price** (user ruling 2026-09-06,
+model (A): *"advancing from the Menu costs no mana"*). It wins over both of the
+other paths: over what a loaded `loop_costs` block says for the start region, and
+over the no-data fallback below. That is what retires the 50 the twelve
+hand-written EMPTY blocks were billing for the first move out of Menu — with no
+preset change, because the presets were never the thing that was wrong.
+
+The rule has TWO writers and FOUR readers, and every one of them names
+`START_REGION_MOVE_COST`, so the panel cannot show a price the queue does not
+charge:
+
+| | site | what it is |
+|---|---|---|
+| writes | `loopCostPlanner.js` `SimulatedState` | the simulation's own budget |
+| writes | `loopCostGenerator.js` `writeCostsByClass` | the `moveCost` stamped into the emitted block |
+| reads | `loopState._calculateActionCost` | the one that CHARGES |
+| reads | `shared/queueAnalysis.getBaseCost` | the Loops and Loop Stats panels' queue analysis |
+| reads | `loopUI._estimateActionCost` | the current-action display and the per-entry cost badge |
+| reads | `loopBlockBuilder._exitMoveCost` | the region block's per-exit cost label |
+
+⛔ It is a `regionMove` rule ONLY. An **explore** in a start region is priced as
+ever (the block builder hides Explore for start regions, so the corpus has no
+such action), and so is a **location check** (no start region in the corpus has
+a location). It does not reach the SUMMARY branch either: a summary substrate is
+priced by time and states its own costs explicitly.
+
+⚖ **Every number in this table is an EXPORTED CONSTANT, not a literal** (user
+ruling 2026-09-06: *"I want the code to use exported constants, not hardcoded
+numbers"*). They are declared once, in
+`frontend/modules/shared/procgen/loopCostGenerator.js`, and re-exported through
+`loops/costDataManager.js` for the runtime's readers. Before that ruling the
+store's location fallback was **100** and the generator's was 10; the two are
+now one value, and **10 is the one that survived**.
 
 Actions are animated in real time. Each action's duration is proportional to its mana cost — expensive actions take longer. The formula is: `time = (cost * 5) / gameSpeed` seconds.
 
@@ -32,7 +67,7 @@ Mana is the core resource that limits what you can accomplish in a single loop.
 
 - **Base mana**: 100
 - **Mana per item**: Each inventory item adds 10 to your max mana
-- **Max mana formula**: `100 + (itemCount * 10)`
+- **Max mana formula**: `100 + (itemCount * 10)`, plus any bonus a substrate in the world adds
 - Mana is consumed continuously as actions execute (not all at once)
 - When mana hits 0, the loop resets
 - On reset, mana refills to its current maximum
@@ -79,12 +114,23 @@ Or select "Loops" from the mode selector in the frontend.
 
 ### Building a Queue
 
-When Loops mode is active, clicking in the tracker queues actions instead of executing them directly:
+In the Loops panel itself, **Explore Region** and a click on an available exit or location row of a region's block append that action to the queue. The [Region Graph](../user/modules/regionGraph.md) and the Menu panel's exit buttons always append in loop mode.
+
+A click in the tracker panels (Regions, Locations, Exits) depends on the **Click-to-queue** setting (`moduleSettings.loops.clickToQueue`, in the panel's Controls): **Off** (the default) — the click acts at once, as it does outside loop mode; **Append to queue** — it adds the one action to the end of the queue, if the queue ends in that region; **Rebuild path (advanced)** — it replaces the queue with a path to the target:
 
 - **Click a location** → Pathfinding calculates the route from Menu to the location's region, queues all the intermediate region moves, then queues the location check (or an explore action if the location is undiscovered)
 - **Click an exit** → Queues region moves along the path to the exit's source region, then moves through the exit (or queues an explore if the exit is undiscovered)
 
-Each click replaces the current queue with a fresh path to the clicked target.
+In *Rebuild path*, each click replaces the current queue with a fresh path to the clicked target.
+
+**Routes start at Menu** — `findDiscoveredPath` sources every route from
+`startRegions[0]`, the region the [Menu panel](../modules/menuPanel.md) owns.
+That panel is also where the player leaves it by hand: pressing one of its exit
+buttons publishes a real `user:regionMove` tagged `menuPanel-exit`, a **planning
+source**, so the move is authored into the path rather than blocked by loop
+mode's strict action gate. With the panel's *Skip the menu* setting on (the
+default) that first hop is taken automatically at load, exactly as
+`procgenPlayer` has always done for a procgen world.
 
 ### Controls
 
@@ -94,13 +140,33 @@ Each click replaces the current queue with a fresh path to the clicked target.
 | **Pause** | Stop processing mid-queue (resume from same point) |
 | **Resume** | Continue from where you paused |
 | **Restart** | Reset the loop (refill mana) and start the queue from the beginning |
-| **Speed slider** | Adjust game speed (0.1x to 100x) |
-| **Instant mode** | Actions complete in one frame (disables speed slider) |
-| **Auto-restart** | Automatically restart the loop when mana runs out |
+| **Speed slider** | Adjust game speed (0.5x to 1000x, default 100x; the number box beside it takes 0.1x to 1000x) |
+| **Instant mode** | Global: timer actions complete in one frame (disables speed slider). Distinct from the per-block **Instant** checkbox described under [Block Modes](#playing-a-substrate-region-block-modes) |
+| **Auto-restart** | Keep the queue running instead of stopping when a loop reset interrupts it. Applies to resets **loops itself causes** — running the pool dry. A reset the underlying game causes (Journey to Ascension, Idle Loops) always continues, because the game has already restarted and stopping would only strand the queue behind it |
 | **Auto-resume** | Automatically resume processing when new actions are added after queue completion |
 | **Auto-remove** | Remove completed location checks and fully-explored explore actions from the queue |
 | **Clear queue** | Remove all queued actions |
 | **Clear explores** | Remove only explore actions from the queue |
+
+### Where a reset puts you
+
+**Clear queue** and a reset from running the pool dry (`fireLoopResetTeleport`, the
+maze and text-adventure legs) teleport the player to the **loop start** — where
+the LOAD put the player — by ONE rule (`LoopState._resolveLoopStartRegion`, public
+as `loops.getLoopStartRegion`; the mana-out leg asks it rather than keeping a
+copy):
+
+- a plain world: the declared start (`startRegions[0]`);
+- a procgen world whose declared start is **skipped** — the *Skip the menu*
+  setting is on AND the start has exactly one exit (`menuPanelEngine.skipsStart`,
+  the rule the load's hop reads) — procgenPlayer's resolved start, the first
+  placed region, because that is where the player began;
+- otherwise (a start with several exits, e.g. an initialised `mm3`'s menu of 13
+  stages, or skip off) the **declared start**, where the menu lists every exit —
+  the same place the menu panel's Restart returns to.
+
+Until APWORLD SUBSTRATE CHANGE S3 both resets preferred the resolved start
+outright, so a multi-exit world's reset landed on its first placed stage.
 
 ### Processing States
 
@@ -118,18 +184,96 @@ The queue cycles through these states:
 
 Explore actions can be set to repeat. When a repeating explore action completes, a new explore action is automatically appended to the queue for the same region. This is useful for grinding XP in a region without manually re-queuing.
 
+## Playing a Substrate Region: Block Modes
+
+Everything above describes a queue of *tracker* actions — moves, explores, location checks — executed by a timer. When a region is backed by a **substrate** (an actual game: a maze, a text adventure, Journey to Ascension, Idle Loops, a runner or bounce level), the queue can hand that region over to you, to a recording, or to the game's own automation.
+
+The unit of that choice is a **block**: one visit to one region, i.e. the run of queued entries between the move that brings you in and the move that takes you out. Visit the same region twice and you get two blocks, each with its own settings. A block of a substrate region carries a row of **Mode** radios in its expanded details:
+
+| Mode | What happens when the queue reaches the block |
+|------|-----------------------------------------------|
+| **Manual** | The queue **parks** and hands you the controls. You play the region yourself; your actions cost mana as you perform them. Leaving through the exit the queue expected resumes the queue at the next block. |
+| **Record** | Manual, plus the visit is remembered. On a successful exit the block's contents are rewritten to what you actually did, and (by default) the block flips itself to Playback so the next loop replays it. |
+| **Playback** | The saved recording is replayed for you. Depending on the game this is a faithful re-enactment of your inputs, or an instant application of the visit's net result. |
+| **Bot** | The game's own automation plays the block. Available only for regions whose game can drive itself to a queued target. |
+
+**Record is the default**, which gives loop mode its intended rhythm: the first time you reach a region you play it by hand, and every loop after that replays it while you push on to the next one.
+
+### What each mode costs
+
+All four cost the same. A region visit is priced by what happens in it, not by who performed it — playing a block by hand, recording it, replaying the recording, and letting the Bot do it all charge the same mana and earn the same XP. There is no cheaper way to do the same content, and no penalty for automating it.
+
+### Instant
+
+**Instant** is a separate checkbox next to the radios, not a fifth mode. It applies to Playback and Bot blocks: instead of animating, the block resolves in a single frame.
+
+Three things to know:
+
+- **It is per-block.** You choose which visits you watch and which ones just happen.
+- **It is a fast-forward, not a skip.** Instant changes how long you watch a block, not what the block does. The game underneath still runs — in Idle Loops, for instance, Instant runs exactly the same ticks in the same order and simply stops waiting between them, so the result is identical to having sat through it. And it is never the cheap route: a block costs the same mana and earns the same XP whether you watch it or not (see [What each mode costs](#what-each-mode-costs)).
+- **It is offered wherever it can mechanically exist** — the idle games included. On **Playback** you get the box in the maze, the text adventure, Journey to Ascension and Idle Loops. On **Bot** you get it wherever the automation itself honours it, which today means Journey to Ascension and Idle Loops. Where the box is missing it is missing for a reason you would agree with: the runner and bounce levels leave it out because their playback is *already* instantaneous — there would be nothing to switch off — and a game with no fast-forward to offer gets no box rather than a dead one.
+
+Idle games get the box too, and that is a deliberate choice rather than an oversight. Waiting really is part of how an idle game plays — the pacing is a cost you are meant to feel, which is why paced play stays the default and why **Record** starts every new block. But that argument is about the region you are *currently* playing. Once a region is solved and you are only re-walking it on the way to the frontier, the waiting has stopped being a decision and become a toll. Instant is how you stop paying it — one block at a time, on your own judgement.
+
+### The normal way to play
+
+The pattern the mode system is built around:
+
+> **Every region Instant except the frontier — and live play at the frontier.**
+
+Regions you have already solved are set to Playback + Instant, so a loop spends almost no real time replaying them. The one region you are actually working on stays Manual or Record, and that is where you spend the loop. As the frontier advances, yesterday's frontier becomes another instant replay.
+
+That is also why loops are expected to be *short* in wall-clock time and *long* in queue: the queue grows with everything you have solved, but only the tail of it is played at human speed.
+
+### Recordings
+
+Recordings persist. They are stored per world, per region, and per *arrival* — which exit you came in through — so a region you enter two different ways keeps a separate recording for each.
+
+- Re-recording a block **replaces** that block's recording rather than piling up duplicates.
+- Recordings **survive deleting the block**. Rebuild a matching visit later and its recording comes back automatically.
+- A per-block indicator (`● recorded` / `○ not recorded`) says whether one exists, and the **Playback** radio stays disabled until the block has something to play — so the mode you can pick is always a mode that will work.
+
+### Why the game sometimes ignores your clicks
+
+While loop mode is on, playing a substrate is only allowed **when the queue is parked on that region and is in Manual, Record, or a Bot block that fell back to live play**. Click into a game at any other time — the queue not started, paused, finished, empty, or parked somewhere else — and the action is refused with a `loops:clickIgnored` notice rather than silently taken.
+
+This is deliberate. Loop mode's whole economy rests on every action being charged and, where relevant, captured; an action performed outside a parked block would be free, unrecorded, and out of order. The rule of thumb: **if you want to play, make the queue park you there.**
+
+What is never blocked: the queue's own execution, the teleport that follows a loop reset, and the tracker's planning clicks (which author the queue rather than play the game).
+
+### Loop games inside loop mode
+
+Some substrates — Journey to Ascension and Idle Loops today — are *already* loop games: their own economy resets you to the start when a resource runs out. For those, a native reset **is** a loop-mode reset, and the two are wired together rather than kept apart. Consequences worth expecting:
+
+- Loop mode **cannot be turned off** while such a world is loaded. It is not an optional layer there; it is the game's own structure.
+- A recording, or a Bot walk, **routinely spans several loops**. One pool of mana is often not enough for one region visit, so the reset teleports you back and the queue re-drives from the start and returns. That is the intended behaviour, not a failure.
+
+For the full mechanics, see the developer page [Loop Recording and Block Modes](../developer/procgen/loop-recording.md).
+
 ## Cost Data System
 
 The mana cost for each region move and location check can be customized per game via cost data files.
 
-### Cost Data File
+### Where cost data lives
 
-Cost data is stored alongside preset files:
-```
-frontend/presets/{game}/AP_{seed_id}/AP_{seed_id}_costs.json
-```
+Cost data reaches the runtime store (`loops/costDataManager.js`) as a
+**`loop_costs` block embedded in the world's `rules.json`** — per player
+(`loop_costs: {"<p>": block}`, APWORLD SUBSTRATE CHANGE P1a): `tryLoadEmbedded(rulesPath,
+playerId)` fetches the rules document and applies the LOADED slot's
+`rulesDoc.loop_costs[playerId]` (the in-memory path, `files:jsonLoaded`, reads
+`loop_costs[selectedPlayerId]` the same way). A slot's block being present is
+also the loop-mode switch: `isLoaded()` non-null ⇒ loop mode on; a document with
+no entry for the loaded slot runs with loop mode off.
 
-Format:
+Two other doors exist for hand-supplied data: `loadFromURL(url)` and
+`loadFromFile(file)` (the panel's file picker).
+
+⚠ There is **no** standalone `AP_{seed_id}_costs.json` sidecar next to a preset
+any more — the loader for that path had no callers and was deleted 2026-09-06.
+(The tracked `frontend/presets/jta*/…_costs.json` files belong to Journey to
+Ascension's *own* cost system, read by `jtaGameDataPanelUI.js`, not by this one.)
+
+Format of the block:
 ```json
 {
   "version": "1.0",
@@ -149,30 +293,70 @@ Format:
 }
 ```
 
-### Cost Generator
+### Who generates it
 
-The cost generator creates balanced cost data by simulating an actual playthrough of the sphere log using the real loop mechanics:
+**One engine**, `shared/procgen/loopCostPlanner.js`, driven from two places:
 
-1. Start at the start region with max mana
-2. For each location in sphere order:
-   - Find the path from start to the target location
-   - For each uncosted region in the path: assign `floor(currentMana / 2 / uncostedRegionsRemaining)`
-   - For the location (if uncosted): assign `floor(currentMana / 2)`
-   - Simulate executing the queued actions using actual loop mechanics
-   - Reset the loop, continue to the next location
-3. Assign default costs to any unvisited regions (use highest neighbor's cost) and locations (use highest existing location cost)
+| Caller | Runs | Writes |
+|---|---|---|
+| `shared/procgen/loopCostGenerator.js` (pure, headless) | the **procgen pipeline**, at compile time (`procgenPipelineEngine.js`, when `enableLoopMode && embedSphereLog`) | the `loop_costs` block into the generated `rules.json` |
+| `loopsCostDebugger/costPlanner.js` | the **runtime**: the Loops panel's Generate Costs button, and the auto-generate on entering loop mode | straight into the store |
 
-This produces costs that scale with the game's progression — early-sphere locations are cheap, late-sphere locations are expensive.
+Both build a *topology* — regions, locations, exits, adjacency and each region's
+substrate — and hand it to the same model, so **they produce the same block for
+the same world**. `scripts/procgen/check-loop-costs-one-model.mjs` asserts that
+over four documents.
+
+The model simulates a playthrough, one action queue per planned step. Start at
+the start region with max mana; for each location in sphere order, path to it,
+pricing each region on the way at what is left of the budget when the walk
+reaches it, split across the regions still ahead; explore the region until the
+budget runs out; then, in a fresh loop, price the location at what remains and
+check it. Items received raise max mana for later loops. Finally, any region the
+log never reached takes its highest costed neighbour's cost, and any unvisited
+location its region's cost × the explore multiplier. The effect is what the
+ruling asked for: costs scale with what the player can afford by the time they
+get there.
+
+**A region's substrate decides whether the block speaks for it at all** —
+coarse regions (and maze) get full numbers, summary regions (runner, bounce) get
+a time-drain rate and nothing else, and substrates with their own mana economy
+(jta, omsi) get no entries. See
+[one loop-cost engine, one store](../developer/procgen/gotchas.md#one-loop-cost-engine-one-store--and-the-debugger-is-its-inspector).
+
+⚖ Two engines were retired getting here. A "live" generator
+(`loops/costGenerator.js`) that played the sphere log through the running loop
+engine had no callers and was deleted 2026-09-06. The pure generator's own
+model — a flat max-mana/2 split across the path — was deleted with the
+unification: over the same document it and the planner agreed only on the start
+region and the first priced region.
 
 ### Fallback Costs
 
-When no cost data is loaded, hardcoded defaults apply:
+When no cost data is loaded, the exported defaults apply
+(`loopState._calculateActionCost`'s no-data branch):
 
-| Action | Default Cost |
-|--------|-------------|
-| Region move | 50 |
-| Explore | 100 (2×50) |
-| Location check | 100 |
+| Action | Default Cost | Constant |
+|--------|-------------|---|
+| Region move | 50 | `DEFAULT_REGION_COST` |
+| Region move OUT OF A START REGION | 0 | `START_REGION_MOVE_COST` |
+| Explore | 50 | `DEFAULT_REGION_COST` |
+| Location check | 10 | `DEFAULT_LOCATION_COST` |
+
+⚠ Explore is **not** `DEFAULT_EXPLORE_MULTIPLIER × DEFAULT_REGION_COST` on this
+path. The no-data branch has always priced an explore at a plain region move
+(this page claimed "100 (2×50)" until 2026-09-06 and the code never did that);
+the multiplier applies only when a block IS loaded, where explore reads the
+region's own `moveCost`. Named, not changed.
+
+⛔ **THE DISPLAY COPY DISAGREED WITH THIS TABLE UNTIL 2026-09-07.**
+`shared/queueAnalysis.js`'s `BASE_COSTS` — what the Loops and Loop Stats panels
+render a queued action's cost from when no block is loaded — typed
+`locationCheck: 100` while the runtime charged 10. Measured: the panel showed
+100 for a check the queue then billed 10, a 10× disagreement that survived L2
+because L2 moved the CHARGING copy and the display copy typed its own number.
+Both tables now read the same exported constants (⚖ user 2026-09-07), and a
+parity row asserts the display equals the charge for all three action types.
 
 ## Loop Stats Panel
 
@@ -200,17 +384,17 @@ Each action row expands to show:
 | Base cost | Raw mana cost from cost data |
 | Level discount | Reduction from region XP level |
 | Final cost | Actual mana charged |
-| Mana before | Mana at start of action |
-| Mana after | Predicted remaining mana |
-| Predicted time | Estimated real-time duration |
+| Remaining | Predicted mana left after the action (red when below 0) |
 
 ### Color Coding
 
-Mana remaining is color-coded:
+In the Loops panel, each queued action's remaining mana is color-coded:
 - **Green** (`loop-mana-good`): > 50% mana remaining
 - **Yellow** (`loop-mana-warn`): 10–50% mana remaining
 - **Red** (`loop-mana-low`): < 10% mana remaining
 - **Red** (`loop-mana-insufficient`): mana goes negative (action won't complete)
+
+In Loop Stats, a row is drawn red when the mana runs out before or during it, has a blue edge while it runs, and is faded once completed.
 
 ### Previous vs. Current
 
@@ -228,9 +412,16 @@ Settings that survive across sessions (stored in localStorage):
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `defaultSpeed` | 10 | Game speed multiplier |
+| `defaultSpeed` | 100 | Game speed multiplier |
 | `autoRestart` | false | Auto-restart loop on mana depletion |
+| `loopModeEnabled` | false | Enter loop mode at start-up |
+| `clickToQueue` | `off` | What a tracker click does in loop mode: `off`, `append` or `rebuildPath` |
+| `autoResumeOnNewAction` | false | Resume a finished queue when an action is added |
+| `autoRemoveCompleted` | false | Drop completed actions from the queue |
 | `instantMode` | false | Complete actions in one frame |
+| `keepFocused` | false | Keep substrate panels from coming to the front while the queue runs |
+| `defaultBlockMode` | `record` | The mode a new block starts in |
+| `autoSwitchToPlaybackAfterRecord` | true | Switch a block to Playback after recording it |
 
 ### Settings File
 
@@ -262,6 +453,8 @@ Loops mode integrates tightly with the discovery system:
 - Only discovered regions and exits can be used for pathfinding
 - Exploring a region triggers discovery events, revealing locations and exits
 - The explore action publishes `loop:exploreCompleted` through the dispatcher chain
+- **Loop mode turns Discovery mode on** for as long as it is on: eight `moduleSettings.discovery.*` settings are forced as session-only overrides (never saved), and leaving loop mode clears them. The discovery module owns the values and the one serialised writer (`frontend/modules/discovery/worldDiscoveryMode.js`); the loops event coordinator calls its `syncDiscoveryOverrides` public function on every loop-mode change.
+- **A world can choose its own Discovery mode** through its per-player `discovery_mode` block (the Procgen Pipeline's *Discovery mode* select, `--discovery-mode` on the drivers). Without the block, loop mode alone decides, as above. With `enabled: false`, Discovery mode is off even in loop mode and every region, location and exit counts as discovered, so pathfinding reaches all of them. With `enabled: true`, loop mode behaves as without the block, and outside loop mode the world is walk-to-reveal. The [Discovery panel guide](../user/modules/discoveryPanel.md) has the table.
 
 ### GameState Path
 
@@ -273,10 +466,6 @@ The action queue is built on top of GameState's path system:
 ### Region Graph
 
 Loops mode is designed to integrate with the region graph visualization (planned features include displaying nodes as pie charts showing mana costs as fractions of total mana).
-
-### MetaGame (Maze Metagame)
-
-Loops mode can be combined with the [Maze Metagame](maze-metagame.md) via `?metagame=mazegameloops`, which adds maze challenges before explore and location check actions.
 
 ## Architecture
 
@@ -294,7 +483,6 @@ The loops system is split across three frontend modules:
 | `loopBlockBuilder.js` | Region block DOM construction, mana cost coloring |
 | `actionQueueManager.js` | Maps GameState path to action objects, tracks progress |
 | `costDataManager.js` | Loads and caches per-region/per-location cost data |
-| `costGenerator.js` | Generates cost data by simulating sphere log playthrough |
 | `eventCoordinator.js` | Centralizes event subscriptions and routing |
 | `loopEvents.js` | Event handlers for location clicks, exit clicks, mode changes |
 | `displaySettingsManager.js` | Persisted UI display preferences |
@@ -343,8 +531,8 @@ The loops module uses a dispatcher-based event system:
 
 | Event | Published By | Description |
 |-------|-------------|-------------|
-| `loopState:manaChanged` | LoopState | Mana value updated |
-| `loopState:xpChanged` | LoopState | Region XP changed |
+| `gameState:manaChanged` | GameState | Mana value updated |
+| `gameState:xpChanged` | GameState | Region XP changed |
 | `loopState:queueUpdated` | LoopState | Action queue modified |
 | `loopState:progressUpdated` | LoopState | Frame-by-frame progress tick |
 | `loopState:actionCompleted` | LoopState | Single action finished |
@@ -352,9 +540,8 @@ The loops module uses a dispatcher-based event system:
 | `loopState:loopReset` | LoopState | Loop reset (mana refilled) |
 | `loopState:pauseStateChanged` | LoopState | Processing state transition |
 | `loopState:speedChanged` | LoopState | Game speed adjusted |
-| `loopUI:modeChanged` | LoopUI | Loop mode toggled on/off |
+| `gameState:loopModeChanged` | GameState | Loop mode toggled on/off |
 | `costDataManager:loaded` | CostDataManager | Cost data loaded or generated |
-| `costGenerator:progress` | CostGenerator | Cost generation progress update |
 
 ## Testing
 
@@ -363,7 +550,6 @@ The loops module uses a dispatcher-based event system:
 | URL Parameter | Description |
 |---------------|-------------|
 | `?mode=loops` | Normal Loops mode |
-| `?mode=test-loops` | Loops with standard test suite |
 | `?mode=test-loops-only` | Loops with only Loops-specific tests |
 
 ### Test Cases
@@ -371,8 +557,8 @@ The loops module uses a dispatcher-based event system:
 The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 1. **Initial Menu not processed** — Starting region isn't treated as an action
-2. **Real actions processed** — Queued actions execute correctly
-3. **Mana consumption** — Mana deducted proportional to action cost
+2. **Real actions processed** — the [Menu panel](../modules/menuPanel.md)'s Restart, then one of its exit buttons pressed *in loop mode*, puts a real `regionMove` in the path; a location check queued behind it, and the queue processes both
+3. **Mana consumption** — the Start/Pause labels driven over one seeded action, asserting mana actually moves (`gameState:manaChanged.current` below the starting value)
 4. **XP awarding** — XP gained matches mana spent
 5. **Level up mechanics** — XP thresholds and cost reduction verified
 6. **Speed adjustment** — Game speed affects processing rate
@@ -387,7 +573,11 @@ The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 ## Current Status
 
-The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, and the Loop Stats panel with cost predictions.
+The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, the Loop Stats panel with cost predictions, and the per-block mode system described above (Manual / Record / Playback / Bot, the Instant toggle, persistent recordings and the strict action gate) — built in the M1–M6 arc (2026-07-21/24) and extended by the omsi arcs D1/D2 (2026-07-25) and the Instant-policy pass (2026-07-25/26).
+
+**Settled (2026-07-25/26):** **Instant** is a normal player-facing control, offered in every game where it can mechanically exist — idle games included. It is not a testing-only capability and not a per-game privilege. The earlier worry, that fast-forwarding an idle game removes a cost the game is built around, turned out to be an argument about the *frontier* rather than about the feature: it is why paced play stays the default and why Record starts every block, not a reason to withhold the checkbox from regions you have already solved. Idle Loops was the last gap and closed on 2026-07-25 (arcs D1/D2 plus the Instant-policy pass), on Playback and on Bot.
+
+The availability described under [Instant](#instant) is therefore the settled shape, not a snapshot. What can still move is the set of games that *can* offer it — a substrate gains the box by implementing a fast-forward, not by being granted permission.
 
 ### Planned Features
 

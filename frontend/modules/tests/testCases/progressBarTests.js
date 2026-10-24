@@ -392,7 +392,9 @@ registerTest({
   description: 'Tests 5-second timer progress bar with start event and completion event validation',
   testFunction: testProgressBarTimer,
   category: 'Progress Bar',
-  //enabled: false,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
   //order: 0,
 });
 
@@ -402,7 +404,9 @@ registerTest({
   description: 'Tests event-driven progress bar with manual progress updates',
   testFunction: testProgressBarEventMode,
   category: 'Progress Bar',
-  //enabled: false,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
   //order: 1,
 });
 
@@ -412,6 +416,8 @@ registerTest({
   description: 'Tests show, hide, and destroy commands for progress bars',
   testFunction: testProgressBarCommands,
   category: 'Progress Bar',
-  //enabled: false,
+  // ⚖ the user, 2026-10-10: the panel is out of the default layout and may be deprecated —
+  // off by default (the full / full-random modes enable every test with no explicit value).
+  enabled: false,
   //order: 2,
 });

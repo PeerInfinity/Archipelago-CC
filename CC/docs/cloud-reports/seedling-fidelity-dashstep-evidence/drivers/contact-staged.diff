@@ -1,0 +1,17 @@
+--- /tmp/claude-0/-home-user-Archipelago-CC/32f59906-272b-549d-91e7-b5bf009403f2/scratchpad/flipwt/scripts/procgen/probe-seedling-contact-divergence.mjs	2026-10-17 15:32:51.539708386 +0000
++++ /tmp/claude-0/-home-user-Archipelago-CC/32f59906-272b-549d-91e7-b5bf009403f2/scratchpad/flipwt/scripts/procgen/zz-tmp-contact-staged.mjs	2026-10-17 15:35:08.094401718 +0000
+@@ -176,6 +176,14 @@
+                 }
+                 row.granted = need;
+                 // eslint-disable-next-line no-await-in-loop
++                if (leg.stagedEvents?.length) {
++                    await rp.gameFrame().evaluate((fs) => {
++                        window.__swfBridge.queueItems(fs.map((f) => ({ invocation: 'method_call', path: [{ class: 'Game' }],
++                            method: 'setPersistence', args: [f.tag, false, f.level] })));
++                    }, leg.stagedEvents.map(({ level, tag }) => ({ level, tag })));
++                    await page.waitForTimeout(2000);
++                    row.stagedEvents = leg.stagedEvents;
++                }
+                 row.landed = await rp.jumpSettled(leg.level, leg.arrive.x, leg.arrive.y);
+                 // eslint-disable-next-line no-await-in-loop
+                 const r = await page.evaluate((a) => window.__contact.contactCompare(a).then((x) => JSON.parse(JSON.stringify(x))),

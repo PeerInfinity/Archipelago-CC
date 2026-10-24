@@ -1,18 +1,19 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { createRng } from '../shared/rng.js';
 // Side-effect: registers the maze and text-adventure substrates.
 // Driver tests below dispatch via substrateRegistry, which needs both
 // available for the mixed-substrate end-to-end checks at the bottom.
 import '../mazeRoom/mazeRoomLibrary.js';
-import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
-    wallOffUnusedExits, growMaze, compileRegionGraph,
-    buildPresetSidecars, buildRulesJson, stringifyRulesJson,
+    wallOffUnusedExits, growMaze, growMazeGen, growMazeAsync, compileRegionGraph,
+    buildPresetSidecars, buildRulesJson, stringifyRulesJson, sourceLocationsOf,
     findDisconnectedCell,
     topDownFromRulesJson, layoutTopDown, realiseTopDownGen,
     sphereLogToWavesAndPlan,
@@ -21,8 +22,13 @@ import {
     reconcileBidirectionalExits,
     spiralCells, buildShuffledSubstrateSequence, arrangeShuffledSpiral,
     computeSourceCounts,
+    moveSphereRegion, swapSphereRegions, relayoutSphereGrid,
+    getRegionExits,
+    discoveryModeConfig,
+    discoveryModeOf,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 
 const TEST_ITEM_LIB = {
     key_red: { id: 'key_red' },
@@ -291,12 +297,12 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         const b = makeRegionStub({
             region_id: 'B',
             exits: [{ id: 'exit', position: { x: 0, y: 3 } }],
-            exits_placed: [{ side: 'W', tile_position: { x: 0, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'W', tile_position: { x: 0, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         g.placeRegion({ gx: 2, gy: 1 }, b);
@@ -310,7 +316,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -322,7 +328,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -376,8 +382,8 @@ describe('wallOffUnusedExits', () => {
                 { id: 'exit_b', position: { x: 1, y: 1 } },
             ],
             exits_placed: [
-                { side: 'E', tile_position: { x: 0, y: 0 } },
-                { side: 'S', tile_position: { x: 1, y: 1 } },
+                { exit_id: 'exit_a', side: 'E', tile_position: { x: 0, y: 0 } },
+                { exit_id: 'exit_b', side: 'S', tile_position: { x: 1, y: 1 } },
             ],
         }));
         // stitchGrid leaves both target_region null (no neighbors built).
@@ -391,7 +397,7 @@ describe('wallOffUnusedExits', () => {
         g.placeRegion({ gx: 0, gy: 0 }, makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         }));
         g.placeRegion({ gx: 1, gy: 0 }, makeRegionStub({ region_id: 'B' }));
         stitchGrid(g);
@@ -402,11 +408,20 @@ describe('wallOffUnusedExits', () => {
 });
 
 describe('Grid teleporters', () => {
-    it('records and resolves a teleporter mapping', () => {
+    it('records and resolves a teleporter mapping by exit id', () => {
         const g = new Grid({ width: 3, height: 3 });
-        g.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 2, gy: 2 });
-        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'E')).toEqual({ gx: 2, gy: 2 });
-        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'N')).toBeNull();
+        g.setTeleporter({ gx: 0, gy: 0 }, 'toFar', { gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'toFar')).toEqual({ gx: 2, gy: 2 });
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'toNear')).toBeNull();
+    });
+
+    it('deleteTeleporter drops ONE exit and keeps its sibling', () => {
+        const g = new Grid({ width: 3, height: 3 });
+        g.setTeleporter({ gx: 0, gy: 0 }, 'x1', { gx: 2, gy: 2 });
+        g.setTeleporter({ gx: 0, gy: 0 }, 'x2', { gx: 2, gy: 0 });
+        expect(g.deleteTeleporter({ gx: 0, gy: 0 }, 'x1')).toBe(true);
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'x1')).toBeNull();
+        expect(g.getTeleporter({ gx: 0, gy: 0 }, 'x2')).toEqual({ gx: 2, gy: 0 });
     });
 });
 
@@ -458,7 +473,7 @@ describe('stitchGrid (teleporters)', () => {
             extracted_rules: { exits: [] },
             exits_placed: [],
         });
-        grid.setTeleporter({ gx: 0, gy: 0 }, 'E', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'exit', { gx: 4, gy: 0 });
 
         stitchGrid(grid);
 
@@ -466,6 +481,109 @@ describe('stitchGrid (teleporters)', () => {
         expect(a.extracted_rules.exits[0].target_region).toBe('B');
         // isTeleporter flag rides on the world.exits entry too.
         expect(a.exits.get('exit').isTeleporter).toBe(true);
+    });
+
+    // PIPELINE RELAYOUT R1: the table is keyed by EXIT. Two teleporters leaving
+    // one side of one cell for two different regions — the top-down driver's
+    // shape — must each resolve to their own target (a side key kept only the
+    // last one written and pointed both exits at it).
+    it('resolves TWO same-side teleporters from one cell to their own targets', () => {
+        const grid = new Grid({ width: 5, height: 3 });
+        const exit = (id, y) => [id, { exit_id: id, x: 5, y, side: 'E', targetRegion: null }];
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'A',
+            exits: new Map([exit('toB', 1), exit('toC', 3)]),
+            playable_payload: {},
+            extracted_rules: { exits: [
+                { id: 'toB', position: { x: 5, y: 1 }, target_region: null },
+                { id: 'toC', position: { x: 5, y: 3 }, target_region: null },
+            ] },
+            exits_placed: [
+                { exit_id: 'toB', side: 'E', tile_position: { x: 5, y: 1 } },
+                { exit_id: 'toC', side: 'E', tile_position: { x: 5, y: 3 } },
+            ],
+        });
+        const stub = (id) => ({ region_id: id, exits: new Map(), playable_payload: {},
+            extracted_rules: { exits: [] }, exits_placed: [] });
+        grid.placeRegion({ gx: 4, gy: 0 }, stub('B'));
+        grid.placeRegion({ gx: 4, gy: 2 }, stub('C'));
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toB', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toC', { gx: 4, gy: 2 });
+
+        stitchGrid(grid);
+
+        const a = grid.getRegion({ gx: 0, gy: 0 });
+        expect(a.extracted_rules.exits.map((e) => e.target_region)).toEqual(['B', 'C']);
+        expect(a.exits.get('toB').targetRegion).toBe('B');
+        expect(a.exits.get('toC').targetRegion).toBe('C');
+        expect(grid.teleporters.size).toBe(2);
+    });
+});
+
+// PIPELINE RELAYOUT R1 task 2: after a layout edit the relayout judges EVERY
+// exit's flag by the side law — back exits included, which stitchGrid skips.
+describe('relayoutSphereGrid (flags by the side law)', () => {
+    // Parent P at (0,0) leaves E for child C at (1,0); C's back exit leaves W for P.
+    const pair = () => {
+        const grid = new Grid({ width: 4, height: 2 });
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'P',
+            exits: new Map([['toC', { exit_id: 'toC', side: 'E', targetRegion: 'C', isTeleporter: false }]]),
+            extracted_rules: { exits: [{ id: 'toC', target_region: 'C' }] },
+            exits_placed: [{ exit_id: 'toC', side: 'E' }],
+        });
+        grid.placeRegion({ gx: 1, gy: 0 }, {
+            region_id: 'C',
+            exits: new Map([['P', { exit_id: 'P', side: 'W', targetRegion: 'P', isTeleporter: false, isBackExit: true }]]),
+            extracted_rules: { exits: [{ id: 'P', target_region: 'P' }] },
+            exits_placed: [],
+        });
+        return grid;
+    };
+
+    it("a moved region's BACK exit becomes a teleporter when its parent is no longer adjacent", () => {
+        const grid = pair();
+        moveSphereRegion(grid, { gx: 1, gy: 0 }, { gx: 3, gy: 1 });
+        const c = grid.getRegion({ gx: 3, gy: 1 });
+        expect(c.exits.get('P').isTeleporter).toBe(true);
+        expect(c.exits.get('P').targetRegion).toBe('P');
+        expect(grid.getRegion({ gx: 0, gy: 0 }).exits.get('toC').isTeleporter).toBe(true);
+        // ...and back again: both links adjacent, both flags false.
+        moveSphereRegion(grid, { gx: 3, gy: 1 }, { gx: 1, gy: 0 });
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(false);
+        expect(grid.getRegion({ gx: 0, gy: 0 }).exits.get('toC').isTeleporter).toBe(false);
+    });
+
+    // PIPELINE RELAYOUT C1: a move / swap keeps every region's place in the
+    // grid's cell Map — the order `allRegions()` hands the compile, which is the
+    // key order of `preset_sidecars[p]`. The regions moved are NOT the Map's last
+    // entries (trap 1360: moving the last key cannot see delete + append).
+    it('a move or swap, and its inverse, keep the order allRegions() returns', () => {
+        const grid = new Grid({ width: 3, height: 2 });
+        for (const [gx, gy, id] of [[0, 0, 'A'], [1, 0, 'B'], [2, 0, 'C'], [0, 1, 'D']]) {
+            grid.placeRegion({ gx, gy }, { region_id: id, exits: new Map() });
+        }
+        const order = () => grid.allRegions().map((r) => r.region_id);
+        moveSphereRegion(grid, { gx: 1, gy: 0 }, { gx: 2, gy: 1 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.getRegion({ gx: 2, gy: 1 }).region_id).toBe('B');
+        moveSphereRegion(grid, { gx: 2, gy: 1 }, { gx: 1, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        swapSphereRegions(grid, { gx: 0, gy: 0 }, { gx: 2, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.getRegion({ gx: 0, gy: 0 }).region_id).toBe('C');
+        swapSphereRegions(grid, { gx: 0, gy: 0 }, { gx: 2, gy: 0 });
+        expect(order()).toEqual(['A', 'B', 'C', 'D']);
+        expect(grid.allRegions().map((r) => cellKey(r.cell))).toEqual(['0,0', '1,0', '2,0', '0,1']);
+    });
+
+    it('leaves an exit whose target is not placed as it is instead of judging it', () => {
+        const grid = pair();
+        grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').targetRegion = 'Nowhere';
+        grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter = true;
+        expect(relayoutSphereGrid(grid)).toBe(grid);
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').targetRegion).toBe('Nowhere');
+        expect(grid.getRegion({ gx: 1, gy: 0 }).exits.get('P').isTeleporter).toBe(true);
     });
 
     it('does not flag normal adjacent exits as teleporters', () => {
@@ -1032,6 +1150,75 @@ describe('growMaze', () => {
     });
 });
 
+describe('growMazeGen / growMaze / growMazeAsync (generator + drains)', () => {
+    const cfg = {
+        gridDims: { width: 4, height: 4 },
+        regionSize: { width: 8, height: 6 },
+        itemPool: { key_red: 6 },
+        obstaclePool: { door_red: 6 },
+        seed: 1,
+        regionParams: {},
+        growthParams: { maxRegions: 8, assumeBidirectional: true },
+    };
+
+    function drain(gen) {
+        const events = [];
+        let r = gen.next();
+        while (!r.done) { events.push(r.value); r = gen.next(); }
+        return { events, result: r.value };
+    }
+
+    it('yields a plan event first, region/regionDone pairs, then a phase event', () => {
+        const { events } = drain(growMazeGen(cfg));
+        expect(events[0]).toEqual({ type: 'plan', regions: null });
+        expect(events[events.length - 1]).toEqual({ type: 'phase', name: 'finalizing' });
+
+        const regionEvents = events.filter((e) => e.type === 'region');
+        const doneEvents = events.filter((e) => e.type === 'regionDone');
+        expect(regionEvents.length).toBe(doneEvents.length);
+        expect(regionEvents.length).toBeGreaterThanOrEqual(2);
+        // Contiguous indices from 0; emergent count (total null); no waves.
+        regionEvents.forEach((e, i) => {
+            expect(e.index).toBe(i);
+            expect(e.total).toBe(null);
+            expect(e.sphere).toBe(null);
+            expect(typeof e.region_id).toBe('string');
+            expect(typeof e.substrate).toBe('string');
+            expect(e.placements).toBeGreaterThanOrEqual(0);
+        });
+        doneEvents.forEach((e, i) => expect(e.index).toBe(i));
+    });
+
+    it('emits exactly one region event per built region', () => {
+        const { events, result } = drain(growMazeGen(cfg));
+        const regionEvents = events.filter((e) => e.type === 'region');
+        expect(regionEvents.length).toBe(result.stats.regionsBuilt);
+    });
+
+    it('growMaze (sync drain) returns the generator return value', () => {
+        const out = growMaze(cfg);
+        expect(out.stats.regionsBuilt).toBeGreaterThanOrEqual(1);
+        expect(out.grid.hasRegion({ gx: 2, gy: 2 })).toBe(true);
+    });
+
+    it('growMazeAsync output is identical to growMaze and forwards the full event stream', async () => {
+        const sync = growMaze(cfg);
+        const events = [];
+        const asyncOut = await growMazeAsync(cfg, (ev) => events.push(ev));
+
+        // Identical result (yields never touch the rng).
+        expect(asyncOut.stats.regionsBuilt).toBe(sync.stats.regionsBuilt);
+        expect(asyncOut.stats.stopReason).toBe(sync.stats.stopReason);
+        expect(asyncOut.stats.teleportersPlaced).toBe(sync.stats.teleportersPlaced);
+        const regionIds = (g) => [...g.allRegions()].map((r) => r.region_id).sort();
+        expect(regionIds(asyncOut.grid)).toEqual(regionIds(sync.grid));
+
+        // The forwarded stream equals what the generator yields.
+        const { events: genEvents } = drain(growMazeGen(cfg));
+        expect(events).toEqual(genEvents);
+    });
+});
+
 describe('compileRegionGraph', () => {
     function smallGridWithItems() {
         return growMaze({
@@ -1244,6 +1431,50 @@ describe('buildPresetSidecars', () => {
         }
     });
 
+    /**
+     * ⛓ seedling generated G1 — the 5th `serializeWorld` argument carries
+     * `ordinalOfRegion`: a region's index among the regions of ITS OWN
+     * substrate, in sidecar order. A spy substrate plays the middle region of a
+     * three-region world; every serializer is handed the same context.
+     */
+    it('hands every serializer `ordinalOfRegion` — the index among its own substrate\'s regions, in sidecar order', () => {
+        const { grid } = smallGrid();
+        const regions = grid.allRegions();
+        expect(regions.length).toBeGreaterThanOrEqual(3);
+        const spyId = regions[1].region_id;
+        regions[1].substrate = 'spy_ordinal';
+        const seen = [];
+        const realGet = substrateRegistry.get.bind(substrateRegistry);
+        const maze = realGet('maze');
+        const spy = vi.spyOn(substrateRegistry, 'get').mockImplementation((id) => {
+            const record = (world, ctx, sub) => seen.push({ sub, region: world.__region, ctx });
+            if (id === 'spy_ordinal') {
+                return { id, serializeWorld: (w, _e, _o, _i, ctx) => { record({ __region: spyId }, ctx, id); return {}; } };
+            }
+            if (id === 'maze') {
+                return {
+                    ...maze,
+                    serializeWorld: (w, e, o, i, ctx) => { seen.push({ sub: 'maze', ctx }); return maze.serializeWorld(w, e, o, i); },
+                };
+            }
+            return realGet(id);
+        });
+        try {
+            buildPresetSidecars(grid);
+        } finally {
+            spy.mockRestore();
+            regions[1].substrate = 'maze';
+        }
+        expect(seen).toHaveLength(regions.length);
+        const ctx = seen[0].ctx;
+        for (const s of seen) expect(s.ctx).toBe(ctx); // one context for the whole grid
+        const mazeIds = regions.filter((r) => r.region_id !== spyId).map((r) => r.region_id);
+        expect(mazeIds.map((id) => ctx.ordinalOfRegion(id))).toEqual(mazeIds.map((_, k) => k));
+        expect(ctx.ordinalOfRegion(spyId)).toBe(0);
+        expect(ctx.substrateOfRegion(spyId)).toBe('spy_ordinal');
+        expect(ctx.ordinalOfRegion('no_such_region')).toBeNull();
+    });
+
     it('omits manaEnabled by default (loop mode opt-in)', () => {
         const { grid } = smallGrid();
         const sidecars = buildPresetSidecars(grid);
@@ -1442,6 +1673,37 @@ describe('buildPresetSidecars', () => {
         expect(restored.hazards).toBeUndefined();
     });
 
+    it('omits the X1 consumable keys entirely when the overlays are empty (byte-inert)', () => {
+        // The whole byte-inert-default proof rests on absence, not on a
+        // null/[] placeholder — a new key with ANY value would drift
+        // every existing preset sidecar.
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const payload = Object.values(sidecars['1'])[0].playable_payload;
+        expect('consumableTiles' in payload).toBe(false);
+        expect('manaTiles' in payload).toBe(false);
+    });
+
+    it('serializes the X1 overlays as position-keyed arrays and round-trips them', () => {
+        const { grid } = smallGrid();
+        const region = grid.allRegions()[0];
+        region.playable_payload.consumableTiles = new Map([
+            ['1,1', { substrate: 'omsi', type: 'gold', count: 2 }],
+        ]);
+        region.playable_payload.manaTiles = new Map([['2,1', 30]]);
+        const sidecars = buildPresetSidecars(grid);
+        const payload = sidecars['1'][region.region_id].playable_payload;
+        expect(payload.consumableTiles).toEqual([
+            { x: 1, y: 1, substrate: 'omsi', type: 'gold', count: 2 },
+        ]);
+        expect(payload.manaTiles).toEqual([{ x: 2, y: 1, amount: 30 }]);
+
+        const restored = deserializeMazeWorld(payload);
+        expect(restored.consumableTiles.get('1,1'))
+            .toEqual({ substrate: 'omsi', type: 'gold', count: 2 });
+        expect(restored.manaTiles.get('2,1')).toBe(30);
+    });
+
     it('growMaze places hazards on regions when hazardOpts.enabled is true', () => {
         // A modest grid + plentiful pool to give the maze room for
         // hazards. count=3 per region, plenty of fail-budget.
@@ -1629,7 +1891,7 @@ describe('buildRulesJson', () => {
         for (const key of [
             'game_name', 'game_directory', 'archipelago_version',
             'generation_seed', 'seed_name', 'player_names',
-            'world_classes', 'regions', 'start_regions', 'items',
+            'regions', 'start_regions', 'items',
             'itempool_counts', 'canonical_placements', 'world',
             'game_info', 'helpers', 'preset_sidecars',
         ]) {
@@ -1666,10 +1928,13 @@ describe('buildRulesJson', () => {
         expect(out.item_groups['1']).toEqual(['Everything']);
     });
 
-    it('emits assume_bidirectional_exits=true at the top level', () => {
+    it("writes assume_bidirectional_exits in the slot's exporter block, never at the top level (rules F1)", () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell });
-        expect(out.assume_bidirectional_exits).toBe(true);
+        expect(out.exporter).toEqual({ '1': { assume_bidirectional_exits: true } });
+        expect(Object.hasOwn(out, 'assume_bidirectional_exits')).toBe(false);
+        const off = buildRulesJson(smallGrid().grid, { startCell, assumeBidirectional: false });
+        expect(off.exporter['1'].assume_bidirectional_exits).toBe(false);
     });
 
     it('omits procgen_metadata when the caller does not supply it', () => {
@@ -1684,19 +1949,60 @@ describe('buildRulesJson', () => {
         expect(out).not.toHaveProperty('loop_costs');
     });
 
+    it('discoveryMode: the default writes no discovery_mode block (byte-inert), on/off write the SLOT\'s', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell, enableLoopMode: true });
+        expect(plain).not.toHaveProperty('discovery_mode');
+        expect(JSON.stringify(buildRulesJson(grid, { startCell, enableLoopMode: true, discoveryMode: 'follow' })))
+            .toBe(JSON.stringify(plain));
+        const off = buildRulesJson(grid, { startCell, playerId: '3', discoveryMode: 'off' });
+        expect(off.discovery_mode).toEqual({ 3: { enabled: false } });
+        const on = buildRulesJson(grid, { startCell, discoveryMode: 'on' });
+        expect(on.discovery_mode).toEqual({ 1: { enabled: true } });
+        expect(() => buildRulesJson(grid, { startCell, discoveryMode: 'yes' })).toThrow(/discoveryMode/);
+        // Read back for an append: the config carries the key only off 'follow'.
+        expect(discoveryModeOf(off, '3')).toBe('off');
+        expect(discoveryModeOf(off, '1')).toBe('follow');
+        expect(discoveryModeConfig('follow')).toEqual({});
+        expect(discoveryModeConfig(undefined)).toEqual({});
+        expect(discoveryModeConfig('on')).toEqual({ discoveryMode: 'on' });
+    });
+
     it('embeds loop_costs when enableLoopMode is true', () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell, enableLoopMode: true });
         expect(out).toHaveProperty('loop_costs');
-        expect(out.loop_costs.regions).toBeDefined();
-        expect(out.loop_costs.locations).toBeDefined();
+        expect(out.loop_costs['1'].regions).toBeDefined();
+        expect(out.loop_costs['1'].locations).toBeDefined();
         // Start region (Menu) is always free
-        expect(out.loop_costs.regions.Menu).toEqual({ moveCost: 0, xpEffect: 'cost' });
+        expect(out.loop_costs['1'].regions.Menu).toEqual({ moveCost: 0, xpEffect: 'cost' });
         // Default regionXpEffect is 'cost' and is also recorded at the
         // sidecar root for fallback.
-        expect(out.loop_costs.defaultRegionXpEffect).toBe('cost');
+        expect(out.loop_costs['1'].defaultRegionXpEffect).toBe('cost');
         // Pipeline records the seed_name as the source
-        expect(out.loop_costs.generatedFrom).toBeTruthy();
+        expect(out.loop_costs['1'].generatedFrom).toBeTruthy();
+    });
+
+    /**
+     * ⛓⛓ P1a (⚖ user 2026-09-27, shape (A)) — both blocks are the SLOT's: a
+     * compile for player 3 writes `procgen_metadata["3"]` and `loop_costs["3"]`
+     * and NOTHING at the old document-level position (no block key sits beside
+     * the slot id). ⛔ Mutant: the writer at the old position reds here.
+     */
+    it('⛓⛓ P1a — writes procgen_metadata[playerId] and loop_costs[playerId] for a non-1 player, nothing at the old position', () => {
+        const { grid, startCell, stats } = smallGrid();
+        const out = buildRulesJson(grid, {
+            startCell, playerId: '3', enableLoopMode: true,
+            procgenMetadata: { driver: 'grid-growth', stop_reason: stats.stopReason },
+        });
+        expect(Object.keys(out.procgen_metadata)).toEqual(['3']);
+        expect(Object.keys(out.loop_costs)).toEqual(['3']);
+        expect(out.procgen_metadata['3'].driver).toBe('grid-growth');
+        expect(out.procgen_metadata['3'].region_count).toBe([...grid.allRegions()].length);
+        expect(Object.keys(out.loop_costs['3'].regions).sort())
+            .toEqual(Object.keys(out.regions['3']).filter((n) => out.loop_costs['3'].regions[n]).sort());
+        expect(out.loop_costs['3'].regions).toBeDefined();
+        expect(out.loop_costs['3'].error).toBeUndefined();
     });
 
     it('skips loop_costs when sphere log embedding is disabled', () => {
@@ -1719,18 +2025,18 @@ describe('buildRulesJson', () => {
             },
         });
         expect(out.procgen_metadata).toBeDefined();
-        expect(out.procgen_metadata.driver).toBe('grid-growth');
-        expect(out.procgen_metadata.stop_reason).toBe(stats.stopReason);
+        expect(out.procgen_metadata['1'].driver).toBe('grid-growth');
+        expect(out.procgen_metadata['1'].stop_reason).toBe(stats.stopReason);
         // Auto-derived from the grid: region_count matches allRegions
         // length, grid_dims is max gx+1 by max gy+1 over occupied cells.
         const allRegions = [...grid.allRegions()];
-        expect(out.procgen_metadata.region_count).toBe(allRegions.length);
+        expect(out.procgen_metadata['1'].region_count).toBe(allRegions.length);
         let maxGx = -1, maxGy = -1;
         for (const r of allRegions) {
             if (r.cell.gx > maxGx) maxGx = r.cell.gx;
             if (r.cell.gy > maxGy) maxGy = r.cell.gy;
         }
-        expect(out.procgen_metadata.grid_dims).toEqual({
+        expect(out.procgen_metadata['1'].grid_dims).toEqual({
             width: maxGx + 1,
             height: maxGy + 1,
         });
@@ -1747,12 +2053,12 @@ describe('buildRulesJson', () => {
                 stop_reason: 'all_placed',
             },
         });
-        expect(out.procgen_metadata.driver).toBe('top-down');
-        expect(out.procgen_metadata.source_game).toBe('Adventure');
-        expect(out.procgen_metadata.source_counts).toEqual({
+        expect(out.procgen_metadata['1'].driver).toBe('top-down');
+        expect(out.procgen_metadata['1'].source_game).toBe('Adventure');
+        expect(out.procgen_metadata['1'].source_counts).toEqual({
             regions: 6, locations: 25, exits: 17, logic_gates: 12,
         });
-        expect(out.procgen_metadata.stop_reason).toBe('all_placed');
+        expect(out.procgen_metadata['1'].stop_reason).toBe('all_placed');
     });
 
     it('back-exits inherit their forward exit access_rule', () => {
@@ -1800,6 +2106,141 @@ describe('buildRulesJson', () => {
         for (const def of Object.values(items)) {
             expect(def.groups).toEqual(['Everything']);
         }
+    });
+
+    it('carries a SOURCE item def\'s groups verbatim, and the source item_groups list verbatim', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placed = Object.keys(plain.items['1']);
+        expect(placed.length).toBeGreaterThan(0);
+        // the first placed item is "from the source"; any other stays synthetic
+        const [fromSource, ...synthetic] = placed;
+        const sourceGroups = ['Keys', 'Everything', 'Progression Items'];
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [fromSource]: { name: fromSource, id: 7, groups: sourceGroups } },
+            sourceItemGroups: ['Keys', 'Everything', 'Progression Items', 'Unused'],
+        });
+        expect(out.items['1'][fromSource].groups).toEqual(sourceGroups);
+        expect(out.items['1'][fromSource].groups).not.toBe(sourceGroups);
+        for (const name of synthetic) expect(out.items['1'][name].groups).toEqual(['Everything']);
+        expect(out.item_groups['1']).toEqual(['Keys', 'Everything', 'Progression Items', 'Unused']);
+        // an event's ['Event'] is a source list like any other — verbatim
+        const ev = buildRulesJson(grid, {
+            startCell, sourceItems: { [fromSource]: { name: fromSource, id: null, groups: ['Event'] } },
+        });
+        expect(ev.items['1'][fromSource].groups).toEqual(['Event']);
+        expect(ev.item_groups['1']).toEqual(['Everything']);
+    });
+
+    it('compiles a SOURCE event location as one: id null, its flags + placed item verbatim, an id-less def verbatim, no canonical placement', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        expect(placedLocs.length).toBeGreaterThan(1);
+        const [evLoc] = placedLocs;
+        const evItem = evLoc.item.name;
+        const sourceDef = { name: evItem, id: null, groups: ['Event'], classification: 'progression',
+            event: true, type: 'Event', max_count: 1 };
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [evItem]: sourceDef },
+            sourceLocations: { [evLoc.name]: { name: evLoc.name, id: null,
+                item: { name: evItem, player: 1, advancement: true, type: 'Event' },
+                locked: true, event: true, crystal: false } },
+        });
+        const locs = Object.values(out.regions['1']).flatMap((r) => r.locations);
+        const got = locs.find((l) => l.name === evLoc.name);
+        expect(got).toEqual({ name: evLoc.name, id: null, access_rule: evLoc.access_rule,
+            item: { name: evItem, player: 1, advancement: true, type: 'Event' }, locked: true, event: true });
+        expect(out.items['1'][evItem]).toEqual(sourceDef);
+        expect(out.canonical_placements['1'][evLoc.name]).toBeUndefined();
+        expect(out.itempool_counts['1'][evItem]).toBe(plain.itempool_counts['1'][evItem]);
+        // the event took no number: the numbered locations stay a contiguous run
+        const ids = locs.map((l) => l.id).filter((id) => id != null);
+        expect(ids.length).toBe(locs.length - 1);
+        expect(ids).toEqual(ids.map((_, i) => ids[0] + i));
+    });
+
+    it('carries a SOURCE item\'s classification, and its placed item\'s advancement + type, verbatim', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        const [fromSource, ...synthetic] = [...new Set(placedLocs.map((l) => l.item.name))];
+        const atLoc = placedLocs.find((l) => l.item.name === fromSource);
+        // the derived branch below needs a second location holding the same item
+        expect(placedLocs.filter((l) => l.item.name === fromSource).length).toBeGreaterThan(1);
+        expect(plain.items['1'][fromSource].classification).toBe('progression');
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [fromSource]: { name: fromSource, id: 7, groups: ['Everything'], classification: 'filler' } },
+            sourceLocations: { [atLoc.name]: { name: atLoc.name, id: 5,
+                item: { name: fromSource, player: 1, advancement: false, type: 'None' } } },
+        });
+        expect(out.items['1'][fromSource].classification).toBe('filler');
+        for (const name of synthetic) expect(out.items['1'][name].classification).toBe(plain.items['1'][name].classification);
+        const locs = Object.values(out.regions['1']).flatMap((r) => r.locations);
+        expect(locs.find((l) => l.name === atLoc.name).item)
+            .toEqual({ name: fromSource, player: 1, advancement: false, type: 'None' });
+        // another location holding the same item, which the source does not place
+        // there: derived from the (source) classification
+        for (const l of locs.filter((x) => x.item?.name === fromSource && x.name !== atLoc.name)) {
+            expect(l.item).toEqual({ name: fromSource, player: 1, advancement: false, type: 'filler' });
+        }
+    });
+
+    it('a derived placement is advancement for EVERY progression flavour (AP: progression in classification)', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const name = Object.values(plain.regions['1']).flatMap((r) => r.locations).find((l) => l.item).item.name;
+        const placedWith = (classification) => {
+            const out = buildRulesJson(grid, { startCell, itemLib: { [name]: { classification } } });
+            return Object.values(out.regions['1']).flatMap((r) => r.locations).find((l) => l.item?.name === name).item;
+        };
+        for (const c of ['progression', 'progression_skip_balancing', 'progression_deprioritized',
+            'progression_deprioritized_skip_balancing', 'progression|useful']) {
+            expect(placedWith(c)).toEqual({ name, player: 1, advancement: true, type: c });
+        }
+        for (const c of ['filler', 'useful', 'trap']) expect(placedWith(c).advancement).toBe(false);
+    });
+
+    it('carries a SOURCE non-event location\'s locked:true verbatim, and pins only via pinnedCanonicalItems (topdown-locked-items R1)', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        expect(placedLocs.length).toBeGreaterThan(1);
+        const [lockedLoc, otherLoc] = placedLocs;
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceLocations: {
+                [lockedLoc.name]: { name: lockedLoc.name, id: 77, item: lockedLoc.item, locked: true },
+                [otherLoc.name]: { name: otherLoc.name, id: 78, item: otherLoc.item, locked: false },
+            },
+        });
+        const byName = (doc) => Object.fromEntries(Object.values(doc.regions['1'])
+            .flatMap((r) => r.locations).map((l) => [l.name, l]));
+        // Archipelago's `locked` rides through; the location stays an ordinary
+        // numbered, canonically placed one (world_generator randomizes it per seed)
+        expect(byName(out)[lockedLoc.name]).toEqual({ ...lockedLoc, locked: true });
+        expect(out.canonical_placements['1'][lockedLoc.name]).toBe(lockedLoc.item.name);
+        // `locked: false` is the default and adds nothing
+        expect(byName(out)[otherLoc.name]).toEqual(otherLoc);
+        // the authored pin is `pinned`, never `locked`
+        const pinnedOut = buildRulesJson(grid, { startCell, pinnedCanonicalItems: [otherLoc.item.name] });
+        expect(byName(pinnedOut)[otherLoc.name]).toEqual({ ...otherLoc, pinned: true });
+        expect(Object.values(plain.regions['1']).flatMap((r) => r.locations)
+            .some((l) => 'locked' in l && l.id != null)).toBe(false);
+    });
+
+    it('sourceLocationsOf maps every source location name to its location, first one winning', () => {
+        const src = { regions: { 1: {
+            A: { name: 'A', locations: [{ name: 'x', id: 1 }, { name: 'y', id: null }] },
+            B: { name: 'B', locations: [{ name: 'x', id: 9 }] },
+        } } };
+        const out = sourceLocationsOf(src, '1');
+        expect(Object.keys(out)).toEqual(['x', 'y']);
+        expect(out.x.id).toBe(1);
+        expect(out.y.id).toBeNull();
     });
 
     it('assigns numeric ids to every item (unique within the game)', () => {
@@ -2006,43 +2447,41 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
         expect(res.spherePlan).toBeTruthy();
     });
 
-    it('embeds the supplied log verbatim and tags top-down-sphere', () => {
+    it('tags top-down-sphere but embeds a log OF THE COMPILED WORLD, not the source log', () => {
         const rulesJson = makeGridGrowthRulesJson();
         const sphereLog = rulesJson.sphere_log;
         const { grid, startCell, sphereTree, spherePlan } = topDownFromRulesJson(rulesJson, {
             gridDims: { width: 5, height: 5 }, seed: 1, sphereLog,
         });
         const out = buildRulesJson(grid, {
-            startCell, sphereLog,
+            startCell,
             procgenMetadata: {
                 driver: 'top-down-sphere',
                 sphere_tree: sphereTree,
                 sphere_plan: spherePlan,
             },
         });
-        expect(out.procgen_metadata.driver).toBe('top-down-sphere');
-        // The embedded log is the authoritative one, NOT a JS re-derivation.
-        // (The grid-growth log already leads with a metadata header.)
-        expect(sphereLog[0].type).toBe('metadata');
-        expect(out.sphere_log).toEqual(sphereLog);
-        expect(out.procgen_metadata.sphere_tree.nodes[0].region_id).toBeDefined();
+        expect(out.procgen_metadata['1'].driver).toBe('top-down-sphere');
+        expect(out.procgen_metadata['1'].sphere_tree.nodes[0].region_id).toBeDefined();
+        // The embedded log is generateSphereLog over `out`, and every region it
+        // names is a COMPILED region. (This grid-growth source happens to share
+        // its region names with the compile; a real source does not — apcalc's
+        // log starts at its own start region, the compile at `Menu`.)
+        expect(out.sphere_log).toEqual(generateSphereLog(out, { metadata: { seed: 1, seed_name: '' } }));
+        const compiled = new Set(Object.keys(out.regions['1']));
+        const named = out.sphere_log.filter((e) => e.type === 'state_update')
+            .flatMap((e) => e.player_data['1'].new_accessible_regions);
+        expect(named.length).toBeGreaterThan(0);
+        for (const r of named) expect(compiled.has(r)).toBe(true);
     });
 
-    it('synthesizes the metadata header when the supplied log lacks one', () => {
+    it('refuses a caller-supplied sphereLog BY NAME (the verbatim embed is gone)', () => {
         const rulesJson = makeGridGrowthRulesJson();
-        // A log pulled from sphereState has its metadata entry stripped.
-        const bareLog = rulesJson.sphere_log.filter((e) => e.type === 'state_update');
-        expect(bareLog[0].type).toBe('state_update');
-        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
-            gridDims: { width: 5, height: 5 }, seed: 1, sphereLog: bareLog,
-        });
-        const out = buildRulesJson(grid, { startCell, seed: 1, seedName: 'sn', sphereLog: bareLog });
-        // Embedded log leads with a metadata header (canonical format), then
-        // the supplied state_update entries verbatim.
-        expect(out.sphere_log[0]).toEqual({
-            type: 'metadata', seed: 1, seed_name: 'sn', event_locations: {}, event_items: {},
-        });
-        expect(out.sphere_log.slice(1)).toEqual(bareLog);
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+        expect(() => buildRulesJson(grid, { startCell, sphereLog: rulesJson.sphere_log }))
+            .toThrow(/the `sphereLog` option is gone/);
+        expect(() => buildRulesJson(grid, { startCell, sphereLog: null }))
+            .toThrow(/the `sphereLog` option is gone/);
     });
 });
 
@@ -2053,7 +2492,7 @@ describe('topDownFromRulesJson — per-region sub-seeds (1b)', () => {
         const reg = (name, exits, locs) => ({ name, exits, locations: locs });
         return {
             start_regions: { '1': { default: ['Menu'] } },
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: reg('Menu', [{ name: 'go', connected_region: 'A', access_rule: T }], []),
@@ -2221,13 +2660,43 @@ describe('topDownFromRulesJson', () => {
         }
     });
 
-    it('emits assume_bidirectional_exits=true on the output (default)', () => {
+    it("emits the slot's assume_bidirectional_exits=true on the output (default)", () => {
         const rulesJson = makeGridGrowthRulesJson();
         const { grid, startCell } = topDownFromRulesJson(rulesJson, {
             gridDims: { width: 5, height: 5 }, seed: 1,
         });
         const out = buildRulesJson(grid, { startCell });
-        expect(out.assume_bidirectional_exits).toBe(true);
+        expect(out.exporter['1'].assume_bidirectional_exits).toBe(true);
+        expect(Object.hasOwn(out, 'assume_bidirectional_exits')).toBe(false);
+    });
+
+    it("the layout honours the SOURCE slot's exporter flag — `false` there mints no back-exit (rules F1)", () => {
+        const backExits = (rulesJson) => {
+            const { grid } = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+            return [...grid.allRegions()].flatMap((r) => [...(getRegionExits(r)?.values() ?? [])])
+                .filter((e) => e.isBackExit).length;
+        };
+        // A one-way chain: the source declares no reverse route, so every
+        // back-exit is the layout's (a grown source already carries its own).
+        const T = { rule: 'True_' };
+        const reg = (name, exits) => ({ name, exits, locations: [] });
+        const on = {
+            schema_version: 3,
+            exporter: { '1': { assume_bidirectional_exits: true } },
+            start_regions: { '1': { default: ['Menu'] } },
+            regions: { '1': {
+                Menu: reg('Menu', [{ name: 'GameStart', connected_region: 'A', access_rule: T }]),
+                A: reg('A', [{ name: 'toB', connected_region: 'B', access_rule: T }]),
+                B: reg('B', [{ name: 'toC', connected_region: 'C', access_rule: T }]),
+                C: reg('C', []),
+            } },
+        };
+        const off = { ...on, exporter: { '1': { assume_bidirectional_exits: false } } };
+        // ⛔ A TOP-LEVEL `false` is not read: the slot's block is the one home.
+        const flat = { ...on, exporter: {}, assume_bidirectional_exits: false };
+        expect(backExits(on)).toBeGreaterThan(0);
+        expect(backExits(off)).toBe(0);
+        expect(backExits(flat)).toBe(backExits(on));
     });
 
     it('places teleporters when the layout cannot fit a region adjacently', () => {
@@ -2235,7 +2704,7 @@ describe('topDownFromRulesJson', () => {
         // forcing the layout to use teleporters once 4 sides are taken.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2296,7 +2765,7 @@ describe('topDownFromRulesJson', () => {
         // continues past tile-pick failures rather than breaking.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2340,7 +2809,7 @@ describe('topDownFromRulesJson', () => {
         // the substrate honors the pin via spec.tile.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2405,7 +2874,7 @@ describe('topDownFromRulesJson', () => {
         // exit's tile (per top-down-driver.md §4 + §7).
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2464,7 +2933,7 @@ describe('topDownFromRulesJson', () => {
         // sources.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2506,7 +2975,7 @@ describe('topDownFromRulesJson', () => {
         // down now overrides both with the source data.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2570,7 +3039,7 @@ describe('topDownFromRulesJson', () => {
         // exercise the clockwise walk across multiple sides.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -3165,10 +3634,9 @@ describe('mixed substrates — end to end', () => {
             }
         });
 
-        it("emits 'biome' on text-adventure regions too — both substrates share generateRegionCore today, so the underlying spatial structure carries a biome regardless", () => {
-            // If/when ta gets its own spatial core or opts out of
-            // biomes, this test should flip to expecting the field
-            // to be omitted; revisit at that time.
+        it("omits 'biome' on text-adventure regions — a text adventure room (G2a) has no spatial structure to carry one", () => {
+            // ⛓ G2a flipped this row, as its old comment asked: until then the
+            // text adventure grew the maze's spatial core and carried its biome.
             const { grid, startCell } = growMaze({
                 gridDims: { width: 2, height: 2 },
                 regionSize: { width: 6, height: 6 },
@@ -3184,7 +3652,7 @@ describe('mixed substrates — end to end', () => {
             const taRegions = Object.values(sidecars).filter((r) => r.substrate === 'text_adventure');
             expect(taRegions.length).toBeGreaterThan(0);
             for (const r of taRegions) {
-                expect(r.biome?.id).toBe('classic');
+                expect(r).not.toHaveProperty('biome');
             }
         });
     });
@@ -3299,8 +3767,12 @@ describe('arrangeShuffledSpiral', () => {
     });
 
     it('throws when a quota exceeds the substrate zoneCount', () => {
+        // Derive the over-quota from the live zoneCount so this can't go
+        // stale when the substrate's zone count changes (it was hardcoded
+        // to 20, which stopped exceeding jta's zoneCount once it reached 30).
+        const jtaZoneCount = substrateRegistry.get('jta').zoneCount;
         expect(() => arrangeShuffledSpiral(defaultConfig({
-            growthParams: { substrateQuotas: { jta: 20 } },
+            growthParams: { substrateQuotas: { jta: jtaZoneCount + 1 } },
         }))).toThrow(/exceeds substrate zoneCount/);
     });
 
@@ -3323,8 +3795,11 @@ describe('arrangeShuffledSpiral', () => {
         const { grid } = arrangeShuffledSpiral(defaultConfig({
             seed: 3,
             growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'jta' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const pairs = [];
         for (const region of grid.allRegions()) {
@@ -3343,8 +3818,11 @@ describe('arrangeShuffledSpiral', () => {
     it('start substrate pin lands on the startCell', () => {
         const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
             growthParams: { substrateQuotas: { jta: 3, maze: 2 }, startSubstrate: 'maze' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const startRegion = grid.getRegion(startCell);
         expect(startRegion.substrate).toBe('maze');
@@ -3353,8 +3831,11 @@ describe('arrangeShuffledSpiral', () => {
     it('runs end-to-end into buildRulesJson without errors', () => {
         const { grid, startCell } = arrangeShuffledSpiral(defaultConfig({
             growthParams: { substrateQuotas: { jta: 4, maze: 2 }, startSubstrate: 'jta' },
-            itemPool: { key_red: 4 },
-            obstaclePool: { door_red: 4 },
+            // ⚖ The item layer refuses a pool its item-holding regions cannot
+            // hold: two maze regions hold 2 × 2 slots, one of them the goal's
+            // (jta declares one; its zone locations are off here).
+            itemPool: { key_red: 3 },
+            obstaclePool: { door_red: 3 },
         }));
         const rules = buildRulesJson(grid, { startCell, seed: 1 });
         expect(rules.regions['1']).toBeTruthy();

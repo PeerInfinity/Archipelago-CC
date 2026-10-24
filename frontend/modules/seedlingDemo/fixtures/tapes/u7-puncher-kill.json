@@ -1,0 +1,64 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 384,
+        "y": 256
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 128,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "primary",
+            "from": 76,
+            "to": 77
+        }
+    ],
+    "name": "u7-puncher-kill",
+    "description": "⛓⛓⛓ U7-swim D3 — THE DEATH, DRIVEN. `KILL_ARM_POLICY.Puncher` flipped `refused` -> `modelled` this slice; this is the witness. The `u7-puncher-punch` boot (L12, two tiles west of `puncher@416,256`) with a sword: one tick of `right` to face east, then a press whenever the body is in `slash()`'s reach and the 31-tick cadence allows. Three LANDED hits (t 15, 46, 77) and NO knockback on any of them — `Puncher.knockback` is an empty override, so the body stays at the player's side through the whole exchange. The killing blow starts the 31-update \"die\" animation (ten frames at rate 10), then the fade: 42 ticks from the blow to the removal. 0 punch(es) land on the player; a wind-up that ends while the puncher's own `hitsTimer` runs throws nothing. L12 holds no `tset -1` lock, and that nil is scanned. Authored by scripts/procgen/plan-seedling-u7-puncher.mjs.",
+    "note": ""
+}

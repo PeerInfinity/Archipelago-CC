@@ -1,0 +1,325 @@
+{
+ "what": "397/i0",
+ "seamTime": 5129,
+ "budgetWork": 1000000000,
+ "upgradeWindowWork": 85,
+ "fidelity": "walls+blast",
+ "ok": false,
+ "kind": "refusal",
+ "work": 156,
+ "ticks": null,
+ "answer": "5a55f5b8",
+ "message": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 143430,
+   "work": 78
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 138487,
+   "work": 78
+  }
+ ],
+ "wallMs": 281917,
+ "points": 30367,
+ "sites": {
+  "segment": 2,
+  "goal": 2,
+  "walk": 158,
+  "heartbeat": 3047,
+  "preview": 27144,
+  "climb": 2,
+  "rung": 10,
+  "done": 2
+ },
+ "wallAfterSiteMs": {
+  "preview": 211816,
+  "heartbeat": 57032,
+  "walk": 11057,
+  "rung": 1446,
+  "goal": 123,
+  "segment": 91,
+  "start": 46,
+  "done": 21,
+  "climb": 10
+ },
+ "topPairs": {
+  "preview→preview": {
+   "n": 24082,
+   "ms": 148311,
+   "maxMs": 1157
+  },
+  "preview→heartbeat": {
+   "n": 2996,
+   "ms": 60499,
+   "maxMs": 445
+  },
+  "heartbeat→preview": {
+   "n": 3026,
+   "ms": 56139,
+   "maxMs": 759
+  },
+  "walk→walk": {
+   "n": 88,
+   "ms": 6118,
+   "maxMs": 598
+  },
+  "preview→walk": {
+   "n": 66,
+   "ms": 3006,
+   "maxMs": 844
+  },
+  "walk→heartbeat": {
+   "n": 31,
+   "ms": 2515,
+   "maxMs": 1253
+  },
+  "walk→preview": {
+   "n": 35,
+   "ms": 1811,
+   "maxMs": 295
+  },
+  "heartbeat→heartbeat": {
+   "n": 19,
+   "ms": 720,
+   "maxMs": 274
+  },
+  "rung→preview": {
+   "n": 1,
+   "ms": 665,
+   "maxMs": 665
+  },
+  "rung→heartbeat": {
+   "n": 1,
+   "ms": 629,
+   "maxMs": 629
+  },
+  "walk→done": {
+   "n": 2,
+   "ms": 607,
+   "maxMs": 375
+  },
+  "heartbeat→walk": {
+   "n": 2,
+   "ms": 172,
+   "maxMs": 150
+  },
+  "rung→rung": {
+   "n": 8,
+   "ms": 152,
+   "maxMs": 126
+  },
+  "goal→walk": {
+   "n": 2,
+   "ms": 123,
+   "maxMs": 118
+  },
+  "segment→goal": {
+   "n": 2,
+   "ms": 91,
+   "maxMs": 90
+  }
+ },
+ "asksByFrame": {},
+ "segments": [
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 78
+   },
+   "work": {
+    "shouldStop": 78,
+    "ticks": 1987,
+    "previews": 13572,
+    "previewStates": 784364,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverBotError"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1523
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  },
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 78
+   },
+   "work": {
+    "shouldStop": 78,
+    "ticks": 1987,
+    "previews": 13572,
+    "previewStates": 784364,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (739.46,683.81) in level 40. There is no step out. the HAMMER-PHASE rung first saw this corner at t1984, and from t1987 NO PHASE admits a step: no hold of 1..44 tick(s) at any walk-offset -1..0 (0 tried) walks the approach clear for one more hammer period (45 ticks) (HAMMER_PHASE_RUNG).",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverBotError"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 3047
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  }
+ ],
+ "cpu": null
+}

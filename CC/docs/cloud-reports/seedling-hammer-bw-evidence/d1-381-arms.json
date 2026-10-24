@@ -1,0 +1,178 @@
+{
+ "strike": {
+  "outcome": "refused",
+  "ms": 278660,
+  "errMd5": "0d1cc291c7a1b184569c48f30e7dcfeb",
+  "counts": null,
+  "err": "solverBot(wasm-arrival-solve) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinner@192,128) by press: every key set \u2014 the plan's own and 5 alternative(s) \u2014 lands the player box on a body's 7x7 rect or on the 13 px hammer line at that tick's own phase, on the next tick, at (249.65,166.62) in level 40. There is no step out. The corner form",
+  "hits": []
+ },
+ "refuge": {
+  "outcome": "refused",
+  "ms": 249063,
+  "errMd5": "d8c930d8e61c014f87df1092708f6824",
+  "counts": {
+   "strikeAsked": 0,
+   "strikeRefused": 0,
+   "refugeAsked": 0,
+   "refugeRefused": 0,
+   "standAsked": 0,
+   "standRefused": 0
+  },
+  "err": "chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not \u2014 and a FORECAST must not guess it any more than the live run m",
+  "hits": [
+   {
+    "t": 1157,
+    "level": 40,
+    "source": "bomb",
+    "id": "bombpusher@112,128#7",
+    "hits": 1,
+    "hitsMax": 3,
+    "died": false,
+    "shake": 5,
+    "knockback": {
+     "dx": -3.405675213653241,
+     "dy": -2.0979457426511186,
+     "landed": {
+      "x": true,
+      "y": true
+     }
+    }
+   }
+  ]
+ },
+ "aim": {
+  "outcome": "refused",
+  "ms": 234407,
+  "errMd5": "f86ee1333d52ac0682d04b6ba81c58dd",
+  "counts": {
+   "strikeAsked": 0,
+   "strikeRefused": 0,
+   "refugeAsked": 0,
+   "refugeRefused": 0,
+   "standAsked": 4,
+   "standRefused": 2
+  },
+  "err": "levelRun: whether bob bob@288,80 is on screen at tick 1157 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the ",
+  "hits": [
+   {
+    "t": 1157,
+    "level": 40,
+    "source": "bomb",
+    "id": "bombpusher@112,128#7",
+    "hits": 1,
+    "hitsMax": 3,
+    "died": false,
+    "shake": 5,
+    "knockback": {
+     "dx": -3.58445939921736,
+     "dy": 0,
+     "landed": {
+      "x": true,
+      "y": false
+     }
+    }
+   }
+  ]
+ },
+ "yield": {
+  "outcome": "refused",
+  "ms": 234259,
+  "errMd5": "d8c930d8e61c014f87df1092708f6824",
+  "counts": {
+   "strikeAsked": 0,
+   "strikeRefused": 0,
+   "refugeAsked": 0,
+   "refugeRefused": 0,
+   "standAsked": 44,
+   "standRefused": 44
+  },
+  "err": "chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not \u2014 and a FORECAST must not guess it any more than the live run m",
+  "hits": [
+   {
+    "t": 1157,
+    "level": 40,
+    "source": "bomb",
+    "id": "bombpusher@112,128#7",
+    "hits": 1,
+    "hitsMax": 3,
+    "died": false,
+    "shake": 5,
+    "knockback": {
+     "dx": -3.405675213653241,
+     "dy": -2.0979457426511186,
+     "landed": {
+      "x": true,
+      "y": true
+     }
+    }
+   }
+  ]
+ },
+ "all2": {
+  "outcome": "refused",
+  "ms": 219244,
+  "errMd5": "e5cd34ac85c0b9d7ba59abc4e1ce6e43",
+  "counts": {
+   "strikeAsked": 12,
+   "strikeRefused": 32,
+   "refugeAsked": 24,
+   "refugeRefused": 10,
+   "standAsked": 12,
+   "standRefused": 0
+  },
+  "err": "levelRun: the Explosion of bombpusher@112,128#9 at (268, 120) on tick 1248 in level 40 reaches the chaser bob@272,112 \u2014 `Enemy.hit(4, \u2026, 1)` (`Explosion.as:62-65`) is not staged on a bomb's blast (seedling-fidelity-bombpusher). Refused by name.",
+  "hits": []
+ },
+ "atlas-on": {
+  "verdict": "THREW",
+  "executed": 1294,
+  "keysMd5": "6b1ac5be8b0469cc77fa1d3a1e5ab671",
+  "ms": 196996,
+  "counts": {
+   "strikeAsked": 24,
+   "strikeRefused": 66,
+   "refugeAsked": 453,
+   "refugeRefused": 156,
+   "standAsked": 54,
+   "standRefused": 0
+  },
+  "message": "levelRun: the Explosion of bombpusher@112,128#10 at (268, 118) on tick 1294 in level 40 reaches the chaser bob@272,112 \u2014 `Enemy.hit(4, \u2026, 1)` (`Explosion.as:62-65`) is not staged on a bomb's blast (seedling-fidelity-bombpusher). Refused by name.",
+  "hits": []
+ },
+ "atlas-off": {
+  "verdict": "THREW",
+  "executed": 1157,
+  "keysMd5": "f7cefc5f0eb83c38304e0b8540c89d04",
+  "ms": 193734,
+  "counts": {
+   "strikeAsked": 0,
+   "strikeRefused": 0,
+   "refugeAsked": 0,
+   "refugeRefused": 0,
+   "standAsked": 0,
+   "standRefused": 0
+  },
+  "message": "chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not \u2014 and a FORECAST must not guess it any more than the live run m",
+  "hits": [
+   {
+    "t": 1157,
+    "level": 40,
+    "source": "bomb",
+    "id": "bombpusher@112,128#7",
+    "hits": 1,
+    "hitsMax": 3,
+    "died": false,
+    "shake": 5,
+    "knockback": {
+     "dx": -3.405675213653241,
+     "dy": -2.0979457426511186,
+     "landed": {
+      "x": true,
+      "y": true
+     }
+    }
+   }
+  ]
+ }
+}

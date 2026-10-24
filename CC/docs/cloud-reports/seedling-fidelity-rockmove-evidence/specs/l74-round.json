@@ -1,0 +1,5 @@
+{"name":"l74-round-trip","levels":[74,73],
+ "tape":{"boot":{"level":73,"x":64,"y":16},"tick_count":480,"inputs":[{"key":"up","from":0,"to":20},{"key":"down","from":20,"to":480}]},
+ "arms":[{"name":"vanilla"},
+  {"name":"remove","ops":[{"op":"remove","level":74,"type":"fallrock","x":288,"y":144}]},
+  {"name":"move-288-128","ops":[{"op":"move","level":74,"type":"fallrock","x":288,"y":144,"to":{"x":288,"y":128}}]}]}

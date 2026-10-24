@@ -1,0 +1,488 @@
+[
+{
+"step": 11,
+"level": 11,
+"verdict": "SOLVED",
+"ticks": 97,
+"replans": 1,
+"refusal": null,
+"rowMd5": "d14e04b1e8c99929b3762480cd26fc0d"
+},
+{
+"step": 15,
+"level": 86,
+"verdict": "SOLVED",
+"ticks": 101,
+"replans": 1,
+"refusal": null,
+"rowMd5": "b3e5b516f33e0bc038bc22f9abe12a6b"
+},
+{
+"step": 19,
+"level": 15,
+"verdict": "SOLVED",
+"ticks": 456,
+"replans": 0,
+"refusal": null,
+"rowMd5": "d2fffd94eeb684952857c292c9d74ff2"
+},
+{
+"step": 21,
+"level": 17,
+"verdict": "SOLVED",
+"ticks": 192,
+"replans": 1,
+"refusal": null,
+"rowMd5": "42fdfeeb9ad2d58da0ee4da4e5926ac4"
+},
+{
+"step": 26,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 328,
+"replans": 0,
+"refusal": null,
+"rowMd5": "34d331b7a6e1f68be83bd90053096c63"
+},
+{
+"step": 27,
+"level": 36,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-27) chest (64,48) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-27) chest (64,48) stance waypoint 1 (72,66): the route entered a proximity-hazard \u2014 chest at (64,48) in level 36 \u2014 at (72.97948572567307,67.99500184538654). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"rowMd5": "5de51aac9602ffc3c2119915d233ae27"
+},
+{
+"step": 28,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 311,
+"replans": 0,
+"refusal": null,
+"rowMd5": "78a419c9a25b06af797de4f1e9cc7557"
+},
+{
+"step": 32,
+"level": 15,
+"verdict": "SOLVED",
+"ticks": 456,
+"replans": 0,
+"refusal": null,
+"rowMd5": "9a039694b58cb62acb19fb2e345507d3"
+},
+{
+"step": 39,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 2364,
+"replans": 0,
+"refusal": null,
+"rowMd5": "afaf0b74d859141b57b433196ded39f3"
+},
+{
+"step": 42,
+"level": 25,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-42) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) \u2014 a pickup in a solid is an obstacle, not a stance problem. No strategy row exists for this obstacle.",
+"rowMd5": "c5f8f3db63f19b02382284c497b0bf1d"
+},
+{
+"step": 53,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-53) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-53) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (328.6670530633372,835.8463944777346). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"rowMd5": "5c2b39a1f03afa3c2492f53baf327b83"
+},
+{
+"step": 55,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 371,
+"replans": 1,
+"refusal": null,
+"rowMd5": "b487a3c0d982801cac98c53ce8f18b54"
+},
+{
+"step": 59,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 208,
+"replans": 0,
+"refusal": null,
+"rowMd5": "5859b148c47a9545031cab3e3ee122d2"
+},
+{
+"step": 61,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 330,
+"replans": 0,
+"refusal": null,
+"rowMd5": "b84a9d464118c98c51f04bdfe9ee410b"
+},
+{
+"step": 66,
+"level": 15,
+"verdict": "SOLVED",
+"ticks": 326,
+"replans": 1,
+"refusal": null,
+"rowMd5": "9e5c8c58a7125eb7270732f934165b3d"
+},
+{
+"step": 70,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 953,
+"replans": 0,
+"refusal": null,
+"rowMd5": "90a8deae88b111138fa81bec7483c4a4"
+},
+{
+"step": 72,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 480,
+"replans": 1,
+"refusal": null,
+"rowMd5": "f36df5362dd3d650fe7534bb8cda54e8"
+},
+{
+"step": 74,
+"level": 40,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-74): no corridor for goal collect-placement toward (664,520) in level 40. Obstacle: solid:pushableblockfire (pushableblockfire@576,576); also on the frontier: wandlock@480,560, iceturret@472,400, chest@880,816, totempart@160,640, dungeonspire@336,576, dungeonspire@304,576. Strategy 'shove' failed to apply. Planner said: no walkable tile path in level 40 from tile (30,56) to (41,32). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"rowMd5": "1547194f405448af3a7e4ab09cdf95c3"
+},
+{
+"step": 76,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 953,
+"replans": 0,
+"refusal": null,
+"rowMd5": "fd51439e3ea809114c03b42d218ed79f"
+},
+{
+"step": 80,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 1352,
+"replans": 2,
+"refusal": null,
+"rowMd5": "232d13ed4ea69183af7f131b8c09054d"
+},
+{
+"step": 82,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 681,
+"replans": 1,
+"refusal": null,
+"rowMd5": "d757675a2691dd82ed2dbbe69f3362a3"
+},
+{
+"step": 92,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 342,
+"replans": 0,
+"refusal": null,
+"rowMd5": "5c385152672be86446d45c9524a13575"
+},
+{
+"step": 97,
+"level": 90,
+"verdict": "SOLVED",
+"ticks": 137,
+"replans": 1,
+"refusal": null,
+"rowMd5": "ee9726ca2e082288dd65a0a70290122d"
+},
+{
+"step": 102,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 359,
+"replans": 1,
+"refusal": null,
+"rowMd5": "42ba2ebd008d836f4943ee2e03c330f7"
+},
+{
+"step": 104,
+"level": 40,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-104) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 \u2014 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold stance (wandlock@448,432): STANCE_REENTRY \u2014 the walk to wandlock@448,432's `hold` stance (488,392) is itself blocked by wandlock@448,432 at tick 0, with nothing spent between, and the 8 px lattice plans no corridor to it either. Applying `hold` again would be the same walk again: the stance is on the far side of the obstacle it is the stance of.",
+"rowMd5": "dae25ecc4d37a06d4f2209e1ca63a0ad"
+},
+{
+"step": 106,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 70,
+"replans": 0,
+"refusal": null,
+"rowMd5": "eb1094aee3e630ba3a31a9b4823c7dde"
+},
+{
+"step": 113,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 347,
+"replans": 0,
+"refusal": null,
+"rowMd5": "bd71ad9aa5159833fa38b437d99f9a10"
+},
+{
+"step": 115,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 295,
+"replans": 0,
+"refusal": null,
+"rowMd5": "9be01a62d2a8685d087df9fc754eb409"
+},
+{
+"step": 123,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 342,
+"replans": 0,
+"refusal": null,
+"rowMd5": "0ac8be6ec0f6660d945ff9ce5db21ff3"
+},
+{
+"step": 128,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 208,
+"replans": 0,
+"refusal": null,
+"rowMd5": "95654b4816a0aafdf6627eb4dad56985"
+},
+{
+"step": 133,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 86,
+"replans": 0,
+"refusal": null,
+"rowMd5": "71425fd81f79af2f61725be3c2c3a74c"
+},
+{
+"step": 141,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 957,
+"replans": 0,
+"refusal": null,
+"rowMd5": "a27ba2981a798b58fb5a1e14074e8bef"
+},
+{
+"step": 143,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 359,
+"replans": 1,
+"refusal": null,
+"rowMd5": "efccf696c400be20ce14b1ffba771d6e"
+},
+{
+"step": 145,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 172,
+"replans": 0,
+"refusal": null,
+"rowMd5": "d4a819764ab3ffb33d806c848f39d7d6"
+},
+{
+"step": 148,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"replans": 0,
+"refusal": null,
+"rowMd5": "d37a013ca30396d953b37e595b83ee85"
+},
+{
+"step": 155,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 89,
+"replans": 0,
+"refusal": null,
+"rowMd5": "a15cea0edce7d15bb2429e6c1df55c8d"
+},
+{
+"step": 160,
+"level": 36,
+"verdict": "NO-ARRIVAL",
+"ticks": null,
+"replans": null,
+"refusal": "the AP exit 'level_69 -> level_36' is out_lightbosscontroller_72_72, and the atlas has no such entity with `to` 36 in L69 \u2014 the two sources disagree.",
+"rowMd5": "81b08d66320ecff199125456b3a1aebc"
+},
+{
+"step": 161,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1189,
+"replans": 0,
+"refusal": null,
+"rowMd5": "ca2225556acda4f00c72711edcd130f2"
+},
+{
+"step": 163,
+"level": 38,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-163) reach-exit (144,0)->L39 -> chest: chest@144,112 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"rowMd5": "7d2464273135ad49f8123ba4f9e4958b"
+},
+{
+"step": 165,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 172,
+"replans": 0,
+"refusal": null,
+"rowMd5": "0e3eb5f64346fbd0cab93a42934961dc"
+},
+{
+"step": 168,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"replans": 0,
+"refusal": null,
+"rowMd5": "ff2f37e85be53b200d9930e21fd26544"
+},
+{
+"step": 173,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 504,
+"replans": 0,
+"refusal": null,
+"rowMd5": "511685de797504c81b8cc69313046c20"
+},
+{
+"step": 177,
+"level": 63,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-177): no corridor for goal reach-exit toward (132,268) in level 63. Obstacle: solid:pushableblockspear (pushableblockspear@112,96). Strategy 'shove' failed to apply. Planner said: A* start tile (7,18) in level 63 \u2014 for (123.61554871341427,301.16961173792373) \u2014 is not walkable: pit Pit (t=6) at tile (7,18). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.",
+"rowMd5": "d8292bdf8378a58fa8a912ed42e2bca5"
+},
+{
+"step": 182,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-182) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"rowMd5": "1fd68ac0e041a1f8407e394c7e0dbce8"
+},
+{
+"step": 186,
+"level": 71,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-186) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"rowMd5": "3321e55d6b816701fa0aa06a7ce90a82"
+},
+{
+"step": 190,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 327,
+"replans": 0,
+"refusal": null,
+"rowMd5": "0ba72dad7a3e39810ca9c7c028d8676b"
+},
+{
+"step": 198,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 193,
+"replans": 0,
+"refusal": null,
+"rowMd5": "cd0bbfcc8f65190285ec7d5e8fc8f093"
+},
+{
+"step": 203,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"replans": 0,
+"refusal": null,
+"rowMd5": "bf1951d518d3f866f2b0b22fc64d5862"
+},
+{
+"step": 208,
+"level": 63,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-208) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-208) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.07145863495577,99.57690978766065). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"rowMd5": "c3a3274fff5d6005486ac1bdf4a01aef"
+},
+{
+"step": 213,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-213) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"rowMd5": "cd7b7965442c7682f0468f5fe6882823"
+},
+{
+"step": 217,
+"level": 71,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-217) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"rowMd5": "7c74fb9bfcfffafd3e698cdbf248a5b5"
+},
+{
+"step": 218,
+"level": 80,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-218) chest (16,128): chest@16,128 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"rowMd5": "13d2216a74519690865b6b708d80fd08"
+},
+{
+"step": 219,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 171,
+"replans": 0,
+"refusal": null,
+"rowMd5": "aea89329e48a26575e306a7d41a1e214"
+},
+{
+"step": 227,
+"level": 98,
+"verdict": "REFUSED",
+"ticks": null,
+"replans": null,
+"refusal": "solverBot(survey-step-227) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-227) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (167.74495030824033,51.25719294972813). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"rowMd5": "9c4461f82cf23d92df5c67993cc9fe61"
+}
+]

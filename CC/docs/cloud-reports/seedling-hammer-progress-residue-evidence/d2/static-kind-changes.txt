@@ -1,0 +1,5 @@
+levelRun.js:14014 error -> soft-lock
+levelRun.js:19502 error -> soft-lock
+solverBot.js:2142 other -> soft-lock
+solverBot.js:6021 other -> deadline
+solverBot.js:16920 other -> diverged

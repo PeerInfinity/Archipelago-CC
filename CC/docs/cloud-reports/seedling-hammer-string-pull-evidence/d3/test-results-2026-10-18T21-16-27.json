@@ -1,0 +1,353 @@
+{
+  "mode": "test-substrates",
+  "batch": null,
+  "testIds": "seedling-js-runtime-bot-completes-generated-room",
+  "flavour": "unbundled",
+  "budgetMs": null,
+  "pageDiagnostics": {
+    "consoleErrors": 1,
+    "pageErrors": 0,
+    "handlerErrors": {
+      "logged": 0,
+      "pageCount": 0,
+      "rows": []
+    }
+  },
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 1,
+    "failedCount": 0,
+    "enabledCount": 1,
+    "notRunCount": 0,
+    "notRunIds": [],
+    "importFailureCount": 0
+  },
+  "testDetails": [
+    {
+      "id": "seedling-js-runtime-bot-completes-generated-room",
+      "name": "Seedling JS runtime: the Playback Bot completes seedling_generated_room",
+      "status": "passed",
+      "category": "Seedling JS runtime",
+      "startTime": "2026-10-18T21:15:58.925Z",
+      "endTime": "2026-10-18T21:16:27.440Z",
+      "durationMs": 28515,
+      "conditions": [
+        {
+          "description": "the playback bot is mounted",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:15:59.044Z"
+        },
+        {
+          "description": "the panel is on the js transport",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:15:59.517Z"
+        },
+        {
+          "description": "embedded sphere log loaded",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:15:59.722Z"
+        },
+        {
+          "description": "the generated arm loaded (the bot's name → cell map)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:00.474Z"
+        },
+        {
+          "description": "the JS runtime page is up",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:00.675Z"
+        },
+        {
+          "description": "the Playback Bot completed seedling_generated_room from its sphere log",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:09.431Z"
+        },
+        {
+          "description": "every sphere-log location is checked in the state manager",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:09.432Z"
+        },
+        {
+          "description": "§5.36: the page's SOLVER took the apitem (collect-placement), nothing declined",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:09.432Z"
+        },
+        {
+          "description": "the bot took a cross-region tile target",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:09.433Z"
+        },
+        {
+          "description": "the bot crossed out of the generated room into a maze region (gameState path)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "description": "the route crossed Seedling doors the page walked (a generated door AND a parking door)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "description": "the bot routed from the maze back into the generated start room (gameState path)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "description": "the bot wrote a status log to read errors out of",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "description": "no error: status at any point",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "description": "no death and no halt on the JS runtime",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "description": "§5.36: the solver drove the generated rooms — ≥ 3 solves (apitem + two doors), 0 declines",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for value: \"playback bot panel instance\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:58.943Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Value found for: \"playback bot panel instance\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.044Z"
+        },
+        {
+          "message": "Condition: \"the playback bot is mounted\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.044Z"
+        },
+        {
+          "message": "runtime = js (session override); loading ./presets/seedling_generated_room/AP_1/AP_1_rules.json…",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.053Z"
+        },
+        {
+          "message": "Waiting for event: stateManager:rulesLoaded (timeout: 8000ms)",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.072Z"
+        },
+        {
+          "message": "Tracking event listener for stateManager:rulesLoaded (total: 1)",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:15:59.073Z"
+        },
+        {
+          "message": "Removed tracking for event listener on stateManager:rulesLoaded",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:15:59.226Z"
+        },
+        {
+          "message": "Event received: stateManager:rulesLoaded",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.226Z"
+        },
+        {
+          "message": "Event data: {\"snapshot\":{\"snapshotCount\":2,\"inventory\":{\"key_blue\":0},\"flags\":[],\"events\":[],\"checkedLocations\":[],\"regionReachability\":{\"Menu\":\"reachable\",\"region_0_0\":\"reachable\",\"region_1_0\":\"reachable\",\"region_0_1\":\"reachable\",\"region_1_1\":\"reachable\"},\"locationReachability\":{\"region_0_0__key_blue_pickup\":\"reachable\"},\"player\":{\"name\":\"Player 1\",\"id\":\"1\",\"slot\":\"1\",\"team\":0},\"game\":\"Procgen Maze\",\"gameMode\":null,\"debugMode\":false,\"autoCollectEventsEnabled\":true,\"startRegions\":{\"default\":[\"Menu\"],\"available\":[]},\"prog_items\":{\"1\":{}}},\"gameName\":\"Procgen Maze\",\"playerId\":\"1\",\"source\":\"./presets/seedling_generated_room/AP_1/AP_1_rules.json\"}",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:15:59.226Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for value: \"the flash panel mounted the js transport (a fresh adapter)\" (timeout: 30000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.262Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Value found for: \"the flash panel mounted the js transport (a fresh adapter)\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.517Z"
+        },
+        {
+          "message": "Condition: \"the panel is on the js transport\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.517Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for condition: \"the preset's EMBEDDED sphere log was loaded\" (timeout: 10000ms, interval: 200ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.518Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Condition met for: \"the preset's EMBEDDED sphere log was loaded\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.722Z"
+        },
+        {
+          "message": "Condition: \"embedded sphere log loaded\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.722Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for value: \"the panel finished its AP load (the generated arm) and holds the assembly report\" (timeout: 30000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:15:59.724Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Value found for: \"the panel finished its AP load (the generated arm) and holds the assembly report\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.474Z"
+        },
+        {
+          "message": "Condition: \"the generated arm loaded (the bot's name → cell map)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.474Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for value: \"the JS runtime page is up and running the set\" (timeout: 15000ms, interval: 200ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.474Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Value found for: \"the JS runtime page is up and running the set\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.675Z"
+        },
+        {
+          "message": "Condition: \"the JS runtime page is up\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.675Z"
+        },
+        {
+          "message": "sphere log locations: [\"region_0_0__key_blue_pickup\"]; bot start region 'region_0_0'",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.675Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for condition: \"the bot drained its whole sphere queue on the JS runtime\" (timeout: 60000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:00.681Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Condition met for: \"the bot drained its whole sphere queue on the JS runtime\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.431Z"
+        },
+        {
+          "message": "Condition: \"the Playback Bot completed seedling_generated_room from its sphere log\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.431Z"
+        },
+        {
+          "message": "Condition: \"every sphere-log location is checked in the state manager\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.432Z"
+        },
+        {
+          "message": "Condition: \"§5.36: the page's SOLVER took the apitem (collect-placement), nothing declined\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.432Z"
+        },
+        {
+          "message": "Condition: \"the bot took a cross-region tile target\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.433Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for condition: \"gameState's path records the bot's arrival in region_1_1 (a maze region)\" (timeout: 60000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:09.433Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Condition met for: \"gameState's path records the bot's arrival in region_1_1 (a maze region)\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "message": "regions walked after the queue: [\"region_0_1\",\"region_1_1\"]; bot \"walking to (region_1_1 5,5)\"",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "message": "Condition: \"the bot crossed out of the generated room into a maze region (gameState path)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "message": "Condition: \"the route crossed Seedling doors the page walked (a generated door AND a parking door)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:20.183Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Polling for condition: \"the bot routed back into the start room\" (timeout: 60000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:20.184Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-generated-room] Condition met for: \"the bot routed back into the start room\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "regions walked on the way back: [\"region_1_0\",\"region_0_0\"]",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Condition: \"the bot routed from the maze back into the generated start room (gameState path)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Condition: \"the bot wrote a status log to read errors out of\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Condition: \"no error: status at any point\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Condition: \"no death and no halt on the JS runtime\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "solver: {\"solves\":3,\"refutations\":1,\"declines\":0,\"played\":554,\"lastSolve\":{\"level\":1,\"goal\":{\"kind\":\"reach-exit\",\"exit\":{\"x\":96,\"y\":48}},\"keys\":7,\"verbs\":[\"walk\"],\"replayMs\":19,\"solveMs\":35,\"prefix\":0,\"waitMs\":467,\"where\":\"worker\",\"pass\":\"dashless\",\"expired\":false,\"passes\":[{\"pass\":\"dashless\",\"ok\":true,\"kind\":null,\"ticks\":7,\"ms\":54,\"work\":2},{\"pass\":\"full\",\"ok\":false,\"kind\":\"skipped\",\"ticks\":null,\"ms\":1,\"work\":0}],\"end\":{\"level\":2,\"x\":24,\"y\":24,\"deaths\":0}},\"lastDecline\":null,\"lastDeclineObstacle\":null,\"expiries\":0,\"stale\":1,\"solving\":false,\"lastWaitMs\":467,\"provisionalPlays\":0,\"backstops\":0,\"current\":0,\"lastRefutation\":null,\"budgetWork\":640}; solved events 3",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Condition: \"§5.36: the solver drove the generated rooms — ≥ 3 solves (apitem + two doors), 0 declines\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.434Z"
+        },
+        {
+          "message": "Test completion signal: PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:27.440Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:27.440Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:27.441Z"
+        }
+      ]
+    }
+  ],
+  "importFailures": [],
+  "completedAt": "2026-10-18T21:16:27.558Z",
+  "frozen": {
+    "head": "6305b1af3e66bf8588dc6127d28c3b04415bfd24",
+    "tracked": "d41d8cd98f00b204e9800998ecf8427e",
+    "trackedLines": 0
+  },
+  "treeMoved": false
+}

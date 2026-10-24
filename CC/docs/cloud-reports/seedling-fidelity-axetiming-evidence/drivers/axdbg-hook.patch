@@ -1,0 +1,20 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index b11bbc2d..381cd543 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -4780,6 +4780,7 @@ function corridorSwing(forecast, state, thrust) {
+  * `solverBot.test.js` calls both, from one starting state, and compares the
+  * held-set sequences.
+  */
++function await_write() { const fs = globalThis.process.getBuiltinModule('node:fs'); fs.writeFileSync(globalThis.process.env.AXDBG, JSON.stringify(globalThis.__axdbg)); }
+ export function previewWalk(run, wps, tolerance = 0,
+     { strike = null, standFor = 0, axisAligned = false, stall = null,
+         /**
+@@ -19425,6 +19426,7 @@ function solveSegmentUnder({
+                     ? { strike: null, axisAligned, stall, stopWhen: dangerous }
+                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
+                 const base = previewWalk(run, wps, tolerance, optsFor(null));
++                if (globalThis.process?.env?.AXDBG) { const full = previewWalk(run, wps, tolerance, axisAligned ? { strike: null, axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }); globalThis.__axdbg ??= []; globalThis.__axdbg.push({ t0: run.ticksCompleted, clockV: axeVisitClock(run).v, state: { x: run.state.x, y: run.state.y }, wps, hit: { tick: h.tick, x: h.x, y: h.y, sources: h.sources.map((s) => ({ id: s.id, axe: s.axe })) }, samples: full.samples.map((sm) => [sm.x, sm.y, sm.wp]), truncated: full.truncated ?? null, dashed: [0, 4, 8, 12, 16].map((off) => { const ticks = new Set(); for (let w = run.ticksCompleted + off; w < run.ticksCompleted + 400; w += 20) for (const d of DASH_CHAIN_PATTERN) ticks.add(w + d); const dashPlan = { ticks, starts: [], windows: [], why: 'axdbg' }; const dw = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan, dashMode: 'full' }) }); return { off, samples: dw.samples.map((sm) => [sm.x, sm.y, sm.wp]), truncated: dw.truncated ?? null }; }) }); if (globalThis.__axdbg.length === 1) (await_write()); }
+                 let door = Math.min(hitAt, base.samples.length - 1);
+                 while (door > 0 && h.sources.some((s) => axeCanReach(s.axe,
+                     playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;

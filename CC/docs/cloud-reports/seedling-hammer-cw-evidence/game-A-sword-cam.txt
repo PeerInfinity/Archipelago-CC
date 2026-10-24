@@ -1,0 +1,8 @@
+# box lock: TAKEN by probe-seedling-chaser-mobiles.mjs (browser, pid 5898) — head 3a53894a9, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:4722
+                throw new Error(`levelRun: the witnessed game camera (${w.x}, ${w.y}) at tick ${ticksCompleted} is not `
+                      ^
+
+Error: levelRun: the witnessed game camera (665, 707) at tick 2016 is not the model's exact camera (662, 708) — asked for iceturret iceturret@472,400. A camera witness that disagrees where the model is exact is misaligned or from another recording.
+

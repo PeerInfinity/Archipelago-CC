@@ -1,0 +1,4 @@
+GREEN: 314 rows match a fresh census
+census-seedling-constants --check — 6028 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE

@@ -1,0 +1,5 @@
+PASS: L38 buttonroom@32,48 -> {39,8} (flip 1): PRESS CLEARS {39,8} — written to persistence_cleared — [{"tag":4,"level":38},{"tag":8,"level":39}]
+PASS: L38 buttonroom@32,48 -> {39,8} (flip 1): BUILT wandlock@144,592 from L38 teleporter@144,0's landing (144,608), holding up — with the game-written flag the player passes it; BARE it stands — {"target":"wandlock@144,592","landing":{"from":38,"door":"teleporter@144,0","x":144,"y":608,"dir":"u
+PASS: L38 buttonroom@144,288 -> {37,4} (flip 1): PRESS CLEARS {37,4} — written to persistence_cleared — [{"tag":4,"level":37},{"tag":5,"level":38}]
+PASS: L38 buttonroom@144,288 -> {37,4} (flip 1): BUILT fallrock@288,32 from L38 teleporter@144,304's landing (288,16), holding down — with the game-written flag it is FALLEN (stopped); BARE the player passes — {"target":"fallrock@288,32","landing":{"from":38,"door":"teleporter@144,304","x":288,"
+ALL CHECKS PASSED

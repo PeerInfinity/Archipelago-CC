@@ -1,0 +1,12 @@
+A-ghost.jsonl {'A found, B refused': 3} pressAt A-B: median None min None max None
+A-sword.jsonl {'A found, B refused': 5, 'B earlier': 2} pressAt A-B: median 23 min 6 max 23
+campaign.jsonl {'B earlier': 21, 'A found, B refused': 6, 'certification differs': 3} pressAt A-B: median 5 min 1 max 27
+ghost-sweep.jsonl {'B earlier': 402, 'A found, B refused': 159} pressAt A-B: median 8 min 2 max 8
+killgate-2.jsonl {'A found, B refused': 9, 'B earlier': 9} pressAt A-B: median 8 min 8 max 8
+killgate-5.jsonl {'B earlier': 9} pressAt A-B: median 16 min 16 max 16
+killgate-9.jsonl {'B earlier': 27, 'A found, B refused': 9} pressAt A-B: median 4 min 1 max 51
+l18.jsonl {'B earlier': 1395, 'A found, B refused': 261, 'certification differs': 36, 'same tick, other cell/eta': 42, 'A refused, B found': 9} pressAt A-B: median 5 min 1 max 68
+leg-397-ghost.jsonl {'A found, B refused': 2} pressAt A-B: median None min None max None
+leg-414-ghost.jsonl {'A found, B refused': 4} pressAt A-B: median None min None max None
+prod-solve-seedling-r8-d2-chain.jsonl {'B earlier': 21, 'A found, B refused': 6} pressAt A-B: median 4 min 1 max 13
+prod-solve-seedling-r8-l18.jsonl {'B earlier': 21, 'A found, B refused': 6} pressAt A-B: median 4 min 1 max 13

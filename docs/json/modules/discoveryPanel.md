@@ -1,4 +1,4 @@
 # Discovery Panel Module
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/discoveryPanel.md)
 - [Technical Reference](../developer/modules/discoveryPanel.md)

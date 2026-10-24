@@ -1,0 +1,31 @@
+--- /home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js	2026-10-14 17:33:11.058744819 +0000
++++ frontend/modules/seedlingDemo/jsRuntimeSolver.js	2026-10-16 15:41:31.356154225 +0000
+@@ -263,9 +263,18 @@
+ export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {} }) {
+     if (!(Number.isFinite(budgetWork) && budgetWork > 0)) return null;
+     const windowAt = p.stop === 'window' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
++    // DB LAB (scratch only): DS's dash-only window — counts only `sword-dash` asks, trips only that site.
++    const labDash = globalThis.process?.env?.LAB_DASH_WINDOW ? Number(globalThis.process.env.LAB_DASH_WINDOW) : null;
++    let dashUnits = 0;
+     return (site) => {
+         const n = work.tick();
+         if (n > budgetWork) { limit.first ??= 'budget'; return true; }
++        if (windowAt !== null && labDash !== null) {
++            if (site !== 'sword-dash') return false;
++            dashUnits += 1;
++            if (dashUnits > labDash) { limit.first ??= 'window'; return true; }
++            return false;
++        }
+         if (windowAt !== null && n > windowAt) { limit.first ??= 'window'; return true; }
+         return false;
+     };
+--- /home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js	2026-10-16 15:51:38.526383019 +0000
++++ frontend/modules/seedlingDemo/solverBot.js	2026-10-16 15:41:31.362545132 +0000
+@@ -5679,6 +5679,7 @@
+      * back a refusal whose `scanned` counts start ticks — a bounded sweep that
+      * names the wrong bound. Loud beats plausible.
+      */
++    globalThis.__DBCAP?.(run, wps, { tolerance, dashMode, stand, iframeLapse });
+     assertDashMode(dashMode, 'planSwordDash');
+     if (dashMode === 'none') {
+         fail('planSwordDash was asked under `dashMode: none`, which is the state that '

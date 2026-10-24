@@ -1,0 +1,11 @@
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests | 1 skipped) 5916ms
+     ✓ OFF writes nothing to the instrument  1649ms
+     ✓ at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised  3105ms
+     ✓ t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)  1155ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (13 tests) 36648ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  19859ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  9714ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  5669ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  747ms
+ Test Files  2 passed (2)
+      Tests  18 passed | 1 skipped (19)

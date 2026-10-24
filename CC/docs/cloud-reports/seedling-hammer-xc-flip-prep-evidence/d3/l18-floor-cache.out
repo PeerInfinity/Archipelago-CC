@@ -1,0 +1,48 @@
+# r9-solve-18 at seam.time 9912 (committed residue 12); HAMMER_ESCAPE ON; HAMMER_ESCAPE_FALLBACK ON; HAMMER_APPROACH OFF; HAMMER_FIGHT OFF; 45 residue(s)
+r 0  SOLVE                   502     3.1s  digest 48cb4787a43a stalls 0 escapes 6 fellBack 0/0 hits 0
+r 1  SOLVE                   466     2.7s  digest 18ebe66f774d stalls 0 escapes 6 fellBack 0/0 hits 0
+r 2  SOLVE                   502     2.3s  digest e4ab70fff895 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 3  SOLVE                   502     2.3s  digest e4ab70fff895 stalls 0 escapes 6 fellBack 0/0 hits 0
+r 4  SOLVE                   437     3.8s  digest e49197b2d1ad stalls 0 escapes 6 fellBack 0/0 hits 0
+r 5  SOLVE                   437     3.6s  digest e49197b2d1ad stalls 0 escapes 6 fellBack 0/0 hits 0
+r 6  SOLVE                   437     3.9s  digest e49197b2d1ad stalls 0 escapes 6 fellBack 0/0 hits 0
+r 7  SOLVE                   478     4.3s  digest 041bd61fdaac stalls 0 escapes 6 fellBack 0/0 hits 0
+r 8  SOLVE                   469     2.4s  digest 6034bc89a9ff stalls 0 escapes 6 fellBack 0/0 hits 0
+r 9  SOLVE                   478     2.2s  digest 230da1ddb793 stalls 0 escapes 6 fellBack 0/0 hits 0
+r10  SOLVE                   415     2.7s  digest d439c7806314 stalls 0 escapes 6 fellBack 0/0 hits 0
+r11  SOLVE                   478     2.6s  digest 4fc668874d20 stalls 0 escapes 6 fellBack 0/0 hits 0
+r12  SOLVE                   390     4.8s  digest a478fd99a093 stalls 0 escapes 6 fellBack 0/0 hits 0
+r13  SOLVE                   367     2.6s  digest c24abea30b03 stalls 0 escapes 6 fellBack 0/0 hits 0
+r14  SOLVE                   367     2.4s  digest c24abea30b03 stalls 0 escapes 6 fellBack 0/0 hits 0
+r15  SOLVE                   367     2.3s  digest c24abea30b03 stalls 0 escapes 6 fellBack 0/0 hits 0
+r16  SOLVE                   367     2.3s  digest c24abea30b03 stalls 0 escapes 6 fellBack 0/0 hits 0
+r17  SOLVE                   367     2.3s  digest c24abea30b03 stalls 0 escapes 6 fellBack 0/0 hits 0
+r18  SOLVE                   372     2.5s  digest 5fffffd509e1 stalls 0 escapes 6 fellBack 0/0 hits 0
+r19  SOLVE                   367     2.9s  digest 1ad5b8b6bd42 stalls 0 escapes 6 fellBack 0/0 hits 0
+r20  SOLVE                   367     2.3s  digest 60d82d49d4be stalls 0 escapes 6 fellBack 0/0 hits 0
+r21  SOLVE                   367     2.6s  digest da48033f1bbb stalls 0 escapes 6 fellBack 0/0 hits 0
+r22  SOLVE                   367     2.4s  digest 570f722c6a73 stalls 0 escapes 6 fellBack 0/0 hits 0
+r23  SOLVE                   411     3.1s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r24  SOLVE                   411     3.3s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r25  SOLVE                   411     3.3s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r26  SOLVE                   411     2.9s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r27  SOLVE                   411     3.1s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r28  SOLVE                   411     3.0s  digest 30a2014faf1b stalls 0 escapes 6 fellBack 0/0 hits 0
+r29  SOLVE                   422     3.2s  digest baeb194b2972 stalls 0 escapes 6 fellBack 0/0 hits 0
+r30  SOLVE                   393     3.1s  digest 57fabe32b995 stalls 0 escapes 6 fellBack 0/0 hits 0
+r31  SOLVE                   419     3.3s  digest c40102965258 stalls 0 escapes 6 fellBack 0/0 hits 0
+r32  SOLVE                   425     3.3s  digest 831725026baf stalls 0 escapes 6 fellBack 0/0 hits 0
+r33  SOLVE                   425     3.3s  digest 831725026baf stalls 0 escapes 6 fellBack 0/0 hits 0
+r34  SOLVE                   486     3.1s  digest b8db06121c07 stalls 0 escapes 6 fellBack 0/0 hits 0
+r35  SOLVE                   410     2.6s  digest 540bd4ce5e1a stalls 0 escapes 6 fellBack 0/0 hits 0
+r36  SOLVE                   467     2.2s  digest 3e561d691150 stalls 0 escapes 6 fellBack 0/0 hits 0
+r37  SOLVE                   467     2.4s  digest 132254b9fc07 stalls 0 escapes 6 fellBack 0/0 hits 0
+r38  SOLVE                   586     2.7s  digest efc20726dffb stalls 0 escapes 6 fellBack 0/0 hits 0
+r39  SOLVE                   497     2.4s  digest 9fe7c5bc3134 stalls 0 escapes 6 fellBack 0/0 hits 0
+r40  SOLVE                   476     2.6s  digest 89fd5fcbb845 stalls 0 escapes 6 fellBack 0/0 hits 0
+r41  SOLVE                   509     2.3s  digest cfebcb977226 stalls 0 escapes 6 fellBack 0/0 hits 0
+r42  SOLVE                   477     2.3s  digest f060f632f234 stalls 0 escapes 6 fellBack 0/0 hits 0
+r43  SOLVE                   484     3.5s  digest 74b18d2781b4 stalls 0 escapes 6 fellBack 0/0 hits 0
+r44  SOLVE                   483     2.5s  digest 0d201170255b stalls 0 escapes 6 fellBack 0/0 hits 0
+
+# 45/45 solve; lengths by residue: 502 466 502 502 437 437 437 478 469 478 415 478 390 367 367 367 367 367 372 367 367 367 367 411 411 411 411 411 411 422 393 419 425 425 486 410 467 467 586 497 476 509 477 484 483

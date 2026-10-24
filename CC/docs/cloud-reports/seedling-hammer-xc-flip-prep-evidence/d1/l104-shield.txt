@@ -1,0 +1,13 @@
+seam keys {"items":{"hasSword":true,"hasGhostSword":false,"hasShield":true,"hasFire":true,"hasWand":true,"hasFireWand":false,"canSwim":true,"hasSpear":true,"hasDarkShield":true,"hasDarkSuit":true,"hasDarkSword":true,"hasFeather":true,"hasTorch":true},"beam":false,"rock_set":false,"hits_max":3,"first_use":false,"extended":false,"time":8586,"primary":0,"secondary":0,"grass_cut":0,"cutscene":[false,false,false,false],"menu_state":0,"music":{"set":"Room","index":1}}
+as staged t100 shield true id none → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+as staged t100 shield true id null → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+as staged t150 shield true id none → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+as staged t150 shield true id null → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+as staged t200 shield true id none → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+as staged t200 shield true id null → false false  the forecast names shield bump (`shieldBumpNow`) as unmodelled spinners 0
+shield dropped t100 shield false id none → false true no-landing the press does not land: no test's rect reached none within 83 row(s) spinners 0
+shield dropped t100 shield false id null → false true no-landing the press does not land: no test's rect reached a body within 83 row(s) spinners 0
+shield dropped t150 shield false id none → false true no-landing the press does not land: the press at t151 opens no window: swallowed (a press with slashDashed true and slash spinners 0
+shield dropped t150 shield false id null → false true no-landing the press does not land: the press at t151 opens no window: swallowed (a press with slashDashed true and slash spinners 0
+shield dropped t200 shield false id none → false true no-landing the press does not land: no test's rect reached none within 83 row(s) spinners 0
+shield dropped t200 shield false id null → false true no-landing the press does not land: no test's rect reached a body within 83 row(s) spinners 0

@@ -4,10 +4,10 @@ Rule converter mixin — individual rule type converter methods.
 
 import copy
 import logging
-import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from ._unknown_kind import unknown_helper, unknown_kind
+from .constants import BOOLEAN_RULE_TYPES
 
 from ._codegen_utils import (
     is_placement_lookup,
@@ -221,12 +221,21 @@ class RuleConverterMixin:
         - count == 1: Any condition must be true (Or of all conditions)
         - count == len(conditions): All must be true (And of all conditions)
         - count > len(conditions): Never possible (False_())
-        - General case: Generate combinations using Or/And
+        - General case: Or of the C(n, count) Ands when C(n, count) <= 120, else AtLeast
 
         For the general case with many conditions, we generate Python code that
         counts conditions. If all conditions are simple item_checks, we use a
         more efficient list comprehension.
         """
+        if isinstance(count, float) and count.is_integer():
+            count = int(count)
+        if not isinstance(count, int):
+            # A count that is not a number (e.g. an expression dict): loud, never a crash or a silent
+            # True_(); lossy mode keeps the True_() placeholder and records it
+            placeholder = unknown_kind('count_true', f'count_true with non-integer count {count!r:.80}', 'True_()')
+            self.required_imports.add('True_')
+            return placeholder
+
         n = len(conditions)
 
         # Edge cases
@@ -290,15 +299,13 @@ class RuleConverterMixin:
                 combo_exprs.append(f'({and_expr})')
             return ' | '.join(combo_exprs)
 
-        # Fallback for truly complex cases: generate True_() with a warning
-        # This is conservative - locations will be accessible earlier than they should be
-        import logging
-        logging.getLogger(__name__).warning(
-            f"count_true rule with count={count} of {n} conditions ({num_combos} combinations) "
-            f"is too complex to expand, falling back to True_() - tracking may be inaccurate"
-        )
-        self.required_imports.add('True_')
-        return 'True_()'
+        # Above the limit, emit the Rule Builder's own "at least count of" node instead of
+        # expanding (code size explodes) or sinking to True_() (locations open early).
+        # AtLeast is the twin of count_true (rule_builder/ast_format.py parses one into the
+        # other); the exporter and the JS ruleBuilderEvaluator both evaluate it.
+        converted = [self._convert_rule(c) for c in conditions]
+        self.required_imports.add('AtLeast')
+        return f'AtLeast({count}, {", ".join(converted)})'
 
     def _convert_can_reach_region(self, rule: Dict[str, Any]) -> str:
         """Convert can_reach to CanReachRegion()."""
@@ -929,43 +936,6 @@ class RuleConverterMixin:
         # For other iterable types, try to convert
         return self._convert_rule(iterable)
 
-    def _convert_setting_value(self, rule: Dict[str, Any]) -> str:
-        """Convert a setting_value reference to its resolved value.
-
-        Settings are resolved at generation time since worldgen worlds
-        don't have access to the original game options at runtime.
-        """
-        setting = rule.get('setting', '')
-
-        # Look up the setting value in our resolved settings
-        if setting in self.settings:
-            value = self.settings[setting]
-            # Handle boolean values
-            if isinstance(value, bool):
-                self.required_imports.add('True_' if value else 'False_')
-                return 'True_()' if value else 'False_()'
-            # Handle string 'true'/'false' which are boolean-like
-            elif isinstance(value, str):
-                if value.lower() == 'true':
-                    self.required_imports.add('True_')
-                    return 'True_()'
-                elif value.lower() == 'false':
-                    self.required_imports.add('False_')
-                    return 'False_()'
-                # For other strings (like 'normal', 'light_and_darkness'), return as string literal
-                return repr(value)
-            # Handle integer values - return as-is for use in count/arithmetic contexts
-            # In cases where they're used in boolean contexts (like Not()), the caller
-            # is responsible for appropriate handling via Compare(value, ">", 0)
-            elif isinstance(value, int):
-                return repr(value)
-            else:
-                return repr(value)
-
-        # Setting not found - return False as safe default
-        self.required_imports.add('False_')
-        return 'False_()'
-
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
         """Generate code to access a world attribute at runtime."""
         return generate_world_attribute_expr(expr)
@@ -1066,12 +1036,10 @@ class RuleConverterMixin:
 
             return helper_call
 
-        # Unknown helper - return True_() as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown helpers are typically progression checks that evaluate to true
-        # under default/normal game settings
+        # Unknown helper name: loud (rule-node F1); lossy mode keeps the True_() placeholder
+        placeholder = unknown_helper('rule helper', helper_name, 'True_()')
         self.required_imports.add('True_')
-        return 'True_()'
+        return placeholder
 
     def _infer_keys_from_dict_args(self, args: List[Any]) -> List[Any]:
         """Infer 'keys' parameter values from adjacent dict arguments.
@@ -1214,11 +1182,6 @@ class RuleConverterMixin:
 
         # ===== Setting/Option/WorldAttribute Values =====
         # AST format
-        if ast_type == 'setting_value':
-            setting = arg.get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
         if ast_type == 'option_value':
             option = arg.get('option', '')
             if option in self.settings:
@@ -1231,16 +1194,6 @@ class RuleConverterMixin:
             return 'None'
 
         # Rule Builder format
-        if rule_type == 'SettingValue':
-            setting = arg.get('args', {}).get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
-        if rule_type == 'AST_setting_value':
-            setting = arg.get('args', {}).get('setting', '')
-            if setting in self.settings:
-                return repr(self.settings[setting])
-            return 'None'
         if rule_type == 'OptionValue':
             option = arg.get('args', {}).get('option', '')
             if option in self.settings:
@@ -1285,12 +1238,6 @@ class RuleConverterMixin:
 
         # ===== Attribute Access =====
         if ast_type == 'attribute':
-            obj = arg.get('object', {})
-            if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
-                setting = obj.get('setting', '')
-                if setting in self.settings:
-                    return repr(self.settings[setting])
-                return 'None'
             return 'None'
         if rule_type == 'Attribute':
             obj_info = arg.get('args', {}).get('object', {})
@@ -1547,18 +1494,10 @@ class RuleConverterMixin:
             # Can't evaluate - return 0 as conservative default
             return repr(0)
 
-        # Unknown helper - return True_() as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown helpers are typically progression checks that evaluate to true
-        # under default/normal game settings
-        # (This matches the behavior of _convert_helper for consistency)
-        print(
-            f"LOSSY FALLBACK: Unknown helper '{helper_name}' in _convert_rule_builder_helper, "
-            f"using True_() (always accessible) as fallback",
-            file=sys.stderr
-        )
+        # Unknown helper name: loud (rule-node F1); lossy mode keeps the True_() placeholder
+        placeholder = unknown_helper('rule_builder helper', helper_name, 'True_()')
         self.required_imports.add('True_')
-        return 'True_()'
+        return placeholder
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to a location_item_name() call.

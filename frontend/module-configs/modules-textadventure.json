@@ -4,8 +4,24 @@
       "path": "./modules/modules/index.js",
       "enabled": true
     },
+    "quickLaunch": {
+      "path": "./modules/quickLaunch/index.js",
+      "enabled": true
+    },
+    "miniPanels": {
+      "path": "./modules/miniPanels/index.js",
+      "enabled": true
+    },
+    "checksPanel": {
+      "path": "./modules/checksPanel/index.js",
+      "enabled": false
+    },
     "json": {
       "path": "./modules/json/index.js",
+      "enabled": true
+    },
+    "storagePanel": {
+      "path": "./modules/storagePanel/index.js",
       "enabled": true
     },
     "events": {
@@ -23,10 +39,6 @@
     "timer": {
       "path": "./modules/timer/index.js",
       "enabled": true
-    },
-    "timerPanel": {
-      "path": "./modules/timerPanel/index.js",
-      "enabled": false
     },
     "inventory": {
       "path": "./modules/inventory/index.js",
@@ -132,8 +144,8 @@
       "path": "./modules/spoilerChecklist/index.js",
       "enabled": false
     },
-    "textAdventureSubstrate": {
-      "path": "./modules/textAdventureSubstrate/index.js",
+    "textAdventureSubstrateWrapper": {
+      "path": "./modules/textAdventureSubstrateWrapper/index.js",
       "enabled": true
     },
     "tests": {
@@ -158,7 +170,7 @@
     },
     "iframeAdapter": {
       "path": "./modules/iframeAdapter/index.js",
-      "enabled": false
+      "enabled": true
     },
     "iframePanel": {
       "path": "./modules/iframePanel/index.js",
@@ -166,10 +178,6 @@
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": false
-    },
-    "mazeGameDataPanel": {
-      "path": "./modules/mazeGameDataPanel/index.js",
       "enabled": false
     },
     "jtaGameDataPanel": {
@@ -227,12 +235,15 @@
   },
   "loadPriority": [
     "modules",
+    "quickLaunch",
+    "miniPanels",
+    "checksPanel",
     "json",
+    "storagePanel",
     "events",
     "stateManager",
     "client",
     "timer",
-    "timerPanel",
     "inventory",
     "editorCore",
     "editor",
@@ -259,7 +270,7 @@
     "spoilerTest",
     "sphereState",
     "spoilerChecklist",
-    "textAdventureSubstrate",
+    "textAdventureSubstrateWrapper",
     "tests",
     "progressBar",
     "progressBarPanel",
@@ -268,7 +279,6 @@
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "mazeGameDataPanel",
     "jtaGameDataPanel",
     "jtaCostDebugger",
     "windowAdapter",

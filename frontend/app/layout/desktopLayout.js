@@ -1,6 +1,8 @@
 // desktopLayout.js - Desktop Golden Layout setup and configuration
 // Extracted from init.js lines 1423-1902
 
+import { wirePanelLifecycle } from '../core/panelManager.js';
+
 /**
  * Sets up Golden Layout for desktop mode
  *
@@ -152,10 +154,10 @@ function registerPanelComponents(options) {
 }
 
 /**
- * Creates a factory function for Golden Layout component instantiation
- * @private
+ * Creates a factory function for Golden Layout component instantiation.
+ * Exported for its unit rows (`core/panelLifecycle.test.js`).
  */
-function createGoldenLayoutComponentFactory(componentType, factoryDetails, logger, log) {
+export function createGoldenLayoutComponentFactory(componentType, factoryDetails, logger, log) {
   return (container, componentState) => {
     logger.debug(
       'init',
@@ -216,6 +218,11 @@ function createGoldenLayoutComponentFactory(componentType, factoryDetails, logge
           `uiProvider.onMount is not a function for ${componentType}.`
         );
       }
+
+      // onShow / onHide / onResize on the container's events (T4, trap 1404:
+      // this factory is the one Golden Layout uses; without this a provider's
+      // onShow never ran on a tab switch).
+      wirePanelLifecycle(container, uiProvider);
     } catch (e) {
       log(
         'error',

@@ -1,0 +1,54 @@
+{
+ "sources": {
+  "ap_rules": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+  "atlas": "frontend/modules/flashPanel/atlases/seedling-map.json",
+  "set_patches": [
+   "moonrock-removed",
+   "l37-fallrock-removed",
+   "l29-fallrock-removed",
+   "l39-fallrock-removed",
+   "l43-fallrock-2-removed",
+   "l43-fallrock-1-removed",
+   "l43-fallrock-3-removed",
+   "l74-fallrock-removed"
+  ],
+  "spheres": "frontend/modules/flashPanel/atlases/seedling-sphere-order.json"
+ },
+ "rows": [
+  {
+   "step": 48,
+   "level": 29,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-48) collect (112,64) stance (ladder-routed: no corridor from (24,232) to a stance that can collect bosskey@112,64 — 27 walkable candidate(s) in range, 27 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold: button@112,128 presses group t=0, which NO responder in level 29 answers — the level's responders are [none] and its pulsers are [none] and its arrow traps are [none]. Holding it would open nothing and arm nothing."
+  },
+  {
+   "step": 77,
+   "level": 39,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-77): no corridor for goal collect-placement toward (88,24) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 39 from tile (9,38) to (5,1). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+  },
+  {
+   "step": 107,
+   "level": 39,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "solverBot(survey-step-107): no corridor for goal reach-exit toward (152,8) in level 39. Obstacle: solid:rope (rope@96,384). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 39 from tile (9,38) to (9,0). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+  },
+  {
+   "step": 113,
+   "level": 43,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "the teleporter at (144,64) in level 43 stands ON a PIT tile (9,4). Walking into it fires the trigger and the pit edge in the same tick, and which one wins is FlashPunk bookkeeping this module does not transcribe — the physics throws on the conflict. Two exist in the extract (L43's exit to L37, L100's to L101); route around them."
+  },
+  {
+   "step": 150,
+   "level": 74,
+   "verdict": "SOLVED",
+   "ticks": 321,
+   "refusal": null
+  }
+ ]
+}

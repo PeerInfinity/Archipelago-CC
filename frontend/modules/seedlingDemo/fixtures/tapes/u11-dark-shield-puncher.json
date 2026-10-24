@@ -1,0 +1,50 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 384,
+        "y": 256
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasShield": true,
+            "hasDarkShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 40
+        }
+    ],
+    "name": "u11-dark-shield-puncher",
+    "description": "⛓⛓⛓ U11-swim D3 — THE DARK SHIELD HITS A PUNCHER: DAMAGE WITH NO SHOVE. L12, U9's puncher boot (384,256), the shield and the DARK shield through the seam and `noDamage` FALSE; `right` for 40 ticks, then still for 20. `shieldBump` calls `Enemy.hit(5, playerPoint, 0.5, \"Shield\")` on `puncher@416,256` on t 13: it takes 0.5 and a 30-tick i-frame, and `Puncher.knockback` is an EMPTY override, so nothing moves. Inside that i-frame the player walks through the puncher untouched — where the plain shield (`u9-shield-puncher`) takes the contact on t 15 and the punch on t 35. Fixed keys. Authored by scripts/procgen/plan-seedling-u11-dark-shield.mjs.",
+    "note": ""
+}

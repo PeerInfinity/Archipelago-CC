@@ -43,7 +43,21 @@ class TestBase(unittest.TestCase):
         },
         "shapez": {
             "Achievements needing a MAM",  # unreachable with default settings
-        }
+        },
+        # Seedling's map has rooms the game itself never lets the player walk into. They hold no
+        # locations, and their exits are one-way OUT, so the transcription records them faithfully
+        # rather than dropping them. See docs/json/developer/procgen/seedling-bot.md.
+        "Seedling Playthrough": {
+            # L58 (Dungeon5_DeadBoss) is NOT here since RULES game-truth-gaps (2026-10-06): L57 is lifted
+            # from never-enter, and the TentacleBeast's death-spawned mouth (the manifest's
+            # `tentacle_beast_mouth`) is wired into it, the arena gated both ways on the kill.
+            # L82 is NOT here since RULES (B) (2026-10-04): `71 ⇓ 82` is wired (L82 was never-enter
+            # by ruling, which stranded all of Dungeon 7) and the LavaBoss arena is gated both ways.
+            # L84 is a pass-through: the 83 -> 84 fall lands on pit with no walkable neighbour, so
+            # only the arrival room r2c4 is entered. These two components have no inbound edge.
+            "level_84__r0c0",
+            "level_84__r3c0",
+        },
     }
 
     def test_default_all_state_can_reach_everything(self):

@@ -1,0 +1,8 @@
+#!/bin/bash
+# DK: every producer's corridors in place, pre-check OFF, in the lab tree (instrumented). $1=scratch
+S=$1; O=$S/d1/producers; mkdir -p $O; cd $S/lab
+for p in $(cat $S/plans-dk.txt); do n=$(basename $p .mjs); s=$(date +%s)
+  DK_OUT=$O/corridors.jsonl DK_NAME=$n SEEDLING_DASH_LEG_PRECHECK=0 SEEDLING_PORT=9593 timeout 2400 node --import $S/tools/dk-preload.mjs $p --check > $O/$n.out 2>&1; rc=$?
+  echo "$n rc=$rc s=$(( $(date +%s)-s ))" >> $O/runs.txt
+done
+echo DONE >> $O/runs.txt

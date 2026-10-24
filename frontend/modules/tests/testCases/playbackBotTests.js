@@ -6,16 +6,25 @@
 // (with the bot as the deterministic driver).
 
 import { registerTest } from '../testRegistry.js';
+import { startAppBotTestSpeed } from '../botTestSpeed.js';
 import { getActivePanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import { arrangeShuffledSpiral, buildRulesJson } from '../../procgenPipeline/procgenPipelineEngine.js';
+import { getPanelInstance as getMazePanel } from '../../mazeRoom/index.js';
+import { getJtaEmitZoneLocations, setJtaEmitZoneLocations } from '../../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
-// Tiny procgen+maze preset (4 regions, 3 locations) — picked specifically
-// because (a) it uses the maze substrate so the bot has a controller to
-// dispatch to and (b) it's small enough to drain to completion fast.
-const PROCGEN_MAZE_RULES =
-  './presets/procgen_maze_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+// The smallest procgen_maze tier — picked specifically because (a) it uses
+// the maze substrate so the bot has a controller to dispatch to and (b) it's
+// small enough to drain to completion fast. It carries its sphere log
+// EMBEDDED (`sphere_log`), not as a `_sphere_log.jsonl` beside it. (Until
+// APWORLD SUBSTRATE CHANGE PM1 this pointed at procgen_maze_worldgen's
+// Generate.py export of the same three payloads — deleted in ccfc5bad02.)
+const PROCGEN_MAZE_RULES = './presets/procgen_maze/AP_1/AP_1_rules.json';
+// A plain (non-procgen) rules.json: no sidecars, no substrate, no controller — the bot plays it DIRECTLY.
+const ADVENTURE_RULES = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 /**
  * Smoke test: load apcalc, activate the playback bot panel, verify the bot
@@ -109,11 +118,15 @@ async function playbackBotInstantPlaybackTest(testController) {
   testController.reportCondition('bot reachable', !!bot);
   if (!bot) return testController.getOverallResult();
 
-  testController.log('Loading procgen_maze_worldgen rules + sphere log...');
+  testController.log('Loading procgen_maze AP_1 rules + its embedded sphere log...');
   await testController.loadRulesFromFile(PROCGEN_MAZE_RULES);
   const sphereState = getSphereStateSingleton();
+  // The embedded log goes in as JSONL text, the shape the Presets module's
+  // embedded path hands loadSphereLog.
+  const rulesDoc = await (await fetch(PROCGEN_MAZE_RULES)).json();
   await sphereState.loadSphereLog(
-    PROCGEN_MAZE_RULES.replace('_rules.json', '_sphere_log.jsonl')
+    `embedded:${PROCGEN_MAZE_RULES}`,
+    (rulesDoc.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'),
   );
   testController.reportCondition(
     'sphere data non-empty',
@@ -175,10 +188,497 @@ registerTest({
   id: 'playback-bot-instant-completion',
   name: 'Playback Bot: instant-mode completion',
   description:
-    'Drives the bot at instant speed through procgen_maze_worldgen '
-    + '(4 regions, 3 locations) and asserts it reaches the "finished" '
-    + 'status. Exercises the bot → substrate-controller dispatch chain.',
+    'Drives the bot at instant speed through procgen_maze AP_1 (the '
+    + 'smallest tier) and asserts it reaches the "finished" status. '
+    + 'Exercises the bot → substrate-controller dispatch chain.',
   testFunction: playbackBotInstantPlaybackTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ DIRECT PLAY (loop-mode-bot S1): the Adventure preset, loop mode OFF, no Maze panel — no region has a substrate
+ * or a controller, so the bot publishes its own user:locationCheck / user:regionMove, one per tick, and counts only
+ * what LANDED (the snapshot's checks, gameState's region). Done = every sphere-log location checked.
+ */
+async function playbackBotDirectPlayAdventureTest(testController) {
+  const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off', 5000, 100);
+  }
+  testController.reportCondition('loop mode is off', !loopModeOn());
+
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  await testController.loadRulesFromFile(ADVENTURE_RULES);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog(ADVENTURE_RULES.replace('_rules.json', '_sphere_log.jsonl'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition('sphere log has locations', sphereLocations.length > 0);
+  bot.refresh();
+
+  await bot.instant();
+  const finished = await testController.pollForCondition(
+    () => (bot.getStatus() || '').startsWith('finished') || /^(error|blocked)/.test(bot.getStatus() || ''),
+    'bot reaches a terminal status',
+    60000,
+    250,
+  );
+  testController.reportCondition(`bot finished (status: "${bot.getStatus()}")`,
+    finished && (bot.getStatus() || '').startsWith('finished'));
+  const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+  const missing = sphereLocations.filter((n) => !checked.has(n));
+  testController.reportCondition(`every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`,
+    missing.length === 0);
+  if (missing.length) {
+    testController.log(`Bot transition log (tail): ${JSON.stringify(bot.getLog?.().slice(-12) ?? [])}`);
+  }
+  bot.stop();
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-direct-play-adventure',
+  name: 'Playback Bot: direct play (Adventure, loop mode off)',
+  description:
+    'Loads the Adventure preset (no procgen, no substrate) with loop mode off and drives the bot at instant speed: '
+    + 'it checks locations and moves through exits itself, and every sphere-log location ends checked.',
+  testFunction: playbackBotDirectPlayAdventureTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ WALK ORDER (bot-route-chooser) — the bot's walk orders on a plain world where the order matters: Adventure's
+ * seed 84719271504320872445 (no substrate, loop mode off, direct play), played to the end three times — the listed
+ * order, then `reachable-cheapest`, then `sphere-cheapest`. Each must finish with every sphere-log location checked;
+ * `reachable-cheapest` must walk FEWER region transitions than the listed order and `sphere-cheapest` no more
+ * (offline, `measure-bot-route-orders.mjs --preset=adventure`: 7 → 5 and 7). ⚠ Not Coding Adventure, where the
+ * cheapest orders gain most: its graph is bidirectional and direct play cannot cross a synthesized reverse exit
+ * ("ServerPath has no exit "ToServerPath" in the static data", in the listed order too). The row sets its own walk
+ * order and puts the viewer's back.
+ */
+const WALK_ORDER_RULES = './presets/adventure/AP_84719271504320872445/AP_84719271504320872445_rules.json';
+
+async function playbackBotWalkOrderTest(testController) {
+  const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off', 5000, 100);
+  }
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  const orderBefore = bot.getWalkOrder();
+  const sourceBefore = bot.getTargetSource();
+  bot.setTargetSource('sphere');
+  const runs = {};
+  try {
+    for (const order of ['sphere-in-order', 'reachable-cheapest', 'sphere-cheapest']) {
+      bot.reset();
+      bot.setWalkOrder(order);
+      await testController.loadRulesFromFile(WALK_ORDER_RULES);
+      const sphereState = getSphereStateSingleton();
+      await sphereState.loadSphereLog(WALK_ORDER_RULES.replace('_rules.json', '_sphere_log.jsonl'));
+      const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+      bot.refresh();
+      await bot.instant();
+      const finished = await testController.pollForCondition(
+        () => (bot.getStatus() || '').startsWith('finished') || /^(error|blocked)/.test(bot.getStatus() || ''),
+        `${order}: bot reaches a terminal status`, 120000, 250);
+      const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+      const missing = sphereLocations.filter((n) => !checked.has(n));
+      runs[order] = bot.getRouteStats();
+      testController.reportCondition(`${order}: finished with every sphere-log location checked (status "${bot.getStatus()}", `
+        + `missing: ${missing.slice(0, 5).join(', ') || 'none'}; ${JSON.stringify(runs[order])})`,
+        finished && (bot.getStatus() || '').startsWith('finished') && missing.length === 0 && sphereLocations.length > 0);
+      bot.stop();
+    }
+    const listed = runs['sphere-in-order']?.transitions ?? -Infinity;
+    testController.reportCondition('reachable-cheapest walks fewer region transitions than the listed order '
+      + `(${runs['reachable-cheapest']?.transitions} < ${listed})`, (runs['reachable-cheapest']?.transitions ?? Infinity) < listed);
+    testController.reportCondition('sphere-cheapest walks no more region transitions than the listed order '
+      + `(${runs['sphere-cheapest']?.transitions} ≤ ${listed})`, (runs['sphere-cheapest']?.transitions ?? Infinity) <= listed);
+  } finally {
+    bot.stop();
+    bot.setWalkOrder(orderBefore);
+    bot.setTargetSource(sourceBefore);
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-walk-order',
+  name: 'Playback Bot: walk orders (Adventure, direct play)',
+  description:
+    'Plays an Adventure seed to the end three times — listed order, cheapest reachable, cheapest in the sphere — and '
+    + 'asserts each finishes with every location checked, cheapest reachable in fewer region transitions.',
+  testFunction: playbackBotWalkOrderTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ LOOP MODE (loop-mode-bot S3) — ⚖ the first target: the Adventure preset in Loop mode, no procgen features. The
+ * row presses the Loops panel's Generate Costs (which enters Loop mode), sets the Loops queue to Instant (⚖ tests
+ * may), and presses the bot's Play: the bot plays loop after loop by writing the Loops queue itself — explore loops
+ * until its target is found, then a check loop — until every sphere-log location is checked.
+ */
+async function playbackBotLoopModeAdventureTest(testController) {
+  const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
+  const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off before loading', 5000, 100);
+  }
+
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  await testController.loadRulesFromFile(ADVENTURE_RULES);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog(ADVENTURE_RULES.replace('_rules.json', '_sphere_log.jsonl'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition('sphere log has locations', sphereLocations.length > 0);
+  bot.refresh();
+
+  // Generate Costs, the Loops panel's own button (it enters Loop mode when it is done).
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' });
+  const generate = await testController.pollForValue(
+    () => document.querySelector('#loop-ui-generate-costs-inline'), 'Generate Costs button', 10000, 100);
+  generate?.click();
+  const loopState = api('loops', 'getLoopState')?.();
+  const ready = await testController.pollForCondition(
+    () => loopModeOn() && loopState?.costDataManager?.isLoaded?.() === true,
+    'costs generated and loop mode on', 60000, 200);
+  testController.reportCondition('Generate Costs entered loop mode with costs', ready);
+  if (!ready) return testController.getOverallResult();
+
+  const instantBefore = !!loopState.instantMode;
+  loopState.setInstantMode(true);
+  try {
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    await bot.play();
+    const finished = await testController.pollForCondition(
+      () => (bot.getStatus() || '').startsWith('finished'),
+      'bot finishes in loop mode', 240000, 500);
+    const runner = bot.getLoopRunner?.();
+    testController.reportCondition(
+      `bot finished in loop mode (status: "${bot.getStatus()}", loops: ${runner?.getLoopCount?.() ?? '?'})`, finished);
+    const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+    const missing = sphereLocations.filter((n) => !checked.has(n));
+    testController.reportCondition(
+      `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
+    testController.reportCondition('the bot played more than one loop', (runner?.getLoopCount?.() ?? 0) > 1);
+    // The loops the bot planned, for the record (each line is one loop's plan).
+    testController.log(`Bot loop log: ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-40))}`);
+    const gameState = api('gameState', 'getState')?.();
+    // Mana spent through the queue earns region XP (1 per mana): the loops were played, not bypassed.
+    const xpEarned = [...(gameState?.regionXP?.values?.() ?? [])].some((x) => (x?.xp ?? 0) > 0 || (x?.level ?? 0) > 0);
+    testController.reportCondition('the queue spent mana (region XP earned)', xpEarned);
+  } finally {
+    bot.stop();
+    loopState.setInstantMode(instantBefore);
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-loop-mode-adventure',
+  name: 'Playback Bot: Loop mode (Adventure, Generate Costs, Instant)',
+  description:
+    'Loads Adventure, presses Generate Costs (enters Loop mode), sets the Loops queue to Instant and presses the '
+    + 'bot\'s Play: the bot writes the Loops queue one loop at a time until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeAdventureTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
+ * ⛓ SUBSTRATE REGIONS IN LOOP MODE (loop-mode-bot S4) — ⚖ first target: a procgen MAZE world in Loop mode. The row
+ * generates a small all-open maze-only world with loop mode ON (loop_costs + manaEnabled → maze delegation), loads
+ * its embedded sphere log, sets the Loops queue to Instant and presses the bot's Play. The runner sets each maze
+ * block to Bot, so Loops' own maze delegation plays the queue's entries; done = every sphere-log location checked.
+ */
+async function playbackBotLoopModeMazeTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 4 }, start: 'maze', seed: 7, solvers: ['delegation'], watchPanel: 'mazeRoomPanel',
+    itemPool: { victory: 1, key_red: 1, key_green: 1 },
+  });
+}
+
+/**
+ * ⛓ loop-mode-bot S5 — a MIXED world in Loop mode: maze (Bot / delegation), text adventure (Bot / walkTo since ta-loop-bot) and
+ * bounce (Bot / walkTo). Same contract as the maze row: every sphere-log location checked by the queue.
+ */
+async function playbackBotLoopModeMixedTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { maze: 2, text_adventure: 2, bounce: 1 }, start: 'maze', seed: 11, solvers: null, watchPanel: null,
+    itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
+  });
+}
+
+/**
+ * ⛓ ta-loop-bot (⚖ user 2026-10-18: "walkTo solver") — a TEXT-ADVENTURE-only world in Loop mode, played to Victory
+ * by Bot blocks: the runner gives every block Bot (the walkTo solver wins over the coarse shape), and Loops hands
+ * each queued move, check and explore to the text adventure's `perform`. Every region must resolve the walkTo solver,
+ * and the per-action Bot times are logged (the chart's L7 measurement).
+ */
+async function playbackBotLoopModeTextAdventureTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { text_adventure: 4 }, start: 'text_adventure', seed: 13, solvers: ['walkTo'],
+    watchPanel: 'textAdventureSubstrateWrapperPanel', itemPool: { victory: 1, key_red: 1, key_green: 1 },
+    expectVictory: true, timeBotActions: true, performEvent: 'textAdventureSubstrateWrapper:control',
+  });
+}
+
+/**
+ * ⛓ loop-mode-bot S6 — JtA zones in Loop mode. JtA's queue takes moves only, so a target there is a PASS (⚖ the
+ * zone's own automation takes the check on the way). The row turns JtA zone locations ON for its world and back.
+ */
+async function playbackBotLoopModeJtaTest(testController) {
+  const before = getJtaEmitZoneLocations();
+  setJtaEmitZoneLocations(true);
+  try {
+    return await playbackBotLoopModeWorld(testController, {
+      quotas: { jta: 2, maze: 1 }, start: 'maze', seed: 5, solvers: null, watchPanel: null,
+      itemPool: { victory: 1, key_red: 1 },
+    });
+  } finally {
+    setJtaEmitZoneLocations(before);
+  }
+}
+
+/**
+ * ⛓ jta-loop-mode — a JtA-only world whose loops START in a JtA zone (the tutorial's shape): three zones, so a hidden
+ * task a Boss unlocks (zone 2's Save the Village) is among the targets. Each loop's walk starts in the region already loaded (no loadRegion
+ * resumes the clock), a loop that ends with its queue resets the run, and a task unlocked mid-game joins the zone's
+ * automation priorities — without any one of them the bot never finishes (jta-loop-mode A–C, 2026-10-12).
+ */
+async function playbackBotLoopModeJtaStartTest(testController) {
+  const before = getJtaEmitZoneLocations();
+  setJtaEmitZoneLocations(true);
+  try {
+    return await playbackBotLoopModeWorld(testController, {
+      quotas: { jta: 3 }, start: 'jta', seed: 3, solvers: null, watchPanel: null,
+      itemPool: { victory: 1 }, budgetMs: 180000,
+    });
+  } finally {
+    setJtaEmitZoneLocations(before);
+  }
+}
+
+async function playbackBotLoopModeWorld(testController, {
+  quotas, start, seed, solvers, watchPanel, itemPool, budgetMs = 120000, expectVictory = false, timeBotActions = false,
+  performEvent = null,
+}) {
+  const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
+  const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  bot.reset();
+
+  const { grid, startCell, stats } = arrangeShuffledSpiral({
+    regionSize: { width: 7, height: 7 },
+    itemPool,
+    obstaclePool: {},
+    seed,
+    regionParams: {},
+    growthParams: { substrateQuotas: quotas, maxItemsPerRegion: 2, startSubstrate: start },
+    hazardOpts: {},
+  });
+  const rulesJson = buildRulesJson(grid, {
+    startCell, seed, enableLoopMode: true, regionXpEffect: 'cost', completionConditionItem: 'victory',
+    procgenMetadata: { driver: 'playback-bot-loop-mode-maze', stop_reason: stats.stopReason },
+  });
+  const loaded = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+  testController.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: 'playbackBotLoopModeMaze' });
+  await loaded;
+  await testController.stateManager.pingWorker('after-rules-load', 3000);
+  const sphereState = getSphereStateSingleton();
+  await sphereState.loadSphereLog('embedded:playbackBotLoopModeMaze',
+    (rulesJson.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'));
+  const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+  testController.reportCondition(`sphere log has locations (${sphereLocations.length})`, sphereLocations.length > 0);
+  const on = await testController.pollForCondition(loopModeOn, 'loop mode on (auto-enabled by loop_costs)', 8000, 100);
+  testController.reportCondition('loop mode on (auto-enabled by loop_costs)', on);
+  const loopState = api('loops', 'getLoopState')?.();
+  const regions = Object.keys(rulesJson.preset_sidecars?.['1'] ?? {});
+  const how = regions.map((r) => `${r}:${rulesJson.preset_sidecars['1'][r].substrate}/${loopState?.getRegionCaptureShape?.(r)}/${loopState?.regionSolver?.(r)}`);
+  testController.log(`regions: ${how.join(', ')}`);
+  if (solvers) {
+    testController.reportCondition(`every region has a ${solvers.join('/')} Bot solver (${how.join(', ')})`,
+      regions.length > 0 && regions.every((r) => solvers.includes(loopState?.regionSolver?.(r))));
+  }
+  if (!on || !loopState) return testController.getOverallResult();
+  bot.refresh();
+
+  const instantBefore = !!loopState.instantMode;
+  loopState.setInstantMode(true);
+  // The global flag above completes the timer-run entries; the Bot walks take their block's own Instant flag.
+  const restoreSpeed = await startAppBotTestSpeed();
+  try {
+    if (watchPanel) testController.eventBus.publish('ui:activatePanel', { panelId: watchPanel });
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const trace = [];
+    const onRC = (d) => trace.push(`RC ${d?.oldRegion}->${d?.newRegion}${d?.fromReset ? ' reset' : ''}${d?.exitName ? ` via ${d.exitName}` : ''}`);
+    // Per-action wall time of the Bot's actions: from the frame the Bot dispatched it to its completion.
+    const botTimes = [];
+    let lastAt = null;
+    const onAC = (d) => {
+      trace.push(`AC ${d?.action?.type}${d?.action?.actionName ? `:${d.action.actionName}` : ''} ${d?.action?.sourceRegion}${d?.action?.destinationRegion ? `->${d.action.destinationRegion}` : ''}`);
+      const now = performance.now();
+      const a = d?.action;
+      if (timeBotActions && lastAt !== null && loopState.getBlockMode?.(a?.sourceRegion, a?.instanceNumber) === 'bot') {
+        botTimes.push(now - lastAt);
+      }
+      lastAt = now;
+    };
+    testController.eventBus.subscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.subscribe('loopState:actionCompleted', onAC, 'tests');
+    // The controller methods the substrate was sent (a `perform` substrate's proof that the Bot drove it).
+    const sent = {};
+    const onControl = (d) => { sent[d?.method] = (sent[d?.method] ?? 0) + 1; };
+    if (performEvent) testController.eventBus.subscribe(performEvent, onControl, 'tests');
+    trace.push(`start=${api('loops', 'getLoopStartRegion')?.()} here=${api('gameState', 'getCurrentRegion')?.()}`);
+    await bot.play();
+    const finished = await testController.pollForCondition(
+      () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', budgetMs, 500);
+    testController.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
+    testController.eventBus.unsubscribe('loopState:actionCompleted', onAC, 'tests');
+    if (performEvent) {
+      testController.eventBus.unsubscribe(performEvent, onControl, 'tests');
+      testController.reportCondition(`the Bot drove the substrate by perform (sent: ${JSON.stringify(sent)})`,
+        (sent.perform ?? 0) > 0 && !sent.walkTo);
+    }
+    if (!finished) testController.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}`);
+    if (!finished) {
+      const maze = getMazePanel();
+      const cur = loopState.currentAction;
+      testController.log(`DIAG maze panel: ${maze ? 'mounted' : 'none'} region=${maze?.currentRegionId ?? '-'} `
+        + `loopsDriven=${JSON.stringify(maze?._loopsDrivenAction ?? null)}; loops: processing=${loopState.isProcessing} `
+        + `paused=${loopState.isPaused} index=${loopState.currentActionIndex} current=${JSON.stringify(cur ? { type: cur.type, actionName: cur.actionName, region: cur.sourceRegion } : null)} `
+        + `delegated=${!!loopState._delegatedAction} bot=${!!loopState._botExecutedAction} manual=${!!loopState._manualActionEntered} `
+        + `mana=${api('gameState', 'getCurrentMana')?.()} here=${api('gameState', 'getCurrentRegion')?.()} `
+        + `mode=${loopState.getBlockMode?.(cur?.sourceRegion, cur?.instanceNumber)}`);
+    }
+    if (!finished) {
+      try {
+        const { getJtaIframe } = await import('../../jtaSubstrateWrapper/test-helpers.js');
+        const w = getJtaIframe()?.contentWindow;
+        const fs = w?.getFullState?.();
+        const qc = w?.getQueueConfigs?.();
+        testController.log(`DIAG jta: paused=${w?.isGameLoopPaused?.()} auto=${w?.getAutomationMode?.()} instant=${w?.isInstantMode?.()} `
+          + `energy=${fs?.currentEnergy}/${fs?.maxEnergy} latch=${fs?.isInEnergyReset} resets=${fs?.energyResetCount} zone=${fs?.currentZone} `
+          + `active=${fs?.activeTaskId} perks=${JSON.stringify(fs?.perks)} tasks=${JSON.stringify(fs?.tasks)} `
+          + `prios=${JSON.stringify(qc)?.slice(0, 1500)}`);
+      } catch (e) { testController.log(`DIAG jta failed: ${e}`); }
+    }
+    const runner = bot.getLoopRunner?.();
+    testController.reportCondition(
+      `bot finished (status: "${bot.getStatus()}", loops: ${runner?.getLoopCount?.() ?? '?'})`, finished);
+    const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+    const missing = sphereLocations.filter((n) => !checked.has(n));
+    testController.reportCondition(
+      `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
+    testController.log(`Bot loop log: ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-40))}`);
+    if (timeBotActions) {
+      const sorted = [...botTimes].sort((x, y) => x - y);
+      const at = (q) => (sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))].toFixed(1) : '-');
+      testController.log(`BOT ACTION TIMES (ms, n=${sorted.length}): median ${at(0.5)} p90 ${at(0.9)} max ${at(1)}`);
+    }
+    if (expectVictory) {
+      const inv = testController.stateManager.getLatestStateSnapshot()?.inventory ?? {};
+      const won = Object.entries(inv).some(([name, n]) => /victory/i.test(name) && Number(n) > 0);
+      testController.reportCondition(`Victory collected (inventory: ${JSON.stringify(inv)})`, won);
+    }
+    if (missing.length) {
+      const disc = (await import('../../discovery/singleton.js')).default;
+      testController.log(`DIAG discovery: locations ${JSON.stringify([...(disc.getDiscoveredLocations?.() ?? [])])} `
+        + `exits ${JSON.stringify([...(disc.getDiscoveredExits?.() ?? [])].map((e) => (Array.isArray(e) ? [e[0], [...e[1]]] : e)))}`);
+    }
+  } finally {
+    bot.stop();
+    await restoreSpeed();
+    try {
+      const { getJtaIframe } = await import('../../jtaSubstrateWrapper/test-helpers.js');
+      testController.reportCondition('the JtA game is not left in instant mode',
+        getJtaIframe()?.contentWindow?.isInstantMode?.() !== true);
+    } catch (e) { testController.log(`instant check failed: ${e}`); }
+    loopState.setInstantMode(instantBefore);
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-loop-mode-maze',
+  name: 'Playback Bot: Loop mode on a procgen maze world (Bot blocks)',
+  description:
+    'Generates a small maze-only world with loop mode on, sets the Loops queue to Instant and presses the bot\'s '
+    + 'Play: the runner sets each maze block to Bot and Loops\' maze delegation plays the queue until every '
+    + 'sphere-log location is checked.',
+  testFunction: playbackBotLoopModeMazeTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-mixed',
+  name: 'Playback Bot: Loop mode on a mixed procgen world (maze, text adventure, bounce)',
+  description:
+    'Generates a small loop-mode world of maze, text adventure and bounce regions and presses the bot\'s Play: '
+    + 'the runner gives each block the mode that lets the queue play it, until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeMixedTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-text-adventure',
+  name: 'Playback Bot: Loop mode on a text adventure world (Bot blocks, to Victory)',
+  description:
+    'Generates a small text-adventure-only world with loop mode on and presses the bot\'s Play: every block runs '
+    + 'as Bot, so the text adventure performs each queued move, check and explore, until Victory is collected.',
+  testFunction: playbackBotLoopModeTextAdventureTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-jta',
+  name: 'Playback Bot: Loop mode with JtA zones (pass-through loops)',
+  description:
+    'Generates a small loop-mode world with JtA zones (locations on) and a maze region and presses the bot\'s Play: '
+    + 'a target in a JtA zone is a pass-through loop whose Bot walk lets the zone\'s automation take the check.',
+  testFunction: playbackBotLoopModeJtaTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-jta-start',
+  name: 'Playback Bot: Loop mode in a JtA-only world that starts in a JtA zone',
+  description:
+    'Generates a three-zone JtA world whose loops start in a JtA zone and presses the bot\'s Play: each loop is a '
+    + 'pass-through whose Bot walk plays the zone, until every sphere-log location is checked.',
+  testFunction: playbackBotLoopModeJtaStartTest,
   category: 'Playback Bot',
   enabled: false,
 });

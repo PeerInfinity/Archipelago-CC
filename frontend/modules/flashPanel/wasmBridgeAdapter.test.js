@@ -1,0 +1,193 @@
+/**
+ * `WasmBridgeAdapter`'s side of the one game page (maze-lab arms F-b / plan
+ * §17.1 F2, F4).
+ *
+ * ⛔ THE WAIT LOOPS ARE NOT HERE — they are in `pollUntil.test.js`, with the
+ * loop they share and the two other call sites. What is asserted HERE is the
+ * adapter's own reading of the page: the window walk it re-reads, the gate
+ * `_getFlash()` answers on, and the verb call the panel now hands to whoever
+ * needs a bot.
+ *
+ * ⛓ `_getWin()` is stubbed rather than a DOM built: the adapter's `document.
+ * getElementById(this.flashObjectId)` is the one line these rows are not about,
+ * and `wasmGamePage.test.js` drives `frameWindow` on its own.
+ */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
+
+const CONFIG = JSON.parse(readFileSync(
+    fileURLToPath(new URL('./games/seedling.json', import.meta.url)), 'utf8'));
+
+const adapterFor = (getWin) => {
+    const a = new WasmBridgeAdapter({
+        config: CONFIG,
+        flashObjectId: `test-${Math.random()}`,
+        stateManager: { getLatestStateSnapshot: () => ({ inventory: {} }) },
+        dispatcher: { publish: () => {} },
+        eventBus: { subscribe: () => () => {} },
+        log: () => {},
+    });
+    a._getWin = getWin;
+    return a;
+};
+
+/** The page once both registration batches have landed. */
+const bootedWith = (game) => ({ __swfBridge: { game }, __runtimeReady: true });
+const BOOTED = bootedWith({ wireCheck() {}, botStatus() {}, botLoadLevels: () => 'ok' });
+
+describe('adapter.bot — the panel\'s verb call, re-read per call', () => {
+    /**
+     * ⛔⛔ **THE ROW THE CAPTURE-ONCE FORM REDS.** `flashPanelUI.js` used to do
+     * `const g = adapter._getFlash()` once, at the top of the AP-placement
+     * load, and index `g` for every step after it. An iframe reload REPLACES
+     * `__swfBridge` (which is why `installStateHook` exists) and a preset
+     * switch replaces the iframe under the SAME element id — so `g` is the
+     * PREVIOUS game's callback table, wired to a runtime that is gone.
+     */
+    it('⛔ swap __swfBridge between two calls and the SECOND reaches the NEW game', () => {
+        let win = bootedWith({ wireCheck() {}, botStatus: () => 'first' });
+        const a = adapterFor(() => win);
+        expect(a.bot('botStatus')).toBe('first');
+        win = bootedWith({ wireCheck() {}, botStatus: () => 'second' });
+        expect(a.bot('botStatus')).toBe('second');
+    });
+
+    it('answers NULL for a verb this build does not have — the delivery NAMES that', () => {
+        const a = adapterFor(() => bootedWith({ wireCheck() {}, botStatus() {} }));
+        expect(a.bot('botLoadLevels', '{"chunk":1}')).toBeNull();
+    });
+
+    it('passes the one argument through, and passes none when none was given', () => {
+        const seen = [];
+        const a = adapterFor(() => bootedWith({
+            wireCheck() {}, botStatus() {}, botLoadLevels: (...x) => { seen.push(x); return 'ok'; },
+        }));
+        expect(a.bot('botLoadLevels', '{"chunk":1}')).toBe('ok');
+        a.bot('botLoadLevels');
+        expect(seen).toEqual([['{"chunk":1}'], []]);
+    });
+
+    it('a frame that has gone away is null, never a throw', () => {
+        const a = adapterFor(() => null);
+        expect(a.bot('botStatus')).toBeNull();
+    });
+
+    /**
+     * ⛓ THE BOT IS NOT GATED ON Q2, AND THAT IS DELIBERATE: asking the surface
+     * for a verb is HOW a host finds out whether the verb is there yet, and
+     * the lab's `start` stage does exactly that.
+     */
+    it('⛓ works before the game is "up" — an ungated surface is how Q2 gets answered', () => {
+        const a = adapterFor(() => bootedWith({ wireCheck() {}, botStatus: () => 'early' }));
+        expect(a._getFlash()).not.toBeNull();
+        const b = adapterFor(() => bootedWith({ wireCheck() {} }));
+        expect(b._getFlash()).toBeNull();
+        expect(b.bot('wireCheck')).not.toBeNull();
+    });
+});
+
+describe('the window walk and the two gates', () => {
+    it('_getBridge is the shim, ungated — installStateHook and the push tick need it early', () => {
+        const a = adapterFor(() => ({ __swfBridge: { game: {} }, __runtimeReady: false }));
+        expect(a._getBridge()).not.toBeNull();
+        expect(a._getFlash()).toBeNull();
+    });
+
+    it('_getFlash answers with the callback SURFACE once both batches have landed', () => {
+        const a = adapterFor(() => BOOTED);
+        expect(a._getFlash()).toBe(BOOTED.__swfBridge.game);
+    });
+
+    /** ⛔ 1,542 ms of it, measured on the live p4d page. */
+    it('⛔ and NOT on BridgeGeneric\'s batch alone', () => {
+        const a = adapterFor(() => bootedWith({ wireCheck() {}, configure() {}, readState() {} }));
+        expect(a._getFlash()).toBeNull();
+    });
+
+    it('installStateHook binds a STABLE hook and is idempotent across a re-run', () => {
+        const win = bootedWith({ wireCheck() {}, botStatus() {} });
+        const a = adapterFor(() => win);
+        expect(a.installStateHook()).toBe(true);
+        const first = win.__swfBridge.onStateChanged;
+        expect(a.installStateHook()).toBe(true);
+        expect(win.__swfBridge.onStateChanged).toBe(first);
+    });
+
+    it('…and a reload that resets the shim gets re-hooked, with the SAME hook identity', () => {
+        let win = bootedWith({ wireCheck() {}, botStatus() {} });
+        const a = adapterFor(() => win);
+        a.installStateHook();
+        const hook = win.__swfBridge.onStateChanged;
+        win = bootedWith({ wireCheck() {}, botStatus() {} });
+        expect(a.installStateHook()).toBe(true);
+        expect(win.__swfBridge.onStateChanged).toBe(hook);
+    });
+
+    it('a missing frame refuses the hook by returning false', () => {
+        expect(adapterFor(() => null).installStateHook()).toBe(false);
+    });
+});
+
+describe('⛓ W7 — a pushed INVOCATION is stamped with the begin record live when it went', () => {
+    const page = (beginEntry) => {
+        const pushed = [];
+        const game = { wireCheck() {}, botStatus() {}, botSeam: () => JSON.stringify({ beginEntry }) };
+        return { pushed, win: { __runtimeReady: true, __swfBridge: { game, queueItems: (items) => pushed.push(items) } } };
+    };
+    it('a teleport push carries the stamp + a count; a push without an invocation stamps nothing', () => {
+        const B = { 'begin.level': 86, 'save.time': 4910 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 86, x: 48, y: 48 });
+        a._pushTick();
+        expect(p.pushed).toHaveLength(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+        expect(a.invocationPushes).toBe(1);
+        a._pushTick(); // nothing queued (the game is not ready: no property writes either)
+        expect(a.invocationPushes).toBe(1);
+    });
+    it('⛓ ARRIVAL JITTER — pushNow() is the push tick, NOW: the queued teleport goes (stamped), true; nothing queued → false', () => {
+        const B = { 'begin.level': 86, 'save.time': 4910 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 86, x: 48, y: 48 });
+        expect(a.pushNow()).toBe(true);
+        expect(p.pushed).toHaveLength(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+        expect(a.pushNow()).toBe(false);
+        expect(adapterFor(() => null).pushNow()).toBe(false); // no frame: nothing to push, never a throw
+    });
+    it('⛓ SERVED LOCATION — a KEY\'s method-call write (`Main.hasKeySet`) is pushed but is NO swap: no stamp, no count; a teleport beside it is', () => {
+        const B = { 'begin.level': 19, 'save.time': 9000 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.stateManager = { getLatestStateSnapshot: () => ({ inventory: { 'Red Key': 1 } }) };
+        a.gameReady = true;
+        a._pushTick();
+        const sent = p.pushed.flat();
+        expect(sent.some((i) => i.invocation === 'method_call' && i.method === 'hasKeySet')).toBe(true);
+        expect(a.invocationPushes ?? 0).toBe(0);           // the held room's guard sees no swap
+        expect(a.lastInvocationPush ?? null).toBeNull();
+        expect(a.pushNow()).toBe(false);                    // nothing of the glue's went (the key is not re-sent inside its retry window)
+        a.teleport({ level: 19, x: 16, y: 144 });
+        expect(a.pushNow()).toBe(true);
+        expect(a.invocationPushes).toBe(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+    });
+    it('a game without botSeam stamps null (no answer — never a guess)', () => {
+        const p = page(null);
+        delete p.win.__swfBridge.game.botSeam;
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 1, x: 2, y: 3 });
+        a._pushTick();
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: null });
+    });
+});

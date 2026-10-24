@@ -123,17 +123,6 @@ def remap_player_ids(rules_file: str, target_player_id: int = 2) -> bool:
             del data['player_names']['1']
             data['player_names'][str(target_player_id)] = player_name
 
-        # Remap world_classes (note: uses integer keys, not string keys)
-        if 'world_classes' in data:
-            if 1 in data['world_classes']:
-                world_class = data['world_classes'][1]
-                del data['world_classes'][1]
-                data['world_classes'][target_player_id] = world_class
-            elif '1' in data['world_classes']:
-                world_class = data['world_classes']['1']
-                del data['world_classes']['1']
-                data['world_classes'][str(target_player_id)] = world_class
-
         # Remap game_info
         if 'game_info' in data:
             if '1' in data['game_info']:
@@ -162,12 +151,6 @@ def remap_player_ids(rules_file: str, target_player_id: int = 2) -> bool:
             dungeons = data['dungeons']['1']
             del data['dungeons']['1']
             data['dungeons'][str(target_player_id)] = dungeons
-
-        # Remap settings
-        if 'settings' in data and '1' in data['settings']:
-            settings = data['settings']['1']
-            del data['settings']['1']
-            data['settings'][str(target_player_id)] = settings
 
         # Remap starting_items
         if 'starting_items' in data and '1' in data['starting_items']:

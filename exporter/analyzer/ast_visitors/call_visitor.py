@@ -14,11 +14,32 @@ import logging
 import sys
 from typing import Any, Dict, Optional
 
-from ..utils import is_simple_value, make_json_serializable
+from ..utils import is_simple_value, make_json_serializable, PLAYER_PARAMS_KEY
 from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 from .base import BaseVisitorMixin
 
 logger = logging.getLogger(__name__)
+
+
+def self_is_collection_state(rule_func, method: str) -> bool:
+    """True when ``self.<method>(...)`` in ``rule_func`` is a CollectionState method call.
+
+    A LogicMixin subclass's methods are merged onto CollectionState (AutoLogicRegister), so
+    inside them ``self`` IS the state: ``self.has("X", player)`` is ``state.has("X", player)``.
+    The mixin's own methods (``self.raft_can_smelt_items(player)``) stay helper calls.
+    """
+    qualname = getattr(rule_func, '__qualname__', '')
+    owner_name, _, _ = qualname.rpartition('.')
+    if not owner_name or '<locals>' in owner_name:
+        return False
+    module = sys.modules.get(getattr(rule_func, '__module__', None) or '')
+    owner = getattr(module, owner_name, None)
+    from worlds.AutoWorld import LogicMixin
+    if not (isinstance(owner, type) and issubclass(owner, LogicMixin)):
+        return False
+    from BaseClasses import CollectionState
+    state_method = getattr(CollectionState, method, None)
+    return callable(state_method) and getattr(state_method, '__qualname__', '').startswith('CollectionState.')
 
 
 class CallVisitorMixin(BaseVisitorMixin):
@@ -454,6 +475,10 @@ class CallVisitorMixin(BaseVisitorMixin):
                                         from exporter.games.base import BaseGameExportHandler
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
+                                            # A same-named helper with a DIFFERENT body (two region builders each defining
+                                            # their own nested `def`) must not overwrite the cached one: inline this one.
+                                            if self._cached_helper_differs(actual_func_name, recursive_result):
+                                                return recursive_result
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
                                             # Register the helper for export with param_mappings detection
                                             self._register_helper_usage(actual_func_name, resolved_func, args_with_nodes)
@@ -464,7 +489,8 @@ class CallVisitorMixin(BaseVisitorMixin):
                                             # result would have specific argument values baked in, which is wrong.
                                             if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(resolved_func, '__code__'):
                                                 all_params = resolved_func.__code__.co_varnames[:resolved_func.__code__.co_argcount]
-                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')
+                                                                                         and p not in param_mapping.get(PLAYER_PARAMS_KEY, ())]
                                                 if not extra_params:
                                                     # No extra params - safe to cache the fully-resolved definition
                                                     self.game_handler.cache_analyzed_helper(actual_func_name, recursive_result)
@@ -589,6 +615,10 @@ class CallVisitorMixin(BaseVisitorMixin):
                                   from exporter.games.base import BaseGameExportHandler
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
+                                      # A same-named helper with a DIFFERENT body (two region builders each defining
+                                      # their own nested `def`) must not overwrite the cached one: inline this one.
+                                      if self._cached_helper_differs(closure_func_name, recursive_result):
+                                          return recursive_result
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
                                       # Register the helper for export with param_mappings detection
                                       self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
@@ -599,7 +629,8 @@ class CallVisitorMixin(BaseVisitorMixin):
                                       # result would have specific argument values baked in, which is wrong.
                                       if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(actual_func, '__code__'):
                                           all_params = actual_func.__code__.co_varnames[:actual_func.__code__.co_argcount]
-                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')
+                                                                                   and p not in param_mapping.get(PLAYER_PARAMS_KEY, ())]
                                           if not extra_params:
                                               # No extra params - safe to cache the fully-resolved definition
                                               self.game_handler.cache_analyzed_helper(closure_func_name, recursive_result)
@@ -1449,7 +1480,10 @@ class CallVisitorMixin(BaseVisitorMixin):
 
         # 2. State method call (e.g., state.has)
         elif (func_info and func_info.get('type') == 'attribute' and
-              func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state'):
+              func_info['object'].get('type') == 'name' and
+              (func_info['object'].get('name') == 'state' or
+               (func_info['object'].get('name') == 'self' and
+                self_is_collection_state(getattr(self, 'rule_func', None), func_info['attr'])))):
                 method = func_info['attr']
                 logging.debug(f"Processing state method: {method}")
 
@@ -1903,15 +1937,13 @@ class CallVisitorMixin(BaseVisitorMixin):
             # We evaluate to_bool() at analysis time since it only depends on settings, not game state.
             elif method_name == 'to_bool':
                 logging.debug(f"Processing potential option to_bool call")
-                # Check if the object is a setting_value or option_value (options access pattern)
-                # Note: expression_visitors.py creates 'option_value' type, but older code may use 'setting_value'
+                # Check if the object is an option_value (options access pattern, created by expression_visitors.py)
                 # Also handle 'attribute' type from AST chains like world.worlds[player].options.X
                 func_object = func_info.get('object', {})
                 func_obj_type = func_object.get('type')
                 setting_name = None
-                if func_obj_type in ('setting_value', 'option_value'):
-                    # Handle both key names: 'setting' (legacy) and 'option' (current)
-                    setting_name = func_object.get('setting') or func_object.get('option')
+                if func_obj_type == 'option_value':
+                    setting_name = func_object.get('option')
                 elif func_obj_type == 'attribute':
                     # Handle attribute chain like {attr: 'open_pyramid', object: {attr: 'options', ...}}
                     # Extract setting name if this is an options.X access pattern

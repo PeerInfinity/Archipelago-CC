@@ -4,6 +4,12 @@ import ast
 import logging
 from typing import Any, Optional, List
 
+# closure_vars key naming a callee's parameters that receive the PLAYER at the call
+# site under another name (jakanddaxter's region-local `def can_jump_farther(state, p)`,
+# called as `can_jump_farther(state, player)`). Those names are filtered like `player`.
+# Set only when such a parameter exists, so every other analysis sees no new key.
+PLAYER_PARAMS_KEY = '__player_params__'
+
 
 def is_simple_value(value: Any) -> bool:
     """

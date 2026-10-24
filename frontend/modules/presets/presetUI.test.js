@@ -1,13 +1,18 @@
 import { describe, it, expect } from 'vitest';
 
 import {
+    APWORLD_EDITOR_BUTTON,
+    apworldEditorButtonHtml,
     selectIndexFile,
     filterAndSortPresets,
     computeDetailNav,
     parseSphereLogShape,
     buildSphereEnrichment,
     computeProcgenStats,
+    procgenDriverLabel,
+    presetButtonFace,
 } from './presetUI.js';
+import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 // Fixture index — subset of the real preset_files.json shape with a
 // mix of plain, _worldgen, _vanilla, and procgen entries.
@@ -32,7 +37,13 @@ const FIXTURE = {
     },
     alttp_vanilla: {
         name: 'A Link to the Past',
-        folders: { AP_V1: { seed: 1, is_vanilla: true, files: ['AP_V1_rules.json'] } },
+        folders: {
+            AP_V1: {
+                seed: 1,
+                games: [{ player: 1, name: 'P', game: 'A Link to the Past', is_vanilla: true }],
+                files: ['AP_V1_rules.json'],
+            },
+        },
     },
     adventure: {
         name: 'Adventure',
@@ -632,13 +643,13 @@ describe('computeProcgenStats', () => {
 
     it('passes through procgen_metadata fields', () => {
         const stats = computeProcgenStats({
-            procgen_metadata: {
+            procgen_metadata: { '1': {
                 driver: 'top-down',
                 source_game: 'Adventure',
                 source_counts: { regions: 6, locations: 25, exits: 17, logic_gates: 12 },
                 stop_reason: 'all_placed',
                 grid_dims: { width: 3, height: 3 },
-            },
+            } },
             preset_sidecars: { '1': {
                 R1: makeRegionSidecar(),
             }},
@@ -648,6 +659,16 @@ describe('computeProcgenStats', () => {
         expect(stats.sourceCounts).toEqual({ regions: 6, locations: 25, exits: 17, logic_gates: 12 });
         expect(stats.stopReason).toBe('all_placed');
         expect(stats.gridDims).toEqual({ width: 3, height: 3 });
+    });
+
+    /** ⛓⛓ P1a — the card reads the SLOT's block: another slot's is not this slot's driver. */
+    it('⛓⛓ P1a — reads the slot\'s procgen_metadata, never another slot\'s', () => {
+        const doc = {
+            procgen_metadata: { '2': { driver: 'top-down', source_game: 'Adventure' } },
+            preset_sidecars: { '1': { R1: makeRegionSidecar() }, '2': { R1: makeRegionSidecar() } },
+        };
+        expect(computeProcgenStats(doc, '1').driver).toBeNull();
+        expect(computeProcgenStats(doc, '2').driver).toBe('top-down');
     });
 
     it('reports null driver for older procgen output without procgen_metadata', () => {
@@ -725,5 +746,97 @@ describe('computeProcgenStats', () => {
         expect(stats.outputCounts).toEqual({
             regions: 2, locations: 3, exits: 3, logic_gates: 0,
         });
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * "Open in APWorld Editor" — the control the ⚖ asked for on the screen a
+ * preset opens into (APWORLD EDITOR HUB slice H2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('APWORLD_EDITOR_BUTTON', () => {
+    /**
+     * ⛓⛓ **THE CHOICE OF EVENT IS THE WHOLE DESIGN, SO IT IS THE ASSERTION.**
+     * `apworldEditor:loadRules` is the pipeline's and the marking tool's
+     * FOCUS-SAFE hand-off, for documents that must not go app-wide. A preset
+     * load already published `files:jsonLoaded`, the hub already opened a
+     * session on the re-emit — so handing it over again would open a SECOND
+     * session boundary and discard whatever the person had edited. The button
+     * only RAISES the panel.
+     */
+    it('raises the hub instead of handing the document over again', () => {
+        expect(APWORLD_EDITOR_BUTTON.event).toBe('ui:activatePanel');
+        expect(APWORLD_EDITOR_BUTTON.payload).toEqual({ panelId: 'apworldEditorPanel' });
+        expect(APWORLD_EDITOR_BUTTON.event).not.toBe('apworldEditor:loadRules');
+    });
+
+    /**
+     * ⛓ TWO GATES, ONE OPENER: the markup and the click wiring read the same
+     * `id`, so the selector the handler queries is the one the html renders.
+     */
+    it('renders markup carrying the id the wiring queries', () => {
+        const html = apworldEditorButtonHtml();
+        expect(html).toContain(`id="${APWORLD_EDITOR_BUTTON.id}"`);
+        expect(html).toContain(APWORLD_EDITOR_BUTTON.label);
+        expect(html).toContain('class="preset-open-apworld"');
+    });
+
+    it('escapes a label and title rather than interpolating them raw', () => {
+        const html = apworldEditorButtonHtml({
+            ...APWORLD_EDITOR_BUTTON,
+            label: '<b>x</b>',
+            title: 'a "quoted" & <tagged> title',
+        });
+        expect(html).not.toContain('<b>x</b>');
+        expect(html).toContain('&lt;b&gt;x&lt;/b&gt;');
+        expect(html).toContain('&quot;quoted&quot;');
+        expect(html).toContain('&amp;');
+    });
+
+    it('is frozen, so no caller can retarget the panel it raises', () => {
+        expect(Object.isFrozen(APWORLD_EDITOR_BUTTON)).toBe(true);
+        expect(Object.isFrozen(APWORLD_EDITOR_BUTTON.payload)).toBe(true);
+    });
+});
+
+describe('procgenDriverLabel — the preset card names the producer (APWORLD SUBSTRATE CHANGE S1)', () => {
+    const stats = (driver, sourceGame) => computeProcgenStats({
+        procgen_metadata: { '1': { driver, source_game: sourceGame } },
+        preset_sidecars: { '1': { R: { substrate: 'maze', grid_cell: { gx: 0, gy: 0 }, playable_payload: {} } } },
+    });
+
+    it('⛓ an APWorld Editor initialise is labelled with its source game, never "driver unknown"', () => {
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, 'Adventure'))).toBe('Initialised in the APWorld Editor (Adventure)');
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, null))).toBe('Initialised in the APWorld Editor');
+        expect(procgenDriverLabel(stats(INITIALISE_DRIVER, '<b>'), (x) => x.replace(/</g, '&lt;')))
+            .toBe('Initialised in the APWorld Editor (&lt;b>)');
+    });
+
+    it('⛓ the other producers keep their labels', () => {
+        expect(procgenDriverLabel(stats('top-down', 'Adventure'))).toBe('Top-down (Adventure)');
+        expect(procgenDriverLabel(stats('grid-growth', null))).toBe('Grid-growth');
+        expect(procgenDriverLabel(stats(undefined, null))).toBe('Procgen (driver unknown)');
+    });
+});
+
+/**
+ * ⛓ rules F3 (⚖ user 2026-10-10, ruling A): the flat button's label and V badge
+ * are the SLOT's (`games[i]`), never the folder's.
+ */
+describe('presetButtonFace', () => {
+    it("a one-slot folder shows its slot's label and V badge", () => {
+        expect(presetButtonFace(FIXTURE.alttp_vanilla.folders.AP_V1)).toEqual({ label: undefined, isVanilla: true });
+        expect(presetButtonFace({ games: [{ player: 1, label: 'canth v', is_vanilla: true }] }))
+            .toEqual({ label: 'canth v', isVanilla: true });
+    });
+
+    it('a multi-slot folder shows neither — no all/any rule picks a slot', () => {
+        const folder = { games: [{ player: 1, label: 'a s1', is_vanilla: true }, { player: 2, label: 'b s1' }] };
+        expect(presetButtonFace(folder)).toEqual({ label: undefined, isVanilla: false });
+    });
+
+    it('ignores a folder-level flag or label (the retired place)', () => {
+        const folder = { is_vanilla: true, label: 'old', games: [{ player: 1 }] };
+        expect(presetButtonFace(folder)).toEqual({ label: undefined, isVanilla: false });
     });
 });

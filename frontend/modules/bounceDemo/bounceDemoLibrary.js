@@ -1,7 +1,6 @@
 /**
- * Substrate registry entry for the Bounce Demo (DJ-Metroidvania) —
- * build-order step 5 + the embed phase
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Substrate registry entry for the Bounce Demo (DJ-Metroidvania)
+ * (docs/json/developer/procgen/bounce.md).
  *
  * The entry is a MERGE: flash runtime plumbing (de/serializeWorld,
  * playback stub — via createFlashSubstrateEntry) + bounce's own panel
@@ -21,10 +20,13 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
-import { physicsStampFor, resolvePhysicsStamp } from './physics.js';
+import {
+    createFlashSubstrateEntry, flashZoneExitSides, flashZoneSidecarFields,
+} from '../flashSubstrate/flashSubstrateLibrary.js';
+import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { PROFILES, physicsStampFor, resolvePhysicsStamp } from './physics.js';
 import { deriveAccessRules, deriveBraidAccessRules } from './deriveRules.js';
-import { attachSideExits } from './sideExits.js';
+import { attachSideExits, portalIdsBySide, SIDE_DIRECTIONS } from './sideExits.js';
 import { generateLevelFromSpecsGen } from './generator.js';
 import {
     ABILITY_ITEM_NAMES, minimalSetsToRule, composeAuthoredRule,
@@ -40,8 +42,15 @@ import { springGap } from './fixtures/springGap.js';
 import { fork } from './fixtures/fork.js';
 import {
     DEFAULT_BOUNCE_PROCGEN_PARAMS, prepareBounceSphereGrowth,
-    buildBounceRegionParams, renderBounceProcgenParams,
+    buildBounceRegionParams, renderBounceProcgenParams, bounceProcgenParamsFromPayload,
 } from './bounceProcgenParams.js';
+import {
+    captureBounceLibraryEntry,
+    instantiateBounceLibraryEntry,
+    instantiateLibraryEntryForSpecs,
+    bounceLibraryEntryRefusal,
+    validateBounceLibraryEntry,
+} from './bounceLibraryEntry.js';
 
 // Canonical assignment constraints (checked by the e2e winnability
 // test): the spiral chain hops E,S,W,W with derived side rules, so
@@ -55,6 +64,9 @@ export const ZONES = Object.freeze([
     { level: springGap, items: { loc_spring: 'Jetpacks' } },
     { level: fork, items: { loc_right: 'Blue platforms', loc_left: VICTORY_ITEM_NAME } },
 ]);
+
+/** The game id every bounce payload carries (`buildZonePayload`). */
+export const BOUNCE_GAME_ID = 'bounceDemo';
 
 /**
  * Payload shaped for the flashSubstrate bridge's configure() contract:
@@ -71,7 +83,7 @@ export function buildZonePayload(region_id, level, sidePortals, physicsProfile =
     // C its rules were derived with, even if the profile is retuned.
     const physics = physicsStampFor(physicsProfile);
     return {
-        gameId: 'bounceDemo',
+        gameId: BOUNCE_GAME_ID,
         params: {
             bounceLevel: level, // transformed geometry the renderer draws
             sidePortals,        // side -> portal id (exit arrows)
@@ -180,7 +192,7 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
 //    rule-gated portals/pickups extension, priority #2) ───────────────
 //
 // Requirement-targeted region realization for the sphere grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md): the
+// (docs/json/developer/procgen/bounce.md §"Sphere-growth integration"): the
 // driver specifies per-exit and per-location target requirements in AP
 // item names (plus optional per-item counts). Bounce SPLITS each
 // requirement at this boundary:
@@ -200,7 +212,8 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
 // exit). There is no gate vocabulary anymore: any AP item gates any
 // portal/pickup via the authored channel.
 
-const SIDE_DIRECTIONS = { N: 'up', S: 'down', E: 'right', W: 'left' };
+// (`SIDE_DIRECTIONS` is `sideExits.js`'s — the module that owns the
+// side ⇄ arrow relation and, since H6b, the portal→side reader too.)
 
 const ABILITY_BY_ITEM_NAME = Object.freeze(Object.fromEntries(
     Object.entries(ABILITY_ITEM_NAMES).map(([ability, name]) => [name, ability])));
@@ -261,9 +274,7 @@ export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 
 /**
  * Registry-declared OBSTACLE library — the bounce side of the
- * obstacles-along-paths refactor
- * (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md,
- * Phase 1). One obstacle per ability: "this path crosses the
+ * obstacles-along-paths vocabulary. One obstacle per ability: "this path crosses the
  * blue-platform gap" compiles (via shared/procgen/pathsAndObstaclesCompiler.js)
  * to has("Blue platforms"). Declared here (NOT in the shared submodule)
  * alongside BOUNCE_LIBRARY_ITEMS; merged with DEFAULT_OBSTACLES by the
@@ -472,7 +483,13 @@ export function buildZoneSpecs(base, regionParams = {}) {
         if (regionParams.bounceJitter) out.jitter = regionParams.bounceJitter;
         if (regionParams.platformRows) out.platformRows = regionParams.platformRows;
         if (regionParams.bounceDecorChance) out.decorChance = regionParams.bounceDecorChance;
-        if (regionParams.bounceFreeArrow) out.freeArrow = regionParams.bounceFreeArrow;
+        // A world that names its free arrow holds ONLY that arrow (sphere
+        // growth grants one as a starting item) — the realiser must not verify
+        // an ungated zone with both arrows held (tutorial-bugs, 2026-10-10).
+        if (regionParams.bounceFreeArrow) {
+            out.freeArrow = regionParams.bounceFreeArrow;
+            out.soleFreeArrow = true;
+        }
     }
     return out;
 }
@@ -512,6 +529,22 @@ export function buildBounceRegionContract({ specs, node, regionParams = {} }) {
         freeArrow: regionParams.bounceFreeArrow ?? 'right',
         entranceSide: specs.entranceSide,
     };
+}
+
+/**
+ * ⛓ F2 — why a bounce zone refuses an exit spec, by name. A zone keys its
+ * portals by SIDE (`side_exit_<side>`, `sidePortals`), so every exit must carry
+ * one of the four. A side-less exit is the DRIVER's to place: the pipeline's
+ * zone path gives a top-down teleporter exit a free side, and refuses up front
+ * a region with more exits than sides (`zoneExitCeilingRefusal`). Measured (F2
+ * W0, 2026-09-30): this used to read `unknown exit side 'undefined'`.
+ */
+export function exitSideRefusal(regionId, side) {
+    return side === undefined || side === null
+        ? `bounce zone '${regionId}': an exit has no side — a bounce room has one exit per side `
+            + 'today (N, E, S or W), so every exit needs one'
+        : `bounce zone '${regionId}': unknown exit side '${side}' — a bounce room has one exit `
+            + 'per side today (N, E, S or W)';
 }
 
 /**
@@ -564,13 +597,14 @@ export function* generateZoneForSpecsGen({
     // The free starting arrow ('left'|'right') the player always holds — gated
     // braid portals ride tips toward it, and the verifier treats it as free.
     freeArrow = 'right',
+    // true: the player holds ONLY `freeArrow` (a sphere world) — see
+    // generateBraidFromSpecsGen. false: Regime 1's both-arrows-free world.
+    soleFreeArrow = false,
     // Extra plain climb rungs per region after the gating content (gated braid).
     platformRows = 0,
 } = {}) {
     const exits = exitSpecs.map((s) => {
-        if (!SIDE_DIRECTIONS[s.side]) {
-            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
-        }
+        if (!SIDE_DIRECTIONS[s.side]) throw new Error(exitSideRefusal(region_id, s.side));
         const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
             id: `side_exit_${s.side}`,
@@ -600,6 +634,7 @@ export function* generateZoneForSpecsGen({
         braidWidth,
         decorChance,
         freeArrow,
+        soleFreeArrow,
         platformRows,
     });
     return assembleBounceRegionFromLevel(level, {
@@ -624,6 +659,25 @@ export function* generateZoneForSpecsGen({
  * generator uses (braid: deriveBraidAccessRules with terminalPortals; column:
  * deriveAccessRules), so an unedited save reproduces the original rules.
  */
+/**
+ * ⛓ **THE ONE DERIVE A LEVEL'S RULES COME FROM** under a region's settings —
+ * the re-assembly below (an editor Save) and the Bounce Region Editor's own
+ * readout both call it, so the readout cannot judge a level under physics the
+ * save does not use. ⛔ MEASURED 2026-10-18 before it was shared: the readout
+ * derived under the experimental DEFAULTS (spring rise 473 px) on a `dj` zone
+ * (544 px) and flagged maze-bounce-sphere-mix's `region_3_2` exit
+ * `side_exit_N` "unreachable under every ability set" over a 520 px gap the
+ * save path derives as `[springs]`.
+ */
+export function deriveBounceLevelRules(level, {
+    physicsProfile = 'experimental', mode = 'column', freeArrow = 'right',
+} = {}) {
+    const C = resolvePhysicsStamp(physicsProfile);
+    return mode === 'braid'
+        ? deriveBraidAccessRules(level, { constants: C, freeArrow, terminalPortals: true })
+        : deriveAccessRules(level, { constants: C });
+}
+
 export function assembleBounceRegionFromLevel(level, {
     region_id,
     exitSpecs = [],
@@ -634,13 +688,36 @@ export function assembleBounceRegionFromLevel(level, {
     derived = null,
     authoredReqs = null,
 } = {}) {
+    /**
+     * ⛓⛓⛓ **THE EXIT'S ID COMES FROM THE LEVEL, NOT FROM ITS SIDE** (H6b, ⚖
+     * user 2026-09-05). This function is the RE-ASSEMBLY path: the level is in
+     * hand and already carries its portals, so their ids are a FACT to read,
+     * not a name to mint. Minting `side_exit_<side>` unconditionally — what
+     * this did until H6b — is wrong twice over on a level whose portal is
+     * authored under its own name (`exit_up`, which `generator.js` writes for
+     * a climb's top exit and `attachSideExits` deliberately REUSES for N):
+     *
+     *   · `derived.exits[e.id]` misses, so the exit's rule silently becomes
+     *     "unreachable" (empty minimal sets → `False_`) — the warn-but-allow
+     *     branch below, firing on a level that is perfectly fine; and
+     *   · `sidePortals` is written with a portal id the level does not
+     *     contain, so an UNCHANGED save already moves the payload's bytes.
+     *
+     * Measured before the fix, over every committed bounce sidecar region:
+     * 10 of 25 re-assembled to a different `sidePortals` than the document's,
+     * and the APWorld hub refused all 10 by name (15/25 doors).
+     *
+     * ⛔ `side_exit_<side>` survives as the FALLBACK, for the side a contract
+     * asks about that the level has no portal for — a contract-breaking edit
+     * (a deleted portal). That case still reaches the missing-derivation
+     * branch below and is still ④'s oracle to flag, unchanged.
+     */
+    const levelPortalIds = portalIdsBySide(level);
     const exits = exitSpecs.map((s) => {
-        if (!SIDE_DIRECTIONS[s.side]) {
-            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
-        }
+        if (!SIDE_DIRECTIONS[s.side]) throw new Error(exitSideRefusal(region_id, s.side));
         const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
-            id: `side_exit_${s.side}`,
+            id: levelPortalIds.get(s.side) ?? `side_exit_${s.side}`,
             side: s.side,
             direction: SIDE_DIRECTIONS[s.side],
             requirement: physics,
@@ -652,12 +729,7 @@ export function assembleBounceRegionFromLevel(level, {
         return { id: s.id, requirement: physics, authored };
     });
 
-    if (!derived) {
-        const C = resolvePhysicsStamp(physicsProfile);
-        derived = mode === 'braid'
-            ? deriveBraidAccessRules(level, { constants: C, freeArrow, terminalPortals: true })
-            : deriveAccessRules(level, { constants: C });
-    }
+    if (!derived) derived = deriveBounceLevelRules(level, { physicsProfile, mode, freeArrow });
 
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
@@ -792,6 +864,50 @@ let _playbackProxy = null;
 export function setPlaybackProxy(proxy) { _playbackProxy = proxy; }
 
 /**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE BOUNCE PAYLOAD, DECLARED**: the shared
+ * flash-zone shape (`flashSubstrateLibrary.flashZoneSidecarFields`) with
+ * bounce's level key and its OPTIONAL physics stamp — `physicsStampFor`
+ * returns null for `experimental`, so an experimental world carries no
+ * `params.physics` at all. The
+ * profile vocabulary is asked of the stamper itself, so a profile added to
+ * `PROFILES` is declared without an edit here.
+ */
+export const BOUNCE_SIDECAR_FIELDS = flashZoneSidecarFields({
+    gameId: BOUNCE_GAME_ID,
+    writer: '`buildZonePayload` (`bounceDemoLibrary.js`)',
+    levelKey: 'bounceLevel',
+    physics: Object.freeze({
+        required: false,
+        schema: Object.freeze({
+            type: 'object',
+            required: Object.freeze(['profile', 'constants']),
+            properties: Object.freeze({
+                profile: Object.freeze({
+                    enum: Object.freeze(Object.keys(PROFILES).filter((id) => physicsStampFor(id))),
+                }),
+                constants: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+    paramsNote: '`params.physics` is DERIVED from the profile (`physicsStampFor`) and OMITTED for '
+        + '`experimental`.',
+});
+
+/** ⛓ PRESET SIDECARS M3 — bounce's `exitSides` declaration (see the entry). */
+export const BOUNCE_EXIT_SIDES = flashZoneExitSides({
+    keys: ['params.bounceLevel.portals[].direction'],
+    also(payload, moves) {
+        const params = payload?.params;
+        const portals = params?.bounceLevel?.portals;
+        if (!Array.isArray(portals)) return;
+        for (const m of moves) {
+            const portal = portals.find((p) => p?.id === params.sidePortals?.[m.to]);
+            if (portal) portal.direction = SIDE_DIRECTIONS[m.to];
+        }
+    },
+});
+
+/**
  * Build a bounce substrate registry entry for a zone set — the same
  * per-entry factory pattern flashSubstrate uses per game, and literally
  * built on it: createFlashSubstrateEntry supplies the runtime plumbing
@@ -808,7 +924,9 @@ export function createBounceSubstrateEntry({
     portalPlacement = 'directional',
 } = {}) {
     return Object.freeze({
-        ...createFlashSubstrateEntry({ id, label, iframeId: BOUNCE_IFRAME_ID }),
+        ...createFlashSubstrateEntry({
+            id, label, iframeId: BOUNCE_IFRAME_ID, sidecarFields: BOUNCE_SIDECAR_FIELDS,
+        }),
 
         // Bounce's single panel identity (one component / event / iframeId
         // for BOTH renderers). The renderer setting no longer switches the
@@ -821,6 +939,82 @@ export function createBounceSubstrateEntry({
         loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
         iframeId: BOUNCE_IFRAME_ID,
 
+        // ⛓ PRESET SIDECARS G1 — a bounce zone is SIDES only: the bridge routes an
+        // exit by its `side` (`params.sidePortals` keyed by side, inverted to
+        // portal → side at play) and reads no tile, so the engine mints no
+        // `x`/`y` for it (`procgenCore/regionGeometry.js`). Declared HERE, not
+        // as a `createFlashSubstrateEntry` default: `flash_seedling` is built by
+        // that factory too and is an atlas reference, which stays tiles.
+        regionGeometry: REGION_GEOMETRY.SIDES,
+
+        // ⛓ PRESET SIDECARS M3 — what else a bounce payload keys by an exit's
+        // side (`procgenCore/exitSides.js`): the flash-zone family's portal map
+        // and back-exit side, plus bounce's own — the portal now serving a side
+        // points its `direction` arrow along that side (`SIDE_DIRECTIONS`; the
+        // arrow is read FIRST when a level portal's side is asked,
+        // `sideExits.portalIdsBySide`, and `bounceLibraryEntry` re-points it the
+        // same way on a relabel).
+        exitSides: BOUNCE_EXIT_SIDES,
+
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+         * (the editor-integration plan §3.2). `procgenPipeline/
+         * regionEditors.getRegionEditor('bounce')` resolves Edit ▸ through
+         * THIS field; `bounceRegionEditor/index.js` no longer registers
+         * itself, so the panel knows bounce has an editor whether or not that
+         * module has run — the property the maze and Seedling LAB PAGES need,
+         * since a page never calls `initialize()`.
+         *
+         * ⛔ **THE IMPORT IS DYNAMIC AND THAT IS A MEASUREMENT, NOT A STYLE.**
+         * A static `import` of `../bounceRegionEditor/index.js` here would put
+         * the whole Golden-Layout panel graph into every HEADLESS consumer of
+         * this library — the capability-matrix generator loads all eight
+         * libraries, and ~30 `check-*.mjs` gates load this one. Measured on
+         * `1eed5988a`: this file alone imports silently; this file plus that
+         * module prints `[centralRegistry] CentralRegistry initialized`. The
+         * declaration therefore stays DATA, and the door opens on first use.
+         *
+         * ⚠ `open` returns a PROMISE where the maze/Seedling `lab` kind
+         * returns synchronously; no caller reads the return value (the ONE
+         * return path is `onSave`), and `_editRegion` ignores it.
+         *
+         * ⛓ `module` is the app module whose panel `open` hands the session
+         * to: `regionEditors.openRoomEditor` enables it first (⚖
+         * region-editor-launch Q1), which creates the panel when the layout
+         * has none — `ui:activatePanel` alone only raises an existing tab.
+         */
+        roomEditor: Object.freeze({
+            kind: 'panel',
+            module: 'bounceRegionEditor',
+            open: (session) => import('../bounceRegionEditor/index.js')
+                .then((m) => m.openBounceRegionEditor(session)),
+        }),
+
+        /**
+         * ⛓⛓⛓ APWORLD EDITOR HUB H4b — **THE DOCUMENT ⇄ ROOM ROUND TRIP.**
+         * `roomEditor` says which editor opens a bounce room; this says what
+         * that editor wants handed IN when the room comes out of a `rules.json`
+         * document, and how to read its save back into one. The hub resolves it
+         * off the registry and names no substrate — H3's `compositeMap`
+         * precedent and the same ⚖.
+         *
+         * ⛔ **THE IMPORT IS DYNAMIC FOR A SECOND REASON ON TOP OF `open`'s.**
+         * `bounceRegionEditor/bounceRegionRoundTrip.js` is headless-safe on its
+         * own (no panel, no Golden Layout), but it imports
+         * `buildEditedRegion.js`, which imports THIS FILE — a static import
+         * here would be a module cycle. Deferring it keeps the declaration DATA
+         * and the graph acyclic.
+         *
+         * ⚠ Both members are therefore ASYNC where the maze's are sync. The hub
+         * awaits both, which is what lets a substrate choose either.
+         */
+        regionRoundTrip: Object.freeze({
+            open: (ctx) => import('../bounceRegionEditor/bounceRegionRoundTrip.js')
+                .then((m) => m.bounceRegionRoundTrip.open(ctx)),
+            save: (saved, ctx) => import('../bounceRegionEditor/bounceRegionRoundTrip.js')
+                .then((m) => m.bounceRegionRoundTrip.save(saved, ctx)),
+        }),
+
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on
         // BOUNCE_PLAYBACK_CONTROL_EVENT; the in-iframe flash bridge
@@ -831,16 +1025,32 @@ export function createBounceSubstrateEntry({
         // Loop-mode capabilities: regionMove + locationCheck queue
         // actions map to the playback bot's implementations (walkTo an
         // exit portal / a location on real physics) via
-        // executeVia: 'playbackBot' — the loops queue parks and the
-        // bot plays; loops charges the loop_costs value on completion
-        // (bounce tracks no mana natively, v1). NO explore action
-        // exists for bounce. Manual play yes; custom queues judged not
-        // worthwhile (user decision, 2026-06-12).
+        // executeVia: 'solver' — the loops queue parks and the bot
+        // plays. `executeVia` stays declared for M6's Bot radio, which
+        // re-homes that path; it is NOT reachable from Playback (see
+        // below). NO explore action exists for bounce. Manual play yes;
+        // custom queues judged not worthwhile (user decision 2026-06-12).
+        //
+        // M5 (2026-07-23): bounce is a SUMMARY-recording substrate — the
+        // third capture category beside coarse-only (text adventure) and
+        // fine-grained (maze, jta). Record captures the NET RESULT of the
+        // visit (duration in drain seconds, performed checks, departure
+        // exit) rather than a replayable action stream; Playback applies
+        // that envelope instantly. Hence `summaryRecording: true` as the
+        // discriminator (fine-grained is discriminated by the registry
+        // entry supplying `takeLastRecording`, which bounce does not).
+        // `instant: true` is declared for the focus-suppression seam —
+        // summary playback is inherently instant, so no per-block Instant
+        // checkbox is offered. See docs loop-recording.md.
         loopSupport: Object.freeze({
             queueActions: Object.freeze(['regionMove', 'locationCheck']),
-            executeVia: 'playbackBot',
+            executeVia: 'solver',
             manual: true,
             customQueues: false,
+            record: true,
+            playback: true,
+            instant: true,
+            summaryRecording: true,
         }),
 
         // The substrate's zone table places this item itself (fork's
@@ -857,6 +1067,24 @@ export function createBounceSubstrateEntry({
         // All payload content comes from extractZoneRules (which knows
         // the exit sides); no separate synthesizeZonePayload needed.
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
+
+        // --- Region-library content-source hooks (region-library F2) ---
+        // bounce is the CONTENT (zone) library substrate: an entry carries its
+        // emitted rules verbatim (geometry not re-derivable) + the level payload;
+        // instantiate re-assembles the synthetic-exit region via assembleZoneRegion
+        // for the slot's sides (⊆ the entry's captured sides). See bounceLibraryEntry.js.
+        captureLibraryEntry: captureBounceLibraryEntry,
+        instantiateLibraryEntry: (entry, ctx) => instantiateBounceLibraryEntry(entry, ctx, { buildZonePayload }),
+        // Requirement-aware sphere placement (region-library F6a): relabels the
+        // captured portals onto the slot's specific sides + reassigns the node's
+        // items; the engine overlays each gate as an access_rule. See
+        // bounceLibraryEntry.js / buildSphereLibraryRegion.
+        instantiateLibraryEntryForSpecs: (entry, ctx) =>
+            instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
+        // ⛓ APWORLD SUBSTRATE CHANGE R6 — the hook's portals refusal, asked
+        //   before it runs (the hub's library picker disables in these words).
+        libraryEntryRefusal: bounceLibraryEntryRefusal,
+        validateLibraryEntry: validateBounceLibraryEntry,
 
         // Sphere-driven growth: requirement-targeted generation + the
         // structural veto for gate combinations + the panel-facing
@@ -887,10 +1115,21 @@ export function createBounceSubstrateEntry({
         // the realised logic is unchanged — see generateRegionZoneGen.
         driftItems: [ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right],
         libraryItems: BOUNCE_LIBRARY_ITEMS,
-        // Physics obstacle vocabulary (obstacles-along-paths refactor,
-        // Phase 1). Merged with DEFAULT_OBSTACLES by the consumer, like
-        // libraryItems. The producer + engine merge land in Phase 2.
-        libraryObstacles: BOUNCE_LIBRARY_OBSTACLES,
+        // What a world built of bounce regions NEEDS in its starting inventory
+        // (apworld substrate R3): the same fact prepareBounceSphereGrowth acts
+        // on — it grants ONE arrow so no region gates on it. Data, read by
+        // procgenCore/startingInventory.js; the APWorld editor's Starting
+        // inventory block draws it with a grant per candidate.
+        startingInventory: Object.freeze({
+            needs: Object.freeze([Object.freeze({
+                anyOf: Object.freeze([ABILITY_ITEM_NAMES.left, ABILITY_ITEM_NAMES.right]),
+                reason: 'a bounce level cannot gate both arrows in one region, and hosts at most one '
+                    + 'arrowless-gated exit — the sphere route grants one arrow at the start for this reason',
+            })]),
+        }),
+        // No `libraryObstacles`: the physics gate defs (BOUNCE_LIBRARY_OBSTACLES)
+        // reach the compiler as each zone region's own `obstacle_defs` (see
+        // extractZoneRules), never through a registry-level pool.
         supportedFeatures: Object.freeze(['arbitrary_ap_locations', 'bounce_abilities']),
 
         // Procgen Pipeline integration (bounceProcgenParams.js): the
@@ -902,6 +1141,9 @@ export function createBounceSubstrateEntry({
         prepareSphereGrowth: prepareBounceSphereGrowth,
         buildRegionParams: buildBounceRegionParams,
         renderProcgenParams: renderBounceProcgenParams,
+        // What an existing payload records of those params (the per-region
+        // generation form opens on it — apworld substrate R1).
+        procgenParamsFromPayload: bounceProcgenParamsFromPayload,
     });
 }
 

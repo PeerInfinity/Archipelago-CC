@@ -6,7 +6,6 @@ The Window Manager opens and manages separate browser windows that connect back 
 
 Choose content in two ways:
 1. **Known pages dropdown** — Select from predefined pages:
-   - "Text Adventure (Standalone)" — A standalone text adventure in a separate window
    - "Window Base" — A basic connection and heartbeat demo
 2. **Custom URL** — Type any URL into the input field.
 

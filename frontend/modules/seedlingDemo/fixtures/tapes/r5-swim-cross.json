@@ -1,0 +1,64 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-swim-cross",
+  "description": "⛓ THE ARMED-WATER PAIR, arm 1 of 2 — the conch HELD. `noHazards` is [\"waterfall\"] ONLY: water is LIVE for the first time on the whole arc, and this arm swims seven ticks of it and comes back. `checkDrowning`'s water arm is `eff == 1 && !canSwim`, so the conch takes its early return and `drownTimer` stays 0. ⚠ Its control is this tape with `conch` removed from `grants` and NOTHING else changed — and the two streams are BYTE-IDENTICAL, because drowning does not touch movement until it latches at eleven cumulative ticks. The whole difference between the arms is a counter inside the game, which is why the control needs a named declaration in `r5Swim.DROWN_EXPECTED` to be allowed to fail the harness's `drownTimer === 0` check.",
+  "boot": {
+    "level": 47,
+    "x": 208,
+    "y": 136
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 47,
+      "items": [
+        "conch",
+        "fire"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 92,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "up",
+      "from": 0,
+      "to": 6
+    },
+    {
+      "key": "left",
+      "from": 6,
+      "to": 7
+    },
+    {
+      "key": "up",
+      "from": 6,
+      "to": 52
+    },
+    {
+      "key": "left",
+      "from": 13,
+      "to": 14
+    },
+    {
+      "key": "down",
+      "from": 52,
+      "to": 68
+    }
+  ]
+}

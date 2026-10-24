@@ -1,0 +1,158 @@
+{
+    "game": "seedling",
+    "name": "watcher-l114-silent",
+    "boot": {
+        "level": 114,
+        "x": 64,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 114,
+            "tag": 0,
+            "note": "the Watcher talked to on an earlier visit (`Watcher.doneTalking()` writes it): `Watcher.update` runs no `talk()` while it is cleared"
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 32,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "up",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "down",
+            "from": 24,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "up",
+            "from": 29,
+            "to": 31
+        },
+        {
+            "key": "down",
+            "from": 31,
+            "to": 32
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY WATCHER — THE OTHER SILENT STATE: L114's SPEAKING `watcher@72,72` with `{114,0}` cleared at boot. The census lists it silent (`Watcher.update` gates `talk()` on the tag), and the solver walks from the top of the two-tile corridor straight through the 24 px circle to `teleporter@64,144` with no dialogue. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [], items [], clears {114,0}). The solver's own plan: 32 t, equips []. Authored by scripts/procgen/plan-seedling-watcher-witness.mjs."
+}

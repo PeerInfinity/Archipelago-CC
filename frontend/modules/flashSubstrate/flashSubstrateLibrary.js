@@ -2,8 +2,7 @@
  * Substrate registry entries for Flash games as a procgen substrate
  * (multi-runtime: SWFRecomp WASM / Ruffle / native Flash — the runtime is
  * chosen by the game page, not this module. See
- * NewDocs/plans/procedural-generation/flash-substrate-converged.md and
- * flash-substrate-unification.md).
+ * docs/json/developer/procgen/flash.md).
  *
  * Mode 1: opaque fixed minigame. A region = one Flash game instance; the
  * region's AP locations = the game's in-game objectives. The game's own
@@ -25,11 +24,14 @@
  *
  * v1 scope: minimal supportedFeatures (arbitrary_ap_locations only — a
  * minigame region is opaque), no build-time procgen hooks, playback
- * deferred (getPlaybackController returns null). The sidecar carries a
+ * deferred (no getPlaybackController at all). The sidecar carries a
  * per-region gameId + optional params and the location<->objective map.
  */
 
-import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { SIDES } from '../shared/procgen/spatialPrimitives.js';
+import {
+    REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
+} from '../procgenCore/sidecarFields.js';
 
 // Shared across every flash game entry — the whole point of Shape 1 is
 // that all per-game ids resolve to the SAME panel + load event, so the
@@ -93,15 +95,219 @@ function serializeWorld(world) {
 }
 
 /**
+ * ⛓⛓ PRESET SIDECARS D0 — **THE GENERIC FLASH PAYLOAD, DECLARED** (the
+ * registry's `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`).
+ * The Mode-1 shape above, as the in-iframe bridge's `configure()` reads it
+ * (`bridge.js`: `gameId params ap_items ap_locations` + the capabilities, and
+ * `gate_rules` for authored locks). ⚠ No committed preset has a region of the
+ * factory's default shape (and no generic `flash` entry exists), so nothing here is read off a corpus: `gameId` is
+ * required because the bridge cannot pick a game without it, and every other
+ * key is optional. `serializeWorld` is a pass-through (only `exits` is
+ * converted), so it emits whatever the payload held. ⚠ `ap_items` is read by
+ * the bridge and written by NO producer in the tree.
+ *
+ * Per-game entries pass their own declaration to `createFlashSubstrateEntry`;
+ * the two zone games build theirs with `flashZoneSidecarFields` below.
+ */
+export const FLASH_SIDECAR_FIELDS = Object.freeze({
+    gameId: Object.freeze({
+        type: 'string', required: true,
+        description: 'Which game the flash page loads for this region (the page picks the runtime).',
+    }),
+    params: Object.freeze({
+        type: 'object',
+        description: 'Per-region game parameters, forwarded verbatim to the game by the bridge\'s '
+            + '`configure()`.',
+    }),
+    ap_items: Object.freeze({
+        type: 'object',
+        description: 'AP item name → the game\'s own item name, forwarded by `configure()`. No '
+            + 'producer in the tree writes it.',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    ap_locations: Object.freeze({
+        type: 'object',
+        description: 'The game\'s objective id → AP location name (the frontend state manager is '
+            + 'name-keyed).',
+        schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
+    }),
+    flashCapabilities: Object.freeze({
+        type: 'object',
+        description: 'HOW the game integrates (`locations`, `items`, `start` styles). Read only by the '
+            + 'in-iframe bridge; absent = cooperative + pull. An open vocabulary, so no enum.',
+    }),
+    gate_rules: Object.freeze({
+        type: 'object',
+        description: 'Authored locks `{portals: {id: rule}, pickups: {id: rule}}` the bridge evaluates '
+            + 'against live inventory (`setGateStates`).',
+        schema: Object.freeze({
+            properties: Object.freeze({
+                portals: Object.freeze({ type: 'object' }),
+                pickups: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
+});
+
+/**
+ * ⛓ PRESET SIDECARS V0 — the flash family's location carrier: `ap_locations`'
+ * values (the bridge maps a game's objective id to the AP location name through
+ * that one map). The default of `createFlashSubstrateEntry`'s `apLocationNamesOf`.
+ */
+export const FLASH_AP_LOCATION_NAMES = nameMapValues('ap_locations');
+
+/**
+ * ⛓⛓ THE FLASH-ZONE PAYLOAD — the ONE shape bounce and runner share
+ * (`buildZonePayload` in each: `{gameId, params: {<level key>, sidePortals,
+ * physics?}, ap_locations, flashCapabilities}`, then `gate_rules` when a spec
+ * carries authored terms), declared here once; each game extends it with its
+ * own level key and physics stamp.
+ *
+ * `required` is read off the committed corpus — every bounce and runner entry
+ * there is written by `buildPresetSidecars`, so the engine's `exits` and
+ * `fogEnabled` are on all of them. `params` is closed
+ * (`additionalProperties: false`): its keys are the level, the portal map, the
+ * physics stamp, and the two the ENGINE adds for the back-portal route
+ * (`backExitSide`, `fallBehavior` — `procgenPipelineEngine.js`).
+ *
+ * @param {object} o
+ * @param {string} o.gameId       the game id `buildZonePayload` stamps
+ * @param {string} o.writer       where that `buildZonePayload` lives (a code span)
+ * @param {string} o.levelKey     the `params` key carrying the level geometry
+ * @param {object} o.physics      `{required, schema}` of `params.physics`
+ * @param {string} [o.paramsNote] a sentence on `params` only this game needs
+ */
+export function flashZoneSidecarFields({ gameId, writer, levelKey, physics, paramsNote = '' }) {
+    return Object.freeze({
+        exits: REQUIRED_ENVELOPE_FIELD,
+        fogEnabled: REQUIRED_ENVELOPE_FIELD,
+        gameId: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.gameId,
+            derived: true,
+            enum: Object.freeze([gameId]),
+            description: `The game id, a constant ${writer} stamps.`,
+        }),
+        params: Object.freeze({
+            type: 'object', required: true,
+            description: `The level the game replays: \`${levelKey}\` (the geometry AFTER the side-exit `
+                + 'transform — authored, and nothing re-derives the rules from it on load), '
+                + '`sidePortals` (side → portal id), the physics stamp, and the engine\'s back-portal '
+                + `route (\`backExitSide\`, \`fallBehavior\`). ${paramsNote}`.trim(),
+            schema: Object.freeze({
+                required: Object.freeze([levelKey, 'sidePortals', ...(physics.required ? ['physics'] : [])]),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    [levelKey]: Object.freeze({ type: 'object' }),
+                    sidePortals: Object.freeze({
+                        type: 'object', additionalProperties: Object.freeze({ type: 'string' }),
+                    }),
+                    physics: physics.schema,
+                    backExitSide: Object.freeze({ enum: Object.freeze([...SIDES]) }),
+                    fallBehavior: Object.freeze({ type: 'string' }),
+                }),
+            }),
+        }),
+        ap_locations: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.ap_locations,
+            required: true, derived: true,
+            description: `Pickup id → AP location name, derived by ${writer} as \`<region>__<pickup>\`. `
+                + 'A mismatch drops the check silently (`bridge.js`).',
+        }),
+        flashCapabilities: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.flashCapabilities,
+            required: true, derived: true,
+            description: `A constant ${writer} stamps (\`cooperative\` locations, \`pull\` items, `
+                + '`auto` start). Read only by the in-iframe bridge.',
+        }),
+        gate_rules: Object.freeze({
+            ...FLASH_SIDECAR_FIELDS.gate_rules,
+            derived: true,
+            description: 'Authored locks the bridge evaluates at runtime, derived from the specs\' '
+                + `authored terms after ${writer}; OMITTED when no spec carries one — no committed `
+                + 'preset does.',
+        }),
+    });
+}
+
+/**
+ * ⛓⛓ PRESET SIDECARS M3 — **THE FLASH-ZONE PAYLOAD'S SIDE-KEYED FACTS**, the
+ * shared half of the `exitSides` declaration (`procgenCore/exitSides.js`).
+ * For a flash zone an exit's `side` is a LINKING KEY — the bridge resolves
+ * `params.sidePortals[exit.side]` to the level portal (`bridge.js`) — so a side
+ * move re-keys two things the payload shape above declares:
+ *
+ *   · `params.sidePortals` — each moved side's key is renamed IN PLACE (its
+ *     position in the map kept, so a move and its move back are byte-identical;
+ *     the pipeline's own `moveSphereExitSide` deletes and re-appends instead);
+ *   · `params.backExitSide` — the entrance side the engine stamps for the
+ *     back-portal route (a fall resolves to it at play) — follows the moved exit
+ *     when that exit is the region's back exit (`isBackExit`), and is never
+ *     added where the payload carries none.
+ *
+ * ⛔ A game with more side-keyed facts adds them (`also`), in its own file.
+ * ⛔ Declared on each zone game's ENTRY, never as a `createFlashSubstrateEntry`
+ * default: `flash` / `flash_seedling` are built by that factory too and carry no
+ * portal map.
+ *
+ * @param {object} [o]
+ * @param {string[]} [o.keys]   the extra payload paths `also` rewrites
+ * @param {Function} [o.also]   `(payload', moves) → void`, run on the relabel's
+ *   own clone after the shared half
+ * @returns {{keys: string[], relabel: Function}}
+ */
+export function flashZoneExitSides({ keys = [], also = null } = {}) {
+    return Object.freeze({
+        keys: Object.freeze(['params.sidePortals', 'params.backExitSide', ...keys]),
+        relabel(payload, moves) {
+            const next = JSON.parse(JSON.stringify(payload));
+            const params = next?.params;
+            const portals = params?.sidePortals;
+            if (portals && typeof portals === 'object') {
+                const renamed = new Map(moves.map((m) => [m.from, m.to]));
+                const vacated = new Set(moves.map((m) => m.from));
+                for (const m of moves) {
+                    if (Object.hasOwn(portals, m.to) && !vacated.has(m.to)) {
+                        throw new Error(`params.sidePortals already maps side ${m.to} to portal `
+                            + `"${portals[m.to]}", and no moved exit vacates it`);
+                    }
+                }
+                params.sidePortals = Object.fromEntries(Object.entries(portals)
+                    .map(([side, id]) => [renamed.get(side) ?? side, id]));
+            }
+            if (params && Object.hasOwn(params, 'backExitSide')) {
+                const exits = Array.isArray(next.exits) ? next.exits : [];
+                for (const m of moves) {
+                    if (exits.find((x) => x?.exit_id === m.exitId)?.isBackExit === true) {
+                        params.backExitSide = m.to;
+                    }
+                }
+            }
+            if (also) also(next, moves);
+            return next;
+        },
+    });
+}
+
+/**
  * Build a Flash substrate registry entry. Per-game entries differ only in
  * identity (id/label) and capabilities (supportedFeatures); the shared
  * runtime fields (panel, load event, de/serialize, playback) are baked in
  * here so every flash game routes through the one panel/bridge.
  *
  * @param {object} opts
- * @param {string}   opts.id               unique substrate id (e.g. 'flash', 'flash_seedling')
+ * @param {string}   opts.id               unique substrate id (e.g. 'flash_seedling')
  * @param {string}  [opts.label]           display name (defaults to id)
  * @param {string[]}[opts.supportedFeatures] procgen-pipeline features (default: arbitrary_ap_locations)
+ * @param {object}  [opts.sidecarFields]   the payload declaration (default: the
+ *   generic Mode-1 `FLASH_SIDECAR_FIELDS`)
+ * @param {Function} [opts.apLocationNamesOf] PRESET SIDECARS V0 — where the
+ *   payload carries its AP location names (default: the VALUES of
+ *   `ap_locations`, which is the one map this family's bridge resolves a game's
+ *   objective to an AP location through — `bridge.js`)
+ * @param {Function} [opts.apExitNamesOf]   PRESET SIDECARS V0 — the payload's
+ *   AP exit names as the region's COMPLETE list (default: the engine's
+ *   envelope, which `buildPresetSidecars` writes whole). A game whose producer
+ *   writes only some of the region's exits removes it (Seedling).
  * @param {string}  [opts.iframeId]        the iframeAdapter id of the panel's iframe
  *   (default: 'flashSubstrate' — the shared flash panel's). procgenPlayer uses
  *   this to re-publish the active region's loadRegion when THIS iframe
@@ -114,6 +320,9 @@ export function createFlashSubstrateEntry({
     label,
     supportedFeatures = ['arbitrary_ap_locations'],
     iframeId = 'flashSubstrate',
+    sidecarFields = FLASH_SIDECAR_FIELDS,
+    apLocationNamesOf = FLASH_AP_LOCATION_NAMES,
+    apExitNamesOf = envelopeExitNames,
 } = {}) {
     if (!id || typeof id !== 'string') {
         throw new Error('createFlashSubstrateEntry: id must be a non-empty string');
@@ -134,12 +343,17 @@ export function createFlashSubstrateEntry({
         iframeId,
         deserializeWorld,
         serializeWorld,
+        sidecarFields,
+        apLocationNamesOf,
+        apExitNamesOf,
 
-        // Playback bot integration is deferred (Mode 1 / v1). Until then
-        // getPlaybackController returns null and the bot no-ops on flash
-        // regions. When it lands, drive the logic-only / stub backend
-        // headless so the test harness never needs WebGPU.
-        getPlaybackController: () => null,
+        // ⛔ NO `getPlaybackController`: playback bot integration is deferred
+        // (Mode 1 / v1), and the field's ABSENCE is what says so — every
+        // reader optional-chains it, so the bot no-ops on flash regions, and
+        // the capability chart reads "the Playback Bot can walk it" off the
+        // field's presence (substrate chart S1). A per-game entry that gains
+        // a controller declares it. When it lands, drive the logic-only / stub
+        // backend headless so the test harness never needs WebGPU.
 
         // Loop-mode capabilities: manual play only for now (user
         // decision, 2026-06-12). Region traversal stays queueable;
@@ -156,22 +370,4 @@ export function createFlashSubstrateEntry({
         // internal content; it just records gameId + params in the
         // sidecar. Mode 2 (AVM2-gated) adds them.
     });
-}
-
-// The default generic 'flash' entry — a region whose game is identified
-// purely by the payload's gameId, with no game-specific capability
-// declaration. Per-game entries (e.g. 'flash_seedling') are registered
-// alongside it via createFlashSubstrateEntry.
-export const substrateRegistryEntry = createFlashSubstrateEntry({
-    id: 'flash',
-    label: 'Flash',
-});
-
-// Side-effect on import: register the default substrate so the procgen
-// pipeline can resolve it without booting the panel module. Same pattern
-// as mazeRoom / textAdventureSubstrate / jtaSubstrateWrapper libraries —
-// idempotent because index.js's host hook also calls register() in the
-// live app.
-if (!substrateRegistry.has(substrateRegistryEntry.id)) {
-    substrateRegistry.register(substrateRegistryEntry);
 }

@@ -1,0 +1,5 @@
+files 75 tests 2578 pass 2577 fail 1 skip 0
+  NONPASS fidelityStrikeLapse.test.js | STRIKELAPSE D1 — the collect stand and the ceremony arm OFF: the plan is the witness `bobsoldier2-l30-torch` (460 t), byte for byte
+tapeRunner rows 635 md5 a02def3b2b47710b8825a88cd62f6c4c nonpass 0
+      Tests  5 passed (5)
+exit 0

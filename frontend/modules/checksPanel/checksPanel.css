@@ -1,0 +1,17 @@
+.checks-panel {
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    color: #cecece;
+    background: #2d2d2d;
+}
+.checks-panel-content {
+    font-size: 0.9em;
+}
+.checks-panel.is-mini {
+    padding: 0;
+}
+.checks-panel.is-mini .checks-panel-content {
+    padding: 3px 8px;
+}

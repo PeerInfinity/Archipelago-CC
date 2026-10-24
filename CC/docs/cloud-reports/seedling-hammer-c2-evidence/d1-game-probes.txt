@@ -1,0 +1,14 @@
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the tape ran to its end on the game
+PASS: the game's `Bot.slashTests` is the model's cumulative sword hit-test count at every sampled tick — 92 sampled tick(s) of 92
+ROW arrows: 0 of 92 sampled tick(s) differ
+PASS: the drained stream is the model's, tick for tick — 92 observations, transitions []
+ROW game: hits 0, hits_timer 0, level 18, slash {"hits":44,"tests":27}, cleared [{"tag":0,"level":3},{"tag":0,"level":5},{"tag":0,"level":8},{"tag":1,"level":8},{"tag":0,"level":10},{"tag":0,"level":11},{"tag":0,"level":15},{"tag":2,"level":15},{"tag":3,"level":15},{"tag":0,"level":16},{"tag":3,"level":16},{"tag":4,"level":16},{"tag":6,"level":16},{"tag":7,"level":16},{"tag":29,"level":17}]
+ALL CHECKS PASSED
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 92 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does <= 87 — 176 comparison(s), worst |Δ| 2.842170943040401e-14
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 92 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+FAIL: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 179 comparison(s), worst |Δ| 2.842170943040401e-14
+      t 88: game has 1 Spinner row(s), the model 2

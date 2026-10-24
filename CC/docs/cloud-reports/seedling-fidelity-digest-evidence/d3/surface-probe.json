@@ -1,0 +1,161 @@
+{
+ "tapes": [
+  {
+   "name": "axe-l48-reach-l49",
+   "level": 48,
+   "ticks": 368,
+   "variants": {
+    "base": {
+     "points": 368
+    },
+    "pending": {
+     "points": 368
+    },
+    "future": {
+     "points": 368
+    },
+    "timeShift": {
+     "points": 368
+    }
+   }
+  },
+  {
+   "name": "axe-l61-reach-l62",
+   "level": 61,
+   "ticks": 284,
+   "variants": {
+    "base": {
+     "points": 284
+    },
+    "pending": {
+     "points": 284
+    },
+    "future": {
+     "points": 284
+    },
+    "timeShift": {
+     "points": 284
+    }
+   }
+  },
+  {
+   "name": "axe-l61-reach-l63",
+   "level": 61,
+   "ticks": 296,
+   "variants": {
+    "base": {
+     "points": 296
+    },
+    "pending": {
+     "points": 296
+    },
+    "future": {
+     "points": 296
+    },
+    "timeShift": {
+     "points": 296
+    }
+   }
+  },
+  {
+   "name": "axe-l71-reach-l76",
+   "level": 71,
+   "ticks": 327,
+   "variants": {
+    "base": {
+     "points": 327
+    },
+    "pending": {
+     "points": 327
+    },
+    "future": {
+     "points": 327
+    },
+    "timeShift": {
+     "points": 327
+    }
+   }
+  },
+  {
+   "name": "stance-l48-chest",
+   "level": 48,
+   "ticks": 540,
+   "variants": {
+    "base": {
+     "points": 540
+    },
+    "pending": {
+     "points": 540
+    },
+    "future": {
+     "points": 540
+    },
+    "timeShift": {
+     "points": 540
+    }
+   }
+  },
+  {
+   "name": "ladder2-l104-beam",
+   "level": 104,
+   "ticks": 278,
+   "variants": {
+    "base": {
+     "points": 278
+    },
+    "pending": {
+     "points": 278
+    },
+    "future": {
+     "points": 278
+    },
+    "timeShift": {
+     "points": 278
+    }
+   }
+  },
+  {
+   "name": "r3-collect-darksuit",
+   "level": 79,
+   "ticks": 53,
+   "variants": {
+    "base": {
+     "points": 53
+    },
+    "pending": {
+     "points": 53
+    },
+    "future": {
+     "points": 53
+    },
+    "timeShift": {
+     "points": 53
+    }
+   }
+  },
+  {
+   "name": "r9-solve-18",
+   "level": 18,
+   "ticks": 440,
+   "variants": {
+    "base": {
+     "points": 440
+    },
+    "pending": {
+     "points": 440
+    },
+    "future": {
+     "points": 440
+    },
+    "timeShift": {
+     "points": 440
+    }
+   }
+  }
+ ],
+ "points": 10344,
+ "falseEqual": 0,
+ "examples": [],
+ "sharedDigestPairs": 5225,
+ "digestDifferSurfaceSame": 0
+}

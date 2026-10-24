@@ -1,0 +1,671 @@
+{
+ "comment": "probe-seedling-wasm-generated-playback.mjs --record (WG): the wasm engine's raw arrival reads on seedling_generated_room (p4e, headless logic-only)",
+ "game": "seedling_generated_room",
+ "arrivals": [
+  {
+   "seam": {
+    "sinceBegin": {
+     "rng_first": -1,
+     "held_at_begin": [],
+     "pressed": {},
+     "input_frames": 0,
+     "dead": 0,
+     "stepped": 0
+    },
+    "beginEntry": {
+     "begin.level": 0,
+     "begin.tick": 0,
+     "rng.gameplay": 1930500710,
+     "rng.cosmetic": 1701797212,
+     "fp.seed": 114513024,
+     "save.time": 4857
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {},
+     "press_totals": {},
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 1138329957,
+     "state": 1930500710
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "camera": {
+     "shake": 0,
+     "y": -40,
+     "x": 56
+    },
+    "game_time": 4857,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 40,
+    "x": 136,
+    "level": 0,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "frozen": false,
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 128,
+    "playerPositionY": 32,
+    "pendingExit": "",
+    "pendingCheck": "",
+    "keyMask": 0,
+    "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
+    "freezeObjects": false,
+    "level": 0,
+    "sealSlot0": -1,
+    "sealSlot1": -1,
+    "sealSlot2": -1,
+    "sealSlot3": -1,
+    "sealSlot4": -1,
+    "sealSlot5": -1,
+    "sealSlot6": -1,
+    "sealSlot7": -1,
+    "sealSlot8": -1,
+    "sealSlot9": -1,
+    "sealSlot10": -1,
+    "sealSlot11": -1,
+    "sealSlot12": -1,
+    "sealSlot13": -1,
+    "sealSlot14": -1,
+    "sealSlot15": -1,
+    "totemPart0": false,
+    "totemPart1": false,
+    "totemPart2": false,
+    "totemPart3": false,
+    "totemPart4": false
+   }
+  },
+  {
+   "seam": {
+    "sinceBegin": {
+     "rng_first": -1,
+     "held_at_begin": [],
+     "pressed": {},
+     "input_frames": 0,
+     "dead": 0,
+     "stepped": 0
+    },
+    "beginEntry": {
+     "begin.level": 0,
+     "begin.tick": 0,
+     "rng.gameplay": 1930500710,
+     "rng.cosmetic": 1486967168,
+     "fp.seed": 475046656,
+     "save.time": 5142
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {
+      "right": 0,
+      "up": 0,
+      "left": 0,
+      "down": 0,
+      "primary": 0,
+      "secondary": 0,
+      "inventory": 0,
+      "inventory2": 0
+     },
+     "press_totals": {
+      "right": 0,
+      "up": 0,
+      "left": 0,
+      "down": 0,
+      "primary": 0,
+      "secondary": 0,
+      "inventory": 0,
+      "inventory2": 0
+     },
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 1945107858,
+     "state": 1930500710
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "camera": {
+     "shake": 0,
+     "y": -40,
+     "x": 56
+    },
+    "game_time": 5142,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [
+     {
+      "tag": 0,
+      "level": 0
+     }
+    ],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 40,
+    "x": 136,
+    "level": 0,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "frozen": false,
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 128,
+    "playerPositionY": 32,
+    "pendingExit": "",
+    "pendingCheck": "1|0|0|0",
+    "keyMask": 0,
+    "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
+    "freezeObjects": false,
+    "level": 0,
+    "sealSlot0": -1,
+    "sealSlot1": -1,
+    "sealSlot2": -1,
+    "sealSlot3": -1,
+    "sealSlot4": -1,
+    "sealSlot5": -1,
+    "sealSlot6": -1,
+    "sealSlot7": -1,
+    "sealSlot8": -1,
+    "sealSlot9": -1,
+    "sealSlot10": -1,
+    "sealSlot11": -1,
+    "sealSlot12": -1,
+    "sealSlot13": -1,
+    "sealSlot14": -1,
+    "sealSlot15": -1,
+    "totemPart0": false,
+    "totemPart1": false,
+    "totemPart2": false,
+    "totemPart3": false,
+    "totemPart4": false
+   }
+  },
+  {
+   "seam": {
+    "sinceBegin": {
+     "rng_first": -1,
+     "held_at_begin": [
+      "up"
+     ],
+     "pressed": {},
+     "input_frames": 0,
+     "dead": 0,
+     "stepped": 0
+    },
+    "beginEntry": {
+     "begin.level": 1,
+     "begin.tick": 7,
+     "rng.gameplay": 1930500710,
+     "rng.cosmetic": 1945107858,
+     "fp.seed": 848358202,
+     "save.time": 5170
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {
+      "right": 0,
+      "up": 0,
+      "left": 0,
+      "down": 0,
+      "primary": 0,
+      "secondary": 0,
+      "inventory": 0,
+      "inventory2": 0
+     },
+     "press_totals": {
+      "right": 0,
+      "up": 1,
+      "left": 0,
+      "down": 0,
+      "primary": 0,
+      "secondary": 0,
+      "inventory": 0,
+      "inventory2": 0
+     },
+     "held": [
+      "up"
+     ],
+     "released": [],
+     "pressed": [],
+     "t": 6
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": true,
+     "seed": 0,
+     "cosmetic_state": 1163515981,
+     "state": 1930500710
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": true,
+     "sound": true
+    },
+    "sound_pin": {
+     "channels": [
+      {
+       "playing": false,
+       "frames": 0,
+       "len_frames": 0
+      }
+     ],
+     "set": "Swim"
+    },
+    "camera": {
+     "shake": 0,
+     "y": -24,
+     "x": 8
+    },
+    "game_time": 5170,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [
+     {
+      "tag": 0,
+      "level": 0
+     }
+    ],
+    "persistence": [
+     {
+      "cleared": true,
+      "tag": 0,
+      "level": 0
+     }
+    ],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 56,
+    "x": 88,
+    "level": 1,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 2,
+    "buffered": 0,
+    "tick_count": 7,
+    "tick": 7,
+    "error": "",
+    "frozen": false,
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": 5161,
+     "pending": false
+    },
+    "armed": true,
+    "loaded": true
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 80,
+    "playerPositionY": 48,
+    "pendingExit": "1|0|teleporter|128|16|1",
+    "pendingCheck": "3|0|0|0",
+    "keyMask": 0,
+    "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
+    "freezeObjects": false,
+    "level": 1,
+    "sealSlot0": -1,
+    "sealSlot1": -1,
+    "sealSlot2": -1,
+    "sealSlot3": -1,
+    "sealSlot4": -1,
+    "sealSlot5": -1,
+    "sealSlot6": -1,
+    "sealSlot7": -1,
+    "sealSlot8": -1,
+    "sealSlot9": -1,
+    "sealSlot10": -1,
+    "sealSlot11": -1,
+    "sealSlot12": -1,
+    "sealSlot13": -1,
+    "sealSlot14": -1,
+    "sealSlot15": -1,
+    "totemPart0": false,
+    "totemPart1": false,
+    "totemPart2": false,
+    "totemPart3": false,
+    "totemPart4": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,509 @@
+/**
+ * ⛓⛓ LOGICAL SUB-REGION LINKS (walk plan §5.17; ⚖ the user, 2026-10-03: the controller and the region
+ * binding learn a region move INSIDE a level).
+ *
+ * ⛔ THE FIXTURE IS THE SHIPPED DATA: the playthrough's and the starter atlas's rules, and the committed
+ * partition (`atlases/seedling-subregion-partition.json`). Tiles and links are read off them, never typed,
+ * except the two links named below (L0's Sword-gated link to the L12 teleporter, and its Swim link).
+ */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
+import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import {
+    LINK_CREDIT_REFUSAL, SUB_REGION_LINK_REFUSAL, SeedlingPlaybackController, realRoomLinks, resolveSeedlingAtlasGoal,
+} from './seedlingPlaybackController.js';
+import { NO_PARTITION, buildSubRegionMap, linkPath, subRegionAt } from './seedlingSubRegions.js';
+
+const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
+const readJson = (rel) => JSON.parse(readFileSync(abs(rel), 'utf8'));
+const PARTITION = readJson('./atlases/seedling-subregion-partition.json');
+const PT = readJson('../../presets/seedling_playthrough/AP_1/AP_1_rules.json');
+const STARTER = readJson('../../presets/seedling_atlas/AP_1/AP_1_rules.json');
+const { map: MAP } = buildSubRegionMap({ rules: PT, partition: PARTITION });
+const SIDECARS = PT.preset_sidecars['1'];
+const world = (region) => SIDECARS[region].playable_payload;
+const TS = MAP.tileSize;
+
+/**
+ * A GATED link out of the start sub-region (Sword / Ghost Spear) to the sibling that holds L12's teleporter.
+ * ⚠ It stands where the Sword's route link (`level_0__r8c0 -> level_0__r1c6`, plan §5.16 D) stood: the rules arc
+ * (`ce1cba867a`) bound L0's stairs to r8c0 and dropped that link, so the Sword's route opens with NO link now.
+ */
+const SWORD_LINK = 'level_0__r8c0 -> level_0__r11c19';
+/** The Swim link out of the start sub-region (the human-walk rows' crossing). */
+const SWIM_LINK = 'level_0__r8c0 -> level_0__r14c0';
+
+/** A gate that evaluates the rule against `inv` (True_/Has/Or/And), the door gate's verdict shape. */
+const evalRule = (rule, inv) => {
+    if (!rule || rule.rule === 'True_') return true;
+    if (rule.rule === 'Has') return (inv[rule.args.item_name] ?? 0) >= (rule.args.count ?? 1);
+    if (rule.rule === 'Or') return rule.children.some((c) => evalRule(c, inv));
+    if (rule.rule === 'And') return rule.children.every((c) => evalRule(c, inv));
+    throw new Error(`rule ${rule.rule} not modelled by the test gate`);
+};
+const gate = (inv) => (exit) => ({ pass: evalRule(exit.access_rule, inv), gated: true, needs: [], missing: [] });
+
+/** Every tile centre of `region`'s sub-region in the partition (pixels), in row order. */
+function tilesOf(region) {
+    const [parent, sub] = region.split('__');
+    const e = MAP.levels.get(world(region).level).find((x) => x.region === parent);
+    const ch = MAP.alphabet[e.subs.indexOf(sub)];
+    const out = [];
+    e.rows.forEach((row, y) => [...row].forEach((c, x) => {
+        if (c === ch) out.push({ x: (x + e.origin[0]) * TS + TS / 2, y: (y + e.origin[1]) * TS + TS / 2 });
+    }));
+    return out;
+}
+/** A tile centre of `level` in NO sub-region ('.'). */
+function seamOf(level) {
+    const e = MAP.levels.get(level)[0];
+    const y = e.rows.findIndex((r) => r.includes('.'));
+    return { x: (e.rows[y].indexOf('.') + e.origin[0]) * TS + TS / 2, y: (y + e.origin[1]) * TS + TS / 2 };
+}
+
+let clock = 0;
+/** A binding standing in `region` (loaded, booted, the arrival landed), with the playthrough's map. */
+function standing(region, inv = {}) {
+    const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(inv) });
+    b.setSubRegions(MAP);
+    b.onStateReport('level', world(region).level);
+    const landing = b.onLoadRegion({ region_id: region, world: world(region) }).find((e) => e.type === 'teleport');
+    // ⛓ SAME-LEVEL LANDING — the arrival teleport LANDS: the first read stands on its spawn.
+    if (landing) b.onPlayerPosition({ level: landing.level, x: landing.x, y: landing.y });
+    return b;
+}
+const moves = (effects) => effects.filter((e) => e.type === 'regionMove');
+const walk = (b, points) => points.flatMap((p) => b.onPlayerPosition({ level: b.lastLevel, ...p }));
+
+describe('the sub-region map is DERIVED from the rules and the committed partition', () => {
+    it('the playthrough: every partitioned sub-region is a rules region, and the links are the controller\'s', () => {
+        expect(MAP).not.toBeNull();
+        expect(MAP.atlasId).toBe(PT.region_atlas['1'].atlas_id);
+        const regions = new Map(Object.entries(SIDECARS).filter(([, s]) => s.substrate === 'flash_seedling')
+            .map(([r, s]) => [r, s.playable_payload]));
+        const fromController = realRoomLinks(PT, regions);
+        expect([...MAP.links.values()].flat().map((l) => l.name).sort()).toEqual(fromController.map((l) => l.name).sort());
+        for (const entries of MAP.levels.values()) {
+            for (const e of entries) for (const s of e.subs) if (s) expect(SIDECARS[`${e.region}__${s}`]).toBeTruthy();
+        }
+        // Every sub-region region of the rules has tiles in the partition.
+        const subRegions = Object.keys(SIDECARS).filter((r) => r.includes('__') && SIDECARS[r].substrate === 'flash_seedling');
+        for (const r of subRegions) expect(tilesOf(r).length, r).toBeGreaterThan(0);
+    });
+
+    it('the starter atlas has its own entry (its links = the controller\'s), and an unknown atlas is refused BY NAME', () => {
+        const starter = buildSubRegionMap({ rules: STARTER, partition: PARTITION });
+        expect(starter.map.atlasId).toBe(STARTER.region_atlas['1'].atlas_id);
+        // ⚠ 16 at this slice (§5.16 said 17): derived, never typed.
+        const starterRegions = new Map(Object.entries(STARTER.preset_sidecars['1'])
+            .filter(([, s]) => s.substrate === 'flash_seedling').map(([r, s]) => [r, s.playable_payload]));
+        expect([...starter.map.links.values()].flat().map((l) => l.name).sort())
+            .toEqual(realRoomLinks(STARTER, starterRegions).map((l) => l.name).sort());
+        const stale = { ...PT, region_atlas: { 1: { ...PT.region_atlas['1'], atlas_id: 'seedling-00000000' } } };
+        expect(buildSubRegionMap({ rules: stale, partition: PARTITION })).toEqual({ map: null, why: NO_PARTITION('seedling-00000000') });
+        // A preset with no sub-regions needs no partition, and says nothing.
+        expect(buildSubRegionMap({ rules: { preset_sidecars: {} }, partition: PARTITION })).toEqual({ map: null, why: null });
+    });
+
+    it('subRegionAt: a sub-region tile names its compound region; a seam tile is no news', () => {
+        for (const r of ['level_0__r8c0', 'level_0__r1c6', 'level_0__r14c0']) {
+            for (const p of tilesOf(r)) expect(subRegionAt(MAP, 0, p.x, p.y)).toBe(r);
+        }
+        expect(subRegionAt(MAP, 0, seamOf(0).x, seamOf(0).y)).toBeNull();
+        expect(subRegionAt(MAP, 86, 40, 40)).toBeNull();
+    });
+
+    it('linkPath walks only links the gate opens', () => {
+        const closed = linkPath(MAP, 'level_0__r8c0', 'level_0__r14c0', gate({}));
+        expect(closed.path).toBeNull();
+        expect(closed.refused.map((r) => r.link.name)).toContain('level_0__r8c0 -> level_0__r14c0');
+        const open = linkPath(MAP, 'level_0__r8c0', 'level_0__r14c0', gate({ 'Progressive Swim': 1 }));
+        expect(open.path.map((h) => h.link.name)).toEqual(['level_0__r8c0 -> level_0__r14c0']);
+    });
+});
+
+describe('a HUMAN walk across a link (position reads; no bot)', () => {
+    const IN = 'level_0__r8c0';
+    const OUT = 'level_0__r14c0';
+
+    it('moves the AP region ONCE per crossing, and the seam never flickers', () => {
+        const b = standing(IN, { 'Progressive Swim': 1 });
+        const here = tilesOf(IN);
+        const there = tilesOf(OUT);
+        const seam = seamOf(0);
+        // Walking about inside the start sub-region: nothing.
+        expect(walk(b, here.slice(0, 5))).toEqual([]);
+        // Across: seam tiles in between say nothing; the first tile of the other side moves ONCE.
+        const out = moves(walk(b, [seam, there[0], seam, there[1], seam, there[0], there[2] ?? there[0]]));
+        expect(out).toHaveLength(1);
+        expect(out[0]).toMatchObject({ sourceRegion: IN, targetRegion: OUT, exitName: `${IN} -> ${OUT}`, logical: true,
+            fromLevel: 0, toLevel: 0 });
+        expect(b.region).toBe(OUT);
+        expect(b.world).toBe(world(OUT));
+        // The region load that move causes is NOT an arrival: no teleport.
+        const loaded = b.onLoadRegion({ region_id: OUT, world: world(OUT), arrivedFrom: { exit_id: `${IN} -> ${OUT}` } });
+        expect(loaded.filter((e) => e.type === 'teleport')).toEqual([]);
+        // And back: once.
+        const back = moves(walk(b, [seam, here[0], here[1], seam, here[2]]));
+        expect(back.map((m) => [m.sourceRegion, m.targetRegion])).toEqual([[OUT, IN]]);
+    });
+
+    it('⛔ never credits a move the logic does not allow: no item → WARNED once, the region stays', () => {
+        const b = standing(IN, {});
+        const there = tilesOf(OUT);
+        const effects = walk(b, [there[0], there[1], there[0]]);
+        expect(moves(effects)).toEqual([]);
+        expect(b.region).toBe(IN);
+        const warns = effects.filter((e) => e.type === 'warn');
+        expect(warns).toHaveLength(1);
+        expect(warns[0].message).toContain(`no OPEN logical link leads there from ${IN}`);
+        expect(warns[0].message).toContain('Progressive Swim');
+    });
+
+    it('a refused move stays ARMED: the item arriving while the player stands there moves the region then', () => {
+        const inv = {};
+        const b = standing(IN, inv);
+        const there = tilesOf(OUT);
+        expect(moves(walk(b, [there[0]]))).toEqual([]);
+        inv['Progressive Swim'] = 1;
+        expect(moves(walk(b, [there[0]])).map((m) => m.targetRegion)).toEqual([OUT]);
+    });
+
+    it('a BASELINE read records where the player stands and moves nothing (the first read after a bot walk)', () => {
+        const b = standing(IN, { 'Progressive Swim': 1 });
+        const there = tilesOf(OUT);
+        expect(b.onPlayerPosition({ level: 0, ...there[0] }, { baseline: true })).toEqual([]);
+        expect(b.region).toBe(IN);
+        expect(b.physicalSub).toBe(OUT);
+        // Edge-triggered: standing on, nothing; only a NEW sub-region is news.
+        expect(walk(b, [there[1]])).toEqual([]);
+    });
+
+    it('reads nothing while a swap of ours is in flight, parked, or on a level with no sub-regions', () => {
+        const b = standing(IN, { 'Progressive Swim': 1 });
+        b.pendingArrival = { level: 0, at: clock };
+        expect(b.wantsPosition()).toBe(false);
+        b.pendingArrival = null;
+        expect(b.wantsPosition()).toBe(true);
+        b.setActive(false);
+        expect(b.wantsPosition()).toBe(false);
+        expect(b.onPlayerPosition({ level: 0, ...tilesOf(OUT)[0] })).toEqual([]);
+        const house = standing('level_86');
+        expect(house.wantsPosition()).toBe(false);
+    });
+});
+
+/**
+ * ⛓ SAME-LEVEL LANDING (the divergence sweep's D2): a host jump to L12 (432,560) resolved, through L0's sibling
+ * departure, to `level_12__r0c19`, whose arrival spawn is (16,80) — a teleport INSIDE the level the game already
+ * reports, so no echo mark. The glue's next read still saw (432,560), in `level_12__r0c37`'s tiles, and moved the
+ * region there before the teleport landed; it then landed in r0c19 behind a closed bosslock link, and the AP region
+ * (r0c37) and the player (r0c19) never met again.
+ *   mutants: the mark never armed → the stale row reds; the mark never retired → the step-after-landing row reds.
+ */
+describe('⛓ SAME-LEVEL LANDING — a read before our own same-level teleport lands is stale', () => {
+    const FROM = 'level_12__r0c19';
+    const STALE = 'level_12__r0c37';
+    const INV = { 'Progressive Sword': 1, 'Red Key': 1 };
+    /** The binding as the jump left it: reporting level 12, a region in L12 just loaded (its teleport queued). */
+    function jumped() {
+        const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(INV) });
+        b.setSubRegions(MAP);
+        b.onStateReport('level', 12);
+        const tp = b.onLoadRegion({ region_id: FROM, world: world(FROM) }).find((e) => e.type === 'teleport');
+        return { b, tp };
+    }
+    const stale = { x: 432, y: 560 };
+
+    it('the shipped data: the jump\'s cell is r0c37\'s, the spawn is r0c19\'s, and r0c19 -> r0c37 is OPEN', () => {
+        expect(subRegionAt(MAP, 12, stale.x, stale.y)).toBe(STALE);
+        const { b, tp } = jumped();
+        expect(tp).toMatchObject({ level: 12, x: 16, y: 80 });
+        expect(subRegionAt(MAP, 12, tp.x, tp.y)).toBe(FROM);
+        expect(linkPath(MAP, FROM, STALE, (l) => b._linkVerdict(l)).path).not.toBeNull();
+    });
+
+    it('a read at the PRE-teleport cell is ignored (counted); the landing is read; a later step across is a real move', () => {
+        const { b, tp } = jumped();
+        expect(b.pendingLanding).toMatchObject({ level: 12, x: 16, y: 80 });
+        expect(b.pendingArrival).toBeNull();                       // no level change will come: no echo mark
+        expect(b.onPlayerPosition({ level: 12, ...stale })).toEqual([]);
+        expect(b.region).toBe(FROM);
+        expect(b.staleLandingReads).toBe(1);
+        expect(b.onPlayerPosition({ level: 12, x: tp.x, y: tp.y })).toEqual([]);
+        expect(b.pendingLanding).toBeNull();
+        expect(b.physicalSub).toBe(FROM);
+        // The harness's re-jump INSIDE the room (or a human walk): now it IS news.
+        expect(moves(b.onPlayerPosition({ level: 12, ...stale })).map((m) => [m.sourceRegion, m.targetRegion])).toEqual([[FROM, STALE]]);
+    });
+
+    it('the mark AGES OUT (a teleport that never lands is not waited for forever), and a BASELINE read retires it', () => {
+        const aged = jumped().b;
+        clock += 15001;
+        expect(moves(aged.onPlayerPosition({ level: 12, ...stale })).map((m) => m.targetRegion)).toEqual([STALE]);
+        const base = jumped().b;
+        expect(base.onPlayerPosition({ level: 12, ...stale }, { baseline: true })).toEqual([]);
+        expect(base.pendingLanding).toBeNull();
+        expect(base.physicalSub).toBe(STALE);
+    });
+
+    it('a CROSS-level arrival arms the echo mark, not the landing mark', () => {
+        const b = new SeedlingRegionBinding({ now: () => clock, canPass: gate(INV) });
+        b.setSubRegions(MAP);
+        b.onStateReport('level', 0);
+        b.onLoadRegion({ region_id: FROM, world: world(FROM) });
+        expect(b.pendingArrival).toMatchObject({ level: 12 });
+        expect(b.pendingLanding).toBeNull();
+    });
+});
+
+describe('the Playback Bot\'s route CREDITS a link (no walk), and the next door resolves from it', () => {
+    it('a gated link, open: credited at once, no teleport, no bounce back from the player\'s tiles, then the sibling\'s door', () => {
+        const b = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        const out = b.creditLink(SWORD_LINK);
+        expect(out.ok).toBe(true);
+        expect(moves(out.effects)).toEqual([expect.objectContaining({ sourceRegion: 'level_0__r8c0',
+            targetRegion: 'level_0__r11c19', exitName: SWORD_LINK, logical: true })]);
+        expect(b.onLoadRegion({ region_id: 'level_0__r11c19', world: world('level_0__r11c19') })
+            .filter((e) => e.type === 'teleport')).toEqual([]);
+        // The player still stands in r8c0's tiles (the link is walked as part of the next door's plan).
+        expect(walk(b, tilesOf('level_0__r8c0').slice(0, 3))).toEqual([]);
+        expect(b.region).toBe('level_0__r11c19');
+        // The teleporter to L12 fires: resolved against the CURRENT sub-region's sidecar.
+        const crossing = moves(b.onStateReport('level', 12));
+        expect(crossing).toEqual([expect.objectContaining({ sourceRegion: 'level_0__r11c19', targetRegion: 'level_12__r0c19',
+            exitName: 'level_0__r11c19 -> level_12__r0c19', toLevel: 12 })]);
+    });
+
+    it('refuses a link out of another region, and a link the gate keeps closed — by name', () => {
+        const b = standing('level_0__r8c0', {});
+        expect(b.creditLink('level_0__r1c6 -> level_0__r2c13')).toMatchObject({ ok: false,
+            reason: expect.stringContaining('leaves level_0__r1c6, but the AP region is level_0__r8c0') });
+        const closed = b.creditLink('level_0__r8c0 -> level_0__r11c19');
+        expect(closed.ok).toBe(false);
+        expect(closed.reason).toContain('is closed');
+        expect(b.region).toBe('level_0__r8c0');
+        expect(b.creditLink('nope')).toMatchObject({ ok: false });
+    });
+});
+
+describe('a door fired from a SIBLING sub-region (no position read saw the seam)', () => {
+    it('the human walks from the start to a sibling\'s door: the open link is credited, then the crossing', () => {
+        const b = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        const effects = moves(b.onStateReport('level', 12));
+        expect(effects.map((m) => [m.sourceRegion, m.targetRegion, !!m.logical])).toEqual([
+            ['level_0__r8c0', 'level_0__r11c19', true],
+            ['level_0__r11c19', 'level_12__r0c19', false],
+        ]);
+        // ⚖ rules `ce1cba867a`: the L2 stairs are r8c0's OWN door now — one crossing, no logical hop, no item.
+        const stairs = standing('level_0__r8c0', {});
+        expect(moves(stairs.onStateReport('level', 2)).map((m) => [m.sourceRegion, m.targetRegion, !!m.logical, m.exitName]))
+            .toEqual([['level_0__r8c0', 'level_2', false, 'level_0__r8c0 -> level_2']]);
+    });
+
+    it('⛔ a sibling behind a CLOSED link is not credited: no logical hop, no move to the sibling\'s door', () => {
+        // r11c19's teleporter goes to L12; r8c0 reaches r11c19 only by Sword / Ghost Spear.
+        const b = standing('level_0__r8c0', {});
+        const effects = b.onStateReport('level', 12);
+        expect(moves(effects)).toEqual([]);
+        expect(effects.map((e) => e.type)).toEqual(['warn']);
+        expect(b.region).toBe('level_0__r8c0');
+        // An ARRIVAL row (no target region) whose level no door of its room leads to is not a way out — a warn,
+        // never a move to `null` (which would park). Since the rules arc's patched set (the Moonrock removed, the
+        // L110 fall CHAINED to L2) that row is `level_2`'s own `in_pit_L110_3_2`; no L0 sidecar keeps an orphan
+        // arrival row any more (every one has its door).
+        const shut = new SeedlingRegionBinding({ now: () => clock, canPass: () => ({ pass: false, gated: true }) });
+        shut.setSubRegions(MAP);
+        shut.onStateReport('level', 2);
+        shut.onLoadRegion({ region_id: 'level_2', world: world('level_2') });
+        const L2 = Object.keys(SIDECARS).filter((r) => r === 'level_2' || r.startsWith('level_2__'));
+        expect(world('level_2').exits.some((e) => e.target_level === 110 && !e.targetRegion)).toBe(true);
+        expect(L2.flatMap((r) => world(r).exits).filter((e) => e.target_level === 110 && e.targetRegion)).toEqual([]);
+        const toPit = shut.onStateReport('level', 110);
+        expect(moves(toPit)).toEqual([]);
+        expect(toPit.map((e) => e.type)).toEqual(['warn']);
+        const armed = standing('level_0__r8c0', { 'Progressive Sword': 1 });
+        expect(moves(armed.onStateReport('level', 12)).map((m) => m.targetRegion))
+            .toEqual(['level_0__r11c19', 'level_12__r0c19']);
+    });
+});
+
+describe('⛔ a departure beats an arrival row (measured live: the bot stalled in L3 after L11)', () => {
+    it('level_11 → level 3: the door, not `in_L3_…` (same target spawn, listed first)', () => {
+        const rows = world('level_11').exits.filter((e) => e.target_level === 3);
+        expect(rows.some((e) => !e.targetRegion)).toBe(true);
+        expect(rows.some((e) => e.targetRegion)).toBe(true);
+        const b = standing('level_11');
+        b.onStateReport('playerPositionX', rows[0].target_spawn.x);
+        b.onStateReport('playerPositionY', rows[0].target_spawn.y);
+        expect(moves(b.onStateReport('level', 3))).toEqual([expect.objectContaining({ sourceRegion: 'level_11',
+            targetRegion: 'level_3__r8c6', exitName: 'level_11 -> level_3__r8c6' })]);
+    });
+});
+
+describe('the glue reads the position, and stands down while the bot walks', () => {
+    function rig({ walking = false, status = null } = {}) {
+        const published = [];
+        const ticks = [];
+        const glue = new SeedlingRegionGlue({
+            eventBus: { subscribe: () => () => {}, publish: () => {} },
+            getDispatcher: () => ({ publish: (event, data) => published.push({ event, data }) }),
+            loadRegionEvent: 'flashSeedling:loadRegion',
+            canPass: gate({ 'Progressive Swim': 1 }),
+            isBotWalking: () => walking,
+            timers: { setInterval: (fn) => { ticks.push(fn); return 1; }, clearInterval: () => {} },
+            now: () => clock,
+        });
+        const game = { botStatus: () => JSON.stringify(status()) };
+        glue.attachAdapter({ _getFlash: () => game, teleport: () => {} });
+        glue.setSubRegions(MAP);
+        glue.binding.onStateReport('level', 0);
+        glue.handleLoadRegion({ region_id: 'level_0__r8c0', world: world('level_0__r8c0') });
+        return { glue, published, ticks, setWalking: (w) => { walking = w; } };
+    }
+
+    it('a read in another sub-region publishes ONE user:regionMove carrying `logical: true`', () => {
+        let at = tilesOf('level_0__r8c0')[0];
+        const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.start();
+        expect(r.ticks).toHaveLength(1);
+        r.ticks[0]();
+        at = tilesOf('level_0__r14c0')[0];
+        r.ticks[0]();
+        r.ticks[0]();
+        const moved = r.published.filter((p) => p.event === 'user:regionMove');
+        expect(moved).toHaveLength(1);
+        expect(moved[0].data).toMatchObject({ sourceRegion: 'level_0__r8c0', targetRegion: 'level_0__r14c0', logical: true });
+        expect(r.glue.stats).toMatchObject({ logicalMoves: 1, positionReads: 3 });
+    });
+
+    it('no read while the bot walks; the first read after it is a BASELINE (its route already credited)', () => {
+        let at = tilesOf('level_0__r14c0')[0];
+        const r = rig({ walking: true, status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.readPosition();
+        expect(r.glue.stats.positionReads).toBe(0);
+        r.setWalking(false);
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
+        expect(r.glue.binding.physicalSub).toBe('level_0__r14c0');
+        at = tilesOf('level_0__r8c0')[0];
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
+        at = tilesOf('level_0__r14c0')[1];
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toHaveLength(1);
+    });
+
+    it('⛓ §5.19 — no read during the randomized load\'s mount + reset window: a TRANSIENT position there credits nothing; after the landing the edge is re-armed and a human step is exact', () => {
+        let at = tilesOf('level_0__r8c0')[0];
+        const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.readPosition();
+        expect(r.glue.binding.physicalSub).toBe('level_0__r8c0');
+        r.glue.holdPositionWatch('the randomized load (mount + reset)');
+        at = tilesOf('level_0__r14c0')[0]; // the page's pre-reset boot / the mount: somewhere else, for a moment
+        r.glue.readPosition();
+        r.glue.readPosition();
+        expect(r.glue.stats.positionReads).toBe(1);
+        at = tilesOf('level_0__r8c0')[1]; // the explicit start lands
+        r.glue.releasePositionWatch();
+        expect(r.glue.binding.physicalSub).toBe(null); // re-armed
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
+        expect(r.glue.binding).toMatchObject({ region: 'level_0__r8c0', physicalSub: 'level_0__r8c0' });
+        at = tilesOf('level_0__r14c0')[1]; // a human step
+        r.glue.readPosition();
+        const moved = r.published.filter((p) => p.event === 'user:regionMove');
+        expect(moved.map((p) => p.data.targetRegion)).toEqual(['level_0__r14c0']);
+    });
+
+    it('⛓ §5.19 — …and a reset that LANDS the player in another sub-region than the AP region moves it there on the first read (re-armed, through the gate)', () => {
+        let at = tilesOf('level_0__r8c0')[0];
+        const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.readPosition();
+        r.glue.holdPositionWatch('reset');
+        at = tilesOf('level_0__r14c0')[0];
+        r.glue.releasePositionWatch();
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove').map((p) => p.data.targetRegion)).toEqual(['level_0__r14c0']);
+    });
+
+    it('creditLogicalLink answers at once and PUBLISHES on the next turn (the bot\'s walkTo is on the stack)', async () => {
+        const r = rig({ status: () => ({ level: 0, x: 0, y: 0 }) });
+        expect(r.glue.creditLogicalLink(SWIM_LINK)).toEqual({ ok: true });
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
+        await Promise.resolve();
+        expect(r.published.filter((p) => p.event === 'user:regionMove').map((p) => p.data.targetRegion)).toEqual(['level_0__r14c0']);
+        expect(r.glue.creditLogicalLink(SWIM_LINK).ok).toBe(false);
+    });
+});
+
+describe('the controller hands a route\'s link to the binding (wasm and JS alike)', () => {
+    const link = MAP.links.get('level_0__r8c0').find((l) => l.name === SWORD_LINK);
+    const atlas = { arm: 'vanilla', entries: [], refused: [], regions: new Map(), links: [link] };
+
+    it('the resolver answers a link, not a goal', () => {
+        expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: SWORD_LINK }, atlas)).toEqual({ link });
+    });
+
+    function controller(surface) {
+        const engine = { liveLevel: () => 0, walkTo: () => ({ ok: true }), status: () => ({ phase: 'idle' }), dispose() {} };
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'wasm', wasm: { getGame: () => ({}), mapPath: 'x' }, atlas, ...surface }),
+            substrate: 'flash_seedling', resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true,
+            loadWasmEngine: async () => engine,
+        });
+        c._wasmEngine = engine;
+        c._wasmGame = c._getSurface().wasm.getGame();
+        return c;
+    }
+
+    it('credited → walkTo true, nothing handed to the engine; refused by the binding → refused by name', () => {
+        let asked = null;
+        const game = {};
+        const c = controller({ wasm: { getGame: () => game, mapPath: 'x' }, creditLink: (n) => { asked = n; return { ok: true }; } });
+        c._wasmGame = game;
+        expect(c.walkTo({ kind: 'exit', name: SWORD_LINK })).toBe(true);
+        expect(asked).toBe(SWORD_LINK);
+        expect(c.lastGoal).toMatchObject({ kind: 'link', name: SWORD_LINK });
+        const d = controller({ wasm: { getGame: () => game, mapPath: 'x' }, creditLink: () => ({ ok: false, reason: 'closed' }) });
+        d._wasmGame = game;
+        expect(d.walkTo({ kind: 'exit', name: SWORD_LINK })).toBe(false);
+        expect(d.lastRefusal).toBe(LINK_CREDIT_REFUSAL(link, 'closed'));
+        const e = controller({ wasm: { getGame: () => game, mapPath: 'x' } });
+        e._wasmGame = game;
+        expect(e.walkTo({ kind: 'exit', name: SWORD_LINK })).toBe(false);
+        expect(e.lastRefusal).toBe(SUB_REGION_LINK_REFUSAL(link));
+    });
+
+    it('busy(): a wasm engine not idle (held counts), a JS walk walking or waiting', () => {
+        const c = controller({});
+        expect(c.busy()).toBe(false);
+        c._wasmEngine = { status: () => ({ phase: 'held' }) };
+        expect(c.busy()).toBe(true);
+        const js = new SeedlingPlaybackController({ getSurface: () => ({ transport: 'js', jsRuntime: { playback: { state: 'waiting' } } }) });
+        expect(js.busy()).toBe(true);
+    });
+});
+
+describe('the committed partition is the atlases\' own analysis (the generator\'s --check, in the suite)', () => {
+    it('a fresh build is byte-identical, and a partition that disagrees with its atlas is refused by name', async () => {
+        const gen = await import('../../../scripts/procgen/make-seedling-subregion-partition.mjs');
+        const { compactJsonFile } = await import('../procgenPipeline/compactJson.js');
+        const { doc } = await gen.buildSubRegionPartition();
+        expect(compactJsonFile(doc)).toBe(readFileSync(abs('./atlases/seedling-subregion-partition.json'), 'utf8'));
+        // Every region checked: a location's tile moved into another sub-region is a named problem.
+        const atlas = readJson('./atlases/seedling-playthrough.json');
+        const region = atlas.regions.find((r) => r.region_id === 'level_0');
+        const entry = PARTITION.atlases[atlas.atlas_id].regions.level_0;
+        expect(gen.partitionProblems(region, entry)).toEqual([]);
+        // An exit standing on a walkable tile, re-bound to a sub-region it is not in.
+        const exit = region.exits.find((e) => entry.rows[e.entrance_tile[1]][e.entrance_tile[0]] !== '.'
+            && e.sub_region !== 'r14c0');
+        const wrong = { ...region, exits: region.exits.map((e) => (e === exit ? { ...e, sub_region: 'r14c0' } : e)) };
+        expect(gen.partitionProblems(wrong, entry).join('\n')).toContain(`"${exit.exit_id}"`);
+    }, 30000);
+});

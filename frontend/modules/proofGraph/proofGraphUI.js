@@ -80,6 +80,7 @@ export class ProofGraphUI {
       <button class="pg-btn pg-btn-layout" title="Re-run layout algorithm">Re-layout</button>
       <button class="pg-btn pg-btn-fit" title="Fit graph to viewport">Fit</button>
       <button class="pg-btn pg-btn-check" title="Check a fully-connected node">Check Next</button>
+      <button class="pg-btn pg-btn-connect" aria-pressed="false" title="Connect two nodes with two clicks instead of a drag: click the dependency, then the step that uses it">Click to connect: off</button>
     `;
     this.rootElement.appendChild(this._toolbarEl);
 
@@ -98,6 +99,7 @@ export class ProofGraphUI {
     this._toolbarEl.querySelector('.pg-btn-layout').addEventListener('click', () => this._runLayout());
     this._toolbarEl.querySelector('.pg-btn-fit').addEventListener('click', () => this._fitGraph());
     this._toolbarEl.querySelector('.pg-btn-check').addEventListener('click', () => this._onCheckNext());
+    this._toolbarEl.querySelector('.pg-btn-connect').addEventListener('click', () => this._setConnectMode(!this._connectMode));
 
     this._toolbarEl.style.display = 'none';
   }
@@ -287,6 +289,10 @@ export class ProofGraphUI {
     // Node click handler: check step (ignore port nodes)
     this.cy.on('tap', 'node.proof-node', (evt) => {
       const node = evt.target;
+      if (this._connectMode) {
+        this._onConnectTap(node);
+        return;
+      }
       const stepIndex = parseInt(node.id(), 10);
       if (proofGraphState.isStepCheckable(stepIndex)) {
         this._checkStep(stepIndex);
@@ -464,6 +470,15 @@ export class ProofGraphUI {
           'border-width': '4px',
         },
       },
+      {
+        // The two-click mode's chosen source (see _setConnectMode).
+        selector: 'node.connect-source',
+        style: {
+          'border-color': '#f9e2af',
+          'border-width': '5px',
+          'border-style': 'dashed',
+        },
+      },
       // ─── Checked (location complete) ────────────
       {
         selector: 'node.checked',
@@ -585,19 +600,7 @@ export class ProofGraphUI {
       // Can this edge be created? Allow any non-self-loop attempt.
       // For correct deps, allow if there's an unfilled slot. For incorrect
       // deps, allow so the player gets rejection feedback.
-      canConnect: (sourceNode, targetNode) => {
-        // Port nodes are not valid edge targets
-        if (targetNode.hasClass('port-node')) return false;
-        const sourceIdx = parseInt(sourceNode.id(), 10);
-        const targetIdx = parseInt(targetNode.id(), 10);
-        if (sourceIdx === targetIdx) return false;
-        // If this is a known dependency, only allow if an unfilled slot remains
-        if (proofGraphState._hasAnySlot(sourceIdx, targetIdx)) {
-          return proofGraphState.hasUnfilledSlot(sourceIdx, targetIdx);
-        }
-        // Unknown dependency — allow attempt (will be rejected with feedback)
-        return true;
-      },
+      canConnect: (sourceNode, targetNode) => this._canConnect(sourceNode, targetNode),
 
       // Edge parameters for the created edge
       edgeParams: (sourceNode, targetNode) => {
@@ -613,60 +616,133 @@ export class ProofGraphUI {
 
     // Handle edge completion via Cytoscape event.
     this.cy.on('ehcomplete', (event, sourceNode, targetNode, addedEdge) => {
-      const sourceIdx = parseInt(sourceNode.id(), 10);
-      const targetIdx = parseInt(targetNode.id(), 10);
-
-      const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
-
-      if (result.success) {
-        // Same-name routing may connect a different instance than the one the
-        // player dragged from, so draw the edge from the routed source.
-        const drawnSource = result.source;
-
-        // Cytoscape edges are immutable in source/target, so replace with
-        // a new edge that targets the port node directly.
-        addedEdge.remove();
-
-        const portId = `port-${targetIdx}-${result.slot}`;
-        const edgeKey = `${drawnSource}->${targetIdx}:${result.slot}`;
-        this.cy.add({
-          group: 'edges',
-          data: {
-            id: `edge-${edgeKey}`,
-            source: String(drawnSource),
-            target: portId,
-          },
-          classes: 'drawn-edge',
-        });
-
-        // Mark port as filled
-        this.cy.getElementById(portId).addClass('port-filled');
-
-        this._flashNode(targetNode, 'success-flash');
-        // Move target node to the row below its source nodes
-        this._updateRowAfterEdge(targetIdx);
-        this._layoutFromRows(true);
-        const routedNote = drawnSource !== sourceIdx ? ` (routed from ${sourceIdx})` : '';
-        log('info', `Edge drawn: ${drawnSource} -> ${targetIdx} (slot ${result.slot})${routedNote}`);
-      } else {
-        // Remove the edge that edgehandles added
-        addedEdge.remove();
-
-        if (result.reason === 'incorrect') {
-          this._flashNode(targetNode, 'reject-flash');
-          this._flashNode(sourceNode, 'reject-flash');
-          log('info', `Edge rejected: ${sourceIdx} -> ${targetIdx}`);
-        }
-      }
-
-      this._updateNodeClasses();
-      this._updateStatus();
+      this._completeEdge(sourceNode, targetNode, addedEdge);
     });
 
-    // Enable drawing mode
-    this.eh.enableDrawMode();
+    // Enable drawing mode (off while the two-click mode is on)
+    if (this._connectMode) this.eh.disableDrawMode();
+    else this.eh.enableDrawMode();
 
     log('info', 'Edgehandles initialized and draw mode enabled');
+  }
+
+  // ─── Two-click connect mode ───────────────────────────────
+
+  /**
+   * ⚖ The user, 2026-10-10: a mode that connects two nodes with two clicks
+   * instead of a click-and-drag. With it on, the drag handle is off, the
+   * first tapped node is the SOURCE (outlined) and the second tap draws the
+   * edge source → target through the same path a drag takes
+   * (`_completeEdge`); tapping the source again cancels. Taps do not check a
+   * node while it is on — Check Next does.
+   */
+  _setConnectMode(on) {
+    this._connectMode = Boolean(on);
+    this._clearConnectSource();
+    const btn = this._toolbarEl?.querySelector('.pg-btn-connect');
+    if (btn) {
+      btn.textContent = `Click to connect: ${this._connectMode ? 'on' : 'off'}`;
+      btn.setAttribute('aria-pressed', String(this._connectMode));
+      btn.classList.toggle('pg-btn-active', this._connectMode);
+    }
+    if (this.eh) {
+      if (this._connectMode) this.eh.disableDrawMode();
+      else this.eh.enableDrawMode();
+    }
+    this._updateStatus();
+  }
+
+  _clearConnectSource() {
+    if (this._connectSource && this.cy) this._connectSource.removeClass('connect-source');
+    this._connectSource = null;
+  }
+
+  _onConnectTap(node) {
+    if (!this._connectSource) {
+      this._connectSource = node;
+      node.addClass('connect-source');
+      this._updateStatus();
+      return;
+    }
+    const source = this._connectSource;
+    this._clearConnectSource();
+    if (source.id() === node.id()) {
+      this._updateStatus();
+      return;
+    }
+    if (!this._canConnect(source, node)) {
+      this._flashNode(node, 'reject-flash');
+      this._updateStatus();
+      return;
+    }
+    this._completeEdge(source, node, null);
+  }
+
+  /** The drag's `canConnect` rule, shared with the two-click mode. */
+  _canConnect(sourceNode, targetNode) {
+    if (targetNode.hasClass('port-node')) return false;
+    const sourceIdx = parseInt(sourceNode.id(), 10);
+    const targetIdx = parseInt(targetNode.id(), 10);
+    if (sourceIdx === targetIdx) return false;
+    if (proofGraphState._hasAnySlot(sourceIdx, targetIdx)) {
+      return proofGraphState.hasUnfilledSlot(sourceIdx, targetIdx);
+    }
+    return true;
+  }
+
+  /**
+   * An edge attempt source → target, from a drag (`addedEdge` is the edge
+   * edgehandles drew) or from the two-click mode (`addedEdge` null).
+   */
+  _completeEdge(sourceNode, targetNode, addedEdge) {
+    const sourceIdx = parseInt(sourceNode.id(), 10);
+    const targetIdx = parseInt(targetNode.id(), 10);
+
+    const result = proofGraphState.tryDrawEdge(sourceIdx, targetIdx);
+
+    if (result.success) {
+      // Same-name routing may connect a different instance than the one the
+      // player dragged from, so draw the edge from the routed source.
+      const drawnSource = result.source;
+
+      // Cytoscape edges are immutable in source/target, so replace with
+      // a new edge that targets the port node directly.
+      addedEdge?.remove();
+
+      const portId = `port-${targetIdx}-${result.slot}`;
+      const edgeKey = `${drawnSource}->${targetIdx}:${result.slot}`;
+      this.cy.add({
+        group: 'edges',
+        data: {
+          id: `edge-${edgeKey}`,
+          source: String(drawnSource),
+          target: portId,
+        },
+        classes: 'drawn-edge',
+      });
+
+      // Mark port as filled
+      this.cy.getElementById(portId).addClass('port-filled');
+
+      this._flashNode(targetNode, 'success-flash');
+      // Move target node to the row below its source nodes
+      this._updateRowAfterEdge(targetIdx);
+      this._layoutFromRows(true);
+      const routedNote = drawnSource !== sourceIdx ? ` (routed from ${sourceIdx})` : '';
+      log('info', `Edge drawn: ${drawnSource} -> ${targetIdx} (slot ${result.slot})${routedNote}`);
+    } else {
+      // Remove the edge that edgehandles added
+      addedEdge?.remove();
+
+      if (result.reason === 'incorrect') {
+        this._flashNode(targetNode, 'reject-flash');
+        this._flashNode(sourceNode, 'reject-flash');
+        log('info', `Edge rejected: ${sourceIdx} -> ${targetIdx}`);
+      }
+    }
+
+    this._updateNodeClasses();
+    this._updateStatus();
   }
 
   // ─── Node Class Updates ───────────────────────────────────
@@ -1073,6 +1149,11 @@ export class ProofGraphUI {
 
     let text = `Edges: ${drawn}/${total} | Steps: ${checked}/${totalSteps}`;
     if (wrong > 0) text += ` | Wrong: ${wrong}`;
+    if (this._connectMode) {
+      text += this._connectSource
+        ? ` | Connecting from ${this._connectSource.id()}: click the step that uses it`
+        : ' | Click to connect: click a dependency';
+    }
     this._statusEl.textContent = text;
     this._statusEl.className = 'pg-status';
   }

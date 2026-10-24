@@ -1,0 +1,7 @@
+A-sword        82834f24 82834f24 82834f24 
+A-ghost        fcac3f47 fcac3f47 fcac3f47 
+leg-397-ghost  b90f7720 b90f7720 b90f7720 
+leg-414-ghost  314c6324 314c6324 314c6324 
+leg-108-sword  9e27846e 9e27846e 9e27846e 
+l18            de6f6e4e de6f6e4e de6f6e4e 
+ghost-sweep    1ca7eed5 1ca7eed5 1ca7eed5 

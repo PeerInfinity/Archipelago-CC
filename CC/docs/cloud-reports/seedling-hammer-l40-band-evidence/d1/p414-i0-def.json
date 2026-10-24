@@ -1,0 +1,313 @@
+{
+ "what": "414/i0",
+ "seamTime": 5131,
+ "budgetWork": 640,
+ "upgradeWindowWork": 85,
+ "fidelity": "defaults",
+ "ok": false,
+ "kind": "refusal",
+ "work": 643,
+ "ticks": null,
+ "answer": "668f4ca7",
+ "message": "solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.",
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 47094,
+   "work": 642,
+   "deadline": "detour",
+   "limit": "budget"
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 6,
+   "work": 1,
+   "deadline": "walk",
+   "limit": "budget"
+  }
+ ],
+ "wallMs": 47101,
+ "points": 11747,
+ "sites": {
+  "segment": 2,
+  "goal": 2,
+  "walk": 101,
+  "heartbeat": 1242,
+  "preview": 9839,
+  "climb": 2,
+  "rung": 13,
+  "detour": 543,
+  "crusher-fork": 1,
+  "done": 2
+ },
+ "wallAfterSiteMs": {
+  "preview": 32278,
+  "heartbeat": 9272,
+  "walk": 2714,
+  "detour": 2154,
+  "rung": 527,
+  "start": 20,
+  "goal": 10,
+  "segment": 7,
+  "climb": 4,
+  "done": 3,
+  "crusher-fork": 2
+ },
+ "topPairs": {
+  "preview→preview": {
+   "n": 8599,
+   "ms": 20926,
+   "maxMs": 209
+  },
+  "preview→heartbeat": {
+   "n": 1209,
+   "ms": 10925,
+   "maxMs": 59
+  },
+  "heartbeat→preview": {
+   "n": 1226,
+   "ms": 9039,
+   "maxMs": 72
+  },
+  "detour→detour": {
+   "n": 542,
+   "ms": 2153,
+   "maxMs": 22
+  },
+  "walk→walk": {
+   "n": 66,
+   "ms": 1480,
+   "maxMs": 83
+  },
+  "walk→heartbeat": {
+   "n": 18,
+   "ms": 671,
+   "maxMs": 190
+  },
+  "walk→preview": {
+   "n": 13,
+   "ms": 545,
+   "maxMs": 170
+  },
+  "preview→walk": {
+   "n": 31,
+   "ms": 428,
+   "maxMs": 127
+  },
+  "rung→heartbeat": {
+   "n": 1,
+   "ms": 318,
+   "maxMs": 318
+  },
+  "heartbeat→heartbeat": {
+   "n": 14,
+   "ms": 156,
+   "maxMs": 41
+  },
+  "rung→rung": {
+   "n": 9,
+   "ms": 112,
+   "maxMs": 64
+  },
+  "heartbeat→walk": {
+   "n": 2,
+   "ms": 77,
+   "maxMs": 58
+  },
+  "rung→preview": {
+   "n": 1,
+   "ms": 63,
+   "maxMs": 63
+  },
+  "rung→crusher-fork": {
+   "n": 1,
+   "ms": 34,
+   "maxMs": 34
+  },
+  "start→segment": {
+   "n": 1,
+   "ms": 20,
+   "maxMs": 20
+  }
+ },
+ "asksByFrame": {
+  "detour | - @ - | climb/rung:detour": 543,
+  "crusher-fork | - @ - | climb/rung:forced-hit": 1
+ },
+ "segments": [
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "refused",
+   "asks": {
+    "walk": 98,
+    "detour": 543,
+    "crusher-fork": 1
+   },
+   "work": {
+    "shouldStop": 642,
+    "ticks": 2132,
+    "previews": 9839,
+    "previewStates": 635300,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 9,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "deadline": 6,
+    "exhausted": 3,
+    "bound": 2,
+    "does-not-apply": 2,
+    "other": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 2,
+    "rung": 13,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,853.7) — chaser:bob@736,800 (inside leash 80 (d=5.9), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 215 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [chaser:bob@736,800] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine(\"Player\", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) at (889.0,849.9)\n  detour: deadline — the caller's anytime deadline (`shouldStop`) was reached while the DETOUR search built its via set, after 541 leg(s), so the rest of the search was not run\n  forced-hit: no forced hit is proven from (727.6,680.2): the caller's deadline tripped inside the proof's fork (0 fork step(s)) ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `detour`) and refused 1 `detour` scan(s), 1 `crusher-fork` scan(s) — this refusal may be the deadline's, not the room's.",
+    "kind": "deadline",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverRefusal"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1242
+   },
+   "topNodes": [
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 2,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:narrow",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:detour",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:forced-hit",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  },
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "refused",
+   "asks": {
+    "walk": 1
+   },
+   "work": {
+    "shouldStop": 1,
+    "ticks": 0,
+    "previews": 0,
+    "previewStates": 0,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 0,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "deadline": 3
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is bounded there, so the solve stops here instead of overrunning. ⏱ DEADLINE: the caller's `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this refusal may be the deadline's, not the room's.",
+    "kind": "deadline",
+    "key": "segment/goal#0/walk",
+    "name": "SolverRefusal"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1242
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  }
+ ],
+ "cpu": null
+}

@@ -1,0 +1,62 @@
+producer	verdict	wall_s	first_differing_row
+plan-seedling-axe-witness	RED	16.3	FAIL: the committed axe-l48-reach-l49 is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-bobsoldier	GREEN	1.9	
+plan-seedling-bobsoldier2	RED	5.9	FAIL: both switches OFF: the staging REFUSES on the kill arm's dwell (the survey's step-50 text) — solverBot(survey-step-50) reach-exit (224,160)->L32: the danger map forbids (72.65027025319233,66.4
+plan-seedling-bulb	GREEN	2.0	
+plan-seedling-burn-witness	GREEN	1.7	
+plan-seedling-c1-static-sword	GREEN	19.1	
+plan-seedling-crusher-witness	GREEN	12.2	
+plan-seedling-encounters	GREEN	19.9	
+plan-seedling-f1-l5-lock	GREEN	0.7	
+plan-seedling-f1-l5-open-lock	RED	1.0	FAIL: ⛓⛓ the open-lock arrival DECLINES, and by the new name — it solved
+plan-seedling-f1c-l18-lock	GREEN	0.8	
+plan-seedling-f1c-l18-phase	GREEN	13.9	
+plan-seedling-f4-l8-sandtraps	GREEN	1.7	
+plan-seedling-f6-reentry	GREEN	0.4	
+plan-seedling-f7-reentry	GREEN	0.4	
+plan-seedling-frontier3-witness	GREEN	1.5	
+plan-seedling-ghostmotion	GREEN	0.3	
+plan-seedling-ghostsword	GREEN	0.3	
+plan-seedling-hammer-a-escape	GREEN	12.1	
+plan-seedling-hammer-b1-approach	GREEN	8.4	
+plan-seedling-hammer-b2-fight	GREEN	11.8	
+plan-seedling-hammer-bw-bombstand	GREEN	775.0	
+plan-seedling-hammer-c2-ghost	GREEN	0.4	
+plan-seedling-hammer-d-ghostwall	GREEN	0.7	
+plan-seedling-hammer-dd-walkkill	GREEN	3.1	
+plan-seedling-hammer-g1-ghostkill	GREEN	175.9	
+plan-seedling-hammer-sf-strikefloor	GREEN	263.3	
+plan-seedling-l12keyline-witness	GREEN	60.4	
+plan-seedling-l14-swordless	GREEN	1.9	
+plan-seedling-l30keylock	RED	14.1	FAIL: the committed l30keylock-pit224 is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-l40button-witness	THROWS	248.3	SolverRefusal: solverBot(l40button-l41-part0) collect (64,144) stance (ladder-routed: no corridor from (936,104) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15
+plan-seedling-ladder2-witness	RED	2.6	FAIL: the committed ladder2-l104-beam is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-proximity-witness	GREEN	3.1	
+plan-seedling-pushblock-witness	RED	2.8	FAIL: the committed pushblock-l65-reach-l68 is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-r1-dark-suit	GREEN	0.8	
+plan-seedling-r2-singles	GREEN	0.4	
+plan-seedling-r2-wallflyer	GREEN	0.4	
+plan-seedling-r3-death	GREEN	0.4	
+plan-seedling-r4	GREEN	0.5	
+plan-seedling-r7-attribution	GREEN	22.5	
+plan-seedling-r7-ends-meet	GREEN (env)	14	THREW at :9688-only boxes: page.goto ERR_CONNECTION_REFUSED http://localhost:8000/... (PAGE_URL hardcodes :8000); re-run with a server on :8000 → rc 0, 14 s
+plan-seedling-r8-hammer-pair	GREEN	1.4	
+plan-seedling-r8-l18-spinner	GREEN	0.9	
+plan-seedling-r9-l0-sword-dash	RED	0.3	FAIL: ⛓ the committed tape is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-r9-l6-bob-press	GREEN	0.4	
+plan-seedling-r9-l6-harmless-window	GREEN	0.8	
+plan-seedling-r9-l6-sword-dash-hit	RED	0.8	FAIL: ⛓ the committed tape is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-return-l15	GREEN	0.4	
+plan-seedling-slots-witness	GREEN	1.5	
+plan-seedling-stance-witness	RED	4.9	FAIL: the committed stance-l46-chest is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-u10-puncher-dwell	RED	0.5	FAIL: ⛓ the committed u10-puncher-dwell is what this script produces today — ⛔ DRIFT — re-run without --check
+plan-seedling-u11-dark-shield	GREEN	0.3	
+plan-seedling-u11-facing	GREEN	0.4	
+plan-seedling-u12-pull	GREEN	0.3	
+plan-seedling-u14-moonrock	GREEN	0.3	
+plan-seedling-u15-turret	GREEN	0.4	
+plan-seedling-u7-puncher	GREEN	0.4	
+plan-seedling-u9-shield-bump	GREEN	0.5	
+plan-seedling-wallflyer	GREEN	0.5	
+plan-seedling-wand-witness	GREEN	1.0	
+plan-seedling-watcher-witness	GREEN	2.5	

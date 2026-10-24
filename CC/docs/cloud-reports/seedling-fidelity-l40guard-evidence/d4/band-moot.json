@@ -1,0 +1,54 @@
+{
+ "game": "seedling",
+ "name": "l40guard-band-moot",
+ "boot": {
+  "level": 40,
+  "x": 680,
+  "y": 664
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": true
+  },
+  "hits_max": 3,
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 1000,
+ "inputs": [],
+ "tape_version": 8,
+ "description": "scratch l40guard witness"
+}

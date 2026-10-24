@@ -19,8 +19,48 @@ import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { getSavedQueues } from './savedQueueStore.js';
+import {
+  botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
+} from '../procgenCore/substratePredicates.js';
+import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
+import {
+  getSavedQueues, getSavedQueueByTag, saveQueue, hasPlayableRecording, hasSummaryRecording,
+} from './savedQueueStore.js';
+import { BlockAnnotationTracker, itemKey } from './blockAnnotations.js';
 import { hashRulesData } from '../shared/rulesHash.js';
+import { isLoopModePlanningSource } from './loopModeExemptions.js';
+import {
+  DEFAULT_TIME_DRAIN_PER_SECOND,
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
+// The explore multiplier and the start-region rule's zero are the generic
+// model's, not the store's: they are stated once beside the rest of the block
+// vocabulary, and imported from the generator the way every runtime reader does.
+import {
+  DEFAULT_EXPLORE_MULTIPLIER,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
+// ⛓ APWORLD SUBSTRATE CHANGE S3 — the loop reset lands where the LOAD put the
+// player, by the ONE start-hop rule (`skipsStart`: the *Skip the menu* setting
+// AND exactly one exit). A pure module (it imports only `rulesGraph`), so this
+// is not a dependency on the menu panel's wiring.
+import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
+
+/**
+ * Tick period of the SUMMARY substrates' live-play time drain (M5). One
+ * second: the drain rate is stated per second, and the tick count during a
+ * Record park IS the visit's recorded duration.
+ */
+const TIME_DRAIN_INTERVAL_MS = 1000;
+
+/** A play-clock `stats` object reduced to its finite-number fields (N4): it is stored in a recording. */
+function plainNumbers(stats) {
+  const out = {};
+  for (const [k, v] of Object.entries(stats ?? {})) if (Number.isFinite(v)) out[k] = v;
+  return out;
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -31,6 +71,61 @@ function log(level, message, ...data) {
       console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[loopState] ${message}`, ...data);
   }
+}
+
+/**
+ * Whether an evaluateActionGate verdict's reason means the strict gate
+ * is simply OUT OF SCOPE for the event (loop mode off, AP-native
+ * region, substrate not yet mode-integrated) — callers fall back to
+ * their legacy behavior (e.g. clickToQueue interception) instead of
+ * treating it as either live play or a block.
+ */
+/**
+ * The COARSE meaning of one recorded entry, or null when it has none.
+ *
+ * Two vocabularies reach `_applyCoarseReplacement` and this is the seam
+ * between them:
+ *   - the shared actionQueue entry (`actionType` / `actionId`) a FINE
+ *     substrate's recording carries — jta, omsi and, since slice Q-b, the
+ *     maze; and
+ *   - loops' OWN path vocabulary (`type` / `locationName`), which is what
+ *     `_liveCaptureBuffer` holds for a coarse or summary substrate and what
+ *     `gameState`'s path entries speak.
+ *
+ * ⛔ Reading both is deliberate and TEMPORARY: the user has ruled that
+ * gameState and actionQueue converge later, in the cross-substrate viewer's
+ * own arc (plan §26). That arc deletes the second branch; nothing else here
+ * has to move for it. Converting the buffer now is explicitly NOT this slice.
+ *
+ * @param {object} entry
+ * @returns {{kind:'locationCheck', name:string}|{kind:'explore'}|null}
+ */
+export function coarseOf(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+  // (i) the shared actionQueue vocabulary
+  if (typeof entry.actionType === 'string') {
+    if (entry.actionType === 'locationCheck' && entry.actionId) {
+      return { kind: 'locationCheck', name: entry.actionId };
+    }
+    if (entry.actionType === 'explore') return { kind: 'explore' };
+    return null;
+  }
+  // (ii) loops' own path vocabulary
+  if (entry.type === 'locationCheck' && entry.locationName) {
+    return { kind: 'locationCheck', name: entry.locationName };
+  }
+  if (entry.type === 'explore') return { kind: 'explore' };
+  return null;
+}
+
+/** A queue action that explores its region (the queue speaks it as an explore `customAction`). */
+function isExploreAction(action) {
+  return action?.type === 'customAction' && action.actionName === 'explore';
+}
+
+export function gateReasonOutOfScope(reason) {
+  return reason === 'loopModeOff' || reason === 'noRegion'
+    || reason === 'apNative' || reason === 'substrateNotGated';
 }
 
 export class LoopState {
@@ -55,6 +150,22 @@ export class LoopState {
     this.isProcessing = false;
     this.isPaused = false; // Not paused — idle (no queue started yet)
     this._queueCompleted = false; // True after queue runs to the end (distinct from idle)
+    // Why the queue completed: 'queueEnd' (the ordinary end-of-queue with
+    // auto-restart off) or 'zeroCostPass' (the free-pass park below). Read
+    // by loopUI's status line; meaningless while _queueCompleted is false.
+    this._queueCompletedReason = null;
+    // Mana actually spent since the cursor last snapped to index 0 — the
+    // current PASS over the queue. Read at the auto-restart wrap: a pass
+    // that cost nothing must NOT wrap (see _completeCurrentAction).
+    // Measured rather than summed from the queue because costs are
+    // dynamic (region XP effects, per-block Instant, live-play drains).
+    this._passManaSpent = 0;
+    // gameState's mana at the start of the current pass, or null when it
+    // couldn't be read. Second, independent witness for the same question:
+    // substrates that own their own economy (resourceChannels) deduct
+    // straight from gameState and never touch _spendMana, so the tally
+    // alone would call their passes free.
+    this._passStartMana = null;
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.autoResumeOnNewAction = false; // Flag to auto-resume when a new action is added after completion
     this.autoRemoveCompleted = false; // Flag to auto-remove completed actions from queue
@@ -110,12 +221,93 @@ export class LoopState {
     // _queuePausedUntilReset. Survives loop resets (cleared by
     // resetForNewRules / hard reset, like repeatExploreStates).
     this.manualRegionStates = new Map(); // regionName -> true
-    // Region currently being played manually via the checkbox; null
+    // Per-block mode map (the mode-radio system that replaces the Manual
+    // checkbox). Keyed by blockKeyOf(region, instanceNumber) so each
+    // region VISIT gets its own mode instead of a whole region sharing
+    // one checkbox. Values are a small string enum, currently
+    // 'manual' | 'playback' (extensible: 'record' | 'bot' land in later
+    // phases). Absent key → fall back to the legacy region checkbox
+    // (manualRegionStates, for migrated saves) then to defaultBlockMode.
+    // Serialized like manualRegionStates; survives loop resets, cleared
+    // by resetForNewRules.
+    this.blockModeStates = new Map(); // 'region#instance' -> mode
+    // Per-block Instant toggle (M3). Keyed the same way as blockModeStates.
+    // A truthy entry means "run this block headlessly in one frame" — it
+    // applies to Playback/Bot blocks on substrates that DECLARE
+    // loopSupport.instant. Absent key → not instant. Serialized alongside
+    // blockModeStates; cleared by resetForNewRules. Distinct from the
+    // GLOBAL this.instantMode debug flag (which instant-completes ALL
+    // blocks) — the two OR together in the generic timer.
+    this.blockInstantStates = new Map(); // 'region#instance' -> boolean
+    // Default mode applied to a block that has no stored mode. Mirrors
+    // the schema-backed `defaultBlockMode` setting (loopUI pushes it in,
+    // like keepFocused / instantMode). M4 flips this to 'record': a fresh
+    // run live-plays each block once and (with auto-switch, default ON)
+    // replays it thereafter. Capability-clamped in getBlockMode — a
+    // substrate without Record falls back to Manual, then to Playback.
+    this.defaultBlockMode = 'record';
+    // Whether a successful Record-mode segment auto-switches its block to
+    // Playback. Schema-backed setting (loopUI pushes it in, like
+    // defaultBlockMode); default ON per the M2 ruling.
+    this.autoSwitchToPlaybackAfterRecord = true;
+    // The block currently being RECORDED ({region, instance}), or null.
+    // Set when a Record-mode block parks; the manual wake handler
+    // finalizes the capture on a SUCCESSFUL exit, and clears this
+    // (discard) on wrong-exit / mana-out / reset.
+    this._recordingBlock = null;
+    // M3b loops-owned coarse capture: the queue-grade actions observed
+    // during a parked Record block on a COARSE-ONLY substrate (one whose
+    // registry entry supplies no takeLastRecording). The block's interior
+    // is rewritten from this buffer on a successful exit; fine-grained
+    // substrates (maze) keep their own full-visit recorder instead and
+    // never touch this. Cleared on park, discard, and finalize.
+    this._liveCaptureBuffer = [];
+    // M4 slice 4: the economy annotations accumulating for the parked
+    // Record block ({items, xp} deltas from block start), or null when no
+    // block is recording. Built into the saved entry's `annotations` field
+    // on a successful exit; discarded with the recording otherwise.
+    // See blockAnnotations.js.
+    this._annotationTracker = null;
+    // M5: the 1 Hz live-play time drain for SUMMARY substrates (runner,
+    // bounce), whose visits are priced by how long they take rather than by
+    // what they do. The interval runs only while loop mode is active and
+    // every tick self-gates on livePlayRegion(), so an unparked, paused or
+    // hard-paused queue costs nothing. `_summaryDrainSeconds` counts the
+    // ticks charged during the parked block — that count IS the recorded
+    // duration (slice 3), which excludes pauses for free.
+    this._drainIntervalId = null;
+    this._summaryDrainSeconds = 0;
+    // N3b: the last PLAY-CLOCK report ({region, running}) from a substrate
+    // that declares `loopSupport.playClock` — its page says whether its own
+    // clock is advancing (a game waiting for a key, or paused, is not). A
+    // stopped clock suspends the drain for that region; no report, or a
+    // report for another region, leaves the drain as it always was. Set by
+    // the `substrate:playClock` event, dropped when the region changes.
+    this._playClock = null;
+    // N4: a GAME-TIME play clock (a report that carries `stats.gameSeconds`)
+    // is charged per whole game second the page played, not per wall second:
+    // this counts the game seconds already charged for {region} on the
+    // current visit. `_lastPlayStats` is the last stats object any play-clock
+    // report carried ({region, stats}); a summary recording keeps it as
+    // `playStats`. Neither is dropped by a region change before the capture
+    // reads it (the departure's own wake persists the summary).
+    this._gameClockCharged = null;
+    this._lastPlayStats = null;
+    // M5: the performed actions of a summary visit that carried an EXPLICIT
+    // loop_costs price. Stored with the recording so Playback can re-price
+    // them at the current XP level (the duration covers everything else,
+    // which is free by default). Cleared with the capture.
+    this._summaryCostedActions = [];
+    // The last queue index at which the Playback bound-recording lookup
+    // ran, so a non-recording playback block doesn't re-resolve tags every
+    // frame while it advances through the generic auto path.
+    this._boundReplayCheckedIndex = -1;
+    // Region currently being played manually via the mode radios; null
     // when parked on a legacy 'manual' / 'customQueue' entry instead.
     // Discriminates the two modes inside the shared wake handlers.
     this._manualRegionName = null;
     // Bot-backed queue execution (substrates whose loopSupport
-    // declares executeVia: 'playbackBot', e.g. bounce). The queue
+    // declares executeVia: 'solver', e.g. bounce). The queue
     // parks on the action while the playback bot walks to the target
     // on real physics; completion arrives via the resulting
     // locationCheck / regionChanged events. Holds the in-flight
@@ -130,6 +322,8 @@ export class LoopState {
     // Used by the customQueue action's saved-queue lookup (needs the
     // rules-hash to key savedQueueStore buckets).
     this._cachedRulesData = null;
+    // The slot those rules were loaded for (the same event) — S3's start rule.
+    this._cachedPlayerId = null;
 
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
@@ -158,6 +352,30 @@ export class LoopState {
       return this._gameStateInstance;
     }
     return null;
+  }
+
+  /**
+   * Is this a START region? The ONE predicate behind the free-by-rule
+   * start-region move (⚖ 2026-09-06, model (A)) — `_calculateActionCost` below,
+   * `shared/queueAnalysis.getBaseCost`, `loopUI._estimateActionCost` and
+   * `loopBlockBuilder`'s per-exit cost label all ask this and answer
+   * `START_REGION_MOVE_COST`, so there is one implementation of "is it free",
+   * not four.
+   *
+   * The injected gameState API already carries `isStartRegion`
+   * (`loops/index.js`'s `gameStateAPI`); the GameState instance is the fallback
+   * for callers that set only `_gameStateInstance`. Anything else answers
+   * false, which prices the move exactly as before the rule existed.
+   *
+   * @param {string} regionName
+   * @returns {boolean}
+   */
+  isStartRegion(regionName) {
+    if (typeof regionName !== 'string' || regionName === '') return false;
+    if (typeof this.gameState?.isStartRegion === 'function') {
+      return this.gameState.isStartRegion(regionName) === true;
+    }
+    return this._gs()?.isStartRegion?.(regionName) === true;
   }
 
   /**
@@ -227,8 +445,13 @@ export class LoopState {
     // action 0 with clean progress, mirroring the loops-queue's own
     // _resetLoop. Path is preserved (the queue stays); only progress
     // and the action cursor reset.
+    // …and release any Manual/Record/Playback park the reset invalidated
+    // (arc D slice 4b). Progress alone is not enough: the park's flags and
+    // its stopProcessing() survive, and nothing else on this seam undoes
+    // them. See _releaseParkForReset.
     this.eventBus.subscribe('gameState:loopReset', () => {
       this._resetActionsProgress();
+      this._releaseParkForReset();
     });
 
     // Manual mode wake handlers. Active only while a manual entry is
@@ -244,8 +467,17 @@ export class LoopState {
       this._handleManualWake_mana();
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
-      this._handleManualWake_regionMove({ targetRegion: data?.newRegion });
-      this._handleBotWake_regionChanged(data?.newRegion);
+      this._handleManualWake_regionMove({
+        targetRegion: data?.newRegion,
+        oldRegion: data?.oldRegion,
+        fromReset: data?.fromReset,
+        // M5: the exit the player actually crossed. gameState merges it in
+        // from the originating user:regionMove (gameState/index.js), so the
+        // summary recording can store the departure without loops needing
+        // its own dispatcher receiver.
+        exitName: data?.exitName,
+      });
+      this._handleBotWake_regionChanged(data?.newRegion, { fromReset: data?.fromReset });
     });
 
     // Cache raw rules data for the customQueue action's saved-queue
@@ -253,7 +485,231 @@ export class LoopState {
     // each consumer that needs the raw JSON caches its own copy.
     this.eventBus.subscribe('stateManager:rawJsonDataLoaded', (data) => {
       this._cachedRulesData = data?.rawJsonData ?? null;
+      this._cachedPlayerId = data?.selectedPlayerInfo?.playerId ?? null;
     });
+
+    // M4 slice 4: cross-substrate consumable arrivals are the one item
+    // movement loops can observe LIVE (the notification bus; the owning
+    // substrate keeps the inventory, the host keeps no store). Folded into
+    // the parked Record block's annotations as a positive delta. Items
+    // CONSUMED during the block come out of the finalized recording
+    // instead — see blockAnnotations.js on why the minimum is conservative.
+    this.eventBus.subscribe('crossSubstrate:itemGranted', (data) => {
+      if (!this._annotationTracker) return;
+      const count = (typeof data?.count === 'number' && data.count > 0) ? data.count : 1;
+      this._annotationTracker.noteItemDelta(itemKey(data?.to, data?.itemType), count);
+    });
+
+    // M5: the summary substrates' live-play time drain runs for exactly as
+    // long as loop mode does. gameState is the sole writer of the flag and
+    // publishes only on an actual change, so this is the one edge to track.
+    this.eventBus.subscribe('gameState:loopModeChanged', (data) => {
+      if (data?.active) this.startTimeDrain();
+      else this.stopTimeDrain();
+    });
+    // N3b: a play-clock substrate's page reports whether its clock runs
+    // (flashSubstrate/bridge.js relays `__swfBridge.setPlayClock`). A region
+    // change drops a report for any other region, so a revisit starts from
+    // "no report" (charged) until the page speaks again.
+    this.eventBus.subscribe('substrate:playClock', (data) => {
+      this.notePlayClock(data?.region, data?.running, data?.stats);
+    });
+    this.eventBus.subscribe('gameState:regionChanged', (data) => {
+      if (this._playClock && this._playClock.region !== data?.newRegion) this._playClock = null;
+      if (this._gameClockCharged && this._gameClockCharged.region !== data?.newRegion) this._gameClockCharged = null;
+    });
+    // Loop mode may already be on when dependencies land (a preset with
+    // loop_costs auto-enables it before loops finishes wiring).
+    if (this._gs()?.isLoopModeActive) this.startTimeDrain();
+  }
+
+  /**
+   * Start the 1 Hz live-play time drain (M5). Idempotent — a second call
+   * while it runs is a no-op, which matters because _setupEventListeners
+   * runs again on every setDependencies.
+   */
+  startTimeDrain() {
+    if (this._drainIntervalId !== null) return;
+    if (typeof setInterval !== 'function') return;
+    this._drainIntervalId = setInterval(() => this._timeDrainTick(), TIME_DRAIN_INTERVAL_MS);
+  }
+
+  /** Stop the live-play time drain (M5). Idempotent. */
+  stopTimeDrain() {
+    if (this._drainIntervalId === null) return;
+    clearInterval(this._drainIntervalId);
+    this._drainIntervalId = null;
+  }
+
+  /**
+   * One second of a SUMMARY substrate's region being PLAYED (M5, extended
+   * by M6). Time is that category's economy, and Bot execution costs what
+   * live play of the same content costs, so the drain runs in exactly two
+   * states — parked live play, and a solver driving the region.
+   *
+   * The two are mutually exclusive by construction: livePlayRegion() is
+   * null whenever _botExecutedAction is set, so a tick can never charge
+   * twice. Everything else — idle, replaying, paused, hard-paused, the
+   * wrong capture shape — costs nothing, with no separate suppression.
+   */
+  _timeDrainTick() {
+    const liveRegion = this.livePlayRegion();
+    if (liveRegion) {
+      if (!this._regionDrainsTime(liveRegion)) return;
+      // N3b: the game says its clock is not running (not started, paused,
+      // cleared) — the second costs nothing and is not recorded. N4: a
+      // game-time clock is charged the whole game seconds it played since
+      // the last charge instead (none, while it is stopped).
+      const seconds = this._takeDueDrainSeconds(liveRegion);
+      if (seconds <= 0) return;
+      // Duration is TIME PARKED, independent of what that time cost — a
+      // zero-rate region still accrues seconds. Counted BEFORE the charge,
+      // because charging can end the park: deductMana fires
+      // gameState:manaChanged synchronously, whose wake runs the depletion
+      // reset (refilling the pool and discarding any in-progress capture).
+      // Nothing may be touched after the charge on this path.
+      this._summaryDrainSeconds += seconds;
+      this._chargeLiveAction({ type: 'timeDrain', sourceRegion: liveRegion }, seconds);
+      return;
+    }
+    const botRegion = this._botDrainRegion();
+    if (!botRegion) return;
+    // The same clock gates a bot: a bot-driven page reports its clock the
+    // same way, so a bot waiting between goals costs what a waiting player does.
+    const seconds = this._takeDueDrainSeconds(botRegion);
+    if (seconds <= 0) return;
+    // No _summaryDrainSeconds increment: that counter is Record-CAPTURE
+    // state (it becomes the saved visit's duration), and a Bot block
+    // records nothing. It stays owned by the live-play branch above.
+    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: botRegion }, seconds);
+    // The one thing that may follow the charge here — and it must. A solver
+    // park runs no frames, so the generic timer's _maybeResetForOOM never
+    // gets a turn, and _handleManualWake_mana ignores a non-manual park:
+    // without this the pool would run negative for as long as the bot keeps
+    // walking. _maybeResetForOOM stops the walk, snaps the queue to index 0
+    // and re-schedules a frame, so the Bot branch re-engages — the same
+    // depletion-retry loop the queue has always had, reached from the only
+    // spend that happens while no frame is running.
+    this._maybeResetForOOM();
+  }
+
+  /**
+   * Record a PLAY-CLOCK report (N3b): the substrate page playing `region`
+   * says whether its own clock is advancing. Kept only for a region whose
+   * substrate declares `loopSupport.playClock`; anything else is ignored,
+   * so a substrate that never opted in can never make its time free.
+   * The last report wins; `_timeDrainTick` consults it per region.
+   */
+  notePlayClock(region, running, stats = null) {
+    if (typeof region !== 'string' || !region || typeof running !== 'boolean') return;
+    if (!this._regionReportsPlayClock(region)) return;
+    const prev = this._playClock;
+    const gameSeconds = Number.isFinite(stats?.gameSeconds) && stats.gameSeconds >= 0 ? stats.gameSeconds : null;
+    if (gameSeconds === null) {
+      this._playClock = { region, running };
+      return;
+    }
+    this._playClock = { region, running, gameSeconds };
+    this._lastPlayStats = { region, stats: plainNumbers(stats) };
+    // N4: the charged count belongs to one visit — a new region, or a page
+    // counter that went back (the page was configured again), starts it over.
+    const prevSeconds = prev?.region === region && typeof prev.gameSeconds === 'number' ? prev.gameSeconds : 0;
+    if (this._gameClockCharged?.region !== region || gameSeconds < prevSeconds) {
+      this._gameClockCharged = { region, seconds: 0 };
+    }
+    // A clock that stops settles at once: the seconds it played up to the
+    // stop are charged now, before the clear or the exit that usually
+    // follows can end the park (so a visit is charged floor(its game
+    // seconds), whatever the speed and wherever the wall ticks fell).
+    if (!running && this._drainIntervalId !== null) this._timeDrainTick();
+  }
+
+  /**
+   * The seconds a drain tick charges `region` now, marked charged (N4). A
+   * GAME-TIME clock (its last report carried `gameSeconds`): the whole game
+   * seconds played since the last charge, whether it runs or not — a page
+   * playing at 2× is charged 2 a wall second, and the same total for the
+   * same play. Otherwise (N3b): 1, or 0 while the clock is reported stopped.
+   */
+  _takeDueDrainSeconds(region) {
+    const clock = this._playClock;
+    if (clock?.region === region && typeof clock.gameSeconds === 'number') {
+      const charged = this._gameClockCharged?.region === region ? this._gameClockCharged : null;
+      const due = Math.floor(clock.gameSeconds) - (charged?.seconds ?? 0);
+      if (due <= 0) return 0;
+      // marked BEFORE the charge: charging can run the depletion reset
+      this._gameClockCharged = { region, seconds: (charged?.seconds ?? 0) + due };
+      return due;
+    }
+    return this._playClockStopped(region) ? 0 : 1;
+  }
+
+  /** Whether a region's substrate opted into play-clock reports (N3b). */
+  _regionReportsPlayClock(region) {
+    const substrateId = this._lookupSubstrateId(region);
+    if (!substrateId) return false;
+    try {
+      return substrateRegistry?.get?.(substrateId)?.loopSupport?.playClock === true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * True only when the region's play clock was REPORTED stopped (N3b). No
+   * report, a report for another region, or a running clock → false, so the
+   * drain fails safe to charging.
+   */
+  _playClockStopped(region) {
+    const clock = this._playClock;
+    return !!clock && clock.region === region && clock.running === false;
+  }
+
+  /**
+   * The region a SOLVER is currently driving, or null — regardless of
+   * capture shape.
+   *
+   * Exposed as the loops public function 'botSolverRegion'. A substrate
+   * whose clock is gated on live play needs it because `livePlayRegion()`
+   * is deliberately null while a solver drives (its events pass on the
+   * 'queueExecution' exemption instead): without this the substrate would
+   * freeze the very solver it was asked to run. omsi's step gate is the
+   * first caller (arc D2 slice 1).
+   *
+   * The park is per-action, so the answer is a REGION, not a boolean — the
+   * queue may be parked on some other substrate's region entirely.
+   */
+  botSolverRegion() {
+    const region = this._botExecutedAction?.sourceRegion;
+    if (!region) return null;
+    if (!this.isProcessing || this.isPaused || this._queuePausedUntilReset) return null;
+    return region;
+  }
+
+  /**
+   * The region a SOLVER is currently driving on the time-drained economy,
+   * or null (M6). Only the walkTo path qualifies: delegation is the maze's,
+   * which is fine-grained and charges natively per tile.
+   */
+  _botDrainRegion() {
+    const region = this.botSolverRegion();
+    if (!region) return null;
+    if (!this._regionDrainsTime(region)) return null;
+    return region;
+  }
+
+  /**
+   * Whether time played in `region` costs mana: a SUMMARY substrate's
+   * (time is its economy, M5), or a COARSE one that declares
+   * `loopSupport.playClock` and so reports its own game clock (⚖ user
+   * 2026-10-12, Seedling: "Drain play time too"). A fine-grained substrate
+   * charges natively per tile and never drains time; a coarse one without a
+   * play clock is charged per queued action only.
+   */
+  _regionDrainsTime(region) {
+    const shape = this._captureShapeForRegion(region);
+    if (shape === 'summary') return true;
+    return shape === 'coarse' && this._regionReportsPlayClock(region);
   }
 
   /**
@@ -474,10 +930,9 @@ export class LoopState {
       this.gameState.trimPath?.();
     }
 
-    // Teleport the player to the resolved loop start. For procgen,
-    // resolvedStart is the first warehoused region after Menu (Menu
-    // itself is a synthetic wrapper with no playable payload); for
-    // non-procgen flows, fall back to gameState.startRegions[0].
+    // Teleport the player to the loop start: where the load put them
+    // (_resolveLoopStartRegion — procgen's first warehoused region only
+    // when the declared start is skipped, else the declared start).
     const loopStartRegion = this._resolveLoopStartRegion();
     if (
       loopStartRegion
@@ -501,24 +956,54 @@ export class LoopState {
 
   /**
    * Resolve the loop start region — where the player teleports on
-   * clearQueue / loop reset. Prefers procgenPlayer.getResolvedStartRegion
-   * (skips synthetic Menu) when available; falls back to
-   * gameState.startRegions[0] otherwise. The fallback reads through
-   * _gs() (the raw GameState instance) because the public gameStateAPI
-   * doesn't expose startRegions as a property.
+   * clearQueue / loop reset: WHERE THE LOAD PUT THE PLAYER.
+   *
+   * ⛓⛓ APWORLD SUBSTRATE CHANGE S3 (plan §27.6 #1): procgenPlayer's resolved
+   * start (the first WAREHOUSED region, past a synthetic Menu) is where the
+   * load hops to only when the declared start IS skipped — the ONE rule,
+   * `menuPanelEngine.skipsStart` (the setting AND exactly one exit), read with
+   * the setting through the same `menuPanel.isSkipMenuEnabled` public function
+   * procgenPlayer reads (trap 1438: no second channel). Otherwise — a start
+   * with several exits (mm3's 13), or skip off — the player begins at the
+   * DECLARED start, the menu, and a loop reset returns there too (M2 made
+   * Restart do the same). Until S3 this always preferred the resolved start,
+   * so a multi-exit world's loop reset landed on the first placed region.
+   *
+   * No resolved start (a plain world): the declared start, as before. The
+   * declared start reads through _gs() (the raw GameState instance) because
+   * the public gameStateAPI doesn't expose startRegions as a property.
    */
   _resolveLoopStartRegion() {
+    const declared = this._gs?.()?.startRegions?.[0] ?? null;
+    let resolved = null;
     try {
       const fn = centralRegistry?.getPublicFunction?.(
         'procgenPlayer', 'getResolvedStartRegion',
       );
-      const resolved = fn?.();
-      if (resolved) return resolved;
+      resolved = fn?.() ?? null;
     } catch {
       // procgenPlayer not loaded; fall through.
     }
-    const gs = this._gs?.();
-    return gs?.startRegions?.[0] ?? null;
+    if (!resolved) return declared;
+    // A warehoused START is its own resolved start: nothing is left, nothing to decide.
+    if (!declared || resolved === declared || !this._cachedRulesData) return resolved;
+    const skipped = skipsStart(
+      this._cachedRulesData, this._cachedPlayerId ?? undefined, declared, this._isSkipMenuEnabled(),
+    );
+    return skipped ? resolved : declared;
+  }
+
+  /**
+   * The *Skip the menu* setting, through the menu panel's public function —
+   * the channel procgenPlayer reads; absent menuPanel, the schema default.
+   */
+  _isSkipMenuEnabled() {
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('menuPanel', 'isSkipMenuEnabled');
+      return typeof fn === 'function' ? fn() === true : SKIP_MENU_DEFAULT;
+    } catch {
+      return SKIP_MENU_DEFAULT;
+    }
   }
 
   /**
@@ -585,6 +1070,10 @@ export class LoopState {
 
     if (resetIndex) {
       this.currentActionIndex = 0;
+      // Start-from-the-top: a new pass, so a new spend tally. The resume
+      // path deliberately keeps the running total — a park (manual block,
+      // pause) in the middle of a pass must not make that pass look free.
+      this._beginPass();
     } else if (this.currentActionIndex >= queue.length) {
       // Resume path: nothing left to advance to.
       return;
@@ -911,7 +1400,7 @@ export class LoopState {
       this.isProcessing = false;
       return;
     }
-    if (this._tickSubstrateDelegation()) return;
+    if (this._tickParkedSolver()) return;
     if (!this._primeFrameClock(timestamp)) return;
 
     const deltaTime = (timestamp - this._lastFrameTime) * this.gameSpeed;
@@ -919,14 +1408,102 @@ export class LoopState {
 
     try {
       if (!this._ensureCurrentAction()) return;
-      // Per-region manual mode: the current action's region is
-      // checkbox-flagged → park and let the player drive the whole
-      // region segment. Checked before the legacy entry types so a
-      // flagged region wins even if old 'manual' entries are queued
-      // there too.
-      const manualRegion = this._manualRegionForCurrentAction();
-      if (manualRegion) {
-        this._handleManualRegionEntry(manualRegion);
+      // Per-block mode dispatch (M1 Manual + M2 Record / Playback-replay).
+      // Resolve the current action's block and mode once. Checked before
+      // the legacy entry types so a mode-flagged block wins even if old
+      // 'manual' entries are queued there too.
+      const modeBlock = this._blockForCurrentAction();
+      const blockMode = modeBlock
+        ? this.getBlockMode(modeBlock.region, modeBlock.instance)
+        : null;
+      // Manual OR Record: park and let the player drive the whole region
+      // segment. Record additionally flags the block so the wake handler
+      // pulls + persists the substrate's capture on a successful exit.
+      if (modeBlock && (blockMode === 'manual' || blockMode === 'record')) {
+        if (blockMode === 'record') {
+          this._recordingBlock = { region: modeBlock.region, instance: modeBlock.instance };
+          // Coarse-only capture starts fresh at every park (M3b).
+          this._liveCaptureBuffer = [];
+          // Annotations are deltas FROM BLOCK START, so the tracker starts
+          // empty at every park (M4 slice 4).
+          this._annotationTracker = new BlockAnnotationTracker();
+        }
+        this._handleManualRegionEntry(modeBlock.region);
+        return;
+      }
+      // Playback with a bound recording: replay the recorded script.
+      // Without a bound recording, fall through to today's auto path
+      // (delegation / bot / timer). Guard the tag lookup per queue index so
+      // a non-recording playback block doesn't re-resolve every frame.
+      // Coarse-only substrates (no takeLastRecording — M3b) skip the
+      // lookup entirely: the block's own interior IS the recording and
+      // the generic executor below runs it. Reaching
+      // _handlePlaybackReplayEntry without a substrate replayActions
+      // would park the block forever.
+      if (modeBlock && blockMode === 'playback'
+          && this._boundReplayCheckedIndex !== this.currentActionIndex) {
+        this._boundReplayCheckedIndex = this.currentActionIndex;
+        const shape = this._captureShapeForRegion(modeBlock.region);
+        if (shape === 'fine') {
+          const bound = this._lookupBoundRecording(modeBlock.region, modeBlock.instance);
+          if (bound) {
+            this._handlePlaybackReplayEntry(modeBlock.region, bound);
+            return;
+          }
+          // M4 ruling: a FINE-GRAINED substrate in Playback with NO bound
+          // recording has no playable content — the auto walkTo/delegation
+          // chain is unreachable from Playback until M6's Bot radio. Park for
+          // live play (Manual behavior) instead of falling through to that
+          // chain. (This is the safety net for a cleared/missing recording;
+          // the Playback radio is disabled without playable content, so it
+          // rarely triggers.)
+          this._handleManualRegionEntry(modeBlock.region);
+          return;
+        }
+        if (shape === 'summary') {
+          // M5: a SUMMARY substrate (runner, bounce) in Playback applies its
+          // recorded net result instantly — no replay, the game does not
+          // participate.
+          const summary = this._lookupBoundSummary(modeBlock.region, modeBlock.instance);
+          if (summary) {
+            this._handleSummaryApplyEntry(modeBlock.region, summary);
+            return;
+          }
+          // With no bound summary it joins the fine-grained ruling above:
+          // park for live play rather than fall through to the walkTo/bot
+          // chain, which stays M6's to re-home.
+          this._handleManualRegionEntry(modeBlock.region);
+          return;
+        }
+        // Coarse-only substrates are unaffected: their block interior IS the
+        // recording, run by the generic executor below.
+      }
+      // Bot (M6): explicit solver-driven execution. This branch is the ONE
+      // trigger for BOTH solver mechanisms — the maze's substrate delegation
+      // and the walkTo path (jta / runner / bounce). Dispatch is per ACTION:
+      // each solver parks on one action, and its completion resumes the frame
+      // loop, which re-enters here for the block's next action.
+      //
+      // A Bot block whose solver can't engage parks for LIVE PLAY with a loud
+      // warning rather than falling through to the generic timer — a silent
+      // timer teleport through content the bot was meant to play is the
+      // failure mode this arc exists to prevent (loop-recording.md gotchas).
+      if (modeBlock && blockMode === 'bot') {
+        const solver = this.regionSolver(modeBlock.region);
+        if (solver === 'delegation' && this._shouldDelegateCurrentAction()) {
+          this._beginDelegatedAction();
+          return;
+        }
+        if (solver === 'walkTo' && this._shouldBotExecuteCurrentAction()) {
+          this._handleBotExecutedAction();
+          return;
+        }
+        if (!this._manualActionEntered) {
+          log('warn', `[LoopState] Bot block in '${modeBlock.region}' has no engageable `
+            + `solver (solver=${solver ?? 'none'}, action=${this.currentAction?.type}) — `
+            + 'parking for live play instead of running it on the generic timer.');
+        }
+        this._handleManualRegionEntry(modeBlock.region);
         return;
       }
       // Manual entry: stop accruing progress, hand control to the
@@ -945,15 +1522,11 @@ export class LoopState {
         this._handleCustomQueueEntry(this.currentAction);
         return;
       }
-      // Bot-backed execution: substrates like bounce map regionMove /
-      // locationCheck queue actions to the playback bot's walkTo. The
-      // queue parks while the bot plays the real physics; the
-      // resulting locationCheck / regionChanged events complete the
-      // action (and charge its loops-fallback mana cost).
-      if (this._shouldBotExecuteCurrentAction()) {
-        this._handleBotExecutedAction();
-        return;
-      }
+      // (M6: the unconditional bot dispatch that used to sit here — the
+      // last leg of the auto execution chain — is gone. Solver execution
+      // is reachable only through the Bot branch above. What remains here
+      // is the generic timer, which runs coarse Playback interiors and
+      // AP-native blocks.)
       this._advanceActionProgress(deltaTime);
       this._maybeCompleteCurrentAction();
       // Queue ran to the end — no current action to reset, terminal events
@@ -973,30 +1546,41 @@ export class LoopState {
   }
 
   /**
-   * Phase 6 substrate delegation. When the current action's sourceRegion
-   * is a maze substrate region with manaEnabled, hand control off — the
-   * substrate panel walks tile-by-tile, deducts mana per tile, and
-   * publishes loops:substrateActionCompleted when done. The queue parks
-   * (no progress tick, no animation frame) until that event arrives;
-   * _handleSubstrateActionCompleted resumes.
+   * Stay parked while a SOLVER action is in flight (M6). Runs BEFORE the
+   * mode dispatch purely as a guard: no progress tick, no animation frame
+   * while the maze panel walks a delegated action tile-by-tile or a bot
+   * walks to its target. _handleSubstrateActionCompleted /
+   * _completeBotExecutedAction resume the loop.
    *
-   * @returns {boolean} true if we parked this frame (caller should bail).
+   * INITIATION does not happen here. Until M6 this tick also FIRED
+   * delegation for any non-Manual block, which ran before the mode
+   * dispatch and so silently shadowed Record and Playback on
+   * delegation-capable regions. Both solvers are now started only from
+   * the Bot branch of the mode dispatch (_processFrame).
+   *
+   * @returns {boolean} true if we are parked (caller should bail).
    */
-  _tickSubstrateDelegation() {
-    if (!this._delegatedAction && this._shouldDelegateCurrentAction()) {
-      this._delegatedAction = this.currentAction;
-      this._lastFrameTime = null;
-      this.eventBus?.publish('loops:substrateActionBegan', {
-        action: this.currentAction,
-      });
-      this._animationFrameId = null;
-      return true;
-    }
-    if (this._delegatedAction) {
+  _tickParkedSolver() {
+    if (this._delegatedAction || this._botExecutedAction) {
       this._animationFrameId = null;
       return true;
     }
     return false;
+  }
+
+  /**
+   * Phase 6 substrate delegation, initiated by a Bot block (M6). Hand the
+   * current action off to the substrate panel, which walks it tile-by-tile,
+   * deducts mana per tile, and publishes loops:substrateActionCompleted
+   * when done. The queue parks until that event arrives.
+   */
+  _beginDelegatedAction() {
+    this._delegatedAction = this.currentAction;
+    this._lastFrameTime = null;
+    this.eventBus?.publish('loops:substrateActionBegan', {
+      action: this.currentAction,
+    });
+    this._animationFrameId = null;
   }
 
   /**
@@ -1095,15 +1679,1081 @@ export class LoopState {
   }
 
   /**
-   * Per-region manual mode (checkbox): resolve the manual-flagged
-   * region for the current action, or null. Every queue action type
-   * carries sourceRegion = the region the action happens in (a
-   * regionMove's sourceRegion is the region being left, so the move
-   * out of a manual region is the player's to perform too).
+   * Per-block manual mode: resolve the region of the current action's
+   * block iff that block's mode is 'manual', else null. Uses the shared
+   * queue-block resolver so the block matches exactly what the panel
+   * renders — critical for the leaving regionMove, whose own
+   * instanceNumber names the DESTINATION block while it's driven from
+   * (and rendered inside) its SOURCE block.
    */
   _manualRegionForCurrentAction() {
-    const region = this.currentAction?.sourceRegion;
-    return region && this.getManualRegion(region) ? region : null;
+    return this._currentBlockIsManual() ? this.currentAction?.sourceRegion ?? null : null;
+  }
+
+  /**
+   * Resolve the (region, instance, key) block that owns the current
+   * action, or null when there's no current action. Walks the queue via
+   * the shared resolver (loopRenderer draws the mode radios off the same
+   * grouping), so a naive (sourceRegion, instanceNumber) lookup — wrong
+   * for a leaving regionMove — is avoided.
+   */
+  _blockForCurrentAction() {
+    if (!this.currentAction) return null;
+    const queue = this.getActionQueue();
+    const { indexToBlock } = resolveQueueBlocks(queue);
+    return indexToBlock.get(this.currentActionIndex) ?? null;
+  }
+
+  /** The mode of the current action's block, or null when there is none. */
+  _currentBlockMode() {
+    const block = this._blockForCurrentAction();
+    if (!block) return null;
+    return this.getBlockMode(block.region, block.instance);
+  }
+
+  /** Whether the current action's block resolves to manual mode. */
+  _currentBlockIsManual() {
+    return this._currentBlockMode() === 'manual';
+  }
+
+  /** The live procgenPlayer warehouse (region → { world }), or null. */
+  _getWarehouse() {
+    try {
+      return centralRegistry?.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Persistent recording tag `(arrivalKey, ordinal)` for a block. Resolves
+   * the queue blocks, stamps recording tags against the live warehouse (so
+   * arrivalKey matches what the substrate recorders captured), and returns
+   * the matching block's tag. loops owns this derivation on BOTH the save
+   * and the auto-restore side, so the two always agree regardless of any
+   * recorder-side id drift. Returns null if the block isn't found.
+   */
+  _recordingTagForBlock(region, instance) {
+    if (!region) return null;
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    assignRecordingTags(visits, this._getWarehouse());
+    const v = visits.find((x) => x.name === region && x.instance === instance);
+    return v ? { arrivalKey: v.arrivalKey, ordinal: v.ordinal } : null;
+  }
+
+  /** Content-hash of the cached rules, or null when rules aren't cached. */
+  _rulesHash() {
+    return this._cachedRulesData ? hashRulesData(this._cachedRulesData) : null;
+  }
+
+  /**
+   * The stored recording bound to a Playback block by its tag, or null.
+   * "Auto-restore" is an on-demand tag lookup at block entry — equivalent
+   * to binding at creation but always consistent with the current queue.
+   */
+  _lookupBoundRecording(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    // An ACTIONS-LESS entry is a coarse substrate's annotations envelope
+    // (M4 slice 4), not a playable recording — replaying it would park the
+    // block on an empty script. Only playable entries bind.
+    return hasPlayableRecording(entry) ? entry : null;
+  }
+
+  /**
+   * The stored SUMMARY bound to a summary-substrate block by its tag, or
+   * null (M5). Parallel to _lookupBoundRecording: same tag lookup, but
+   * guarded on `hasSummaryRecording` instead of `hasPlayableRecording` —
+   * a summary entry is actions-less by design and must never bind to a
+   * fine-grained replay, nor a fine recording to an instant apply.
+   */
+  _lookupBoundSummary(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    return hasSummaryRecording(entry) ? entry : null;
+  }
+
+  /** Whether a SUMMARY recording is bound to this block (M5). */
+  hasBoundSummary(region, instance) {
+    return !!this._lookupBoundSummary(region, instance);
+  }
+
+  /**
+   * The stored annotations for a block, or null. Separate from
+   * _lookupBoundRecording because annotations exist for COARSE blocks too,
+   * where there is no playable recording to bind. Used by the panel.
+   */
+  getBlockAnnotations(region, instance) {
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const entry = getSavedQueueByTag(rulesHash, region, substrate, tag.arrivalKey, tag.ordinal);
+    return entry?.annotations ?? null;
+  }
+
+  /**
+   * Persist the substrate's stashed recording for a just-completed Record
+   * block under its `(region, arrivalKey, ordinal)` tag, then apply the
+   * auto-switch-to-Playback setting. Called only on a SUCCESSFUL exit (the
+   * wake handler matched the expected departing regionMove). arrivalExitId
+   * is stamped from the loops-owned arrivalKey so a later auto-restore
+   * lookup keys on the identical value.
+   *
+   * M4 slice 4: the entry also carries the block's `annotations` — the
+   * recording's item deltas + minima and its XP, as deltas from block start.
+   * The recording's own `useItem` entries are the consumption half, folded
+   * in here (blockAnnotations.js).
+   */
+  _persistRecordingForBlock(region, instance) {
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const rec = substrateRegistry?.get?.(substrate)?.takeLastRecording?.();
+    if (!rec) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    this._annotationTracker?.foldRecordedItemUses(rec.actions, substrate);
+    const annotations = this._annotationTracker?.build() ?? null;
+    saveQueue(rulesHash, {
+      ...rec,
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+      annotations,
+    });
+    this._autoSwitchAfterRecord(region, instance);
+    return rec;
+  }
+
+  /**
+   * Persist a COARSE-ONLY block's annotations (M4 slice 4). savedQueueStore
+   * is the universal recording+metadata envelope, so a coarse substrate gets
+   * an entry under the same `(region, arrivalKey, ordinal)` tag holding only
+   * annotations — `actions: []`. That entry must NEVER read as a playable
+   * recording: the coarse Playback contract is that the block's own INTERIOR
+   * is the recording and the store is never consulted for actions (M3b
+   * invariant), which `hasPlayableRecording` enforces on every read.
+   *
+   * Nothing is written when the block moved no economy at all, so a plain
+   * walk-through doesn't litter the store.
+   */
+  _persistAnnotationsForBlock(region, instance) {
+    const annotations = this._annotationTracker?.build() ?? null;
+    if (!annotations) return null;
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    saveQueue(rulesHash, {
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+      departureExitId: null,
+      actions: [],
+      annotations,
+    });
+    return annotations;
+  }
+
+  /**
+   * Finalize a successfully-exited Record block (M3b). Branches on the
+   * capture contract:
+   *   - FINE-GRAINED (registry supplies takeLastRecording — maze): pull
+   *     the substrate's stashed full-visit recording, persist it to
+   *     savedQueueStore under the block's tag, and project its coarse
+   *     subset into the block interior.
+   *   - COARSE-ONLY (text adventure): the loops-side capture buffer of
+   *     observed live actions IS the recording — rewrite the block
+   *     interior from it directly. No ACTIONS are written to
+   *     savedQueueStore (the queue itself persists the same information;
+   *     one source of truth), only the M4 annotations envelope.
+   * Both paths apply the auto-switch-to-Playback setting.
+   */
+  _finalizeRecordBlock(region, instance, departureExitId = null) {
+    const shape = this._captureShapeFor(this._lookupSubstrateId(region));
+    if (shape === 'fine') {
+      const rec = this._persistRecordingForBlock(region, instance);
+      if (rec) this._applyCoarseReplacement(region, instance, rec);
+    } else {
+      // COARSE and SUMMARY share the interior rewrite — the block's queued
+      // interior becomes what the player actually did (ruling 6: queue
+      // readability, consistent with the maze/TA UX). They differ in what
+      // is persisted: a coarse block stores only its annotations envelope
+      // (its interior IS its recording), while a summary block stores the
+      // visit's net RESULT, which the interior cannot express.
+      this._applyCoarseReplacement(region, instance, { actions: this._liveCaptureBuffer.slice() });
+      if (shape === 'summary') {
+        this._persistSummaryForBlock(region, instance, departureExitId);
+      } else {
+        this._persistAnnotationsForBlock(region, instance);
+      }
+      this._autoSwitchAfterRecord(region, instance);
+    }
+    this._liveCaptureBuffer = [];
+    this._annotationTracker = null;
+    this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
+  }
+
+  /**
+   * The exit the queue intends to leave the current block by — the first
+   * `regionMove` at or after the cursor. Used as the departure fallback
+   * when the substrate's move carried no exit name (M5).
+   */
+  _queuedDepartureExit() {
+    const queue = this.getActionQueue() ?? [];
+    for (let i = Math.max(0, this.currentActionIndex); i < queue.length; i++) {
+      if (queue[i]?.type === 'regionMove') return queue[i].exitUsed ?? null;
+    }
+    return null;
+  }
+
+  /**
+   * Persist a SUMMARY block's recording (M5): the NET RESULT of the visit,
+   * under the same `(region, arrivalKey, ordinal)` tag every other category
+   * uses. `actions` stays EMPTY — a summary is not a replayable script, and
+   * `hasPlayableRecording` must stay false for it — and the payload lives
+   * in `summary`:
+   *
+   *   durationSeconds — drain ticks charged while parked. Playback prices
+   *     this at the region's CURRENT rate, so region-XP growth keeps
+   *     mattering for replays (a frozen mana number would not).
+   *   checks         — the locations checked, refired on Playback.
+   *   costedActions  — the performed actions that carried an EXPLICIT
+   *     loop_costs price, re-priced at replay the same way.
+   *
+   * Unlike the coarse annotations envelope, this is written even when the
+   * visit moved no economy at all: the duration alone is a real recording.
+   */
+  _persistSummaryForBlock(region, instance, departureExitId = null) {
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return null;
+    const tag = this._recordingTagForBlock(region, instance);
+    if (!tag) return null;
+    const rulesHash = this._rulesHash();
+    if (!rulesHash) return null;
+    const summary = {
+      durationSeconds: this._summaryDrainSeconds,
+      checks: this._liveCaptureBuffer
+        .filter((a) => a?.type === 'locationCheck' && a.locationName)
+        .map((a) => a.locationName),
+      costedActions: this._summaryCostedActions.slice(),
+    };
+    // N4: the last play-clock stats of this region (e.g. Noiz2sa's
+    // {gameSeconds, score}), kept opaque — loops reads none of it; a
+    // substrate that earns from a visit earns the same from its Playback
+    // (`loops:summaryApplied`).
+    if (this._lastPlayStats?.region === region) summary.playStats = { ...this._lastPlayStats.stats };
+    saveQueue(rulesHash, {
+      regionName: region,
+      substrate,
+      arrivalExitId: tag.arrivalKey,
+      ordinal: tag.ordinal,
+      departureExitId: departureExitId ?? null,
+      actions: [],
+      annotations: this._annotationTracker?.build() ?? null,
+      summary,
+    });
+    return summary;
+  }
+
+  /**
+   * Coarse layer of Record (M2): replace the block's queued INTERIOR
+   * entries with the coarse actions the player actually performed
+   * (locationCheck / explore), so the queue reflects reality. The two
+   * boundary regionMoves are untouched (clearActionsAt type-filters them),
+   * and no regionMove is added or removed, so regionInstanceCounts /
+   * instanceNumber bookkeeping stays exactly correct (recon 2).
+   *
+   * Safe to run inside the manual wake: a parked block's processing state is
+   * 'idle' (not 'waiting'), so the gameState:pathUpdated this emits does NOT
+   * trip eventCoordinator's auto-resume — no cursor reentrancy. Covered by
+   * the "coarse replacement survives the pathUpdated reentrancy" test.
+   */
+  _applyCoarseReplacement(region, instance, rec) {
+    const gs = this._gs();
+    if (!gs || typeof gs.clearActionsAt !== 'function') return;
+    gs.clearActionsAt(region, instance);
+    for (const a of rec?.actions ?? []) {
+      const coarse = coarseOf(a);
+      if (coarse?.kind === 'locationCheck') {
+        gs.insertLocationCheckAt?.(coarse.name, region, instance, region);
+      } else if (coarse?.kind === 'explore') {
+        gs.insertCustomActionAt?.('explore', region, instance, {});
+      }
+      // Fine-grained substrate actions (maze 'move', etc.) are NOT coarse
+      // queue entries — they live only in the recorded fine script.
+    }
+  }
+
+  /** Discard any in-progress Record capture (wrong-exit / mana-out / reset). */
+  _discardActiveRecording() {
+    this._liveCaptureBuffer = [];
+    this._annotationTracker = null;
+    // M5: the duration and costed-action list accrued for this visit die
+    // with the capture.
+    this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
+    if (!this._recordingBlock) return;
+    // Drain the substrate's stash so it can't be pulled by a later block.
+    const substrate = this._lookupSubstrateId(this._recordingBlock.region);
+    try { substrateRegistry?.get?.(substrate)?.takeLastRecording?.(); } catch { /* ignore */ }
+    this._recordingBlock = null;
+  }
+
+  /**
+   * Playback with a bound recording: park the block and replay the recorded
+   * script through the substrate's replayActions (generalizes the
+   * customQueue path to mode-driven Playback). Same wake handlers as manual
+   * mode advance past the block on the expected exit.
+   */
+  _handlePlaybackReplayEntry(region, saved) {
+    if (this._manualActionEntered) return;
+    // Capture the block's Instant flag (M3) BEFORE stopProcessing so the
+    // running-block resolution is still valid; a truthy flag drains the
+    // replay in one frame and (via isFocusLocked) suppresses the panel below.
+    const instant = this._currentBlockIsInstant();
+    this._manualActionEntered = true;
+    this._manualRegionName = region;
+
+    const componentType = this._lookupSubstrateComponentType(region);
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+    this.stopProcessing();
+
+    const controller = substrateRegistry?.get?.(this._lookupSubstrateId(region))?.getPlaybackController?.();
+    if (typeof controller?.replayActions === 'function') {
+      try {
+        controller.replayActions(saved.actions, {
+          onComplete: () => { /* reserved for future UI */ },
+          // Recorded actions exclude the region-departure move, so the
+          // substrate uses this to cross the recorded exit after the interior
+          // replay drains (textAdventure issues the closing regionMove; maze
+          // physically walks its player across the exit tile) — the parked
+          // loops block advances on the resulting regionMove wake.
+          departureExitId: saved.departureExitId ?? null,
+          // Instant (M3): drain the whole replay in one frame instead of
+          // animating one action per clock tick.
+          instant,
+          // The whole ENVELOPE, beside its actions (maze slice R-b): a
+          // substrate that stamps preconditions on a recording
+          // (`worldDigest` / `requires`) can then refuse a replay BEFORE
+          // step 0 and name what is missing. Substrates that stamp none
+          // ignore the field, and so does everything in this file.
+          recording: saved,
+        });
+      } catch (err) {
+        log('warn', '[LoopState] playback replayActions threw:', err);
+      }
+    }
+
+    if (this.eventBus?.publish) {
+      this.eventBus.publish('loopState:manualEntered', {
+        regionName: region,
+        expectedNextRegion: this._getExpectedNextRegion(this.currentActionIndex),
+        manualRegion: true,
+        playback: true,
+      });
+    }
+  }
+
+  /**
+   * The mana a stored summary costs to replay RIGHT NOW (M5): its recorded
+   * seconds at the region's current XP-discounted drain rate, plus the
+   * current XP-discounted price of each explicitly-costed action it
+   * performed. Everything else the visit did is free by construction.
+   *
+   * Pricing at replay time (rather than storing a frozen number) is what
+   * keeps region-XP growth meaningful for replays, and matches how the
+   * generic executor prices a coarse replay.
+   */
+  _priceSummaryReplay(region, summary) {
+    const seconds = Math.max(0, summary?.durationSeconds ?? 0);
+    let total = this._calculateActionCost({ type: 'timeDrain', sourceRegion: region }) * seconds;
+    for (const action of summary?.costedActions ?? []) {
+      total += this._calculateActionCost({ ...action, sourceRegion: region });
+    }
+    return total;
+  }
+
+  /**
+   * Playback for a SUMMARY substrate (M5): apply the recorded net result
+   * directly instead of replaying anything. The game iframe does not
+   * participate and the player character stays where it is — that is the
+   * design of the category, not a bug.
+   *
+   * Order matters. The mana is spent FIRST, because spending can end the
+   * visit: deductMana fires the depletion wake synchronously, which refills
+   * the pool and snaps the queue back to index 0. If that happened, the
+   * park flag is already cleared and the apply ABORTS — firing the checks
+   * and the departure into a freshly reset loop would advance a block that
+   * was never paid for.
+   *
+   * Summary playback is ALWAYS instant, so the per-block Instant flag is
+   * not consulted; `instant` stays declared for the focus-suppression seam.
+   */
+  _handleSummaryApplyEntry(region, saved) {
+    if (this._manualActionEntered) return;
+    this._manualActionEntered = true;
+    this._manualRegionName = region;
+
+    const componentType = this._lookupSubstrateComponentType(region);
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
+      this.eventBus.publish('ui:activatePanel', { panelId: componentType });
+    }
+    this.stopProcessing();
+
+    // Published BEFORE the apply, unlike the fine-grained replay path: the
+    // apply below is synchronous end to end, so the departure's wake would
+    // otherwise advance the block before this "we parked" event went out.
+    this.eventBus?.publish?.('loopState:manualEntered', {
+      regionName: region,
+      expectedNextRegion: this._getExpectedNextRegion(this.currentActionIndex),
+      manualRegion: true,
+      playback: true,
+      summary: true,
+    });
+
+    this._spendMana(region, this._priceSummaryReplay(region, saved?.summary));
+    if (!this._manualActionEntered) return; // depletion reset fired — abort
+
+    // N4: the visit was paid for — a substrate that earns from play (Noiz2sa's
+    // training) earns the recorded visit again ("Instant playback should
+    // still accumulate resources"). Before the checks and the departure,
+    // which end the park.
+    this.eventBus?.publish?.('loops:summaryApplied', {
+      region,
+      substrate: this._lookupSubstrateId(region),
+      summary: saved?.summary ?? null,
+    });
+
+    // Refire the recorded checks. Same dispatch as the generic executor:
+    // host state is name-keyed and idempotent, and fromLoop marks these as
+    // queue execution so neither the gate nor the path-append sees them as
+    // performed play.
+    for (const locationName of saved?.summary?.checks ?? []) {
+      if (!locationName) continue;
+      this.dispatcher?.publishToNextModule?.('loops', 'user:locationCheck', {
+        locationName,
+        regionName: region,
+        fromLoop: true,
+      }, { direction: 'up' });
+    }
+
+    // Cross the recorded departure. The TARGET comes from the queue, not
+    // the recording: it is what the wake handler compares against, so
+    // taking it from anywhere else could park the block forever on a
+    // "wrong region" mismatch. The parked block advances on the resulting
+    // regionMove wake.
+    const targetRegion = this._getExpectedNextRegion(this.currentActionIndex);
+    if (targetRegion) {
+      this.dispatcher?.publish?.('user:regionMove', {
+        sourceRegion: region,
+        targetRegion,
+        exitName: saved?.departureExitId ?? this._queuedDepartureExit(),
+        fromLoop: true,
+      }, { initialTarget: 'bottom' });
+    }
+  }
+
+  /**
+   * Resolve a block's mode. Precedence:
+   *   1. explicit per-block mode (set via the radios / set-all);
+   *   2. legacy region checkbox (migrated saves) → 'manual';
+   *   3. defaultBlockMode — but a 'manual' default only applies where the
+   *      substrate actually supports manual (an AP-native / no-manual
+   *      block would otherwise park forever with no panel to hand to).
+   * Explicit / legacy manual are NOT capability-clamped: the radios and
+   * old checkbox only offered Manual where supported, so a stored value
+   * already implies capability (and tests set it directly by design).
+   */
+  getBlockMode(region, instance) {
+    if (!region) return this.defaultBlockMode || 'playback';
+    const key = blockKeyOf(region, instance);
+    if (this.blockModeStates.has(key)) return this.blockModeStates.get(key);
+    if (this.manualRegionStates.get(region)) return 'manual';
+    const dflt = this.defaultBlockMode || 'record';
+    if (dflt === 'manual' && !this._regionSupportsManual(region)) return 'playback';
+    // M4: the default is Record. A substrate that can't record falls back to
+    // MANUAL, not Playback (user ruling 2026-07-23) — the point of the
+    // Record default is "live-play each block once", and Manual is the
+    // live-play mode. Manual is itself clamped to Playback where the
+    // substrate can't park, so the two clamps compose in one step.
+    if (dflt === 'record' && !this._regionSupportsRecord(region)) {
+      return this._regionSupportsManual(region) ? 'manual' : 'playback';
+    }
+    return dflt;
+  }
+
+  /**
+   * Whether the region's substrate follows the FINE-GRAINED capture
+   * contract (M4 slice 5, public form of _substrateHasRecorder). The panel
+   * needs it to decide what "a recording exists" means for a block: a bound
+   * store recording for fine-grained substrates, a non-empty block interior
+   * for coarse ones.
+   */
+  isFineGrainedRegion(region) {
+    return this._captureShapeForRegion(region) === 'fine';
+  }
+
+  /**
+   * Whether a PLAYABLE recording is bound to this block. Only meaningful
+   * for fine-grained substrates; coarse blocks store no playable actions
+   * (their interior is the recording), so this is always false for them.
+   */
+  hasBoundRecording(region, instance) {
+    return !!this._lookupBoundRecording(region, instance);
+  }
+
+  /** Store an explicit per-block mode (overrides legacy + default). */
+  setBlockMode(region, instance, mode) {
+    if (!region || !mode) return;
+    this.blockModeStates.set(blockKeyOf(region, instance), mode);
+  }
+
+  /**
+   * Whether a block is set to run Instant (M3). Only meaningful for a
+   * Playback/Bot block whose substrate declares loopSupport.instant; the
+   * generic timer / substrate replay consult this to complete the block
+   * headlessly in one frame. Absent key → false.
+   */
+  getBlockInstant(region, instance) {
+    if (!region) return false;
+    return this.blockInstantStates.get(blockKeyOf(region, instance)) === true;
+  }
+
+  /** Store a per-block Instant flag. Absent/false entries are dropped. */
+  setBlockInstant(region, instance, on) {
+    if (!region) return;
+    const key = blockKeyOf(region, instance);
+    if (on) this.blockInstantStates.set(key, true);
+    else this.blockInstantStates.delete(key);
+  }
+
+  /**
+   * Apply an Instant flag to every block in the current queue whose
+   * substrate declares instant support (the "set all Instant" control).
+   * Blocks that can't offer it are left untouched. Returns the count changed.
+   */
+  setAllBlockInstant(on) {
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    let changed = 0;
+    for (const v of visits) {
+      if (!this._regionSupportsInstant(v.name)) continue;
+      this.setBlockInstant(v.name, v.instance, on);
+      changed += 1;
+    }
+    return changed;
+  }
+
+  /** Whether the current action's block resolves to Instant. */
+  _currentBlockIsInstant() {
+    const block = this._blockForCurrentAction();
+    if (!block) return false;
+    return this.getBlockInstant(block.region, block.instance);
+  }
+
+  /**
+   * Apply `mode` to every block in the current queue whose substrate
+   * supports it (the "set all" control). Blocks that can't offer the
+   * mode are left untouched. Returns the number of blocks changed.
+   */
+  setAllBlockModes(mode) {
+    if (!mode) return 0;
+    const { visits } = resolveQueueBlocks(this.getActionQueue());
+    let changed = 0;
+    for (const v of visits) {
+      if (mode === 'manual' && !this._regionSupportsManual(v.name)) continue;
+      if (mode === 'record' && !this._regionSupportsRecord(v.name)) continue;
+      if (mode === 'playback' && !this._regionOffersPlayback(v.name)) continue;
+      if (mode === 'bot' && !this._regionSupportsBot(v.name)) continue;
+      this.setBlockMode(v.name, v.instance, mode);
+      changed += 1;
+    }
+    return changed;
+  }
+
+  /** Whether the region's substrate declares manual loop support. */
+  _regionSupportsManual(region) {
+    return !!this._loopSupportFor(region)?.manual;
+  }
+
+  /**
+   * Whether the region's substrate can offer Record — it must DECLARE both
+   * a recorder and replay (record requires playback). Mirrors
+   * loopBlockBuilder.getModeOffers so the set-all control and the radios
+   * agree on where Record is offered.
+   */
+  _regionSupportsRecord(region) {
+    const ls = this._loopSupportFor(region);
+    return !!ls?.record && !!ls?.playback;
+  }
+
+  /**
+   * Whether the region's substrate declares Instant support (M3). The
+   * per-block Instant toggle is offered only where this is true AND the
+   * block runs in Playback/Bot (instant applies to the auto paths, not
+   * Manual). Requires a real replay/timer instant primitive on the substrate.
+   */
+  _regionSupportsInstant(region) {
+    return !!this._loopSupportFor(region)?.instant;
+  }
+
+  /**
+   * Whether the region "auto-runs today" and can therefore offer the
+   * Playback radio: any substrate with a real loopSupport declaration
+   * (maze delegation / solver walkTo / generic timer all count).
+   * AP-native (null) and NO_LOOP_SUPPORT (empty) regions get no row.
+   */
+  _regionOffersPlayback(region) {
+    return offersPlayback(this._entryFor(region));
+  }
+
+  /** loopSupport for a region's substrate, or null (AP-native / lookup unavailable). */
+  _loopSupportFor(region) {
+    return this._entryFor(region)?.loopSupport ?? null;
+  }
+
+  /**
+   * The registry ENTRY of a region's substrate, or null (AP-native / lookup
+   * unavailable). The capability predicates (procgenCore/substratePredicates.js)
+   * take the entry, so the chart and these controls ask one function.
+   */
+  _entryFor(region) {
+    if (!region) return null;
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      const sub = fn?.(region)?.substrate;
+      if (!sub) return null;
+      return substrateRegistry.get(sub) ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  // -------------------- M3b: strict action gate + live-play observation --------------------
+
+  /**
+   * Whether a substrate follows the FINE-GRAINED capture contract: its
+   * registry entry supplies a full-visit recorder (`takeLastRecording`).
+   * Fine-grained substrates (maze) own capture AND the live-play drain
+   * (per-tile, their native economy); coarse-only substrates (text
+   * adventure) get both from loops. See loop-recording.md.
+   */
+  _substrateHasRecorder(substrateId) {
+    if (!substrateId) return false;
+    try {
+      return typeof substrateRegistry?.get?.(substrateId)?.takeLastRecording === 'function';
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The substrate's CAPTURE SHAPE — the single resolver every
+   * shape-dependent branch goes through, so a new category can never fall
+   * into another's behavior by omission (M5). Three categories:
+   *
+   *   'fine'    — the registry entry supplies `takeLastRecording` (maze,
+   *               jta): the substrate captures + replays a full interleaved
+   *               action stream and charges its own native economy.
+   *   'summary' — loopSupport declares `summaryRecording` (runner, bounce):
+   *               the recording is the NET RESULT of the visit (duration,
+   *               performed checks, departure exit) and Playback applies it
+   *               instantly; the game replays nothing.
+   *   'coarse'  — everything else (text adventure): the block's own queued
+   *               interior IS the recording, run by the generic executor.
+   *
+   * The fine check wins if a substrate somehow declared both — a real
+   * recorder is the stronger contract. See loop-recording.md.
+   */
+  _captureShapeFor(substrateId) {
+    if (!substrateId) return 'coarse';
+    let entry = null;
+    try {
+      entry = substrateRegistry?.get?.(substrateId) ?? null;
+    } catch { /* no entry → coarse */ }
+    return captureShapeOf(entry);
+  }
+
+  /** The capture shape of a REGION's substrate (see _captureShapeFor). */
+  _captureShapeForRegion(region) {
+    return this._captureShapeFor(this._lookupSubstrateId(region));
+  }
+
+  /**
+   * ⛓⛓ L3 — **PUBLIC FORM OF `_captureShapeFor`, KEYED BY SUBSTRATE ID.**
+   * `getRegionCaptureShape` answers for a region of the APPLIED world, which
+   * is the wrong question for a panel inspecting a WORKING COPY: the app's
+   * `_lookupSubstrateId` knows nothing about a document it never loaded and
+   * would answer 'coarse' for every region of it.
+   *
+   * ⛔ It exists so the cost-debugger panel does not re-derive the rule. The
+   * panel resolves a region's substrate from the PLAN's own topology (right
+   * for applied state and for a working copy alike) and asks here what that
+   * substrate's shape is — one resolver, one answer, exactly as
+   * `_captureShapeFor`'s own docblock demands of every shape-dependent branch.
+   *
+   * @param {string|null} substrateId
+   * @returns {'fine'|'summary'|'coarse'}
+   */
+  getSubstrateCaptureShape(substrateId) {
+    return this._captureShapeFor(substrateId);
+  }
+
+  /**
+   * Public form of _captureShapeForRegion — the panel needs it to decide
+   * what "a recording exists" means for a block (loopBlockBuilder's
+   * getBlockPlayableContent).
+   */
+  getRegionCaptureShape(region) {
+    return this._captureShapeForRegion(region);
+  }
+
+  /**
+   * Which SOLVER can execute a region's actions under a Bot block, or null
+   * where none can (M6). The companion of _captureShapeForRegion: one
+   * public resolver, derived from EXISTING declarations — there is no new
+   * capability flag (settled).
+   *
+   *   'walkTo'     — the substrate declares loopSupport.executeVia: 'solver'.
+   *                  Loops drives its PlaybackController.walkTo and parks
+   *                  until the resulting event arrives (jta, runner, bounce).
+   *   'delegation' — the registry entry declares sharing.mana.loopAction-
+   *                  Delegation AND the region has manaEnabled. The substrate
+   *                  panel walks the action itself, charging natively, and
+   *                  publishes loops:substrateActionCompleted (maze).
+   *
+   * The two are mutually exclusive in practice; walkTo wins if a substrate
+   * ever declared both. Maze may NOT be moved onto walkTo: its controller's
+   * walkTo drives the VISUALIZER (a separate position tracker), while
+   * delegation drives the charging panel engine. M6 unifies the TRIGGER and
+   * keeps both drivers.
+   *
+   * @param {string} region
+   * @returns {'walkTo'|'delegation'|null}
+   */
+  regionSolver(region) {
+    if (!region) return null;
+    const kind = solverKindOf(this._entryFor(region));
+    if (kind === SOLVER_KINDS.DELEGATION) {
+      return this._regionSupportsDelegation(region) ? kind : null;
+    }
+    return kind;
+  }
+
+  /**
+   * The delegation half of regionSolver: the region's substrate declares
+   * the loop-action-delegation capability and the region has manaEnabled.
+   * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid a hard
+   * dep — false in standalone / non-procgen contexts.
+   */
+  _regionSupportsDelegation(region) {
+    let info = null;
+    try {
+      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
+      info = fn?.(region) ?? null;
+    } catch {
+      info = null;
+    }
+    const entry = info?.substrate ? substrateRegistry.get(info.substrate) : null;
+    return entry?.sharing?.mana?.loopActionDelegation === true
+      && info?.manaEnabled === true;
+  }
+
+  /** Whether a region can offer the Bot radio — i.e. it has a solver (M6). */
+  _regionSupportsBot(region) {
+    return this.regionSolver(region) !== null;
+  }
+
+  /**
+   * Whether a BOT block in this region can actually honor the Instant flag
+   * (M6 ruling 4). The M1 "Instant applies to Playback and Bot" ruling is
+   * satisfied PER CAPABILITY, not per declaration: showing a checkbox where
+   * it does nothing is a vacuous control, so the Bot Instant checkbox is
+   * offered only here.
+   *
+   * v1 is the walkTo solver on a FINE substrate — jta, whose controller
+   * `instant()` maps to the fork's setInstantMode and really does collapse
+   * the walk. The other two are deliberately out:
+   *   - SUMMARY bots (runner, bounce) play real-time physics; no instant
+   *     variant of that exists, so the checkbox would promise nothing.
+   *   - MAZE DELEGATION is deferred, not impossible: its controller's
+   *     instant() drives the VISUALIZER, while a delegated walk is tracked
+   *     through the visualizer's per-tick change stream (step buffer,
+   *     per-tile charging, mirrored queue, stuck detection). Wiring it
+   *     means touching the two-position-tracker split, which is out of
+   *     scope for this arc.
+   */
+  regionBotHonorsInstant(region) {
+    return botHonorsInstant(this._entryFor(region));
+  }
+
+  /**
+   * Whether the strict action gate is ENFORCED for a region's substrate.
+   * The gate model is substrate-universal, but enforcement rolls out with
+   * each substrate's block-mode integration (declared record + playback —
+   * maze and the text adventure since M3b, jta since M4, runner and bounce
+   * since M5). Only omsi (pending arc D) and the manual-only flash keep
+   * their pre-mode loop behavior; each opts in when it declares the
+   * capabilities.
+   */
+  _substrateGateEnforced(region) {
+    const ls = this._loopSupportFor(region);
+    return !!ls?.record && !!ls?.playback;
+  }
+
+  /**
+   * The region currently open for parked LIVE PLAY (a Manual or Record
+   * block the queue is parked on), or null. Playback/replay parks set
+   * the same parked flags but are not live play. Hard-pause, user pause,
+   * and completed/idle states all return null (ruling 3: strict gate).
+   *
+   * Exposed as the loops public function 'livePlayRegion' — the maze
+   * consults it to enable its native per-tile drain during parked live
+   * play (rule 2: Manual AND Record drain).
+   */
+  livePlayRegion() {
+    if (!this._manualActionEntered) return null;
+    if (this._queuePausedUntilReset) return null;
+    if (this.isPaused) return null;
+    // A solver is driving: not live play (M6). Its events pass the gate on
+    // the 'queueExecution' exemption instead. Belt-and-braces — a solver
+    // park never sets _manualActionEntered — so the negative can't rot.
+    if (this._delegatedAction || this._botExecutedAction) return null;
+    if (this._manualRegionName) {
+      // Mode-driven park: discriminate hand-play (manual/record, plus a Bot
+      // block whose solver could not engage and fell back to live play —
+      // M6 ruling 2) from replay parks (playback / fine-grained recording
+      // replay), which set the same _manualActionEntered/_manualRegionName
+      // flags. Without 'bot' here the fallback park would be unplayable:
+      // the strict gate would block the very hand-play it fell back to.
+      const block = this._blockForCurrentAction();
+      if (!block) return null;
+      const mode = this.getBlockMode(block.region, block.instance);
+      return (mode === 'manual' || mode === 'record' || mode === 'bot')
+        ? this._manualRegionName : null;
+    }
+    // Legacy parks: a 'manual' path entry is hand-play; 'customQueue'
+    // may fall back to hand-play when no replay is available.
+    const t = this.currentAction?.type;
+    if (t === 'manual' || t === 'customQueue') {
+      return this.currentAction?.sourceRegion ?? null;
+    }
+    return null;
+  }
+
+  /**
+   * The strict loop-mode action gate (M3b ruling 3, session 66b).
+   * Decides whether a performed substrate action may proceed.
+   *
+   * @param {Object} args
+   * @param {'location'|'exit'|'move'|'explore'} args.kind
+   * @param {string|null} args.regionName - region the action is performed
+   *   in (a move's SOURCE region).
+   * @param {string|null} [args.eventName] - dispatcher event name, for
+   *   the system:* exemption.
+   * @param {Object|null} [args.data] - original event payload, for the
+   *   fromLoop / fromReset / planning-source exemptions.
+   * @returns {{allowed: boolean, reason: string, expectedRegion?: string|null}}
+   *   reason ∈ exempt: 'loopModeOff'|'fromLoop'|'fromReset'|'systemEvent'|
+   *     'planningSource'|'queueExecution'|'syntheticMove' — out of
+   *     scope: 'noRegion'|'apNative'|'substrateNotGated' — allowed live
+   *     play: 'parkedLivePlay' — blocked: 'hardPause'|'queueCompleted'|
+   *     'emptyQueue'|'notStarted'|'paused'|'wrongRegion'.
+   */
+  evaluateActionGate({ kind, regionName = null, eventName = null, data = null }) {
+    const gs = this._gs();
+    if (!gs?.isLoopModeActive) return { allowed: true, reason: 'loopModeOff' };
+    const d = data ?? {};
+    if (d.fromLoop === true) return { allowed: true, reason: 'fromLoop' };
+    if (d.fromReset === true) return { allowed: true, reason: 'fromReset' };
+    if (typeof eventName === 'string' && eventName.startsWith('system:')) {
+      return { allowed: true, reason: 'systemEvent' };
+    }
+    if (isLoopModePlanningSource(d.source)) {
+      return { allowed: true, reason: 'planningSource' };
+    }
+    // The queue's own execution must always pass: substrate delegation
+    // (maze walks) and solver/bot-backed actions dispatch real events.
+    if (this._delegatedAction || this._botExecutedAction) {
+      return { allowed: true, reason: 'queueExecution' };
+    }
+    // A regionMove WITHOUT an exit is a synthetic reposition (test
+    // harness, debug tooling), not a player-performed exit crossing —
+    // every real substrate publish carries the exit it crossed. The
+    // gate governs performed substrate actions only.
+    if (kind === 'move' && !d.exitName) {
+      return { allowed: true, reason: 'syntheticMove' };
+    }
+    // A move without a resolvable source region can't be classified by
+    // substrate — fall back to the player's current region.
+    let region = regionName;
+    if (!region && kind === 'move') {
+      region = this.gameState?.getCurrentRegion?.() ?? null;
+    }
+    if (!region) return { allowed: true, reason: 'noRegion' };
+    const substrate = this._lookupSubstrateId(region);
+    if (!substrate) return { allowed: true, reason: 'apNative' };
+    if (!this._substrateGateEnforced(region)) {
+      return { allowed: true, reason: 'substrateNotGated' };
+    }
+    const liveRegion = this.livePlayRegion();
+    if (liveRegion && liveRegion === region) {
+      return { allowed: true, reason: 'parkedLivePlay' };
+    }
+    // Blocked — classify for user-facing feedback.
+    let reason;
+    if (this._queuePausedUntilReset) reason = 'hardPause';
+    else if (this._queueCompleted) reason = 'queueCompleted';
+    else if ((this.getActionQueue()?.length ?? 0) === 0) reason = 'emptyQueue';
+    else if (this.isPaused) reason = 'paused';
+    else if (liveRegion) reason = 'wrongRegion';
+    else reason = 'notStarted';
+    return { allowed: false, reason, expectedRegion: liveRegion ?? null };
+  }
+
+  /**
+   * Observe a gate-allowed parked live-play action (rule 1 + rule 2,
+   * session 66b): charge its loop_costs value (xp-adjusted, one economy
+   * with the generic executor) and, when the parked block is Record,
+   * append it to the coarse capture buffer. Applies to COARSE-ONLY
+   * substrates only — fine-grained substrates (maze) drain natively and
+   * capture through their own recorder. The departing regionMove is
+   * charged on the wake (_handleManualWake_regionMove), not here.
+   *
+   * @param {{type: 'locationCheck'|'explore', locationName?: string, regionName: string}} action
+   */
+  observeParkedLiveAction({ type, locationName = null, regionName }) {
+    const liveRegion = this.livePlayRegion();
+    if (!liveRegion || liveRegion !== regionName) return;
+    const substrate = this._lookupSubstrateId(regionName);
+    if (!substrate) return;
+    // FINE-GRAINED substrates drain natively and capture through their own
+    // recorder — loops observes nothing. COARSE-ONLY and SUMMARY substrates
+    // are both charged and captured here; M5 slice 2 splits their PRICING
+    // (summary substrates charge only costs explicitly present in the
+    // loop_costs data, never the 50/100 fallbacks).
+    const shape = this._captureShapeFor(substrate);
+    if (shape === 'fine') return;
+    const actionShape = type === 'explore'
+      ? { type: 'customAction', sourceRegion: regionName }
+      : { type: 'locationCheck', locationName, sourceRegion: regionName };
+    if (shape === 'summary') this._noteSummaryCostedAction(actionShape);
+    this._chargeLiveAction(actionShape);
+    if (this._recordingBlock) {
+      this._liveCaptureBuffer.push(type === 'explore'
+        ? { type: 'explore', regionName }
+        : { type: 'locationCheck', locationName });
+    }
+  }
+
+  /**
+   * Remember a summary-visit action that carried an EXPLICIT loop_costs
+   * price, so Playback can re-price it (M5). Free actions are deliberately
+   * NOT listed: the recorded duration already prices them, and listing them
+   * would invite a future reader to charge them twice.
+   *
+   * Recorded at CHARGE time rather than derived at finalize, so the list is
+   * exactly what was paid for — including the departing move, which is
+   * charged on the wake before the capture is finalized.
+   */
+  _noteSummaryCostedAction(actionShape) {
+    if (!this._recordingBlock) return;
+    if (!(this._summaryBaseCost(actionShape) > 0)) return;
+    const { type, locationName = null } = actionShape;
+    this._summaryCostedActions.push(
+      locationName ? { type, locationName } : { type },
+    );
+  }
+
+  /**
+   * Charge one live-play action's cost: same cost model and XP award as
+   * the generic executor (_advanceActionProgress), so live play, Record,
+   * and Playback share one economy. Depletion is handled by the existing
+   * mana wake (gameState:manaChanged → _handleManualWake_mana →
+   * _resetLoop), which fires synchronously from deductMana.
+   */
+  _chargeLiveAction(actionShape, times = 1) {
+    this._spendMana(actionShape.sourceRegion, this._calculateActionCost(actionShape) * times);
+  }
+
+  /**
+   * Deduct mana and award the matching region XP 1:1 — the single spend
+   * path shared by live-play charges, the M5 time drain, and the M5
+   * summary replay, so all three keep one economy.
+   *
+   * CALLER BEWARE: deductMana fires gameState:manaChanged SYNCHRONOUSLY,
+   * whose wake can run the depletion reset (refilling the pool, snapping
+   * the queue to index 0 and discarding any capture). Anything a caller
+   * does after this must tolerate that, or check for it.
+   */
+  _spendMana(region, cost) {
+    if (!(cost > 0)) return;
+    const gs = this._gs();
+    if (!gs?.deductMana) return;
+    gs.deductMana(cost);
+    this._passManaSpent += cost;
+    if (region) {
+      // bulletml N5: every spend, by region and substrate — a substrate whose
+      // resources come from the mana spent in its regions (Noiz2sa's training)
+      // earns from this one feed, whether live play, a Bot block or a Playback
+      // spent it. After the deduct, so it reports mana actually spent.
+      this.eventBus?.publish?.('loops:manaSpent', {
+        region,
+        substrate: this._lookupSubstrateId(region),
+        mana: cost,
+      });
+      this.addRegionXP(region, cost);
+      this._annotationTracker?.noteXp(cost);
+      this.eventBus?.publish('gameState:xpChanged', {
+        regionName: region,
+        xpData: this.getRegionXP(region),
+      });
+    }
+  }
+
+  /**
+   * Auto-switch a just-recorded block to Playback (schema-backed
+   * setting, default ON) and refresh the panel. Shared by the
+   * fine-grained persist path and the coarse-only finalize path.
+   */
+  _autoSwitchAfterRecord(region, instance) {
+    if (!this.autoSwitchToPlaybackAfterRecord) return;
+    this.setBlockMode(region, instance, 'playback');
+    this.eventBus?.publish?.('loopState:blockModeChanged', {
+      region,
+      instance,
+      mode: 'playback',
+      reason: 'autoSwitchAfterRecord',
+    });
+    // Re-render the panel so the block's mode radio flips to Playback
+    // immediately on exit. eventCoordinator re-renders on queueUpdated
+    // but not blockModeChanged. The payload MUST carry `queue` —
+    // _handleQueueUpdated → _updateRegionsInQueue iterates it (an empty
+    // {} throws on the for-of).
+    this.eventBus?.publish?.('loopState:queueUpdated', { queue: this.getActionQueue() });
   }
 
   /**
@@ -1116,6 +2766,10 @@ export class LoopState {
     if (this._manualActionEntered) return;
     this._manualActionEntered = true;
     this._manualRegionName = regionName;
+    // M5: the visit's duration and costed actions are counted from this
+    // park (summary substrates only — they stay empty elsewhere).
+    this._summaryDrainSeconds = 0;
+    this._summaryCostedActions = [];
 
     const componentType = this._lookupSubstrateComponentType(regionName);
     if (componentType && this.eventBus?.publish) {
@@ -1174,7 +2828,9 @@ export class LoopState {
           entry.locationName === locationName &&
           !entry.completed) {
         this.actionQueueManager?.markCompleted(entry.pathIndex);
-        this.eventBus?.publish('loopState:queueUpdated', {});
+        // Payload MUST carry `queue` — _handleQueueUpdated →
+        // _updateRegionsInQueue iterates it (an empty {} throws).
+        this.eventBus?.publish('loopState:queueUpdated', { queue });
         return;
       }
     }
@@ -1249,10 +2905,19 @@ export class LoopState {
    */
   _handleCustomQueueEntry(action) {
     if (this._manualActionEntered) return;
+    // Capture the block's Instant flag (M3) before stopProcessing, same as
+    // the mode-driven Playback path — a customQueue replay on an Instant
+    // block drains in one frame too.
+    const instant = this._currentBlockIsInstant();
     this._manualActionEntered = true;
 
+    // Playback (customQueue) runs the block automatically — unlike a
+    // Manual entry, it should NOT steal panel focus when the user has
+    // "Keep this panel focused" on. Gate on the same isFocusLocked
+    // predicate the substrates consult before self-activating.
     const componentType = this._lookupSubstrateComponentType(action.sourceRegion);
-    if (componentType && this.eventBus?.publish) {
+    const focusLocked = centralRegistry?.getPublicFunction?.('loops', 'isFocusLocked')?.() ?? false;
+    if (componentType && !focusLocked && this.eventBus?.publish) {
       this.eventBus.publish('ui:activatePanel', { panelId: componentType });
     }
     this.stopProcessing();
@@ -1271,6 +2936,10 @@ export class LoopState {
         try {
           controller.replayActions(saved.actions, {
             onComplete: () => { /* reserved for future UI */ },
+            instant,
+            // See `_handlePlaybackReplayEntry` — the envelope rides along so a
+            // substrate can refuse a stale recording before step 0.
+            recording: saved,
           });
         } catch (err) {
           log('warn', '[LoopState] customQueue replayActions threw:', err);
@@ -1295,25 +2964,30 @@ export class LoopState {
   // -------------------- Bot-backed queue execution --------------------
 
   /**
-   * Whether the current action should be executed by the substrate's
-   * playback bot instead of the generic progress-timer path. Requires
-   * the substrate's registry entry to declare loopSupport.executeVia
-   * === 'playbackBot' with the action's type in queueActions, and a
-   * live playback controller exposing walkTo. A missing controller
-   * (panel not mounted / headless) falls back to generic execution —
-   * the event-driven teleport still works, just without the physics.
+   * Whether the current ACTION can be executed by the walkTo solver.
+   * The per-action half of the Bot branch's check (regionSolver answers
+   * the per-REGION half): the action's type must be in queueActions and
+   * a live playback controller exposing walkTo must exist. A missing
+   * controller (panel not mounted / headless) means the solver cannot
+   * engage — since M6 that parks the block for live play with a warning
+   * rather than silently teleporting it on the generic timer.
    */
   _shouldBotExecuteCurrentAction() {
     const action = this.currentAction;
     if (!action) return false;
-    if (action.type !== 'regionMove' && action.type !== 'locationCheck') return false;
+    const explore = isExploreAction(action);
+    if (!explore && action.type !== 'regionMove' && action.type !== 'locationCheck') return false;
     const substrate = this._lookupSubstrateId(action.sourceRegion);
     if (!substrate) return false;
     const entry = substrateRegistry?.get?.(substrate);
     const loopSupport = entry?.loopSupport;
-    if (loopSupport?.executeVia !== 'playbackBot') return false;
-    if (!loopSupport.queueActions?.includes(action.type)) return false;
-    return typeof entry.getPlaybackController?.()?.walkTo === 'function';
+    if (loopSupport?.executeVia !== 'solver') return false;
+    if (!loopSupport.queueActions?.includes(explore ? 'explore' : action.type)) return false;
+    const controller = entry.getPlaybackController?.();
+    // An explore has no place to walk to: only a controller that PERFORMS
+    // takes it (the text adventure's — its engine shows the explore).
+    if (explore) return typeof controller?.perform === 'function';
+    return typeof controller?.walkTo === 'function';
   }
 
   /**
@@ -1338,15 +3012,63 @@ export class LoopState {
     const controller = substrate
       ? substrateRegistry?.get?.(substrate)?.getPlaybackController?.()
       : null;
-    const target = action.type === 'locationCheck'
-      ? { kind: 'location', name: action.locationName }
-      : { kind: 'exit', name: action.exitUsed };
+    const explore = isExploreAction(action);
+    const target = explore ? { kind: 'explore', region: action.sourceRegion }
+      : action.type === 'locationCheck'
+        ? { kind: 'location', name: action.locationName }
+        : { kind: 'exit', name: action.exitUsed };
     try {
-      controller?.walkTo?.(target);
-      log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
+      // Instant (M6 ruling 4): collapse the walk where the solver really
+      // honors it. Set BEFORE walkTo — it is a MODE the substrate reads as
+      // the walk runs, not an argument to it.
+      //
+      // Set BOTH WAYS, unconditionally, for solvers that honor it: jta's
+      // instant maps to setInstantMode, which is sticky with no unset path
+      // of its own, so only ever turning it ON would let one Instant block
+      // leave the fork instant for the rest of the session — silently
+      // collapsing later paced blocks, Manual play and Record captures in
+      // the same iframe. Each block establishes its own pacing instead.
+      //
+      // Scoped to regionBotHonorsInstant regions so this never reaches a
+      // solver that would ignore it (or half-honor it) — and so the
+      // standalone playback-bot panel's deliberate instant() is not
+      // clobbered by a queue running elsewhere.
+      if (this.regionBotHonorsInstant(action.sourceRegion)) {
+        controller?.instant?.(this._currentBlockIsInstant());
+      }
+      // `perform` where the controller has one (the text adventure's): it acts
+      // NOW, where its `walkTo` only queues the target for a clock this path
+      // never starts.
+      // A synchronous `false` is a REFUSAL (the PlaybackController contract):
+      // the walk will never happen, so the park would never wake. Stop by
+      // name instead, with the controller's own reason when it has one.
+      const go = typeof controller?.perform === 'function'
+        ? controller.perform(target) : controller?.walkTo?.(target);
+      if (go === false) {
+        const why = typeof controller.lastRefusal === 'string' && controller.lastRefusal
+          ? controller.lastRefusal
+          : `the ${substrate} controller refused ${target.kind} '${target.name}'`;
+        this._failBotExecutedAction(why);
+        return;
+      }
+      // A solver that ACCEPTED the walk and only later finds it cannot be
+      // walked says so on playback:walkFailed. Listened to ONLY while this
+      // walk is parked (dropped in _stopBotExecutedAction): an always-on
+      // subscription measurably perturbed an unrelated cross-substrate grant
+      // row (omsi-award-schedule, 6/13 red vs 0/9 without it, mechanism not
+      // identified), and outside a park the event is never ours anyway.
+      if (!this._botWalkFailedListener && this.eventBus?.subscribe) {
+        this._botWalkFailedListener = (data) => this._handleBotWalkFailed(data);
+        this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+      }
+      log('info', `[LoopState] Bot walking to ${target.kind} '${target.name ?? target.region}' in ${action.sourceRegion}`);
     } catch (err) {
       log('warn', '[LoopState] Bot walkTo threw:', err);
     }
+    // An explore has no event of its own to wake on: the engine has shown it,
+    // and completing it here publishes the loop:exploreCompleted (fromLoop)
+    // that reveals — once.
+    if (explore && this._botExecutedAction === action) this._completeBotExecutedAction();
   }
 
   /**
@@ -1354,7 +3076,54 @@ export class LoopState {
    * action. Called on pause/stop, loop reset, and unexpected-region
    * detection.
    */
+  /**
+   * A late refusal (`playback:walkFailed`) for the parked Bot walk. Matched
+   * on the parked action's substrate and, when the event names one, its
+   * target — a failure from another controller (the standalone Playback Bot
+   * driving a different region) is not ours.
+   */
+  _handleBotWalkFailed(data) {
+    const action = this._botExecutedAction;
+    if (!action) return;
+    const substrate = this._lookupSubstrateId(action.sourceRegion);
+    if (data?.substrate && substrate && data.substrate !== substrate) return;
+    const want = action.type === 'locationCheck' ? action.locationName : action.exitUsed;
+    if (data?.target?.name && want && data.target.name !== want) return;
+    this._failBotExecutedAction(
+      typeof data?.reason === 'string' && data.reason ? data.reason : `the ${substrate} walk failed`);
+  }
+
+  /**
+   * The NAMED STOP of a Bot block whose walk cannot happen: drop the park,
+   * pause the queue, and publish `loopState:botWalkFailed` with the reason
+   * (never a silent wait). The user — or the Playback Bot's loop runner —
+   * decides what next.
+   */
+  _failBotExecutedAction(reason) {
+    const action = this._botExecutedAction;
+    this._stopBotExecutedAction();
+    log('warn', `[LoopState] Bot block in '${action?.sourceRegion}' stopped: ${reason}`);
+    this.stopProcessing();
+    this.isPaused = true;
+    this.eventBus?.publish?.('loopState:botWalkFailed', {
+      region: action?.sourceRegion ?? null,
+      action,
+      reason,
+    });
+    this.eventBus?.publish?.('loopState:pauseStateChanged', {
+      isPaused: this.isPaused,
+      processingState: this.getProcessingState(),
+    });
+  }
+
+  _dropBotWalkFailedListener() {
+    if (!this._botWalkFailedListener) return;
+    this.eventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
+    this._botWalkFailedListener = null;
+  }
+
   _stopBotExecutedAction() {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     if (!action) return;
     this._botExecutedAction = null;
@@ -1383,15 +3152,42 @@ export class LoopState {
   }
 
   /**
-   * Wake for bot-executed actions on a region change. A regionMove
-   * arriving at its destination completes; any other region change
-   * while the bot drives (an open non-target portal swallowed a
-   * landing, the player grabbed the controls...) gets the same
-   * paused-until-reset semantics as a manual wrong-exit.
+   * Wake for bot-executed actions on a region change. Three cases:
+   *
+   *   1. A LOOP-RESET teleport (`fromReset`). The reset flow owns queue
+   *      state — the same exemption the manual wake takes — so a reset
+   *      teleport is NEVER a wrong exit. The bot park is released and the
+   *      frame loop resumes so the queue re-drives from index 0 (which
+   *      `_resetActionsProgress` has already snapped to). This is the
+   *      generic queue-restart retry, the path a solver with no bridge
+   *      memory of its own (runner, bounce) relies on when a walk outruns
+   *      a pool. Checked FIRST, before the completion match, so a reset
+   *      that happens to land on the destination still retries rather than
+   *      falsely completing an interrupted walk.
+   *   2. A regionMove arriving at its DESTINATION completes.
+   *   3. Any OTHER region change while the bot drives (an open non-target
+   *      portal swallowed a landing, the player grabbed the controls...)
+   *      keeps the paused-until-reset semantics of a manual wrong-exit.
+   *
+   * @param {string} newRegion
+   * @param {{ fromReset?: boolean }} [opts]
    */
-  _handleBotWake_regionChanged(newRegion) {
+  _handleBotWake_regionChanged(newRegion, opts = {}) {
     const action = this._botExecutedAction;
     if (!action || !newRegion) return;
+    if (opts.fromReset) {
+      this._stopBotExecutedAction();
+      // Nothing else re-schedules a frame during a bot park (the park leaves
+      // _animationFrameId null and does not stopProcessing), and the fork-
+      // propagated reset only ran _resetActionsProgress — so resume the loop
+      // here or the queue would sit dormant with the cursor at 0. The Bot
+      // branch re-parks and re-dispatches on the next frame once the player
+      // is in index 0's region; a multi-region walk that teleported away
+      // additionally needs the queue to route back there (its own leading
+      // moves, or the caller), which is not the wake's concern.
+      this._resumeFrameLoopIfProcessing();
+      return;
+    }
     if (action.type === 'regionMove' && newRegion === action.destinationRegion) {
       this._completeBotExecutedAction({ viaRegionMove: true });
       return;
@@ -1411,22 +3207,57 @@ export class LoopState {
   }
 
   /**
-   * Complete the parked bot-executed action: charge its loops-fallback
-   * mana cost (v1 decision — bounce-style substrates track no mana
-   * natively, so the queue charges the loop_costs value on completion;
-   * a resulting mana ≤ 0 lands on the next frame's _maybeResetForOOM),
-   * then run the normal completion flow. For regionMoves the bridge
-   * already moved the player, so the duplicate user:regionMove
-   * dispatch is suppressed exactly like substrate delegation.
+   * Resume the RAF frame loop from wherever the cursor is, if the queue is
+   * still processing. Shared by the completion path and the loop-reset bot
+   * wake — both need to kick the dormant loop back to life after a park.
+   */
+  _resumeFrameLoopIfProcessing() {
+    if (!this.isProcessing || this.isPaused) return;
+    this._lastFrameTime = null;
+    if (this._animationFrameId) {
+      cancelAnimationFrame(this._animationFrameId);
+    }
+    this._animationFrameId = requestAnimationFrame(
+      this._processFrame.bind(this),
+    );
+  }
+
+  /**
+   * Complete the parked bot-executed action: charge it, then run the
+   * normal completion flow. For regionMoves the bridge already moved the
+   * player, so the duplicate user:regionMove dispatch is suppressed
+   * exactly like substrate delegation.
+   *
+   * THE CHARGE (M6 ruling 3 — Bot execution costs what live play of the
+   * same content costs, so the charge follows the region's CAPTURE SHAPE):
+   *
+   *   - FINE (jta, maze): nothing. The substrate charges natively while
+   *     the bot plays — jta's energy drain mirrors into the pool. The flat
+   *     completion charge this replaces was a v1 decision made when bounce
+   *     was the only user; on a natively-charging substrate it double-bills
+   *     the same play.
+   *   - SUMMARY (runner, bounce): the per-second drain has been running
+   *     throughout, and the action itself costs only what the loop_costs
+   *     data names EXPLICITLY (_calculateActionCost's summary branch) —
+   *     no 50/100 fallbacks, which would price the visit twice.
+   *   - Anything else (unreachable today — no coarse substrate declares a
+   *     solver): charge as the safe default, matching the generic executor.
+   *
+   * All of it routes through _chargeLiveAction, so a bot's spend awards
+   * region XP 1:1 like every other spend. The old direct deductMana call
+   * awarded none. A resulting mana ≤ 0 lands on the next frame's
+   * _maybeResetForOOM — the completion flow below is safe to run either
+   * way, because the depletion wake ignores a non-manual park.
    */
   _completeBotExecutedAction({ viaRegionMove = false } = {}) {
+    this._dropBotWalkFailedListener();
     const action = this._botExecutedAction;
     this._botExecutedAction = null;
     if (!action || this.currentAction !== action) return;
 
-    const gs = this._gs();
-    const cost = this._calculateActionCost(action);
-    if (gs?.deductMana && cost > 0) gs.deductMana(cost);
+    if (this._captureShapeForRegion(action.sourceRegion) !== 'fine') {
+      this._chargeLiveAction(action);
+    }
 
     if (this.actionQueueManager) {
       this.actionQueueManager.setProgress(action.pathIndex, 100);
@@ -1441,15 +3272,7 @@ export class LoopState {
 
     // Resume the frame loop to tick the next action (or hit the
     // queue-completed / OOM transitions cleanly).
-    if (this.isProcessing && !this.isPaused) {
-      this._lastFrameTime = null;
-      if (this._animationFrameId) {
-        cancelAnimationFrame(this._animationFrameId);
-      }
-      this._animationFrameId = requestAnimationFrame(
-        this._processFrame.bind(this),
-      );
-    }
+    this._resumeFrameLoopIfProcessing();
   }
 
   /**
@@ -1459,11 +3282,37 @@ export class LoopState {
    * queue paused-until-reset and publish a warning.
    */
   _handleManualWake_regionMove(data) {
+    // Not parked: nothing to wake. (M2's unparked Record capture lived
+    // here; it is dead code under the M3b strict action gate — free-
+    // walking a Record region can no longer happen — and was removed.)
     if (!this._manualActionEntered) return;
+    // The loop-reset teleport is not live play — the reset flow owns
+    // queue state (exemption matrix: fromReset).
+    if (data?.fromReset) return;
     if (!this.currentAction) return;
     const manualRegion = this._manualRegionName;
     const t = this.currentAction.type;
     if (!manualRegion && t !== 'manual' && t !== 'customQueue') return;
+    // Rule 2 (session 66b): live play drains — charge the departing
+    // regionMove the player just performed, success or wrong exit alike
+    // (the move happened either way). Coarse-only AND summary substrates
+    // (M5) are charged here; fine-grained substrates charge their own
+    // native economy per tile. M5 slice 2 splits the two pricings — a
+    // summary substrate's departure costs only what loop_costs states
+    // explicitly, never the 50 fallback.
+    const liveRegion = this.livePlayRegion();
+    if (liveRegion && liveRegion === (data?.oldRegion ?? liveRegion)
+        && this._captureShapeForRegion(liveRegion) !== 'fine') {
+      const move = { type: 'regionMove', sourceRegion: liveRegion };
+      if (this._captureShapeForRegion(liveRegion) === 'summary') {
+        this._noteSummaryCostedAction(move);
+      }
+      this._chargeLiveAction(move);
+      // The charge may have depleted mana: deductMana fires manaChanged
+      // synchronously, whose wake runs _resetLoop (mana-out mid-Record
+      // discards, M2 ruling). The park state is gone — stop here.
+      if (!this._manualActionEntered) return;
+    }
     // Per-region manual mode scans from the current action INCLUSIVE
     // (the cursor may be parked on the leaving regionMove itself);
     // legacy manual/customQueue entries scan from the next entry.
@@ -1475,6 +3324,23 @@ export class LoopState {
       // region segment (per-region manual mode).
       this._manualActionEntered = false;
       this._manualRegionName = null;
+      this._boundReplayCheckedIndex = -1;
+      // Successful Record exit: finalize the capture + rewrite the
+      // block interior BEFORE completing the segment (the departing
+      // regionMove the segment-completer walks to stays untouched).
+      const recordingBlock = this._recordingBlock;
+      this._recordingBlock = null;
+      if (recordingBlock) {
+        // The crossed exit, or the one the queue meant to cross. A summary
+        // recording needs it to replay the departure (M5); resolve it
+        // BEFORE _completeManualRegionSegment moves the cursor past the
+        // queued regionMove the fallback reads.
+        this._finalizeRecordBlock(
+          recordingBlock.region,
+          recordingBlock.instance,
+          data?.exitName ?? this._queuedDepartureExit(),
+        );
+      }
       if (manualRegion) {
         this._completeManualRegionSegment();
       } else {
@@ -1495,7 +3361,10 @@ export class LoopState {
       this.resumeProcessing?.();
       return;
     }
-    // Mismatch — disable playback until the next loop reset.
+    // Mismatch — disable playback until the next loop reset. A Record in
+    // progress is DISCARDED (M2 ruling: wrong exit = Manual's wrong-region
+    // semantics, recording thrown away).
+    this._discardActiveRecording();
     this._queuePausedUntilReset = true;
     if (this.eventBus?.publish) {
       this.eventBus.publish('loopState:queuePausedUntilReset', {
@@ -1506,7 +3375,28 @@ export class LoopState {
     }
   }
 
-  /** Mana-zero during manual mode → standard loop reset. */
+  /**
+   * Mana-zero during manual mode → standard loop reset.
+   *
+   * This is a depletion reset LOOPS OWNS: the spend that emptied the pool was
+   * `_chargeLiveAction`'s, on a block loops parked. So `autoRestartQueue`
+   * governs it, the same way it governs the frame OOM check and the drain
+   * tick's — see loop-recording.md, "`autoRestartQueue` governs the resets
+   * loops OWNS". Until 2026-07-25 this row honoured the flag in NEITHER
+   * direction: `_resetLoop` deliberately leaves pause state alone, so the
+   * park's own `stopProcessing()` survived and the queue sat stopped with the
+   * cursor at 0 — even for a player who had ticked the box.
+   *
+   * ON-direction only, deliberately (user 2026-07-25). Flag off keeps today's
+   * behaviour exactly: the queue stops, as it always has. Making that an
+   * explicit pause to match `_maybeResetForOOM` would change what every
+   * default-config player sees after a mana-out in hand-play, and buys
+   * nothing they can act on — stopped and paused both mean "press Start".
+   *
+   * Step mode is excluded for the same reason `_maybeResetForOOM` excludes it:
+   * the reset IS the step's terminal event. A user pause is excluded by
+   * `_beginProcessing`, which bails on `isPaused`.
+   */
   _handleManualWake_mana() {
     if (!this._manualActionEntered) return;
     if (!this.currentAction) return;
@@ -1515,7 +3405,12 @@ export class LoopState {
     const gs = this._gs();
     if (typeof gs?.getCurrentMana !== 'function') return;
     if (gs.getCurrentMana() > 0) return;
+    // The no-depletion-reset debug flag suppresses this reset exactly
+    // like the generic timer's _maybeResetForOOM — mana runs negative
+    // (manaDebt) instead.
+    if (gs.noManaDepletionReset) return;
     this._resetLoop();
+    if (this.autoRestartQueue && !this._stepMode) this.resumeProcessing();
   }
 
   /**
@@ -1525,7 +3420,8 @@ export class LoopState {
    *   - gs.deductMana (handles noManaDepletionReset / manaDebt internally)
    *   - gs.addRegionXP + gameState:xpChanged event for fine-grained UI updates
    *
-   * Zero-cost actions and instantMode complete in a single frame.
+   * Zero-cost actions, the global instantMode debug flag, and a per-block
+   * Instant toggle (M3) all complete the action in a single frame.
    */
   _advanceActionProgress(deltaTime) {
     const actionCost = this._calculateActionCost(this.currentAction);
@@ -1533,7 +3429,7 @@ export class LoopState {
       this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
 
     let progressIncrement;
-    if (actionCost === 0 || this.instantMode) {
+    if (actionCost === 0 || this.instantMode || this._currentBlockIsInstant()) {
       progressIncrement = 100 - currentProgress;
     } else {
       // Slow down the action for better visibility — 20 instead of 100.
@@ -1549,7 +3445,10 @@ export class LoopState {
 
     const manaCost = (progressIncrement / 100) * actionCost;
     const gs = this._gs();
-    if (gs) gs.deductMana(manaCost);
+    if (gs) {
+      gs.deductMana(manaCost);
+      if (manaCost > 0) this._passManaSpent += manaCost;
+    }
 
     if (this.currentAction.sourceRegion) {
       const xpGain = (progressIncrement / 100) * actionCost;
@@ -1724,20 +3623,43 @@ export class LoopState {
 
     // If we reached the end of the queue
     if (this.currentActionIndex >= queue.length) {
-      // Reset to beginning if auto-restart is enabled
-      if (this.autoRestartQueue) {
+      // A pass that spent NO mana must not wrap, even with auto-restart on.
+      // Zero-cost actions (and Instant blocks) complete in a single frame,
+      // so an all-free path re-runs the whole queue every animation frame:
+      // nothing is ever spent, so `_maybeResetForOOM` — the only thing that
+      // normally ends an auto-restarting run — can never fire, and the
+      // per-completion re-render storm starves the panel of clicks, so the
+      // user cannot even edit the path out of it. Park on the ordinary
+      // queueCompleted path instead: "Restart" re-runs it deliberately.
+      //
+      // Measured, not summed from the queue: costs are dynamic (region XP
+      // effects, live-play drains, delegated walks), so the only honest
+      // question is what this pass actually burned — by loops' spends or
+      // by a substrate drawing on the pool itself (see _passWasFree).
+      const freePass = this._passWasFree();
+      if (this.autoRestartQueue && !freePass) {
         this.currentActionIndex = 0;
         this._resetActionsProgress();
       } else {
+        if (freePass && this.autoRestartQueue) {
+          log('warn',
+            '[LoopState] Auto-restart declined: the queue completed a full '
+            + 'pass without spending any mana. Parking instead of restarting '
+            + 'at frame rate.');
+        }
         // Queue completed — transition to completed state
         this.currentAction = null;
         this.isProcessing = false;
         this.isPaused = false;
         this._queueCompleted = true;
+        this._queueCompletedReason =
+          freePass && this.autoRestartQueue ? 'zeroCostPass' : 'queueEnd';
         // Step mode is irrelevant once the queue ends; the completed
         // state already meets "stop after one action".
         this._stepMode = false;
-        this.eventBus.publish('loopState:queueCompleted', {});
+        this.eventBus.publish('loopState:queueCompleted', {
+          reason: this._queueCompletedReason,
+        });
         this.eventBus.publish('loopState:pauseStateChanged', {
           isPaused: this.isPaused,
           processingState: this.getProcessingState(),
@@ -1768,27 +3690,22 @@ export class LoopState {
   }
 
   /**
-   * True when the current action's sourceRegion is a maze substrate
-   * region with manaEnabled — i.e. one that wants to handle the
-   * action via tile-by-tile walking instead of the queue's flat
-   * tick-progress-to-100 model.
+   * Whether the current action's region can be handled by the DELEGATION
+   * solver — one that wants to walk the action tile-by-tile instead of
+   * running the queue's flat tick-progress-to-100 model.
    *
-   * Reads procgenPlayer.getRegionInfo via centralRegistry to avoid
-   * a hard dep. Returns false in standalone / non-procgen contexts.
+   * This is a pure CAPABILITY predicate. Whether delegation actually fires
+   * is a question of block MODE, and since M6 exactly one mode answers yes:
+   * the Bot branch of _processFrame's dispatch is the only caller that
+   * initiates. (Before M6 this predicate carried a "not Manual" exclusion
+   * and doubled as the trigger from a pre-dispatch tick — which is how
+   * Record and Playback blocks on delegation-capable regions got delegated
+   * out from under their own mode.)
    */
   _shouldDelegateCurrentAction() {
-    if (!this.currentAction?.sourceRegion) return false;
-    // Manual-checked regions are player-driven — never delegate to
-    // the substrate's auto-walk; _processFrame parks on them instead.
-    if (this.getManualRegion(this.currentAction.sourceRegion)) return false;
-    let info = null;
-    try {
-      const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
-      info = fn?.(this.currentAction.sourceRegion) ?? null;
-    } catch {
-      info = null;
-    }
-    return info?.substrate === 'maze' && info?.manaEnabled === true;
+    const region = this.currentAction?.sourceRegion;
+    if (!region) return false;
+    return this.regionSolver(region) === 'delegation';
   }
 
   /**
@@ -1864,9 +3781,14 @@ export class LoopState {
 
     switch (action.type) {
       case 'customAction':
-        // Publish event for discovery module via dispatcher
+        // Publish event for discovery module via dispatcher. fromLoop
+        // marks it as queue execution: loops itself receives this event
+        // first (M3b explore gate/observation receiver, initialTarget
+        // 'bottom' → highest load priority first) and must pass its own
+        // dispatches through without gating or re-charging them.
         this.dispatcher.publish('loop:exploreCompleted', {
           regionName: action.sourceRegion,
+          fromLoop: true,
         });
         break;
       case 'locationCheck':
@@ -1917,6 +3839,36 @@ export class LoopState {
   }
 
   /**
+   * The pre-XP base cost of one action in a SUMMARY substrate's region
+   * (M5). Time is the default economy: a second of live play costs the
+   * region's drain rate, and everything else is FREE unless the loop_costs
+   * data names a cost for it explicitly.
+   *
+   * @param {Object} action - {type, sourceRegion, locationName?}
+   * @returns {number} base mana cost (0 when the data states none)
+   */
+  _summaryBaseCost(action) {
+    const cdm = this.costDataManager;
+    const region = action.sourceRegion;
+    switch (action.type) {
+      case 'timeDrain':
+        return cdm?.getTimeDrainPerSecond?.(region) ?? DEFAULT_TIME_DRAIN_PER_SECOND;
+      case 'regionMove':
+        return cdm?.getExplicitRegionCost?.(region) ?? 0;
+      case 'locationCheck':
+        return cdm?.getExplicitLocationCost?.(action.locationName) ?? 0;
+      case 'customAction': {
+        // Explore is 2× the move cost where one exists (matching the
+        // generic model); neither runner nor bounce declares the action.
+        const move = cdm?.getExplicitRegionCost?.(region);
+        return typeof move === 'number' ? move * DEFAULT_EXPLORE_MULTIPLIER : 0;
+      }
+      default:
+        return 0;
+    }
+  }
+
+  /**
    * Calculate the mana cost of an action.
    * Uses per-region/per-location costs from costDataManager when available,
    * falling back to hardcoded defaults.
@@ -1926,7 +3878,36 @@ export class LoopState {
   _calculateActionCost(action) {
     let baseCost;
 
-    if (this.costDataManager?.isLoaded()) {
+    // M5: SUMMARY substrates (runner, bounce) are priced by TIME. Their
+    // per-action costs apply only where the loop_costs data states one
+    // EXPLICITLY (user ruling 2026-07-23) — the 50/100 fallbacks below,
+    // and the sidecar-level defaults behind them, must never reach a
+    // summary action, or every visit would be charged twice.
+    // A COARSE region whose substrate declares a play clock (Seedling) is
+    // ALSO time-drained (⚖ user 2026-10-12, "Drain play time too"): its
+    // timeDrain is priced like a summary region's; its queue actions keep
+    // their own prices below.
+    if (action?.sourceRegion && (this._captureShapeForRegion(action.sourceRegion) === 'summary'
+        || (action.type === 'timeDrain' && this._regionDrainsTime(action.sourceRegion)))) {
+      baseCost = this._summaryBaseCost(action);
+      return applyRegionXpCostEffect(
+        baseCost,
+        this.getRegionXP(action.sourceRegion).level,
+        this.costDataManager?.getRegionXpEffect?.(action.sourceRegion),
+      );
+    }
+
+    // ⚖ 2026-09-06, model (A) — **A `regionMove` OUT OF A START REGION IS FREE
+    // BY RULE.** Tested before BOTH branches below because it holds in both: it
+    // overrides what a loaded block says for the start region (the twelve
+    // hand-written EMPTY blocks bill `defaultRegionCost` 50 for the Menu hop,
+    // which is what this retires — with no preset change), and it overrides the
+    // no-block fallback. Before the XP discount, which leaves 0 at 0.
+    // ⛔ regionMove ONLY: an explore or a location check in a start region is
+    // priced as ever, and the SUMMARY branch above never reaches here.
+    if (action?.type === 'regionMove' && this.isStartRegion(action.sourceRegion)) {
+      baseCost = START_REGION_MOVE_COST;
+    } else if (this.costDataManager?.isLoaded()) {
       // Use per-region/per-location costs from cost data
       switch (action.type) {
         case 'regionMove':
@@ -1938,8 +3919,9 @@ export class LoopState {
           baseCost = this.costDataManager.getLocationCost(action.locationName);
           break;
         case 'customAction':
-          // Explore cost = 2x region's moveCost
-          baseCost = this.costDataManager.getRegionCost(action.sourceRegion) * 2;
+          // Explore cost = DEFAULT_EXPLORE_MULTIPLIER x region's moveCost
+          baseCost = this.costDataManager.getRegionCost(action.sourceRegion)
+            * DEFAULT_EXPLORE_MULTIPLIER;
           break;
         case 'manual':
         case 'customQueue':
@@ -1949,27 +3931,39 @@ export class LoopState {
           // consume mana as they run.
           baseCost = 0;
           break;
-        default:
-          baseCost = 50;
-      }
-    } else {
-      // Fallback to hardcoded defaults when no cost data is loaded
-      switch (action.type) {
-        case 'customAction':
-          baseCost = 50;
-          break;
-        case 'locationCheck':
-          baseCost = 100;
-          break;
-        case 'regionMove':
-          baseCost = 50;
-          break;
-        case 'manual':
-        case 'customQueue':
+        case 'timeDrain':
+          // Only the summary branch above produces these; a stray one on
+          // any other substrate is free, never the region default.
           baseCost = 0;
           break;
         default:
-          baseCost = 50;
+          baseCost = DEFAULT_REGION_COST;
+      }
+    } else {
+      // No cost data loaded: the exported defaults, which are the same
+      // numbers a generated block writes at its root (⚖ 2026-09-06 — one
+      // exported constant, never a typed number).
+      // ⚠ `customAction` is DEFAULT_REGION_COST here, NOT
+      // DEFAULT_REGION_COST × DEFAULT_EXPLORE_MULTIPLIER: the no-data
+      // fallback has always priced an explore at a plain region move, and
+      // this rung moves the location default only. Named, not changed.
+      switch (action.type) {
+        case 'customAction':
+          baseCost = DEFAULT_REGION_COST;
+          break;
+        case 'locationCheck':
+          baseCost = DEFAULT_LOCATION_COST;
+          break;
+        case 'regionMove':
+          baseCost = DEFAULT_REGION_COST;
+          break;
+        case 'manual':
+        case 'customQueue':
+        case 'timeDrain':
+          baseCost = 0;
+          break;
+        default:
+          baseCost = DEFAULT_REGION_COST;
       }
     }
 
@@ -1995,6 +3989,118 @@ export class LoopState {
     // Reset current action index so startProcessing() starts from the beginning
     this.currentActionIndex = 0;
     this.currentAction = null;
+    // The cursor is back at 0 — a fresh pass, so a fresh spend tally.
+    this._beginPass();
+  }
+
+  /**
+   * Start a new PASS over the queue: zero the spend tally and re-read the
+   * mana high-water mark the free-pass guard compares against. Called from
+   * every seam that snaps the cursor back to index 0.
+   */
+  _beginPass() {
+    this._passManaSpent = 0;
+    const gs = this._gs();
+    this._passStartMana = typeof gs?.currentMana === 'number' ? gs.currentMana : null;
+  }
+
+  /**
+   * Did the pass that just ended consume any mana — by loops' own spends
+   * (_advanceActionProgress / _spendMana) or by anyone else drawing on the
+   * pool (a substrate with its own economy)? Only a pass that consumed
+   * NOTHING by either measure may decline the auto-restart wrap.
+   */
+  _passWasFree() {
+    if (this._passManaSpent > 0) return false;
+    const gs = this._gs();
+    if (
+      typeof gs?.currentMana === 'number' &&
+      typeof this._passStartMana === 'number' &&
+      gs.currentMana < this._passStartMana
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Release a Manual / Record / Playback park that a SUBSTRATE-DRIVEN loop
+   * reset just invalidated, and restart the queue (arc D slice 4b).
+   *
+   * `gameState:loopReset` is published only by `gameState.triggerLoopReset`,
+   * i.e. exclusively by resourceChannels' `fireLoopResetTeleport` — the
+   * substrate-driven out-of-mana flow. The loops-internal flow is
+   * `_resetLoop`, which publishes `loopState:loopReset` instead. Until this
+   * slice the two disagreed: `_resetLoop` clears the park, this seam ran
+   * `_resetActionsProgress()` alone, and FOUR pieces of park state survived a
+   * reset that had just teleported the player out of the parked region —
+   *
+   *   - `_manualActionEntered` / `_manualRegionName`: a park pointing at a
+   *     region the player is no longer in. A Manual block was recoverable by
+   *     hand (walk back, cross the expected exit — the wake still listens),
+   *     which is why this went unnoticed. Nobody walks for Playback.
+   *   - `isProcessing`: both park entries call `stopProcessing()`, so the
+   *     frame loop is DEAD, not dormant. (`_resumeFrameLoopIfProcessing`, the
+   *     M6 bot-park cure, bails on `!isProcessing` — the bot park never stops
+   *     processing, so it needed only the animation frame back.)
+   *   - `_boundReplayCheckedIndex`: the per-index guard in `_processFrame`
+   *     that stops a Playback block re-resolving its recording every frame.
+   *     Left stale, a retry that re-enters the block WITHOUT an intervening
+   *     manual wake (which clears it at `_handleManualWake_regionMove`'s match
+   *     branch) falls through to the bot/generic executor — a silent teleport
+   *     across an exit that was never replayed, worse than the hang. The
+   *     in-app leg routes through a manual wake and so does not witness this
+   *     one; blockModes.test.js does.
+   *   - `_queuePausedUntilReset`, whose contract is literally "until the next
+   *     loop reset".
+   *
+   * With those cleared the queue re-drives from index 0 (which
+   * `_resetActionsProgress` has just snapped to) and re-parks wherever the
+   * reset's teleport actually left the player — the generic queue-restart
+   * retry, and the only way a replay bigger than one run continues at all.
+   *
+   * THE RESUME IS UNCONDITIONAL, matching `_handleBotWake_regionChanged`'s
+   * `fromReset` branch (M6) rather than `_maybeResetForOOM`, which honours
+   * `autoRestartQueue`. RULED 2026-07-25 (loop-recording.md,
+   * "`autoRestartQueue` governs the resets loops OWNS"): the flag governs a
+   * depletion reset loops itself owns. This one belongs to the SUBSTRATE —
+   * it has already happened, the fork has already restarted and the player
+   * has already been teleported, so declining to resume prevents nothing and
+   * only desynchronises the queue from a running game (and, because
+   * `livePlayRegion()` is null while paused, makes the strict gate answer
+   * `paused` to the player's own hand-play). Nor does an "in-flight replay
+   * or bot walk is implicit consent" carve-out help: on these substrates
+   * Manual and Record span runs exactly as Playback and Bot do, so the
+   * exemption would swallow the rule.
+   *
+   * `resumeProcessing()` (not `startProcessing()`) because the cursor is
+   * already at 0 and the resume path skips the `processingStarted` publish —
+   * the same call the successful manual wake makes.
+   *
+   * Ordering: this runs BEFORE the reset's `fromReset` teleport dispatch
+   * (`fireLoopResetTeleport` calls `triggerLoopReset()` first). That is safe
+   * because the resume schedules a requestAnimationFrame, which cannot run
+   * until the synchronous reset+teleport has finished. It is also why the fix
+   * lives here rather than in the manual wake's `fromReset` branch: a reset
+   * whose teleport target IS the current region fires no `regionChanged` at
+   * all (`gameState.setCurrentRegion` publishes only on a change), so a
+   * Playback block on the start region would never be released there.
+   *
+   * A Record capture in flight is DISCARDED, as `_resetLoop` already does
+   * (M2 ruling: mana-out mid-Record discards) — the visit it belongs to
+   * cannot be honestly finished from the region the player was teleported to.
+   *
+   * Bot parks are untouched: they never set `_manualActionEntered`, and
+   * `_handleBotWake_regionChanged` releases them on the teleport that follows.
+   */
+  _releaseParkForReset() {
+    if (!this._manualActionEntered) return;
+    this._discardActiveRecording();
+    this._manualActionEntered = false;
+    this._manualRegionName = null;
+    this._boundReplayCheckedIndex = -1;
+    this._queuePausedUntilReset = false;
+    this.resumeProcessing();
   }
 
   /**
@@ -2010,9 +4116,19 @@ export class LoopState {
     // stateManager:rulesLoaded handler chain). Just clear loop-specific state.
     this.repeatExploreStates.clear();
     this.manualRegionStates.clear();
+    this.blockModeStates.clear();
+    this.blockInstantStates.clear();
     this._manualRegionName = null;
     this._manualActionEntered = false;
     this._delegatedAction = null;
+    // The wrong-region hard-pause must not survive a WORLD change — and
+    // it can be freshly set by the rules switch itself: gameState.reset()
+    // fires regionChanged (→ Menu) into a still-parked wake, which reads
+    // as a wrong-exit mismatch. gameState's rulesLoaded handler runs
+    // before ours (lower load priority), so clearing here wins.
+    this._queuePausedUntilReset = false;
+    // Any in-progress Record capture belongs to the old world.
+    this._discardActiveRecording();
 
     // Reset action progress
     this._resetActionsProgress();
@@ -2064,6 +4180,9 @@ export class LoopState {
     this._manualActionEntered = false;
     this._manualRegionName = null;
     this._queuePausedUntilReset = false;
+    // A Record in progress at reset (mana-out mid-record) is discarded.
+    this._discardActiveRecording();
+    this._boundReplayCheckedIndex = -1;
 
     // Notify loop reset
     this.eventBus.publish('loopState:loopReset', {
@@ -2339,6 +4458,14 @@ export class LoopState {
       actionCompleted: queueState.actionCompleted,
       currentActionIndex: this.currentActionIndex,
       repeatExploreStates: Array.from(this.repeatExploreStates.entries()),
+      // blockModeStates is the per-block mode map. manualRegionStates is
+      // retained alongside it as a lossless read-side fallback for saves
+      // written before the mode system existed (and blocks whose mode is
+      // still region-inherited) — see loadFromSerializedState.
+      blockModeStates: Array.from(this.blockModeStates.entries()),
+      // Per-block Instant flags (M3), keyed like blockModeStates. Only
+      // truthy entries are stored, so old saves simply carry none.
+      blockInstantStates: Array.from(this.blockInstantStates.entries()),
       manualRegionStates: Array.from(this.manualRegionStates.entries()),
     };
   }
@@ -2372,8 +4499,15 @@ export class LoopState {
     }
     this.currentActionIndex = state.currentActionIndex ?? 0;
 
-    // Load repeatExploreStates + manual region checkboxes
+    // Load repeatExploreStates + per-block modes. manualRegionStates is
+    // the legacy region-level fallback: an old save has only it (no
+    // blockModeStates), and getBlockMode falls through to it region-wide
+    // → every block of a formerly-checked region resolves to 'manual',
+    // exactly the migration the design calls for. New per-block choices
+    // land in blockModeStates and win per key.
     this.repeatExploreStates = new Map(state.repeatExploreStates || []);
+    this.blockModeStates = new Map(state.blockModeStates || []);
+    this.blockInstantStates = new Map(state.blockInstantStates || []);
     this.manualRegionStates = new Map(state.manualRegionStates || []);
 
     // Notify mana/xp change so consumers reflect the loaded values

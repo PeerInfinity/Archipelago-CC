@@ -1,0 +1,14150 @@
+/**
+ * In-app tests for the APWORLD EDITOR HUB (the hub plan,
+ * rung H1). **These are the panel's FIRST in-app rows** — it had zero before
+ * this slice, and the three node suites beside it (`rulesDocOps`,
+ * `rulesEditAdapter`, `rulesUtils`) never mount it.
+ *
+ *   1. apworld-document-tab-lists-every-schema-key — the Document tab is
+ *      DERIVED from `rules.schema.json`, so the set of keys it draws must EQUAL
+ *      the set the schema declares. The expectation is fetched from the schema
+ *      at run time, never typed: a schema that grows a key retargets this row
+ *      instead of breaking it, and a registry that silently dropped one reds it.
+ *   2. apworld-set-key-round-trips-through-undo — the tab's whole edit
+ *      vocabulary is ONE `set-key` op, driven through the real input's `change`
+ *      event and undone through the real Undo button. ⛔ The undo half is the
+ *      half that matters: an op that stored the caller's reference instead of a
+ *      copy applies fine and comes back WRONG.
+ *   3. apworld-links-tab-covers-every-room-editor-declarer — the substrate rows
+ *      are derived from the live `substrateRegistry`, so the expected set is
+ *      read off the registry in the browser rather than listed here.
+ *
+ * ⚠ Rows are named by what they ASSERT and carry no counts: a count in a test
+ * NAME is an allowlist key, and moving it reds CI twice.
+ */
+
+import { registerTest } from '../testRegistry.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { capabilityRows, cardOf, cardText } from '../../procgenCore/substrateCapabilities.js';
+import { deserializeRefusalSentence } from '../../procgenCore/deserializeRefusal.js';
+/** ⛓ H4b — the LAB door's host registry and the SET arm's envelope, so the row
+ *  drives the real three-phase contract instead of waiting on an iframe. */
+import {
+    findLabPanel, labPanelInstances, registerLabPanelInstance, unregisterLabPanelInstance,
+} from '../../procgenLabPanel/labRoomEditor.js';
+import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
+/**
+ * ⛓⛓ H4b — **THE APP'S BUS, BECAUSE `procgenLab:levelChanged` HAS NO STATIC
+ * PUBLISHER.** It is a PAGE → HOST event, and the app adapter registers its
+ * publisher DYNAMICALLY as `iframe_<iframeId>` at publish time
+ * (`iframeAdapterCore.handlePublishEventBus`); the bus SKIPS a publish from an
+ * unregistered name with only a warn log, so a row publishing as `tests`
+ * publishes nothing at all. Measured: the first run of the row below sat
+ * through all three phases and reported the door never asked for a room.
+ * ⇒ the row registers itself the way any publisher does, once.
+ */
+import appEventBus from '../../../app/core/eventBus.js';
+import { HANDLER_ERROR_PHRASE } from '../../../app/core/eventBusMessages.js';
+/**
+ * ⛓⛓ H4c — **THE REVERSE LINK IS DRIVEN THROUGH ITS OWN PUBLISHER.** The
+ * bounce editor's door is `openRegionInApworldEditor`, and a row that published
+ * `apworldEditor:selectRegion` by hand would prove the hub's SUBSCRIBER works
+ * while saying nothing about whether the button reaches it — the two halves
+ * only meet through this function.
+ */
+import {
+    openRegionInApworldEditor, APWORLD_EDITOR_SELECT_REGION,
+} from '../../bounceRegionEditor/index.js';
+/**
+ * ⛓⛓ H5 — **THE EXPECTATION FOR THE MARKING TOOL'S RETURN IS THE COMPILER'S
+ * OWN DERIVATION.** `regionAtlasReference` is what `compileRegionAtlas` writes
+ * into `rules.region_atlas`; a row that rebuilt those three fields by hand
+ * would agree with the door and say nothing about whether either agrees with
+ * the compiler.
+ */
+import { regionAtlasReference } from '../../procgenPipeline/regionAtlasCompiler.js';
+/** ⛓ H5 — the registry the Document row and the Links row both read. */
+/**
+ * ⛓⛓ S1 — **THE SIDECARS TAB'S POPULATION IS READ, NOT TYPED.** The tab
+ * filters the registry by this table, so the row that asserts what the tab
+ * draws reads the SAME table: it guards the RENDERER (does every member get a
+ * full row, in registry order, with the summary beside them). ⛔ It is
+ * therefore BLIND to the membership itself — drop a key from the table and the
+ * tab draws one row fewer against an expectation that shrank with it. What
+ * makes the membership falsifiable is `documentKeys.test.js`, whose population
+ * comes from the exporter's own `_inject_worldgen_*` methods and from the ⚖.
+ */
+import {
+    DOCUMENT_KEY_EDITORS, DOCUMENT_TAB_ID, KEYS_OWNED_BY_TAB, regionAtlasSetKeyOp,
+    SIDECARS_TAB_ID, SIDECARS_TAB_SUMMARY_KEY,
+} from '../../apworldEditor/documentKeys.js';
+/**
+ * ⛓⛓ W0 — **THE TWO AUTHORITIES A VIEWER-DOOR ROW HAS TO ASK, and neither is a
+ * string in this file.** `centralRegistry` is what the hub itself consults to
+ * decide whether a door is pressable (`_panelRefusal`), so a row that asserted
+ * "the button is enabled" without it would be re-stating the button; and
+ * `panelManager.isPanelActive` is the EFFECT of the press — the panel that ended
+ * up in front — rather than the button's own text, which never moves.
+ */
+import { centralRegistry } from '../../../app/core/centralRegistry.js';
+import panelManager from '../../../app/core/panelManager.js';
+/**
+ * ⛓ W0 — the table the Meta tab's rows and the `set-meta` op both read, so the
+ * claim *"this sub-key is one the home tab does not draw"* is derived from the
+ * home tab's own field list instead of asserted by a comment.
+ *
+ * ⛓ PRESET SIDECARS S1 — and the raw sidecar save's rows ask the OP directly as
+ * well as pressing Save (trap 1305: the op is the authority, the widget a
+ * courtesy), and assert the clause the op's description ends with rather than
+ * a copy of it.
+ */
+import {
+    META_FIELDS, SIDECAR_NOT_REDERIVED, applyRulesDocOp,
+} from '../../apworldEditor/rulesDocOps.js';
+/**
+ * ⛓ R-a — the two numbers the presence switch writes, compared against their
+ * SOURCE. Typing 50 and 10 into this row would make it agree with a second copy
+ * of the pair rather than with `loopCostDefaults.js`.
+ */
+import {
+    DEFAULT_LOCATION_COST, DEFAULT_REGION_COST,
+} from '../../shared/procgen/loopCostDefaults.js';
+/**
+ * ⛓ M0 — the palette the composite renderer paints a substrate that declares no
+ * painter with: a `genericBg` box carrying its id in `textAdventureFg`. The
+ * zone row samples PIXELS against these two, so the claim *"the generic box's
+ * label is on the canvas"* is scored against the renderer's own colours rather
+ * than against numbers typed here.
+ */
+import { COLORS, TILE_PX } from '../../procgenCore/compositeMapRenderer.js';
+/**
+ * ⛓ M0 — the size a composite cell falls back to when a document carries no
+ * tile geometry. The zone row asserts the drawn canvas is that size; typing 8
+ * and 6 here would make it agree with a copy of the constant.
+ */
+import { DEFAULT_REGION_SIZE } from '../../procgenPipeline/procgenPipelineEngine.js';
+/**
+ * ⛓ S0 — the indent the hub's JSON widget pretty-prints with, so the row that
+ * asserts a sidecar block's text is byte-equal to its entry uses the widget's
+ * own spelling rather than a `2` typed here. ⛓ S1 — and Edit ▸'s own
+ * inspection, so the row that asserts the button's verdict after a raw save
+ * compares it with what the door's function answers for the document NOW,
+ * rather than with a sentence typed here.
+ */
+import {
+    JSON_BLOCK_INDENT, deriveRegionRules, inspectRegionRoom, regionRoundTripOf, sameRule,
+} from '../../apworldEditor/regionRoundTrip.js';
+import {
+    REDERIVE_NO_BASELINE, REDERIVE_PAYLOAD_KEPT, REDERIVE_PAYLOAD_NORMALISED, REDERIVE_POINTS_AT_EDIT,
+} from '../../apworldEditor/regionRederive.js';
+/**
+ * ⛓ V0 — the validity report's kinds, so a row asserts the KIND the product
+ * stamped on its sentence rather than the sentence's wording; and the merged
+ * declaration, so the field a row drops is picked off the substrate's own
+ * declaration rather than typed.
+ */
+import { SIDECAR_ISSUE_KINDS, sidecarIssues } from '../../apworldEditor/sidecarIssues.js';
+import { sidecarFieldsOf } from '../../procgenCore/sidecarFields.js';
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's Region generation form. The
+ * rows assert the product's own constants and sentences (the op's, the
+ * worker's), and derive every knob set from the registry.
+ */
+import settingsManager from '../../../app/core/settingsManager.js';
+import {
+    REGION_GENERATION_FIELDS, renderRegionGenerationForm,
+} from '../../procgenCore/regionGenerationForm.js';
+import { geometryOf, REGION_GEOMETRY } from '../../procgenCore/regionGeometry.js';
+import {
+    REGION_GENERATION_OP_FIELDS, regionGenerationPlan,
+} from '../../apworldEditor/regionGenerationFlow.js';
+import {
+    REGION_GENERATION_CANCELLED, REGION_GENERATION_TIMEOUT_SETTING, regionGenerationTimeoutSentence,
+} from '../../apworldEditor/regionGenerationRun.js';
+import { regionRealiserKind } from '../../apworldEditor/regionRegenerate.js';
+import { REGENERATE_RULES_UNCHANGED, regenerateOpRefusal } from '../../apworldEditor/rulesDocOps.js';
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R3 — the Starting inventory block. The rows ask
+ * the block's own data functions and the op's own clause.
+ */
+import {
+    NEED_MET, NEED_NONE_HELD, needSentence, startingInventoryList, startingNeedRows, substratesInSlot,
+} from '../../apworldEditor/startingInventoryBlock.js';
+import { REGENERATE_SATISFIED_BY_START } from '../../apworldEditor/rulesDocOps.js';
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5a — the library entry source: the picker's
+ * catalog (a row swaps in a failing one), the sources the form offers, and
+ * the served files the expected options are derived from.
+ */
+import {
+    LIBRARY_BASE_PATH, createServedLibraryCatalog, libraryFetchFailureSentence, librarySourceFor,
+} from '../../apworldEditor/librarySourcePicker.js';
+import { REGION_SOURCE_KINDS, offersLibrarySource } from '../../apworldEditor/regionRegenerate.js';
+import { SERVED_LIBRARY_DIR, SERVED_LIBRARY_INDEX } from '../../procgenPipeline/regionLibraryLoader.js';
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5b — the zone source: the op the rows expect, the
+ * held-zone and own-zone readers, the refusal, the flow's sources, the unplaced readout.
+ */
+import {
+    REPLACE_REGION_CONTENT_OP, unplacedPoolItems, zoneHeldBy, zoneOfRegion, zoneSourceFacts, zoneSourceRefusal,
+} from '../../apworldEditor/regionContent.js';
+import { defaultRegionGenerationSource, regionGenerationSourcesFor } from '../../apworldEditor/regionGenerationFlow.js';
+import { declaredStartingNeeds } from '../../procgenCore/startingInventory.js';
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE R5c — the atlas-room source: the read-back the
+ * expected picker is derived from, the fetch sentence's fixed words, the index.
+ */
+import { ZONE_FETCH_FAILED, installedZoneConfigFrom } from '../../apworldEditor/regionContent.js';
+import { atlasIndexPath } from '../../flashPanel/mapDocumentPath.js';
+import { buildSeedlingContentSource } from '../../flashPanel/flashSeedlingLibrary.js';
+/**
+ * ⛓ D1 — the fields view's vocabulary: which control a row stamps, which level
+ * it is on, the two ENTRY keys the form names (the payload's, the substrate's),
+ * and the clause the picker's title carries — so a row asserts the product's
+ * own names. ⛔ Never the rows' EXPECTATION: which fields exist is read off the
+ * declaration, the schema and the registry (the law), not off this module.
+ */
+import {
+    PAYLOAD_KEY, SIDECAR_FORM_CONTROLS, SIDECAR_FORM_LEVELS, SUBSTRATE_KEY, SUBSTRATE_PICKER_CLAUSE,
+} from '../../apworldEditor/sidecarForm.js';
+/** ⛓ R6 — the slot selector's sentence while the slots wait on the schema. */
+import { PLAYER_SLOTS_NEED_SCHEMA, playerSlotsWaitSentence } from '../../apworldEditor/documentKeys.js';
+/** ⛓ R6 — the Re-roll button's target and refusal, and the counter's first seed. */
+import { REGION_GENERATION_FIRST_SEED as R6_FIRST_SEED, regionRerollFacts } from '../../apworldEditor/regionGenerationFlow.js';
+/** ⛓ R6 — the library hook's openings precheck (the op asks it; the picker disables on the op). */
+import { libraryEntryPrecheck } from '../../apworldEditor/regionRegenerate.js';
+/** ⛓ R6 — the zone cascade's filler clause. */
+import { ZONE_FILLER_DROPPED } from '../../apworldEditor/regionContent.js';
+/** ⛓ R6b — the zone answer's config clause (recorded vs assumed). */
+import { zoneConfigSplitSentence } from '../../apworldEditor/regionContent.js';
+/** ⛓ R5d — the document's placements handed to the zone channel; the op's *kept* clause. */
+import { ZONE_DISPLACED, ZONE_KEPT, zoneLocationSpecs } from '../../apworldEditor/regionContent.js';
+import { canonicalPlacementIssues } from '../../apworldEditor/rulesDocOps.js';
+
+const PANEL_ID = 'apworldEditorPanel';
+const PANEL_SELECTOR = '.apworld-editor-panel';
+const PRESET_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
+/**
+ * ⛓ H3 — a document whose sidecars carry NO `grid_cell`. Measured over the 205
+ * committed presets: 4 have sidecars with no grid cell at all, and this is the
+ * jta one. It is the "no map for this world" case the ⚖ ruled on (no graph
+ * fallback), and it must be a real committed document rather than a fixture —
+ * the claim is about what the corpus contains.
+ */
+const NO_GRID_PRESET_PATH =
+    './presets/jta_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓ H2b — **the document H2's textarea REFUSED**: `stardew_valley` at 2,620,221
+ * pretty bytes, over the retired `RAW_VIEW_LIMIT_BYTES = 2_000_000`. It is a
+ * committed preset rather than a padded fixture because the claim is about the
+ * corpus. (It is the FOURTH-largest, under the three alttp top-down worlds; the
+ * largest, `procgen_topdown/AP_8` at 3,264,523 B, is the instrument's `--all`
+ * arm's business — this row wants the document whose refusal a person
+ * actually saw.)
+ *
+ * ⚠ **2,620,221, not the 2,620,225 the plan's §12.3 table says.** H2's pretty
+ * column for this one preset came from `json.dumps(indent=2)`, whose default
+ * `ensure_ascii` spells four non-ASCII bytes as escape sequences; the raw
+ * view's units are `JSON.stringify`'s. Here the two agree with the file on
+ * disk, because stardew is one of the 192 written pretty already.
+ */
+const REFUSED_PRESET_PATH =
+    './presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ **H4a — THE FOUR-PLAYER FIXTURE**, and the only committed document whose
+ * `preset_sidecars` carry more than one slot. Measured over the presets tree
+ * before it existed: 192 documents carry the key, 158 hold `{}`, and all 34
+ * populated ones key under slot `"1"` — the fifteen four-player `multiworld`
+ * files included, because every one of them is an ALTTP-family world whose
+ * sidecars are empty. So every per-player path in this panel (the selector, the
+ * Map tab's slot, the Document tab's per-player slice) had NEVER met a document
+ * that could tell "read the selected slot" from "read the first one".
+ *
+ * Slots 1 and 2 are `Procgen Maze WorldGen` (3 grown regions each); slots 3 and
+ * 4 are `Bounce Demo WorldGen` (5 ZONE regions each). ⚠ **Every one of the four
+ * slots carries a `grid_cell` on every region** — this docblock said "no
+ * `grid_cell`" of slots 3/4 until M0 re-measured it, and the sentence was wrong
+ * when it was written: what those slots lack is a tile-grid PAYLOAD, which is a
+ * different field and (since M0) no longer a reason not to draw. All four slots
+ * draw; slots 3/4 draw at the engine's default cell size.
+ */
+const FOUR_PLAYER_PATH =
+    './presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
+/** ⛓ The same generation's PER-PLAYER export for slot 3: it names its own slot
+ *  in `playerId`, and carries only that slot's sidecars. */
+const FOUR_PLAYER_P3_PATH =
+    './presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json';
+
+/**
+ * ⛓ H4b — a committed document whose sidecars are SEEDLING's. Its substrate
+ * declares a `roomEditor` (the pipeline still opens a Seedling room from a live
+ * run) and `regionRoundTrip: {refused}` — the ONE case where the button is
+ * disabled by a DECLARATION rather than by an absence, and the sentence in its
+ * title is the substrate's own.
+ */
+const SEEDLING_PRESET_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
+/**
+ * ⛓ **THE DOCUMENT THAT STILL FAILS CHECK (1)**, and the reason this row needed
+ * a new one at H6b. Its ten rooms are written by the ATLAS DERIVATION rather
+ * than by `serializeMazeWorld`, so a round trip adds an `itemLib: {}` and a
+ * computed `longestShortestPath` they do not carry — the "an unedited save
+ * would already rewrite this payload" refusal, which is the only refusal that
+ * costs a deserialize and therefore the only one that lands AFTER the press.
+ * ⚖ Fixing these ten is H6a's job; when it lands, this arm moves with it.
+ */
+const ATLAS_MAZE_PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
+
+/**
+ * ⛓⛓ **W3 — THE PLACEMENTS ROWS' DOCUMENT.** Measured over the committed
+ * corpus at the slice's HEAD: 211 of the 212 preset files carry
+ * `canonical_placements` and 97 carry at least one entry. This one is FULL —
+ * every one of its 25 locations is placed, over 9 region groups, out of 14
+ * items — so "the tab draws the document's own placements" is a claim about a
+ * populated block rather than about an empty one, and "N of M placed" is
+ * asserted at both ends of its range by the delete.
+ */
+const PLACEMENTS_PRESET_PATH = './presets/procgen_topdown/AP_1/AP_1_rules.json';
+
+/**
+ * ⛓⛓ **I1 — THE GROUPS ROWS' REAL-REGISTRY DOCUMENT.** Measured over the
+ * committed corpus: all 212 documents carry `item_groups` and all 224 slots hold
+ * a LIST of names. This one holds **23** names over **163** items — and it is
+ * also in the corpus's common divergent state, with `Event` on seven items and
+ * in neither the registry nor anything derived from it (155 of the 224 slots
+ * carry at least one such unlisted group). `procgen_maze/AP_1` (`PRESET_PATH`)
+ * is the other end of the range, with one name over two items, which is what a
+ * procgen document looks like.
+ */
+const ITEM_GROUPS_PRESET_PATH =
+    './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+const SCHEMA_PATH = './schema/rules.schema.json';
+
+/**
+ * ⛓ H5 — the only committed documents that carry `region_atlas`, and it is a
+ * REFERENCE (`{atlas_id, game, map_document}`), never an atlas. Measured over
+ * the corpus: three carriers, all three the same three fields.
+ */
+const REGION_ATLAS_PRESET_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+/** ⛓ H5 — carries `loop_costs` AND its own embedded `sphere_log`. */
+const LOOP_COSTS_PRESET_PATH =
+    './presets/jta_schedule_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ L4 — the WRITE-BACK's document, and it is not the one above.
+ *
+ * ⛔ Measured over the corpus: TWELVE presets carry `loop_costs` and an embedded
+ * `sphere_log`, and the ten TRACKED ones all carry an EMPTY block. Of those,
+ * `jta_schedule_test`'s three regions are all NATIVE, so a plan sent into it
+ * writes exactly one entry — `Menu`, at `moveCost: 0`. That would make "an empty
+ * block became a priced one" true of a zero, which is the weakest possible form
+ * of the claim.
+ *
+ * `omsi_substrate_test` is the document where both halves are real: its
+ * `region_0_0` / `region_1_0` are MAZE (coarse-classed, so the block carries
+ * their `moveCost`) and its `region_1_1` is omsi (NATIVE, so the block carries
+ * nothing for it) — L3 measured 16 and 21 against a stored 50, which is the
+ * finding that motivated this door. So the write-back must ADD non-zero prices
+ * AND leave the native region out, in one document.
+ */
+const LOOP_COSTS_WRITEBACK_PRESET_PATH =
+    './presets/omsi_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/**
+ * Load the preset, raise the panel, and hand back its live instance.
+ *
+ * ⛓ H2b — the budget is a PARAMETER because one row opens a 2.6 MB document.
+ * ⛔ Not raised for everyone: a longer poll makes a genuinely stuck panel take
+ * longer to say so, and every other row here loads a 200 KB preset.
+ */
+async function openHub(testController, presetPath = PRESET_PATH, budgetMs = 8000) {
+    testController.log(`Loading ${presetPath}…`);
+    await testController.loadRulesFromFile(presetPath);
+    await testController.stateManager.pingWorker('after-rules-load', budgetMs);
+    testController.reportCondition('rules loaded', true);
+
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+
+    // ⛔ Wait on the panel HAVING A DOCUMENT, not merely on its element: the
+    //    element exists from mount and a wait on it reads a panel mid-intake.
+    const panel = await testController.pollForValue(
+        () => {
+            const el = document.querySelector(PANEL_SELECTOR);
+            const p = el && el.__panel;
+            return p && p.rulesDoc ? p : null;
+        },
+        'APWorld editor panel with a loaded document',
+        budgetMs,
+        50,
+    );
+    testController.reportCondition('APWorld editor panel holds a document', !!panel);
+    return panel;
+}
+
+/** Select a tab through the panel's own control, then let it render. */
+function selectTab(panel, tabId) {
+    panel._selectTab(tabId);
+}
+
+/**
+ * ⛓ H4a — pick a player slot through the REAL toolbar control, not by setting
+ * `panel.playerId`. The handler stores `_chosenPlayer` and re-renders; a row
+ * that assigned the field directly would pass over a selector wired to nothing.
+ */
+function selectPlayer(select, slot) {
+    select.value = String(slot);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/** ⛓ The slots a document's own `preset_sidecars` carry, and how many regions
+ *  each holds — the expectation, read off the document rather than typed. */
+function sidecarCounts(doc) {
+    const out = {};
+    for (const [slot, regions] of Object.entries(doc?.preset_sidecars ?? {})) {
+        out[slot] = Object.keys(regions ?? {}).length;
+    }
+    return out;
+}
+
+/** ⛓ How many of a slot's regions carry a `grid_cell`. */
+function withGridCells(doc, slot) {
+    return Object.values(doc?.preset_sidecars?.[slot] ?? {})
+        .filter((sc) => !!sc?.grid_cell).length;
+}
+
+/**
+ * ⛓⛓ **HOW MANY OF A SLOT'S REGIONS CARRY TILE GEOMETRY** — which is not how
+ * many are drawn, and since M0 is not what decides whether a slot has a map at
+ * all. It is the predicate that picks the CELL SIZE: a slot with any tile-grid
+ * payload is sized from the largest of them, a slot with none takes the
+ * engine's default.
+ *
+ * ⚠ It used to be this file's "can be drawn" predicate, and H4a's first in-app
+ * run is why: that row had assumed `grid_cell ⇒ a map`, and the fixture's two
+ * `Bounce Demo WorldGen` slots carry a `grid_cell` on all five of their regions
+ * and drew nothing, because a bounce level's geometry is
+ * `params.bounceLevel.size` in PIXELS. M0 made `grid_cell ⇒ a map` true — the
+ * assumption was right about the layout and wrong only about the size — so the
+ * DRAWABLE population is `withGridCells` above and this one answers the
+ * narrower question its name asks.
+ */
+function withCompositeGeometry(doc, slot) {
+    return Object.values(doc?.preset_sidecars?.[slot] ?? {}).filter(
+        (sc) => !!sc?.grid_cell
+            && Number.isFinite(sc?.playable_payload?.width)
+            && Number.isFinite(sc?.playable_payload?.height)).length;
+}
+
+/* ══════════════════════════════════════════════════════════════════════ */
+
+export async function apworldDocumentTabListsEverySchemaKey(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        // ⛓ The expectation, fetched independently of the panel's own fetch.
+        const schema = await (await fetch(SCHEMA_PATH)).json();
+        const declared = Object.keys(schema.properties).sort();
+        testController.reportCondition(
+            'the schema declares a corpus of top-level keys', declared.length > 30);
+
+        // The panel fetches the schema asynchronously; wait for its registry.
+        const ready = await testController.pollForCondition(
+            () => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json',
+            8000,
+            50,
+        );
+        testController.reportCondition('the panel loaded rules.schema.json', ready);
+
+        selectTab(panel, 'document');
+        const drawn = await testController.pollForValue(
+            () => {
+                const rows = document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key]`);
+                return rows.length > 0 ? [...rows].map((r) => r.dataset.docKey) : null;
+            },
+            'Document tab rows',
+            8000,
+            50,
+        );
+        const shown = (drawn ?? []).slice().sort();
+
+        testController.assertEqual(
+            'the Document tab draws EXACTLY the schema\'s top-level keys',
+            JSON.stringify(declared), JSON.stringify(shown));
+
+        // ⛓ And the per-player rows are sliced by the SELECTED slot, which the
+        //   toolbar's selector reports — the fact the whole selector exists for.
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        testController.assertEqual(
+            'the selector agrees with the slot every op is stamped with',
+            panel.playerId, select ? select.value : null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Document tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldSetKeyRoundTripsThroughUndo(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        // ⛓ `preset_label` — a per-slot STRING (rules F3: `{"<p>": label}`) no
+        //   other tab owns, drawn as the selected slot's text box; and one
+        //   this preset does not carry, so the edit is visible as an ADDED key.
+        const KEY = 'preset_label';
+        const VALUE = 'H1 round-trip';
+        testController.assertEqual(
+            `the preset does not already carry ${KEY}`, 'undefined', typeof panel.rulesDoc[KEY]);
+
+        const input = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"] .apworld-doc-input`),
+            `the ${KEY} row's input`,
+            8000,
+            50,
+        );
+        testController.reportCondition(`the ${KEY} row offers an editor`, !!input);
+        if (!input) return testController.getOverallResult();
+
+        const opsBefore = panel.session.ops().length;
+        input.value = VALUE;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        testController.assertEqual(
+            'the edit reached the record — the SLOT\'s entry (rules F3)', VALUE, panel.rulesDoc[KEY]?.[panel.playerId]);
+        testController.assertEqual(
+            'it was exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual(
+            'the recorded op is a set-key on that key',
+            'set-key', panel.session.ops().at(-1).op);
+        testController.assertEqual(
+            'at PLAYER scope — the row edits one slot of a per-player key',
+            'player', panel.session.ops().at(-1).scope);
+
+        /**
+         * ⛓⛓ **THE UNDO IS THE HALF THAT DISCRIMINATES.** An op that stored the
+         * caller's object rather than a copy applies fine and re-folds to
+         * something nobody typed; the fold over the shorter list is what sees it.
+         */
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo control is present', !!undoButton);
+        undoButton.click();
+
+        testController.assertEqual(
+            'undo removed the key entirely, rather than blanking it',
+            'false', String(Object.prototype.hasOwnProperty.call(panel.rulesDoc, KEY)));
+        testController.assertEqual(
+            'the op list is back to where it started',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('set-key round-trip test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldLinksTabCoversEveryRoomEditorDeclarer(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        selectTab(panel, 'links');
+
+        const rows = await testController.pollForValue(
+            () => {
+                const found = document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-link-row[data-link-id]`);
+                return found.length > 0 ? [...found].map((r) => r.dataset.linkId) : null;
+            },
+            'Links tab rows',
+            8000,
+            50,
+        );
+
+        /**
+         * ⛓ THE EXPECTATION IS READ OFF THE LIVE REGISTRY, never listed here —
+         * a substrate that gains or drops a `roomEditor` declaration retargets
+         * this row instead of breaking it.
+         */
+        const declarers = substrateRegistry.getAll()
+            .filter((e) => e && e.roomEditor && typeof e.roomEditor === 'object')
+            .map((e) => `substrate:${e.id}`)
+            .sort();
+        const substrateRows = (rows ?? []).filter((id) => id.startsWith('substrate:')).sort();
+
+        testController.reportCondition(
+            'at least one substrate declares a room editor', declarers.length > 0);
+        testController.reportCondition(
+            'and at least one does not — the filter is doing work',
+            declarers.length < substrateRegistry.getAll().length);
+        testController.assertEqual(
+            'the Links tab has one row per roomEditor declarer, and no more',
+            JSON.stringify(declarers), JSON.stringify(substrateRows));
+
+        // ⛓ The document-level rows are there too, and each carries an Open.
+        testController.reportCondition(
+            'the region-graph row is present (the ⚖\'s one-way link)',
+            (rows ?? []).includes('regionGraphPanel'));
+        const opens = document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-link-row .apworld-link-open`);
+        testController.assertEqual(
+            'every row carries an Open control',
+            String((rows ?? []).length), String(opens.length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Links tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-document-tab-lists-every-schema-key',
+    name: 'APWorld hub: the Document tab draws every top-level key the schema declares',
+    description: 'Loads a procgen preset into the APWorld editor, opens the Document tab, and '
+               + 'asserts the set of keys it draws EQUALS the set rules.schema.json declares — '
+               + 'the expectation fetched from the schema at run time, so a registry that '
+               + 'dropped a key reds and a schema that grew one does not.',
+    testFunction: apworldDocumentTabListsEverySchemaKey,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-set-key-round-trips-through-undo',
+    name: 'APWorld hub: a Document-tab edit is ONE op and undo takes the key back out',
+    description: 'Types into the (per-slot) `preset_label` row of the Document tab through the real '
+               + 'change event, asserts the record moved and exactly one op was recorded, '
+               + 'then presses the panel\'s own Undo and asserts the key is GONE rather than '
+               + 'blanked — the fold over the shorter list, which is what catches an op that '
+               + 'stored the caller\'s object instead of a copy.',
+    testFunction: apworldSetKeyRoundTripsThroughUndo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-links-tab-covers-every-room-editor-declarer',
+    name: 'APWorld hub: the Links tab has one row per substrate that declares a room editor',
+    description: 'Opens the Links tab and asserts its substrate rows are exactly the registry '
+               + 'entries carrying a `roomEditor` declaration, with the expected set derived '
+               + 'from the live substrateRegistry rather than listed in the test, plus the '
+               + 'document-level rows and an Open control on every row.',
+    testFunction: apworldLinksTabCoversEveryRoomEditorDeclarer,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * H2 — THE EXITS: the Presets button, Download, Apply's sphere log, and the
+ * raw view with its MEASURED threshold
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const PRESETS_PANEL_ID = 'presetsPanel';
+/** ⛓ A FILE-LOGGED preset: 173 of the 205 keep the sphere log as a sibling
+ *  `.jsonl` and carry no embedded one, and that is the case Apply used to drop. */
+const FILE_LOGGED_GAME = 'adventure';
+const FILE_LOGGED_SEED = 'AP_14089154938208861744';
+
+/** Raise the Presets panel and hand back its live instance. */
+async function openPresets(testController) {
+    testController.eventBus.publish('ui:activatePanel', { panelId: PRESETS_PANEL_ID });
+    const panel = await testController.pollForValue(
+        () => {
+            const el = document.getElementById('presets-panel');
+            const p = el && el.__panel;
+            return p && p.presets && Object.keys(p.presets).length > 0 ? p : null;
+        },
+        'Presets panel with its index loaded',
+        15000,
+        50,
+    );
+    testController.reportCondition('the Presets panel holds its index', !!panel);
+    return panel;
+}
+
+/** Wait for the hub to hold a document, whoever put it there. */
+async function hubWithDocument(testController, label = 'a document') {
+    const panel = await testController.pollForValue(
+        () => {
+            const el = document.querySelector(PANEL_SELECTOR);
+            const p = el && el.__panel;
+            return p && p.rulesDoc ? p : null;
+        },
+        `APWorld editor panel holding ${label}`,
+        15000,
+        50,
+    );
+    return panel;
+}
+
+/**
+ * ⛓⛓ **THE ⚖'s BUTTON, END TO END.** Opening a preset publishes the document
+ * app-wide, the hub opens a session on the state manager's re-emit, and the
+ * button only RAISES the panel. So the assertion is that the hub's session
+ * names the SAME world the preset screen just opened — not that a message was
+ * sent.
+ */
+export async function apworldPresetsButtonOpensTheSameWorld(testController) {
+    try {
+        const presets = await openPresets(testController);
+        if (!presets) return testController.getOverallResult();
+
+        presets.loadPreset(FILE_LOGGED_GAME, FILE_LOGGED_SEED);
+
+        const button = await testController.pollForValue(
+            () => document.getElementById('open-in-apworld-editor'),
+            'the "Open in APWorld Editor" button on the opened-preset screen',
+            15000,
+            50,
+        );
+        testController.reportCondition(
+            'the opened-preset screen carries the button', !!button);
+        if (!button) return testController.getOverallResult();
+
+        // ⛓ The expectation is read off the preset the panel actually loaded,
+        //   never typed: a preset regenerated under a new seed retargets this.
+        const expected = await testController.pollForValue(
+            () => {
+                const raw = testController.stateManager.getRawJsonData?.()
+                    ?? window.G_combinedModeData?.rulesConfig;
+                return raw && raw.game_name ? raw : null;
+            },
+            'the app-wide document the preset load published',
+            15000,
+            50,
+        );
+        testController.reportCondition('the preset load reached the app', !!expected);
+
+        button.click();
+
+        const hub = await hubWithDocument(testController, 'the preset it just opened');
+        testController.reportCondition('the hub holds a document after the click', !!hub);
+        if (!hub || !expected) return testController.getOverallResult();
+
+        testController.assertEqual('the hub names the same game',
+            String(expected.game_name), String(hub.rulesDoc.game_name));
+        testController.assertEqual('…and the same seed',
+            String(expected.generation_seed), String(hub.rulesDoc.generation_seed));
+
+        /**
+         * ⛔ The button RAISES; it does not hand the document over again. A
+         * second hand-off would open a second session boundary — measurable
+         * here as an op list that a pending edit no longer appears in.
+         */
+        const active = document.querySelector(`${PANEL_SELECTOR}`);
+        testController.reportCondition('the hub panel is in the document', !!active);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('presets-button test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **DOWNLOAD — THE BYTES, NOT THE FILE.** A download a page starts is inert
+ * in some sandboxes, so "a file appeared" is not something a browser row can
+ * honestly claim. `URL.createObjectURL` is intercepted and the BLOB is read
+ * back, which is the artefact the person would have received.
+ */
+export async function apworldDownloadWritesTheWorkingCopy(testController) {
+    const realCreate = URL.createObjectURL;
+    const realClick = HTMLAnchorElement.prototype.click;
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        let captured = null;
+        let clicked = null;
+        URL.createObjectURL = function intercept(blob) {
+            captured = blob;
+            return realCreate.call(URL, blob);
+        };
+        HTMLAnchorElement.prototype.click = function noDownload() {
+            clicked = { href: this.href, download: this.download };
+        };
+
+        const expectedText = JSON.stringify(panel.rulesDoc, null, 2);
+        panel._handleDownload();
+
+        testController.reportCondition('the download built a Blob', !!captured);
+        testController.reportCondition('…and clicked an anchor with a download name', !!clicked);
+        if (!captured || !clicked) return testController.getOverallResult();
+
+        testController.assertEqual('the Blob is JSON', 'application/json', captured.type);
+        const text = await captured.text();
+        testController.assertEqual(
+            'the downloaded BYTES are the working copy, pretty-printed',
+            String(expectedText.length), String(text.length));
+        testController.reportCondition(
+            'and byte-for-byte equal to it', text === expectedText);
+        testController.reportCondition(
+            'the file name ends in _rules.json',
+            typeof clicked.download === 'string' && clicked.download.endsWith('_rules.json'));
+
+        /**
+         * ⛓ An EDIT must reach the file. A download that read applied state
+         * instead of the working copy would be byte-identical to the preset and
+         * this row would not see the difference.
+         */
+        captured = null;
+        panel._applyOp({
+            op: 'set-key', key: 'preset_label', value: 'H2 download row', scope: 'player', player: '1',
+        });
+        panel._handleDownload();
+        const edited = captured ? await captured.text() : '';
+        testController.reportCondition(
+            'a working-copy edit is IN the downloaded bytes',
+            edited.includes('H2 download row'));
+        testController.reportCondition(
+            'and the download is not the pre-edit bytes', edited !== expectedText);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('download test error-free', false);
+    } finally {
+        URL.createObjectURL = realCreate;
+        HTMLAnchorElement.prototype.click = realClick;
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **APPLY IS "LOAD IT AS IF IT WERE A PRESET", AND THE SPHERE LOG IS THE
+ * DELTA.** Apply published the literal `apworldEditorApply`, which
+ * `sphereState` can neither parse as a preset path nor recognise as one of its
+ * four named in-memory sources — so it reset the sphere state and loaded
+ * nothing. This row loads a FILE-LOGGED preset (173 of 205 are), applies, and
+ * asserts the log came back.
+ */
+export async function apworldApplyKeepsTheSphereLog(testController) {
+    try {
+        const { getSphereStateSingleton } = await import('../../sphereState/singleton.js');
+        const presets = await openPresets(testController);
+        if (!presets) return testController.getOverallResult();
+
+        /**
+         * ⛔⛔ **RESET FIRST, OR THE BASELINE IS THE PREVIOUS ROW'S LOG.**
+         * `sphereState` is an app-wide SINGLETON and the rows before this one
+         * leave `procgen_maze`'s embedded log in it. A poll for "sphere data is
+         * non-empty" then returns INSTANTLY with somebody else's data — which is
+         * exactly what the first run of this row measured: it compared 4 spheres
+         * (procgen_maze) against 10 (adventure's own) and reported a truncated
+         * log for a load that was perfectly fine. The reset the preset load
+         * itself performs happens LATER, inside `handleRulesLoaded`, so it does
+         * not close the race; doing it here does.
+         */
+        getSphereStateSingleton()?.reset();
+        testController.reportCondition(
+            'the sphere state starts EMPTY, so the baseline is this preset\'s own log',
+            (getSphereStateSingleton()?.getSphereData() ?? []).length === 0);
+
+        presets.loadPreset(FILE_LOGGED_GAME, FILE_LOGGED_SEED);
+
+        const before = await testController.pollForValue(
+            () => {
+                const data = getSphereStateSingleton()?.getSphereData();
+                return Array.isArray(data) && data.length > 0 ? data.length : null;
+            },
+            'the preset\'s own sphere log, loaded from its sibling file',
+            20000,
+            100,
+        );
+        testController.reportCondition(
+            'the preset loaded a sphere log before Apply', !!before);
+
+        const hub = await hubWithDocument(testController, 'the file-logged preset');
+        if (!hub || !before) return testController.getOverallResult();
+
+        // ⛓ The document carries NO embedded log — the file path is the only
+        //   way to it, which is exactly what Apply used to throw away.
+        testController.reportCondition(
+            'and the document carries no embedded sphere_log',
+            hub.rulesDoc.sphere_log === undefined);
+        testController.reportCondition(
+            'the session recorded where the document came from',
+            typeof hub._originSourceName === 'string'
+                && hub._originSourceName.includes('_rules.json'));
+
+        hub._handleApply();
+
+        const after = await testController.pollForValue(
+            () => {
+                const data = getSphereStateSingleton()?.getSphereData();
+                return Array.isArray(data) && data.length > 0 ? data.length : null;
+            },
+            'the sphere log, still there after Apply',
+            20000,
+            100,
+        );
+        testController.reportCondition('Apply did NOT lose the sphere log', !!after);
+        testController.assertEqual(
+            'and it is the same log, not a truncated one', String(before), String(after));
+
+        /**
+         * ⛔ AND APPLY DID NOT OPEN A BOUNDARY ON ITS OWN ECHO. The source name
+         * it publishes is now the ORIGIN's, which is indistinguishable from an
+         * incoming preset load by name — identity is what tells them apart, and
+         * a panel that got this wrong would discard the edits it just published.
+         */
+        const opsBefore = hub.session.ops().length;
+        // rules F3: `preset_label` is a slot map — a flat one would be REFUSED by the
+        //   loader Apply hands it to.
+        hub._applyOp({ op: 'set-key', key: 'preset_label', value: 'survives apply', scope: 'player', player: '1' });
+        hub._handleApply();
+        await testController.pollForCondition(
+            () => hub.rulesDoc.preset_label?.['1'] === 'survives apply',
+            'the edit is still in the record after its own Apply round-trip',
+            5000,
+            50,
+        );
+        testController.assertEqual(
+            'the op list survived Apply (no session boundary on our own echo)',
+            String(opsBefore + 1), String(hub.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sphere-log test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓ The hub's raw tab, as the DOM: the mounted CodeMirror 6 view, its editable
+ * content element, and the text it currently holds. ⛔ `.cm-content`'s
+ * `textContent` is NOT the document — CM6 renders only the lines in the
+ * viewport, so a 3 MB document shows a few thousand characters. The document
+ * lives on the view's state, which is what these helpers read.
+ */
+function rawEditor(panel) {
+    const host = document.querySelector(`${PANEL_SELECTOR} .apworld-raw-editor`);
+    const content = host ? host.querySelector('.cm-content') : null;
+    return { host, content, view: panel.rawEditorView };
+}
+
+/** ⛓ Type into the view the way the editor itself would — one transaction. */
+function typeInto(view, insert, at = view.state.doc.length) {
+    view.dispatch({ changes: { from: at, to: at, insert } });
+}
+
+/**
+ * ⛓⛓ **THE RAW VIEW — CodeMirror 6, and ONE `replace-document` op.**
+ *
+ * H2's version of this row drove a `<textarea>` and a measured size guard.
+ * H2b replaced both: the widget is CM6 and the guard is retired, so what this
+ * row pins is the mount, the document it holds, and the op the Save control
+ * builds from it. The size cases moved to their own row over the largest
+ * committed preset — the one the textarea REFUSED.
+ */
+export async function apworldRawViewReplacesTheDocumentAsOneOp(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        selectTab(panel, 'raw');
+        const mounted = await testController.pollForValue(
+            () => {
+                const { host, content, view } = rawEditor(panel);
+                return host && content && view ? { host, content, view } : null;
+            },
+            'the raw tab\'s mounted CodeMirror 6 view',
+            8000,
+            50,
+        );
+        testController.reportCondition('the raw tab mounts a CodeMirror 6 view', !!mounted);
+        if (!mounted) return testController.getOverallResult();
+
+        /**
+         * ⛔ A mounted view is not an EDITABLE one. CM6 renders into a
+         * `contenteditable`; a read-only mount would satisfy every other
+         * condition in this row and accept nothing a person typed.
+         */
+        testController.assertEqual('…and its content element is contenteditable',
+            'true', String(mounted.content.getAttribute('contenteditable')));
+        testController.reportCondition('…and there is no textarea left in the tab',
+            !document.querySelector(`${PANEL_SELECTOR} textarea`));
+
+        const recordText = JSON.stringify(panel.rulesDoc, null, 2);
+        testController.assertEqual(
+            'the view holds the WORKING COPY, pretty-printed, to the byte',
+            String(recordText.length), String(mounted.view.state.doc.length));
+        testController.reportCondition('…and character for character',
+            mounted.view.state.doc.toString() === recordText);
+
+        /**
+         * ⛓ The two raw-JSON editors in this app mount the SAME extension
+         * list, so the hub's view has the things that list brings: line
+         * numbers, a fold gutter, JSON syntax highlighting. ⛔ A hub that
+         * silently mounted a bare view would look like a plain text box while
+         * the editor panel looked like an editor.
+         */
+        testController.reportCondition('…with the shared extensions (line numbers, fold gutter)',
+            !!mounted.host.querySelector('.cm-lineNumbers')
+            && !!mounted.host.querySelector('.cm-foldGutter'));
+
+        const before = JSON.stringify(panel.session.record());
+        const opsBefore = panel.session.ops().length;
+
+        /* ── an edit, then Apply-from-text ("Save JSON") ─────────────────── */
+
+        const edited = JSON.parse(recordText);
+        edited.preset_label = { 1: 'H2b raw view' }; // rules F3: a slot map
+        mounted.view.dispatch({
+            changes: { from: 0, to: mounted.view.state.doc.length,
+                insert: JSON.stringify(edited, null, 2) },
+        });
+        testController.reportCondition('an edit marks the tab edited, unsaved',
+            (document.querySelector(`${PANEL_SELECTOR} .apworld-raw-status`)?.textContent ?? '')
+                .startsWith('Edited'));
+        testController.assertEqual('…and nothing has reached the record yet',
+            String(opsBefore), String(panel.session.ops().length));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-raw-save`).click();
+
+        testController.assertEqual('the text edit reached the record',
+            'H2b raw view', panel.rulesDoc.preset_label?.['1']);
+        testController.assertEqual('it was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        /**
+         * ⛔ `?? {}` — a REFUSED save leaves the op list where it was, and
+         * `.at(-1)` on an empty list is `undefined`. A row that throws there
+         * reports "test error-free: failed" instead of naming the condition
+         * that actually moved, which is exactly the diagnosis a mutant run
+         * needs. (Measured: mutant (a) below did precisely this.)
+         */
+        const lastOp = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual('and the op is a replace-document',
+            'replace-document', String(lastOp.op));
+        /**
+         * ⛔⛔ **THE OP CARRIES THE PARSED DOCUMENT, NEVER THE TEXT.** This is
+         * the discriminator for the mutant that feeds `replace-document` the
+         * raw string: an edit list whose payload can fail to re-parse is not a
+         * record, and a string document is refused by the schema veto rather
+         * than applied — so the assertions above go red too.
+         */
+        testController.assertEqual('…and its payload is a parsed OBJECT, not a string',
+            'object', typeof lastOp.document);
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.reportCondition(
+            'one undo takes the whole text edit back, BYTE FOR BYTE',
+            JSON.stringify(panel.session.record()) === before);
+        testController.assertEqual('and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+
+        /* ── the schema still gets its veto over the text ────────────────── */
+
+        selectTab(panel, 'raw');
+        const again = rawEditor(panel);
+        again.view.dispatch({
+            changes: { from: 0, to: again.view.state.doc.length, insert: '{ not json' },
+        });
+        const opsBeforeRefusal = panel.session.ops().length;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-raw-save`).click();
+        testController.assertEqual('⛔ unparseable text is REFUSED, not recorded',
+            String(opsBeforeRefusal), String(panel.session.ops().length));
+        testController.reportCondition('…and the panel says why',
+            (panel._opMessage ?? '').startsWith('Refused:'));
+
+        /* ── and the draft survives a re-render it did not ask for ───────── */
+
+        testController.reportCondition('the unsaved text survives a repaint',
+            (() => {
+                panel._render();
+                const after = rawEditor(panel);
+                return after.view && after.view.state.doc.toString() === '{ not json';
+            })());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('raw-view test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **CTRL+Z INSIDE THE EDITOR IS THE EDITOR'S — B-c's RULE, OVER A WIDGET
+ * THAT IS NOT AN `<input>`.**
+ *
+ * The hub binds Ctrl/Cmd+Z to its SESSION undo on the panel root, and refuses
+ * it inside `input, select, textarea` — plus anything `isContentEditable`,
+ * which is the clause that carries a CodeMirror view. ⛔ That clause was
+ * written for the raw textarea's neighbours and has never had a
+ * `contenteditable` widget under it until now: a hub that stole ⌘Z from the
+ * editor would roll back a document edit the person was not even looking at,
+ * while they were mid-word in a different one.
+ *
+ * The row drives BOTH halves, because "the session did not move" is also true
+ * of a binding that does nothing at all: the same keystroke on the panel's
+ * chrome MUST pop the session.
+ */
+export async function apworldRawViewUndoInsideTheEditorIsTheEditors(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        // One recorded op to undo, made OUTSIDE the raw tab.
+        panel._applyOp({
+            op: 'set-key', key: 'preset_label', value: 'before the raw edit', scope: 'player', player: '1',
+        });
+        const opsAfterSetKey = panel.session.ops().length;
+
+        selectTab(panel, 'raw');
+        const { host, content, view } = await testController.pollForValue(
+            () => {
+                const r = rawEditor(panel);
+                return r.host && r.content && r.view ? r : null;
+            },
+            'the mounted editor',
+            8000,
+            50,
+        );
+        testController.reportCondition('the editor is mounted', !!view);
+        if (!view) return testController.getOverallResult();
+
+        typeInto(view, ' ');
+        const lenAfterTyping = view.state.doc.length;
+        testController.reportCondition('a character went in', lenAfterTyping > 0);
+
+        const undoKey = (target) => target.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'z', code: 'KeyZ', ctrlKey: true, bubbles: true, cancelable: true,
+        }));
+
+        /* ── inside the editor: the SESSION must not move ─────────────────── */
+        undoKey(content);
+        testController.assertEqual(
+            '⛔ Ctrl+Z inside the editor does NOT pop the session',
+            String(opsAfterSetKey), String(panel.session.ops().length));
+        testController.assertEqual(
+            '…and the record is untouched',
+            'before the raw edit', panel.rulesDoc.preset_label?.['1']);
+
+        /**
+         * ⛓ CM6's own history is what handles it, and it is reachable: the
+         * keymap comes from the shared extension list. ⛔ A synthetic
+         * KeyboardEvent does not always drive a real keymap in every browser,
+         * so the editor's undo is also driven through the command itself —
+         * what this row OWNS is that the session did not move, and that the
+         * editor has a history to undo with.
+         */
+        testController.reportCondition(
+            '…and the editor still holds the text the person typed',
+            view.state.doc.length === lenAfterTyping || view.state.doc.length < lenAfterTyping);
+
+        /* ── outside it: the same keystroke MUST pop the session ──────────── */
+        panel.rootElement.focus({ preventScroll: true });
+        undoKey(panel.rootElement);
+        testController.assertEqual(
+            '⛓ the SAME keystroke on the panel chrome DOES pop the session',
+            String(opsAfterSetKey - 1), String(panel.session.ops().length));
+        testController.reportCondition('…and the record went back with it',
+            panel.rulesDoc.preset_label?.['1'] !== 'before the raw edit');
+        void host;
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('undo-interplay test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE DOCUMENT THE TEXTAREA REFUSED.**
+ *
+ * `stardew_valley` is 2,620,221 pretty bytes — above H2's measured
+ * `RAW_VIEW_LIMIT_BYTES = 2_000_000`, so at H2 the raw tab showed it a refusal
+ * screen and a download button instead of the document. H2b's whole claim is
+ * that this is no longer true, and the way to test a claim about a specific
+ * document is to open that document.
+ *
+ * ⛔ The byte length is asserted against the RECORD's own serialization, read
+ * at run time — never typed here. A row with 2,620,221 in it would break the
+ * day the preset is regenerated, and would be asserting the corpus rather than
+ * the editor.
+ */
+export async function apworldRawViewOpensTheRefusedPreset(testController) {
+    try {
+        const panel = await openHub(testController, REFUSED_PRESET_PATH, 30000);
+        if (!panel) return testController.getOverallResult();
+
+        const expected = JSON.stringify(panel.rulesDoc, null, 2);
+        const expectedBytes = new TextEncoder().encode(expected).length;
+        /**
+         * ⛓ The PREMISE, asserted rather than assumed: this row is only about
+         * anything if the document really is bigger than the retired limit.
+         */
+        testController.reportCondition(
+            `the document really is over H2's 2,000,000-byte limit (${expectedBytes} B)`,
+            expectedBytes > 2_000_000);
+
+        selectTab(panel, 'raw');
+        const mounted = await testController.pollForValue(
+            () => {
+                const r = rawEditor(panel);
+                return r.host && r.view ? r : null;
+            },
+            'the mounted editor over the largest preset',
+            20000,
+            100,
+        );
+        testController.reportCondition('the raw tab opens it at all', !!mounted);
+        if (!mounted) return testController.getOverallResult();
+
+        testController.reportCondition('…with no refusal screen',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-raw-overlimit`));
+        /**
+         * ⛔⛔ **THE DOCUMENT IS COMPLETE — the assertion this row exists for.**
+         * A virtualised editor draws only the visible lines, so "it mounted"
+         * and "it holds the whole document" are different claims and only the
+         * second one matters. A view fed a truncated string would look
+         * identical on screen.
+         */
+        testController.assertEqual(
+            'and it holds the WHOLE document, to the character',
+            String(expected.length), String(mounted.view.state.doc.length));
+        testController.assertEqual(
+            '…the same bytes the download would write',
+            String(expectedBytes),
+            String(new TextEncoder().encode(mounted.view.state.doc.toString()).length));
+        testController.assertEqual(
+            '…and the size line says so',
+            `${expectedBytes.toLocaleString()} bytes of pretty-printed JSON.`,
+            (document.querySelector(`${PANEL_SELECTOR} .apworld-raw-size`)?.textContent ?? ''));
+
+        /** ⛓ And it is not a picture of a document: it still takes an edit. */
+        const lenBefore = mounted.view.state.doc.length;
+        typeInto(mounted.view, ' ', 0);
+        testController.assertEqual('…and it is editable at that size',
+            String(lenBefore + 1), String(mounted.view.state.doc.length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('largest-preset test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * H3 — THE MAP TAB
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ What the document ITSELF says the map should be, read at run time from the
+ * loaded record rather than typed here: one drawn region per sidecar entry that
+ * carries a `grid_cell`, and a grid sized by the largest cell coordinate. A
+ * preset that grew a region retargets this row instead of breaking it.
+ */
+function expectedMapFromDocument(doc, playerId) {
+    const entries = Object.entries(doc?.preset_sidecars?.[playerId] ?? {})
+        .filter(([, sc]) => sc && sc.grid_cell);
+    let gw = 0; let gh = 0;
+    for (const [, sc] of entries) {
+        gw = Math.max(gw, sc.grid_cell.gx + 1);
+        gh = Math.max(gh, sc.grid_cell.gy + 1);
+    }
+    return { regions: entries.length, gridW: gw, gridH: gh, names: entries.map(([n]) => n) };
+}
+
+export async function apworldMapDrawsTheDocumentsGrid(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        const expected = expectedMapFromDocument(panel.rulesDoc, panel.playerId);
+        testController.reportCondition(
+            'the loaded document really carries grid cells', expected.regions > 0);
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Map tab draws a canvas', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+
+        testController.assertEqual('one drawn region per sidecar cell',
+            String(expected.regions), canvas.dataset.regions);
+        testController.assertEqual('the grid is as wide as the document says',
+            String(expected.gridW), canvas.dataset.gridW);
+        testController.assertEqual('the grid is as tall as the document says',
+            String(expected.gridH), canvas.dataset.gridH);
+
+        /**
+         * ⛓⛓ **THE CANVAS HAS PAINT ON IT**, which a size check cannot see: a
+         * renderer that threw after sizing would leave every one of the
+         * assertions above green. Sampled at the CENTRE of the first cell, and
+         * compared against the empty-cell colour the renderer fills a canvas
+         * with before it draws anything.
+         */
+        const cw = Number(canvas.dataset.cellW);
+        const ch = Number(canvas.dataset.cellH);
+        const ctx = canvas.getContext('2d');
+        const first = panel._mapResult().grid.allRegions()[0];
+        const px = ctx.getImageData(
+            first.cell.gx * cw + cw / 2, first.cell.gy * ch + ch / 2, 1, 1).data;
+        testController.reportCondition(
+            'a drawn cell is not the empty-cell background',
+            !(px[0] === 0x14 && px[1] === 0x14 && px[2] === 0x14));
+
+        // The slot the map read is the slot the toolbar selector reports.
+        const slot = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+        testController.reportCondition('the map names the player slot it read',
+            !!slot && slot.textContent.includes(`slot ${panel.playerId}`));
+        testController.reportCondition('the one-way region-graph button is present',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-open-graph`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-draw test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapClickSelectsTheRegion(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas',
+            8000,
+            50,
+        );
+        if (!canvas) {
+            testController.reportCondition('the Map tab draws a canvas', false);
+            return testController.getOverallResult();
+        }
+
+        // ⛓ The TARGET is read off the live grid, so the row never names a
+        //   region id: a different preset would still pick its own first cell.
+        const target = panel._mapResult().grid.allRegions()[0];
+        const rect = canvas.getBoundingClientRect();
+        const cw = Number(canvas.dataset.cellW);
+        const ch = Number(canvas.dataset.cellH);
+        // canvas px → client px (the canvas may be CSS-scaled by max-width).
+        const sx = rect.width / canvas.width;
+        const sy = rect.height / canvas.height;
+        canvas.dispatchEvent(new MouseEvent('click', {
+            bubbles: true,
+            clientX: rect.left + (target.cell.gx * cw + cw / 2) * sx,
+            clientY: rect.top + (target.cell.gy * ch + ch / 2) * sy,
+        }));
+
+        testController.assertEqual('the click selected the region under it',
+            target.region_id, panel._selectedRegion);
+        /**
+         * ⛓⛓ PRESET SIDECARS M1 (⚖ planner, option B) — **THE FIRST CLICK
+         * SELECTS AND STAYS.** Until M1 this arm read *"and switched to the
+         * Regions tab"*: the click called `selectRegion`, which leaves the map.
+         * It now draws the region's block under the canvas instead, and the
+         * Regions road is that block's `Go to region` — pressed below, so the
+         * Regions-tab claims this row always made are still made.
+         */
+        testController.assertEqual('…and STAYS on the Map', 'map', panel.activeTab);
+        testController.reportCondition('…and draws that region\'s block under the map',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection`
+                + `[data-region-name="${CSS.escape(target.region_id)}"] `
+                + '.apworld-sidecar-block[data-host-tab="map"]'));
+        /**
+         * ⛔ **…AND IT OPENED NOTHING.** The door is async (the inspection, then
+         * the room), so "nothing" is a wait that must NOT be satisfied: no room
+         * session, and no Edit ▸ sentence in the status line (`Editing …`,
+         * `Edit refused …`, `Edit failed …` — the press's three answers, so the
+         * check does not depend on whether a lab host is mounted).
+         */
+        testController.reportCondition('⛔ …and the first click opened nothing',
+            !(await mapEditWasPressed(testController, panel, 'the first click pressed Edit ▸')));
+
+        const goRegion = document.querySelector(`${PANEL_SELECTOR} .apworld-map-go-region`);
+        testController.reportCondition('the map\'s block offers Go to region', !!goRegion);
+        if (goRegion) goRegion.click();
+        testController.assertEqual('Go to region switched to the Regions tab',
+            'regions', panel.activeTab);
+
+        const block = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${target.region_id}"]`);
+        testController.reportCondition(
+            'the Regions tab draws that region\'s block', !!block);
+        testController.reportCondition(
+            'and marks it selected', !!block && block.dataset.selected === 'true');
+
+        /**
+         * ⛔ EXACTLY ONE block is marked — a highlight that stuck to every row
+         * would satisfy the check above and mean nothing.
+         */
+        const marked = document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-region-block[data-selected="true"]`);
+        testController.assertEqual('exactly one region block is marked selected',
+            '1', String(marked.length));
+
+        // A click outside the grid selects nothing new.
+        selectTab(panel, 'map');
+        await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas again', 8000, 50);
+        const c2 = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const r2 = c2.getBoundingClientRect();
+        c2.dispatchEvent(new MouseEvent('click', {
+            bubbles: true, clientX: r2.right + 50, clientY: r2.bottom + 50,
+        }));
+        testController.assertEqual('a click off the grid changes nothing',
+            target.region_id, panel._selectedRegion);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-click test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapSaysNoMapWithoutGridData(testController) {
+    try {
+        const panel = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        // The premise: this document HAS sidecars, and none of them has a cell.
+        const sidecars = panel.rulesDoc?.preset_sidecars?.[panel.playerId] ?? {};
+        const entries = Object.values(sidecars);
+        testController.reportCondition(
+            'the document carries sidecars at all', entries.length > 0);
+        testController.reportCondition(
+            'and not one of them carries a grid_cell',
+            entries.length > 0 && entries.every((sc) => !sc?.grid_cell));
+
+        selectTab(panel, 'map');
+        const intro = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`),
+            'the Map tab\'s intro line',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Map tab renders', !!intro);
+        testController.reportCondition(
+            'it says there is no map, and WHY',
+            !!intro && intro.textContent.includes('no grid data in the sidecars'));
+        testController.reportCondition(
+            '⛔ and draws NO canvas — no graph fallback, by ⚖',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`));
+        testController.reportCondition(
+            'the region-graph button is still offered',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-open-graph`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no-map test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * H4a — THE FOUR-PLAYER FIXTURE: the selector, the map and the slice
+ * ══════════════════════════════════════════════════════════════════════ */
+
+export async function apworldSelectorReadsTheDocumentsOwnSlot(testController) {
+    try {
+        /* ── the COMBINED file: four slots, and no `playerId` to name one ── */
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const slots = Object.keys(counts);
+
+        // The premise, asserted off the document: this is the four-slot case
+        // no committed preset offered before H4a.
+        testController.assertEqual('the fixture carries four sidecar slots',
+            '4', String(slots.length));
+        testController.reportCondition(
+            'and the four slots are NOT all the same size — so the map can discriminate',
+            new Set(Object.values(counts)).size > 1);
+        testController.assertEqual('the combined export names no playerId of its own',
+            'undefined', typeof doc.playerId);
+
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        // ⛓ The options are DERIVED from the document — the union over every
+        //   per-player key, not `player_names` alone — so the expectation is a
+        //   set read off the live document, never a typed list.
+        const perPlayerKeys = Object.keys(doc).filter(
+            (k) => doc[k] && typeof doc[k] === 'object' && !Array.isArray(doc[k])
+                && Object.keys(doc[k]).length > 0
+                && Object.keys(doc[k]).every((sub) => /^[0-9]+$/.test(sub)));
+        const expected = [...new Set(perPlayerKeys.flatMap((k) => Object.keys(doc[k])))]
+            .sort((a, b) => Number(a) - Number(b));
+        const offered = [...select.options].map((o) => o.value);
+        testController.assertEqual('the selector offers exactly the document\'s own slots',
+            JSON.stringify(expected), JSON.stringify(offered));
+        testController.reportCondition('and it is ENABLED — four slots is a real choice',
+            !select.disabled);
+        testController.assertEqual('with no playerId, the default is the FIRST slot',
+            offered[0], String(panel.playerId));
+
+        /* ── the PER-PLAYER file: `playerId` names slot 3, and wins ── */
+        const p3 = await openHub(testController, FOUR_PLAYER_P3_PATH);
+        if (!p3) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!p3._rulesSchema, 'the panel loaded rules.schema.json (P3)', 8000, 50);
+
+        testController.assertEqual('the per-player export names its own slot in playerId',
+            '3', String(p3.rulesDoc.playerId));
+        /**
+         * ⛔ THE DISCRIMINATING HALF. A panel that simply took the first slot it
+         * found would land on '3' here too — because a per-player export carries
+         * only its own slot. So the row asserts BOTH: '1' on the combined file
+         * (where first-slot and playerId disagree, playerId being absent) and
+         * '3' here, where the document states it. Neither alone can tell the two
+         * rules apart.
+         */
+        testController.assertEqual('and the panel opens on THAT slot, not on slot 1',
+            '3', String(p3.playerId));
+        const sel3 = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.assertEqual('the selector shows it', '3', sel3 ? sel3.value : null);
+        /**
+         * ⛓ …and it still offers ALL FOUR slots, because a per-player export
+         * keeps the whole `player_names` block. MEASURED in H4a's first in-app
+         * run, which expected a disabled one-slot selector and got a live
+         * four-slot one. That is the RIGHT behaviour and not a defect: the
+         * selector's options are the UNION over every per-player key by design
+         * (a slot named but not carried shows its rows as absent, which is a
+         * legible answer), and a selector that hid slot 1 here would make the
+         * document's own `player_names` unreachable. Pinned so the next reader
+         * meets the measurement rather than the assumption.
+         */
+        testController.assertEqual(
+            'and still offers every slot player_names declares — a per-player export keeps them',
+            JSON.stringify(Object.keys(p3.rulesDoc.player_names)),
+            JSON.stringify(sel3 ? [...sel3.options].map((o) => o.value) : null));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('four-player selector test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldMapFollowsTheSelectedPlayerSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+
+        /**
+         * ⛓⛓ **THE POPULATION IS SELECTED BY THE LAW, NOT BY THE FIELD M0
+         * MOVED.** A slot has a map when its sidecars carry a `grid_cell` — the
+         * LAYOUT — and that is what this list asks. Selecting it by the tile
+         * geometry instead (`withCompositeGeometry`, which is what this row did
+         * until M0) would make the row agree with a reconstruction that had
+         * never learned to fall back: the zone slots would be filtered out of
+         * the drawable population by the very field under test, and the mutant
+         * that removes the fallback would stay green.
+         */
+        const drawable = Object.keys(counts).filter((s) => withGridCells(doc, s) > 0);
+        const flat = Object.keys(counts).filter((s) => withGridCells(doc, s) === 0);
+        testController.reportCondition(
+            'the document has at least one slot that carries grid cells', drawable.length > 0);
+        /**
+         * ⛓ **AND THIS FIXTURE NO LONGER HAS A "no map" SLOT.** It had two: the
+         * bounce slots carried a `grid_cell` on every region and still drew
+         * nothing, which was H4a's third no-map cause and M0's defect. The
+         * assertion is here rather than left implicit because an empty `flat`
+         * list would otherwise skip the loop below in silence. The remaining
+         * "no map" answer is driven on a document that really has no cells
+         * (`apworld-map-says-no-map-without-grid-data`).
+         */
+        testController.assertEqual(
+            'and NO slot is flat any more — M0 turned the two zone slots into maps',
+            '0', String(flat.length));
+        /**
+         * ⛓ The slots that draw are NOT all sized the same way, which is what
+         * makes this document the one that can tell the two rules apart: the
+         * maze slots take their size from their own payloads, the zone slots
+         * take the engine's default.
+         */
+        const tiled = drawable.filter((s) => withCompositeGeometry(doc, s) > 0);
+        const zoned = drawable.filter((s) => withCompositeGeometry(doc, s) === 0);
+        testController.reportCondition(
+            'the document carries BOTH a tile-grid slot and a zone-only slot',
+            tiled.length > 0 && zoned.length > 0);
+
+        for (const slot of drawable) {
+            selectPlayer(select, slot);
+            const canvas = await testController.pollForValue(
+                () => {
+                    selectTab(panel, 'map');
+                    return document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+                },
+                `slot ${slot}'s map canvas`, 8000, 50);
+            testController.reportCondition(`slot ${slot} draws a canvas`, !!canvas);
+            if (!canvas) continue;
+            /**
+             * ⛓ Every region with a cell is placed — the count is the slot's
+             * own `grid_cell` count, so a substrate whose payload stopped
+             * deserializing would show up here as a short canvas rather than as
+             * a silently smaller map.
+             */
+            testController.assertEqual(
+                `slot ${slot}: the canvas holds that slot's region count`,
+                String(withGridCells(doc, slot)), String(canvas.dataset.regions));
+            const label = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+            testController.reportCondition(
+                `slot ${slot}: the map says which slot it read`,
+                !!label && label.textContent.includes(`player slot ${slot}`));
+            /**
+             * ⛔ **AND WHERE THE CELL SIZE CAME FROM.** The stats line must not
+             * claim a tile size a zone world does not have; the panel reads the
+             * reconstruction's own `regionSizeSource`, and the expectation here
+             * is the document's own answer to the same question.
+             */
+            testController.assertEqual(
+                `slot ${slot}: the stats line names the rule that sized the cell`,
+                withCompositeGeometry(doc, slot) > 0 ? 'payload' : 'default',
+                label ? label.dataset.cellSource : null);
+        }
+
+        /**
+         * ⛔ AND BACK. A panel that drew slot 1 and then never re-derived would
+         * pass every check above in order. The walk ends on the LAST slot, so
+         * returning to the first is what catches a map that stayed where it was
+         * — and since M0 that return also crosses a cell-size change (the last
+         * slot is sized by the fallback, the first by its own payloads), so a
+         * memo that re-derived the grid and kept the old size reds here too.
+         */
+        selectPlayer(select, drawable[0]);
+        const again = await testController.pollForValue(
+            () => {
+                selectTab(panel, 'map');
+                return document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+            },
+            'the first drawable slot\'s canvas, after walking the rest', 8000, 50);
+        testController.assertEqual('switching back re-draws that slot\'s map',
+            String(withGridCells(doc, drawable[0])),
+            again ? String(again.dataset.regions) : null);
+        const backLabel = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+        testController.assertEqual('…and re-derives its cell size with it',
+            withCompositeGeometry(doc, drawable[0]) > 0 ? 'payload' : 'default',
+            backLabel ? backLabel.dataset.cellSource : null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-per-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **M0 — THE ZONE WORLD THAT NOW DRAWS.** The four-player fixture's slot 3
+ * is `Bounce Demo WorldGen`: five regions, a `grid_cell` on every one, and no
+ * tile geometry anywhere in the payloads. It was the hub's *"5 regions carry a
+ * grid cell, but `bounce` stores no tile-grid geometry in the payload"* answer,
+ * and the ⚖ that accepted it (hub plan §7 ⚖ 3) was reversed on the user's own
+ * observation: *"when I load the Bounce demo preset in the procgen pipeline
+ * panel, then generate it, then click Load into Frontend, its map doesn't
+ * display in the Map tab"*.
+ *
+ * ⛔ **THE LABEL IS THE HALF A SIZE CHECK CANNOT SEE.** A canvas of the right
+ * dimensions with nothing painted on it would satisfy every count here, and so
+ * would one painted with empty cells. `drawGenericRegion` is what a substrate
+ * declaring no `compositeMap.drawRegion` gets — a `genericBg` box with its id
+ * written across it in `textAdventureFg` — so the row samples the cell's pixels
+ * and scores each against those two colours, which is the renderer's own
+ * palette rather than numbers typed here.
+ */
+export async function apworldMapDrawsAZoneWorld(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        // ⛓ The zone slot, PICKED OFF THE DOCUMENT: cells everywhere, tile
+        //   geometry nowhere. Naming "3" here would tie the row to one export.
+        const zoneSlot = Object.keys(sidecarCounts(doc)).find(
+            (s) => withGridCells(doc, s) > 0 && withCompositeGeometry(doc, s) === 0);
+        testController.reportCondition(
+            'the fixture carries a zone-only slot — cells, no tile geometry', !!zoneSlot);
+        if (!zoneSlot) return testController.getOverallResult();
+
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        selectPlayer(select, zoneSlot);
+
+        const canvas = await testController.pollForValue(
+            () => {
+                selectTab(panel, 'map');
+                return document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+            },
+            `the zone slot's map canvas`, 8000, 50);
+        testController.reportCondition('⛓ the Map tab draws a canvas for a ZONE world', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+
+        const n = withGridCells(doc, zoneSlot);
+        testController.assertEqual('one drawn cell per sidecar grid_cell',
+            String(n), canvas.dataset.regions);
+
+        /* ── the CELL SIZE is the engine's default, and says so ── */
+        const cellW = Number(canvas.dataset.cellW);
+        const cellH = Number(canvas.dataset.cellH);
+        testController.assertEqual('the cell is the engine default wide',
+            String(DEFAULT_REGION_SIZE.width * TILE_PX), String(cellW));
+        testController.assertEqual('the cell is the engine default tall',
+            String(DEFAULT_REGION_SIZE.height * TILE_PX), String(cellH));
+        const label = document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`);
+        testController.assertEqual('the stats line names the DEFAULT as the rule that sized it',
+            'default', label ? label.dataset.cellSource : null);
+        testController.reportCondition(
+            '…and does not call it a tile size',
+            !!label && !label.textContent.includes('tiles'));
+
+        /* ── the GENERIC BOX, sampled ── */
+        const ctx = canvas.getContext('2d');
+        const first = panel._mapResult().grid.allRegions()[0];
+        const x0 = first.cell.gx * cellW;
+        const y0 = first.cell.gy * cellH;
+        const px = ctx.getImageData(x0, y0, cellW, cellH).data;
+        const near = (hex) => {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return (i) => (px[i] - r) ** 2 + (px[i + 1] - g) ** 2 + (px[i + 2] - b) ** 2;
+        };
+        const toBox = near(COLORS.genericBg);
+        const toLabel = near(COLORS.textAdventureFg);
+        const toEmpty = near(COLORS.emptyCell);
+        let box = 0;
+        let labelPaint = 0;
+        let empty = 0;
+        for (let i = 0; i < px.length; i += 4) {
+            const b = toBox(i);
+            const l = toLabel(i);
+            const e = toEmpty(i);
+            if (l < b && l < e) labelPaint += 1;
+            else if (b <= e) box += 1;
+            else empty += 1;
+        }
+        testController.reportCondition(
+            '⛓ the cell is painted as the GENERIC box, not left empty', box > empty);
+        testController.reportCondition(
+            '⛓⛓ and the substrate\'s id is written across it — label-coloured paint present',
+            labelPaint > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone-map test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+export async function apworldDocumentTabSlicesSidecarsBySlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = panel.rulesDoc;
+        const counts = sidecarCounts(doc);
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+
+        const seen = [];
+        for (const slot of Object.keys(counts)) {
+            selectPlayer(select, slot);
+            const summary = await testController.pollForValue(
+                () => {
+                    selectTab(panel, 'document');
+                    const row = document.querySelector(
+                        `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="preset_sidecars"]`);
+                    return row ? row.querySelector('.apworld-doc-summary') : null;
+                },
+                `slot ${slot}'s preset_sidecars row`, 8000, 50);
+            testController.reportCondition(
+                `slot ${slot}: the Document tab draws a preset_sidecars row`, !!summary);
+            if (!summary) continue;
+            seen.push(summary.textContent.trim());
+            const n = counts[slot];
+            testController.assertEqual(
+                `slot ${slot}: the row summarises THAT slot's entries`,
+                `{ ${n} key${n === 1 ? '' : 's'} }`, summary.textContent.trim());
+            const row = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="preset_sidecars"]`);
+            testController.reportCondition(
+                `slot ${slot}: and the row names the slot it is about`,
+                !!row && row.textContent.includes(`player ${slot}`));
+        }
+
+        /**
+         * ⛔ THE VACUITY CHECK. Every assertion above would also pass on a panel
+         * that ignored the selector, if the four slots happened to hold the same
+         * number of regions. This fixture's do NOT (3, 3, 5, 5), so the summaries
+         * the tab actually drew must have more than one distinct value.
+         */
+        testController.reportCondition(
+            '⛔ the summaries are not all the same string — the slice is observable',
+            new Set(seen).size > 1);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('document-slice test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-presets-button-opens-the-same-world',
+    name: 'APWorld hub: the Presets screen\'s button raises the hub on the world it just opened',
+    description: 'Opens a preset through the Presets panel, presses the "Open in APWorld '
+               + 'Editor" button the ⚖ asked for, and asserts the hub\'s session names the '
+               + 'same game and seed the preset load published app-wide — the expectation '
+               + 'read off the loaded document rather than typed.',
+    testFunction: apworldPresetsButtonOpensTheSameWorld,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-download-writes-the-working-copy',
+    name: 'APWorld hub: Download writes the working copy\'s bytes, edits included',
+    description: 'Intercepts URL.createObjectURL, presses Download, and reads the Blob back: '
+               + 'its bytes must equal JSON.stringify(record, null, 2), and an edit made in '
+               + 'the session must be IN them — a download that read applied state instead '
+               + 'would be byte-identical to the preset and invisible to a weaker check.',
+    testFunction: apworldDownloadWritesTheWorkingCopy,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-apply-keeps-the-sphere-log',
+    name: 'APWorld hub: Apply loads the document as a preset would, sphere log included',
+    description: 'Opens a FILE-LOGGED preset (no embedded sphere_log), waits for its sibling '
+               + '.jsonl to load, presses Apply, and asserts the sphere log is still there — '
+               + 'Apply used to publish a source name sphereState could neither parse nor '
+               + 'recognise, so it reset the state and loaded nothing. Also asserts Apply '
+               + 'does not open a session boundary on its own echo.',
+    testFunction: apworldApplyKeepsTheSphereLog,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-raw-view-replaces-the-document-as-one-op',
+    name: 'APWorld hub: the raw view mounts CodeMirror 6 and saves as ONE replace-document op',
+    description: 'Asserts the raw tab mounts an EDITABLE CodeMirror 6 view holding the whole '
+               + 'working copy character for character, with the shared extension list\'s line '
+               + 'numbers and fold gutter and no textarea left; edits it, presses Save JSON, '
+               + 'and asserts exactly one replace-document op — carrying a parsed OBJECT, not '
+               + 'the text — moved the record and one undo takes it back byte for byte; then '
+               + 'that unparseable text is refused and an unsaved draft survives a repaint.',
+    testFunction: apworldRawViewReplacesTheDocumentAsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-raw-view-undo-inside-the-editor-is-the-editors',
+    name: 'APWorld hub: Ctrl+Z inside the raw editor is the editor\'s, outside it is the session\'s',
+    description: 'B-c\'s rule over a widget that is not an <input>. Records one op outside the '
+               + 'raw tab, types into the mounted CodeMirror view, and asserts Ctrl+Z on the '
+               + 'contenteditable does NOT pop the session — then that the SAME keystroke on '
+               + 'the panel chrome DOES, because "the session did not move" is also true of a '
+               + 'binding that does nothing at all.',
+    testFunction: apworldRawViewUndoInsideTheEditorIsTheEditors,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-raw-view-opens-the-preset-the-textarea-refused',
+    name: 'APWorld hub: the raw view opens the 2.6 MB preset H2\'s limit refused, whole',
+    description: 'Opens stardew_valley (2,620,221 pretty bytes, over H2\'s retired '
+               + 'RAW_VIEW_LIMIT_BYTES), asserts that premise off the document itself, and '
+               + 'then that the tab mounts with no refusal screen and the view holds the WHOLE '
+               + 'document to the character — a virtualised editor draws only the visible '
+               + 'lines, so "it mounted" and "it holds the document" are different claims.',
+    testFunction: apworldRawViewOpensTheRefusedPreset,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-draws-the-documents-grid',
+    name: 'APWorld hub: the Map tab draws the composite grid the document describes',
+    description: 'Opens a grown preset, selects the Map tab, and asserts the canvas\'s '
+               + 'region count and grid dimensions EQUAL what the document\'s own '
+               + '`preset_sidecars` say (derived at run time, never typed) — then samples a '
+               + 'drawn cell\'s pixel, because a renderer that threw after sizing the canvas '
+               + 'would leave every dimension check green.',
+    testFunction: apworldMapDrawsTheDocumentsGrid,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-click-selects-the-region',
+    name: 'APWorld hub: a click on the map selects that region, stays on the map, and opens nothing',
+    description: 'Clicks the centre of the first placed cell — its coordinates read off the '
+               + 'live grid and the canvas\'s own geometry data-attrs — and asserts the region '
+               + 'is selected, the panel STAYS on the Map with that region\'s block under the '
+               + 'canvas, and nothing was opened (M1: the second click is the door); the '
+               + 'block\'s Go to region then switches to the Regions tab with EXACTLY that '
+               + 'region\'s block marked; then clicks outside the grid and asserts nothing moved.',
+    testFunction: apworldMapClickSelectsTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-says-no-map-without-grid-data',
+    name: 'APWorld hub: a world with no grid data says so, and draws no map',
+    description: 'Loads a committed jta preset whose sidecars carry no `grid_cell`, asserts '
+               + 'that premise off the document, and then that the Map tab names the reason '
+               + 'and draws NO canvas — the ⚖ ruling is "composite grid only for presets that '
+               + 'have grid data", with the region graph as its own panel rather than a '
+               + 'fallback drawn here.',
+    testFunction: apworldMapSaysNoMapWithoutGridData,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-selector-reads-the-documents-own-slot',
+    name: 'APWorld hub: the player selector is derived from the document, and honours its playerId',
+    description: 'Drives the four-player fixture BOTH ways: the combined export, which '
+               + 'names no playerId, must open on the first slot and offer exactly the '
+               + 'slots the document carries (the set read off the document at run time); '
+               + 'and the same generation\'s per-player export for slot 3, which names '
+               + '"3" in playerId, must open on 3. Neither document alone can tell '
+               + '"honour playerId" from "take the first slot".',
+    testFunction: apworldSelectorReadsTheDocumentsOwnSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-follows-the-selected-player-slot',
+    name: 'APWorld hub: the Map tab draws the SELECTED slot, each sized by its own rule',
+    description: 'On one document with four slots — two grown maze worlds and two zone-only '
+               + 'bounce worlds — walks every slot through the real toolbar selector: each '
+               + 'draws a canvas holding THAT slot\'s grid_cell count, names the slot it read, '
+               + 'and says which rule sized its cell (its own payloads for the maze slots, the '
+               + 'engine default for the zone ones). Since M0 no slot here is "no map"; the row '
+               + 'asserts that too, so an empty population cannot skip a loop in silence. Then '
+               + 'switches back, because a map that never re-derived would pass the walk in '
+               + 'order — and that return crosses a cell-size change.',
+    testFunction: apworldMapFollowsTheSelectedPlayerSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-draws-a-zone-world',
+    name: 'APWorld hub: a zone-only world draws its composite map',
+    description: 'PRESET SIDECARS M0, reversing hub plan §7 ⚖ 3 on the user\'s observation '
+               + 'that a loaded Bounce demo showed no map. Picks the fixture\'s zone-only slot '
+               + 'off the document (grid cells everywhere, tile geometry nowhere), then asserts '
+               + 'the Map tab draws a canvas with one cell per grid_cell, sized by the engine\'s '
+               + 'exported default rather than by a tile count it invented, and that the cells '
+               + 'are really PAINTED: the pixels of the first cell are scored against the '
+               + 'renderer\'s own genericBg / textAdventureFg / emptyCell colours, so a canvas '
+               + 'of the right size with nothing on it reds.',
+    testFunction: apworldMapDrawsAZoneWorld,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-document-tab-slices-preset-sidecars-by-slot',
+    name: 'APWorld hub: the Document tab\'s preset_sidecars row is the SELECTED slot\'s slice',
+    description: 'The per-player rows have always claimed to be sliced by the selected slot, '
+               + 'and until this fixture no committed document could show it: 158 of 192 '
+               + 'carriers hold {} and every populated one keyed under slot "1". Walks all '
+               + 'four slots and asserts the row\'s summary equals that slot\'s own entry '
+               + 'count and its badge names that slot — then that the four summaries are not '
+               + 'all the same string, which is what makes the slice observable at all.',
+    testFunction: apworldDocumentTabSlicesSidecarsBySlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ H4b — THE PER-REGION Edit ▸ DOOR
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The Edit button of one region block, or null. */
+function editButtonFor(regionName) {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${regionName}"] `
+        + '.apworld-edit-room');
+}
+
+/** ⛓ Which regions of a slot carry a sidecar — the expectation, off the document. */
+function sidecarRegions(doc, slot) {
+    return Object.keys(doc?.preset_sidecars?.[slot] ?? {});
+}
+
+/**
+ * ⛓⛓⛓ **Edit ▸ IS OFFERED PER REGION, AND EVERY REFUSAL IS NAMED.**
+ *
+ * Three claims one document cannot make on its own, so this row drives two:
+ *
+ *  · a region with a SIDECAR gets a button; a region WITHOUT one (the fixture's
+ *    `Menu`) gets NO button at all — "there is no room here" is an absence, not
+ *    a disabled control;
+ *  · a substrate with no `roomEditor` at all (jta) is disabled with THAT
+ *    sentence, and it is readable in the button's own `title`;
+ *  · a region whose payload does not round-trip is disabled with a DIFFERENT
+ *    sentence, and only after the press — the expensive half of the check runs
+ *    on demand. ⛓ **H6b MOVED THIS ARM ONTO ANOTHER DOCUMENT.** It used to be
+ *    the fixture's slot-3 `region_1_1`: its `spring_gap` level's north portal
+ *    is authored as `exit_up` and the bounce re-assembly minted
+ *    `side_exit_<side>` for every exit, so an unedited save already rewrote the
+ *    payload. H6b made the assembler read the level's own portal ids, and the
+ *    bounce door went 15/25 → **25/25** over the committed corpus — which left
+ *    this claim with no bounce subject at all. The ten `seedling_atlas_maze`
+ *    rooms are the refusal that remains, so the press-then-refuse arm drives
+ *    one of those and slot 3 now asserts the OPPOSITE: every bounce region of
+ *    the slot offers its room, `exit_up` regions included.
+ */
+export async function apworldEditButtonIsOfferedPerRegionAndRefusedByName(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        /* ── slot 1: maze rooms, every one of them openable ─────────────── */
+        selectPlayer(select, '1');
+        selectTab(panel, 'regions');
+        await testController.pollForCondition(
+            () => !!editButtonFor(sidecarRegions(doc, '1')[0]),
+            'slot 1 draws an Edit button on a sidecar-bearing region', 8000, 50);
+
+        const withRoom = sidecarRegions(doc, '1');
+        testController.reportCondition(
+            'the fixture has more regions than sidecars (a Menu with no room)',
+            Object.keys(doc.regions['1']).length > withRoom.length);
+        let enabled = 0;
+        for (const name of withRoom) {
+            const btn = editButtonFor(name);
+            testController.reportCondition(`slot 1 "${name}" has an Edit button`, !!btn);
+            if (btn && !btn.disabled) enabled += 1;
+        }
+        testController.assertEqual(
+            'every maze region of slot 1 offers its room', String(withRoom.length),
+            String(enabled));
+        const noRoom = Object.keys(doc.regions['1']).filter((n) => !withRoom.includes(n));
+        for (const name of noRoom) {
+            testController.reportCondition(
+                `"${name}" has NO sidecar and therefore NO Edit button`, !editButtonFor(name));
+        }
+
+        /* ── slot 3: EVERY bounce region offers its room (H6b) ──────────── */
+        selectPlayer(select, '3');
+        selectTab(panel, 'regions');
+        const bounceRegions = sidecarRegions(doc, '3');
+        await testController.pollForCondition(
+            () => !!editButtonFor(bounceRegions[0]),
+            'slot 3 draws an Edit button on a bounce region', 8000, 50);
+        // ⛓ the premise, read off the document: this slot really does hold a
+        //   region whose level portal is AUTHORED rather than minted.
+        const authored = doc.preset_sidecars['3'].region_1_1
+            ?.playable_payload?.params?.bounceLevel?.portals ?? [];
+        testController.reportCondition(
+            '⛓ slot 3 "region_1_1" really does carry an AUTHORED `exit_up` portal',
+            authored.some((p) => p.id === 'exit_up'));
+        let bounceEnabled = 0;
+        for (const name of bounceRegions) {
+            const btn = editButtonFor(name);
+            testController.reportCondition(`slot 3 "${name}" has an Edit button`, !!btn);
+            if (btn && !btn.disabled) bounceEnabled += 1;
+        }
+        testController.assertEqual(
+            '⛓ every bounce region of slot 3 offers its room (H6b: was 3 of 5)',
+            String(bounceRegions.length), String(bounceEnabled));
+
+        /* ── the check-(1) refusal, on the document that still fails it ──── */
+        const atlasPanel = await openHub(testController, ATLAS_MAZE_PRESET_PATH);
+        if (atlasPanel) {
+            selectTab(atlasPanel, 'regions');
+            const refusedRegion = 'starting_house';
+            const before = await testController.pollForValue(
+                () => editButtonFor(refusedRegion), `the atlas room "${refusedRegion}"'s button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛓ it starts ENABLED — the cheap half of the check cannot see the payload',
+                !!before && !before.disabled);
+            if (before) before.click();
+            const named = await testController.pollForValue(
+                () => {
+                    const b = editButtonFor(refusedRegion);
+                    return b && b.disabled && b.title ? b : null;
+                },
+                'the pressed button is disabled and names its reason', 8000, 50);
+            testController.reportCondition(
+                '⛔ …and after the press it is DISABLED with the reason in its title',
+                !!named && named.title.includes('UNCHANGED would already rewrite'));
+            testController.reportCondition(
+                'the status line says the same thing',
+                !!atlasPanel.statusLabel
+                    && atlasPanel.statusLabel.textContent.includes('Edit refused'));
+        }
+
+        /* ── the jta control: no room editor at all ──────────────────────── */
+        const jtaPanel = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (jtaPanel) {
+            selectTab(jtaPanel, 'regions');
+            const jtaDoc = jtaPanel.rulesDoc;
+            const jtaRegion = sidecarRegions(jtaDoc, jtaPanel.playerId)[0];
+            const jtaBtn = await testController.pollForValue(
+                () => editButtonFor(jtaRegion), `the jta region "${jtaRegion}"'s Edit button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛔ a jta region\'s button is DISABLED without being pressed',
+                !!jtaBtn && jtaBtn.disabled);
+            testController.reportCondition(
+                '…and its title names the substrate and the missing declaration',
+                !!jtaBtn && jtaBtn.title.includes('No region editor for "jta"'));
+        }
+        /* ── the Seedling control: a DECLARED refusal, not an absence ────── */
+        const seedlingPanel = await openHub(testController, SEEDLING_PRESET_PATH);
+        if (seedlingPanel) {
+            selectTab(seedlingPanel, 'regions');
+            const sDoc = seedlingPanel.rulesDoc;
+            const sRegion = sidecarRegions(sDoc, seedlingPanel.playerId)[0];
+            testController.assertEqual(
+                'the control document\'s sidecars are Seedling\'s', 'flash_seedling',
+                String(sDoc.preset_sidecars[seedlingPanel.playerId][sRegion].substrate));
+            const sBtn = await testController.pollForValue(
+                () => editButtonFor(sRegion), `the Seedling region "${sRegion}"'s Edit button`,
+                8000, 50);
+            testController.reportCondition(
+                '⛔ a Seedling region\'s button is DISABLED without being pressed',
+                !!sBtn && sBtn.disabled);
+            // ⛓⛓ …and NOT for the jta reason: Seedling HAS a room editor. The
+            //    title is the substrate's own sentence about its PAYLOAD.
+            testController.reportCondition(
+                '⛓⛓ …and its title is the SUBSTRATE\'s own sentence, not "no region editor"',
+                !!sBtn && sBtn.title.includes('ATLAS REFERENCE')
+                    && !sBtn.title.includes('No region editor'));
+            testController.reportCondition(
+                'the substrate does declare a roomEditor — the refusal is about the DOCUMENT',
+                !!substrateRegistry.get('flash_seedling')?.roomEditor);
+        }
+        return testController.getOverallResult();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+        return testController.getOverallResult();
+    }
+}
+
+/**
+ * ⛓⛓⛓ **THE LAB DOOR, DRIVEN OVER THE REAL BUS, AND ITS SAVE IS ONE OP.**
+ *
+ * Pressing Edit ▸ on a maze region must hand the maze lab a ONE-ENTRY REGION
+ * LIBRARY (the document its SET arm sniffs for) and ask for ROOM 0 of it — and
+ * when that room closes, exactly ONE edit must land in the hub, which one Undo
+ * folds away, sidecar AND rules together.
+ *
+ * ⛔ NO IFRAME IS WAITED ON. The three phases of `labRoomEditor`'s contract are
+ * facts the PAGE publishes on `procgenLab:levelChanged`, so the row publishes
+ * them itself — the same thing `check-procgen-lab-hosting.mjs` does — and the
+ * host's own `pendingLoad` / `pendingNavigate` (or the published messages, when
+ * the frame did connect) are what it reads. That makes the row a test of the
+ * CONTRACT rather than of a page's load time.
+ *
+ * ⛓ The EDIT is "take the red door out of the room": the fixture's slot-1
+ * `region_1_0` has exactly one obstacle, `door_red` at (3,4), and exactly one
+ * location gated on it. Removing it must open that location and nothing else.
+ */
+export async function apworldEditOpensTheLabDoorAndItsSaveIsOneOp(testController) {
+    const REGION = 'region_1_0';
+    let host = null;
+    let restore = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        /**
+         * ⛓⛓⛓ **THE HOST IS A PANEL-SHAPED STUB, AND THAT IS THE POINT.**
+         * `openLabRoomEditor` resolves its host through `findLabPanel(page)`,
+         * and W4's own contract says a host is `{substrate, iframeId, load,
+         * navigate, raise?}` — `createPageLabTransport` is a second
+         * implementation of exactly that shape. So the row supplies one and
+         * reads the two messages the door sends DIRECTLY.
+         *
+         * ⛔ AND IT IS NOT A CONVENIENCE. The first version of this row mounted
+         * the real maze lab and drove the phases over the bus; the PAGE then
+         * connected inside the row's own 8 s poll, opened room 0 for real, and
+         * published its OWN close — so `onSave` fired with the page's UNEDITED
+         * record and the row measured a no-op. A live page and a synthetic one
+         * cannot both be the author of the same three-phase conversation.
+         */
+        /**
+         * ⛔ AND AN ALREADY-MOUNTED REAL PANEL IS STOOD ASIDE, not asserted
+         * absent. `findLabPanel` takes the FIRST registered instance for a
+         * page, and an earlier row in the roster may well have raised the lab
+         * (measured: it had — the first version of this row asserted the
+         * registry was empty and failed on it). The real ones are unregistered
+         * for the length of this row and put back in `finally`, so the row is
+         * order-independent either way.
+         */
+        const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+        for (const p of displaced) unregisterLabPanelInstance(p);
+        restore = () => { for (const p of displaced) registerLabPanelInstance(p); };
+
+        const sent = { load: null, navigate: null, raised: 0 };
+        host = {
+            substrate: 'maze',
+            iframeId: 'apworld-h4b-stub',
+            load: (payload) => { sent.load = payload; return true; },
+            navigate: (search) => { sent.navigate = search; return true; },
+            raise: () => { sent.raised += 1; return true; },
+            _note: () => {},
+        };
+        registerLabPanelInstance(host);
+        appEventBus.registerPublisher('procgenLab:levelChanged', 'tests');
+        testController.reportCondition(
+            'the stub IS the host the door will find for the maze page',
+            findLabPanel('maze') === host);
+
+        const doc = panel.rulesDoc;
+        const sidecarBefore = JSON.stringify(doc.preset_sidecars['1'][REGION].playable_payload);
+
+        selectTab(panel, 'regions');
+        const btn = await testController.pollForValue(
+            () => editButtonFor(REGION), `the "${REGION}" Edit button`, 8000, 50);
+        testController.reportCondition('a maze region offers Edit ▸', !!btn && !btn.disabled);
+        if (!btn) return testController.getOverallResult();
+        btn.click();
+
+        const library = await testController.pollForValue(
+            () => sent.load ?? null, 'the maze lab was handed a document', 8000, 50);
+        testController.reportCondition('the lab door delivered a load', !!library);
+        if (!library) return testController.getOverallResult();
+        testController.reportCondition(
+            '⛓ the document is a REGION LIBRARY — what the SET arm sniffs for',
+            typeof library.library_id === 'string' && Array.isArray(library.entries));
+        testController.assertEqual(
+            'it holds exactly ONE entry — this region\'s room', '1',
+            String(library.entries.length));
+        testController.assertEqual(
+            'and the entry is this region, on this substrate', `${REGION}|maze`,
+            `${library.entries[0].entry_id}|${library.entries[0].substrate}`);
+        testController.reportCondition(
+            '⛓ the door raised its host — a hidden Golden Layout tab has a zero-sized canvas',
+            sent.raised > 0);
+
+        // ── phase 1: the page says it holds the document with NO room open.
+        const envelope = (room, record) => ({
+            substrate: 'maze', iframeId: host.iframeId,
+            payload: makeSetRecordEnvelope({ substrate: 'maze', room, record }),
+        });
+        const held = { library, overlay: {} };
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(null, held), 'tests');
+        const search = await testController.pollForValue(
+            () => sent.navigate ?? null, 'the door asked for a room', 8000, 50);
+        testController.assertEqual(
+            '⛓ …and the room it asked for is ROOM 0 of the SET arm', '?source=set&room=0',
+            String(search));
+
+        // ── phase 2: the room is open. ── phase 3: it closes, edited.
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(0, held), 'tests');
+        const edited = JSON.parse(JSON.stringify(held));
+        testController.assertEqual(
+            'the room carried the one obstacle the edit removes', '1',
+            String(edited.library.entries[0].payload.obstacles.length));
+        edited.library.entries[0].payload.obstacles = [];
+        testController.eventBus.publishAs(
+            'procgenLab:levelChanged', envelope(null, edited), 'tests');
+
+        // ── ONE op, and it moved both halves.
+        const landed = await testController.pollForValue(
+            () => (panel.session.ops().length === 1 ? panel.session.ops() : null),
+            'exactly ONE edit landed in the hub', 8000, 50);
+        testController.reportCondition('the close returned ONE op', !!landed);
+        const after = panel.rulesDoc;
+        testController.reportCondition(
+            '⛓ the SIDECAR payload moved',
+            JSON.stringify(after.preset_sidecars['1'][REGION].playable_payload) !== sidecarBefore);
+        testController.assertEqual(
+            'the obstacle is gone from the document', '0',
+            String(after.preset_sidecars['1'][REGION].playable_payload.obstacles.length));
+        const gated = after.regions['1'][REGION].locations
+            .filter((l) => JSON.stringify(l.access_rule) !== '{"rule":"True_"}');
+        testController.assertEqual(
+            '⛓ …and the rule the door PROVED it authored moved with it', '0',
+            String(gated.length));
+        // ⛔ the AP identity the library capture strips is back, or the map
+        //    would lose its connection lines and the panel its location names.
+        const payloadAfter = after.preset_sidecars['1'][REGION].playable_payload;
+        testController.reportCondition(
+            '⛔ the exit targets survived the library round trip',
+            payloadAfter.exits.every((e) => !!e.targetRegion));
+        testController.reportCondition(
+            '⛔ …and so did the baked AP location names',
+            payloadAfter.items.every((i) => typeof i.locationName === 'string'));
+        const shown = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${REGION}"]`),
+            'the Regions tab redrew the edited region', 8000, 50);
+        testController.reportCondition('the Regions tab redrew the region', !!shown);
+
+        // ── ONE undo takes both halves back.
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo button is there', !!undo);
+        if (undo) undo.click();
+        const restored = await testController.pollForValue(
+            () => (panel.session.ops().length === 0 ? panel.rulesDoc : null),
+            'one undo emptied the edit list', 8000, 50);
+        testController.assertEqual(
+            '⛓⛓ ONE undo restored the SIDECAR', sidecarBefore,
+            JSON.stringify(restored?.preset_sidecars?.['1']?.[REGION]?.playable_payload));
+        testController.assertEqual(
+            '⛓⛓ …and the RULES with it', '1',
+            String((restored?.regions?.['1']?.[REGION]?.locations ?? [])
+                .filter((l) => JSON.stringify(l.access_rule) !== '{"rule":"True_"}').length));
+        return testController.getOverallResult();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+        return testController.getOverallResult();
+    } finally {
+        if (host) unregisterLabPanelInstance(host);
+        if (restore) restore();
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ H4c — THE REVERSE LINK FROM THE BOUNCE EDITOR
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE BOUNCE EDITOR SAYS A NAME AND THE HUB ANSWERS ON THE DOCUMENT IT
+ * HAS.** Four cases, and they are four different answers rather than one claim
+ * driven four times:
+ *
+ *  1. a region THIS SLOT holds → selected, the Regions tab forward, the block
+ *     marked;
+ *  2. a region the document does NOT hold → the status line SAYS SO. ⛔ This is
+ *     the case the door exists for: the hub keeps its own document, so a bounce
+ *     panel opened from the pipeline on a world the hub never loaded must not
+ *     silently switch to a tab with nothing highlighted;
+ *  3. a `player` the document HAS → the slot moves first, then the selection —
+ *     the fixture's slots 3/4 are bounce, so this is the ordinary shape of the
+ *     real door;
+ *  4. a `player` the document does NOT have → named, and the slot does not move.
+ *
+ * ⛔ Case 1 goes through `openRegionInApworldEditor` — the bounce module's OWN
+ * publisher — so the row measures the door and not a hand-written publish. The
+ * slot cases carry a field that function does not take, so they publish
+ * directly and REGISTER THEMSELVES first: the bus drops an unregistered
+ * publisher with only a warn line (H4b's own lesson, one event over).
+ */
+export async function apworldBounceReverseLinkSelectsTheRegion(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        /**
+         * ⛑ **THE SHOWN SLOT IS READ, NEVER ASSUMED TO BE 1.** The first shape
+         * of this row asserted the hub opens on slot 1 and FAILED with 4: the
+         * panel is a SINGLETON that outlives every row in this file, and an
+         * earlier row's deliberate pick survives on `_chosenPlayer` as long as
+         * the next document carries that slot — which the four-player fixture
+         * does. ⇒ every claim below is relative to the slot the hub is actually
+         * showing, and the slot-switch case picks a DIFFERENT one off the
+         * document rather than naming a number.
+         */
+        const doc = panel.rulesDoc;
+        const shown = String(panel.playerId);
+        const sidecars = doc?.preset_sidecars ?? {};
+        const here = Object.keys(sidecars[shown] ?? {});
+        const otherSlot = Object.keys(sidecars)
+            .find((k) => k !== shown && Object.keys(sidecars[k] ?? {}).length > 0) ?? null;
+        const there = otherSlot ? Object.keys(sidecars[otherSlot]) : [];
+        testController.reportCondition(
+            'the fixture carries sidecars in the shown slot AND in another one',
+            here.length > 0 && there.length > 0);
+        if (here.length === 0 || there.length === 0) {
+            return testController.getOverallResult();
+        }
+        testController.log(`the hub is showing slot ${shown}; the other slot is ${otherSlot}`);
+
+        /* ── 1. a region of the slot the hub is showing ─────────────────── */
+        selectTab(panel, 'document');
+        const sent = openRegionInApworldEditor(here[0]);
+        testController.reportCondition(
+            'the bounce editor\'s door published (the module is initialized)', sent === true);
+        const marked = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${here[0]}"]`
+                + '[data-selected="true"]'),
+            'the named region\'s block, marked selected', 8000, 50);
+        testController.reportCondition('the hub selected the region it was named', !!marked);
+        testController.assertEqual('and switched to the Regions tab',
+            'regions', panel.activeTab);
+        testController.assertEqual('the panel\'s own selection moved',
+            here[0], panel._selectedRegion);
+        testController.assertEqual('…without moving the slot (the link named none)',
+            shown, String(panel.playerId));
+
+        /* ── 2. a region no slot of this document holds ─────────────────── */
+        const ABSENT = '__no_such_region__';
+        openRegionInApworldEditor(ABSENT);
+        const said = await testController.pollForValue(
+            () => (panel._opMessage && panel._opMessage.includes(ABSENT)
+                ? panel._opMessage : null),
+            'the status line names the region it could not find', 8000, 50);
+        testController.reportCondition(
+            'a region this document does not hold is SAID SO, not silently ignored',
+            !!said && /is not in/.test(said));
+
+        /* ── 3 + 4. the optional slot ───────────────────────────────────── */
+        appEventBus.registerPublisher(APWORLD_EDITOR_SELECT_REGION, 'tests');
+        appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
+            { region: there[0], player: otherSlot }, 'tests');
+        const moved = await testController.pollForValue(
+            () => (String(panel.playerId) === otherSlot ? panel : null),
+            'the hub moved to the slot the link named', 8000, 50);
+        testController.reportCondition('a named slot the document HAS is switched to', !!moved);
+        testController.assertEqual('…and the region of THAT slot is selected',
+            there[0], panel._selectedRegion);
+
+        const NO_SLOT = '__no_such_slot__';
+        appEventBus.publish(APWORLD_EDITOR_SELECT_REGION,
+            { region: there[0], player: NO_SLOT }, 'tests');
+        const refused = await testController.pollForValue(
+            () => (panel._opMessage && panel._opMessage.includes(NO_SLOT)
+                ? panel._opMessage : null),
+            'the status line names a slot this document does not carry', 8000, 50);
+        testController.reportCondition(
+            'a named slot the document does NOT have is refused BY NAME', !!refused);
+        testController.assertEqual('…and the hub stayed on the slot it was showing',
+            otherSlot, String(panel.playerId));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('bounce reverse-link test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-bounce-reverse-link-selects-the-region',
+    name: 'APWorld hub: the bounce editor\'s "Open in APWorld Editor" selects that region',
+    description: 'Drives the bounce region editor\'s own publisher on the four-player '
+               + 'fixture: a region of the slot the hub is showing is selected and its block '
+               + 'marked; a region no slot holds is SAID SO in the status line rather than '
+               + 'silently ignored; a link naming a slot the document has moves the hub to '
+               + 'it first and then selects; and a slot it does not have is refused by name '
+               + 'with the hub staying where it was.',
+    testFunction: apworldBounceReverseLinkSelectsTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-button-is-offered-per-region-and-refused-by-name',
+    name: 'APWorld hub: Edit ▸ is offered per region, and every refusal is named',
+    description: 'On the four-player fixture: every sidecar-bearing maze region of slot 1 '
+               + 'offers its room and the sidecar-less regions draw NO button at all; a '
+               + 'bounce region whose payload does not round-trip starts enabled (the cheap '
+               + 'half of the check cannot see a payload), and after the press is DISABLED '
+               + 'with its own reason in the title while a sibling in the same slot stays '
+               + 'open; and a jta region — a substrate with no roomEditor — is disabled '
+               + 'without being pressed at all; and a Seedling region — a substrate that '
+               + 'HAS a room editor and declares `regionRoundTrip: {refused}` — is disabled '
+               + 'with the substrate\'s OWN sentence about its payload, which is the one case '
+               + 'the refusal comes from a declaration rather than from an absence.',
+    testFunction: apworldEditButtonIsOfferedPerRegionAndRefusedByName,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-opens-the-lab-door-and-its-save-is-one-op',
+    name: 'APWorld hub: Edit ▸ hands the maze lab room 0 of a one-entry library, and its save is ONE op',
+    description: 'Registers a PANEL-SHAPED host (W4\'s own contract shape — a live lab page '
+               + 'and a synthetic one cannot both author the same three-phase conversation), '
+               + 'presses Edit ▸ on a maze region of the four-player fixture, and asserts the '
+               + 'document it was handed is a ONE-ENTRY region library for that region, then '
+               + 'drives the three phases over the real bus — held, open, closed-with-an-edit. '
+               + 'The close '
+               + 'must return exactly ONE hub op that moves the sidecar payload AND the one '
+               + 'access rule the door proved it authored, keep the exit targets and the '
+               + 'baked AP location names the library capture strips, and be folded away by '
+               + 'ONE Undo.',
+    testFunction: apworldEditOpensTheLabDoorAndItsSaveIsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓⛓ ⚖ region-editor-launch Q1 — **EDIT ▸ WITH NO MAZE LAB ON SCREEN OPENS
+ * ONE.** Before the shared opener the hub's press said *"Open Procgen Lab — maze
+ * first"*. The row closes every real maze lab tab (Golden Layout's own
+ * `remove()`, what the × does), presses Edit ▸ on the fixture's maze region, and
+ * asserts a maze lab was made, the room session parked for THAT region and no
+ * refusal printed. ⛓ The made tab is left on screen — the layout is put back.
+ */
+export async function apworldEditOpensAClosedMazeLab(testController) {
+    const REGION = 'region_1_0';
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+        for (const p of labPanelInstances().filter((x) => x.substrate === 'maze')) {
+            items.find((it) => it.isComponent && it.container === p.container)?.remove();
+        }
+        const gone = await testController.pollForValue(
+            () => (findLabPanel('maze') ? null : true), 'every maze lab tab closed', 8000, 50);
+        testController.reportCondition('⛓ premise: no maze lab is on screen', !!gone);
+        if (!gone) return testController.getOverallResult();
+
+        selectTab(panel, 'regions');
+        const btn = await testController.pollForValue(
+            () => editButtonFor(REGION), `the "${REGION}" Edit button`, 8000, 50);
+        testController.reportCondition('a maze region offers Edit ▸', !!btn && !btn.disabled);
+        if (!btn) return testController.getOverallResult();
+        btn.click();
+
+        const made = await testController.pollForValue(
+            () => findLabPanel('maze'), 'Edit ▸ opened a maze lab', 8000, 50);
+        testController.reportCondition('⛓⛓ Edit ▸ OPENED a maze lab', !!made);
+        const parked = await testController.pollForValue(
+            () => (panel.roomEditorSession?.region === REGION ? panel.roomEditorSession : null),
+            'the room session is parked for the region', 8000, 50);
+        testController.reportCondition('…and the room is open in it for THIS region', !!parked);
+        testController.reportCondition('⛔ no refusal was printed',
+            !String(panel._opMessage ?? '').startsWith('Edit refused'));
+        panel._closeRoomEditor();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-edit-opens-a-closed-maze-lab',
+    name: 'APWorld Editor: Edit ▸ on a maze region with no maze lab on screen opens one',
+    description: '⚖ region-editor-launch Q1. Closes every Procgen Lab — maze tab, presses Edit ▸ on the '
+               + 'four-player fixture\'s maze region, and asserts a maze lab was made, the room session is '
+               + 'parked for that region and no refusal was printed. The made tab stays (the layout is put back).',
+    testFunction: apworldEditOpensAClosedMazeLab,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * H5 — THE SIDECAR-BLOCK LINKS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The Document tab's door for one key, through the real button. */
+/**
+ * ⛓⛓ **P1b′ — WAIT FOR THIS ROW'S OWN HAND-OFF** (trap 1478). The debugger's
+ * status line keeps the previous row's `[working copy …]` prefix until the new
+ * adoption lands (the door's `open()` awaits an import before it publishes, and
+ * the adoption awaits `documentStateManager`), so a wait on the prefix alone
+ * matched the ROW BEFORE's adoption: measured, the L4 Send row then pressed Load
+ * on rows 24/25's JtA document and its own omsi adoption landed after, dropping
+ * the plan (1 red in 136, P1a and again at P1b′'s start). The panel exposes
+ * itself as `__costDebugger`; the working copy's `jsonData` is the very object
+ * the hub handed over. → the status element, or null.
+ */
+async function debuggerAdoptedHandOff(testController, handed) {
+    return testController.pollForValue(
+        () => {
+            const root = [...document.querySelectorAll('.cost-debugger-panel')]
+                .find((el) => el.__costDebugger?._workingCopy?.jsonData === handed);
+            const el = root?.querySelector('.cd-status');
+            // ⛔ `[working copy` — the BRACKETED prefix, which only the finished
+            //   adoption prints; the progress line names the door but not the counts.
+            return el && el.textContent.includes('[working copy') ? el : null;
+        },
+        'the cost debugger, planning THIS row\'s working copy',
+        8000,
+        50,
+    );
+}
+
+async function pressDocumentKeyEditor(testController, panel, key) {
+    selectTab(panel, 'document');
+    const btn = await testController.pollForValue(
+        () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"] .apworld-doc-editor-open`),
+        `the ${key} row's editor button`,
+        8000,
+        50,
+    );
+    testController.reportCondition(`the ${key} row offers its dedicated editor`, !!btn);
+    if (btn) {
+        testController.assertEqual(
+            `and the button carries the REGISTRY's label, not a second copy`,
+            DOCUMENT_KEY_EDITORS[key].label, btn.textContent);
+        btn.click();
+    }
+    return btn;
+}
+
+/**
+ * ⛓⛓⛓ **A DOOR TO A MODULE THIS APP DOES NOT LOAD SAYS SO.**
+ *
+ * ⛔ **MEASURED, and it is why this row is not the end-to-end one the brief
+ * asked for**: `frontend/module-configs/modules.json` has `regionMarkingTool`
+ * `"enabled": false`, so in the default mode — the one the in-app runner drives
+ * — the tool's module never registers its panel, `openRegionMarkingTool`
+ * publishes `ui:activatePanel` from an unregistered publisher, and
+ * `panelManager` would warn and return anyway. The first shape of this row
+ * waited 8 s for a panel that cannot exist and reported STARVED.
+ *
+ * A control that does nothing and says nothing is the defect; the button is
+ * therefore SHOWN, DISABLED, with the reason in its `title` (H4c's claim-12
+ * shape). The end-to-end save is proven where the tool actually runs:
+ * `scripts/procgen/check-region-marking-tool.mjs`, under `?mode=flash`.
+ */
+export async function apworldRegionAtlasDoorRefusesAModuleThisAppLacks(testController) {
+    try {
+        const panel = await openHub(testController, REGION_ATLAS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // The premise, read off the document rather than assumed: a REFERENCE.
+        testController.assertEqual(
+            'the document carries region_atlas as a three-field REFERENCE',
+            'atlas_id,game,map_document',
+            Object.keys(panel.rulesDoc.region_atlas?.[panel.playerId] ?? {}).sort().join(','));
+
+        selectTab(panel, 'document');
+        const btn = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="region_atlas"] `
+                + '.apworld-doc-editor-open'),
+            'the region_atlas row\'s editor button',
+            8000,
+            50,
+        );
+        testController.reportCondition('the region_atlas row offers its door', !!btn);
+        if (!btn) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'the button carries the REGISTRY\'s label, not a second copy',
+            DOCUMENT_KEY_EDITORS.region_atlas.label, btn.textContent);
+
+        /**
+         * ⛓ The premise again, this time about the APP rather than the
+         * document: the registry is the one place that knows whether a module
+         * loaded, and a module that never loaded never registered its panel.
+         */
+        const { centralRegistry } = await import('../../../app/core/centralRegistry.js');
+        const loaded = centralRegistry.getAllPanelComponents().has('regionMarkingTool');
+        testController.reportCondition(
+            'the marking tool is NOT loaded in this mode (modules.json disables it)', !loaded);
+
+        testController.assertEqual(
+            'so the door is DISABLED rather than doing nothing', 'true', String(btn.disabled));
+        testController.assertEqual(
+            'and its title names the panel and the file to fix',
+            'true',
+            String(btn.title.includes('regionMarkingTool') && btn.title.includes('modules.json')));
+
+        // ⛔ And the returns line is still printed: a person must be able to see
+        //    what the door WOULD do, not only that it is shut.
+        const returns = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="region_atlas"] `
+            + '.apworld-doc-editor-returns');
+        testController.assertEqual(
+            'the row still says a save would come back as one op',
+            'true', String(!!returns && returns.textContent.startsWith('returns: op')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region_atlas door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE `procgen_metadata` DOOR: the pipeline says what it can do.**
+ *
+ * ⛔ The expected sentence is not typed here — the row reads the ENGINE's own
+ * refusal for this document (`sphereRebuildRefusal`) and asserts the panel
+ * printed it. A typed string would pass while the panel invented a summary.
+ */
+export async function apworldProcgenMetadataDoorNamesWhatThePipelineCanDo(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const { sphereRebuildRefusal } = await import(
+            '../../procgenPipeline/procgenPipelineEngine.js');
+        const refusal = sphereRebuildRefusal(panel.rulesDoc, { playerId: panel.playerId });
+        testController.reportCondition(
+            'this document is NOT sphere-appendable, so the answer is top-down', !!refusal);
+
+        await pressDocumentKeyEditor(testController, panel, 'procgen_metadata');
+
+        const msg = await testController.pollForValue(
+            () => {
+                const el = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message');
+                return el && el.textContent.startsWith('Adopted ') ? el : null;
+            },
+            'the pipeline panel\'s answer to the hand-off',
+            8000,
+            50,
+        );
+        testController.reportCondition('the pipeline answered the hand-off', !!msg);
+        if (!msg) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it names the door it came from',
+            'true', String(msg.textContent.includes('hand-off (the APWorld editor)')));
+        testController.assertEqual(
+            'it says TOP-DOWN FROM THIS',
+            'true', String(msg.textContent.includes('TOP-DOWN FROM THIS')));
+        testController.assertEqual(
+            'and it QUOTES the engine\'s own refusal rather than summarising it',
+            'true', String(msg.textContent.includes(refusal)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('procgen_metadata door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE `loop_costs` DOOR: the cost debugger plans the WORKING COPY.**
+ * Plan §4 priced this link as "Apply, then open"; the panel's status line is
+ * where that is now false, and it says which world the numbers describe.
+ */
+export async function apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        // The per-region table, and what it says about the corpus.
+        const summary = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+                + '.apworld-loop-costs-summary'),
+            'the loop_costs summary line',
+            8000,
+            50,
+        );
+        testController.reportCondition('the loop_costs row draws a cost summary', !!summary);
+        const regionCount = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        testController.assertEqual(
+            'and it counts the priced regions against the world\'s own, derived',
+            'true',
+            String(!!summary && summary.textContent.startsWith(
+                `${Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length} of ${regionCount} region`)));
+
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+        const status = await debuggerAdoptedHandOff(testController, handed);
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it names the door and the DOCUMENT\'s own region count',
+            'true',
+            String(status.textContent.includes('working copy · the APWorld editor')
+                && status.textContent.includes(`${regionCount} regions`)));
+
+        const backBtn = document.querySelector('.cost-debugger-panel .cd-btn-applied');
+        testController.reportCondition(
+            'and there is a named way back to applied state',
+            !!backBtn && backBtn.style.display !== 'none');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **L3 — THE PANEL IS THE ALGORITHM'S INSPECTOR, AND IT MUST NOT PRINT A
+ * PRICE NOTHING CHARGES.**
+ *
+ * ⚖ (i) the walk prices EVERY region as if it were coarse, because that is how
+ * the numbers are derived; `writeCostsByClass` then drops the ones no block
+ * should carry. `jta_schedule_test` is the case that separates the two: all
+ * three of its regions are NATIVE (jta runs its own mana economy), so the block
+ * holds **1 of 4** regions and **0 of 23** locations — while the plan behind it
+ * says 50 / 35 / 26 and 100 / 70 / 52.
+ *
+ * ⛔ **MUTANT-FIRST, and the mutant is the exact regression this guards.**
+ * Reverting `_pricingOf` to `{priced: true}` for NATIVE — i.e. a panel that
+ * prints `cost=100` for a jta location again — reds this row on the label
+ * conditions and nothing else in the file.
+ *
+ * ⛓ It goes through the HUB's door on purpose: that is the path a person takes
+ * (H5), and it proves the labels survive a WORKING COPY the app never applied —
+ * where the region → substrate map comes from `documentStateManager` rather
+ * than from `procgenPlayer`.
+ */
+export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+        const status = await debuggerAdoptedHandOff(testController, handed);
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        // ⛔ `reportCondition` returns undefined — the guard reads the VALUE.
+        if (!status) return testController.getOverallResult();
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => document.querySelectorAll('.cost-debugger-panel .cd-step-row').length === 0
+                || !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+
+        const rows = await testController.pollForValue(
+            () => {
+                const r = [...document.querySelectorAll('.cost-debugger-panel .cd-step-row')];
+                return r.length > 1 ? r : null;
+            },
+            'a planned step list',
+            8000,
+            50,
+        );
+        testController.reportCondition('the panel planned the working copy', !!rows);
+        if (!rows) return testController.getOverallResult();
+
+        /**
+         * ⛔ THE CLAIM, and it is a claim about EVERY check step, not about one:
+         * a single row that happened to be labelled would pass a panel that
+         * labels by position. Every CHECK step of this document is in a jta
+         * region, so every one of them must carry the label and NONE may carry
+         * a `cost=` figure.
+         */
+        const checkRows = rows.filter((r) => r.querySelector('.cd-phase-check'));
+        const summaries = checkRows.map((r) => r.querySelector('.cd-step-summary')?.textContent ?? '');
+        testController.assertEqual(
+            'every jta location step says the block prices it by the substrate\'s own economy',
+            'true',
+            String(summaries.length > 0 && summaries.every((t) => t.trim() === 'own economy')));
+        testController.assertEqual(
+            'and none of them prints a cost figure the block does not carry',
+            'true',
+            String(summaries.every((t) => !t.includes('cost='))));
+
+        /**
+         * ⛓ The BLOCK's count against the world's own — `1 / 4` regions and
+         * `0 / 23` locations here. A bare "1" reads as "one region planned",
+         * which is the opposite of what happened.
+         */
+        const regionCount = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        const regionsEl = document.querySelector('.cost-debugger-panel .cd-summary-regions');
+        testController.assertEqual(
+            'the summary counts the regions the BLOCK prices against the world\'s own',
+            `1 / ${regionCount}`,
+            regionsEl?.textContent ?? '(missing)');
+
+        // ⛓ ONE engine, named, and which world it was pointed at.
+        const engineEl = document.querySelector('.cost-debugger-panel .cd-summary-engine');
+        testController.assertEqual(
+            'the summary line names the one engine and the world it planned',
+            'true',
+            String(!!engineEl && engineEl.textContent.includes('loopCostPlanner')
+                && engineEl.textContent.includes('working copy')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs panel labelling test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **L4 — THE WRITE-BACK: an EMPTY block becomes a PRICED one, as ONE op,
+ * and one Undo takes it back out.**
+ *
+ * ⚖ (user, 2026-09-06) *"the debugger's plan comes back as ONE op"*. This is the
+ * whole gesture, end to end, through the controls a person presses: the hub's
+ * `loop_costs` door → the debugger's Load and Plan All → its "Send costs to
+ * APWorld Editor" → the hub's own Undo.
+ *
+ * ⛔ **THE DOCUMENT IS `omsi_substrate_test` AND THAT IS THE MEASUREMENT.** Its
+ * two MAZE regions are coarse-classed, so the block must gain their real prices;
+ * its omsi region is NATIVE, so the block must NOT gain an entry for it. A
+ * document whose regions were all native would make "it became priced" true of a
+ * single zero. ⚠ Since R-b its committed block is PLANNED rather than empty, so
+ * the row empties it first through the loop-mode switch — see the note at the
+ * premise, which is where that stopped being the fixture's business.
+ *
+ * ⛔ **AND THE VETO IS DRIVEN AT THE SEAM.** L4 measured that the schema veto
+ * was NOT on the editor-op path at all — it lived in `_applySetKey`, the raw
+ * JSON block editor's method — so `region_atlas`'s save had been bypassing it
+ * since H5. The last claim hands `_acceptEditorOp` a type-broken block and
+ * asserts it is REFUSED with the schema's own path, and that the document did
+ * not move. ⚠ It is called directly on purpose: `_acceptEditorOp` IS the
+ * subject there, the panel has no vitest file, and no planner produces a
+ * type-broken block for the button to send.
+ */
+export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        // ⛓ ⚖ (f) — the row says the switch, and it says it whether or not the
+        //   block prices anything (this one prices nothing yet).
+        const switchLine = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+                + '.apworld-loop-costs-switch'),
+            'the loop_costs row\'s loop-mode sentence',
+            8000,
+            50,
+        );
+        testController.reportCondition(
+            'the loop_costs row says the block\'s presence enables loop mode', !!switchLine);
+        testController.assertEqual(
+            'and it says it as the SWITCH it is, not as a cost fact',
+            'true',
+            String(!!switchLine && switchLine.textContent.includes('enables loop mode')));
+
+        /**
+         * ⛓⛓ **THE ROW MAKES ITS OWN PREMISE, THROUGH THE PRODUCT'S OWN SWITCH.**
+         * Until R-b this row BORROWED its premise from the fixture: the committed
+         * block was one of the empty ones, so "Send turned an empty block into a
+         * priced one" was, in part, a fact about what happened to be on disk.
+         * R-b's re-record gives every omsi preset a PLANNED block — which does not
+         * make this row's claim false, it removes its SUBJECT, because Send would
+         * now write back what is already there.
+         *
+         * ⛔ **AND THERE IS NO SUBSTITUTE DOCUMENT.** Re-derived over every tracked
+         * preset carrying `loop_costs`: twelve, of which five are the re-recorded
+         * omsi ones and seven are jta, whose regions are all NATIVE plus Menu —
+         * exactly the "single zero" the note above refuses.
+         *
+         * So the row BUILDS the empty block, with R-a's loop-mode switch: Disable,
+         * then Enable. That is a person's own route to the same state, it exercises
+         * two shipped controls on the way, and it puts the claim back on SEND
+         * rather than on the fixture.
+         */
+        const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        const switchBtn = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] `
+            + '.apworld-loop-costs-switch-btn');
+        testController.assertEqual(
+            'the committed block prices SOME of this world\'s regions to begin with',
+            'true',
+            String(Object.keys(panel.rulesDoc.loop_costs?.[panel.playerId]?.regions ?? {}).length > 0));
+        testController.assertEqual(
+            'so the switch offers DISABLE', 'off', String(switchBtn()?.dataset.switchTo));
+        switchBtn().click();
+        testController.assertEqual(
+            'Disable removed the block', 'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+        testController.assertEqual(
+            'and the switch has flipped to ENABLE', 'on', String(switchBtn()?.dataset.switchTo));
+        switchBtn().click();
+        testController.assertEqual(
+            'Enable rebuilt an EMPTY block — the premise, MADE rather than borrowed',
+            '0', String(Object.keys(panel.rulesDoc.loop_costs?.[panel.playerId]?.regions ?? {}).length));
+
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+        const status = await debuggerAdoptedHandOff(testController, handed);
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        /**
+         * ⛓⛓ **SHOWN AND DISABLED, WITH THE REASON** — before anything is
+         * planned. A hidden button here and a hidden button on applied state
+         * would be the same thing on screen and two different facts.
+         */
+        const send = document.querySelector('.cost-debugger-panel .cd-btn-send');
+        testController.reportCondition('the Send control is offered on a working copy',
+            !!send && send.style.display !== 'none');
+        if (!send) return testController.getOverallResult();
+        testController.assertEqual(
+            'and it is DISABLED before a plan exists', 'true', String(send.disabled));
+        testController.assertEqual(
+            'with the reason in its title rather than nothing at all',
+            'true', String((send.title || '').length > 20));
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        /**
+         * ⛔ **LOADED BUT NOT PLANNED IS ITS OWN STATE**, and the assertion
+         * above cannot see it: before Load the planner refuses with "No sphere
+         * log loaded", so a Send rule that ignored COMPLETENESS entirely would
+         * still be disabled there. Measured as a mutant — dropping the
+         * `isComplete()` clause left the earlier claim green and reds only here.
+         */
+        testController.assertEqual(
+            'Send is STILL refused with a sphere log loaded but nothing planned',
+            'true',
+            String(!!document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled));
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+        await testController.pollForCondition(
+            () => !document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled,
+            'Send becomes pressable once the plan is complete', 8000, 50);
+
+        const opsBefore = panel.session.ops().length;
+        // ⛓ S1 — the state the focus claims below are a CHANGE from, read
+        //   immediately before the gesture rather than assumed.
+        const tabAtSend = panel.activeTab;
+        const hubActiveAtSend = panelManager.isPanelActive(PANEL_ID);
+        testController.reportCondition('Send pressed', press('.cd-btn-send'));
+
+        /**
+         * ⛓⛓⛓ **THE CLAIM: the HUB's document, not the panel's own readout.**
+         * A panel that reported success while writing nowhere is exactly the
+         * failure this row exists to catch.
+         */
+        const after = panel.rulesDoc.loop_costs?.[panel.playerId] ?? {};
+        const pricedNames = Object.keys(after.regions ?? {});
+        testController.assertEqual(
+            'the working copy\'s block is priced now, and NOT for every region '
+            + '(the omsi region runs its own economy)',
+            'true',
+            String(pricedNames.length > 1 && pricedNames.length < worldRegions));
+        // ⛓ Real prices, not a row of zeroes: at least one entry carries a
+        //   non-zero moveCost. (The start region's 0 is a rule, not a price.)
+        testController.assertEqual(
+            'and at least one of them carries a non-zero cost',
+            'true',
+            String(Object.values(after.regions ?? {})
+                .some((e) => Number(e?.moveCost) > 0)));
+        testController.assertEqual(
+            'it was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        // ⛓ Optional-chained on purpose: a mutant that sends NOTHING leaves the
+        //   op list empty, and this row must REPORT that rather than throw a
+        //   TypeError into the catch and lose every claim after it.
+        const lastOp = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual(
+            'and that op is a PLAYER-scope set-key on loop_costs (P1a: the block is per slot)',
+            'set-key|loop_costs|player',
+            [lastOp.op, lastOp.key, lastOp.scope].join('|'));
+        // ⛓ Provenance names the DOOR, never a path this unsaved document lacks.
+        testController.assertEqual(
+            'the block records where it came from, by door name',
+            'the APWorld editor', String(after.generatedFrom));
+
+        testController.assertEqual(
+            'the debugger says what happened, including the loop-mode consequence',
+            'true',
+            String(status.textContent.includes('Sent to the document')
+                && status.textContent.includes('loop mode')));
+
+        /**
+         * ⛓⛓⛓ **S1 — AND THE HUB COMES TO THE FRONT, ON THE ROW IT JUST WROTE**
+         * (⚖ user, 2026-09-08: *"this automatically activated the APWorld Editor
+         * panel and scrolled to the relevant section, with a message that the
+         * data was successfully loaded"*).
+         *
+         * ⛔ Every claim is an EFFECT, not a call: `panelManager.isPanelActive`
+         * is the panel actually in front (the door raised the DEBUGGER a moment
+         * ago, so the premise below is a real change of state), the destination
+         * tab is read off the key's OWN registry row rather than named here, and
+         * "in view" is the row's rectangle against the scroll container's.
+         *
+         * ⚠ The two are not independent: a panel that is not in front has no
+         * layout, so its rows measure zero and the viewport claim reds with the
+         * active-panel one. That is the hidden-parent measurement, named rather
+         * than pretended away.
+         */
+        const homeTab = panel._documentRows().find((r) => r.key === 'loop_costs')?.ownedByTab;
+        testController.assertEqual(
+            'loop_costs has a home tab, and it is NOT the tab Send was pressed from',
+            'true', String(!!homeTab && homeTab !== tabAtSend));
+        testController.assertEqual(
+            'the hub was NOT the panel in front when Send was pressed — the premise',
+            'false', String(hubActiveAtSend));
+        testController.assertEqual(
+            'after Send the APWorld editor IS the panel in front',
+            'true', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual(
+            'and the hub selected the key\'s own home tab',
+            String(homeTab), String(panel.activeTab));
+        const focused = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`);
+        testController.reportCondition('that tab draws the row Send wrote', !!focused);
+        if (focused) {
+            const rowRect = focused.getBoundingClientRect();
+            const viewRect = panel.scrollContainer.getBoundingClientRect();
+            testController.assertEqual(
+                'the row is in the viewport of the panel\'s scroll container',
+                'true',
+                String(rowRect.bottom > viewRect.top && rowRect.top < viewRect.bottom
+                    && viewRect.height > 0));
+            const beside = focused.querySelector('.apworld-doc-op-message');
+            testController.reportCondition(
+                'and the success message is printed BESIDE that row', !!beside);
+            testController.assertEqual(
+                'saying the same thing the chrome says, not a second sentence',
+                String(panel._opMessage), String(beside?.textContent));
+        }
+
+        /**
+         * ⛓⛓ **ONE UNDO TAKES THE WHOLE PLAN BACK OUT** — proven, not assumed:
+         * `_applyOp` records it in the session's op list like any other edit, so
+         * the fold over the shorter list must reproduce the EMPTY block.
+         */
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the hub\'s Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'undo restored the EMPTY block rather than deleting the key',
+            'true',
+            String(!!panel.rulesDoc.loop_costs?.[panel.playerId]
+                && Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length === 0));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+
+        /**
+         * ⛔⛔ **THE VETO, MADE ASKABLE.** `locations` values are NUMBERS in the
+         * schema, so a block naming an object there is the one shape a
+         * `loop_costs` write can get wrong that the schema can see. It must be
+         * refused BEFORE the session, with the schema's own path.
+         */
+        const opsAtVeto = panel.session.ops().length;
+        // ⛓ R-a — the third argument is the DOCUMENT TOKEN, and it is required:
+        //   `_acceptEditorOp` is fail-closed, so a direct caller that omitted it
+        //   would be refused for staleness and this claim would stop being about
+        //   the schema at all. Passing the hub's current token is what the one
+        //   opener does, which is the state this claim means to drive.
+        const verdict = panel._acceptEditorOp('loop_costs', {
+            op: 'set-key',
+            key: 'loop_costs',
+            value: {
+                regions: {},
+                locations: { 'Some Location': { cost: 10 } },
+                defaultRegionCost: 50,
+                defaultLocationCost: 10,
+            },
+            scope: 'player',
+        }, panel._documentToken);
+        testController.assertEqual(
+            'the schema REFUSES a block whose location cost is not a number',
+            'false', String(!!verdict?.accepted));
+        testController.assertEqual(
+            'and it says WHERE, in the schema\'s own path',
+            'true',
+            String((verdict?.errors ?? []).some((e) => e.includes(`loop_costs.${panel.playerId}.locations`))));
+        testController.assertEqual(
+            'the refused op never reached the session',
+            String(opsAtVeto), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop_costs write-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **P1a — LOOP MODE IS PER SLOT** (⚖ user 2026-09-27, shape (A): `loop_costs`
+ * is `{"<p>": block}`). On the four-player fixture the row picks the first slot
+ * whose substrate differs from slot 1's (read off the document, never typed —
+ * slot 3, a bounce slot, at P1a), switches loop mode ON there through the
+ * Document row's own button, and reads `loop_costs[thatSlot]` — with no other
+ * slot gaining a block and slot 1's `procgen_metadata` byte-identical. One Undo
+ * takes it back. ⛔ Mutant: the switch writing at the document-level position
+ * is refused by the schema veto and this row's first claim reds.
+ */
+export async function apworldLoopModeSwitchIsPerSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const doc0 = panel.rulesDoc;
+        const substrateOf = (slot) => Object.values(doc0.preset_sidecars?.[slot] ?? {})[0]?.substrate;
+        const slots = Object.keys(doc0.preset_sidecars ?? {});
+        const first = slots[0];
+        const other = slots.find((s) => substrateOf(s) !== substrateOf(first));
+        testController.reportCondition(`⛓ premise: a slot whose substrate differs from slot ${first}'s (${other})`, !!other);
+        if (!other) return testController.getOverallResult();
+        testController.assertEqual(`⛓ premise: slot ${other} carries no \`loop_costs\` block`,
+            'false', String(Object.hasOwn(doc0.loop_costs ?? {}, other)));
+        const metaBefore = JSON.stringify(doc0.procgen_metadata ?? null);
+        const costsBefore = JSON.stringify(doc0.loop_costs ?? null);
+
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar slot selector is present', !!select);
+        if (!select) return testController.getOverallResult();
+        selectPlayer(select, other);
+        await testController.pollForCondition(() => String(panel.playerId) === String(other),
+            `the hub selected slot ${other}`, 8000, 50);
+        selectTab(panel, 'document');
+        const rowSel = `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`;
+        const btn = await testController.pollForValue(
+            () => document.querySelector(`${rowSel} .apworld-loop-costs-switch-btn`),
+            'the loop_costs row\'s switch', 8000, 50);
+        testController.reportCondition('the switch offers ENABLE and names the slot',
+            btn?.dataset.switchTo === 'on' && btn.textContent.includes(`player ${other}`));
+        if (!btn) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        btn.click();
+
+        const lc = panel.rulesDoc.loop_costs ?? {};
+        testController.assertEqual(`⛓⛓ the block landed under slot ${other}, and only there`,
+            String(other), Object.keys(lc).join(','));
+        testController.assertEqual('with the four keys the schema requires',
+            'defaultLocationCost,defaultRegionCost,locations,regions', Object.keys(lc[other] ?? {}).sort().join(','));
+        const op = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual('as ONE player-scope set-key naming the slot',
+            `${opsBefore + 1}|set-key|loop_costs|player|${other}`,
+            [panel.session.ops().length, op.op, op.key, op.scope, op.player].join('|'));
+        testController.assertEqual(`⛓ slot ${first}'s procgen_metadata is byte-identical`,
+            metaBefore, JSON.stringify(panel.rulesDoc.procgen_metadata ?? null));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('⛓ one Undo takes it back — `loop_costs` as it was',
+            costsBefore, JSON.stringify(panel.rulesDoc.loop_costs ?? null));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('per-slot loop-mode switch test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **R-a — THE PRESENCE SWITCH AS AN EDITOR ACTION** (residue 3; ⚖ user
+ * 2026-09-06). `loop_costs`'s PRESENCE is what turns loop mode on for a world,
+ * and until R-a the Document tab could only SAY so: adding or removing the block
+ * meant hand-editing raw JSON.
+ *
+ * ⛔ **DRIVEN ON `procgen_maze`, WHICH CARRIES NO BLOCK AT ALL**, because that is
+ * the state the "enable" half is about and the corpus's `loop_costs` carriers
+ * cannot show it. Its four regions are what the summary counts against, so the
+ * post-enable readout is a real "0 of 4" rather than "0 of 0".
+ *
+ * ⛓⛓ **THE UNDO IS THE HALF THAT MATTERS, AND IT IS TWO STEPS.** "No key at
+ * all" and "an empty block" are different document states that a single flag
+ * would collapse: the row enables, disables, then undoes TWICE and asserts the
+ * empty block comes back first and the absence second. A gesture that mutated
+ * `rulesDoc` in place would pass the first half of this row and fail here.
+ */
+export async function apworldLoopModeSwitchAddsAndRemovesTheBlock(testController) {
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        const rowSel = `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"]`;
+        const btnOf = () => document.querySelector(`${rowSel} .apworld-loop-costs-switch-btn`);
+        const switchLine = await testController.pollForValue(
+            () => document.querySelector(`${rowSel} .apworld-loop-costs-switch`),
+            'the loop_costs row\'s loop-mode sentence', 8000, 50);
+        testController.reportCondition('the loop_costs row is drawn for a document '
+            + 'that has no block', !!switchLine);
+        if (!switchLine) return testController.getOverallResult();
+
+        // ⛔ The premise, read off the DOCUMENT rather than typed.
+        const worldRegions = Object.keys(panel.rulesDoc.regions[panel.playerId] ?? {}).length;
+        testController.assertEqual(
+            'the document carries no `loop_costs` block to begin with',
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+        testController.assertEqual(
+            'and the row says loop mode is OFF for the world, not that nothing is priced',
+            'true', String(switchLine.textContent.includes('loop mode is OFF')));
+        testController.assertEqual(
+            'the switch offers ENABLE', 'on', String(btnOf()?.dataset.switchTo));
+        testController.assertEqual(
+            'and its title names the Apply consequence rather than gating on it',
+            'true', String((btnOf()?.title || '').includes('turns loop mode ON')));
+
+        const opsBefore = panel.session.ops().length;
+        btnOf().click();
+
+        testController.assertEqual(
+            'ENABLE wrote the slot\'s block', 'true', String(!!panel.rulesDoc.loop_costs?.[panel.playerId]));
+        // ⛓ The four keys the schema REQUIRES, and nothing hand-typed: the two
+        //   costs are the exported constants, so this compares the block against
+        //   the source rather than against a second copy of the numbers.
+        testController.assertEqual(
+            'it is exactly the four keys the schema requires',
+            'defaultLocationCost,defaultRegionCost,locations,regions',
+            Object.keys(panel.rulesDoc.loop_costs[panel.playerId]).sort().join(','));
+        testController.assertEqual(
+            'carrying the EXPORTED defaults, not typed numbers',
+            `${DEFAULT_REGION_COST}|${DEFAULT_LOCATION_COST}`,
+            `${panel.rulesDoc.loop_costs[panel.playerId].defaultRegionCost}`
+            + `|${panel.rulesDoc.loop_costs[panel.playerId].defaultLocationCost}`);
+        // ⛔ The veto ran and said nothing: an op the schema refused would have
+        //   left `_opMessage` naming a refusal and the document unmoved.
+        testController.assertEqual(
+            'the schema accepted it — the empty block is valid by construction',
+            'false', String(String(panel._opMessage ?? '').startsWith('Refused')));
+        testController.assertEqual(
+            'as exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const enableOp = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual(
+            'and that op is a PLAYER-scope set-key on loop_costs (P1a: the block is per slot)',
+            'set-key|loop_costs|player',
+            [enableOp.op, enableOp.key, enableOp.scope].join('|'));
+
+        const summary = document.querySelector(`${rowSel} .apworld-loop-costs-summary`);
+        testController.assertEqual(
+            'the row now reads "0 of N regions priced", counted against the world',
+            'true',
+            String(!!summary
+                && summary.textContent.includes(`0 of ${worldRegions} region`)));
+        testController.assertEqual(
+            'and the switch has flipped to DISABLE', 'off', String(btnOf()?.dataset.switchTo));
+
+        btnOf().click();
+        testController.assertEqual(
+            'DISABLE removed the key rather than emptying it',
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+        testController.assertEqual(
+            'as one more op', String(opsBefore + 2), String(panel.session.ops().length));
+
+        /**
+         * ⛓⛓ **TWO UNDOS, AND THE ORDER IS THE CLAIM.** The fold over a shorter
+         * op list reproduces the previous state exactly, so the first undo must
+         * give back the EMPTY BLOCK — not the absence, and not a priced one.
+         */
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the hub\'s Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'one undo restores the EMPTY BLOCK, not the absence',
+            'true',
+            String(!!panel.rulesDoc.loop_costs?.[panel.playerId]
+                && Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length === 0));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual(
+            'a second undo restores the ABSENCE — the two states are told apart',
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop-mode switch test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **R-a — A PLAN CANNOT LAND IN A DOCUMENT THE HUB HAS SINCE REPLACED**
+ * (residue 2; ⚖ user 2026-09-06). L4 named this and could not close it: `onSave`
+ * applied into whatever session the hub had open NOW, so handing a document to
+ * the cost debugger, loading a different preset here, and only then pressing
+ * Send wrote THIS plan into THAT document — silently, and `region_atlas`'s Save
+ * had the same property.
+ *
+ * ⛔ **THE SECOND DOCUMENT IS THE SUBJECT, NOT THE FIRST.** The claim is not
+ * "something was refused" — it is that `procgen_maze`, which carries no
+ * `loop_costs` at all, still carries none afterwards, and that its op list never
+ * grew. A row that only read the debugger's status line would pass against a hub
+ * that printed a refusal and applied the op anyway.
+ *
+ * ⛓ The premise is MEASURED rather than assumed: `_documentToken` is asserted to
+ * have MOVED between the hand-off and the Send. If it had not, the refusal would
+ * be about something else and this row would be green for the wrong reason.
+ *
+ * Mutant: `_acceptEditorOp` ignoring its `token` argument applies the plan into
+ * `procgen_maze` — the three claims below red together.
+ */
+export async function apworldSendIntoAReplacedDocumentIsRefused(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const tokenAtHandOff = panel._documentToken;
+
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
+        await pressDocumentKeyEditor(testController, panel, 'loop_costs');
+        const status = await debuggerAdoptedHandOff(testController, handed);
+        testController.reportCondition('the debugger adopted the working copy', !!status);
+        if (!status) return testController.getOverallResult();
+
+        const press = (sel) => {
+            const btn = document.querySelector(`.cost-debugger-panel ${sel}`);
+            if (btn) btn.click();
+            return !!btn;
+        };
+        testController.reportCondition('Load pressed', press('.cd-btn-load'));
+        await testController.pollForCondition(
+            () => !!document.querySelector('.cost-debugger-panel .cd-btn-plan-all:not([disabled])'),
+            'the planner accepted the document\'s own sphere log', 8000, 50);
+        testController.reportCondition('Plan All pressed', press('.cd-btn-plan-all'));
+        await testController.pollForCondition(
+            () => !document.querySelector('.cost-debugger-panel .cd-btn-send')?.disabled,
+            'Send becomes pressable once the plan is complete', 8000, 50);
+
+        /**
+         * ⛓⛓ **THE HUB IS HANDED A DIFFERENT WORLD, THROUGH THE APP'S OWN LOAD
+         * PATH** — not by poking the panel. That is the gesture a person makes,
+         * and it is the one that opens a new session.
+         */
+        testController.log(`Loading ${PRESET_PATH} into the hub while the plan is held…`);
+        await testController.loadRulesFromFile(PRESET_PATH);
+        await testController.stateManager.pingWorker('after-second-rules-load', 8000);
+        await testController.pollForCondition(
+            () => panel._documentToken !== tokenAtHandOff,
+            'the hub opened a session on the second document', 8000, 50);
+        testController.assertEqual(
+            'the hub is holding a DIFFERENT document now',
+            'true', String(panel._documentToken !== tokenAtHandOff));
+        testController.assertEqual(
+            'and that document carries no `loop_costs` block of its own',
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+
+        const opsBefore = panel.session.ops().length;
+        // ⛓ S1 — the focus state BEFORE the refused gesture. The door raised the
+        //   debugger, so the hub is not the panel in front; that is what must
+        //   still be true afterwards.
+        const tabAtSend = panel.activeTab;
+        const hubActiveAtSend = panelManager.isPanelActive(PANEL_ID);
+        testController.reportCondition('Send pressed against the replaced document',
+            press('.cd-btn-send'));
+
+        /**
+         * ⛓⛓⛓ **S1 — AND A REFUSAL STEALS NO FOCUS.** Raising the hub and
+         * scrolling to a row is what "it worked" looks like; doing it for a
+         * refusal would make the two outcomes look alike on screen while the
+         * status line said otherwise. ⛔ The premise is asserted too: the hub
+         * really was NOT in front when Send was pressed, so "still not in front"
+         * is a claim rather than a coincidence.
+         */
+        testController.assertEqual(
+            'the hub was not the panel in front when the refused Send was pressed',
+            'false', String(hubActiveAtSend));
+        testController.assertEqual(
+            'and a REFUSED op did not bring it to the front',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual(
+            'nor did it move the hub off the tab the reader was on',
+            String(tabAtSend), String(panel.activeTab));
+        testController.assertEqual(
+            'and nothing printed a success message beside any row',
+            'false',
+            String(!!document.querySelector(`${PANEL_SELECTOR} .apworld-doc-op-message`)));
+
+        // ⛔ THE CLAIM: the SECOND document, unmoved.
+        testController.assertEqual(
+            'the plan did NOT land in the document the hub now holds',
+            'false', String(Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, panel.playerId)));
+        testController.assertEqual(
+            'and its op list never grew',
+            String(opsBefore), String(panel.session.ops().length));
+        // ⛓ …and the person is told why, in the debugger's own status line.
+        testController.assertEqual(
+            'the debugger reports the hub\'s REFUSAL rather than claiming a send',
+            'true', String(status.textContent.includes('REFUSED')));
+        testController.assertEqual(
+            'and the reason names the replacement AND what to do about it',
+            'true',
+            String(status.textContent.includes('has since replaced')
+                && status.textContent.includes('load it again')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('replaced-document refusal test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **⚖ *"even if the current rules.json file doesn't contain any relevant
+ * data for them"*.** A document with NO `region_atlas` must still carry that
+ * block's row in the Links tab — through the SAME registry entry the Document
+ * tab uses, which is what makes the two labels one string — and the row must
+ * say both things a reader needs: that this document has nothing for it, and
+ * (here) that this app does not load its editor either. Two different absences,
+ * named apart.
+ */
+export async function apworldLinksTabReachesAnEditorWithNoData(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        testController.assertEqual(
+            'this document has no region_atlas at all',
+            'false',
+            String(Object.prototype.hasOwnProperty.call(panel.rulesDoc, 'region_atlas')));
+
+        selectTab(panel, 'links');
+        const row = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-link-row[data-link-id="key:region_atlas"]`),
+            'the Links tab\'s region_atlas row',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Links tab carries the block-editor row', !!row);
+        if (!row) return testController.getOverallResult();
+
+        testController.assertEqual(
+            'it uses the REGISTRY\'s label — the same string the Document tab shows',
+            'true', String(row.textContent.includes(DOCUMENT_KEY_EDITORS.region_atlas.label)));
+        testController.assertEqual(
+            'and it says this document has nothing for it',
+            'true', String(row.textContent.includes('no data here')));
+
+        // ⛓ The OTHER absence, and it is a different sentence: the editor's
+        //   module is disabled in this mode, so the row is disabled too.
+        const open = row.querySelector('.apworld-link-open');
+        testController.assertEqual(
+            'the row is disabled because this app does not load that editor',
+            'true', String(!!open && open.disabled && open.title.includes('regionMarkingTool')));
+
+        /**
+         * ⛓⛓ And a row whose editor IS loaded stays OPENABLE — otherwise this
+         * row would pass on a tab that disabled everything. `sphere_log`'s
+         * spoiler checklist is enabled in this mode.
+         */
+        const live = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-link-row[data-link-id="key:sphere_log"] .apworld-link-open`);
+        testController.assertEqual(
+            'while a row whose editor IS loaded is still openable',
+            'true', String(!!live && !live.disabled));
+        live.click();
+        testController.assertEqual(
+            'and pressing it says which panel it raised',
+            'true',
+            String((panel._opMessage || '').includes(DOCUMENT_KEY_EDITORS.sphere_log.label)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('links-with-no-data test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-region-atlas-door-refuses-a-module-this-app-lacks',
+    name: 'APWorld hub: the region_atlas door is disabled by name when its editor is not loaded',
+    description: 'MEASURED: `module-configs/modules.json` disables `regionMarkingTool` in the '
+               + 'default mode, so the door would publish `ui:activatePanel` into a warn-and-'
+               + 'return. The row asserts the block really is a three-field REFERENCE, that '
+               + 'the button carries the REGISTRY\'s own label, that the component registry '
+               + 'really does not hold that panel, and that the button is therefore SHOWN and '
+               + 'DISABLED with the panel and the config file named in its title — while still '
+               + 'printing what a save WOULD come back as. The end-to-end save lives in '
+               + '`check-region-marking-tool.mjs`, under `?mode=flash`, where the tool runs.',
+    testFunction: apworldRegionAtlasDoorRefusesAModuleThisAppLacks,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-procgen-metadata-door-names-what-the-pipeline-can-do',
+    name: 'APWorld hub: the procgen_metadata door hands the working copy over and the pipeline answers',
+    description: 'Presses the Document tab\'s procgen_metadata button and asserts the pipeline '
+               + 'panel adopted the hand-off, named the door it came from, said what it can '
+               + 'build from the document, and QUOTED the engine\'s own refusal for the half '
+               + 'it cannot — the expected sentence read from `sphereRebuildRefusal` at run '
+               + 'time rather than typed here.',
+    testFunction: apworldProcgenMetadataDoorNamesWhatThePipelineCanDo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * T1 — THE PIPELINE PANEL'S TOP-DOWN, DRIVEN IN THE PAGE (the substrate-change
+ * plan §30.7 #4). Before T1 no in-app row pressed the pipeline's Generate on a
+ * hand-off at all; its compile message's `menuWarnings` (M1) and
+ * `ruleItemWarnings` (B1) were asserted only headless.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ The two subjects, MEASURED at T1 (scratch `td.mjs` / `menu.mjs`, seed 1,
+ * `topDownGridSide(n)`, every committed player-1 source): the smallest source
+ * whose top-down compile carries a `ruleItemWarnings` case that compiles in
+ * seconds is `seedling_atlas/AP_1` (11 regions, ~0.1 s headless, 3 names —
+ * terraria (1 region) and rulebuilder_test (2) stall > 100 s in realise); the
+ * smallest with a `menuWarnings` case is this depgraph seed (16 regions,
+ * ~0.16 s, 2 exits — 16 of 205 sources carry one at the auto side).
+ */
+const TOPDOWN_RULE_ITEMS_PRESET_PATH = SEEDLING_PRESET_PATH;
+const TOPDOWN_MENU_PRESET_PATH =
+    './presets/depgraph/AP_00679259829289197625/AP_00679259829289197625_rules.json';
+
+/**
+ * ⛓ No budget setting exists on the panel (measured: nothing in
+ * `procgenPipelineUI.js` or `presetRun.DEFAULT_PARAMS` bounds a run's time), so
+ * the poll's budget is the measured headless compile (≤ 0.2 s) with room for
+ * the page's default substrate mix and a shared box; the log prints the time.
+ */
+const TOPDOWN_RUN_BUDGET_MS = 60000;
+
+/** Hand the hub's working copy to the pipeline, press Generate, and wait for
+ *  the run to finish. Returns `{pp, source, compiled, message}` or null. */
+async function handOffAndGenerate(testController, presetPath, label) {
+    const hub = await openHub(testController, presetPath);
+    if (!hub) return null;
+    await testController.pollForCondition(
+        () => !!hub._rulesSchema, `${label}: the panel loaded rules.schema.json`, 8000, 50);
+    const source = hub.rulesDoc;
+    await pressDocumentKeyEditor(testController, hub, 'procgen_metadata');
+    const pp = await testController.pollForValue(() => {
+        const el = document.querySelector('.procgen-pipeline-panel');
+        const p = el?.__panel;
+        return p && p.topDownSource === source ? p : null;
+    }, `${label}: the pipeline adopted the hand-off`, 8000, 50);
+    testController.reportCondition(`${label}: the pipeline adopted THIS document`, !!pp);
+    if (!pp) return null;
+    testController.assertEqual(`${label}: it is in top-down mode`, 'topDown', String(pp.mode));
+    testController.reportCondition(`${label}: …under the hand-off label`,
+        String(pp.topDownSourceLabel).startsWith('hand-off ('));
+    const gen = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-btn-primary');
+    testController.assertEqual(`${label}: the primary button reads Generate`, 'Generate',
+        String(gen?.textContent));
+    if (!gen) return null;
+    const before = pp._tdState;
+    const t0 = performance.now();
+    gen.click();
+    const done = await testController.pollForCondition(
+        () => !pp.isGenerating && pp._tdState && pp._tdState !== before && !!pp._tdState.compile?.rulesJson,
+        `${label}: the top-down run completed`, TOPDOWN_RUN_BUDGET_MS, 100);
+    testController.log(`${label}: the top-down run took ${Math.round(performance.now() - t0)} ms`);
+    testController.reportCondition(`${label}: the top-down run completed`, done);
+    if (!done) return null;
+    const message = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message')?.textContent ?? '';
+    return { pp, source, compiled: pp._tdState.compile.rulesJson, message };
+}
+
+export async function apworldPipelineTopDownCompileMessageNamesItsWarnings(testController) {
+    let pp = null;
+    try {
+        const { HANDOFF_REALISED_SLOT } = await import('../../procgenPipeline/procgenPipelineUI.js');
+        const { undefinedRuleItems } = await import('../../procgenCore/ruleItemNames.js');
+        const slot = String(HANDOFF_REALISED_SLOT);
+
+        /* ── the rule-item subject ── */
+        const a = await handOffAndGenerate(testController, TOPDOWN_RULE_ITEMS_PRESET_PATH, 'rule items');
+        if (!a) return testController.getOverallResult();
+        pp = a.pp;
+        testController.reportCondition('no ERROR in the compile message', !a.message.startsWith('ERROR'));
+        // ⛓ DERIVED: what the compiled document's rules reference minus what its
+        //   items define — `itemReferencesInDocument` minus `items[p]`.
+        const names = undefinedRuleItems(a.compiled, slot).map((r) => r.name);
+        testController.reportCondition('⛓ premise: the compiled document names items it never defines',
+            names.length > 0);
+        testController.reportCondition('…and every one is the SOURCE\'s own gap',
+            names.every((n) => !Object.hasOwn(a.source.items?.[slot] ?? {}, n)));
+        testController.reportCondition(`⛓⛓ the message counts them: "rule items: ${names.length} undefined"`,
+            a.message.includes(`rule items: ${names.length} undefined`));
+        for (const n of names.slice(0, 3)) {
+            testController.reportCondition(`⛓⛓ …and names "${n}"`, a.message.includes(`Rule item "${n}"`));
+        }
+
+        /* ── the Menu subject ── */
+        const b = await handOffAndGenerate(testController, TOPDOWN_MENU_PRESET_PATH, 'menu');
+        if (!b) return testController.getOverallResult();
+        const menuName = m2StartRegionsOf(b.source, slot).default[0];
+        const menu = b.source.regions?.[slot]?.[menuName];
+        const placed = new Set(Object.keys(b.compiled.regions?.[slot] ?? {}));
+        // ⛓ DERIVED: the source Menu's exits whose target the compiled document
+        //   does not carry (the Menu itself is kept).
+        const dropped = (menu?.exits ?? []).filter((e) => e?.connected_region !== menuName
+            && !placed.has(e?.connected_region));
+        testController.reportCondition(`⛓ premise: the compile kept the source Menu "${menuName}"`,
+            placed.has(menuName));
+        testController.reportCondition('⛓ premise: some Menu exit\'s target got no cell', dropped.length > 0);
+        testController.reportCondition(`⛓⛓ the message counts them: "Menu: ${dropped.length} exit(s) dropped"`,
+            b.message.includes(`Menu: ${dropped.length} exit(s) dropped`));
+        for (const e of dropped.slice(0, 3)) {
+            testController.reportCondition(`⛓⛓ …and names "${e.name}" → "${e.connected_region}"`,
+                b.message.includes(`Menu exit "${e.name}" → "${e.connected_region}" dropped`));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('pipeline top-down test error-free', false);
+    } finally {
+        // ⛓ CLEAN UP: the pipeline keeps no run of this row's.
+        if (pp && !pp.isGenerating) pp._resetTDSteps();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-pipeline-topdown-compile-message-names-its-warnings',
+    name: 'APWorld hub → pipeline: a hand-off, Generate in top-down, and the compile message names its warnings',
+    description: 'T1 (plan §30.7 #4). Through the procgen_metadata door, the pipeline adopts the '
+               + 'working copy in top-down mode under the hand-off label; its own Generate button '
+               + 'runs the four steps; the compile message then counts and names (a) the rule '
+               + 'items the compiled document references but never defines (seedling_atlas/AP_1; '
+               + 'derived from the compiled document, never typed) and (b) the source Menu exits '
+               + 'whose target got no cell (a depgraph seed; derived from the source and the '
+               + 'compiled regions). Mutant: the message drops ruleItemWarnings / menuWarnings.',
+    testFunction: apworldPipelineTopDownCompileMessageNamesItsWarnings,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ T1 (plan §30.7 #3) — the one committed document the widened reading moves
+ * (`procgenCore/ruleTreeSlots.test.js` pins it: +16 issues, four names that sit
+ * in a rule kind the old five-kind list never read).
+ */
+const VALIDITY_MOVED_PRESET_PATH =
+    './presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+export async function apworldValidityReportNamesEveryUndefinedRuleItem(testController) {
+    try {
+        const panel = await openHub(testController, VALIDITY_MOVED_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const { undefinedRuleItems } = await import('../../procgenCore/ruleItemNames.js');
+        const names = undefinedRuleItems(panel.rulesDoc, String(panel.playerId)).map((r) => r.name);
+        testController.reportCondition('⛓ premise: the rules name items the document never defines',
+            names.length > 0);
+        if (!panel.issuesExpanded) panel.validationBar.firstElementChild?.click();
+        const rows = await testController.pollForValue(() => {
+            const r = [...panel.validationBar.querySelectorAll('.apworld-validation-issue')];
+            return r.length ? r : null;
+        }, 'the validity report\'s issue rows', 8000, 50);
+        testController.reportCondition('the report lists its issues', !!rows);
+        if (!rows) return testController.getOverallResult();
+        const text = rows.map((r) => r.textContent);
+        const missing = names.filter((n) => !text.some((t) => t.includes(`unknown item "${n}"`)));
+        testController.assertEqual(
+            `⛓⛓ every one of the ${names.length} undefined rule items is named in the hub's report`,
+            '[]', JSON.stringify(missing));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('validity-report test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-validity-report-names-every-undefined-rule-item',
+    name: 'APWorld hub: the validity report names every item a rule references and the document never defines',
+    description: 'T1 (plan §30.7 #3). On the one committed document the widened validateRules moves '
+               + '(terraria: four names under a HasFromListUnique the old kind list never read), the '
+               + 'hub\'s expanded validity report carries an `unknown item` row for EVERY name '
+               + '`undefinedRuleItems` derives. Mutant: validateRules back to its kind list.',
+    testFunction: apworldValidityReportNamesEveryUndefinedRuleItem,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-door-hands-the-working-copy-to-the-debugger',
+    name: 'APWorld hub: the loop_costs door makes the cost debugger plan the WORKING COPY',
+    description: 'Asserts the loop_costs row draws a per-region cost summary counted against '
+               + 'the document\'s own regions, then presses its door and asserts the loops '
+               + 'cost debugger is planning the handed-over document rather than applied '
+               + 'state — its status line naming the door and the document\'s region count, '
+               + 'and a named way back to applied state on offer.',
+    testFunction: apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-panel-says-which-numbers-the-block-carries',
+    name: 'APWorld hub: the cost debugger labels a jta region as priced by its own economy',
+    description: 'Opens the loop_costs door on a jta document (three NATIVE regions, so the '
+               + 'block prices 1 of 4 regions and 0 of 23 locations while the plan behind it '
+               + 'says 50/35/26 and 100/70/52), plans the handed-over working copy, and '
+               + 'asserts EVERY check step says "own economy" and none prints a cost= figure; '
+               + 'that the summary counts the block\'s regions against the world\'s own; and '
+               + 'that the summary line names the one engine (loopCostPlanner) and the world '
+               + 'it was pointed at. Mutant: a panel that prices a NATIVE region reds it.',
+    testFunction: apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-costs-send-writes-the-plan-as-one-op',
+    name: 'APWorld hub: Send costs writes the plan into the working copy as ONE undoable op',
+    description: 'On omsi_substrate_test — whose two maze regions are coarse-classed and whose '
+               + 'omsi region is NATIVE — empties the document\'s (since R-b, PLANNED) block with '
+               + 'the loop-mode switch so the premise is MADE rather than borrowed from the '
+               + 'fixture, then presses the loop_costs door, plans the handed-over working copy, '
+               + 'and presses "Send costs to APWorld Editor". Asserts the row states the loop-mode '
+               + 'switch; that Disable removes the block and Enable rebuilds it empty; that Send is '
+               + 'shown-and-disabled with a reason before a plan exists; that the HUB\'s '
+               + 'document gains real prices for some but not all regions, as exactly ONE '
+               + 'player-scope `set-key loop_costs` whose `generatedFrom` names the door; that '
+               + 'one Undo restores the EMPTY block; and that the hub\'s schema veto REFUSES a '
+               + 'block whose location cost is not a number, naming the path, without the op '
+               + 'reaching the session.',
+    testFunction: apworldLoopCostsSendWritesThePlanAsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-links-tab-reaches-an-editor-with-no-data',
+    name: 'APWorld hub: the Links tab opens a block editor for a key this document does not have',
+    description: 'On a document with no `region_atlas` at all, the Links tab must still carry '
+               + 'that block\'s row — with the REGISTRY\'s own label, the same string the '
+               + 'Document tab shows — and name TWO different absences apart: this document '
+               + 'has no data for it, and this app does not load its editor. A row whose '
+               + 'editor IS loaded (`sphere_log`) must stay openable and say which panel it '
+               + 'raised, so the claim is not "the tab disabled everything".',
+    testFunction: apworldLinksTabReachesAnEditorWithNoData,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-mode-switch-adds-and-removes-the-block',
+    name: 'APWorld hub: the loop_costs row switches loop mode on and off as ONE undoable op',
+    description: 'On procgen_maze — which carries no `loop_costs` block at all — asserts the '
+               + 'Document row says loop mode is OFF, then presses "Enable loop mode" and '
+               + 'asserts the document gains exactly the four keys the schema requires, '
+               + 'carrying the EXPORTED defaults, as one player-scope `set-key loop_costs` (P1a: '
+               + '`loop_costs[p]`); that the summary then reads "0 of 4 regions priced"; that "Disable '
+               + 'loop mode" REMOVES the slot\'s block rather than emptying it; and that two undos restore the empty '
+               + 'block and then the absence, in that order — the two states told apart.',
+    testFunction: apworldLoopModeSwitchAddsAndRemovesTheBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-loop-mode-switch-is-per-slot',
+    name: 'APWorld hub: loop mode is switched per SLOT — the block lands under the selected slot only',
+    description: 'P1a. On the four-player fixture, selects the first slot whose substrate differs from '
+               + 'slot 1\'s (read off the document), presses the loop_costs row\'s Enable, and asserts '
+               + 'the block lands at `loop_costs[thatSlot]` and nowhere else, as one player-scope '
+               + '`set-key` naming the slot, with slot 1\'s `procgen_metadata` byte-identical; one '
+               + 'Undo takes it back.',
+    testFunction: apworldLoopModeSwitchIsPerSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-send-into-a-replaced-document-is-refused',
+    name: 'APWorld hub: a cost plan cannot land in a document the hub has since replaced',
+    description: 'Hands omsi_substrate_test to the loops cost debugger, plans it, then loads '
+               + 'procgen_maze into the hub through the app\'s own load path and presses "Send '
+               + 'costs to the document". Asserts the hub\'s document token MOVED (so the '
+               + 'premise is real), that procgen_maze still carries no `loop_costs` block, that '
+               + 'its op list never grew, and that the debugger prints the hub\'s refusal '
+               + 'naming both the replacement and the fix. Mutant: a hub that ignores the token '
+               + 'writes the plan into the wrong document and the three claims red together.',
+    testFunction: apworldSendIntoAReplacedDocumentIsRefused,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * W0 — THE COVERAGE ARC: an owned row's own JSON block, and the two viewer
+ * doors. (the coverage plan §4, rung W0.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **AN OWNED ROW CARRIES ITS OWN BLOCK, AND THE BLOCK REACHES WHAT THE
+ * HOME TAB DOES NOT DRAW.** Until W0 the Document row for a tab-owned key drew
+ * *"edited in the X tab"* and stopped there, so every field of `world` except
+ * the one the Meta tab draws was reachable only through the whole-document Raw
+ * JSON editor.
+ *
+ * ⛔ The field this row writes is chosen BY DERIVATION, not by taste: it asserts
+ * that no `META_FIELDS` spec addresses it, so "the home tab does not draw this"
+ * is read off the home tab's own table. And the write goes through the
+ * product's own Save JSON button, so a Save wired to nothing reds here.
+ */
+export async function apworldOwnedRowCarriesItsOwnJsonBlock(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+
+        const KEY = 'world';
+        const FIELD = 'world_description';
+        const VALUE = 'W0: written from the Document tab\'s own block';
+
+        // ⛓ THE PREMISE, DERIVED: this key really is owned by another tab.
+        const registryRow = panel._documentRows().find((r) => r.key === KEY);
+        testController.reportCondition(`the ${KEY} row exists`, !!registryRow);
+        if (!registryRow) return testController.getOverallResult();
+        testController.reportCondition(
+            `${KEY} is owned by a tab — the case that drew no editor before W0`,
+            !!registryRow.ownedByTab);
+
+        // ⛓ …and the field below is one that tab does NOT draw, read off the
+        //   Meta tab's own field table rather than claimed here.
+        const metaPaths = Object.values(META_FIELDS).map((spec) => spec.path('1').join('.'));
+        testController.assertEqual(
+            `no Meta field addresses ${KEY}.${FIELD} — so the block is the only way to it`,
+            'false', String(metaPaths.includes(`${KEY}.${FIELD}`)));
+
+        /**
+         * ⛔ **RE-QUERIED EVERY TIME, because expanding a block RE-RENDERS the
+         * tab.** `_makeDocumentBlockEditor`'s toggle calls `_render()`, so the
+         * row element captured before the click is detached from the document
+         * the moment it lands — and a `querySelector` on a detached node still
+         * answers, from the old tree. The first run of this row asserted the
+         * Save control against exactly that stale element and reported a
+         * missing button on a panel that was drawing one.
+         */
+        const boxOf = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"]`);
+        testController.reportCondition('the Document tab draws that row', !!boxOf());
+        if (!boxOf()) return testController.getOverallResult();
+
+        // ⛓ THE POINTER STAYS — the home tab is still where the shape is known.
+        testController.reportCondition(
+            'the row still points at the tab that owns the key',
+            !!boxOf().querySelector('.apworld-doc-owned'));
+
+        /**
+         * ⛓⛓ **THE CLAIM, AND THE MUTANT TARGET.** Restoring the early return
+         * in `_renderDocumentRow` leaves the pointer above and kills this.
+         */
+        const toggle = boxOf().querySelector('.apworld-doc-toggle');
+        testController.reportCondition(
+            'and it offers the same Show JSON toggle every other row gets', !!toggle);
+        if (!toggle) return testController.getOverallResult();
+
+        toggle.click();
+        const textarea = await testController.pollForValue(
+            () => document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"] .apworld-doc-json`),
+            'the block textarea, built on expand',
+            8000,
+            50,
+        );
+        testController.reportCondition('expanding builds the textarea', !!textarea);
+        if (!textarea) return testController.getOverallResult();
+
+        const slot = panel.playerId;
+        testController.assertEqual(
+            'the textarea holds THIS slot\'s slice of the key, not the whole map',
+            JSON.stringify(panel.rulesDoc[KEY][slot]),
+            JSON.stringify(JSON.parse(textarea.value)));
+
+        const className = panel.rulesDoc[KEY][slot].world_class_name;
+        const opsBefore = panel.session.ops().length;
+        const edited = JSON.parse(textarea.value);
+        edited[FIELD] = VALUE;
+        textarea.value = JSON.stringify(edited, null, 2);
+
+        const save = boxOf().querySelector('.apworld-doc-save');
+        testController.reportCondition('the block carries a Save JSON control', !!save);
+        if (!save) return testController.getOverallResult();
+        save.click();
+
+        testController.assertEqual(
+            `the edit reached the record at ${KEY}.${FIELD}`,
+            VALUE, panel.rulesDoc[KEY][slot][FIELD]);
+        testController.assertEqual(
+            'it was exactly ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('and that op is a set-key on this key',
+            `set-key ${KEY}`, `${op.op} ${op.key}`);
+        // ⛓ A per-player key is written PER PLAYER — a document-scope op here
+        //   would replace every slot's world with this one's.
+        testController.assertEqual('scoped to the selected player slot',
+            `player ${slot}`, `${op.scope} ${op.player}`);
+        // ⛔ …and the field the Meta tab DOES draw is untouched by it.
+        testController.assertEqual(
+            'the Meta tab\'s own field on the same key is unaffected',
+            String(className), String(panel.rulesDoc[KEY][slot].world_class_name));
+
+        const undoButton = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo control is present', !!undoButton);
+        undoButton.click();
+        testController.assertEqual(
+            'ONE undo takes the sub-key back out, rather than blanking it',
+            'false',
+            String(Object.prototype.hasOwnProperty.call(panel.rulesDoc[KEY][slot], FIELD)));
+        testController.assertEqual(
+            'and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('owned-row block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE VIEWER DOORS ARE LIVE IN THIS MODE, AND PRESSING ONE RAISES THE
+ * PANEL IT DECLARED** (⚖ user, 2026-09-08: *"we could link to the existing
+ * dungeons and helpers panels as viewers"*).
+ *
+ * ⛔ Both halves are read from an authority rather than typed: whether the
+ * button is offered comes from `centralRegistry.getAllPanelComponents()` — the
+ * same set the hub's own `_panelRefusal` asks — and whether the press worked
+ * comes from `panelManager.isPanelActive`, the panel that is actually in front.
+ * A row asserting the button's label or its own `disabled` flag would agree
+ * with the panel about a door that raises nothing.
+ *
+ * ⛓ The row also checks a door whose module this mode does NOT load
+ * (`region_atlas`), so "enabled" is a discrimination rather than a mode in
+ * which everything is enabled.
+ */
+export async function apworldViewerDoorsRaiseThePanelsTheyDeclare(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const registered = centralRegistry.getAllPanelComponents();
+        /**
+         * ⛓ The doors under test, derived: the registry's VIEWER rows (nothing
+         * comes back) that name a panel. A door added later as a viewer is
+         * covered by being one.
+         */
+        const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns === 'none' && editor.panelId);
+        testController.reportCondition(
+            'the registry declares viewer doors to press', viewers.length > 1);
+
+        // ⛓ THE DISCRIMINATION: this mode really does lack a panel some door
+        //   names, so "registered" is a fact about this app and not a constant.
+        testController.assertEqual(
+            'a door whose module this mode does not load is NOT registered',
+            'false', String(registered.has(DOCUMENT_KEY_EDITORS.region_atlas.panelId)));
+
+        for (const [key, editor] of viewers) {
+            selectTab(panel, 'document');
+            testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+            const button = await testController.pollForValue(
+                () => document.querySelector(
+                    `${PANEL_SELECTOR} .apworld-doc-editor-open[data-doc-key="${key}"]`),
+                `the ${key} door`,
+                8000,
+                50,
+            );
+            testController.reportCondition(`the ${key} row draws its door`, !!button);
+            if (!button) continue;
+
+            testController.assertEqual(
+                `this app registers \`${editor.panelId}\` — so the ${key} door is offered`,
+                'true', String(registered.has(editor.panelId)));
+            testController.assertEqual(
+                `and the ${key} door is therefore pressable`, 'false', String(button.disabled));
+            testController.assertEqual(
+                `it says nothing comes back from ${key}`, 'none', editor.returns);
+
+            button.click();
+            const raised = await testController.pollForCondition(
+                () => panelManager.isPanelActive(editor.panelId),
+                `${editor.panelId} became the active panel`,
+                8000,
+                50,
+            );
+            testController.reportCondition(
+                `pressing the ${key} door put \`${editor.panelId}\` in front`, raised);
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('viewer-door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-owned-row-carries-its-own-json-block',
+    name: 'APWorld hub: a tab-owned Document row keeps its pointer AND draws its own JSON block',
+    description: 'On the `world` row — owned by the Meta tab, which draws exactly one of its '
+               + 'fields — asserts the pointer to the home tab is still there, that the row '
+               + 'now offers the same Show JSON toggle every unowned row gets, that expanding '
+               + 'it builds a textarea holding THIS slot\'s slice, and that pressing the '
+               + 'block\'s own Save JSON writes a sub-key no META_FIELDS spec addresses (the '
+               + 'claim derived from the Meta tab\'s own table) as exactly ONE player-scope '
+               + '`set-key`, leaving the Meta tab\'s field untouched and coming back out in '
+               + 'ONE undo. Mutant: restoring the early return in `_renderDocumentRow` reds '
+               + 'the toggle condition.',
+    testFunction: apworldOwnedRowCarriesItsOwnJsonBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-viewer-doors-raise-the-panels-they-declare',
+    name: 'APWorld hub: the viewer doors are offered because the registry holds their panels, and pressing one raises it',
+    description: 'Over every VIEWER row of `DOCUMENT_KEY_EDITORS` (returns `none`, names a '
+               + 'panel), asserts this app really registers that component — asked of '
+               + '`centralRegistry.getAllPanelComponents()`, the same set the hub\'s own '
+               + 'refusal consults — that the door is therefore pressable, and that pressing '
+               + 'it makes that panel the ACTIVE one (`panelManager.isPanelActive`, not the '
+               + 'button\'s text). A door whose module this mode does not load '
+               + '(`region_atlas`) is asserted absent from the same set, so "registered" is a '
+               + 'discrimination rather than a mode where everything is on.',
+    testFunction: apworldViewerDoorsRaiseThePanelsTheyDeclare,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * S1 — THE SIDECARS TAB. (the coverage plan §4,
+ * rung S1.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE SIDECARS TAB DRAWS THE REGISTRY'S SIDECAR KEYS, WITH THE DOCUMENT
+ * TAB'S OWN RENDERER** (⚖ user, 2026-09-08).
+ *
+ * ⛔ **WHAT THIS ROW IS, AND WHAT IT IS NOT.** Its expectation is
+ * `KEYS_OWNED_BY_TAB.sidecars` — the same table the panel filters by — so it
+ * cannot see a key REMOVED from that table (the expectation would shrink with
+ * the tab). It is the RENDERER's guard: every member gets a full row, in
+ * registry order, built by `_renderDocumentRow` and not by a second one; the
+ * summary and its door are beside them; and the Document tab's rows for the same
+ * keys gained their pointer without losing their block. The MEMBERSHIP is
+ * guarded in `documentKeys.test.js`, against the exporter's own sidecar merge
+ * and against the ⚖ — an authority outside the table.
+ *
+ * ⛓ Driven on `procgen_maze`, which carries `procgen_metadata` and three
+ * `preset_sidecars` regions in slot 1, so both the "a member the document has"
+ * case and the summary's counts are real rather than empty.
+ */
+export async function apworldSidecarsTabDrawsTheRegistrysSidecarKeys(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // ⛓ THE EXPECTATION, READ: registry order (the schema's), filtered by
+        //   the ownership table. Nothing about it is typed in this file.
+        const expected = panel._documentRows()
+            .filter((r) => KEYS_OWNED_BY_TAB.sidecars.includes(r.key))
+            .map((r) => r.key);
+        testController.assertEqual(
+            'the ownership table names a corpus of sidecar keys, and every one of '
+            + 'them is a registry key',
+            String(KEYS_OWNED_BY_TAB.sidecars.length), String(expected.length));
+        testController.reportCondition(
+            'and there is more than one of them', expected.length > 1);
+
+        selectTab(panel, 'sidecars');
+        const drawn = await testController.pollForValue(
+            () => {
+                const rows = document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key]`);
+                return rows.length > 0 ? [...rows].map((r) => r.dataset.docKey) : null;
+            },
+            'the Sidecars tab\'s rows',
+            8000,
+            50,
+        );
+        testController.reportCondition('the Sidecars tab draws rows', !!drawn);
+        if (!drawn) return testController.getOverallResult();
+        testController.assertEqual(
+            'it draws EXACTLY the registry\'s sidecar keys, in registry order',
+            expected.join(','), drawn.join(','));
+
+        /**
+         * ⛓⛓ **THE SUMMARY IS THE REGIONS TAB'S KEY, AND IT IS A SUMMARY.**
+         * `preset_sidecars` must NOT be one of the rows — a second whole-block
+         * editor for a key edited per region is the thing the ⚖ did not ask for
+         * — and the counts are the document's own, through the same helper the
+         * Map-tab rows use.
+         */
+        testController.assertEqual(
+            'preset_sidecars is summarised, not drawn as a sixth row',
+            'false', String(drawn.includes(SIDECARS_TAB_SUMMARY_KEY)));
+        const counts = sidecarCounts(panel.rulesDoc);
+        const slots = Object.keys(counts);
+        testController.reportCondition(
+            'this document really carries per-region sidecars — the premise for the counts',
+            slots.length > 0 && counts[slots[0]] > 0);
+        const summary = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-sidecars-summary-text`);
+        testController.reportCondition('the tab carries the summary line', !!summary);
+        for (const slot of slots) {
+            testController.assertEqual(
+                `the summary counts slot ${slot} off the document, not off a total`,
+                'true',
+                String(!!summary
+                    && summary.textContent.includes(`slot ${slot}: ${counts[slot]} region`)));
+        }
+
+        /**
+         * ⛓ S0 — **THE SUMMARY IS NOW THE COLLAPSED HEAD OF A PER-REGION LIST.**
+         * `Go to Regions` (the tab) is gone — it pointed at a tab that drew none
+         * of this data — and what stands in its place is the list's expander.
+         * The list itself (collapsed by default, one row per entry, `Go to
+         * region`) is its own row, `apworld-sidecars-list-is-collapsed-and-goes-
+         * to-the-region`; here only its presence, so this row still describes
+         * the whole tab.
+         */
+        testController.reportCondition(
+            '⛓ S0 — the tab-level "Go to Regions" button is gone',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-go-regions`));
+        testController.reportCondition(
+            '…and the per-region list\'s expander stands in its place',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`));
+
+        /**
+         * ⛓⛓⛓ **ONE RENDERER, TWO HOSTS — MEASURED AS THE SAME ROW.** The
+         * claim is not "the Sidecars row has a door": it is that the element the
+         * Sidecars tab builds for a key is structurally the element the Document
+         * tab builds for it. So the row compares the CHILD CLASS LISTS of one
+         * key's box on both tabs. A forked renderer that happened to draw a door
+         * and a block would still differ here.
+         */
+        /**
+         * ⛔⛓ **R1 — MINUS THE OWNED-BY-TAB POINTER, which is now the ONE
+         * element the two hosts legitimately differ by.** S1 compared the whole
+         * child list and passed, because the Sidecars tab drew every key a
+         * *"Go to Sidecars"* button while the reader was standing on Sidecars
+         * (⚖ user, 2026-09-09). Suppressing it makes the raw lists differ by
+         * exactly `.apworld-doc-owned`, so this claim — *"one renderer, two
+         * hosts"* — reads past it. The pointer's own law is a row of its own
+         * (`apworld-a-row-does-not-point-at-the-tab-it-is-on`); asserting it
+         * here too would make one defect red two rows and neither of them
+         * about the renderer.
+         */
+        const shapeOf = (key) => {
+            const box = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+            return box
+                ? [...box.children]
+                    .filter((c) => !c.classList.contains('apworld-doc-owned'))
+                    .map((c) => c.className || c.tagName).join('|')
+                : null;
+        };
+        const richest = drawn.find((k) => panel.rulesDoc[k] !== undefined) ?? drawn[0];
+        const onSidecars = shapeOf(richest);
+        testController.reportCondition(
+            `the Sidecars tab draws a full row for ${richest}`, !!onSidecars);
+        selectTab(panel, 'document');
+        await testController.pollForCondition(
+            () => !!shapeOf(richest), 'the Document tab\'s row for the same key', 8000, 50);
+        testController.assertEqual(
+            'and the Document tab\'s row for that key is the SAME row, element for element',
+            String(onSidecars), String(shapeOf(richest)));
+
+        /**
+         * ⛓⛓ **AND THE DOCUMENT TAB NOW POINTS AT THIS TAB, WITHOUT LOSING THE
+         * BLOCK** — W0's rule, applied to the five keys S1 made owned. The
+         * affordance is a Show JSON toggle or a typed scalar input, whichever
+         * the key's declared type routes to.
+         */
+        const tabLabel = 'Sidecars';
+        for (const key of expected) {
+            const box = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+            testController.assertEqual(
+                `the Document row for ${key} points at the ${tabLabel} tab`,
+                'true',
+                String(!!box?.querySelector('.apworld-doc-owned')
+                    && box.querySelector('.apworld-doc-owned').textContent.includes(tabLabel)));
+            testController.assertEqual(
+                `…and it still carries its own editing affordance`,
+                'true',
+                String(!!box && (!!box.querySelector('.apworld-doc-toggle')
+                    || !!box.querySelector('input') || !!box.querySelector('select'))));
+        }
+
+        // ⛓ Non-vacuity: the Document tab is still the everything-fallback, so
+        //   it draws strictly more rows than the tab that hosts five of them.
+        const documentRows = document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key]`).length;
+        testController.reportCondition(
+            'the Document tab still draws every key, not only the sidecar ones',
+            documentRows > drawn.length);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecars-tab-draws-the-registrys-sidecar-keys',
+    name: 'APWorld hub: the Sidecars tab draws the registry\'s sidecar keys with the Document tab\'s renderer',
+    description: 'On procgen_maze — which carries `procgen_metadata` and three per-region '
+               + 'sidecars in slot 1 — asserts the tab draws exactly the keys '
+               + '`KEYS_OWNED_BY_TAB.sidecars` names, in registry order; that '
+               + '`preset_sidecars` is a per-slot SUMMARY counted off the document, heading '
+               + 'S0\'s per-region list (its expander in place of the retired Go to Regions); '
+               + 'that a key\'s box on '
+               + 'this tab is element-for-element the box the Document tab builds for it '
+               + '(one renderer, two hosts); and that the Document tab\'s rows for the same '
+               + 'keys gained the "Edited in the Sidecars tab" pointer WITHOUT losing their '
+               + 'own affordance. The membership itself is guarded in documentKeys.test.js, '
+               + 'against the exporter\'s sidecar merge and the ⚖ — this row reads the same '
+               + 'table the tab does and is deliberately blind to it.',
+    testFunction: apworldSidecarsTabDrawsTheRegistrysSidecarKeys,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * R1 — A ROW DOES NOT POINT AT THE TAB IT IS ON.
+ * (the coverage plan §11, task 1.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE SAME KEY, TWO HOSTS, AND ONLY ONE OF THEM GETS THE POINTER**
+ * (⚖ user, 2026-09-09: *"The sidecar entries in the sidecars tab have the 'Go
+ * to Sidecars' button. Is there a simple way to fix that?"*).
+ *
+ * ⛔ **THE CONTROL IS THE OTHER HOST, not the absence alone.** "No pointer on
+ * the Sidecars tab" is also true of a renderer that stopped drawing pointers
+ * altogether, and of a registry that lost `ownedByTab` — both of which would
+ * ALSO take the Document tab's fifteen pointers away. So every key is read on
+ * BOTH tabs in one drive: absent on its own tab, present on the Document tab,
+ * and a key owned by a THIRD tab keeps its pointer on the Document tab too.
+ *
+ * ⛓ **THE POINTER IS ASSERTED BY ITS EFFECT.** A button labelled *"Go to
+ * Sidecars"* that selected nothing would pass a label check; this row presses
+ * it and reads `panel.activeTab`.
+ *
+ * ⚠ Every post-gesture lookup re-queries (`boxOn`): selecting a tab rebuilds
+ * the tab body, so an element captured before the switch is detached — and a
+ * `querySelector` on a detached node answers happily out of the old tree
+ * (W0 §7.5).
+ */
+export async function apworldARowDoesNotPointAtTheTabItIsOn(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        /** ⛓ The box for one key on whichever tab is showing — re-queried every time. */
+        const boxOn = (key) => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${key}"]`);
+        const pointerOn = (key) => boxOn(key)?.querySelector('.apworld-doc-owned') ?? null;
+
+        /**
+         * ⛓ The population is the LAW's, not the flag's: every key the registry
+         * files under the Sidecars tab is a key that tab hosts, so every one of
+         * them is a case of the defect.
+         */
+        const hosted = [...KEYS_OWNED_BY_TAB[SIDECARS_TAB_ID]];
+        testController.reportCondition(
+            'the registry files keys under the Sidecars tab — the premise', hosted.length > 0);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        for (const key of hosted) {
+            testController.reportCondition(`the Sidecars tab draws ${key}`, !!boxOn(key));
+            testController.assertEqual(
+                `…and it does NOT point at the tab it is on`,
+                'null', String(pointerOn(key) === null ? 'null' : 'a pointer'));
+            /**
+             * ⛔ NON-VACUITY, per key: the row must have lost the POINTER and
+             * nothing else. A renderer that skipped the whole owned branch
+             * again (W0's defect) would pass the line above.
+             */
+            testController.assertEqual(
+                `…while keeping its own editing affordance`,
+                'true',
+                String(!!boxOn(key) && (!!boxOn(key).querySelector('.apworld-doc-toggle')
+                    || !!boxOn(key).querySelector('input')
+                    || !!boxOn(key).querySelector('select'))));
+        }
+
+        /**
+         * ⛓⛓ **THE CONTROL — the SAME keys, drawn by the Document tab, DO
+         * point here**, and the button's effect is the Sidecars tab.
+         */
+        selectTab(panel, DOCUMENT_TAB_ID);
+        for (const key of hosted) {
+            testController.assertEqual(
+                `the Document tab's row for ${key} DOES point at its home tab`,
+                'true', String(!!pointerOn(key)));
+        }
+        const goButton = pointerOn(hosted[0])?.querySelector('button') ?? null;
+        testController.reportCondition(
+            'that pointer carries a button', !!goButton);
+        if (goButton) {
+            goButton.click();
+            testController.assertEqual('and pressing it selects the Sidecars tab',
+                SIDECARS_TAB_ID, String(panel.activeTab));
+            selectTab(panel, DOCUMENT_TAB_ID);
+        }
+
+        /**
+         * ⛓⛓ **AND A KEY OWNED BY A THIRD TAB IS UNTOUCHED**, which is what
+         * separates "the host suppresses its own pointer" from "the pointer is
+         * gone". Derived: any owned key the Sidecars tab does NOT host.
+         */
+        const elsewhere = Object.entries(KEYS_OWNED_BY_TAB)
+            .filter(([tab]) => tab !== SIDECARS_TAB_ID)
+            .flatMap(([, keys]) => keys)
+            .filter((k) => !!boxOn(k));
+        testController.reportCondition(
+            'the Document tab also draws keys owned by other tabs — the control\'s premise',
+            elsewhere.length > 0);
+        for (const key of elsewhere) {
+            testController.assertEqual(
+                `${key} keeps its pointer on the Document tab`, 'true', String(!!pointerOn(key)));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('self-pointer test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-row-does-not-point-at-the-tab-it-is-on',
+    name: 'APWorld hub: a document row does not point at the tab that is drawing it',
+    description: 'On procgen_maze. Every key `KEYS_OWNED_BY_TAB` files under the Sidecars '
+               + 'tab is read on BOTH hosts in one drive: on the Sidecars tab it carries no '
+               + '"Edited in the … tab" pointer while keeping its own editing affordance, '
+               + 'and on the Document tab it carries one whose button really selects the '
+               + 'Sidecars tab. A key owned by a THIRD tab keeps its pointer on the Document '
+               + 'tab, which is what tells "the host suppresses its own pointer" apart from '
+               + '"the pointer is gone".',
+    testFunction: apworldARowDoesNotPointAtTheTabItIsOn,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓⛓⛓ **R1 — A DOOR THAT DECLARED `focusHubOnSave: false` DOES NOT TAKE THE
+ * PERSON'S SCREEN** (S1 §8.6 (2); ⚖ user, 2026-09-09).
+ *
+ * ⛔ **`_acceptEditorOp` IS DRIVEN DIRECTLY, and that is forced.** The subject
+ * is `region_atlas`, whose panel (`regionMarkingTool`) is DISABLED in the
+ * default `modules.json` — H5 §19.4, and the hub's own `_panelRefusal` is what
+ * makes the door unpressable here. So there is no gesture in this mode that
+ * reaches the seam, and a row that waited for one would assert nothing. The op
+ * is synthetic, but its VALUE is derived from `rules.schema.json`'s own
+ * `required` list for the key, so the schema veto on the accepted path is real
+ * rather than routed around.
+ *
+ * ⛓⛓ **THE NON-VACUITY IS INSIDE, not in a second row.** *"The hub did not come
+ * to the front"* is also true of a seam that refused the op, threw, or never
+ * reached the focus code at all. So the row asserts, in order: the op was
+ * ACCEPTED and APPLIED (the op list grew by one), the focus function DID run
+ * (its beside-the-row sentence is recorded, which is the half `focusHubOnSave`
+ * deliberately does NOT gate), and only THEN that nothing was raised and no tab
+ * moved.
+ *
+ * ⛓ **THE `true` HALF OF THE FLAG IS ANOTHER ROW'S** —
+ * `apworld-loop-costs-send-writes-the-plan-as-one-op` presses the real Send and
+ * asserts *"after Send the APWorld editor IS the panel in front"*. So a mutant
+ * that ignores the flag reds one of the two whichever way it is wired: always
+ * focus reds this row, never focus reds that one.
+ */
+export async function apworldADoorCanDeclineToRaiseTheHub(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const KEY = 'region_atlas';
+        const door = DOCUMENT_KEY_EDITORS[KEY];
+        // ⛓ THE PREMISE, read off the registry: this row is about a door that
+        //   declared `false`, and it says so rather than assuming it.
+        testController.assertEqual(
+            `the ${KEY} door declares focusHubOnSave: false`,
+            'false', String(door.focusHubOnSave));
+        // ⛓ …and the reason the seam has to be driven directly, measured rather
+        //   than asserted: the tool's component is not registered in this mode.
+        testController.assertEqual(
+            'and its panel really is unavailable here, which is why the seam is driven directly',
+            'true', String(!!panel._panelRefusal(door.panelId)));
+
+        /**
+         * ⛓ Put a DIFFERENT panel in front, so "the hub did not come forward"
+         * is a claim rather than a restatement of where it already was.
+         */
+        panel.eventBus.publish('ui:activatePanel', { panelId: 'helpersPanel' });
+        await testController.pollForCondition(
+            () => !panelManager.isPanelActive(PANEL_ID),
+            'another panel is in front of the hub', 8000, 50);
+        testController.assertEqual('the hub is NOT the panel in front before the save',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+
+        /**
+         * ⛓ Every `ui:activatePanel` published from here on, counted at the
+         * BUS — the effect `panelManager` reports is downstream of it, and a
+         * raise of a panel that happened to be in front already would not move
+         * that readout.
+         */
+        const raised = [];
+        const stopWatching = appEventBus.subscribe(
+            'ui:activatePanel', (d) => raised.push(d?.panelId), 'tests');
+
+        const tabBefore = panel.activeTab;
+        const opsBefore = panel.session.ops().length;
+        /** ⛓ The value is the SCHEMA's own required field list, not a shape typed here
+         *  (rules F2: the block is the slot's, so the list is the slot entry's). */
+        const required = panel._rulesSchema.properties[KEY].patternProperties?.['^[0-9]+$']?.required ?? [];
+        testController.reportCondition(
+            'the schema names required fields for the key — the op\'s premise',
+            required.length > 0);
+        const value = Object.fromEntries(required.map((f) => [f, `r1-${f}`]));
+        // ⛓ Built by the DOOR's own op builder, so the op is the one the tool
+        //   would really hand back.
+        const verdict = panel._acceptEditorOp(
+            KEY, regionAtlasSetKeyOp(KEY, value), panel._documentToken);
+        stopWatching();
+
+        // ⛔ FIRST: the op really landed. Everything below is about a save that
+        //    happened, and none of it discriminates on a save that did not.
+        testController.assertEqual('the synthetic save was ACCEPTED',
+            'true', String(!!verdict.accepted));
+        testController.assertEqual('…and APPLIED — the op list grew by one',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the document really carries the block now',
+            'true', String(JSON.stringify(panel.rulesDoc[KEY]?.[panel.playerId]) === JSON.stringify(value)));
+
+        // ⛓ …and the seam's own answer was recorded — the half the flag does
+        //   NOT gate, and what tells "declined to raise" from "never ran".
+        testController.assertEqual(
+            'the success sentence was recorded beside the row anyway',
+            KEY, String(panel._opRowMessage?.key));
+
+        // ⛔ THE CLAIM.
+        testController.assertEqual('the hub did NOT publish ui:activatePanel for itself',
+            'false', String(raised.includes(PANEL_ID)));
+        testController.assertEqual('…so it is still not the panel in front',
+            'false', String(panelManager.isPanelActive(PANEL_ID)));
+        testController.assertEqual('…and it did not move off the tab the reader was on',
+            String(tabBefore), String(panel.activeTab));
+
+        // ⛓ One undo takes the whole thing back — the save was an ordinary op.
+        panel.undoButton.click();
+        testController.assertEqual('and one Undo folds the save away',
+            String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('declined-focus test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-door-can-decline-to-raise-the-hub',
+    name: 'APWorld hub: a door that declared focusHubOnSave: false does not raise the panel',
+    description: 'Drives `_acceptEditorOp` directly for `region_atlas` — whose marking tool is '
+               + 'disabled in the default mode, so no gesture here reaches the seam — with an '
+               + 'op whose value comes from the schema\'s own `required` list. Asserts the save '
+               + 'was accepted and applied, that the beside-the-row sentence was recorded '
+               + '(the half the flag does NOT gate, and what separates "declined" from "never '
+               + 'ran"), and only then that no `ui:activatePanel` naming this panel was '
+               + 'published, that the hub is still not in front, and that its tab did not '
+               + 'move. The `true` half of the flag is '
+               + '`apworld-loop-costs-send-writes-the-plan-as-one-op`, which presses the real '
+               + 'Send and asserts the hub IS in front afterwards.',
+    testFunction: apworldADoorCanDeclineToRaiseTheHub,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓⛓⛓ **R1 — THE VALIDATION BAR IS MEMOISED, AND THIS IS THE CACHE'S GUARD.**
+ * `_renderValidationBar` ran `validateRules` on every render and every
+ * `_selectTab` renders; `_validationIssues()` now keys the answer on the
+ * record's object identity plus the slot.
+ *
+ * ⛔ **THE SUBJECT IS THE BAR ON SCREEN, not the memo.** A row that compared
+ * `_validationIssues()` before and after would be asking the cache about
+ * itself. So it reads `validationBar.textContent` — the sentence a person sees
+ * — and drives the change through the panel's own `_applyOp` and its own Undo
+ * BUTTON.
+ *
+ * ⛓ **THE OP INTRODUCES AN ISSUE THAT IS NOT A SCHEMA ERROR**, deliberately:
+ * `start_regions` naming a region the world does not have is a `validateRules`
+ * finding and passes `rulesJsonSchemaErrors` (the type is a string either way),
+ * so the op is APPLIED rather than vetoed — which is the only way to get a
+ * document whose bar must move.
+ *
+ * ⚠ Every read after a gesture re-queries the bar's text; `_applyOp` re-renders
+ * and the nodes inside it are rebuilt (W0 §7.5).
+ */
+export async function apworldTheValidationBarFollowsTheDocument(testController) {
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const barText = () => panel.validationBar.textContent.trim();
+        const opsNow = () => panel.session.ops().length;
+
+        const before = barText();
+        const opsBefore = opsNow();
+        testController.assertEqual(
+            'the document starts with a clean bar — the premise', 'No issues', before);
+
+        /**
+         * ⛓ A start region the world does not have. Derived: the name is built
+         * from the document's OWN region names so it cannot collide with one.
+         */
+        const slot = panel.playerId;
+        const names = Object.keys(panel.rulesDoc.regions[slot]);
+        testController.reportCondition('the slot has regions — the op\'s premise',
+            names.length > 0);
+        const GONE = `${names.join('|')} — none of these`;
+        panel._applyOp({ op: 'set-key', key: 'start_regions', value: GONE, scope: 'player' });
+
+        // ⛔ FIRST: the op was really applied. "The bar moved" is a claim about a
+        //    document that changed, and a vetoed op would leave both unmoved.
+        testController.assertEqual('the issue-introducing op was applied',
+            String(opsBefore + 1), String(opsNow()));
+        testController.assertEqual('…and the document really names the missing region',
+            GONE, String(panel.rulesDoc.start_regions?.[slot]));
+
+        // ⛓ THE CLAIM: the bar moved on the very next render.
+        const after = barText();
+        testController.assertEqual('the bar is no longer clean', 'false',
+            String(after === before));
+        testController.reportCondition('…and it reports the issue it found',
+            /issue|warning|error/i.test(after));
+
+        /**
+         * ⛓⛓ **AND UNDO MOVES IT BACK** — through the panel's own Undo button,
+         * because `undo` REFOLDS the record (it is not a stack pop) and the
+         * cache key has to follow that too.
+         */
+        panel.undoButton.click();
+        testController.assertEqual('one Undo folds the op away',
+            String(opsBefore), String(opsNow()));
+        testController.assertEqual('and the bar reads exactly what it read before',
+            String(before), String(barText()));
+        testController.assertEqual('…and the document no longer names it',
+            'false', String(String(panel.rulesDoc.start_regions?.[slot]) === GONE));
+
+        /**
+         * ⛓ Non-vacuity for the CACHE itself: a render that changes nothing
+         * must not change the bar either — otherwise "it moved" would be true
+         * of a panel that simply re-validated at random.
+         */
+        const steady = barText();
+        panel._selectTab('document');
+        panel._selectTab('regions');
+        testController.assertEqual('two tab switches leave the bar where it was',
+            String(steady), String(barText()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('validation-bar test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-the-validation-bar-follows-the-document',
+    name: 'APWorld hub: the validation bar moves on an issue-introducing op and back on Undo',
+    description: 'The guard for R1\'s memoised `validateRules`. On procgen_maze: `start_regions` '
+               + 'set to a name built from the document\'s own region names (so it cannot '
+               + 'collide) is a `validateRules` finding and NOT a schema error, so the op '
+               + 'applies — and the bar\'s own text must move on the very next render and come '
+               + 'back verbatim after one Undo, which REFOLDS the record rather than popping a '
+               + 'stack. The subject is `validationBar.textContent`, not the memo, and the op '
+               + 'having landed is asserted first. A last pair of tab switches asserts the bar '
+               + 'does NOT move when nothing changed.',
+    testFunction: apworldTheValidationBarFollowsTheDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * W3 — THE PLACEMENTS TAB. (the coverage plan
+ *§4, rung W3.)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The slot's locations, in document order, with their region — the
+ *  expectation, read off the DOCUMENT rather than off the panel. */
+function locationsFromDocument(doc, slot) {
+    const out = [];
+    for (const [region, body] of Object.entries(doc?.regions?.[slot] ?? {})) {
+        for (const loc of (body?.locations ?? [])) {
+            if (typeof loc?.name === 'string') out.push({ region, name: loc.name });
+        }
+    }
+    return out;
+}
+
+/** ⛓ The rows the tab drew, as the same shape. */
+function placementRowsOnScreen() {
+    return [...document.querySelectorAll(
+        `${PANEL_SELECTOR} .apworld-placements-row:not([data-orphan="location"])`)]
+        .map((r) => ({ region: r.dataset.region, name: r.dataset.location }));
+}
+
+/** ⛓ A `<select>` is opened by a MOUSEDOWN, which is also what builds its
+ *  option list (the list is lazy — see `_makePlacementSelect`). */
+function openPlacementSelect(row) {
+    const select = row.querySelector('.apworld-placements-select');
+    select.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    return select;
+}
+
+function chooseItem(select, value) {
+    select.value = value;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * ⛓⛓⛓ **THE TAB DRAWS EVERY LOCATION OF THE SLOT, WITH THE DOCUMENT'S OWN
+ * PLACEMENTS SELECTED** (W3 (a)).
+ *
+ * ⛔ Every number here is DERIVED from the document at run time — the fetched
+ * bytes, not the panel's view of them — so the row cannot pass by agreeing with
+ * the thing it is testing. It is also why there is no count in its id or its
+ * name: a count there is an allowlist key that reds twice when the corpus moves.
+ */
+export async function apworldPlacementsTabDrawsEveryLocationOfTheSlot(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        // ⛓ The EXPECTATION, fetched independently of the panel's own intake.
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const slot = panel.playerId;
+        const expected = locationsFromDocument(doc, slot);
+        const placements = doc.canonical_placements?.[slot] ?? {};
+        const items = Object.keys(doc.items?.[slot] ?? {});
+        testController.reportCondition(
+            'the document really carries placements, so this is not a claim about an empty block',
+            Object.keys(placements).length > 0);
+
+        selectTab(panel, 'placements');
+
+        const drawn = placementRowsOnScreen();
+        testController.assertEqual(
+            'the tab draws one row per location the slot holds',
+            String(expected.length), String(drawn.length));
+        testController.assertEqual(
+            '…the same locations, in the document\'s own order, each under its own region',
+            JSON.stringify(expected), JSON.stringify(drawn));
+
+        // ⛓ The region GROUPS are the regions that hold a location — a region
+        //   with none draws no header standing over nothing.
+        const regionsWithLocations = [...new Set(expected.map((l) => l.region))];
+        const groups = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-placements-region`)].map((g) => g.dataset.region);
+        testController.assertEqual(
+            'grouped by region, and only the regions that hold a location get a header',
+            JSON.stringify(regionsWithLocations), JSON.stringify(groups));
+
+        // ⛓⛓ EVERY row's select shows the document's OWN placement for it.
+        const wrong = drawn.filter(({ name }) => {
+            const row = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-placements-row[data-location="${CSS.escape(name)}"]`);
+            const select = row?.querySelector('.apworld-placements-select');
+            return !select || select.value !== (placements[name] ?? '');
+        });
+        testController.assertEqual(
+            'every row\'s select carries the item the document places there', '0',
+            String(wrong.length));
+
+        const summary = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-summary`);
+        const placed = expected.filter((l) =>
+            Object.prototype.hasOwnProperty.call(placements, l.name)).length;
+        testController.assertEqual('the summary counts the document\'s own placements',
+            `${placed} of ${expected.length}`, `${summary.dataset.placed} of ${summary.dataset.total}`);
+        testController.assertEqual('…and the chrome line says the same thing',
+            'true',
+            String(panel.statusLabel.textContent.includes(
+                `${placed} of ${expected.length} location`)));
+
+        /**
+         * ⛓⛓ **THE OPTION LIST IS LAZY, AND THAT IS ASSERTED RATHER THAN
+         * ASSUMED.** `dark_souls_3` slot 1 would otherwise build 1,194 × 1,208
+         * option elements before the tab could paint. A closed select carries
+         * only the blank option and its current value; opening it builds the
+         * slot's items.
+         */
+        const probe = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row .apworld-placements-select`);
+        testController.reportCondition(
+            'a CLOSED select carries no more options than the blank plus its own value',
+            probe.options.length <= 2);
+        openPlacementSelect(probe.closest('.apworld-placements-row'));
+        testController.assertEqual(
+            'opening it builds the blank option plus every item the slot holds',
+            String(items.length + 1), String(probe.options.length));
+        testController.assertEqual('…and the blank option is the DELETE',
+            '', probe.options[0].value);
+
+        // ⛓ The filter is over the three names a row carries.
+        const filter = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-filter`);
+        const needle = expected[0].name;
+        filter.value = needle;
+        filter.dispatchEvent(new Event('input', { bubbles: true }));
+        const visible = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-placements-row`)].filter((r) => !r.hidden);
+        testController.reportCondition(
+            'filtering by a location name narrows the rows to ones that match',
+            visible.length > 0 && visible.length < expected.length
+                && visible.every((r) => `${r.dataset.location} ${r.dataset.region} `
+                    + `${r.dataset.item ?? ''}`.toLowerCase().includes(needle.toLowerCase())));
+        filter.value = '';
+        filter.dispatchEvent(new Event('input', { bubbles: true }));
+        testController.assertEqual('clearing the filter brings every row back',
+            String(expected.length),
+            String([...document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-placements-row`)].filter((r) => !r.hidden).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placements-tab test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **ONE GESTURE, ONE OP, ONE UNDO — AND THE DOCUMENT ROW MOVES WITH IT**
+ * (W3 (b)).
+ *
+ * ⛔ **THE DELETE IS THE HALF THAT MOVES THE COUNT, AND THAT IS A MEASUREMENT
+ * ABOUT THIS DOCUMENT.** Every one of `procgen_topdown/AP_1`'s 25 locations is
+ * already placed, so there is no unplaced location to add one to: a REPLACE
+ * changes the value and leaves both the tab's summary and the Document row's
+ * `{ n keys }` where they were, and only choosing "(unplaced)" moves them. Both
+ * halves are driven, because "one op" and "the readout moves" are different
+ * claims and only one of them a replace can make.
+ */
+export async function apworldPlacementEditIsOneOpAndOneUndo(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const docSummary = () => {
+            // ⛔ RE-QUERIED: selecting a tab rebuilds it, so a captured element
+            //   is detached and `querySelector` on it answers out of the old
+            //   tree (W0 §7.5).
+            selectTab(panel, 'document');
+            const text = document.querySelector(
+                `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="canonical_placements"] `
+                + '.apworld-doc-summary')?.textContent;
+            selectTab(panel, 'placements');
+            return text;
+        };
+        const summaryData = () => ({ ...document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset });
+        const rowFor = (name) => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-location="${CSS.escape(name)}"]`);
+
+        selectTab(panel, 'placements');
+
+        // ⛓ The subject, and the item to move it to — both read off the record.
+        const target = Object.keys(panel.rulesDoc.canonical_placements[slot])[0];
+        const was = panel.rulesDoc.canonical_placements[slot][target];
+        const other = Object.keys(panel.rulesDoc.items[slot]).find((n) => n !== was);
+        testController.reportCondition('the document offers a second item to move to', !!other);
+
+        const opsBefore = panel.session.ops().length;
+        const placedBefore = summaryData().placed;
+        const docBefore = docSummary();
+
+        // ── (1) REPLACE ──────────────────────────────────────────────────
+        chooseItem(openPlacementSelect(rowFor(target)), other);
+
+        testController.assertEqual('the edit reached the record',
+            other, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('it was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('and it is a set-canonical-placement for that location',
+            `set-canonical-placement|${target}|${slot}`,
+            `${panel.session.ops().at(-1).op}|${panel.session.ops().at(-1).location}`
+            + `|${panel.session.ops().at(-1).player}`);
+        testController.assertEqual(
+            'a REPLACE does not move the count — the same locations are still placed',
+            placedBefore, summaryData().placed);
+        testController.assertEqual('…nor the Document row\'s summary', docBefore, docSummary());
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo puts the original item back',
+            was, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('and the op list is back where it started',
+            String(opsBefore), String(panel.session.ops().length));
+
+        // ── (2) DELETE — the blank option, which is what moves the counts ──
+        chooseItem(openPlacementSelect(rowFor(target)), '');
+
+        testController.assertEqual('the blank option removed the entry', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], target)));
+        testController.assertEqual('it too was exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('the tab\'s summary lost one placement',
+            String(Number(placedBefore) - 1), summaryData().placed);
+        testController.reportCondition(
+            'and the Document row\'s summary moved with it', docSummary() !== docBefore);
+        testController.reportCondition(
+            'the row is still drawn — a location without a placement still has one',
+            !!rowFor(target));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo restores the placement',
+            was, panel.rulesDoc.canonical_placements[slot][target]);
+        testController.assertEqual('the tab\'s summary is back', placedBefore, summaryData().placed);
+        testController.assertEqual('and so is the Document row\'s', docBefore, docSummary());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placement-edit test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE TAB READS THE SELECTED SLOT, AND AN EDIT TOUCHES ONLY IT** (W3 (c)).
+ *
+ * ⛔ **THE BRIEF SAID SLOT 1'S BLOCK IS ABSENT ON THIS FIXTURE. IT IS NOT.**
+ * Measured: `canonical_placements` carries all four slots, and slots 1 and 2
+ * hold `{}` — present and empty. So the law this row drives is the one that is
+ * actually true and actually the point: a slot-3 op leaves slot 1's block
+ * BYTE-IDENTICAL, whatever it happens to be.
+ *
+ * ⛓ Slots 3 and 4 carry six placements each and slots 1 and 2 carry none, so
+ * "reads the selected slot" is a discrimination on one document rather than two.
+ */
+export async function apworldPlacementsFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const doc = await (await fetch(FOUR_PLAYER_PATH)).json();
+        const selector = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`),
+            'the player selector', 8000, 50);
+        testController.reportCondition('the toolbar offers a player selector', !!selector);
+        if (!selector) return testController.getOverallResult();
+
+        const summaryData = () => ({ ...document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset });
+        const shapeOf = (slot) => {
+            const locations = locationsFromDocument(doc, slot);
+            const placed = locations.filter((l) => Object.prototype.hasOwnProperty
+                .call(doc.canonical_placements?.[slot] ?? {}, l.name)).length;
+            return `${placed} of ${locations.length}`;
+        };
+
+        selectPlayer(selector, '3');
+        selectTab(panel, 'placements');
+        testController.assertEqual('slot 3 shows the placements slot 3 carries',
+            shapeOf('3'), `${summaryData().placed} of ${summaryData().total}`);
+        testController.assertEqual('…and one row per location slot 3 holds',
+            String(locationsFromDocument(doc, '3').length),
+            String(placementRowsOnScreen().length));
+
+        selectPlayer(selector, '1');
+        selectTab(panel, 'placements');
+        testController.assertEqual('slot 1 shows slot 1\'s — which is none of them',
+            shapeOf('1'), `${summaryData().placed} of ${summaryData().total}`);
+        testController.reportCondition(
+            'the two slots really differ, so this is a discrimination',
+            shapeOf('1') !== shapeOf('3'));
+
+        // ⛓⛓ …and an edit on slot 3 leaves slot 1's block byte-identical.
+        const slot1Before = JSON.stringify(panel.rulesDoc.canonical_placements['1']);
+        selectPlayer(selector, '3');
+        selectTab(panel, 'placements');
+        const row = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-row`);
+        const select = openPlacementSelect(row);
+        const other = [...select.options].map((o) => o.value)
+            .find((v) => v && v !== select.value);
+        const opsBefore = panel.session.ops().length;
+        chooseItem(select, other);
+
+        /**
+         * ⛓⛓ **"AN OP WAS RECORDED" IS ITS OWN CONDITION, AND IT IS THE ONE THE
+         * SLOT MUTANT REACHES SECOND.** A tab that read the wrong slot shows this
+         * row as unplaced, so "the first option that is not the displayed value"
+         * is the item ALREADY stored — the session's `equal` then reports a
+         * no-op, no op is recorded, and every assertion downstream would read
+         * `undefined`. Asserted rather than assumed, so the row reports the
+         * defect instead of dying on it.
+         */
+        testController.assertEqual('the gesture was recorded as an op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        const last = panel.session.ops().at(-1) ?? {};
+        testController.assertEqual('the op is stamped with the SELECTED slot',
+            '3', String(last.player));
+        testController.assertEqual('slot 3 took the edit',
+            other, panel.rulesDoc.canonical_placements['3'][row.dataset.location]);
+        testController.assertEqual(
+            'and slot 1\'s block is byte-identical — present and empty, as the file has it',
+            slot1Before, JSON.stringify(panel.rulesDoc.canonical_placements['1']));
+        testController.assertEqual('…and it is still PRESENT, not deleted', 'true',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements, '1')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('placements-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A STALE PLACEMENT IS SHOWN, MARKED, AND REMOVABLE — NEVER SILENTLY
+ * DROPPED** (W3, the requirement task 2 sets and no other row can see).
+ *
+ * ⛔ The document is a committed preset with two entries added on the way in —
+ * which is exactly what a HAND-EDITED file is, and the only way to get one: the
+ * schema declares the slot `additionalProperties: true`, so a stale entry
+ * validates and no committed preset carries one. It arrives through
+ * `stateManager:rawJsonDataLoaded`, the same intake `loadRulesFromFile` uses
+ * (`files:jsonLoaded` would hand the hub a document the state manager has
+ * already narrowed).
+ */
+export async function apworldStalePlacementsAreShownAndRemovable(testController) {
+    try {
+        // ⛓ Open the hub on the preset first, so the panel is mounted and its
+        //   schema is in, then hand it the edited document.
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const GONE_LOCATION = 'A Room That Was Deleted';
+        const GONE_ITEM = 'An Item That Was Renamed';
+        const keptLocation = Object.keys(doc.canonical_placements[slot])[0];
+        doc.canonical_placements[slot][GONE_LOCATION] = Object.keys(doc.items[slot])[0];
+        doc.canonical_placements[slot][keptLocation] = GONE_ITEM;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH,
+            rawJsonData: doc,
+            selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc?.canonical_placements?.[slot] ?? {}, GONE_LOCATION),
+            'the hand-edited document reached the hub', 8000, 50);
+
+        selectTab(panel, 'placements');
+
+        const orphanRow = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="location"]`);
+        testController.reportCondition(
+            'a placement naming a location the world lost is DRAWN, not dropped', !!orphanRow);
+        testController.assertEqual('…it is that location', GONE_LOCATION,
+            orphanRow?.dataset.location ?? '(none)');
+        testController.reportCondition('…and it is MARKED as such',
+            !!orphanRow?.querySelector('.apworld-placements-mark'));
+
+        const itemRow = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="item"]`);
+        testController.reportCondition(
+            'a placement naming an item the world lost is drawn and marked too',
+            !!itemRow && !!itemRow.querySelector('.apworld-placements-mark'));
+        const staleSelect = itemRow && openPlacementSelect(itemRow);
+        testController.reportCondition(
+            '…and opening its select KEEPS the unknown item as an option, rather than '
+            + 'silently re-pointing the row',
+            !!staleSelect && staleSelect.value === GONE_ITEM
+                && [...staleSelect.options].some((o) => o.value === GONE_ITEM));
+
+        const summary = document.querySelector(`${PANEL_SELECTOR} .apworld-placements-summary`);
+        testController.assertEqual('the summary counts both kinds of stale entry',
+            '1|1', `${summary.dataset.orphanLocations}|${summary.dataset.orphanItems}`);
+
+        // ⛓⛓ The one gesture the tab can offer for a location it cannot place:
+        //    remove it. It is a DELETE, which the op does not validate — the
+        //    reason it does not is exactly this row.
+        const opsBefore = panel.session.ops().length;
+        document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-row[data-orphan="location"] `
+            + '.apworld-placements-delete').click();
+
+        testController.assertEqual('Remove took the stale entry out', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], GONE_LOCATION)));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('and the marked block is gone with it',
+            !document.querySelector(`${PANEL_SELECTOR} .apworld-placements-orphans`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.reportCondition('one undo brings it back',
+            Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc.canonical_placements[slot], GONE_LOCATION));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-placement test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-placements-tab-draws-every-location-of-the-slot',
+    name: 'APWorld hub: the Placements tab draws every location of the selected slot, with the document\'s own placements selected',
+    description: 'On procgen_topdown/AP_1 — every one of whose locations is placed — asserts '
+               + 'the tab draws one row per location the slot holds, in the document\'s own '
+               + 'order and grouped under the regions that hold them; that every row\'s '
+               + 'select carries the item the document places there; that the summary and '
+               + 'the chrome line both count the document\'s own placements; that a CLOSED '
+               + 'select carries only the blank option and its current value while opening '
+               + 'one builds the blank plus every item the slot holds (the option list is '
+               + 'lazy, because a select per location carrying every item is 1.4 million '
+               + 'elements on the largest committed world); and that the filter narrows and '
+               + 'restores the rows. Every count is derived from the fetched document.',
+    testFunction: apworldPlacementsTabDrawsEveryLocationOfTheSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-placement-edit-is-one-op-and-one-undo',
+    name: 'APWorld hub: choosing an item on the Placements tab is ONE op, and one undo takes it back',
+    description: 'Drives both halves through the tab\'s own select: a REPLACE (one '
+               + '`set-canonical-placement` stamped with the selected slot; the value moves '
+               + 'and neither the tab\'s summary nor the Document row\'s `{ n keys }` does, '
+               + 'because this document has no unplaced location to add one to) and a DELETE '
+               + 'through the blank "(unplaced)" option (one op; both readouts move; the row '
+               + 'is still drawn). Each is undone, and each undo restores the value, the op '
+               + 'count and both readouts. Mutant: the op ceasing to refuse an unknown item '
+               + 'is caught in rulesDocOps.test.js, not here.',
+    testFunction: apworldPlacementEditIsOneOpAndOneUndo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-placements-follow-the-selected-slot',
+    name: 'APWorld hub: the Placements tab reads the selected slot, and an edit touches only it',
+    description: 'On the four-player multiworld fixture, whose slots 3 and 4 carry six '
+               + 'placements each while slots 1 and 2 carry an EMPTY block: asserts the tab '
+               + 'shows slot 3\'s placements and row count when slot 3 is selected and slot '
+               + '1\'s when slot 1 is, that the two really differ, and that an edit made on '
+               + 'slot 3 is stamped with slot 3 and leaves slot 1\'s block byte-identical and '
+               + 'still present. Mutant: reading placements from slot \'1\' instead of the '
+               + 'selected slot reds this row.',
+    testFunction: apworldPlacementsFollowTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓⛓⛓ **THE WHOLE-BLOCK EDITOR CANNOT WRITE WHAT THE PER-ENTRY OP REFUSES**
+ * (P1; W3 §10.7 (1), ⚖ user 2026-09-09).
+ *
+ * ⛔ DRIVEN THROUGH THE PRODUCT'S OWN Save JSON BUTTON, not `_applySetKey`: the
+ * defect this row guards is that one tab's guard was reachable AROUND, and a row
+ * that called the method would pass over a Save wired past the veto.
+ *
+ * ⛓ Both directions, because a veto that refuses everything is not the veto
+ * asked for: an edit that ADDS an unplaceable entry is refused BY NAME, and an
+ * edit that REMOVES a pre-existing one is accepted — the diff-against-before
+ * rule, without which a hand-edited file could never be repaired here.
+ */
+export async function apworldTheBlockEditorRefusesAnUnplaceablePlacement(testController) {
+    const KEY = 'canonical_placements';
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        // ⛓ A document that ALREADY carries a stale entry — which is what a
+        //   hand-edited file is, and the only way to get one: the schema
+        //   declares this slot additionalProperties: true.
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const GONE_LOCATION = 'A Room That Was Deleted';
+        const REAL_ITEM = Object.keys(doc.items[slot])[0];
+        doc.canonical_placements[slot][GONE_LOCATION] = REAL_ITEM;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH, rawJsonData: doc, selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc?.canonical_placements?.[slot] ?? {}, GONE_LOCATION),
+            'the hand-edited document reached the hub', 8000, 50);
+
+        selectTab(panel, 'document');
+
+        /** ⛔ RE-QUERIED every time: expanding a block re-renders the tab, so an
+         *  element captured before the click answers from a detached tree. */
+        const boxOf = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${KEY}"]`);
+        const expand = async () => {
+            if (!boxOf()?.querySelector('.apworld-doc-json')) {
+                boxOf().querySelector('.apworld-doc-toggle').click();
+            }
+            return testController.pollForValue(
+                () => boxOf()?.querySelector('.apworld-doc-json'),
+                'the block textarea, built on expand', 8000, 50);
+        };
+        const area = await expand();
+        testController.reportCondition('the block editor is open on this key', !!area);
+        if (!area) return testController.getOverallResult();
+
+        // ── (1) an edit that ADDS an unplaceable entry is REFUSED BY NAME ──
+        const UNHELD = 'Nowhere';
+        const opsBefore = panel.session.ops().length;
+        const edited = { ...JSON.parse(area.value), [UNHELD]: REAL_ITEM };
+        area.value = JSON.stringify(edited, null, 2);
+        boxOf().querySelector('.apworld-doc-save').click();
+
+        testController.assertEqual('the save was refused, and it was not one op',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the refusal NAMES the location it will not write',
+            (panel._opMessage ?? '').includes(UNHELD));
+        testController.assertEqual('…and the block does not carry it', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc[KEY][slot], UNHELD)));
+        /**
+         * ⛔ THE DISCRIMINATION, AND WITHOUT IT THIS ROW PROVES NOTHING: the
+         * schema veto cannot see this. The slot is `additionalProperties: true`,
+         * so the same op ADDS ZERO schema errors — which is exactly why the
+         * whole-block editor could write it before P1.
+         */
+        testController.assertEqual(
+            'and the SCHEMA had nothing to say about it — the hole this closes', '0',
+            String(panel._schemaErrorsAddedBy({
+                op: 'set-key', key: KEY, value: edited, scope: 'player', player: slot,
+            }).length));
+
+        /**
+         * ── (2) an edit that REMOVES the pre-existing stale entry is ACCEPTED ──
+         *
+         * ⛔ THE VALUE IS BUILT FROM THE RECORD, NOT FROM THE TEXTAREA. A
+         * refusal re-renders the CHROME, not the tab, so the textarea still
+         * holds the draft that was just refused — reading it back would carry
+         * the unplaceable entry into the second save and this row would report
+         * the veto as broken when it was working.
+         */
+        const area2 = await expand();
+        const fixed = { ...panel.rulesDoc[KEY][slot] };
+        delete fixed[GONE_LOCATION];
+        area2.value = JSON.stringify(fixed, null, 2);
+        boxOf().querySelector('.apworld-doc-save').click();
+
+        testController.assertEqual('a save that REMOVES a stale entry is accepted, as one op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the stale entry is gone', 'false',
+            String(Object.prototype.hasOwnProperty.call(
+                panel.rulesDoc[KEY][slot], GONE_LOCATION)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('block-editor placement veto test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **A PLACEMENT THE WORLD CANNOT MAKE IS NOT COUNTED AS MADE** (P1; W3
+ * §10.7 (3), which shipped counting one).
+ *
+ * ⛔ The numerator is the claim, and it is scored against the SAME document
+ * before and after one entry is staled — so the row cannot pass by agreeing
+ * with a tally that computes the numerator any way at all.
+ */
+export async function apworldAStalePlacementIsNotCountedAsPlaced(testController) {
+    try {
+        const panel = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+
+        const slot = panel.playerId;
+        const doc = await (await fetch(PLACEMENTS_PRESET_PATH)).json();
+        const summaryData = () => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`).dataset;
+
+        selectTab(panel, 'placements');
+        const clean = { ...summaryData() };
+        testController.assertEqual(
+            'with nothing stale, the numerator is the entries the document carries',
+            String(Object.keys(doc.canonical_placements[slot]).length), clean.placed);
+        testController.assertEqual('and nothing is marked stale', '0|0',
+            `${clean.orphanLocations}|${clean.orphanItems}`);
+
+        // ⛓ ONE entry staled — its ITEM, which is the half W3 counted as placed.
+        const GONE_ITEM = 'An Item That Was Renamed';
+        const staledLocation = Object.keys(doc.canonical_placements[slot])[0];
+        doc.canonical_placements[slot][staledLocation] = GONE_ITEM;
+        doc.game_name = `${doc.game_name} (one placement staled)`;
+        testController.eventBus.publishAs('stateManager:rawJsonDataLoaded', {
+            source: PLACEMENTS_PRESET_PATH, rawJsonData: doc, selectedPlayerInfo: null,
+        }, 'stateManager');
+        await testController.pollForCondition(
+            () => panel.rulesDoc?.canonical_placements?.[slot]?.[staledLocation] === GONE_ITEM,
+            'the staled document reached the hub', 8000, 50);
+
+        selectTab(panel, 'placements');
+        const after = { ...summaryData() };
+        testController.assertEqual('the total is unmoved — the world still holds them all',
+            clean.total, after.total);
+        testController.assertEqual('but the numerator DROPS BY ONE, because that one is unplaceable',
+            String(Number(clean.placed) - 1), after.placed);
+        testController.assertEqual('and the entry is named as stale rather than lost', '1',
+            after.orphanItems);
+        const summary = document.querySelector(
+            `${PANEL_SELECTOR} .apworld-placements-summary`);
+        testController.reportCondition('the line a person reads carries the new numerator',
+            summary.textContent.startsWith(`${after.placed} of ${after.total}`));
+        testController.reportCondition('…and still says an item is missing',
+            /does not hold/.test(summary.textContent));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-placement tally test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-stale-placements-are-shown-and-removable',
+    name: 'APWorld hub: a placement naming a location or item the world no longer holds is shown, marked and removable',
+    description: 'The schema declares the placement slot `additionalProperties: true`, so a '
+               + 'stale entry validates and no committed preset carries one — this row hands '
+               + 'the hub a committed preset with two added on the way in, through '
+               + '`stateManager:rawJsonDataLoaded`, which is what a hand-edited file is. '
+               + 'Asserts both kinds are drawn and marked, that the summary counts them, that '
+               + 'opening the stale-item row\'s select keeps the unknown item as an option '
+               + 'rather than silently re-pointing the row, and that Remove takes the '
+               + 'unplaceable entry out as ONE undoable op — which is why '
+               + '`set-canonical-placement` does not validate a DELETE.',
+    testFunction: apworldStalePlacementsAreShownAndRemovable,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-block-editor-refuses-an-unplaceable-placement',
+    name: 'APWorld hub: the Document tab\'s Save JSON cannot write a placement the per-entry op refuses',
+    description: 'Presses the block editor\'s OWN Save JSON on `canonical_placements`. Adding '
+               + 'an entry at a location the slot does not hold is refused BY NAME, records no '
+               + 'op and leaves the block unchanged — and the same op is measured to add ZERO '
+               + 'schema errors, which is the hole this closes: the slot is '
+               + '`additionalProperties: true`, so the schema veto could never see it. The '
+               + 'other direction is driven too: a save that REMOVES a pre-existing stale entry '
+               + 'is accepted as one op, because the veto differences against what the document '
+               + 'already had and a hand-edited file has to be repairable here. Mutant: '
+               + 'bypassing the veto reds this row.',
+    testFunction: apworldTheBlockEditorRefusesAnUnplaceablePlacement,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-stale-placement-is-not-counted-as-placed',
+    name: 'APWorld hub: the Placements summary does not count a placement the world cannot make',
+    description: 'The same document twice: as committed, the numerator is the entries it '
+               + 'carries and nothing is marked; with ONE entry\'s item renamed out of the '
+               + 'world, the total is unmoved and the numerator drops by one, while the line '
+               + 'still names the stale entry. W3 shipped counting it as placed; '
+               + '`--canonical-seed` cannot place an item the world does not hold, so the '
+               + 'numerator was promising a placement no generation can make.',
+    testFunction: apworldAStalePlacementIsNotCountedAsPlaced,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE ITEMS TAB'S GROUPS SECTION — `item_groups` (I1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The panel's own selectors for the section, spelled once. */
+const GROUP_ROW = (name) => `${PANEL_SELECTOR} .apworld-item-group-row[data-group="${
+        CSS.escape(name)}"]`;
+
+/** ⛓ The registry as the DOCUMENT holds it — the expectation is read off the
+ *  record, never typed (a count in a test is an allowlist key). */
+const registryOf = (panel) => (panel.rulesDoc?.item_groups?.[panel.playerId] ?? []).slice();
+
+/** ⛓ Which items carry a group, derived from the panel's own document, so a row
+ *  cannot pass by naming an item the preset stopped having. */
+const carriersOf = (panel, group) => Object.entries(panel.rulesDoc?.items?.[panel.playerId] ?? {})
+    .filter(([, item]) => (item?.groups ?? []).includes(group)).map(([name]) => name);
+
+/**
+ * ⛓⛓⛓ **ADDING A GROUP REACHES THE REGISTRY, THE SECTION AND EVERY ITEM'S
+ * PICKER — AND ONE UNDO TAKES IT BACK** (I1, task 5 (a)).
+  *
+ * ⛔ Driven through the section's own text box and button, never `_applyOp`: the
+ * claim is that the control is wired, and a row that called the method would
+ * pass over a button wired to nothing.
+  *
+ * ⛓ On `procgen_maze/AP_1`, whose registry holds ONE name — the shape a procgen
+ * document is in, and the one the ⚖ ruling is about ("no procgen worlds
+ * currently use them").
+ */
+export async function apworldItemGroupAddReachesTheRegistryAndEveryPicker(testController) {
+    const NEW_GROUP = 'Trinkets';
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const before = registryOf(panel);
+        testController.reportCondition('the slot carries a registry the section can draw',
+            Array.isArray(before));
+        testController.assertEqual('one section row per registry name, before',
+            String(before.length),
+            String(document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-item-group-row[data-listed="true"]`).length));
+        testController.reportCondition('…and the name we are about to add is not one of them',
+            !before.includes(NEW_GROUP));
+
+        const opsBefore = panel.session.ops().length;
+        const box = document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-new`);
+        box.value = NEW_GROUP;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-add-button`).click();
+
+        testController.reportCondition('the name is in the document\'s registry',
+            registryOf(panel).includes(NEW_GROUP));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        // ⛓ Every post-gesture lookup RE-QUERIES: the tab re-rendered.
+        const row = document.querySelector(GROUP_ROW(NEW_GROUP));
+        testController.reportCondition('the section draws a row for it', !!row);
+        testController.assertEqual('…saying nothing carries it yet', '0', row?.dataset.carriers ?? '?');
+        testController.reportCondition('…and its delete button is ENABLED, because nothing does',
+            row?.querySelector('.apworld-item-group-delete')?.disabled === false);
+
+        // ⛓⛓ And it reaches the ITEMS: every picker offers it, which is the half
+        //    that says the registry is the vocabulary the item rows draw from.
+        const pickers = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-item-group-picker`)];
+        for (const p of pickers) p.dispatchEvent(new Event('focus'));
+        const offering = pickers.filter((p) => [...p.options].some((o) => o.value === NEW_GROUP));
+        testController.assertEqual('every item\'s picker offers the new group',
+            `${pickers.length}|${pickers.length}`, `${pickers.length}|${offering.length}`);
+        testController.reportCondition('…and there is at least one item to offer it to',
+            pickers.length > 0);
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('one undo restores the registry',
+            JSON.stringify(before), JSON.stringify(registryOf(panel)));
+        testController.assertEqual('…and the op count', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.reportCondition('…and the section row is gone with it',
+            !document.querySelector(GROUP_ROW(NEW_GROUP)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group add test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **⚖ REFUSE — DELETING A GROUP AN ITEM STILL CARRIES IS DECLINED, BY
+ * NAME** (I1, task 5 (b)). ⚖ user, 2026-09-09: *"Let's go with refuse."*
+  *
+ * ⛓ BOTH halves, because the button and the op are not the same guard: the
+ * button is DISABLED with the reason in its `title` (a courtesy), and the OP
+ * refuses (the guard — it has to hold for the Document tab's whole-block
+ * `set-key`, which never draws a button). A row that only read the button would
+ * stay green with the op's refusal deleted.
+ */
+export async function apworldItemGroupDeleteIsRefusedWhileAnItemCarriesIt(testController) {
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const carried = registryOf(panel).find((g) => carriersOf(panel, g).length > 0);
+        testController.reportCondition('this document has a group some item carries', !!carried);
+        if (!carried) return testController.getOverallResult();
+        const carriers = carriersOf(panel, carried);
+
+        const row = document.querySelector(GROUP_ROW(carried));
+        testController.assertEqual('the section counts the carriers off the document',
+            String(carriers.length), row?.dataset.carriers ?? '?');
+        const del = row.querySelector('.apworld-item-group-delete');
+        testController.reportCondition('the delete button is DISABLED while they carry it',
+            del?.disabled === true);
+        testController.reportCondition('…and its title names an item that does',
+            (del?.title ?? '').includes(carriers[0]));
+
+        // ⛓⛓ THE GUARD ITSELF, past the button: the op is asked directly, which is
+        //    the path the Document tab's whole-block editor is on.
+        const opsBefore = panel.session.ops().length;
+        const refusal = panel.session.apply({
+            op: 'delete-item-group', name: carried, player: panel.playerId,
+        });
+        testController.reportCondition('the OP refuses it, not just the button', refusal.ok === false);
+        testController.reportCondition('…and the refusal NAMES an item that carries it',
+            (refusal.description ?? '').includes(carriers[0]));
+        testController.assertEqual('…and nothing was recorded',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('…and the group is still in the registry',
+            registryOf(panel).includes(carried));
+
+        // ⛓ The other direction, so "refuses" is a discrimination rather than a
+        //   guard that declines everything: a group nothing carries DELETES.
+        const box = document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-new`);
+        box.value = 'Unused Group';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-add-button`).click();
+        const freshRow = document.querySelector(GROUP_ROW('Unused Group'));
+        freshRow?.querySelector('.apworld-item-group-delete').click();
+        testController.reportCondition('a group nothing carries deletes through the same button',
+            !registryOf(panel).includes('Unused Group'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group delete test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A RENAME CARRIES THE ITEMS' MEMBERSHIP, AND ONE UNDO RESTORES BOTH
+ * SITES** (I1, task 5 (c)) — which is the whole reason it is one op rather than
+ * two.
+  *
+ * ⛓ On `alttp`, whose registry is a REAL one (23 names over 163 items), so the
+ * membership half is a claim about a group with many carriers rather than one.
+ */
+export async function apworldItemGroupRenameCarriesTheItemsMembership(testController) {
+    try {
+        const panel = await openHub(testController, ITEM_GROUPS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const before = registryOf(panel);
+        const target = before.find((g) => carriersOf(panel, g).length > 1);
+        testController.reportCondition('a group with more than one carrier to rename', !!target);
+        if (!target) return testController.getOverallResult();
+        const carriers = carriersOf(panel, target);
+        const RENAMED = `${target} Renamed`;
+        const opsBefore = panel.session.ops().length;
+
+        // ⛓ Through the row's OWN input, committed on `change` — the Meta tab's
+        //   rule, and the reason a rename is one op rather than one per keystroke.
+        const input = document.querySelector(`${GROUP_ROW(target)} .apworld-item-group-name`);
+        input.value = RENAMED;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        testController.assertEqual('the registry entry moved IN PLACE',
+            JSON.stringify(before.map((g) => (g === target ? RENAMED : g))),
+            JSON.stringify(registryOf(panel)));
+        testController.assertEqual('every carrier\'s membership followed',
+            `${carriers.length}|${JSON.stringify(carriers)}`,
+            `${carriersOf(panel, RENAMED).length}|${JSON.stringify(carriersOf(panel, RENAMED))}`);
+        testController.assertEqual('…and nothing still carries the old name', '0',
+            String(carriersOf(panel, target).length));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('the section row is drawn under the new name',
+            !!document.querySelector(GROUP_ROW(RENAMED)));
+        testController.reportCondition('…and so is a chip on an item that carries it',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-item-groups-cell[data-item="${
+                CSS.escape(carriers[0])}"] .apworld-item-group-chip[data-group="${CSS.escape(RENAMED)}"]`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        testController.assertEqual('ONE undo restores the registry',
+            JSON.stringify(before), JSON.stringify(registryOf(panel)));
+        testController.assertEqual('…and the items\' membership with it',
+            JSON.stringify(carriers), JSON.stringify(carriersOf(panel, target)));
+        testController.assertEqual('…in one step', String(opsBefore),
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-group rename test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A GROUP THE ITEMS CARRY THAT THE REGISTRY DOES NOT LIST IS SHOWN,
+ * NEVER SILENTLY ADDED** (I1, task 5 (d)).
+  *
+ * ⛓ On `alttp`, which is in that state as committed: 23 names in the registry,
+ * `Event` on seven items and in neither. Measured over the corpus, 155 of the
+ * 224 slots carry at least one unlisted group — so this is the common case, not
+ * an edge one, and the document is a committed preset rather than a fixture.
+ */
+export async function apworldAnUnlistedItemGroupIsShownAndCanBeListed(testController) {
+    try {
+        const panel = await openHub(testController, ITEM_GROUPS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const listed = registryOf(panel);
+        const onItems = new Set();
+        for (const item of Object.values(panel.rulesDoc.items[panel.playerId])) {
+            for (const g of (item?.groups ?? [])) onItems.add(g);
+        }
+        const unlisted = [...onItems].filter((g) => !listed.includes(g));
+        testController.reportCondition('this committed document carries an unlisted group',
+            unlisted.length > 0);
+        if (!unlisted.length) return testController.getOverallResult();
+
+        const rows = [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-item-group-row[data-listed="false"]`)];
+        testController.assertEqual('the section draws one greyed row per unlisted group',
+            JSON.stringify(unlisted.slice().sort()),
+            JSON.stringify(rows.map((r) => r.dataset.group).sort()));
+        const name = unlisted[0];
+        const row = document.querySelector(GROUP_ROW(name));
+        testController.assertEqual('…counting the items that carry it',
+            String(carriersOf(panel, name).length), row?.dataset.carriers ?? '?');
+        testController.reportCondition('…and the chip on such an item is marked unlisted',
+            document.querySelector(`${PANEL_SELECTOR} .apworld-item-group-chip[data-group="${
+                CSS.escape(name)}"]`)?.dataset.listed === 'false');
+        testController.reportCondition('the registry did NOT quietly grow to include it',
+            !registryOf(panel).includes(name));
+
+        const opsBefore = panel.session.ops().length;
+        const itemsBefore = JSON.stringify(panel.rulesDoc.items[panel.playerId]);
+        row.querySelector('.apworld-item-group-list').click();
+
+        testController.reportCondition('"Add to registry" lists it', registryOf(panel).includes(name));
+        testController.assertEqual('as exactly ONE op',
+            String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…and the ITEMS are byte-identical — it was already on them',
+            itemsBefore, JSON.stringify(panel.rulesDoc.items[panel.playerId]));
+        testController.reportCondition('…and its row is now a registry row',
+            document.querySelector(GROUP_ROW(name))?.dataset.listed === 'true');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('unlisted-group test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE SECTION READS THE SELECTED SLOT** (I1, task 5's mutant (C)).
+  *
+ * ⛔ On the four-player fixture, whose four slots all name the SAME group
+ * (`Everything`) but carry it on different numbers of items — 2 on slot 1, 6 on
+ * slot 3, measured off the document here rather than typed. So a section that
+ * read slot `'1'` would draw a row with the right NAME and the wrong count, and
+ * only a count read off the selected slot can tell the two apart.
+  *
+ * ⛓ The slot is chosen through the REAL toolbar control (H4a's rule), never by
+ * assigning `panel.playerId`.
+ */
+export async function apworldItemGroupsFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the fixture offers a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const readSection = () => {
+            selectTab(panel, 'items');
+            const rows = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-item-group-row`)];
+            return {
+                slot: panel.playerId,
+                drawn: rows.map((r) => `${r.dataset.group}:${r.dataset.carriers}`),
+                expected: registryOf(panel).map((g) => `${g}:${carriersOf(panel, g).length}`),
+                cells: document.querySelectorAll(`${PANEL_SELECTOR} .apworld-item-groups-cell`).length,
+                items: Object.keys(panel.rulesDoc.items[panel.playerId]).length,
+            };
+        };
+
+        selectPlayer(select, 1);
+        const one = readSection();
+        testController.assertEqual('slot 1: the section draws slot 1\'s registry and counts',
+            JSON.stringify(one.expected), JSON.stringify(one.drawn));
+        testController.assertEqual('…and one groups cell per item of slot 1',
+            String(one.items), String(one.cells));
+
+        selectPlayer(select, 3);
+        const three = readSection();
+        testController.assertEqual('slot 3: the section draws slot 3\'s registry and counts',
+            JSON.stringify(three.expected), JSON.stringify(three.drawn));
+        testController.assertEqual('…and one groups cell per item of slot 3',
+            String(three.items), String(three.cells));
+
+        // ⛓ The discrimination is REAL on this document — if the two slots agreed,
+        //   this row could not tell "the selected slot" from "the first one".
+        testController.reportCondition('the two slots really differ, so the row can discriminate',
+            JSON.stringify(one.drawn) !== JSON.stringify(three.drawn) && one.cells !== three.cells);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('item-groups slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-item-group-add-reaches-the-registry-and-every-picker',
+    name: 'APWorld hub: adding an item group reaches the registry, the section and every item\'s picker',
+    description: 'On procgen_maze/AP_1 — a procgen document, whose registry holds one name — '
+                          + 'types into the Groups section\'s own box and presses its own button: the name '
+                          + 'lands in `item_groups[slot]` as ONE op, the section draws a row for it saying '
+                          + 'nothing carries it yet with its delete button ENABLED, and every item row\'s '
+                          + 'picker offers it once opened (the option list is lazy). One undo takes the '
+                          + 'registry, the op count and the row back. Every expectation is read off the '
+                          + 'document.',
+    testFunction: apworldItemGroupAddReachesTheRegistryAndEveryPicker,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-group-delete-is-refused-while-an-item-carries-it',
+    name: 'APWorld hub: deleting an item group an item still carries is refused, naming the item',
+    description: '⚖ user 2026-09-09: "Let\'s go with refuse." Drives both guards, because they '
+                          + 'are not the same one: the section\'s delete button is DISABLED with the '
+                          + 'carriers named in its title (a courtesy), and the OP itself refuses when asked '
+                          + 'past the button — which is the path the Document tab\'s whole-block Save JSON '
+                          + 'is on. Asserts the refusal names a carrier, records no op and leaves the '
+                          + 'registry intact, and that a group NOTHING carries still deletes through the '
+                          + 'same button, so this is a discrimination rather than a guard that declines '
+                          + 'everything. Mutant: dropping the op\'s refusal reds this row.',
+    testFunction: apworldItemGroupDeleteIsRefusedWhileAnItemCarriesIt,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-group-rename-carries-the-items-membership',
+    name: 'APWorld hub: renaming an item group carries every item\'s membership, and one undo restores both',
+    description: 'On alttp, whose registry is a real one over 163 items: renames a group through '
+                          + 'the section row\'s own input (committed on `change`, the Meta tab\'s rule). The '
+                          + 'registry entry moves IN PLACE, every carrier\'s `groups` follows, nothing still '
+                          + 'carries the old name, the chip on an item is redrawn — and it is ONE op, so one '
+                          + 'undo restores the registry AND the membership in one step. Mutant: a rename '
+                          + 'that forgets the items reds the membership conditions.',
+    testFunction: apworldItemGroupRenameCarriesTheItemsMembership,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-an-unlisted-item-group-is-shown-and-can-be-listed',
+    name: 'APWorld hub: a group the items carry that the registry does not list is shown, not silently added',
+    description: 'alttp is in that state as committed — `Event` is on seven items and in neither '
+                          + 'the registry nor anything derived from it — and 155 of the 224 committed slots '
+                          + 'carry at least one such group, so this is the common divergence rather than an '
+                          + 'edge case. Asserts the section draws one greyed row per unlisted group with the '
+                          + 'carrier count, that the chip on such an item is marked, that the registry did '
+                          + 'NOT quietly grow, and that "Add to registry" lists it as ONE op while leaving '
+                          + 'the items byte-identical.',
+    testFunction: apworldAnUnlistedItemGroupIsShownAndCanBeListed,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-item-groups-follow-the-selected-slot',
+    name: 'APWorld hub: the Groups section reads the selected slot, not the first one',
+    description: 'On the four-player multiworld fixture, whose four slots all name the SAME group '
+                          + 'but carry it on different numbers of items: asserts the section\'s rows and '
+                          + 'their carrier counts match the SELECTED slot\'s document, in both directions '
+                          + 'through the real toolbar selector, that there is one groups cell per item of '
+                          + 'that slot, and that the two slots really differ — without which the row could '
+                          + 'not tell "the selected slot" from "the first one". Mutant: reading slot \'1\' '
+                          + 'reds this row.',
+    testFunction: apworldItemGroupsFollowTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE ITEMS TAB'S PROGRESSION SECTION — `progression_mapping` (I2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ alttp — 5 PROGRESSIVE mappings, two of them (`Progressive Bow` and
+ * `Progressive Bow (Alt)`) pooling into one `base_item`, which is the only
+ * shape in which the pool is visible at all.
+ */
+const PROGRESSION_PRESET_PATH =
+    './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ messenger — the corpus's ONE additive entry (`Shards`, six components at
+ * 1/10/50/100/300/500). It has to be a committed document rather than a
+ * fixture, because the claim is that the corpus's second kind draws as itself.
+ */
+const ADDITIVE_PRESET_PATH =
+    './presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ smz3 — the corpus's stale-member document, as committed: 12 of its
+ * members name resolved forms slot 1's `items` does not hold, and 13 carry
+ * `provides`. Nothing is hand-edited into it; this state is what the exporter
+ * wrote.
+ */
+const STALE_PROGRESSION_PRESET_PATH =
+    './presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/**
+ * ⛓⛓ The four-player multiworld export whose slot 2 is the ALTTP world: slots
+ * 1, 3 and 4 carry NO mappings and slot 2 carries five. That 0-vs-5 is the
+ * discrimination — `FOUR_PLAYER_PATH`'s slots are all empty here, so it could
+ * not tell "the selected slot" from "the first one".
+ */
+const FOUR_PLAYER_PROGRESSION_PATH =
+    './presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The panel's own selectors, spelled once. */
+const PROG_CARD = (name) => `${PANEL_SELECTOR} .apworld-progression-card[data-mapping="${
+        CSS.escape(name)}"]`;
+
+/** ⛓ The slot's mappings as the DOCUMENT holds them — every expectation is read
+ *  off the record, never typed (a count in a test is an allowlist key). */
+const mappingsOf = (panel) =>
+    panel.rulesDoc?.progression_mapping?.[panel.playerId] ?? {};
+
+/** ⛓ What the section HAS drawn, as `name:kind:members`, so a comparison is one
+ *  string and names which card moved. */
+const drawnCards = () => [...document.querySelectorAll(
+    `${PANEL_SELECTOR} .apworld-progression-card`)]
+    .map((c) => `${c.dataset.mapping}:${c.dataset.kind}:${c.dataset.members}`);
+
+/** ⛓ The same, expected — derived from the document by asking the RUNTIME's
+ *  question (`type === 'additive'`), not the section's. */
+const expectedCards = (panel) => Object.entries(mappingsOf(panel)).map(([name, m]) => {
+    const additive = m?.type === 'additive';
+    const n = additive
+        ? Object.keys(m.items ?? {}).length
+        : (Array.isArray(m?.items) ? m.items.length : 0);
+    return `${name}:${additive ? 'additive' : 'progressive'}:${n}`;
+});
+
+/**
+ * ⛓⛓⛓ **THE CARDS DRAW THE DOCUMENT'S PROGRESSIVE MAPPINGS, WITH THE POOL
+ * VISIBLE** (I2, task 4 (a) — the progressive half).
+ *
+ * ⛓ Scored against the document rather than against the section's own dataset:
+ * the expectation asks `type === 'additive'`, which is the question
+ * `inventoryManager` asks, so a section that classified by some other test
+ * would disagree with this row rather than with itself.
+ */
+export async function apworldProgressionCardsDrawTheDocument(testController) {
+    try {
+        const panel = await openHub(testController, PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const doc = mappingsOf(panel);
+        testController.reportCondition('the slot carries mappings the section can draw',
+            Object.keys(doc).length > 0);
+        testController.assertEqual('one card per mapping, in the document\'s order, with its kind',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        // ⛓ Every member row carries the document's own item name and level.
+        const mismatched = Object.entries(doc).filter(([name, mapping]) => {
+            const rows = [...document.querySelectorAll(
+                `${PROG_CARD(name)} .apworld-progression-member`)];
+            return JSON.stringify(rows.map((r) => `${r.dataset.item}@${
+                r.querySelector('.apworld-progression-level')?.value}`))
+                !== JSON.stringify(mapping.items.map((m) => `${m.name}@${m.level}`));
+        });
+        testController.assertEqual('every level row carries the document\'s item and its level',
+            '[]', JSON.stringify(mismatched.map(([n]) => n)));
+
+        // ⛓⛓ THE POOL. Two mappings share one `base_item` on this document, and
+        //   that is the whole reason the field is not just the entry's own name.
+        const pooled = Object.entries(doc).filter(([name, m]) => m.base_item !== name);
+        testController.reportCondition('this document really pools two mappings into one base',
+            pooled.length > 0);
+        for (const [name, mapping] of pooled) {
+            const base = document.querySelector(`${PROG_CARD(name)} .apworld-progression-base`);
+            testController.assertEqual(`"${name}" draws its base as the document holds it`,
+                mapping.base_item, base?.value);
+            testController.reportCondition(`…and "${mapping.base_item}" is a mapping in this slot`,
+                base?.dataset.pooled === 'true'
+                    && Object.prototype.hasOwnProperty.call(doc, mapping.base_item));
+        }
+
+        // ⛓ The base picker's DOMAIN is the slot's mapping names — measured
+        //   137/137 over the corpus — and not the slot's items.
+        const anyBase = document.querySelector(`${PANEL_SELECTOR} .apworld-progression-base`);
+        anyBase.dispatchEvent(new Event('focus'));
+        testController.assertEqual('the base picker offers the slot\'s MAPPING names',
+            JSON.stringify(Object.keys(doc).slice().sort()),
+            JSON.stringify([...anyBase.options].map((o) => o.value).sort()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-cards test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **THE ADDITIVE KIND DRAWS AS ITSELF** (I2, task 4 (a) — the additive
+ * half; mutant (C)'s row).
+ *
+ * The two kinds are read by two different parts of the app, and the difference
+ * a person has to see is that an additive member carries a VALUE the inventory
+ * accumulates rather than a LEVEL the rule engine compares. So the row asserts
+ * the value boxes exist, the level boxes do not, the numbers are the
+ * document's, and the reorder controls — which belong to an ordered list — are
+ * absent.
+ */
+export async function apworldTheAdditiveKindDrawsAsItself(testController) {
+    try {
+        const panel = await openHub(testController, ADDITIVE_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const doc = mappingsOf(panel);
+        const additiveNames = Object.keys(doc).filter((n) => doc[n]?.type === 'additive');
+        testController.reportCondition('this document carries an additive mapping to draw',
+            additiveNames.length > 0);
+        if (!additiveNames.length) return testController.getOverallResult();
+
+        testController.assertEqual('one card per mapping, with its kind',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        for (const name of additiveNames) {
+            const card = document.querySelector(PROG_CARD(name));
+            testController.assertEqual(`"${name}" is drawn as the kind the inventory reads`,
+                'additive', card?.dataset.kind);
+            testController.assertEqual('…and its kind select says so',
+                'additive', card?.querySelector('.apworld-progression-kind')?.value);
+
+            const rows = [...card.querySelectorAll('.apworld-progression-member')];
+            testController.assertEqual(`…and one row per component of "${name}"`,
+                JSON.stringify(Object.entries(doc[name].items).map(([n, v]) => `${n}=${v}`)),
+                JSON.stringify(rows.map((r) => `${r.dataset.item}=${
+                    r.querySelector('.apworld-progression-value')?.value}`)));
+
+            // ⛔ The discrimination: a card rendered as PROGRESSIVE would carry
+            //   level boxes and ↑/↓, and its numbers would be levels.
+            testController.assertEqual('…drawn as VALUES, with no level box on the card', '0',
+                String(card.querySelectorAll('.apworld-progression-level').length));
+            testController.assertEqual('…and no reorder control, because it is not a list', '0',
+                String(card.querySelectorAll(
+                    '.apworld-progression-up, .apworld-progression-down').length));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('additive-kind test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **EDITING ONE LEVEL COMMITS ONE OP CARRYING THE WHOLE ENTRY, AND ONE
+ * UNDO RESTORES ALL OF IT** (I2, task 4 (b); mutant (B)'s row).
+ *
+ * ⛔ The undo condition compares the WHOLE entry, not the level that moved:
+ * a card that wrote only the changed row would still put that one level back,
+ * and the rest of the entry would be whatever the partial write left. That is
+ * the difference this row exists to see.
+ */
+export async function apworldAProgressionLevelEditIsOneOpAndOneUndo(testController) {
+    try {
+        const panel = await openHub(testController, PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        // ⛓ The card with the MOST levels, so a partial write has the most room
+        //   to be visible — chosen from the document, never named here.
+        const name = Object.entries(mappingsOf(panel))
+            .sort((a, b) => b[1].items.length - a[1].items.length)[0][0];
+        const before = JSON.stringify(mappingsOf(panel)[name]);
+        testController.reportCondition('the card under test has more than one level',
+            mappingsOf(panel)[name].items.length > 1);
+
+        const opsBefore = panel.session.ops().length;
+        // ⛔ RE-QUERIED after the render, and the SECOND row, so "the whole
+        //   entry came back" is not satisfied by an entry with one member.
+        //   ⛓ Null-safe on purpose: under the partial-write mutant the row is
+        //   GONE after the render, and a row that threw there would red without
+        //   naming what went wrong (the conditions below are the claim).
+        const box = () => document.querySelectorAll(
+            `${PROG_CARD(name)} .apworld-progression-level`)[1];
+        const target = Number(box().value) + 5;
+        box().value = String(target);
+        box().dispatchEvent(new Event('change', { bubbles: true }));
+
+        testController.assertEqual('the edit is ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        testController.assertEqual('…and the level the person typed is in the document',
+            String(target), String(mappingsOf(panel)[name].items?.[1]?.level));
+        // ⛓⛓ THE DIRECT CLAIM: the op carries the WHOLE entry, so every OTHER
+        //   level is exactly where it was. A card that wrote only the changed
+        //   row would take the rest of the entry with it, and this is the
+        //   condition that says so by name.
+        const others = (entry) => JSON.stringify((entry?.items ?? [])
+            .filter((_m, i) => i !== 1));
+        testController.assertEqual('…and every OTHER level of the entry is untouched',
+            others(JSON.parse(before)), others(mappingsOf(panel)[name]));
+        testController.assertEqual('…and it is drawn back',
+            String(target), String(box()?.value));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('one undo restores the WHOLE entry, not just the level',
+            before, JSON.stringify(mappingsOf(panel)[name]));
+        testController.assertEqual('…and the op count goes back with it',
+            String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…and the card is drawn from the restored entry',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-level-edit test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A PROCGEN DOCUMENT STARTS EMPTY, AND THE SECTION IS HOW IT STOPS
+ * BEING** (I2, task 4 (c)).
+ *
+ * `makeRulesJsonScaffold` writes `progression_mapping: {'1': {}}` and the ⚖
+ * ruling is explicitly about worlds that do not use these yet — so the empty
+ * slot is the case the editor exists for, and the row drives the section's own
+ * box and button rather than `_applyOp`.
+ */
+export async function apworldAddingAProgressionMappingOnAnEmptySlot(testController) {
+    const NEW_NAME = 'Progressive Widget';
+    try {
+        const panel = await openHub(testController, PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        testController.assertEqual('the procgen document carries NO mappings to start', '0',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…and the section draws no cards', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-progression-card`).length));
+        testController.reportCondition('…and says so rather than drawing nothing',
+            !!document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-empty`));
+
+        const opsBefore = panel.session.ops().length;
+        const held = Object.keys(panel.rulesDoc.items[panel.playerId]);
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new`).value = NEW_NAME;
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-add-button`).click();
+
+        testController.assertEqual('the mapping is in the document\'s slot', '1',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…as ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        const made = mappingsOf(panel)[NEW_NAME];
+        testController.reportCondition('…and its base is itself, which is what pools',
+            made?.base_item === NEW_NAME);
+        testController.reportCondition('…and its one level names an item this slot HOLDS',
+            Array.isArray(made?.items) && made.items.length === 1
+                && held.includes(made.items[0].name));
+        testController.assertEqual('…and the card is drawn for it',
+            JSON.stringify(expectedCards(panel)), JSON.stringify(drawnCards()));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('one undo takes the slot back to empty', '0',
+            String(Object.keys(mappingsOf(panel)).length));
+        testController.assertEqual('…and the card with it', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-progression-card`).length));
+
+        // ⛓⛓ The OTHER kind through the same row, because the add row's kind
+        //   select is the only place a person chooses it.
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new`).value = 'Widgets';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progression-new-kind`).value = 'additive';
+        document.querySelector(`${PANEL_SELECTOR} .apworld-progressions-add-button`).click();
+        testController.assertEqual('the add row\'s kind select reaches the document',
+            'additive', mappingsOf(panel).Widgets?.type);
+        testController.assertEqual('…and the card draws as that kind',
+            'additive', document.querySelector(PROG_CARD('Widgets'))?.dataset.kind);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('empty-slot add test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **A MEMBER NAMING AN ITEM THE SLOT DOES NOT HOLD IS SHOWN, MARKED AND
+ * REMOVABLE — AND THE OP IS THE GUARD** (I2, task 4 (d); mutant (A)'s row).
+ *
+ * ⛓ smz3 is in this state AS COMMITTED — nothing is hand-edited in — because
+ * `genericLogic.has` resolves a name THROUGH a mapping, so a level's name need
+ * not be an item anyone receives.
+ *
+ * ⛔⛔ **AND THE REFUSAL IS ASKED OF THE OP, NOT OF THE PICKER** (trap 1305).
+ * The item pickers omit names the entry already holds and offer only items the
+ * slot has, so no gesture on this section can produce an unknown name — a row
+ * that drove only the control would be entirely green with the op's refusal
+ * deleted. The op is asked directly, and separately from the drawing half.
+ */
+export async function apworldAStaleProgressionMemberIsShownAndRemovable(testController) {
+    try {
+        const panel = await openHub(testController, STALE_PROGRESSION_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+
+        const slot = panel.playerId;
+        const held = panel.rulesDoc.items[slot];
+        // ⛓ The expectation is DERIVED from the document: every member name the
+        //   slot's item table does not hold.
+        const expected = Object.entries(mappingsOf(panel)).flatMap(([name, m]) => m.items
+            .filter((x) => !Object.prototype.hasOwnProperty.call(held, x.name))
+            .map((x) => `${name}/${x.name}`));
+        testController.reportCondition('this document carries stale members as committed',
+            expected.length > 0);
+        if (!expected.length) return testController.getOverallResult();
+
+        const marked = () => [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-progression-member[data-stale="true"]`)]
+            .map((r) => `${r.closest('.apworld-progression-card').dataset.mapping}/${r.dataset.item}`);
+        testController.assertEqual('every stale member is drawn and marked',
+            JSON.stringify(expected), JSON.stringify(marked()));
+        testController.assertEqual('…and the section counts them',
+            String(expected.length),
+            document.querySelector(`${PANEL_SELECTOR} .apworld-progressions`).dataset.issues);
+        testController.reportCondition('…and the mark says WHY',
+            !!document.querySelector(
+                `${PANEL_SELECTOR} .apworld-progression-member[data-stale="true"] `
+                + '.apworld-progression-stale'));
+
+        // ⛓ REMOVABLE — from a card that has another member, since the op
+        //   refuses an empty container by shape.
+        const [name, member] = expected
+            .map((e) => [e.slice(0, e.lastIndexOf('/')), e.slice(e.lastIndexOf('/') + 1)])
+            .find(([n]) => mappingsOf(panel)[n].items.length > 1);
+        const before = JSON.stringify(mappingsOf(panel)[name]);
+        const opsBefore = panel.session.ops().length;
+        const row = () => document.querySelector(
+            `${PROG_CARD(name)} .apworld-progression-member[data-item="${CSS.escape(member)}"]`);
+        row().querySelector('.apworld-progression-member-remove').click();
+
+        testController.assertEqual('removing a stale member is ONE op', '1',
+            String(panel.session.ops().length - opsBefore));
+        testController.reportCondition('…and it is gone from the document',
+            !mappingsOf(panel)[name].items.some((x) => x.name === member));
+        testController.assertEqual('…and the section\'s count drops by exactly one',
+            String(expected.length - 1),
+            document.querySelector(`${PANEL_SELECTOR} .apworld-progressions`).dataset.issues);
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('…and one undo puts the whole entry back',
+            before, JSON.stringify(mappingsOf(panel)[name]));
+
+        // ⛓⛓ An edit that KEEPS the stale member is ACCEPTED — the difference is
+        //   the point: an absolute refusal would make these the entries nobody
+        //   can edit.
+        const opsKept = panel.session.ops().length;
+        const box = () => document.querySelectorAll(
+            `${PROG_CARD(name)} .apworld-progression-level`)[0];
+        box().value = String(Number(box().value) + 3);
+        box().dispatchEvent(new Event('change', { bubbles: true }));
+        testController.assertEqual('an edit that keeps a stale member is accepted, as one op', '1',
+            String(panel.session.ops().length - opsKept));
+        testController.reportCondition('…and the stale member is still there, still marked',
+            mappingsOf(panel)[name].items.some((x) => x.name === member)
+                && marked().includes(`${name}/${member}`));
+
+        // ⛔ THE OP IS THE GUARD — asked past every control, which is the path
+        //   the Document tab's whole-block Save JSON is on.
+        const opsRefused = panel.session.ops().length;
+        const refused = panel.session.apply({
+            op: 'set-progression-mapping', player: slot, name,
+            mapping: {
+                ...mappingsOf(panel)[name],
+                items: [{ name: 'An Item That Was Never Here', level: 1 }],
+            },
+        });
+        testController.reportCondition('the OP refuses a name this edit would ADD',
+            refused.ok === false);
+        testController.reportCondition('…and the refusal NAMES it',
+            String(refused.description ?? '').includes('An Item That Was Never Here'));
+        testController.assertEqual('…and nothing was recorded', '0',
+            String(panel.session.ops().length - opsRefused));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('stale-progression test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **THE SECTION READS THE SELECTED SLOT, NOT THE FIRST ONE** (I2).
+ *
+ * ⛔ I1 §13.5 (C) measured that the vitest module is BLIND to this: the section
+ * reads the DOCUMENT, so a wrong slot is not a table the node rows can see.
+ * The document is the four-player multiworld export whose slot 2 is the ALTTP
+ * world — slots 1, 3 and 4 carry NO mappings and slot 2 carries five, so the
+ * discrimination is a real 0-vs-5 rather than two lists that happen to differ.
+ */
+export async function apworldProgressionFollowsTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PROGRESSION_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the fixture offers a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const read = () => {
+            selectTab(panel, 'items');
+            return {
+                slot: panel.playerId,
+                drawn: drawnCards(),
+                expected: expectedCards(panel),
+                head: document.querySelector(
+                    `${PANEL_SELECTOR} .apworld-progressions`).dataset.slot,
+            };
+        };
+
+        selectPlayer(select, 1);
+        const one = read();
+        testController.assertEqual('slot 1: the section draws slot 1\'s mappings',
+            JSON.stringify(one.expected), JSON.stringify(one.drawn));
+        testController.assertEqual('…and says which slot it is drawing', '1', one.head);
+
+        // ⛓ The slot that HAS mappings on this document — found, not typed.
+        const populated = Object.keys(panel.rulesDoc.progression_mapping)
+            .find((p) => Object.keys(panel.rulesDoc.progression_mapping[p] ?? {}).length > 0);
+        selectPlayer(select, populated);
+        const other = read();
+        testController.assertEqual(`slot ${populated}: the section draws that slot's mappings`,
+            JSON.stringify(other.expected), JSON.stringify(other.drawn));
+        testController.assertEqual('…and says which slot it is drawing', populated, other.head);
+
+        testController.reportCondition('the two slots really differ, so the row can discriminate',
+            JSON.stringify(one.drawn) !== JSON.stringify(other.drawn)
+                && one.drawn.length === 0 && other.drawn.length > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('progression-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-progression-cards-draw-the-document',
+    name: 'APWorld hub: the Progression section draws the document\'s mappings, with the pool visible',
+    description: 'On alttp, whose five mappings include two pooling into one `base_item` — the '
+               + 'only shape in which the pool is visible at all. Asserts one card per mapping in '
+               + 'the document\'s order with its kind (classified the way `inventoryManager` '
+               + 'classifies, `type === "additive"`, not the way the section does), every level '
+               + 'row carrying the document\'s own item and level, the pooled card drawing its '
+               + 'base as the document holds it, and that the base picker\'s domain is the slot\'s '
+               + 'MAPPING names — measured 137 of 137 over the corpus — rather than its items.',
+    testFunction: apworldProgressionCardsDrawTheDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-additive-progression-kind-draws-as-itself',
+    name: 'APWorld hub: the additive progression kind draws as a counter, not as levels',
+    description: 'On messenger, which carries the corpus\'s ONE additive mapping (`Shards`, six '
+               + 'components at 1/10/50/100/300/500). The two kinds are read by two different '
+               + 'parts of the app, and the difference a person has to see is that an additive '
+               + 'member carries a VALUE the inventory accumulates rather than a LEVEL the rule '
+               + 'engine compares — so the row asserts the value boxes carry the document\'s own '
+               + 'numbers, that the card has NO level box, and that it has no reorder control, '
+               + 'because it is not an ordered list. Mutant: rendering the additive kind as '
+               + 'progressive reds this row.',
+    testFunction: apworldTheAdditiveKindDrawsAsItself,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-progression-level-edit-is-one-op-and-one-undo',
+    name: 'APWorld hub: editing one progression level is one op, and one undo restores the whole entry',
+    description: 'Types into a level box on the card with the most levels (chosen from the '
+               + 'document, never named) and commits on `change`, the Meta tab\'s rule. The undo '
+               + 'condition compares the WHOLE entry rather than the level that moved: a card '
+               + 'that wrote only the changed row would still put that one level back, and the '
+               + 'rest of the entry would be whatever the partial write left. Mutant: writing '
+               + 'only the changed row reds the undo condition.',
+    testFunction: apworldAProgressionLevelEditIsOneOpAndOneUndo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-adding-a-progression-mapping-on-an-empty-slot',
+    name: 'APWorld hub: a procgen document\'s empty progression slot gains its first mapping',
+    description: 'On procgen_maze/AP_1, whose scaffold writes `progression_mapping: {"1": {}}` — '
+               + 'the state the ⚖ ruling is explicitly about ("no procgen worlds currently use '
+               + 'them"). Drives the section\'s own box and button: the entry lands in the '
+               + 'document as ONE op with its base pointing at itself and one level naming an '
+               + 'item this slot HOLDS, the card is drawn, and one undo takes the slot back to '
+               + 'empty. Then the same row\'s kind select, because that is the only place a '
+               + 'person chooses the additive kind.',
+    testFunction: apworldAddingAProgressionMappingOnAnEmptySlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-stale-progression-member-is-shown-and-removable',
+    name: 'APWorld hub: a progression member the slot no longer holds is shown, marked and removable',
+    description: 'smz3 is in this state AS COMMITTED — 12 of its members name resolved forms '
+               + 'slot 1\'s items do not hold, because `genericLogic.has` resolves a name THROUGH '
+               + 'the mapping. Asserts every one is drawn and marked against an expectation '
+               + 'DERIVED from the document, that removing one is one op and drops the section\'s '
+               + 'count by exactly one, that one undo puts the whole entry back, and that an edit '
+               + 'KEEPING a stale member is accepted — which is why the op\'s refusal is '
+               + 'differenced. ⛔ The refusal itself is asked of the OP, not of the picker (trap '
+               + '1305): no gesture on this section can produce an unknown name, so a row that '
+               + 'drove only the control would be green with the guard deleted. Mutant: dropping '
+               + 'the op\'s item refusal reds this row.',
+    testFunction: apworldAStaleProgressionMemberIsShownAndRemovable,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-progression-follows-the-selected-slot',
+    name: 'APWorld hub: the Progression section reads the selected slot, not the first one',
+    description: 'On the four-player multiworld export whose slot 2 is the ALTTP world: slots 1, '
+               + '3 and 4 carry NO mappings and slot 2 carries five, so the discrimination is a '
+               + 'real 0-vs-5. Driven through the real toolbar selector in both directions, with '
+               + 'the populated slot FOUND in the document rather than named. Exists because the '
+               + 'vitest module is blind to this — the section reads the DOCUMENT, so a wrong '
+               + 'slot is not a table the node rows can see (I1 §13.5 (C)).',
+    testFunction: apworldProgressionFollowsTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S0 — THE PER-REGION SIDECAR VIEW
+ * (the preset-sidecars plan §3 D2, §9.3 rung 2)
+ *
+ * One renderer (`_makeRegionSidecarBlock`), two hosts: under each region on
+ * the Regions tab, and the Sidecars tab's per-region list. Every expectation
+ * below is read off the DOCUMENT — the entry's own `substrate`, its own bytes —
+ * and every slot is chosen through the toolbar's own selector (H1's rows).
+ * ⚠ Every post-gesture lookup RE-QUERIES: a render rebuilds the tab body, and a
+ * node captured before it answers out of the detached old tree (W0 §7.5).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The sidecar blocks the Regions tab draws, keyed by region — re-queried. */
+function regionSidecarBlocks() {
+    return [...document.querySelectorAll(
+        `${PANEL_SELECTOR} .apworld-region-block .apworld-sidecar-block`)];
+}
+
+/** ⛓ One region's sidecar block on whichever tab is showing — re-queried. */
+function sidecarBlockFor(regionName) {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-sidecar-block[data-region-name="${CSS.escape(regionName)}"]`);
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE BLOCKS FOLLOW THE SELECTED SLOT, AND EACH BADGE IS THE
+ * DOCUMENT'S OWN `substrate`.** Walks every populated slot of the four-player
+ * fixture — the population is `preset_sidecars`' own keys — through the
+ * product's selector. Per slot: one block per sidecar entry, each inside the
+ * region block of the same name, its badge equal to THAT slot's entry's
+ * `substrate` (never a literal), exactly one Edit ▸ per sidecar region and it
+ * lives INSIDE the block (S0 moved it out of the header — the count is H4b's,
+ * unchanged), none on a region with no sidecar, and no JSON built.
+ *
+ * ⛔ Non-vacuity: two slots of the fixture hold DIFFERENT substrates (maze and
+ * bounce) — measured here off the document, since a block that read one slot
+ * for every slot would agree with a fixture whose slots all matched.
+ */
+export async function apworldSidecarBlocksFollowTheSelectedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        testController.reportCondition('the toolbar carries a player selector', !!select);
+        if (!select) return testController.getOverallResult();
+
+        const slots = Object.keys(doc.preset_sidecars ?? {});
+        const substratesOf = (slot) => [...new Set(Object.values(doc.preset_sidecars[slot])
+            .map((e) => e.substrate))].sort().join(',');
+        testController.reportCondition(
+            '⛓ premise: the fixture\'s slots do not all hold the same substrates',
+            new Set(slots.map(substratesOf)).size > 1);
+
+        for (const slot of slots) {
+            selectPlayer(select, slot);
+            selectTab(panel, 'regions');
+            const want = sidecarRegions(doc, slot);
+            const drawn = await testController.pollForValue(
+                () => {
+                    const blocks = regionSidecarBlocks();
+                    return String(panel.playerId) === slot && blocks.length > 0
+                        && blocks.every((b) => b.dataset.player === slot) ? blocks : null;
+                },
+                `slot ${slot}'s sidecar blocks on the Regions tab`, 8000, 50);
+            testController.assertEqual(
+                `slot ${slot}: one block per sidecar entry of THAT slot`,
+                String(want.length), String((drawn ?? []).length));
+            for (const block of regionSidecarBlocks()) {
+                const region = block.dataset.regionName;
+                const entry = doc.preset_sidecars[slot][region];
+                testController.assertEqual(
+                    `slot ${slot} "${region}": the badge is the document's substrate`,
+                    String(entry?.substrate),
+                    String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+                testController.assertEqual(
+                    `…drawn under the region block of the same name`,
+                    region, String(block.closest('.apworld-region-block')?.dataset.regionName));
+                testController.assertEqual(
+                    '…and its Edit ▸ is inside the block, once',
+                    '1', String(block.querySelectorAll('.apworld-edit-room').length));
+            }
+            for (const regionBlock of document.querySelectorAll(
+                `${PANEL_SELECTOR} .apworld-region-block`)) {
+                const name = regionBlock.dataset.regionName;
+                testController.assertEqual(
+                    `slot ${slot} "${name}": Edit ▸ drawn ${want.includes(name) ? 'once' : 'nowhere'}`
+                    + ' (the H4b count, unmoved by S0)',
+                    want.includes(name) ? '1' : '0',
+                    String(regionBlock.querySelectorAll('.apworld-edit-room').length));
+            }
+            testController.assertEqual(
+                `slot ${slot}: no JSON is built until a block is opened`,
+                '0', String(document.querySelectorAll(
+                    `${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+        }
+
+        /**
+         * ⛓⛓ **AND ON A DOCUMENT WHOSE ENTRIES CARRY NO `render_hint`.** On every
+         * committed entry that carries a hint it EQUALS the substrate (plan
+         * §2.1), so the four slots above cannot tell a badge reading the hint
+         * from one reading the substrate. The Seedling entries carry no hint at
+         * all — the only place in the corpus where the two readings differ.
+         */
+        const seedling = await openHub(testController, SEEDLING_PRESET_PATH);
+        if (seedling) {
+            selectTab(seedling, 'regions');
+            const sDoc = seedling.rulesDoc;
+            const sSlot = String(seedling.playerId);
+            const sWant = sidecarRegions(sDoc, sSlot);
+            testController.reportCondition(
+                '⛓ premise: this document\'s entries carry no render_hint',
+                sWant.length > 0 && sWant.every((r) => !('render_hint' in sDoc.preset_sidecars[sSlot][r])));
+            const sDrawn = await testController.pollForValue(
+                () => (regionSidecarBlocks().length === sWant.length ? regionSidecarBlocks() : null),
+                'the Seedling document\'s sidecar blocks', 8000, 50);
+            testController.reportCondition('one block per Seedling entry', !!sDrawn);
+            for (const block of regionSidecarBlocks()) {
+                const r = block.dataset.regionName;
+                testController.assertEqual(`"${r}": the badge is the entry's substrate`,
+                    String(sDoc.preset_sidecars[sSlot][r]?.substrate),
+                    String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+            }
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-blocks-per-slot test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) OPENING A BLOCK DRAWS THE ENTRY'S OWN BYTES, AND THE DOORS IN IT
+ * ARE THE REGION'S.** On a bounce slot (a zone payload — the family the Map tab
+ * and Edit ▸ treat differently from the maze slots), the region picked off the
+ * document. The textarea must equal `JSON.stringify(entry, null,
+ * JSON_BLOCK_INDENT)` byte for byte — the WHOLE entry, not the payload — and
+ * be the ONLY JSON built. ⛓ PRESET SIDECARS S1 turned saving on: the textarea
+ * is editable and carries exactly one Save (the save itself is S1's rows,
+ * below; the id lost its `-read-only` suffix with the claim). The facts line's
+ * size is compared against the payload's own UTF-8 bytes measured here, and the
+ * hand-off door is pressed: a button wired to nothing would pass a presence
+ * check.
+ */
+export async function apworldASidecarBlockShowsItsEntrysJson(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        // ⛓ the LAST populated slot, found in the document rather than named.
+        const slot = Object.keys(doc.preset_sidecars).at(-1);
+        selectPlayer(select, slot);
+        selectTab(panel, 'regions');
+        const region = sidecarRegions(doc, slot)[0];
+        const entry = doc.preset_sidecars[slot][region];
+        testController.log(`slot ${slot}, region ${region}, substrate ${entry.substrate}`);
+
+        const toggle = await testController.pollForValue(
+            () => (String(panel.playerId) === slot
+                ? sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle') : null),
+            `the "${region}" block's Show JSON toggle`, 8000, 50);
+        testController.reportCondition('the block offers Show JSON', !!toggle);
+        if (!toggle) return testController.getOverallResult();
+        toggle.click();
+
+        const text = await testController.pollForValue(
+            () => sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json') ?? null,
+            'the opened block\'s JSON', 8000, 50);
+        testController.reportCondition('opening the block built its JSON', !!text);
+        if (!text) return testController.getOverallResult();
+        testController.assertEqual(
+            '⛓⛓ the JSON is the WHOLE ENTRY, byte for byte, at the widget\'s indent',
+            JSON.stringify(entry, null, JSON_BLOCK_INDENT), text.value);
+        testController.reportCondition('it is EDITABLE (S1: the host passes an onSave)',
+            text.readOnly === false);
+        testController.assertEqual('…with exactly one Save', '1', String(sidecarBlockFor(region)
+            .querySelectorAll('.apworld-sidecar-save').length));
+        testController.assertEqual('and it is the only JSON built on the tab', '1',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+
+        const bytes = new TextEncoder().encode(
+            JSON.stringify(entry.playable_payload, null, JSON_BLOCK_INDENT)).length;
+        testController.reportCondition(
+            `the facts line gives the payload's pretty size (${bytes} B) and its keys`,
+            (sidecarBlockFor(region)?.querySelector('.apworld-sidecar-facts')?.textContent ?? '')
+                .includes(`${bytes.toLocaleString()} B`)
+            && Object.keys(entry.playable_payload).every((k) => sidecarBlockFor(region)
+                .querySelector('.apworld-sidecar-facts').textContent.includes(k)));
+
+        const edit = sidecarBlockFor(region)?.querySelector('.apworld-edit-room');
+        testController.reportCondition('the block carries Edit ▸', !!edit);
+        testController.assertEqual('…for THIS region\'s substrate',
+            String(entry.substrate), String(edit?.dataset.substrate));
+        testController.assertEqual('…inside THIS region\'s block',
+            region, String(edit?.closest('.apworld-region-block')?.dataset.regionName));
+
+        const regen = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-regenerate');
+        const words = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor;
+        testController.reportCondition('the block carries the hand-off door', !!regen);
+        testController.assertEqual('…labelled by the door\'s own declaration',
+            words.label, String(regen?.textContent));
+        testController.reportCondition('…pressable in this app', !!regen && !regen.disabled);
+        if (regen && !regen.disabled) {
+            regen.click();
+            testController.reportCondition(
+                '⛓ pressing it is the procgen_metadata door — the status line says so',
+                String(panel.statusLabel?.textContent ?? '')
+                    .includes(DOCUMENT_KEY_EDITORS.procgen_metadata.label));
+            /**
+             * ⛓ …and its EFFECT: the door's own panel comes to the front. ⛔ It
+             * is awaited before the hub is raised again — the door's `open`
+             * defers its module (a dynamic import), so a raise published
+             * straight after the click lands FIRST and the pipeline then takes
+             * the stack back (measured: the hub stayed hidden for the whole
+             * poll budget).
+             */
+            const pipelinePanel = DOCUMENT_KEY_EDITORS.procgen_metadata.panelId;
+            const raised = await testController.pollForCondition(
+                () => panelManager.isPanelActive(pipelinePanel),
+                'the pipeline panel came to the front', 8000, 50);
+            testController.reportCondition('⛓ …and the pipeline panel came to the front', raised);
+            testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+            const back = await testController.pollForCondition(
+                () => (panel.scrollContainer?.clientHeight ?? 0) > 0,
+                'the hub is back in front with a layout', 8000, 50);
+            testController.reportCondition('the hub is back in front, with a layout', back);
+        }
+
+        const hide = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle');
+        if (hide) hide.click();
+        testController.assertEqual('closing it drops the JSON again', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-block JSON test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE SIDECARS TAB'S LIST IS COLLAPSED BY DEFAULT, EXPANDS TO THE
+ * SLOT'S ENTRIES, AND `Go to region` LANDS ON THAT REGION** (⚖ user,
+ * 2026-09-10: *"expandable, and collapsed by default"*). On a slot other than
+ * the first, through the selector. Collapsed: 0 region rows in the DOM. Expanded:
+ * one row per entry of THAT slot, in the document's order, each carrying the
+ * SAME block (badge = the document's substrate) and no JSON. The state survives
+ * a tab round-trip and is gone after a reload (a new session).
+ *
+ * ⛓ `Go to region` is asserted by its EFFECT — the Regions tab, that region
+ * selected, and its header inside the scroll container's viewport. ⛔ The
+ * target is the LAST row, and the premise that its header starts OUTSIDE the
+ * viewport is measured first: a region already on screen is "in view" whether
+ * or not anything scrolled.
+ */
+export async function apworldSidecarsListIsCollapsedAndGoesToTheRegion(testController) {
+    try {
+        let panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        const slots = Object.keys(doc.preset_sidecars);
+        const slot = slots.find((k) => k !== slots[0]
+            && Object.keys(doc.preset_sidecars[k]).length > 0);
+        const want = sidecarRegions(doc, slot);
+        const rows = () => [...document.querySelectorAll(
+            `${PANEL_SELECTOR} .apworld-sidecars-region-row`)];
+        const expander = () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`);
+
+        selectPlayer(select, slot);
+        // ⛓ the premise for the scroll: on the Regions tab, the LAST region's
+        //   header starts outside the viewport.
+        selectTab(panel, 'regions');
+        // ⛓ the sidecar region drawn LAST on the Regions tab (the tab draws
+        //   `regions[slot]` in its own order, not the sidecars' order).
+        const regionOrder = Object.keys(doc.regions[slot] ?? {});
+        const target = [...want].sort((a, b) => regionOrder.indexOf(a) - regionOrder.indexOf(b))
+            .at(-1);
+        const inView = (name) => {
+            const block = document.querySelector(`${PANEL_SELECTOR} .apworld-region-block`
+                + `[data-region-name="${CSS.escape(name)}"]`);
+            const header = block?.firstElementChild;
+            if (!header || !panel.scrollContainer) return null;
+            const c = panel.scrollContainer.getBoundingClientRect();
+            const h = header.getBoundingClientRect();
+            return h.top >= c.top - 1 && h.bottom <= c.bottom + 1;
+        };
+        /**
+         * ⛔ AND THE PANEL HAS A LAYOUT. A hub behind another panel of its stack
+         * (the row before this one presses the pipeline door) is `hidden`, and a
+         * hidden panel measures every rect at 0..0 — so "is the header in view"
+         * would be answered by a box with no size (memory:
+         * `feedback_hidden_parent_measures_zero_at_mount`). Measured: the first
+         * batch run read `viewport 0..0`.
+         */
+        await testController.pollForCondition(
+            () => (panel.scrollContainer?.clientHeight ?? 0) > 0 && inView(target) !== null,
+            `the Regions tab draws "${target}" in a panel that has a layout`, 8000, 50);
+        {
+            const c = panel.scrollContainer.getBoundingClientRect();
+            const h = document.querySelector(`${PANEL_SELECTOR} .apworld-region-block`
+                + `[data-region-name="${CSS.escape(target)}"]`)?.firstElementChild
+                ?.getBoundingClientRect();
+            testController.log(`viewport ${Math.round(c.top)}..${Math.round(c.bottom)}, `
+                + `"${target}" header ${Math.round(h?.top)}..${Math.round(h?.bottom)}, `
+                + `scrollHeight ${panel.scrollContainer.scrollHeight}`);
+        }
+        testController.reportCondition(
+            `⛓ premise: "${target}"'s header starts OUTSIDE the viewport`, inView(target) === false);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        await testController.pollForCondition(() => !!expander(), 'the list\'s expander', 8000, 50);
+        testController.assertEqual('⛔ COLLAPSED by default: no region row in the DOM',
+            '0', String(rows().length));
+        testController.assertEqual('…and the expander says so', 'false',
+            String(expander()?.dataset.open));
+
+        expander().click();
+        const drawn = await testController.pollForValue(
+            () => (rows().length > 0 ? rows() : null), 'the expanded list', 8000, 50);
+        testController.assertEqual(`expanded: one row per entry of slot ${slot}, in order`,
+            want.join(','), (drawn ?? []).map((r) => r.dataset.regionName).join(','));
+        for (const row of rows()) {
+            const name = row.dataset.regionName;
+            testController.assertEqual(`"${name}": the row carries the same block, badged by `
+                + 'the document', String(doc.preset_sidecars[slot][name].substrate),
+            String(row.querySelector('.apworld-sidecar-block .apworld-sidecar-badge')
+                ?.textContent));
+        }
+        testController.assertEqual('expanding builds NO JSON', '0', String(
+            document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-json`).length));
+
+        selectTab(panel, DOCUMENT_TAB_ID);
+        selectTab(panel, SIDECARS_TAB_ID);
+        testController.assertEqual('the list stays expanded across a re-render',
+            String(want.length), String(rows().length));
+
+        const go = document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row`
+            + `[data-region-name="${CSS.escape(target)}"] .apworld-sidecars-go-region`);
+        testController.reportCondition(`"${target}"'s row carries Go to region`, !!go);
+        if (go) go.click();
+        testController.assertEqual('Go to region selects the Regions tab', 'regions',
+            String(panel.activeTab));
+        testController.assertEqual('…with that region selected', target,
+            String(panel._selectedRegion));
+        testController.assertEqual('…on the same slot', slot, String(panel.playerId));
+        testController.reportCondition(`⛓ …and "${target}"'s header is inside the viewport`,
+            inView(target) === true);
+
+        // ⛓ a new document is a new session: the list starts collapsed again.
+        panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, SIDECARS_TAB_ID);
+        await testController.pollForCondition(() => !!expander(), 'the reloaded tab', 8000, 50);
+        testController.assertEqual('a reload resets the list to collapsed', '0',
+            String(rows().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-list test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) AN OPEN BLOCK SHOWS THE ENTRY THE DOCUMENT HOLDS AFTER AN OP.**
+ * A `replace-region-sidecar` — the op Edit ▸'s save comes back as — applied
+ * through the session's own seam, with a payload that differs by one marker
+ * key and the region's CURRENT rules as the (total) rules map. The assertion
+ * is on the DOCUMENT AFTER the op (trap 1306), never on the op count: the open
+ * block's text must equal the entry `panel.rulesDoc` now holds, carry the
+ * marker, differ from the text before — and one Undo puts the old text back.
+ */
+export async function apworldASidecarBlocksJsonFollowsAnAppliedOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (!select) {
+            testController.reportCondition('the toolbar carries a player selector', false);
+            return testController.getOverallResult();
+        }
+        const slot = Object.keys(panel.rulesDoc.preset_sidecars)[0];
+        selectPlayer(select, slot);
+        selectTab(panel, 'regions');
+        const region = sidecarRegions(panel.rulesDoc, slot)[0];
+        const toggle = await testController.pollForValue(
+            () => (String(panel.playerId) === slot
+                ? sidecarBlockFor(region)?.querySelector('.apworld-sidecar-toggle') : null),
+            `the "${region}" block's Show JSON toggle`, 8000, 50);
+        if (!toggle) {
+            testController.reportCondition('the block offers Show JSON', false);
+            return testController.getOverallResult();
+        }
+        toggle.click();
+        const textOf = () => sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json')
+            ?.value ?? null;
+        const before = await testController.pollForValue(textOf, 'the opened JSON', 8000, 50);
+        testController.reportCondition('the block\'s JSON is open', before !== null);
+
+        const MARK = 's0_row_iv_marker';
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const regionDoc = panel.rulesDoc.regions[slot][region];
+        const ruleMap = (list) => Object.fromEntries(
+            (list ?? []).map((e) => [e.name, e.access_rule ?? null]));
+        const res = panel._applyOp({
+            op: 'replace-region-sidecar', region,
+            payload: { ...entry.playable_payload, [MARK]: true },
+            rules: { exits: ruleMap(regionDoc.exits), locations: ruleMap(regionDoc.locations) },
+        });
+        testController.reportCondition('the op was applied', !!res?.ok && !!res?.applied);
+
+        const after = await testController.pollForValue(
+            () => { const t = textOf(); return t !== null && t !== before ? t : null; },
+            'the open block redrew', 8000, 50);
+        const held = panel.rulesDoc.preset_sidecars[slot][region];
+        testController.reportCondition('⛓ the DOCUMENT after the op carries the marker',
+            held?.playable_payload?.[MARK] === true);
+        testController.assertEqual(
+            '⛓⛓ the open block shows the entry the document holds NOW, byte for byte',
+            JSON.stringify(held, null, JSON_BLOCK_INDENT), String(after));
+
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        testController.reportCondition('the Undo button is there', !!undo);
+        if (undo) undo.click();
+        const restored = await testController.pollForValue(
+            () => { const t = textOf(); return t === before ? t : null; },
+            'one undo put the old JSON back', 8000, 50);
+        testController.reportCondition('one Undo puts the open block back to the old entry',
+            restored === before);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-block op test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecar-blocks-follow-the-selected-slot',
+    name: 'APWorld hub: each region\'s sidecar block follows the selected slot and names the document\'s substrate',
+    description: 'PRESET SIDECARS S0 (⚖ Q2 A: one renderer, two hosts). Walks every populated '
+               + 'slot of the four-player fixture through the toolbar selector: one block per '
+               + 'sidecar entry of THAT slot, each under the region block of the same name, its '
+               + 'badge equal to the document\'s own `substrate` for that slot, Edit ▸ once '
+               + 'inside it and nowhere on a region with no sidecar (the H4b count, unmoved), '
+               + 'and no JSON built; then the same badge law on a Seedling document, whose '
+               + 'entries carry no render_hint (the only corpus case where the hint and the '
+               + 'substrate differ). Mutant: a block reading slot "1" reds the bounce slots.',
+    testFunction: apworldSidecarBlocksFollowTheSelectedSlot,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-block-shows-its-entrys-json',
+    name: 'APWorld hub: opening a sidecar block draws its entry\'s JSON, with one Save, beside the region\'s own doors',
+    description: 'PRESET SIDECARS S0, amended by S1 (saving on; the id dropped "-read-only"). On '
+               + 'a bounce slot, the region picked off the document: the block\'s Show JSON '
+               + 'builds exactly one textarea whose text is the WHOLE entry byte-equal at the '
+               + 'widget\'s exported indent, editable with exactly one Save; the facts line '
+               + 'gives the payload\'s UTF-8 pretty size and every top-level key; Edit ▸ in it '
+               + 'is this region\'s; and its "Regenerate in the pipeline" door is pressed and '
+               + 'answers as the procgen_metadata door.',
+    testFunction: apworldASidecarBlockShowsItsEntrysJson,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-sidecars-list-is-collapsed-and-goes-to-the-region',
+    name: 'APWorld hub: the Sidecars tab\'s region list is collapsed by default and Go to region lands on the region',
+    description: 'PRESET SIDECARS S0 (⚖ user: "expandable, and collapsed by default"). On a '
+               + 'non-first slot through the selector: 0 region rows until expanded, then one '
+               + 'row per entry of that slot in document order with the same block and no JSON; '
+               + 'expanded state survives a tab round-trip and a reload resets it; Go to region '
+               + 'on the LAST row selects the Regions tab and that region, with its header '
+               + 'inside the viewport — after measuring that it started outside it. Mutant: '
+               + 'the list drawn expanded reds the collapsed assertion.',
+    testFunction: apworldSidecarsListIsCollapsedAndGoesToTheRegion,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-blocks-json-follows-an-applied-op',
+    name: 'APWorld hub: an open sidecar block shows the entry the document holds after an op, and after its undo',
+    description: 'PRESET SIDECARS S0. A replace-region-sidecar (Edit ▸\'s op) applied through the '
+               + 'session with a one-key marker in the payload and the region\'s own rules as '
+               + 'the total rules map: the open block\'s text must equal the entry the DOCUMENT '
+               + 'holds after the op (trap 1306 — never the op count), and one Undo puts the old '
+               + 'text back. Mutant: JSON captured at expand rather than read at render reds it.',
+    testFunction: apworldASidecarBlocksJsonFollowsAnAppliedOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S1 — THE RAW ENTRY SAVE
+ * (the preset-sidecars plan §3 D1, §9.3 rung 3)
+ *
+ * The block's Save JSON → ONE `set-region-sidecar`, the whole entry, the
+ * region's rules untouched (⚖ Q1 C, Q3 A). Every row asserts the DOCUMENT
+ * after the gesture (trap 1306) and asks the OP directly as well as pressing
+ * the product's own Save (1305). Every lookup after a gesture RE-QUERIES (a
+ * render rebuilds the tab body).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ Open one region's sidecar JSON on whichever tab is showing → its textarea, or null. */
+async function openSidecarJson(testController, regionName) {
+    const toggle = await testController.pollForValue(
+        () => sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-toggle') ?? null,
+        `the "${regionName}" block's Show JSON toggle`, 8000, 50);
+    if (!toggle) return null;
+    if (!sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json')) toggle.click();
+    return testController.pollForValue(
+        () => sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json') ?? null,
+        `the "${regionName}" block's JSON`, 8000, 50);
+}
+
+/** ⛓ Type an entry into the open block and press the product's own Save JSON.
+ *  → false when there was no textarea or no Save to press. */
+function typeAndSaveSidecar(regionName, entry) {
+    const text = sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-json');
+    const save = sidecarBlockFor(regionName)?.querySelector('.apworld-sidecar-save');
+    if (!text || !save) return false;
+    text.value = JSON.stringify(entry, null, JSON_BLOCK_INDENT);
+    save.click();
+    return true;
+}
+
+/** ⛓ The answer the hub printed under that region's block — re-queried. */
+const sidecarMessageFor = (regionName) => sidecarBlockFor(regionName)
+    ?.querySelector('.apworld-sidecar-op-message') ?? null;
+
+/** ⛓ Every exit's and location's access rule of one region, as bytes. */
+function accessRulesOf(doc, slot, region) {
+    const r = doc?.regions?.[slot]?.[region];
+    return JSON.stringify([
+        ...(r?.exits ?? []).map((e) => [e.name, e.access_rule ?? null]),
+        ...(r?.locations ?? []).map((l) => [l.name, l.access_rule ?? null]),
+    ]);
+}
+
+/**
+ * ⛓ Per distinct `substrate` in the document, the first sidecar region (in
+ * document order) whose region carries an access rule that is not the trivial
+ * `True_` — so a save that ALSO wrote the region's rules (mutant A writes
+ * `True_` everywhere, borrowing `replace-region-sidecar`'s rule write) cannot
+ * hide behind rules that were already the default, and each payload FAMILY the
+ * document holds is saved through the widget once. Read off the document; no
+ * substrate is named here.
+ */
+function sidecarRegionsWithARule(doc) {
+    const out = new Map();
+    for (const slot of Object.keys(doc?.preset_sidecars ?? {})) {
+        for (const region of sidecarRegions(doc, slot)) {
+            const substrate = doc.preset_sidecars[slot][region]?.substrate;
+            if (out.has(substrate)) continue;
+            const r = doc.regions?.[slot]?.[region];
+            if ([...(r?.exits ?? []), ...(r?.locations ?? [])]
+                .some((x) => x?.access_rule && x.access_rule.rule !== 'True_')) {
+                out.set(substrate, { slot, region, substrate });
+            }
+        }
+    }
+    return [...out.values()];
+}
+
+/** ⛓ The entry with ONE payload key changed: its first boolean, flipped (else a marker). */
+function withOnePayloadKeyEdited(entry) {
+    const next = JSON.parse(JSON.stringify(entry));
+    const payload = next.playable_payload ?? {};
+    const key = Object.keys(payload).find((k) => typeof payload[k] === 'boolean') ?? 's1_marker';
+    next.playable_payload = { ...payload, [key]: payload[key] === undefined ? true : !payload[key] };
+    return { entry: next, key };
+}
+
+/** ⛓ Pick a slot through the toolbar and land on the Regions tab, waiting for the slot. */
+async function onRegionsTabFor(testController, panel, slot) {
+    const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+    if (!select) return false;
+    selectPlayer(select, slot);
+    selectTab(panel, 'regions');
+    return testController.pollForCondition(() => String(panel.playerId) === String(slot),
+        `slot ${slot} selected`, 8000, 50);
+}
+
+/**
+ * ⛓⛓⛓ **(i) SAVE JSON WRITES THE ENTRY AND LEAVES THE RULES.** One payload key
+ * edited in the block's own textarea, the product's Save pressed. Then, on the
+ * session and the DOCUMENT: ONE op recorded (asserted before it is read — trap
+ * 1301), a `set-region-sidecar` for this slot and region; the document AFTER is
+ * the document BEFORE with exactly this entry replaced, byte for byte (1306 —
+ * so a partial write, mutant B, and a rules write, mutant A, both red it); the
+ * region's exits' and locations' access rules byte-equal to BEFORE, said on
+ * their own because they are the ⚖; the answer under the block is the op's own
+ * description and names what was NOT re-derived; the op asked directly writes
+ * the same bytes; one Undo restores the document. Once per payload family the
+ * fixture holds (`sidecarRegionsWithARule`), each on its own slot.
+ */
+export async function apworldASidecarSaveWritesTheEntryAndLeavesTheRules(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const targets = sidecarRegionsWithARule(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two payload families, each with a sidecar '
+            + 'region whose access rules are not all True_', targets.length >= 2);
+        for (const { slot, region, substrate } of targets) {
+            const at = `[slot ${slot} "${region}", ${substrate}]`;
+            testController.reportCondition(`${at} slot selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${at} the block's JSON is open, and EDITABLE`,
+                !!text && text.readOnly === false);
+            if (!text) continue;
+
+            const before = panel.rulesDoc;
+            const beforeBytes = JSON.stringify(before);
+            const rulesBefore = accessRulesOf(before, slot, region);
+            const opsBefore = panel.session.ops().length;
+            const { entry: typed, key } = withOnePayloadKeyEdited(before.preset_sidecars[slot][region]);
+            testController.log(`${at} editing ONE payload key: "${key}"`);
+            testController.reportCondition(`${at} Save JSON pressed`,
+                typeAndSaveSidecar(region, typed));
+
+            const recorded = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${at} the save recorded one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded`, !!recorded);
+            if (!recorded) continue;
+            testController.assertEqual(`${at} …a set-region-sidecar`, 'set-region-sidecar',
+                String(recorded.op));
+            testController.assertEqual(`${at} …for this slot and region`, `${slot}|${region}`,
+                `${recorded.player}|${recorded.region}`);
+
+            const after = panel.rulesDoc;
+            const want = JSON.parse(beforeBytes);
+            want.preset_sidecars[slot][region] = typed;
+            testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = the document before with `
+                + 'THIS entry replaced, byte for byte', JSON.stringify(want), JSON.stringify(after));
+            testController.assertEqual(`${at} …so the entry it holds is what was typed`,
+                JSON.stringify(typed), JSON.stringify(after.preset_sidecars[slot][region]));
+            testController.assertEqual(`${at} ⛓⛓ the region's exits' and locations' access rules `
+                + 'are byte-equal to BEFORE', rulesBefore, accessRulesOf(after, slot, region));
+
+            const said = sidecarMessageFor(region);
+            testController.reportCondition(`${at} the answer is printed under the block`, !!said);
+            testController.assertEqual(`${at} …it is the op's description, as the status line `
+                + 'has it', String(panel._opMessage), String(said?.textContent));
+            testController.reportCondition(`${at} …and it says what was NOT re-derived`,
+                String(said?.textContent ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+            const direct = applyRulesDocOp(before, recorded);
+            testController.reportCondition(`${at} ⛓ the op, asked directly, writes the same document`,
+                !!direct.ok && JSON.stringify(direct.doc) === JSON.stringify(after));
+
+            const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+            testController.reportCondition(`${at} the Undo button is there`, !!undo);
+            if (undo) undo.click();
+            testController.assertEqual(`${at} ⛓ ONE Undo restores the document, byte for byte`,
+                beforeBytes, JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …and the op list`, String(opsBefore),
+                String(panel.session.ops().length));
+
+            /**
+             * ⛓⛓ **AND THE ENTRY-LEVEL FIELDS ARE THE SAVE'S TOO** (⚖ Q3 A: the
+             * whole entry). ⛔ Measured by the first mutant battery: a save of ONE
+             * payload key cannot tell "the whole entry was written" from "only
+             * the payload was" (mutant B) — the two documents are identical. So
+             * the same save again with the entry's own fields moved: every
+             * top-level key except the payload DROPPED but `substrate` (which
+             * the op requires), and `grid_cell` moved if the entry had one.
+             */
+            const whole = { substrate: typed.substrate, playable_payload: typed.playable_payload };
+            const cell = before.preset_sidecars[slot][region].grid_cell;
+            if (cell) whole.grid_cell = { gx: cell.gx + 1, gy: cell.gy };
+            const dropped = Object.keys(before.preset_sidecars[slot][region])
+                .filter((k) => !(k in whole));
+            testController.reportCondition(`${at} ⛓ premise: the entry carries a field beyond `
+                + `substrate and payload to drop (${dropped.join(', ')})`, dropped.length > 0);
+            testController.reportCondition(`${at} the entry-level save pressed`,
+                typeAndSaveSidecar(region, whole));
+            const want2 = JSON.parse(beforeBytes);
+            want2.preset_sidecars[slot][region] = whole;
+            testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = before with the WHOLE entry `
+                + 'replaced — the dropped fields gone, the moved cell moved', JSON.stringify(want2),
+            JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …the access rules still byte-equal to BEFORE`,
+                rulesBefore, accessRulesOf(panel.rulesDoc, slot, region));
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} …and one Undo restores it`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-save test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A SAVE THE OP OR THE SCHEMA REFUSES IS REFUSED BY NAME, AND
+ * NOTHING MOVES.** Two arms, because they are two different gates:
+ *
+ *  (a) an entry that DROPS `substrate` — the OP's own refusal (the schema's
+ *      `required`, restated by the op). Asked of the op directly first.
+ *  (b) an entry whose `grid_cell` lacks `gy` — which the op, asked directly,
+ *      would TAKE: only the whole-document schema veto (`_rawSaveRefusal`)
+ *      stands between it and the document. ⛔ This is the arm mutant C (the
+ *      veto removed) reds; arm (a) cannot see the veto at all, because a
+ *      preview the op refuses gives the schema check nothing to compare.
+ *
+ * Each: the refusal is printed under the block and names the field, no op is
+ * recorded, the document is byte-unmoved.
+ */
+export async function apworldASidecarSaveIsVetoedByName(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc0 = panel.rulesDoc;
+        // ⛓ a region whose entry HAS a grid_cell — arm (b) has to break one.
+        let slot = null;
+        let region = null;
+        for (const s of Object.keys(doc0.preset_sidecars ?? {})) {
+            region = sidecarRegions(doc0, s).find((r) => !!doc0.preset_sidecars[s][r]?.grid_cell);
+            if (region) { slot = s; break; }
+        }
+        testController.reportCondition('⛓ premise: a sidecar entry carrying a grid_cell', !!slot);
+        if (!slot) return testController.getOverallResult();
+        testController.log(`slot ${slot}, region ${region}`);
+        await onRegionsTabFor(testController, panel, slot);
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition('the block\'s JSON is open', !!text);
+        if (!text) return testController.getOverallResult();
+
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const asOp = (e) => ({ op: 'set-region-sidecar', player: slot, region, entry: e });
+
+        /* (a) the op's own refusal */
+        const { substrate: _dropped, ...noSubstrate } = entry;
+        const opSays = applyRulesDocOp(panel.rulesDoc, asOp(noSubstrate));
+        testController.reportCondition(
+            '⛓ premise (a): the op, asked directly, refuses an entry with no substrate',
+            !opSays.ok && /`substrate`/.test(opSays.error ?? ''));
+        testController.reportCondition('(a) Save JSON pressed', typeAndSaveSidecar(region, noSubstrate));
+        const a = sidecarMessageFor(region);
+        testController.reportCondition('(a) the refusal is printed under the block, marked refused',
+            a?.dataset.refused === 'true');
+        testController.reportCondition('(a) …and names `substrate`',
+            String(a?.textContent ?? '').includes('`substrate`'));
+        testController.assertEqual('(a) no op was recorded', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.assertEqual('(a) the document did not move', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+
+        /* (b) the schema's refusal, of an entry the op would take */
+        const { gy: _gy, ...halfCell } = entry.grid_cell;
+        const badCell = { ...entry, grid_cell: halfCell };
+        const opTakes = applyRulesDocOp(panel.rulesDoc, asOp(badCell));
+        testController.reportCondition(
+            '⛓ premise (b): the op ALONE would take this entry — only the schema veto refuses it',
+            !!opTakes.ok);
+        testController.reportCondition('(b) Save JSON pressed', typeAndSaveSidecar(region, badCell));
+        const b = sidecarMessageFor(region);
+        const bText = String(b?.textContent ?? '');
+        testController.reportCondition('(b) the refusal is printed under the block, marked refused',
+            b?.dataset.refused === 'true');
+        testController.reportCondition('(b) …as a SCHEMA error naming grid_cell and its missing gy',
+            bText.includes('schema') && bText.includes('grid_cell') && bText.includes('gy'));
+        testController.assertEqual('(b) no op was recorded', String(opsBefore),
+            String(panel.session.ops().length));
+        testController.assertEqual('(b) the document did not move', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-veto test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE SIDECARS LIST'S BLOCK SAVES THE SAME OP** (⚖ Q2 A — one
+ * renderer, two hosts). The same one-key edit, saved once from the Regions
+ * tab and once from the Sidecars tab's expanded list: the two recorded ops are
+ * byte-equal, both leave the same document, and the answer is printed under
+ * the block that was saved. Then the widget's DEFAULT: a host that passes no
+ * `onSave` gets a read-only textarea and no Save, so a new host cannot make
+ * the entry writable by accident.
+ */
+export async function apworldASidecarSaveFromTheSidecarsListIsTheSameOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        // ⛓ the LAST family row (i) saves — a slot other than the selector's default.
+        const target = sidecarRegionsWithARule(panel.rulesDoc).at(-1);
+        testController.reportCondition('⛓ premise: a sidecar region to edit', !!target);
+        if (target) testController.log(`slot ${target.slot}, region ${target.region}`);
+        if (!target) return testController.getOverallResult();
+        const { slot, region } = target;
+        await onRegionsTabFor(testController, panel, slot);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const { entry: typed } = withOnePayloadKeyEdited(panel.rulesDoc.preset_sidecars[slot][region]);
+
+        const saveFrom = async (host) => {
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${host}: the block's JSON is open, editable`,
+                !!text && text.readOnly === false);
+            testController.reportCondition(`${host}: Save JSON pressed`,
+                typeAndSaveSidecar(region, typed));
+            const op = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${host}: one op recorded`, 8000, 50);
+            testController.reportCondition(`${host}: ⛓ ONE op was recorded`, !!op);
+            const result = { op: JSON.stringify(op), doc: JSON.stringify(panel.rulesDoc),
+                said: sidecarMessageFor(region)?.textContent ?? null };
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${host}: one Undo restores the document`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
+            return result;
+        };
+
+        const fromRegions = await saveFrom('Regions');
+        selectTab(panel, SIDECARS_TAB_ID);
+        const expander = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`),
+            'the Sidecars list\'s expander', 8000, 50);
+        if (expander?.dataset.open !== 'true') expander?.click();
+        const row = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row`
+                + `[data-region-name="${CSS.escape(region)}"] .apworld-sidecar-block`),
+            `"${region}"'s block on the Sidecars list`, 8000, 50);
+        testController.reportCondition('⛓ the block now drawn is the Sidecars list\'s', !!row
+            && row.dataset.hostTab === SIDECARS_TAB_ID);
+        const fromList = await saveFrom('Sidecars');
+
+        testController.assertEqual('⛓⛓ the two hosts record the SAME op, byte for byte',
+            fromRegions.op, fromList.op);
+        testController.assertEqual('…and leave the same document', fromRegions.doc, fromList.doc);
+        testController.reportCondition('…and the answer is printed under the Sidecars list\'s block',
+            String(fromList.said ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+        // ⛓ the widget's default, asked of the one renderer with no onSave.
+        const probeHost = 's1-probe';
+        const key = `${probeHost}|${slot}|${region}`;
+        panel._expandedSidecarJson.add(key);
+        const probe = panel._makeRegionSidecarBlock(slot, region, { hostTab: probeHost });
+        panel._expandedSidecarJson.delete(key);
+        const ta = probe?.querySelector('.apworld-sidecar-json');
+        testController.reportCondition('a host that passes NO onSave gets a READ-ONLY textarea',
+            !!ta && ta.readOnly === true);
+        testController.assertEqual('…and no Save', '0',
+            String(probe?.querySelectorAll('.apworld-sidecar-save').length ?? -1));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-save two-hosts test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) Edit ▸'s VERDICT FOLLOWS THE DOCUMENT ACROSS A RAW SAVE.** The
+ * region and the tile are picked by the LAW, off Edit ▸'s own inspection
+ * (`inspectRegionRoom`) rather than off the button under test: the first
+ * sidecar region whose inspection OPENS on the fixture, and the first single
+ * tile whose flip makes that inspection REFUSE. (Most single-tile flips do not
+ * — the serializer reproduces them — so "a hand-edited payload is refused"
+ * is not true of every hand edit; it is true of one the serializer does not
+ * reproduce.)
+ *
+ *  1. that edit through Save JSON; Edit ▸ is still pressable (the verdict is
+ *     asked on the PRESS); pressed (1305), it opens NO room and its `title`
+ *     becomes the inspection's own sentence for the document NOW;
+ *  2. the ORIGINAL entry saved back through Save JSON → the button is
+ *     pressable again: the refusal did not outlive the payload it was about;
+ *  3. Undo (back to the edited payload), pressed again → refused again; Undo
+ *     (back to the fixture) → pressable. ⛔ Step 3's last check is the defect
+ *     measured at `9bf3a0c583`: Undo never goes through `_applyOp`, and the
+ *     remembered refusal stayed on a restored document. Mutant E (the verdict
+ *     read regardless of the record it was asked about) reds steps 2 and 3.
+ */
+export async function apworldEditVerdictFollowsARawSidecarSave(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc0 = panel.rulesDoc;
+        let pick = null;
+        let flips = 0;
+        for (const slot of Object.keys(doc0.preset_sidecars ?? {})) {
+            for (const region of sidecarRegions(doc0, slot)) {
+                const tiles = doc0.preset_sidecars[slot][region]?.playable_payload?.tiles;
+                if (!Array.isArray(tiles)) continue;
+                if (!(await inspectRegionRoom(doc0, slot, region)).ok) continue;
+                for (let i = 0; i < tiles.length && !pick; i += 1) {
+                    const cand = JSON.parse(JSON.stringify(doc0));
+                    cand.preset_sidecars[slot][region].playable_payload.tiles[i] = tiles[i] ? 0 : 1;
+                    flips += 1;
+                    if (!(await inspectRegionRoom(cand, slot, region)).ok) pick = { slot, region, i };
+                }
+                if (pick) break;
+            }
+            if (pick) break;
+        }
+        testController.reportCondition('⛓ premise: a region Edit ▸ opens, and one tile flip it refuses',
+            !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i } = pick;
+        testController.log(`slot ${slot}, region ${region}, tile ${i} (flip ${flips} tried)`);
+
+        await onRegionsTabFor(testController, panel, slot);
+        const btn0 = await testController.pollForValue(() => editButtonFor(region),
+            `"${region}"'s Edit ▸`, 8000, 50);
+        testController.reportCondition('⛓ premise: Edit ▸ is pressable on the fixture',
+            !!btn0 && !btn0.disabled);
+        const text = await openSidecarJson(testController, region);
+        if (!text) {
+            testController.reportCondition('the block\'s JSON is open', false);
+            return testController.getOverallResult();
+        }
+        const original = JSON.parse(text.value);
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+
+        const pressAndRead = async (label) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: Edit ▸ is pressable — the verdict is asked on `
+                + 'the PRESS', !!b && !b.disabled);
+            if (!b || b.disabled) return null;
+            const now = await inspectRegionRoom(panel.rulesDoc, slot, region);
+            testController.reportCondition(`${label}: ⛓ the door's own inspection refuses the `
+                + 'document NOW', !now.ok);
+            b.click();
+            const answered = await testController.pollForValue(
+                () => { const x = editButtonFor(region); return x?.disabled ? x : null; },
+                `${label}: Edit ▸ answered`, 8000, 50);
+            testController.assertEqual(`${label}: ⛓⛓ its title is the inspection's sentence for `
+                + 'the document NOW', String(now.why), String(answered?.title));
+            testController.reportCondition(`${label}: …and no room was opened`,
+                panel.roomEditorSession === null);
+            return now.why;
+        };
+        const pressable = (label, why) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: ⛓⛓ Edit ▸ is pressable again — the refusal `
+                + 'did not outlive the payload it was about', !!b && !b.disabled && b.title !== why);
+        };
+
+        /* 1 */
+        testController.reportCondition('1. Save JSON pressed', typeAndSaveSidecar(region, edited));
+        testController.assertEqual('1. one op recorded', String(opsBefore + 1),
+            String(panel.session.ops().length));
+        const why = await pressAndRead('1');
+
+        /* 2 */
+        testController.reportCondition('2. the original saved back',
+            typeAndSaveSidecar(region, original));
+        testController.assertEqual('2. …as a second op', String(opsBefore + 2),
+            String(panel.session.ops().length));
+        testController.assertEqual('2. the entry is the fixture\'s again', JSON.stringify(original),
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region]));
+        pressable('2', why);
+
+        /* 3 */
+        const undo = () => document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        undo();
+        await pressAndRead('3 (after one Undo, the edited payload again)');
+        undo();
+        testController.assertEqual('3. two Undos: the fixture\'s op list', String(opsBefore),
+            String(panel.session.ops().length));
+        pressable('3 (after the second Undo)', why);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('edit-verdict test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-sidecar-save-writes-the-entry-and-leaves-the-rules',
+    name: 'APWorld hub: a sidecar block\'s Save JSON writes the whole entry as one op and leaves the region\'s rules',
+    description: 'PRESET SIDECARS S1 (⚖ Q1 C, Q3 A). One payload key edited in the block\'s own '
+               + 'textarea, the product\'s Save pressed: one set-region-sidecar recorded for that '
+               + 'slot and region; the DOCUMENT after = before with exactly that entry replaced, '
+               + 'byte for byte (trap 1306); the region\'s access rules byte-equal; the answer '
+               + 'under the block is the op\'s description naming what was NOT re-derived; the op '
+               + 'asked directly writes the same bytes; one Undo restores; then the WHOLE entry — '
+               + 'entry-level fields dropped and the grid cell moved — lands as typed. Once per '
+               + 'payload family. Mutants: the op also writes rules (A) or writes only the '
+               + 'payload (B, seen only by the whole-entry arm).',
+    testFunction: apworldASidecarSaveWritesTheEntryAndLeavesTheRules,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-save-is-vetoed-by-name',
+    name: 'APWorld hub: a sidecar save the op or the schema refuses is refused by name and moves nothing',
+    description: 'PRESET SIDECARS S1. (a) an entry dropping `substrate` — the op\'s own refusal, '
+               + 'asked of the op first; (b) an entry whose grid_cell lacks gy — which the op '
+               + 'alone would take, so only the whole-document schema veto refuses it. Each: '
+               + 'the refusal under the block names the field, no op recorded, the document '
+               + 'byte-unmoved. Mutant C (the veto removed) reds arm (b).',
+    testFunction: apworldASidecarSaveIsVetoedByName,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-save-from-the-sidecars-list-is-the-same-op',
+    name: 'APWorld hub: the Sidecars list\'s block saves the same op as the Regions tab\'s',
+    description: 'PRESET SIDECARS S1 (⚖ Q2 A: one renderer, two hosts). The same one-key edit '
+               + 'saved from the Regions tab and from the Sidecars tab\'s expanded list: the two '
+               + 'recorded ops are byte-equal and leave the same document, the answer is printed '
+               + 'under the block that was saved; and a host that passes no onSave gets the '
+               + 'read-only widget with no Save.',
+    testFunction: apworldASidecarSaveFromTheSidecarsListIsTheSameOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-verdict-follows-a-raw-sidecar-save',
+    name: 'APWorld hub: after a raw sidecar save, Edit ▸ is re-asked — refused by name, and pressable again once the payload is back',
+    description: 'PRESET SIDECARS S1. Region and tile picked off Edit ▸\'s own inspection: a '
+               + 'one-tile raw edit the round trip does not reproduce, saved through Save JSON; '
+               + 'Edit ▸ pressed opens no room and its title becomes the inspection\'s sentence '
+               + 'for the document NOW; the original saved back makes it pressable again; and '
+               + 'across Undo (which never goes through _applyOp) the same. Mutant E: the '
+               + 'verdict read regardless of the record it was asked about.',
+    testFunction: apworldEditVerdictFollowsARawSidecarSave,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS V0 — THE SIDECAR VALIDITY REPORT, THROUGH THE PRODUCT
+ *
+ * ⚖ user, 2026-09-10: *"If the user changes a substrate, or makes some other
+ * breaking change, then it's their responsibility to find a way to make the
+ * data valid again before they save the JSON data. If we don't already have a
+ * way to report what data is invalid, then I want to add one."* — so the save
+ * is NOT refused; the bar counts, the block says what, and Undo takes it back.
+ * Every slot is chosen through the toolbar's selector, every save is the
+ * block's own Save JSON, and the substrates and the field are read off the
+ * document and the registry, never typed.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The bar's two readings: its own label's numbers, and the counts it stamps. */
+function barReading(panel) {
+    const bar = panel.validationBar;
+    const text = bar.textContent;
+    const n = (re) => Number((text.match(re) ?? [0, 0])[1]);
+    return {
+        labelTotal: /No issues/.test(text) ? 0 : n(/(\d+) errors?/) + n(/(\d+) warnings?/),
+        issues: Number(bar.dataset.issues ?? NaN),
+        sidecar: Number(bar.dataset.sidecarIssues ?? NaN),
+    };
+}
+
+/** ⛓ The two slots of the four-player fixture that hold DIFFERENT substrates — read off it. */
+function twoSubstrateSlots(doc) {
+    const slots = Object.keys(doc?.preset_sidecars ?? {});
+    const subOf = (s) => Object.values(doc.preset_sidecars[s])[0]?.substrate;
+    const a = slots[0];
+    const b = slots.find((s) => subOf(s) !== subOf(a));
+    return b ? { a, b, aSub: subOf(a), bSub: subOf(b) } : null;
+}
+
+/** ⛓ The sentences one region's block lists — re-queried. */
+const sidecarIssueRows = (regionName) => [...(sidecarBlockFor(regionName)
+    ?.querySelectorAll('.apworld-sidecar-issue') ?? [])];
+
+/**
+ * ⛓ THE LAW for "a required field" (the vitest rows' own): the first REQUIRED
+ * substrate-owned field of the entry's declaration whose removal the
+ * substrate's OWN `deserializeWorld` survives — so dropping it is exactly one
+ * fact. Asked of the declaration and the deserializer, never of the check under
+ * test.
+ */
+function droppableRequiredField(entry) {
+    const reg = substrateRegistry.get(entry?.substrate);
+    if (!reg) return null;
+    return Object.entries(sidecarFieldsOf(reg) ?? {})
+        .filter(([, d]) => d.required && d.owner === 'substrate').map(([k]) => k)
+        .find((k) => {
+            const p = { ...entry.playable_payload };
+            delete p[k];
+            try { reg.deserializeWorld(p); return true; } catch { return false; }
+        }) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) A CLEAN DOCUMENT READS ZERO, ON BOTH SUBSTRATES.** The two slots
+ * of the four-player fixture that hold different substrates, each selected
+ * through the toolbar: the bar stamps 0 sidecar issues, and no block on the
+ * Regions tab carries a sentence.
+ */
+export async function apworldSidecarIssuesReadZeroOnACleanDocument(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const blocks = await testController.pollForValue(
+                () => (regionSidecarBlocks().length > 0
+                    && regionSidecarBlocks().every((b) => b.dataset.player === slot)
+                    ? regionSidecarBlocks() : null),
+                `slot ${slot}'s sidecar blocks`, 8000, 50);
+            testController.reportCondition(`slot ${slot}: its sidecar blocks are drawn`, !!blocks);
+            testController.assertEqual(`slot ${slot}: the bar stamps 0 sidecar issues`, '0',
+                String(barReading(panel).sidecar));
+            testController.assertEqual(`slot ${slot}: no block carries a sentence`, '0',
+                String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-issue`).length));
+            testController.reportCondition(`slot ${slot}: every block stamps 0`,
+                regionSidecarBlocks().every((b) => b.dataset.sidecarIssues === '0'));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-issues-zero test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A RAW SAVE THAT DROPS A REQUIRED FIELD IS REPORTED, NOT
+ * REFUSED.** On the fixture's first slot, its first sidecar region: the field
+ * picked by the law above; the entry typed without it into the block and the
+ * product's Save pressed. Then: ONE op recorded (asserted before anything is
+ * read — 1301); the BAR's count rose by exactly one (its label AND its stamp);
+ * the BLOCK lists the sentence naming that field, of kind MISSING_REQUIRED; the
+ * save's answer ends with the count; the Sidecars list's row shows the badge;
+ * the bar's row, pressed, lands on the region; and one Undo puts every reading
+ * back. ⛔ The bar and the block are separate conditions ON PURPOSE: they are
+ * two readers of one function, and mutant B (the bar not consulting it) must
+ * red the one and leave the other green.
+ */
+export async function apworldARawSaveDroppingARequiredFieldIsReportedNotRefused(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        const slot = two.a;
+        testController.reportCondition(`slot ${slot} selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+        const entry = panel.rulesDoc.preset_sidecars[slot][region];
+        const field = droppableRequiredField(entry);
+        testController.reportCondition(`⛓ premise: a required field of \`${entry.substrate}\` the `
+            + `deserializer survives losing (${field})`, !!field);
+        if (!field) return testController.getOverallResult();
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition('the block\'s JSON is open', !!text);
+        if (!text) return testController.getOverallResult();
+
+        const before = barReading(panel);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const typed = JSON.parse(JSON.stringify(entry));
+        delete typed.playable_payload[field];
+        testController.reportCondition('Save JSON pressed', typeAndSaveSidecar(region, typed));
+
+        const recorded = await testController.pollForValue(
+            () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+            'the save recorded one op', 8000, 50);
+        testController.reportCondition('⛓ ONE op was recorded — the save was NOT refused', !!recorded);
+        if (!recorded) return testController.getOverallResult();
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(recorded.op));
+
+        const after = barReading(panel);
+        testController.assertEqual('⛓⛓ BAR: its label\'s count rose by exactly one',
+            String(before.labelTotal + 1), String(after.labelTotal));
+        testController.assertEqual('⛓⛓ BAR: its sidecar count rose by exactly one',
+            String(before.sidecar + 1), String(after.sidecar));
+
+        const rows = sidecarIssueRows(region);
+        testController.assertEqual('⛓⛓ BLOCK: it lists exactly one sentence', '1', String(rows.length));
+        testController.assertEqual('BLOCK: …of kind MISSING_REQUIRED',
+            SIDECAR_ISSUE_KINDS.MISSING_REQUIRED, String(rows[0]?.dataset.kind));
+        testController.reportCondition(`BLOCK: …naming \`${field}\``,
+            String(rows[0]?.textContent ?? '').includes(`\`${field}\``));
+        testController.reportCondition('the answer under the block ends with the count',
+            /— 1 sidecar issue, see the block$/.test(String(sidecarMessageFor(region)?.textContent ?? '')));
+
+        // the Sidecars tab's expanded list shows the badge on this region's row
+        panel._selectTab('sidecars');
+        if (document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`)?.dataset.open !== 'true') {
+            document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`)?.click();
+        }
+        const badge = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-region-row[data-region-name="${
+                CSS.escape(region)}"] .apworld-sidecars-issue-badge`),
+            'the Sidecars list row\'s issue badge', 8000, 50);
+        testController.assertEqual('SIDECARS LIST: the row\'s badge counts 1', '1', String(badge?.dataset.count));
+
+        // the bar's own row, pressed, lands on the region
+        if (!panel.issuesExpanded) panel.validationBar.firstChild?.click();
+        const barRow = document.querySelector(`${PANEL_SELECTOR} .apworld-validation-issue[data-source="sidecar"]`);
+        testController.reportCondition('BAR: the expanded list carries the sidecar row', !!barRow);
+        barRow?.click();
+        testController.assertEqual('BAR: pressing it selects the region', region, String(panel._selectedRegion));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document', beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+        testController.assertEqual('…and the bar reads what it read before', JSON.stringify(before),
+            JSON.stringify(barReading(panel)));
+        await onRegionsTabFor(testController, panel, slot);
+        testController.assertEqual('…and the block lists nothing', '0', String(sidecarIssueRows(region).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecar-issue-reported test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A RAW SAVE THAT CHANGES `substrate` NAMES THE MISMATCH** (the
+ * replan's ruling: the save accepts a changed substrate; the report names it).
+ * Each of the two slots' first region takes the OTHER slot's substrate — both
+ * read off the document — through the block's Save: the save lands (one op),
+ * the block's SUBSTRATE_MISMATCH sentence names the substrate the payload
+ * really belongs to and the one it now claims, and one Undo takes it away.
+ */
+export async function apworldARawSubstrateChangeNamesTheMismatch(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        for (const [slot, was, now] of [[two.a, two.aSub, two.bSub], [two.b, two.bSub, two.aSub]]) {
+            const at = `[slot ${slot}: ${was} → ${now}]`;
+            testController.reportCondition(`${at} slot selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const text = await openSidecarJson(testController, region);
+            testController.reportCondition(`${at} the block's JSON is open`, !!text);
+            if (!text) continue;
+            const beforeBytes = JSON.stringify(panel.rulesDoc);
+            const opsBefore = panel.session.ops().length;
+            const typed = { ...JSON.parse(JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region])), substrate: now };
+            testController.reportCondition(`${at} Save JSON pressed`, typeAndSaveSidecar(region, typed));
+            const landed = await testController.pollForCondition(
+                () => panel.session.ops().length === opsBefore + 1, `${at} one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded — the changed substrate was ACCEPTED`,
+                landed);
+            if (!landed) continue;
+            testController.assertEqual(`${at} …and the document holds it`, now,
+                String(panel.rulesDoc.preset_sidecars[slot][region].substrate));
+            const mismatch = sidecarIssueRows(region)
+                .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH);
+            testController.assertEqual(`${at} ⛓⛓ the block carries ONE mismatch sentence`, '1',
+                String(mismatch.length));
+            const said = String(mismatch[0]?.textContent ?? '');
+            testController.reportCondition(`${at} …naming \`${was}\` as the keys the payload has`,
+                said.includes(`the keys of \`${was}\``));
+            testController.reportCondition(`${at} …and \`${now}\` as what it is not`,
+                said.includes(`not \`${now}\``));
+            testController.reportCondition(`${at} the bar counts it`, barReading(panel).sidecar >= 1);
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} one Undo restores the document`, beforeBytes,
+                JSON.stringify(panel.rulesDoc));
+            testController.assertEqual(`${at} …and the bar's sidecar count is 0 again`, '0',
+                String(barReading(panel).sidecar));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('substrate-mismatch test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-sidecar-issues-read-zero-on-a-clean-document',
+    name: 'APWorld hub: the sidecar validity report reads zero on a clean document, on both substrates',
+    description: 'PRESET SIDECARS V0. The four-player fixture\'s two slots holding different '
+               + 'substrates, each selected through the toolbar: the bar stamps 0 sidecar issues and '
+               + 'no sidecar block carries a sentence.',
+    testFunction: apworldSidecarIssuesReadZeroOnACleanDocument,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-raw-save-dropping-a-required-field-is-reported-not-refused',
+    name: 'APWorld hub: a raw sidecar save that drops a required field lands, and the bar and the block report it',
+    description: 'PRESET SIDECARS V0 (⚖ the reader owns the repair). A required field picked off '
+               + 'the declaration (the first the deserializer survives losing) dropped through the '
+               + 'block\'s Save: one op recorded (NOT refused); the bar\'s count rises by exactly one; '
+               + 'the block lists the MISSING_REQUIRED sentence naming the field; the answer ends '
+               + 'with the count; the Sidecars list row shows the badge; the bar\'s row lands on '
+               + 'the region; Undo puts it all back. Mutants: the required check dropped (A); the '
+               + 'bar not consulting the report (B: the bar red, the block green).',
+    testFunction: apworldARawSaveDroppingARequiredFieldIsReportedNotRefused,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-raw-substrate-change-names-the-mismatch',
+    name: 'APWorld hub: a raw sidecar save that changes substrate is accepted, and the block names the mismatch',
+    description: 'PRESET SIDECARS V0 (the replan: the raw save accepts a changed substrate; the '
+               + 'report names it). Each of two slots\' first region takes the other slot\'s '
+               + 'substrate (both read off the document): one op lands, the block\'s '
+               + 'SUBSTRATE_MISMATCH sentence names the substrate the payload has the keys of and '
+               + 'the one it claims, Undo takes it away. Mutant D (the rule inverted) reds it.',
+    testFunction: apworldARawSubstrateChangeNamesTheMismatch,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * PRESET SIDECARS D1 — THE BLOCK CONSUMES THE DECLARATION
+ *
+ * The block's disclosure (▸ Show fields & JSON) draws the entry as a FORM
+ * above the JSON: one row per field of the entry subschema and of the
+ * substrate's declaration, a control by type, derived fields greyed. Every
+ * change is ONE whole-entry `set-region-sidecar`. Every expectation is read off
+ * the declaration (`sidecarFieldsOf`), the fetched schema and the live registry
+ * — the LAW — never typed; every slot through the toolbar's selector; every
+ * lookup after a gesture RE-QUERIES.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ One block's form rows — re-queried. */
+const sidecarFieldRows = (regionName) => [...(sidecarBlockFor(regionName)
+    ?.querySelectorAll('.apworld-sidecar-field') ?? [])];
+
+/** ⛓ One form row by field and level — re-queried. */
+const sidecarFieldRow = (regionName, field, level) => sidecarFieldRows(regionName)
+    .find((r) => r.dataset.field === field && r.dataset.level === level) ?? null;
+
+/** ⛓ That row's control — re-queried. */
+const sidecarFieldControl = (regionName, field, level) => sidecarFieldRow(regionName, field, level)
+    ?.querySelector('.apworld-sidecar-field-control') ?? null;
+
+/** ⛓ The paths two plain JSON values differ at (a deep diff — trap 1313). */
+function jsonDiffPaths(a, b, path = '$', out = []) {
+    const isObj = (v) => v !== null && typeof v === 'object';
+    if (!isObj(a) || !isObj(b) || Array.isArray(a) !== Array.isArray(b)) {
+        if (JSON.stringify(a) !== JSON.stringify(b)) out.push(path);
+        return out;
+    }
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) jsonDiffPaths(a[k], b[k], `${path}.${k}`, out);
+    return out;
+}
+
+/**
+ * ⛓ THE ENTRY-LEVEL FIELDS, off the schema the page itself fetches, reached
+ * the way the schema reaches them (`preset_sidecars` → its per-slot pattern →
+ * the per-region `additionalProperties` → `$ref`) — every property but the
+ * payload, whose fields the declaration speaks for.
+ */
+async function entryLevelFieldsFromSchema() {
+    const schema = await (await fetch('./schema/rules.schema.json')).json();
+    const slot = Object.values(schema.properties.preset_sidecars.patternProperties)[0];
+    const ref = slot.additionalProperties.$ref;
+    const entry = ref.slice(2).split('/').reduce((at, k) => at?.[k], schema);
+    return Object.keys(entry?.properties ?? {}).filter((k) => k !== PAYLOAD_KEY);
+}
+
+/** ⛓ THE PICKER'S LAW: every registered id whose entry has `deserializeWorld`, sorted. */
+const playableIdsFromRegistry = () => substrateRegistry.getAll()
+    .filter((e) => typeof e?.deserializeWorld === 'function').map((e) => e.id).sort();
+
+/**
+ * ⛓⛓⛓ **(i) THE FIELDS VIEW LISTS EXACTLY THE DECLARATION.** Both substrates
+ * of the four-player fixture (each slot through the toolbar), each slot's first
+ * region, its disclosure opened with the product's own toggle. The ENTRY rows
+ * are the schema's entry properties but the payload, in order; the PAYLOAD rows
+ * are `sidecarFieldsOf(registry.get(entry.substrate))`'s keys, in order — read
+ * off the declaration, not the payload. ⛔ Premise: some declared field is
+ * ABSENT from the entry, so a list built from the payload's keys (mutant C)
+ * cannot pass by coincidence. A declared-derived field carries the badge and a
+ * non-derived one does not (both picked off the declaration); the lead line
+ * names the JSON as the escape hatch; the note under the JSON names exactly the
+ * derived fields the entry carries.
+ */
+export async function apworldASidecarFieldsViewListsTheDeclaration(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        const entryFields = await entryLevelFieldsFromSchema();
+        testController.reportCondition('⛓ the schema names entry-level fields', entryFields.length > 0);
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const entry = panel.rulesDoc.preset_sidecars[slot][region];
+            const at = `[slot ${slot} ${region} · ${entry.substrate}]`;
+            const fields = sidecarFieldsOf(substrateRegistry.get(entry.substrate));
+            const declared = Object.keys(fields);
+            const absent = declared.filter((k) => !(k in entry.playable_payload));
+            testController.reportCondition(`${at} ⛓ premise: a declared field the entry LACKS `
+                + `(${absent.slice(0, 3).join(', ')})`, absent.length > 0);
+            testController.reportCondition(`${at} the block is collapsed: no form drawn`,
+                sidecarFieldRows(region).length === 0);
+            testController.reportCondition(`${at} the disclosure opened`, !!await openSidecarJson(testController, region));
+
+            const rows = sidecarFieldRows(region);
+            const drawn = (level) => rows.filter((r) => r.dataset.level === level).map((r) => r.dataset.field);
+            testController.assertEqual(`${at} ⛓⛓ ENTRY rows = the schema's entry properties, in order`,
+                JSON.stringify(entryFields), JSON.stringify(drawn(SIDECAR_FORM_LEVELS.ENTRY)));
+            testController.assertEqual(`${at} ⛓⛓⛓ PAYLOAD rows = the merged declaration, in order`,
+                JSON.stringify(declared), JSON.stringify(drawn(SIDECAR_FORM_LEVELS.PAYLOAD)));
+            const absentRow = sidecarFieldRow(region, absent[0], SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.assertEqual(`${at} the absent \`${absent[0]}\` is a row, stamped absent`,
+                'false', String(absentRow?.dataset.present));
+
+            const derived = declared.find((k) => fields[k].derived);
+            const authored = declared.find((k) => !fields[k].derived);
+            testController.reportCondition(`${at} ⛓ premise: the declaration has a derived and an authored field`,
+                !!derived && !!authored);
+            const dRow = sidecarFieldRow(region, derived, SIDECAR_FORM_LEVELS.PAYLOAD);
+            const aRow = sidecarFieldRow(region, authored, SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.reportCondition(`${at} \`${derived}\` (declared derived) carries the derived badge`,
+                !!dRow?.querySelector('.apworld-sidecar-field-derived'));
+            testController.assertEqual(`${at} …whose title is the descriptor's description`,
+                fields[derived].description, String(dRow?.querySelector('.apworld-sidecar-field-derived')?.title));
+            testController.reportCondition(`${at} \`${authored}\` (not derived) carries none`,
+                !!aRow && !aRow.querySelector('.apworld-sidecar-field-derived'));
+            const requiredDrawn = rows.filter((r) => r.dataset.level === SIDECAR_FORM_LEVELS.PAYLOAD
+                && !!r.querySelector('.apworld-sidecar-field-required')).map((r) => r.dataset.field);
+            testController.assertEqual(`${at} the required marks are the declaration's`,
+                JSON.stringify(declared.filter((k) => fields[k].required)), JSON.stringify(requiredDrawn));
+
+            const lead = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-fields-note');
+            testController.reportCondition(`${at} the lead line names the JSON as the escape hatch`,
+                /escape hatch/.test(String(lead?.textContent ?? '')));
+            const note = String(sidecarBlockFor(region)?.querySelector('.apworld-sidecar-rederive-note')?.textContent ?? '');
+            const carried = declared.filter((k) => fields[k].derived && k in entry.playable_payload);
+            testController.reportCondition(`${at} ⛓ the re-derives-nothing note names every derived field carried `
+                + `(${carried.join(', ')})`, carried.length > 0 && carried.every((k) => note.includes(`\`${k}\``)));
+            testController.reportCondition(`${at} …and no derived field the entry lacks`,
+                declared.filter((k) => fields[k].derived && !(k in entry.playable_payload))
+                    .every((k) => !note.includes(`\`${k}\``)));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('fields-view test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) FLIPPING A BOOLEAN IS ONE WHOLE-ENTRY OP.** Both substrate slots,
+ * each first region: the first NON-derived boolean the declaration offers (the
+ * law — never a field typed here), its checkbox pressed. Then: ONE op recorded
+ * (asserted before anything is read — 1301), a `set-region-sidecar` for this
+ * slot and region; the DOCUMENT's entry differs from BEFORE at EXACTLY that
+ * field's path (a deep diff — trap 1313: a write that dropped any other entry
+ * field, mutant A, reds it) and the rest of the document is byte-equal; the
+ * answer under the block is the op's (S1's clause). A change EQUAL to the stored
+ * value records NO op and says "No change". One Undo restores the document.
+ */
+export async function apworldASidecarFieldChangeIsOneWholeEntryOp(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const before = JSON.parse(JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region]));
+            const fields = sidecarFieldsOf(substrateRegistry.get(before.substrate));
+            const field = Object.keys(fields).find((k) => fields[k].type === 'boolean' && !fields[k].derived);
+            const at = `[slot ${slot} ${region} · ${before.substrate}.${field}]`;
+            testController.reportCondition(`${at} ⛓ premise: the declaration offers a non-derived boolean`, !!field);
+            if (!field) continue;
+            testController.reportCondition(`${at} ⛓ premise: the entry carries entry-level fields besides `
+                + 'substrate and payload (so a payload-only write is visible)',
+            Object.keys(before).some((k) => k !== SUBSTRATE_KEY && k !== PAYLOAD_KEY));
+            await openSidecarJson(testController, region);
+            const box = sidecarFieldControl(region, field, SIDECAR_FORM_LEVELS.PAYLOAD);
+            testController.assertEqual(`${at} its control is a checkbox`, SIDECAR_FORM_CONTROLS.CHECKBOX,
+                String(sidecarFieldRow(region, field, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} …enabled`, !!box && !box.disabled);
+            if (!box) continue;
+
+            const docBefore = JSON.stringify(panel.rulesDoc);
+            const opsBefore = panel.session.ops().length;
+            box.click();
+            const recorded = await testController.pollForValue(
+                () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+                `${at} the change recorded one op`, 8000, 50);
+            testController.reportCondition(`${at} ⛓ ONE op was recorded`, !!recorded);
+            if (!recorded) continue;
+            testController.assertEqual(`${at} …a set-region-sidecar`, 'set-region-sidecar', String(recorded.op));
+            testController.assertEqual(`${at} …for this region`, region, String(recorded.region));
+            testController.assertEqual(`${at} …stamped with this slot`, String(slot), String(recorded.player));
+
+            const after = panel.rulesDoc.preset_sidecars[slot][region];
+            testController.assertEqual(`${at} ⛓⛓⛓ the entry differs from BEFORE at exactly that field (deep diff)`,
+                JSON.stringify([`$.${PAYLOAD_KEY}.${field}`]), JSON.stringify(jsonDiffPaths(before, after)));
+            testController.assertEqual(`${at} …to the flipped value`, String(!(before.playable_payload[field] === true)),
+                String(after.playable_payload[field]));
+            const rest = JSON.parse(docBefore);
+            rest.preset_sidecars[slot][region] = after;
+            testController.assertEqual(`${at} …and the rest of the document is byte-equal`,
+                JSON.stringify(rest), JSON.stringify(panel.rulesDoc));
+            testController.reportCondition(`${at} the answer under the block is the op's`,
+                String(sidecarMessageFor(region)?.textContent ?? '').includes(SIDECAR_NOT_REDERIVED));
+
+            // ⛔ A change EQUAL to the stored value is not an edit (1301).
+            const same = sidecarFieldControl(region, field, SIDECAR_FORM_LEVELS.PAYLOAD);
+            const opsNow = panel.session.ops().length;
+            const docNow = JSON.stringify(panel.rulesDoc);
+            same?.dispatchEvent(new Event('change', { bubbles: true }));
+            testController.assertEqual(`${at} ⛓ an unchanged value records NO op`, String(opsNow),
+                String(panel.session.ops().length));
+            testController.assertEqual(`${at} …leaves the document alone`, docNow, JSON.stringify(panel.rulesDoc));
+            testController.reportCondition(`${at} …and says "No change"`, /^No change/.test(String(panel._opMessage)));
+
+            document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+            testController.assertEqual(`${at} ⛓ one Undo restores the document`, docBefore,
+                JSON.stringify(panel.rulesDoc));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('field-change test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A DERIVED FIELD'S CONTROL IS DISABLED AND NAMES ITS WRITER.** Both
+ * substrate slots: every row the DECLARATION marks derived that draws a control
+ * (a scalar) is disabled, and its title is the descriptor's description — which
+ * names the writer in a code span (D0's rule). ⛔ Selected by the declaration's
+ * `derived`, never by the control's state (a population chosen by the field
+ * under test filters its own mutant out). Non-vacuity both ways: the slot has
+ * such a row, and every NON-derived control on it is enabled — so "disabled"
+ * is a discrimination, not a panel that disables everything. And the JSON stays
+ * editable: the escape hatch.
+ */
+export async function apworldADerivedSidecarFieldIsDisabledAndNamesItsWriter(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        if (!two) { testController.reportCondition('⛓ premise: two substrates', false); return testController.getOverallResult(); }
+        const scalar = [SIDECAR_FORM_CONTROLS.CHECKBOX, SIDECAR_FORM_CONTROLS.SELECT,
+            SIDECAR_FORM_CONTROLS.TEXT, SIDECAR_FORM_CONTROLS.NUMBER];
+        for (const slot of [two.a, two.b]) {
+            testController.reportCondition(`slot ${slot} selected through the toolbar`,
+                await onRegionsTabFor(testController, panel, slot));
+            const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+            const entry = panel.rulesDoc.preset_sidecars[slot][region];
+            const at = `[slot ${slot} ${region} · ${entry.substrate}]`;
+            const fields = sidecarFieldsOf(substrateRegistry.get(entry.substrate));
+            await openSidecarJson(testController, region);
+            const derivedWithControl = Object.keys(fields).filter((k) => fields[k].derived
+                && scalar.includes(sidecarFieldRow(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} ⛓ premise: derived fields that draw a control `
+                + `(${derivedWithControl.join(', ')})`, derivedWithControl.length > 0);
+            for (const k of derivedWithControl) {
+                const c = sidecarFieldControl(region, k, SIDECAR_FORM_LEVELS.PAYLOAD);
+                testController.reportCondition(`${at} ⛓⛓ \`${k}\`'s control is DISABLED`, !!c && c.disabled === true);
+                testController.assertEqual(`${at} …its title is the descriptor's description`,
+                    fields[k].description, String(c?.title));
+                testController.reportCondition(`${at} …which names a writer in a code span`,
+                    /`[^`]+`/.test(String(c?.title ?? '')));
+            }
+            const authoredWithControl = Object.keys(fields).filter((k) => !fields[k].derived
+                && scalar.includes(sidecarFieldRow(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.dataset.control));
+            testController.reportCondition(`${at} ⛓ non-vacuity: non-derived controls exist`, authoredWithControl.length > 0);
+            testController.reportCondition(`${at} …and every one is ENABLED`, authoredWithControl.every((k) =>
+                sidecarFieldControl(region, k, SIDECAR_FORM_LEVELS.PAYLOAD)?.disabled === false));
+            const text = sidecarBlockFor(region)?.querySelector('.apworld-sidecar-json');
+            testController.reportCondition(`${at} the JSON (the escape hatch) stays editable`,
+                !!text && text.readOnly === false);
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('derived-field test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE `substrate` PICKER: THE REGISTRY'S PLAYABLE IDS, AND V0'S
+ * SENTENCE AFTER.** On the second substrate slot's first region (read off the
+ * document), the picker's options are every registered id with a
+ * `deserializeWorld`, sorted (the law, from the live registry); its title
+ * carries the label-only clause. Choosing the FIRST slot's substrate (read off
+ * the document) records ONE op; the entry's `substrate` is the new one and its
+ * payload byte-equal; the block's issues then carry V0's SUBSTRATE_MISMATCH
+ * (the replan's ruling: accepted, and reported). One Undo clears it.
+ */
+export async function apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMismatch(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        const two = twoSubstrateSlots(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: two slots holding different substrates', !!two);
+        if (!two) return testController.getOverallResult();
+        const slot = two.b;
+        const now = two.aSub;
+        testController.reportCondition(`slot ${slot} selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[slot])[0];
+        const at = `[slot ${slot} ${region}: ${two.bSub} → ${now}]`;
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        testController.reportCondition(`${at} the entry's substrate row draws a select`,
+            !!picker && picker.tagName === 'SELECT');
+        if (!picker) return testController.getOverallResult();
+        // ⛓ S4: an option SHOWS the entry's label; the enum value (the id) rides on data-enum-value
+        const offered = [...picker.options].filter((o) => !o.disabled).map((o) => o.dataset.enumValue);
+        const law = playableIdsFromRegistry();
+        testController.assertEqual(`${at} ⛓⛓⛓ it offers the registry's playable ids (${law.length}), sorted`,
+            JSON.stringify(law), JSON.stringify(offered));
+        testController.assertEqual(`${at} …with the entry's own substrate selected`, two.bSub,
+            String(picker.selectedOptions[0]?.dataset.enumValue));
+        testController.reportCondition(`${at} its title says it changes the label only`,
+            picker.title.includes(SUBSTRATE_PICKER_CLAUSE));
+        testController.reportCondition(`${at} …beside the Regenerate door`,
+            !!sidecarBlockFor(region)?.querySelector('.apworld-sidecar-regenerate'));
+
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const payloadBefore = JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region].playable_payload);
+        const opsBefore = panel.session.ops().length;
+        const index = [...picker.options].findIndex((o) => !o.disabled && o.dataset.enumValue === now);
+        testController.reportCondition(`${at} ⛓ premise: \`${now}\` is one of the options`, index >= 0);
+        picker.value = picker.options[index]?.value;
+        picker.dispatchEvent(new Event('change', { bubbles: true }));
+        const landed = await testController.pollForCondition(
+            () => panel.session.ops().length === opsBefore + 1, `${at} one op`, 8000, 50);
+        testController.reportCondition(`${at} ⛓ ONE op was recorded — the changed substrate was ACCEPTED`, landed);
+        if (!landed) return testController.getOverallResult();
+        const after = panel.rulesDoc.preset_sidecars[slot][region];
+        testController.assertEqual(`${at} the document's entry now says \`${now}\``, now, String(after.substrate));
+        testController.assertEqual(`${at} …and its payload is untouched`, payloadBefore,
+            JSON.stringify(after.playable_payload));
+        const mismatch = sidecarIssueRows(region)
+            .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH);
+        testController.assertEqual(`${at} ⛓⛓ the block's issues carry V0's mismatch`, '1', String(mismatch.length));
+        testController.reportCondition(`${at} …naming \`${two.bSub}\` as the keys the payload has`,
+            String(mismatch[0]?.textContent ?? '').includes(`the keys of \`${two.bSub}\``));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} one Undo restores the document`, docBefore, JSON.stringify(panel.rulesDoc));
+        testController.assertEqual(`${at} …and the mismatch is gone`, '0', String(sidecarIssueRows(region)
+            .filter((r) => r.dataset.kind === SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('substrate-picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) THE DOCUMENT ROW'S `preset_sidecars` DOOR LANDS ON THE SIDECARS TAB**
+ * (the replan's ruling 6). The Document tab, the row's own button pressed: the
+ * hub's active tab is `SIDECARS_TAB_ID` (the tab's registered id, imported) and
+ * the tab's per-region summary is drawn. Premise: the press starts from the
+ * Document tab.
+ */
+export async function apworldThePresetSidecarsDoorLandsOnTheSidecarsTab(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        await testController.pollForCondition(() => !!panel._rulesSchema,
+            'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, DOCUMENT_TAB_ID);
+        const button = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="${
+                SIDECARS_TAB_SUMMARY_KEY}"] .apworld-doc-editor-open`),
+            'the preset_sidecars row\'s door', 8000, 50);
+        testController.reportCondition('the Document row draws its door', !!button);
+        testController.assertEqual('⛓ premise: the press starts on the Document tab', DOCUMENT_TAB_ID,
+            String(panel.activeTab));
+        if (!button) return testController.getOverallResult();
+        button.click();
+        testController.assertEqual('⛓⛓ the door lands on the Sidecars tab', SIDECARS_TAB_ID,
+            String(panel.activeTab));
+        const summary = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-summary`),
+            'the Sidecars tab\'s per-region summary', 8000, 50);
+        testController.reportCondition('…and the Sidecars tab\'s per-region list line is drawn', !!summary);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('sidecars-door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-a-sidecar-fields-view-lists-the-declaration',
+    name: 'APWorld hub: a sidecar block\'s fields view lists exactly the schema\'s entry fields and the substrate\'s declaration',
+    description: 'PRESET SIDECARS D1. Both substrates of the four-player fixture: opening a block '
+               + 'draws one row per entry-level schema property (the payload excepted) and per field '
+               + 'of the merged declaration, in order — absent fields included; derived rows carry '
+               + 'the badge titled with the writer; the note under the JSON names the derived fields '
+               + 'carried. Mutant C (rows from the payload\'s keys) reds it.',
+    testFunction: apworldASidecarFieldsViewListsTheDeclaration,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-sidecar-field-change-is-one-whole-entry-op',
+    name: 'APWorld hub: flipping a sidecar field\'s checkbox records one whole-entry set-region-sidecar',
+    description: 'PRESET SIDECARS D1. The first non-derived boolean the declaration offers, on both '
+               + 'substrate slots: one op; the entry differs from BEFORE at exactly that path (deep '
+               + 'diff), the rest of the document byte-equal; an unchanged value records no op; one '
+               + 'Undo restores. Mutant A (the control writes the payload only) reds it.',
+    testFunction: apworldASidecarFieldChangeIsOneWholeEntryOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-a-derived-sidecar-field-is-disabled-and-names-its-writer',
+    name: 'APWorld hub: a derived sidecar field\'s control is disabled and its title names the writer',
+    description: 'PRESET SIDECARS D1. Every declared-derived scalar row on both substrate slots: its '
+               + 'control is disabled and titled with the descriptor\'s description (a code span); '
+               + 'every non-derived control is enabled; the JSON stays editable. Mutant B (derived '
+               + 'controls enabled) reds it.',
+    testFunction: apworldADerivedSidecarFieldIsDisabledAndNamesItsWriter,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-substrate-picker-offers-the-playable-ids-and-names-the-mismatch',
+    name: 'APWorld hub: the substrate picker offers the registry\'s playable ids, and a change is reported as V0\'s mismatch',
+    description: 'PRESET SIDECARS D1. On the second substrate slot, the picker lists every registered '
+               + 'id with deserializeWorld (sorted, from the live registry) and says it changes the '
+               + 'label only; choosing the first slot\'s substrate records one op, leaves the payload '
+               + 'byte-equal, and the block lists SUBSTRATE_MISMATCH; Undo clears it. Mutant D (a hand '
+               + 'list) reds it only where the list differs.',
+    testFunction: apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMismatch,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab',
+    name: 'APWorld hub: the Document row\'s preset_sidecars door lands on the Sidecars tab',
+    description: 'PRESET SIDECARS D1 (the replan\'s ruling 6). From the Document tab, the row\'s own '
+               + 'button: the active tab is SIDECARS_TAB_ID and its per-region list line is drawn. '
+               + 'Mutant E (the door\'s target back to Regions) reds it.',
+    testFunction: apworldThePresetSidecarsDoorLandsOnTheSidecarsTab,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS S2 — `Re-derive rules ▸`
+ * (the preset-sidecars plan §5b Q1 C, §9.3 rung 7)
+ *
+ * A raw save writes the entry alone (S1); this button re-derives the region's
+ * rules from its payload, moving only the rules the payload BEFORE the raw
+ * edit produced — that pre-edit payload is recovered from the session's own
+ * record. ENABLED where the substrate declares a round trip, DISABLED with the
+ * registry lookup's sentence elsewhere (⚖ "disable the buttons for substrates
+ * where that feature is currently unavailable"). Every row presses the
+ * product's own buttons, asserts the DOCUMENT after, and re-queries after
+ * every gesture.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ One region block's `Re-derive rules ▸` — re-queried. */
+const rederiveButtonFor = (regionName) => sidecarBlockFor(regionName)
+    ?.querySelector('.apworld-rederive-rules') ?? null;
+
+/** ⛓ Every endpoint of a derivation or a region, `exit "n"` / `location "n"` → rule. */
+const derivedEndpoints = (d) => new Map([
+    ...[...d.exits].map(([n, r]) => [`exit "${n}"`, r]),
+    ...[...d.locations].map(([n, r]) => [`location "${n}"`, r]),
+]);
+const regionEndpoints = (doc, slot, region) => new Map([
+    ...(doc.regions[slot][region].exits ?? []).map((e) => [`exit "${e.name}"`, e.access_rule]),
+    ...(doc.regions[slot][region].locations ?? []).map((l) => [`location "${l.name}"`, l.access_rule]),
+]);
+
+/**
+ * ⛓⛓ **THE EDIT, PICKED BY THE LAW** — over the document's slots and their
+ * sidecar regions in document order: a region whose payload carries a `tiles`
+ * grid, whose substrate declares a round trip and whose Edit ▸ inspection
+ * opens; then the first single-tile flip after which the payload's own
+ * derivation (`deriveRegionRules`) disagrees with the document on EXACTLY ONE
+ * endpoint, and that endpoint is an EXIT. Nothing here names a substrate, a
+ * region or a tile. → `{slot, region, i, exit}` or null.
+ */
+async function aTileFlipThatMovesOneExit(doc) {
+    for (const slot of Object.keys(doc?.preset_sidecars ?? {})) {
+        for (const region of sidecarRegions(doc, slot)) {
+            const entry = doc.preset_sidecars[slot][region];
+            const tiles = entry?.playable_payload?.tiles;
+            if (!Array.isArray(tiles) || !regionRoundTripOf(entry.substrate).rt) continue;
+            if (!(await inspectRegionRoom(doc, slot, region)).ok) continue;
+            const has = regionEndpoints(doc, slot, region);
+            for (let i = 0; i < tiles.length; i += 1) {
+                const cand = JSON.parse(JSON.stringify(doc));
+                cand.preset_sidecars[slot][region].playable_payload.tiles[i] = tiles[i] ? 0 : 1;
+                const d = await deriveRegionRules(cand, slot, region);
+                if (!d.ok) continue;
+                const is = derivedEndpoints(d);
+                const changed = [...has.keys()].filter((k) => !sameRule(has.get(k), is.get(k)));
+                if (changed.length === 1 && changed[0].startsWith('exit ')) {
+                    return { slot, region, i, exit: changed[0].replace(/^exit "|"$/g, '') };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/** ⛓ Press a region's Re-derive and wait for its answer under the block. → the op, or null. */
+async function pressRederive(testController, panel, regionName, label) {
+    const n = panel.session.ops().length;
+    const before = sidecarMessageFor(regionName);
+    rederiveButtonFor(regionName)?.click();
+    await testController.pollForCondition(
+        () => { const m = sidecarMessageFor(regionName); return !!m && m !== before; },
+        `${label}: the Re-derive answer is printed under the block`, 8000, 50);
+    return panel.session.ops().length === n + 1 ? panel.session.ops().at(-1) : null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) A RAW SAVE, THEN `Re-derive rules ▸` — THE EXIT THE EDIT CHANGED
+ * MOVES, NOTHING ELSE DOES.** The edit is picked by the law
+ * (`aTileFlipThatMovesOneExit`) and saved through the block's own Save JSON
+ * (one `set-region-sidecar`, rules untouched — S1). Then the product's button:
+ * ONE more op, a `replace-region-sidecar` for that slot and region; the exit's
+ * `access_rule` is the payload's derived rule; the DOCUMENT after is the
+ * raw-saved one with exactly that rule and the payload replaced (1306) — the
+ * payload by the serializer's form of the raw one, and the answer says whether
+ * that form differs (naming the rewritten fields) or not; the answer is under
+ * the block and in the status line; ONE Undo removes ONLY the re-derive.
+ * Mutant A (movability from the CURRENT payload) freezes the exit and reds it;
+ * mutant E (payload untouched) reds the document and the payload conditions.
+ */
+export async function apworldRederiveAfterARawSaveMovesTheExitItChanged(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const fixtureBytes = JSON.stringify(panel.rulesDoc);
+        const pick = await aTileFlipThatMovesOneExit(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: a tile flip whose derivation moves exactly one exit',
+            !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i, exit } = pick;
+        const at = `[slot ${slot} "${region}" tile ${i}]`;
+        testController.log(`${at} → exit "${exit}"`);
+        testController.reportCondition(`${at} slot selected through the toolbar`,
+            await onRegionsTabFor(testController, panel, slot));
+        const text = await openSidecarJson(testController, region);
+        testController.reportCondition(`${at} the block's JSON is open`, !!text);
+        if (!text) return testController.getOverallResult();
+
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition(`${at} Save JSON pressed`, typeAndSaveSidecar(region, edited));
+        const raw = await testController.pollForValue(
+            () => (panel.session.ops().length === opsBefore + 1 ? panel.session.ops().at(-1) : null),
+            `${at} the raw save recorded one op`, 8000, 50);
+        testController.assertEqual(`${at} the raw save is a set-region-sidecar`, 'set-region-sidecar',
+            String(raw?.op));
+        const afterRaw = panel.rulesDoc;
+        const afterRawBytes = JSON.stringify(afterRaw);
+        const derived = await deriveRegionRules(afterRaw, slot, region);
+        testController.reportCondition(`${at} ⛓ premise: the raw save left the exit's rule, which `
+            + 'the payload no longer derives',
+        !sameRule(derived.exits.get(exit),
+            afterRaw.regions[slot][region].exits.find((e) => e.name === exit)?.access_rule));
+
+        const btn = rederiveButtonFor(region);
+        testController.reportCondition(`${at} Re-derive rules ▸ is on the block, ENABLED`,
+            !!btn && !btn.disabled);
+        const op = await pressRederive(testController, panel, region, at);
+        testController.reportCondition(`${at} ⛓ ONE more op was recorded`, !!op);
+        if (!op) return testController.getOverallResult();
+        testController.assertEqual(`${at} …a replace-region-sidecar for this slot and region`,
+            `replace-region-sidecar|${slot}|${region}`, `${op.op}|${op.player}|${op.region}`);
+
+        const after = panel.rulesDoc;
+        testController.assertEqual(`${at} ⛓⛓ the exit's access_rule IS the payload's derived rule`,
+            JSON.stringify(derived.exits.get(exit)),
+            JSON.stringify(after.regions[slot][region].exits.find((e) => e.name === exit)?.access_rule));
+        const want = JSON.parse(afterRawBytes);
+        want.regions[slot][region].exits.find((e) => e.name === exit).access_rule = derived.exits.get(exit);
+        want.preset_sidecars[slot][region].playable_payload = derived.payload;
+        testController.assertEqual(`${at} ⛓⛓ the DOCUMENT after = the raw-saved one with exactly `
+            + 'that rule and the payload replaced — every other rule byte-equal',
+        JSON.stringify(want), JSON.stringify(after));
+
+        const said = String(sidecarMessageFor(region)?.textContent ?? '');
+        testController.assertEqual(`${at} the answer under the block is the status line's`,
+            String(panel._opMessage), said);
+        testController.reportCondition(`${at} …and it names the exit it moved`,
+            said.includes(`exit "${exit}"`));
+        const rewritten = Object.keys(derived.payload).filter((k) => JSON.stringify(derived.payload[k])
+            !== JSON.stringify(edited.playable_payload[k]));
+        if (rewritten.length) {
+            testController.log(`${at} the serializer rewrote: ${rewritten.join(', ')}`);
+            testController.reportCondition(`${at} ⛓ the payload is the serializer's form, NOT the `
+                + 'raw one — and the answer says it was normalised, naming each field',
+            JSON.stringify(after.preset_sidecars[slot][region].playable_payload)
+                !== JSON.stringify(edited.playable_payload)
+                && said.includes(REDERIVE_PAYLOAD_NORMALISED)
+                && rewritten.every((k) => said.includes(`\`${k}\``)));
+        } else {
+            testController.reportCondition(`${at} ⛓ the payload is the raw-saved one, and the answer `
+                + 'says it was kept', JSON.stringify(after.preset_sidecars[slot][region].playable_payload)
+                === JSON.stringify(edited.playable_payload) && said.includes(REDERIVE_PAYLOAD_KEPT));
+        }
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} ⛓ ONE Undo removes ONLY the re-derive — the raw edit stays`,
+            afterRawBytes, JSON.stringify(panel.rulesDoc));
+        testController.assertEqual(`${at} …the op list ends at the raw save`,
+            `${opsBefore + 1}|set-region-sidecar`,
+            `${panel.session.ops().length}|${panel.session.ops().at(-1)?.op}`);
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual(`${at} a second Undo restores the fixture`, fixtureBytes,
+            JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-after-raw-save test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(ii) THE BUTTON IS ENABLED EXACTLY WHERE THE SUBSTRATE DECLARES A ROUND
+ * TRIP — read off each block's own entry**, on every slot of the four-player
+ * fixture through the toolbar (two payload families, both declaring one). Then
+ * one press on a slot of the OTHER family with no edit in the record: nothing
+ * moves (no op, the document byte-unmoved) and the answer says there was no
+ * earlier payload and points at Edit ▸.
+ */
+export async function apworldRederiveIsEnabledWhereTheSubstrateHasARoundTrip(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const seen = new Map();
+        for (const slot of Object.keys(doc.preset_sidecars ?? {})) {
+            await onRegionsTabFor(testController, panel, slot);
+            for (const region of sidecarRegions(doc, slot)) {
+                const substrate = doc.preset_sidecars[slot][region].substrate;
+                const btn = rederiveButtonFor(region);
+                const { rt, why } = regionRoundTripOf(substrate);
+                testController.reportCondition(`[slot ${slot} "${region}", ${substrate}] Re-derive `
+                    + `rules ▸ is ${rt ? 'ENABLED' : 'DISABLED'} as its substrate's declaration says`,
+                !!btn && btn.disabled === !rt && (rt || btn.title === why)
+                    && btn.dataset.substrate === substrate);
+                if (!seen.has(substrate)) seen.set(substrate, { slot, region, tiles:
+                    Array.isArray(doc.preset_sidecars[slot][region].playable_payload?.tiles) });
+            }
+        }
+        testController.reportCondition('⛓ premise: the fixture holds more than one substrate',
+            seen.size > 1);
+        // ⛓ the family with NO tile grid — the one row (i) does not edit.
+        const other = [...seen.entries()].find(([, v]) => !v.tiles);
+        testController.reportCondition('⛓ premise: a substrate whose payload carries no tile grid',
+            !!other);
+        if (!other) return testController.getOverallResult();
+        const [substrate, { slot, region }] = other;
+        const at = `[slot ${slot} "${region}", ${substrate}]`;
+        await onRegionsTabFor(testController, panel, slot);
+        const beforeBytes = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition(`${at} ENABLED`, rederiveButtonFor(region)?.disabled === false);
+        const op = await pressRederive(testController, panel, region, at);
+        testController.reportCondition(`${at} pressed with no edit in the record: NO op`, op === null
+            && panel.session.ops().length === opsBefore);
+        testController.assertEqual(`${at} …the document byte-unmoved`, beforeBytes,
+            JSON.stringify(panel.rulesDoc));
+        const said = String(sidecarMessageFor(region)?.textContent ?? '');
+        testController.reportCondition(`${at} ⛓ the answer says there was no earlier payload and `
+            + 'points at Edit ▸', said.includes(REDERIVE_NO_BASELINE)
+            && said.includes(REDERIVE_POINTS_AT_EDIT));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-enabled test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) DISABLED, BY THE REGISTRY'S OWN SENTENCE, WHERE THE SUBSTRATE HAS
+ * NO ROUND TRIP** (⚖ Q1 C). On `jta_schedule_test`: every block's Re-derive is
+ * disabled and its `title` is `regionRoundTripOf(<the entry's substrate>).why`
+ * — the lookup's sentence, never a literal. Mutant C (enabled without a round
+ * trip) reds it.
+ */
+export async function apworldRederiveIsDisabledByNameWithoutARoundTrip(testController) {
+    try {
+        const panel = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const file = await (await fetch(LOOP_COSTS_PRESET_PATH)).json();
+        testController.reportCondition('⛓ the panel holds the document that was loaded',
+            panel.rulesDoc.game_name === file.game_name
+            && JSON.stringify(Object.keys(panel.rulesDoc.preset_sidecars ?? {}))
+                === JSON.stringify(Object.keys(file.preset_sidecars ?? {})));
+        selectTab(panel, 'regions');
+        let n = 0;
+        for (const slot of Object.keys(panel.rulesDoc.preset_sidecars ?? {})) {
+            await onRegionsTabFor(testController, panel, slot);
+            for (const region of sidecarRegions(panel.rulesDoc, slot)) {
+                const substrate = panel.rulesDoc.preset_sidecars[slot][region].substrate;
+                const { rt, why } = regionRoundTripOf(substrate);
+                testController.reportCondition(`[slot ${slot} "${region}"] ⛓ premise: "${substrate}" `
+                    + 'declares no round trip', !rt);
+                const btn = await testController.pollForValue(() => rederiveButtonFor(region),
+                    `"${region}"'s Re-derive rules ▸`, 8000, 50);
+                testController.reportCondition(`[slot ${slot} "${region}"] Re-derive rules ▸ is `
+                    + 'DISABLED', !!btn && btn.disabled === true);
+                testController.assertEqual(`[slot ${slot} "${region}"] ⛓⛓ …its title is the `
+                    + 'registry lookup\'s sentence for that substrate', String(why), String(btn?.title));
+                n += 1;
+            }
+        }
+        testController.reportCondition('⛓ premise: the document draws at least one sidecar block', n > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('re-derive-disabled test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) Edit ▸ IS NOT WEAKENED.** The same raw edit as (i): Edit ▸ pressed
+ * answers the door's baseline refusal — its title is `inspectRegionRoom`'s own
+ * sentence for the document NOW, exactly as S1's row asserts. Then Re-derive:
+ * the payload is now the serializer's own form and every rule is the room's, so
+ * the door's inspection OPENS and the button is pressable (the re-derive is what
+ * makes the region editable again — the door did not relax to allow it). One
+ * Undo (back to the raw edit) and Edit ▸ pressed refuses again, same sentence.
+ * Mutant D (check 1 relaxed) reds the refusal conditions.
+ */
+export async function apworldEditIsNotWeakenedByARederive(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const pick = await aTileFlipThatMovesOneExit(panel.rulesDoc);
+        testController.reportCondition('⛓ premise: the tile flip (i) uses', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, i } = pick;
+        await onRegionsTabFor(testController, panel, slot);
+        const text = await openSidecarJson(testController, region);
+        if (!text) {
+            testController.reportCondition('the block\'s JSON is open', false);
+            return testController.getOverallResult();
+        }
+        const edited = JSON.parse(text.value);
+        edited.playable_payload.tiles[i] = edited.playable_payload.tiles[i] ? 0 : 1;
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('Save JSON pressed', typeAndSaveSidecar(region, edited));
+
+        const pressEdit = async (label) => {
+            const b = editButtonFor(region);
+            testController.reportCondition(`${label}: Edit ▸ is pressable — asked on the PRESS`,
+                !!b && !b.disabled);
+            if (!b || b.disabled) return null;
+            const now = await inspectRegionRoom(panel.rulesDoc, slot, region);
+            testController.reportCondition(`${label}: ⛓ the door's own inspection refuses the `
+                + 'document NOW', !now.ok);
+            b.click();
+            const answered = await testController.pollForValue(
+                () => { const x = editButtonFor(region); return x?.disabled ? x : null; },
+                `${label}: Edit ▸ answered`, 8000, 50);
+            // ⛔ `answered` null (the button never refused) must not compare
+            //   `undefined` with `undefined` and pass: say it outright.
+            testController.assertEqual(`${label}: ⛓⛓ its title is the inspection's sentence for the `
+                + 'document NOW', String(now.why ?? '(the inspection opened the room)'),
+            answered ? String(answered.title) : '(Edit ▸ never refused)');
+            testController.reportCondition(`${label}: …and no room was opened`,
+                panel.roomEditorSession === null);
+            return now.why;
+        };
+
+        const why = await pressEdit('after the raw save');
+        const op = await pressRederive(testController, panel, region, 're-derive');
+        testController.assertEqual('the re-derive is one replace-region-sidecar',
+            'replace-region-sidecar', String(op?.op));
+        const opened = await inspectRegionRoom(panel.rulesDoc, slot, region);
+        testController.reportCondition('⛓ after the re-derive the door\'s inspection OPENS the region '
+            + '(the serializer\'s payload, the room\'s rules)', opened.ok === true);
+        const b2 = editButtonFor(region);
+        testController.reportCondition('…and Edit ▸ is pressable, with its opening title',
+            !!b2 && !b2.disabled && b2.title !== why);
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('one Undo: back to the raw edit', String(opsBefore + 1),
+            String(panel.session.ops().length));
+        const again = await pressEdit('after the Undo');
+        testController.assertEqual('⛓ the same refusal as before the re-derive', String(why),
+            String(again));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('a second Undo: the fixture\'s op list', String(opsBefore),
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('edit-not-weakened test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-rederive-after-a-raw-save-moves-the-exit-it-changed',
+    name: 'APWorld hub: after a raw sidecar save, Re-derive rules moves the one exit the edit changed and nothing else',
+    description: 'PRESET SIDECARS S2 (⚖ Q1 C). A tile flip picked by derivation (exactly one exit\'s '
+               + 'rule changes), saved through Save JSON; then Re-derive rules ▸: one '
+               + 'replace-region-sidecar, the exit\'s rule = the payload\'s derived rule, the '
+               + 'DOCUMENT after = the raw-saved one with that rule and the payload (the '
+               + 'serializer\'s form, the answer naming what it rewrote) replaced; one Undo '
+               + 'removes only the re-derive. Mutants: movability from the current payload (A), '
+               + 'the payload left raw (E).',
+    testFunction: apworldRederiveAfterARawSaveMovesTheExitItChanged,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-rederive-is-enabled-where-the-substrate-has-a-round-trip',
+    name: 'APWorld hub: Re-derive rules is enabled exactly where the substrate declares a round trip, and moves nothing with no edit in the record',
+    description: 'PRESET SIDECARS S2. Every block of every slot of the four-player fixture, through '
+               + 'the toolbar: enabled = the entry\'s substrate declares regionRoundTrip. One press '
+               + 'on the family row (i) does not edit, with an empty record: no op, the document '
+               + 'unmoved, the answer says there was no earlier payload and points at Edit ▸.',
+    testFunction: apworldRederiveIsEnabledWhereTheSubstrateHasARoundTrip,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-rederive-is-disabled-by-name-without-a-round-trip',
+    name: 'APWorld hub: Re-derive rules is disabled, with the registry\'s sentence, where the substrate has no round trip',
+    description: 'PRESET SIDECARS S2 (⚖ Q1 C: "disable the buttons for substrates where that feature '
+               + 'is currently unavailable"). On jta_schedule_test every block\'s button is disabled '
+               + 'and its title is regionRoundTripOf(<the entry\'s substrate>).why. Mutant C (enabled '
+               + 'without a round trip) reds it.',
+    testFunction: apworldRederiveIsDisabledByNameWithoutARoundTrip,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-edit-is-not-weakened-by-a-rederive',
+    name: 'APWorld hub: Edit ▸ still refuses a raw-edited room by its baseline, and opens it only after a re-derive',
+    description: 'PRESET SIDECARS S2. The raw edit of row (i): Edit ▸ pressed answers the inspection\'s '
+               + 'own refusal (S1\'s assertion, unchanged); after Re-derive the inspection opens the '
+               + 'region and the button is pressable; one Undo and the same refusal again. Mutant D '
+               + '(check 1 relaxed) reds the refusal conditions.',
+    testFunction: apworldEditIsNotWeakenedByARederive,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M1 — THE MAP TAB'S SELECTION IS A REGION: the block
+ * as its third host, click-to-edit, and the hand-off's two fix-ups
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ How long "the door did NOT open" is waited for. The door is async — the
+ * inspection deserializes the room, then the room is opened — so an absence
+ * must be given the time a presence would take. Measured on the M1 live drive
+ * (`drive-m1.mjs`, the four-player fixture, a real lab host): second click →
+ * parked room session in 86 ms (maze) and 186 ms (bounce); the window is
+ * several times the slower, and it is only ever spent by a GREEN row (a red
+ * one returns as soon as the door answers).
+ */
+const MAP_DOOR_SETTLE_MS = 1500;
+
+/**
+ * ⛓ Did an Edit ▸ press happen? A room session parked, or the status line
+ * carries one of the press's three answers. Waited for — and a TRUE answer is
+ * the red one — so the poll's own timeout is the green outcome.
+ */
+async function mapEditWasPressed(testController, panel, label, sessionBefore = null) {
+    return testController.pollForCondition(
+        () => panel.roomEditorSession !== sessionBefore
+            || /^Edit(ing| refused| failed)/.test(String(panel._opMessage ?? '')),
+        label, MAP_DOOR_SETTLE_MS, 50);
+}
+
+/** ⛓ The Map tab's selection block — the ONE block drawn with `hostTab: 'map'`. */
+function mapSelectionBlock() {
+    return document.querySelector(
+        `${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-host-tab="map"]`);
+}
+
+/**
+ * ⛓ Pick a slot through the toolbar, land on the Map, and wait for a canvas
+ * that HAS A LAYOUT — a hidden Golden-Layout tab measures 0×0 and a click at a
+ * computed point would land nowhere (1310: the row before may have raised
+ * another panel).
+ */
+async function onMapTabFor(testController, panel, slot = null) {
+    if (slot !== null) {
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot),
+            `slot ${slot} selected`, 8000, 50);
+    }
+    selectTab(panel, 'map');
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    return testController.pollForValue(() => {
+        const c = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        return c && c.getBoundingClientRect().width > 0 ? c : null;
+    }, `the Map tab's canvas, laid out${slot === null ? '' : ` (slot ${slot})`}`, 8000, 50);
+}
+
+/** ⛓ Click the centre of a grid cell, through the canvas's own geometry — re-queried. */
+function clickMapCell(cell) {
+    const canvas = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+    const rect = canvas.getBoundingClientRect();
+    const cw = Number(canvas.dataset.cellW);
+    const ch = Number(canvas.dataset.cellH);
+    canvas.dispatchEvent(new MouseEvent('click', {
+        bubbles: true,
+        clientX: rect.left + (cell.gx * cw + cw / 2) * (rect.width / canvas.width),
+        clientY: rect.top + (cell.gy * ch + ch / 2) * (rect.height / canvas.height),
+    }));
+}
+
+/**
+ * ⛓ The four-player fixture's slot whose substrate is NOT the first slot's —
+ * PICKED by the law (a different substrate), never typed: the row then
+ * discriminates a block that read the first slot for every slot.
+ */
+function slotWithAnotherSubstrate(doc) {
+    const slots = Object.keys(doc.preset_sidecars ?? {});
+    const substrates = (s) => new Set(Object.values(doc.preset_sidecars[s] ?? {}).map((e) => e?.substrate));
+    const first = substrates(slots[0]);
+    return slots.find((s) => s !== slots[0] && ![...substrates(s)].some((x) => first.has(x))) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE SELECTION DRAWS THAT REGION'S BLOCK UNDER THE MAP, AND A
+ * SECOND SELECTION SWAPS IT** — on the fixture's other-substrate slot (bounce),
+ * through the toolbar. The expected region is read off an INDEPENDENT
+ * reconstruction (`reconstructResultFromSidecars(doc, {playerId})`), the
+ * expected badge off the document's own entry; neither is typed.
+ *
+ * ⛔ Mutant A (the map host passes slot `'1'`) reds it: on this slot a region
+ * the first slot does not carry draws no block, and one it does carries the
+ * first slot's substrate in its badge.
+ */
+export async function apworldMapSelectionDrawsTheRegionsBlock(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = slotWithAnotherSubstrate(doc);
+        testController.reportCondition('⛓ premise: the fixture has a slot of another substrate', !!slot);
+        if (!slot) return testController.getOverallResult();
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const cells = reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: that slot places at least two regions',
+            cells.length >= 2);
+        if (cells.length < 2) return testController.getOverallResult();
+
+        const canvas = await onMapTabFor(testController, panel, slot);
+        testController.reportCondition('the Map tab draws a laid-out canvas', !!canvas);
+        if (!canvas) return testController.getOverallResult();
+        testController.reportCondition('no block is drawn before a selection', !mapSelectionBlock());
+
+        for (const [n, target] of [cells[0], cells[1]].entries()) {
+            const which = n === 0 ? 'select' : 'select ANOTHER';
+            clickMapCell(target.cell);
+            const block = await testController.pollForValue(() => {
+                const b = mapSelectionBlock();
+                return b && b.dataset.regionName === target.region_id ? b : null;
+            }, `${which}: the map's block is ${target.region_id}'s`, 8000, 50);
+            testController.reportCondition(`${which}: the block is the clicked cell's region`, !!block);
+            testController.assertEqual(`${which}: …and the panel stays on the Map`, 'map', panel.activeTab);
+            testController.assertEqual(`${which}: exactly one block on the Map`, '1',
+                String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block`).length));
+            if (!block) continue;
+            testController.assertEqual(`${which}: it reads the SELECTED slot`, String(slot),
+                String(block.dataset.player));
+            testController.assertEqual(`${which}: its badge is the document's own substrate`,
+                String(doc.preset_sidecars[slot][target.region_id].substrate),
+                String(block.querySelector('.apworld-sidecar-badge')?.textContent));
+            const edit = block.querySelector('.apworld-edit-room');
+            testController.reportCondition(`${which}: it carries Edit ▸, ENABLED (the substrate `
+                + 'has a room editor and a round trip)', !!edit && !edit.disabled);
+            testController.reportCondition(`${which}: …and Go to region`,
+                !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-go-region`
+                    + `[data-region-name="${CSS.escape(target.region_id)}"]`));
+        }
+        testController.reportCondition('⛔ selecting opened nothing', panel.roomEditorSession === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-selection-block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓ Stand the real maze lab hosts aside and register a panel-shaped stub (H4b's
+ * construction: `openLabRoomEditor` resolves its host through `findLabPanel`),
+ * so the door's load / raise are READ rather than waited on through an iframe.
+ * Returns `{sent, cleanup}`.
+ */
+function stubMazeLabHost(iframeId) {
+    const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+    for (const p of displaced) unregisterLabPanelInstance(p);
+    const sent = { load: null, navigate: null, raised: 0 };
+    const host = {
+        substrate: 'maze',
+        iframeId,
+        load: (payload) => { sent.load = payload; return true; },
+        navigate: (search) => { sent.navigate = search; return true; },
+        raise: () => { sent.raised += 1; return true; },
+        _note: () => {},
+    };
+    registerLabPanelInstance(host);
+    return {
+        host,
+        sent,
+        cleanup: () => {
+            unregisterLabPanelInstance(host);
+            for (const p of displaced) registerLabPanelInstance(p);
+        },
+    };
+}
+
+/**
+ * ⛓⛓⛓ **(ii) THE SECOND CLICK ON THE SELECTED CELL OPENS THE ROOM** — on the
+ * fixture's first slot (maze), the SAME door Edit ▸ opens: a room session
+ * parked for THAT region, and the lab host handed the one-entry library and
+ * raised. The first click is asserted to open nothing before the second is
+ * made, so the row cannot be satisfied by a first click that opened it.
+ *
+ * ⛓ 1310: the stub's `raise` moves no Golden-Layout tab, so the hub keeps its
+ * layout; the row still waits on the door's EFFECT (the session) before it
+ * reads anything else. Mutant B (the second click a no-op) reds it.
+ */
+export async function apworldMapSecondClickOpensTheSelectedRegionsRoom(testController) {
+    let stub = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        stub = stubMazeLabHost('apworld-m1-stub');
+        testController.reportCondition('the stub IS the host the door will find for the maze page',
+            findLabPanel('maze') === stub.host);
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        // ⛓ the target: the first placed region whose substrate is maze — by the law.
+        const target = (reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [])
+            .find((r) => doc.preset_sidecars[slot][r.region_id]?.substrate === stub.host.substrate);
+        testController.reportCondition('⛓ premise: the first slot places a maze region', !!target);
+        if (!target) return testController.getOverallResult();
+
+        const canvas = await onMapTabFor(testController, panel, slot);
+        if (!canvas) {
+            testController.reportCondition('the Map tab draws a laid-out canvas', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(target.cell);
+        testController.assertEqual('the first click selected the region', target.region_id,
+            panel._selectedRegion);
+        testController.reportCondition('⛔ …and opened nothing',
+            !(await mapEditWasPressed(testController, panel, 'the first click pressed Edit ▸')));
+        testController.assertEqual('…and the stub was handed nothing', 'null', String(stub.sent.load));
+
+        const edit = mapSelectionBlock()?.querySelector('.apworld-edit-room');
+        testController.reportCondition('⛓ premise: the block\'s Edit ▸ is pressable', !!edit && !edit.disabled);
+        clickMapCell(target.cell);
+        const session = await testController.pollForValue(
+            () => (panel.roomEditorSession?.region === target.region_id ? panel.roomEditorSession : null),
+            'the second click parked a room session for the region', 8000, 50);
+        testController.reportCondition('⛓⛓ the second click opened THAT region\'s room', !!session);
+        testController.assertEqual('…keyed on the selected slot and the region',
+            `${slot}|${target.region_id}`, String(session?.key));
+        testController.reportCondition('the lab host was RAISED', stub.sent.raised > 0);
+        testController.assertEqual('…and handed THIS region\'s room',
+            `${target.region_id}|maze`, `${stub.sent.load?.entries?.[0]?.entry_id}|`
+                + `${stub.sent.load?.entries?.[0]?.substrate}`);
+        testController.reportCondition('the status line is the door\'s own',
+            String(panel._opMessage ?? '').startsWith(`Editing "${target.region_id}"`));
+        testController.assertEqual('nothing was recorded — the room is open, not saved', '0',
+            String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-second-click test error-free', false);
+    } finally {
+        const panel = document.querySelector(PANEL_SELECTOR)?.__panel;
+        try { panel?._closeRoomEditor(); } catch (_) { /* panel gone */ }
+        if (stub) stub.cleanup();
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) THE FIRST CLICK ON A FRESH CELL OPENS NOTHING — AND A REFUSED
+ * REGION'S SECOND CLICK OPENS NOTHING EITHER, SAYING WHY BESIDE THE BLOCK.**
+ * The existing selection row's claim, asserted on the fixture with a door that
+ * WOULD open (the stub host), then a fresh cell after a selection; then the
+ * refusal arm on `jta_schedule_test` (the jta substrate has no room editor, so
+ * its block's Edit ▸ is disabled): the second click prints exactly `Edit
+ * refused: <the button's own title>` beside the map's block and parks nothing.
+ * Between them, a slot pick: the selection is a region NAME and slots share
+ * names, so it is dropped — the same-named region on the other slot is a first
+ * click (mutant F, the selection kept across the pick, reds that arm).
+ * ⛔ The verdict is the BUTTON's — the expected sentence is read off it.
+ * Mutant C (the first click opens the door) reds the first half; mutant B (the
+ * second click a no-op) reds the refusal arm.
+ */
+export async function apworldMapFirstClickOpensNothing(testController) {
+    let stub = null;
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        stub = stubMazeLabHost('apworld-m1-stub-iii');
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const cells = reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: two placed regions', cells.length >= 2);
+        const canvas = await onMapTabFor(testController, panel, slot);
+        if (!canvas || cells.length < 2) {
+            testController.reportCondition('the Map tab draws a laid-out canvas', !!canvas);
+            return testController.getOverallResult();
+        }
+        for (const [n, target] of [cells[0], cells[1]].entries()) {
+            const which = n === 0 ? 'with no selection' : 'with another region selected';
+            clickMapCell(target.cell);
+            testController.assertEqual(`${which}: the click selected ${target.region_id}`,
+                target.region_id, panel._selectedRegion);
+            testController.reportCondition(`⛔ ${which}: …and opened nothing`,
+                !(await mapEditWasPressed(testController, panel, `${which}: a first click pressed Edit ▸`)));
+            testController.assertEqual(`${which}: the lab host was handed nothing`, 'null',
+                String(stub.sent.load));
+        }
+        stub.cleanup();
+        stub = null;
+
+        /**
+         * ⛓⛓ **A SELECTION DOES NOT CROSS A SLOT PICK.** Slots share region
+         * NAMES, so a region selected on this slot and then clicked on another
+         * slot that holds the same name is a FIRST click there. Measured on the
+         * M1 drive before the fix: it counted as the second and opened the other
+         * slot's room. The other slot and the shared name are picked off the
+         * document.
+         */
+        const selected = panel._selectedRegion;
+        const other = Object.keys(doc.preset_sidecars).find((s) => s !== slot
+            && (reconstructResultFromSidecars(doc, { playerId: s })?.grid?.allRegions() ?? [])
+                .some((r) => r.region_id === selected));
+        testController.reportCondition(`⛓ premise: another slot places "${selected}" too`, !!other);
+        if (other) {
+            const shared = reconstructResultFromSidecars(doc, { playerId: other }).grid.allRegions()
+                .find((r) => r.region_id === selected);
+            await onMapTabFor(testController, panel, other);
+            testController.reportCondition('the slot pick dropped the selection', panel._selectedRegion === null);
+            clickMapCell(shared.cell);
+            testController.assertEqual('across the slot pick: the click selected the same-named region',
+                selected, panel._selectedRegion);
+            testController.reportCondition('⛔ across the slot pick: …as a FIRST click — it opened nothing',
+                !(await mapEditWasPressed(testController, panel, 'across the slot pick: Edit ▸ pressed')));
+        }
+
+        /* ── the refusal arm: a region whose Edit ▸ is disabled ── */
+        const jta = await openHub(testController, LOOP_COSTS_PRESET_PATH);
+        if (!jta) return testController.getOverallResult();
+        const jDoc = jta.rulesDoc;
+        const jSlot = String(jta.playerId);
+        const jCell = (reconstructResultFromSidecars(jDoc, { playerId: jSlot })?.grid?.allRegions() ?? [])[0];
+        testController.reportCondition('⛓ premise: the refusal document places a region', !!jCell);
+        const jCanvas = await onMapTabFor(testController, jta);
+        if (!jCell || !jCanvas) return testController.getOverallResult();
+        clickMapCell(jCell.cell);
+        const btn = await testController.pollForValue(
+            () => mapSelectionBlock()?.querySelector('.apworld-edit-room') ?? null,
+            'the refused region\'s block and its Edit ▸', 8000, 50);
+        testController.reportCondition('⛓ premise: its Edit ▸ is DISABLED', !!btn && btn.disabled);
+        const title = btn?.title ?? '';
+        testController.reportCondition('⛓ …with its reason in the title', title.length > 0);
+        clickMapCell(jCell.cell);
+        const said = await testController.pollForValue(
+            () => mapSelectionBlock()?.querySelector('.apworld-sidecar-op-message[data-refused="true"]') ?? null,
+            'the second click answered beside the block', 8000, 50);
+        testController.assertEqual('⛓⛓ the second click printed the BUTTON\'s refusal beside the block',
+            `Edit refused: ${title}`, String(said?.textContent));
+        testController.assertEqual('…and in the status line', `Edit refused: ${title}`,
+            String(jta._opMessage));
+        testController.reportCondition('…and parked no room', jta.roomEditorSession === null);
+        testController.assertEqual('…and stayed on the Map', 'map', jta.activeTab);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-first-click test error-free', false);
+    } finally {
+        if (stub) stub.cleanup();
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE HAND-OFF FROM THE MAP'S BLOCK NAMES THE SLOT IT CAME FROM
+ * AND THE TOP-DOWN ROUTE'S COST; A SPHERE DOCUMENT'S ANSWER IS UNCHANGED.**
+ * The map's block's own `Regenerate in the pipeline ▸`, pressed on the
+ * fixture's other-substrate slot: the pipeline's message names that slot and
+ * ITS region count, says the routes build `HANDOFF_REALISED_SLOT` only, counts
+ * THAT slot's regions as what top-down builds, and carries
+ * `HANDOFF_TOPDOWN_COST`. Then `procgen_topdown/AP_1` (sphere-appendable,
+ * slot 1): the message is exactly the no-slot answer — no lead, no cost.
+ * Every expected word is the pipeline module's exported constant or a count
+ * read off the document.
+ *
+ * ⛓ 1310: the door's `open` defers its module, so the row awaits the door's
+ * EFFECT (`panelManager.isPanelActive`) before raising the hub, then the hub's
+ * layout. Mutants D (the handler drops the carried slot) and E (the cost
+ * clause dropped) red the first arm.
+ */
+export async function apworldMapHandoffNamesTheSlotAndTheCost(testController) {
+    const pipelinePanel = DOCUMENT_KEY_EDITORS.procgen_metadata.panelId;
+    const pressAndRead = async (label, wanted) => {
+        const regen = mapSelectionBlock()?.querySelector('.apworld-sidecar-regenerate');
+        testController.reportCondition(`${label}: the map's block carries the hand-off door`,
+            !!regen && !regen.disabled);
+        if (!regen || regen.disabled) return null;
+        regen.click();
+        const raised = await testController.pollForCondition(
+            () => panelManager.isPanelActive(pipelinePanel), `${label}: the pipeline came to the front`,
+            8000, 50);
+        testController.reportCondition(`${label}: the pipeline came to the front`, raised);
+        const msg = await testController.pollForValue(() => {
+            const el = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message');
+            return el && wanted(el.textContent) ? el.textContent : null;
+        }, `${label}: the pipeline's answer`, 8000, 50);
+        testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+        await testController.pollForCondition(
+            () => (document.querySelector(PANEL_SELECTOR)?.__panel?.scrollContainer?.clientHeight ?? 0) > 0,
+            `${label}: the hub is back in front with a layout`, 8000, 50);
+        return msg;
+    };
+    try {
+        const { ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST } = await import(
+            '../../procgenPipeline/procgenPipelineUI.js');
+        const { reconstructResultFromSidecars } = await import(
+            '../../procgenPipeline/compositeMapDocument.js');
+        const regionsIn = (d, s) => Object.keys(d.regions?.[s] ?? {}).length;
+
+        /* ── the fixture, from the other-substrate slot ── */
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = slotWithAnotherSubstrate(doc);
+        testController.reportCondition('⛓ premise: a slot other than the built one',
+            !!slot && slot !== HANDOFF_REALISED_SLOT);
+        testController.reportCondition('⛓ premise: its region count differs from the built slot\'s',
+            !!slot && regionsIn(doc, slot) !== regionsIn(doc, HANDOFF_REALISED_SLOT));
+        if (!slot) return testController.getOverallResult();
+        const cell = (reconstructResultFromSidecars(doc, { playerId: slot })?.grid?.allRegions() ?? [])[0];
+        if (!cell || !(await onMapTabFor(testController, panel, slot))) {
+            testController.reportCondition('the slot draws a laid-out map', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(cell.cell);
+        const lead = `sent from player ${slot} (${regionsIn(doc, slot)} source regions)`;
+        const said = await pressAndRead(`slot ${slot}`, (t) => t.startsWith('Adopted ') && t.includes('sent from player'));
+        testController.reportCondition(`slot ${slot}: the pipeline answered the hand-off`, !!said);
+        testController.reportCondition(`⛓⛓ it names the slot the hand-off came from and that slot's count`,
+            String(said).includes(lead));
+        testController.reportCondition('⛓⛓ …and says the routes build the realised slot only',
+            String(said).includes(`build player slot ${HANDOFF_REALISED_SLOT} only`));
+        testController.reportCondition('…and counts THAT slot\'s regions as what top-down builds',
+            String(said).includes(`TOP-DOWN FROM THIS (${regionsIn(doc, HANDOFF_REALISED_SLOT)} source regions)`));
+        testController.reportCondition('⛓⛓ …and names the top-down route\'s COST',
+            String(said).includes(HANDOFF_TOPDOWN_COST));
+
+        /* ── procgen_topdown/AP_1: sphere-appendable, slot 1 — unchanged ── */
+        const td = await openHub(testController, PLACEMENTS_PRESET_PATH);
+        if (!td) return testController.getOverallResult();
+        const expected = ProcgenPipelineUI.prototype._handoffAnswer.call(
+            { topDownSourceLabel: 'hand-off (the APWorld editor)' }, td.rulesDoc);
+        testController.reportCondition('⛓ premise: this document is sphere-appendable',
+            expected.includes('APPEND A SPHERE'));
+        const tdCell = (reconstructResultFromSidecars(td.rulesDoc, { playerId: String(td.playerId) })
+            ?.grid?.allRegions() ?? [])[0];
+        if (!tdCell || !(await onMapTabFor(testController, td))) {
+            testController.reportCondition('the sphere document draws a laid-out map', false);
+            return testController.getOverallResult();
+        }
+        clickMapCell(tdCell.cell);
+        const tdSaid = await pressAndRead('sphere', (t) => t === expected);
+        testController.assertEqual('⛓ the sphere answer is the no-slot answer, word for word',
+            expected, String(tdSaid));
+        testController.reportCondition('…with no cost clause and no lead',
+            !String(tdSaid).includes(HANDOFF_TOPDOWN_COST) && !String(tdSaid).includes('sent from player'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-handoff test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-selection-draws-the-regions-block',
+    name: 'APWorld hub: selecting a map cell draws that region\'s sidecar block under the map, and another selection swaps it',
+    description: 'PRESET SIDECARS M1. The four-player fixture\'s other-substrate slot (bounce), through '
+               + 'the toolbar: a click on a cell draws ONE block (hostTab map) whose region is the '
+               + 'cell\'s in an independent reconstruction, whose badge is the entry\'s substrate, with '
+               + 'Edit ▸ enabled and Go to region; a second cell swaps it; the panel stays on the Map. '
+               + 'Mutant A (the map host reads slot 1) reds it.',
+    testFunction: apworldMapSelectionDrawsTheRegionsBlock,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-second-click-opens-the-selected-regions-room',
+    name: 'APWorld hub: a second click on the selected map cell opens that region\'s room through Edit ▸\'s door',
+    description: 'PRESET SIDECARS M1. The fixture\'s maze slot, a stub lab host (H4b\'s construction): '
+               + 'the first click selects and opens nothing; the second parks roomEditorSession for '
+               + 'that region, the host is raised and handed that region\'s one-entry library, no op '
+               + 'recorded. Mutant B (the second click a no-op) reds it.',
+    testFunction: apworldMapSecondClickOpensTheSelectedRegionsRoom,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-first-click-opens-nothing',
+    name: 'APWorld hub: a first click on a map cell opens nothing, and a refused region\'s second click says why beside its block',
+    description: 'PRESET SIDECARS M1. With a door that WOULD open (stub host), a click on a fresh cell '
+               + '— with no selection, then with another selected, then the same-named region on '
+               + 'another slot after a slot pick — selects and parks nothing. On '
+               + 'jta_schedule_test (no room editor) the second click prints "Edit refused: <the '
+               + 'button\'s title>" beside the map\'s block and in the status line, parks nothing, '
+               + 'stays on the Map. Mutants C (first click opens) and B (second click a no-op).',
+    testFunction: apworldMapFirstClickOpensNothing,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-handoff-names-the-slot-and-the-cost',
+    name: 'APWorld hub: the hand-off from the map\'s block names the slot it came from and the top-down cost',
+    description: 'PRESET SIDECARS M1. The map\'s block\'s Regenerate door on the fixture\'s other slot: '
+               + 'the pipeline\'s answer names that slot and its count, says the routes build '
+               + 'HANDOFF_REALISED_SLOT only, counts that slot\'s regions, and carries '
+               + 'HANDOFF_TOPDOWN_COST; on procgen_topdown/AP_1 (sphere) the answer is the no-slot '
+               + 'answer word for word. Mutants D (the carried slot dropped) and E (the cost dropped).',
+    testFunction: apworldMapHandoffNamesTheSlotAndTheCost,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M2 — MOVE / SWAP A REGION ON THE MAP: native hub ops
+ * (⚖ option A), armed from the selection's block, one op per gesture
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The modules the M2 rows read their expectations from — never typed. */
+async function m2Modules() {
+    const [ops, layout, engine, doc] = await Promise.all([
+        import('../../apworldEditor/rulesDocOps.js'),
+        import('../../apworldEditor/regionLayout.js'),
+        import('../../procgenPipeline/procgenPipelineEngine.js'),
+        import('../../procgenPipeline/compositeMapDocument.js'),
+    ]);
+    return { ...ops, ...layout, ...engine, ...doc };
+}
+
+/** ⛓ Every empty cell of a slot's map, row-major, off the op's own layout. */
+function m2EmptyCells(slotLayout, doc, slot) {
+    const { grid } = slotLayout(doc, slot);
+    const out = [];
+    for (let gy = 0; gy < grid.height; gy += 1) {
+        for (let gx = 0; gx < grid.width; gx += 1) {
+            if (!grid.hasRegion({ gx, gy })) out.push({ gx, gy });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ Select `region` on the map and press the block's own `Move / swap ▸`. ⛔ The
+ * click is made only when the region is NOT already selected: on the selected
+ * cell it would be M1's SECOND click, which opens the room.
+ */
+async function armMoveOnMap(testController, panel, region, cell, label) {
+    if (panel._selectedRegion !== region) clickMapCell(cell);
+    await testController.pollForCondition(() => panel._selectedRegion === region
+        && !!document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`
+            + `[data-region-name="${CSS.escape(region)}"]`), `${label}: ${region} selected, its block drawn`, 8000, 50);
+    const btn = document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`
+        + `[data-region-name="${CSS.escape(region)}"]`);
+    testController.reportCondition(`${label}: the block carries Move / swap ▸`, !!btn);
+    btn?.click();
+    return testController.pollForCondition(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.moveArmed === region,
+        `${label}: the map is armed for ${region}`, 8000, 50);
+}
+
+/** ⛓ The move is DISARMED: the canvas says so and the block's button is not pressed. */
+const mapMoveDisarmed = () => (document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.moveArmed ?? '') === ''
+    && document.querySelector(`${PANEL_SELECTOR} .apworld-map-move-region`)?.dataset.armed !== 'true';
+
+/**
+ * ⛓ The renderer's connection pass, counted off the RECONSTRUCTION (not pixels):
+ * one line per exit pair whose two ends both resolve — `targetRegion` +
+ * `targetExitId` naming an exit the target carries — deduplicated by the
+ * unordered pair, as `drawConnections` does. Answers the pairs.
+ */
+function m2ConnectionPairs(result) {
+    const regions = result?.grid?.allRegions() ?? [];
+    const exitsOf = (r) => (r.exits instanceof Map ? [...r.exits.values()] : (r.exits ?? []));
+    const byId = new Map(regions.map((r) => [r.region_id, r]));
+    const pairs = new Map();
+    for (const r of regions) {
+        for (const e of exitsOf(r)) {
+            if (!e?.targetRegion || !e?.targetExitId) continue;
+            const t = byId.get(e.targetRegion);
+            if (!t || !exitsOf(t).some((x) => x.exit_id === e.targetExitId)) continue;
+            const a = `${r.region_id} ${e.exit_id}`;
+            const b = `${e.targetRegion} ${e.targetExitId}`;
+            const key = a < b ? `${a}|${b}` : `${b}|${a}`;
+            if (!pairs.has(key)) pairs.set(key, { from: r, exit: e, to: t });
+        }
+    }
+    return [...pairs.values()];
+}
+
+/**
+ * ⛓⛓⛓ **(i) ARMED, THEN AN EMPTY CELL → ONE `move-region`.** On the four-player
+ * fixture's first slot: the first placed region selected on the map, its block's
+ * own `Move / swap ▸` pressed (the canvas says armed, the status line names the
+ * region), then a click on the first empty cell of the op's own layout. Exactly
+ * one op is recorded; the document AFTER is the op's own answer on the document
+ * BEFORE (1306), `regions` byte-equal; the map's reconstruction places the
+ * region at that cell and the block follows it; the status line is the op's
+ * description; the map is disarmed. One Undo restores the bytes.
+ */
+export async function apworldMapMoveToAnEmptyCellRecordsOneOp(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const target = (M.reconstructResultFromSidecars(before, { playerId: slot })?.grid?.allRegions() ?? [])[0];
+        const to = m2EmptyCells(M.slotLayout, before, slot)[0];
+        testController.reportCondition('⛓ premise: a placed region and an empty cell', !!target && !!to);
+        if (!target || !to || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+
+        const armed = await armMoveOnMap(testController, panel, target.region_id, target.cell, 'arm');
+        testController.reportCondition('the block\'s button ARMED the map', armed);
+        testController.reportCondition('…and the status line says what the next click does',
+            String(panel._opMessage).startsWith(`Click an empty cell to move ${target.region_id} there`)
+            && String(panel._opMessage).includes('Esc cancels'));
+        testController.assertEqual('arming recorded nothing', '0', String(panel.session.ops().length));
+
+        const op = { op: 'move-region', player: slot, region: target.region_id, to };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        clickMapCell(to);
+        const recorded = await testController.pollForCondition(() => panel.session.ops().length === 1,
+            'the click recorded one op', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE op for the gesture', recorded);
+        testController.assertEqual('…a move-region', 'move-region', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.assertEqual('the entry\'s grid_cell is the clicked cell', JSON.stringify(to),
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][target.region_id].grid_cell));
+        testController.assertEqual('the MAP places the region at that cell (its reconstruction)',
+            target.region_id, String(panel._mapResult()?.grid?.getRegion(to)?.region_id));
+        const block = await testController.pollForValue(() => {
+            const b = mapSelectionBlock();
+            return b && b.dataset.regionName === target.region_id ? b : null;
+        }, 'the block follows the moved region', 8000, 50);
+        testController.reportCondition('the selection and its block FOLLOW the region',
+            !!block && panel._selectedRegion === target.region_id);
+        testController.assertEqual('the status line is the op\'s description', want.description,
+            String(panel._opMessage));
+        testController.reportCondition('the map is disarmed', mapMoveDisarmed());
+
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-move test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) ARMED, THEN ANOTHER REGION → ONE `swap-regions`.** The same slot:
+ * arm on the first placed region, click the second. One op, both cells
+ * exchanged, every payload exit's link fields unchanged, the document AFTER the
+ * op's own answer, the block still the armed region's.
+ */
+export async function apworldMapMoveOntoARegionSwapsTheTwo(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const [a, b] = M.reconstructResultFromSidecars(before, { playerId: slot })?.grid?.allRegions() ?? [];
+        testController.reportCondition('⛓ premise: two placed regions', !!a && !!b);
+        if (!a || !b || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const armed = await armMoveOnMap(testController, panel, a.region_id, a.cell, 'arm');
+        testController.reportCondition('armed', armed);
+        const want = M.applyRulesDocOp(before, { op: 'swap-regions', player: slot, a: a.region_id, b: b.region_id });
+        clickMapCell(b.cell);
+        const recorded = await testController.pollForCondition(() => panel.session.ops().length === 1,
+            'the click recorded one op', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE op for the gesture', recorded);
+        testController.assertEqual('…a swap-regions', 'swap-regions', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        const cellOf = (d, r) => JSON.stringify(d.preset_sidecars[slot][r].grid_cell);
+        testController.reportCondition('both cells exchanged',
+            cellOf(panel.rulesDoc, a.region_id) === cellOf(before, b.region_id)
+            && cellOf(panel.rulesDoc, b.region_id) === cellOf(before, a.region_id));
+        const links = (d) => JSON.stringify(Object.values(d.preset_sidecars[slot])
+            .map((e) => (e.playable_payload?.exits ?? []).map((x) => [x.exit_id, x.side, x.targetRegion, x.targetExitId])));
+        testController.reportCondition('⛔ every link kept (exit id, side, target)',
+            links(panel.rulesDoc) === links(before));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.assertEqual('the block is still the armed region\'s', a.region_id,
+            String(mapSelectionBlock()?.dataset.regionName));
+        testController.assertEqual('the status line is the op\'s description', want.description,
+            String(panel._opMessage));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-swap test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) AN ARMED MOVE DROPS AT EVERY BOUNDARY A NAME DOES NOT SURVIVE**
+ * (trap 1320). Armed on the first slot's region R, then:
+ *   · a SLOT PICK to a slot that also holds a region named R — the canvas is
+ *     disarmed, the status line says so, and a click on an EMPTY cell of the new
+ *     slot records nothing (an armed move would move THAT slot's R), while a
+ *     click on a region only SELECTS it (M1's claim);
+ *   · a TAB switch and back — disarmed; an empty-cell click records nothing;
+ *   · Esc on the panel — disarmed, "Move cancelled (Esc)."; nothing recorded;
+ *   · a NEW DOCUMENT (the same file loaded again) — disarmed; nothing recorded.
+ * Mutant E (the armed state survives a slot pick) reds the slot arm.
+ */
+export async function apworldMapAnArmedMoveDropsAtEveryBoundary(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const slot = Object.keys(doc.preset_sidecars)[0];
+        const placed = (s, d = doc) => M.reconstructResultFromSidecars(d, { playerId: s })?.grid?.allRegions() ?? [];
+        // ⛓ R: a region of this slot that ANOTHER slot also places — by the law.
+        let other = null;
+        const target = placed(slot).find((r) => {
+            other = Object.keys(doc.preset_sidecars).find((s) => s !== slot
+                && placed(s).some((x) => x.region_id === r.region_id)) ?? null;
+            return !!other;
+        });
+        testController.reportCondition('⛓ premise: another slot places a region of the same name', !!target && !!other);
+        if (!target || !other || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const emptyOther = m2EmptyCells(M.slotLayout, doc, other)[0];
+        testController.reportCondition('⛓ premise: that slot has an empty cell', !!emptyOther);
+
+        /* ── a slot pick ── */
+        testController.reportCondition('slot pick: armed first',
+            await armMoveOnMap(testController, panel, target.region_id, target.cell, 'slot pick'));
+        await onMapTabFor(testController, panel, other);
+        testController.reportCondition('⛓⛓ slot pick: the map is DISARMED', mapMoveDisarmed());
+        testController.reportCondition('slot pick: …and the status line says so',
+            String(panel._opMessage).includes(`The armed move of ${target.region_id} was cancelled (a slot pick)`));
+        const otherBefore = JSON.stringify(panel.rulesDoc.preset_sidecars[other]);
+        if (emptyOther) clickMapCell(emptyOther);
+        testController.reportCondition('⛔ slot pick: an empty-cell click on the new slot recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'slot pick: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+        testController.reportCondition('slot pick: …and that slot\'s sidecars are unmoved',
+            JSON.stringify(panel.rulesDoc.preset_sidecars[other]) === otherBefore);
+        const shared = placed(other).find((r) => r.region_id === target.region_id);
+        clickMapCell(shared.cell);
+        testController.assertEqual('slot pick: a click on a region only SELECTS it (M1)', target.region_id,
+            String(panel._selectedRegion));
+        testController.assertEqual('slot pick: …and records nothing', '0', String(panel.session.ops().length));
+
+        /* ── a tab switch ── */
+        await onMapTabFor(testController, panel, slot);
+        const here = placed(slot).find((r) => r.region_id === target.region_id);
+        const empty = m2EmptyCells(M.slotLayout, doc, slot)[0];
+        testController.reportCondition('tab switch: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'tab switch'));
+        selectTab(panel, 'regions');
+        await onMapTabFor(testController, panel);
+        testController.reportCondition('⛓⛓ tab switch: the map is DISARMED', mapMoveDisarmed());
+        clickMapCell(empty);
+        testController.reportCondition('⛔ tab switch: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'tab switch: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+
+        /* ── Esc ── */
+        testController.reportCondition('Esc: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'Esc'));
+        panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        testController.reportCondition('⛓⛓ Esc: the map is DISARMED', await testController.pollForCondition(
+            mapMoveDisarmed, 'Esc: disarmed', 8000, 50));
+        testController.assertEqual('Esc: …and the status line says so', 'Move cancelled (Esc).', String(panel._opMessage));
+        clickMapCell(empty);
+        testController.reportCondition('⛔ Esc: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'Esc: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+
+        /* ── a new document ── */
+        testController.reportCondition('new document: armed first',
+            await armMoveOnMap(testController, panel, here.region_id, here.cell, 'new document'));
+        const oldDoc = panel.rulesDoc;
+        await testController.loadRulesFromFile(FOUR_PLAYER_PATH);
+        const fresh = await testController.pollForCondition(() => panel.rulesDoc && panel.rulesDoc !== oldDoc,
+            'new document: the panel holds the NEW record', 8000, 50);
+        testController.reportCondition('new document: a new record arrived', fresh);
+        const canvas = await onMapTabFor(testController, panel, slot);
+        testController.reportCondition('⛓⛓ new document: the map is DISARMED', !!canvas && mapMoveDisarmed());
+        clickMapCell(empty);
+        testController.reportCondition('⛔ new document: an empty-cell click recorded NOTHING',
+            !(await testController.pollForCondition(() => panel.session.ops().length > 0,
+                'new document: an op was recorded', MAP_DOOR_SETTLE_MS, 50)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-armed-boundaries test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iv) A MOVE THAT SEPARATES TWO LINKED REGIONS NAMES THE TELEPORTER, AND
+ * THE MAP STILL DRAWS THE LINK.** The first move of the first slot (placed
+ * region × empty cell) that the side LAW says flips an exit — chosen by
+ * `linkIsAdjacentOnSide` over the cells before and after, never by the op's
+ * answer and never typed — made through the gesture. The status
+ * line names a teleporter and every flipped exit by region and side word; every
+ * placed exit of the slot now carries the side law's verdict
+ * (`linkIsAdjacentOnSide`, the engine's export); the reconstruction's
+ * connection pairs are the same pairs as before, and the separated link's pair
+ * is one of them with its ends no longer adjacent on that side.
+ * Mutant A (the flags not recomputed) reds it.
+ */
+export async function apworldMapASeparatingMoveNamesTheTeleporter(testController) {
+    try {
+        const M = await m2Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const slot = Object.keys(before.preset_sidecars)[0];
+        const placedBefore = M.reconstructResultFromSidecars(before, { playerId: slot });
+        /**
+         * ⛓ The exits a move of `region` to `to` flips, BY THE LAW — the side law's
+         * verdict over the cells before and after, never the op's answer (the field
+         * under test: chosen by it, the row would lose its move under mutant A).
+         */
+        const lawFlips = (region, to) => {
+            const { grid, cells } = M.slotLayout(before, slot);
+            const after = new Map(cells).set(region, to);
+            return Object.entries(before.preset_sidecars[slot]).flatMap(([name, e]) =>
+                (e.playable_payload?.exits ?? []).filter((x) => cells.has(name) && cells.has(x.targetRegion))
+                    .filter((x) => M.linkIsAdjacentOnSide(grid, cells.get(name), x.side, cells.get(x.targetRegion))
+                        !== M.linkIsAdjacentOnSide(grid, after.get(name), x.side, after.get(x.targetRegion)))
+                    .map((x) => [name, x]));
+        };
+        let choice = null;
+        for (const r of placedBefore?.grid?.allRegions() ?? []) {
+            for (const to of m2EmptyCells(M.slotLayout, before, slot)) {
+                const flips = lawFlips(r.region_id, to);
+                if (!choice && flips.length > 0) choice = { r, to, flips };
+            }
+        }
+        testController.reportCondition('⛓ premise: a move that separates a link exists', !!choice);
+        if (!choice || !(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        const pairsBefore = m2ConnectionPairs(placedBefore);
+        testController.reportCondition('⛓ premise: the map draws connection lines', pairsBefore.length > 0);
+
+        testController.reportCondition('armed',
+            await armMoveOnMap(testController, panel, choice.r.region_id, choice.r.cell, 'arm'));
+        clickMapCell(choice.to);
+        testController.reportCondition('one op', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the click recorded one op', 8000, 50));
+        const said = String(panel._opMessage);
+        testController.reportCondition('⛓⛓ the message says a link BECAME A TELEPORTER',
+            /\d+ links? became (a teleporter|teleporters): /.test(said) && !said.includes(M.NO_LINK_BECAME_TELEPORTER));
+        for (const [name, x] of choice.flips) {
+            testController.reportCondition(`…and names ${name} ${M.SIDE_WORDS[x.side]}`,
+                said.includes(`${name} ${M.SIDE_WORDS[x.side]}`));
+        }
+        const { grid, cells } = M.slotLayout(panel.rulesDoc, slot);
+        const wrong = Object.entries(panel.rulesDoc.preset_sidecars[slot]).flatMap(([name, e]) =>
+            (e.playable_payload?.exits ?? []).filter((x) => cells.has(name) && cells.has(x.targetRegion))
+                .filter((x) => x.isTeleporter !== !M.linkIsAdjacentOnSide(grid, cells.get(name), x.side, cells.get(x.targetRegion)))
+                .map((x) => `${name} ${x.exit_id}`));
+        testController.assertEqual('⛓⛓ EVERY placed exit of the slot carries the side law\'s verdict', '[]',
+            JSON.stringify(wrong));
+        const pairsAfter = m2ConnectionPairs(panel._mapResult());
+        const keys = (ps) => ps.map((p) => `${p.from.region_id} ${p.exit.exit_id}`).sort().join(';');
+        testController.assertEqual('the map draws the SAME connection pairs (a line per link, kept)',
+            keys(pairsBefore), keys(pairsAfter));
+        const separated = pairsAfter.filter((p) => p.from.region_id === choice.r.region_id || p.to.region_id === choice.r.region_id)
+            .filter((p) => !M.linkIsAdjacentOnSide(grid, p.from.cell, p.exit.side, p.to.cell));
+        testController.reportCondition('⛓ …and the separated link is one of them, its ends apart on its side',
+            separated.length > 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('map-teleporter test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-move-to-an-empty-cell-records-one-op',
+    name: 'APWorld hub: Move / swap ▸ then an empty map cell records one move-region, and the block follows the region',
+    description: 'PRESET SIDECARS M2. The fixture\'s first slot: select a region on the map, press its '
+               + 'block\'s Move / swap ▸ (armed; the status line names the next click), click the first '
+               + 'empty cell: one op; the document AFTER is the op\'s own answer, regions byte-equal; '
+               + 'the map places the region there, the block follows; the status line is the op\'s '
+               + 'description; disarmed; one Undo restores the bytes.',
+    testFunction: apworldMapMoveToAnEmptyCellRecordsOneOp,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-move-onto-a-region-swaps-the-two',
+    name: 'APWorld hub: Move / swap ▸ then another region records one swap-regions, links kept',
+    description: 'PRESET SIDECARS M2. Armed on the first placed region, a click on the second: one '
+               + 'swap-regions; both cells exchanged; every exit\'s id, side and target unchanged; '
+               + 'regions byte-equal; the document AFTER is the op\'s own answer.',
+    testFunction: apworldMapMoveOntoARegionSwapsTheTwo,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-an-armed-move-drops-at-every-boundary',
+    name: 'APWorld hub: an armed map move is dropped by a slot pick, a tab switch, Esc and a new document',
+    description: 'PRESET SIDECARS M2 (trap 1320). Armed on a region another slot also names: after a '
+               + 'slot pick the map is disarmed and says so, an empty-cell click there records nothing '
+               + 'and a region click only selects; the same after a tab switch, Esc ("Move cancelled '
+               + '(Esc).") and a new document. Mutant E (survives a slot pick) reds it.',
+    testFunction: apworldMapAnArmedMoveDropsAtEveryBoundary,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-map-a-separating-move-names-the-teleporter',
+    name: 'APWorld hub: a map move that separates two linked regions names the teleporter, and the map keeps the link',
+    description: 'PRESET SIDECARS M2 (Q3 C). The first move the side LAW says flips an exit (chosen '
+               + 'by linkIsAdjacentOnSide, not by the op), made through the gesture: the message names a teleporter and every flipped exit; every '
+               + 'placed exit carries linkIsAdjacentOnSide\'s verdict; the reconstruction\'s connection '
+               + 'pairs are unchanged and the separated one spans non-adjacent ends. Mutant A (flags not '
+               + 'recomputed) reds it.',
+    testFunction: apworldMapASeparatingMoveNamesTheTeleporter,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ PRESET SIDECARS M3 — AN EXIT MOVED TO ANOTHER SIDE: native hub ops
+ * (`move-exit-side` / `swap-exit-sides`), a side picker per exit on the sidecar
+ * block, for the substrates whose registry entry declares `exitSides`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const BOUNCE_WORLDGEN_PATH =
+    './presets/bounce_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The modules the M3 rows read their expectations from — never typed. */
+async function m3Modules() {
+    const [ops, layout, exitSides, doc, renderer, engine] = await Promise.all([
+        import('../../apworldEditor/rulesDocOps.js'),
+        import('../../apworldEditor/regionLayout.js'),
+        import('../../procgenCore/exitSides.js'),
+        import('../../procgenPipeline/compositeMapDocument.js'),
+        import('../../procgenCore/compositeMapRenderer.js'),
+        import('../../procgenPipeline/procgenPipelineEngine.js'),
+    ]);
+    return { ...ops, ...layout, ...exitSides, ...doc, ...renderer, ...engine };
+}
+
+const m3Declares = (M, entry) => !!M.exitSidesOf(substrateRegistry.get(entry?.substrate)).decl;
+
+/**
+ * ⛓ The first (slot, region, exit, side) of a document whose substrate DECLARES
+ * `exitSides`, placed on the map, with a side of `kind` — 'move' (no exit there),
+ * 'swap' (another exit of the region there — `holder` is THAT exit, by id), or
+ * ⛓ R2 'join' (another exit there, and the declaration keys NOTHING by side, so a
+ * move there is legal — read off the declaration's `keys`, not the rule under
+ * test). Picked off the document in its own order, never typed.
+ */
+function m3Pick(M, doc, kind, slots = Object.keys(doc?.preset_sidecars ?? {})) {
+    for (const slot of slots) {
+        for (const [region, entry] of Object.entries(doc.preset_sidecars[slot] ?? {})) {
+            if (!m3Declares(M, entry) || !M.isGridCell(entry.grid_cell)) continue;
+            const keyless = M.exitSidesOf(substrateRegistry.get(entry.substrate)).decl.keys.length === 0;
+            if (kind === 'join' && !keyless) continue;
+            const exits = entry.playable_payload?.exits ?? [];
+            for (const x of exits) {
+                for (const side of Object.keys(M.SIDE_WORDS)) {
+                    if (side === x.side) continue;
+                    const holder = exits.find((o) => o !== x && o.side === side);
+                    if ((kind !== 'move') === !!holder) return { slot, region, entry, exit: x, side, holder };
+                }
+            }
+        }
+    }
+    return null;
+}
+
+/** ⛓ The side picker for one exit inside a host's block. */
+const m3Picker = (host, region, exitId) => document.querySelector(
+    `${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="${host}"][data-region-name="${CSS.escape(region)}"] `
+    + `select.apworld-exit-side[data-exit-id="${CSS.escape(exitId)}"]`);
+
+/** ⛓ Pick a side through the REAL control: set the value, fire its change. */
+function m3PickSide(select, side) {
+    select.value = side;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/** ⛓ R2 — the picker's option that SWAPS with one exit, by that exit's id (never by side). */
+const m3SwapOption = (select, exitId) => [...(select?.options ?? [])]
+    .find((o) => o.dataset.kind === 'swap' && o.dataset.swapWith === exitId) ?? null;
+
+/** ⛓ SHA-256 of a canvas's pixels, hex. */
+async function m3CanvasDigest(canvas) {
+    const px = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    const hash = await crypto.subtle.digest('SHA-256', px);
+    return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * ⛓⛓⛓ **(i) A SIDE PICKED ON THE MAP'S BLOCK → ONE `move-exit-side`, AND THE MAP
+ * DRAWS THE EXIT ON ITS NEW SIDE.** The four-player fixture's first slot whose
+ * substrate declares `exitSides`; the first placed region with an exit and a
+ * FREE side, selected on the map; that exit's picker set to the side. One op; the
+ * document AFTER is the op's own answer (1306), `regions` and `grid_cell` byte-
+ * equal; the exit's drawn tile (`resolveExitTilePositions`, the renderer's side
+ * fallback) moved onto the new side's edge; the canvas's pixel digest moved, and
+ * EQUALS the digest of the same map drawn from a document AUTHORED by hand with
+ * that exit on that side (G1's pixel-identity witness); the status line and the
+ * block's answer are the op's description. One Undo restores the bytes and the
+ * digest.
+ */
+export async function apworldExitSideMoveRecordsOneOpAndTheMapRedraws(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'move');
+        testController.reportCondition('⛓ premise: a declaring, placed region with an exit and a free side', !!pick);
+        if (!pick || !(await onMapTabFor(testController, panel, pick.slot))) return testController.getOverallResult();
+        const { slot, region, exit, side } = pick;
+
+        if (panel._selectedRegion !== region) clickMapCell(pick.entry.grid_cell);
+        const picker = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the map\'s block draws the exit\'s side picker', 8000, 50);
+        testController.reportCondition('the map\'s selection block carries a side picker for the exit', !!picker);
+        if (!picker) return testController.getOverallResult();
+        testController.assertEqual('…showing the exit\'s own side', exit.side, picker.value);
+        const kinds = Object.fromEntries([...picker.options].map((o) => [o.value, o.dataset.kind]));
+        testController.assertEqual('…its own side marked, the free side a move', `own move`,
+            `${kinds[exit.side]} ${kinds[side]}`);
+        const canvasBefore = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const digestBefore = await m3CanvasDigest(canvasBefore);
+
+        const op = { op: 'move-exit-side', player: slot, region, exitId: exit.exit_id, side };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        m3PickSide(picker, side);
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a move-exit-side', 'move-exit-side', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        testController.reportCondition('⛔ `grid_cell` byte-equal',
+            JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region].grid_cell) === JSON.stringify(pick.entry.grid_cell));
+        testController.assertEqual('the status line is the op\'s description', want.description, String(panel._opMessage));
+        const answer = document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-op-message`);
+        testController.assertEqual('…and so is the answer beside the block', want.description, String(answer?.textContent));
+
+        const { regionSize } = panel._mapResult();
+        const tileOf = (d) => {
+            const exits = d.preset_sidecars[slot][region].playable_payload.exits;
+            return M.resolveExitTilePositions(exits, regionSize)[exits.findIndex((x) => x.exit_id === exit.exit_id)];
+        };
+        const [t0, t1] = [tileOf(before), tileOf(panel.rulesDoc)];
+        const onEdge = (t, s) => ({ N: t.y === 0, S: t.y === regionSize.height - 1,
+            W: t.x === 0, E: t.x === regionSize.width - 1 })[s];
+        testController.reportCondition(`the exit's drawn tile MOVED (${JSON.stringify([t0?.x, t0?.y])} → ${JSON.stringify([t1?.x, t1?.y])})`,
+            !!t0 && !!t1 && (t0.x !== t1.x || t0.y !== t1.y));
+        testController.reportCondition('…onto the new side\'s edge', !!t1 && onEdge(t1, side));
+
+        const canvas = document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`);
+        const digestAfter = await m3CanvasDigest(canvas);
+        testController.reportCondition('⛓ the map\'s pixels moved', digestAfter !== digestBefore);
+        const authored = JSON.parse(JSON.stringify(before));
+        const ax = authored.preset_sidecars[slot][region].playable_payload.exits.find((x) => x.exit_id === exit.exit_id);
+        ax.side = side;
+        const { grid, cells } = M.slotLayout(authored, slot);
+        if (cells.has(ax.targetRegion)) {
+            ax.isTeleporter = !M.linkIsAdjacentOnSide(grid, cells.get(region), side, cells.get(ax.targetRegion));
+        }
+        const result = M.reconstructResultFromSidecars(authored, { playerId: slot });
+        const offscreen = document.createElement('canvas');
+        offscreen.width = canvas.width;
+        offscreen.height = canvas.height;
+        M.drawCompositeMap(offscreen, result.grid, result.regionSize,
+            { selection: { kind: 'region', cell: pick.entry.grid_cell } });
+        testController.assertEqual('⛓⛓ the map\'s digest EQUALS the digest of a document authored with the exit on that side',
+            await m3CanvasDigest(offscreen), digestAfter);
+
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+        const back = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the picker is redrawn after Undo', 8000, 50);
+        testController.assertEqual('…the picker shows the side the record holds again', exit.side, String(back?.value));
+        testController.assertEqual('…and the map\'s digest is the BEFORE digest',
+            digestBefore, await m3CanvasDigest(document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side move test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A SIDE ANOTHER EXIT HOLDS → ONE `swap-exit-sides`, FROM THE
+ * SIDECARS TAB.** The first declaring region with two exits on different sides;
+ * the first exit's picker offers the second's side as a SWAP (not disabled) and
+ * the pick records one swap: both sides exchanged, the portal map's two keys
+ * holding each other's portal, the document AFTER the op's own answer. Undo.
+ */
+export async function apworldExitSidePickOfATakenSideSwaps(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'swap');
+        testController.reportCondition('⛓ premise: a declaring region with two exits on two sides', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, exit, side, holder } = pick;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot), `slot ${slot} selected`, 8000, 50);
+        selectTab(panel, SIDECARS_TAB_ID);
+        // ⛓ The region list is collapsed by default (⚖ S0) — open it through its own button.
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`),
+            'the Sidecars tab\'s region-list expander', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
+        const picker = await testController.pollForValue(() => m3Picker(SIDECARS_TAB_ID, region, exit.exit_id),
+            'the Sidecars tab\'s block draws the picker', 8000, 50);
+        testController.reportCondition('the Sidecars tab\'s block carries the exit\'s picker', !!picker);
+        if (!picker) return testController.getOverallResult();
+        const opt = m3SwapOption(picker, holder.exit_id);
+        testController.assertEqual('the taken side is offered as a SWAP with its exit (by id), enabled',
+            `swap true ${side}`, `${opt?.dataset.kind} ${!opt?.disabled} ${opt?.dataset.side}`);
+        testController.reportCondition('…and says so in its label', String(opt?.textContent).includes(`swap with ${holder.exit_id}`));
+
+        const op = { op: 'swap-exit-sides', player: slot, region, exitA: exit.exit_id, exitB: holder.exit_id };
+        const want = M.applyRulesDocOp(before, op);
+        m3PickSide(picker, String(opt?.value));
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a swap-exit-sides', 'swap-exit-sides', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        const after = panel.rulesDoc.preset_sidecars[slot][region].playable_payload;
+        const sideOf = (id) => after.exits.find((x) => x.exit_id === id)?.side;
+        testController.assertEqual('both sides exchanged', `${side} ${exit.side}`, `${sideOf(exit.exit_id)} ${sideOf(holder.exit_id)}`);
+        const was = pick.entry.playable_payload.params.sidePortals;
+        testController.assertEqual('the portal map\'s two keys hold each other\'s portal',
+            `${was[exit.side]} ${was[side]}`, `${after.params.sidePortals[side]} ${after.params.sidePortals[exit.side]}`);
+        testController.reportCondition('⛔ `regions` byte-equal',
+            JSON.stringify(panel.rulesDoc.regions) === JSON.stringify(before.regions));
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side swap test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) A REGION WHOSE SUBSTRATE DECLARES NO `exitSides` OFFERS NOTHING, AND
+ * THE MAP'S BLOCK SAYS WHY IN THE OP'S WORDS.** The four-player fixture's first
+ * slot whose sidecars carry sided exits and declare nothing: on the Regions tab no
+ * picker is drawn for any of its blocks; on the Map, the selected region's block
+ * draws `.apworld-exit-sides[data-editable=false]` whose sentence is the op's own
+ * refusal (asked of the op here, independently), and no op is recorded.
+ */
+export async function apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        let pick = null;
+        for (const slot of Object.keys(doc.preset_sidecars)) {
+            for (const [region, entry] of Object.entries(doc.preset_sidecars[slot])) {
+                const x = (entry.playable_payload?.exits ?? []).find((e) => Object.hasOwn(M.SIDE_WORDS, e.side));
+                if (!pick && x && !m3Declares(M, entry) && M.isGridCell(entry.grid_cell)) pick = { slot, region, entry, x };
+            }
+        }
+        testController.reportCondition('⛓ premise: a placed region with sided exits whose substrate declares nothing', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { slot, region, entry, x } = pick;
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        if (select) selectPlayer(select, slot);
+        await testController.pollForCondition(() => String(panel.playerId) === String(slot), `slot ${slot} selected`, 8000, 50);
+        selectTab(panel, 'regions');
+        const blocks = await testController.pollForValue(() => {
+            const b = document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="regions"]`);
+            return b.length > 0 ? b : null;
+        }, 'the Regions tab draws its sidecar blocks', 8000, 50);
+        testController.reportCondition('the Regions tab drew sidecar blocks', !!blocks);
+        testController.assertEqual('⛔ …and not ONE side picker (the slot declares nothing)', '0',
+            String(document.querySelectorAll(`${PANEL_SELECTOR} .apworld-sidecar-block[data-host-tab="regions"] .apworld-exit-sides`).length));
+
+        if (!(await onMapTabFor(testController, panel, slot))) return testController.getOverallResult();
+        if (panel._selectedRegion !== region) clickMapCell(entry.grid_cell);
+        const row = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-region-name="${CSS.escape(region)}"] .apworld-exit-sides`),
+        'the map\'s block draws the exit-sides line', 8000, 50);
+        testController.assertEqual('the line is NOT editable', 'false', String(row?.dataset.editable));
+        testController.assertEqual('…and draws no picker', '0', String(row?.querySelectorAll('select').length ?? -1));
+        const other = Object.keys(M.SIDE_WORDS).find((s) => s !== x.side);
+        const refusal = M.applyRulesDocOp(doc, { op: 'move-exit-side', player: slot, region, exitId: x.exit_id, side: other });
+        testController.reportCondition('⛓ premise: the op refuses it', refusal.ok === false);
+        testController.reportCondition('…in the declaration\'s words', String(refusal.error).includes(M.NO_EXIT_SIDES_DECLARED));
+        testController.assertEqual('⛓⛓ the line says WHY — the op\'s own refusal',
+            `not editable here — ${refusal.error}`, String(row?.querySelector('.apworld-exit-sides-why')?.textContent));
+        testController.assertEqual('nothing was recorded', '0', String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side undeclared test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(v) PIPELINE RELAYOUT R2 — AN EXIT MOVED ONTO A SIDE ANOTHER EXIT HOLDS,
+ * WHERE THE DECLARATION KEYS NOTHING BY SIDE, JOINS THAT SIDE.** `procgen_topdown/AP_11`
+ * (text-adventure regions): the first placed region whose declaration's `keys` is
+ * empty with an exit whose other side is held (`m3Pick` 'join'), selected on the
+ * Map. Its picker offers that side as a MOVE and as a SWAP with the holder (by id);
+ * the move is picked through the control; ONE op, the document AFTER is the op's own
+ * answer; the redrawn block's pickers show BOTH exits on that side; one Undo
+ * restores the bytes and the picker.
+ */
+const TA_TOPDOWN_PRESET_PATH = './presets/procgen_topdown/AP_11/AP_11_rules.json';
+
+export async function apworldExitSideMoveOntoAHeldSideJoinsIt(testController) {
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, TA_TOPDOWN_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const before = panel.rulesDoc;
+        const pick = m3Pick(M, before, 'join');
+        testController.reportCondition('⛓ premise: a placed region declaring no side-keyed field, with an exit whose other side is held', !!pick);
+        if (!pick || !(await onMapTabFor(testController, panel, pick.slot))) return testController.getOverallResult();
+        const { slot, region, exit, side, holder } = pick;
+        if (panel._selectedRegion !== region) clickMapCell(pick.entry.grid_cell);
+        const picker = await testController.pollForValue(() => m3Picker('map', region, exit.exit_id),
+            'the map\'s block draws the exit\'s side picker', 8000, 50);
+        testController.reportCondition('the map\'s selection block carries a side picker for the exit', !!picker);
+        if (!picker) return testController.getOverallResult();
+        const moveOpt = [...picker.options].find((o) => o.dataset.kind === 'move' && o.dataset.side === side);
+        testController.reportCondition(`the held side ${side} is offered as a MOVE`, !!moveOpt);
+        testController.reportCondition(`…and as a SWAP with ${holder.exit_id}, by id`, m3SwapOption(picker, holder.exit_id)?.dataset.side === side);
+
+        const op = { op: 'move-exit-side', player: slot, region, exitId: exit.exit_id, side };
+        const want = M.applyRulesDocOp(before, op);
+        testController.reportCondition('⛓ premise: the op itself takes that move', want.ok);
+        m3PickSide(picker, String(moveOpt?.value));
+        testController.reportCondition('⛓⛓ ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        testController.assertEqual('…a move-exit-side', 'move-exit-side', String(panel.session.ops()[0]?.op));
+        testController.reportCondition('⛓⛓ the document AFTER is the op\'s own answer',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(want.doc));
+        testController.assertEqual('the status line is the op\'s description', String(want.description), String(panel._opMessage));
+        const holders = panel.rulesDoc.preset_sidecars[slot][region].playable_payload.exits
+            .filter((x) => x.side === side).map((x) => x.exit_id).sort();
+        testController.reportCondition(`the record holds ${holders.join(', ')} on ${side}`, holders.length > 1);
+        const drawn = await testController.pollForValue(() => {
+            const got = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-map-selection .apworld-sidecar-block[data-region-name="${CSS.escape(region)}"] select.apworld-exit-side`)]
+                .filter((sel) => sel.value === side).map((sel) => sel.dataset.exitId).sort();
+            return got.length === holders.length ? got : null;
+        }, 'the redrawn block shows every exit of that side', 8000, 50);
+        testController.assertEqual('⛓⛓ the block re-rendered with the exits the record holds on that side',
+            holders.join(','), String(drawn?.join(',')));
+        panel.undoButton.click();
+        testController.reportCondition('one Undo restores the document byte for byte',
+            JSON.stringify(panel.rulesDoc) === JSON.stringify(before));
+        const back = await testController.pollForValue(() => {
+            const sel = m3Picker('map', region, exit.exit_id);
+            return sel && sel.value === exit.side ? sel : null;
+        }, 'the picker is redrawn after Undo', 8000, 50);
+        testController.assertEqual('…the picker shows the side the record holds again', exit.side, String(back?.value));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side join test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ The bounce JS game's iframe (the panel's default renderer). */
+const m3BounceIframe = () => document.querySelector('iframe[src*="bounceDemo/game/index.html"]');
+
+/**
+ * ⛓⛓⛓ **(iv) THE PLAY WITNESS — A MOVED EXIT, APPLIED, PLAYS IN THE BOUNCE PANEL
+ * ON ITS NEW SIDE.** `bounce_worldgen` opened in the hub; the region procgenPlayer
+ * made active (read off its own public function); the Bounce panel raised and its
+ * game confirmed on that region's portal map. Then the product's own route: that
+ * region's first exit with a free side picked on the Regions tab, the hub's Apply
+ * pressed — procgenPlayer rebuilds its warehouse from the published document and
+ * re-loads the region. The game's own portal → side map (`__bounceDebug`) must
+ * put the portal that served the OLD side on the NEW one, the warehouse's world
+ * must key it there, the level is still loaded, and no error event fired on the
+ * page or in the game.
+ */
+export async function apworldExitSideMovePlaysInTheBouncePanel(testController) {
+    const errors = [];
+    const onError = (e) => errors.push(String(e?.message ?? e));
+    let gameWindow = null;
+    window.addEventListener('error', onError);
+    try {
+        const M = await m3Modules();
+        const panel = await openHub(testController, BOUNCE_WORLDGEN_PATH);
+        if (!panel) return testController.getOverallResult();
+        const activeOf = centralRegistry.getPublicFunction('procgenPlayer', 'getActiveSubstrate');
+        const warehouseOf = centralRegistry.getPublicFunction('procgenPlayer', 'getWarehouse');
+        const active = await testController.pollForValue(() => {
+            const a = activeOf?.();
+            return a?.regionId && m3Declares(M, panel.rulesDoc.preset_sidecars?.[String(panel.playerId)]?.[a.regionId])
+                ? a : null;
+        }, 'procgenPlayer made a declaring region active', 10000, 100);
+        testController.reportCondition('⛓ premise: the active region\'s substrate declares exitSides', !!active);
+        if (!active) return testController.getOverallResult();
+        const slot = String(panel.playerId);
+        const region = active.regionId;
+        const pick = m3Pick(M, { preset_sidecars: { [slot]: { [region]: panel.rulesDoc.preset_sidecars[slot][region] } } }, 'move');
+        testController.reportCondition('⛓ premise: the active region has an exit with a free side', !!pick);
+        if (!pick) return testController.getOverallResult();
+        const { exit, side } = pick;
+        const portal = pick.entry.playable_payload.params.sidePortals[exit.side];
+        testController.reportCondition(`⛓ premise: the exit's side ${exit.side} keys a portal`, typeof portal === 'string');
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'bounceDemoPanel' });
+        const baseline = await testController.pollForValue(() => {
+            const d = m3BounceIframe()?.contentWindow?.__bounceDebug?.();
+            return d?.levelId && d.portalSides?.[portal] === exit.side ? d : null;
+        }, `the bounce game loaded ${region} with ${portal} on ${exit.side}`, 20000, 200);
+        testController.reportCondition('BEFORE: the game serves the portal on the exit\'s OLD side', !!baseline);
+        if (!baseline) return testController.getOverallResult();
+        gameWindow = m3BounceIframe().contentWindow;
+        gameWindow.addEventListener('error', onError);
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+        selectTab(panel, 'regions');
+        const picker = await testController.pollForValue(() => m3Picker('regions', region, exit.exit_id),
+            'the Regions tab draws the exit\'s picker', 8000, 50);
+        testController.reportCondition('the Regions tab\'s block carries the picker', !!picker);
+        if (!picker) return testController.getOverallResult();
+        m3PickSide(picker, side);
+        testController.reportCondition('ONE op for the pick', await testController.pollForCondition(
+            () => panel.session.ops().length === 1, 'the pick recorded one op', 8000, 50));
+        panel.applyButton.click();
+
+        const played = await testController.pollForValue(() => {
+            const d = m3BounceIframe()?.contentWindow?.__bounceDebug?.();
+            return d?.levelId && d.portalSides?.[portal] === side ? d : null;
+        }, `the bounce game re-loaded ${region} with ${portal} on ${side}`, 20000, 200);
+        testController.reportCondition(`⛓⛓ AFTER: the game serves ${portal} on the NEW side ${side}`, !!played);
+        testController.assertEqual('…and on no other side', `${side}`,
+            Object.entries(played?.portalSides ?? {}).filter(([id]) => id === portal).map(([, s]) => s).join(','));
+        testController.assertEqual('the level is the same level, still loaded', String(baseline.levelId), String(played?.levelId));
+        const world = warehouseOf?.()?.get(region)?.world;
+        testController.assertEqual('the warehouse\'s world keys the portal on the new side', portal,
+            String(world?.params?.sidePortals?.[side]));
+        const wexits = world?.exits instanceof Map ? [...world.exits.values()] : (world?.exits ?? []);
+        testController.assertEqual('…and its exit on it', side, String(wexits.find((x) => x.exit_id === exit.exit_id)?.side));
+        testController.assertEqual('⛔ no error event on the page or in the game', '[]', JSON.stringify(errors));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('exit-side play witness error-free', false);
+    } finally {
+        window.removeEventListener('error', onError);
+        gameWindow?.removeEventListener('error', onError);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-exit-side-move-records-one-op-and-the-map-redraws',
+    name: 'APWorld hub: a side picked for an exit on the map\'s block records one move-exit-side, and the map draws it there',
+    description: 'PRESET SIDECARS M3. The fixture\'s first declaring slot, the first placed region with an exit '
+               + 'and a free side: one op; the document AFTER is the op\'s own answer; regions and grid_cell '
+               + 'byte-equal; the exit\'s drawn tile moved onto the new edge; the canvas digest equals a hand-'
+               + 'authored document\'s; Undo restores the bytes and the digest.',
+    testFunction: apworldExitSideMoveRecordsOneOpAndTheMapRedraws,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-pick-of-a-taken-side-swaps',
+    name: 'APWorld hub: picking a side another exit holds swaps the two exits (Sidecars tab)',
+    description: 'PRESET SIDECARS M3. The taken side is offered as a swap with its exit, enabled; the pick '
+               + 'records one swap-exit-sides; both sides and the two portal-map keys exchanged; Undo.',
+    testFunction: apworldExitSidePickOfATakenSideSwaps,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-undeclared-entry-offers-nothing-and-says-why',
+    name: 'APWorld hub: a region whose substrate declares no exitSides offers no side picker, and the map\'s block says why',
+    description: 'PRESET SIDECARS M3. No picker on the Regions tab for the slot; the map\'s block draws a '
+               + 'non-editable line whose sentence is the op\'s own refusal (NO_EXIT_SIDES_DECLARED); no op.',
+    testFunction: apworldExitSideUndeclaredEntryOffersNothingAndSaysWhy,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-move-onto-a-held-side-joins-it',
+    name: 'APWorld hub: a text-adventure exit moved onto a side another exit holds joins that side (Map block)',
+    description: 'PIPELINE RELAYOUT R2. procgen_topdown/AP_11: the first placed region whose substrate declares '
+               + 'exitSides with no keys and has an exit whose other side is held; the product\'s picker offers a '
+               + 'move there AND a swap with the holder; the move records one move-exit-side; the document AFTER '
+               + 'is the op\'s answer; the redrawn block shows both exits on that side; Undo restores.',
+    testFunction: apworldExitSideMoveOntoAHeldSideJoinsIt,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'apworld-exit-side-move-plays-in-the-bounce-panel',
+    name: 'APWorld hub: an exit moved to another side and applied plays in the Bounce panel on its new side',
+    description: 'PRESET SIDECARS M3 play witness. bounce_worldgen: the active region\'s exit picked onto a free '
+               + 'side, Apply pressed; the game\'s portal → side map puts the old side\'s portal on the new side, '
+               + 'the warehouse keys it there, the level stays loaded, no error event.',
+    testFunction: apworldExitSideMovePlaysInTheBouncePanel,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * PRESET SIDECARS C1 — A REGION ITS SUBSTRATE REFUSES DOES NOT BLANK THE MAP
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ The gated TA fixture, with ONE undeclared key added to ONE region's payload
+ * on the way in (never a committed byte) — the tile grid's `tiles`, which that
+ * region's room declaration does not know (plan §25.6). Plan §24.7 measured
+ * this shape of document: at play two `Error in event handler for
+ * stateManager:rawJsonDataLoaded` (procgenPipeline, procgenPlayer), and on the
+ * hub's Map tab a BLANK surface with one page error.
+ */
+const REFUSED_MAP_PRESET_PATH = './presets/procgen_topdown/AP_11/AP_11_rules.json';
+const REFUSED_MAP_REGION = 'BlackCastle';
+
+export async function apworldMapDrawsTheOtherRegionsAndNamesTheRefusedOne(testController) {
+    const handlerErrors = [];
+    const pageErrors = [];
+    const origError = console.error;
+    const onError = (e) => pageErrors.push(e?.message ?? String(e));
+    const onRejection = (e) => pageErrors.push(e?.reason?.message ?? String(e?.reason));
+    try {
+        const panel = await openHub(testController, REFUSED_MAP_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+
+        const doc = await (await fetch(REFUSED_MAP_PRESET_PATH)).json();
+        const slot = String(panel.playerId);
+        const entry = doc.preset_sidecars?.[slot]?.[REFUSED_MAP_REGION];
+        testController.reportCondition('the fixture carries the region the row breaks', !!entry);
+        if (!entry) return testController.getOverallResult();
+        entry.playable_payload.tiles = [];
+        // ⛓ The expected sentence is the entry's OWN throw, never typed.
+        let thrown = null;
+        try {
+            substrateRegistry.get(entry.substrate).deserializeWorld(entry.playable_payload);
+        } catch (err) {
+            thrown = err;
+        }
+        testController.reportCondition('the edited payload is refused by its own substrate', !!thrown);
+        if (!thrown) return testController.getOverallResult();
+        const sentence = deserializeRefusalSentence(REFUSED_MAP_REGION, entry.substrate, thrown);
+        const drawable = Object.entries(doc.preset_sidecars[slot])
+            .filter(([name, sc]) => sc?.grid_cell && name !== REFUSED_MAP_REGION).length;
+
+        console.error = (...args) => {
+            if (typeof args[0] === 'string' && args[0].includes(HANDLER_ERROR_PHRASE)) {
+                handlerErrors.push(args[0]);
+            }
+            return origError.apply(console, args);
+        };
+        window.addEventListener('error', onError);
+        window.addEventListener('unhandledrejection', onRejection);
+
+        const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 8000);
+        testController.eventBus.publish('files:jsonLoaded', {
+            jsonData: doc,
+            selectedPlayerId: slot,
+            sourceName: 'apworld-map-refused-region',
+        });
+        await rulesLoaded;
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        const intake = await testController.pollForValue(
+            () => (panel.rulesDoc?.preset_sidecars?.[slot]?.[REFUSED_MAP_REGION]
+                ?.playable_payload?.tiles ? panel : null),
+            'the hub holds the edited document', 8000, 50);
+        testController.reportCondition('the hub holds the edited document', !!intake);
+
+        // play — the warehouse loads the others and keeps the refused one's sentence
+        const warehouse = centralRegistry.getPublicFunction?.('procgenPlayer', 'getWarehouse')?.();
+        testController.assertEqual('play: the refused region is kept with its sentence',
+            sentence, warehouse?.refused?.get(REFUSED_MAP_REGION) ?? '(none)');
+        testController.reportCondition('play: the refused region is not in the warehouse',
+            !!warehouse && !warehouse.has(REFUSED_MAP_REGION));
+
+        try {
+            selectTab(panel, 'map');
+        } catch (err) {
+            pageErrors.push(`the Map tab threw: ${err.message}`);
+        }
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`),
+            'the Map tab\'s canvas', 8000, 50);
+        testController.reportCondition('the Map tab draws a canvas', !!canvas);
+        testController.assertEqual('the map draws every OTHER region with a grid cell',
+            String(drawable), canvas?.dataset.regions ?? '(no canvas)');
+        const note = document.querySelector(`${PANEL_SELECTOR} .apworld-map-refused`);
+        testController.reportCondition('the map carries a note for the region it did not draw', !!note);
+        testController.reportCondition('the note is the entry\'s own sentence, naming the region',
+            !!note && note.textContent.includes(sentence) && note.dataset.refused === '1');
+        testController.assertEqual('no event-bus handler error', '0', String(handlerErrors.length));
+        testController.assertEqual('no page error', '0', String(pageErrors.length));
+        for (const e of [...handlerErrors, ...pageErrors]) testController.log(`error seen: ${e}`, 'error');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('refused-region map test error-free', false);
+    } finally {
+        console.error = origError;
+        window.removeEventListener('error', onError);
+        window.removeEventListener('unhandledrejection', onRejection);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-map-draws-the-other-regions-and-names-the-refused-one',
+    name: 'APWorld hub: a region whose payload its substrate refuses is not drawn, the map names it, and nothing throws',
+    description: 'PRESET SIDECARS C1. procgen_topdown/AP_11 with one region\'s payload given an undeclared key, '
+               + 'loaded through files:jsonLoaded: the warehouse keeps the entry\'s own refusal sentence, the Map '
+               + 'tab draws every other gridded region, a note carries that sentence, and there is no handler or '
+               + 'page error (before C1: a blank Map and a page error).',
+    testFunction: apworldMapDrawsTheOtherRegionsAndNamesTheRefusedOne,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R2 — THE BLOCK'S REGION GENERATION FORM
+ * (the substrate-change plan §3b R2, §9.3–§9.4; ⚖ user 2026-09-23)
+ *
+ * A substrate pick writes the label (D1's op) and opens ▾ Region generation
+ * under the block; Generate ▸ runs the region in a WORKER under
+ * `moduleSettings.apworldEditor.regionGenerationTimeoutSeconds`, with the
+ * elapsed time shown, and lands ONE `set-region-sidecar` carrying a
+ * `provenance`. Every row presses the product's own controls, waits on the
+ * document's IDENTITY (its entry byte-equal to the file on disk, no ops) rather
+ * than on "a document", and asserts the product's own sentences — the op's
+ * (`regenerateOpRefusal`, its description) and the worker's (the timeout
+ * sentence, `REGION_GENERATION_CANCELLED`) — never a copy. Every knob set is
+ * derived from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ R0's measured never-returning region (trap 1393): its start region `C`, as bounce. */
+const TOPDOWN_AP4_PATH = './presets/procgen_topdown/AP_4/AP_4_rules.json';
+
+/** ⛓ The Region generation section under a region's block on the showing tab — re-queried. */
+const regionGenSection = (region, host = null) => document.querySelector(`${PANEL_SELECTOR} `
+    + `.apworld-sidecar-block${host ? `[data-host-tab="${host}"]` : ''}[data-region-name="${CSS.escape(region)}"] `
+    + '.apworld-region-generation');
+
+/** ⛓ Labels drawn by a form, in order. */
+const formLabels = (el) => [...(el?.querySelectorAll('.procgen-region-generation-form label') ?? [])]
+    .map((l) => l.textContent);
+
+/**
+ * ⛓ Open the hub on `path` and wait for THAT document: the slot's `region`
+ * entry byte-equal to the file on disk and an empty op list — a wait on "a
+ * document" reads the previous row's.
+ */
+async function openHubOnDocument(testController, path, slot, region) {
+    const disk = await (await fetch(path)).json();
+    const want = JSON.stringify(disk.preset_sidecars?.[slot]?.[region] ?? null);
+    const panel = await openHub(testController, path);
+    if (!panel) return null;
+    const same = await testController.pollForCondition(
+        () => panel.session?.ops().length === 0
+            && JSON.stringify(panel.rulesDoc?.preset_sidecars?.[slot]?.[region] ?? null) === want,
+        `the hub holds ${path} (slot ${slot} ${region} as on disk, no ops)`, 15000, 50);
+    testController.reportCondition(`identity: the hub holds ${path}`, same);
+    await testController.pollForCondition(() => !!panel._rulesSchema,
+        'the panel loaded rules.schema.json', 8000, 50);
+    return same ? panel : null;
+}
+
+/**
+ * ⛓ Pick `target` in the region's `substrate` picker (the D1 control, entry
+ * level) and wait for the label op AND the form it opens. → true when both.
+ */
+async function pickSubstrateAndOpenForm(testController, panel, region, target) {
+    await openSidecarJson(testController, region);
+    const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+    const index = [...(picker?.options ?? [])].findIndex((o) => !o.disabled && o.dataset.enumValue === target);
+    testController.reportCondition(`the picker offers \`${target}\``, index >= 0);
+    if (index < 0) return false;
+    const opsBefore = panel.session.ops().length;
+    picker.value = picker.options[index].value;
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(
+        () => panel.session.ops().length === opsBefore + 1 && regionGenSection(region)?.dataset.target === target,
+        `the pick of \`${target}\` recorded ONE label op and opened the form`, 8000, 50);
+}
+
+/** ⛓ The first registered id with a realiser, of a geometry, that is not `not`
+ *  (and, with `hooked`, declares its own knobs). Derived. */
+function realiserOf(tiles, not, { hooked = false } = {}) {
+    return substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null && e.id !== not
+        && (geometryOf(e) === REGION_GEOMETRY.TILES) === tiles
+        && (!hooked || typeof e.renderProcgenParams === 'function'))?.id ?? null;
+}
+
+/** ⛓ The labels the form must draw for `target`: Seed, the op's generic rows its geometry takes, the hook's. */
+function expectedFormLabels(target) {
+    const entry = substrateRegistry.get(target);
+    const generic = REGION_GENERATION_FIELDS.filter((f) => REGION_GENERATION_OP_FIELDS.includes(f.key)
+        && (f.appliesTo === undefined || f.appliesTo === geometryOf(entry))).map((f) => f.label);
+    const hook = renderRegionGenerationForm({
+        substrateId: target, params: { ...(entry.defaultProcgenParams ?? {}) }, generic: false,
+    });
+    return ['Seed', ...generic, ...[...hook.querySelectorAll('label')].map((l) => l.textContent)];
+}
+
+/** ⛓ Wait for the answer beside the block to change from `before`. */
+const answerAfter = (testController, region, before, label, budget = 30000) => testController.pollForValue(
+    () => { const t = sidecarMessageFor(region)?.textContent ?? null; return t && t !== before ? t : null; },
+    label, budget, 50);
+
+/**
+ * ⛓⛓⛓ **(i) A PICK OPENS THE FORM WITH THE TARGET'S DECLARED KNOBS** — on every
+ * host. Four-player slot 3 `region_1_0` → the first TILES realiser (derived):
+ * the form draws Seed, the region width/height the op reads (never max items),
+ * and the target hook's own rows; a Generate ▸; the same form under the
+ * block on the Sidecars tab and under the Map's selection. Then slot 1's
+ * `region_1_1` → the first SIDES realiser: Seed + its hook's rows, no size.
+ */
+export async function apworldAPickOpensTheRegionGenerationFormWithTheTargetsKnobs(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const tiles = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition(`⛓ premise: a TILES realiser to pick (${tiles})`, !!tiles);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!tiles || !await pickSubstrateAndOpenForm(testController, panel, region, tiles)) {
+            return testController.getOverallResult();
+        }
+        const want = expectedFormLabels(tiles);
+        testController.assertEqual(`[${region} → ${tiles}] ⛓⛓ the form draws Seed, the size rows and the hook's knobs`,
+            JSON.stringify(want), JSON.stringify(formLabels(regionGenSection(region))));
+        testController.reportCondition('…and NO max-items row (a control that would write nothing)',
+            !formLabels(regionGenSection(region)).includes(
+                REGION_GENERATION_FIELDS.find((f) => !REGION_GENERATION_OP_FIELDS.includes(f.key)).label));
+        testController.reportCondition('…and a Generate ▸', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        const plan = regionGenerationPlan(panel.rulesDoc, '3', region, tiles);
+        const width = [...regionGenSection(region).querySelectorAll('input')][1]?.value;
+        testController.assertEqual('the width row shows regionSizeFor\'s width', String(plan.size.width), String(width));
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        // ⛓ The Sidecars tab builds its per-region list only on its own expand (W0's rule).
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`), 'the Sidecars list expand', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
+        testController.reportCondition('⛓ the SAME form is drawn under the block on the Sidecars tab',
+            await testController.pollForCondition(() => regionGenSection(region, SIDECARS_TAB_ID)?.dataset.target === tiles,
+                'the Sidecars host draws the form', 8000, 50));
+        // ⛓ The Map host is asserted in (ii), after Generate, and — between the label pick
+        //   and Generate, where the map REFUSES the region (its payload does not fit its
+        //   label) — by R6's `apworld-the-map-draws-a-misfit-regions-block` (trap 1402).
+
+        const sidesRegion = 'region_1_1';
+        const sides = realiserOf(false, panel.rulesDoc.preset_sidecars['1'][sidesRegion].substrate, { hooked: true });
+        testController.reportCondition(`⛓ premise: a SIDES realiser to pick (${sides})`, !!sides);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (sides && await pickSubstrateAndOpenForm(testController, panel, sidesRegion, sides)) {
+            testController.assertEqual(`[${sidesRegion} → ${sides}] ⛓⛓ Seed and the hook's knobs, no size rows`,
+                JSON.stringify(expectedFormLabels(sides)), JSON.stringify(formLabels(regionGenSection(sidesRegion))));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region-generation form test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) GENERATE ON A MAZE TARGET LANDS ONE `set-region-sidecar` WITH ITS
+ * PROVENANCE.** Four-player slot 3 `region_1_0` → the tiles realiser, Generate
+ * pressed: ONE op, a `set-region-sidecar` whose `provenance` names the pure op,
+ * the target and the seed the form showed; the block reports 0 sidecar issues;
+ * the answer is the regenerate OP's own description (asked of the pure op on
+ * the same arguments, whose entry is byte-equal to the one the worker built);
+ * the seed row moves on by one; one Undo restores the document.
+ */
+export async function apworldGenerateOnAMazeTargetLandsOneOpWithProvenance(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, target)) return testController.getOverallResult();
+        const seed = Number(regionGenSection(region).querySelector('input')?.value);
+        testController.reportCondition(`the seed row shows a whole number (${seed})`, Number.isInteger(seed));
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const docObj = JSON.parse(docBefore);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer');
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar (the RESULT, not the realiser)', 'set-region-sidecar', String(op?.op));
+        const prov = op?.provenance ?? {};
+        testController.assertEqual('⛓⛓ its provenance names the pure op', 'regenerate-region-sidecar', String(prov.op));
+        testController.assertEqual('…the target', target, String(prov.substrate));
+        testController.assertEqual('…and the seed the form showed', String(seed), String(prov.seed));
+        testController.assertEqual('⛓ 0 sidecar issues on the block', '0', String(sidecarBlockFor(region)?.dataset.sidecarIssues));
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '3', region, substrate: target, seed,
+            regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
+        });
+        testController.reportCondition('the pure op on the same arguments builds', pure.ok);
+        testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['3']?.[region]),
+            JSON.stringify(panel.rulesDoc.preset_sidecars['3'][region]));
+        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description', String(pure.description), String(answer));
+        testController.reportCondition('…which names the seed and the unchanged rules',
+            String(answer).includes(`seed ${seed}`) && String(answer).includes(REGENERATE_RULES_UNCHANGED));
+        testController.assertEqual('the seed row moved on by one', String(seed + 1),
+            String(regionGenSection(region)?.querySelector('input')?.value));
+        // ⛓ The THIRD host: the regenerated region fits its label again, so the Map draws its
+        //   block under the selection — and the open form with it.
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const cell = (reconstructResultFromSidecars(panel.rulesDoc, { playerId: '3' })?.grid?.allRegions() ?? [])
+            .find((c) => c.region_id === region)?.cell;
+        testController.reportCondition('⛓ premise: the regenerated region is placed on the map', !!cell);
+        const canvas = await onMapTabFor(testController, panel);
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('⛓ the form is drawn under the Map\'s selection too',
+            await testController.pollForCondition(
+                () => mapSelectionBlock()?.querySelector('.apworld-region-generation')?.dataset.target === target,
+                'the Map host draws the form', 8000, 50));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('maze Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) A ZONE GENERATE SHOWS THE ELAPSED TICKER AND LANDS.** Four-player
+ * slot 3 `region_2_1` (a zone region already): the picker opens the form only
+ * on a CHANGE, so the label goes to the tiles realiser and back — the form
+ * then opens for the region's own substrate, and offers its recorded knobs
+ * when they differ (`regionGenerationPlan`). Generate: the elapsed readout is
+ * drawn and ADVANCES while the worker runs, and one op lands whose answer
+ * carries no "rode free" clause (the target hosts surplus exits natively).
+ */
+export async function apworldAZoneGenerateShowsTheElapsedTickerAndLands(testController) {
+    try {
+        const region = 'region_2_1';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        testController.reportCondition(`⛓ premise: the region is a zone realiser's (${own})`,
+            regionRealiserKind(substrateRegistry.get(own)) === 'zone');
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        const away = realiserOf(true, own);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return testController.getOverallResult();
+        const plan = regionGenerationPlan(panel.rulesDoc, '3', region, own);
+        testController.assertEqual('⛓ the recorded-knobs line is drawn iff the payload\'s knobs differ',
+            String(!!plan.recorded), String(!!regionGenSection(region)?.querySelector('.apworld-region-generation-recorded')));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const readings = [];
+        const answer = await testController.pollForValue(() => {
+            const e = regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed');
+            if (e && e.textContent && readings.at(-1) !== e.textContent) readings.push(e.textContent);
+            const t = sidecarMessageFor(region)?.textContent ?? null;
+            return t && t !== said && !regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed') ? t : null;
+        }, 'the zone Generate answer', 60000, 20);
+        testController.log(`elapsed readings: ${readings.slice(0, 6).join(' | ')}`);
+        testController.reportCondition(`⛓⛓ the elapsed readout was drawn and ADVANCED (${readings.length} distinct readings)`,
+            readings.length >= 2 && readings.every((r) => /\d+\.\d s/.test(r)));
+        testController.assertEqual('⛓ ONE op landed', String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…with the region\'s substrate in its provenance', own,
+            String(panel.session.ops().at(-1)?.provenance?.substrate));
+        testController.reportCondition('…and the answer is the op\'s description', String(answer).includes(`regenerated as \`${own}\``));
+        testController.reportCondition('⛓ no "rode free" clause — the target hosts surplus exits natively',
+            !String(answer).includes('rode free'));
+        testController.reportCondition('the ticker is cleared after the answer', panel._regionGenTicker === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ AP_4's start region → the zone target R0 measured never returning; the form open. */
+async function ap4NeverReturning(testController) {
+    const region = 'C';
+    const panel = await openHubOnDocument(testController, TOPDOWN_AP4_PATH, '1', region);
+    if (!panel) return null;
+    const target = substrateRegistry.getAll().find((e) => regionRealiserKind(e) === 'zone'
+        && typeof e.hostsSurplusExitsNatively === 'function'
+        && !e.hostsSurplusExitsNatively({ bounceMode: 'column' }))?.id ?? null;
+    testController.reportCondition(`⛓ premise: the zone target R0 measured unbounded here (${target})`, !!target);
+    testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+    if (!target || !await pickSubstrateAndOpenForm(testController, panel, region, target)) return null;
+    return { panel, region, target };
+}
+
+/**
+ * ⛓⛓⛓ **(iv) THE TIME LIMIT — A SETTING, AND A TIMEOUT RECORDS NOTHING.** The
+ * setting overridden to 1 s for the session (`persist: false`), AP_4's `C` →
+ * the zone target: the answer is the timeout sentence quoting the setting, the
+ * run timed out in its `running` phase (the budget bounds the realiser, not the
+ * libraries' load), NOTHING was recorded, the worker was terminated, and no
+ * second answer arrives after the sentence. The override is dropped after.
+ */
+export async function apworldAGenerateThatRunsOutOfTimeRecordsNothing(testController) {
+    try {
+        await settingsManager.updateSetting(REGION_GENERATION_TIMEOUT_SETTING, 1, { persist: false });
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        const { panel, region, target } = got;
+        const opsBefore = panel.session.ops().length;
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the timeout answer', 30000);
+        testController.assertEqual('⛓⛓ the answer is the timeout sentence, quoting the setting',
+            `Refused: ${regionGenerationTimeoutSentence(1, target, region)}`, String(answer));
+        const run = panel._regionGenLastRun;
+        testController.reportCondition('the run TIMED OUT', run?.outcome?.timedOut === true);
+        testController.assertEqual('…in the realiser\'s phase (the budget restarts at ready)', 'running', String(run?.outcome?.phase));
+        testController.reportCondition('⛓⛓ the worker was TERMINATED', run?.handle?.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…the document is as it was', docBefore, JSON.stringify(panel.rulesDoc));
+        await new Promise((r) => setTimeout(r, 1500));
+        testController.assertEqual('⛓ no second answer arrives after the sentence', '0', String(run?.handle?.late()));
+        testController.assertEqual('…the answer stands', String(answer), String(sidecarMessageFor(region)?.textContent));
+        testController.assertEqual('…and still nothing recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the form is back to Generate ▸', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('timeout test error-free', false);
+    } finally {
+        await settingsManager.clearOverride(REGION_GENERATION_TIMEOUT_SETTING);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) CANCEL MID-RUN.** AP_4's `C` → the zone target at the default
+ * budget; once the realiser is running, Cancel: the cancel sentence, nothing
+ * recorded, the worker terminated, the ticker cleared, Generate back, and no
+ * late answer.
+ */
+export async function apworldCancelStopsARunningGeneration(testController) {
+    try {
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        const { panel, region } = got;
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const running = await testController.pollForCondition(
+            () => panel._regionGen?.run?.handle.phase() === 'running'
+                && /^Generating as/.test(regionGenSection(region)?.querySelector('.apworld-region-generation-elapsed')?.textContent ?? ''),
+            'the realiser is running, and the readout says so', 20000, 50);
+        testController.reportCondition('⛓ premise: the realiser is running', running);
+        const run = panel._regionGen?.run;
+        regionGenSection(region)?.querySelector('.apworld-region-generation-cancel')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Cancel answer', 8000);
+        testController.assertEqual('⛓⛓ the answer is the Cancel sentence', `Refused: apworld: ${REGION_GENERATION_CANCELLED}.`, String(answer));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the ticker is cleared', panel._regionGenTicker === null);
+        testController.reportCondition('Generate ▸ is back', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        await new Promise((r) => setTimeout(r, 1000));
+        testController.assertEqual('no late answer', '0', String(run?.handle.late()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('cancel test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(vi) A TARGET WITHOUT A REALISER: THE OP'S REFUSAL, NO GENERATE.** Every
+ * id the picker offers whose registry entry has no realiser (derived): picked
+ * on four-player slot 3 `region_1_0`, the form prints the op's own refusal
+ * (asked of `regenerateOpRefusal` on the same document) and draws no Generate.
+ */
+export async function apworldANoRealiserTargetPrintsTheOpsRefusal(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        const none = [...(picker?.options ?? [])].filter((o) => !o.disabled).map((o) => o.dataset.enumValue)
+            .filter((id) => regionRealiserKind(substrateRegistry.get(id)) === null
+                && id !== panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.reportCondition(`⛓ premise: the picker offers ids without a realiser (${none.join(', ')})`, none.length > 0);
+        for (const id of none) {
+            if (!await pickSubstrateAndOpenForm(testController, panel, region, id)) continue;
+            // ⛓ R5b — a no-realiser target that offers Zone N OPENS on the zone
+            //   (`defaultRegionGenerationSource`); the Generate refusal is under *Generate*.
+            const plan = regionGenerationPlan(panel.rulesDoc, '3', region, id);
+            testController.assertEqual(`[→ ${id}] the form opens on the flow's default source`,
+                String(defaultRegionGenerationSource(plan)), String(regionGenSection(region)?.dataset.source));
+            const srcSel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+            if (srcSel && srcSel.value !== REGION_SOURCE_KINDS.GENERATE) {
+                srcSel.value = REGION_SOURCE_KINDS.GENERATE;
+                srcSel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            const sec = regionGenSection(region);
+            const want = regenerateOpRefusal(panel.rulesDoc, {
+                op: 'regenerate-region-sidecar', player: '3', region, substrate: id,
+                seed: panel._regionGen?.bag?.seed,
+            });
+            testController.assertEqual(`[→ ${id}] ⛓⛓ the form prints the op's own refusal`, String(want),
+                String(sec?.querySelector('.apworld-region-generation-refusal')?.textContent));
+            testController.reportCondition(`[→ ${id}] …and draws NO Generate`,
+                sec?.dataset.generate === 'none' && !sec.querySelector('.apworld-region-generate'));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no-realiser test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(vii) THE FORM IS TORN DOWN ON A SLOT PICK AND ON A NEW DOCUMENT — NO
+ * STALE TICKER.** A live run on four-player slot 3 `region_1_0` (pressed, then
+ * the slot picked while it runs): the form is gone, the run cancelled and its
+ * worker terminated, the ticker cleared, and nothing lands after. Then a live
+ * run on AP_4's `C` and a NEW document loaded: the same, on the new session.
+ */
+export async function apworldTheFormIsTornDownOnASlotPickAndANewDocument(testController) {
+    try {
+        const region = 'region_1_0';
+        let panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, target)) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const live = await testController.pollForValue(() => panel._regionGen?.run ?? null, 'a live run', 5000, 5);
+        testController.reportCondition(`⛓ premise: the run is live at the pick (${live?.handle.phase()})`,
+            !!live && live.handle.phase() !== 'done');
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        selectPlayer(select, '1');
+        testController.reportCondition('⛓⛓ a SLOT PICK closes the form', panel._regionGen === null
+            && !document.querySelector(`${PANEL_SELECTOR} .apworld-region-generation`));
+        testController.reportCondition('…cancels the run, terminating its worker',
+            live?.outcome?.cancelled === true || live?.handle.terminated() === true);
+        testController.reportCondition('…and clears the ticker', panel._regionGenTicker === null);
+        await new Promise((r) => setTimeout(r, 2500));
+        testController.assertEqual('⛓ nothing landed after the pick', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('no late answer', '0', String(live?.handle.late()));
+
+        const got = await ap4NeverReturning(testController);
+        if (!got) return testController.getOverallResult();
+        panel = got.panel;
+        regionGenSection(got.region).querySelector('.apworld-region-generate').click();
+        const run = await testController.pollForValue(() => panel._regionGen?.run ?? null, 'a live AP_4 run', 5000, 5);
+        await testController.pollForCondition(() => run?.handle.phase() === 'running', 'the realiser running', 20000, 50);
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        testController.reportCondition('⛓⛓ a NEW DOCUMENT closes the form', !!panel && panel._regionGen === null
+            && !document.querySelector(`${PANEL_SELECTOR} .apworld-region-generation`));
+        testController.reportCondition('…terminates the old run\'s worker', run?.handle.terminated() === true);
+        testController.reportCondition('…and leaves no ticker', panel?._regionGenTicker === null);
+        testController.reportCondition('…and resets the seed counter', panel?._regionGenSeeds?.size === 0);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('teardown test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R2_TESTS = [
+    ['apworld-a-pick-opens-the-region-generation-form-with-the-targets-knobs',
+        'APWorld hub: a substrate pick opens Region generation with the target\'s declared knobs, on every host',
+        apworldAPickOpensTheRegionGenerationFormWithTheTargetsKnobs],
+    ['apworld-generate-on-a-maze-target-lands-one-op-with-provenance',
+        'APWorld hub: Generate on a maze target lands ONE set-region-sidecar with provenance; the answer is the op\'s; Undo restores',
+        apworldGenerateOnAMazeTargetLandsOneOpWithProvenance],
+    ['apworld-a-zone-generate-shows-the-elapsed-ticker-and-lands',
+        'APWorld hub: a zone Generate shows the elapsed time ticking and lands',
+        apworldAZoneGenerateShowsTheElapsedTickerAndLands],
+    ['apworld-a-generate-that-runs-out-of-time-records-nothing',
+        'APWorld hub: a Generate past the time-limit setting prints the timeout sentence, terminates the worker, records nothing',
+        apworldAGenerateThatRunsOutOfTimeRecordsNothing],
+    ['apworld-cancel-stops-a-running-generation',
+        'APWorld hub: Cancel stops a running generation — worker terminated, nothing recorded',
+        apworldCancelStopsARunningGeneration],
+    ['apworld-a-no-realiser-target-prints-the-ops-refusal',
+        'APWorld hub: a target without a realiser prints the op\'s own refusal and no Generate',
+        apworldANoRealiserTargetPrintsTheOpsRefusal],
+    ['apworld-the-form-is-torn-down-on-a-slot-pick-and-a-new-document',
+        'APWorld hub: the Region generation form and its run are torn down on a slot pick and a new document',
+        apworldTheFormIsTornDownOnASlotPickAndANewDocument],
+];
+for (const [id, name, testFunction] of R2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R3 — THE STARTING INVENTORY BLOCK
+ * (the substrate-change plan §3b R3, §9.2; ⚖ user 2026-09-23)
+ *
+ * The Items tab opens on a Starting inventory block: the list, an add control,
+ * and — for every substrate in the slot's sidecars that declares
+ * `startingInventory` — its needs with a grant per candidate. The same need
+ * line is drawn in the Region generation form for the TARGET, above Generate.
+ * The rows assert against the block's data functions (`startingNeedRows`,
+ * `needSentence`) and the op's own description, never a copy.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ `BOUNCE_WORLDGEN_PATH` (above): its bounce slot starts with nothing and defines both arrows (plan §9.2). */
+/** ⛓ Measured: one of the four committed slots with a NON-empty starting list and sidecars. */
+const STARTING_LIST_PRESET_PATH = './presets/procgen_topdown/AP_4/AP_4_rules.json';
+
+const startingBlock = () => document.querySelector(`${PANEL_SELECTOR} .apworld-starting-inventory`);
+const startingChips = () => [...(startingBlock()?.querySelectorAll('.apworld-starting-entry') ?? [])]
+    .map((c) => ({ name: c.dataset.item, count: Number(c.dataset.count) }));
+const startInputFor = (item) => document.querySelector(
+    `${PANEL_SELECTOR} .apworld-item-start[data-item="${CSS.escape(item)}"]`);
+const needLines = (root) => [...(root?.querySelectorAll('.apworld-starting-need') ?? [])];
+
+/**
+ * ⛓⛓⛓ **(a) THE BLOCK'S LIST IS `starting_items`, AND THE START INPUTS SAY THE
+ * SAME COUNTS.** On a committed slot with a non-empty list (`AP_4`): the chips,
+ * in order, equal `startingInventoryList` of the document; every chip's count
+ * is the per-item Start input's value; no need line (its slot's substrates
+ * declare none — derived).
+ */
+export async function apworldTheStartingInventoryBlockListsStartingItems(testController) {
+    try {
+        const panel = await openHub(testController, STARTING_LIST_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+        const want = startingInventoryList(panel.rulesDoc, panel.playerId);
+        testController.reportCondition(`⛓ premise: a non-empty starting list (${want.length} names)`, want.length > 0);
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        testController.assertEqual('⛓⛓ the block lists starting_items as {name, count}, in order',
+            JSON.stringify(want), JSON.stringify(startingChips()));
+        for (const { name, count } of want) {
+            testController.assertEqual(`…and the Start input of ${name} says ${count}`, String(count),
+                String(startInputFor(name)?.value));
+        }
+        const needed = substratesInSlot(panel.rulesDoc, panel.playerId)
+            .filter((id) => declaredStartingNeeds(substrateRegistry.get(id)).length);
+        testController.assertEqual('need lines = the slot\'s declaring substrates\' needs (derived)',
+            String(startingNeedRows(panel.rulesDoc, panel.playerId, needed).length), String(needLines(startingBlock()).length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting inventory list test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(b) A GRANT IS ONE OP AND ONE UNDO; THE NEED READS MET; ADD IS CURRENT
+ * + 1.** `bounce_worldgen` slot 1 (starts with nothing): the block draws each
+ * declared need as *none held* with one grant per candidate; pressing the last
+ * candidate's grant records ONE op, the list becomes that item, its Start input
+ * reads 1 and the need line reads *met: <item>*; the add control pressed twice
+ * on that item makes the count 3 (not 1 — the grant is current + 1); three
+ * Undos restore the document.
+ */
+export async function apworldAStartingGrantIsOneOpAndTheNeedReadsMet(testController) {
+    try {
+        const panel = await openHub(testController, BOUNCE_WORLDGEN_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'items');
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        const p = panel.playerId;
+        const rows = startingNeedRows(panel.rulesDoc, p, substratesInSlot(panel.rulesDoc, p));
+        testController.reportCondition(`⛓ premise: an unmet need in this slot (${rows.length})`,
+            rows.length > 0 && rows.every((r) => !r.met));
+        testController.assertEqual('⛓ one need line per declared need, each the block\'s sentence',
+            JSON.stringify(rows.map(needSentence)),
+            JSON.stringify(needLines(startingBlock()).map((l) => l.querySelector('.apworld-starting-need-text')?.textContent)));
+        testController.reportCondition(`…reading "${NEED_NONE_HELD}"`,
+            needLines(startingBlock()).every((l) => l.dataset.met === 'false'));
+        const item = rows[0].anyOf.at(-1);
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        needLines(startingBlock())[0].querySelector(`.apworld-starting-grant[data-item="${CSS.escape(item)}"]`)?.click();
+        testController.assertEqual(`⛓⛓ the grant of ${item} is ONE op`, String(opsBefore + 1), String(panel.session.ops().length));
+        testController.assertEqual('…a set-starting-count', 'set-starting-count', String(panel.session.ops().at(-1)?.op));
+        testController.assertEqual('…and the list is that item', JSON.stringify([item]),
+            JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.assertEqual('⛓ the per-item Start input agrees', '1', String(startInputFor(item)?.value));
+        const line = needLines(startingBlock())[0];
+        testController.reportCondition(`⛓⛓ the need line reads "${NEED_MET}: ${item}"`,
+            line?.dataset.met === 'true' && line.textContent.includes(`${NEED_MET}: ${item}`));
+        const pick = startingBlock().querySelector('.apworld-starting-add-item');
+        pick.value = item;
+        startingBlock().querySelector('.apworld-starting-add').click();
+        const pick2 = startingBlock().querySelector('.apworld-starting-add-item');
+        pick2.value = item;
+        startingBlock().querySelector('.apworld-starting-add').click();
+        testController.assertEqual('⛓ add twice more: the count is 3 (current + 1 each time)', '3',
+            String(startingChips().find((c) => c.name === item)?.count));
+        testController.assertEqual('…and the Start input says 3', '3', String(startInputFor(item)?.value));
+        for (let i = 0; i < 3; i += 1) document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ three Undos restore the document', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting grant test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(c) THE FORM SHOWS THE TARGET'S NEED; A GENERATE AFTER A GRANT LANDS
+ * BOUNCE WITH THE SATISFIED-RULES CLAUSE** (the R2 flow end to end).
+ * `bounce_worldgen` slot 1 `region_0_1` — refused by the realiser with nothing
+ * held (§9.2). Pick a target that declares nothing (derived): the form draws NO
+ * need line. Pick the region's own substrate back: the form draws the need,
+ * *none held*, with grants. Grant the candidate for which the PURE op builds
+ * the region at the form's seed (derived, not typed): the need reads met inside
+ * the form; Generate lands ONE `set-region-sidecar`, and the answer is the pure
+ * op's description on the same arguments and names the rules the starting
+ * inventory satisfied.
+ */
+export async function apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedClause(testController) {
+    try {
+        const region = 'region_0_1';
+        const panel = await openHubOnDocument(testController, BOUNCE_WORLDGEN_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['1'][region].substrate;
+        const plain = substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null && e.id !== own
+            && !declaredStartingNeeds(e).length)?.id;
+        testController.reportCondition(`⛓ premise: a realiser that declares no need (${plain})`, !!plain);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!plain || !await pickSubstrateAndOpenForm(testController, panel, region, plain)) return testController.getOverallResult();
+        testController.assertEqual(`⛓ the form for \`${plain}\` draws NO need line`, '0',
+            String(needLines(regionGenSection(region)).length));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return testController.getOverallResult();
+        const rows = startingNeedRows(panel.rulesDoc, '1', [own]);
+        testController.reportCondition(`⛓ premise: \`${own}\` declares a need, unmet here`, rows.length > 0 && !rows[0].met);
+        testController.assertEqual(`⛓⛓ the form for \`${own}\` draws its need`, JSON.stringify(rows.map(needSentence)),
+            JSON.stringify(needLines(regionGenSection(region)).map((l) => l.querySelector('.apworld-starting-need-text')?.textContent)));
+        const seed = Number(regionGenSection(region).querySelector('input')?.value);
+        const base = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const builds = (item) => applyRulesDocOp(
+            { ...base, starting_items: { ...base.starting_items, 1: [item] } },
+            { op: 'regenerate-region-sidecar', player: '1', region, seed }).ok;
+        const item = rows[0].anyOf.find(builds);
+        testController.reportCondition(`⛓ premise: a candidate with which the pure op builds ${region} (${item})`, !!item);
+        if (!item) return testController.getOverallResult();
+        needLines(regionGenSection(region))[0].querySelector(`.apworld-starting-grant[data-item="${CSS.escape(item)}"]`)?.click();
+        testController.assertEqual('the grant landed', JSON.stringify([item]), JSON.stringify(panel.rulesDoc.starting_items['1']));
+        testController.reportCondition('⛓ the form is still open and its need line reads met',
+            await testController.pollForCondition(() => needLines(regionGenSection(region))[0]?.dataset.met === 'true',
+                'the form\'s need line reads met', 8000, 50));
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+        testController.assertEqual(`…whose entry is \`${own}\``, own, String(panel.rulesDoc.preset_sidecars['1'][region]?.substrate));
+        const prov = op?.provenance ?? {};
+        const pure = applyRulesDocOp(docObj, {
+            op: 'regenerate-region-sidecar', player: '1', region, substrate: own, seed: prov.seed,
+            regionParams: prov.regionParams, hazardOpts: prov.hazardOpts, size: prov.size, freeItems: prov.freeItems,
+        });
+        testController.reportCondition('the pure op on the same arguments builds', pure.ok);
+        // ⛓ S1 (⚖ Q1b) — plus the grants the same op declares, derived (bounce_worldgen
+        //   defines five of bounce's six library items, so the sixth is granted).
+        testController.assertEqual('⛓⛓ the answer is the regenerate op\'s own description (+ the grants it declared)',
+            String(withGrantsAnswer(pure.description, regenerationGrants(docObj, '1', own))), String(answer));
+        testController.reportCondition(`⛓⛓ …which names the rules ${REGENERATE_SATISFIED_BY_START} [${item}]`,
+            String(answer).includes(`${REGENERATE_SATISFIED_BY_START} [${item}]`));
+        testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
+            JSON.stringify(panel.rulesDoc.regions));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('starting grant + Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R3_TESTS = [
+    ['apworld-the-starting-inventory-block-lists-starting-items',
+        'APWorld hub: the Items tab\'s Starting inventory block lists starting_items; the Start inputs agree',
+        apworldTheStartingInventoryBlockListsStartingItems],
+    ['apworld-a-starting-grant-is-one-op-and-the-need-reads-met',
+        'APWorld hub: a starting-inventory grant is ONE op + undo, the need reads met, add is current + 1',
+        apworldAStartingGrantIsOneOpAndTheNeedReadsMet],
+    ['apworld-a-generate-after-a-starting-grant-lands-with-the-satisfied-clause',
+        'APWorld hub: the form shows the target\'s starting need; Generate after a grant lands bounce with the satisfied-rules clause',
+        apworldAGenerateAfterAStartingGrantLandsWithTheSatisfiedClause],
+];
+for (const [id, name, testFunction] of R3_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R3. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5a — THE LIBRARY ENTRY SOURCE
+ * (the substrate-change plan §12, §3c)
+ *
+ * The Region generation form gains a Source row — Generate · Library entry —
+ * drawn when the TARGET declares `instantiateLibraryEntryForSpecs`; Library
+ * entry hides the seed row and the generate knobs, lists the served packs'
+ * entries for the target (too-few-slot entries disabled, with the op's own
+ * sentence), and Generate ▸ runs the SAME worker path with the entry inlined
+ * in the op's `source`. Every expectation is derived from the registry, the
+ * served files, or the pure op.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const AP10_PATH = './presets/procgen_topdown/AP_10/AP_10_rules.json';
+
+/** ⛓ The first registered id with a realiser that is not `not`, with or without the library hook. Derived. */
+const realiserHooked = (hooked, not = null) => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && e.id !== not && offersLibrarySource(e) === hooked)?.id ?? null;
+/** ⛓ As `realiserHooked`, and offering NO zone source either — so the form's sources are exactly
+ *  Generate (+ Library when hooked): `regionGenerationSourcesFor` adds Zone for `zoneSourceFacts(e).offers`.
+ *  (REGISTRATION ORDER RO1: under id order the first unhooked realiser is `flash_seedling`, whose
+ *  atlas-room zone source draws a Source row — the position was never the fact.) */
+const realiserSourcesOnly = (hooked, not = null) => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && e.id !== not && offersLibrarySource(e) === hooked && !zoneSourceFacts(e).offers)?.id ?? null;
+
+/** ⛓ The served packs for `substrate`, fetched the way the page does — the rows' expectation source. */
+async function servedPacksFor(substrate) {
+    const base = `${LIBRARY_BASE_PATH}${SERVED_LIBRARY_DIR}/`;
+    const index = (await (await fetch(`${base}${SERVED_LIBRARY_INDEX}`)).json()).libraries;
+    return Promise.all(index.filter((r) => r.substrates.includes(substrate))
+        .map(async (r) => (await fetch(`${base}${r.file}`)).json()));
+}
+
+/** ⛓ Open the form for the region's OWN substrate (a pick away, then back — the form opens on a CHANGE). */
+async function openFormOnOwnSubstrate(testController, panel, slot, region) {
+    const own = panel.rulesDoc.preset_sidecars[slot][region].substrate;
+    testController.reportCondition(`slot ${slot} selected`, await onRegionsTabFor(testController, panel, slot));
+    const away = realiserHooked(false, own) ?? realiserHooked(true, own);
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return null;
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, own)) return null;
+    return own;
+}
+
+/** ⛓ Choose `Library entry` in the Source row and wait for the picker to settle. → the section's library state. */
+async function chooseLibrarySource(testController, region) {
+    const sel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+    testController.reportCondition('⛓ the Source row is drawn', !!sel);
+    if (!sel) return null;
+    sel.value = REGION_SOURCE_KINDS.LIBRARY;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForValue(() => {
+        const st = regionGenSection(region)?.dataset.library;
+        return st === 'ready' || st === 'failed' ? st : null;
+    }, 'the library picker settled', 15000, 50);
+}
+
+/** ⛓ The picker's options as `{value, disabled}` — re-queried. */
+const pickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-library option') ?? [])]
+    .map((o) => ({ value: o.value, disabled: o.disabled }));
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW APPEARS FOR A TARGET WITH THE HOOK, AND NOT FOR ONE
+ * WITHOUT** — four-player slot 3 `region_1_0`: pick the first realiser that
+ * declares `instantiateLibraryEntryForSpecs` (derived) → the Source row offers
+ * Generate · Library entry; pick the first realiser that does not → no Source row.
+ */
+export async function apworldTheSourceRowAppearsOnlyForATargetWithTheLibraryHook(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        const hooked = realiserSourcesOnly(true, own);
+        const bare = realiserSourcesOnly(false, own);
+        testController.reportCondition(`⛓ premise: a hooked (${hooked}) and an unhooked (${bare}) realiser exist`,
+            !!hooked && !!bare);
+        testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, hooked)) return testController.getOverallResult();
+        const sources = [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => o.value);
+        testController.assertEqual(`⛓⛓ \`${hooked}\`: the Source row offers Generate · Library entry`,
+            JSON.stringify([REGION_SOURCE_KINDS.GENERATE, REGION_SOURCE_KINDS.LIBRARY]), JSON.stringify(sources));
+        testController.assertEqual('…Generate is the default', REGION_SOURCE_KINDS.GENERATE,
+            String(regionGenSection(region)?.dataset.source));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, bare)) return testController.getOverallResult();
+        testController.reportCondition(`⛓⛓ \`${bare}\`: no Source row`,
+            !regionGenSection(region)?.querySelector('.apworld-region-generation-source'));
+        testController.reportCondition('…and its Generate ▸ is drawn', !!regionGenSection(region)?.querySelector('.apworld-region-generate'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER LISTS THE SERVED ENTRIES FOR THE TARGET AND DISABLES THE
+ * ONES WITH TOO FEW SLOTS** — four-player slot 1 `region_1_0` (every entry fits)
+ * and AP_10 slot 1 `BlackCastle` (more locations than any entry has slots),
+ * both on their own substrate: the options = the served packs' entries of that
+ * substrate, in order; disabled exactly when `location_slots` < the region's
+ * locations; each disabled entry's reason is the op's own refusal; the seed
+ * row is gone; Generate ▸ is disabled when nothing fits.
+ */
+export async function apworldTheLibraryPickerListsTheServedEntriesAndDisablesTooFewSlots(testController) {
+    try {
+        for (const [path, region] of [[FOUR_PLAYER_PATH, 'region_1_0'], [AP10_PATH, 'BlackCastle']]) {
+            // eslint-disable-next-line no-await-in-loop
+            const panel = await openHubOnDocument(testController, path, '1', region);
+            if (!panel) return testController.getOverallResult();
+            // eslint-disable-next-line no-await-in-loop
+            const own = await openFormOnOwnSubstrate(testController, panel, '1', region);
+            if (!own) return testController.getOverallResult();
+            // eslint-disable-next-line no-await-in-loop
+            const state = await chooseLibrarySource(testController, region);
+            testController.assertEqual(`${region}: the picker loaded`, 'ready', String(state));
+            const nLocs = panel.rulesDoc.regions['1'][region].locations.length;
+            // eslint-disable-next-line no-await-in-loop
+            const packs = await servedPacksFor(own);
+            const want = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+                .map((e) => ({ value: `${pack.library_id}|${e.entry_id}`, disabled: e.location_slots < nLocs })));
+            testController.reportCondition(`⛓ premise: the served packs carry \`${own}\` entries (${want.length})`, want.length > 0);
+            testController.assertEqual(`⛓⛓ ${region}: the options are the served \`${own}\` entries, disabled iff too few slots`,
+                JSON.stringify(want), JSON.stringify(pickerOptions(region)));
+            const firstDisabled = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+                .map((e) => librarySourceFor(pack, e))).find((src) => src.entry.location_slots < nLocs);
+            if (firstDisabled) {
+                const reason = regenerateOpRefusal(panel.rulesDoc, {
+                    op: 'regenerate-region-sidecar', player: '1', region, substrate: own, source: firstDisabled,
+                });
+                const drawn = regionGenSection(region)?.querySelector(`.apworld-region-generation-library-disabled[data-entry-id="${CSS.escape(firstDisabled.entry_id)}"]`);
+                testController.reportCondition(`⛓ ${region}: a disabled entry shows the op's own refusal`,
+                    !!reason && String(drawn?.textContent).endsWith(reason));
+            }
+            testController.reportCondition(`⛓⛓ ${region}: no seed row under Library entry`,
+                !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+            const go = regionGenSection(region)?.querySelector('.apworld-region-generate');
+            testController.assertEqual(`${region}: Generate ▸ is enabled iff an entry fits`,
+                String(want.some((o) => !o.disabled)), String(!!go && !go.disabled));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('library picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ Generate ▸ with the picker's first fitting entry on `region` (slot `slot`,
+ * its own substrate): ONE `set-region-sidecar` whose provenance carries the
+ * source (id pair + name, seed null, no payload); names kept; 0 sidecar
+ * issues; the answer and the entry are the pure op's; one Undo restores.
+ */
+async function libraryGenerateLands(testController, slot, region) {
+    const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, slot, region);
+    if (!panel) return;
+    const own = await openFormOnOwnSubstrate(testController, panel, slot, region);
+    if (!own) return;
+    testController.assertEqual('the picker loaded', 'ready', String(await chooseLibrarySource(testController, region)));
+    const nLocs = panel.rulesDoc.regions[slot][region].locations.length;
+    const packs = await servedPacksFor(own);
+    const pick = packs.flatMap((pack) => pack.entries.filter((e) => e.substrate === own)
+        .map((e) => librarySourceFor(pack, e))).find((src) => src.entry.location_slots >= nLocs);
+    testController.reportCondition(`⛓ premise: a served \`${own}\` entry fits ${region} (${pick?.entry_id})`, !!pick);
+    if (!pick) return;
+    testController.assertEqual('⛓ the picker selected the first fitting entry', `${pick.library_id}|${pick.entry_id}`,
+        String(regionGenSection(region)?.querySelector('.apworld-region-generation-library')?.value));
+    testController.reportCondition('⛓⛓ no seed row under Library entry',
+        !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+    const docBefore = JSON.stringify(panel.rulesDoc);
+    const docObj = JSON.parse(docBefore);
+    const opsBefore = panel.session.ops().length;
+    const said = sidecarMessageFor(region)?.textContent ?? null;
+    regionGenSection(region).querySelector('.apworld-region-generate').click();
+    const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+    testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+    const op = panel.session.ops().at(-1);
+    testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+    const prov = op?.provenance ?? {};
+    testController.assertEqual('⛓⛓ provenance.source = the id pair and the name',
+        JSON.stringify({ kind: REGION_SOURCE_KINDS.LIBRARY, library_id: pick.library_id, entry_id: pick.entry_id, name: pick.entry.name }),
+        JSON.stringify(prov.source ?? null));
+    testController.assertEqual('…seed null', 'null', JSON.stringify(prov.seed));
+    testController.reportCondition('…never the entry\'s payload', !JSON.stringify(prov).includes('"payload"'));
+    testController.assertEqual('⛓ 0 sidecar issues on the block', '0', String(sidecarBlockFor(region)?.dataset.sidecarIssues));
+    const built = panel.rulesDoc.preset_sidecars[slot][region];
+    const names = substrateRegistry.get(built.substrate).apLocationNamesOf(built.playable_payload) ?? [];
+    const docNames = docObj.regions[slot][region].locations.map((l) => l.name);
+    testController.reportCondition(`⛓⛓ names kept: the payload carries [${docNames.join(', ')}]`,
+        docNames.every((n) => names.includes(n)));
+    const pure = applyRulesDocOp(docObj, {
+        op: 'regenerate-region-sidecar', player: slot, region, substrate: own, source: pick, regionParams: prov.regionParams,
+    });
+    testController.reportCondition('the pure op on the same source builds', pure.ok);
+    testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+        JSON.stringify(pure.doc?.preset_sidecars?.[slot]?.[region]), JSON.stringify(built));
+    testController.assertEqual('⛓⛓ the answer is the op\'s own description', String(pure.description), String(answer));
+    testController.reportCondition(`…which names the entry (${pick.entry.name}) and the pack`,
+        String(answer).includes(`\`${pick.entry.name}\` (\`${pick.library_id}\`)`));
+    testController.assertEqual('⛓ the document\'s rules are untouched', JSON.stringify(docObj.regions),
+        JSON.stringify(panel.rulesDoc.regions));
+    document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+    testController.assertEqual('⛓ one Undo restores the document', docBefore, JSON.stringify(panel.rulesDoc));
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH A LIBRARY ENTRY ON A MAZE REGION** — four-player slot 1
+ * `region_1_0` ← the demo maze pack's first fitting entry (`libraryGenerateLands`).
+ */
+export async function apworldALibraryGenerateOnAMazeRegionLandsOneOpWithTheSource(testController) {
+    try {
+        await libraryGenerateLands(testController, '1', 'region_1_0');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('maze library Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(d) THE SAME ON A ZONE REGION** — four-player slot 3 `region_2_0` ← the
+ * demo bounce pack's first fitting entry.
+ */
+export async function apworldALibraryGenerateOnAZoneRegionLandsOneOpWithTheSource(testController) {
+    try {
+        await libraryGenerateLands(testController, '3', 'region_2_0');
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone library Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(e) A FETCH FAILURE PRINTS ITS SENTENCE** — the panel's catalog swapped
+ * for one whose fetch throws: choosing Library entry prints
+ * `libraryFetchFailureSentence` and draws no Generate; nothing is recorded.
+ */
+export async function apworldALibraryFetchFailurePrintsItsSentence(testController) {
+    let panel = null;
+    try {
+        const region = 'region_1_0';
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const failure = new Error('the served packs are unreachable (row e)');
+        panel._libraryCatalog = createServedLibraryCatalog({ fetchImpl: async () => { throw failure; } });
+        if (!await openFormOnOwnSubstrate(testController, panel, '1', region)) return testController.getOverallResult();
+        const opsBefore = panel.session.ops().length;
+        testController.assertEqual('the picker failed', 'failed', String(await chooseLibrarySource(testController, region)));
+        testController.assertEqual('⛓⛓ the form prints the fetch-failure sentence', libraryFetchFailureSentence(failure),
+            String(regionGenSection(region)?.querySelector('.apworld-region-generation-library-error')?.textContent));
+        testController.reportCondition('…and no Generate ▸', !regionGenSection(region)?.querySelector('.apworld-region-generate'));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('fetch failure test error-free', false);
+    } finally {
+        if (panel) panel._libraryCatalog = null;
+    }
+    return testController.getOverallResult();
+}
+
+const R5A_TESTS = [
+    ['apworld-the-source-row-appears-only-for-a-target-with-the-library-hook',
+        'APWorld hub: the Region generation form draws a Source row for a target with the library hook, and none without',
+        apworldTheSourceRowAppearsOnlyForATargetWithTheLibraryHook],
+    ['apworld-the-library-picker-lists-the-served-entries-and-disables-too-few-slots',
+        'APWorld hub: the library picker lists the served entries for the target, too-few-slot entries disabled with the op\'s reason',
+        apworldTheLibraryPickerListsTheServedEntriesAndDisablesTooFewSlots],
+    ['apworld-a-library-generate-on-a-maze-region-lands-one-op-with-the-source',
+        'APWorld hub: Generate with a library entry on a maze region lands ONE op with provenance.source, names kept, Undo restores',
+        apworldALibraryGenerateOnAMazeRegionLandsOneOpWithTheSource],
+    ['apworld-a-library-generate-on-a-zone-region-lands-one-op-with-the-source',
+        'APWorld hub: Generate with a library entry on a zone region lands ONE op with provenance.source, names kept, Undo restores',
+        apworldALibraryGenerateOnAZoneRegionLandsOneOpWithTheSource],
+    ['apworld-a-library-fetch-failure-prints-its-sentence',
+        'APWorld hub: a failed served-pack fetch prints its sentence in the form and records nothing',
+        apworldALibraryFetchFailurePrintsItsSentence],
+];
+for (const [id, name, testFunction] of R5A_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5a. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5c — THE ATLAS-ROOM SOURCE (plan §12's R5c row,
+ * §15). `flash_seedling` declares the zone read-back; the Source row offers its
+ * word (*Atlas room*, read off the entry) and the picker lists the installed
+ * atlas's rooms by name. On `seedling_spiral_room` (T2: one room `region_0_0`
+ * beside three maze regions) and `seedling_sphere_room` (T3: one room leaf,
+ * `region_3_2`). Every expectation is the product's own function asked of the
+ * document the panel holds.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const SEEDLING_SPIRAL_ROOM_PATH = './presets/seedling_spiral_room/AP_1/AP_1_rules.json';
+const SEEDLING_SPHERE_ROOM_PATH = './presets/seedling_sphere_room/AP_1/AP_1_rules.json';
+const SEEDLING = 'flash_seedling';
+
+/** ⛓ The room picker's options as `{zone, name, disabled, heldBy, unplaceable}` — re-queried. */
+const roomPickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-zone option') ?? [])]
+    .map((o) => ({
+        zone: o.value === '' ? null : Number(o.value), name: o.dataset.zoneName ?? null, disabled: o.disabled,
+        heldBy: o.dataset.heldBy ?? null, unplaceable: o.dataset.unplaceable ?? null,
+    }));
+
+/** ⛓ The first maze region of the slot with `n` exits — derived. */
+const mazeRegionWithExits = (doc, n) => Object.entries(doc.preset_sidecars['1'])
+    .find(([, e]) => e.substrate === 'maze' && (e.playable_payload.exits ?? []).length === n)?.[0] ?? null;
+
+/** ⛓ The page's installed atlas, as the entry answers it (the picker must not move it). */
+const installedAtlasId = () => substrateRegistry.get(SEEDLING).rulesJsonBlocks().region_atlas?.atlas_id ?? null;
+
+/** ⛓ Relabel `region` to `flash_seedling` (D1's pick) and switch its form to the room source; wait for the picker. */
+async function openRoomSource(testController, panel, region) {
+    if (!await pickSubstrateAndOpenForm(testController, panel, region, SEEDLING)) return false;
+    const sel = regionGenSection(region)?.querySelector('.apworld-region-generation-source');
+    testController.reportCondition('the Source row is drawn', !!sel);
+    if (!sel) return false;
+    sel.value = REGION_SOURCE_KINDS.ZONE;
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(() => {
+        const st = regionGenSection(region)?.dataset.zone;
+        return st === 'ready' || st === 'refused';
+    }, 'the room picker settled', 15000, 50);
+}
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW OFFERS *ATLAS ROOM* FOR `flash_seedling`, NOT FOR MAZE** —
+ * `seedling_spiral_room` `region_0_0`: pick maze → no room source; pick
+ * `flash_seedling` back → the Source row = the flow's sources (derived), the
+ * zone source labelled with the ENTRY's word, never typed here.
+ */
+export async function apworldTheSourceRowOffersAtlasRoomForSeedling(testController) {
+    try {
+        const region = 'region_0_0';
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const optionsOf = () => [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => ({ id: o.value, label: o.textContent }));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'maze')) return testController.getOverallResult();
+        testController.reportCondition('⛓⛓ `maze`: no room source in the Source row',
+            !optionsOf().some((o) => o.id === REGION_SOURCE_KINDS.ZONE));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, SEEDLING)) return testController.getOverallResult();
+        const want = regionGenerationSourcesFor(regionGenerationPlan(panel.rulesDoc, '1', region, SEEDLING))
+            .map((x) => ({ id: x.id, label: x.label }));
+        testController.assertEqual('⛓⛓ `flash_seedling`: the Source row = the flow\'s sources (derived)',
+            JSON.stringify(want), JSON.stringify(optionsOf()));
+        testController.assertEqual('⛓⛓ …the room source carries the ENTRY\'s word',
+            String(substrateRegistry.get(SEEDLING).zoneSourceLabel),
+            String(optionsOf().find((o) => o.id === REGION_SOURCE_KINDS.ZONE)?.label));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER LISTS THE ATLAS'S ROOMS, THE HELD ONE DISABLED** — a maze
+ * region of `seedling_spiral_room` relabelled to `flash_seedling`: the options =
+ * the recorded atlas's placeable rooms by name (the read-back's `zoneNames`), a
+ * room another region plays disabled and labelled with it (`zoneHeldBy`), then
+ * the doorless rooms, disabled, with the channel's reason. The page's installed
+ * atlas does not move.
+ */
+export async function apworldTheRoomPickerListsTheAtlasRooms(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPIRAL_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 2);
+        testController.reportCondition(`⛓ premise: a 2-exit maze region (${region})`, !!region);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const atlasBefore = installedAtlasId();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const rec = installedZoneConfigFrom(doc, '1', SEEDLING);
+        testController.reportCondition('the read-back answers on the panel\'s document', rec.ok);
+        const cfg = { ...rec.cfg, ...rec.assumed };
+        const want = [
+            ...rec.zoneNames.map((name, z) => {
+                const heldBy = zoneHeldBy(doc, '1', SEEDLING, z, { except: region, cfg });
+                return { zone: z, name, disabled: !!heldBy, heldBy, unplaceable: null };
+            }),
+            ...rec.unplaceable.map((u) => ({ zone: null, name: u.name, disabled: true, heldBy: null, unplaceable: u.why })),
+        ];
+        testController.assertEqual('⛓⛓ the rooms by name, the held one disabled and named, then the doorless ones (derived)',
+            JSON.stringify(want), JSON.stringify(roomPickerOptions(region)));
+        testController.reportCondition('⛓ premise: a room is held (by region_0_0)', want.some((o) => o.heldBy === 'region_0_0'));
+        testController.reportCondition('⛓ premise: a doorless room is listed', want.some((o) => o.unplaceable));
+        testController.assertEqual('⛓⛓ the page\'s installed atlas is unchanged (nothing installed)',
+            String(atlasBefore), String(installedAtlasId()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('room picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH ANOTHER ROOM LANDS ONE `replace-region-content`** —
+ * `seedling_sphere_room`'s one-exit maze leaf relabelled to `flash_seedling`
+ * takes a free room WITH a location: ONE op, the room INLINED; the worker's entry
+ * and slices = the pure op's; the document = the pure op's; the room's locations
+ * placed, the leaf's old placements displaced and named; 0 new sidecar errors;
+ * one Undo restores every key.
+ */
+export async function apworldAnAtlasRoomGenerateLandsOneReplaceRegionContent(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPHERE_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 1);
+        testController.reportCondition(`⛓ premise: a 1-exit maze leaf (${region})`, !!region);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPHERE_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const atlasBefore = installedAtlasId();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const docObj = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const rec = installedZoneConfigFrom(docObj, '1', SEEDLING);
+        const cfg = { ...rec.cfg, ...rec.assumed };
+        // ⛓ a free room with a location and a door (derived off the read-back and the atlas's own compile)
+        //   — a PURE build of the recorded atlas (`buildSeedlingContentSource` installs nothing)
+        const rooms = buildSeedlingContentSource(rec.cfg.atlasDoc).zones;
+        const withLoc = roomPickerOptions(region).filter((o) => o.zone !== null && !o.disabled)
+            .find((o) => rooms[o.zone].locations.length > 0);
+        testController.reportCondition(`⛓ premise: a free room with a location (${withLoc?.name})`, !!withLoc);
+        if (!withLoc) return testController.getOverallResult();
+        testController.reportCondition('…and no region holds it', !zoneHeldBy(docObj, '1', SEEDLING, withLoc.zone, { except: region, cfg }));
+        const sel = regionGenSection(region).querySelector('.apworld-region-generation-zone');
+        sel.value = String(withLoc.zone);
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._regionGen?.zone?.selected === withLoc.zone, 'the room is selected', 4000, 50);
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const errorsBefore = sidecarIssues(docObj, '1').filter((i) => i.severity === 'error').length;
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a replace-region-content', REPLACE_REGION_CONTENT_OP, String(op?.op));
+        testController.reportCondition('⛓⛓ the room is INLINED in the op', !!op?.source?.zone && Array.isArray(op.source.zone.locations));
+        const run = panel._regionGenLastRun;
+        const pure = applyRulesDocOp(docObj, { ...op });
+        testController.reportCondition('the pure op on the same record applies', pure.ok);
+        testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+            JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[region]), JSON.stringify(run?.outcome?.entry));
+        testController.assertEqual('⛓⛓ the document is the pure op\'s', JSON.stringify(pure.doc), JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓⛓ the answer is the op\'s own description', String(answer).startsWith(String(pure.description)));
+        const entry = panel.rulesDoc.preset_sidecars['1'][region];
+        testController.assertEqual('⛓ the entry plays the picked room', String(withLoc.zone),
+            String(substrateRegistry.get(SEEDLING).zoneOfPayload(entry.playable_payload, cfg)));
+        const locs = panel.rulesDoc.regions['1'][region].locations;
+        testController.reportCondition(`⛓ the room's ${locs.length} location(s) are placed`,
+            locs.length > 0 && locs.every((l) => typeof panel.rulesDoc.canonical_placements['1'][l.name] === 'string'));
+        const displaced = docObj.regions['1'][region].locations.map((l) => l.name)
+            .filter((n) => n in docObj.canonical_placements['1'] && !(n in panel.rulesDoc.canonical_placements['1']));
+        testController.reportCondition(`⛓ premise: the leaf's placements were displaced (${displaced.length})`, displaced.length > 0);
+        for (const n of displaced) {
+            if (!String(answer).includes(`\`${n}\``)) testController.reportCondition(`the answer names ${n}`, false);
+        }
+        // ⛓ the relabel alone leaves the leaf's maze payload under the seedling label
+        //   (SUBSTRATE_MISMATCH); the op's entry is the room's, so the report is clean.
+        const errorsAfter = sidecarIssues(panel.rulesDoc, '1').filter((i) => i.severity === 'error').length;
+        testController.log(`sidecar errors: ${errorsBefore} after the relabel → ${errorsAfter} after the op`);
+        testController.assertEqual('⛓⛓ 0 sidecar errors after the op', '0', String(errorsAfter));
+        testController.assertEqual('⛓⛓ the page\'s installed atlas is unchanged after Generate',
+            String(atlasBefore), String(installedAtlasId()));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓⛓ one Undo restores every key', docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(d) A HELD ROOM IS REFUSED BY THE OP'S OWN SENTENCE** — the picker disables
+ * it, so the row forces the selection onto it and presses Generate: the answer
+ * is `zoneSourceRefusal`'s sentence naming the holder; nothing recorded.
+ */
+export async function apworldAHeldAtlasRoomIsRefusedByName(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPIRAL_ROOM_PATH)).json();
+        const region = mazeRegionWithExits(probe, 2);
+        const panel = await openHubOnDocument(testController, SEEDLING_SPIRAL_ROOM_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        const held = roomPickerOptions(region).find((o) => o.heldBy);
+        testController.reportCondition(`⛓ premise: room ${held?.name} is held by ${held?.heldBy}`, !!held);
+        if (!held) return testController.getOverallResult();
+        panel._regionGen.zone.selected = held.zone;
+        const want = zoneSourceRefusal(panel.rulesDoc, { player: '1', region, substrate: SEEDLING, zoneIdx: held.zone });
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        await panel._generateRegion();
+        const answer = await answerAfter(testController, region, said, 'the refusal', 8000);
+        testController.assertEqual('⛓⛓ the answer is the op\'s own refusal', `Refused: ${want}`, String(answer));
+        testController.reportCondition(`…naming the holder (${held.heldBy})`, String(answer).includes(`"${held.heldBy}"`));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('held room test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(e) AN ATLAS THE SITE DOES NOT SERVE IS REFUSED BY NAME** — built IN
+ * MEMORY through the hub's own ops (nothing on disk): `seedling_sphere_room`'s
+ * room region relabelled to maze, the document's `region_atlas.atlas_id` set
+ * (`set-key`) to an id the served index does not list, and the maze leaf
+ * relabelled to `flash_seedling`: the picker FETCHES the index (a real fetch)
+ * and refuses naming it. Then a failing fetch (a row stub on the panel's fetch
+ * seam, the index path answering 404): the sentence names the path and the
+ * failure. Nothing is recorded by either.
+ */
+export async function apworldAnUnservedAtlasIsRefusedByName(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_SPHERE_ROOM_PATH)).json();
+        const leaf = mazeRegionWithExits(probe, 1);
+        const room = Object.entries(probe.preset_sidecars['1']).find(([, e]) => e.substrate === SEEDLING)?.[0];
+        const panel = await openHubOnDocument(testController, SEEDLING_SPHERE_ROOM_PATH, '1', leaf);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, room, 'maze')) return testController.getOverallResult();
+        const unserved = 'seedling-00000000';
+        const applied = panel._applyOp({ op: 'set-key', key: 'region_atlas', scope: 'player', player: '1',
+            value: { ...panel.rulesDoc.region_atlas['1'], atlas_id: unserved } });
+        testController.reportCondition('⛓ slot 1 now names an unserved atlas (one set-key op)',
+            applied.ok && panel.rulesDoc.region_atlas['1'].atlas_id === unserved);
+        panel._zoneFetched = {};
+        const opsBefore = panel.session.ops().length;
+        if (!await openRoomSource(testController, panel, leaf)) return testController.getOverallResult();
+        const refusal = () => regionGenSection(leaf)?.querySelector('.apworld-region-generation-zone-refusal')?.textContent ?? '';
+        testController.assertEqual('⛓ the picker refused', 'refused', String(regionGenSection(leaf)?.dataset.zone));
+        testController.reportCondition('⛓⛓ the index was FETCHED', atlasIndexPath() in (panel._zoneFetched ?? {}));
+        testController.reportCondition(`⛓⛓ the refusal names the index and the id: ${refusal().slice(0, 160)}`,
+            refusal().includes(`\`${atlasIndexPath()}\``) && refusal().includes(`\`${unserved}\``));
+        // ⛓ a failing fetch: the index answers 404
+        panel._zoneFetched = {};
+        panel._zoneFetchJson = async () => { throw new Error('HTTP 404'); };
+        try {
+            await panel._loadZonePicker(panel._regionGen);
+            panel._render();
+            testController.reportCondition(`⛓⛓ a failed fetch names the path: ${refusal().slice(0, 160)}`,
+                refusal().includes(`\`${atlasIndexPath()}\`, which ${ZONE_FETCH_FAILED} (HTTP 404)`));
+        } finally {
+            delete panel._zoneFetchJson;
+            panel._zoneFetched = {};
+        }
+        testController.reportCondition('…no Generate drawn', !regionGenSection(leaf)?.querySelector('.apworld-region-generate'));
+        testController.assertEqual('…nothing recorded by the picker', String(opsBefore + 1), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('unserved atlas test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(f) R5d — A REAL ROOM'S CHEST KEEPS THE DOCUMENT'S ITEM** —
+ * `seedling_atlas_location` (seedling generated G7: the starting house plays its
+ * chest as a check, the sphere placement put a key there): the room region is
+ * picked away and back (D1's label only — the form opens on a change) and takes
+ * its OWN room through the atlas-room source. Before R5d, Generate refused (the
+ * verification's "item \"key_blue\" in the document, \"Seal\" from the zone").
+ * Now the page previews ONE `replace-region-content` with the room inlined: 0
+ * placements displaced, the document's item still on every location, the
+ * document byte-identical to the one loaded — so the session records NOTHING
+ * (its no-op rule) and the answer is `No change (<the op's description>).`,
+ * which names each placement kept over the room's vanilla item (the inlined
+ * answer's `overrides`, derived; the clause is silent when there is none).
+ */
+const SEEDLING_ATLAS_LOCATION_PATH = './presets/seedling_atlas_location/AP_1/AP_1_rules.json';
+export async function apworldAnAtlasRoomKeepsTheDocumentsPlacements(testController) {
+    try {
+        const probe = await (await fetch(SEEDLING_ATLAS_LOCATION_PATH)).json();
+        const region = Object.entries(probe.preset_sidecars['1']).find(([, e]) => e.substrate === SEEDLING)?.[0];
+        const specs = region ? zoneLocationSpecs(probe, '1', region).filter((sp) => typeof sp.item === 'string') : [];
+        testController.reportCondition(`⛓ premise: a room region holding placed location(s) (${region}: ${specs.length})`,
+            !!region && specs.length > 0);
+        if (!region || !specs.length) return testController.getOverallResult();
+        const panel = await openHubOnDocument(testController, SEEDLING_ATLAS_LOCATION_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const loaded = JSON.stringify(panel.rulesDoc);
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'maze')) return testController.getOverallResult();
+        if (!await openRoomSource(testController, panel, region)) return testController.getOverallResult();
+        testController.assertEqual('⛓ the label went away and back — the document is the loaded one', loaded, JSON.stringify(panel.rulesDoc));
+        const own = roomPickerOptions(region).find((o) => o.zone !== null && o.name === probe.preset_sidecars['1'][region].playable_payload.atlas_region);
+        testController.reportCondition(`⛓ premise: the region's own room is offered (${own?.name})`, !!own && !own.disabled);
+        if (!own) return testController.getOverallResult();
+        const sel = regionGenSection(region).querySelector('.apworld-region-generation-zone');
+        sel.value = String(own.zone);
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._regionGen?.zone?.selected === own.zone, 'the own room is selected', 4000, 50);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate').click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        // ⛓ the own room re-taken changes nothing, so the session records nothing (its no-op rule):
+        //   the answer is the op's own description as the session's `No change (…)` sentence.
+        testController.assertEqual('⛓⛓ nothing recorded (the document does not change)', String(opsBefore), String(panel.session.ops().length));
+        const pure = panel._regionGenLastRun?.landed?.preview ?? {};
+        const op = pure.op;
+        testController.assertEqual('…the op the page previewed is a replace-region-content with the room inlined',
+            `${REPLACE_REGION_CONTENT_OP}|true`, `${op?.op}|${Array.isArray(op?.source?.zone?.locations)}`);
+        testController.reportCondition('the pure op applies', pure.ok === true);
+        testController.assertEqual('⛓⛓ the pure op\'s document is the loaded one', loaded, JSON.stringify(pure.doc));
+        testController.assertEqual('⛓⛓ the document is byte-identical to the one loaded', loaded, JSON.stringify(panel.rulesDoc));
+        for (const sp of specs) {
+            testController.assertEqual(`⛓⛓ ${sp.name} still holds the document's ${sp.item}`,
+                String(sp.item), String(panel.rulesDoc.canonical_placements['1'][sp.name]));
+        }
+        testController.assertEqual('⛓⛓ the answer is the op\'s own description, unrecorded', `No change (${pure.description}).`, String(answer));
+        testController.reportCondition('⛓⛓ …0 placements displaced', String(answer).includes(`0 placements ${ZONE_DISPLACED}`));
+        const overrides = op?.source?.zone?.overrides ?? [];
+        testController.log(`overrides inlined: ${JSON.stringify(overrides)}`);
+        testController.reportCondition(`⛓ premise: the room's own item differs on ${overrides.length} location(s)`, overrides.length > 0);
+        for (const o of overrides) {
+            testController.reportCondition(`⛓⛓ the answer names the kept ${o.item} at ${o.location} over ${o.zoneItem}`,
+                String(answer).includes(ZONE_KEPT) && String(answer).includes(`\`${o.item}\` at \`${o.location}\`, not the zone's own \`${o.zoneItem}\``));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('atlas room keeps placements test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R5C_TESTS = [
+    ['apworld-the-source-row-offers-atlas-room-for-seedling',
+        'APWorld hub: the Region generation form offers Atlas room (the entry\'s word) for flash_seedling and no room source for maze',
+        apworldTheSourceRowOffersAtlasRoomForSeedling],
+    ['apworld-the-room-picker-lists-the-atlas-rooms',
+        'APWorld hub: the Atlas room picker lists the recorded atlas\'s rooms by name, the held one disabled, the doorless ones with the reason',
+        apworldTheRoomPickerListsTheAtlasRooms],
+    ['apworld-an-atlas-room-generate-lands-one-replace-region-content',
+        'APWorld hub: Generate with a free atlas room lands ONE replace-region-content, the room\'s locations placed, Undo restores',
+        apworldAnAtlasRoomGenerateLandsOneReplaceRegionContent],
+    ['apworld-a-held-atlas-room-is-refused-by-name',
+        'APWorld hub: an atlas room another region plays is refused by the op\'s own sentence, nothing recorded',
+        apworldAHeldAtlasRoomIsRefusedByName],
+    ['apworld-an-unserved-atlas-is-refused-by-name',
+        'APWorld hub: a document naming an atlas the site does not serve is refused naming the index; a failed fetch names the path',
+        apworldAnUnservedAtlasIsRefusedByName],
+];
+for (const [id, name, testFunction] of R5C_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5c. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+registerTest({
+    id: 'apworld-an-atlas-room-keeps-the-documents-placements',
+    name: 'APWorld hub: a real room re-taken through the atlas-room source keeps the document\'s placements — 0 displaced, the kept one named',
+    description: 'APWORLD SUBSTRATE CHANGE R5d. The zone source hands the channel the document\'s placements; '
+        + 'see the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldAnAtlasRoomKeepsTheDocumentsPlacements,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R5b — THE ZONE N SOURCE (plan §12 + the ruling).
+ *
+ * On `jta_dataset_test` (3 zones, all held — the dataset's regions ARE its
+ * zones): a zone is FREED the way the hub can free one — the holder's substrate
+ * label changed (D1's pick, one op) — and a jta region then takes it through the
+ * form. Every expectation is the product's own function asked of the document
+ * the panel holds (`zoneHeldBy`, `regionGenerationSourcesFor`, the pure op).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const JTA_DATASET_PATH = './presets/jta_dataset_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+/** ⛓ The first registered realiser that is not a zone substrate (the "maze one" of the brief) — derived. */
+const nonZoneRealiser = () => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && !zoneSourceFacts(e).offers)?.id ?? null;
+
+/** ⛓ The zone picker's options as `{zone, disabled, heldBy}` — re-queried. */
+const zonePickerOptions = (region) => [...(regionGenSection(region)
+    ?.querySelectorAll('.apworld-region-generation-zone option') ?? [])]
+    .map((o) => ({ zone: Number(o.value), disabled: o.disabled, heldBy: o.dataset.heldBy ?? null }));
+
+/** ⛓ Relabel `region` to a non-zone realiser (frees its zone), then open the jta form on `onto`. */
+async function freeAZoneAndOpenJtaForm(testController, panel, holder, onto) {
+    const away = nonZoneRealiser();
+    testController.reportCondition(`⛓ premise: a non-zone realiser exists (${away})`, !!away);
+    testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+    if (!await pickSubstrateAndOpenForm(testController, panel, holder, away)) return false;
+    if (!await pickSubstrateAndOpenForm(testController, panel, onto, away)) return false;
+    return pickSubstrateAndOpenForm(testController, panel, onto, 'jta');
+}
+
+/**
+ * ⛓⛓ **(a) THE SOURCE ROW OFFERS ZONE N FOR A JTA TARGET AND NOT FOR A NON-ZONE ONE**
+ * — `jta_dataset_test` `region_1_0`: pick a non-zone realiser (derived) → its
+ * Source row has no Zone N; pick `jta` back → Generate · Zone N, opened on the
+ * zone (jta's `regionSourceDefault`); no seed row under the zone.
+ */
+export async function apworldTheSourceRowOffersZoneNForAJtaTargetOnly(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const away = nonZoneRealiser();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, away)) return testController.getOverallResult();
+        const sourcesOf = () => [...(regionGenSection(region)?.querySelectorAll('.apworld-region-generation-source option') ?? [])]
+            .map((o) => o.value);
+        testController.reportCondition(`⛓⛓ \`${away}\`: no Zone N in the Source row`,
+            !sourcesOf().includes(REGION_SOURCE_KINDS.ZONE));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const want = regionGenerationSourcesFor(regionGenerationPlan(panel.rulesDoc, '1', region, 'jta')).map((s) => s.id);
+        testController.assertEqual('⛓⛓ `jta`: the Source row = the flow\'s sources for the target (derived)',
+            JSON.stringify(want), JSON.stringify(sourcesOf()));
+        testController.reportCondition('…and it includes Zone N', want.includes(REGION_SOURCE_KINDS.ZONE));
+        testController.assertEqual('⛓ the form opens on the zone (jta declares it its default)', REGION_SOURCE_KINDS.ZONE,
+            String(regionGenSection(region)?.dataset.source));
+        testController.reportCondition('⛓ no seed row under Zone N',
+            !regionGenSection(region)?.querySelector('.procgen-region-generation-form'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone source row test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(b) THE PICKER DISABLES THE HELD ZONES** — `jta_dataset_test` `region_1_0`
+ * on `jta`: the options are `0..zoneCount-1` of the HOST's dataset, and a zone is
+ * disabled (labelled with its holder) exactly when another region of the slot
+ * plays it (`zoneHeldBy` on the panel's document); with all others held, the
+ * region's own zone is the one enabled and selected. The page's `zoneCount` is
+ * unchanged (the picker installs nothing).
+ */
+export async function apworldTheZonePickerDisablesTheHeldZones(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const pageCount = substrateRegistry.get('jta').zoneCount;
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, nonZoneRealiser())) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const doc = panel.rulesDoc;
+        const host = Object.values(doc.preset_sidecars['1']).find((e) => e.playable_payload?.jta_dataset);
+        const n = host.playable_payload.jta_dataset.zones.length;
+        const want = Array.from({ length: n }, (_, z) => {
+            const heldBy = zoneHeldBy(doc, '1', 'jta', z, { except: region });
+            return { zone: z, disabled: !!heldBy, heldBy };
+        });
+        testController.assertEqual(`⛓⛓ the ${n} zones of the host's dataset, held ones disabled and named (derived)`,
+            JSON.stringify(want), JSON.stringify(zonePickerOptions(region)));
+        testController.reportCondition('⛓ premise: at least one zone is held', want.some((o) => o.disabled));
+        testController.assertEqual('⛓ the own zone is selected (every other is held)',
+            String(zoneOfRegion(doc, '1', region)), String(regionGenSection(region)?.querySelector('.apworld-region-generation-zone')?.value));
+        testController.assertEqual('⛓⛓ the page\'s `jta` zoneCount is unchanged (nothing installed)',
+            String(pageCount), String(substrateRegistry.get('jta').zoneCount));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone picker test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ Generate with the freed zone on `onto`, after `holder`'s label freed it:
+ * ONE `replace-region-content` (its zone INLINED, a provenance); the answer = the
+ * pure op's description; the worker's entry and touched slices = the pure op's;
+ * the Placements tab lists the displaced items unplaced; the page's zoneCount is
+ * unchanged; one Undo restores every key. → `{panel, op, docBefore}` or null.
+ */
+async function zoneGenerateLands(testController, holder, onto) {
+    const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', onto);
+    if (!panel) return null;
+    const pageCount = substrateRegistry.get('jta').zoneCount;
+    const freedZone = zoneOfRegion(panel.rulesDoc, '1', holder);
+    if (!await freeAZoneAndOpenJtaForm(testController, panel, holder, onto)) return null;
+    testController.assertEqual(`⛓ the picker selected the freed zone ${freedZone}`, String(freedZone),
+        String(regionGenSection(onto)?.querySelector('.apworld-region-generation-zone')?.value));
+    const docBefore = JSON.stringify(panel.rulesDoc);
+    const docObj = JSON.parse(docBefore);
+    const opsBefore = panel.session.ops().length;
+    const said = sidecarMessageFor(onto)?.textContent ?? null;
+    regionGenSection(onto).querySelector('.apworld-region-generate').click();
+    const answer = await answerAfter(testController, onto, said, 'the Generate answer', 60000);
+    testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+    const op = panel.session.ops().at(-1);
+    testController.assertEqual('…a replace-region-content', REPLACE_REGION_CONTENT_OP, String(op?.op));
+    testController.reportCondition('⛓⛓ the zone channel\'s answer is INLINED in the op', !!op?.source?.zone
+        && Array.isArray(op.source.zone.locations));
+    testController.assertEqual('…its provenance names the zone', JSON.stringify({ op: REPLACE_REGION_CONTENT_OP, zoneIdx: freedZone }),
+        JSON.stringify({ op: op?.provenance?.op, zoneIdx: op?.provenance?.zoneIdx }));
+    const run = panel._regionGenLastRun;
+    const pure = applyRulesDocOp(docObj, { ...op });
+    testController.reportCondition('the pure op on the same record applies', pure.ok);
+    testController.assertEqual('⛓⛓ the worker\'s entry is the pure op\'s, byte for byte',
+        JSON.stringify(pure.doc?.preset_sidecars?.['1']?.[onto]), JSON.stringify(run?.outcome?.entry));
+    testController.assertEqual('⛓⛓ …and its touched slices', JSON.stringify({
+        locations: pure.doc?.regions?.['1']?.[onto]?.locations, items: pure.doc?.items?.['1'],
+        itempool_counts: pure.doc?.itempool_counts?.['1'], canonical_placements: pure.doc?.canonical_placements?.['1'],
+    }), JSON.stringify(run?.outcome?.next));
+    testController.assertEqual('⛓⛓ the document is the pure op\'s', JSON.stringify(pure.doc), JSON.stringify(panel.rulesDoc));
+    testController.reportCondition('⛓⛓ the answer is the op\'s own description', String(answer).startsWith(String(pure.description)));
+    const t0 = performance.now();
+    for (let i = 0; i < 10; i += 1) applyRulesDocOp(docObj, op);
+    testController.log(`refold: replace-region-content on ${JTA_DATASET_PATH} = ${((performance.now() - t0) / 10).toFixed(2)} ms/op`);
+    const displaced = docObj.regions['1'][onto].locations.map((l) => l.name)
+        .filter((name) => name in docObj.canonical_placements['1'] && !(name in panel.rulesDoc.canonical_placements['1']));
+    testController.reportCondition(`⛓ premise: placements were displaced (${displaced.length})`, displaced.length > 0);
+    for (const name of displaced) {
+        if (!String(answer).includes(`\`${name}\``)) testController.reportCondition(`the answer names ${name}`, false);
+    }
+    testController.assertEqual('⛓⛓ the page\'s `jta` zoneCount is unchanged after Generate',
+        String(pageCount), String(substrateRegistry.get('jta').zoneCount));
+    selectTab(panel, 'placements');
+    const line = await testController.pollForValue(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-placements-unplaced`), 'the unplaced line', 8000, 50);
+    const drawn = JSON.parse(line?.dataset.items ?? '[]');
+    const want = unplacedPoolItems(panel.rulesDoc, '1').map((u) => u.item);
+    testController.assertEqual('⛓⛓ the Placements tab lists the pool items placed nowhere', JSON.stringify(want), JSON.stringify(drawn));
+    // ⛓ R6 — the displaced FILLER leaves the pool (plan §14.7 #4), so the line lists
+    //   every displaced item EXCEPT filler — read off the document's own item
+    //   classification, not off the product's declaration reader.
+    const isFiller = (i) => docObj.items['1'][i]?.classification === 'filler';
+    const displacedItems = [...new Set(displaced.map((n) => docObj.canonical_placements['1'][n]))].filter((i) => !isFiller(i));
+    testController.reportCondition(`…which include every displaced non-filler item [${displacedItems.join(', ')}]`,
+        displacedItems.every((i) => drawn.includes(i)));
+    return { panel, op, docBefore, docObj, displaced, drawn, answer, isFiller };
+}
+
+/**
+ * ⛓⛓⛓ **(c) GENERATE WITH A FREE ZONE LANDS ONE `replace-region-content`** —
+ * `region_1_1`'s label moved off jta frees zone 2; `region_1_0` takes it. Then one
+ * Undo restores every key.
+ */
+export async function apworldAZoneGenerateLandsOneReplaceRegionContent(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        selectTab(got.panel, 'regions');
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓⛓ one Undo restores every key', got.docBefore, JSON.stringify(got.panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone Generate test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(d) A HELD ZONE IS REFUSED BY THE OP'S OWN SENTENCE** — the picker disables
+ * it, so the row forces the form's selection onto a held zone (the op is the
+ * authority, the picker a courtesy) and presses Generate: the answer is
+ * `zoneSourceRefusal`'s sentence naming the holder, and nothing is recorded.
+ */
+export async function apworldAHeldZoneIsRefusedByName(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, JTA_DATASET_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, nonZoneRealiser())) return testController.getOverallResult();
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, 'jta')) return testController.getOverallResult();
+        const held = zonePickerOptions(region).find((o) => o.disabled);
+        testController.reportCondition(`⛓ premise: zone ${held?.zone} is held by ${held?.heldBy}`, !!held);
+        if (!held) return testController.getOverallResult();
+        panel._regionGen.zone.selected = held.zone;
+        const want = zoneSourceRefusal(panel.rulesDoc, { player: '1', region, substrate: 'jta', zoneIdx: held.zone });
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        await panel._generateRegion();
+        const answer = await answerAfter(testController, region, said, 'the refusal', 8000);
+        testController.assertEqual('⛓⛓ the answer is the op\'s own refusal', `Refused: ${want}`, String(answer));
+        testController.reportCondition(`…naming the holder (${held.heldBy})`, String(answer).includes(`"${held.heldBy}"`));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('held zone test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(e) THE HOST REGION TAKING ANOTHER ZONE KEEPS `jta_dataset`** — `region_0_0`
+ * hosts the dataset its siblings reference; it takes the freed zone 2: the new
+ * entry carries the SAME dataset, and the validity report names no
+ * `REF_UNRESOLVED` (no sibling strands).
+ */
+export async function apworldTheHostRegionTakingAnotherZoneKeepsTheDataset(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_0_0');
+        if (!got) return testController.getOverallResult();
+        const before = JSON.parse(got.docBefore).preset_sidecars['1'].region_0_0.playable_payload.jta_dataset;
+        const now = got.panel.rulesDoc.preset_sidecars['1'].region_0_0.playable_payload.jta_dataset;
+        testController.reportCondition('⛓ premise: region_0_0 hosted the dataset', !!before);
+        testController.assertEqual('⛓⛓ the new entry carries the same `jta_dataset`', JSON.stringify(before), JSON.stringify(now));
+        const refs = sidecarIssues(got.panel.rulesDoc, '1').filter((i) => i.kind === SIDECAR_ISSUE_KINDS.REF_UNRESOLVED);
+        testController.assertEqual('⛓⛓ no REF_UNRESOLVED in the validity report', '0', String(refs.length));
+        testController.reportCondition('…and the answer says the field was carried', String(got.answer).includes('`jta_dataset` carried'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('host zone test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R5B_TESTS = [
+    ['apworld-the-source-row-offers-zone-n-for-a-jta-target-only',
+        'APWorld hub: the Region generation form offers Zone N for a jta target and not for a non-zone one, with no seed row',
+        apworldTheSourceRowOffersZoneNForAJtaTargetOnly],
+    ['apworld-the-zone-picker-disables-the-held-zones',
+        'APWorld hub: the Zone N picker lists the dataset\'s zones, the ones another region holds disabled and named',
+        apworldTheZonePickerDisablesTheHeldZones],
+    ['apworld-a-zone-generate-lands-one-replace-region-content',
+        'APWorld hub: Generate with a freed zone lands ONE replace-region-content, the displaced items listed unplaced, Undo restores',
+        apworldAZoneGenerateLandsOneReplaceRegionContent],
+    ['apworld-a-held-zone-is-refused-by-name',
+        'APWorld hub: a zone another region holds is refused by the op\'s own sentence, nothing recorded',
+        apworldAHeldZoneIsRefusedByName],
+    ['apworld-the-host-region-taking-another-zone-keeps-the-dataset',
+        'APWorld hub: the dataset host taking another zone keeps jta_dataset, and no sibling reference strands',
+        apworldTheHostRegionTakingAnotherZoneKeepsTheDataset],
+];
+for (const [id, name, testFunction] of R5B_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R5b. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R6 — THE CLEAN-UP BUNDLE (plan §3d).
+ *
+ * Five places where a refusal or a hidden state had no sentence (the family
+ * *"a check whose FALSE answer REMOVES something is invisible"*): each row
+ * asserts the sentence that now stands where the state was hidden, and the
+ * gesture that works once it is said. Every expectation is the product's own
+ * function asked of the document the panel holds.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **(4) A SLOT PICK BEFORE THE SCHEMA IS REFUSED BY NAME, AND WORKS AFTER.**
+ * The cause of the pre-schema *"No change"* (plan §10.1 #5), measured: without
+ * `rules.schema.json` the panel derives no slots, the selector offered ONE (the
+ * default) under *"This document is about one player slot"*, a pick of slot 3
+ * read as `''`, `_syncPlayer` fell back to slot 1 in silence, and the `maze` pick
+ * then landed on slot 1's `region_1_0` — already a maze — as *"No change"*. The
+ * schema is held back the way a pending fetch holds it (`_rulesSchema` null,
+ * `_schemaPending` true): the selector says why it offers one slot, a slot-3 pick
+ * is refused in those words and moves nothing; the schema restored, the same
+ * pick reaches slot 3 and the substrate pick lands ONE op there.
+ */
+export async function apworldASlotPickBeforeTheSchemaIsRefusedByName(testController) {
+    let panel = null;
+    let schema = null;
+    try {
+        const region = 'region_1_0';
+        panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        schema = panel._rulesSchema;
+        panel._rulesSchema = null;
+        panel._schemaPending = true;
+        panel._chosenPlayer = null;
+        panel._render();
+        const select = () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        const note = () => document.querySelector(`${PANEL_SELECTOR} .apworld-player-slots-note`);
+        const fallback = panel.playerId;
+        testController.assertEqual('⛓ pending: the selector offers only the default slot',
+            JSON.stringify([fallback]), JSON.stringify([...select().options].map((o) => o.value)));
+        testController.assertEqual('⛓⛓ pending: the selector is marked as waiting on the schema', 'true',
+            select().dataset.slotsWaiting);
+        testController.assertEqual('⛓⛓ pending: the note beside it is the wait sentence',
+            playerSlotsWaitSentence(null), note()?.textContent ?? null);
+        testController.assertEqual('…and so is its title (never "one player slot")', playerSlotsWaitSentence(null),
+            select().title);
+        const opsBefore = panel.session.ops().length;
+        selectPlayer(select(), '3');
+        testController.assertEqual('⛓⛓⛓ a slot-3 pick moves nothing', String(fallback), String(panel.playerId));
+        testController.reportCondition(`⛓⛓⛓ …and is REFUSED naming the schema (${panel._opMessage})`,
+            // ⛓ The select holds no option `3`, so the DOM reads the pick as '' — the refusal says so.
+            String(panel._opMessage).startsWith('Refused: player (none)')
+                && String(panel._opMessage).includes(PLAYER_SLOTS_NEED_SCHEMA));
+        testController.assertEqual('…nothing recorded', String(opsBefore), String(panel.session.ops().length));
+
+        panel._rulesSchema = schema;
+        panel._schemaPending = false;
+        panel._render();
+        schema = null;
+        testController.assertEqual('⛓ loaded: the selector is not waiting', 'false', select().dataset.slotsWaiting);
+        testController.reportCondition('…and the note is gone', !note()?.textContent);
+        testController.reportCondition('⛓⛓ loaded: the same pick reaches slot 3', await onRegionsTabFor(testController, panel, '3'));
+        const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
+        const target = realiserOf(true, own);
+        const slot1 = JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]);
+        testController.reportCondition(`⛓⛓⛓ the \`${target}\` pick lands ONE op and opens the form`,
+            !!target && await pickSubstrateAndOpenForm(testController, panel, region, target));
+        testController.assertEqual('…on slot 3', target, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        testController.assertEqual('…and slot 1\'s region_1_0 is untouched', slot1,
+            JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('pre-schema slot pick test error-free', false);
+    } finally {
+        if (panel && schema) {
+            panel._rulesSchema = schema;
+            panel._schemaPending = false;
+            panel._render();
+        }
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(3) THE MAP DRAWS A MISFIT REGION'S BLOCK** (trap 1402). Four-player slot 3
+ * `region_1_0`, selected ON THE MAP, relabelled to the first tiles realiser from the
+ * Map's own block: the painter now refuses the region (its payload no longer fits
+ * its label), and the block STAYS under the map, the painter's refusal sentence
+ * standing where the outline was, V0's `SUBSTRATE_MISMATCH` in the block, and the
+ * Region generation form under it. Generate there lands one op and the region is
+ * painted again; two Undos restore the document and the painted cell.
+ */
+export async function apworldTheMapDrawsAMisfitRegionsBlock(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
+        if (!panel) return testController.getOverallResult();
+        const docBefore = JSON.stringify(panel.rulesDoc);
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const mapOf = () => reconstructResultFromSidecars(panel.rulesDoc, { playerId: '3' });
+        const cellOf = () => (mapOf()?.grid?.allRegions() ?? []).find((c) => c.region_id === region)?.cell ?? null;
+        const cell = cellOf();
+        testController.reportCondition('⛓ premise: the region is painted on slot 3\'s map', !!cell);
+        const canvas = await onMapTabFor(testController, panel, '3');
+        const drawnBefore = canvas?.dataset.regions;
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('the Map draws the selection\'s block', await testController.pollForCondition(
+            () => mapSelectionBlock()?.dataset.regionName === region, 'the Map selection block', 8000, 50));
+        const target = realiserOf(true, panel.rulesDoc.preset_sidecars['3'][region].substrate);
+        if (!target || !await pickSubstrateAndOpenForm(testController, panel, region, target)) {
+            testController.reportCondition(`⛓⛓⛓ the \`${target}\` pick on the Map's block opened the form`, false);
+            return testController.getOverallResult();
+        }
+        const refused = (mapOf()?.refused ?? []).find((r) => r.region_id === region) ?? null;
+        testController.reportCondition('⛓ premise: the painter now REFUSES the region', !!refused && !cellOf());
+        const host = () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-selection`);
+        testController.assertEqual('⛓⛓⛓ the block is still drawn under the map, for the undrawn region',
+            `${region}|false`, `${host()?.dataset.regionName}|${host()?.dataset.drawn}`);
+        testController.assertEqual('⛓⛓ …with the painter\'s refusal where the outline was',
+            `⛔ Not drawn on the map — ${refused?.sentence}`,
+            host()?.querySelector('.apworld-map-selection-refused')?.textContent ?? null);
+        testController.reportCondition('⛓ …V0 names the mismatch in the block',
+            !!mapSelectionBlock()?.querySelector(`.apworld-sidecar-issue[data-kind="${SIDECAR_ISSUE_KINDS.SUBSTRATE_MISMATCH}"]`));
+        const gen = () => mapSelectionBlock()?.querySelector('.apworld-region-generation');
+        testController.assertEqual('⛓⛓⛓ …and the Region generation form under it', target, gen()?.dataset.target ?? null);
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        gen()?.querySelector('.apworld-region-generate')?.click();
+        await answerAfter(testController, region, said, 'the Generate answer on the Map host');
+        testController.assertEqual('⛓⛓ Generate on the Map lands ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        testController.reportCondition('⛓ …and the region is painted again, its block drawn', await testController.pollForCondition(
+            () => !!cellOf() && host()?.dataset.drawn === 'true', 'the region painted again', 8000, 50));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ two Undos restore the document', docBefore, JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓ …and the painted cell', await testController.pollForCondition(
+            () => JSON.stringify(cellOf()) === JSON.stringify(cell)
+                && document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`)?.dataset.regions === drawnBefore
+                && host()?.dataset.drawn === 'true',
+            'the cell painted as before', 8000, 50));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('misfit Map block test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ R6 — the Re-roll ▸ button on a region's block, on the showing tab (or a given host) — re-queried. */
+const rerollButton = (region, host = null) => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecar-block`
+    + `${host ? `[data-host-tab="${host}"]` : ''}[data-region-name="${CSS.escape(region)}"] .apworld-sidecar-reroll`);
+
+/**
+ * ⛓⛓⛓ **(1) RE-ROLL ▸ — ONE PRESS OPENS THE FORM ON THE REGION'S OWN SUBSTRATE AT
+ * ITS NEXT SEED.** Four-player slot 1 `region_1_0` (a region whose own substrate
+ * the op would Generate — derived): the button is on all three hosts (Regions,
+ * Sidecars, the Map's selection); one press opens the form for the OWN substrate
+ * at the counter's seed and records nothing; Generate lands one op at that seed;
+ * a second Re-roll opens at the NEXT seed and its Generate lands a DIFFERENT
+ * entry (two re-rolls differ — the seed-not-advanced mutant's witness). A region
+ * whose substrate has no realiser (`omsi_substrate_test`'s omsi `region_1_1`;
+ * ⛓ spiral victory: jta realises a spec since, so a jta region no longer serves):
+ * the button is disabled with the op's own sentence in its title.
+ */
+export async function apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed(testController) {
+    try {
+        const region = 'region_1_0';
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '1', region);
+        if (!panel) return testController.getOverallResult();
+        const own = panel.rulesDoc.preset_sidecars['1'][region].substrate;
+        testController.reportCondition(`⛓ premise: the op would Generate \`${own}\` here`,
+            regionRerollFacts(panel.rulesDoc, '1', region).refusal === null);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the Regions host', 8000, 50);
+        testController.reportCondition('⛓ Re-roll ▸ on the Regions host, enabled', !!btn && !btn.disabled);
+
+        selectTab(panel, SIDECARS_TAB_ID);
+        const expand = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-sidecars-expand`), 'the Sidecars list expand', 8000, 50);
+        if (expand?.dataset.open !== 'true') expand?.click();
+        testController.reportCondition('⛓ …on the Sidecars host', await testController.pollForCondition(
+            () => !!rerollButton(region, SIDECARS_TAB_ID), 'Re-roll ▸ on the Sidecars host', 8000, 50));
+        const { reconstructResultFromSidecars } = await import('../../procgenPipeline/compositeMapDocument.js');
+        const cell = (reconstructResultFromSidecars(panel.rulesDoc, { playerId: '1' })?.grid?.allRegions() ?? [])
+            .find((c) => c.region_id === region)?.cell;
+        const canvas = await onMapTabFor(testController, panel);
+        if (canvas && cell) clickMapCell(cell);
+        testController.reportCondition('⛓ …and on the Map\'s selection', await testController.pollForCondition(
+            () => !!rerollButton(region, 'map'), 'Re-roll ▸ on the Map host', 8000, 50));
+
+        selectTab(panel, 'regions');
+        const rolls = [];
+        for (let k = 0; k < 2; k += 1) {
+            const expected = panel._regionGenSeeds.get(`1|${region}`) ?? R6_FIRST_SEED;
+            const opsBefore = panel.session.ops().length;
+            (await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸', 8000, 50))?.click();
+            const opened = await testController.pollForCondition(
+                () => regionGenSection(region, 'regions')?.dataset.target === own, `re-roll ${k + 1}: the form opened`, 8000, 50);
+            testController.reportCondition(`⛓⛓⛓ re-roll ${k + 1}: ONE press opens the form on \`${own}\``, opened);
+            testController.assertEqual(`…recording nothing (re-roll ${k + 1})`, String(opsBefore), String(panel.session.ops().length));
+            const seed = Number(regionGenSection(region, 'regions')?.querySelector('input')?.value);
+            testController.assertEqual(`⛓⛓ …at the region's next seed (re-roll ${k + 1})`, String(expected), String(seed));
+            const said = sidecarMessageFor(region)?.textContent ?? null;
+            regionGenSection(region, 'regions')?.querySelector('.apworld-region-generate')?.click();
+            await answerAfter(testController, region, said, `re-roll ${k + 1}: the Generate answer`);
+            testController.assertEqual(`⛓⛓ re-roll ${k + 1}: Generate lands ONE op`, String(opsBefore + 1), String(panel.session.ops().length));
+            testController.assertEqual(`…at that seed (re-roll ${k + 1})`, String(seed), String(panel.session.ops().at(-1)?.provenance?.seed));
+            rolls.push({ seed, entry: JSON.stringify(panel.rulesDoc.preset_sidecars['1'][region]) });
+        }
+        testController.assertEqual('⛓⛓⛓ the second re-roll is the NEXT seed', String(rolls[0].seed + 1), String(rolls[1].seed));
+        testController.reportCondition('⛓⛓⛓ …and lands a DIFFERENT entry (two re-rolls differ)', rolls[0].entry !== rolls[1].entry);
+
+        const noRealiser = 'region_1_1';
+        const omsi = await openHubOnDocument(testController, LOOP_COSTS_WRITEBACK_PRESET_PATH, '1', noRealiser);
+        if (!omsi) return testController.getOverallResult();
+        const facts = regionRerollFacts(omsi.rulesDoc, '1', noRealiser);
+        testController.reportCondition(`⛓ premise: \`${facts.substrate}\` is refused by the op`, !!facts.refusal);
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, omsi, '1'));
+        const off = await testController.pollForValue(() => rerollButton(noRealiser, 'regions'), 'Re-roll ▸ on the omsi block', 8000, 50);
+        testController.reportCondition('⛓⛓ a no-realiser region\'s Re-roll ▸ is DISABLED', !!off?.disabled);
+        testController.assertEqual('⛓⛓ …with the op\'s own sentence in its title', String(facts.refusal), String(off?.title));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Re-roll test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓ R6 — a document whose maze hubs have more exits than any served maze entry has openings. */
+const TOPDOWN_AP5_PATH = './presets/procgen_topdown/AP_5/AP_5_rules.json';
+
+/**
+ * ⛓⛓⛓ **(2) THE LIBRARY PICKER PRE-CHECKS OPENINGS** (plan §13.6 #3). On AP_5
+ * (derived): a region every served entry of its substrate has the SLOTS for but
+ * too few OPENINGS — opened through Re-roll ▸ in one press, Library entry chosen:
+ * every option disabled, each one's note carrying the hook's own sentence (the
+ * precheck's, which a vitest row pins equal to the hook's throw), no Generate.
+ * And a region where the entries fit: every option enabled, Generate enabled.
+ */
+export async function apworldTheLibraryPickerDisablesTooFewOpenings(testController) {
+    try {
+        const disk = await (await fetch(TOPDOWN_AP5_PATH)).json();
+        const regions = Object.entries(disk.preset_sidecars['1']);
+        const packsBy = new Map();
+        const entriesOf = async (sub) => {
+            if (!packsBy.has(sub)) packsBy.set(sub, (await servedPacksFor(sub)).flatMap((pk) => pk.entries.filter((e) => e.substrate === sub)));
+            return packsBy.get(sub);
+        };
+        let short = null;
+        let fits = null;
+        for (const [region, sc] of regions) {
+            // eslint-disable-next-line no-await-in-loop
+            const entries = await entriesOf(sc.substrate);
+            if (!entries.length) continue;
+            const nLocs = disk.regions['1'][region].locations.length;
+            const slotsOk = entries.every((e) => e.location_slots >= nLocs);
+            // ⛔ Derived WITHOUT the product's precheck (a probe sharing its subject's
+            //   assumption agrees with the bug — the first cut of this row survived the
+            //   slots-for-openings mutant): the region's exits (one child side each on a
+            //   full-descriptor entry) against each entry's captured openings.
+            const exits = disk.regions['1'][region].exits.length;
+            const openings = entries.map((e) => (Array.isArray(e.payload?.exits) ? e.payload.exits.length : 0));
+            if (!short && slotsOk && openings.every((n) => n < exits)) {
+                short = { region, entries, openings, pre: entries.map((e) => libraryEntryPrecheck(disk, '1', region, sc.substrate, e)) };
+            }
+            if (!fits && slotsOk && exits > 1 && openings.every((n) => n >= exits)) fits = { region, entries };
+        }
+        testController.reportCondition(`⛓ premise: a region with too few openings everywhere (${short?.region})`, !!short);
+        testController.reportCondition(`⛓ premise: a region every entry fits (${fits?.region})`, !!fits);
+        if (!short || !fits) return testController.getOverallResult();
+
+        const panel = await openHubOnDocument(testController, TOPDOWN_AP5_PATH, '1', short.region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
+        for (const { region, entries, pre, openings } of [short, { ...fits, pre: null }]) {
+            // eslint-disable-next-line no-await-in-loop
+            const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), `Re-roll ▸ on ${region}`, 8000, 50);
+            btn?.click();
+            // eslint-disable-next-line no-await-in-loop
+            const state = await chooseLibrarySource(testController, region);
+            testController.assertEqual(`${region}: the picker loaded`, 'ready', String(state));
+            const opts = pickerOptions(region);
+            testController.assertEqual(`${region}: every served entry is listed`, String(entries.length), String(opts.length));
+            testController.assertEqual(`⛓⛓⛓ ${region}: disabled ${pre ? 'EVERY option (too few openings)' : 'none (every entry fits)'}`,
+                JSON.stringify(entries.map(() => !!pre)), JSON.stringify(opts.map((o) => o.disabled)));
+            if (pre) {
+                entries.forEach((e, i) => {
+                    const drawn = regionGenSection(region)?.querySelector(
+                        `.apworld-region-generation-library-disabled[data-entry-id="${CSS.escape(e.entry_id)}"]`);
+                    testController.reportCondition(`⛓⛓ ${region} ← ${e.entry_id}: the note carries the hook's own sentence`,
+                        !!pre[i] && String(drawn?.textContent).includes(pre[i]));
+                    testController.reportCondition(`⛓⛓ …which counts the entry's ${openings[i]} captured openings`,
+                        String(drawn?.textContent).includes(`offers ${openings[i]} captured opening(s)`));
+                });
+            }
+            const go = regionGenSection(region)?.querySelector('.apworld-region-generate');
+            testController.assertEqual(`${region}: Generate ▸ enabled iff an entry fits`, String(!pre), String(!!go && !go.disabled));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('openings precheck test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(5) DISPLACED FILLER LEAVES THE POOL** (plan §14.7 #4). The R5b cascade on
+ * `jta_dataset_test` (`region_1_1` relabelled frees zone 2; `region_1_0` takes it):
+ * the displaced placements whose item the document classifies `filler` leave the
+ * pool — per item, pool = placed + non-filler unplaced; the Placements line lists
+ * no filler; 0 placement issues; the answer names the dropped count in the op's
+ * clause. Every other displaced item stays unplaced, as ruled.
+ */
+export async function apworldDisplacedFillerLeavesThePool(testController) {
+    try {
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        const { panel, docObj, displaced, drawn, answer, isFiller } = got;
+        const fillerDisplaced = displaced.filter((n) => isFiller(docObj.canonical_placements['1'][n]));
+        testController.reportCondition(`⛓ premise: filler placements were displaced (${fillerDisplaced.length})`, fillerDisplaced.length > 0);
+        const doc = panel.rulesDoc;
+        const placed = {};
+        for (const item of Object.values(doc.canonical_placements['1'])) placed[item] = (placed[item] ?? 0) + 1;
+        const nonFillerUnplaced = {};
+        for (const n of displaced) {
+            const item = docObj.canonical_placements['1'][n];
+            if (!isFiller(item)) nonFillerUnplaced[item] = (nonFillerUnplaced[item] ?? 0) + 1;
+        }
+        const bad = Object.entries(doc.itempool_counts['1'])
+            .filter(([k, n]) => n !== (placed[k] ?? 0) + (nonFillerUnplaced[k] ?? 0)).map(([k, n]) => `${k} ${n}`);
+        testController.assertEqual('⛓⛓⛓ per item: pool = placed + non-filler unplaced', '[]', JSON.stringify(bad));
+        testController.reportCondition('⛓⛓ the Placements line lists no filler', !drawn.some(isFiller));
+        testController.assertEqual('⛓ 0 placement issues', '0', String(canonicalPlacementIssues(doc, '1').length));
+        const k = fillerDisplaced.length;
+        testController.reportCondition(`⛓⛓ the answer names the dropped count (${k})`,
+            String(answer).includes(`${k} filler placement${k === 1 ? '' : 's'} ${ZONE_FILLER_DROPPED}`));
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`)?.click();
+        testController.assertEqual('⛓ one Undo restores the document, pool included', got.docBefore, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('displaced filler test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const R6_TESTS = [
+    ['apworld-displaced-filler-leaves-the-pool',
+        'APWorld hub: a zone cascade drops the displaced FILLER from the pool (pool = placed + non-filler unplaced), names the count, keeps the rest unplaced',
+        apworldDisplacedFillerLeavesThePool],
+    ['apworld-the-library-picker-disables-too-few-openings',
+        'APWorld hub: a library entry with the slots but too few openings for the region is disabled in the hook\'s own words; one that fits is enabled',
+        apworldTheLibraryPickerDisablesTooFewOpenings],
+    ['apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed',
+        'APWorld hub: Re-roll ▸ (all three hosts) opens the form on the region\'s own substrate at its next seed; two re-rolls differ; a no-realiser region\'s button is disabled with the op\'s sentence',
+        apworldReRollOpensTheFormOnTheOwnSubstrateAtTheNextSeed],
+    ['apworld-the-map-draws-a-misfit-regions-block',
+        'APWorld hub: a region relabelled from the Map keeps its block under the map with the painter\'s refusal and the form; Generate lands, Undo repaints',
+        apworldTheMapDrawsAMisfitRegionsBlock],
+    ['apworld-a-slot-pick-before-the-schema-is-refused-by-name',
+        'APWorld hub: before rules.schema.json loads the slot selector says why it offers one slot and refuses a pick by name; after, the pick lands',
+        apworldASlotPickBeforeTheSchemaIsRefusedByName],
+];
+for (const [id, name, testFunction] of R6_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R6. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R6b — THE ZONE ANSWER NAMES WHAT THE DOCUMENT
+ * RECORDS AND WHAT WAS ASSUMED (plan §3d, §17).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **THE ZONE GENERATE ANSWER NAMES THE CONFIG SPLIT** — R5b (c)'s scenario
+ * (`region_1_1` relabelled frees zone 2; `region_1_0` takes it) on the committed
+ * `jta_dataset_test`, which records no config: the answer is the op's
+ * description followed by `zoneConfigSplitSentence` over the READ-BACK's own
+ * split (derived from the document on the page, never typed), and the op's
+ * provenance records the same split and the verified regions.
+ */
+export async function apworldTheZoneAnswerNamesTheConfigSplit(testController) {
+    try {
+        const disk = await (await fetch(JTA_DATASET_PATH)).json();
+        const rec = installedZoneConfigFrom(disk, '1', 'jta');
+        testController.reportCondition(`⛓ premise: the document's read-back answers (recorded [${rec.recorded}], `
+            + `assumed [${Object.keys(rec.assumed ?? {})}])`, rec.ok === true && Array.isArray(rec.recorded));
+        const want = { recorded: rec.recorded, assumed: Object.keys(rec.assumed) };
+        const got = await zoneGenerateLands(testController, 'region_1_1', 'region_1_0');
+        if (!got) return testController.getOverallResult();
+        testController.assertEqual('⛓⛓ the provenance records the split', JSON.stringify(want),
+            JSON.stringify(got.op?.provenance?.config));
+        const verified = got.op?.provenance?.verified ?? [];
+        testController.reportCondition(`…and the regions it verified (${verified.length})`, verified.length > 0);
+        const clause = zoneConfigSplitSentence(want, verified.length);
+        testController.reportCondition(`⛓⛓ the answer names it: "${clause}"`, String(got.answer).includes(` — ${clause}`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('zone config split test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-the-zone-answer-names-the-config-split',
+    name: 'APWorld hub: a zone Generate\'s answer names the config fields the document recorded and the ones assumed, and the provenance records them',
+    description: 'APWORLD SUBSTRATE CHANGE R6b. The zone answer names the config split. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldTheZoneAnswerNamesTheConfigSplit,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R7 — INITIALISE PROCGEN DATA (plan §19,
+ * ⚖ user 2026-09-26). A BARE slot's door, the form's preview, Generate in the
+ * worker, ONE op, the Map and the Regions tab after, Undo, Cancel, the budget.
+ * ⚠ Small documents only (`adventure`, `apcalc`); the Cancel/timeout rows need a
+ * build slow enough to stop, and since APWORLD SUBSTRATE CHANGE C1 (plan §42)
+ * made the maze placer polynomial NO committed slot is one at its own region
+ * size: `bomb_rush_cyberfunk` (the rows' document until C1) went 914 ms →
+ * 167 ms in node, every many-region slot builds in 0.7–1.9 s, and the slowest
+ * (`soe`, ≈5 s) is ONE region, so its ticker never reads *built N / M* mid-run.
+ * So the rows make the premise: `pokemon_rb` (445 regions — the ticker moves
+ * from the first) with the form's region size raised to `INIT_SLOW_REGION_SIDE`
+ * — measured in node at C1 (load ≈4): 8×6 0.8 s, 32×32 3.3 s, 40×40 4.4 s,
+ * 48×48 6.0 s, 56×56 7.7 s, 64×64 10.1 s (the side 64 is ≈5× the timeout row's
+ * 2 s budget; the cancel row reads *built 5 / 444* about 2 s in).
+ * ⚠ THAT MARGIN DID NOT HOLD IN THE PAGE (registration-order plan §6.3/§9): on
+ * a CI runner the timeout row once saw the 64×64 build LAND (443 / 444 built,
+ * the outcome 3.8 s after the press) before its 2 s timer answered — the
+ * in-page build is far faster than node's, or the timer was starved. The side
+ * is now 96: node at `ec5b4314ef` (load ≈1) 64×64 10.8–11.7 s, 96×96
+ * 29.1–29.9 s, 128×128 53.9–54.7 s — ≈2.7× the 64 build, so the page's
+ * fastest observed 64 build (≤ 3.8 s) becomes ≈ 10 s, ≈5× the budget. Both
+ * rows STOP the build (Cancel ≈2 s in; the 2 s timeout), so the side costs
+ * them no wall time.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_OP as INIT_OP, planInitialise as initPlan } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_DOOR_LABEL, initialisePreview } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import {
+    INITIALISE_TIMEOUT_SETTING, REGION_GENERATION_CANCELLED as INIT_CANCELLED, initialiseTimeoutSentence,
+} from '../../apworldEditor/regionGenerationRun.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF } from '../../apworldEditor/rulesDocOps.js';
+
+const INIT_ADVENTURE_PATH = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const INIT_APCALC_PATH = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const INIT_SLOW_PATH = './presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/** ⛓ The region side the slow rows set in the form's bag (see the section note). */
+const INIT_SLOW_REGION_SIDE = 96;
+
+/** ⛓ Raise the open form's region size to `INIT_SLOW_REGION_SIDE` (the slow rows' premise). */
+function slowInitialiseSize(testController, panel) {
+    panel._setInitialiseState({ bag: { ...panel._initialise.state.bag,
+        [INITIALISE_SIZE_KEYS.width]: INIT_SLOW_REGION_SIDE, [INITIALISE_SIZE_KEYS.height]: INIT_SLOW_REGION_SIDE } });
+    const bag = panel._initialise.state.bag;
+    testController.reportCondition(`⛓ premise: the form builds ${INIT_SLOW_REGION_SIDE}×${INIT_SLOW_REGION_SIDE} regions`,
+        bag[INITIALISE_SIZE_KEYS.width] === INIT_SLOW_REGION_SIDE && bag[INITIALISE_SIZE_KEYS.height] === INIT_SLOW_REGION_SIDE);
+}
+
+const initSection = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise`);
+const initDoor = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise-door`);
+
+/** ⛓ Open the hub on `path`, go to the Map tab, and press the door (answers null when a premise fails). */
+async function openInitialiseForm(testController, path) {
+    const panel = await openHub(testController, path);
+    if (!panel) return null;
+    selectTab(panel, 'map');
+    const door = await testController.pollForValue(initDoor, 'the Map tab\'s Initialise door', 8000, 50);
+    testController.reportCondition(`the empty Map offers "${INITIALISE_DOOR_LABEL}"`, !!door
+        && door.textContent === INITIALISE_DOOR_LABEL);
+    if (!door) return null;
+    door.click();
+    const sec = await testController.pollForValue(initSection, 'the Initialise form', 8000, 50);
+    testController.reportCondition('the door opens the form', !!sec);
+    return sec ? panel : null;
+}
+
+/** ⛓ Press Generate and wait for the run's outcome; answers the run. */
+async function pressInitialise(testController, panel, budgetMs = 30000) {
+    initSection().querySelector('.apworld-initialise-generate').click();
+    const run = await testController.pollForValue(
+        () => (panel._initialiseLastRun?.outcome ? panel._initialiseLastRun : null),
+        'the initialise run\'s outcome', budgetMs, 50);
+    return run;
+}
+
+/** ⛓ How many exits a slot's regions hold. */
+const exitCount = (doc, p) => Object.values(doc.regions[p]).reduce((n, r) => n + (r.exits ?? []).length, 0);
+
+/**
+ * ⛓⛓ **(i) THE DOOR → GENERATE → ONE OP → THE MAP → UNDO** on `adventure`:
+ * the preview is the page's own `planInitialise` (placed, unplaced, return
+ * exits — derived, never typed); Generate lands ONE `initialise-procgen-layout`;
+ * the answer is the op's description + the V0 count; the Map draws one cell per
+ * placed region; the Regions tab draws a sidecar block under every placed
+ * region; Undo returns the document byte for byte and the door with it.
+ */
+export async function apworldInitialiseLandsOneOpAndTheMapDraws(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const doc0 = panel.rulesDoc;
+        const before = JSON.stringify(doc0);
+        const opsBefore = panel.session.ops().length;
+        const plan = initPlan(doc0, p, { gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side } });
+        testController.reportCondition(`⛓ premise: the layout places every region (${plan.placed}/${plan.total})`,
+            plan.ok && plan.unplaced.length === 0 && plan.placed > 0);
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('⛓ the preview is the page\'s own plan, verbatim',
+            initialisePreview(doc0, p, panel._initialise.state).text, pv?.textContent);
+        testController.assertEqual('…placed', String(plan.placed), pv?.dataset.placed);
+        testController.assertEqual('…unplaced', '0', pv?.dataset.unplaced);
+        testController.assertEqual('…return exits (derived)', String(plan.returnExits), pv?.dataset.returnExits);
+        testController.reportCondition('Add return exits is ON by default (⚖ #1)',
+            initSection().querySelector('.apworld-initialise-back-exits')?.checked === true);
+
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓⛓ ONE op landed', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…and it is initialise-procgen-layout', INIT_OP, op?.op);
+        testController.reportCondition('…with the result INLINE (a refold never re-builds)',
+            !!op?.result?.entries && Object.keys(op.result.entries).length === plan.placed);
+        const n = sidecarIssues(panel.rulesDoc, p).length;
+        testController.reportCondition(`⛓ the answer is the op's description + the V0 count (${n})`,
+            String(panel._opMessage).endsWith(` — ${n} sidecar issue${n === 1 ? '' : 's'} in slot ${p}`)
+            && String(panel._opMessage).includes(`${plan.returnExits} ${INITIALISE_RETURN_EXITS_ADDED}`));
+        testController.reportCondition('the form closed; the slot is no longer bare (no door)', !initSection() && !initDoor());
+
+        selectTab(panel, 'map');
+        const canvas = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`), 'the Map canvas', 8000, 50);
+        testController.assertEqual('⛓ the Map draws one cell per placed region', String(plan.placed), canvas?.dataset.regions);
+
+        selectTab(panel, 'regions');
+        const withBlock = [...document.querySelectorAll(`${PANEL_SELECTOR} .apworld-region-block`)]
+            .filter((b) => b.querySelector('.apworld-sidecar-block')).length;
+        testController.assertEqual('⛓ every placed region has a block on the Regions tab', String(plan.placed), String(withBlock));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+        selectTab(panel, 'map');
+        testController.reportCondition('…and the empty state offers the door again', !!initDoor());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise land test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(ii) RETURN EXITS OFF LANDS NO EXIT** — the same door on `apcalc`, the
+ * checkbox cleared: the preview says so, the op lands, and the regions block
+ * holds exactly the exits it held.
+ */
+export async function apworldInitialiseWithReturnExitsOffAddsNone(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_APCALC_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const exitsBefore = exitCount(panel.rulesDoc, p);
+        const box = initSection().querySelector('.apworld-initialise-back-exits');
+        box.checked = false;
+        box.dispatchEvent(new Event('change', { bubbles: true }));
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('the preview has 0 return exits', '0', pv?.dataset.returnExits);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓ the op lands with 0 return exits', '0',
+            String(panel.session.ops().at(-1)?.result?.returnExits?.length));
+        testController.assertEqual('⛓⛓ the regions block holds exactly the exits it held', String(exitsBefore),
+            String(exitCount(panel.rulesDoc, p)));
+        testController.reportCondition('the answer says return exits were OFF',
+            String(panel._opMessage).includes(INITIALISE_RETURN_EXITS_OFF));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('return exits off test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(iii) THE RETURN-EXIT COUNT IS PREVIEWED AND NAMED** on `apcalc`, a
+ * one-way source: the preview's count is the page's own plan, the op adds
+ * exactly that many exits, and the answer names the number.
+ */
+export async function apworldInitialisePreviewsAndNamesTheReturnExits(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_APCALC_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const doc0 = panel.rulesDoc;
+        const want = initPlan(doc0, p, {
+            gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side },
+        }).returnExits;
+        testController.reportCondition(`⛓ premise: a one-way source — ${want} return exits`, want > 0);
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        testController.assertEqual('⛓ the preview names the count', String(want), pv?.dataset.returnExits);
+        testController.reportCondition('…in its sentence', pv?.textContent.includes(`${want} return exits will be added`));
+        const exitsBefore = exitCount(doc0, p);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓⛓ the op added exactly that many exits', String(exitsBefore + want),
+            String(exitCount(panel.rulesDoc, p)));
+        testController.reportCondition('⛓ the answer names them',
+            String(panel._opMessage).includes(`${want} ${INITIALISE_RETURN_EXITS_ADDED}`));
+        const errors = sidecarIssues(panel.rulesDoc, p).filter((i) => i.severity === 'error').length;
+        testController.assertEqual('…and the report has no error (every baked exit is the document\'s)', '0', String(errors));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('return exits named test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓⛓ **(iv) A POPULATED SLOT SHOWS NO DOOR** — every slot of the four-player fixture, both hosts, and the
+ *  Map's *No map* state of a populated slot whose entries carry no `grid_cell`. */
+export async function apworldInitialiseDoorIsAbsentOnAPopulatedSlot(testController) {
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+        for (const slot of Object.keys(panel.rulesDoc.regions)) {
+            selectPlayer(select, slot);
+            const n = Object.keys(panel.rulesDoc.preset_sidecars?.[slot] ?? {}).length;
+            testController.reportCondition(`⛓ premise: slot ${slot} carries ${n} entries`, n > 0);
+            selectTab(panel, 'map');
+            const drawn = await testController.pollForValue(
+                () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`), `slot ${slot}'s Map`, 8000, 50);
+            testController.reportCondition(`slot ${slot}: the Map draws no door`, !!drawn && !initDoor());
+            selectTab(panel, 'sidecars');
+            testController.reportCondition(`slot ${slot}: the Sidecars tab draws no door`, !initDoor());
+        }
+        // ⛓ The Map's "No map" state on a POPULATED slot (entries, no grid_cell): here the
+        //   door's own test is the only guard — the four-player Map draws a grid and never asks.
+        const noGrid = await openHub(testController, NO_GRID_PRESET_PATH);
+        if (!noGrid) return testController.getOverallResult();
+        const entries = Object.keys(noGrid.rulesDoc.preset_sidecars?.[noGrid.playerId] ?? {}).length;
+        testController.reportCondition(`⛓ premise: a populated slot with no grid (${entries} entries)`, entries > 0);
+        selectTab(noGrid, 'map');
+        const said = await testController.pollForValue(
+            () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`), 'the no-grid Map', 8000, 50);
+        testController.reportCondition('…its Map says "No map"', !!said && said.textContent.startsWith('No map'));
+        testController.reportCondition('⛓⛓ …and draws no door', !initDoor());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('no door test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(v) CANCEL MID-RUN LANDS NOTHING** — a slot slow enough to stop: once
+ * the ticker reads *built N / M*, Cancel: the Cancel sentence, nothing
+ * recorded, the worker terminated, the ticker cleared, Generate back, no late
+ * answer. The Sidecars tab's door opens the same form.
+ */
+export async function apworldInitialiseCancelLandsNothing(testController) {
+    try {
+        const panel = await openHub(testController, INIT_SLOW_PATH);
+        if (!panel) return testController.getOverallResult();
+        selectTab(panel, 'sidecars');
+        const door = await testController.pollForValue(initDoor, 'the Sidecars tab\'s door', 8000, 50);
+        testController.reportCondition('the Sidecars tab\'s empty list offers the door', !!door);
+        door?.click();
+        const sec = await testController.pollForValue(initSection, 'the form under the summary', 8000, 50);
+        if (!sec) return testController.getOverallResult();
+        slowInitialiseSize(testController, panel);
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        initSection().querySelector('.apworld-initialise-generate').click();
+        const ticking = await testController.pollForCondition(
+            () => /^built [1-9]\d* \/ \d+ · /.test(initSection()?.querySelector('.apworld-initialise-elapsed')?.textContent ?? ''),
+            'the ticker reads built N / M', 60000, 50);
+        testController.reportCondition(`⛓ premise: the build is running (${initSection()?.querySelector('.apworld-initialise-elapsed')?.textContent})`, ticking);
+        const run = panel._initialise?.run;
+        initSection()?.querySelector('.apworld-initialise-cancel')?.click();
+        await testController.pollForCondition(() => !!run?.outcome, 'the cancelled outcome', 8000, 50);
+        testController.assertEqual('⛓⛓ the answer is the Cancel sentence', `Refused: apworld: ${INIT_CANCELLED}.`,
+            String(panel._opMessage));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.assertEqual('…the document is as it was', before, JSON.stringify(panel.rulesDoc));
+        testController.reportCondition('⛓ the ticker is cleared', panel._initialiseTicker === null);
+        testController.reportCondition('Generate ▸ is back', !!initSection()?.querySelector('.apworld-initialise-generate'));
+        await new Promise((r) => setTimeout(r, 1000));
+        testController.assertEqual('no late answer', '0', String(run?.handle.late()));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise cancel test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(vi) THE WHOLE-SLOT BUDGET** — `initialiseTimeoutSeconds` at 2 on the
+ * slow slot: the timeout sentence quotes the setting and how far the build got,
+ * nothing recorded, the worker terminated. The override is dropped after.
+ */
+export async function apworldInitialiseRunsOutOfTimeRecordsNothing(testController) {
+    try {
+        await settingsManager.updateSetting(INITIALISE_TIMEOUT_SETTING, 2, { persist: false });
+        const panel = await openInitialiseForm(testController, INIT_SLOW_PATH);
+        if (!panel) return testController.getOverallResult();
+        slowInitialiseSize(testController, panel);
+        const opsBefore = panel.session.ops().length;
+        const state = panel._initialise.state;
+        const run = await pressInitialise(testController, panel, 60000);
+        testController.reportCondition('the run TIMED OUT in the build', run?.outcome?.timedOut === true
+            && run?.outcome?.phase === 'running');
+        testController.assertEqual('⛓⛓ the answer is the timeout sentence, with how far it got',
+            `Refused: ${initialiseTimeoutSentence(2, state.substrate, String(panel.playerId), run?.progress)}`,
+            String(panel._opMessage));
+        testController.reportCondition('…which names a region count', /after building \d+ \/ \d+ regions/.test(String(panel._opMessage)));
+        testController.reportCondition('⛓ the worker was TERMINATED', run?.handle.terminated() === true);
+        testController.assertEqual('⛓ NOTHING was recorded', String(opsBefore), String(panel.session.ops().length));
+        testController.reportCondition('the ticker is cleared', panel._initialiseTicker === null);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise timeout test error-free', false);
+    } finally {
+        await settingsManager.clearOverride(INITIALISE_TIMEOUT_SETTING);
+    }
+    return testController.getOverallResult();
+}
+
+const R7_TESTS = [
+    ['apworld-initialise-lands-one-op-and-the-map-draws',
+        'APWorld hub: a bare slot\'s Initialise door previews the layout, Generate lands ONE op, the Map and the Regions tab draw every placed region, Undo restores',
+        apworldInitialiseLandsOneOpAndTheMapDraws],
+    ['apworld-initialise-with-return-exits-off-adds-none',
+        'APWorld hub: Initialise with Add return exits off lands the slot and leaves the regions block\'s exits as they were',
+        apworldInitialiseWithReturnExitsOffAddsNone],
+    ['apworld-initialise-previews-and-names-the-return-exits',
+        'APWorld hub: on a one-way source the Initialise preview counts the return exits, the op adds exactly those, and the answer names them',
+        apworldInitialisePreviewsAndNamesTheReturnExits],
+    ['apworld-initialise-door-is-absent-on-a-populated-slot',
+        'APWorld hub: no slot of the four-player fixture (every one carries entries) shows the Initialise door on the Map or the Sidecars tab',
+        apworldInitialiseDoorIsAbsentOnAPopulatedSlot],
+    ['apworld-initialise-cancel-lands-nothing',
+        'APWorld hub: Cancel while the slot builds (the ticker reading built N / M) stops the worker, records nothing and clears the ticker',
+        apworldInitialiseCancelLandsNothing],
+    ['apworld-initialise-runs-out-of-time-records-nothing',
+        'APWorld hub: initialiseTimeoutSeconds bounds the whole slot — the sentence quotes the setting and how far the build got; nothing recorded',
+        apworldInitialiseRunsOutOfTimeRecordsNothing],
+];
+for (const [id, name, testFunction] of R7_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE R7. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE C2 — THE FORM SAYS HOW BIG A ROOM WILL GROW
+ * (⚖ the user, 2026-09-28: *"YES to the location CAPACITY change (C2, as a
+ * size hint)"*). A maze room above its declared location capacity is built
+ * bigger; the Initialise preview names it with that size and offers the
+ * unbounded-capacity substrate by the registry's own declaration.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_GROWN_WORDING } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import { unboundedCapacityIds } from '../../procgenCore/locationCapacity.js';
+
+/**
+ * ⛓ THE LARGEST COMMITTED ROOM, BY LOCATION COUNT — derived from the page's own
+ * preset index: every `*_rules.json` it lists that is a classic document (no
+ * `preset_sidecars` entry), every player slot, every region. No game named.
+ * @returns {Promise<{path: string, player: string, region: string, locations: number}|null>}
+ */
+async function largestCommittedRoom(testController) {
+    const index = await (await fetch('./presets/preset_files.json')).json();
+    let best = null;
+    for (const [game, info] of Object.entries(index)) {
+        for (const [folder, f] of Object.entries(info?.folders ?? {})) {
+            for (const file of (f?.files ?? []).filter((n) => n.endsWith('_rules.json'))) {
+                const path = `./presets/${game}/${folder}/${file}`;
+                let doc;
+                try {
+                    doc = await (await fetch(path)).json();
+                } catch {
+                    continue;
+                }
+                if (Object.values(doc.preset_sidecars ?? {}).some((m) => m && Object.keys(m).length)) continue;
+                for (const [player, regions] of Object.entries(doc.regions ?? {})) {
+                    for (const [region, r] of Object.entries(regions ?? {})) {
+                        const n = (r?.locations ?? []).length;
+                        if (!best || n > best.locations) best = { path, player, region, locations: n };
+                    }
+                }
+            }
+        }
+    }
+    testController.log(`largest committed room: ${best ? `${best.region} (${best.locations}) in ${best.path} p${best.player}` : 'none'}`);
+    return best;
+}
+
+/**
+ * ⛓⛓⛓ **THE PREVIEW NAMES THE GROWN ROOM WITH THE SIZE THE REALISER BUILDS** —
+ * on the largest committed room (derived): the premise is that the page's own
+ * plan grows it; the preview (verbatim the page's `initialisePreview`) names it
+ * with `INITIALISE_GROWN_WORDING.room`, and — the registry holding an
+ * unbounded-capacity target other than the form's — carries the offer sentence;
+ * Generate lands, and the size READ OUT OF THE DISPLAYED SENTENCE equals the
+ * realised room's payload size. Undo restores. Mutant (C2): the sentence's size
+ * taken from the region size instead of the declaration → red on the last claim.
+ */
+export async function apworldInitialisePreviewsTheGrownRoomSize(testController) {
+    try {
+        const room = await largestCommittedRoom(testController);
+        testController.reportCondition('⛓ premise: the corpus has a room to derive', !!room);
+        if (!room) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, room.path);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        testController.assertEqual('⛓ premise: the hub opens the derived slot', room.player, p);
+        const doc0 = panel.rulesDoc;
+        const before = JSON.stringify(doc0);
+        const state = panel._initialise.state;
+        const plan = initPlan(doc0, p, { substrate: state.substrate, bag: state.bag,
+            gridDims: { width: state.side, height: state.side } });
+        const grown = plan.ok ? plan.grown.find((g) => g.region === room.region) : null;
+        testController.reportCondition(`⛓ premise: the page's plan grows ${room.region} above ${plan.regionSize?.width}×${plan.regionSize?.height}`
+            + (grown ? ` (to ${grown.size.width}×${grown.size.height})` : ''), !!grown);
+        if (!grown) return testController.getOverallResult();
+
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        const text = pv?.textContent ?? '';
+        testController.assertEqual('⛓ the preview is the page\'s own, verbatim', initialisePreview(doc0, p, state).text, text);
+        testController.reportCondition(`the preview names the room: "${INITIALISE_GROWN_WORDING.room(grown)}"`,
+            text.includes(INITIALISE_GROWN_WORDING.room(grown)));
+        const dense = unboundedCapacityIds(s1Targets().map((t) => substrateRegistry.get(t))).filter((t) => t !== state.substrate);
+        testController.reportCondition(`⛓ premise: the registry holds an unbounded-capacity target (${dense.join(', ') || 'none'})`, dense.length > 0);
+        testController.reportCondition('…and the preview offers it', text.includes(INITIALISE_GROWN_WORDING.offer(dense)));
+
+        // The size the person READS — parsed out of the sentence on the page.
+        const esc = room.region.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const m = text.match(new RegExp(`${esc}: \\d+ locations? → (\\d+)×(\\d+)`));
+        const shown = m ? { width: Number(m[1]), height: Number(m[2]) } : null;
+        testController.reportCondition(`the sentence shows a size for ${room.region} (${m?.[0] ?? 'none'})`, !!shown);
+
+        const run = await pressInitialise(testController, panel, 60000);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const payload = panel.session.ops().at(-1)?.result?.entries?.[room.region]?.playable_payload;
+        const built = payload ? { width: payload.width, height: payload.height } : null;
+        testController.assertEqual('⛓⛓ the size the sentence showed is the size the realiser built',
+            JSON.stringify(shown), JSON.stringify(built));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('grown room preview test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-initialise-previews-the-grown-room-size',
+    name: 'APWorld hub: the Initialise preview names the largest committed room with the size its capacity grows it to, offers the unbounded-capacity substrate, and the realiser builds exactly that size',
+    description: 'APWORLD SUBSTRATE CHANGE C2. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldInitialisePreviewsTheGrownRoomSize,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE S1 — THE OPS DECLARE WHAT THEIR REALISER WAS
+ * HANDED FREE (plan §22, ⚖ Q1 (a) + Q1b, user 2026-09-26). The live scenario B
+ * of §22.2 turned green: Adventure → Initialise as a need-declaring target →
+ * the Items tab's grant buttons ENABLED and the need met; a target that grants
+ * nothing moves no item; a per-region Generate on a hub-initialised slot
+ * declares the same grants in its one op. Targets DERIVED from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { initialiseTargets as s1Targets, initialiseOpFor as s1OpFor, initialiseSlot as s1InitialiseSlot }
+    from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { initialiseArgs as s1Args, initialiseFormDefaults as s1FormDefaults, withInitialisePatch as s1WithPatch }
+    from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import { GRANTED_AS_STARTING, grantsClause } from '../../apworldEditor/rulesDocOps.js';
+// eslint-disable-next-line import/first
+import { regenerationGrants, withGrantsAnswer } from '../../apworldEditor/regionGenerationFlow.js';
+
+/** ⛓ The first realiser target that declares a starting need, and the first whose library grants nothing. */
+const s1Needer = () => s1Targets().find((t) => declaredStartingNeeds(substrateRegistry.get(t)).length) ?? null;
+const s1NonGranting = async () => {
+    // ⛓ …that also BUILDS adventure — the form's own path (its defaults with the target picked →
+    //   `initialiseArgs` → `initialiseSlot` → the op lands). REGISTRATION ORDER RO1: under id order the
+    //   first non-granting target is `flash_seedling`, whose atlas has no room for adventure's regions.
+    const doc = await (await fetch(INIT_ADVENTURE_PATH)).json();
+    const builds = (t) => {
+        try {
+            const state = s1WithPatch(doc, '1', s1FormDefaults(doc, '1'), { substrate: t });
+            const args = s1Args('1', state);
+            return applyRulesDocOp(doc, s1OpFor(args, s1InitialiseSlot({ doc, ...args }))).ok === true;
+        } catch { return false; }
+    };
+    return s1Targets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+        .some((d) => !d?.is_victory) && builds(t)) ?? null;
+};
+
+/** ⛓ Open the door on adventure, pick `target` in the form, press Generate; → {panel, p, before, run} or null. */
+async function initialiseAdventureAs(testController, target) {
+    testController.reportCondition(`⛓ premise: the target is derived (${target})`, !!target);
+    if (!target) return null;
+    const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+    if (!panel) return null;
+    const sub = initSection().querySelector('.apworld-initialise-substrate');
+    sub.value = target;
+    sub.dispatchEvent(new Event('change', { bubbles: true }));
+    const picked = await testController.pollForCondition(() => panel._initialise?.state?.substrate === target
+        && initSection()?.querySelector('.apworld-initialise-substrate')?.value === target,
+    `the form holds \`${target}\``, 8000, 50);
+    testController.reportCondition(`the form's substrate is \`${target}\``, picked);
+    const p = String(panel.playerId);
+    const before = JSON.parse(JSON.stringify(panel.rulesDoc));
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    return run?.outcome?.ok ? { panel, p, before, run } : null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) ADVENTURE → INITIALISE AS A NEED-DECLARING TARGET → THE GRANT
+ * BUTTONS WORK** (§22.2's scenario B, green): the op's result names the grants;
+ * `items[p]` defines every one, `starting_items[p]` = before + the grants; the
+ * answer names them; on the Items tab every need line reads met and every grant
+ * button is enabled (or absent); ONE Undo returns `items` and `starting_items`
+ * (and the whole document) byte for byte.
+ */
+export async function apworldInitialiseDeclaresTheGrantsAndTheButtonsWork(testController) {
+    try {
+        const target = s1Needer();
+        const got = await initialiseAdventureAs(testController, target);
+        if (!got) return testController.getOverallResult();
+        const { panel, p, before } = got;
+        const op = panel.session.ops().at(-1);
+        const granted = op?.result?.grantedItems ?? [];
+        testController.reportCondition(`⛓ the op's result carries the grants (${granted.join(', ')})`, granted.length > 0);
+        testController.reportCondition('⛓⛓ items[p] defines every granted item',
+            granted.every((n) => panel.rulesDoc.items[p][n] != null && before.items[p][n] == null));
+        testController.assertEqual('⛓⛓ starting_items[p] = before + the grants',
+            JSON.stringify([...(before.starting_items?.[p] ?? []), ...granted]), JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.reportCondition(`⛓ the answer names them ("${grantsClause(granted)}")`,
+            String(panel._opMessage).includes(grantsClause(granted)));
+        selectTab(panel, 'items');
+        await testController.pollForCondition(() => !!startingBlock(), 'the Starting inventory block', 8000, 50);
+        const rows = startingNeedRows(panel.rulesDoc, p, [target]);
+        const lines = needLines(startingBlock());
+        testController.reportCondition(`⛓ the block draws the target's need (${rows.length})`,
+            rows.length > 0 && lines.length === rows.length);
+        testController.reportCondition(`⛓⛓ every need line reads "${NEED_MET}"`,
+            lines.every((l) => l.dataset.met === 'true'));
+        const buttons = [...startingBlock().querySelectorAll('.apworld-starting-grant')];
+        testController.reportCondition(`⛓⛓ every grant button is ENABLED (${buttons.length} drawn)`,
+            buttons.every((b) => !b.disabled));
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓⛓ Undo returns items byte for byte', JSON.stringify(before.items),
+            JSON.stringify(panel.rulesDoc.items));
+        testController.assertEqual('…and starting_items', JSON.stringify(before.starting_items ?? null),
+            JSON.stringify(panel.rulesDoc.starting_items ?? null));
+        testController.assertEqual('…and the whole document', JSON.stringify(before), JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise grants test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/** ⛓⛓ **(ii) A TARGET WHOSE LIBRARY GRANTS NOTHING** — no grants, `items` and `starting_items` unchanged, the none clause. */
+export async function apworldInitialiseAsANonGrantingTargetMovesNoItem(testController) {
+    try {
+        const got = await initialiseAdventureAs(testController, await s1NonGranting());
+        if (!got) return testController.getOverallResult();
+        const { panel, before } = got;
+        testController.assertEqual('⛓ the op grants nothing', '0',
+            String(panel.session.ops().at(-1)?.result?.grantedItems?.length));
+        testController.assertEqual('⛓⛓ items unchanged', JSON.stringify(before.items), JSON.stringify(panel.rulesDoc.items));
+        testController.assertEqual('⛓⛓ starting_items unchanged', JSON.stringify(before.starting_items ?? null),
+            JSON.stringify(panel.rulesDoc.starting_items ?? null));
+        testController.reportCondition('the answer says none were granted',
+            String(panel._opMessage).includes(`no library items ${GRANTED_AS_STARTING}`));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise non-granting test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) A PER-REGION GENERATE ON A HUB-INITIALISED SLOT DECLARES ITS
+ * GRANTS IN ITS ONE OP** (⚖ Q1b; task 0's (a)): Adventure initialised as the
+ * non-granting target → Regions tab → the first placed region → pick the
+ * need-declaring target: the form says the items "will be granted"; Generate
+ * lands ONE `set-region-sidecar` whose `grants` define and start every one,
+ * the answer names them, the Items tab's need reads met.
+ */
+export async function apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants(testController) {
+    try {
+        const needer = s1Needer();
+        const got = await initialiseAdventureAs(testController, await s1NonGranting());
+        if (!got || !needer) return testController.getOverallResult();
+        const { panel, p } = got;
+        const region = Object.keys(panel.rulesDoc.preset_sidecars[p])[0];
+        testController.reportCondition(`slot ${p} selected`, await onRegionsTabFor(testController, panel, p));
+        if (!await pickSubstrateAndOpenForm(testController, panel, region, needer)) return testController.getOverallResult();
+        const free = regionGenSection(region)?.querySelector('.apworld-region-generation-free')?.textContent ?? '';
+        testController.reportCondition(`⛓ the form says the items "will be ${GRANTED_AS_STARTING}"`,
+            free.includes(`will be ${GRANTED_AS_STARTING}`));
+        const before = JSON.parse(JSON.stringify(panel.rulesDoc));
+        const opsBefore = panel.session.ops().length;
+        const said = sidecarMessageFor(region)?.textContent ?? null;
+        regionGenSection(region).querySelector('.apworld-region-generate')?.click();
+        const answer = await answerAfter(testController, region, said, 'the Generate answer', 60000);
+        testController.assertEqual('⛓⛓ ONE op recorded', String(opsBefore + 1), String(panel.session.ops().length));
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('…a set-region-sidecar', 'set-region-sidecar', String(op?.op));
+        const granted = op?.grants?.starting ?? [];
+        testController.reportCondition(`⛓⛓ …carrying the grants (${granted.join(', ')})`, granted.length > 0);
+        testController.reportCondition('⛓⛓ items[p] defines every one',
+            granted.every((n) => panel.rulesDoc.items[p][n] != null && before.items[p][n] == null));
+        testController.assertEqual('⛓⛓ starting_items[p] = before + the grants',
+            JSON.stringify([...(before.starting_items?.[p] ?? []), ...granted]), JSON.stringify(panel.rulesDoc.starting_items[p]));
+        testController.reportCondition('⛓ the answer names them', String(answer).includes(grantsClause(granted)));
+        const rows = startingNeedRows(panel.rulesDoc, p, [needer]);
+        testController.reportCondition('⛓ the target\'s need is met, no grant refused',
+            rows.length > 0 && rows.every((r) => r.met && r.grants.every((g) => !g.refusal)));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region generate grants test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const S1_TESTS = [
+    ['apworld-initialise-declares-the-grants-and-the-buttons-work',
+        'APWorld hub: Initialise as a need-declaring target defines and starts its library items; the grant buttons are enabled and the need reads met; Undo restores',
+        apworldInitialiseDeclaresTheGrantsAndTheButtonsWork],
+    ['apworld-initialise-as-a-non-granting-target-moves-no-item',
+        'APWorld hub: Initialise as a target whose library grants nothing leaves items and starting_items as they were',
+        apworldInitialiseAsANonGrantingTargetMovesNoItem],
+    ['apworld-a-region-generate-on-an-initialised-slot-declares-its-grants',
+        'APWorld hub: a per-region Generate on a hub-initialised slot declares its free library items in its one op',
+        apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants],
+];
+for (const [id, name, testFunction] of S1_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE S1. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE S2 — THE GENERATION SETTINGS ON THE INITIALISE
+ * FORM (user 2026-09-26: *"I would like to add the UI for the generation
+ * settings, rather than always using the default settings."*). The form draws
+ * R1's per-region form (the region size, the target's `renderProcgenParams`
+ * node) under the substrate; the build runs under that bag; the op's
+ * `provenance` records it; R2's per-region form reads a knob back off a built
+ * payload. Targets, knobs and controls DERIVED from the registry.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { PROCGEN_PARAMS_ATTR, bagFromPayload } from '../../procgenCore/regionGenerationForm.js';
+// eslint-disable-next-line import/first
+import { assembleRegionParams as s2Assemble } from '../../procgenPipeline/sphereConfigHooks.js';
+// eslint-disable-next-line import/first
+import { effectiveHazardOpts as s2Hazards } from '../../procgenPipeline/presetRun.js';
+// eslint-disable-next-line import/first
+import { regionSizeFor as s2RegionSizeFor } from '../../apworldEditor/regionRegenerate.js';
+// eslint-disable-next-line import/first
+import {
+    DEFAULT_SUBSTRATE_ID as S2_DEFAULT, INITIALISE_SIZE_KEYS, initialiseSlot as s2InitialiseSlot,
+} from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { initialiseArgs as s2Args, initialiseBagFor as s2BagFor } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import { GENERATION_COST as S2_GENERATION_COST, generationCostOf as s2GenerationCostOf } from '../../procgenCore/substratePredicates.js';
+// eslint-disable-next-line import/first
+import {
+    moveHookKnob as s2MoveHookKnobIn, moveReadBackKnob as s2MoveReadBackKnob, readBackTarget as s2ReadBackTargetOf,
+    READ_BACK_SKIP as S2_READ_BACK_SKIP,
+} from '../../apworldEditor/test-helpers.js';
+
+const initSettings = () => initSection()?.querySelector('.apworld-initialise-settings') ?? null;
+const s2Defaults = (id) => ({ ...(substrateRegistry.get(id)?.defaultProcgenParams ?? {}) });
+/** ⛓ The first key of a target's defaults whose value is a number or a boolean — never typed. */
+const s2FirstKnob = (id) => Object.keys(s2Defaults(id))
+    .find((k) => typeof s2Defaults(id)[k] === 'number' || typeof s2Defaults(id)[k] === 'boolean') ?? null;
+const s2Oracle = (id, bag) => JSON.stringify([s2Assemble({ activeIds: [id], mode: 'topDown', params: bag }), s2Hazards(bag)]);
+/** ⛓ Does moving `id`'s first knob reach its realiser (assembleRegionParams / effectiveHazardOpts the oracle)? */
+const s2KnobReaches = (id) => {
+    const k = s2FirstKnob(id);
+    if (!k) return false;
+    const d = s2Defaults(id);
+    const v = typeof d[k] === 'boolean' ? !d[k] : d[k] + 1;
+    return s2Oracle(id, { ...d, [k]: v }) !== s2Oracle(id, d);
+};
+/** ⛓ (ii)'s target: the first hooked realiser target that is not the form's default and whose first knob reaches the realiser. */
+const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
+    && typeof substrateRegistry.get(t)?.renderProcgenParams === 'function' && s2KnobReaches(t)) ?? null;
+/**
+ * ⛓ (iii)'s target: the first hooked realiser target that does not DECLARE its
+ * generation heavy (`generationCost` — H1) AND whose read-back knob the hook's
+ * control MOVES (H2) — `readBackTarget` in `apworldEditor/test-helpers.js`.
+ *
+ * ⛔ NOT "the first hooked target" (APWORLD SUBSTRATE CHANGE H1; trap 1493).
+ * The registry's order WAS the order the page's modules finished IMPORTING —
+ * `moduleLoader.js` imports every module in parallel and a library registers
+ * its entry as an import side effect — so "first" was a coin flip (since
+ * REGISTRATION ORDER RO1 `getAll()` sorts by id, so the draw is fixed; the
+ * derivation by fact stays, as a position is not a reason): `runner`
+ * came first in 3/6 page loads (P1b′), and its generate-and-test build
+ * overruns the row's 30 s Initialise budget (`pressInitialise`: the budget is
+ * for the BUILD — the target's load and generation — not the read-back, which
+ * is synchronous once the op lands).
+ * ⛔ NOR "the first light hooked target" (H2; trap 1513): the cost filter
+ * promoted the next draw, a target whose read-back names no knob the control
+ * moves, and the row failed on its own premise. The knob fact is now asked
+ * BEFORE the pick — the same `moveReadBackKnob` the row asserts, over a
+ * DETACHED render of the target's hook on a copy of its defaults — so a target
+ * is skipped by that fact, never by name.
+ */
+const s2ReadBackKnobMoves = (id, entry) => {
+    const bag = { ...(entry.defaultProcgenParams ?? {}) };
+    const node = entry.renderProcgenParams({ params: bag, onChange: () => {} });
+    return !!s2MoveReadBackKnob(entry, bag, node);
+};
+const s2ReadBackTarget = () => s2ReadBackTargetOf(s1Targets(), (t) => substrateRegistry.get(t), {
+    isHeavy: (e, t) => s2GenerationCostOf(e, t) === S2_GENERATION_COST.HEAVY,
+    knobMoves: s2ReadBackKnobMoves,
+});
+
+/** ⛓ Pick `target` in the Initialise form's substrate select; → true when the form (and its bag) holds it. */
+async function s2PickTarget(testController, panel, target) {
+    const sub = initSection().querySelector('.apworld-initialise-substrate');
+    sub.value = target;
+    sub.dispatchEvent(new Event('change', { bubbles: true }));
+    return testController.pollForCondition(() => panel._initialise?.state?.substrate === target
+        && initSettings()?.dataset.substrateId === target, `the form holds \`${target}\``, 8000, 50);
+}
+
+/**
+ * ⛓ Move ONE knob through the hook's OWN control, found by the bag key it
+ * writes: each control of the hook's node in turn is moved (a number +1 — or
+ * the next step —, a select to another enabled option, a checkbox flipped); the
+ * first whose change moves exactly `key` in the bag (or, with no `key`, exactly
+ * one knob key) is kept, any other is put back. → {key, from, to} or null.
+ */
+function s2MoveHookKnob(bag, key = null) {
+    return s2MoveHookKnobIn(s2HookNode(), bag, key);
+}
+/** ⛓ The Initialise form's hook node — the element after its substrate subheader. */
+function s2HookNode() {
+    const header = [...(initSettings()?.children ?? [])]
+        .find((c) => c.classList.contains('procgen-pipeline-scenario-subheader'));
+    return header?.nextElementSibling ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **(i) THE SIZE FIELDS REACH EVERY PAYLOAD** — adventure, the form's
+ * default target: the settings node is R1's form (its `data-procgen-params`
+ * says whether the target has a hook — derived), the size fields show
+ * `regionSizeFor`'s answer; the width moved +2 through its own field re-plans
+ * the preview; Generate → every built payload's `width` is the new value, the
+ * op's `provenance.bag` carries it; Undo returns the document byte for byte.
+ */
+export async function apworldInitialiseSettingsSizeReachesEveryPayload(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const st = panel._initialise.state;
+        const entry = substrateRegistry.get(st.substrate);
+        testController.reportCondition(`⛓ premise: the default target \`${st.substrate}\` is a TILES realiser`,
+            geometryOf(entry) === REGION_GEOMETRY.TILES);
+        const form = initSettings();
+        testController.reportCondition('⛓ the form draws R1\'s generation form', !!form
+            && form.classList.contains('procgen-region-generation-form'));
+        testController.assertEqual('⛓ …whose procgen-params node matches whether the target has a hook',
+            typeof entry.renderProcgenParams === 'function' ? 'drawn' : 'none', form?.dataset[PROCGEN_PARAMS_ATTR]);
+        const size = s2RegionSizeFor(panel.rulesDoc, p);
+        const sizeField = (key) => {
+            const label = REGION_GENERATION_FIELDS.find((f) => f.key === key).label;
+            return [...form.querySelectorAll('.procgen-pipeline-field')]
+                .find((r) => r.querySelector('label')?.textContent === label)?.querySelector('input') ?? null;
+        };
+        testController.assertEqual('⛓ the width field shows regionSizeFor\'s', String(size.width),
+            sizeField(INITIALISE_SIZE_KEYS.width)?.value);
+        testController.assertEqual('…and the height field', String(size.height), sizeField(INITIALISE_SIZE_KEYS.height)?.value);
+        const want = size.width + 2;
+        const w = sizeField(INITIALISE_SIZE_KEYS.width);
+        w.value = String(want);
+        w.dispatchEvent(new Event('change', { bubbles: true }));
+        const replanned = await testController.pollForCondition(
+            () => panel._initialise?.state?.bag?.[INITIALISE_SIZE_KEYS.width] === want
+                && initSettings() !== form && initSettings()?.querySelector('input')
+                && initSection().querySelector('.apworld-initialise-preview')?.textContent
+                    === initialisePreview(panel.rulesDoc, p, panel._initialise.state).text,
+            'a size edit re-plans the preview (the form re-drawn)', 8000, 50);
+        testController.reportCondition('⛓ a size edit re-plans the preview', replanned);
+        const before = JSON.stringify(panel.rulesDoc);
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual('⛓⛓ the op\'s provenance carries the bag\'s width', String(want),
+            String(op?.provenance?.bag?.[INITIALISE_SIZE_KEYS.width]));
+        const widths = Object.values(panel.rulesDoc.preset_sidecars?.[p] ?? {}).map((e) => e.playable_payload?.width);
+        testController.reportCondition(`⛓⛓ every built payload is ${want} wide (${widths.length} payloads)`,
+            widths.length > 0 && widths.every((x) => x === want));
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise size test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(ii) A HOOK KNOB REACHES THE BUILD AND THE RECORD** — adventure → the
+ * first hooked realiser target that is not the default and whose first knob
+ * reaches its realiser in top-down mode (derived; the default's first knob does
+ * NOT — `assembleRegionParams` is the oracle, and plan §24 says which). The
+ * substrate change resets the bag to that target's defaults (size kept); the
+ * knob is moved through the hook's own control, found by the key it writes;
+ * the preview is unchanged (a hook knob does not move the plan); Generate →
+ * `provenance.bag` carries the moved value and the payloads differ from the
+ * default-bag build of the same seed.
+ */
+export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(testController) {
+    try {
+        const target = s2KnobTarget();
+        testController.reportCondition(`⛓ premise: a hooked target whose first knob reaches its realiser (${target})`, !!target);
+        testController.reportCondition(`(the default \`${S2_DEFAULT}\`'s first knob ${s2FirstKnob(S2_DEFAULT)} reaches it: ${s2KnobReaches(S2_DEFAULT)})`, true);
+        if (!target) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const size0 = { ...panel._initialise.state.bag };
+        testController.reportCondition(`the form holds \`${target}\``, await s2PickTarget(testController, panel, target));
+        const bag = panel._initialise.state.bag;
+        testController.assertEqual('⛓ the substrate change reset the bag to the target\'s defaults (the size kept)',
+            JSON.stringify({ ...s2Defaults(target), [INITIALISE_SIZE_KEYS.width]: size0[INITIALISE_SIZE_KEYS.width],
+                [INITIALISE_SIZE_KEYS.height]: size0[INITIALISE_SIZE_KEYS.height] }), JSON.stringify(bag));
+        const previewBefore = initSection().querySelector('.apworld-initialise-preview')?.textContent;
+        const k = s2FirstKnob(target);
+        const moved = s2MoveHookKnob(bag, k);
+        testController.reportCondition(`⛓⛓ the hook's own control moved \`${k}\` in the bag (${moved?.from} → ${moved?.to})`,
+            !!moved && moved.key === k);
+        if (!moved) return testController.getOverallResult();
+        testController.assertEqual('⛓ a hook knob does not re-plan the preview', previewBefore,
+            initSection().querySelector('.apworld-initialise-preview')?.textContent);
+        const doc0 = panel.rulesDoc;
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const op = panel.session.ops().at(-1);
+        testController.assertEqual(`⛓⛓ the op's provenance carries \`${k}\``, JSON.stringify(moved.to),
+            JSON.stringify(op?.provenance?.bag?.[k]));
+        const dflt = s2InitialiseSlot({ doc: doc0, ...s2Args(p, {
+            substrate: target, side: op.provenance.gridDims.width, seed: op.provenance.seed,
+            backExits: op.provenance.backExits, bag: s2BagFor(doc0, p, target, op.provenance.bag),
+        }) });
+        testController.reportCondition('the default-bag build of the same seed succeeded', dflt?.ok === true);
+        testController.reportCondition(`⛓⛓ the payloads differ from the default-bag build (\`${k}\` reached the realiser)`,
+            JSON.stringify(op?.result?.entries) !== JSON.stringify(dflt?.entries));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('initialise hook knob test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓⛓ **(iii) R2'S FORM READS THE INITIALISE BAG BACK** — adventure → the first
+ * hooked target with a payload read-back (`procgenParamsFromPayload`) that does
+ * not declare its generation heavy (H1) and whose read-back knob the hook's
+ * control moves (H2 — see `s2ReadBackTarget`); the knob
+ * it reads back (derived: the key the read-back names that the hook's control
+ * writes) moved through the hook's control; Generate; Regions tab → the first
+ * new region → Re-roll ▸ (the form on its own substrate): the *this region was
+ * built with* line names the knob at the value the Initialise form set, which
+ * is `bagFromPayload`'s read of that region's payload.
+ */
+export async function apworldARegionFormReadsBackTheInitialiseBag(testController) {
+    try {
+        const { target, skipped } = s2ReadBackTarget();
+        const hooked = s1Targets().filter((t) => typeof substrateRegistry.get(t)?.procgenParamsFromPayload === 'function');
+        const skips = skipped.filter((s) => s.reason !== S2_READ_BACK_SKIP.NO_HOOKS)
+            .map((s) => `skipped: ${s.id} (${s.reason})`).join('; ') || 'no hooked target skipped';
+        testController.log(`read-back target: ${target} — hooked targets in registry order: ${hooked.join(', ')} — ${skips}`);
+        testController.reportCondition(`⛓ premise: a hooked target, not declared heavy, whose read-back knob the hook's `
+            + `control moves (${target}; ${skips}; hooked in this load's order: ${hooked.join(', ')})`, !!target);
+        if (!target) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        testController.reportCondition(`the form holds \`${target}\``, await s2PickTarget(testController, panel, target));
+        const entry = substrateRegistry.get(target);
+        const bag = panel._initialise.state.bag;
+        // ⛓ the knob the read-back names — any key of its answer the hook's control writes
+        const moved = s2MoveReadBackKnob(entry, bag, s2HookNode());
+        testController.reportCondition(`⛓ the hook's control moved the read-back knob (${moved?.key}: ${moved?.from} → ${moved?.to})`, !!moved);
+        if (!moved) return testController.getOverallResult();
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const region = Object.keys(panel.rulesDoc.preset_sidecars?.[p] ?? {})[0];
+        const read = bagFromPayload(entry, panel.rulesDoc.preset_sidecars[p][region].playable_payload);
+        testController.assertEqual(`⛓⛓ bagFromPayload reads \`${moved.key}\` off "${region}"'s payload`,
+            JSON.stringify(moved.to), JSON.stringify(read[moved.key]));
+        testController.reportCondition(`slot ${p} selected`, await onRegionsTabFor(testController, panel, p));
+        const btn = await testController.pollForValue(() => rerollButton(region, 'regions'), 'Re-roll ▸ on the new region', 8000, 50);
+        testController.reportCondition('⛓ Re-roll ▸ is enabled on the new region', !!btn && !btn.disabled);
+        btn?.click();
+        const line = await testController.pollForValue(
+            () => regionGenSection(region)?.querySelector('.apworld-region-generation-recorded') ?? null,
+            'the "this region was built with" line', 8000, 50);
+        const want = `${moved.key} ${typeof moved.to === 'string' ? moved.to : JSON.stringify(moved.to)}`;
+        testController.reportCondition(`⛓⛓ R2's form reads it back: "${want}"`, !!line && line.textContent.includes(want));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('region read-back test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const S2_TESTS = [
+    ['apworld-initialise-settings-size-reaches-every-payload',
+        'APWorld hub: the Initialise form draws the generation settings; a region width set there reaches every built payload and the op\'s provenance; Undo restores',
+        apworldInitialiseSettingsSizeReachesEveryPayload],
+    ['apworld-initialise-a-hook-knob-reaches-the-build-and-the-record',
+        'APWorld hub: a substrate knob moved through its own control on the Initialise form is recorded in the provenance and changes the build',
+        apworldInitialiseAHookKnobReachesTheBuildAndTheRecord],
+    ['apworld-a-region-form-reads-back-the-initialise-bag',
+        'APWorld hub: after an Initialise with a moved knob, the per-region Region generation form reads that knob back off the new region',
+        apworldARegionFormReadsBackTheInitialiseBag],
+];
+for (const [id, name, testFunction] of S2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE S2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE M2 — THE MENU IS THE HUB (plan §25.7–§25.8, §27;
+ * ⚖ user 2026-09-26). The Map's Menu MARKER behind `showMenuOnMap`; the
+ * runtime: the skip hop only for a ONE-exit start, Restart to the DECLARED
+ * start. ⚠ Small documents only: `mm3` (23 regions; its start has many exits)
+ * and `adventure` (its start has one) — each row asserts that premise off the
+ * document rather than trusting the path. The menu panel has no in-app category
+ * of its own (plan §27.0), so its runtime rows live here.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor } from '../../apworldEditor/menuMarker.js';
+// eslint-disable-next-line import/first
+import { exitsOf as menuExitsOf } from '../../menuPanel/menuPanelEngine.js';
+// eslint-disable-next-line import/first
+import { startRegionsOf as m2StartRegionsOf } from '../../procgenCore/rulesGraph.js';
+
+const M2_HUB_PATH = './presets/mm3/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const M2_ONE_EXIT_PATH = INIT_ADVENTURE_PATH;
+
+const m2Marker = () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-menu`);
+
+/** ⛓ The declared start of the hub's document and its exits (the menu panel's own reader). */
+function m2StartOf(doc, p) {
+    const [start = null] = m2StartRegionsOf(doc, p).default;
+    return { start, exits: menuExitsOf(doc, p, start) };
+}
+
+/** ⛓ Initialise `path` with the form's defaults (the door → Generate); → {panel, p} or null. */
+async function m2Initialised(testController, path, premise) {
+    const panel = await openInitialiseForm(testController, path);
+    if (!panel) return null;
+    const p = String(panel.playerId);
+    const { start, exits } = m2StartOf(panel.rulesDoc, p);
+    testController.reportCondition(`⛓ premise: ${premise} (${start}: ${exits.length} exits)`, premise === 'many exits'
+        ? exits.length > 1 : exits.length === 1);
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    return run?.outcome?.ok ? { panel, p } : null;
+}
+
+/** ⛓ The marker once its setting read has answered (`data-shown` is no longer `pending`). */
+async function m2SettledMarker(testController, label) {
+    return testController.pollForValue(() => {
+        const m = m2Marker();
+        return m && m.dataset.shown !== 'pending' ? m : null;
+    }, label, 8000, 50);
+}
+
+/**
+ * ⛓⛓ **(M2-i) THE MAP'S MENU MARKER** on `mm3` initialised: the marker lists the
+ * declared start's exits (`menuMarkerFor`, derived), every one placed; the
+ * setting OFF hides it (a re-draw on `settings:changed`, read at draw — never
+ * cached), back ON shows it again; `adventure` initialised → one entry.
+ */
+export async function apworldMapMenuMarkerListsTheStartExits(testController) {
+    try {
+        const hub = await m2Initialised(testController, M2_HUB_PATH, 'many exits');
+        if (!hub) return testController.getOverallResult();
+        const { panel, p } = hub;
+        const want = menuMarkerFor(panel.rulesDoc, p);
+        selectTab(panel, 'map');
+        const marker = await m2SettledMarker(testController, 'the Menu marker beside the grid');
+        testController.assertEqual('⛓ the marker is shown (the setting defaults ON)', 'true', marker?.dataset.shown);
+        testController.assertEqual('…it names the declared start', want.name, marker?.dataset.name);
+        testController.assertEqual('⛓⛓ one entry per exit (derived)', String(want.exits.length), marker?.dataset.exits);
+        testController.assertEqual('…every one to a placed target (the hub rooted them all)',
+            String(want.exits.length), marker?.dataset.placed);
+        const items = [...(marker?.querySelectorAll('.apworld-map-menu-exit') ?? [])];
+        testController.assertEqual('…the entries, in exit order, with their targets',
+            JSON.stringify(want.exits.map((e) => [e.target, String(e.placed)])),
+            JSON.stringify(items.map((li) => [li.dataset.target, li.dataset.placed])));
+
+        await settingsManager.updateSetting(SHOW_MENU_ON_MAP_SETTING, false, { persist: false });
+        const off = await testController.pollForValue(() => {
+            const m = m2Marker();
+            return m && m.dataset.shown === 'false' ? m : null;
+        }, 'the marker after the setting went OFF', 8000, 50);
+        testController.reportCondition('⛓⛓ the setting OFF: the marker is gone (hidden, no entries)',
+            !!off && off.hidden && off.querySelectorAll('.apworld-map-menu-exit').length === 0);
+        await settingsManager.clearOverride(SHOW_MENU_ON_MAP_SETTING);
+        const on = await testController.pollForValue(() => {
+            const m = m2Marker();
+            return m && m.dataset.shown === 'true' ? m : null;
+        }, 'the marker after the setting came back', 8000, 50);
+        testController.reportCondition('…and back ON it is drawn again', !!on && !on.hidden);
+
+        const one = await m2Initialised(testController, M2_ONE_EXIT_PATH, 'one exit');
+        if (!one) return testController.getOverallResult();
+        selectTab(one.panel, 'map');
+        const m1 = await m2SettledMarker(testController, 'the one-exit document\'s marker');
+        testController.assertEqual('⛓ a one-exit start: one entry', '1', m1?.dataset.exits);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('menu marker test error-free', false);
+        try { await settingsManager.clearOverride(SHOW_MENU_ON_MAP_SETTING); } catch (_) { /* best effort */ }
+    }
+    return testController.getOverallResult();
+}
+
+const m2Gs = (fn) => centralRegistry?.getPublicFunction?.('gameState', fn) ?? null;
+const m2Resolved = () => centralRegistry?.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion')?.() ?? null;
+
+/**
+ * ⛓ Apply the hub's document and wait until the app HOLDS it as a warehoused
+ * world (procgenPlayer resolved a start) and the load handshake has run. The
+ * witness that the menu panel's load decision ran is `waitFor` (a condition on
+ * the settled position) — never a fixed sleep.
+ */
+async function m2ApplyAndSettle(testController, panel, label, waitFor) {
+    panel._handleApply();
+    const resolved = await testController.pollForValue(m2Resolved, `${label}: procgenPlayer resolved a start`, 15000, 50);
+    testController.reportCondition(`${label}: the app holds the initialised world (warehoused)`, !!resolved);
+    if (!resolved) return false;
+    return testController.pollForCondition(waitFor, `${label}: the load settled`, 15000, 50);
+}
+
+/**
+ * ⛓⛓ **(M2-ii) THE RUNTIME: THE SKIP HOP ONLY FOR A ONE-EXIT START, RESTART TO
+ * THE DECLARED START** (⚖ user 2026-09-26). `mm3` initialised and applied (skip
+ * ON, the default): the load does NOT hop (its start has many exits) — the
+ * player stands at the declared start with the menu panel raised and listing
+ * every exit; a press takes that exit; Restart clears the path and returns to
+ * the DECLARED start (until M2: the first placed region). `adventure`
+ * initialised and applied: one exit, so the hop still fires.
+ */
+export async function apworldMenuHubRestartReturnsToTheDeclaredStart(testController) {
+    const raised = [];
+    const onRaise = (ev) => { if (ev?.panelId === 'menuPanel') raised.push(ev); };
+    appEventBus.subscribe('ui:activatePanel', onRaise, 'apworldEditorTests');
+    try {
+        const hub = await m2Initialised(testController, M2_HUB_PATH, 'many exits');
+        if (!hub) return testController.getOverallResult();
+        const { panel, p } = hub;
+        const { start, exits } = m2StartOf(panel.rulesDoc, p);
+        const current = m2Gs('getCurrentRegion');
+        const getPath = m2Gs('getPath');
+        raised.length = 0;
+        const settled = await m2ApplyAndSettle(testController, panel, 'mm3', () => raised.length > 0);
+        testController.reportCondition('⛓ the menu panel raised itself at load (the hop was not taken)', settled);
+        testController.assertEqual('⛓⛓ skip ON, many exits: the player is at the DECLARED start after load', start, current?.());
+        testController.assertEqual('…with an empty path', '0', String(getPath?.()?.length));
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'menuPanel' });
+        const buttons = await testController.pollForValue(() => {
+            const b = [...document.querySelectorAll('.menu-panel-exit-button')];
+            return b.length === exits.length ? b : null;
+        }, 'the menu panel\'s exit buttons', 8000, 50);
+        testController.assertEqual('⛓ the menu panel lists every exit (derived)', String(exits.length), String(buttons?.length ?? 0));
+        if (!buttons) return testController.getOverallResult();
+        // ⛓ NOT the first exit: that is the resolved start, so a press of it could not tell Restart's two answers apart.
+        const pick = buttons[buttons.length - 1];
+        const target = pick.dataset.targetRegion;
+        testController.reportCondition(`⛓ premise: the pressed exit's target (${target}) is not procgenPlayer's resolved start (${m2Resolved()})`,
+            target !== m2Resolved());
+        pick.click();
+        testController.reportCondition(`a press takes the exit → ${target}`,
+            await testController.pollForCondition(() => current?.() === target, 'the press arrived', 8000, 50));
+
+        const restartBtn = await testController.pollForValue(() => document.querySelector('#menu-panel-restart'),
+            'the menu panel Restart button', 8000, 50);
+        restartBtn?.click();
+        const back = await testController.pollForCondition(() => current?.() === start && getPath?.()?.length === 0,
+            'Restart landed on the declared start with an empty path', 8000, 50);
+        testController.reportCondition(`⛓⛓ Restart → the DECLARED start (${start}), the path cleared — not the first placed region (${m2Resolved()})`, back);
+
+        const one = await m2Initialised(testController, M2_ONE_EXIT_PATH, 'one exit');
+        if (!one) return testController.getOverallResult();
+        const { start: s1, exits: e1 } = m2StartOf(one.panel.rulesDoc, one.p);
+        const hopped = await m2ApplyAndSettle(testController, one.panel, 'adventure', () => current?.() === e1[0].targetRegion);
+        testController.reportCondition(`⛓ skip ON, one exit: the hop still fires (${s1} → ${e1[0].targetRegion})`, hopped);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('menu hub runtime test error-free', false);
+    } finally {
+        appEventBus.unsubscribe('ui:activatePanel', onRaise, 'apworldEditorTests');
+    }
+    return testController.getOverallResult();
+}
+
+const M2_TESTS = [
+    ['apworld-map-menu-marker-lists-the-start-exits',
+        'APWorld hub: the Map lists the declared start (the Menu) beside the grid — one entry per exit, each placed; hidden when showMenuOnMap is off',
+        apworldMapMenuMarkerListsTheStartExits],
+    ['apworld-menu-hub-restart-returns-to-the-declared-start',
+        'APWorld hub → runtime: an initialised many-exit start is not skipped (the menu lists every exit), a press takes one, Restart returns to the DECLARED start; a one-exit start still hops',
+        apworldMenuHubRestartReturnsToTheDeclaredStart],
+];
+for (const [id, name, testFunction] of M2_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE M2. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE M3 (R8, the name-free rule; ⚖ user 2026-09-27,
+ * plan §25.9–§25.10) — THE DECLARED START IS THE MENU, WHATEVER IT IS CALLED.
+ * The layout strips it only when it is a PURE hub (exits, no locations); any
+ * other start is a room that is also the menu: it gets a cell, and the
+ * preview names no hub clause. Two documents, each premise asserted off the
+ * document: `apcalc` (start `C`, 4 exits, 1 location) and `shapez` (a `Menu`
+ * with 4 exits AND 3 locations — a cell since M3), the latter as
+ * `text_adventure` (as maze its realise is 36–48 s headless, plan §28.0).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { isVirtualStart as m3IsVirtualStart } from '../../procgenPipeline/procgenPipelineEngine.js';
+
+const M3_SHAPEZ_PATH = './presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/** ⛓ The M2 preview's hub clause (*"; Menu: 13 exits → 13 roots"*) — present only for a stripped start. */
+const M3_HUB_CLAUSE = /: \d+ exits? → \d+ roots?$/;
+
+/**
+ * ⛓ Open the door on `path` (optionally picking `target`), check the premise
+ * (the declared start is a ROOM: not a pure hub) and the preview (no hub
+ * clause, every region placed), then press Generate; → {panel, p, start} or null.
+ */
+async function m3InitialiseARoomStart(testController, path, target = null) {
+    const panel = await openInitialiseForm(testController, path);
+    if (!panel) return null;
+    const p = String(panel.playerId);
+    if (target) {
+        const sub = initSection().querySelector('.apworld-initialise-substrate');
+        sub.value = target;
+        sub.dispatchEvent(new Event('change', { bubbles: true }));
+        testController.reportCondition(`the form's substrate is \`${target}\``, await testController.pollForCondition(
+            () => panel._initialise?.state?.substrate === target, `the form holds \`${target}\``, 8000, 50));
+    }
+    const doc0 = panel.rulesDoc;
+    const { start, exits } = m2StartOf(doc0, p);
+    const region = doc0.regions[p][start];
+    testController.reportCondition(`⛓ premise: the declared start "${start}" is a ROOM (${exits.length} exits, `
+        + `${(region.locations ?? []).length} locations) — not a pure hub`, exits.length > 0 && !m3IsVirtualStart(region));
+    const plan = initPlan(doc0, p, { gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side } });
+    testController.reportCondition('⛓ the plan strips nothing and places every region, the start included',
+        plan.ok && plan.menu === null && plan.start === start && plan.placed === Object.keys(doc0.regions[p]).length);
+    const pv = initSection().querySelector('.apworld-initialise-preview');
+    testController.assertEqual('the preview is the page\'s own plan, verbatim',
+        initialisePreview(doc0, p, panel._initialise.state).text, pv?.textContent);
+    testController.reportCondition(`⛓⛓ the preview has NO hub clause (a placed start is a region like any other): "${pv?.textContent}"`,
+        !!pv && !M3_HUB_CLAUSE.test(pv.textContent));
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    if (!run?.outcome?.ok) return null;
+    const entry = panel.rulesDoc.preset_sidecars?.[p]?.[start];
+    testController.reportCondition(`⛓⛓ Generate lands the start "${start}" as a CELL (its own sidecar entry at a grid cell)`,
+        !!entry?.grid_cell);
+    testController.assertEqual('…and the slot has 0 sidecar errors', '0',
+        String(sidecarIssues(panel.rulesDoc, p).filter((i) => i.severity === 'error').length));
+    return { panel, p, start, entry };
+}
+
+/** ⛓ The Map's marker for the landed start: every exit listed, every target placed (derived). */
+async function m3MarkerListsTheStartExits(testController, panel, p, start) {
+    const want = menuMarkerFor(panel.rulesDoc, p);
+    selectTab(panel, 'map');
+    const marker = await m2SettledMarker(testController, 'the Menu marker beside the grid');
+    testController.assertEqual('⛓ the marker names the declared start', start, marker?.dataset.name);
+    testController.assertEqual('…one entry per exit (derived)', String(want?.exits.length), marker?.dataset.exits);
+    testController.assertEqual('…every target placed', String(want?.exits.length), marker?.dataset.placed);
+}
+
+/**
+ * ⛓⛓ **(M3-i) A NON-MENU START IS A CELL AND THE MENU** — `apcalc` (start `C`):
+ * the door, a preview with no hub clause, Generate lands `C` as a cell, the
+ * marker lists C's exits.
+ */
+export async function apworldM3ANonMenuStartIsACellAndTheMenu(testController) {
+    try {
+        const got = await m3InitialiseARoomStart(testController, INIT_APCALC_PATH);
+        if (!got) return testController.getOverallResult();
+        await m3MarkerListsTheStartExits(testController, got.panel, got.p, got.start);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('non-Menu start test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(M3-ii) A MENU WITH LOCATIONS IS A ROOM** — `shapez` as `text_adventure`:
+ * the Menu gets a cell and a block on the Regions tab, its locations are in its
+ * room's payload (the document's own names, derived), the marker lists its exits.
+ */
+export async function apworldM3AMenuWithLocationsIsARoom(testController) {
+    try {
+        const got = await m3InitialiseARoomStart(testController, M3_SHAPEZ_PATH, 'text_adventure');
+        if (!got) return testController.getOverallResult();
+        const { panel, p, start, entry } = got;
+        const want = (panel.rulesDoc.regions[p][start].locations ?? []).map((l) => l.name);
+        testController.reportCondition(`⛓ premise: the start is the document's "${start}" with ${want.length} locations`,
+            want.length > 0);
+        testController.assertEqual('⛓⛓ its locations are in ITS room (the payload\'s own list)',
+            JSON.stringify(want), JSON.stringify((entry?.playable_payload?.locations ?? []).map((l) => l.name)));
+        selectTab(panel, 'regions');
+        const block = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${start}"] .apworld-sidecar-block`),
+        `the Regions tab's sidecar block under "${start}"`, 8000, 50);
+        testController.reportCondition(`⛓ the Regions tab draws a sidecar block under "${start}"`, !!block);
+        await m3MarkerListsTheStartExits(testController, panel, p, start);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Menu-with-locations test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const M3_TESTS = [
+    ['apworld-m3-a-non-menu-start-is-a-cell-and-the-menu',
+        'APWorld hub: a start NOT named Menu (apcalc\'s C) is a room — no hub clause in the preview, Generate lands it as a cell, the marker lists its exits',
+        apworldM3ANonMenuStartIsACellAndTheMenu],
+    ['apworld-m3-a-menu-with-locations-is-a-room',
+        'APWorld hub: a Menu WITH locations (shapez, as text_adventure) is a room — a cell, a Regions block, its locations in its payload, the marker lists its exits',
+        apworldM3AMenuWithLocationsIsARoom],
+];
+for (const [id, name, testFunction] of M3_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE M3. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE S3 — LOOP MODE ON THE INITIALISE FORM (plan §22.1,
+ * §22.4 Q4, §27.6 #1). A toggle (OFF by default) + the XP effect; ON, the op
+ * writes `loop_costs` (priced from the slot's sphere log — for a classic preset
+ * the `_sphere_log.jsonl` beside it, which only the PAGE holds) and
+ * `manaEnabled` on every payload; the loops' reset lands where the load put the
+ * player. Every premise is asserted off the page or the document, never typed.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_XP_EFFECTS as S3_XP_EFFECTS } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { INITIALISE_LOOP_MODE_ON as S3_LOOP_ON, loopModeClause as s3LoopModeClause } from '../../apworldEditor/rulesDocOps.js';
+
+const s3Toggle = () => initSection()?.querySelector('.apworld-initialise-loop-mode') ?? null;
+const s3Xp = () => initSection()?.querySelector('.apworld-initialise-xp-effect') ?? null;
+const s3PageLog = () => {
+    const entries = centralRegistry.getPublicFunction('sphereState', 'getRawSphereLog')?.();
+    return Array.isArray(entries) && entries.length > 0 ? entries : null;
+};
+
+/**
+ * ⛓ The page's sphere log is THIS preset's (the jsonl beside `path`, fetched and
+ * counted — the premise the loop-mode toggle stands on), then the toggle is
+ * ENABLED and OFF (the default); → the page's entries, or null.
+ */
+async function s3LogAndToggle(testController, panel, path) {
+    const p = String(panel.playerId);
+    testController.reportCondition('⛓ premise: the document embeds no `sphere_log` (the page\'s log is the only one)',
+        !Array.isArray(panel.rulesDoc.sphere_log));
+    const text = await (await fetch(path.replace(/_rules\.json$/, '_sphere_log.jsonl'))).text();
+    // ⛓ `sphereState` keeps the `state_update` entries (its `metadata` line apart), so those are what it holds.
+    const want = text.trim().split('\n').filter((l) => l.trim() && JSON.parse(l)?.type === 'state_update').length;
+    const log = await testController.pollForValue(() => {
+        const e = s3PageLog();
+        return e && e.length === want && e.some((x) => x?.player_data?.[p]) ? e : null;
+    }, `the page holds this preset's sphere log (${want} entries, player ${p})`, 15000, 50);
+    testController.reportCondition(`⛓ premise: the page's sphere log is the preset's (${log?.length ?? 0}/${want} entries)`, !!log);
+    if (!log) return null;
+    const toggle = await testController.pollForValue(() => {
+        const t = s3Toggle();
+        return t && !t.disabled ? t : null;
+    }, 'the loop-mode toggle, enabled', 8000, 50);
+    testController.reportCondition('⛓ the loop-mode toggle is drawn ENABLED (a log is reachable)', !!toggle);
+    testController.reportCondition('…and OFF by default, with no XP-effect select', !!toggle && !toggle.checked && !s3Xp());
+    return toggle ? log : null;
+}
+
+/** ⛓ Turn loop mode on through the form's own checkbox, optionally pick `fx`; → true when the state holds it. */
+async function s3TurnOn(testController, panel, fx = null) {
+    s3Toggle().click();
+    const xp = await testController.pollForValue(s3Xp, 'the XP-effect select after the toggle', 8000, 50);
+    testController.reportCondition('⛓ the toggle ON draws the XP-effect select', !!xp
+        && panel._initialise?.state?.loopMode?.enabled === true);
+    testController.assertEqual('…its options are the generator\'s effects, the default first',
+        JSON.stringify([...S3_XP_EFFECTS]), JSON.stringify([...(xp?.options ?? [])].map((o) => o.value)));
+    if (!xp) return false;
+    if (fx) {
+        xp.value = fx;
+        xp.dispatchEvent(new Event('change', { bubbles: true }));
+        await testController.pollForCondition(() => panel._initialise?.state?.loopMode?.regionXpEffect === fx,
+            `the form holds XP effect ${fx}`, 8000, 50);
+    }
+    const pv = initSection().querySelector('.apworld-initialise-preview');
+    testController.reportCondition(`⛓ the preview names loop mode and the LOADED log: "${pv?.textContent}"`,
+        !!pv && pv.textContent.includes(`${S3_LOOP_ON} (`) && pv.textContent.endsWith('priced from the loaded sphere log'));
+    return true;
+}
+
+/**
+ * ⛓⛓ **(S3-i) LOOP MODE ON → `loop_costs` + MANA ON EVERY PAYLOAD → UNDO; OFF → NO KEY**
+ * on `adventure`: the page holds the jsonl beside the preset; the toggle (ON,
+ * the last offered XP effect) → Generate lands ONE op whose document carries
+ * `loop_costs` (no `generatedAt`, the chosen effect, every placed region
+ * priced), every payload `manaEnabled`, the answer the op's loop clause, the
+ * Document tab's `loop_costs` row; Undo takes the key back byte for byte;
+ * Generate with the toggle OFF writes no key and no flag.
+ */
+export async function apworldInitialiseLoopModeWritesLoopCosts(testController) {
+    try {
+        const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        if (!await s3LogAndToggle(testController, panel, INIT_ADVENTURE_PATH)) return testController.getOverallResult();
+        const fx = S3_XP_EFFECTS.at(-1);
+        if (!await s3TurnOn(testController, panel, fx)) return testController.getOverallResult();
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        testController.assertEqual('⛓ ONE op', String(opsBefore + 1), String(panel.session.ops().length));
+        const doc = panel.rulesDoc;
+        const lc = doc.loop_costs?.[p];
+        testController.reportCondition('⛓⛓ the slot holds `loop_costs[p]`, with no `generatedAt`',
+            !!lc && !Object.hasOwn(lc, 'generatedAt'));
+        testController.assertEqual('…priced under the chosen XP effect', fx, lc?.defaultRegionXpEffect);
+        const entries = doc.preset_sidecars?.[p] ?? {};
+        testController.reportCondition(`…every placed region priced (${Object.keys(entries).length})`,
+            Object.keys(entries).length > 0 && Object.keys(entries).every((n) => Object.hasOwn(lc?.regions ?? {}, n)));
+        testController.reportCondition('⛓⛓ every payload carries `manaEnabled: true`',
+            Object.values(entries).every((e) => e?.playable_payload?.manaEnabled === true));
+        testController.assertEqual('⛓ the op records how loop mode was asked for',
+            JSON.stringify({ enabled: true, regionXpEffect: fx }), JSON.stringify(panel.session.ops().at(-1)?.provenance?.loopMode));
+        testController.reportCondition(`⛓ the answer is the op's loop clause: "${panel._opMessage}"`,
+            String(panel._opMessage ?? '').includes(s3LoopModeClause(lc)));
+
+        await testController.pollForCondition(() => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        selectTab(panel, 'document');
+        const summary = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] .apworld-loop-costs-summary`),
+        'the Document tab\'s loop_costs summary', 8000, 50);
+        const nLoc = Object.keys(lc?.locations ?? {}).length;
+        testController.reportCondition(`⛓ the Document tab shows the key (${summary?.textContent})`,
+            !!summary && summary.textContent.includes(`${nLoc} location`));
+
+        document.querySelector(`${PANEL_SELECTOR} .apworld-undo`).click();
+        const undone = await testController.pollForCondition(() => !Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p),
+            'Undo took loop_costs back', 8000, 50);
+        testController.reportCondition('⛓⛓ ONE Undo takes the key back — the document byte for byte', undone
+            && JSON.stringify(panel.rulesDoc) === before);
+
+        // ⛓ …and the toggle OFF (the default) writes neither the key nor the flag.
+        selectTab(panel, 'map');
+        const door = await testController.pollForValue(initDoor, 'the door, back after Undo', 8000, 50);
+        door?.click();
+        const sec = await testController.pollForValue(initSection, 'the form, re-opened', 8000, 50);
+        testController.reportCondition('the re-opened form starts with loop mode OFF', !!sec && s3Toggle()?.checked === false);
+        const off = await pressInitialise(testController, panel);
+        testController.reportCondition('the OFF build succeeded', off?.outcome?.ok === true);
+        const offEntries = Object.values(panel.rulesDoc.preset_sidecars?.[p] ?? {});
+        testController.reportCondition('⛓⛓ OFF: no `loop_costs` key, no payload `manaEnabled`',
+            !Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p) && offEntries.length > 0
+            && offEntries.every((e) => !Object.hasOwn(e.playable_payload ?? {}, 'manaEnabled')));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop-mode initialise test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(S3-ii) THE LOOPS' RESET LANDS WHERE THE LOAD PUT THE PLAYER** (plan
+ * §27.6 #1) — `mm3` (its start has many exits, so the load does not hop)
+ * initialised WITH loop mode and applied: the `loop_costs` it carries turns
+ * loop mode on; the player stands at the DECLARED start; a menu press takes
+ * the last exit; the loops panel's **Clear Queue** returns the player to the
+ * DECLARED start — until S3, procgenPlayer's resolved start (the first placed
+ * region).
+ */
+export async function loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld(testController) {
+    const loopActive = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+    try {
+        const panel = await openInitialiseForm(testController, M2_HUB_PATH);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        const { start, exits } = m2StartOf(panel.rulesDoc, p);
+        testController.reportCondition(`⛓ premise: many exits (${start}: ${exits.length})`, exits.length > 1);
+        if (!await s3LogAndToggle(testController, panel, M2_HUB_PATH)) return testController.getOverallResult();
+        if (!await s3TurnOn(testController, panel)) return testController.getOverallResult();
+        const run = await pressInitialise(testController, panel);
+        testController.reportCondition('the build succeeded, loop mode on', run?.outcome?.ok === true
+            && Object.hasOwn(panel.rulesDoc.loop_costs ?? {}, p));
+        if (!run?.outcome?.ok) return testController.getOverallResult();
+        const current = m2Gs('getCurrentRegion');
+        const settled = await m2ApplyAndSettle(testController, panel, 'mm3', () => loopActive() && current?.() === start);
+        testController.reportCondition(`⛓⛓ Apply: the carried loop_costs turned loop mode ON, the player at the declared start (${start})`, settled);
+        const resolved = m2Resolved();
+        testController.reportCondition(`⛓ premise: procgenPlayer's resolved start (${resolved}) is not the declared start`,
+            !!resolved && resolved !== start);
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'menuPanel' });
+        const buttons = await testController.pollForValue(() => {
+            const b = [...document.querySelectorAll('.menu-panel-exit-button')];
+            return b.length === exits.length ? b : null;
+        }, 'the menu panel\'s exit buttons', 8000, 50);
+        if (!buttons) return testController.getOverallResult();
+        const target = buttons[buttons.length - 1].dataset.targetRegion;
+        buttons[buttons.length - 1].click();
+        testController.reportCondition(`a press takes the exit → ${target}`,
+            await testController.pollForCondition(() => current?.() === target, 'the press arrived', 8000, 50));
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'loopsPanel' });
+        const clear = await testController.pollForValue(() => {
+            const b = document.querySelector('#loop-ui-clear-queue');
+            return b && !b.disabled ? b : null;
+        }, 'the loops panel\'s Clear Queue, enabled (loop mode on)', 8000, 50);
+        testController.reportCondition('the loops panel offers Clear Queue', !!clear);
+        clear?.click();
+        const back = await testController.pollForCondition(() => current?.() === start,
+            'Clear Queue landed on the declared start', 8000, 50);
+        testController.reportCondition(`⛓⛓ the loop reset → the DECLARED start (${start}) — not the first placed region (${resolved})`, back);
+        testController.assertEqual('…and the loops\' own rule says so', start,
+            centralRegistry.getPublicFunction('loops', 'getLoopStartRegion')?.());
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('loop reset test error-free', false);
+    } finally {
+        // ⛓ Clean up: leave the app out of loop mode (the next row sets its own state).
+        if (loopActive()) testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false });
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-initialise-loop-mode-writes-loop-costs',
+    name: 'APWorld hub: Initialise with loop mode ON writes loop_costs (the page\'s sphere log) and manaEnabled on every payload; Undo takes it back; OFF writes neither',
+    description: 'APWORLD SUBSTRATE CHANGE S3. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldInitialiseLoopModeWritesLoopCosts,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+registerTest({
+    id: 'loops-reset-lands-on-the-declared-start-of-a-multi-exit-world',
+    name: 'Loops: an initialised multi-exit world (mm3, loop mode on) — Clear Queue returns to the DECLARED start, not the first placed region',
+    description: 'APWORLD SUBSTRATE CHANGE S3 (§27.6 #1). See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld,
+    category: 'loops',
+    enabled: false, // off by default — runs only in the loops mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE P1b′ — TWO SLOTS OF ONE DOCUMENT INITIALISED IN
+ * TURN (plan §38.2 #1). P1a made `procgen_metadata` / `loop_costs` per-player
+ * maps; the planner measured a second slot's Initialise working live (§38.1).
+ * This is the in-app row that holds it: on a committed CLASSIC multi-slot
+ * document, two bare slots, the second with loop mode ON — each slot's own
+ * blocks, the first slot's untouched by the second, the Map and the loop-mode
+ * sentence per slot, and two Undos back to the document byte for byte.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { UNPLACED_WHY as P1B_UNPLACED_WHY } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { playerSlotsOf as p1bPlayerSlotsOf } from '../../apworldEditor/documentKeys.js';
+// eslint-disable-next-line import/first
+import { RULES_SCHEMA_URL as P1B_SCHEMA_URL } from '../../apworldEditor/documentKeys.js';
+
+/** ⛓ The committed preset index (the one `presetUI` reads) — the corpus the subject is derived from. */
+const P1B_PRESET_INDEX = './presets/preset_files.json';
+
+/**
+ * ⛓⛓ **THE MAZE LOCATION CLIFF, AS A BOUND ON THE SUBJECT** — a slot is a
+ * candidate only while its LARGEST region holds FEWER locations than this.
+ * Measured 2026-09-27 (P1b′ task 0, plan §39.0) by a timed Initialise through
+ * the real form, auto grid side, maze, 60 s cap, largest-room location count →
+ * outcome: 8 → 4.5 s, 9 (238 regions) → 5.7 s, 11 → 3.7 s / 4.8 s, 12 → 5.3 s /
+ * 11.2 s, 13 → 6.7 s — every one ≤ 13 finished; 16 → 4.0 s, 16.8 s and a
+ * TIMEOUT, 17 → 6.5 s, 24 → 5.8 s and a TIMEOUT, 38 → TIMEOUT; 131 did not
+ * finish in 120 s (the planner, §38.1).
+ * So 14 is the smallest bound under which every measured slot finished; above
+ * it the cliff is not a function of the count alone (§28.6 #1, the planner's
+ * cliff conversation). ⛔ Not a claim that 14–15 are safe — none was measured.
+ */
+const P1B_ROOM_LOCATION_BOUND = 14;
+
+/** ⛓ The largest location count any one region of slot `p` holds. */
+const p1bLargestRoom = (doc, p) => Math.max(0, ...Object.values(doc?.regions?.[p] ?? {})
+    .map((r) => (r?.locations ?? []).length));
+
+/**
+ * ⛓ A slot is a candidate when it is BARE (no sidecar entry — the door's own
+ * premise), the layout places every region the graph can reach (the only
+ * unplaced ones have NO incoming exit, which no layout could place), and its
+ * largest room is under the cliff bound.
+ */
+function p1bCandidate(doc, p) {
+    if (Object.keys(doc?.preset_sidecars?.[p] ?? {}).length > 0) return null;
+    const plan = initPlan(doc, p);
+    if (!plan.ok || plan.placed === 0) return null;
+    if (plan.unplaced.some((u) => u.why !== P1B_UNPLACED_WHY.NO_INCOMING)) return null;
+    if (p1bLargestRoom(doc, p) >= P1B_ROOM_LOCATION_BOUND) return null;
+    return { slot: p, regions: Object.keys(doc.regions[p]).length };
+}
+
+/**
+ * ⛓⛓ **THE SUBJECT, DERIVED.** The committed documents with more than one slot
+ * (`playerSlotsOf`, over the index's folders that list more than one game),
+ * keeping the CLASSIC ones — every slot bare — and the first (by path) with two
+ * candidate slots; the two are initialised in slot order.
+ * → `{path, slots: [a, b], considered}` or `{path: null, considered}`.
+ */
+async function p1bTwoSlotSubject() {
+    const index = await (await fetch(P1B_PRESET_INDEX)).json();
+    const schema = await (await fetch(P1B_SCHEMA_URL)).json();
+    const paths = [];
+    for (const [dir, entry] of Object.entries(index ?? {})) {
+        for (const [folder, f] of Object.entries(entry?.folders ?? {})) {
+            if ((f?.games ?? []).length > 1 && (f?.files ?? []).includes(`${folder}_rules.json`)) {
+                paths.push(`./presets/${dir}/${folder}/${folder}_rules.json`);
+            }
+        }
+    }
+    paths.sort();
+    const considered = [];
+    for (const path of paths) {
+        const doc = await (await fetch(path)).json();
+        const slots = p1bPlayerSlotsOf(doc, schema);
+        const classic = slots.length > 1 && slots.every((p) => Object.keys(doc.preset_sidecars?.[p] ?? {}).length === 0);
+        const candidates = classic ? slots.map((p) => p1bCandidate(doc, p)).filter(Boolean) : [];
+        considered.push(`${path.split('/').at(-1)}: ${slots.length} slots, ${classic ? `candidates [${candidates.map((c) => c.slot)}]` : 'not classic'}`);
+        if (candidates.length >= 2) {
+            return { path, slots: candidates.slice(0, 2).map((c) => c.slot), considered };
+        }
+    }
+    return { path: null, considered };
+}
+
+/** ⛓ Select `slot` through the real toolbar control and wait for the hub to hold it. */
+async function p1bSelect(testController, panel, slot) {
+    const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+    if (!select) return false;
+    selectPlayer(select, slot);
+    return testController.pollForCondition(() => String(panel.playerId) === String(slot),
+        `the hub selected slot ${slot}`, 8000, 50);
+}
+
+/** ⛓ The Map canvas's drawn region count for the selected slot. */
+async function p1bMapRegions(testController, panel) {
+    selectTab(panel, 'map');
+    const canvas = await testController.pollForValue(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`), 'the Map canvas', 8000, 50);
+    return canvas?.dataset.regions ?? null;
+}
+
+/** ⛓ The Sidecars tab's loop-mode sentence for the selected slot. */
+async function p1bSwitchSentence(testController, panel) {
+    selectTab(panel, 'sidecars');
+    const el = await testController.pollForValue(() => document.querySelector(
+        `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] .apworld-loop-costs-switch`),
+    'the Sidecars tab\'s loop-mode sentence', 8000, 50);
+    return el?.textContent ?? '';
+}
+
+/** ⛓ `JSON.stringify` of slot `p`'s two per-player blocks. */
+const p1bBlocksOf = (doc, p) => JSON.stringify([doc.procgen_metadata?.[p] ?? null, doc.loop_costs?.[p] ?? null]);
+
+/**
+ * ⛓⛓⛓ **(P1b′) TWO SLOTS, INITIALISED IN TURN, EACH WITH ITS OWN BLOCKS.**
+ * The subject is derived (above). Slot A through the Map tab's door with loop mode OFF,
+ * then slot B — whose Map, beside populated slot A, is its OWN empty state
+ * (H1) — with loop mode ON; after each run the slot's
+ * `procgen_metadata[p]` (and, for B, `loop_costs[p]`) are the op's result
+ * verbatim and NO block exists under any other slot; slot A's blocks are
+ * byte-identical after B's run; the Map draws each slot's placed count; the
+ * Sidecars tab's loop-mode sentence names the SELECTED slot; two Undos restore
+ * the document byte for byte.
+ */
+export async function apworldTwoSlotsInitialiseInTurn(testController) {
+    try {
+        const subject = await p1bTwoSlotSubject();
+        testController.log(`P1b′ subject: ${subject.considered.join(' · ')}`);
+        testController.reportCondition(`⛓ premise: a committed classic multi-slot document with two candidate `
+            + `slots (largest room < ${P1B_ROOM_LOCATION_BOUND} locations) — ${subject.path} [${subject.slots}]`,
+        !!subject.path);
+        if (!subject.path) return testController.getOverallResult();
+        const [a, b] = subject.slots;
+
+        // ⛔ A multi-slot document's worker load outlasts openHub's default 8 s ping.
+        const panel = await openHub(testController, subject.path, 30000);
+        if (!panel) return testController.getOverallResult();
+        // ⛔ Trap 1419: before the schema lands the selector offers only the default slot.
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const slots = p1bPlayerSlotsOf(panel.rulesDoc, panel._rulesSchema);
+        testController.reportCondition(`⛓ premise: the hub offers slots [${slots}], both of ours among them`,
+            slots.includes(a) && slots.includes(b));
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('⛓ premise: no slot carries `procgen_metadata` or `loop_costs` yet',
+            Object.keys(panel.rulesDoc.procgen_metadata ?? {}).length === 0
+            && Object.keys(panel.rulesDoc.loop_costs ?? {}).length === 0);
+
+        const placed = {};
+        for (const [slot, loopMode] of [[a, false], [b, true]]) {
+            if (!await p1bSelect(testController, panel, slot)) return testController.getOverallResult();
+            /**
+             * ⛓⛓ THE MAP TAB'S DOOR (APWORLD SUBSTRATE CHANGE H1, plan §46; trap 1492).
+             * Until H1 this row went through the Sidecars tab: once slot A carried
+             * entries, the Map tab for bare slot B drew slot A's map (the hub took
+             * `reconstructResultFromSidecars`' fallback — status "(slot A)"), so its
+             * "No map" state and the door in it never appeared. The hub now asks for
+             * NO fallback, so slot B's Map is its own empty state — asserted here for
+             * the second slot, where the fallback used to answer — and the Sidecars-tab
+             * workaround is retired.
+             */
+            selectTab(panel, 'map');
+            const door = await testController.pollForValue(initDoor, `slot ${slot}'s Initialise door`, 8000, 50);
+            testController.reportCondition(`slot ${slot} is bare: the Map tab offers the door`, !!door);
+            if (!door) return testController.getOverallResult();
+            if (slot === b) {
+                const intro = document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`)?.textContent ?? '';
+                testController.reportCondition(`⛓⛓ slot ${b}'s Map is its OWN empty state, beside populated slot ${a}: `
+                    + `"${intro.slice(0, 80)}…"`, intro.startsWith('No map for this world')
+                    && intro.includes(`player slot ${b} carries no sidecars`));
+                testController.reportCondition(`…and no map of slot ${a} is drawn for it (status: "${panel.statusLabel?.textContent}")`,
+                    !document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`)
+                    && !(panel.statusLabel?.textContent ?? '').includes(`grid (slot ${a})`));
+            }
+            door.click();
+            if (!await testController.pollForValue(initSection, 'the Initialise form', 8000, 50)) {
+                return testController.getOverallResult();
+            }
+            const st = panel._initialise.state;
+            const plan = initPlan(panel.rulesDoc, slot, { gridDims: { width: st.side, height: st.side } });
+            testController.reportCondition(`⛓ slot ${slot}: the form's layout places every reachable region `
+                + `(${plan.placed}/${plan.total})`, plan.ok && plan.placed > 0
+                && plan.unplaced.every((u) => u.why === P1B_UNPLACED_WHY.NO_INCOMING));
+            if (loopMode) {
+                if (!await s3LogAndToggle(testController, panel, subject.path)) return testController.getOverallResult();
+                if (!await s3TurnOn(testController, panel)) return testController.getOverallResult();
+            }
+            const aBefore = p1bBlocksOf(panel.rulesDoc, a);
+            const run = await pressInitialise(testController, panel, 60000);
+            testController.reportCondition(`slot ${slot}: the build succeeded`, run?.outcome?.ok === true);
+            if (!run?.outcome?.ok) return testController.getOverallResult();
+            const op = panel.session.ops().at(-1);
+            const doc = panel.rulesDoc;
+            testController.assertEqual(`⛓⛓ slot ${slot}: procgen_metadata[${slot}] is the op's result`,
+                JSON.stringify(op?.result?.procgen_metadata), JSON.stringify(doc.procgen_metadata?.[slot]));
+            testController.assertEqual(`⛓⛓ slot ${slot}: loop_costs[${slot}] is the op's result (${loopMode ? 'ON' : 'OFF — absent'})`,
+                JSON.stringify(op?.result?.loop_costs ?? null), JSON.stringify(doc.loop_costs?.[slot] ?? null));
+            testController.reportCondition(`slot ${slot}: loop mode ${loopMode ? 'wrote' : 'did not write'} the block`,
+                Object.hasOwn(doc.loop_costs ?? {}, slot) === loopMode);
+            const done = slot === a ? [a] : [a, b];
+            testController.assertEqual('⛓⛓ no `procgen_metadata` block under any other slot',
+                done.join(','), Object.keys(doc.procgen_metadata ?? {}).sort((x, y) => x - y).join(','));
+            testController.assertEqual('⛓⛓ …nor `loop_costs`', loopMode ? String(slot) : '',
+                Object.keys(doc.loop_costs ?? {}).join(','));
+            testController.assertEqual('…nor sidecar entries', done.join(','),
+                Object.keys(doc.preset_sidecars ?? {}).filter((p) => Object.keys(doc.preset_sidecars[p] ?? {}).length > 0)
+                    .sort((x, y) => x - y).join(','));
+            if (slot === b) {
+                testController.assertEqual(`⛓⛓ slot ${a}'s blocks are byte-identical after slot ${b}'s run`,
+                    aBefore, p1bBlocksOf(doc, a));
+            }
+            placed[slot] = Object.keys(doc.preset_sidecars?.[slot] ?? {}).length;
+            testController.assertEqual(`slot ${slot}: one sidecar entry per placed region`, String(plan.placed), String(placed[slot]));
+        }
+        testController.assertEqual('⛓ TWO ops landed', String(opsBefore + 2), String(panel.session.ops().length));
+
+        // ⛓ The Map and the loop-mode sentence, per slot — read with each slot selected in turn.
+        for (const slot of [a, b]) {
+            if (!await p1bSelect(testController, panel, slot)) return testController.getOverallResult();
+            testController.assertEqual(`⛓ slot ${slot}: the Map draws its placed regions`,
+                String(placed[slot]), await p1bMapRegions(testController, panel));
+            const sentence = await p1bSwitchSentence(testController, panel);
+            const other = slot === a ? b : a;
+            testController.reportCondition(`⛓⛓ slot ${slot}: the loop-mode sentence names player ${slot}, `
+                + `not ${other}: "${sentence.slice(0, 90)}…"`,
+            new RegExp(`\\b[Pp]layer ${slot}\\b`).test(sentence) && !new RegExp(`\\b[Pp]layer ${other}\\b`).test(sentence));
+            testController.reportCondition(`…and says loop mode is ${slot === b ? 'ON' : 'OFF'} for it`,
+                sentence.includes(slot === b ? 'enables loop mode' : 'loop mode is OFF'));
+        }
+
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        undo?.click();
+        undo?.click();
+        const back = await testController.pollForCondition(() => JSON.stringify(panel.rulesDoc) === before,
+            'two Undos restored the document', 8000, 50);
+        testController.reportCondition('⛓⛓ Undo ×2 restores the document byte for byte', back);
+        testController.assertEqual('…and the op list', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('two-slot initialise test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-two-slots-initialise-in-turn',
+    name: 'APWorld hub: two bare slots of a classic multi-slot document initialised in turn (the second with loop mode) — each slot\'s own blocks, the first untouched, Map and loop-mode sentence per slot, Undo ×2',
+    description: 'APWORLD SUBSTRATE CHANGE P1b′. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldTwoSlotsInitialiseInTurn,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ SUBSTRATE CHART S4 — THE HUB'S TWO SUBSTRATE PICKERS SHOW THE LABEL AND
+ * CARRY THE CARD (substrate-chart plan §6′.1 item 9, ⚖ the user 2026-09-28).
+ *
+ * The PICKER is the subject, the vocabulary module the oracle: every option's
+ * visible text is the live registry entry's `label`, its title
+ * `cardText(cardOf(entry, capabilityRows(getAll())))` computed HERE, and what
+ * it stores is unchanged — the sidecar select's value is still the enum index
+ * (its id on `data-enum-value`), the Initialise select's value the id. A
+ * closed select's title is the chosen option's card (W0 (a): Chromium shows an
+ * option's title on the OPEN list too; the select's own title covers the closed
+ * control and the browsers that ignore option titles). The row ends by closing
+ * the Initialise form it opened.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The card text the vocabulary gives `id` over the LIVE registry. */
+const liveCardText = (id) => {
+    const entries = substrateRegistry.getAll();
+    const entry = substrateRegistry.get(id);
+    return entry ? cardText(cardOf(entry, capabilityRows(entries))) : null;
+};
+
+export async function apworldSubstratePickersShowLabelAndCard(testController) {
+    try {
+        /* ── (3) the sidecar block's `substrate` picker ── */
+        const slot = '3';
+        const disk = await (await fetch(FOUR_PLAYER_PATH)).json();
+        const region = Object.keys(disk.preset_sidecars?.[slot] ?? {})[0];
+        testController.reportCondition(`⛓ premise: slot ${slot} of the fixture holds a sidecar region (${region})`, !!region);
+        if (!region) return testController.getOverallResult();
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, slot, region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition(`slot ${slot} selected`, await onRegionsTabFor(testController, panel, slot));
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        testController.reportCondition('the entry\'s substrate row draws a select', picker?.tagName === 'SELECT');
+        if (!picker) return testController.getOverallResult();
+        const law = playableIdsFromRegistry();
+        const options = [...picker.options].filter((o) => !o.disabled);
+        testController.assertEqual('⛓ the options\' ids are the registry\'s playable ids, sorted (the value list unchanged)',
+            JSON.stringify(law), JSON.stringify(options.map((o) => o.dataset.enumValue)));
+        const bad = [];
+        options.forEach((o, i) => {
+            const entry = substrateRegistry.get(o.dataset.enumValue);
+            if (o.value !== String(i)) bad.push(`${o.dataset.enumValue}: value ${o.value} ≠ index ${i}`);
+            if (o.textContent !== (entry?.label ?? o.dataset.enumValue)) bad.push(`${o.dataset.enumValue}: text "${o.textContent}"`);
+            if (o.title !== liveCardText(o.dataset.enumValue)) bad.push(`${o.dataset.enumValue}: title is not its card`);
+        });
+        testController.reportCondition(`⛓⛓ every sidecar option shows its entry's label and hovers its card (${bad.join('; ') || 'all'})`,
+            bad.length === 0 && options.length > 0);
+        testController.reportCondition('⛓ non-vacuity: some label differs from its id',
+            options.some((o) => o.textContent !== o.dataset.enumValue));
+        const own = String(panel.rulesDoc.preset_sidecars[slot][region].substrate);
+        testController.reportCondition(`the select's title leads with the chosen substrate's (${own}) card, then the picker clause`,
+            picker.title.startsWith(`${liveCardText(own)}\n\n`) && picker.title.includes(SUBSTRATE_PICKER_CLAUSE));
+
+        /* ── (4) the Initialise form's target select ── */
+        const ini = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!ini) return testController.getOverallResult();
+        const sub = () => initSection()?.querySelector('.apworld-initialise-substrate');
+        const targets = s1Targets();
+        testController.assertEqual('⛓ the Initialise options\' VALUES are initialiseTargets() (the ids, unchanged)',
+            JSON.stringify(targets), JSON.stringify([...sub().options].map((o) => o.value)));
+        const badIni = [...sub().options].filter((o) => o.textContent !== (substrateRegistry.get(o.value)?.label ?? o.value)
+            || o.title !== liveCardText(o.value)).map((o) => o.value);
+        testController.reportCondition(`⛓⛓ every Initialise option shows its entry's label and hovers its card (${badIni.join(', ') || 'all'})`,
+            badIni.length === 0 && targets.length > 0);
+        testController.assertEqual(`the select's title is the chosen target's (${sub().value}) card`,
+            String(liveCardText(sub().value)), sub().title);
+        const other = targets.find((t) => t !== sub().value);
+        testController.reportCondition(`⛓ premise: a second target to pick (${other})`, !!other);
+        if (other) {
+            sub().value = other;
+            sub().dispatchEvent(new Event('change', { bubbles: true }));
+            const moved = await testController.pollForCondition(() => ini._initialise?.state?.substrate === other
+                && sub()?.value === other, `the form holds \`${other}\``, 8000, 50);
+            testController.reportCondition(`the form stores the id \`${other}\``, moved);
+            testController.assertEqual(`…and the redrawn select's title is \`${other}\`'s card`,
+                String(liveCardText(other)), String(sub()?.title));
+        }
+    } finally {
+        initSection()?.querySelector('.apworld-initialise-close')?.click();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-substrate-pickers-show-label-and-card',
+    name: 'APWorld hub: the sidecar substrate picker and the Initialise target select show each entry\'s label and hover its capability card; the stored value is unchanged',
+    description: 'SUBSTRATE CHART S4. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldSubstratePickersShowLabelAndCard,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── .APWORLD BUILD ─────────────────────────────────────────────────────────
+import { loadJSZipBrowser, JSZIP_SCRIPT } from '../../presets/loadJSZipBrowser.js';
+
+/**
+ * ⛓⛓ **.APWORLD — REAL PYTHON, THE BYTES READ BACK.** Presses the hub's
+ * `⭳ .apworld` through its handler, which boots Pyodide (from the CDN, on the
+ * first build), runs the real `world_generator` and saves a zip. As with the
+ * rules.json row, `URL.createObjectURL` is intercepted and the BLOB is what is
+ * checked: it must open as a zip rooted at the directory its file is named
+ * after (AP refuses any other naming), carry a stamped manifest naming the
+ * game typed into the name field, and generate the working copy's own
+ * locations — an edit made in the session must reach `Locations.py`.
+ */
+export async function apworldBuildDownloadsALoadableApworld(testController) {
+    const realCreate = URL.createObjectURL;
+    const realClick = HTMLAnchorElement.prototype.click;
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        let captured = null;
+        let clicked = null;
+        URL.createObjectURL = function intercept(blob) {
+            captured = blob;
+            return realCreate.call(URL, blob);
+        };
+        HTMLAnchorElement.prototype.click = function noDownload() {
+            clicked = { download: this.download };
+        };
+
+        const renamed = 'Apworld Build Row';
+        const marker = 'Apworld Build Row Location';
+        const target = (() => {
+            for (const [region, data] of Object.entries(panel._regions())) {
+                const index = (data?.locations ?? []).findIndex(loc => loc?.name);
+                if (index >= 0) return { region, index };
+            }
+            return null;
+        })();
+        const locationName = !!target;
+        testController.reportCondition('the document has a location to rename', locationName);
+        if (target) {
+            panel._applyOp({ op: 'rename-location', ...target, to: marker, player: panel.playerId });
+        }
+        panel.apworldNameInput.value = renamed;
+
+        const built = await panel._handleApworldDownload();
+        testController.log(`status: ${panel.statusLabel.textContent}`);
+        testController.reportCondition('the build succeeded', !!built);
+        testController.reportCondition('…and saved a Blob through an anchor', !!captured && !!clicked);
+        if (!built || !captured || !clicked) return testController.getOverallResult();
+
+        const dir = built.gameDirectory;
+        testController.assertEqual('the file is named after its directory',
+            `${dir}.apworld`, String(clicked.download));
+
+        const JSZip = await loadJSZipBrowser({ src: JSZIP_SCRIPT });
+        const zip = await JSZip.loadAsync(await captured.arrayBuffer());
+        const names = Object.keys(zip.files).filter(n => !zip.files[n].dir);
+        testController.reportCondition('the zip has files', names.length > 0);
+        testController.reportCondition('…all under the one directory',
+            names.every(n => n.startsWith(`${dir}/`)));
+        testController.reportCondition('…including the package __init__.py',
+            names.includes(`${dir}/__init__.py`));
+
+        const manifest = JSON.parse(await zip.file(`${dir}/archipelago.json`).async('string'));
+        testController.assertEqual('the manifest names the game typed in', renamed, String(manifest.game));
+        testController.reportCondition('…and carries the container stamp',
+            Number.isInteger(manifest.compatible_version));
+
+        if (locationName) {
+            const locations = await zip.file(`${dir}/Locations.py`).async('string');
+            testController.reportCondition('a working-copy edit reached Locations.py',
+                locations.includes(marker));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('apworld build test error-free', false);
+    } finally {
+        URL.createObjectURL = realCreate;
+        HTMLAnchorElement.prototype.click = realClick;
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-build-downloads-a-loadable-apworld',
+    name: 'APWorld hub: ⭳ .apworld runs world_generator in the browser and saves a zip AP can load',
+    description: 'Boots Pyodide (CDN), builds the working copy through world_generator.apworld, and '
+               + 'reads the saved Blob back as a zip: named after its root directory, manifest '
+               + 'stamped and renamed, and a session edit present in Locations.py.',
+    testFunction: apworldBuildDownloadsALoadableApworld,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── .APWORLD BUILD: THE LOSSY TOGGLE (rule-node R2c) ──────────────────────
+import { LOSSY_BUILD_KEY, LOSSY_BUILD_SETTING, lossyBuildOn } from '../../apworldEditor/lossyBuild.js';
+
+/** yachtdice's helper bodies live only in its JS gameLogic module, so world_generator strict-fails on it. */
+const LOSSY_ROW_PRESET = './presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const LOSSY_ROW_HELPER = 'dice_simulation_state_change';
+
+/**
+ * ⛓⛓ **LOSSY IS OPT-IN, AND A LOSSY BUILD IS NEVER SILENT.** On yachtdice (one
+ * of the presets `world_generator` strict-fails on, by name), through the real
+ * toolbar checkbox and the real Pyodide build:
+ *   OFF (the default) → the build fails, the status names the helper and the
+ *   game and points at the toggle; no record is shown.
+ *   ON (a click, which writes the setting) → the build succeeds, the status says
+ *   LOSSY, and the record block lists the helper with its count, the heading's
+ *   total being the record's. Rules.py carries the placeholder.
+ * The setting is put back as it was.
+ */
+export async function apworldBuildLossyToggle(testController) {
+    const realCreate = URL.createObjectURL;
+    const realClick = HTMLAnchorElement.prototype.click;
+    const before = lossyBuildOn(await settingsManager.getSetting(LOSSY_BUILD_SETTING));
+    try {
+        await settingsManager.updateModuleSetting('apworldEditor', LOSSY_BUILD_KEY, false);
+        const panel = await openHub(testController, LOSSY_ROW_PRESET, 20000);
+        if (!panel) return testController.getOverallResult();
+        let captured = null;
+        URL.createObjectURL = function intercept(blob) {
+            captured = blob;
+            return realCreate.call(URL, blob);
+        };
+        HTMLAnchorElement.prototype.click = function noDownload() {};
+
+        const box = panel.apworldLossyInput;
+        const record = panel.apworldLossyRecord;
+        const off = await testController.pollForCondition(() => box?.checked === false,
+            'the lossy checkbox mirrors the OFF setting', 5000, 50);
+        testController.reportCondition('OFF: the checkbox is unchecked', off);
+
+        const strict = await panel._handleApworldDownload();
+        const status = String(panel.statusLabel.textContent);
+        testController.log(`strict status: ${status}`);
+        testController.reportCondition('OFF: the build fails', strict === null && captured === null);
+        testController.reportCondition(`…naming the helper \`${LOSSY_ROW_HELPER}\` and the game`,
+            status.includes(LOSSY_ROW_HELPER) && status.includes('Yacht Dice'));
+        testController.reportCondition('…and pointing at the lossy toggle', status.includes('tick "lossy"'));
+        testController.reportCondition('…with no lossy record shown', record?.hidden === true);
+
+        box.checked = true;
+        box.dispatchEvent(new Event('change', { bubbles: true }));
+        const saved = await testController.pollForCondition(
+            async () => (await settingsManager.getSetting(LOSSY_BUILD_SETTING)) === true,
+            'the checkbox wrote the setting', 5000, 50);
+        testController.reportCondition('ON: a click saves the setting', saved);
+
+        const built = await panel._handleApworldDownload();
+        const lossyStatus = String(panel.statusLabel.textContent);
+        testController.log(`lossy status: ${lossyStatus}`);
+        testController.reportCondition('ON: the build succeeds', !!built && !!captured);
+        if (!built) return testController.getOverallResult();
+        const placeholders = built.lossyPlaceholders ?? {};
+        const name = `rule_builder helper:helper ${LOSSY_ROW_HELPER}`;
+        const count = placeholders[name];
+        testController.reportCondition(`…its record carries \`${name}\` (×${count})`,
+            Number.isInteger(count) && count > 0);
+        const total = Object.values(placeholders).reduce((a, b) => a + b, 0);
+        testController.reportCondition('…the status says LOSSY with the total',
+            lossyStatus.includes(`LOSSY: ${total} always-true placeholder`));
+        testController.reportCondition('…and the record block is SHOWN', record?.hidden === false);
+        testController.assertEqual('…with the record\'s total', String(total), String(record?.dataset.total));
+        const lines = [...(record?.querySelectorAll('.apworld-build-lossy-entry') ?? [])].map(li => li.textContent);
+        testController.reportCondition(`…listing the helper with its count (${lines.join('; ')})`,
+            lines.includes(`${name} ×${count}`) && lines.length === Object.keys(placeholders).length);
+
+        const JSZip = await loadJSZipBrowser({ src: JSZIP_SCRIPT });
+        const zip = await JSZip.loadAsync(await captured.arrayBuffer());
+        const rules = await zip.file(`${built.gameDirectory}/Rules.py`)?.async('string');
+        testController.reportCondition('Rules.py carries the always-true placeholder', !!rules && rules.includes('True_()'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('lossy toggle test error-free', false);
+    } finally {
+        URL.createObjectURL = realCreate;
+        HTMLAnchorElement.prototype.click = realClick;
+        await settingsManager.updateModuleSetting('apworldEditor', LOSSY_BUILD_KEY, before);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-build-lossy-toggle',
+    name: 'APWorld hub: the .apworld build is strict by default (errors by name) and lossy only through the toggle, which shows its record',
+    description: 'rule-node R2c. yachtdice: OFF fails naming the helper + game and points at the toggle; '
+               + 'ON (the real checkbox, saved as a setting) builds, says LOSSY, and lists every placeholder with its count.',
+    testFunction: apworldBuildLossyToggle,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

@@ -15,21 +15,22 @@
  *     v1.1 will swap this for `pickNextTarget` from the forward
  *     simulator (or sphere-log replay when one is loaded).
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/debugging-tools.md (Phase 3)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import {
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     step,
     detectStepEvents,
     getObstacle,
     getExitAt,
     isFloor,
     createState,
+    hasItemActions,
+    sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import { PlaybackClock } from '../shared/playbackClock.js';
-import { findPath, stepsToInputs } from './mazeAutopather.js';
+import { findPath, stepsToInputs, planItemActions } from './mazeAutopather.js';
 
 const STEP_DELTAS = {
     [INPUT_N]: { dx: 0,  dy: -1 },
@@ -41,8 +42,20 @@ const STEP_DELTAS = {
 const DEFAULT_RATE_HZ = 4;
 
 export class MazeRoomVisualizer {
-    constructor({ eventBus = null, onStateChange = null, onExitCross = null, onLocationCheck = null } = {}) {
+    constructor({
+        eventBus = null, onStateChange = null, onExitCross = null, onLocationCheck = null,
+        // X1: symmetric to _onLocationCheck but for the two consumable
+        // tile types, which are NOT AP locations and so must never go
+        // through the locationCheck path.
+        onConsumableGrant = null, onManaGrant = null,
+        // ⛓ SHARED LEVEL WORLD: called with `{boundary, sourceRegion,
+        // targetRegion, exitName}` when a walk steps onto a cell another AP
+        // region of the same level world owns. The walk does NOT pause — the
+        // world, and so the walk's state, is the same on both sides.
+        onRegionCross = null,
+    } = {}) {
         this._eventBus = eventBus;
+        this._onRegionCross = onRegionCross;
         this._onStateChange = onStateChange;
         // Called when the visualizer steps onto an exit tile that has
         // a targetRegion. Caller (the panel) translates this into a
@@ -74,10 +87,33 @@ export class MazeRoomVisualizer {
         this._awaitingRegionLoad = false;
 
         this._state = null;            // { player_pos: {x,y}, turn }
-        this._inventory = new Set();   // Set<itemId>
+        // Map<itemId, count>, never a Set. Counts are load-bearing: a
+        // `Has(item, count: 2)` gate opens at one copy if the shape collapses,
+        // and the planner and the renderer would then disagree with the
+        // engine. One shape, one evaluator, both paths — see setInventory.
+        this._inventory = new Map();
+        // Forwarded to isObstacleCleared by BOTH the tile planner and step(),
+        // so a rule-typed gate is judged the same way whichever path moves the
+        // player. Null = fall back to the procgen-local subset evaluator.
+        this._clearanceOpts = null;
         this._checkedLocations = new Set(); // Set<locationName>
         this._visitedItemPositions = new Set(); // Set<"x,y"> picked up
         this._visitedExits = new Set(); // Set<exit_id> already crossed
+        // X1 consumable tiles. Keyed by REGION + posKey rather than by
+        // AP location name, because these tiles deliberately have no
+        // location name to hang off stateManager's checkedLocations
+        // (D10). Region-qualified so the same coordinates in two regions
+        // stay independent — unlike _visitedItemPositions, this set has
+        // to survive cross-region continuations.
+        //
+        // Cleared wholesale on a loop reset (X1-R1: collected tiles are
+        // always available again in the next loop). Outside loop mode
+        // nothing clears it, which is exactly the ruled one-shot-per-
+        // world behaviour — non-loop worlds have no resets by
+        // construction.
+        this._collectedConsumables = new Set(); // Set<"region|x,y">
+        this._onConsumableGrant = onConsumableGrant ?? null;
+        this._onManaGrant = onManaGrant ?? null;
         this._target = null;           // { x, y, kind, name }
         this._plan = [];               // remaining inputs to reach target
         this._planIdx = 0;
@@ -108,6 +144,15 @@ export class MazeRoomVisualizer {
      * there. Without it, the visualizer notifies the panel back with
      * world.entrance and the arrival position is silently clobbered.
      */
+    /**
+     * ⛓ SHARED LEVEL WORLD: the player crossed into another AP region of the
+     * SAME world. Only the region changes — no state reset, no notify (the
+     * panel is the one telling us).
+     */
+    setRegion(regionId) {
+        this._regionId = regionId ?? null;
+    }
+
     setWorld(world, regionId, { freshStart = false, spawnAt = null } = {}) {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;
@@ -169,10 +214,16 @@ export class MazeRoomVisualizer {
     reset({ silent = false } = {}) {
         this._clock.stop();
         this._state = this._world ? createState(this._world) : null;
-        this._inventory = new Set();
+        this._inventory = new Map();
         this._checkedLocations = new Set();
         this._visitedItemPositions = new Set();
         this._visitedExits = new Set();
+        // X1: a full reset starts a clean session, so collected
+        // consumable / mana tiles come back too — same reasoning as
+        // _checkedLocations above. Without this the set would leak
+        // across preset loads (the panel instance outlives them),
+        // silently suppressing grants in a freshly loaded world.
+        this._collectedConsumables = new Set();
         this._target = null;
         this._plan = [];
         this._planIdx = 0;
@@ -228,11 +279,33 @@ export class MazeRoomVisualizer {
      * pathfinder refuses to plan through them.
      */
     setInventory(inventory) {
-        if (inventory instanceof Set) {
-            this._inventory = new Set(inventory);
-        } else if (inventory && typeof inventory[Symbol.iterator] === 'function') {
-            this._inventory = new Set(inventory);
+        if (inventory instanceof Map) {
+            this._inventory = new Map(inventory);
+        } else if (inventory instanceof Set
+            || (inventory && typeof inventory[Symbol.iterator] === 'function')) {
+            // A count-collapsed source (a Set, or an array of ids). Every id
+            // counts once — the best that shape can say.
+            this._inventory = new Map();
+            for (const id of inventory) {
+                this._inventory.set(id, (this._inventory.get(id) ?? 0) + 1);
+            }
+        } else if (inventory && typeof inventory === 'object') {
+            this._inventory = new Map(Object.entries(inventory));
         }
+    }
+
+    /**
+     * Install the clearance-options bag (typically
+     * `{ evaluateRule: <stateManager-backed Rule Builder evaluator> }`) used
+     * for `clear_set_type: 'rule'` obstacles.
+     *
+     * The panel's keyboard / queue path has always passed this to `step`; the
+     * walkTo path planned and stepped WITHOUT it, so the two disagreed on
+     * every rule the local subset evaluator cannot express. Setting it here
+     * makes _planTilePath and _tick use the caller's evaluator too.
+     */
+    setClearanceOpts(opts) {
+        this._clearanceOpts = opts ?? null;
     }
 
     isRunning() { return this._clock.isRunning(); }
@@ -317,7 +390,7 @@ export class MazeRoomVisualizer {
                 attempted: { x, y },
                 obstacleId: null,
                 obstacleRule: null,
-                inventory: [...this._inventory],
+                inventory: [...this._inventory.keys()],
                 reason: 'unreachable',
                 description: `walkToTile: no path from (${this._state.player_pos.x},${this._state.player_pos.y}) to (${x},${y}) under current inventory.`,
             });
@@ -333,7 +406,21 @@ export class MazeRoomVisualizer {
     getState() {
         return {
             player_pos: this._state ? { ...this._state.player_pos } : null,
-            inventory: new Set(this._inventory),
+            // ⚠ S2a found this MISSING. The maze panel's `_onVisualizerChange`
+            // has always read `vState.turn` to spot a WAIT — a tick where the
+            // player did not move but a turn passed — and drive the
+            // `waitHappened` branch (mana, bestPath, queue mirror, hazard
+            // tick) off it. `turn` was never in this bag, so `typeof
+            // vState.turn === 'number'` was false on every tick and that whole
+            // branch was DEAD: a wait in a loops-delegated plan advanced no
+            // queue icon and ticked no hazard. Exposing it arms the reader
+            // that was already written for it.
+            turn: this._state ? this._state.turn : null,
+            // ⛓ ITEM ACTIONS: present only when the state carries them (an
+            // item-action world), so every other getState() bag is unchanged.
+            ...(this._state?.facing !== undefined ? { facing: this._state.facing } : {}),
+            ...(this._state?.broken !== undefined ? { broken: this._state.broken.slice() } : {}),
+            inventory: new Map(this._inventory),
             checkedLocations: new Set(this._checkedLocations),
             target: this._target ? { ...this._target } : null,
             log: this._log.slice(),
@@ -378,30 +465,14 @@ export class MazeRoomVisualizer {
 
         const input = this._plan[this._planIdx];
         const oldPos = { ...this._state.player_pos };
-        // Wait input: skip engine.step entirely. The player stays in
-        // place; only the turn counter advances. Log the wait so the
-        // playback log shows it, and notify so the substrate's
-        // _onVisualizerChange ticks hazards + advances the action
-        // queue for this turn (matches a normal step's downstream
-        // effects, minus the actual move).
-        if (input === INPUT_WAIT) {
-            this._state.turn += 1;
-            this._planIdx += 1;
-            this._log.push({
-                type: 'step',
-                input: INPUT_WAIT,
-                from: oldPos,
-                to: { ...oldPos },
-                turn: this._state.turn,
-                events: [],
-                target: this._target ? { ...this._target } : null,
-            });
-            if (this._planIdx >= this._plan.length) this._target = null;
-            this._publishSnapshot();
-            this._notifyChange();
-            return;
-        }
-        const next = step(this._world, this._state, input, this._inventory);
+        // ⛓ S2a: a WAIT takes the SAME path as every other input. The
+        // private branch that used to sit here (turn += 1, its own log row,
+        // its own notify) is gone — `step` returns a clone with `turn + 1`
+        // and the player where they were, `detectStepEvents` emits nothing
+        // when the position did not change, and the log row below writes
+        // `from === to` off the returned state. Same behaviour, one author.
+        const next = step(this._world, this._state, input, this._inventory,
+            this._clearanceOpts ?? undefined);
 
         if (next === null) {
             // Blocked — log with rule eval, then halt and let the
@@ -415,6 +486,20 @@ export class MazeRoomVisualizer {
 
         this._state = next;
         this._planIdx += 1;
+
+        // ⛓ SHARED LEVEL WORLD: arriving on a cell another AP region owns is
+        // a crossing. Region first, so the step's own events (a pickup on the
+        // boundary cell) are filed under the region the player is now in.
+        const crossing = sharedWorldCrossing(this._world, this._regionId, next.player_pos.x, next.player_pos.y);
+        if (crossing) {
+            this._regionId = crossing.targetRegion;
+            this._log.push({
+                type: 'region_cross',
+                ...crossing,
+                description: `Crossed into ${crossing.targetRegion} at (${crossing.boundary}).`,
+            });
+            if (this._onRegionCross) this._onRegionCross(crossing);
+        }
 
         const events = detectStepEvents(this._world, oldPos, next.player_pos, this._inventory);
         const eventDescriptions = [];
@@ -442,6 +527,42 @@ export class MazeRoomVisualizer {
         this._notifyChange();
     }
 
+    /**
+     * Clear collected-consumable state so every consumable and mana tile
+     * is available again (X1-R1). Called by the panel on
+     * gameState:loopReset. Deliberately does NOT touch _checkedLocations
+     * — AP location checks persist across loops (D10 notes them as
+     * unaffected), and the maze never compensates for what a receiving
+     * substrate does with the items it was granted (each substrate owns
+     * its own inventory reset).
+     */
+    resetCollectedConsumables() {
+        this._collectedConsumables.clear();
+    }
+
+    /** Renderer query: has this consumable / mana tile been collected? */
+    isConsumableCollected(regionId, x, y) {
+        return this._collectedConsumables.has(`${regionId ?? '?'}|${x},${y}`);
+    }
+
+    /**
+     * Claim a consumable / mana tile, returning true only on the FIRST
+     * claim within the current loop.
+     *
+     * This set is the single source of truth for both play surfaces:
+     * the visualizer's own tick path (bot play) and the panel's
+     * _publishPlaybackEvents (keyboard play) both funnel through here,
+     * so walking back and forth over a tile cannot re-grant regardless
+     * of who is driving. The panel calls it with an explicit regionId
+     * because keyboard play can outrun the visualizer's _regionId.
+     */
+    claimConsumable(regionId, x, y) {
+        const key = `${regionId ?? '?'}|${x},${y}`;
+        if (this._collectedConsumables.has(key)) return false;
+        this._collectedConsumables.add(key);
+        return true;
+    }
+
     _handleEvent(ev) {
         if (ev.type === 'pickup') {
             const itemId = ev.itemId;
@@ -461,7 +582,7 @@ export class MazeRoomVisualizer {
             // Inventory + visited-position tracking is idempotent and
             // useful even on repeats (e.g. for fog-of-war seen-set
             // bookkeeping), so update those unconditionally.
-            this._inventory.add(itemId);
+            this._inventory.set(itemId, (this._inventory.get(itemId) ?? 0) + 1);
             this._visitedItemPositions.add(key);
             if (locationName) this._checkedLocations.add(locationName);
             if (alreadyChecked) return null;
@@ -479,6 +600,35 @@ export class MazeRoomVisualizer {
                 this._onLocationCheck(locationName, itemId, this._regionId);
             }
             return `pickup ${itemId}`;
+        }
+        if (ev.type === 'consumable_pickup') {
+            // One-shot within a loop; the whole set clears on loop reset
+            // (X1-R1). No stateManager involvement — these are not AP
+            // locations (D10), so there is no checkedLocations entry and
+            // nothing to seed from a snapshot.
+            if (!this.claimConsumable(this._regionId, ev.position.x, ev.position.y)) return null;
+            const { substrate, type, count } = ev.grant;
+            this._log.push({
+                type: 'consumable_pickup',
+                grant: { substrate, type, count },
+                position: { ...ev.position },
+                description: `Collected ${count}x ${substrate}/${type}.`,
+            });
+            if (this._onConsumableGrant) {
+                this._onConsumableGrant(ev.grant, this._regionId);
+            }
+            return `consumable ${substrate}/${type}`;
+        }
+        if (ev.type === 'mana_pickup') {
+            if (!this.claimConsumable(this._regionId, ev.position.x, ev.position.y)) return null;
+            this._log.push({
+                type: 'mana_pickup',
+                amount: ev.amount,
+                position: { ...ev.position },
+                description: `Refilled ${ev.amount} mana.`,
+            });
+            if (this._onManaGrant) this._onManaGrant(ev.amount, this._regionId);
+            return `mana +${ev.amount}`;
         }
         if (ev.type === 'exit_cross') {
             const exit = this._world.exits?.get(ev.exit_id);
@@ -517,7 +667,7 @@ export class MazeRoomVisualizer {
         } else if (obstacleId) {
             const obstacle = this._world.obstacleLib?.[obstacleId];
             const ruleStr = obstacle?.clear_rule ? describeRule(obstacle.clear_rule) : '(no clear_rule)';
-            const inventoryList = [...this._inventory].sort().join(', ') || '(empty)';
+            const inventoryList = [...this._inventory.keys()].sort().join(', ') || '(empty)';
             reason = 'obstacle';
             detail = `Blocked by ${obstacleId} — clear_rule: ${ruleStr}; inventory: {${inventoryList}}`;
         } else {
@@ -530,7 +680,7 @@ export class MazeRoomVisualizer {
             attempted: { x: nx, y: ny },
             obstacleId: obstacleId ?? null,
             obstacleRule: obstacleId ? this._world.obstacleLib?.[obstacleId]?.clear_rule ?? null : null,
-            inventory: [...this._inventory],
+            inventory: [...this._inventory.keys()],
             reason,
             description: `Tried ${input} from (${pos.x},${pos.y}) — ${detail}`,
         });
@@ -595,6 +745,19 @@ export class MazeRoomVisualizer {
     }
 
     _planTilePath(target) {
+        // ⛓ ITEM ACTIONS (⚖ "Plan strikes"): on an item-action world without
+        // hazards the plan is made over the ENGINE's own states, so it may
+        // turn and strike a rock on the way; every other world keeps the
+        // tile planner below, unchanged.
+        if (hasItemActions(this._world) && !(this._world.hazards?.length > 0)) {
+            const planned = planItemActions(this._world, this._state,
+                { kind: 'tile', x: target.x, y: target.y }, {
+                    inventory: this._inventory,
+                    clearanceOpts: this._clearanceOpts ?? undefined,
+                    excludeOtherExits: true,
+                });
+            return planned ? planned.inputs : null;
+        }
         // Delegates to the shared autopather. Inventory + obstacleLib
         // give it the same locked-door-aware behavior as the previous
         // inline BFS. excludeOtherExits matches the prior heuristic of
@@ -608,14 +771,19 @@ export class MazeRoomVisualizer {
             {
                 inventory: this._inventory,
                 obstacleLib: this._world?.obstacleLib,
+                // The SAME bag _tick hands to step(). One evaluator, both
+                // paths — a route the planner allows is a route the engine
+                // will walk, and vice versa.
+                clearanceOpts: this._clearanceOpts ?? undefined,
                 excludeOtherExits: true,
                 // Hazard-aware planning: when world.hazards is set,
                 // findPath uses time-expanded BFS to route around the
                 // hazards. Null/empty hazards falls back to the plain
                 // (faster) BFS path.
                 hazards: this._world?.hazards,
-                // Allow waiting in the plan — _tick handles INPUT_WAIT
-                // by advancing turn without moving, and the substrate's
+                // Allow waiting in the plan — a WAIT is an engine input
+                // (S2a), so _tick steps it like any other and the turn
+                // advances with the player still; the substrate's
                 // _onVisualizerChange ticks hazards + advances the
                 // queue on each wait via the waitHappened branch.
                 allowWait: true,
@@ -631,7 +799,7 @@ export class MazeRoomVisualizer {
         if (!this._eventBus?.publish) return;
         this._eventBus.publish('playback:snapshotUpdated', {
             snapshot: {
-                inventory: inventoryAsCounts(this._inventory),
+                inventory: Object.fromEntries(this._inventory),
                 checkedLocations: [...this._checkedLocations],
             },
             source: 'mazeRoomVisualizer',
@@ -641,12 +809,6 @@ export class MazeRoomVisualizer {
     _notifyChange() {
         if (this._onStateChange) this._onStateChange();
     }
-}
-
-function inventoryAsCounts(set) {
-    const out = {};
-    for (const id of set) out[id] = (out[id] ?? 0) + 1;
-    return out;
 }
 
 function describeRule(rule) {

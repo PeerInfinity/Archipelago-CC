@@ -1,0 +1,507 @@
+/**
+ * seedlingDemo/jsRuntimePage — **THE SEEDLING JS RUNTIME'S PAGE** (Seedling JS
+ * runtime J1): the DOM half of `jsRuntimeCore.js`, mounted by the flash panel
+ * as its game iframe when `moduleSettings.flashPanel.runtime` is `'js'`.
+ *
+ * It does four things and owns no game logic:
+ *
+ *  1. installs `window.__swfBridge` in the SHAPE of the wasm build's
+ *     `swf_bridge_avm2.js` — `game` (the callback table), `queueItems`,
+ *     `onStateChanged` (re-read on every report, because the host REPLACES it:
+ *     `WasmBridgeAdapter.installStateHook`), `stateLog` — and sets
+ *     `window.__runtimeReady`. Both of `wasmGamePage`'s questions answer at
+ *     once: there is no ▶ Start, because there is no GPU or audio context to
+ *     unlock (⚖ no graphics, no sound);
+ *  2. reads the keyboard on its canvas (`watchManual.KEYBOARD_BINDINGS` — the
+ *     watch page's MANUAL arm's bindings, one table);
+ *  3. paces the model at 30 ticks a second with a requestAnimationFrame
+ *     ACCUMULATOR (watchManual's "THE LOOP QUESTION": the page's clock decides
+ *     WHEN a tick runs, the model decides WHAT it does). ⚠ A hidden or
+ *     `display:none` frame gets no animation frames, so a timer PUMP keeps the
+ *     clock going when rAF has been silent for `PUMP_AFTER_MS` — the panel's
+ *     host glue (deliveries, crossings) must not stall behind a tab switch;
+ *  4. paints the room in rectangles with the watch page's palette
+ *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
+ *     the player's hitbox.
+ *
+ * ⛓ J3 — it also fetches the VANILLA map document
+ * (`flashPanel/atlases/seedling-map.json`, the one map every committed preset
+ * names, `mapDocumentPath.DEFAULT_MAP_DOCUMENT`) and hands it to the core
+ * (`setVanilla`): the atlas arm delivers nothing, so the real rooms are the
+ * vanilla ones, exactly as the wasm game runs its own tables.
+ *
+ * `window.__seedlingJsRuntime` is the core itself. J1 used it as a TEST handle
+ * (the in-app row reads the mounted rooms off it); ⛓ since J2 its `playback`
+ * member is also the HOST's: `flashPanel/seedlingPlaybackController.js` (the
+ * `flash_seedling_gen` PlaybackController) hands the Playback Bot's goals to it
+ * synchronously, and the walk then runs inside this page's own tick — while a
+ * goal is being walked the keyboard is not read.
+ *
+ * ⛓ solver-walk S2 — the page hands the core a module-Worker solve service
+ * (`jsRuntimeSolveService.createWorkerSolveService`): the solver mode's
+ * solves run off this thread, so the clock below keeps running (and painting
+ * "solving…") while one is in flight. ⛓ DETERMINISTIC BUDGET: the budget is
+ * WORK, counted in the worker — `?solverBudgetWork=<units>` on this page's URL
+ * sets it (a test knob; the default is `SOLVER_BUDGET_WORK`) and
+ * `?solverUpgradeWindowWork=<units>` the upgrade window
+ * (`jsRuntimeSolver.upgradeWindowWork`); `?solverBackstopMs=<ms>` the wall-clock
+ * backstop, which only ever FAILS a goal by name. A browser without module
+ * workers solves in place, as S1 did — said once on the console.
+ *
+ * ⛓ GRAPHICS G1 — `?graphics=<stack>` paints the room in a content-pack stack's
+ * art (`frontend/packs/packs.json` names the stacks; `seedling` = the original
+ * Seedling sheets + the Archipelago pickup) through `seedlingSkinRenderer`;
+ * absent = today's rectangles, byte for byte. `?camera=follow` shows the
+ * original 160×160 view following the player instead of the whole room
+ * (`room`, the default). Both are off-default URL params the flash panel adds
+ * from its settings, and both can be changed LIVE through
+ * `window.__seedlingJsGraphics.set({ graphics, camera })` (the panel does, so a
+ * cosmetic switch never re-mounts the game). The packs load asynchronously
+ * (`createImageBitmap`); until a sheet decodes — or if it never does — its
+ * sprites are drawn as their rectangles. The renderer only READS the run.
+ *
+ * ⛓ GRAPHICS G2 — with a stack on, the player is drawn from the pack too
+ * (`seedlingPlayerSkin.js`): `skinView(run)` is read after EVERY game tick and
+ * folded into the renderer's own FlashPunk state (`stepPlayerSkin`: the
+ * playing animation, the mirror, the hit/freeze tint, the swing), and each
+ * paint draws `playerOps`. `__seedlingJsGraphics.player` reads back the keys
+ * and frame it drew. With no stack nothing here runs.
+ *
+ * ⛓ GRAPHICS G3 — and so are the enemies, spinners and arrows
+ * (`seedlingEnemySkin.js`): `enemySkinView(run)` after every game tick, folded
+ * into each body's own FlashPunk state (`stepEnemySkin`: its Spritemap and
+ * end-of-anim callback, mirror, hit tint), and `enemyOps` at each paint; the
+ * AP items are drawn as their looks (`apItemOps`). `__seedlingJsGraphics.enemies`
+ * reads back what was drawn, body by body. With no stack nothing here runs.
+ *
+ * ⛓ GRAPHICS G3b — and so are the room bodies that are not chasers: the
+ * wallflyers, drills, ice turrets and their blasts, turrets and their spits,
+ * and the Bob Boss (`seedlingRoomBodySkin.js`: `roomBodySkinView` /
+ * `stepRoomBodySkin` after every tick, `roomBodyOps` at each paint, Y-sorted
+ * with the enemies). `__seedlingJsGraphics.roomBodies` reads them back.
+ * ⛓ G3c — the spinning axes, crushers, lava chains, the Boss Totem and its
+ * shots, the bomb pusher and its bombs, and the placed grenades
+ * (`seedlingHazardSkin.js`: `hazardSkinView` / `stepHazardSkin` after every
+ * tick, `hazardOps` at each paint, Y-sorted with the rest; their static solids
+ * are not painted again, `roomOps`' `drawnObjects`).
+ * `__seedlingJsGraphics.hazards` reads them back.
+ * ⛓ G4 — the explosions, slash hits and rain (Y-sorted with the rest), and the
+ * screen-anchored overlays on top: the talk bars and typed text (a placeholder
+ * font — ⚖ the font is open), the totem's white-out, the hearts and the load
+ * fade (`seedlingEffectSkin.js`). ⚖ The overlays sit on the MODEL's camera rect
+ * in room mode too (⚖ CLAMPED to the canvas for a room narrower than the
+ * screen, G4b F1; the talking NPC's box with its portrait and ALIGN from the
+ * run's `talkingNow`, G4b-dialogue), and follow mode jiggles inside a shake band on the
+ * renderer's own draw (user, 2026-10-21). ⛓ THE FADE HOLD: a room build's
+ * dead frames are SPENT by the run, never ticked, so with a stack on the page
+ * holds its clock for them — each owed frame is one tick slot that steps the
+ * fade (`holdEffectSkin`) instead of the run. The run's inputs and ticks are
+ * unchanged; only the wall clock waits. With no stack nothing here runs.
+ * `__seedlingJsGraphics.effects` reads them back.
+ *
+ * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
+ * grammar) sets this page's `killLockBodies` switches before its first run;
+ * absent = the defaults. The panel adds it only when its settings are
+ * off-default, and re-mounts the page when they change. The worker gets the
+ * set with each solve request (`killLockBodiesStamp`).
+ */
+
+import { createJsRuntime } from './jsRuntimeCore.js';
+import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
+import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
+import { applyAxeDodgeAsk, parseAxeDodgeAsk } from './axeDodgeAskHook.js';
+import { applyDashOnlyWindow, parseDashOnlyWindow } from './dashOnlyWindowHook.js';
+import { applyDashShape, parseDashShape } from './dashShapeHook.js';
+import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
+import { createLifetime } from './watchLifetime.js';
+import {
+    FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
+} from './rectPalette.js';
+import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
+import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
+import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
+import {
+    effectOps, effectSkinView, holdEffectSkin, holdOwed, jiggleCam, primeEffectSkin, screenOps, stepEffectSkin,
+} from './seedlingEffectSkin.js';
+import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
+import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
+
+export const TICKS_PER_SECOND = 30;
+const TICK_MS = 1000 / TICKS_PER_SECOND;
+/** At most this many ticks per frame — a long stall is skipped, not replayed. */
+const MAX_TICKS_PER_FRAME = 5;
+const PUMP_AFTER_MS = 250;
+
+const AP_ITEM_COLOUR = '#e8c040';
+const TELEPORTER_COLOUR = '#3fd8ce';
+const PLAYER_COLOUR = '#ffffff';
+/** ⛓ J3 — the vanilla map, page-relative (this page lives in `seedlingDemo/`). */
+export const VANILLA_MAP_PATH = '../flashPanel/atlases/seedling-map.json';
+
+/**
+ * ⛓ GRAPHICS G1 — load the pack STACK `name` (a key of `packs.json`'s
+ * `graphics`) and decode its sheets. Resolves `{ art, images, failed }`;
+ * a malformed pack or an unknown stack REJECTS by name (the page shows it and
+ * keeps painting rectangles).
+ */
+export async function loadGraphicsStack(name, { win = window, base = packsBaseUrl() } = {}) {
+    const readJson = async (url) => {
+        const r = await win.fetch(url, { cache: 'no-store' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+    };
+    const registry = parseRegistry(await readJson(new URL('packs.json', base).href));
+    const ids = registry.stacks[name];
+    if (!ids) throw new Error(`no graphics stack "${name}" in packs.json (have: ${Object.keys(registry.stacks).join(', ') || 'none'})`);
+    const art = createArtLibrary(await loadPackStack(ids, { base, readJson }));
+    const { images, failed } = await loadSheetImages(art, browserDecoder(win));
+    return { art, images, failed };
+}
+
+export function mountJsRuntimePage(win = window) {
+    const doc = win.document;
+    const canvas = doc.getElementById('game');
+    const status = doc.getElementById('status');
+    const ctx = canvas.getContext('2d');
+    // ⛓ Every listener goes through a lifetime (`watchLifetime.test.js`'s rule
+    // for every page module here); this page has one, for the document.
+    const life = createLifetime('seedling-js-runtime-page');
+
+    const bridge = {
+        game: {},
+        stateLog: [],
+        queueItems: (items) => runtime.queueItems(items),
+        onStateChanged: (name, value) => {
+            win.console?.log?.('[swfBridge] stateChanged (unhandled):', name, value);
+        },
+    };
+    // ⛓ S2 — the solver mode's solves run in a module Worker.
+    let solveService = null;
+    if (typeof win.Worker === 'function') {
+        solveService = createWorkerSolveService({
+            createWorker: () => new win.Worker(new URL('./jsRuntimeSolveWorker.js', import.meta.url), { type: 'module', name: 'seedling-js-solver' }),
+            clock: () => win.performance.now(),
+        });
+    } else {
+        win.console?.warn?.('[js runtime] no Worker in this browser — the solver mode solves on the page thread (S1)');
+    }
+    const params = new URL(win.location.href).searchParams;
+    const budgetParam = Number(params.get('solverBudgetWork'));
+    const windowParam = Number(params.get('solverUpgradeWindowWork'));
+    const backstopParam = Number(params.get('solverBackstopMs'));
+    // ⛓ KILLLOCK HOOK — before the runtime exists, so every run of this page steps under the same switches.
+    const killLockParam = params.get('killLockBodies');
+    if (killLockParam !== null) applyKillLockBodies(parseKillLockBodies(killLockParam, '?killLockBodies='));
+    // ⛓ CONTACT HOOK — the same, for the model's contact switches (`contactFidelity.js`).
+    const contactParam = params.get('contactFidelity');
+    if (contactParam !== null) applyContactFidelity(parseContactFidelity(contactParam, '?contactFidelity='));
+    // ⛓ AXE_DODGE HOOK — and fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskHook.js`): `on` / `off`.
+    const axeParam = params.get('axeDodgeAskPerPreview');
+    if (axeParam !== null) applyAxeDodgeAsk(parseAxeDodgeAsk(axeParam, '?axeDodgeAskPerPreview='));
+    // ⛓ DASH-ONLY WINDOW — and the solver's `DASH_ONLY_WINDOW` (`dashOnlyWindowHook.js`): `on` / `off`.
+    const dashOnlyParam = params.get('dashOnlyWindow');
+    if (dashOnlyParam !== null) applyDashOnlyWindow(parseDashOnlyWindow(dashOnlyParam, '?dashOnlyWindow='));
+    // ⛓ DASH-SHAPE STAMP — and solverBot's three dash switches (`dashShapeHook.js`): `<key>:on|off,…` or `all`.
+    const dashShapeParam = params.get('dashShape');
+    if (dashShapeParam !== null) applyDashShape(parseDashShape(dashShapeParam, '?dashShape='));
+    // ⛓ GRAPHICS G1 — the renderer's own state; nothing here reaches the runtime.
+    const graphics = {
+        stack: null, camera: 'room', status: 'off', error: null, failedSheets: [],
+        art: null, images: null, counts: null, frames: 0,
+        paintMs: { last: 0, avg: 0, max: 0 },
+        // ⛓ G2 — the player picture's own state (one step per game tick) and the last paint's player ops.
+        skin: null, player: null,
+        // ⛓ G3 — the bodies' pictures (one step per game tick) and the last paint's body ops.
+        enemySkin: null, enemies: null,
+        // ⛓ G3b — the room bodies' pictures and the last paint's ops.
+        roomBodySkin: null, roomBodies: null,
+        // ⛓ G3c — the puzzlements' and the last bodies' pictures and the last paint's ops.
+        hazardSkin: null, hazards: null,
+        // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
+        effectSkin: null, effects: null, held: 0,
+    };
+    let graphicsLoad = 0;
+    function setGraphics({ graphics: stack, camera } = {}) {
+        if (camera !== undefined) {
+            if (!CAMERA_MODES.includes(camera)) throw new Error(`?camera=${camera}: one of ${CAMERA_MODES.join(' | ')}`);
+            graphics.camera = camera;
+        }
+        if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
+        const ticket = ++graphicsLoad;
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, effectSkin: null, effects: null });
+        if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
+        graphics.status = 'loading';
+        return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
+            if (ticket !== graphicsLoad) return graphics.status;
+            Object.assign(graphics, { art, images, failedSheets: failed, status: 'ready' });
+            if (failed.length) win.console?.warn?.(`[js runtime] graphics "${stack}": ${failed.length} sheet(s) failed — drawn as rectangles: ${failed.join('; ')}`);
+            return 'ready';
+        }, (err) => {
+            if (ticket !== graphicsLoad) return graphics.status;
+            Object.assign(graphics, { status: 'failed', error: err.message });
+            win.console?.warn?.(`[js runtime] graphics "${stack}" could not be loaded — drawing rectangles: ${err.message}`);
+            return 'failed';
+        });
+    }
+    setGraphics({ graphics: params.get('graphics') || null, camera: params.get('camera') ?? undefined });
+    const runtime = createJsRuntime({
+        onStateChanged: (name, value) => {
+            bridge.stateLog.push({ name, value });
+            bridge.onStateChanged(name, value);
+        },
+        log: (msg) => win.console?.log?.(msg),
+        solveService,
+        ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetWork: budgetParam } : {}),
+        ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowWork: windowParam } : {}),
+        ...(Number.isFinite(backstopParam) && backstopParam > 0 ? { solverBackstopMs: backstopParam } : {}),
+    });
+    Object.assign(bridge.game, runtime.game);
+    win.__swfBridge = bridge;
+    win.__seedlingJsRuntime = runtime;
+    win.__runtimeReady = true;
+    // ⛓ GRAPHICS G1 — the renderer's handle: a READOUT and the live switch, never the run.
+    win.__seedlingJsGraphics = {
+        get stack() { return graphics.stack; },
+        get camera() { return graphics.camera; },
+        get status() { return graphics.status; },
+        get error() { return graphics.error; },
+        get failedSheets() { return graphics.failedSheets.slice(); },
+        get counts() { return graphics.counts ? { ...graphics.counts } : null; },
+        get frames() { return graphics.frames; },
+        get paintMs() { return { ...graphics.paintMs }; },
+        get player() { return graphics.player ? { ...graphics.player } : null; },
+        get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
+        get roomBodies() { return graphics.roomBodies ? { ...graphics.roomBodies, ops: graphics.roomBodies.ops.map((o) => ({ ...o })) } : null; },
+        get hazards() { return graphics.hazards ? { ...graphics.hazards, ops: graphics.hazards.ops.map((o) => ({ ...o })) } : null; },
+        get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
+        get held() { return graphics.held; },
+        get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
+        set: setGraphics,
+    };
+
+    // ⛓ J3 — the vanilla rooms. A teleport that beats this fetch is held by
+    // the core and replayed; a failure is shown, never swallowed.
+    let vanillaError = null;
+    // `no-store`: a committed artifact is never read from a cache
+    // (`watchLifetime.test.js`'s one-busted-fetch rule, in spirit).
+    win.fetch(new URL(VANILLA_MAP_PATH, win.location.href).href, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+        .then((doc) => runtime.setVanilla(doc))
+        .catch((err) => {
+            vanillaError = err.message;
+            win.console?.error?.(`[js runtime] the vanilla map could not be loaded — ${err.message}`);
+        });
+
+    // ── keys ──────────────────────────────────────────────────────────────
+    const down = new Set();
+    const onKey = (e, pressed) => {
+        if (!(e.code in KEYBOARD_BINDINGS)) return;
+        e.preventDefault();
+        if (pressed) down.add(e.code);
+        else down.delete(e.code);
+    };
+    life.on(doc, 'keydown', (e) => onKey(e, true));
+    life.on(doc, 'keyup', (e) => onKey(e, false));
+    life.on(win, 'blur', () => down.clear());
+
+    // ── clock ─────────────────────────────────────────────────────────────
+    let last = null;
+    let acc = 0;
+    let lastFrameAt = 0;
+    function advance(now) {
+        if (last === null) last = now;
+        acc += Math.min(now - last, TICK_MS * MAX_TICKS_PER_FRAME);
+        last = now;
+        let n = 0;
+        while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
+            // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
+            if (graphics.stack && runtime.run) {
+                const ev = effectView();
+                // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing
+                if (graphics.effectSkin?.epoch.run !== runtime.run) {
+                    graphics.effectSkin = primeEffectSkin(runtime.run.ticksCompleted === 0 ? ev : { ...ev, loadSpans: [] });
+                    if (runtime.run.ticksCompleted !== 0) graphics.effectSkin.seen.loadSpans = ev.loadSpans.length;
+                }
+                if (holdOwed(graphics.effectSkin)) {
+                    graphics.effectSkin = holdEffectSkin(graphics.effectSkin, ev);
+                    graphics.held += 1;
+                    acc -= TICK_MS;
+                    n += 1;
+                    continue;
+                }
+            }
+            runtime.tick(heldFromCodes(down));
+            if (graphics.stack) {
+                graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
+                graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
+                graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
+                graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
+                graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks);
+            }
+            acc -= TICK_MS;
+            n += 1;
+        }
+    }
+    /** ⛓ G4 — the effects' view: the run, and the room's level record (the rain row the world does not keep). */
+    function effectView() {
+        const run = runtime.run;
+        return effectSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
+    }
+    function frame(now) {
+        lastFrameAt = now;
+        advance(now);
+        paint();
+        win.requestAnimationFrame(frame);
+    }
+    win.requestAnimationFrame(frame);
+    win.setInterval(() => {
+        const now = win.performance.now();
+        if (now - lastFrameAt > PUMP_AFTER_MS) advance(now);
+    }, PUMP_AFTER_MS / 2);
+
+    // ── paint ─────────────────────────────────────────────────────────────
+    function paint() {
+        const view = runtime.view();
+        ctx.fillStyle = '#101014';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (!view) {
+            status.textContent = runtime.halted
+                ? `HALTED — ${runtime.halted.message.split('\n')[0]}`
+                : (runtime.mounted
+                    ? 'level set mounted — waiting for the host to start the game'
+                    : (vanillaError ? `the vanilla map could not be loaded — ${vanillaError}`
+                        : 'Seedling JS runtime — loading the vanilla map…'));
+            return;
+        }
+        const { world, state, apItems, level } = view;
+        if (graphics.stack || graphics.camera !== 'room') {
+            paintSkinned(view);
+            return;
+        }
+        // The room's size in PIXELS (`world.world`); `world.width` / `world.height` count TILES, and dividing by
+        // them drew the room 16× too large: only its top-left corner, as a few big grey blocks.
+        const scale = Math.min(canvas.width / world.world.width, canvas.height / world.world.height);
+        const r = (rect, colour, alpha = 1) => {
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = colour;
+            ctx.fillRect(rect.x * scale, rect.y * scale, (rect.right - rect.x) * scale, (rect.bottom - rect.y) * scale);
+            ctx.globalAlpha = 1;
+        };
+        const solid = new Set(world.solids.map((s) => `${s.rect.x},${s.rect.y}`));
+        for (const t of world.tiles) {
+            r(t.rect, solid.has(`${t.rect.x},${t.rect.y}`) ? SOLID_COLOUR : (TILE_COLOURS[t.t] ?? FLOOR_COLOUR));
+        }
+        for (const s of world.objectSolids) r(s.rect, objectSolidColour(s), 0.85);
+        for (const tp of world.teleporters) if (!tp.deactivated) r(tp.rect, TELEPORTER_COLOUR, 0.45);
+        for (const p of world.pickups ?? []) r(p.rect, AP_ITEM_COLOUR, 0.5);
+        for (const a of apItems) r(a.rect, AP_ITEM_COLOUR, 1);
+        r(playerBoxAt(state.x, state.y), PLAYER_COLOUR, 0.95);
+        writeStatus(level);
+    }
+
+    function writeStatus(level, extra = '') {
+        const deaths = runtime.deaths.length;
+        status.textContent = `level ${level} · tick ${runtime.ticks}`
+            + `${deaths ? ` · deaths ${deaths}` : ''}${runtime.run?.inCeremony ? ' · (text — auto-advancing)' : ''}`
+            + `${runtime.playback.goal ? ` · ${runtime.playback.describe()}` : ''}${extra}`;
+    }
+
+    /**
+     * ⛓ GRAPHICS G1 — the pack painter (or the rectangles through the same
+     * ops, while the pack loads or when only the camera is off-default). Reads
+     * the view and the run's camera; writes only the canvas and `graphics`.
+     */
+    function paintSkinned({ world, state, apItems, level }) {
+        const t0 = win.performance.now();
+        const art = graphics.status === 'ready' ? graphics.art : null;
+        const pv = art ? skinView(runtime.run) : null;
+        const playerSprites = pv ? playerOps(pv, art, { tick: runtime.ticks, skin: graphics.skin }) : [];
+        graphics.player = playerSprites.length
+            ? { anim: graphics.skin?.anim ?? null, ops: playerSprites.map((o) => ({ key: o.key, frame: o.frame, flipX: o.flipX, tint: o.tint ?? null, pack: art.packOf(o.key) })) }
+            : null;
+        const ev = art ? enemySkinView(runtime.run) : null;
+        const rv = art ? roomBodySkinView(runtime.run) : null;
+        const bodySprites = rv ? roomBodyOps(rv, art, { skin: graphics.roomBodySkin }) : [];
+        graphics.roomBodies = rv
+            ? { bodies: graphics.roomBodySkin?.bodies.size ?? 0,
+                ops: bodySprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const hv = art ? hazardSkinView(runtime.run) : null;
+        const hazardSprites = hv ? hazardOps(hv, art, { skin: graphics.hazardSkin }) : [];
+        graphics.hazards = hv
+            ? { bodies: graphics.hazardSkin?.bodies.size ?? 0,
+                ops: hazardSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, rot: o.rot ?? 0, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const fv = art && graphics.effectSkin ? effectView() : null;
+        const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin }) : [];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...effectSprites];
+        const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
+        graphics.enemies = ev
+            ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
+                ops: [...enemySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
+                    pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const ops = roomOps(world, art, {
+            level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) } : {}),
+        });
+        // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
+        const view = cameraView(graphics.camera, world, state, runtime.run,
+            { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });
+        // ⚖ the overlays: on the displayed screen in follow mode, on the model's camera rect (its middle) in room mode,
+        // ⚖ CLAMPED to the canvas there when the room is narrower than the screen (G4b F1, `overlayRect`)
+        const roomMode = graphics.camera !== 'follow';
+        const cam = roomMode ? cameraView('follow', world, state, runtime.run) : view;
+        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null }) : [];
+        graphics.effects = fv
+            ? { explosions: graphics.effectSkin.explosions.length, slashes: graphics.effectSkin.slashes.length, droplets: graphics.effectSkin.droplets.length,
+                hearts: { ...graphics.effectSkin.hearts }, cover: graphics.effectSkin.cover, owed: graphics.effectSkin.fadeQueue.length,
+                talk: fv.dialogue ? { speaker: fv.dialogue.speaker ?? null, align: fv.dialogue.align ?? 'CENTER', portrait: fv.dialogue.portrait ?? null } : null,
+                talkState: fv.talkState,
+                ops: effectSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })),
+                screen: overlays.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, colour: o.colour ?? null, alpha: o.alpha ?? 1, glyph: o.glyph ?? null })) }
+            : null;
+        graphics.counts = { ops: ops.length + overlays.length, ...paintOps(ctx, [...ops, ...overlays], art ? graphics.images : null, view, canvas, { tinted }) };
+        const ms = win.performance.now() - t0;
+        graphics.frames += 1;
+        const pm = graphics.paintMs;
+        pm.last = ms;
+        pm.max = Math.max(pm.max, ms);
+        pm.avg = pm.avg + (ms - pm.avg) / Math.min(graphics.frames, 60);
+        const label = graphics.stack ? ` · graphics ${graphics.stack}${graphics.status === 'ready' ? '' : ` (${graphics.status})`}` : '';
+        writeStatus(level, label);
+    }
+
+    /**
+     * ⛓ G2 — FlashPunk's `Image.color` MULTIPLIES the sprite (`Image.as` colour transform): the sheet
+     * times the tint, keeping its own alpha. One cached copy per (sheet, tint).
+     */
+    const tintCache = new WeakMap();
+    function tinted(img, tint) {
+        let byTint = tintCache.get(img);
+        if (!byTint) tintCache.set(img, byTint = new Map());
+        if (!byTint.has(tint)) {
+            const c = doc.createElement('canvas');
+            c.width = img.width;
+            c.height = img.height;
+            const t = c.getContext('2d');
+            t.drawImage(img, 0, 0);
+            t.globalCompositeOperation = 'multiply';
+            t.fillStyle = tint;
+            t.fillRect(0, 0, c.width, c.height);
+            t.globalCompositeOperation = 'destination-in';
+            t.drawImage(img, 0, 0);
+            byTint.set(tint, c);
+        }
+        return byTint.get(tint);
+    }
+
+    life.on(canvas, 'mousedown', () => canvas.focus());
+    return runtime;
+}

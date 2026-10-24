@@ -7,10 +7,11 @@ import connection from '../core/apClient.js';
 import storage from '../core/storage.js';
 import {
   setMainContentUIInstance,
-  getClientModuleDispatcher,
   getClientModuleEventBus,
 } from '../index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
+import { docsBase } from '../../../app/config/docsBase.js';
+import { mountChecksLine } from '../../commonUI/checksLine.js';
 
 
 // Helper function for logging with fallback
@@ -23,8 +24,6 @@ function log(level, message, ...data) {
   }
 }
 
-// const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI'; // May not be needed, or keep for logging
-const CLIENT_MODULE_ID = 'client'; // This module's ID for logging or other purposes
 
 class MainContentUI {
   constructor(container, componentState) {
@@ -40,7 +39,7 @@ class MainContentUI {
     }
 
     this.componentState = componentState;
-    this.timerHostPlaceholder = null;
+    this.checksLine = null;
 
     setMainContentUIInstance(this); // ADDED - Register instance with module's index.js
 
@@ -58,22 +57,62 @@ class MainContentUI {
     this.stateManager = stateManager;
     this.messageHandler = messageHandler;
 
+    // The panel's view of the connection. "Connected" means the AP handshake
+    // finished (a Connected packet), NOT that a websocket opened — a refused
+    // handshake leaves an open socket behind. The connect/disconnect toggle
+    // reads this, so it can never offer "Disconnect" for a connection that
+    // was never established.
+    // One of: 'disconnected' | 'connecting' | 'connected' | 'error'
+    this._connectionState =
+      this.messageHandler?.getClientSlot?.() !== null &&
+      this.messageHandler?.getClientSlot?.() !== undefined
+        ? 'connected'
+        : this.connection.isConnected()
+          ? 'connecting'
+          : 'disconnected';
+    this._connectionDetail = '';
+    this._lastConnectionError = null;
+
     // Subscribe to connection events using the scoped eventBus
+    this.eventBus.subscribe('connection:connecting', () => {
+      this.setConnectionState('connecting');
+    });
+    // A websocket that opened is still only half way there: the AP handshake
+    // (Connect → Connected) runs next, so stay in 'connecting'.
     this.eventBus.subscribe('connection:open', () => {
-      this.updateConnectionStatus(true);
+      this.setConnectionState('connecting');
     });
     this.eventBus.subscribe('connection:close', () => {
-      this.updateConnectionStatus(false);
+      this.setConnectionState('disconnected');
     });
-    this.eventBus.subscribe('connection:error', () => {
-      this.updateConnectionStatus(false);
+    this.eventBus.subscribe('connection:error', (data) => {
+      const message = data?.message || 'Connection failed.';
+      // The reconnect loop republishes the same failure every few seconds;
+      // print it once and let the status line carry the retries. A user-
+      // initiated attempt (or a successful connection) re-arms this.
+      if (message !== this._lastConnectionError) {
+        this.appendConsoleMessage(message, 'error');
+        this._lastConnectionError = message;
+      }
+      this.setConnectionState('error', message);
     });
     this.eventBus.subscribe('connection:reconnecting', () => {
-      this.updateConnectionStatus('connecting');
+      this.setConnectionState('connecting');
+    });
+    // The server rejected the login (bad slot name, wrong game, bad
+    // password). messageHandler prints the reason to the console; the status
+    // line names it too so the failure isn't invisible.
+    this.eventBus.subscribe('network:connectionRefused', (data) => {
+      const reason = (data?.errors || []).join(', ') || 'refused by server';
+      this.setConnectionState('error', `Connection refused: ${reason}`);
     });
 
     // ADDED: Subscribe to the game:connected event to show the final success message
     this.eventBus.subscribe('game:connected', (data) => {
+      // The AP handshake completed — this, and only this, is "connected".
+      this.setConnectionState('connected');
+      this._lastConnectionError = null;
+
       // Find player name
       const player = data.players.find((p) => p.slot === data.slot);
       const playerName = player ? player.name : `Player ${data.slot}`;
@@ -133,42 +172,6 @@ class MainContentUI {
       // ADDED: Ensure cleanup
       this.dispose();
     });
-
-    this.container.on('open', () => {
-      // When the panel (re)opens, ensure it is set as an active host if it has a placeholder
-      // OLD LOGIC - REMOVED
-      // if (this.timerHostPlaceholder) {
-      //   centralRegistry.setUIHostActive(
-      //     TIMER_UI_COMPONENT_TYPE,
-      //     CLIENT_MODULE_ID,
-      //     true
-      //   );
-      // }
-      // New logic: if a rehome is needed when a panel opens, system:rehomeTimerUI should be dispatched.
-      // This panel will respond if it's the highest priority viable host.
-      // Perhaps dispatch a rehome event here? Or rely on a general rehome event.
-      // For now, per plan, this panel just becomes ready. If Timer is not homed, a general rehome event is needed.
-      // log('info', '[MainContentUI] Panel opened. Ready to host TimerUI if system:rehomeTimerUI is dispatched.');
-    });
-
-    this.container.on('hide', () => {
-      // When the panel is hidden (e.g. tab closed but not destroyed), mark as inactive host
-      // OLD LOGIC - REMOVED
-      // centralRegistry.setUIHostActive(
-      //   TIMER_UI_COMPONENT_TYPE,
-      //   CLIENT_MODULE_ID,
-      //   false
-      // );
-      // New logic: If this panel was hosting and is now hidden, the TimerUI might need rehoming.
-      // This panel should not proactively detach. The Timer's attachToHost should handle moving.
-      // If this panel becomes non-viable, the next system:rehomeTimerUI event will find another host.
-      // If it was hosting, it might need to signal that its viability changed.
-      // The Timer UI should ideally be detached if this panel is no longer a good host.
-      // This might require a call to Timer's detach or a new rehome dispatch.
-      // For now, we focus on this panel's reaction to rehome requests.
-      // If it was hosting, and then hidden, and TimerUI needs to move,
-      // another dispatch of 'system:rehomeTimerUI' would be needed.
-    });
   }
 
   getRootElement() {
@@ -201,8 +204,7 @@ class MainContentUI {
             </div>
           </div>
           
-          <!-- Timer UI Placeholder -->
-          <div id="timer-ui-placeholder" style="margin-bottom: 10px;"></div>
+          <div id="console-checks-line" style="font-size: 0.9em;"></div>
         </div>
         
         <div id="main-console" class="main-console" style="flex-grow: 1; overflow-y: auto; background-color: #222; border: 1px solid #444; padding: 10px;">
@@ -247,24 +249,17 @@ class MainContentUI {
     this.attachEventListeners();
     this.initializeConsole();
     this.registerConsoleCommands();
-    this.updateConnectionStatus(
-      this.connection.isConnected() ? 'connected' : 'disconnected'
-    );
+    // Repaint whatever state the panel is already in — events may have
+    // arrived before the elements existed (updateConnectionStatus keeps the
+    // state but has nothing to draw on until now).
+    this.updateConnectionStatus(this._connectionState, this._connectionDetail);
 
-    // Inject Timer UI
-    const timerPlaceholder = this.rootElement.querySelector(
-      '#timer-ui-placeholder'
-    );
-    if (timerPlaceholder) {
-      this.timerHostPlaceholder = timerPlaceholder; // Store reference
-      log('info', 
-        '[MainContentUI] Timer host placeholder identified. Ready for TimerUI via event.'
-      );
-    } else {
-      log('error', 
-        '[MainContentUI] Placeholder div for Timer UI (#timer-ui-placeholder) not found.'
-      );
-    }
+    this.checksLine?.dispose();
+    this.checksLine = mountChecksLine(root.querySelector('#console-checks-line'), {
+      bus: this.eventBus,
+      stateManager: this.stateManager,
+      moduleName: 'client',
+    });
 
     log('info', '[MainContentUI] Elements initialized and references stored');
   }
@@ -286,7 +281,11 @@ class MainContentUI {
       log('error', '[MainContentUI] Error reading playerName from storage:', e);
     }
 
-    const slotName = prompt('Enter your slot name:', storedName || 'Player1');
+    // Default to the loaded player's own name (a multiworld loaded as player
+    // 3 shouldn't offer player 1's name).
+    const defaultName =
+      storedName || this.messageHandler?.getDefaultSlotName?.() || 'Player1';
+    const slotName = prompt('Enter your slot name:', defaultName);
     if (!slotName) return null;
 
     // Save to localStorage for next time
@@ -306,12 +305,26 @@ class MainContentUI {
   attachEventListeners() {
     if (this.connectButton && this.serverAddressInput) {
       this.connectButton.addEventListener('click', () => {
-        log('info', '[MainContentUI] Connect button clicked');
-        if (this.connection.isConnected()) {
+        log('info',
+          `[MainContentUI] Connect button clicked (state: ${this._connectionState})`
+        );
+        // The toggle acts on the panel's state, not on the raw socket: a
+        // refused or half-open socket must still offer "Connect", and one
+        // press of "Disconnect"/"Cancel" must both close and repaint.
+        if (
+          this._connectionState === 'connected' ||
+          this._connectionState === 'connecting'
+        ) {
           this.connection.disconnect();
+          this.setConnectionState('disconnected');
+          this.appendConsoleMessage('Disconnected from the server.', 'system');
         } else {
           const slotName = this._promptPlayerName();
           if (!slotName) return; // User cancelled the prompt
+
+          // A deliberate retry: report its outcome even if it fails the same
+          // way the last attempt did.
+          this._lastConnectionError = null;
 
           const serverAddress =
             this.serverAddressInput.value || 'ws://localhost:38281';
@@ -351,10 +364,7 @@ class MainContentUI {
     this.appendConsoleMessage(
       'Console initialized. Type "help" for local commands, or "!help" for server commands.'
     );
-    const isStable = window.location.pathname.startsWith('/Archipelago/');
-    const overviewUrl = isStable
-      ? 'https://github.com/PeerInfinity/Archipelago/blob/JSONExport/docs/json/user/overview.md'
-      : 'https://github.com/PeerInfinity/Archipelago-CC/blob/main/docs/json/user/overview.md';
+    const overviewUrl = docsBase() + 'docs/json/user/overview.md';
     this.appendConsoleLink(
       'New here? See the ',
       'Overview',
@@ -1105,21 +1115,55 @@ class MainContentUI {
     log('info', '[MainContentUI] Registered all console commands');
   }
 
-  updateConnectionStatus(status) {
-    if (this.statusIndicator) {
-      if (status === true || status === 'connected') {
-        this.statusIndicator.textContent = 'Connected';
-        this.statusIndicator.style.color = 'lightgreen';
-        if (this.connectButton) this.connectButton.textContent = 'Disconnect';
-      } else if (status === 'connecting') {
-        this.statusIndicator.textContent = 'Connecting...';
-        this.statusIndicator.style.color = 'orange';
-        if (this.connectButton) this.connectButton.textContent = 'Cancel';
-      } else {
-        this.statusIndicator.textContent = 'Not Connected';
-        this.statusIndicator.style.color = 'yellow';
-        if (this.connectButton) this.connectButton.textContent = 'Connect';
-      }
+  /**
+   * Record the panel's connection state and repaint the status line + toggle.
+   * This is the only writer of both, so the two can never disagree.
+   *
+   * @param {'disconnected'|'connecting'|'connected'|'error'} state
+   * @param {string} [detail] - Reason shown for the 'error' state
+   */
+  setConnectionState(state, detail = '') {
+    this._connectionState = state;
+    this._connectionDetail = detail;
+    this.updateConnectionStatus(state, detail);
+  }
+
+  updateConnectionStatus(status, detail = this._connectionDetail) {
+    // Accept the legacy boolean/string forms as well as the state names.
+    let state = status;
+    if (status === true) state = 'connected';
+    else if (status === false) state = 'disconnected';
+    else if (status !== 'connected' && status !== 'connecting' && status !== 'error') {
+      state = 'disconnected';
+    }
+    this._connectionState = state;
+
+    if (!this.statusIndicator) return;
+
+    if (state === 'connected') {
+      this.statusIndicator.textContent = 'Connected';
+      this.statusIndicator.style.color = 'lightgreen';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Disconnect';
+    } else if (state === 'connecting') {
+      this.statusIndicator.textContent = 'Connecting...';
+      this.statusIndicator.style.color = 'orange';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Cancel';
+    } else if (state === 'error') {
+      const reason = detail || 'Connection failed.';
+      // The status line sits in a one-line bar: keep it short and hang the
+      // full reason off the tooltip (the console keeps the untruncated text).
+      this.statusIndicator.textContent =
+        reason.length > 60 ? `${reason.slice(0, 57)}...` : reason;
+      this.statusIndicator.style.color = '#ff6b6b';
+      this.statusIndicator.title = reason;
+      if (this.connectButton) this.connectButton.textContent = 'Connect';
+    } else {
+      this.statusIndicator.textContent = 'Not Connected';
+      this.statusIndicator.style.color = 'yellow';
+      this.statusIndicator.title = '';
+      if (this.connectButton) this.connectButton.textContent = 'Connect';
     }
   }
 
@@ -1127,166 +1171,16 @@ class MainContentUI {
     log('info', '[MainContentUI] Disposing...');
     setMainContentUIInstance(null); // Clear instance on dispose
 
-    // Unsubscribe from eventBus events to prevent memory leaks
-    // (Assuming eventBus.unsubscribe requires the original handler reference,
-    // which might need to be stored if not using anonymous functions)
-    // For simplicity, if subscriptions were like eventBus.subscribe('event', this.handler.bind(this)),
-    // then unsubscription is more complex. If they are module-level or with anonymous functions
-    // as shown in constructor, they might auto-clean or need specific handling.
-    // The provided code uses anonymous functions for eventBus.subscribe, so unsubscription
-    // would require storing those handler functions. Let's assume this is handled or not critical for this refactor.
-
-    // OLD LOGIC - REMOVED. No explicit unregister needed for the new system from here.
-    // if (this.timerHostPlaceholder) {
-    //   centralRegistry.unregisterUIHost(TIMER_UI_COMPONENT_TYPE, CLIENT_MODULE_ID);
-    // }
+    this.checksLine?.dispose();
+    this.checksLine = null;
 
     // Detach any DOM elements this UI created if necessary
     if (this.rootElement && this.rootElement.parentNode) {
       this.rootElement.parentNode.removeChild(this.rootElement);
     }
     this.rootElement = null;
-    this.timerHostPlaceholder = null; // Clear reference
 
-    // Other cleanup
     log('info', '[MainContentUI] Disposed.');
-
-    // ADDED: Dispatch rehome event when panel is disposed (destroyed)
-    const dispatcher = getClientModuleDispatcher();
-    if (dispatcher && typeof dispatcher.publish === 'function') {
-      log('info', 
-        '[MainContentUI] Panel disposed, dispatching system:rehomeTimerUI.'
-      );
-      // Use setTimeout to ensure this dispatch happens after current call stack (including GL destroy) unwinds
-      setTimeout(() => {
-        dispatcher.publish(
-          'client', // Origin module ID
-          'system:rehomeTimerUI', // Event name
-          {}, // Event data
-          { initialTarget: 'top' } // Dispatch options
-        );
-      }, 0);
-    } else {
-      log('warn', 
-        '[MainContentUI] Could not get dispatcher or publish function to rehome TimerUI on panel dispose.'
-      );
-    }
-  }
-
-  // --- New Timer Hosting Logic --- //
-  handleRehomeTimerUI(eventData, propagationOptions, dispatcher) {
-    const panelIdForLog =
-      this.container?.config?.id || this.container?.id || CLIENT_MODULE_ID;
-    log('info', 
-      `[MainContentUI - ${panelIdForLog}] handleRehomeTimerUI called.`
-    );
-    let isViableHost = false;
-
-    if (
-      this.container &&
-      this.container.element &&
-      this.timerHostPlaceholder &&
-      document.body.contains(this.timerHostPlaceholder)
-    ) {
-      isViableHost = true;
-      // A more robust check for visibility:
-      // GoldenLayout's isVisible is on the item container, not the component directly.
-      // The component's container (this.container) is the item container.
-      if (
-        typeof this.container.isVisible === 'boolean' &&
-        !this.container.isVisible
-      ) {
-        isViableHost = false;
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Panel container reports not visible.`
-        );
-      }
-      // Additional check: if the tab itself is not active, it might not be truly "visible" for hosting.
-      // However, GoldenLayout's isVisible should ideally cover this.
-      // If the panel is in a stack, only the active tab's content is usually fully visible.
-      // Let's rely on this.container.isVisible for now.
-    } else {
-      if (!this.container || !this.container.element)
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Container or container.element missing.`
-        );
-      if (!this.timerHostPlaceholder)
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Timer host placeholder not found.`
-        );
-      else if (
-        this.timerHostPlaceholder &&
-        !document.body.contains(this.timerHostPlaceholder)
-      ) {
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Timer host placeholder found but not in document body.`
-        );
-      }
-    }
-
-    if (isViableHost) {
-      log('info', 
-        `[MainContentUI - ${panelIdForLog}] Is a viable host. Attempting to attach TimerUI.`
-      );
-      if (
-        centralRegistry &&
-        typeof centralRegistry.getPublicFunction === 'function'
-      ) {
-        const attachFn = centralRegistry.getPublicFunction(
-          'timer', // Module name used by Timer module in moduleInfo.name
-          'attachTimerToHost'
-        );
-        if (attachFn && typeof attachFn === 'function') {
-          // Ensure attachFn is a function
-          try {
-            attachFn(this.timerHostPlaceholder);
-            log('info', 
-              `[MainContentUI - ${panelIdForLog}] TimerUI attach function called. Propagation stopped.`
-            );
-          } catch (e) {
-            log('error', 
-              `[MainContentUI - ${panelIdForLog}] Error calling attachFn for TimerUI:`,
-              e
-            );
-            isViableHost = false; // Mark as not successful if attachFn throws
-          }
-        } else {
-          log('error', 
-            `[MainContentUI - ${panelIdForLog}] Could not get 'attachTimerToHost' function from Timer module, or it's not a function. Function received:`,
-            attachFn
-          );
-          isViableHost = false; // Mark as not successful
-        }
-      } else {
-        log('error', 
-          `[MainContentUI - ${panelIdForLog}] centralRegistry or centralRegistry.getPublicFunction not available.`
-        );
-        isViableHost = false; // Mark as not successful
-      }
-    }
-
-    if (!isViableHost) {
-      // If not viable OR became not viable due to errors above
-      log('info', 
-        `[MainContentUI - ${panelIdForLog}] Not a viable host or attach failed. Attempting to propagate event.`
-      );
-      // Explicitly propagate if this panel isn't hosting
-      if (dispatcher && typeof dispatcher.publishToNextModule === 'function') {
-        dispatcher.publishToNextModule(
-          CLIENT_MODULE_ID,
-          'system:rehomeTimerUI',
-          eventData, // Original event data
-          { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
-        );
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Called publishToNextModule for system:rehomeTimerUI (direction: up).`
-        );
-      } else {
-        log('warn', 
-          `[MainContentUI - ${panelIdForLog}] Could not propagate system:rehomeTimerUI: dispatcher or publishToNextModule missing.`
-        );
-      }
-    }
   }
 }
 

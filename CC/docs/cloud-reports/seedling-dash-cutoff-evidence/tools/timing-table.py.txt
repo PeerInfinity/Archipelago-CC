@@ -1,0 +1,24 @@
+import json, sys, statistics, collections
+rows = [json.loads(l) for l in open(sys.argv[1])]
+cfgs = ['off', 'k40', 'dk', 'nolp']
+cell = collections.defaultdict(list); meta = {}
+loads = [r['load'] for r in rows]
+for r in rows:
+    k = f"{r['r']['id']}:{r['r']['i']}"; c = r['config']
+    cell[(k, c)].append(r['r']['ms'] / 1000)
+    t = r['r']['shipped']['ticks'] if r['r']['shipped'] else None
+    meta.setdefault((k, c), set()).add((t, r['r']['work']))
+keys = sorted({k for k, _ in cell}, key=lambda s: int(s.split(':')[0]))
+print(f"rounds {max(r['round'] for r in rows)}, load {min(loads):.2f}-{max(loads):.2f} (median {statistics.median(loads):.2f})")
+print('| key | ' + ' | '.join(['OFF (today)', 'ON, K = 40 (DF)', 'ON, DK floor', 'ON without (i)']) + ' |')
+print('|---|---|---|---|---|')
+tot = {c: [0, 0] for c in cfgs}
+for k in keys:
+    out = []
+    for c in cfgs:
+        v = cell[(k, c)]; m = meta[(k, c)]
+        tk = '/'.join(str(t) for t, _ in sorted(m, key=str)); un = '/'.join(str(u) for _, u in sorted(m, key=str))
+        out.append(f"{tk} t, {un} u, {statistics.median(v):.2f} / {min(v):.2f} s")
+        tot[c][0] += statistics.median(v); tot[c][1] += min(v)
+    print(f'| {k} | ' + ' | '.join(out) + ' |')
+print('| **Σ median / min** | ' + ' | '.join(f'**{tot[c][0]:.1f} / {tot[c][1]:.1f} s**' for c in cfgs) + ' |')

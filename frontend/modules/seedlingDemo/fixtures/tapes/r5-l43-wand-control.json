@@ -1,0 +1,75 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "name": "r5-l43-wand-control",
+  "description": "R5 slice 23: the shut-before control — the SAME tape with `save.totem_parts: []`. `Wand.update`'s whole body, contact test included, is behind `Player.hasAllTotemParts()`, so the pickup is inert, the boss stays a wall, and the northward run is stopped by a COLLISION at 214.05 where the drive is stopped by an ASSIGNMENT at 212.",
+  "boot": {
+    "level": 43,
+    "x": 144,
+    "y": 208
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "pit",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 43,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "tick_count": 200,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 10
+    },
+    {
+      "key": "primary",
+      "from": 14,
+      "to": 15
+    },
+    {
+      "key": "primary",
+      "from": 45,
+      "to": 46
+    },
+    {
+      "key": "primary",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "primary",
+      "from": 107,
+      "to": 108
+    },
+    {
+      "key": "up",
+      "from": 112,
+      "to": 144
+    }
+  ]
+}

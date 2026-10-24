@@ -3,6 +3,8 @@
 -   **ID:** `progressBar`
 -   **Purpose:** Provides the core logic for creating and managing multiple, independent, and configurable progress bars. It is a utility module that does not have its own UI panel but creates UI elements that are hosted by other panels.
 
+> ⚠ **Deprecated** (2026-10-11). The Meta Game and Progress Bars panels and their MetaGame / ProgressBar modules are kept in the code but disabled in every launch mode, and are no longer maintained. See [Deprecated Panels](../../modules/README.md#deprecated-panels).
+
 ---
 
 #### Key Files

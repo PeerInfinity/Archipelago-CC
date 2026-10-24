@@ -222,6 +222,8 @@ import { profiler } from '../shared/profiler.js';
 // Import worker-side spoiler test runner
 import { WorkerSpoilerTest } from './core/workerSpoilerTest.js';
 
+import { slotGameName } from './core/statePersistence.js';
+
 // Initialize worker logger with basic settings
 initializeWorkerLogger({
   defaultLevel: 'WARN',
@@ -598,7 +600,8 @@ async function handleMessage(message) {
         self.postMessage({
           type: 'rulesLoadedConfirmation',
           initialSnapshot: initialSnapshot,
-          gameName: stateManagerInstance.rules?.game_name,
+          // The loaded SLOT's game (rules F4), not the document label.
+          gameName: slotGameName(stateManagerInstance),
           playerId: playerId,
           newStaticData: workerStaticGameData, // Send the entire new static data object
         });
@@ -1116,7 +1119,7 @@ async function handleMessage(message) {
                 '[SMW APPLY_TEST] Using itempool_counts for base inventory (respecting exclusions and required items).'
               );
               Object.entries(itemPool).forEach(([itemName, count]) => {
-                if (itemName.startsWith('__')) return; // Skip special config values like __max_progressive_bottle
+                if (itemName.startsWith('__')) return; // Skip special config keys (none are exported today; pool limits live in world[p])
                 if (combinedExclusions.includes(itemName)) return; // Skip excluded items AND required items
                 if (
                   itemName.includes('Bottle') &&

@@ -145,6 +145,13 @@ def main():
         help=f"Output directory (default: {DEFAULT_TARGET_DIR})",
     )
     parser.add_argument(
+        "--out",
+        default=None,
+        help="write this file instead of <target-dir>/"
+        f"{DEFAULT_TARGET_FILENAME} (test/test_jta_substrate_test_preset.py "
+        "compares that file to the tracked one)",
+    )
+    parser.add_argument(
         "--player-id",
         default="1",
         help="Player id key in the rules.json (default: 1)",
@@ -154,7 +161,8 @@ def main():
     root = project_root()
     src = root / args.source
     tgt_dir = root / args.target_dir
-    tgt = tgt_dir / DEFAULT_TARGET_FILENAME
+    tgt = Path(args.out).resolve() if args.out else tgt_dir / DEFAULT_TARGET_FILENAME
+    tgt_dir = tgt.parent
 
     if not src.exists():
         print(f"error: source not found: {src}", file=sys.stderr)
@@ -181,7 +189,7 @@ def main():
     rules["preset_sidecars"] = {args.player_id: sidecars}
     # Loop_costs is what triggers the loops module's "auto-enter loop
     # mode" path at runtime. See DEFAULT_LOOP_COSTS comment above.
-    rules["loop_costs"] = DEFAULT_LOOP_COSTS
+    rules["loop_costs"] = {args.player_id: DEFAULT_LOOP_COSTS}
 
     tgt_dir.mkdir(parents=True, exist_ok=True)
     with tgt.open("w") as f:
@@ -192,6 +200,8 @@ def main():
     print(f"  mapped {len(sidecars)} regions to jta zones (0..{max(ZONE_MAP.values())})")
     if unmapped:
         print(f"  unmapped regions (no substrate): {unmapped}")
+    if args.out:
+        return 0
     print()
     print(
         "Register with the preset index via:\n"

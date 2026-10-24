@@ -1,0 +1,45 @@
+| 373 | `level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0` | SOLVED 5 t walk, hits 0, landings 0, 0.2 s | SOLVED 5 t walk, hits 0, landings 0, 0.2 s | = |
+| 374 | `level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40` | SOLVED 75 t apitem, hits 0, landings 0, 0.5 s | SOLVED 76 t apitem, hits 0, landings 0, 0.5 s | **≠** |
+| 375 | `level_39__r2c11 <- in_L38_144_0 -> exit:out_teleporter_144_624` | SOLVED 4 t walk, hits 0, landings 0, 0.1 s | SOLVED 4 t walk, hits 0, landings 0, 0.2 s | = |
+| 376 | `level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0` | SOLVED 70 t walk, hits 0, landings 0, 1.6 s | SOLVED 105 t walk, hits 0, landings 0, 1.5 s | **≠** |
+| 377 | `level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96` | SOLVED 5 t walk, hits 0, landings 0, 0.3 s | SOLVED 5 t walk, hits 0, landings 0, 0.3 s | = |
+| 378 | `level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144` | SOLVED 1540 t break+kill+walk, hits 0, landings 0, 222.1 s | REFUSED (solverBot(wasm-arrival-solve) apitem (64,144) contact -> hold stance (wandlock@176,80) -> ) 218.3 s | **≠** |
+| 379 | `level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0` | SOLVED 5 t walk, hits 0, landings 0, 0.3 s | SOLVED 5 t walk, hits 0, landings 0, 0.2 s | = |
+| 380 | `level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96` | SOLVED 70 t walk, hits 0, landings 0, 1.2 s | SOLVED 105 t walk, hits 0, landings 0, 1.6 s | **≠** |
+| 381 | `level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144` | SOLVED 1592 t hold+kill+walk, hits 0, landings 3, 249.4 s | REFUSED (solverBot(wasm-arrival-solve) apitem (64,144) contact -> hold stance (wandlock@176,80) -> ) 252.6 s | **≠** |
+| 382 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576` | SOLVED 172 t walk, hits 0, landings 0, 2.7 s | SOLVED 289 t walk, hits 0, landings 0, 3.5 s | **≠** |
+| 383 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912` | SOLVED 4 t walk, hits 0, landings 0, 0.3 s | SOLVED 4 t walk, hits 0, landings 0, 0.3 s | = |
+| 384 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20` | SOLVED 859 t walk, hits 0, landings 0, 154.3 s | SOLVED 859 t walk, hits 0, landings 0, 156.5 s | = |
+| 385 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20` | SOLVED 913 t walk, hits 0, landings 0, 142.5 s | SOLVED 910 t walk, hits 0, landings 0, 155.3 s | **≠** |
+| 386 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20` | SOLVED 1025 t brave, hits 0, landings 0, 208.5 s | SOLVED 1023 t brave, hits 0, landings 0, 239.5 s | **≠** |
+| 387 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20` | SOLVED 1087 t brave, hits 0, landings 0, 250.8 s | SOLVED 1083 t brave, hits 0, landings 0, 233.1 s | **≠** |
+| 388 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21` | SOLVED 844 t walk, hits 0, landings 0, 112.6 s | SOLVED 843 t walk, hits 0, landings 0, 126.6 s | **≠** |
+| 389 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21` | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,28)->L43: the combat ladder is EXHAUSTED. The ) 49.6 s | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,28)->L43: the combat ladder is EXHAUSTED. The ) 56.1 s | = |
+| 390 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21` | REFUSED (solverBot(wasm-arrival-solve) reach-pit (23,28)->L43: the combat ladder is EXHAUSTED. The ) 75.7 s | REFUSED (solverBot(wasm-arrival-solve) reach-pit (23,28)->L43: the combat ladder is EXHAUSTED. The ) 74.2 s | = |
+| 391 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21` | REFUSED (solverBot(wasm-arrival-solve) reach-pit (24,28)->L43: the combat ladder is EXHAUSTED. The ) 80.9 s | REFUSED (solverBot(wasm-arrival-solve) reach-pit (24,28)->L43: the combat ladder is EXHAUSTED. The ) 79.6 s | = |
+| 392 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22` | SOLVED 834 t walk, hits 0, landings 0, 196.2 s | SOLVED 840 t walk, hits 0, landings 0, 164.4 s | **≠** |
+| 393 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22` | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,29)->L43: the combat ladder is EXHAUSTED. The ) 47.7 s | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,29)->L43: the combat ladder is EXHAUSTED. The ) 71.9 s | = |
+| 394 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23` | SOLVED 804 t walk, hits 0, landings 0, 166.9 s | SOLVED 804 t walk, hits 0, landings 0, 146.5 s | = |
+| 395 | `level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23` | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,30)->L43: the combat ladder is EXHAUSTED. The ) 60.8 s | REFUSED (solverBot(wasm-arrival-solve) reach-pit (15,30)->L43: the combat ladder is EXHAUSTED. The ) 54.5 s | = |
+| 396 | `level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640` | SOLVED 494 t apitem, hits 0, landings 0, 86.7 s | SOLVED 494 t apitem, hits 0, landings 0, 90.6 s | = |
+| 397 | `level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest` | REFUSED (solverBot(wasm-arrival-solve) apitem (880,816) contact: the combat ladder is EXHAUSTED. Th) 761.8 s | REFUSED (solverBot(wasm-arrival-solve) apitem (880,816) contact: the combat ladder is EXHAUSTED. Th) 3.3 s | = |
+| 398 | `level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared` | THREW (TypeError: Cannot read properties of undefined (reading 'level')) 0.0 s | THREW (TypeError: Cannot read properties of undefined (reading 'level')) 0.0 s | = |
+| 399 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576` | SOLVED 5 t walk, hits 0, landings 0, 0.6 s | SOLVED 5 t walk, hits 0, landings 0, 0.6 s | = |
+| 400 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912` | SOLVED 270 t walk, hits 0, landings 0, 34.4 s | SOLVED 355 t walk, hits 0, landings 0, 29.6 s | **≠** |
+| 401 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20` | SOLVED 392 t walk, hits 0, landings 0, 6.8 s | SOLVED 462 t walk, hits 0, landings 0, 7.5 s | **≠** |
+| 402 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20` | SOLVED 427 t walk, hits 0, landings 0, 10.2 s | SOLVED 513 t walk, hits 0, landings 0, 16.4 s | **≠** |
+| 403 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20` | SOLVED 455 t brave, hits 0, landings 0, 15.7 s | SOLVED 594 t brave, hits 0, landings 0, 18.5 s | **≠** |
+| 404 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20` | SOLVED 640 t brave, hits 0, landings 0, 22.3 s | SOLVED 692 t brave, hits 0, landings 0, 20.8 s | **≠** |
+| 405 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21` | SOLVED 390 t walk, hits 0, landings 0, 4.9 s | SOLVED 487 t walk, hits 0, landings 0, 9.5 s | **≠** |
+| 406 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21` | SOLVED 512 t walk, hits 0, landings 0, 9.0 s | SOLVED 535 t walk, hits 0, landings 0, 10.0 s | **≠** |
+| 407 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21` | SOLVED 631 t brave, hits 0, landings 0, 13.0 s | SOLVED 601 t brave, hits 0, landings 0, 13.4 s | **≠** |
+| 408 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21` | SOLVED 562 t brave, hits 0, landings 0, 14.7 s | SOLVED 685 t brave, hits 0, landings 0, 34.4 s | **≠** |
+| 409 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22` | SOLVED 347 t walk, hits 0, landings 0, 5.4 s | SOLVED 457 t walk, hits 0, landings 0, 8.6 s | **≠** |
+| 410 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22` | SOLVED 526 t walk, hits 1, landings 0, 9.1 s | SOLVED 511 t walk, hits 0, landings 0, 14.8 s | **≠** |
+| 411 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23` | SOLVED 332 t walk, hits 0, landings 0, 5.4 s | SOLVED 415 t walk, hits 0, landings 0, 4.6 s | **≠** |
+| 412 | `level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23` | SOLVED 375 t walk, hits 0, landings 0, 7.1 s | SOLVED 495 t walk, hits 0, landings 0, 9.1 s | **≠** |
+| 413 | `level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640` | SOLVED 118 t apitem, hits 0, landings 0, 2.0 s | SOLVED 181 t apitem, hits 0, landings 0, 3.5 s | **≠** |
+| 414 | `level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest` | REFUSED (solverBot(wasm-arrival-solve) apitem (880,816) contact: the combat ladder is EXHAUSTED. Th) 58.3 s | REFUSED (solverBot(wasm-arrival-solve) apitem (880,816) contact: the combat ladder is EXHAUSTED. Th) 1.4 s | = |
+| 415 | `level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared` | THREW (TypeError: Cannot read properties of undefined (reading 'level')) 0.0 s | THREW (TypeError: Cannot read properties of undefined (reading 'level')) 0.0 s | = |
+| 717 | `level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144` | SOLVED 4 t walk, hits 0, landings 0, 0.1 s | SOLVED 4 t walk, hits 0, landings 0, 0.1 s | = |
+| 718 | `level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144` | SOLVED 11 t walk, hits 0, landings 0, 0.2 s | SOLVED 11 t walk, hits 0, landings 0, 0.2 s | = |

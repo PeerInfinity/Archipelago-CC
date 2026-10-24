@@ -1,6 +1,7 @@
 // Queue display panel - dual queue: current list (execution snapshot) + next list (editable queue)
 // Per-action controls and drag-and-drop on the next list
 import { ActionState } from '../shared/actionQueue/actionTypes.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 /**
  * Generate a subtle tint color from a group name (zone name).
@@ -17,6 +18,25 @@ function fmtEnergy(value) {
 
 function truncLabel(name, max) {
     return name.length > max ? name.substring(0, max - 1) + '…' : name;
+}
+
+/**
+ * What to call this entry. `label` is optional in the shared shape and
+ * recordings no longer carry one (plan §23.1 Q8 — it is DERIVED); the owner of
+ * the wording is the substrate's registry `describeAction`. Falls back to the
+ * bare action id so a foreign entry still renders as something.
+ */
+function entryLabel(entry) {
+    if (typeof entry?.label === 'string' && entry.label) return entry.label;
+    const substrate = substrateRegistry.get(entry?.substrate ?? 'jta');
+    const described = substrate?.describeAction?.(entry);
+    if (typeof described === 'string' && described) return described;
+    return String(entry?.actionId ?? '');
+}
+
+/** jta's zone rides in `params` — it is a jta field, not a shared one (Q3/A3). */
+function entryZoneId(entry) {
+    return entry?.params?.zoneId;
 }
 
 /**
@@ -161,16 +181,17 @@ export class JTAQueuePanelUI {
             let actualsHtml = '';
             if (this.#showActuals && status) {
                 const parts = [];
-                if (status.actualEnergyCost !== undefined) {
-                    const costSign = status.actualEnergyCost >= 0 ? '-' : '+';
-                    parts.push(`<span class="aq-actual-cost">${costSign}${fmtEnergy(Math.abs(status.actualEnergyCost))}</span>`);
+                const actuals = status.actuals ?? {};
+                if (actuals.actualEnergyCost !== undefined) {
+                    const costSign = actuals.actualEnergyCost >= 0 ? '-' : '+';
+                    parts.push(`<span class="aq-actual-cost">${costSign}${fmtEnergy(Math.abs(actuals.actualEnergyCost))}</span>`);
                 }
-                if (status.energyAfter !== undefined) {
-                    parts.push(`<span class="aq-actual-remaining">${fmtEnergy(status.energyAfter)}</span>`);
+                if (actuals.energyAfter !== undefined) {
+                    parts.push(`<span class="aq-actual-remaining">${fmtEnergy(actuals.energyAfter)}</span>`);
                 }
                 let skillInner = '';
-                if (status.actualSkillGains && Object.keys(status.actualSkillGains).length > 0) {
-                    const skillParts = Object.values(status.actualSkillGains).map(g =>
+                if (actuals.actualSkillGains && Object.keys(actuals.actualSkillGains).length > 0) {
+                    const skillParts = Object.values(actuals.actualSkillGains).map(g =>
                         `<span class="aq-actual-skill">+${g.gained.toFixed(1)} ${g.name.slice(0, 3)}</span>`
                     );
                     skillInner = skillParts.join(' ');
@@ -185,16 +206,17 @@ export class JTAQueuePanelUI {
             }
 
             // Build tooltip text
-            const tipParts = [`${entry.label} (${entry.actionType})`];
+            const tipParts = [`${entryLabel(entry)} (${entry.actionType})`];
             if (loopsTotal > 1) tipParts.push(`Loops: ${loopsCompleted}/${loopsTotal}`);
             tipParts.push(`State: ${state || 'pending'}`);
             if (status?.error) tipParts.push(`Error: ${status.error}`);
             if (this.#showActuals && status) {
-                if (status.actualEnergyCost !== undefined) {
-                    tipParts.push(`Energy: -${fmtEnergy(Math.abs(status.actualEnergyCost))} → ${fmtEnergy(status.energyAfter ?? 0)} remaining`);
+                const actuals = status.actuals ?? {};
+                if (actuals.actualEnergyCost !== undefined) {
+                    tipParts.push(`Energy: -${fmtEnergy(Math.abs(actuals.actualEnergyCost))} → ${fmtEnergy(actuals.energyAfter ?? 0)} remaining`);
                 }
-                if (status.actualSkillGains) {
-                    for (const g of Object.values(status.actualSkillGains)) {
+                if (actuals.actualSkillGains) {
+                    for (const g of Object.values(actuals.actualSkillGains)) {
                         tipParts.push(`${g.name}: +${g.gained.toFixed(1)} levels`);
                     }
                 }
@@ -204,8 +226,8 @@ export class JTAQueuePanelUI {
             }
             const tooltip = tipParts.join('\n');
 
-            const zoneNum = entry.zoneId !== undefined ? String(entry.zoneId + 1) : '';
-            const nameCol = truncLabel(entry.label, 20);
+            const zoneNum = entryZoneId(entry) !== undefined ? String(entryZoneId(entry) + 1) : '';
+            const nameCol = truncLabel(entryLabel(entry), 20);
 
             return `<div class="aq-current-entry ${stateClass} ${currentClass}" title="${tooltip.replace(/"/g, '&quot;')}">
                 <div class="aq-progress-bar" style="width: ${progressPct}%"></div>
@@ -243,12 +265,12 @@ export class JTAQueuePanelUI {
             if (status.state !== ActionState.COMPLETED && status.state !== ActionState.FAILED) return null;
 
             const predCost = pred.energyCost;
-            const actCost = status.actualEnergyCost ?? null;
+            const actCost = status.actuals?.actualEnergyCost ?? null;
             const deltaCost = (actCost !== null) ? actCost - predCost : null;
 
             // Skill comparison
             const predSkills = pred.skillGains || {};
-            const actSkills = status.actualSkillGains || {};
+            const actSkills = status.actuals?.actualSkillGains || {};
             const allSkillIds = new Set([
                 ...Object.keys(predSkills).map(Number),
                 ...Object.keys(actSkills).map(Number),
@@ -295,7 +317,7 @@ export class JTAQueuePanelUI {
                 }).join(', ');
 
                 return `<tr>
-                    <td>${r.entry.label}</td>
+                    <td>${entryLabel(r.entry)}</td>
                     <td>${fmtEnergy(r.predCost)}</td>
                     <td>${r.actCost !== null ? fmtEnergy(r.actCost) : '\u2014'}</td>
                     <td class="${deltaClass}">${r.deltaCost !== null ? (r.deltaCost > 0 ? '+' : '') + fmtEnergy(r.deltaCost) : '\u2014'}</td>
@@ -360,8 +382,8 @@ export class JTAQueuePanelUI {
             }
 
             const titleAttr = predTooltip ? ` title="${predTooltip.replace(/"/g, '&quot;')}"` : '';
-            const zoneNum = entry.zoneId !== undefined ? String(entry.zoneId + 1) : '';
-            const nameCol = truncLabel(entry.label, 20) + loopText;
+            const zoneNum = entryZoneId(entry) !== undefined ? String(entryZoneId(entry) + 1) : '';
+            const nameCol = truncLabel(entryLabel(entry), 20) + loopText;
 
             return `<div class="aq-entry ${disabledClass}" data-entry-id="${entry.entryId}" data-index="${idx}" draggable="true" style="${tintStyle}"${titleAttr}>
                 <span class="aq-entry-index">${idx + 1}</span>

@@ -1,0 +1,421 @@
+#!/usr/bin/env node
+/**
+ * check-seedling-wasm-element — **ONE GENERATED LEVEL CONTAINING A NAMED
+ * ELEMENT, SHIPPED TO THE REAL GAME AND VERDICTED PER TICK — HEADLESS.**
+ *
+ * PROCGEN ELEMENTS arc 5, ⚖ **ruling 5** (the standing acceptance gate): *each
+ * NEW element family ships one generated level containing it to the real game
+ * and verdicts per tick, via the cheapest arm that produces a tape.* Slice 3
+ * adds the `chamber` family and this is the arm.
+ *
+ * ── ⛔ WHY IT IS NOT A FOURTH PLAN IN `check-seedling-wasm-ship.mjs` ──
+ *
+ * That row drives **real-GPU Windows Chrome** through `/mnt/c/Windows/py.exe`
+ * by the standing ⚖ rule: it is a different machine, a different driver and a
+ * prerequisite no runner has, and every Windows run is ANNOUNCED first. The
+ * per-element gate is owed ONCE PER FAMILY and will be owed again by the arena
+ * (slice 4), so it needs an arm that a session can run on the box it is
+ * already sitting at. ⛓ Slice 1 proved the reach: a SHORT generated tape is
+ * inside a headless swiftshader budget (154 ticks in 719 s, with a 224-cell
+ * census competing for the machine), which is the whole reason the subject
+ * below is chosen for its TICK COUNT and not for its prettiness. (⛓ H1,
+ * 2026-09-11: that budget was a LOST WebGPU device, not rasterising; with
+ * `HEADLESS_WEBGPU_ARGS` this whole gate — a 259-tick ship — runs in 22.5 s.)
+ *
+ * ⛔ **WHAT THIS ARM CAN SEE.** `?source=generate` ships the room the page
+ * generated as a one-room level SET plus the certification tape that proved it
+ * — and the model's whole observation stream carries level **900** while the
+ * mounted set calls the same room **0**. A per-tick agreement is therefore the
+ * 900→0 remap witnessed at EVERY observation, in a room built around an
+ * element the game has never been shown before.
+ *
+ * ⛔ **AND WHAT IT CANNOT.** It is blind to any defect the two runtimes SHARE
+ * (trap 389) — the instrument that compares the game against RECORDED oracles
+ * is `check-seedling-bot-differential.mjs`. And swiftshader emitted a few
+ * hundred `A valid external Instance reference no longer exists` page errors
+ * during any headless ship; slice 1 measured a DENSE control emitting the same
+ * number, so they are the renderer's and this row does not assert zero of
+ * them (the Windows row does, and passes). ⛔ Corrected at H1 (2026-09-11):
+ * that text IS the WebGPU device-lost message — one unhandled work-done
+ * rejection per frame — and with `HEADLESS_WEBGPU_ARGS` the count is 0. The
+ * row still prints rather than asserts it (never key a check on the loss's
+ * message text, which differs across Chromium versions).
+ * ⛓ H2 (2026-09-12, ⚖ ruling A): the gate now runs on `HEADLESS_LOGIC_ONLY_ARGS`
+ * — it reads no pixels and asserts no pageerror list — and PROVES that channel
+ * by the runtime's readout (`seedlingChannel.js`), so the count printed below is
+ * the channel's own device-lost signature, not a defect.
+ *
+ * ── ⛓⛓ THE SUBJECT IS MEASURED, NOT CHOSEN ───────────────────────────
+ *
+ * The defaults below are the SHORTEST tape found over `winding`/`branchy`/
+ * `loopy`/`open` x seeds 1..16 x {10x10, 12x10} whose chamber PLACED and whose
+ * `--areas=1` graph ACCEPTED: **`branchy` seed 5 at 10x10, 259 ticks, 3 locks
+ * and 1 flag** (30 candidates; the runner-up is 273). So the level that ships
+ * has the element in it AND a lock-and-key graph over the area it declared,
+ * which is the whole of what slice 3 built — and it is short enough that
+ * swiftshader's ~4.7 s/tick is twenty minutes rather than an afternoon
+ * (⛓ H1: ~4.7 s/tick was the lost-device park; the whole 259-tick gate now
+ * runs in 22.5 s). ⛔ The two preconditions are CLAIMS below and
+ * not assumptions: a row that shipped a room whose element REFUSED would pass
+ * while witnessing nothing (vacuity at the SUBJECT, slice 1 §9.6's lesson).
+ *
+ * Prerequisites: a dev server on :8000 at the REPO ROOT.
+ *
+ * Run:
+ *   node scripts/procgen/check-seedling-wasm-element.mjs
+ *   node scripts/procgen/check-seedling-wasm-element.mjs \
+ *       --elements='chamber;w=2;h=3' --seed=5 --skeleton=branchy \
+ *       --width=10 --height=10 --areas=1
+ *   # ⛓ S1's three door elements (subjects: the shortest certified tape per head)
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=rockgate --seed=8 \
+ *       --skeleton=empty --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shortcut --seed=4 \
+ *       --skeleton=loopy --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shieldgate --seed=8 \
+ *       --skeleton=empty --biome=post-shield --areas=0
+ *   # ⛓ concept library F1b's THROUGH-ROOM roam (three certified subjects, two
+ *   #   kinds, both boots; the two post-sword ones are levels whose bodies COST
+ *   #   the walk). F1's three were dead-end rooms and no longer place a roam.
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=10 \
+ *       --skeleton=rooms --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=1 \
+ *       --skeleton=bushy --width=14 --height=14 --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=10 \
+ *       --skeleton=rooms --width=14 --height=14 --biome=pre-sword --areas=0
+ *
+ * ⚠ QUOTE THE SPEC: `;` is a shell statement separator.
+ */
+
+import { chromium } from 'playwright';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
+ * so it takes the box before it starts and refuses BY NAME if another
+ * instrument holds it — replacing a hand-relayed "BOX BUSY". A gate run
+ * UNDER `gates.mjs` recognises the holder's token and passes through.
+ * `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'check-seedling-wasm-element.mjs', kind: 'browser' });
+
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+
+const HOST = arg('host', 'http://localhost:8000');
+const ELEMENTS = arg('elements', 'chamber;w=2;h=3');
+const SEED = arg('seed', '5');
+const SKELETON = arg('skeleton', 'branchy');
+const BIOME = arg('biome', 'pre-sword');
+const WIDTH = arg('width', '10');
+const HEIGHT = arg('height', '10');
+const AREAS = arg('areas', '1');
+const COUNT = Number(arg('count', '1'));
+/** ⛓ NAMED, AND THE REFUSAL SAYS IT: a wall-clock bound on the ship, and not a
+ *  guess.
+ *
+ *  ⛓⛓ H1 (2026-09-11) — RE-DERIVED. `2400` was sized for "~0.5 ticks/s", which
+ *  was the pinned runtime parking every other frame after SwiftShader LOST its
+ *  WebGPU device (`headlessChromium.js`). With the Vulkan pair this whole gate —
+ *  generate, boot, mount, the 259-tick ship, the drain — ran in **22.5 s** on
+ *  the box (0 page errors, 11/0), so 22.5 s is an UPPER bound on the ship alone.
+ *  ⇒ `300` ≈ 13 × that bound. ⚖ The multiplier, written down: the runner's
+ *  SwiftShader-on-Vulkan rate is UNMEASURED until CI runs this at H1's head,
+ *  and the only CPU-bound comparison on record says the runner is NOT slower
+ *  than the box (`seedling-editor-generate` 44.3 s in CI vs 134.9 s here,
+ *  `-arm` 44.5 vs 58.8) — so an order of magnitude keeps a live-device runner
+ *  far inside the cap, while a runner that still LOSES the device (the
+ *  pre-H1 897 s) times out BY NAME instead of passing slowly. */
+const SHIP_SEC = Number(arg('shipsec', '300'));
+
+const WATCH = `${HOST}/frontend/modules/seedlingDemo/watch.html`
+    + `?source=generate&seed=${SEED}&biome=${BIOME}&skeleton=${SKELETON}`
+    + `&width=${WIDTH}&height=${HEIGHT}&elements=${encodeURIComponent(ELEMENTS)}`
+    + `&areas=${AREAS}&count=${COUNT}&run=1`;
+
+let failed = 0;
+const check = (ok, what, detail) => {
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${what}${detail === undefined ? '' : ` — ${detail}`}`);
+    if (!ok) failed += 1;
+};
+const say = (l = '') => console.log(l);
+
+/**
+ * ⛓⛓⛓ **THE BODY IS DRAINED, AND THAT IS NOT TIDINESS — IT IS THE FIX FOR A
+ * CRASH THIS GATE TOOK IN CI** (standing-values CI arc, S3; ⚖ 72).
+ *
+ * ⛔⛔ `await fetch(WATCH).then((r) => r.ok)` leaves the response body UNREAD.
+ * Under Node 22's bundled undici the socket then ends while the parser is
+ * paused and the process dies on an internal `assert(!this.paused)` — an
+ * ERR_ASSERTION thrown from a socket callback, which NO `try`/`catch` around
+ * the fetch can see. The first two CI runs of S3 both printed
+ * `gate: seedling-wasm-element | 0/0 | exit=1 | (no total)` at 0.4 s with the
+ * gate's own stdout lost to the abrupt exit.
+ *
+ * ⛓ MEASURED, not reasoned: node **v22.23.2** (the runner's), 40 runs each,
+ * against this repo's own `python3 -m http.server` —
+ *
+ *     the old form (GET, body unread)      **5 / 40 crashed**
+ *     GET + `await r.arrayBuffer()`         0 / 40
+ *     `{ method: 'HEAD' }`                  0 / 40
+ *
+ * …and 0 / 25 on node 18 (the box's) and node 23.11, which is why this never
+ * fired on the box and why it is a LATENT trap there rather than an absent
+ * one: the day the box moves to Node 22 it fires here too.
+ *
+ * ⛓ THE DRAIN, NOT HEAD, because the probe's QUESTION must not move — a GET
+ * that reads the body asks exactly what this line always asked.
+ * ⚠ NINE SIBLING GATES CARRY THE UNDRAINED FORM and are green in the same CI
+ * run, so this is not swept blind — and the reason is MEASURED, not assumed:
+ * their probe is a 26 KB `index.json` and it is **0 / 40** on the same node
+ * 22.23.2, against this line's 85 KB `watch.html` at 5 / 40. The trigger is
+ * the body's size against the socket's close, so the fix goes where the crash
+ * is; a sweep of the other nine would move nine standing keys for a defect
+ * none of them has yet. ⛔ It is a LATENT trap for every one of them: the day
+ * a probe target grows, that gate joins this one.
+ */
+const alive = await fetch(WATCH)
+    .then(async (r) => { await r.arrayBuffer(); return r.ok; }).catch(() => false);
+if (!alive) {
+    say(`SKIP: no dev server serving ${HOST} — start one at the REPO ROOT with `
+        + '`python3 -m http.server 8000` (or pass --host=)');
+    process.exit(0);
+}
+
+say(`# a GENERATED level containing \`${ELEMENTS}\`, shipped to the real game, HEADLESS`);
+say(`  ${WATCH}`);
+say('');
+
+/** ⛔ The WebGPU flags are `check-seedling-wasm-bridge.mjs`' own and are not
+ *  optional: without them the page reaches `runtime ready`, the ▶ click
+ *  invokes `runSWF`, the renderer cannot initialise and `botStatus` never
+ *  appears — a failure that looks like a tape problem and is not. */
+const browser = await chromium.launch({
+    /** ⛓ H2 (⚖ ruling A): logic-only — this gate reads no pixels and asserts
+     *  no pageerror list, so the device loss costs it nothing but wall clock. */
+    args: HEADLESS_LOGIC_ONLY_ARGS,
+});
+const page = await browser.newPage();
+const pageErrors = [];
+page.on('pageerror', (e) => pageErrors.push(e.message));
+await page.goto(WATCH, { waitUntil: 'domcontentloaded' });
+
+const t0 = Date.now();
+/** ⛔ Poll a CONDITION, never "a readout exists" — a mid-run page has one. */
+const until = async (expr, sec, what) => {
+    for (let i = 0; i < sec * 2; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        if (await page.evaluate(`Boolean(${expr})`)) return true;
+        // eslint-disable-next-line no-await-in-loop
+        await page.waitForTimeout(500);
+    }
+    check(false, `${what} — TIMED OUT after ${sec}s`, expr);
+    return false;
+};
+
+/**
+ * ⛔ THE WHOLE LADDER, NOT ITS FIRST `ok` (§18.15.5's trap): `status === 'ok'`
+ * flips at every accepted step, so a wait on it alone ships step 1 of N.
+ */
+const ladder = await until(
+    `window.__editorGenerate?.status === 'ok' && window.__editorGenerate?.step === ${COUNT}`
+    + " && !document.getElementById('genRunAll').disabled"
+    + " && !document.getElementById('loadWasm').disabled",
+    600, 'the generator ran its WHOLE ladder');
+if (!ladder) { await browser.close(); say(`\n${failed} FAILURE(S)`); process.exit(1); }
+
+const gen = await page.evaluate(() => ({
+    step: window.__editorGenerate.step,
+    ticks: window.__editorGenerate.ticks,
+    certified: window.__editorGenerate.certified,
+    room: window.__editorGenerate.room,
+    identity: window.__editorGenerate.identity,
+    elements: window.__editorGenerate.elements ?? null,
+    areas: window.__editorGenerate.areas ?? null,
+}));
+say(`  generated: ${JSON.stringify(gen.identity)}`);
+say(`  room:      ${JSON.stringify(gen.room)}`);
+say(`  elements:  ${JSON.stringify(gen.elements)}`);
+say(`  areas:     ${JSON.stringify(gen.areas)}`);
+say(`  ticks:     ${gen.ticks}   certified: ${gen.certified}`);
+say('');
+
+/**
+ * ⛔⛔ THE PRECONDITIONS ARE CLAIMS. A ship whose element REFUSED is a ship of
+ * an ordinary room, and reading `agrees per tick` off it would witness nothing
+ * this gate is about.
+ */
+check(gen.step === COUNT, '⛔ the room that shipped is the LADDER\'S LAST step',
+    `step ${gen.step} of ${COUNT}`);
+check(gen.elements?.ran === true,
+    '⛓⛓⛓ the shipped room really CONTAINS the element — it was PLACED, not refused',
+    gen.elements?.ran ? `${gen.elements.placed?.[0]?.instance} at `
+        // ⛓ S1: a door element has a DOOR CELL, not a site
+        + `(${gen.elements.placed?.[0]?.site?.x ?? gen.elements.placed?.[0]?.doorCell?.x},`
+        + `${gen.elements.placed?.[0]?.site?.y ?? gen.elements.placed?.[0]?.doorCell?.y})`
+        : `REFUSED: ${gen.elements?.refused?.reason}`);
+/**
+ * ⛓⛓⛓ **THE SECOND PRECONDITION IS WHAT THE ELEMENT DECLARED** (arc 5, slice 4)
+ * — the arc's own rule, applied to this gate rather than to the binding.
+ *
+ * Slice 3's family was the CHAMBER, whose whole point is to give a room an
+ * AREA, so *"a lock-and-key graph was adjudicated over it"* is exactly the
+ * fact that makes its ship non-vacuous. Slice 4's family is the ARENA, whose
+ * point is a FIGHT: its own payload is `bodies` spinners and a `tset:-1` kill
+ * lock on a main-path cut, and a graph over it is optional decoration. ⛔ A row
+ * that demanded the graph of an arena would fail for a reason that has nothing
+ * to do with the family it is gating; one that demanded nothing would ship an
+ * ordinary room and read `agrees per tick` off it.
+ */
+const placed = gen.elements?.placed?.[0] ?? null;
+if (placed?.element === 'corridor-body') {
+    /**
+     * ⛓⛓ SEEDLING SWIM U3 (D3) — THE CORRIDOR BODY: a lock-less spinner ON the
+     * door cell of a main-path cut. What the shipped room must carry is that
+     * body where the element put it — its `corridorbody_door` obstacle on its
+     * door cell, realised as a spinner (no lock) — and a CERTIFIED solve, which
+     * (as for `roam`) is only possible against the TEXTLESS goal. ⛔ Not the
+     * roam branch below: a corridor body is no blob and no through-room.
+     */
+    const door = (placed.entities ?? []).find((e) => e.role === 'obstacle'
+        && e.id === 'corridorbody_door'
+        && e.x === placed.doorCell?.x && e.y === placed.doorCell?.y);
+    check(gen.certified === true && Boolean(door) && (placed.killLockCell ?? null) === null,
+        '⛓⛓ …and the room really carries THIS element\'s payload — ONE lock-less body on its '
+        + 'door cell, certified against the textless goal',
+        door ? `${door.id} at (${door.x},${door.y}), killLockCell `
+            + `${JSON.stringify(placed.killLockCell ?? null)}, certified ${gen.certified}`
+            : `no corridorbody_door on the door cell ${JSON.stringify(placed.doorCell)}`);
+} else if ((placed?.bodies?.length ?? 0) > 0 && (placed.killLockCell ?? null) === null) {
+    /**
+     * ⛓⛓ CONCEPT LIBRARY F1 (D6) — THE ROAMING ENEMY: bodies and NO lock. What
+     * the shipped room must carry is the bodies themselves, live all the way to
+     * the goal (nothing kills them for a reason), and a CERTIFIED solve — which
+     * on this element is only possible against the TEXTLESS goal the binding
+     * swaps in (the torch's ceremony throws `levelRun`'s live-spinner guard).
+     * ⛔ Asserting a kill lock here would demand the one thing the element
+     * exists not to have.
+     */
+    check(gen.certified === true && placed.element === 'roam',
+        '⛓⛓ …and the room really carries THIS element\'s payload — ROAMING bodies, NO kill '
+        + 'lock, certified against the textless goal',
+        `${placed.bodies.length} roaming body/bodies at `
+        + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, killLockCell `
+        + `${JSON.stringify(placed.killLockCell ?? null)}, certified ${gen.certified}`);
+    /**
+     * ⛓ CONCEPT LIBRARY F1b (D4) — **AND IT IS A THROUGH-ROOM**: the record
+     * carries `through` and its second mouth, so a witness of a roam room is a
+     * witness of a room whose route CROSSES the bodies (the binding refused it
+     * otherwise, `the-through-room-is-not-on-the-route`).
+     */
+    check(placed.through === true && Boolean(placed.exitMouth),
+        '⛓ …and the blob is a THROUGH-ROOM — both mouths opened and joined',
+        `through ${JSON.stringify(placed.through ?? null)}, entry mouth `
+        + `(${placed.entryMouth?.x},${placed.entryMouth?.y}), exit mouth `
+        + `(${placed.exitMouth?.x},${placed.exitMouth?.y}), exit tunnel ${placed.exitTunnel ?? '—'}`);
+} else if ((placed?.bodies?.length ?? 0) > 0) {
+    check(Boolean(placed.killLockCell),
+        '⛓⛓ …and the room really carries THIS element\'s payload — its bodies and the '
+        + 'KILL LOCK their death opens',
+        `${placed.bodies.length} body/bodies at `
+        + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, kill lock at `
+        + `(${placed.killLockCell?.x},${placed.killLockCell?.y})`);
+} else if (placed?.phase === 'on-connector') {
+    /**
+     * ⛓⛓ SEEDLING SUBSTRATE S1 — A DOOR ELEMENT, NOT A SPACE ONE. The rock gate,
+     * the rock shortcut and the shield gate declare no area and no bodies: what
+     * the shipped room must carry is the DOOR — one obstacle standing on the
+     * element's own door cell. ⛔ Asserting an area graph here would demand a
+     * `--areas=` the element never asked for; ship these with `--areas=0`.
+     */
+    const door = (placed.entities ?? []).find((e) => e.role === 'obstacle'
+        && e.x === placed.doorCell?.x && e.y === placed.doorCell?.y);
+    check(Boolean(door),
+        '⛓⛓ …and the room really carries THIS element\'s DOOR — its obstacle on its door cell',
+        door ? `${door.id} at (${door.x},${door.y}), opened from `
+            + `${(placed.clearer ?? []).map((c) => `(${c.x},${c.y})`).join(' ')}`
+            : `no obstacle on the door cell ${JSON.stringify(placed.doorCell)}`);
+} else {
+    check((gen.areas?.locks?.length ?? 0) > 0,
+        '⛓⛓ …and a lock-and-key GRAPH was adjudicated over the room the element made',
+        `${gen.areas?.locks?.length ?? 0} lock(s), ${gen.areas?.flags?.length ?? 0} flag(s), `
+        + `refused ${gen.areas?.refused?.reason ?? 'no'}`);
+}
+
+await page.click('#loadWasm');
+if (!await until("window.__watch?.wasm?.reached?.includes('runtime')", 600,
+    'the ship reached `runtime` and is waiting for a REAL ▶ Start')) {
+    await browser.close(); say(`\n${failed} FAILURE(S)`); process.exit(1);
+}
+/** ⛓ Playwright's click IS a real input event with real user activation — the
+ *  page's own warning is about what the PARENT document can do, not a driver. */
+const frame = page.frames().find((f) => /\/game\.html/.test(f.url()));
+check(Boolean(frame), 'the game frame is mounted', frame?.url() ?? 'no /game.html frame');
+if (!frame) { await browser.close(); say(`\n${failed} FAILURE(S)`); process.exit(1); }
+await frame.click('#btn-start');
+await assertLogicOnlyChannel(frame, { say });
+
+await until("window.__watch?.wasm?.reached?.includes('levels') || window.__watch?.wasm?.refusal",
+    600, '⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact');
+const finished = await until(
+    "window.__watch?.wasm?.verdict && window.__watch.wasm.verdict.kind !== 'not-finished'",
+    SHIP_SEC, '⛓ the ship reached `finished` — the real game ran the tape out');
+
+const wasm = await page.evaluate(() => window.__watch?.wasm ?? null);
+const verdictText = await page.evaluate(
+    () => document.getElementById('wasmVerdict')?.textContent ?? '');
+await browser.close();
+
+say('');
+say(`  ${Math.round((Date.now() - t0) / 1000)} s · reached ${JSON.stringify(wasm?.reached)}`);
+say(`  drain   ${wasm?.drain?.observations} observation(s), `
+    + `${wasm?.drain?.reportedTransitions} reported transition(s)`);
+verdictText.split('\n').forEach((l) => l && say(`  verdict ${l}`));
+say('');
+
+check(finished && wasm !== null, 'the ship produced a verdict at all',
+    wasm?.verdict?.kind ?? 'none');
+if (wasm) {
+    check((wasm.drain?.observations ?? 0) > 0,
+        '⛓ the game DRAINED its whole observation stream — a buffered read, once',
+        `${wasm.drain?.observations} observation(s)`);
+    check(wasm.verdict?.perTick?.kind === 'agrees',
+        '⛓⛓⛓ wasm verdict: AGREES PER TICK — the real game reproduced the model '
+        + 'observation for observation, in a room built around this element',
+        `${wasm.verdict?.perTick?.text} (kind ${wasm.verdict?.perTick?.kind})`);
+    /**
+     * ⛔ THE SENTENCE'S OWN COUNT, PARSED — three independent accounts of how
+     * long the run was, asserted equal. `kind === 'agrees'` alone is the same
+     * word an END-STATE agreement uses and would pass over a PREFIX.
+     */
+    const said = /agrees per tick \((\d+) observations?\)/.exec(wasm.verdict?.perTick?.text ?? '');
+    const n = said ? Number(said[1]) : null;
+    check(n !== null && n === (wasm.status?.tick ?? -1) + 1 && n === wasm.drain?.observations,
+        '⛔⛔ …and the PER-TICK sentence\'s OWN count is the whole run',
+        `sentence ${n} · drain ${wasm.drain?.observations} · game tick ${wasm.status?.tick} + 1`);
+    check(wasm.verdict?.agrees === true,
+        '⛓ end-state verdict: AGREES — the real game ended where the model ended',
+        `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy}`);
+    check(wasm.status?.level === 0,
+        '⛔ …and the GAME was in room 0 the whole time — the 900→0 remap is what made a '
+        + 'stream of 900s agree with it',
+        `game level ${wasm.status?.level}, model record level 900`);
+    check(wasm.status?.tick === gen.ticks,
+        'the game ran the SAME number of ticks the certification produced',
+        `game ${wasm.status?.tick} vs certification ${gen.ticks}`);
+}
+/** ⛓ NOT a claim — printed so a reader is not surprised by it. ⛔ H1: this
+ *  was read as swiftshader's own noise (slice 1 measured a dense control
+ *  emitting the same count); it is the device-lost message, and 0 under
+ *  `HEADLESS_WEBGPU_ARGS`. ⛓ H2: this gate runs logic-only, where the loss is
+ *  ASKED FOR and proved by `__swfGpu.lost` — so a non-zero count is expected. */
+say(`\n  [headless] ${pageErrors.length} page error(s) `
+    + `— e.g. ${JSON.stringify(pageErrors[0] ?? 'none')}`);
+
+say(`\n${failed} FAILURE(S)`);
+process.exit(failed === 0 ? 0 : 1);

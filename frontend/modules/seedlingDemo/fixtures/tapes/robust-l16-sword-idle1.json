@@ -1,0 +1,177 @@
+{
+    "game": "seedling",
+    "name": "robust-l16-sword-idle1",
+    "boot": {
+        "level": 16,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasDarkSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasDarkShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasFeather": false,
+            "hasSpear": false,
+            "hasDarkSuit": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 220,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 1,
+            "to": 14
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 15,
+            "to": 41
+        },
+        {
+            "key": "up",
+            "from": 41,
+            "to": 42
+        },
+        {
+            "key": "down",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "right",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "primary",
+            "from": 47,
+            "to": 48
+        },
+        {
+            "key": "left",
+            "from": 48,
+            "to": 49
+        },
+        {
+            "key": "right",
+            "from": 51,
+            "to": 91
+        },
+        {
+            "key": "left",
+            "from": 93,
+            "to": 95
+        },
+        {
+            "key": "up",
+            "from": 99,
+            "to": 168
+        },
+        {
+            "key": "down",
+            "from": 169,
+            "to": 171
+        },
+        {
+            "key": "left",
+            "from": 175,
+            "to": 176
+        },
+        {
+            "key": "primary",
+            "from": 176,
+            "to": 177
+        },
+        {
+            "key": "down",
+            "from": 178,
+            "to": 188
+        },
+        {
+            "key": "up",
+            "from": 188,
+            "to": 189
+        },
+        {
+            "key": "down",
+            "from": 189,
+            "to": 190
+        },
+        {
+            "key": "up",
+            "from": 190,
+            "to": 191
+        },
+        {
+            "key": "down",
+            "from": 191,
+            "to": 192
+        },
+        {
+            "key": "up",
+            "from": 194,
+            "to": 195
+        },
+        {
+            "key": "right",
+            "from": 178,
+            "to": 206
+        },
+        {
+            "key": "left",
+            "from": 208,
+            "to": 210
+        },
+        {
+            "key": "down",
+            "from": 214,
+            "to": 220
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓ SEEDLING FIDELITY CANCROSS — a `canCross` witness: level 16 → 17, inventory [sword], arrival the door from level 15 at (32,64) (assumed: persistence, save, rng, beam, rockSet, hitsMax, time, primary, cutscene), 1 idle tick(s) first, dashMode none: 220 ticks, 0 hit(s). Written by scripts/procgen/can-cross-seedling.mjs --witness."
+}

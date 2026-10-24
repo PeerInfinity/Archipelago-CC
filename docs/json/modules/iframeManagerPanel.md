@@ -1,4 +1,4 @@
 # Iframe Manager Panel
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/iframeManagerPanel.md)
 - [Technical Reference](../developer/modules/iframeManagerPanel.md)

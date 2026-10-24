@@ -1,0 +1,550 @@
+#!/usr/bin/env node
+/**
+ * Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LEG LIST: every exit and
+ * location leg of the committed Seedling atlas worlds + `seedling_playthrough`, from each region's
+ * RESOLVED arrivals, with the inventory the AP route holds there. Pure node, no browser; it writes jsonl
+ * and changes nothing tracked. Its consumer is `probe-seedling-divergence-sweep.mjs`.
+ *
+ *   arrivals   for every door INTO a region (another region's sidecar exit naming it as `targetRegion` +
+ *              `targetExitId`), `seedlingRegionBinding.resolveArrivalSpawn` over that door — the binding's
+ *              own answer (the game's return spawn, else the door's entrance spawn); a start region also
+ *              gets its no-"came from" arrival. Distinct (x, y) per region.
+ *   goals      every sidecar exit that is not an `in_` (arrival-only) door, and every rules location of the
+ *              region. A logical link (no door) is not walked, so it is not a leg.
+ *   sphere     the preset's sphere log (embedded; `seedling_playthrough` carries none, so
+ *              `forwardSimulator.generateSphereLog` over the committed rules — the same tool the embedded
+ *              logs come from). A location's sphere = where it becomes accessible; an exit's = the first
+ *              sphere at or after its region's in which its own `access_rule` holds (`never` = the route
+ *              never may take it). `inventory` = the items collected THROUGH that sphere, in collection
+ *              order (the game's slot order is acquisition order) — what the AP route holds there.
+ *   blocks     (`--blocks`) how many locations the sphere log LOSES with this leg's edge removed (the exit's
+ *              rule, or the location's rule, set False): the leg's weight in the playthrough's ranking.
+ *
+ * Geometry repeats across presets (every atlas world is cut from the same map): a leg whose
+ * (level, arrival, goal) an earlier preset already lists is kept once, under the first preset, with
+ * `alsoIn`. Preset order: playthrough first (it binds every level).
+ *
+ *   events     ⛓ an arrival whose door EDGE needs a `game_state` event (an obstacle flag only the game sets:
+ *              `level_76 -> level_71__r0c6` = `Has(L71 flag 2: …)`, its landing inside the shield lock) carries
+ *              `arrive.events` (`{eventId, level, tag}`). An arrival reached by several doors needs an event only
+ *              when EVERY door does. The leg STAGES those flags (`stagedEvents`: `{eventId, level, tag, otherLevel}`,
+ *              `eventStaging`): the sweep writes each into the game's persistence table before the jump, so the
+ *              obstacle is already broken — the true game state for that arrival, since a player using it broke the
+ *              obstacle earlier in the run (persistence is game-global: a flag in ANOTHER level is staged too,
+ *              `otherLevel: true`). ⚖ A TEST-HARNESS STAGING CHOICE ONLY: the runtime's "flags flow game → AP only"
+ *              is unchanged, and production never stages a flag the game did not set. Two cases stay `skip`ped BY
+ *              NAME (the sweep emits a skipped row and never runs them): a gate that maps to no flag (an event that
+ *              is not `game_state`, or one without an integer `{level, tag}`), and a leg whose GOAL is one of its own
+ *              gating events (staged, there is nothing left to clear).
+ *   goal events ⛓ a leg whose GOAL rule (a location's rule, or the rule of the exit it crosses) needs a `game_state`
+ *              event STAGES it too, through the same `stagedEvents` channel (after the arrival's, deduplicated), and names
+ *              it in `goalEvents` (event ids). The AP route held that event at the goal's sphere, so the game would hold
+ *              its flag: `L113 -> L114`'s FinalDoor = And(Seal×16, Has(flag:L114:0)) stages the Watcher's talk; Dungeon 6's
+ *              darktrap exits = Or(Has(flag:L62:0), Has(Ghost Spear)) stage the lit pole. WHICH events (`goalEvents`): the
+ *              cheapest way the AP inventory AT THAT SPHERE satisfies the rule — `And` = every child's; `Or` = the branch
+ *              that holds and needs the FEWEST events (a tie: the first in rule order), so a held Ghost Spear stages
+ *              nothing; a goal the route never satisfies (no sphere) stages nothing. An unmappable goal event (no flag)
+ *              skips the leg by name (`goal-needs-unmappable-event`). A leg whose goal needs no event is byte-identical.
+ *   key        `legKey` — (region, the arrival's door, goal): the leg's identity ACROSS SHAs. The numeric `id` is
+ *              the list position (display only: it shifts when an earlier leg is added or removed).
+ *   door-less  ⛓ (§5.126) a room NO door enters (no arrival above) is entered in play by WALKING a logical link from a
+ *              sibling room of its level (`linkArrivals`): its legs start at that sibling's door arrival (the jump is a
+ *              real door spawn; ⛔ no door is invented, no position written) and walk across, `arrive.entry: 'link'`,
+ *              key `<region> <- <door> ~> <room walked from> -> <goal>`. The link's `game_state` event stages as a door
+ *              edge's does. They are built AFTER every preset's door legs, so a door leg's id, key and bytes never move
+ *              (`fixtures/divergence-door-leg-keys.json` pins the keys). A door-less room with a goal and no such arrival
+ *              prints `UNREACHABLE-AS-LEG: <preset>:<region> — <why>`; the goal-less ones are named in one INFO line.
+ *
+ * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks]
+ */
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+
+/**
+ * ⚖ D3 (rule-node-registry R2b): a kind these readers do not know needs no event only when no event item appears
+ * anywhere in it (`True_`, a `Has` of an ordinary item, …). One that names an event item is REFUSED by name: reading
+ * it as "needs none" was fail-open, and a decider never guesses.
+ */
+function refuseUnknownKindWithEvents(rule, byItem, reader) {
+    // the item names anywhere in `rule`, by arg (the keys procgenCore/ruleItemNames.js reads)
+    const events = new Set();
+    const walk = (node) => {
+        if (Array.isArray(node)) { node.forEach(walk); return; }
+        if (!node || typeof node !== 'object') return;
+        const holder = typeof node.rule === 'string' ? node.args : node;
+        for (const [key, value] of Object.entries(holder ?? {})) {
+            const names = (key === 'item_name' || key === 'item') ? [value]
+                : (key === 'item_names' || key === 'items') && Array.isArray(value) ? value : [];
+            for (const n of names) if (typeof n === 'string' && byItem.has(n)) events.add(n);
+        }
+        Object.values(node).forEach(walk);
+    };
+    walk(rule);
+    if (events.size) {
+        throw new Error(`${reader}: rule kind ${JSON.stringify(rule.rule ?? rule.type)} names event item(s) `
+            + `${JSON.stringify([...events])} and this reader cannot tell which it needs; handle the kind here`);
+    }
+}
+
+/**
+ * The `game_state` event items a rule CANNOT hold without: `Has` / `HasAll` of an event item; `And` = the union;
+ * `Or` = none when some branch needs none, else the union of every branch's (fail-closed: each branch needs one).
+ * Any other kind: none, unless it names an event item (then it is refused by name). `byItem` maps an event ITEM name
+ * to its event (`procgenCore/eventRoute.gameStateEventsOf`).
+ */
+export function requiredEvents(rule, byItem) {
+    if (!rule || typeof rule !== 'object') return [];
+    const own = (names) => names.filter((n) => byItem.has(n)).map((n) => byItem.get(n));
+    const uniq = (list) => [...new Map(list.map((e) => [e.item, e])).values()];
+    switch (rule.rule) {
+        case 'Has': return own([rule.args?.item_name]);
+        case 'HasAll': return own(rule.args?.item_names ?? []);
+        case 'And': return uniq((rule.children ?? []).flatMap((c) => requiredEvents(c, byItem)));
+        case 'Or': {
+            const branches = (rule.children ?? []).map((c) => requiredEvents(c, byItem));
+            return branches.some((b) => b.length === 0) ? [] : uniq(branches.flat());
+        }
+        default:
+            refuseUnknownKindWithEvents(rule, byItem, 'requiredEvents');
+            return [];
+    }
+}
+
+/**
+ * The `game_state` events the cheapest satisfied branch of `rule` needs, given what the AP route holds (`holds(rule)` →
+ * true when the inventory satisfies that rule); `null` when the inventory does not satisfy it. `Has` / `HasAll` = its
+ * event items (when held); `And` = the union (null if any child is); `Or` = the held branch with the FEWEST events, the
+ * first in rule order on a tie (null when none holds); anything else = none when it holds, unless it names an event
+ * item (refused by name, as in `requiredEvents`). `byItem` as `requiredEvents`.
+ */
+export function goalEventsHeld(rule, byItem, holds) {
+    if (!rule || typeof rule !== 'object') return [];
+    const uniq = (list) => [...new Map(list.map((e) => [e.item, e])).values()];
+    switch (rule.rule) {
+        case 'And': {
+            const parts = (rule.children ?? []).map((c) => goalEventsHeld(c, byItem, holds));
+            return parts.some((p) => p === null) ? null : uniq(parts.flat());
+        }
+        case 'Or': {
+            let best = null;
+            for (const c of rule.children ?? []) {
+                const got = goalEventsHeld(c, byItem, holds);
+                if (got !== null && (best === null || got.length < best.length)) best = got;
+            }
+            return best;
+        }
+        case 'Has': case 'HasAll': return holds(rule) ? requiredEvents(rule, byItem) : null;
+        default:
+            refuseUnknownKindWithEvents(rule, byItem, 'goalEventsHeld');
+            return holds(rule) ? [] : null;
+    }
+}
+
+/**
+ * An arrival's event needs from its doors' (`needs` = one `requiredEvents` list per door reaching the spawn): none
+ * when ANY door needs none (the arrival is reachable without an event), else the union of every door's.
+ */
+export function arrivalEventNeeds(needs) {
+    const gated = needs.length > 0 && needs.every((n) => n.length > 0);
+    return gated ? [...new Map(needs.flat().map((e) => [e.item, e])).values()] : [];
+}
+
+/**
+ * The flag an event STAGES (`{eventId, level, tag}`), or `{why}` when it maps to none: only a `game_state` event
+ * (`procgenCore/eventRoute.gameStateEventsOf`, `kind: 'game_state'`) with an integer obstacle `{level, tag}` whose
+ * `eventId` is that flag's (`flag:L<level>:<tag>`) is a persistence flag the game itself would hold.
+ */
+export function stagedFlagOf(event) {
+    const id = event?.eventId ?? event?.item ?? event?.name ?? '?';
+    if (event?.kind !== 'game_state') return { why: `${id}: not a game_state event (event_kind ${JSON.stringify(event?.kind ?? null)})` };
+    if (!Number.isInteger(event.level) || !Number.isInteger(event.tag)) return { why: `${id}: no integer obstacle {level, tag}` };
+    if (event.eventId !== `flag:L${event.level}:${event.tag}`) return { why: `${id}: the event id is not its obstacle's flag:L${event.level}:${event.tag}` };
+    return { eventId: event.eventId, level: event.level, tag: event.tag };
+}
+
+/**
+ * An event-gated arrival's staging: `staged` (one `{eventId, level, tag, otherLevel}` per mappable event; `otherLevel`
+ * = the obstacle is in another level than the arrival's) and `unmappable` (`[why]`). A leg with ANY unmappable gate
+ * is skipped: staging only some of its gates would still land it inside the rest.
+ */
+export function eventStaging(events, arrivalLevel) {
+    const staged = [];
+    const unmappable = [];
+    for (const e of events ?? []) {
+        const f = stagedFlagOf(e);
+        if (f.why) unmappable.push(f.why);
+        else staged.push({ ...f, otherLevel: f.level !== arrivalLevel });
+    }
+    return { staged, unmappable };
+}
+
+/**
+ * An event-gated leg's fields: `{}` for an ungated arrival; `{stagedEvents}` when every gate maps to a flag; else
+ * `{skip}` BY NAME — an unmappable gate (`arrival-needs-unmappable-event`), or a location goal that IS one of the
+ * gating events (`goal-is-a-staged-event`: staged, there is nothing left to clear).
+ */
+export function eventGate({ arrive, level, goal, goalEvents = [] }) {
+    const goalStage = goalEventStaging(goalEvents, arrive, level);
+    if (!arrive?.events?.length) return goalStage;
+    const need = arrive.events.map((e) => e.eventId ?? e.name).join(' / ');
+    const { staged, unmappable } = eventStaging(arrive.events, level);
+    if (unmappable.length) {
+        return { skip: `arrival-needs-unmappable-event: every door into (${arrive.x},${arrive.y}) needs ${need} — `
+            + `${unmappable.join('; ')} (no persistence flag to stage: the landing would be inside the obstacle)` };
+    }
+    if (goal?.kind === 'location' && arrive.events.some((e) => e.name === goal.name)) {
+        return { skip: `goal-is-a-staged-event: every door into (${arrive.x},${arrive.y}) needs ${goal.name}, `
+            + 'the goal itself — staging its flag leaves nothing to clear' };
+    }
+    if (goalStage.skip) return goalStage;
+    return { stagedEvents: [...staged, ...(goalStage.stagedEvents ?? [])], ...(goalStage.goalEvents ? { goalEvents: goalStage.goalEvents } : {}) };
+}
+
+/**
+ * A leg's GOAL-rule staging (`goalEventsHeld`'s events): `{}` when none; `{stagedEvents, goalEvents}` for the events
+ * the arrival does not already stage (`goalEvents` = their ids); `{skip}` BY NAME when one maps to no flag.
+ */
+export function goalEventStaging(events, arrive, level) {
+    const have = new Set((arrive?.events ?? []).map((e) => e.eventId));
+    const add = (events ?? []).filter((e) => !have.has(e.eventId));
+    if (!add.length) return {};
+    const { staged, unmappable } = eventStaging(add, level);
+    if (unmappable.length) {
+        return { skip: `goal-needs-unmappable-event: the goal's rule needs ${add.map((e) => e.eventId ?? e.name).join(' / ')} — `
+            + `${unmappable.join('; ')} (no persistence flag to stage)` };
+    }
+    return { stagedEvents: staged, goalEvents: staged.map((e) => e.eventId) };
+}
+
+/**
+ * ⛓ DOOR-LESS SUB-REGIONS (§5.126) — the arrivals of the rooms no door enters, by the way the game enters them: the
+ * player came in through a SIBLING sub-region's door (or its start) and WALKED a logical link (a rules exit between two
+ * rooms of one level, no sidecar door: swim, a cut bush, a cut rope, …) into it. `rooms` = `[[region, level]]` in atlas
+ * order; `arrivalsOf` = region → its DOOR arrivals (events collapsed). Breadth-first: a room takes its arrivals only from
+ * the rooms holding arrivals at the start of its layer (the SHORTEST link chain, depth 1 first), entrants in rules order.
+ * Each arrival is the source's own spawn (`x`, `y`, `exitId`, `landing`: the jump the sweep makes is a real door
+ * arrival), `via` = the source's `via` + ` ~> <the room walked from>` (stable: door ids and region names only),
+ * `entry: 'link'`, `through` (the rooms walked across, in order), `links` (the rules exits crossed). Distinct (x, y) per
+ * room, the first path's `via`. Events: one need list per path = the source arrival's events + the link's
+ * `requiredEvents` (crossing it, the player broke it — the door edges' rule); the arrival needs them only when EVERY path
+ * does (the union then). A room with no such arrival is absent from the map.
+ */
+export function linkArrivals({ rooms, arrivalsOf, rulesRegions, byItem }) {
+    const levelOf = new Map(rooms);
+    const known = new Map([...arrivalsOf].filter(([, a]) => a.length));
+    const out = new Map();
+    const norm = (e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind });
+    const idOf = (e) => e.eventId ?? e.name;
+    for (;;) {
+        const next = new Map();
+        for (const [b] of rooms) {
+            if (known.has(b)) continue;
+            const arr = [];
+            for (const [s, reg] of Object.entries(rulesRegions)) {
+                if (s === b || !known.has(s) || levelOf.get(s) !== levelOf.get(b)) continue;
+                for (const x of reg.exits ?? []) {
+                    if (x.connected_region !== b) continue;
+                    const need = requiredEvents(x.access_rule, byItem).map(norm);
+                    for (const a of known.get(s)) {
+                        const needs = [...new Map([...(a.events ?? []), ...need].map((e) => [idOf(e), e])).values()];
+                        const same = arr.find((c) => c.x === a.x && c.y === a.y);
+                        if (same) { same.needs.push(needs); continue; }
+                        arr.push({ x: a.x, y: a.y, exitId: a.exitId, landing: a.landing, via: `${a.via} ~> ${s}`, entry: 'link',
+                            through: [...(a.through ?? []), s], links: [...(a.links ?? []), x.name], needs: [needs] });
+                    }
+                }
+            }
+            if (arr.length) next.set(b, arr);
+        }
+        if (!next.size) return out;
+        for (const [b, arr] of next) {
+            for (const a of arr) {
+                const gated = a.needs.every((n) => n.length > 0);
+                const events = gated ? [...new Map(a.needs.flat().map((e) => [idOf(e), e])).values()] : [];
+                delete a.needs;
+                if (events.length) a.events = events;
+            }
+            known.set(b, arr);
+            out.set(b, arr);
+        }
+    }
+}
+
+/** Why a door-less room has no `linkArrivals` arrival — UNREACHABLE-AS-LEG, by name (never dropped silently). */
+export function linkUnreachableWhy(region, { rooms, rulesRegions }) {
+    const levelOf = new Map(rooms);
+    const ins = Object.entries(rulesRegions).flatMap(([s, reg]) => (reg.exits ?? []).filter((x) => x.connected_region === region).map(() => s));
+    if (!ins.length) return 'no rules exit enters it (no door and no logical link: a pocket the route never enters)';
+    const why = [...new Set(ins)].map((s) => (!levelOf.has(s) ? `${s} (not an atlas room of this preset: no arrival spawn)`
+        : levelOf.get(s) !== levelOf.get(region) ? `${s} (another level, and no door)` : `${s} (no arrival of its own)`));
+    return `its only entrants have no walkable arrival: ${why.join('; ')}`;
+}
+
+/** The leg's identity across SHAs: (region, the arrival's door — `start` for the no-"came from" one, goal). */
+export function legKey({ region, arrive, goal }) {
+    const goalId = goal.kind === 'exit' ? `exit:${goal.exit_id}` : `location:${goal.name}`;
+    return `${region} <- ${arrive.via} -> ${goalId}`;
+}
+
+/**
+ * The legs `--ids=` / `--keys=` select (`--keys` is `|`-separated: a location name may hold a comma). A key that
+ * matches no leg THROWS by name (a stale key from another SHA must not select nothing silently).
+ */
+export function pickLegs(legs, { ids = [], keys = [] } = {}) {
+    if (!ids.length && !keys.length) return legs;
+    const known = new Set(legs.map((l) => l.key));
+    const missing = keys.filter((k) => !known.has(k));
+    if (missing.length) throw new Error(`no leg has the key(s) ${JSON.stringify(missing)}`);
+    const wantKeys = new Set(keys);
+    return legs.filter((l) => ids.includes(l.id) || wantKeys.has(l.key));
+}
+
+/** `--ids=a,b` and `--keys=k1|k2` off `argv`. */
+export function legSelectors(arg) {
+    return { ids: arg('ids', '').split(',').filter(Boolean).map(Number), keys: arg('keys', '').split('|').filter(Boolean) };
+}
+
+export const PRESETS = ['seedling_playthrough', 'seedling_atlas', 'seedling_atlas_location', 'seedling_atlas_host',
+    'seedling_atlas_maze', 'seedling_atlas_sphere'];
+
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
+
+async function main() {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REPO = join(HERE, '..', '..');
+    const M = (p) => import(join(REPO, 'frontend/modules', p));
+    const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback);
+    const OUT = arg('out', '');
+    if (!OUT) { console.log('FAIL: --out=<legs.jsonl> is required'); process.exit(2); }
+    const presets = arg('presets', PRESETS.join(',')).split(',');
+    const BLOCKS = process.argv.includes('--blocks');
+    const { resolveArrivalSpawn } = await M('flashPanel/seedlingRegionBinding.js');
+    const { returnSpawnTable } = await M('flashPanel/seedlingReturnSpawns.js');
+    const { atlasRoomRegions } = await M('seedlingDemo/seedlingAtlasCheckTable.js');
+    const { generateSphereLog } = await M('shared/procgen/forwardSimulator.js');
+    const { evaluateRuleWithInventory } = await M('shared/procgen/library.js');
+    const { gameStateEventsOf } = await M('procgenCore/eventRoute.js');
+    const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+    const RETURNS = returnSpawnTable(MAP);
+
+    const seen = new Map();
+    const legs = [];
+    const doorlessPasses = [];
+    const doorless = { linked: [], noGoal: [], unreachable: [], shadowed: [] };
+    for (const preset of presets) {
+        const rules = JSON.parse(readFileSync(join(REPO, `frontend/presets/${preset}/AP_1/AP_1_rules.json`), 'utf8'));
+        const embedded = (rules.sphere_log ?? []).filter((e) => e.type === 'state_update');
+        const log = embedded.length ? embedded : generateSphereLog(rules).filter((e) => e.type === 'state_update');
+        const spheres = sphereTable(log);
+        const rulesRegions = rules.regions['1'];
+        const pm = rules.progression_mapping?.['1'] ?? null;
+        const sidecars = rules.preset_sidecars['1'];
+        const regions = atlasRoomRegions(rules).map(({ region }) => [region, sidecars[region].playable_payload]);
+        // every EVENT a door may need: the game_state ones (their flags stage) and any other event location
+        // (`event_kind` set, not game_state: no flag to stage, so a leg gated on it stays skipped by name)
+        const byItem = new Map([...otherEventsOf(rules, '1'), ...gameStateEventsOf(rules, '1').map((e) => ({ ...e, kind: 'game_state' }))]
+            .map((e) => [e.item, e]));
+        // region → door id → the doors' edges' event needs (one entry per source door)
+        const into = new Map();
+        for (const [from, pl] of regions) {
+            for (const e of pl.exits ?? []) {
+                if (!e.targetRegion || !e.targetExitId) continue;
+                if (!into.has(e.targetRegion)) into.set(e.targetRegion, new Map());
+                const doors = into.get(e.targetRegion);
+                if (!doors.has(e.targetExitId)) doors.set(e.targetExitId, []);
+                const edge = (rulesRegions[from]?.exits ?? []).find((x) => x.name === e.exitName) ?? null;
+                doors.get(e.targetExitId).push(edge ? requiredEvents(edge.access_rule, byItem) : []);
+            }
+        }
+        // the goal rule's events the AP route holds at sphere `i` (the cheapest satisfied branch: `goalEventsHeld`)
+        const heldGoalEvents = (rule, i) => {
+            const row = spheres.rows[i];
+            const holds = (r) => evaluateRuleWithInventory(r, row.counts, '1', (x) => row.reached.has(x), pm) === true;
+            return (goalEventsHeld(rule, byItem, holds) ?? []).map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
+        };
+        const starts = new Set(startTargets(rules));
+        const totalLocs = spheres.allLocations.size;
+        const blocksCache = new Map();
+        const doorArrivals = new Map();
+        const goalsOf = new Map();
+        const blocksOf = (mutate) => {
+            const doc = structuredClone(rules);
+            delete doc.sphere_log;
+            mutate(doc.regions['1']);
+            let got;
+            try { got = new Set(generateSphereLog(doc).filter((e) => e.type === 'state_update').flatMap((e) => e.player_data['1'].sphere_locations ?? [])); } catch (err) { return { error: err.message.slice(0, 120) }; }
+            return totalLocs - [...spheres.allLocations].filter((l) => got.has(l)).length;
+        };
+        for (const [region, pl] of regions) {
+            const arrivals = [];
+            // needs: one event list per door reaching this spawn; the arrival needs events only when EVERY door does
+            const add = (a, via, needs) => {
+                if (!a) return;
+                const same = arrivals.find((b) => b.x === a.x && b.y === a.y);
+                if (same) { same.needs.push(...needs); return; }
+                arrivals.push({ x: a.x, y: a.y, exitId: a.exitId, landing: a.landing, via, needs: [...needs] });
+            };
+            for (const [id, needs] of into.get(region) ?? []) add(resolveArrivalSpawn(pl, { exit_id: id }, RETURNS), id, needs);
+            if (starts.has(region)) add(resolveArrivalSpawn(pl, null, RETURNS), 'start', [[]]);
+            for (const a of arrivals) {
+                const events = arrivalEventNeeds(a.needs);
+                delete a.needs;
+                if (events.length) {
+                    a.events = events.map((e) => ({ eventId: e.eventId, level: e.level, tag: e.tag, name: e.name, kind: e.kind }));
+                }
+            }
+            const rr = rulesRegions[region];
+            const goals = [];
+            for (const e of pl.exits ?? []) {
+                if (/^in_/.test(e.exit_id)) continue;
+                const re = (rr?.exits ?? []).find((x) => x.name === e.exitName) ?? null;
+                const sphere = re ? exitSphere(spheres, region, re.access_rule, pm, evaluateRuleWithInventory) : null;
+                const goalEvents = sphere?.index != null ? heldGoalEvents(re.access_rule, sphere.index) : [];
+                goals.push({ goal: { kind: 'exit', level: pl.level, tiles: e.exit_tiles, name: e.exitName, exit_id: e.exit_id },
+                    target_level: e.target_level, targetRegion: e.targetRegion, rule: re?.access_rule ?? null, sphere,
+                    geo: `x|${JSON.stringify(e.exit_tiles)}`, edge: re ? { region, exit: re.name } : null, goalEvents });
+            }
+            for (const l of rr?.locations ?? []) {
+                const s = spheres.locationSphere.get(l.name) ?? null;
+                goals.push({ goal: { kind: 'location', level: pl.level, name: l.name }, rule: l.access_rule ?? null,
+                    sphere: s === null ? null : { index: s, ...spheres.at(s) }, item: l.item?.name ?? null,
+                    geo: `l|${l.name.replace(/^.*? - /, '')}`, edge: { region, location: l.name },
+                    goalEvents: s === null ? [] : heldGoalEvents(l.access_rule, s) });
+            }
+            doorArrivals.set(region, arrivals);
+            goalsOf.set(region, goals);
+            for (const a of arrivals) for (const g of goals) emitLeg(region, pl, a, g);
+        }
+        // ⛓ DOOR-LESS SUB-REGIONS (§5.126) — after EVERY preset's door legs (`doorless` below), so no door leg moves
+        doorlessPasses.push(() => {
+            const rooms = regions.map(([r, p]) => [r, p.level]);
+            const viaLinks = linkArrivals({ rooms, arrivalsOf: doorArrivals, rulesRegions, byItem });
+            for (const [region, pl] of regions) {
+                if (doorArrivals.get(region).length) continue;
+                const goals = goalsOf.get(region);
+                const arr = viaLinks.get(region) ?? [];
+                if (!goals.length) { doorless.noGoal.push(`${preset}:${region}`); continue; }
+                if (!arr.length) { doorless.unreachable.push({ preset, region, why: linkUnreachableWhy(region, { rooms, rulesRegions }) }); continue; }
+                doorless.linked.push({ preset, region, arrivals: arr.length, goals: goals.length });
+                for (const a of arr) for (const g of goals) emitLeg(region, pl, a, g);
+            }
+        });
+        /** One leg per (arrival, goal), deduplicated by geometry (`alsoIn`). A door-less leg never touches a door leg. */
+        function emitLeg(region, pl, a, g) {
+            const k = `${pl.level}|${a.x}|${a.y}|${g.geo}`;
+            if (seen.has(k)) {
+                const first = seen.get(k);
+                if (a.entry === 'link' && first.arrive.entry !== 'link') { doorless.shadowed.push(`${preset}:${region} = ${first.key}`); return; }
+                (first.alsoIn ??= []).push(`${preset}:${region}`);
+                return;
+            }
+            let blocks = null;
+            if (BLOCKS && g.edge) {
+                const bk = `${preset}|${JSON.stringify(g.edge)}`;
+                if (!blocksCache.has(bk)) {
+                    blocksCache.set(bk, blocksOf((rg) => {
+                        const r = rg[g.edge.region];
+                        const t = g.edge.exit ? r.exits.find((x) => x.name === g.edge.exit) : r.locations.find((x) => x.name === g.edge.location);
+                        if (t) t.access_rule = { rule: 'Or', children: [] };
+                    }));
+                }
+                blocks = blocksCache.get(bk);
+            }
+            const leg = { id: legs.length, key: legKey({ region, arrive: a, goal: g.goal }), preset, region,
+                level: pl.level, arrive: a, ...g, blocks,
+                regionSphere: spheres.regionSphere.get(region) ?? null };
+            delete leg.geo;
+            delete leg.edge;
+            delete leg.goalEvents;
+            // ⚖ TEST-HARNESS STAGING ONLY (see `events` / `goal events` above): production never stages a flag
+            Object.assign(leg, eventGate({ arrive: a, level: pl.level, goal: g.goal, goalEvents: g.goalEvents }));
+            seen.set(k, leg);
+            legs.push(leg);
+        }
+        console.log(`INFO: ${preset}: ${regions.length} regions, ${log.length} spheres, ${legs.length} legs so far`);
+    }
+    const doorLegs = legs.length;
+    for (const pass of doorlessPasses) pass();
+    console.log(`INFO: DOOR-LESS sub-regions: ${doorless.linked.length} entered through a logical link → ${legs.length - doorLegs} leg(s) `
+        + `after the ${doorLegs} door legs: ${JSON.stringify(doorless.linked.map((d) => `${d.preset}:${d.region} (${d.arrivals} arrival(s) × ${d.goals} goal(s))`))}`);
+    for (const u of doorless.unreachable) console.log(`INFO: UNREACHABLE-AS-LEG: ${u.preset}:${u.region} — ${u.why}`);
+    console.log(`INFO: ${doorless.noGoal.length} door-less sub-region(s) hold NO goal (no sidecar exit, no location: nothing to walk): `
+        + JSON.stringify(doorless.noGoal));
+    if (doorless.shadowed.length) console.log(`INFO: ${doorless.shadowed.length} door-less leg(s) walk a door leg's geometry (kept as the door leg): ${JSON.stringify(doorless.shadowed)}`);
+    writeFileSync(OUT, legs.map((l) => JSON.stringify(l)).join('\n') + '\n');
+    const by = (f) => legs.reduce((m, l) => { const k = f(l); m[k] = (m[k] ?? 0) + 1; return m; }, {});
+    console.log(`INFO: ${legs.length} legs → ${OUT}`, JSON.stringify(by((l) => `${l.preset} ${l.goal.kind}`)));
+    const staged = legs.filter((l) => l.stagedEvents);
+    console.log(`INFO: ${staged.length} leg(s) STAGE their arrival's gating flag(s) (an event-gated arrival; test-harness staging): `
+        + JSON.stringify(by((l) => (l.stagedEvents ? l.stagedEvents.map((e) => e.eventId + (e.otherLevel ? '(other level)' : '')).join('+') : 'ungated'))));
+    const goalStaged = legs.filter((l) => l.goalEvents);
+    console.log(`INFO: ${goalStaged.length} leg(s) STAGE their GOAL rule's event flag(s) (the cheapest branch the AP route holds): `
+        + JSON.stringify(by((l) => (l.goalEvents ? l.goalEvents.join('+') : 'none'))));
+    const skipped = legs.filter((l) => l.skip);
+    console.log(`INFO: ${skipped.length} leg(s) SKIPPED by name (an event gate that maps to no flag, or the goal IS the gating event)`
+        + (skipped.length ? `: ${JSON.stringify(by((l) => (l.skip ? `${l.skip.split(':')[0]} ${(l.arrive.events ?? []).map((e) => e.eventId ?? e.name).join('+')}` : 'run')))}` : ''));
+    const keys = new Set(legs.map((l) => l.key));
+    if (keys.size !== legs.length) { console.log(`FAIL: ${legs.length - keys.size} duplicate leg key(s)`); process.exit(1); }
+}
+
+/** Event locations that are NOT `game_state` (`event_kind` set to anything else): gates with no flag to stage. */
+export function otherEventsOf(rules, playerId = '1') {
+    const out = [];
+    for (const [region, reg] of Object.entries(rules?.regions?.[String(playerId)] ?? {})) {
+        for (const loc of reg?.locations ?? []) {
+            if (!loc?.event_kind || loc.event_kind === 'game_state') continue;
+            out.push({ name: loc.name, item: loc.item?.name ?? loc.name, region, eventId: loc.event_id ?? null,
+                level: loc.obstacle?.level ?? null, tag: loc.obstacle?.tag ?? null, kind: loc.event_kind });
+        }
+    }
+    return out;
+}
+
+/** The start hop's target regions (Menu → …). */
+function startTargets(rules) {
+    const out = [];
+    for (const s of rules.start_regions?.['1']?.default ?? []) {
+        for (const e of rules.regions['1'][s]?.exits ?? []) out.push(e.connected_region);
+    }
+    return out;
+}
+
+/** The sphere log as ordinals: per sphere, the cumulative inventory (in collection order) and reached regions. */
+export function sphereTable(log) {
+    const regionSphere = new Map();
+    const locationSphere = new Map();
+    const allLocations = new Set();
+    const rows = [];
+    const order = [];
+    const counts = new Map();
+    const reached = new Set();
+    log.forEach((e, i) => {
+        const pd = e.player_data['1'];
+        for (const [name, n] of Object.entries(pd.new_inventory_details?.base_items ?? {})) {
+            for (let k = 0; k < n; k++) order.push(name);
+            counts.set(name, (counts.get(name) ?? 0) + n);
+        }
+        for (const r of pd.new_accessible_regions ?? []) { if (!regionSphere.has(r)) regionSphere.set(r, i); reached.add(r); }
+        for (const l of pd.new_accessible_locations ?? []) if (!locationSphere.has(l)) locationSphere.set(l, i);
+        for (const l of pd.sphere_locations ?? []) allLocations.add(l);
+        rows.push({ label: e.sphere_index, inventory: [...order], counts: new Map(counts), reached: new Set(reached) });
+    });
+    return { regionSphere, locationSphere, allLocations, rows,
+        at: (i) => ({ label: rows[i].label, inventory: rows[i].inventory }) };
+}
+
+function exitSphere(spheres, region, rule, pm, evaluate) {
+    const from = spheres.regionSphere.get(region);
+    if (from === undefined) return { index: null, label: 'never (region unreached)' };
+    for (let i = from; i < spheres.rows.length; i++) {
+        const row = spheres.rows[i];
+        const v = evaluate(rule ?? { rule: 'True_' }, row.counts, '1', (r) => row.reached.has(r), pm);
+        if (v === true) return { index: i, ...spheres.at(i) };
+    }
+    return { index: null, label: 'never (rule never holds)' };
+}

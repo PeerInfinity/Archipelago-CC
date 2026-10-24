@@ -16,7 +16,8 @@ export const moduleInfo = {
     componentType: 'apcalcPanel',
     icon: '🧮',
     column: 2,
-    description: 'Calculator-themed puzzle game for Archipelago',
+    category: 'Non-procgen Games',
+    description: 'A calculator puzzle: press number and operation keys, each with limited presses, to reach target numbers.',
     requires: ['stateManager'],
 };
 

@@ -4390,6 +4390,12 @@
   "starting_items": {
     "1": []
   },
+  "flash_panel": {
+    "1": {
+      "config": "seedling.json",
+      "wasm": "seedling_bot_ap_p4g/game.html"
+    }
+  },
   "preset_sidecars": {},
   "world": {
     "1": {

@@ -6,10 +6,12 @@ builds a dependency graph where each phase is a node, and outputs a
 DepGraph-compatible JSON file.
 
 Usage:
-    python extract_depgraph.py [--investigation-dir PATH] [--output PATH] [--validate-only]
+    python extract_depgraph.py --investigation-dir PATH [--output PATH] [--validate-only]
+
+--investigation-dir is required: a SWFRecomp-CC checkout's
+ruffle-tests/tests/swfs/avm1/_investigation directory.
 
 Defaults:
-    --investigation-dir: ~/CC/SWFRecomp-CC/ruffle-tests/tests/swfs/avm1/_investigation
     --output: depgraph_swfrecomp.json
 """
 
@@ -284,8 +286,7 @@ def main():
     parser.add_argument(
         "--investigation-dir",
         type=Path,
-        default=Path.home()
-        / "CC/SWFRecomp-CC/ruffle-tests/tests/swfs/avm1/_investigation",
+        required=True,
         help="Path to the _investigation directory",
     )
     parser.add_argument(

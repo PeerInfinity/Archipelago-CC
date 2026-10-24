@@ -74,13 +74,9 @@ class WorldDataMixin:
             if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
 
-        if hasattr(world, 'difficulty_requirements'):
-            if hasattr(world.difficulty_requirements, 'progressive_bottle_limit'):
-                itempool_counts['__max_progressive_bottle'] = world.difficulty_requirements.progressive_bottle_limit
-            if hasattr(world.difficulty_requirements, 'boss_heart_container_limit'):
-                itempool_counts['__max_boss_heart_container'] = world.difficulty_requirements.boss_heart_container_limit
-            if hasattr(world.difficulty_requirements, 'heart_piece_limit'):
-                itempool_counts['__max_heart_piece'] = world.difficulty_requirements.heart_piece_limit
+        # Pool limits (e.g. ALttP's difficulty_requirements.heart_piece_limit) are not
+        # items and are not written here: they are exported with the rest of the
+        # runtime world attributes, at world[player].difficulty_requirements.
 
         return dict(sorted(itempool_counts.items()))
 
@@ -685,6 +681,20 @@ class WorldDataMixin:
         """
         attributes = {}
 
+        # A world_generator world names the location keys its source rules.json carried
+        # (`_worldgen_extra_attributes`, RULES obstacle-events): those round-trip VERBATIM,
+        # structured values included — auto-discovery below keeps only scalars, which
+        # silently dropped e.g. an obstacle event's `obstacle` / `action` blocks.
+        for attr_name in getattr(location, '_worldgen_extra_attributes', ()) or ():
+            value = getattr(location, attr_name, None)
+            if value is None:
+                continue
+            try:
+                json.dumps(value)
+            except (TypeError, ValueError):
+                continue
+            attributes[attr_name] = value
+
         # Only do full auto-discovery if enabled
         if not self.AUTO_DISCOVER_LOCATION_ATTRIBUTES:
             return attributes
@@ -714,7 +724,7 @@ class WorldDataMixin:
         for attr_name in sorted(attrs_to_check):
             if attr_name.startswith('_'):
                 continue
-            if attr_name in skip_attrs:
+            if attr_name in skip_attrs or attr_name in attributes:
                 continue
 
             try:

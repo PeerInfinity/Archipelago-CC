@@ -1,0 +1,4 @@
+# box lock: TAKEN by probe-seedling-bobsoldier-mobiles.mjs (browser, pid 19948) — head 3e59a25ee, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the sample clock is the model's — 361 sampled tick(s) inside the tape; shifts that fit every player x: [0] (must be exactly [0])
+PASS: the BobSoldier's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 218 comparison(s), worst |Δ| 0

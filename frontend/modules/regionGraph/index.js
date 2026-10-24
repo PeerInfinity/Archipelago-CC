@@ -8,9 +8,11 @@ export const moduleInfo = {
   name: 'regionGraph',
   title: 'Region Graph',
   componentType: 'regionGraphPanel',
+  docs: 'docs/json/user/modules/regionGraph.md',
   icon: '🌐',
   column: 2, // Middle column,
-  description: 'Interactive visualization of region connectivity graph with deterministic layout',
+  category: 'Analysis Panels',
+  description: 'A map of regions and exits colored by reachability; click a region to move toward it or check its locations.',
   requires: ['stateManager', 'gameState'],
 };
 

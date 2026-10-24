@@ -877,12 +877,11 @@ describe('PlaybackBotUI — append-only log', () => {
         // with pingWorker is round-tripped before findPathWithExits runs,
         // and that findPathWithExits is called only after the ping resolves.
         const calls = [];
-        let resolvePing;
-        const pingPromise = new Promise((r) => { resolvePing = r; });
+        const pings = [];
         const proxy = {
             pingWorker: (label) => {
                 calls.push(`ping:${label}`);
-                return pingPromise;
+                return new Promise((r) => { pings.push(r); });
             },
         };
         const bot = new PlaybackBotUI({
@@ -905,30 +904,65 @@ describe('PlaybackBotUI — append-only log', () => {
             stateManagerProxy: proxy,
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
-        await bot.play();                                    // walk to Loc A (same region — no ping)
-        expect(calls).toEqual([]);
+        const playing = bot.play();                          // walk to Loc A (same region — flushed too)
+        pings.shift()();
+        await playing;
+        calls.length = 0;
         bot.onLocationCheck({ locationName: 'Loc A' });      // cross-region — should ping then path-find
         // Before the ping resolves, only the ping is recorded.
         expect(calls).toEqual(['ping:playbackBot:flush']);
-        resolvePing();
-        await pingPromise;
-        // Yield once more so the awaited continuation in _publishNextWalkTo runs.
-        await Promise.resolve();
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
         expect(calls).toEqual(['ping:playbackBot:flush', 'findPath:region_a->region_b']);
     });
 
+    it('flushes the stateManager worker before a SAME-region walkTo', async () => {
+        // Regression (tutorial drafts procgen-shuffled-spiral and
+        // procgen-grid-growth, 2026-10-10): the Maze panel hands the
+        // snapshot's inventory to its tile planner on every walkTo. The
+        // bot published a same-region walkTo synchronously after
+        // onLocationCheck, so the planner saw the snapshot from BEFORE the
+        // pickup — no key, door shut — and stuck with "walkToTile: no path
+        // … under current inventory". The walkTo must wait for the flush.
+        const pings = [];
+        const proxy = { pingWorker: () => new Promise((r) => { pings.push(r); }) };
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [
+                { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+                { sphereIndex: 0, fractionalIndex: 2, locations: ['Loc A2'] },
+            ],
+            getStaticData: () => ({ regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A' }, { name: 'Loc A2' }] }],
+            ]) }),
+            getActiveController: () => controller,
+            stateManagerProxy: proxy,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        const playing = bot.play();
+        pings.shift()();
+        await playing;
+        const walkTos = () => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0].name);
+        expect(walkTos()).toEqual(['Loc A']);
+        bot.onLocationCheck({ locationName: 'Loc A' });
+        // The ping is outstanding: nothing may have been published yet.
+        expect(pings.length).toBe(1);
+        expect(walkTos()).toEqual(['Loc A']);
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
+        expect(walkTos()).toEqual(['Loc A', 'Loc A2']);
+    });
+
     it('takes the same-region branch when onRegionMove fires during the flush await', async () => {
-        // Race regression: the same-region check happens before the
-        // flush await, but onRegionMove can fire while we await
+        // Race regression: onRegionMove can fire while we await
         // pingWorker — the visualizer crosses an exit on its own
-        // clock — and currentRegion ends up matching the head region
-        // by the time PathFinder is called. Without re-checking after
-        // the await, PathFinder sees (X, X), returns a length-0 path,
-        // and the bot errors with "no path from X to X".
+        // clock — and currentRegion ends up matching the head region.
+        // Deciding the branch BEFORE the await sent PathFinder (X, X),
+        // a length-0 path, and the error "no path from X to X"; every
+        // branch is now decided after the flush.
         const findPathCalls = [];
-        let resolvePing;
-        const pingPromise = new Promise((r) => { resolvePing = r; });
-        const proxy = { pingWorker: () => pingPromise };
+        const pings = [];
+        const proxy = { pingWorker: () => new Promise((r) => { pings.push(r); }) };
         const controller = makeFakeController();
         const bot = new PlaybackBotUI({
             getSphereData: () => [
@@ -950,15 +984,16 @@ describe('PlaybackBotUI — append-only log', () => {
             stateManagerProxy: proxy,
         });
         bot.onRegionMove({ targetRegion: 'region_a' });
-        await bot.play();                                    // walk to Loc A
+        const playing = bot.play();                          // walk to Loc A
+        pings.shift()();
+        await playing;
         bot.onLocationCheck({ locationName: 'Loc A' });      // sphere 0.2 wants region_b — cross-region path
         // While awaiting flush, the visualizer crosses an exit and
         // updates currentRegion to region_b — just as it would in
         // production when the visualizer's clock runs concurrently.
         bot.onRegionMove({ targetRegion: 'region_b' });
-        resolvePing();
-        await pingPromise;
-        await Promise.resolve();
+        pings.shift()();
+        await new Promise((r) => setTimeout(r, 0));
         // PathFinder should NOT have been called (post-flush re-check
         // saw region match), and the bot should have walked to Loc B
         // directly instead of erroring with "no path from X to X".
@@ -1066,5 +1101,1078 @@ describe('PlaybackBotUI — substrate-switch stops the previous controller', () 
         // controller would be a no-op anyway. Either way, no stop on
         // the new (text) controller.
         expect(textController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
+    });
+});
+
+describe('PlaybackBotUI — X1 maze collect policy', () => {
+    function makeCollectController(tiles) {
+        const c = makeFakeController();
+        c.listUncollectedConsumables = () => tiles;
+        return c;
+    }
+
+    function makeBot(controller) {
+        const bot = new PlaybackBotUI({
+            getSphereData: () => SAMPLE_SPHERE_DATA,
+            getStaticData: () => ({ regions: { R: { locations: [{ name: 'Free Loc' }] } } }),
+            getActiveController: () => controller,
+        });
+        bot._currentRegion = 'R';
+        return bot;
+    }
+
+    it('defaults to never — no detour, playback unchanged (X1-R3)', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        expect(bot.getMazeCollectPolicy()).toBe('never');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('never even asks the controller under the default policy', () => {
+        // The default must be a true no-op, not "ask then ignore" —
+        // otherwise a substrate could observe the bot probing it.
+        let asked = 0;
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { asked++; return [{ x: 1, y: 1 }]; };
+        const bot = makeBot(controller);
+        bot._nextCollectDetour();
+        expect(asked).toBe(0);
+    });
+
+    it('returns the first uncollected tile under always', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }, { x: 3, y: 1 }]);
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toEqual({ x: 2, y: 2 });
+    });
+
+    it('returns null under always when nothing is left to collect', () => {
+        const bot = makeBot(makeCollectController([]));
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('degrades to a no-op for substrates without the optional slot', () => {
+        const bot = makeBot(makeFakeController());
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('survives a controller that throws', () => {
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { throw new Error('boom'); };
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('normalises any unrecognised policy value to never', () => {
+        const bot = makeBot(makeCollectController([{ x: 1, y: 1 }]));
+        expect(bot.setMazeCollectPolicy('sometimes')).toBe('never');
+        expect(bot.setMazeCollectPolicy('ALWAYS')).toBe('never');
+        expect(bot.setMazeCollectPolicy('always')).toBe('always');
+    });
+
+    it('onConsumableCollected is inert when idle or when detours are off', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        bot._isActive = false;
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+
+        bot._isActive = true; // active, but policy still 'never'
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+    });
+});
+
+describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a stall', () => {
+    // The router routes over the AP region graph; the substrate walks tiles.
+    // Those two can disagree: the region-atlas maze projection deliberately
+    // WALLS some crossings the AP compiler still emits, so the router can pick
+    // an exit the maze world has no tile for. The controller answers `false`;
+    // before this the panel logged to the console and returned, and the bot
+    // sat waiting for a region transition that could never arrive — a silent
+    // stall that reads exactly like slow progress in a timed test.
+    function makeRefusingController() {
+        const calls = [];
+        const record = (method) => (...args) => { calls.push({ method, args }); };
+        return {
+            calls,
+            play: record('play'),
+            stop: record('stop'),
+            step: record('step'),
+            instant: record('instant'),
+            reset: record('reset'),
+            setRate: record('setRate'),
+            walkTo: (...args) => { calls.push({ method: 'walkTo', args }); return false; },
+        };
+    }
+
+    const sphereData = [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }];
+    const staticData = {
+        regions: new Map([['region_a', { locations: [{ name: 'Loc A', id: 1 }] }]]),
+    };
+
+    it('reports an error status naming the target the substrate cannot reach', () => {
+        const controller = makeRefusingController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(controller.calls.some((c) => c.method === 'walkTo')).toBe(true);
+        expect(bot.getStatus()).toContain('error:');
+        expect(bot.getStatus()).toContain('Loc A');
+        // And it did NOT go on to kick the clock as if the target had landed.
+        expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
+    });
+
+    it('a refusal that carries its REASON (`lastRefusal`) is shown in the status (Seedling JS J2)', () => {
+        const controller = makeRefusingController();
+        controller.lastRefusal = 'flash_seedling_gen regions are walked only on the Seedling JS runtime';
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).toBe('error: region_a: the bot cannot walk to location "Loc A" — '
+            + 'flash_seedling_gen regions are walked only on the Seedling JS runtime');
+        expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
+    });
+
+    it('a LATE refusal (playback:walkFailed → onWalkFailed) is the same named error status', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).not.toContain('error:');
+        bot.onWalkFailed({ substrate: 'flash_seedling_gen', target: { kind: 'location', name: 'Loc A' },
+            reason: 'the JS runtime\'s walk failed: not reached within 1800 ticks' });
+        expect(bot.getStatus()).toBe('error: region_a: the bot cannot walk to location "Loc A" — '
+            + 'the JS runtime\'s walk failed: not reached within 1800 ticks');
+        bot.onWalkFailed({});
+        expect(bot.getStatus()).toContain('not reached within 1800 ticks');
+    });
+
+    it('⛓ S2 — a live walk\'s note (playback:walkNote → onWalkNote) rides after the status and clears', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        const status = bot.getStatus();
+        bot.onWalkNote({ substrate: 'flash_seedling', target: { kind: 'location', name: 'Loc A' }, note: 'solving… (budget 5 s)' });
+        expect(bot.getWalkNote()).toBe('solving… (budget 5 s)');
+        expect(bot.getStatus()).toBe(status);
+        expect(bot.getLog()).toContain(`${status} — solving… (budget 5 s)`);
+        bot.onWalkNote({ note: null });
+        expect(bot.getWalkNote()).toBeNull();
+        expect(bot.getStatus()).not.toContain('error:');
+    });
+
+    it('a controller that accepts the target is unaffected', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).not.toContain('error:');
+        expect(controller.calls.some((c) => c.method === 'play')).toBe(true);
+    });
+});
+
+describe('PlaybackBotUI — a substrate that declares no controller', () => {
+    // The flash entries (and both Seedling entries built on them) omit
+    // `getPlaybackController` on purpose. A walkTo into such a region used
+    // to wait forever with no status; it is now a NAMED error. A declared
+    // controller that returns null (a panel still mounting) stays silent.
+    beforeEach(() => {
+        substrateRegistry.clear();
+        substrateRegistry.register({ id: 'flash_seedling_gen' });
+        substrateRegistry.register({ id: 'maze', getPlaybackController: () => null });
+    });
+    afterEach(() => { substrateRegistry.clear(); });
+
+    function makeBot(regionSubstrate) {
+        const rulesJson = { preset_sidecars: { '1': { region_x: { substrate: regionSubstrate } } } };
+        return new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc X'] }],
+            getStaticData: () => ({ regions: new Map([['region_x', { locations: [{ name: 'Loc X' }] }]]) }),
+            getRulesJson: () => rulesJson,
+        });
+    }
+    const statusText = (bot) => bot.getElement()
+        .queryAll((el) => el.className === 'playback-bot-status')[0]?.textContent;
+
+    it('names the substrate when its entry has no getPlaybackController', () => {
+        const bot = makeBot('flash_seedling_gen');
+        bot.onRegionMove({ targetRegion: 'region_x' });
+        bot.play();
+        expect(statusText(bot)).toBe('error: region_x is a flash_seedling_gen region, and '
+            + 'flash_seedling_gen has no playback controller — the bot cannot walk it');
+    });
+
+    it('stays silent when the controller is declared but not yet available', () => {
+        const bot = makeBot('maze');
+        bot.onRegionMove({ targetRegion: 'region_x' });
+        bot.play();
+        expect(statusText(bot)).toBe('Sphere 0.1 → walking to "Loc X" (1/1)');
+    });
+});
+
+/**
+ * ⛓ RETURN TO MENU (procgenCore/restartRoute.js) — the bot's RESTART step. Where the slot declares
+ * `exporter[p].return_to_menu` and no walk leads from the player's region to the head's, the bot takes the Menu
+ * panel's Restart (stubbed here: the reset move to `Menu`, then the substrate's start hop) and routes on from the
+ * arrival. It never publishes an exit walkTo for it.
+ */
+describe('PlaybackBotUI — the RESTART step (return_to_menu)', () => {
+    // Menu -GameStart-> Start; Start -toB-> region_b; Start -drop-> Pit (one-way).
+    const ADJ = {
+        Menu: [['GameStart', 'Start']],
+        Start: [['toB', 'region_b'], ['drop', 'Pit']],
+        Pit: [],
+        region_b: [['backS', 'Start']],
+        region_c: [['cToB', 'region_b']],
+    };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = {
+        regions: new Map([
+            ['Pit', { locations: [] }],
+            ['region_b', { locations: [{ name: 'Loc B' }] }],
+        ]),
+    };
+    const rulesWith = (flag) => ({ start_regions: { 1: ['Menu'] }, exporter: { 1: flag ? { return_to_menu: true } : {} } });
+
+    function makeBot({ flag = true, restart } = {}) {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc B'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rulesWith(flag),
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart,
+        });
+        return { bot, controller };
+    }
+    /** The stubbed warp: the Menu panel's reset move, then (unless `hop: false`) the start hop. */
+    function stubRestart(botRef, { hop = true, answer = { mode: 'world', target: 'Menu' } } = {}) {
+        const calls = [];
+        const fn = () => {
+            calls.push(botRef.bot.getRestartPending());
+            botRef.bot.onRegionMove({ targetRegion: 'Menu' });
+            if (hop) botRef.bot.onRegionMove({ targetRegion: 'Start' });
+            return answer;
+        };
+        return { fn, calls };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+
+    it('flag ON, stranded in the pit: Restart, land past Menu, then walk the start\'s exit', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(r.calls).toEqual([{ from: 'Pit', target: 'Menu' }]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.getRestartPending()).toBeNull();
+        expect(ref.bot.isActive()).toBe(true);
+        expect(ref.bot.getLog().some((l) => /restarting \(no walk from Pit\) → region_b/.test(l))).toBe(true);
+    });
+
+    it('the bot WAITS on Menu for the start hop: no walkTo there, then routes on from the arrival', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(walkTos(ref.controller)).toEqual([]);
+        expect(ref.bot.getStatus()).toBe('restarted at Menu — waiting for the start hop');
+        expect(ref.bot.getRestartPending()).toEqual({ from: 'Pit', target: 'Menu' });
+        ref.bot.onRegionMove({ targetRegion: 'Start' });   // the substrate's start hop lands
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.getRestartPending()).toBeNull();
+    });
+
+    it('⛔ a RESTART step is never an exit crossing: no walkTo names Menu, GameStart or a null exit', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        for (const t of walkTos(ref.controller)) {
+            expect(t.name).not.toBeNull();
+            expect(['Menu', 'GameStart']).not.toContain(t.name);
+        }
+        expect(r.calls).toHaveLength(1);
+    });
+
+    it('flag OFF: today\'s refusal, and no Restart', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ flag: false, restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.getStatus()).toBe('error: no path from Pit to region_b');
+        expect(ref.bot.isActive()).toBe(false);
+        expect(r.calls).toEqual([]);
+    });
+
+    it('a walk is preferred: from region_c the bot walks, never restarts', async () => {
+        const ref = {};
+        const r = stubRestart(ref);
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'region_c' });
+        await ref.bot.play();
+        expect(r.calls).toEqual([]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'cToB' }]);
+    });
+
+    it('a manual target routes through the Restart too (walkToLocation)', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        ref.bot.walkToLocation('Loc B');
+        await Promise.resolve();
+        expect(r.calls).toEqual([{ from: 'Pit', target: 'Menu' }]);
+        expect(walkTos(ref.controller)).toEqual([]);
+        ref.bot.onRegionMove({ targetRegion: 'Start' });
+        await Promise.resolve();
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('named refusals: no Restart wired; a Restart that does not answer; a loop-mode Restart', async () => {
+        const none = makeBot({ restart: null });
+        none.bot.onRegionMove({ targetRegion: 'Pit' });
+        await none.bot.play();
+        expect(none.bot.getStatus()).toBe('error: Pit: the route needs a Restart and no Restart is wired');
+        expect(none.bot.isActive()).toBe(false);
+
+        const silent = makeBot({ restart: () => null });
+        silent.bot.onRegionMove({ targetRegion: 'Pit' });
+        await silent.bot.play();
+        expect(silent.bot.getStatus()).toMatch(/Menu panel's Restart did not answer/);
+        expect(silent.bot.getRestartPending()).toBeNull();
+
+        const loop = makeBot({ restart: () => ({ mode: 'loop', target: null }) });
+        loop.bot.onRegionMove({ targetRegion: 'Pit' });
+        await loop.bot.play();
+        expect(loop.bot.getStatus()).toMatch(/mode "loop", which does not return to the menu/);
+        expect(loop.bot.isActive()).toBe(false);
+    });
+
+    it('stop() and reset() drop a pending Restart', async () => {
+        const ref = {};
+        const r = stubRestart(ref, { hop: false });
+        Object.assign(ref, makeBot({ restart: r.fn }));
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.getRestartPending()).not.toBeNull();
+        ref.bot.stop();
+        expect(ref.bot.getRestartPending()).toBeNull();
+    });
+});
+
+/**
+ * ⛓ WALK IDENTITY (b) — the bot's RESTART waits for the controller's PLAYING leg to reach its end
+ * (`settleBeforeRestart`), so it never cuts a tape at a wall-clock tick (§5.39: L17's chest tape cut ~1.15 s
+ * into 42 ticks). A controller without the hook, or with nothing playing (null), restarts as before.
+ */
+describe('PlaybackBotUI — the RESTART step waits for the playing leg (walk identity)', () => {
+    const ADJ = { Menu: [['GameStart', 'Start']], Start: [['toB', 'region_b'], ['drop', 'Pit']], Pit: [], region_b: [] };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = { regions: new Map([['Pit', { locations: [] }], ['region_b', { locations: [{ name: 'Loc B' }] }]]) };
+    const rules = { start_regions: { 1: ['Menu'] }, exporter: { 1: { return_to_menu: true } } };
+    /** `settle`: undefined = the controller has no hook (every non-Seedling substrate); else what the hook answers. */
+    function makeBot({ settle, answer = { mode: 'world', target: 'Menu' } } = {}) {
+        const controller = makeFakeController();
+        if (settle !== undefined) controller.settleBeforeRestart = () => { controller.calls.push({ method: 'settleBeforeRestart', args: [] }); return settle(); };
+        const ref = { restarts: [] };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc B'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rules,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart: () => {
+                ref.restarts.push(controller.calls.map((c) => c.method));
+                if (!answer) return null;
+                bot.onRegionMove({ targetRegion: 'Menu' });
+                bot.onRegionMove({ targetRegion: 'Start' });
+                return answer;
+            },
+        });
+        return Object.assign(ref, { bot, controller });
+    }
+    /** A leg the test ends by hand. */
+    const legEnd = () => { const d = {}; d.promise = new Promise((res) => { d.end = res; }); return d; };
+    const flush = () => new Promise((res) => setTimeout(res, 0));
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+
+    it('a controller WITHOUT the hook (a non-Seedling substrate) restarts at once, as before', async () => {
+        const ref = makeBot();
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferrals()).toEqual([]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('a hook answering null (nothing playing: held, idle, solving) restarts at once', async () => {
+        const ref = makeBot({ settle: () => null });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+    });
+
+    it('a PLAYING leg: the Restart waits (named), is taken in the turn the leg ends, then routes on', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.restarts).toEqual([]);
+        expect(ref.bot.getRestartDeferred()).toMatchObject({ from: 'Pit' });
+        expect(ref.bot.getStatus()).toMatch(/restarting \(no walk from Pit\) → region_b .* — waiting for the leg to reach its end/);
+        expect(ref.controller.calls.filter((c) => c.method === 'stop')).toEqual([]);
+        leg.end({ ended: true, phase: 'held', waitedMs: 1400 });
+        await flush();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+        expect(ref.bot.getRestartDeferrals()).toEqual([{ from: 'Pit', ended: true, timedOut: false, waitedMs: 1400 }]);
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        expect(ref.bot.isActive()).toBe(true);
+    });
+
+    it('a leg that never reaches its end within the wait: the Restart is taken anyway and the CUT is named', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        leg.end({ ended: false, timedOut: true, phase: 'playing', waitedMs: 30001 });
+        await flush();
+        expect(ref.restarts).toHaveLength(1);
+        expect(ref.bot.getRestartDeferrals()).toEqual([{ from: 'Pit', ended: false, timedOut: true, waitedMs: 30001 }]);
+        expect(ref.bot.getLog().some((l) => /the leg did not reach its end: cut/.test(l))).toBe(true);
+    });
+
+    it('stop() during the wait drops it: the Restart is never taken', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        ref.bot.stop();
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.restarts).toEqual([]);
+        expect(ref.bot.getRestartDeferred()).toBeNull();
+    });
+
+    it('a region move during the wait drops it (the route is re-planned from there)', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        ref.bot.onRegionMove({ targetRegion: 'Start' });
+        expect(walkTos(ref.controller)).toEqual([{ kind: 'exit', name: 'toB' }]);
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.restarts).toEqual([]);
+    });
+
+    it('a deferred Restart the Menu panel does not answer stops the bot by name (the caller\'s own stop)', async () => {
+        const leg = legEnd();
+        const ref = makeBot({ settle: () => leg.promise, answer: null });
+        ref.bot.onRegionMove({ targetRegion: 'Pit' });
+        await ref.bot.play();
+        expect(ref.bot.isActive()).toBe(true);
+        leg.end({ ended: true, phase: 'held' });
+        await flush();
+        expect(ref.bot.isActive()).toBe(false);
+        expect(ref.bot.getStatus()).toMatch(/the Menu panel's Restart did not answer/);
+        expect(ref.controller.calls.at(-1).method).toBe('stop');
+    });
+});
+
+/**
+ * ⛓ WAVE-6 CONSUMER — a walk that fails because the player's box ARRIVED INSIDE A SOLID (fidelity ARRIVAL's
+ * `arrival-inside-solid`; the controller hands the bot `escape` = the refusal's `wayOut` in AP terms). No walk
+ * leaves a solid: the bot takes the EXISTING Restart step when the refusal offers it and the slot declares
+ * `return_to_menu`, and every later route avoids the entrance that landed inside, going by one of the refusal's
+ * other arrivals. Otherwise a named stop. ⚖ No swing from inside.
+ */
+describe('PlaybackBotUI — an arrival inside a solid escapes by its wayOut', () => {
+    // Menu -GameStart-> Start; Start -toL12-> L12 -inRock-> Pocket -toGoal-> region_g (the short way, through the
+    // rock's landing); Start -toSide-> Side -sideDoor-> Hall -hallA-> HallB -toG-> region_g (the long way in).
+    const ADJ = {
+        Menu: [['GameStart', 'Start']],
+        Start: [['toL12', 'L12'], ['toSide', 'Side']],
+        L12: [['inRock', 'Pocket']],
+        Pocket: [['toGoal', 'region_g']],
+        Side: [['sideDoor', 'Hall']],
+        Hall: [['hallA', 'HallB']],
+        HallB: [['toG', 'region_g']],
+        region_g: [],
+    };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = { regions: new Map([['region_g', { locations: [{ name: 'Loc G' }] }]]) };
+    const rulesWith = (flag) => ({ start_regions: { 1: ['Menu'] }, exporter: { 1: flag ? { return_to_menu: true } : {} } });
+    const ESCAPE = Object.freeze({
+        kind: 'arrival-inside-solid', solids: ['breakablerock@288,176'], at: { level: 0, x: 296, y: 184 },
+        restart: true, arrivals: [{ region: 'Side', exit: 'sideDoor', landing: 'Hall', from: 2, door: 'stairs@48,16' }],
+        unmapped: [],
+    });
+    const FAILED = (escape = ESCAPE) => ({
+        substrate: 'flash_seedling', target: { kind: 'exit', name: 'toGoal' },
+        reason: 'the wasm playback failed: the solver declined toGoal in level 0 (refusal): … arrival-inside-solid …',
+        ...(escape ? { escape } : {}),
+    });
+
+    function makeBot({ flag = true } = {}) {
+        const controller = makeFakeController();
+        const calls = [];
+        const ref = {};
+        ref.restart = () => {
+            calls.push(ref.bot.getRestartPending());
+            ref.bot.onRegionMove({ targetRegion: 'Menu' });
+            ref.bot.onRegionMove({ targetRegion: 'Start' });
+            return { mode: 'world', target: 'Menu' };
+        };
+        ref.bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc G'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rulesWith(flag),
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart: () => ref.restart(),
+        });
+        return { bot: ref.bot, controller, calls };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0].name);
+    /** Walk the short way in: Start → L12 → (inRock) Pocket, as the crossings report them. */
+    async function intoThePocket(t) {
+        t.bot.onRegionMove({ targetRegion: 'Start' });
+        await t.bot.play();
+        t.bot.onRegionMove({ targetRegion: 'L12', exitName: 'toL12' });
+        t.bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'inRock' });
+        expect(walkTos(t.controller)).toEqual(['toL12', 'inRock', 'toGoal']);
+    }
+
+    it('flag ON + a Restart offer: Restart, then route AROUND the entrance that landed inside (another arrival)', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toEqual([{ from: 'Pocket', target: 'Menu' }]);
+        // from the start the short way would cross `inRock` again: the route goes by the refusal's other arrival
+        expect(walkTos(t.controller).slice(3)).toEqual(['toSide']);
+        expect(t.bot.isActive()).toBe(true);
+        expect(t.bot.getLog().some((l) => /escaping arrival-inside-solid \(breakablerock@288,176 at L0 \(296,184\)\) in Pocket — Restart, then routing around "inRock"/.test(l))).toBe(true);
+        expect(t.bot.getEscapes()).toEqual({ escapes: [{ from: 'Pocket', exit: 'inRock', solids: ['breakablerock@288,176'],
+            at: { level: 0, x: 296, y: 184 } }], avoided: ['inRock'] });
+        t.bot.onRegionMove({ targetRegion: 'Side', exitName: 'toSide' });
+        expect(walkTos(t.controller).at(-1)).toBe('sideDoor');
+    });
+
+    it('flag OFF: a NAMED stop carrying the way out, and no Restart', async () => {
+        const t = makeBot({ flag: false });
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toMatch(/^error: Pocket: the bot cannot walk to exit "toGoal" — .* — arrival-inside-solid: the player's box in Pocket is inside breakablerock@288,176 and no walk leaves it; the way out is the Menu's Restart, and this slot does not declare return_to_menu; other arrivals: sideDoor$/);
+        expect(t.bot.getEscapes().escapes).toEqual([]);
+    });
+
+    it('no Restart in the wayOut: a named stop (the other arrivals cannot be walked to from inside a solid)', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED({ ...ESCAPE, restart: false }));
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toMatch(/the refusal offers no Restart; other arrivals: sideDoor$/);
+    });
+
+    it('a failure with no escape (no wayOut) is today\'s named status, word for word', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED(null));
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toBe(`error: Pocket: the bot cannot walk to exit "toGoal" — ${FAILED(null).reason}`);
+    });
+
+    it('landing inside AGAIN after an escape is a named stop, never a loop of Restarts', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        t.bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'inRock' });   // something put it back in the pocket
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toHaveLength(1);
+        expect(t.bot.getStatus()).toMatch(/the route landed inside it again after a Restart/);
+    });
+
+    it('no other arrival and no clean route from the start: Restart, then the route\'s own named refusal', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED({ ...ESCAPE, arrivals: [] }));
+        expect(t.calls).toHaveLength(1);
+        // the long way exists in this graph, but the refusal names no arrival on it: the detours are the solver's
+        // `wayOut` only (no second graph search), so the avoided route is refused by name
+        expect(t.bot.getStatus()).toBe('error: no path from Start to region_g, nor from the restart target Menu');
+        expect(t.bot.isActive()).toBe(false);
+    });
+});
+
+/**
+ * ⛓ OBSTACLE EVENTS (procgenCore/eventRoute.js) — BREAK BEFORE FIRST USE in the bot. A game-state event is never a
+ * queue row (the game breaks it; walking to it would break it eagerly); where the graph's walk has none, the route
+ * meets the event by CROSSING CREDIT (a hop through the obstacle at its own cost — remembered until the collector
+ * sees the flag) or by a goal-first BREAK step, before any Restart.
+ */
+describe('PlaybackBotUI — obstacle events (break before first use)', () => {
+    const SWORD = { rule: 'Has', args: { item_name: 'Sword' } };
+    const ROCK = 'L9 flag 1: breakablerock@16,16 cleared';
+    const WALL = 'L9 flag 2: breakablerock@64,16 cleared';
+    const ev = (name, tag, across) => ({ name, id: null, event: true, event_kind: 'game_state', event_id: `flag:L9:${tag}`,
+        access_rule: SWORD, item: { name }, obstacle: { level: 9, tag, class: 'breakablerock', x: tag === 1 ? 16 : 64, y: 16 },
+        action: { verb: 'broken by a sword strike', item: 'hasSword' }, side: 'Start', across });
+    const x = (name, to, rule = null) => ({ name, connected_region: to, ...(rule ? { access_rule: rule } : {}) });
+    const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+    const RULES = {
+        start_regions: { 1: ['Menu'] },
+        exporter: { 1: {} },
+        regions: { 1: {
+            Menu: { exits: [x('GameStart', 'Start')], locations: [] },
+            Start: { exits: [x('Start -> Pocket', 'Pocket', SWORD), x('Start -> Far2', 'Far2')],
+                locations: [ev(ROCK, 1, ['Pocket']), ev(WALL, 2, []),
+                    { name: 'Odd', id: null, event: true, event_kind: 'future_kind', item: { name: 'Odd' } }] },
+            Pocket: { exits: [x('Pocket -> Gem', 'Gem')], locations: [] },
+            Gem: { exits: [x('Gem -> Lander', 'Lander')], locations: [] },
+            Lander: { exits: [x('Lander -> Vault2', 'Vault2', has(ROCK))], locations: [] },
+            Vault2: { exits: [], locations: [{ name: 'Loc V2', id: 2 }] },
+            Far2: { exits: [x('Far2 -> Vault', 'Vault', has(WALL)), x('Far2 -> Start', 'Start')], locations: [] },
+            Vault: { exits: [], locations: [{ name: 'Loc V', id: 1 }] },
+        } },
+    };
+    const REGIONS = RULES.regions[1];
+    const staticData = { regions: new Map(Object.entries(REGIONS)) };
+
+    function makeBot({ sphere, inventory = { Sword: 1 }, proxy = true } = {}) {
+        const controller = makeFakeController();
+        const snapshot = { inventory: { ...inventory } };
+        // The graph's own walk (PathFinder's role): only exits whose rule the SNAPSHOT satisfies.
+        const findPathWithExits = (from, to) => {
+            const ok = (rule) => !rule || (snapshot.inventory[rule.args.item_name] ?? 0) > 0;
+            const seen = new Set([from]);
+            const queue = [[{ region: from, exitUsed: null }]];
+            while (queue.length) {
+                const path = queue.shift();
+                const here = path[path.length - 1].region;
+                if (here === to) return { steps: path, length: path.length - 1 };
+                for (const e of REGIONS[here]?.exits ?? []) {
+                    if (!seen.has(e.connected_region) && ok(e.access_rule)) {
+                        seen.add(e.connected_region);
+                        queue.push([...path, { region: e.connected_region, exitUsed: e.name }]);
+                    }
+                }
+            }
+            return null;
+        };
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphere,
+            getStaticData: () => staticData,
+            getRulesJson: () => RULES,
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            stateManagerProxy: proxy ? { getLatestStateSnapshot: () => snapshot } : null,
+        });
+        return { bot, controller, snapshot };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0]);
+    const sphereOf = (...locations) => [{ sphereIndex: 1, fractionalIndex: 1, locations }];
+
+    it('the queue LEAVES game-state events to the game (never walked eagerly); an unknown kind stays a row (refused by name)', async () => {
+        const { bot } = makeBot({ sphere: sphereOf(ROCK, 'Loc V2', WALL, 'Odd') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        bot._ensureQueueBuilt();
+        expect(bot._queue.map((q) => q.locationName)).toEqual(['Loc V2', 'Odd']);
+        expect(bot.getEventState().leftToGame).toEqual([ROCK, WALL]);
+    });
+
+    it('GOAL FIRST: the graph has no walk to the Vault (its landing is inside the wall) → the bot walks to the wall to break it', async () => {
+        const { bot, controller } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        expect(bot.getStatus()).toMatch(/breaking breakablerock@64,16 first \(flag:L9:2\) — the route to Vault/);
+    });
+
+    // ⛓ ROPE GOAL — the game collects a broken obstacle's event as a LOCAL check (no user:locationCheck, no region
+    // move), so the BREAK walk's end is heard off the snapshot (`onSnapshotUpdated`). Measured before this: the
+    // whole-game walk cut L16's rope, the flag was collected, and the bot stayed silent to the budget.
+    // Mutants (each reds a row below by name): `_takeBreakStep` never records `_pendingBreak` → "collected → the
+    // next walk"; `onSnapshotUpdated` skips the checked test → "a snapshot WITHOUT the check"; `_publishWalkTo`
+    // never drops it → "another target".
+    const flush = async () => { for (let i = 0; i < 5; i += 1) await Promise.resolve(); };
+    it('BREAK → collected → the next walk: the snapshot that holds the event checked re-plans the gated route', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        // the game breaks the wall: its flag is collected (inventory gains the event item, the location is checked)
+        snapshot.inventory[WALL] = 1;
+        snapshot.checkedLocations = [WALL];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }, { kind: 'exit', name: 'Start -> Far2' }]);
+        expect(bot.getLog()).toContain(`"${WALL}" collected by the game — re-planning the route`);
+        // once answered, a later snapshot is a no-op
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toHaveLength(2);
+    });
+
+    it('a snapshot WITHOUT the check (the flag not collected yet) changes nothing — no walk is re-issued', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        snapshot.checkedLocations = ['Odd'];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        expect(bot.getStatus()).toMatch(/breaking breakablerock@64,16 first/);
+        // no re-plan was even asked (the dedupe alone would hide a re-plan to the same break walk)
+        expect(bot.getLog().some((l) => /collected by the game/.test(l))).toBe(false);
+    });
+
+    it('another target ends the pending BREAK step: a later collection of it does not re-plan', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        bot._publishWalkTo({ kind: 'tile', x: 3, y: 3 });
+        const before = walkTos(controller).length;
+        snapshot.inventory[WALL] = 1;
+        snapshot.checkedLocations = [WALL];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toHaveLength(before);
+        bot.reset();
+        expect(bot._pendingBreak).toBe(null);
+    });
+
+    it('CROSSING CREDIT: Start → Pocket passes through the rock at its own cost — walked, credited, and the gated landing is taken later', async () => {
+        const { bot, controller } = makeBot({ sphere: sphereOf('Loc V2') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'exit', name: 'Start -> Pocket' }]);
+        expect(bot.getEventState().credited).toEqual([ROCK]);
+        bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'Start -> Pocket' });
+        await Promise.resolve();
+        bot.onRegionMove({ targetRegion: 'Gem', exitName: 'Pocket -> Gem' });
+        await Promise.resolve();
+        bot.onRegionMove({ targetRegion: 'Lander', exitName: 'Gem -> Lander' });
+        await Promise.resolve();
+        // the snapshot still lacks the event (the collector has not seen the flag): the credit routes the gated landing
+        expect(walkTos(controller).at(-1)).toEqual({ kind: 'exit', name: 'Lander -> Vault2' });
+        expect(bot.getLog().some((l) => /credits "L9 flag 1: breakablerock@16,16 cleared"/.test(l))).toBe(true);
+        bot.reset();
+        expect(bot.getEventState().credited).toEqual([]);
+    });
+
+    it('no snapshot (no state manager) → no event path: today\'s named refusal', async () => {
+        const { bot } = makeBot({ sphere: sphereOf('Loc V'), proxy: false });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(bot.getStatus()).toBe('error: no path from Start to Vault');
+    });
+
+    it('without the breaking item no event route exists: today\'s refusal', async () => {
+        const { bot } = makeBot({ sphere: sphereOf('Loc V'), inventory: {} });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(bot.getStatus()).toBe('error: no path from Start to Vault');
+    });
+});
+
+describe('PlaybackBotUI — direct play and blocked events (loop-mode-bot S1)', () => {
+    // A plain world: no sidecars, no controller. `publish` plays the dispatcher chain — the world decides whether
+    // the action lands (`refuse`), then hands the event to the bot's receivers as playbackBot/index.js does.
+    function makeWorld({ refuse = () => false, loopMode = false } = {}) {
+        const world = { here: 'region_a', checked: [], published: [] };
+        const staticData = {
+            regions: new Map([
+                ['region_a', { locations: [{ name: 'Loc A', id: 1 }], exits: [{ name: 'A to B', connected_region: 'region_b' }] }],
+                ['region_b', { locations: [{ name: 'Loc B', id: 2 }], exits: [] }],
+            ]),
+        };
+        const sphereData = [
+            { sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] },
+            { sphereIndex: 1, fractionalIndex: 0, locations: ['Loc B'] },
+        ];
+        const proxy = {
+            pingWorker: () => Promise.resolve(),
+            getLatestStateSnapshot: () => ({ checkedLocations: world.checked.slice() }),
+        };
+        const pathFinder = {
+            findPathWithExits: (from, to) => (from === 'region_a' && to === 'region_b'
+                ? { steps: [{ region: 'region_a', exitUsed: null }, { region: 'region_b', exitUsed: 'A to B' }], length: 1 }
+                : null),
+        };
+        let bot;
+        const publish = (eventName, payload) => {
+            world.published.push({ eventName, payload });
+            if (!refuse(eventName, payload)) {
+                if (eventName === 'user:locationCheck') world.checked.push(payload.locationName);
+                if (eventName === 'user:regionMove') world.here = payload.targetRegion;
+            }
+            if (eventName === 'user:locationCheck') bot.onLocationCheck(payload);
+            if (eventName === 'user:regionMove') bot.onRegionMove(payload);
+        };
+        bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => null,
+            pathFinder,
+            stateManagerProxy: proxy,
+            publish,
+            getCurrentRegion: () => world.here,
+            isLoopModeActive: () => loopMode,
+        });
+        return { bot, world };
+    }
+
+    it('plays a plain rules.json to the end with its own checks and moves', async () => {
+        const { bot, world } = makeWorld();
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(world.checked).toEqual(['Loc A', 'Loc B']);
+        expect(world.here).toBe('region_b');
+        expect(world.published.map((p) => p.eventName))
+            .toEqual(['user:locationCheck', 'user:regionMove', 'user:locationCheck']);
+        expect(world.published.every((p) => p.payload.fromBot === true)).toBe(true);
+    });
+
+    it('a step performs exactly one action', async () => {
+        const { bot, world } = makeWorld();
+        await bot.step();
+        await vi.waitFor(() => expect(world.checked).toEqual(['Loc A']));
+        await new Promise((r) => setTimeout(r, 300));
+        expect(world.published).toHaveLength(1);
+        expect(bot.isActive()).toBe(false);
+    });
+
+    it('a BLOCKED check does not move the cursor', async () => {
+        const { bot, world } = makeWorld({ refuse: (ev) => ev === 'user:locationCheck' });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the check of "Loc A" did not land/));
+        expect(bot.getCursor()).toBe(0);
+        expect(world.checked).toEqual([]);
+    });
+
+    it('a BLOCKED move keeps the region and the cursor', async () => {
+        const { bot, world } = makeWorld({ refuse: (ev) => ev === 'user:regionMove' });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the move to region_b did not land \(still in region_a\)/));
+        expect(bot.getCurrentRegion()).toBe('region_a');
+        expect(bot.getCursor()).toBe(1);
+        expect(world.checked).toEqual(['Loc A']);
+    });
+
+    it('waits instead of acting directly in loop mode', async () => {
+        const { bot, world } = makeWorld({ loopMode: true });
+        await bot.instant();
+        await new Promise((r) => setTimeout(r, 50));
+        expect(world.published).toEqual([]);
+        expect(bot.getStatus()).toMatch(/does not play loop mode yet/);
+    });
+
+    it('the control bar shows the bot running: Stop enabled while it plays, Play back once it ends', async () => {
+        const { bot } = makeWorld({ refuse: (ev) => ev === 'user:regionMove' });
+        const button = (title) => bot.getElement().queryAll((el) => el.tagName === 'BUTTON' && el.title === title)[0];
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+        // The refused move parks the walk (blocked), so the bot is still playing.
+        await bot.play();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/blocked: the move/));
+        expect(bot.isActive()).toBe(true);
+        expect(button('Stop').disabled).toBe(false);
+        expect(button('Play').disabled).toBe(true);
+        button('Stop').onclick();
+        expect(bot.isActive()).toBe(false);
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+    });
+
+    it('a walk that finishes on its own hands the bar back to Play', async () => {
+        const { bot } = makeWorld();
+        const button = (title) => bot.getElement().queryAll((el) => el.tagName === 'BUTTON' && el.title === title)[0];
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(button('Stop').disabled).toBe(true);
+        expect(button('Play').disabled).toBe(false);
+    });
+
+    it('a region with a sidecar never plays directly', async () => {
+        const { bot, world } = makeWorld();
+        bot._getRulesJson = () => ({ preset_sidecars: { 1: { region_a: { substrate: 'maze' } } } });
+        await bot.instant();
+        await new Promise((r) => setTimeout(r, 50));
+        expect(world.published).toEqual([]);
+    });
+});
+
+describe('PlaybackBotUI — direct play behind a refusing controller', () => {
+    it('a plain region whose controller has no tile for the target is played directly', async () => {
+        const world = { here: 'region_a', checked: [] };
+        const controller = { walkTo: () => false, play() {}, stop() {}, step() {}, instant() {}, reset() {}, setRate() {} };
+        let bot;
+        bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }],
+            getStaticData: () => ({ regions: new Map([['region_a', { locations: [{ name: 'Loc A', id: 1 }], exits: [] }]]) }),
+            getActiveController: () => controller,
+            stateManagerProxy: { pingWorker: () => Promise.resolve(), getLatestStateSnapshot: () => ({ checkedLocations: world.checked.slice() }) },
+            publish: (ev, payload) => { world.checked.push(payload.locationName); bot.onLocationCheck(payload); },
+            getCurrentRegion: () => world.here,
+            isLoopModeActive: () => false,
+        });
+        await bot.instant();
+        await vi.waitFor(() => expect(bot.getStatus()).toMatch(/^finished/));
+        expect(world.checked).toEqual(['Loc A']);
+    });
+});
+
+describe('PlaybackBotUI — target source "any reachable location" drives the timer', () => {
+    function makeFakeTimer({ quickCheckResult = true } = {}) {
+        const timer = {
+            running: false,
+            calls: [],
+            listener: null,
+            begin() { timer.calls.push('begin'); timer.running = true; timer.listener?.(true); },
+            stop() { timer.calls.push('stop'); timer.running = false; timer.listener?.(false); },
+            quickCheck: async () => { timer.calls.push('quickCheck'); return quickCheckResult; },
+            isRunning: () => timer.running,
+            onRunningChanged(fn) { timer.listener = fn; return () => { timer.listener = null; }; },
+        };
+        return timer;
+    }
+    const statusOf = (bot) => bot.getElement().queryAll((el) => el.className === 'playback-bot-status')[0].textContent;
+
+    it('defaults to the sphere log; Play there never touches the timer', async () => {
+        const timer = makeFakeTimer();
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => controller, timer });
+        expect(bot.getTargetSource()).toBe('sphere');
+        await bot.play();
+        expect(timer.calls).toEqual([]);
+        expect(controller.calls.map((c) => c.method)).toContain('play');
+    });
+
+    it('Play begins the timer, Stop stops it, and the status follows the timer', async () => {
+        const timer = makeFakeTimer();
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller, timer });
+        bot.setTargetSource('reachable');
+        expect(statusOf(bot)).toMatch(/^Any reachable location/);
+
+        await bot.play();
+        expect(timer.calls).toEqual(['begin']);
+        expect(statusOf(bot)).toBe('checking reachable locations…');
+        expect(controller.calls).toEqual([]);   // the sphere walk never started
+
+        bot.stop();
+        expect(timer.calls).toEqual(['begin', 'stop']);
+        expect(bot.getStatus()).toBe('stopped');
+    });
+
+    it('Instant is Play (the timer keeps its own delay); a second Play does not restart it', async () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.instant();
+        await bot.play();
+        expect(timer.calls).toEqual(['begin']);
+    });
+
+    it('Step is Quick Check, and says whether a location was sent', async () => {
+        const timer = makeFakeTimer({ quickCheckResult: false });
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.step();
+        expect(timer.calls).toEqual(['quickCheck']);
+        expect(bot.getStatus()).toBe('no unchecked location is reachable');
+    });
+
+    it('switching source stops a running timer; without a timer the switch is refused', async () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.play();
+        bot.setTargetSource('sphere');
+        expect(timer.running).toBe(false);
+        expect(bot.getTargetSource()).toBe('sphere');
+
+        const plain = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController() });
+        plain.setTargetSource('reachable');
+        expect(plain.getTargetSource()).toBe('sphere');
+    });
+
+    it('destroy drops the timer subscription', () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        expect(timer.listener).toBeTypeOf('function');
+        bot.destroy();
+        expect(timer.listener).toBeNull();
     });
 });

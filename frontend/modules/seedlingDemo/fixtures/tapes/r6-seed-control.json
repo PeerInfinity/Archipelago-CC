@@ -1,0 +1,82 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-seed-control",
+  "description": "R6 slice 6d: the one-release-fewer control — the same tape with the SIXTH and last dialogue release deleted. The approach is byte-identical (three movement spans from a separate generator), the 150 frozen frames of `Pickup.specialTimer` are paid in full and five sixths of the seed's text is read; what is never reached is `Seed.removeSelf`. So there is no cover fade, no `cutscene[2]`, no reboot, no tree, no second fade and no credits: `menu_state` stays 0 where the drive's reads 2, and that readout is the pair's discriminator. The tape ends inside the ceremony with the player still standing on the seed and the NPC on its last page — the same shape as `r6-watcher-control`, and for a stronger version of the same reason: a pickup's freeze has nothing to lower it, so these frames are DEAD and the tape's counter does not even run through them.",
+  "boot": {
+    "level": 115,
+    "x": 64,
+    "y": 128
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 115,
+      "items": [
+        "conch",
+        "feather"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 220,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 95
+    },
+    {
+      "key": "right",
+      "from": 95,
+      "to": 109
+    },
+    {
+      "key": "up",
+      "from": 109,
+      "to": 145
+    },
+    {
+      "key": "primary",
+      "from": 140,
+      "to": 141
+    },
+    {
+      "key": "primary",
+      "from": 148,
+      "to": 149
+    },
+    {
+      "key": "primary",
+      "from": 156,
+      "to": 157
+    },
+    {
+      "key": "primary",
+      "from": 164,
+      "to": 165
+    },
+    {
+      "key": "primary",
+      "from": 172,
+      "to": 173
+    }
+  ]
+}
+

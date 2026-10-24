@@ -1,0 +1,22 @@
+SEAM-SWEEP: leg 414: 9 distinct answer(s) over 21 seam time(s) — VARIES WITH seam.time
+  t=5120 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5121 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5122 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5123 refusal work=140 [dashless:70,full:70] chaserForecast: whether bob bob@736,800 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that
+  t=5124 refusal work=160 [dashless:80,full:80] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)
+  t=5125 refusal work=134 [dashless:67,full:67] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)
+  t=5126 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5127 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5128 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5129 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5130 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5131 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5132 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5133 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5134 refusal work=158 [dashless:79,full:79] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)
+  t=5135 refusal work=152 [dashless:76,full:76] chaserForecast: whether bob bob@736,800 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that
+  t=5136 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5137 refusal work=643 [dashless:642/detour,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5138 refusal work=72 [dashless:36,full:36] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)
+  t=5139 refusal work=130 [dashless:65,full:65] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)
+  t=5140 refusal work=72 [dashless:36,full:36] solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s)

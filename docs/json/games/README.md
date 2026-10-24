@@ -1,8 +1,14 @@
 # Playable Games
 
+<!-- quick-launch-help: order=30 audience=user -->
+
 Games and game modes playable through the Archipelago JSON Tools web client.
 
 Each game has its own documentation covering how to play, game mechanics, and configuration. For technical module documentation, see the [Frontend Module Reference](../modules/README.md). For the broader feature overview (including non-game features), see the [Features Index](../features/README.md).
+
+## Generated Worlds
+
+The web client generates new worlds in the browser: each region is a small playable game (a maze, a text adventure, a platformer, a run of shoot-'em-up scenes, a room of the recompiled Flash game *Seedling*), and one world can mix them. See [Procedural Generation](../features/procgen.md) and [What each substrate can do](../features/procgen-substrates.md).
 
 ## Game Modes
 
@@ -10,9 +16,8 @@ These are alternate ways to interact with the tracker. They work with any Archip
 
 | Game | Description | Docs |
 |------|-------------|------|
-| **Loops** | Incremental/idle game layered on the tracker — queue actions, spend mana, earn XP, optimize your loops. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops) | [loops/](loops/) |
-| **Text Adventure** | Text-based adventure mode for navigating any Archipelago world via typed commands. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=textadventure) | [text-adventure/](text-adventure/) |
-| **Maze Metagame** | A-Mazing-Idle as a meta-progression layer — solve mazes before checking locations. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?metagame=mazegame) | [maze-metagame/](maze-metagame/) |
+| **Loops** | Incremental/idle game layered on the tracker — queue actions, spend mana, earn XP, optimize your loops. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=loops) | [loops/](loops/README.md) |
+| **Text Adventure** | Text-based adventure mode for navigating any Archipelago world via typed commands. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=textadventure) | [text-adventure/](text-adventure/README.md) |
 
 ## APWorld Games
 
@@ -20,10 +25,10 @@ These are standalone Archipelago worlds with their own items, locations, and rul
 
 | Game | Description | Docs |
 |------|-------------|------|
-| **MetaMath** | Turns MetaMath theorem proofs into playable Archipelago worlds. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=metamath) | [metamath/](metamath/) |
-| **DepGraph** | Turn any directed acyclic graph into a playable Archipelago world — nodes become items and locations, edges become access rules. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph) | [depgraph/](depgraph/) |
-| **Journey to Ascension** | Archipelago integration for the incremental/idle game Journey to Ascension. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta) | [journey-to-ascension/](journey-to-ascension/) |
-| **APCalc** | Calculator-themed puzzle game — collect number and operation buttons, budget presses to navigate a procedurally generated graph of target numbers. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=apcalc) | [apcalc/](apcalc/) |
+| **MetaMath** | Turns MetaMath theorem proofs into playable Archipelago worlds. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=metamath) | [metamath/](metamath/README.md) |
+| **DepGraph** | Turn any directed acyclic graph into a playable Archipelago world — nodes become items and locations, edges become access rules. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=depgraph) | [depgraph/](depgraph/README.md) |
+| **Journey to Ascension** | Archipelago integration for the incremental/idle game Journey to Ascension. | [journey-to-ascension/](journey-to-ascension/README.md) |
+| **APCalc** | Calculator-themed puzzle game — collect number and operation buttons, budget presses to navigate a procedurally generated graph of target numbers. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=apcalc) | [apcalc/](apcalc/README.md) |
 
 ## DepGraph Games
 
@@ -31,4 +36,4 @@ These use the DepGraph APWorld as their backend but provide a distinct game expe
 
 | Game | Description | Docs |
 |------|-------------|------|
-| **Vibe Coding Simulator** | Manage an AI-assisted coding project — assign tasks, review agent work, accept or reject changes. Quality is hidden; information is revealed through review, testing, and manual inspection. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=vibecoding) | [vibe-coding-simulator/](vibe-coding-simulator/) |
+| **Vibe Coding Simulator** | Manage an AI-assisted coding project — assign tasks, review agent work, accept or reject changes. Quality is hidden; information is revealed through review, testing, and manual inspection. [Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=vibecoding) | [vibe-coding-simulator/](vibe-coding-simulator/README.md) |

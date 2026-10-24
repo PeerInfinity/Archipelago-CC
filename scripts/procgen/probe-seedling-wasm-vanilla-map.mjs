@@ -1,0 +1,599 @@
+#!/usr/bin/env node
+/**
+ * Seedling solver-walk, slice VANILLA MAP — the
+ * Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map
+ * `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the set it
+ * DELIVERED; the sidecars' exit_tiles). Default build p4f, headless logic-only, under the box lock; every
+ * session on a FRESH page (the wasm game runs out of memory after ~150–170 swaps).
+ *
+ *   V  WASM — the playthrough loaded by `?rules=` (the `?game=` form resolves another seed with no
+ *      flash_panel). The map is BOUND (arm `vanilla`, one entry per table entry + the rules' game-state events, entity = the delivered
+ *      room's), the controller's engine STAGES THE DELIVERED SET (not the map document), and the Playback
+ *      Bot walks from the explicit start (skip-intro: no ceremony), the cold start ADOPTED — through the
+ *      first rooms and checks: **0 forced re-arrivals**. The sphere log is DERIVED from the rules
+ *      (`forwardSimulator.generateSphereLog`; `AP_1` ships none). How far it gets and the FIRST refusal by
+ *      name are recorded (`ROW V reach`), not asserted beyond the first check: the solver's coverage of the
+ *      whole playthrough is S4's census. The proxy routes on the DIRECTED graph the rules declare
+ *      (`exporter["1"].assume_bidirectional_exits: false` since rules `9a35ad8989`; source `explicit`) — §5.16's
+ *      first refusal (the auto-detected "bidirectional", a one-way door routed backwards) is gone from the data.
+ *   D  WASM, ROUTED ON THE RULES' DIRECTED GRAPH (the rules' own declaration, as V; the probe-side override this
+ *      row once carried is redundant and dropped), then: (1) the sphere queue's first goal, the Sword: the bot's
+ *      own PathFinder routes it in 9 hops opening with r8c0's OWN stairs (`level_0__r8c0 -> level_2`) — since
+ *      the rules' logical-links recompile (`ce1cba867a`) there is no logical link on it, and none is credited;
+ *      (2) GREEDY door-only walks: the bot's manual `walkToLocation` to the queue location
+ *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
+ *      the next from where it stands, up to `--max-checks` (default 3) — the fade waited out (§5.19), the cold
+ *      start ADOPTED, each location checked once, **0 forced re-arrivals**; the first refusal by name ends it.
+ *   J  ⛓ §5.18 — JS: the same preset on the JS runtime. The AP load TAKES the vanilla arm (⚖ the user,
+ *      2026-10-03, "WITH THE SOLVER"): the page mounts the delivered set as REAL rooms
+ *      (`jsRuntimeCore.mountedKindOf`, `botLevelSet().kind`), the reset's explicit start (skip-intro) boots
+ *      level 0, and the panel binds the same vanilla map as on wasm. The browser's mount cost of the 116 rooms
+ *      is measured on a FRESH runtime instance (`ROW J mount`). Then, routed on the directed graph the rules
+ *      declare (source `explicit`, as V and D), the Playback Bot walks D's greedy door-only targets: the starting house's chest (an APITEM) is checked
+ *      once, the page's solver DRIVING (`solverStats`: every leg solved, the location by verb `apitem`), and
+ *      the first refusal by name ends it (recorded, `ROW J reach`). ⛓ §5.19: the load holds the region glue's
+ *      position watch across the mount + reset (no read inside it), and NO logical move at the start (the first
+ *      goal's route opens with a door since `ce1cba867a`; `ROW J start state`); the mounted region is read
+ *      before `play()`.
+ *
+ * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
+ * `N CHECK(S) FAILED` (exit 1).
+ *
+ * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build (the
+ * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
+ *
+ * Run: node scripts/procgen/probe-seedling-wasm-vanilla-map.mjs [--host=http://localhost:8000] [--only=V,D,J]
+ *      [--budget-s=600] [--max-checks=3] [--wait-for-box=<sec>]
+ */
+import { chromium } from 'playwright';
+import { existsSync, readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
+import { assertLogicOnlyChannel } from './seedlingChannel.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
+import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './seedlingProbeBoot.js';
+
+argvHelp(import.meta.url);
+
+/** The preset, by its rules file (served path relative to `frontend/`). */
+export const RULES_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+/** V: a walk whose bot status changed within this many seconds of the budget's end is ADVANCING, not stalled. */
+const ADVANCING_WINDOW_S = 180;
+
+/**
+ * D's next target, DERIVED: of `candidates` (the sphere queue's locations, in its order), the one whose
+ * shortest directed route from `from` over the `True_` exits (sphere 0: no items) is SHORTEST while crossing
+ * only DOORS (an exit a `flash_seedling` sidecar names, so it has tiles) — no logical sub-region link; ties
+ * keep the queue's order. A location in `from` itself is a route of length 0. `{location, region, route}`
+ * or null.
+ */
+export function nearestDoorOnlyTarget(rules, from, candidates) {
+    const regions = rules.regions['1'];
+    const sidecars = rules.preset_sidecars?.['1'] ?? {};
+    const doors = new Set(Object.values(sidecars).flatMap((s) => (s.playable_payload?.exits ?? []).map((x) => x.exitName)).filter(Boolean));
+    const regionOf = new Map(Object.entries(regions).flatMap(([r, d]) => (d.locations ?? []).map((l) => [l.name, r])));
+    const routes = new Map([[from, []]]);
+    const queue = [from];
+    while (queue.length) {
+        const at = queue.shift();
+        for (const e of regions[at]?.exits ?? []) {
+            if (routes.has(e.connected_region) || e.access_rule?.rule !== 'True_' || !doors.has(e.name)) continue;
+            routes.set(e.connected_region, [...routes.get(at), e.name]);
+            queue.push(e.connected_region);
+        }
+    }
+    let best = null;
+    for (const location of candidates) {
+        const route = routes.get(regionOf.get(location));
+        if (route && (!best || route.length < best.route.length)) best = { location, region: regionOf.get(location), route };
+    }
+    return best;
+}
+
+/**
+ * ⛓ ENCOUNTERS — the two bound encounters as the map spells them (`location@x,y->drop`, sorted), DERIVED: the anchor
+ * is `encounterAnchorOf` on the atlas the rules name (the page's own rule), and each anchor's tile must hold the
+ * ledger row's entity in the DELIVERED set — so a set patch that moves the entity (rules-l32-rock-move: Bob's rock
+ * (64,128) -> (88,128), tile [5,8]) moves the expectation with it, and an anchor off its entity throws by name.
+ */
+export async function expectedEncounters(preset) {
+    const HERE_ = dirname(fileURLToPath(import.meta.url));
+    const M = (p) => import(join(HERE_, '..', '..', 'frontend/modules', p));
+    const json = (rel) => JSON.parse(readFileSync(join(HERE_, '..', '..', 'frontend/modules', rel), 'utf8'));
+    const { encounterAnchorOf } = await M('flashPanel/seedlingPlaybackController.js');
+    const { R7_GOAL_LEDGER } = await M('seedlingDemo/r7Acceptance.js');
+    const { entityForLedgerRow, levelName, labelFor } = await M('seedlingDemo/seedlingAtlasDerivation.js');
+    const { vanillaRecordSet } = await M('seedlingDemo/levelSetExporter.js');
+    const atlasId = preset.region_atlas?.['1']?.atlas_id;
+    const file = json('flashPanel/atlases/atlas_files.json').atlases.find((a) => a.atlas_id === atlasId)?.file;
+    if (!file) throw new Error(`expectedEncounters: the rules name atlas ${atlasId}, which atlas_files.json does not list`);
+    const atlas = json(`flashPanel/atlases/${file}`);
+    const size = atlas.tile_space.tile_size;
+    const rooms = vanillaRecordSet(json('seedlingDemo/fixtures/seedling-vanilla-set.json'),
+        json('flashPanel/atlases/seedling-map.json')).set.rooms.map((r) => r.source.record);
+    return R7_GOAL_LEDGER.filter((row) => row.kind === 'encounter').map((row) => {
+        const location = `${levelName(row.level)} - ${labelFor(row)}`;
+        const { entity, item } = entityForLedgerRow(rooms[row.level], row);
+        const at = encounterAnchorOf(atlas, { level: row.level, location });
+        if (!at || !entity || Math.floor(entity.x / size) * size !== at.x || Math.floor(entity.y / size) * size !== at.y) {
+            throw new Error(`expectedEncounters: ${location}'s anchor ${JSON.stringify(at)} is not the tile of its delivered `
+                + `${entity?.type}@${entity?.x},${entity?.y}`);
+        }
+        return `${location}@${at.x},${at.y}->${item}`;
+    }).sort();
+}
+
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
+
+/** In the GAME frame: count host `new Game` pushes (the forced re-arrivals' world swaps). */
+function installSwapCounter() {
+    const br = window.__swfBridge;
+    if (window.__vmSwaps) return true;
+    const c = { hostNewGame: 0 };
+    const q = br.queueItems.bind(br);
+    br.queueItems = (items) => {
+        for (const i of (Array.isArray(items) ? items : [items])) if (i?.invocation === 'new_instance' && i.className === 'Game') c.hostNewGame += 1;
+        return q(items);
+    };
+    window.__vmSwaps = c;
+    return true;
+}
+
+async function main() {
+    takeBoxLockOrExit({ name: 'probe-seedling-wasm-vanilla-map.mjs', kind: 'browser' });
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REPO = join(HERE, '..', '..');
+    const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+        ?.slice(name.length + 3) ?? fallback);
+    const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
+    const SESSIONS = arg('only', 'V,D,J').split(',').filter(Boolean);
+    const BUDGET_MS = Number(arg('budget-s', '600')) * 1000;
+    const MAX_CHECKS = Number(arg('max-checks', '3'));
+    const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
+    const REGIONS = PRESET.regions['1'];
+    const ENCOUNTERS = await expectedEncounters(PRESET);
+    const START = REGIONS.Menu.exits[0].connected_region;
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
+    if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
+        console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
+        process.exit(0);
+    }
+    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
+    let failed = 0;
+    for (const S of SESSIONS) {
+        console.log(`INFO: ── session ${S} (a fresh page) ──`);
+        // eslint-disable-next-line no-await-in-loop
+        failed += await withBootRetry(S, () => runSession(S));
+    }
+    await browser.close();
+    console.log(bootRetriesLine());
+    console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
+    process.exit(failed === 0 ? 0 : 1);
+
+    async function runSession(S) {
+        const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+        const logs = [];
+        page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
+        page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
+        const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: `vm-${S}` });
+        const { check } = rp;
+        const out = (tag, o) => console.log(`ROW ${tag} ${JSON.stringify(o)}`);
+        const panelLogTail = () => page.evaluate(() => (document.querySelector('.flash-panel-log')?.textContent ?? '')
+            .split('\n').slice(-12).join(' | '));
+
+        /** Mount the Playback Bot in START with the DERIVED sphere log, and play. */
+        /** Mount the bot in START with the derived sphere queue; `play: false` builds the queue and reads its first route only. */
+        async function startBot({ play = true } = {}) {
+            await page.evaluate(async (rulesPath) => {
+                const rules = await (await fetch(rulesPath)).json();
+                const { generateSphereLog } = await import('./modules/shared/procgen/forwardSimulator.js');
+                const text = generateSphereLog(rules).map((e) => JSON.stringify(e)).join('\n');
+                const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
+                return getSphereStateSingleton().loadSphereLog('probe-seedling-wasm-vanilla-map:derived', text);
+            }, RULES_PATH);
+            return page.evaluate(async ({ start, doPlay }) => {
+                const bus = (await import('./app/core/eventBus.js')).default;
+                bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                for (let i = 0; i < 50 && !getActivePanel()?.getBot?.(); i++) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await new Promise((r) => { setTimeout(r, 100); });
+                }
+                const bot = getActivePanel()?.getBot?.();
+                if (!bot) return { ok: false, why: 'no playback bot panel' };
+                bot.onRegionMove({ targetRegion: start });
+                bot.refresh();
+                // ⛓ §5.19 — the region the bot is MOUNTED in is read before `play()`: play starts the sphere queue,
+                // whose first route may credit a logical link at once (the JS controller does, in a microtask before
+                // play resolves; the wasm engine's load is async, so D read START by timing alone — measured).
+                const region = bot.getCurrentRegion();
+                bot._ensureQueueBuilt?.();
+                const head = bot._queue?.[0] ?? null;
+                const route = head ? bot._pathFinder?.findPath?.(start, head.regionName) ?? null : null;
+                if (doPlay) await bot.play();
+                return { ok: true, region, afterPlay: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName },
+                    route };
+            }, { start: START, doPlay: play });
+        }
+        const botStatus = () => page.evaluate(async () => {
+            const { getActivePanel } = await import('./modules/playbackBot/index.js');
+            const bot = getActivePanel()?.getBot?.();
+            return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null, active: bot?.isActive?.() ?? null };
+        });
+
+        const engineStats = () => page.evaluate(async () => {
+            const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+            const c = substrateRegistry.get('flash_seedling')?.getPlaybackController?.();
+            const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+            const e = c?._wasmEngine ?? null;
+            if (!e) return { engine: false, lastRefusal: c?.lastRefusal ?? null };
+            const st = e.stats;
+            return JSON.parse(JSON.stringify({
+                engine: true,
+                stagesDelivered: c._wasmDelivered !== null && c._wasmDelivered === p.seedlingPlaybackSurface().wasm?.deliveredSet,
+                adopted: st.adopted, forced: st.forced, forcedBy: st.forcedBy, adoptRefused: st.adoptRefused, ceremonies: st.ceremonies,
+                held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries, failed: st.failed,
+                done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
+                history: (st.history ?? []).map((h) => ({ goal: h.goal?.name, level: h.goal?.level, outcome: h.outcome, producer: h.producer,
+                    continuation: h.continuation ?? false, divergence: h.divergence ?? null, reason: h.reason ?? null })),
+                lastRefusal: c.lastRefusal }));
+        });
+        /** Poll the bot's status until `until(status)` or the budget; every change is logged. */
+        async function watchBot(tag, until, budgetMs) {
+            const t0 = Date.now();
+            const statuses = [];
+            let end = null;
+            while (Date.now() - t0 < budgetMs) {
+                // eslint-disable-next-line no-await-in-loop
+                end = await botStatus();
+                if (end.status !== statuses.at(-1)?.status) {
+                    statuses.push({ s: Math.round((Date.now() - t0) / 1000), status: end.status, region: end.region });
+                    console.log(`INFO: ${tag} +${((Date.now() - t0) / 1000).toFixed(1)} s bot: ${end.status}`);
+                }
+                // eslint-disable-next-line no-await-in-loop
+                if (end.status.startsWith('error') || await until(end)) break;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(500);
+            }
+            return { end, statuses, seconds: Math.round((Date.now() - t0) / 1000) };
+        }
+
+        /** V — the bot as it ships: the sphere queue, the proxy's own routing (the rules' explicit declaration). */
+        async function runDefault() {
+            const booted = await startBot();
+            check(`V: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
+            await clickPanelTab(page, FLASH_PANEL).catch(() => null);
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source, mode: b.detection?.mode ?? null };
+            });
+            out('V routing', routing);
+            check('V: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            const w = await watchBot('V', (e) => e.status.startsWith('finished'), BUDGET_MS);
+            const eng = await engineStats();
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            out('V engine', eng);
+            out('V reach', { seconds: w.seconds, checks, finalStatus: w.end?.status, region: w.end?.region, statuses: w.statuses.slice(-12) });
+            out('V first refusal', { status: (w.end?.status ?? '').startsWith('error') ? w.end.status : null, engineRefusal: eng?.lastRefusal ?? null });
+            // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the bot Restarts out of the pockets that used to end this
+            // walk by name at L17 (~180 s), so it can now still be WALKING when the budget ends. That is not a stall:
+            // a walk whose status changed within ADVANCING_WINDOW_S of the end is advancing (measured: the longest
+            // gap between two status changes on this walk is 113 s, the L19 boss-key room).
+            const quietS = w.seconds - (w.statuses.at(-1)?.s ?? 0);
+            const advancing = !!w.end?.active && quietS < ADVANCING_WINDOW_S;
+            out('V end', { quietS, advancing, windowS: ADVANCING_WINDOW_S });
+            check('V: the walk ends FINISHED, with a NAMED refusal, or still ADVANCING at the budget (never a silent stall)',
+                (w.end?.status ?? '').startsWith('finished') || (w.end?.status ?? '').startsWith('error') || advancing,
+                JSON.stringify({ status: w.end?.status ?? '', quietS, active: w.end?.active ?? null }));
+            if (eng.engine) check('V: the controller\'s engine STAGES THE DELIVERED SET (the rooms the game plays)', eng.stagesDelivered === true, JSON.stringify(eng.stagesDelivered));
+        }
+
+        /** D — the rules' directed graph: the sphere queue's first route (doors only), then greedy door-only walks. */
+        async function runDirected() {
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
+            });
+            check('D: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            // The queue is built and its first route read; nothing is played, so the door-only walks start in START.
+            const booted = await startBot({ play: false });
+            check(`D: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
+            await clickPanelTab(page, FLASH_PANEL).catch(() => null);
+            const order = await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
+            });
+            out('D queue first step', { head: booted.head, route: booted.route });
+            // ⛓ rules `ce1cba867a`: L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` is gone,
+            // so the Sword's route (§5.17's logical-link row until then) is doors only.
+            check('D: the sphere queue\'s first goal (level 10) routes in 9 hops opening with r8c0\'s OWN stairs — no logical sub-region link on it',
+                /^level_10(__|$)/.test(booted.head?.region ?? '') && booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
+                    && booted.route.steps.filter((r) => r.startsWith('level_0__')).length === 1,
+                JSON.stringify({ head: booted.head, route: booted.route }));
+            const legs = [];
+            let where = START;
+            let refusal = null;
+            const t0 = Date.now();
+            while (legs.length < MAX_CHECKS && Date.now() - t0 < BUDGET_MS) {
+                // eslint-disable-next-line no-await-in-loop
+                const done = await page.evaluate(() => window.__checks ?? []);
+                const target = nearestDoorOnlyTarget(PRESET, where, order.filter((n) => !done.includes(n)));
+                out('D target', { from: where, ...target });
+                if (!target) break;
+                // eslint-disable-next-line no-await-in-loop
+                await page.evaluate(async (name) => {
+                    const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                    getActivePanel()?.getBot?.().walkToLocation(name);
+                }, target.location);
+                const before = done.length;
+                // eslint-disable-next-line no-await-in-loop
+                const w = await watchBot(`D → ${target.location}`, async () => (await page.evaluate(() => window.__checks ?? [])).length > before,
+                    BUDGET_MS - (Date.now() - t0));
+                // eslint-disable-next-line no-await-in-loop
+                const after = await page.evaluate(() => window.__checks ?? []);
+                legs.push({ target: target.location, doors: target.route.length, checked: after.length > before ? after.at(-1) : null,
+                    seconds: w.seconds, status: w.end?.status ?? null });
+                if (after.length <= before) { refusal = w.end?.status ?? null; break; }
+                where = target.region;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(1000);
+            }
+            await page.waitForTimeout(1500);
+            const eng = await engineStats();
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            const swaps = await rp.gameFrame().evaluate(() => window.__vmSwaps).catch(() => null);
+            const moves = await rp.glueMoves().catch(() => null);
+            out('D engine', eng);
+            out('D reach', { seconds: Math.round((Date.now() - t0) / 1000), legs, checks, swaps, doors: moves?.length ?? null, firstRefusal: refusal });
+            check('D: the controller\'s engine STAGES THE DELIVERED SET', eng.stagesDelivered === true, JSON.stringify(eng.stagesDelivered));
+            check('D: the bot CHECKED its first door-only target, each location once',
+                legs[0]?.checked === legs[0]?.target && new Set(checks).size === checks.length, JSON.stringify({ legs, checks }));
+            // ⛓ §5.19 — no ceremony since skip-intro: the first goal can come inside the explicit start's fade, which the
+            // adoption WAITS out (a transient clause); the probe's stop hands the room back, so the next goal adopts AGAIN
+            // (the begin record the engine's own tape load cleared is read back) — every cold start adopted, none forced.
+            check('D: every cold start ADOPTED (the fade waited out, §5.19) — 0 forced re-arrivals in total, nothing refused',
+                eng.adopted >= 1 && eng.forced === 0 && Object.keys(eng.forcedBy ?? {}).length === 0 && (eng.adoptRefused ?? []).length === 0
+                    && eng.hostStarts?.[0] === 'adopt',
+                JSON.stringify({ adopted: eng.adopted, forced: eng.forced, forcedBy: eng.forcedBy, refused: eng.adoptRefused, hostStarts: eng.hostStarts }));
+            check('D: 0 divergences, 0 recoveries (a solver DECLINE is recorded as the first refusal, not a divergence)',
+                eng.divergences === 0 && eng.recoveries === 0, JSON.stringify({ d: eng.divergences, r: eng.recoveries, f: eng.failed, history: eng.history }));
+        }
+
+        /** Count `user:locationCheck` as it leaves the adapter's dispatcher (`flashBridgeAdapter.js`), into `window.__checks`. */
+        const wrapDispatcher = () => page.evaluate(async () => {
+            window.__checks = window.__checks ?? [];
+            const { getActivePanelInstance } = await import('./modules/flashPanel/index.js');
+            const d = getActivePanelInstance()?.adapter?.dispatcher ?? null;
+            if (!d) return false;
+            if (!d.__vm) {
+                const orig = d.publish.bind(d);
+                d.publish = (n, p, o) => {
+                    if (n === 'user:locationCheck') window.__checks.push(p?.locationName ?? null);
+                    return orig(n, p, o);
+                };
+                d.__vm = true;
+            }
+            return true;
+        });
+
+        /** J — the JS runtime takes the vanilla delivery; the solver drives its real rooms (§5.18). */
+        async function runJs() {
+            await page.evaluate(async () => {
+                const sm = (await import('./app/core/settingsManager.js')).default;
+                await sm.updateSetting('moduleSettings.flashPanel.runtime', 'js', { persist: false });
+            });
+            await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
+            // ⛓ §5.19 — the region glue's logical moves (with WHY: the bot's route, or a position read) and its position
+            // reads, stamped against the randomized load's position HOLD (mount + reset), installed before the load runs.
+            await page.evaluate(async () => {
+                const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                const w = { moves: [], reads: [], holds: [] };
+                window.__startState = w;
+                const move = glue._regionMove.bind(glue);
+                glue._regionMove = (e) => { if (e.logical) w.moves.push({ exit: e.exitName, why: e.why ?? null }); return move(e); };
+                const pos = glue.binding.onPlayerPosition.bind(glue.binding);
+                glue.binding.onPlayerPosition = (p, o) => { w.reads.push({ held: !!glue._positionHold, p: [p.level, p.x, p.y] }); return pos(p, o); };
+                const hold = glue.holdPositionWatch.bind(glue);
+                glue.holdPositionWatch = (why) => { w.holds.push({ why, reads: w.reads.length }); return hold(why); };
+                const release = glue.releasePositionWatch.bind(glue);
+                glue.releasePositionWatch = () => { const h = w.holds.at(-1); if (h) h.readsAtRelease = w.reads.length; return release(); };
+            });
+            const surface = () => page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const s = p?.seedlingPlaybackSurface?.();
+                const rt = s?.jsRuntime ?? null;
+                return s ? JSON.parse(JSON.stringify({ transport: s.transport, arm: s.atlas?.arm ?? null, entries: s.atlas?.entries?.length ?? null,
+                    apRefusal: s.apRefusal, loaded: !!p._apLoadResult, reset: p._apLoadResult?.reset ?? null,
+                    levelSet: rt ? JSON.parse(rt.game.botLevelSet()) : null, level: rt?.run?.level ?? null, solverWalk: s.solverWalk })) : null;
+            });
+            const surf = await rp.waitFor('the JS page mounted the delivered set and the reset landed', async () => {
+                const x = await surface();
+                return x?.transport === 'js' && (x.apRefusal || (x.loaded && x.levelSet?.kind)) ? x : null;
+            }, 120000);
+            out('J surface', surf);
+            check('J: on the JS runtime the AP load TAKES the vanilla arm — the map bound, no refusal',
+                surf?.arm === 'vanilla' && surf.entries > 0 && surf.apRefusal === null, JSON.stringify(surf));
+            // ⛓ R4b part 2 — a REFUSED load (the build lacks a capability the rules need, e.g. `bossreport`) has no set to
+            // measure: the refusal above is J's one named answer, and nothing below is read off a load that never ran.
+            if (surf?.apRefusal) return;
+            check('J: the page mounted the delivered set as REAL rooms (all of them), and the explicit start booted level 0',
+                surf?.levelSet?.kind === 'real' && surf.levelSet.rooms > 0 && surf.levelSet.rooms === surf.levelSet.table_levels
+                    && surf.reset?.mode === 'explicit-start' && surf.reset?.landed === true && surf.level === 0,
+                JSON.stringify({ levelSet: surf?.levelSet, reset: surf?.reset, level: surf?.level }));
+            // ⛔ The reset of a start with no position takes the GAME's boot position (`Main.as:51`). First run of this
+            // session: the page's mount reported (0, 0) and the player was sent into `tree@0,0` (§5.18, fixed in jsRuntimeCore).
+            // The wiring's rule: the position the game itself booted at = the region binding's last declared spawn (here the
+            // arrival into the bot's start region, before the load ran — the same rule the adopt probe's N pins on wasm).
+            const boot = await page.evaluate(async () => (await import('./modules/flashPanel/index.js')).getActivePanelInstance()
+                ._apLoadResult?.steps?.find((x) => x.name === 'reset-begin')?.detail?.bootPosition ?? null);
+            check('J: the reset sent the GAME\'s boot position (the binding\'s declared spawn), never (0, 0); the player stands there',
+                boot && surf?.reset?.x === boot.x && surf?.reset?.y === boot.y && !(boot.x === 0 && boot.y === 0)
+                    && surf?.reset?.observed?.player?.x === boot.x + 8 && surf?.reset?.observed?.player?.y === boot.y + 8,
+                JSON.stringify({ boot, args: [surf?.reset?.x, surf?.reset?.y], player: surf?.reset?.observed?.player }));
+            // The browser's cost of the mount: the SAME chunks on a FRESH runtime instance (the live one is untouched).
+            const mount = await page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const set = p._seedlingRealSet;
+                const { planLevelSetChunks } = await import('./modules/seedlingDemo/levelSetValidator.js');
+                const { createJsRuntime } = await import('./modules/seedlingDemo/jsRuntimeCore.js');
+                const runs = [];
+                for (let i = 0; i < 3; i += 1) {
+                    const t0 = performance.now();
+                    const { chunks } = planLevelSetChunks(set);
+                    const t1 = performance.now();
+                    const rt = createJsRuntime();
+                    const per = chunks.map((c) => { const a = performance.now(); const ans = rt.game.botLoadLevels(JSON.stringify(c)); return [Math.round(performance.now() - a), ans]; });
+                    runs.push({ planMs: Math.round(t1 - t0), mountMs: Math.round(performance.now() - t1), chunks: chunks.length,
+                        lastChunkMs: per.at(-1)[0], answer: per.at(-1)[1], kind: rt.mounted?.kind ?? null, rooms: rt.mounted?.records.size ?? null });
+                }
+                return runs;
+            });
+            out('J mount', mount);
+            check('J: a fresh runtime mounts the same delivered set (ok, real, every room)',
+                mount.every((m) => m.answer === 'ok' && m.kind === 'real' && m.rooms === surf?.levelSet?.rooms), JSON.stringify(mount));
+
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
+            });
+            check('J: the proxy routes on the directed graph the RULES declare (source `explicit`, as V and D)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
+            const booted = await startBot();
+            check(`J: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
+            // ⛓ §5.19 — measured: the r1c6 this row once read was the ROUTE crediting the queue's first link (the player at the
+            // explicit start), not a position read; no read may land inside the load's hold. Since rules `ce1cba867a` that
+            // route opens with a door, so NO logical move is made at the start at all.
+            const ss = await page.evaluate(() => window.__startState);
+            out('J start state', { ...ss, reads: ss.reads.slice(0, 12), afterPlay: booted.afterPlay });
+            check('J: the load HELD the glue\'s position watch (mount + reset) and no position was read inside it; NO logical move at the start (the first route opens with a door)',
+                ss.holds.length === 1 && ss.holds[0].readsAtRelease === ss.holds[0].reads && ss.reads.every((r) => !r.held)
+                    && ss.moves.length === 0,
+                JSON.stringify({ holds: ss.holds, heldReads: ss.reads.filter((r) => r.held).length, moves: ss.moves }));
+            await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                getActivePanel()?.getBot?.().stop?.();
+            });
+            const order = await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
+            });
+            const pageStats = () => page.evaluate(async () => {
+                const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance().seedlingPlaybackSurface();
+                const rt = s.jsRuntime;
+                const { getSeedlingRegionGlue } = await import('./modules/flashPanel/index.js');
+                return JSON.parse(JSON.stringify({ solver: rt.playback.solverStats, level: rt.run?.level ?? null, deaths: rt.deaths.length,
+                    collected: [...rt.collected], binding: getSeedlingRegionGlue()?.checkBinding?.stats ?? null,
+                    halted: rt.halted?.message ?? null, solved: rt.events.filter((e) => e.type === 'solver' && e.solver === 'solved').map((e) => e.message) }));
+            });
+            const legs = [];
+            let where = START;
+            let refusal = null;
+            const t0 = Date.now();
+            while (legs.length < MAX_CHECKS && Date.now() - t0 < BUDGET_MS) {
+                // eslint-disable-next-line no-await-in-loop
+                const done = await page.evaluate(() => window.__checks ?? []);
+                const target = nearestDoorOnlyTarget(PRESET, where, order.filter((n) => !done.includes(n)));
+                out('J target', { from: where, ...target });
+                if (!target) break;
+                // eslint-disable-next-line no-await-in-loop
+                const s0 = await pageStats();
+                // eslint-disable-next-line no-await-in-loop
+                await page.evaluate(async (name) => {
+                    const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                    getActivePanel()?.getBot?.().walkToLocation(name);
+                }, target.location);
+                const before = done.length;
+                // eslint-disable-next-line no-await-in-loop
+                const w = await watchBot(`J → ${target.location}`, async () => (await page.evaluate(() => window.__checks ?? [])).length > before,
+                    BUDGET_MS - (Date.now() - t0));
+                // eslint-disable-next-line no-await-in-loop
+                const s1 = await pageStats();
+                // eslint-disable-next-line no-await-in-loop
+                const after = await page.evaluate(() => window.__checks ?? []);
+                legs.push({ target: target.location, doors: target.route.length, checked: after.length > before ? after.at(-1) : null,
+                    seconds: w.seconds, status: w.end?.status ?? null, solves: s1.solver.solves - s0.solver.solves,
+                    declines: s1.solver.declines - s0.solver.declines, lastVerbs: s1.solver.lastSolve?.verbs ?? null,
+                    lastGoal: s1.solver.lastSolve?.goal?.kind ?? null, lastDecline: s1.solver.lastDecline });
+                if (after.length <= before) { refusal = w.end?.status ?? s1.solver.lastDecline ?? null; break; }
+                where = target.region;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(1000);
+            }
+            const st = await pageStats();
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            out('J reach', { seconds: Math.round((Date.now() - t0) / 1000), legs, checks, page: st, firstRefusal: refusal });
+            check('J: the bot CHECKED the starting house\'s chest (its first door-only target), each location once',
+                legs[0]?.checked === legs[0]?.target && /Chest/.test(legs[0]?.target ?? '') && new Set(checks).size === checks.length,
+                JSON.stringify({ legs, checks }));
+            check('J: the page\'s SOLVER drove that leg — the doors solved, the apitem by verb `apitem`, nothing declined',
+                legs[0]?.solves >= 2 && legs[0]?.declines === 0 && legs[0]?.lastGoal === 'collect-placement'
+                    && JSON.stringify(legs[0]?.lastVerbs) === '["apitem"]', JSON.stringify(legs[0]));
+            check('J: the walk never HALTED the page (a decline is the first refusal, recorded)', st.halted === null, JSON.stringify(st.halted));
+        }
+
+        try {
+            await page.goto(`${HOST}/frontend/?rules=${RULES_PATH}`, { waitUntil: 'domcontentloaded' });
+            await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
+            await rp.installWatchers();
+
+            if (S === 'J') await runJs();
+
+            if (S === 'V' || S === 'D') {
+                await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
+                await rp.waitFor('wasm iframe mounted', async () => page.frames().some((fr) => fr.url().includes(WASM_PAGE)));
+                // ⛓ READY before the click; a known boot fault re-boots once (seedlingProbeBoot.js).
+                await startWasmGame(() => rp.gameFrame(), { logs });
+                await assertLogicOnlyChannel(rp.gameFrame());
+                await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
+                    document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
+                await rp.waitForApLoad(120000);
+                await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
+                await rp.gameFrame().evaluate(installSwapCounter);
+                const map = await page.evaluate(async () => {
+                    const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                    const s = p.seedlingPlaybackSurface();
+                    const a = s.atlas;
+                    return { arm: a?.arm ?? null, entries: a?.entries?.length ?? null, refused: (a?.refused ?? []).map((r) => r.location),
+                        events: (a?.events ?? []).map((e) => e.location),
+                        // ⛓ ENCOUNTERS — the two encounter entries are bound too (their own kind): the pickups' types apart
+                        types: [...new Set((a?.entries ?? []).filter((e) => e.kind !== 'encounter').map((e) => e.entityType))],
+                        encounters: (a?.entries ?? []).filter((e) => e.kind === 'encounter')
+                            .map((e) => `${e.location}@${e.at?.x},${e.at?.y}->${e.drop?.item}`).sort(),
+                        links: a?.links?.length ?? null,
+                        delivered: !!s.wasm?.deliveredSet, deliveredRooms: s.wasm?.deliveredSet?.rooms?.length ?? null,
+                        apRefusal: s.apRefusal };
+                });
+                out('V map', map);
+                const locCount = Object.values(REGIONS).reduce((n, r) => n + (r.locations ?? []).length, 0);
+                // ⛓ OBSTACLE EVENTS — a game-state event is the map's third class: neither a pickup nor a refusal, a goal
+                // whose check is the game's flag. Exactly the rules' `event_kind: 'game_state'` locations, no more.
+                const gameState = Object.values(REGIONS).flatMap((r) => (r.locations ?? []).filter((l) => l.event_kind === 'game_state')
+                    .map((l) => l.name)).sort();
+                check(`${S}: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity`,
+                    map.arm === 'vanilla' && map.entries + map.refused.length + map.events.length === locCount && map.entries > 0
+                        && map.types.length === 1 && JSON.stringify([...map.events].sort()) === JSON.stringify(gameState)
+                        // ⛓ ENCOUNTERS — both bound, each at its atlas tile with the game's own drop (`expectedEncounters`:
+                        //   read off the atlas the rules name, and each tile checked to hold its DELIVERED entity)
+                        && JSON.stringify(map.encounters) === JSON.stringify(ENCOUNTERS)
+                        && map.delivered && map.apRefusal === null, JSON.stringify(map));
+
+                if (S === 'D') await runDirected();
+                else await runDefault();
+            }
+            console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s) (the logic-only channel's device loss)`);
+        } catch (e) {
+            if (isBootFault(e)) { await page.close(); throw e; }
+            check(`fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
+            console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
+        }
+        await page.close();
+        return rp.failures();
+    }
+}

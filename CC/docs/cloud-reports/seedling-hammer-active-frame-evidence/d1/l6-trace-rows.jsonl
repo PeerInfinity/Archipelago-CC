@@ -1,0 +1,4 @@
+{"tick":0,"strategy":{"verb":"bait","rung":"bait","climb":1,"stance":{"x":56,"y":24},"target":"bob@112,48"},"obstacle":{"kind":"danger","id":"sandtrap@64,16","sources":["enemy:sandtrap@64,16"]},"goal":"reach-exit","rejected":["avoid","time","sword-dash"]}
+{"tick":65,"strategy":{"verb":"walk","rung":"avoid","climb":2},"obstacle":{"kind":"danger","id":"sandtrap@64,16","sources":["enemy:sandtrap@64,16"]},"goal":"reach-exit","rejected":["keep-plan","sword-dash"]}
+{"record":{"goal":"reach-exit","strategy":"bait","target":"bob@112,48"}}
+{"record":{"goal":"reach-exit"}}

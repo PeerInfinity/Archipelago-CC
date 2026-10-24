@@ -1,0 +1,31 @@
+== l18
+  off   rounds [88.9, 98.8, 108.8]  median 98.8 s
+  coff  rounds [68.0, 71.2, 75.9]  median 71.2 s
+  on    rounds [132.5, 139.5, 146.1]  median 139.5 s
+  con   rounds [92.7, 99.0, 102.9]  median 99.0 s
+  cache, floor OFF: 0.721x   cache, floor ON: 0.710x
+== A-sword
+  off   rounds [102.1, 109.6, 123.1]  median 109.6 s
+  coff  rounds [107.1, 111.6, 110.3]  median 110.3 s
+  on    rounds [49.8, 56.5, 57.8]  median 56.5 s
+  con   rounds [49.2, 53.1, 50.6]  median 50.6 s
+  cache, floor OFF: 1.006x   cache, floor ON: 0.896x
+== p40
+  off   rounds [5.3, 6.1, 5.4]  median 5.4 s
+  coff  rounds [4.9, 5.5, 5.6]  median 5.5 s
+  on    rounds [5.4, 6.1, 5.9]  median 5.9 s
+  con   rounds [5.2, 6.0, 5.1]  median 5.2 s
+  cache, floor OFF: 1.019x   cache, floor ON: 0.881x
+== the floor-flip table (L18 medians)
+  floor ON ÷ floor OFF, no cache:        1.412
+  floor ON + cache ÷ floor OFF + cache:  1.390
+  floor ON + cache ÷ floor OFF (today):  1.002
+== norm-md5 by (workload, mode): one md5 per cell means every round agreed
+  l18      {'off': ['de6f6e4e'], 'coff': ['de6f6e4e'], 'on': ['bae5c6de'], 'con': ['bae5c6de']}
+  A-sword  {'off': ['82834f24'], 'coff': ['82834f24'], 'on': ['7d8e280e'], 'con': ['7d8e280e']}
+  p40      {'off': ['466b303c', '78e5d9cf'], 'coff': ['466b303c', '78e5d9cf'], 'on': ['466b303c', '78e5d9cf', 'bdb2e8ff'], 'con': ['466b303c', '9f3d32e7']}
+
+== p40: the probe prints a wall-dependent 'longest gap (before call N, site)', so its norm-md5 varies by round; its answer, hook-call count and length, every round and mode:
+     12 SOLVED 679 t
+     12 answer 3addc3798712900a1155934ad303a8e8
+     12 hook calls 372

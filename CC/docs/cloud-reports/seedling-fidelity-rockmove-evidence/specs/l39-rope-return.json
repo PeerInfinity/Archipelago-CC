@@ -1,0 +1,5 @@
+{"name":"l39-rope-return","levels":[39,38],"tapeFile":"frontend/modules/seedlingDemo/fixtures/tapes/r5-shaft.json",
+ "tapePatch":{"inputsUntil":226,"append":[{"key":"down","from":240,"to":700}],"tick_count":700},
+ "arms":[{"name":"vanilla"},
+  {"name":"remove","ops":[{"op":"remove","level":39,"type":"fallrock","x":144,"y":624}]},
+  {"name":"move-144-608","ops":[{"op":"move","level":39,"type":"fallrock","x":144,"y":624,"to":{"x":144,"y":608}}]}]}

@@ -1,0 +1,30 @@
+m-622-L0-append        climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-622-L0-none          climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-622-L0-probe         climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-622-L1-append        climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-622-L1-none          climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-622-L1-probe         climbs=  2 fires=  0 [] | DONE 4t hits=0 verbs=['forced-hit'] md5=0191cbb1
+m-624-L0-append        climbs=  2 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) — chaser:lavarunner@208,96 (insi
+m-624-L0-none          climbs=  2 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) — chaser:lavarunner@208,96 (insi
+m-624-L0-probe         climbs=  2 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the danger map forbids (222.70589296504838,120.1793485888045) — chaser:lavarunner@208,96 (insi
+m-624-L1-append        climbs=  4 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | DONE 752t hits=0 verbs=['kill', 'walk'] md5=56a407aa
+m-624-L1-none          climbs=  2 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | DONE 331t hits=0 verbs=['detour'] md5=5b6de60a
+m-624-L1-probe         climbs=  4 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | DONE 481t hits=0 verbs=['detour', 'kill'] md5=22edb073
+m-626-L0-append        climbs=  2 fires=  0 [] | DONE 344t hits=0 verbs=['detour'] md5=e7a85e7f
+m-626-L0-none          climbs=  2 fires=  0 [] | DONE 344t hits=0 verbs=['detour'] md5=e7a85e7f
+m-626-L0-probe         climbs=  2 fires=  0 [] | DONE 344t hits=0 verbs=['detour'] md5=e7a85e7f
+m-626-L1-append        climbs=  2 fires=  0 [] | DONE 284t hits=0 verbs=['kill', 'walk'] md5=8483c1e3
+m-626-L1-none          climbs=  2 fires=  0 [] | DONE 284t hits=0 verbs=['kill', 'walk'] md5=8483c1e3
+m-626-L1-probe         climbs=  2 fires=  0 [] | DONE 284t hits=0 verbs=['kill', 'walk'] md5=8483c1e3
+m-628-L0-append        climbs=  6 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the 
+m-628-L0-none          climbs=  6 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the 
+m-628-L0-probe         climbs=  6 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@208,96')] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt (button@288,128, east lane x=302): no x-input sequence of at most 16 ticks takes the 
+m-628-L1-append        climbs=  2 fires=  0 [] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too — solverBot(wasm-arrival-
+m-628-L1-none          climbs=  2 fires=  0 [] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too — solverBot(wasm-arrival-
+m-628-L1-probe         climbs=  2 fires=  0 [] | REFUSED solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too — solverBot(wasm-arrival-
+m-629-L0-append        climbs=  4 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@24,56')] | DONE 253t hits=0 verbs=['bait', 'kill', 'walk'] md5=8da3bee8
+m-629-L0-none          climbs=  4 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@24,56')] | DONE 253t hits=0 verbs=['bait', 'kill', 'walk'] md5=8da3bee8
+m-629-L0-probe         climbs=  4 fires=  2 [(74, 'bulb@48,112', 'chaser:lavarunner@24,56')] | DONE 253t hits=0 verbs=['bait', 'kill', 'walk'] md5=8da3bee8
+m-629-L1-append        climbs=  4 fires=  0 [] | DONE 252t hits=0 verbs=['bait', 'kill', 'walk'] md5=2e6c4c52
+m-629-L1-none          climbs=  4 fires=  0 [] | DONE 252t hits=0 verbs=['bait', 'kill', 'walk'] md5=2e6c4c52
+m-629-L1-probe         climbs=  4 fires=  0 [] | DONE 252t hits=0 verbs=['bait', 'kill', 'walk'] md5=2e6c4c52

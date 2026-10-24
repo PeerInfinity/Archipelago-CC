@@ -1,7 +1,24 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { LoopState } from './loopState.js';
+import { LoopState, coarseOf } from './loopState.js';
+import { CostDataManager } from './costDataManager.js';
+import {
+  DEFAULT_REGION_COST,
+  START_REGION_MOVE_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { SKIP_MENU_DEFAULT } from '../menuPanel/menuPanelEngine.js';
+
+// The delegation check reads the substrate's registry-declared
+// loop-action-delegation capability (sharing.mana.loopActionDelegation)
+// — register the maze declaration the way mazeRoomLibrary does.
+if (!substrateRegistry.has('maze')) {
+    substrateRegistry.register({
+        id: 'maze',
+        sharing: { mana: { loopActionDelegation: true } },
+    });
+}
 
 function makeBus() {
   const events = [];
@@ -38,8 +55,7 @@ function makeStubDispatcher() {
  * to the GameState instance so consumers see the same observable
  * behavior the runtime gives them.
  */
-function makeWiredLoopState({ withDispatcher = false } = {}) {
-  const bus = makeBus();
+function makeWiredLoopState({ withDispatcher = false, bus = makeBus() } = {}) {
   const gs = new GameState(bus);
   const loopState = new LoopState();
   const dispatcher = withDispatcher ? makeStubDispatcher() : null;
@@ -57,6 +73,10 @@ function makeWiredLoopState({ withDispatcher = false } = {}) {
       addCustomAction: (a, p) => gs.addCustomAction(a, p),
       insertLocationCheckAt: (l, r, i, lr) => gs.insertLocationCheckAt(l, r, i, lr),
       insertCustomActionAt: (a, r, i, p) => gs.insertCustomActionAt(a, r, i, p),
+      // The runtime's `gameStateAPI` carries this (loops/index.js), and it is
+      // the handle the free-by-rule start-region move reads.
+      setStartRegions: (r) => gs.setStartRegions(r),
+      isStartRegion: (r) => gs.isStartRegion(r),
     },
   });
   return { loopState, gs, bus, dispatcher };
@@ -310,6 +330,92 @@ describe('LoopState — clearQueue (Phase 6g)', () => {
   });
 });
 
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE S3 (plan §27.6 #1) — THE LOOP RESET LANDS WHERE
+ * THE LOAD PUT THE PLAYER, by the ONE start-hop rule (`menuPanelEngine.skipsStart`:
+ * the *Skip the menu* setting AND exactly one exit). The rules arrive the way
+ * the runtime delivers them — `stateManager:rawJsonDataLoaded` on the bus — and
+ * the setting through `menuPanel.isSkipMenuEnabled`, the channel procgenPlayer reads.
+ */
+describe('LoopState — the loop start follows skipsStart (S3)', () => {
+  let loopState, gs, dispatcher, bus;
+  const PLAYER = '2';
+  const docWith = (startExits) => ({
+    regions: {
+      [PLAYER]: {
+        Menu: { exits: startExits.map((t, i) => ({ name: `to ${t} ${i}`, connected_region: t })) },
+        region_0_0: { exits: [] },
+        region_1_0: { exits: [] },
+      },
+    },
+  });
+  function makeDispatchingBus() {
+    const handlers = new Map();
+    return {
+      events: [],
+      publish(name, data) { this.events.push({ name, data }); for (const h of handlers.get(name) ?? []) h(data); },
+      subscribe: (name, h) => {
+        handlers.set(name, [...(handlers.get(name) ?? []), h]);
+        return () => {};
+      },
+    };
+  }
+  const setFn = (mod, fn, value) => centralRegistry.registerPublicFunction(mod, fn, () => value);
+  const reset = () => dispatcher.calls.find((c) => c.eventName === 'user:regionMove')?.eventData?.targetRegion;
+  function load(doc) {
+    bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: PLAYER } });
+    gs.setStartRegions(['Menu']);
+    gs.setCurrentRegion('region_1_0');
+  }
+
+  beforeEach(() => {
+    bus = makeDispatchingBus();
+    ({ loopState, gs, dispatcher } = makeWiredLoopState({ withDispatcher: true, bus }));
+    setFn('procgenPlayer', 'getResolvedStartRegion', 'region_0_0');
+  });
+  afterEach(() => {
+    setFn('procgenPlayer', 'getResolvedStartRegion', null);
+    setFn('menuPanel', 'isSkipMenuEnabled', SKIP_MENU_DEFAULT);
+  });
+
+  it('⛓ a ONE-exit start with skip ON is skipped: the reset lands on the resolved start', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    load(docWith(['region_0_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('region_0_0');
+  });
+
+  it('⛓⛓ a MULTI-exit start is never skipped: the reset lands on the DECLARED start (mm3\'s shape)', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    load(docWith(['region_0_0', 'region_1_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
+  });
+
+  it('⛓ skip OFF: the player began at the declared start, so the reset returns there', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', false);
+    load(docWith(['region_0_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
+  });
+
+  it('⛓ the rule reads the LOADED slot (the event\'s player), not player 1', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    const doc = docWith(['region_0_0']);
+    doc.regions['1'] = { Menu: { exits: [{ connected_region: 'a' }, { connected_region: 'b' }] } };
+    load(doc);
+    loopState.clearQueue();
+    expect(reset()).toBe('region_0_0');
+  });
+
+  it('⛓ a warehoused START is its own resolved start — nothing to decide', () => {
+    setFn('procgenPlayer', 'getResolvedStartRegion', 'Menu');
+    load(docWith(['region_0_0', 'region_1_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
+  });
+});
+
 describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () => {
   let loopState, gs, dispatcher;
 
@@ -365,5 +471,161 @@ describe('LoopState — _applyActionEffects regionMove dispatch (Phase 6g)', () 
     expect(dispatcher.calls.some(
       (c) => c.eventName === 'loop:moveCompleted',
     )).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — `coarseOf` is the seam between TWO vocabularies.
+//
+// A fine substrate's recording is now a shared actionQueue entry
+// (`actionType`/`actionId`) — jta, omsi and, since this slice, the maze. Loops'
+// OWN `_liveCaptureBuffer` and gameState's path entries still speak
+// `type`/`locationName`. `_applyCoarseReplacement` is handed both, so it reads
+// both through this one adapter. ⛔ The user has ruled the two converge LATER,
+// in the viewer's arc; that arc deletes branch (ii), not this whole function.
+// ---------------------------------------------------------------------------
+
+describe('coarseOf — reads both recording vocabularies (Q-b)', () => {
+  it('(i) the SHARED actionQueue vocabulary', () => {
+    expect(coarseOf({ actionType: 'locationCheck', actionId: 'Loc1' }))
+      .toEqual({ kind: 'locationCheck', name: 'Loc1' });
+    expect(coarseOf({ actionType: 'explore', actionId: null }))
+      .toEqual({ kind: 'explore' });
+  });
+
+  it("(ii) loops' OWN path vocabulary", () => {
+    expect(coarseOf({ type: 'locationCheck', locationName: 'Loc1' }))
+      .toEqual({ kind: 'locationCheck', name: 'Loc1' });
+    expect(coarseOf({ type: 'explore', regionName: 'A' }))
+      .toEqual({ kind: 'explore' });
+  });
+
+  it("a maze 'move' has NO coarse meaning in either vocabulary — fine-grained "
+    + 'substrate actions live only in the recorded fine script', () => {
+    expect(coarseOf({ actionType: 'move', actionId: 'E', substrate: 'maze' })).toBeNull();
+    expect(coarseOf({ type: 'move', dir: 'E' })).toBeNull();
+    expect(coarseOf({ actionType: 'wait', actionId: null })).toBeNull();
+  });
+
+  it('a shared entry WINS the vocabulary test even when it also carries a '
+    + '`type` rider, so one entry is never read twice', () => {
+    expect(coarseOf({ actionType: 'move', actionId: 'E', type: 'locationCheck', locationName: 'X' }))
+      .toBeNull();
+  });
+
+  it('a nameless locationCheck is not a coarse entry in either vocabulary', () => {
+    expect(coarseOf({ actionType: 'locationCheck', actionId: null })).toBeNull();
+    expect(coarseOf({ type: 'locationCheck' })).toBeNull();
+  });
+
+  it('junk is null, never a throw', () => {
+    expect(coarseOf(null)).toBeNull();
+    expect(coarseOf(undefined)).toBeNull();
+    expect(coarseOf('locationCheck')).toBeNull();
+    expect(coarseOf({})).toBeNull();
+  });
+});
+
+describe('_applyCoarseReplacement reads a MAZE recording in the new shape', () => {
+  it('a maze recording\'s locationCheck entries become coarse queue entries, '
+    + 'and its moves do not', () => {
+    const gs = new GameState();
+    const calls = [];
+    gs.clearActionsAt = () => calls.push(['clear']);
+    gs.insertLocationCheckAt = (name) => calls.push(['check', name]);
+    gs.insertCustomActionAt = (name) => calls.push(['custom', name]);
+    const loopState = new LoopState({ eventBus: makeBus(), gameState: gs });
+    loopState._gs = () => gs;
+    loopState._applyCoarseReplacement('A', 1, {
+      actions: [
+        { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 4 },
+        { actionType: 'locationCheck', actionId: 'Sword Room', substrate: 'maze', loops: 1 },
+        { actionType: 'wait', actionId: null, substrate: 'maze', loops: 2 },
+      ],
+    });
+    expect(calls).toEqual([['clear'], ['check', 'Sword Room']]);
+  });
+});
+
+/**
+ * ⚖ user ruling 2026-09-06, model (A): *"advancing from the Menu costs no
+ * mana"*. A `regionMove` whose SOURCE is a start region is priced
+ * `START_REGION_MOVE_COST`, whatever the loaded block says and whatever the
+ * no-block fallback says — which is what retires the 50 the twelve
+ * hand-written EMPTY blocks bill for the first move out of Menu, with no preset
+ * change.
+ *
+ * ⛓ These rows are about the site that CHARGES. The three DISPLAY pricers that
+ * read the same constant have their own:
+ * `shared/queueAnalysis.test.js` and `startRegionMoveCost.test.js`.
+ */
+describe('LoopState — the start-region move is free by rule', () => {
+  let loopState, gs;
+
+  /** The shape of the twelve hand-written EMPTY blocks: roots only, no entries. */
+  function emptyBlockStore() {
+    const cdm = new CostDataManager();
+    cdm.setCostData({
+      regions: {}, locations: {},
+      defaultRegionCost: DEFAULT_REGION_COST, defaultLocationCost: 10,
+    }, 'embedded:test');
+    return cdm;
+  }
+
+  const move = (sourceRegion) => ({
+    type: 'regionMove', sourceRegion, destinationRegion: 'A', exitUsed: 'to_a',
+  });
+
+  beforeEach(() => {
+    ({ loopState, gs } = makeWiredLoopState());
+    gs.setStartRegions(['Menu']);
+  });
+
+  it('isStartRegion reads the injected gameState API', () => {
+    expect(loopState.isStartRegion('Menu')).toBe(true);
+    expect(loopState.isStartRegion('A')).toBe(false);
+    expect(loopState.isStartRegion('')).toBe(false);
+    expect(loopState.isStartRegion(undefined)).toBe(false);
+  });
+
+  it('overrides a LOADED block that prices the start region 50', () => {
+    const cdm = emptyBlockStore();
+    loopState.setCostDataManager(cdm);
+    // The block really does say 50 — the store is not being lied to.
+    expect(cdm.getRegionCost('Menu')).toBe(DEFAULT_REGION_COST);
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+  });
+
+  it('leaves a move out of a NON-start region priced by the block', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost(move('A'))).toBe(DEFAULT_REGION_COST);
+  });
+
+  it('applies the rule in the NO-COST-DATA fallback too', () => {
+    expect(loopState.costDataManager?.isLoaded?.()).toBeFalsy();
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+    expect(loopState._calculateActionCost(move('A'))).toBe(DEFAULT_REGION_COST);
+  });
+
+  it('prices it at the shared constant, not at a number typed here', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(START_REGION_MOVE_COST);
+  });
+
+  it('is applied BEFORE the XP discount, so XP on the start region leaves 0 at 0', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    loopState.addRegionXP('Menu', 500);
+    expect(loopState.getRegionXP('Menu').level).toBeGreaterThan(0);
+    expect(loopState._calculateActionCost(move('Menu'))).toBe(0);
+  });
+
+  it('does NOT free an explore or a location check in the start region', () => {
+    loopState.setCostDataManager(emptyBlockStore());
+    expect(loopState._calculateActionCost({
+      type: 'customAction', actionName: 'explore', sourceRegion: 'Menu',
+    })).toBe(DEFAULT_REGION_COST * 2);
+    expect(loopState._calculateActionCost({
+      type: 'locationCheck', locationName: 'Loc', sourceRegion: 'Menu',
+    })).toBe(10);
   });
 });

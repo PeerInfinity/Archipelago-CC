@@ -10,11 +10,11 @@
     },
     "game_name": {
       "type": "string",
-      "description": "The name of the game."
+      "description": "The DOCUMENT's game label: the slot's game for a one-slot document, \"Multiworld\" for a combined one. It is a label, not the slot's identity: the loaded slot's game is world[\"<p>\"].game, and logic, inventory and the snapshot resolve from that (rules F4)."
     },
     "game_directory": {
       "type": "string",
-      "description": "The world directory name for the game."
+      "description": "The DOCUMENT's world-directory label (a combined document's is \"multiworld\"). The slot's own directory is world[\"<p>\"].world_directory (rules F4)."
     },
     "archipelago_version": {
       "type": "string",
@@ -39,14 +39,6 @@
     "player_names": {
       "type": "object",
       "description": "Mapping of player slot ID (string) to player name.",
-      "patternProperties": {
-        "^[0-9]+$": { "type": "string" }
-      },
-      "additionalProperties": false
-    },
-    "world_classes": {
-      "type": "object",
-      "description": "Mapping of player slot ID (string) to the world class name used.",
       "patternProperties": {
         "^[0-9]+$": { "type": "string" }
       },
@@ -164,7 +156,12 @@
           "properties": {
             "game": {
               "type": "string",
-              "description": "Name of the game this world is for."
+              "description": "Name of the game this world is for: the slot's game, which every reader that resolves logic, inventory or the slot's identity uses (top-level game_name is only the document's label)."
+            },
+            "world_directory": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The slot's world directory under worlds/ (the export handler's lookup key; exporter.py's export_game_rules adds it, as do the JS producers rulesExporter.js, regionAtlasCompiler.js and apcalcGeneratorEngine.js). Optional: older documents omit it."
             },
             "slot_data": {
               "type": "object",
@@ -227,28 +224,42 @@
             },
             "assume_bidirectional_exits": {
               "type": "boolean",
-              "description": "Whether region connections are bidirectional by default."
+              "description": "This slot's statement that its region connections are bidirectional by default: when true, every back-exit inherits its paired forward exit's rule, and consumers may construct back-exits that the document does not list. Per player, and this is its ONLY place — a top-level `assume_bidirectional_exits` is not part of the schema and the runtime loader refuses it by name (rules F1, 2026-10-03; scripts/procgen/migrate-per-player-blocks.mjs moves an old document). ABSENT means the slot states nothing: the runtime auto-detects (stateManagerProxy.js `getEffectiveBidirectionalSetting`, via shared/bidirectionalDetector.js), and a top-down layout over this slot treats it as true. Producers: exporter/games/base/handler.py `get_exporter_settings` (the game handler's `ASSUME_BIDIRECTIONAL_EXITS`, or failing that a world_generator world's `assume_bidirectional_exits` class attribute, which carries its source slot's value — world_generator/_template_init.py) and frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (for its `playerId`)."
+            },
+            "return_to_menu": {
+              "type": "boolean",
+              "description": "This slot's statement that returning to the menu is always possible: the runtime's Restart warps the player to the start region (Menu -> GameStart), from anywhere. A FLAG, never an edge: the regions carry no exit to Menu (the user's ruling, 2026-10-05). Position-aware consumers read it: a walk with no way back may Restart, and a soft-lock census lists such places as Restart-only (a diagnostic) instead of soft-locks. ABSENT means false: the slot keeps real soft-lock detection. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` and regionAtlasCompiler.js `compileRegionAtlas` (`returnToMenu`), both from the playing substrate's registry declaration `restartWarp` (frontend/modules/procgenCore/restartWarp.js); exporter/games/base/handler.py `get_exporter_settings` from a world_generator world's `return_to_menu` class attribute (world_generator/_template_init.py)."
             },
             "use_resolved_items": {
               "type": "boolean",
               "description": "Whether to use resolved items in event processing."
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "additionalProperties": false
-    },
-    "settings": {
-      "type": "object",
-      "description": "DEPRECATED: Use 'world' instead. Kept for backwards compatibility.",
-      "patternProperties": {
-        "^[0-9]+$": {
-          "type": "object",
-          "properties": {
-            "game": {
-              "type": "string",
-              "description": "Name of the game these settings apply to."
+            },
+            "format_fallback": {
+              "type": "object",
+              "description": "Present ONLY when the exporter was asked for the Rule Builder format (`rules_json_format` `rule_builder` or `both`) and wrote AST format instead (the fallback is kept by the user's ruling, 2026-10-11, and made visible here, in an ERROR log line, and in a run-end WARNING summary). ABSENT on a normal export. Written into every slot's block of the file. Producer: exporter/format_fallback.py via exporter/exporter.py `export_game_rules`. No consumer changes behaviour on it; it is a record for the reader.",
+              "properties": {
+                "requested": {
+                  "type": "string",
+                  "enum": ["rule_builder", "both"],
+                  "description": "The rules_json_format the run asked for."
+                },
+                "written": {
+                  "type": "string",
+                  "enum": ["ast"],
+                  "description": "The format this file's rules are actually in."
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "The cause: the exception type, message and raising frame (file:line) of the converter import or conversion failure."
+                },
+                "rule_builder_output": {
+                  "type": "string",
+                  "enum": ["not written", "dropped"],
+                  "description": "`dropped` when `both` was asked for and conversion failed: the primary file is AST and the _rules-ast.json is still written. `not written` otherwise."
+                }
+              },
+              "required": ["requested", "written", "reason", "rule_builder_output"],
+              "additionalProperties": false
             }
           },
           "additionalProperties": true
@@ -258,7 +269,8 @@
     },
     "game_info": {
       "type": "object",
-      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections.",
+      "description": "Game-specific information and accumulator patterns, keyed by player slot ID (string). Contains custom game data that doesn't fit in world/exporter sections. At least one slot row (rules S12): every producer writes the slot's completion_condition, so an empty map is a writer that forgot the slot.",
+      "minProperties": 1,
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -294,12 +306,26 @@
       "description": "The seed name string for this generation."
     },
     "is_vanilla": {
-      "type": "boolean",
-      "description": "Whether item placements match the original non-randomized game. True for games where items are in their designed/intended locations."
+      "type": "object",
+      "description": "Which slots' item placements match the original non-randomized game, keyed by player slot ID (string): a slot whose world puts items in their designed/intended locations maps to `true`; a slot that does not is ABSENT (the key is omitted when no slot is vanilla). Per slot, never one value for the document (rules F3, 2026-10-10; ⚖ user 2026-10-03: *\"This should also be per player. This should not be folder level.\"*). A document-level boolean is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document. Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `is_vanilla` (class or instance attribute).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "boolean",
+          "description": "`true`: this slot's placements are the original game's."
+        }
+      },
+      "additionalProperties": false
     },
     "is_canonical": {
-      "type": "boolean",
-      "description": "Whether item placements are deterministically reproduced by the world generator. True for worldgen worlds generated with --canonical-seed."
+      "type": "object",
+      "description": "Which slots' item placements are deterministically reproduced by the world generator (worldgen worlds generated with --canonical-seed), keyed by player slot ID (string): such a slot maps to `true`; any other slot is ABSENT (the key is omitted when no slot is canonical). Per slot (rules F3, 2026-10-10): a multiworld mixing a canonical world with a non-canonical one marks only the canonical slots. A document-level boolean is refused by name (stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `is_canonical` (class or instance attribute; world_generator/_template_init.py emits the ClassVar).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "boolean",
+          "description": "`true`: this slot's placements are the world generator's canonical ones."
+        }
+      },
+      "additionalProperties": false
     },
     "canonical_placements": {
       "type": "object",
@@ -312,8 +338,276 @@
         }
       },
       "additionalProperties": false
+    },
+    "playerId": {
+      "type": "string",
+      "description": "Player slot ID (string) of a PLAYER-SPECIFIC export; absent from the combined multiworld document. Producer: exporter/exporter.py:2864-2866 (value from :3024, `player_str`).",
+      "pattern": "^[0-9]+$"
+    },
+    "preset_label": {
+      "type": "object",
+      "description": "Each slot's short frontend button label (e.g. 'canth s4'), keyed by player slot ID (string); a slot whose world declares no label is ABSENT (the key is omitted when none does). Per slot (rules F3, 2026-10-10), never the first declaring world's label for the whole document. A document-level string is refused by name (stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). Producer: exporter/exporter.py `export_game_rules`'s per-player loop, from the slot world's `preset_label` (a class attribute world_generator/_template_init.py `generate_init_py` emits, or the instance label depgraph/metamath set in `generate_early`).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "preset_sidecars": {
+      "type": "object",
+      "description": "Per-region playable payloads for procgen substrates, keyed by player slot ID (string). Producers: exporter/exporter.py:1073 (the empty `{}` every export carries), exporter/games/base/handler.py:2102 (the worldgen `_worldgen_sidecars.json` round-trip), frontend/modules/procgenPipeline/procgenPipelineEngine.js:6331 (`buildPresetSidecars`, defined at :6053) and frontend/modules/procgenPipeline/regionAtlasCompiler.js:722.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "Mapping of region name to that region's sidecar entry — keyed exactly like this player's `regions` block.",
+          "additionalProperties": { "$ref": "#/$defs/presetSidecarEntry" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "procgen_metadata": {
+      "type": "object",
+      "description": "How each player slot's world was procedurally generated, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry only when a producer wrote one for it. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6981 (`buildRulesJson`, for its `playerId`), frontend/modules/apworldEditor/rulesDocOps.js:3264 (the `initialise-procgen-layout` op, for the initialised slot) and exporter/games/base/handler.py:2118 (the worldgen `_worldgen_procgen_metadata.json` round-trip, under the exporting player; a `_P<n>` export carries only its own slot's entry). Consumers: apworldEditor (sidecarIssues, regionSizeFor, initialiseFacts), presets/presetUI.js `computeProcgenStats`, procgenPipeline (`mapBoundsFor`, the sphere rebuild), world_generator (generator.py writes the slot's block into the package). It does not change placement: always-place intent is a location's `pinned`.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's block: how that slot's world was generated. `buildRulesJson` merges the caller's block with the auto-derived `region_count` and `grid_dims`; its callers supply the rest — procgenPipeline/sphereSteps.js and procgenPipeline/topDownSteps.js (and apworldEditor/slotInitialise.js for an initialise). Open-ended by construction: the caller's fields are spread in, so consumers must tolerate unlisted ones.",
+          "properties": {
+            "driver": {
+              "type": "string",
+              "description": "Which pipeline driver built the world — 'sphere-growth' (sphereSteps.js:492), 'top-down' or 'top-down-sphere' (topDownSteps.js:135)."
+            },
+            "stop_reason": {
+              "type": "string",
+              "description": "Why grid growth stopped, from the driver's own stats."
+            },
+            "region_count": {
+              "type": "integer",
+              "description": "Number of generated regions. Auto-derived by procgenPipelineEngine.js:6351, never caller-supplied."
+            },
+            "grid_dims": {
+              "type": "object",
+              "description": "Bounding size of the generated grid in cells. Auto-derived by procgenPipelineEngine.js:6353-6356 from the maximum `grid_cell`.",
+              "properties": {
+                "width": { "type": "integer" },
+                "height": { "type": "integer" }
+              },
+              "required": ["width", "height"]
+            },
+            "source_game": {
+              "type": ["string", "null"],
+              "description": "Name of the source world a top-down build was derived from. Producer: procgenPipeline/topDownSteps.js:136."
+            },
+            "source_counts": {
+              "type": "object",
+              "description": "Item/location tallies of the source world a top-down build consumed. Producer: procgenPipeline/topDownSteps.js:137 (`computeSourceCounts`)."
+            },
+            "sphere_plan": {
+              "type": "object",
+              "description": "Compact per-sphere plan the driver executed. Producers: procgenPipeline/sphereSteps.js:494 and topDownSteps.js:142; read back by `rebuildEnvelopeFromRulesJson` (procgenPipelineEngine.js:4072-4078)."
+            },
+            "sphere_tree": {
+              "type": "object",
+              "description": "Compact region-to-wave attribution — the abstract topology without the grid. Producer: procgenPipeline/topDownSteps.js:142; read back by `rebuildEnvelopeFromRulesJson`."
+            },
+            "edits": {
+              "type": "array",
+              "description": "Recorded hand edits to the generated grid, kept as provenance. Producers: procgenPipeline/sphereSteps.js and topDownSteps.js:141 (omitted entirely when nothing was edited)."
+            },
+            "concepts": {
+              "type": "array",
+              "items": {"type": "string"},
+              "minItems": 1,
+              "description": "The concept ids the world named (concept library T0b; `procgenCore/concepts.js` `CONCEPTS`). Producers: procgenPipeline/sphereSteps.js and topDownSteps.js via `recordedConceptsOf` (omitted entirely when the world names none). Read back by `rebuildEnvelopeFromRulesJson` into `regionParams.concepts`, so an appended sphere's gates are realised as the world's concepts."
+            },
+            "substrate_configs": {
+              "type": "object",
+              "description": "The config each content source was installed with, by substrate id (APWORLD SUBSTRATE CHANGE R6b). Producer: procgenPipeline/procgenPipelineEngine.js `buildRulesJson` — for every registry entry that declares `recordablePipelineConfig` AND realised a region of the grid, whenever the compile writes procgen_metadata (procgenCore/substrateConfigRecord.js). Absent when no declaring source was realised. Consumer: the APWorld hub's zone read-back (apworldEditor/regionContent.js), which prefers a recorded field over its assumption.",
+              "additionalProperties": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "loop_costs": {
+      "type": "object",
+      "description": "Loop-mode mana economy, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry exactly when its world runs in loop mode. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:7082 (`buildRulesJson` when enableLoopMode && embedSphereLog, via shared/procgen/loopCostGenerator.js `generateLoopCosts`), frontend/modules/apworldEditor/rulesDocOps.js:3271 (an initialise with loop mode on), the hub's player-scope `set-key loop_costs` (the loops cost debugger's Send, loopsCostDebugger/costDebuggerUI.js:413, and the Document row's loop-mode switch), exporter/games/base/handler.py:2133 (the worldgen `_worldgen_loop_costs.json` round-trip, under the exporting player) and the committed test-preset writers (scripts/test/presetLoopCosts.mjs:69, generate-jta-*-test-preset.*). Consumed by frontend/modules/loops (index.js reads the loaded slot's entry; costDataManager.js `tryLoadEmbedded(rulesPath, playerId)`).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's loop-mode mana economy. `generateLoopCosts` (shared/procgen/loopCostGenerator.js) drives the ONE cost model in loopCostPlanner.js and applies the write-by-class rule; the map's description names every producer.",
+          "$comment": "R-a (loop costs residue 1) TIGHTENED this block, and every constraint below is what the CORPUS and write-by-class allow rather than what a reading of the vocabulary would suggest. `required` is the four keys ALL fourteen blocks on disk carry (twelve tracked, written by scripts/test/generate-*-preset.*; two untracked maze fixtures) AND the four the pipeline's own failure marker carries (procgenPipelineEngine.js's catch writes {version, error, regions, locations, defaultRegionCost, defaultLocationCost}) — `version`, `generatedAt` and `defaultRegionXpEffect` are NOT required, because the twelve tracked blocks carry none of them. `additionalProperties: false` here and on a region entry closes L4's finding that every semantic error write-by-class exists to prevent was invisible to this schema. ⛔ `moveCost` and `timeDrainPerSecond` stay declared SIBLINGS on an entry and the schema does NOT say 'exactly one': a coarse entry and a summary entry are different shapes, a summary entry legitimately carries BOTH when the input block states a moveCost explicitly (loopCostGenerator.js `writeCostsByClass`), and which one is right for a region is write-by-class's answer, not a schema's.",
+          "required": [
+            "regions",
+            "locations",
+            "defaultRegionCost",
+            "defaultLocationCost"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Cost-data format version ('1.0'). Producer: loopCostGenerator.js `generateLoopCosts`."
+            },
+            "generatedAt": {
+              "type": "string",
+              "description": "ISO-8601 timestamp of generation. Producer: loopCostGenerator.js `generateLoopCosts`, and the Loops / JtA cost-debugger writers. The procgen pipeline's buildRulesJson and the committed preset writers (scripts/test/presetLoopCosts.mjs) DELETE it so a generated world is byte-identical across runs — optional for that reason."
+            },
+            "generatedFrom": {
+              "type": ["string", "null"],
+              "description": "Name of the source file the costs were simulated from. Producer: loopCostGenerator.js `generateLoopCosts` (its `sourceFileName` argument)."
+            },
+            "regions": {
+              "type": "object",
+              "description": "Region name -> cost entry. Producer: loopCostGenerator.js `writeCostsByClass` — a region's entry depends on its substrate's CLASS: coarse ⇒ {moveCost, xpEffect}; summary ⇒ {timeDrainPerSecond, xpEffect} plus anything the input block states explicitly; a substrate with its own mana economy (jta, omsi) gets NO entry at all.",
+              "additionalProperties": {
+                "type": "object",
+                "description": "One region's cost entry.",
+                "additionalProperties": false,
+                "properties": {
+                  "moveCost": {
+                    "type": "number",
+                    "description": "Mana charged for entering this region. The EXPLICIT per-region cost costDataManager.js:368-371 reads."
+                  },
+                  "timeDrainPerSecond": {
+                    "type": "number",
+                    "description": "Mana drained per second of live play — how SUMMARY substrates (runner, bounce) are priced instead of per action."
+                  },
+                  "xpEffect": {
+                    "type": "string",
+                    "description": "Per-region XP effect mode. The enum is VALID_REGION_XP_EFFECTS in shared/procgen/loopCostDefaults.js, which a JSON document cannot import — jsonSchemaCheck.test.js is the ONE place the two are compared, so a typed copy cannot drift unseen.",
+                    "enum": [
+                      "cost",
+                      "speed",
+                      "both",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            },
+            "locations": {
+              "type": "object",
+              "description": "Location name -> mana cost. The values are NUMBERS, not objects (written by loopCostGenerator.js `writeCostsByClass`; read at costDataManager.js `getLocationCost`).",
+              "additionalProperties": { "type": "number" }
+            },
+            "defaultRegionCost": {
+              "type": "number",
+              "description": "Fallback move cost for regions `regions` does not name. Producer: loopCostGenerator.js; the default is the exported DEFAULT_REGION_COST (50) in loopCostDefaults.js."
+            },
+            "defaultLocationCost": {
+              "type": "number",
+              "description": "Fallback check cost for locations `locations` does not name. Producer: loopCostGenerator.js; the default is the exported DEFAULT_LOCATION_COST (10) in loopCostDefaults.js."
+            },
+            "defaultRegionXpEffect": {
+              "type": "string",
+              "description": "Fallback XP effect mode for regions that state none. Producer: loopCostGenerator.js `generateLoopCosts` (its `regionXpEffect` argument, normalized). Same enum as a region entry's `xpEffect`, and pinned to VALID_REGION_XP_EFFECTS by the same row.",
+              "enum": [
+                "cost",
+                "speed",
+                "both",
+                "none"
+              ]
+            },
+            "error": {
+              "type": "string",
+              "description": "Set instead of real costs when generation threw — costDataManager.js:209 skips a block carrying it. Producer: procgenPipelineEngine.js:6422-6430."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "discovery_mode": {
+      "type": "object",
+      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's choice. enabled:true — Discovery on: with loop mode, Loop mode's overrides as for a world without the block; without it, walk-to-reveal (entering a region reveals it, its locations and its exits; a click on a discovered exit moves). enabled:false — Discovery off in and out of loop mode, and every region, location and exit counts as discovered, so Loops can plan through all of them.",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "region_atlas": {
+      "type": "object",
+      "description": "Which region atlas each slot's graph was compiled from, keyed by player slot ID (string) — the shape `procgen_metadata`, `loop_costs` and `preset_sidecars` use (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document). Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (via `regionAtlasReference`), the procgen pipeline's `buildRulesJson` and the APWorld Editor's initialise op (a substrate's `rulesJsonBlocks`, landed under the slot by rulesDocOps.js), and the hub's player-scope `set-key region_atlas` (the marking tool's Save, documentKeys.js `regionAtlasSetKeyOp`).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's atlas reference. `game` is the ATLAS's game id (e.g. `seedling`), not the slot's `world[p].game`.",
+          "properties": {
+            "atlas_id": {
+              "type": "string",
+              "description": "The atlas's stamped id; it ends in the atlas content hash, so a restamped atlas visibly invalidates a stale preset."
+            },
+            "game": {
+              "type": "string",
+              "description": "The atlas's game identifier."
+            },
+            "map_document": {
+              "type": "string",
+              "description": "Path of the tile-space map document the atlas was marked on. Omitted when the atlas declares no tile space."
+            }
+          },
+          "required": ["atlas_id", "game"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "flash_panel": {
+      "type": "object",
+      "description": "Wiring that boots the recompiled original game for a slot in the Flash panel, keyed by player slot ID (string) (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). The panel reads the LOADED slot's block (statePersistence.js `getStaticGameData`'s `flash_panel`). Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (from the `FLASH_PANEL_WIRING` table, the only CODE source of this block), the procgen pipeline's `buildRulesJson` and the APWorld Editor's initialise op (a substrate's `rulesJsonBlocks`), and frontend/modules/tileMapAnalyzer/rulesExporter.js `exportRulesJson`. Blocks in hand-authored presets are provisional (flashPanel/README.md).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's Flash panel wiring.",
+          "properties": {
+            "config": {
+              "type": "string",
+              "description": "Panel config file name for the game."
+            },
+            "wasm": {
+              "type": "string",
+              "description": "Path of the recompiled WASM build's page (e.g. 'seedling_bot_ap_p4d/game.html')."
+            },
+            "swf": {
+              "type": "string",
+              "description": "Injected SWF file name, for games still booted from Flash. Producer: tileMapAnalyzer/rulesExporter.js `exportRulesJson`."
+            }
+          },
+          "required": ["config"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Where each slot's graph came from, keyed by player slot ID (string) (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`). Producer: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (passes `options.provenance` through verbatim, under the compiled slot). No rules.json is identity-stamped: `contentIdentity.stampIdentity` stamps atlases, pools, libraries, level sets, datasets and maze sets, never this document.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "OPAQUE — whatever the generator that produced this slot's graph wants to say about where it came from; stamped, never derived, so the fields vary per generator."
+        }
+      },
+      "additionalProperties": false
     }
   },
+  "additionalProperties": false,
   "required": [
     "schema_version",
     "game_name",
@@ -342,7 +636,8 @@
       "properties": {
         "rule": {
           "type": "string",
-          "description": "The rule type name (e.g., 'Has', 'And', 'True_') or a game-specific helper name."
+          "not": { "enum": ["SettingValue", "AST_setting_value"] },
+          "description": "The rule type name (e.g., 'Has', 'And', 'True_') or a game-specific helper name. `SettingValue` / `AST_setting_value` are retired (rules S7) and refused by name: an option is `OptionValue` (`option`), a world attribute `WorldAttribute` (`attribute`)."
         },
         "args": {
           "description": "Rule arguments. Object for named args (e.g., {\"item_name\": \"Sword\"}), array for positional args."
@@ -368,7 +663,11 @@
       "description": "An AST-format rule object defining access conditions.",
       "type": "object",
       "properties": {
-        "type": { "type": "string" },
+        "type": {
+          "type": "string",
+          "not": { "enum": ["setting_value", "setting_check"] },
+          "description": "The node type. `setting_value` is retired (rules S7, user 2026-10-03) and refused by name: an option is `option_value` (`option`), a world attribute `world_attribute` (`attribute`). `setting_check` (never written by any exporter) is refused with it."
+        },
         "value": { "description": "Used for 'constant' type." },
         "name": {
           "type": "string",
@@ -481,10 +780,6 @@
         "location": {
           "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }],
           "description": "Location name for 'location_check', 'placement_lookup'."
-        },
-        "setting": {
-          "type": "string",
-          "description": "Setting name for 'setting_value' (legacy)."
         },
         "option": {
           "type": "string",
@@ -605,7 +900,51 @@
         },
         "locked": {
           "type": "boolean",
-          "description": "True if the item was placed via place_locked_item at generation time. In procgen-emitted rules.json (procgen_metadata present) this is authored intent: world_generator places the item via place_locked_item so the placement holds even in multiworld fill."
+          "description": "Archipelago's meaning, in every rules.json: true if the item was placed locked at generation time (place_locked_item, or fill_restrictive with lock=True — e.g. ALTTP's per-seed dungeon pre-fill). An observation, not intent: world_generator pins a locked EVENT on every seed but treats a locked non-event placement as canonical only (randomized on other seeds) whenever canonical placements exist. Always-place intent is `pinned`."
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Authored always-place intent (procgen's, e.g. the bounce start-stack arrow, the jta round trip's Victory): world_generator places this location's item via place_locked_item on EVERY seed, even in multiworld fill, and the pin survives an export → re-derive (it is a Location attribute the exporter writes back). Producer: procgenPipelineEngine.js compileRegionGraph's `pinnedItems` (buildRulesJson's `pinnedCanonicalItems`). Replaces procgen's former use of `locked` for this (topdown-locked-items R1, 2026-10-01)."
+        },
+        "event_kind": {
+          "type": "string",
+          "enum": ["game_state"],
+          "description": "RULES obstacle-events: what an EVENT location (id null, event true) stands for. Absent = a logic event, which the frontend state manager auto-collects on reach (Archipelago's own sweep does the same). 'game_state' = state the GAME saves (a saved obstacle's persistence flag): the state manager NEVER auto-collects it (stateManager/core/eventKinds.js, fail-closed: an unknown kind is not auto-collected either); the runtime collects it on the game's own flag. Producer: scripts/procgen/make-seedling-playthrough-rules.mjs (flashPanel/seedlingObstacleEvents.js)."
+        },
+        "event_id": {
+          "type": "string",
+          "pattern": "^flag:L[0-9]+:[0-9]+$",
+          "description": "RULES obstacle-events: the stable id a runtime collector keys on, `flag:L<level>:<tag>` (the saved flag)."
+        },
+        "obstacle": {
+          "type": "object",
+          "description": "RULES obstacle-events: the solid entity the flag removes.",
+          "properties": {
+            "level": { "type": "integer" },
+            "tag": { "type": "integer" },
+            "class": { "type": "string" },
+            "x": { "type": "integer" },
+            "y": { "type": "integer" }
+          },
+          "required": ["level", "tag", "class", "x", "y"]
+        },
+        "action": {
+          "type": "object",
+          "description": "RULES obstacle-events: what clears the flag (`verb`, the fidelity census's FLAG_ACTIONS text) and the game inventory flag it needs (`item`, or null). The AP cost is the location's access_rule.",
+          "properties": {
+            "verb": { "type": ["string", "null"] },
+            "item": { "type": ["string", "null"] }
+          },
+          "required": ["verb", "item"]
+        },
+        "side": {
+          "type": "string",
+          "description": "RULES obstacle-events: the AP region the event sits in, on the obstacle's open side."
+        },
+        "across": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "RULES obstacle-events: the AP regions on the obstacle's FAR side from `side` (the other sub-regions its footprint touches; empty when none). A walk crossing between `side` and one of them at the event's own cost passes THROUGH the obstacle, which breaks it in the game (the survey's leg walk credits the event there)."
         }
       },
       "required": ["name", "id", "access_rule"],
@@ -706,6 +1045,10 @@
       "required": ["name"]
     },
     "itemDefinition": {
+      "$comment": "rules S6: the retired boolean flags advancement/useful/trap are REFUSED by name (propertyNames), not merely undeclared, since additionalProperties is open; 'classification' is the one shape. The exporter's items step converts a handler's flags, and the accumulator items (handler.py make_accumulator_item) write classification directly.",
+      "propertyNames": {
+        "not": { "enum": ["advancement", "useful", "trap"] }
+      },
       "type": "object",
       "properties": {
         "name": { "type": "string" },
@@ -725,18 +1068,6 @@
         "classification": {
           "type": "string",
           "description": "Item classification string (e.g., 'progression', 'useful', 'trap', 'filler', 'progression_skip_balancing')."
-        },
-        "advancement": {
-          "type": "boolean",
-          "description": "Legacy: whether item is progression. Replaced by 'classification' in newer exports."
-        },
-        "useful": {
-          "type": "boolean",
-          "description": "Legacy: whether item is useful. Replaced by 'classification' in newer exports."
-        },
-        "trap": {
-          "type": "boolean",
-          "description": "Legacy: whether item is a trap. Replaced by 'classification' in newer exports."
         },
         "event": { "type": "boolean" },
         "type": {
@@ -828,6 +1159,46 @@
         "type": { "oneOf": [{ "type": "integer" }, { "type": "string" }] }
       },
       "required": ["name", "type"]
+    },
+    "presetSidecarEntry": {
+      "type": "object",
+      "description": "One region's procgen sidecar: which substrate owns the region, how to draw it, where it sits on the driver's grid, and the substrate's own serialized world. Producer: `buildPresetSidecars`, frontend/modules/procgenPipeline/procgenPipelineEngine.js:6106-6129.",
+      "properties": {
+        "substrate": {
+          "type": "string",
+          "description": "Substrate id owning this region (`region.substrate`, defaulting to 'maze'). Resolves through substrateRegistry; measured values across the committed presets: bounce, flash_seedling, jta, maze, omsi, runner, text_adventure."
+        },
+        "render_hint": {
+          "type": "string",
+          "description": "How a map renderer should draw this region; defaults to the substrate id when the region declares none."
+        },
+        "grid_cell": {
+          "type": "object",
+          "description": "Driver-level layout coordinate, so consumers reproduce the driver's spatial layout instead of running their own force-directed pass. Present only for grid-grown worlds.",
+          "properties": {
+            "gx": { "type": "integer" },
+            "gy": { "type": "integer" }
+          },
+          "required": ["gx", "gy"]
+        },
+        "shared_world": {
+          "type": "string",
+          "description": "SHARED LEVEL WORLD (tile-primitives Stage 2): the key of the one maze world every AP region of a level plays in. Exactly one entry of the level carries the world in its `playable_payload` (whose `shared_world.key` equals this); every other entry of the level names the key and carries NO payload — an alias the play-time warehouse (`procgenPlayerEngine.buildWarehouse`) resolves to the same world object. Producer: `projectLevelWorld`, frontend/modules/procgenPipeline/regionAtlasMazeProjection.js."
+        },
+        "playable_payload": {
+          "type": "object",
+          "description": "OPAQUE — the substrate's own serialized world, produced by that substrate's adapter `serializeWorld`. This schema deliberately states no inner shape: the payload belongs to the substrate, not to rules.json. Each substrate DECLARES its payload's fields on its registry entry (`sidecarFields`, read through `sidecarFieldsOf` in frontend/modules/procgenCore/sidecarFields.js), and scripts/procgen/check-sidecar-fields.mjs holds every committed entry to that declaration."
+        },
+        "biome": {
+          "type": "object",
+          "description": "Resolved biome configuration, so regenerating this region can reuse it. Omitted (not null) for substrates with no biome concept."
+        },
+        "grow_telemetry": {
+          "type": "object",
+          "description": "Substrate-side auto-grow telemetry from `generateRegionCore`; read by `computeProcgenStats` to surface formula under-provisioning. Omitted when the adapter reported none."
+        }
+      },
+      "required": ["substrate"]
     }
   }
 }

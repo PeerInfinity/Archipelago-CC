@@ -1,0 +1,9 @@
+calls 81525 (strike 80595), runs 135, segments 135, escape 130.7 s of 225.7 s wall
+FALSE EQUAL (digest+args+globals equal, answer differs): 0  (answer|asks|nodes differs: 0)
+DIGEST repeats 54350 (66.7% of calls; 86.43 s = 66.2% of escape, 38.3% of wall)
+CONTENT repeats 54403 (66.7% of calls; 86.77 s = 66.4% of escape, 38.4% of wall)
+SHARE: digest also matches 54350/54403 = 99.9% of CONTENT repeats (99.6% of their escape time; 38.3% of wall)
+digest repeats that are NOT content repeats: 0
+  content repeats the digest misses, by differing component (vs the content-first call): {'visit': 53}
+COST: digest median 0.171 ms (p90 0.251, max 22.61); escape median 0.865 ms; strike callers: escape median 0.861 ms, digest 0.171 ms → ratio 0.199; digest total 17.62 s vs escape 130.7 s
+FRESH: 407 sampled, 0 differ from the memo digest

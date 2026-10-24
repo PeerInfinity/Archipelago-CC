@@ -1,4 +1,4 @@
 # Exits
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/exits.md)
 - [Technical Reference](../developer/modules/exits.md)

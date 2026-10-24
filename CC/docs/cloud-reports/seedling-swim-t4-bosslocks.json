@@ -1,0 +1,1400 @@
+{
+  "generatedBy": "census-seedling-bosslocks (seedlingBossLockCensus.censusLocks) — swim T4",
+  "probe": {
+    "bosslock": "S (BossLock.as:62)",
+    "shieldlock": "W (ShieldLock.as:32), reported only"
+  },
+  "before_v1": {
+    "atlas_id": "seedling-ae833c1e",
+    "counts": {
+      "DISAGREES:LIVE": 10,
+      "NOT": 2,
+      "NOT-SEALED": 1,
+      "DISAGREES:INERT": 1
+    },
+    "rows": [
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "416,240",
+        "tile": [
+          26,
+          15
+        ],
+        "keyType": 0,
+        "persistTag": 4,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c37",
+          "S": "r0c19",
+          "E": "(gated)",
+          "W": "(wall)"
+        },
+        "probeSide": "r0c19",
+        "farSide": "r0c37",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r0c37",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              }
+            ]
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L34_128_0",
+          "in_L37_32_304",
+          "in_L83_32_64"
+        ],
+        "farOther": [
+          "r0c37<->r44c19"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "432,240",
+        "tile": [
+          27,
+          15
+        ],
+        "keyType": 0,
+        "persistTag": 5,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c37",
+          "S": "r0c19",
+          "E": "(wall)",
+          "W": "(gated)"
+        },
+        "probeSide": "r0c19",
+        "farSide": "r0c37",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r0c37",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              }
+            ]
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L34_128_0",
+          "in_L37_32_304",
+          "in_L83_32_64"
+        ],
+        "farOther": [
+          "r0c37<->r44c19"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "80,656",
+        "tile": [
+          5,
+          41
+        ],
+        "keyType": 1,
+        "persistTag": 3,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "(wall)",
+          "S": "r40c4",
+          "E": "r0c19",
+          "W": "r40c4"
+        },
+        "probeSide": "r40c4",
+        "farSide": "r0c19",
+        "farDirs": [
+          "E"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r40c4",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L0_304_176",
+          "in_L33_32_64",
+          "in_L35_32_64",
+          "in_L36_32_128",
+          "in_L88_96_304",
+          "in_L95_624_64",
+          "in_L95_624_80"
+        ],
+        "farOther": [
+          "r0c19<->r0c37",
+          "r0c19<->r13c6",
+          "r0c19<->r44c19"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "112,192",
+        "tile": [
+          7,
+          12
+        ],
+        "keyType": 4,
+        "persistTag": 11,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c19",
+          "S": "r13c6",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r13c6",
+        "farSide": "r0c19",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r13c6",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Yellow Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L0_304_176",
+          "in_L33_32_64",
+          "in_L35_32_64",
+          "in_L36_32_128",
+          "in_L88_96_304",
+          "in_L95_624_64",
+          "in_L95_624_80"
+        ],
+        "farOther": [
+          "r0c19<->r0c37",
+          "r0c19<->r40c4",
+          "r0c19<->r44c19"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "32,864",
+        "tile": [
+          2,
+          54
+        ],
+        "keyType": 4,
+        "persistTag": 12,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "(directional)",
+          "S": "r55c1",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r55c1",
+        "farSide": "(directional)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT A SEPARATOR (no far sub-region beside it; crossing material (directional) beyond)"
+      },
+      {
+        "level": 19,
+        "tag": "bosslock",
+        "at": "48,32",
+        "tile": [
+          3,
+          2
+        ],
+        "keyType": 0,
+        "persistTag": 1,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r1c1",
+          "S": "r3c3",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r3c3",
+        "farSide": "r1c1",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r1c1",
+          "to": "r3c3",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Red Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L20_192_48"
+        ],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 30,
+        "tag": "bosslock",
+        "at": "64,32",
+        "tile": [
+          4,
+          2
+        ],
+        "keyType": 1,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c4",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r0c4",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c4",
+          "to": "r2c10",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L22_96_192"
+        ],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 30,
+        "tag": "bosslock",
+        "at": "224,208",
+        "tile": [
+          14,
+          13
+        ],
+        "keyType": 1,
+        "persistTag": 2,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r8c13",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r8c13",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r2c10",
+          "to": "r8c13",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L32_72_136"
+        ],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 31,
+        "tag": "bosslock",
+        "at": "192,432",
+        "tile": [
+          12,
+          27
+        ],
+        "keyType": 1,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r24c10",
+          "S": "r5c24",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r5c24",
+        "farSide": "r24c10",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r24c10",
+          "to": "r5c24",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L30_192_48"
+        ],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 40,
+        "tag": "bosslock",
+        "at": "480,352",
+        "tile": [
+          30,
+          22
+        ],
+        "keyType": 2,
+        "persistTag": 8,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c53",
+          "S": "r23c29",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r23c29",
+        "farSide": "r0c53",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c53",
+          "to": "r23c29",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Purple Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L41_0_160",
+          "in_L42_240_336"
+        ],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 48,
+        "tag": "bosslock",
+        "at": "48,144",
+        "tile": [
+          3,
+          9
+        ],
+        "keyType": 3,
+        "persistTag": 1,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r4c3",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r4c3",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r2c10",
+          "to": "r4c3",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Blue Key"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [],
+        "farOther": [
+          "r4c3<->r7c0"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 56,
+        "tag": "bosslock",
+        "at": "96,16",
+        "tile": [
+          6,
+          1
+        ],
+        "keyType": 3,
+        "persistTag": 0,
+        "cellKind": "sink",
+        "probe": "S",
+        "sides": {
+          "N": "(wall)",
+          "S": "r2c6",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c6",
+        "farSide": "(wall)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT A SEPARATOR (no far sub-region beside it)"
+      },
+      {
+        "level": 66,
+        "tag": "bosslock",
+        "at": "72,64",
+        "tile": [
+          4,
+          4
+        ],
+        "keyType": 4,
+        "persistTag": 0,
+        "cellKind": "manual",
+        "probe": "S",
+        "sides": {
+          "N": "(manual)",
+          "S": "r5c4",
+          "E": "(manual)",
+          "W": "(manual)"
+        },
+        "probeSide": "r5c4",
+        "farSide": "(manual)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT-SEALED (off-grid: the lock claims no whole tile)"
+      },
+      {
+        "level": 68,
+        "tag": "bosslock",
+        "at": "16,32",
+        "tile": [
+          1,
+          2
+        ],
+        "keyType": 4,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r1c1",
+          "S": "r3c1",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r3c1",
+        "farSide": "r1c1",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r1c1",
+          "to": "r3c1",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Yellow Key"
+                }
+              },
+              {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  },
+                  {
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire Wand Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Wand"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, INERT (the far side is reached only through this lock)"
+      }
+    ]
+  },
+  "after_d4": {
+    "atlas_id": "seedling-0faa7fee",
+    "counts": {
+      "AGREES": 11,
+      "NOT": 2,
+      "NOT-SEALED": 1
+    },
+    "rows": [
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "416,240",
+        "tile": [
+          26,
+          15
+        ],
+        "keyType": 0,
+        "persistTag": 4,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c37",
+          "S": "r0c19",
+          "E": "(gated)",
+          "W": "(wall)"
+        },
+        "probeSide": "r0c19",
+        "farSide": "r0c37",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r0c37",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              }
+            ]
+          }
+        },
+        "ruleDirections": "r0c19->r0c37",
+        "farEntrances": [
+          "in_L34_128_0",
+          "in_L37_32_304",
+          "in_L83_32_64"
+        ],
+        "farOther": [
+          "r0c37<->r44c19"
+        ],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "432,240",
+        "tile": [
+          27,
+          15
+        ],
+        "keyType": 0,
+        "persistTag": 5,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c37",
+          "S": "r0c19",
+          "E": "(wall)",
+          "W": "(gated)"
+        },
+        "probeSide": "r0c19",
+        "farSide": "r0c37",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r0c37",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              }
+            ]
+          }
+        },
+        "ruleDirections": "r0c19->r0c37",
+        "farEntrances": [
+          "in_L34_128_0",
+          "in_L37_32_304",
+          "in_L83_32_64"
+        ],
+        "farOther": [
+          "r0c37<->r44c19"
+        ],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "80,656",
+        "tile": [
+          5,
+          41
+        ],
+        "keyType": 1,
+        "persistTag": 3,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "(wall)",
+          "S": "r40c4",
+          "E": "r0c19",
+          "W": "r40c4"
+        },
+        "probeSide": "r40c4",
+        "farSide": "r0c19",
+        "farDirs": [
+          "E"
+        ],
+        "rule": {
+          "from": "r40c4",
+          "to": "r0c19",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "r40c4->r0c19",
+        "farEntrances": [
+          "in_L0_304_176",
+          "in_L33_32_64",
+          "in_L35_32_64",
+          "in_L36_32_128",
+          "in_L88_96_304",
+          "in_L95_624_64",
+          "in_L95_624_80"
+        ],
+        "farOther": [
+          "r0c19<->r44c19",
+          "r0c37->r0c19",
+          "r13c6->r0c19"
+        ],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "112,192",
+        "tile": [
+          7,
+          12
+        ],
+        "keyType": 4,
+        "persistTag": 11,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c19",
+          "S": "r13c6",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r13c6",
+        "farSide": "r0c19",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r13c6",
+          "to": "r0c19",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Yellow Key"
+            }
+          }
+        },
+        "ruleDirections": "r13c6->r0c19",
+        "farEntrances": [
+          "in_L0_304_176",
+          "in_L33_32_64",
+          "in_L35_32_64",
+          "in_L36_32_128",
+          "in_L88_96_304",
+          "in_L95_624_64",
+          "in_L95_624_80"
+        ],
+        "farOther": [
+          "r0c19<->r44c19",
+          "r0c37->r0c19",
+          "r40c4->r0c19"
+        ],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 12,
+        "tag": "bosslock",
+        "at": "32,864",
+        "tile": [
+          2,
+          54
+        ],
+        "keyType": 4,
+        "persistTag": 12,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "(directional)",
+          "S": "r55c1",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r55c1",
+        "farSide": "(directional)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT A SEPARATOR (no far sub-region beside it; crossing material (directional) beyond)"
+      },
+      {
+        "level": 19,
+        "tag": "bosslock",
+        "at": "48,32",
+        "tile": [
+          3,
+          2
+        ],
+        "keyType": 0,
+        "persistTag": 1,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r1c1",
+          "S": "r3c3",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r3c3",
+        "farSide": "r1c1",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r3c3",
+          "to": "r1c1",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Red Key"
+            }
+          }
+        },
+        "ruleDirections": "r3c3->r1c1",
+        "farEntrances": [
+          "in_L20_192_48"
+        ],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 30,
+        "tag": "bosslock",
+        "at": "64,32",
+        "tile": [
+          4,
+          2
+        ],
+        "keyType": 1,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c4",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r0c4",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r2c10",
+          "to": "r0c4",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "r2c10->r0c4",
+        "farEntrances": [
+          "in_L22_96_192"
+        ],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 30,
+        "tag": "bosslock",
+        "at": "224,208",
+        "tile": [
+          14,
+          13
+        ],
+        "keyType": 1,
+        "persistTag": 2,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r8c13",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r8c13",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r2c10",
+          "to": "r8c13",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "r2c10->r8c13",
+        "farEntrances": [
+          "in_L32_72_136"
+        ],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 31,
+        "tag": "bosslock",
+        "at": "192,432",
+        "tile": [
+          12,
+          27
+        ],
+        "keyType": 1,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r24c10",
+          "S": "r5c24",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r5c24",
+        "farSide": "r24c10",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r5c24",
+          "to": "r24c10",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Green Key"
+            }
+          }
+        },
+        "ruleDirections": "r5c24->r24c10",
+        "farEntrances": [
+          "in_L30_192_48"
+        ],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 40,
+        "tag": "bosslock",
+        "at": "480,352",
+        "tile": [
+          30,
+          22
+        ],
+        "keyType": 2,
+        "persistTag": 8,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r0c53",
+          "S": "r23c29",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r23c29",
+        "farSide": "r0c53",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r23c29",
+          "to": "r0c53",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Purple Key"
+            }
+          }
+        },
+        "ruleDirections": "r23c29->r0c53",
+        "farEntrances": [
+          "in_L41_0_160",
+          "in_L42_240_336"
+        ],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 48,
+        "tag": "bosslock",
+        "at": "48,144",
+        "tile": [
+          3,
+          9
+        ],
+        "keyType": 3,
+        "persistTag": 1,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r4c3",
+          "S": "r2c10",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c10",
+        "farSide": "r4c3",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r2c10",
+          "to": "r4c3",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Blue Key"
+            }
+          }
+        },
+        "ruleDirections": "r2c10->r4c3",
+        "farEntrances": [],
+        "farOther": [
+          "r4c3<->r7c0"
+        ],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      },
+      {
+        "level": 56,
+        "tag": "bosslock",
+        "at": "96,16",
+        "tile": [
+          6,
+          1
+        ],
+        "keyType": 3,
+        "persistTag": 0,
+        "cellKind": "sink",
+        "probe": "S",
+        "sides": {
+          "N": "(wall)",
+          "S": "r2c6",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r2c6",
+        "farSide": "(wall)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT A SEPARATOR (no far sub-region beside it)"
+      },
+      {
+        "level": 66,
+        "tag": "bosslock",
+        "at": "72,64",
+        "tile": [
+          4,
+          4
+        ],
+        "keyType": 4,
+        "persistTag": 0,
+        "cellKind": "manual",
+        "probe": "S",
+        "sides": {
+          "N": "(manual)",
+          "S": "r5c4",
+          "E": "(manual)",
+          "W": "(manual)"
+        },
+        "probeSide": "r5c4",
+        "farSide": "(manual)",
+        "farDirs": [],
+        "rule": null,
+        "ruleDirections": null,
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "NOT-SEALED (off-grid: the lock claims no whole tile)"
+      },
+      {
+        "level": 68,
+        "tag": "bosslock",
+        "at": "16,32",
+        "tile": [
+          1,
+          2
+        ],
+        "keyType": 4,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "S",
+        "sides": {
+          "N": "r1c1",
+          "S": "r3c1",
+          "E": "(wall)",
+          "W": "(wall)"
+        },
+        "probeSide": "r3c1",
+        "farSide": "r1c1",
+        "farDirs": [
+          "N"
+        ],
+        "rule": {
+          "from": "r3c1",
+          "to": "r1c1",
+          "bidirectional": false,
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Yellow Key"
+                }
+              },
+              {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  },
+                  {
+                    "rule": "And",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire Wand Fusion"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Wand"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "ruleDirections": "r3c1->r1c1",
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "AGREES (one-way, probe side -> far side)"
+      }
+    ]
+  },
+  "shieldlocks_after_d4_report_only": {
+    "atlas_id": "seedling-0faa7fee",
+    "counts": {
+      "DISAGREES:LIVE": 1,
+      "DISAGREES:INERT": 2
+    },
+    "rows": [
+      {
+        "level": 12,
+        "tag": "shieldlocknorm",
+        "at": "288,704",
+        "tile": [
+          18,
+          44
+        ],
+        "keyType": null,
+        "persistTag": 10,
+        "cellKind": "gated",
+        "probe": "W",
+        "sides": {
+          "N": "(wall)",
+          "S": "r44c19",
+          "E": "r44c19",
+          "W": "r0c19"
+        },
+        "probeSide": "r0c19",
+        "farSide": "r44c19",
+        "farDirs": [
+          "S",
+          "E"
+        ],
+        "rule": {
+          "from": "r0c19",
+          "to": "r44c19",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Progressive Shield"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [
+          "in_L34_32_144"
+        ],
+        "farOther": [
+          "r0c37<->r44c19"
+        ],
+        "verdict": "DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN"
+      },
+      {
+        "level": 20,
+        "tag": "shieldlocknorm",
+        "at": "176,16",
+        "tile": [
+          11,
+          1
+        ],
+        "keyType": null,
+        "persistTag": 0,
+        "cellKind": "gated",
+        "probe": "W",
+        "sides": {
+          "N": "(wall)",
+          "S": "(wall)",
+          "E": "r1c12",
+          "W": "r1c4"
+        },
+        "probeSide": "r1c4",
+        "farSide": "r1c12",
+        "farDirs": [
+          "E"
+        ],
+        "rule": {
+          "from": "r1c12",
+          "to": "r1c4",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Progressive Shield"
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, INERT (the far side is reached only through this lock)"
+      },
+      {
+        "level": 71,
+        "tag": "shieldlock",
+        "at": "288,256",
+        "tile": [
+          18,
+          16
+        ],
+        "keyType": null,
+        "persistTag": 2,
+        "cellKind": "gated",
+        "probe": "W",
+        "sides": {
+          "N": "(wall)",
+          "S": "(wall)",
+          "E": "r16c19",
+          "W": "r0c6"
+        },
+        "probeSide": "r0c6",
+        "farSide": "r16c19",
+        "farDirs": [
+          "E"
+        ],
+        "rule": {
+          "from": "r0c6",
+          "to": "r16c19",
+          "bidirectional": true,
+          "access_rule": {
+            "rule": "Has",
+            "args": {
+              "item_name": "Progressive Shield",
+              "count": 2
+            }
+          }
+        },
+        "ruleDirections": "both",
+        "farEntrances": [],
+        "farOther": [],
+        "verdict": "DISAGREES — TWO-WAY, INERT (the far side is reached only through this lock)"
+      }
+    ]
+  }
+}

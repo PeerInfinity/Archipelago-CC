@@ -1,0 +1,6 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-f5bdb07d
+PASS: shut: the game ran the tape to its end on the delivered set — 176 obs, seedling-vanilla-record-f5bdb07d
+PASS: shut: untalked, the game kept {58,0} and {58,1} — []
+PASS: shut: untalked, the game does NOT cross the tag-1 door to L46 — final {"t":175,"x":64,"y":104,"level":58}
+PASS: shut: the model (yetiTalk ON) reproduces the game at 0 px — {"max":0,"first":null}
+ALL CHECKS PASSED

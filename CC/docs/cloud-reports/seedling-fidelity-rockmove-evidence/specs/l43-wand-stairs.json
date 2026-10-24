@@ -1,0 +1,167 @@
+{
+ "name": "l43-wand-stairs",
+ "levels": [
+  43,
+  40
+ ],
+ "tape": {
+  "boot": {
+   "level": 43,
+   "x": 144,
+   "y": 240
+  },
+  "tick_count": 1000,
+  "save": {
+   "totem_parts": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "keys": [],
+   "seal_parts": []
+  },
+  "grants": [
+   {
+    "level": 43,
+    "items": [
+     "conch",
+     "feather",
+     "fire",
+     "sword"
+    ]
+   }
+  ],
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 8
+   },
+   {
+    "key": "primary",
+    "from": 20,
+    "to": 21
+   },
+   {
+    "key": "primary",
+    "from": 51,
+    "to": 52
+   },
+   {
+    "key": "primary",
+    "from": 82,
+    "to": 83
+   },
+   {
+    "key": "primary",
+    "from": 113,
+    "to": 114
+   },
+   {
+    "key": "primary",
+    "from": 144,
+    "to": 145
+   },
+   {
+    "key": "primary",
+    "from": 175,
+    "to": 176
+   },
+   {
+    "key": "right",
+    "from": 300,
+    "to": 329
+   },
+   {
+    "key": "down",
+    "from": 335,
+    "to": 1000
+   }
+  ]
+ },
+ "arms": [
+  {
+   "name": "vanilla"
+  },
+  {
+   "name": "remove3",
+   "ops": [
+    {
+     "op": "remove",
+     "level": 43,
+     "type": "fallrock",
+     "x": 96,
+     "y": 336
+    },
+    {
+     "op": "remove",
+     "level": 43,
+     "type": "fallrock",
+     "x": 192,
+     "y": 336
+    },
+    {
+     "op": "remove",
+     "level": 43,
+     "type": "fallrock",
+     "x": 176,
+     "y": 384
+    }
+   ]
+  },
+  {
+   "name": "move3",
+   "ops": [
+    {
+     "op": "move",
+     "level": 43,
+     "type": "fallrock",
+     "x": 96,
+     "y": 336,
+     "to": {
+      "x": 128,
+      "y": 336
+     }
+    },
+    {
+     "op": "move",
+     "level": 43,
+     "type": "fallrock",
+     "x": 192,
+     "y": 336,
+     "to": {
+      "x": 160,
+      "y": 336
+     }
+    },
+    {
+     "op": "move",
+     "level": 43,
+     "type": "fallrock",
+     "x": 176,
+     "y": 384,
+     "to": {
+      "x": 160,
+      "y": 368
+     }
+    }
+   ]
+  },
+  {
+   "name": "apitem",
+   "ops": [
+    {
+     "op": "apitem",
+     "level": 43,
+     "type": "wand",
+     "x": 144,
+     "y": 224,
+     "tag": 0,
+     "look": "wand"
+    }
+   ]
+  }
+ ]
+}

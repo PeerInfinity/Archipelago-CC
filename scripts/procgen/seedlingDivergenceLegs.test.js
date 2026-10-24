@@ -1,0 +1,413 @@
+/**
+ * The divergence sweep's LEG LIST (`seedling-divergence-legs.mjs`): an arrival whose door edge needs a `game_state`
+ * event STAGES that event's flag (`stagedEvents`: the obstacle already broken — ⚖ a test-harness staging choice; a
+ * player using that arrival broke it earlier in the run). Unstaged, the jump lands inside the obstacle (the model's
+ * `arrivalInsideSolid`, by name — the MUTANT rows below). A gate that maps to no flag, or a goal that IS its gating
+ * event, stays SKIPPED by name. A leg's identity across SHAs is its KEY (region, arrival door, goal), never its id.
+ * A leg whose GOAL rule needs a `game_state` event stages it too (`goalEvents`): the cheapest branch the AP route holds.
+ */
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { arrivalEventNeeds, eventGate, eventStaging, goalEventsHeld, goalEventStaging, legKey, linkArrivals, linkUnreachableWhy,
+    otherEventsOf, pickLegs, requiredEvents, stagedFlagOf }
+    from './seedling-divergence-legs.mjs';
+import { stagingFromWasmArrival } from '../../frontend/modules/seedlingDemo/wasmArrival.js';
+import { createRunForStaging } from '../../frontend/modules/seedlingDemo/tapeRunner.js';
+import { arrivalInsideSolid } from '../../frontend/modules/seedlingDemo/arrivalSolid.js';
+import { indexLevels, levelSourceFromAtlas } from '../../frontend/modules/seedlingDemo/atlasSource.js';
+
+const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+const E1 = { item: 'L9 flag 1: rock cleared', eventId: 'flag:L9:1' };
+const E2 = { item: 'L9 flag 2: rock cleared', eventId: 'flag:L9:2' };
+const byItem = new Map([[E1.item, E1], [E2.item, E2]]);
+const ids = (list) => list.map((e) => e.eventId);
+
+describe('requiredEvents — the game_state events a door edge cannot hold without', () => {
+    it('Has / HasAll of an event; an ordinary item is not an event', () => {
+        expect(ids(requiredEvents(has(E1.item), byItem))).toEqual(['flag:L9:1']);
+        expect(ids(requiredEvents({ rule: 'HasAll', args: { item_names: ['Sword', E2.item] } }, byItem))).toEqual(['flag:L9:2']);
+        expect(requiredEvents(has('Sword'), byItem)).toEqual([]);
+        expect(requiredEvents(null, byItem)).toEqual([]);
+        expect(requiredEvents({ rule: 'True_' }, byItem)).toEqual([]);
+    });
+    it('And = the union; Or = none when one branch needs none, else every branch\'s (fail-closed)', () => {
+        expect(ids(requiredEvents({ rule: 'And', children: [has('Sword'), has(E1.item), has(E2.item)] }, byItem)))
+            .toEqual(['flag:L9:1', 'flag:L9:2']);
+        expect(requiredEvents({ rule: 'Or', children: [has(E1.item), has('Wand')] }, byItem)).toEqual([]);
+        expect(ids(requiredEvents({ rule: 'Or', children: [has(E1.item), { rule: 'And', children: [has('Red'), has(E2.item)] }] }, byItem)))
+            .toEqual(['flag:L9:1', 'flag:L9:2']);
+    });
+    it('⚖ D3: another kind needs none only when it names no event item; one that does is refused by name', () => {
+        expect(requiredEvents({ rule: 'HasAny', args: { item_names: ['Sword', 'Wand'] } }, byItem)).toEqual([]);
+        const gated = { rule: 'Not', child: { rule: 'HasAny', args: { item_names: ['Sword', E1.item] } } };
+        expect(() => requiredEvents(gated, byItem)).toThrow('rule kind "Not" names event item(s) ["L9 flag 1: rock cleared"]');
+        expect(() => goalEventsHeld(gated, byItem, () => true)).toThrow(/goalEventsHeld: rule kind "Not"/);
+        expect(goalEventsHeld({ rule: 'True_' }, byItem, () => true)).toEqual([]);
+    });
+});
+
+describe('arrivalEventNeeds — an arrival needs an event only when EVERY door into its spawn does', () => {
+    it('one ungated door → none; all gated → the union; no door → none', () => {
+        expect(arrivalEventNeeds([[E1], []])).toEqual([]);
+        expect(arrivalEventNeeds([[], [E1]])).toEqual([]);
+        expect(ids(arrivalEventNeeds([[E1], [E2], [E1]]))).toEqual(['flag:L9:1', 'flag:L9:2']);
+        expect(arrivalEventNeeds([])).toEqual([]);
+    });
+});
+
+const GS = (level, tag, extra = {}) => ({ kind: 'game_state', item: `L${level} flag ${tag}: x cleared`, name: `L${level} flag ${tag}: x cleared`,
+    eventId: `flag:L${level}:${tag}`, level, tag, ...extra });
+
+describe('stagedFlagOf / eventStaging / eventGate — which gates STAGE, which stay skipped by name', () => {
+    it('a game_state event with an integer {level, tag} and its own flag id stages that flag', () => {
+        expect(stagedFlagOf(GS(0, 1))).toEqual({ eventId: 'flag:L0:1', level: 0, tag: 1 });
+    });
+    it('UNMAPPABLE: not game_state, no integer obstacle, or an id that is not the obstacle\'s flag', () => {
+        expect(stagedFlagOf({ ...GS(0, 1), kind: 'victory' }).why).toMatch(/not a game_state event/);
+        expect(stagedFlagOf({ ...GS(0, 1), level: null }).why).toMatch(/no integer obstacle/);
+        expect(stagedFlagOf({ ...GS(0, 1), eventId: 'flag:L0:2' }).why).toMatch(/not its obstacle's flag:L0:1/);
+    });
+    it('a flag in ANOTHER level than the arrival stages too (persistence is game-global), marked otherLevel', () => {
+        expect(eventStaging([GS(12, 7), GS(83, 0)], 12).staged).toEqual([
+            { eventId: 'flag:L12:7', level: 12, tag: 7, otherLevel: false },
+            { eventId: 'flag:L83:0', level: 83, tag: 0, otherLevel: true }]);
+    });
+    it('eventGate: ungated → {}; mappable → stagedEvents; ANY unmappable gate → skipped by name', () => {
+        const arrive = (events) => ({ x: 32, y: 864, via: 'in_L83_32_64', events });
+        const goal = { kind: 'exit', exit_id: 'out_teleporter_32_848' };
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 12, goal })).toEqual({});
+        expect(eventGate({ arrive: arrive([GS(12, 7), GS(12, 12)]), level: 12, goal }).stagedEvents.map((e) => e.eventId))
+            .toEqual(['flag:L12:7', 'flag:L12:12']);
+        const g = eventGate({ arrive: arrive([GS(12, 7), { name: 'Victory', item: 'Victory', kind: 'victory' }]), level: 12, goal });
+        expect(g.stagedEvents).toBeUndefined();
+        expect(g.skip).toMatch(/^arrival-needs-unmappable-event: .*Victory: not a game_state event/);
+    });
+    it('eventGate: a location goal that IS a gating event is skipped by name (staged, nothing left to clear)', () => {
+        const e = GS(71, 2);
+        const g = eventGate({ arrive: { x: 288, y: 256, events: [e] }, level: 71, goal: { kind: 'location', name: e.name } });
+        expect(g.skip).toMatch(/^goal-is-a-staged-event: /);
+    });
+    it('otherEventsOf: event locations whose event_kind is not game_state — a door needing one is a gate (unmappable)', () => {
+        const rules = { regions: { 1: { r: { locations: [
+            { name: 'Win', event_kind: 'victory', item: { name: 'Victory' } },
+            { name: 'L0 flag 1', event_kind: 'game_state', event_id: 'flag:L0:1', obstacle: { level: 0, tag: 1 }, item: { name: 'L0 flag 1' } },
+            { name: 'Chest', item: { name: 'Seal' } }] } } } };
+        const other = otherEventsOf(rules, '1');
+        expect(other.map((e) => [e.item, e.kind])).toEqual([['Victory', 'victory']]);
+        const byItemAll = new Map(other.map((e) => [e.item, e]));
+        expect(requiredEvents(has('Victory'), byItemAll).map((e) => e.kind)).toEqual(['victory']);
+    });
+});
+
+describe('goalEventsHeld / goalEventStaging — the GOAL rule\'s events, by the cheapest branch the AP inventory holds', () => {
+    const SPEAR = has('Ghost Spear');
+    const holding = (...items) => (r) => (r.rule === 'Has' ? items.includes(r.args.item_name)
+        : r.rule === 'HasAll' ? r.args.item_names.every((n) => items.includes(n)) : r.rule === 'True_');
+    const darktrap = { rule: 'Or', children: [has(E1.item), SPEAR] };
+    it('Or: the held branch — the event when only it is held, NONE when the Ghost Spear is', () => {
+        expect(ids(goalEventsHeld(darktrap, byItem, holding(E1.item)))).toEqual(['flag:L9:1']);
+        expect(goalEventsHeld(darktrap, byItem, holding('Ghost Spear'))).toEqual([]);
+    });
+    it('⛓ Or: BOTH held → the branch with the FEWEST events, wherever it sits (the wrong-branch mutant)', () => {
+        expect(goalEventsHeld(darktrap, byItem, holding(E1.item, 'Ghost Spear'))).toEqual([]);
+        const two = { rule: 'Or', children: [{ rule: 'And', children: [has(E1.item), has(E2.item)] }, has(E2.item)] };
+        expect(ids(goalEventsHeld(two, byItem, holding(E1.item, E2.item)))).toEqual(['flag:L9:2']);
+        const tie = { rule: 'Or', children: [has(E2.item), has(E1.item)] };
+        expect(ids(goalEventsHeld(tie, byItem, holding(E1.item, E2.item)))).toEqual(['flag:L9:2']); // a tie: rule order
+    });
+    it('And = every child\'s; an unheld child (or no held Or branch) → null; ordinary items stage nothing', () => {
+        const door = { rule: 'And', children: [{ rule: 'Has', args: { item_name: 'Seal', count: 16 } }, has(E1.item), has('Swim')] };
+        expect(ids(goalEventsHeld(door, byItem, holding('Seal', E1.item, 'Swim')))).toEqual(['flag:L9:1']);
+        expect(goalEventsHeld(door, byItem, holding('Seal', 'Swim'))).toBeNull();
+        expect(goalEventsHeld(darktrap, byItem, holding())).toBeNull();
+        expect(goalEventsHeld({ rule: 'True_' }, byItem, holding())).toEqual([]);
+        expect(goalEventsHeld(null, byItem, holding())).toEqual([]);
+    });
+    it('goalEventStaging / eventGate: goal events stage AFTER the arrival\'s (deduplicated), named in goalEvents; none = {}', () => {
+        const arrive = { x: 64, y: 128, events: [GS(113, 0)] };
+        expect(goalEventStaging([], arrive, 113)).toEqual({});
+        expect(goalEventStaging([GS(113, 0)], arrive, 113)).toEqual({});
+        const goal = { kind: 'exit', exit_id: 'out_teleporter_112_0' };
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal, goalEvents: [GS(114, 0)] })).toEqual({
+            stagedEvents: [{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }], goalEvents: ['flag:L114:0'] });
+        expect(eventGate({ arrive, level: 113, goal, goalEvents: [GS(113, 0), GS(114, 0)] })).toEqual({
+            stagedEvents: [{ eventId: 'flag:L113:0', level: 113, tag: 0, otherLevel: false },
+                { eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }], goalEvents: ['flag:L114:0'] });
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal })).toEqual({});
+        expect(eventGate({ arrive: { x: 0, y: 0 }, level: 113, goal, goalEvents: [{ name: 'Victory', item: 'Victory', kind: 'victory' }] }).skip)
+            .toMatch(/^goal-needs-unmappable-event: .*Victory: not a game_state event/);
+    });
+});
+
+describe('legKey / pickLegs', () => {
+    const exitLeg = { id: 7, region: 'level_71__r0c6', arrive: { via: 'in_L76_0_80' }, goal: { kind: 'exit', exit_id: 'out_teleporter_96_0' } };
+    const locLeg = { id: 8, region: 'level_71__r0c6', arrive: { via: 'start' }, goal: { kind: 'location', name: 'L71 flag 2: shieldlock@288,256 cleared' } };
+    const legs = [exitLeg, locLeg].map((l) => ({ ...l, key: legKey(l) }));
+    it('the key is (region, arrival door, goal) — no list position in it', () => {
+        expect(legs[0].key).toBe('level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0');
+        expect(legKey({ ...exitLeg, id: 99 })).toBe(legs[0].key);
+        expect(legs[1].key).toBe('level_71__r0c6 <- start -> location:L71 flag 2: shieldlock@288,256 cleared');
+    });
+    it('selects by id or by key (a key may hold a comma); an unknown key THROWS by name', () => {
+        expect(pickLegs(legs, {})).toBe(legs);
+        expect(pickLegs(legs, { ids: [8] }).map((l) => l.id)).toEqual([8]);
+        expect(pickLegs(legs, { keys: [legs[1].key] }).map((l) => l.id)).toEqual([8]);
+        expect(() => pickLegs(legs, { keys: ['nowhere <- x -> exit:y'] })).toThrow(/no leg has the key/);
+    });
+});
+
+describe('the committed playthrough\'s leg list', () => {
+    let dir;
+    let all;
+    // ⛓ §5.126: the rows below read the DOOR legs (the door-less sub-regions' link legs come after them, their own rows)
+    let legs;
+    beforeAll(() => {
+        dir = mkdtempSync(join(tmpdir(), 'div-legs-'));
+        execFileSync(process.execPath, [join(REPO, 'scripts/procgen/seedling-divergence-legs.mjs'), `--out=${join(dir, 'legs.jsonl')}`,
+            '--presets=seedling_playthrough'], { cwd: REPO, stdio: 'pipe' });
+        all = readFileSync(join(dir, 'legs.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+        legs = all.filter((l) => l.arrive.entry !== 'link');
+    }, 60000);
+    afterAll(() => { if (dir) rmSync(dir, { recursive: true, force: true }); });
+
+    it('every leg has a distinct key; ids are the list positions', () => {
+        expect(new Set(all.map((l) => l.key)).size).toBe(all.length);
+        expect(all.every((l, i) => l.id === i)).toBe(true);
+    });
+
+    it('rank 1 (`level_0__r11c19 -> level_12__r0c19`, 51): its arrival into L0\'s rock STAGES flag:L0:1 — a normal leg', () => {
+        const l = legs.find((x) => x.key === 'level_0__r11c19 <- in_L12_0_80 -> exit:out_teleporter_304_176');
+        expect(l.skip).toBeUndefined();
+        expect(l.stagedEvents).toEqual([{ eventId: 'flag:L0:1', level: 0, tag: 1, otherLevel: false }]);
+        expect([l.arrive.x, l.arrive.y, l.targetRegion]).toEqual([288, 176, 'level_12__r0c19']);
+    });
+
+    it('rank 6 (`level_12__r42c29 -> level_83`, 12): L83 → L12\'s arrival stages BOTH its flags (the magical lock and the boss lock)', () => {
+        const l = legs.find((x) => x.key === 'level_12__r42c29 <- in_L83_32_64 -> exit:out_teleporter_32_848');
+        expect(l.skip).toBeUndefined();
+        expect(l.stagedEvents.map((e) => [e.eventId, e.level, e.tag, e.otherLevel]))
+            .toEqual([['flag:L12:7', 12, 7, false], ['flag:L12:12', 12, 12, false]]);
+        expect(l.targetRegion).toBe('level_83');
+    });
+
+    it('L71\'s arrival through in_L76_0_80 (edge Has(flag:L71:2)) stages the flag; its own event goal stays SKIPPED by name', () => {
+        const l71 = legs.filter((l) => l.region === 'level_71__r0c6' && l.arrive.via === 'in_L76_0_80');
+        expect(l71.length).toBe(5);
+        for (const l of l71) expect(l.arrive.events).toEqual([expect.objectContaining({ eventId: 'flag:L71:2', level: 71, tag: 2 })]);
+        expect(l71.filter((l) => l.stagedEvents).length).toBe(4);
+        expect(l71.filter((l) => l.skip).map((l) => l.goal.name)).toEqual(['L71 flag 2: shieldlock@288,256 cleared']);
+        expect(l71.find((l) => l.skip).skip).toMatch(/^goal-is-a-staged-event: /);
+    });
+
+    it('every event-gated leg stages OR is skipped by name; non-gated legs carry neither (unchanged)', () => {
+        const gated = legs.filter((l) => l.arrive.events);
+        // ⛓ RULES l38-button-event added 5 (flag:L39:8: 4 staged, 1 skipped — the event's own goal);
+        //   RULES watcher-event 4 (flag:L114:0, staged `otherLevel` on L115's four return legs through the FinalDoor)
+        //   R4b boss-locations 1 (the Owl's location reached back through L113, gated by flag:L112:1, staged)
+        //   RULES rope-events 1 (flag:L16:0: L17's stairs land in L16's armed lane, staged)
+        expect(gated.length).toBe(50);
+        expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(41);
+        expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
+        const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
+        expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
+        expect(legs.filter((l) => l.arrive.via === 'start').every((l) => !l.arrive.events)).toBe(true);
+    });
+
+    it('⛓ GOAL EVENTS: exactly these legs stage their goal rule\'s events (the Watcher, the darktraps, …); every other leg as before', () => {
+        const goal = legs.filter((l) => l.goalEvents);
+        const by = {};
+        for (const l of goal) (by[l.goalEvents.join('+')] ??= []).push(l.id);
+        // ⛓ R4b (rules-boss-locations): the SAME legs by key, every id from 352 on shifted by the 12 new boss/L69 legs
+        //   ([[feedback_divergence_leg_ids_shift]]); no leg gained or lost a goal event.
+        // ⛓ RULES rope-events: the SAME legs by key again, every id from 201 on shifted by -13 — L16's r1c1 legs
+        //   (17) go, its split adds r3c7's one leg from the L17 arrival and the three rope-event location legs (4). And
+        //   L17's eight legs to its stairs up (they land in L16's armed lane) stage the cut, flag:L16:0.
+        expect(by).toEqual({
+            'flag:L0:4': [50], 'flag:L0:1': [102, 112, 122, 132, 142, 152, 162], 'flag:L24:0': [178],
+            'flag:L16:0': [204, 206, 208, 210, 212, 214, 216, 218], 'flag:L39:8': [355],
+            'flag:L62:0': [533, 538, 543, 548, 553, 581], 'flag:L63:1': [535, 540, 545, 550, 555, 559, 564, 569, 574],
+            'flag:L71:2': [635, 637], 'flag:L12:7+flag:L12:12': [655],
+            'flag:L112:1': [807, 808, 814, 815, 821, 822, 828, 829, 835, 836],
+            'flag:L114:0': [809, 810, 811, 816, 817, 818, 823, 824, 825, 830, 831, 837, 838],
+            'flag:L113:0': [846, 847, 848, 849],
+        });
+        // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
+        for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
+        // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
+        expect(legs[810].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
+        expect(legs[533].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[535].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
+        expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
+    });
+
+    it('⛓ the MUTANT, in the model: every staged arrival lands CLEAR with its flags, and INSIDE its obstacle (named) without', () => {
+        const SRC = levelSourceFromAtlas(indexLevels(JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'))));
+        const fix = JSON.parse(readFileSync(join(REPO, 'frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json'), 'utf8'))
+            .arrivals.find((a) => a.status.level === 0);
+        const staging = (cleared) => stagingFromWasmArrival({ seam: fix.seam, status: { ...fix.status, persistence_cleared: cleared },
+            state: fix.state }).staging;
+        const inside = (l, cleared) => arrivalInsideSolid(createRunForStaging({ ...staging(cleared),
+            boot: { level: l.level, x: l.arrive.x, y: l.arrive.y } }, SRC));
+        // ⛓ RULES l38-button-event — a cross-room PRESS event (`action.presser`) seals a POCKET, not the landing: its
+        //   arrivals land BESIDE the target (L39's plug) or in another level (L38, `otherLevel`), never inside it.
+        //   RULES watcher-event — so does a TALK (`action.gates`): the Watcher is no solid, and the arrivals it is staged
+        //   for are L115's (`otherLevel`), the FinalDoor's far side.
+        const RULES = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
+        // ⛓ RULES rope-events — and a rope CUT (`action.opens`): its barrier is an arrow lane, never a solid.
+        const PRESS = new Set(Object.values(RULES.regions['1']).flatMap((r) => r.locations)
+            .filter((x) => x.action?.presser || x.action?.gates || x.action?.opens).map((x) => x.event_id));
+        // ⛓ RULES darktrap-events: + the two presses that light Dungeon 6's poles (their barrier is a darktrap's
+        //   contact, never a solid, so their arrivals are never inside one either)
+        // ⛓ RULES yeti-event: + the L58 Yeti's talk (`action.gates`: the portal to L46, never a solid)
+        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1', 'flag:L62:0', 'flag:L63:1']);
+        // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
+        const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)
+            .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));
+        const pressed = arrivalStaged.filter((l) => l.stagedEvents.some((e) => PRESS.has(e.eventId)));
+        expect([...new Set(pressed.map((l) => `${l.level},${l.arrive.x},${l.arrive.y}`))].sort())
+            .toEqual(['115,64,128', '115,80,128', '16,112,48', '38,144,16', '39,144,608']);
+        for (const l of pressed) expect(inside(l, []), l.key).toBeNull();
+        const byArrival = new Map(arrivalStaged.filter((l) => !pressed.includes(l))
+            .map((l) => [`${l.level},${l.arrive.x},${l.arrive.y}`, l]));
+        expect(byArrival.size).toBe(8);
+        const dropped = {};
+        for (const [k, l] of byArrival) {
+            expect(inside(l, l.stagedEvents.map(({ level, tag }) => ({ level, tag }))), k).toBeNull();
+            dropped[k] = inside(l, [])?.solids.map((s) => s.id) ?? null;
+        }
+        expect(dropped).toEqual({
+            '0,80,112': ['breakablerock@80,112'], '0,288,176': ['breakablerock@288,176'],
+            '12,32,864': ['magicallock@32,864', 'bosslock@32,864'], '24,48,128': ['burnabletree@32,128'],
+            '71,288,256': ['shieldlock@288,256'], '112,112,16': ['rocklock@112,16'],
+            '113,112,16': ['finaldoor@112,0'], '113,128,16': ['finaldoor@112,0'],
+        });
+    });
+});
+
+describe('⛓ linkArrivals (§5.126) — a door-less room is entered by WALKING a logical link from a sibling room\'s door arrival', () => {
+    const ROPE = { item: 'L1 flag 0: rope cleared', eventId: 'flag:L1:0', level: 1, tag: 0, name: 'L1 flag 0: rope cleared', kind: 'game_state' };
+    const ev = new Map([[ROPE.item, ROPE]]);
+    const door = { x: 16, y: 32, exitId: 'in_L0_0_0', landing: 'return', via: 'in_L0_0_0' };
+    const rooms = [['A', 1], ['B', 1], ['C', 1], ['D', 2], ['E', 1]];
+    const doors = () => new Map([['A', [door]], ['B', []], ['C', []], ['D', [{ ...door, via: 'in_L3_0_0' }]], ['E', []]]);
+    const T = { rule: 'True_' };
+    it('depth 1: the source\'s own spawn, via `<door> ~> <source>`; a chain walks on (depth 2); another level never enters', () => {
+        const rr = { A: { exits: [{ name: 'A -> B', connected_region: 'B', access_rule: T }] },
+            B: { exits: [{ name: 'B -> C', connected_region: 'C', access_rule: T }] },
+            D: { exits: [{ name: 'D -> C', connected_region: 'C', access_rule: T }, { name: 'D -> E', connected_region: 'E', access_rule: T }] } };
+        const out = linkArrivals({ rooms, arrivalsOf: doors(), rulesRegions: rr, byItem: ev });
+        expect(out.get('B')).toEqual([{ x: 16, y: 32, exitId: 'in_L0_0_0', landing: 'return', via: 'in_L0_0_0 ~> A', entry: 'link',
+            through: ['A'], links: ['A -> B'] }]);
+        expect(out.get('C')).toEqual([{ x: 16, y: 32, exitId: 'in_L0_0_0', landing: 'return', via: 'in_L0_0_0 ~> A ~> B', entry: 'link',
+            through: ['A', 'B'], links: ['A -> B', 'B -> C'] }]);
+        expect(out.has('E')).toBe(false);
+        expect(out.has('A')).toBe(false);
+    });
+    it('the SHORTEST chain wins: a direct link beats the two-hop one', () => {
+        const rr = { A: { exits: [{ name: 'A -> B', connected_region: 'B', access_rule: T }, { name: 'A -> C', connected_region: 'C', access_rule: T }] },
+            B: { exits: [{ name: 'B -> C', connected_region: 'C', access_rule: T }] } };
+        expect(linkArrivals({ rooms, arrivalsOf: doors(), rulesRegions: rr, byItem: ev }).get('C')[0].via).toBe('in_L0_0_0 ~> A');
+    });
+    it('events: a link that needs a game_state event stages it (the crosser broke it); any ungated path → none; the source\'s carry', () => {
+        const gated = { A: { exits: [{ name: 'A -> B', connected_region: 'B', access_rule: has(ROPE.item) }] } };
+        expect(linkArrivals({ rooms, arrivalsOf: doors(), rulesRegions: gated, byItem: ev }).get('B')[0].events)
+            .toEqual([{ eventId: 'flag:L1:0', level: 1, tag: 0, name: ROPE.name, kind: 'game_state' }]);
+        const both = { A: { exits: [...gated.A.exits, { name: 'A -> B #2', connected_region: 'B', access_rule: T }] } };
+        const b = linkArrivals({ rooms, arrivalsOf: doors(), rulesRegions: both, byItem: ev }).get('B');
+        expect(b.length).toBe(1);
+        expect(b[0].events).toBeUndefined();
+        expect(b[0].links).toEqual(['A -> B']);
+        const carried = { eventId: 'flag:L1:5', level: 1, tag: 5, name: 'L1 flag 5', kind: 'game_state' };
+        const src = new Map([...doors(), ['A', [{ ...door, events: [carried] }]]]);
+        const plain = { A: { exits: [{ name: 'A -> B', connected_region: 'B', access_rule: T }] } };
+        expect(linkArrivals({ rooms, arrivalsOf: src, rulesRegions: plain, byItem: ev }).get('B')[0].events).toEqual([carried]);
+    });
+    it('UNREACHABLE-AS-LEG is named: no entrant at all, or entrants with no walkable arrival', () => {
+        expect(linkUnreachableWhy('E', { rooms, rulesRegions: {} })).toMatch(/^no rules exit enters it/);
+        const rr = { Menu: { exits: [{ name: 'x', connected_region: 'E' }] }, D: { exits: [{ name: 'y', connected_region: 'E' }] } };
+        expect(linkUnreachableWhy('E', { rooms, rulesRegions: rr }))
+            .toBe('its only entrants have no walkable arrival: Menu (not an atlas room of this preset: no arrival spawn); D (another level, and no door)');
+    });
+});
+
+describe('⛓ the committed leg list\'s DOOR-LESS sub-region legs (§5.126) — they only ADD', () => {
+    let dir;
+    let legs;
+    let stdout;
+    beforeAll(() => {
+        dir = mkdtempSync(join(tmpdir(), 'div-legs-'));
+        stdout = execFileSync(process.execPath, [join(REPO, 'scripts/procgen/seedling-divergence-legs.mjs'), `--out=${join(dir, 'legs.jsonl')}`],
+            { cwd: REPO, stdio: 'pipe' }).toString();
+        legs = readFileSync(join(dir, 'legs.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+    }, 60000);
+    afterAll(() => { if (dir) rmSync(dir, { recursive: true, force: true }); });
+    const isLink = (l) => l.arrive.entry === 'link';
+
+    it('⛔ THE PIN: every pre-existing (door) key is still emitted, in order, by a door leg; every link leg comes after them', () => {
+        const { keys } = JSON.parse(readFileSync(join(REPO, 'scripts/procgen/fixtures/divergence-door-leg-keys.json'), 'utf8'));
+        expect(legs.filter((l) => !isLink(l)).map((l) => l.key)).toEqual(keys);
+        const firstLink = legs.findIndex(isLink);
+        expect(firstLink).toBe(keys.length);
+        expect(legs.slice(firstLink).every(isLink)).toBe(true);
+    });
+
+    it('every link leg jumps to a DOOR arrival of its level (a spawn the game produces), never an invented one, into a room no door enters', () => {
+        const doorLegs = legs.filter((l) => !isLink(l));
+        const doorRegions = new Set(doorLegs.map((l) => l.region));
+        const spawns = new Map(doorLegs.map((l) => [`${l.region}|${l.arrive.via}`, l.arrive]));
+        const links = legs.filter(isLink);
+        expect(links.length).toBeGreaterThan(0);
+        // the doors INTO each room: another room's sidecar exit naming it (`targetRegion` + `targetExitId`), as the door legs read them
+        const doorsInto = new Map();
+        for (const preset of new Set(links.map((l) => l.preset))) {
+            const sc = JSON.parse(readFileSync(join(REPO, `frontend/presets/${preset}/AP_1/AP_1_rules.json`), 'utf8')).preset_sidecars['1'];
+            for (const s of Object.values(sc)) {
+                for (const e of s.playable_payload?.exits ?? []) if (e.targetRegion && e.targetExitId) doorsInto.set(`${e.targetRegion}|${e.targetExitId}`, true);
+            }
+        }
+        let compared = 0;
+        for (const l of links) {
+            expect(doorRegions.has(l.region), l.key).toBe(false);
+            const [door] = l.arrive.via.split(' ~> ');
+            expect(door === 'start' || doorsInto.has(`${l.arrive.through[0]}|${door}`), l.key).toBe(true);
+            // where the source room has door legs of its own, the spawn is theirs exactly
+            const src = spawns.get(`${l.arrive.through[0]}|${door}`);
+            if (src) { compared += 1; expect([l.arrive.x, l.arrive.y, l.arrive.exitId], l.key).toEqual([src.x, src.y, src.exitId]); }
+            expect(l.arrive.via, l.key).toBe([l.arrive.via.split(' ~> ')[0], ...l.arrive.through].join(' ~> '));
+            expect(l.key, l.key).toMatch(new RegExp(`^${l.region} <- \\S+( ~> \\S+)+ -> (exit|location):`));
+        }
+        expect(compared).toBeGreaterThan(links.length / 2);
+    });
+
+    it('L16\'s r1c9 (the seven pits into L17) is walked from BOTH arrivals across the rope link, its cut staged', () => {
+        const l16 = legs.filter((l) => l.region === 'level_16__r1c9');
+        expect(l16.map((l) => l.goal.exit_id).filter((x, i, a) => a.indexOf(x) === i).length).toBe(7);
+        expect([...new Set(l16.map((l) => l.arrive.via))]).toEqual(['in_L15_144_16 ~> level_16__r1c1', 'in_L17_32_48 ~> level_16__r3c7']);
+        for (const l of l16) expect(l.stagedEvents, l.key).toEqual([{ eventId: 'flag:L16:0', level: 16, tag: 0, otherLevel: false }]);
+    });
+
+    it('a link gated on the goal\'s OWN event is skipped by name (L19\'s bosslock); the ungated arrival still runs', () => {
+        const l19 = legs.filter((l) => l.region === 'level_19__r3c3');
+        expect(l19.map((l) => [l.arrive.via, l.skip ? l.skip.split(':')[0] : 'run']))
+            .toEqual([['in_L20_192_48 ~> level_19__r1c1', 'goal-is-a-staged-event'], ['in_L18_176_112 ~> level_19__r5c5', 'run']]);
+    });
+
+    it('UNREACHABLE-AS-LEG is listed BY NAME, never dropped silently; the goal-less rooms are named too', () => {
+        expect(stdout.split('\n').filter((l) => l.startsWith('INFO: UNREACHABLE-AS-LEG: '))).toEqual([
+            'INFO: UNREACHABLE-AS-LEG: seedling_playthrough:level_84__r0c0 — no rules exit enters it (no door and no logical link: a pocket the route never enters)',
+            'INFO: UNREACHABLE-AS-LEG: seedling_playthrough:level_84__r3c0 — no rules exit enters it (no door and no logical link: a pocket the route never enters)',
+            'INFO: UNREACHABLE-AS-LEG: seedling_atlas_host:region_3_2 — its only entrants have no walkable arrival: region_3_1 (not an atlas room of this preset: no arrival spawn); region_2_2 (not an atlas room of this preset: no arrival spawn)',
+        ]);
+        expect(stdout).toMatch(/INFO: \d+ door-less sub-region\(s\) hold NO goal/);
+    });
+});

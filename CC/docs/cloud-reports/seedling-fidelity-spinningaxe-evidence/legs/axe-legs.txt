@@ -1,0 +1,77 @@
+level_48__r7c0 <- in_L53_208_64 -> exit:out_teleporter_0_112
+level_48__r18c7 <- in_L47_216_112 -> exit:out_teleporter_112_304
+level_54__r1c8 <- in_L53_144_240 -> exit:out_teleporter_144_0
+level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464
+level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160
+level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0
+level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160
+level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0
+level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96
+level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160
+level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0
+level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96
+level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0
+level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48
+level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0
+level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48
+level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208
+level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48
+level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96
+level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0
+level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0
+level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48
+level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96
+level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0
+level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0
+level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48
+level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96
+level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0
+level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0
+level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48
+level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96
+level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0
+level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0
+level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304
+level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208
+level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208
+level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304
+level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0
+level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304
+level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96
+level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest
+level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304
+level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96
+level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+level_71__r0c6 <- in_L76_0_80 -> location:L71 flag 2: shieldlock@288,256 cleared
+level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304
+level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96
+level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest
+level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304
+level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0
+level_75 <- in_L71_96_0 -> exit:out_teleporter_64_224
+level_75 <- in_L74_16_144 -> exit:out_teleporter_64_0
+level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192
+level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192
+level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96
+level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96
+level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64
+level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144
+level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64
+level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144

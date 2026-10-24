@@ -1,0 +1,64 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 72,
+        "y": 104
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 98,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 33,
+            "to": 34
+        },
+        {
+            "key": "primary",
+            "from": 64,
+            "to": 65
+        }
+    ],
+    "name": "wallflyer-kill",
+    "description": "⛓⛓⛓ seedling-fidelity-wallflyer W6 — THE DEATH, AT REST. L22, boot (72,104): the player below `wallflyer@64,80` (settled at (71,88)) and in no flyer's ray, a sword, one tick of `up` to face it, then a press every 31 ticks in `slash()`'s reach. Three LANDED hits (t 3, 34, 65); the body is at rest, so `WallFlyer.knockback`'s `v = -v` moves nothing, and the third plays \"die\" WITHOUT `destroy` (`WallFlyer.startDeath`). The model predicts `destroy` (`endAnim`) at t 79 and the removal (`Mobile.death`'s fade; `classCount(WallFlyer)` 4 -> 3) at t 90, 24 after the anim's first update (the tick after the blow: the Player updates last). Authored by scripts/procgen/plan-seedling-wallflyer.mjs.",
+    "note": ""
+}

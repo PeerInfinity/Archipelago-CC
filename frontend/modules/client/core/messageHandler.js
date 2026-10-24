@@ -85,9 +85,20 @@ export class MessageHandler {
     }
     log('info', '[MessageHandler] Subscribing to connection events...');
     this.eventBus.subscribe('connection:open', () => {
+      // The websocket is open but the AP handshake has not run yet. Slot and
+      // team stay null until the server answers Connect — they are what
+      // isHandshakeComplete()/getConnectionInfo() report, and a placeholder 0
+      // made a refused connection look established.
       this.players = [];
-      this.clientSlot = 0;
-      this.clientTeam = 0;
+      this.clientSlot = null;
+      this.clientTeam = null;
+    });
+    this.eventBus.subscribe('connection:close', () => {
+      // The session is over: stop reporting a slot, or isHandshakeComplete()
+      // keeps claiming the client is logged in after a disconnect.
+      this.clientSlot = null;
+      this.clientTeam = null;
+      this.players = [];
     });
     this.eventBus.subscribe('connection:message', (commands) => {
       commands.forEach((command) => this.processMessage(command));
@@ -152,6 +163,49 @@ export class MessageHandler {
     return this.stateManager;
   }
 
+  /**
+   * The game name the AP server knows the loaded slot by — what goes in the
+   * Connect packet and what the data package is looked up under.
+   *
+   * The loaded player's `world` entry is the authority. A combined multiworld
+   * rules.json has the placeholder `game_name: "Multiworld"` at the top level
+   * (the per-player slices don't), and sending that as `game` gets the
+   * connection refused with InvalidGame.
+   *
+   * @returns {string|null} The selected player's game, or null if unknown.
+   */
+  getClientGameName() {
+    const stateManager = stateManagerProxySingleton;
+    if (!stateManager) return null;
+
+    const staticData = stateManager.getStaticData?.();
+    const playerId = staticData?.playerId;
+    const playerGame =
+      playerId !== undefined && playerId !== null
+        ? staticData?.world?.[String(playerId)]?.game
+        : null;
+    if (playerGame) return playerGame;
+
+    return stateManager.getGameName?.() || null;
+  }
+
+  /**
+   * The slot name to offer when the user hasn't chosen one — the loaded
+   * player's name from the rules file, so a multiworld loaded as player 3
+   * doesn't default to player 1's name.
+   *
+   * @returns {string} A slot name (never empty).
+   */
+  getDefaultSlotName() {
+    const staticData = stateManagerProxySingleton?.getStaticData?.();
+    const playerId = staticData?.playerId;
+    const name =
+      playerId !== undefined && playerId !== null
+        ? staticData?.player_names?.[String(playerId)]
+        : null;
+    return name || 'Player1';
+  }
+
   // Private message handlers
   _handleRoomInfo(data) {
     log('info', '[MessageHandler] Received RoomInfo:', data);
@@ -172,7 +226,7 @@ export class MessageHandler {
         const storedSettings = storage.getItem('clientSettings');
         if (storedSettings) {
           const settings = JSON.parse(storedSettings);
-          this.clientSlotName = settings.playerName || 'Player1';
+          this.clientSlotName = settings.playerName || null;
         }
       } catch (e) {
         log('error', 'Error reading playerName from storage:', e);
@@ -180,7 +234,7 @@ export class MessageHandler {
     }
 
     if (!this.clientSlotName) {
-      this.clientSlotName = 'Player1';
+      this.clientSlotName = this.getDefaultSlotName();
     }
 
     const slotName = this.clientSlotName;
@@ -190,11 +244,9 @@ export class MessageHandler {
     let gameName = null;
 
     // First, try to get game name from stateManager (most reliable for multiworld)
-    if (stateManagerProxySingleton) {
-      gameName = stateManagerProxySingleton.getGameName();
-      if (gameName) {
-        log('info', `[MessageHandler] Using game name from stateManager: ${gameName}`);
-      }
+    gameName = this.getClientGameName();
+    if (gameName) {
+      log('info', `[MessageHandler] Using game name from stateManager: ${gameName}`);
     }
 
     // Log RoomInfo structure for debugging
@@ -360,9 +412,15 @@ export class MessageHandler {
   }
 
   _handleConnectionRefused(data) {
+    // The handshake failed: nothing is connected, so drop the half-built
+    // session state before anyone reads it back as an established connection.
+    this.clientSlot = null;
+    this.clientTeam = null;
+    this.players = [];
+
     // Use injected eventBus
     this.eventBus?.publish('network:connectionRefused', data);
-    const message = `Connection refused: ${data.errors.join(', ')}`;
+    const message = `Connection refused: ${(data.errors || []).join(', ') || 'unknown reason'}`;
     log('error', '[MessageHandler]', message);
     // Publish event instead of directly printing
     this.eventBus?.publish('ui:printToConsole', {

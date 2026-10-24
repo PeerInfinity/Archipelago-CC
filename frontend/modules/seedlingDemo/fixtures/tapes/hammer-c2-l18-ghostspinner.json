@@ -1,0 +1,199 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": [
+            8
+        ]
+    },
+    "rng": {
+        "seed": 463063377,
+        "split": true,
+        "cosmetic": 1853748893,
+        "fp": 1847462486
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 9940,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 192,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 91,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 26
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 75
+        },
+        {
+            "key": "primary",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 34,
+            "to": 35
+        },
+        {
+            "key": "primary",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "down",
+            "from": 46,
+            "to": 73
+        },
+        {
+            "key": "up",
+            "from": 73,
+            "to": 74
+        },
+        {
+            "key": "primary",
+            "from": 75,
+            "to": 76
+        }
+    ],
+    "name": "hammer-c2-l18-ghostspinner",
+    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE C2 D1 — THE GHOST SWORD AGAINST A SPINNER, ON THE GAME. `r9-solve-18`'s frozen staging (`witness-bases/r9-solve-18.hammer-a.json`) with ONE progress override, `seam.items.hasGhostSword` true (the sword is held too: a ghost sword alone never tests). The walk heads for `spinner@48,96` and presses at t 26, when the body is inside 20 px and the ghost rect (24 x 48) toward it overlaps it; then presses at +2, +8, +10, +18 with the facing key held. The swing lands at t 27 from 18.41 px (past the sword's 16), 2 damage; the +2 press DASHES and replaces the swing's window; the +8 press is SWALLOWED (the ghost dash's 6-tick release, which the sword chain would dash on); +10 and +18 dash; each dash tests 6 ticks. The i-frame run out, it aims and presses at t 75: the landing at t 76 makes hits 4 and kills the body (the sword needs three). No hit on the player. Authored by scripts/procgen/plan-seedling-hammer-c2-ghost.mjs.",
+    "note": ""
+}

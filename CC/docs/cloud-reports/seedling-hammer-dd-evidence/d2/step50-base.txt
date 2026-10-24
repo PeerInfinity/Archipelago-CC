@@ -1,0 +1,4 @@
+lapse=0 dd=0 SOLVED 460 keys=1e6a1eaf hits=0 walkKills=0
+lapse=0 dd=1 SOLVED 460 keys=1e6a1eaf hits=0 walkKills=0
+lapse=1 dd=0 SOLVED 413 keys=09fe6280 hits=0 walkKills=0
+lapse=1 dd=1 SOLVED 413 keys=09fe6280 hits=0 walkKills=0

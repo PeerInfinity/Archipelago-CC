@@ -7,9 +7,11 @@ export const moduleInfo = {
   name: 'windowPanel',
   title: 'Window Panel',
   componentType: 'windowPanel',
+  docs: 'docs/json/user/modules/windowPanel.md',
   icon: '🪟',
   column: 3, // Right column
-  description: 'Window Panel display panel.',
+  category: 'Embedding and Windows',
+  description: 'Opens the page the Window Manager sends in a separate browser window and shows its connection and heartbeats.',
   requires: ['windowAdapter'],
 };
 

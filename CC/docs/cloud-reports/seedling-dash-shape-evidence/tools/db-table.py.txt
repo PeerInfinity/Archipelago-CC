@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+# DB (scratch): a battery's rows against its own today (85) and window-0 rows, DS's columns plus the worst single Δ.
+# db-table.py <jsonl> <today-tag> <w0-tag> [tag ...]
+import json, sys
+from collections import defaultdict
+F, TT, WT = sys.argv[1:4]; tags = sys.argv[4:]
+S = '/tmp/claude-0/-home-user-Archipelago-CC/7ae38058-df82-5f1f-ab35-1de95c85f4e9/scratchpad'
+pop = [tuple(map(int, x.split(':'))) for x in open(f'{S}/pop617.txt').read().split(',')]
+rows = defaultdict(dict)
+for l in open(F):
+    r = json.loads(l); rows[(r['tag'], r['window'])][(r['id'], r['i'])] = r
+tk = lambda r: (r.get('shipped') or {}).get('ticks') if r and 'error' not in r else None
+T, Z = rows[(TT, 85)], rows[(WT, 0)]
+T85 = {k: tk(T.get(k)) for k in pop}; T0 = {k: tk(Z.get(k)) for k in pop}
+W85 = {k: (T.get(k) or {}).get('work') or 0 for k in pop}; M85 = {k: (T.get(k) or {}).get('ms') or 0 for k in pop}
+avail = sum(T85[k] - T0[k] for k in pop if T85[k] and T0[k])
+print(f'POPULATION {len(pop)}; today rows {len(T)}, window-0 rows {len(Z)}; window 0 saves {avail} t over today')
+print(f"{'row':12} {'win':>3} {'n':>4} {'ticks':>7} {'saved':>6} {'%w0':>6} {'better/worse':>13} {'worse-w0':>8} {'units (Δ today)':>18} {'wall s (Δ today)':>18} {'worst Δ s':>9} {'err':>3} {'net s':>7}")
+for tag in tags:
+    for w in (85, 0):
+        R = rows.get((tag, w))
+        if not R: continue
+        ks = [k for k in pop if k in R and 'error' not in R[k]]
+        err = sum(1 for k in pop if k in R and 'error' in R[k]); miss = sum(1 for k in pop if k not in R)
+        ticks = sum(tk(R[k]) or 0 for k in ks)
+        saved = sum((T85[k] or 0) - (tk(R[k]) or T85[k] or 0) for k in ks)
+        better = sum(1 for k in ks if tk(R[k]) and T85[k] and tk(R[k]) < T85[k])
+        worse = sum(1 for k in ks if (tk(R[k]) or 10**9) > (T85[k] or 10**9) or (T85[k] and not tk(R[k])))
+        worse0 = sum(1 for k in ks if T0[k] and (tk(R[k]) or 10**9) > T0[k])
+        units = sum(R[k]['work'] or 0 for k in ks); du = units - sum(W85[k] for k in ks)
+        wall = sum(R[k]['ms'] for k in ks) / 1000; dw = wall - sum(M85[k] for k in ks) / 1000
+        worst = max(((R[k]['ms'] - M85[k]) / 1000, k) for k in ks)
+        print(f"{tag:12} {w:>3} {len(ks):>4} {ticks:>7} {saved:>6} {100*saved/avail:>6.1f} {better:>6}/{worse:<6} {worse0:>8} {units:>9} ({du:+7}) {wall:>8.1f} ({dw:+7.1f}) {worst[0]:>+9.1f} {err+miss:>3} {saved/30-dw:>+7.1f}   worst at {worst[1]}")

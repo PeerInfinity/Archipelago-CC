@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<!--
+  procgenDocs/glossary.html — **THE PROCGEN GLOSSARY, RENDERED.** One entry per
+  term the procgen docs and the two lab pages use as vocabulary: a
+  plain-language sentence first, then the concrete rule and where it lives.
+
+  ⚖ The user, 2026-08-18: *"demos.md and the demo pages are dense with
+  technical jargon — a new document that defines each of the technical terms,
+  linked from the document and the demo pages … served on GitHub Pages …
+  covering ALL of procgen, not just the Seedling substrate"*.
+
+  ⛔⛔ THE DATA IS `./glossary.js` AND THIS PAGE ONLY RENDERS IT. No fetch, no
+  build step, no second copy of a definition. The same module is imported by
+  `scripts/procgen/check-procgen-demos.mjs` (which loads this page and asserts
+  it renders what the module holds), by `demos.html` (whose entries link their
+  `terms` here), and by the two lab pages (whose section summaries carry a
+  term's `plain` sentence as a `title=` tooltip).
+
+  ⛓ IT IMPORTS BOTH CATALOGUES. `demos.js` is read only to COMPUTE the
+  "shown in demo" back-links: an entry names glossary slugs, and this page
+  inverts that mapping rather than anyone maintaining a second list.
+
+  Serve from the REPO ROOT, or read it on Pages:
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/procgenDocs/glossary.html
+      https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Procgen glossary — the vocabulary, defined</title>
+<link rel="stylesheet" href="./procgenDocs.css">
+<style>
+  /* ⛓ THE SHARED SHEET IS `./procgenDocs.css`, LINKED ABOVE. What stays here is
+     the GLOSSARY'S OWN VOCABULARY — the area heading, the two-level entry's
+     first level, and the three kinds of outbound link an entry carries. */
+  #count { font-size: 12px; color: #9a9aa8; }
+  #where, #also { font-size: 12px; color: #7a7a88; margin-top: 2px; }
+  h2 { font-size: 15px; margin: 22px 0 2px; color: #7fe0ff; font-weight: 600;
+    border-top: 1px solid #24242c; padding-top: 12px; }
+  h2 .n { color: #6a6a78; font-weight: 400; font-size: 12px; }
+  .blurb { color: #8a8a98; font-size: 12px; margin: 0 0 6px; }
+  /* ⛓ THE TERM IS AN IDENTIFIER (`rules.json`, `sphere growth`) and reads as
+     one; ⛔ ITS DEFINITION IS PROSE. Putting the mono face on the whole
+     summary put it on the teaser too — a sentence set in a code face, which
+     is the exact thing the font split was for. */
+  details.entry > summary { font-family: var(--mono); }
+  details.entry > summary .teaser { font-family: var(--sans); }
+  details.entry > summary .alias { color: #6a6a78; font-weight: 400; margin-left: 8px; }
+  /* ⛔ THE FIRST LEVEL IS THE ENTRY'S POINT — "one sentence for someone who has
+     read none of the records" — so it keeps its own rule, and it is the string
+     the closed summary teases with. */
+  .plain { color: #e8e8f0; border-left: 2px solid #2a4a3a; padding-left: 8px;
+    margin: 4px 0 8px; }
+  .where a { word-break: break-all; }
+  .where .k { color: #7fd88f; font-family: var(--mono); font-size: 11px; }
+  .see a { color: #9fff9f; }
+  .demo a { color: #ffd75f; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Procgen glossary — <span>the vocabulary, defined</span></h1>
+  <div id="count" class="note"></div>
+  <div id="where" class="note"></div>
+  <div id="also" class="note"></div>
+</header>
+
+<!--
+  ⛓⛓ THE SHELL. `#index` is a NAV of AREAS, not of terms: 159 term rows would
+  be a rail longer than most of the areas it indexes, and the filter is the
+  control for finding ONE term. ⛔ Nothing in here wears `entry` — the row counts
+  `details.entry` off the DOM and asserts the module's term set against it.
+-->
+<div id="shell" class="pageShell">
+<nav id="index" class="pageRail" aria-label="the areas">
+  <span class="railHead">find a term</span>
+  <div class="filterBox">
+    <label for="filter" class="note">filter</label>
+    <input id="filter" type="search" placeholder="door, area, draw…"
+      autocomplete="off" spellcheck="false">
+  </div>
+  <div id="filterNote" class="filterNote"></div>
+  <div class="ixctl">
+    <button id="expandAll" type="button">expand all</button>
+    <button id="collapseAll" type="button">collapse all</button>
+  </div>
+  <span class="railHead">the areas</span>
+  <div id="ixlist"></div>
+</nav>
+
+<main>
+  <p>Every entry is TWO LEVELS. The first line — the one the closed entry shows
+    you — is one sentence for someone who has read none of the records;
+    <b>in this project</b> is the concrete rule — the number, the refusal's own
+    name — and <b>where it lives</b> points at the tracked doc and the module.
+    ⛔ Nothing here is invented: every entry comes from a doc or from a string
+    one of the lab pages puts on your screen.</p>
+
+  <div id="entries"></div>
+</main>
+</div>
+
+<footer id="foot"></footer>
+
+<script type="module">
+import { DEMOS, PAGES_BASE, docHref, pagesHref } from './demos.js';
+import { AREAS, TERMS, hrefFor, termById, termsInArea } from './glossary.js';
+import { esc, inline, prose } from './markdownLite.js';
+
+/**
+ * ⛓ REPO-RELATIVE PATHS ARE RESOLVED FROM THIS MODULE'S OWN URL — the same
+ * resolver `demos.html` and `watchViewer.js` use, for the same reason: the dev
+ * server serves the REPO root, Pages publishes `frontend/` AS its root, so a
+ * root-absolute `/frontend/…` is a 404 there.
+ */
+const FRONTEND_ROOT = new URL('../../', import.meta.url);
+function repoUrl(path) {
+    const p = String(path).replace(/^\/+/, '');
+    return p.startsWith('frontend/')
+        ? new URL(p.slice('frontend/'.length), FRONTEND_ROOT).href
+        : new URL(p, new URL('../../../', import.meta.url)).href;
+}
+const onPages = repoUrl('frontend/modules/procgenDocs/glossary.html').startsWith(PAGES_BASE);
+
+const label = (h) => `<span class="lbl">${h}</span>`;
+
+/**
+ * ⛓⛓ **THE BACK-LINKS ARE INVERTED, NOT MAINTAINED.** A catalogue entry names
+ * glossary slugs in its `terms`; this is the only place the other direction
+ * exists. ⛔ Nobody has to remember to add a term to a demo's list AND a demo
+ * to a term's list — the second one cannot fall out of step because it is
+ * computed.
+ */
+const DEMOS_BY_TERM = new Map();
+for (const entry of DEMOS) {
+    for (const slug of entry.terms) {
+        if (!DEMOS_BY_TERM.has(slug)) DEMOS_BY_TERM.set(slug, []);
+        DEMOS_BY_TERM.get(slug).push(entry);
+    }
+}
+
+/** A `where` row: a tracked doc, or a repo code path — both on GitHub, because
+ *  Pages publishes `frontend/` alone and neither `docs/` nor `scripts/` is
+ *  served there at all. */
+function whereRow(w) {
+    const target = w.doc ?? w.code;
+    return `<div class="where"><span class="k">${w.doc ? 'DOC ' : 'CODE'}</span> `
+        + `<a href="${esc(docHref(String(target).split('#')[0]))}`
+        + `${w.doc && String(w.doc).includes('#') ? `#${esc(String(w.doc).split('#')[1])}` : ''}">`
+        + `${inline(w.label)}</a></div>`;
+}
+
+function renderTerm(entry) {
+    const d = document.createElement('details');
+    d.className = 'entry';
+    d.id = entry.id;
+    d.dataset.termId = entry.id;
+    /* ⛔ CLOSED. 159 entries open measured 55,741px — 55.7 screens — with no
+       navigation on the page but a filter. The DOM is identical either way,
+       which is why the row is indifferent to it: it reads `details.entry` with
+       `querySelectorAll` and drives `#filter`, neither of which cares whether a
+       `<details>` is expanded. */
+    d.open = false;
+    const aliases = entry.aliases.length
+        ? `<span class="alias">— also: ${entry.aliases.map((a) => inline(a)).join(' · ')}</span>`
+        : '';
+    /* ⛓⛓ THE TEASER IS THE ENTRY'S OWN FIRST LEVEL. `plain` is already
+       defined as *"one sentence for someone who has read none of the records"*
+       — the perfect teaser, and one nobody has to write a second time. It is
+       the SAME string the body shows in `.plain`, from the same field; the
+       stylesheet hides the teaser once the entry is open so it is never read
+       twice. */
+    const parts = [`<summary>${inline(entry.term)}${aliases}`
+        + `<span class="teaser">${inline(entry.plain)}</span></summary>`,
+        '<div class="body">'];
+    parts.push(`<div class="plain">${inline(entry.plain)}</div>`);
+    parts.push(label('in this project'), prose(entry.detail));
+    parts.push(label('where it lives'));
+    for (const w of entry.where) parts.push(whereRow(w));
+    if (entry.seeAlso.length) {
+        parts.push(label('see also'));
+        parts.push(`<div class="see">${entry.seeAlso.map((id) => {
+            const t = termById(id);
+            return `<a href="${esc(hrefFor(id))}">${inline(t.term)}</a>`;
+        }).join(' · ')}</div>`);
+    }
+    const shown = DEMOS_BY_TERM.get(entry.id) ?? [];
+    if (shown.length) {
+        parts.push(label('shown in the demo catalogue'));
+        parts.push(`<div class="demo">${shown.map((e) => `<a href="${
+            esc(`${repoUrl('frontend/modules/procgenDocs/demos.html')}#${e.id}`)
+        }">#${e.n} ${inline(e.title)}</a>`).join('<br>')}</div>`);
+    }
+    parts.push('</div>');
+    d.innerHTML = parts.join('');
+    return d;
+}
+
+/* ══════════ THE RENDER ══════════════════════════════════════════════ */
+
+const host = document.getElementById('entries');
+for (const area of AREAS) {
+    const rows = termsInArea(area.id);
+    const h = document.createElement('h2');
+    h.id = `area-${area.id}`;
+    h.innerHTML = `${esc(area.title)} <span class="n">— ${rows.length}</span>`;
+    host.appendChild(h);
+    const blurb = document.createElement('p');
+    blurb.className = 'blurb';
+    blurb.innerHTML = inline(area.blurb);
+    host.appendChild(blurb);
+    const box = document.createElement('div');
+    box.dataset.areaId = area.id;
+    for (const entry of rows) box.appendChild(renderTerm(entry));
+    host.appendChild(box);
+}
+
+/* ══════════ THE RAIL ══════════════════════════════════════
+ * ⛓⛓ ONE ROW PER AREA, and the count on it is the count the FILTER is
+ * currently showing — so the rail answers "where are my matches" rather than
+ * repeating a constant the header already prints. An area the filter has
+ * emptied is dimmed rather than removed: a list of areas that silently lost
+ * members would make a filter with two hits look like a glossary with two
+ * areas. */
+const ixlist = document.getElementById('ixlist');
+const IX_ROWS = new Map();
+for (const a of AREAS) {
+    const el = document.createElement('a');
+    el.className = 'ix';
+    el.href = `#area-${a.id}`;
+    el.dataset.for = `area-${a.id}`;
+    el.title = a.blurb;
+    el.innerHTML = `<span class="t">${esc(a.title)}</span>`
+        + `<span class="n">${termsInArea(a.id).length}</span>`;
+    ixlist.appendChild(el);
+    IX_ROWS.set(a.id, el);
+}
+
+/* ══════════ THE FILTER — CLIENT-SIDE, NO FETCH ══════════════════════
+ * ⛓ It matches the TERM, its ALIASES and its `plain` sentence — the three
+ * things a reader could be searching with. A heading whose whole block is
+ * filtered out is hidden with it, so the page never shows an empty area. */
+const ENTRY_ELS = [...document.querySelectorAll('details.entry')];
+const HAYSTACK = new Map(TERMS.map((e) => [e.id,
+    `${e.term} ${e.aliases.join(' ')} ${e.plain}`.toLowerCase()]));
+
+function applyFilter(raw) {
+    const q = String(raw ?? '').trim().toLowerCase();
+    let visible = 0;
+    for (const el of ENTRY_ELS) {
+        const hit = !q || (HAYSTACK.get(el.dataset.termId) ?? '').includes(q);
+        el.hidden = !hit;
+        if (hit) visible += 1;
+    }
+    for (const area of AREAS) {
+        const box = document.querySelector(`[data-area-id="${area.id}"]`);
+        const hits = [...box.querySelectorAll('details.entry')].filter((e) => !e.hidden).length;
+        const any = hits > 0;
+        box.hidden = !any;
+        document.getElementById(`area-${area.id}`).hidden = !any;
+        document.getElementById(`area-${area.id}`).nextElementSibling.hidden = !any;
+        /* ⛓ …and the rail says the same thing, off the same count. */
+        const row = IX_ROWS.get(area.id);
+        row.querySelector('.n').textContent = String(hits);
+        row.style.opacity = any ? '' : '.4';
+    }
+    document.getElementById('filterNote').textContent = q
+        ? `${visible} of ${TERMS.length} entries match ${JSON.stringify(q)}`
+        : `${TERMS.length} entries — narrow by term, alias or plain sentence`;
+    return visible;
+}
+
+/**
+ * ⛓ ONE OPENER FOR EVERY WAY IN — a link from the catalogue, the reference or
+ * a doc, a pasted `#slug`, a Back press. ⛔ A `<details>` is NOT auto-opened by
+ * being the fragment target (`:target` styles it; it does not expand it), so
+ * with the entries closed every inbound term link in the corpus would have
+ * landed on a shut box. There are hundreds of them.
+ */
+function openTarget() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    el.scrollIntoView({ block: 'start' });
+}
+window.addEventListener('hashchange', openTarget);
+
+const ENTRY_ALL = [...document.querySelectorAll('details.entry')];
+document.getElementById('expandAll')
+    .addEventListener('click', () => { for (const el of ENTRY_ALL) el.open = true; });
+document.getElementById('collapseAll')
+    .addEventListener('click', () => { for (const el of ENTRY_ALL) el.open = false; });
+
+/** ⛓ WHERE YOU ARE — the last area heading scrolled past. One writer. */
+const HEADS = AREAS.map((a) => document.getElementById(`area-${a.id}`));
+let lit = null;
+let ticking = false;
+function syncHere() {
+    ticking = false;
+    let cur = null;
+    for (const h of HEADS) {
+        if (!h.hidden && h.getBoundingClientRect().top <= 90) cur = h.id;
+    }
+    if (!cur || cur === lit) return;
+    for (const el of ixlist.querySelectorAll('a.ix.here')) el.classList.remove('here');
+    const row = ixlist.querySelector(`a.ix[data-for="${CSS.escape(cur)}"]`);
+    if (row) row.classList.add('here');
+    lit = cur;
+}
+window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(syncHere);
+}, { passive: true });
+
+const filterInput = document.getElementById('filter');
+filterInput.addEventListener('input', () => {
+    publish(applyFilter(filterInput.value));
+});
+
+/* ══════════ THE HEADER LINES ════════════════════════════════════════ */
+
+const areaCounts = AREAS.map((a) => `${a.title} ${termsInArea(a.id).length}`).join(' · ');
+document.getElementById('count').textContent =
+    `${TERMS.length} entries over ${AREAS.length} areas — ${areaCounts}.`;
+document.getElementById('where').innerHTML =
+    `served from <code>${esc(location.origin)}</code>${onPages ? ' (GitHub Pages)' : ''}`
+    + ` · the data is <a href="${esc(docHref('frontend/modules/procgenDocs/glossary.js'))}">`
+    + 'frontend/modules/procgenDocs/glossary.js</a>, and this page only renders it'
+    + ` · always at <a href="${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}">`
+    + `${esc(hrefFor('', { base: PAGES_BASE }).replace(/#$/, ''))}</a>`;
+document.getElementById('also').innerHTML =
+    'the narrative documents every term is drawn from are '
+    + '<a href="docs.html">rendered here</a> · '
+    + 'every term here is used somewhere you can actually run — see '
+    + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">the demo catalogue</a>`
+    + `, and the two lab pages it links: <a href="${esc(pagesHref(
+        DEMOS.find((e) => e.id === 'sites')))}">the Seedling watch page</a> and `
+    + `<a href="${esc(pagesHref(DEMOS.find((e) => e.id === 'maze-area-graph')))}">the maze lab</a>`
+    + ' · and the tables the code itself knows — every URL parameter, template, '
+    + `element and refusal name — are <a href="${esc(repoUrl(
+        'frontend/modules/procgenDocs/reference.html'))}">the reference</a>, `
+    + 'GENERATED from the code and gated by regenerate = no diff';
+document.getElementById('foot').innerHTML =
+    '⛔ Do not edit this page to change a definition — edit <code>glossary.js</code>. '
+    + 'The glossary is ONE module with several readers: this page, '
+    + `<a href="${esc(repoUrl('frontend/modules/procgenDocs/demos.html'))}">demos.html</a>, `
+    + 'the two lab pages\' tooltips, and '
+    + `<a href="${esc(docHref('scripts/procgen/check-procgen-demos.mjs'))}">check-procgen-demos.mjs</a>, `
+    + 'which loads this page and asserts it renders what the module holds. '
+    + 'The candidate set it was chosen FROM is measured by '
+    + `<a href="${esc(docHref('scripts/procgen/harvest-procgen-terms.mjs'))}">harvest-procgen-terms.mjs</a>.`;
+
+/**
+ * ⛓⛓ THE READOUT IS MEASURED OFF THE DOM, NOT ECHOED FROM `TERMS` (trap 269).
+ * The row asserts this page renders the entries the module holds; a readout
+ * copied from the import would hold even with the render deleted. `visible` is
+ * recomputed by the filter, so the row can type into the box and read the
+ * answer the page itself computed.
+ */
+function publish(visible) {
+    const rendered = [...document.querySelectorAll('details.entry')];
+    window.__procgenGlossaryPage = Object.freeze({
+        ids: Object.freeze(rendered.map((el) => el.dataset.termId)),
+        count: rendered.length,
+        areas: Object.freeze([...document.querySelectorAll('[data-area-id]')]
+            .map((el) => el.dataset.areaId)),
+        anchors: Object.freeze(rendered.map((el) => el.id)),
+        visible,
+        ready: true,
+    });
+}
+publish(applyFilter(''));
+
+/* ⛓ LAST, and AFTER the readout: a deep link's open-and-scroll happens on a
+   fully rendered page, and the readout is about what was RENDERED — it must not
+   depend on which entry a fragment happened to expand. */
+openTarget();
+syncHere();
+</script>
+</body>
+</html>

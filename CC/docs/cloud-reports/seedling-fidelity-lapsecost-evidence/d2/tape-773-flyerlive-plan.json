@@ -1,0 +1,247 @@
+{
+  "game": "seedling",
+  "name": "lapsecost-l105-773-flyer",
+  "boot": {
+    "level": 105,
+    "x": 208,
+    "y": 64
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "despawn": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 614467865,
+    "split": true,
+    "cosmetic": 0
+  },
+  "seam": {
+    "items": {
+      "hasSword": true,
+      "hasGhostSword": false,
+      "hasShield": true,
+      "hasFire": true,
+      "hasWand": true,
+      "hasFireWand": false,
+      "canSwim": true,
+      "hasSpear": true,
+      "hasDarkShield": true,
+      "hasDarkSuit": true,
+      "hasDarkSword": true,
+      "hasFeather": true,
+      "hasTorch": true
+    },
+    "beam": false,
+    "rock_set": false,
+    "hits_max": 4,
+    "time": 5335,
+    "primary": 0,
+    "secondary": 0,
+    "cutscene": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "menu_state": 0
+  },
+  "inventory_slots": [
+    0,
+    1,
+    3,
+    2
+  ],
+  "tick_count": 381,
+  "inputs": [
+    {
+      "key": "left",
+      "from": 0,
+      "to": 41
+    },
+    {
+      "key": "left",
+      "from": 42,
+      "to": 66
+    },
+    {
+      "key": "left",
+      "from": 69,
+      "to": 71
+    },
+    {
+      "key": "left",
+      "from": 97,
+      "to": 150
+    },
+    {
+      "key": "left",
+      "from": 151,
+      "to": 153
+    },
+    {
+      "key": "left",
+      "from": 171,
+      "to": 173
+    },
+    {
+      "key": "left",
+      "from": 180,
+      "to": 181
+    },
+    {
+      "key": "left",
+      "from": 199,
+      "to": 226
+    },
+    {
+      "key": "left",
+      "from": 332,
+      "to": 333
+    },
+    {
+      "key": "primary",
+      "from": 41,
+      "to": 42
+    },
+    {
+      "key": "primary",
+      "from": 68,
+      "to": 69
+    },
+    {
+      "key": "primary",
+      "from": 90,
+      "to": 91
+    },
+    {
+      "key": "primary",
+      "from": 170,
+      "to": 171
+    },
+    {
+      "key": "right",
+      "from": 66,
+      "to": 67
+    },
+    {
+      "key": "right",
+      "from": 72,
+      "to": 74
+    },
+    {
+      "key": "right",
+      "from": 150,
+      "to": 151
+    },
+    {
+      "key": "right",
+      "from": 154,
+      "to": 156
+    },
+    {
+      "key": "right",
+      "from": 169,
+      "to": 170
+    },
+    {
+      "key": "right",
+      "from": 175,
+      "to": 177
+    },
+    {
+      "key": "right",
+      "from": 227,
+      "to": 229
+    },
+    {
+      "key": "right",
+      "from": 292,
+      "to": 332
+    },
+    {
+      "key": "down",
+      "from": 67,
+      "to": 68
+    },
+    {
+      "key": "down",
+      "from": 91,
+      "to": 92
+    },
+    {
+      "key": "down",
+      "from": 193,
+      "to": 195
+    },
+    {
+      "key": "down",
+      "from": 233,
+      "to": 286
+    },
+    {
+      "key": "down",
+      "from": 287,
+      "to": 288
+    },
+    {
+      "key": "down",
+      "from": 335,
+      "to": 381
+    },
+    {
+      "key": "up",
+      "from": 69,
+      "to": 70
+    },
+    {
+      "key": "up",
+      "from": 78,
+      "to": 90
+    },
+    {
+      "key": "up",
+      "from": 92,
+      "to": 93
+    },
+    {
+      "key": "up",
+      "from": 160,
+      "to": 163
+    },
+    {
+      "key": "up",
+      "from": 168,
+      "to": 169
+    },
+    {
+      "key": "up",
+      "from": 171,
+      "to": 191
+    },
+    {
+      "key": "up",
+      "from": 286,
+      "to": 287
+    }
+  ],
+  "tape_version": 8,
+  "description": "LAPSECOST measurement: the solver's ON plan for a captured sweep request (/tmp/claude-0/w/cap-leg-773.jsonl); not a roster tape."
+}

@@ -1,0 +1,6 @@
+guards shake=false reboot=false
+L18 digest=230dc0ff7300b9741e5559abc26ef70f ok=true ticks=445 shouldStop=165 asks=[{"walk":13,"hammer-escape":37},{"walk":14,"hammer-escape":37},{"walk":18,"hammer-escape":37,"sword-dash":9}]
+L40 digest=3addc3798712900a1155934ad303a8e8 ok=true ticks=679 shouldStop=167 asks=[{"walk":61,"kill-chaser":97,"sword-dash":9}]
+L6 digest=341a2e63348568efe9ed5ab0b772e928 ok=true ticks=294 shouldStop=15 asks=[{"walk":15}]
+L3 digest=c4625729413b39902bfeac97708c6baa ok=true ticks=245 shouldStop=16 asks=[{"walk":16}]
+counts {"shakeRefused":0,"rebootRefused":0}

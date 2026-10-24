@@ -1,0 +1,246 @@
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (130 tests) 8282ms
+     ✓ r5-l42-part4: the query equals the getter for every family at every tick, and the tape makes crushers, crushersParked, pushables, spinnerBodies, turrets, turretDamage, turretsSettled non-trivial  512ms
+     ✓ r5-totem-entrance: the query equals the getter for every family at every tick, and the tape makes armedPulsers, latchedGroups, openActivators, openChests, pushesSettled non-trivial  325ms
+     ✓ r8-d2: the query equals the getter for every folded member at every tick, and the tape makes appliedTimedClears, bankedClears, collected, earnedClears, inCeremony, inputRefused, inventory, keyOpens, keys, lockSnaps, presses, roomWrites, saveState, shieldBossKills, shieldBossStabs, slashInfo, spinnerKillLockOpens, spinnerPressHits, spinnerWrites, takenPickups non-trivial  745ms
+     ✓ r9-solve-16: the query equals the getter for every folded member at every tick, and the tape makes arrowVolleys, chaserKillLockOpens, ropePulls non-trivial  312ms
+     ✓ r5-l40-part5-control: the query equals the getter for every folded member at every tick, and the tape makes blastFreezes, frozenTimer, turretKills non-trivial  655ms
+     ✓ r5-bobboss-fire: the query equals the getter for every folded member at every tick, and the tape makes bobBossEvents non-trivial  575ms
+     ✓ r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query  958ms
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (94 tests) 4375ms
+     ✓ ⛔ the two exposed tapes are DERIVED by driving the roster, not declared  3990ms
+ ✓ frontend/modules/flashPanel/seedlingWasmPlayback.test.js (132 tests) 12084ms
+     ✓ clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)  8497ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 15229ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  352ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  380ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  888ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  947ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  776ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  3108ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  627ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  966ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  1459ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  800ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  538ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  1109ms
+ ✓ frontend/modules/seedlingDemo/watchOverlays.test.js (87 tests) 3331ms
+     ✓ ⛔⛔ L39's rope is SWAPPED, not gone — the builder's own shrunk box  895ms
+     ✓ ⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound  1112ms
+ ❯ frontend/modules/procgenDocs/generated.test.js (55 tests | 1 failed) 8443ms
+     ✓ ⛔ carries the GENERATED header and NO timestamp — a stamp would make every regeneration a diff and the gate unfailable 12ms
+     ✓ ⛔ every nested row is frozen — a reader cannot mutate the table it renders 10ms
+     ✓ ⛔ every object's keys are SORTED — the diff of a regeneration is the diff of the CODE, never of a key order nobody chose 19ms
+     ✓ ⛓⛓ every URL parameter names at least one glossary term, and every term it names EXISTS 1ms
+     ✓ ⛓⛓ every read*/write* export of urlParams.js is named (21 of them) 0ms
+     ✓ ⛓⛓ every parameter one of them touches appears on at least one PAGE 0ms
+     ✓ ⛔ every parameter carries a codec, a provenance and a default field or an explicit `null` — never a blank row 6ms
+     ✓ ⛓ the RETIRED parameters carry the refusal the code ITSELF produced 1ms
+     ✓ ⛔ the two pages' DEFAULTS are the readers' own answers, not a copy 0ms
+     ✓ ⛓⛓ every PALETTE row of both Seedling biomes and of the maze 0ms
+     ✓ ⛓⛓ every EXCLUDED row, with its cause and its measurement 1ms
+     ✓ ⛓⛓ every ELEMENT_TABLE head, with its `needs` and its parameter schema 6ms
+     ✓ ⛓⛓ every SKELETON KIND, per substrate, with `offered` telling the two apart 1ms
+     ✓ ⛓ the biome DEFAULT element spec, and the two biomes differ by exactly the sword-gated head 0ms
+     ✓ ⛓ the DEFAULT-IN column: which biome defaults draw each head (the ⚖ Q13 fold) 1ms
+     ✓ ⛔ KILL_LOCK_TEMPLATES is EMPTY, and the table SAYS SO rather than omitting the row 0ms
+     ✓ ⛓⛓ every name in KILL_GATE_REFUSALS / BLOCK_POCKET_REFUSALS / SEEDLING_ELEMENT_REFUSALS 1ms
+     ✓ ⛓⛓ every loop-core ENUM value — VERDICT, ATTEMPT, KEEP_POLICY, KEPT_KIND, STOP 0ms
+     ✓ ⛔ every row says WHICH kind of source it came from, and a constant row says whether the SCAN found it firing 12ms
+     ✓ ⛓⛓⛓ the SCAN is not empty for any source — an empty scan would make every coverage claim vacuous 1ms
+     ✓ ⛓⛓ the P3a findings, pinned — FOUR OF FIVE FIXED by P5 3ms
+     ✓ ⛓⛓ exactly ONE refusal source is still a literal scan, and it is the one the record names as DELIBERATELY not fixed 1ms
+     ✓ ⛓⛓ replaces ONLY the text between the markers — the prose survives byte-for-byte 1ms
+     ✓ ⛔ is IDEMPOTENT — writing the same body twice is the same file, which is what makes `--check` = regenerate-no-diff meaningful 0ms
+     ✓ ⛔ REFUSES BY NAME when the BEGIN marker is missing 1ms
+     ✓ ⛔ REFUSES BY NAME when the END marker is missing 0ms
+     ✓ ⛔ REFUSES BY NAME when a marker is DUPLICATED — two regions for one table is a file where half the table rots unwatched 0ms
+     ✓ ⛔ REFUSES BY NAME when the markers are INVERTED 0ms
+     ✓ ⛔ the markers name the GENERATOR, so a reader who finds one knows what rewrites it 0ms
+     ✓ ⛓⛓ every entry the REGISTRY returns is a column, in the same order 0ms
+     ✓ ⛓⛓ every FIELD on every entry is a row — the union of `Object.keys`, so a substrate that grows a field lands here without an edit 0ms
+     ✓ ⛓⛓ every `loopSupport.*` flag any entry declares is its OWN row — the expandable parents are derived from the doc, never listed 0ms
+     ✓ ⛔ a cell says PRESENT exactly when the entry carries the field 13ms
+     ✓ ⛔ every library the generator imports LOADED headless — and a failure would be NAMED rather than a quietly missing column 0ms
+     ✓ ⛔ every row is in a GROUP, and the groups partition the rows 0ms
+     ✓ ⛓⛓ the P3b registry findings, pinned — ALL EIGHT FIXED by P5 0ms
+     ✓ ⛓⛓ every statement id of the SOURCE module is a row of the page's tables 0ms
+     ✓ ⛓⛓ every loaded entry's label heads a card, and is a column, in registry order 0ms
+     ✓ ⛓ the checked-in module equals the in-memory build, and the region is its markdown 20ms
+     ✓ ⛓⛓ the TRACKED LISTING is the source — every tracked `.mjs` is a row, in order (437 of them); an UNTRACKED scratch file is not 1ms
+     ✓ ⛔ every row carries a category, a path and a docblock STYLE or an explicit null — never a blank row 31ms
+     ✓ ⛓⛓ a BROWSER row is exactly a file that imports playwright — asked of the files, not of the table 42ms
+     ✓ ⛓ the categories partition the rows, and the counts add up 2ms
+     ✓ ⛓⛓ the flags of `generate-seedling-level.mjs`, by hand 1ms
+     ✓ ⛓⛓ the P3b instrument findings, pinned — ALL SIX FIXED by P5 0ms
+     ✓ ⛓⛓ a citation MARKED `(never written)` or `(retired)` is dropped, and the marked set is published 20ms
+     ✓ ⛓⛓ every `.md` on disk is a row, README excepted (28) 0ms
+     ✓ ⛓⛓ …in the DECLARED reading order, not alphabetically — and the declaration covers the directory exactly, so a new document cannot arrive unindexed 0ms
+     ✓ ⛓⛓ every PAGE is a row too — three of README's entries point at a page rather than a `.md`, and dropping them would be a table that stopped covering its subject 0ms
+     ✓ ⛔ every row carries the document's OWN H1 and its OWN first paragraph — read out of the file, never a summary kept here 97ms
+     ✓ ⛓ the word count is the file's own, and the totals add up 0ms
+     ✓ ⛓ every row carries a heading count, and the corpus total is the rows PLUS the index file — two different denominators, said out loud 1ms
+     ✓ ⛔ an UNTRACKED file is not listed; a COMMITTED and a newly ADDED one are 206ms
+     ✓ ⛓ with no repository it DEGRADES to the directory listing, untracked included 8ms
+ ✓ frontend/modules/seedlingDemo/procgenPostSword.test.js (13 tests) 16268ms
+     ✓ ⛔ no longer generates the pre-sword level — the roster split is REAL  1692ms
+     ✓ and the same room under both boots gives the same verdict and tick count  796ms
+     ✓ spinner-killlock: SOLVES, and the clear is DISCHARGED in the records  435ms
+     ✓ …and with the clock UNDECLARED the same room throws, as it always did  517ms
+     ✓ shieldboss-door: a live boss refuses the goal's own ceremony  317ms
+     ✓ seed 13: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED  12378ms
+ ✓ frontend/modules/flashPanel/seedlingPlaybackController.test.js (34 tests) 679ms
+     ✓ walks end to end in node: the check, then the door, as the host reads them  480ms
+ ✓ frontend/modules/seedlingDemo/iceTurret.test.js (44 tests) 997ms
+ ✓ scripts/procgen/rerecordCampaign.test.js (37 tests) 1468ms
+     ✓ no hand witness duplicates what the producers themselves declare  1427ms
+ ✓ frontend/modules/procgenDocs/docsRender.test.js (46 tests) 298ms
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 17501ms
+     ✓ lets exactly ONE of eight simultaneous takers hold the box; the rest refuse  3168ms
+     ✓ serialises four QUEUED simultaneous takers — every one takes, no two hold at once  8780ms
+     ✓ lets a QUEUED taker die on SIGTERM — it never takes the box later  2612ms
+     ✓ makes a REAL browser gate refuse before it spends anything  734ms
+ ✓ frontend/modules/procgenDocs/docLinks.test.js (15 tests) 25ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveService.test.js (18 tests) 6426ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  992ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  1035ms
+     ✓ L12 (the solver's walk), 120 walker ticks in: same keys, same end digest, the room HELD while the worker thinks  974ms
+     ✓ a solve that runs out of its WORK budget DECLINES BY NAME (the ⏱ clause) — the worker answered, nothing was terminated, and the walker takes the goal  343ms
+     ✓ the BACKSTOP (default 300000 ms): a solve past it is TERMINATED and the goal FAILS BY NAME — never walked, never played  328ms
+     ✓ decline → retry → SOLVED on the L6 W=71 leg (each retry named)  642ms
+     ✓ a re-boot while the worker thinks: the answer is STALE — refuted, never played — and the goal re-solves  609ms
+     ✓ the REAL worker: the dashless plan lands first as the PROVISIONAL answer, then the full plan (fewer ticks) settles  686ms
+ ✓ frontend/modules/seedlingDemo/tapeRunner.test.js (617 tests) 36902ms
+     ✓ crusher-l42-round-trip: JS stream matches the real game recording, exactly  579ms
+     ✓ l40button-l41-part0: JS stream matches the real game recording, exactly  427ms
+     ✓ l40button-l42-part0: JS stream matches the real game recording, exactly  307ms
+     ✓ r2-walk-full: JS stream matches the real game recording, exactly  572ms
+     ✓ r3-walk-full: JS stream matches the real game recording, exactly  548ms
+     ✓ r4-walk-full: JS stream matches the real game recording, exactly  532ms
+     ✓ r5-l40-part5: JS stream matches the real game recording, exactly  334ms
+     ✓ r5-l41-part3: JS stream matches the real game recording, exactly  404ms
+     ✓ r5-l41-part3-control: JS stream matches the real game recording, exactly  309ms
+     ✓ r5-l42-part4: JS stream matches the real game recording, exactly  862ms
+     ✓ r5-l42-part4-control: JS stream matches the real game recording, exactly  1089ms
+     ✓ crusher-l42-round-trip: stepping to completion == runTape, byte for byte  812ms
+     ✓ l40button-l41-part0: stepping to completion == runTape, byte for byte  356ms
+     ✓ l40button-l42-part0: stepping to completion == runTape, byte for byte  308ms
+     ✓ r2-walk-full: stepping to completion == runTape, byte for byte  745ms
+     ✓ r3-walk-full: stepping to completion == runTape, byte for byte  922ms
+     ✓ r4-walk-full: stepping to completion == runTape, byte for byte  996ms
+     ✓ r5-l40-part5: stepping to completion == runTape, byte for byte  403ms
+     ✓ r5-l40-part5-control: stepping to completion == runTape, byte for byte  550ms
+     ✓ r5-l41-part3: stepping to completion == runTape, byte for byte  770ms
+     ✓ r5-l41-part3-control: stepping to completion == runTape, byte for byte  650ms
+     ✓ r5-l42-part4: stepping to completion == runTape, byte for byte  1346ms
+     ✓ r5-l42-part4-control: stepping to completion == runTape, byte for byte  886ms
+     ✓ r5-shaft: stepping to completion == runTape, byte for byte  463ms
+     ✓ r5-shaft-control: stepping to completion == runTape, byte for byte  447ms
+     ✓ r7-act2-full: stepping to completion == runTape, byte for byte  484ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 7313ms
+     ✓ swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves  2451ms
+     ✓ `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)  1865ms
+     ✓ `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why  325ms
+     ✓ untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged  1671ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 31334ms
+     ✓ (iv) the family file list equals the import closure  666ms
+     ✓ the import door's closure is the simulation's: solverView.js pulls in no family file  463ms
+     ✓ (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED  1334ms
+     ✓ (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`  1426ms
+     ✓ (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door  1119ms
+     ✓ (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"  1301ms
+     ✓ (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)  1472ms
+     ✓ (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule  1130ms
+     ✓ (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"  1089ms
+     ✓ (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice  1166ms
+     ✓ (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"  1349ms
+     ✓ (d) a COMMENT naming a simulation module in a family file ⇒ GREEN  1177ms
+     ✓ (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once  1223ms
+     ✓ (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"  1203ms
+     ✓ (c) run.entities(name) with a variable ⇒ RED, a named blind spot  1444ms
+     ✓ (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table  1261ms
+     ✓ (e) a COMMENT naming run.pushables in a family file ⇒ GREEN  1221ms
+     ✓ (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once  1171ms
+     ✓ (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once  1457ms
+     ✓ (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS  1172ms
+     ✓ (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)  1137ms
+     ✓ (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table  1176ms
+     ✓ (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values  1303ms
+     ✓ (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN  1074ms
+     ✓ (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"  977ms
+ ✓ frontend/modules/tutorials/tutorials.test.js (51 tests) 105ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js (18 tests) 1531ms
+     ✓ a window of the whole budget: the full plan (219 t) replaces the dashless one, nothing tripped; the units are counted  433ms
+     ✓ the clock decides nothing: the default budgets on a clock that jumps a DAY per read answer exactly as on a counter  313ms
+ ✓ frontend/modules/quickLaunch/generated.test.js (34 tests) 227ms
+ ✓ frontend/modules/seedlingDemo/dashOnlyWindow.test.js (14 tests) 1567ms
+     ✓ window 75: OFF cuts the WHOLE full pass and ships the dashless 255 t — stamped; ON (the default) lets its non-dash work run on the budget and upgrades to 219 t  516ms
+     ✓ ON: the smallest window that holds the full pass's dash asks is 39 (219 t); at 38 the full pass trips at `sword-dash` (never `walk`), keeping the partial schedule that dash scan returns  316ms
+     ✓ L4 at window 75 through a real worker: the posting instance OFF → the worker ships the dashless 255 t and stamps `dashOnlyWindow: false`; at the default (ON) it upgrades to 219 t, unstamped  718ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js (22 tests) 788ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (21 tests) 36358ms
+     ✓ ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned  488ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  29186ms
+     ✓ the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF  557ms
+     ✓ the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585)  5395ms
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 1392ms
+     ✓ is in neither the simulation closure nor the solver-family closure  738ms
+     ✓ is imported by nothing but its own test  341ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 5601ms
+     ✓ blank lines inserted above statements in a temp copy move lines and no key  960ms
+     ✓ (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key  1005ms
+     ✓ (b) PREDICTED GREEN: a new literal inside a cosmetic table  1058ms
+     ✓ (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED  979ms
+     ✓ (d) PREDICTED RED: a hand edit inside the doc region is a stale doc  815ms
+     ✓ MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key  538ms
+ ✓ frontend/modules/seedlingDemo/dashShape.test.js (14 tests) 60287ms
+     ✓ in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work  36783ms
+     ✓ through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped  23440ms
+ ✓ scripts/procgen/seedlingDivergenceLegs.test.js (17 tests) 399ms
+ ✓ scripts/procgen/seedlingDivergenceSweep.test.js (37 tests) 19ms
+ ✓ scripts/procgen/checkProcgenHelp.test.js (8 tests) 37461ms
+     ✓ an import door killed at the short ceiling reports timedOut + the ceiling that killed it  2718ms
+     ✓ ⛔ MUTANT: with `timedOut` off the result, the killed door is indistinguishable from a clean exit  2703ms
+     ✓ two `--write-baseline` runs record the late banner and write the SAME BYTES  9623ms
+     ✓ ⛔ NOT THE SEED: with `inheritedOutput` seeded EMPTY the FIRST write records the banner anyway  4800ms
+     ✓ ⛔ MUTANT + THE FALSE RED: the un-completed control records nothing, and `--doors=ci` reds the help door for it  11892ms
+     ✓ a control killed at the LONG ceiling too is named as truncated, not silently recorded  2504ms
+     ✓ the child honours the parent env: TMPDIR stays clean, the parent dir holds the scratch  1557ms
+     ✓ ⛔ NOT VACUOUS: without the env the killed child leaks under TMPDIR (the pre-fix shape)  1541ms
+ ✓ scripts/procgen/producerSegments.test.js (12 tests) 1506ms
+     ✓ ⛓⛓ every participating producer answers, and names itself correctly  1445ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 173ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (13 tests) 23807ms
+     ✓ ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t)  12969ms
+     ✓ ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)  734ms
+     ✓ MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget  9059ms
+     ✓ ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 381 t with no hit  861ms
+ ✓ scripts/procgen/seedlingDivergenceLegBudget.test.js (18 tests) 1170ms
+     ✓ --leg-budget-ms=90000 is byte-identical to no flag (the default plan has no stamp)  740ms
+     ✓ off the default the plan is stamped and its timeout covers the budget  418ms
+ ✓ scripts/procgen/seedlingDivergenceWindow.test.js (12 tests) 1100ms
+     ✓ empty flags are byte-identical to no flag (no stamp); set, the plan is stamped  1087ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverAnytime.test.js (8 tests) 1134ms
+     ✓ L11 chest, KIT: dashless 180 ticks, then FULL 160 ticks (one dash) REPLACES it — each pass heard as it lands, the plan named  457ms
+     ✓ L71 chest, BARE (no sword): the full pass is SKIPPED by name (it would repeat the dashless search) — the dashless plan (552 ticks) is the answer  424ms
+ ✓ frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js (9 tests) 2929ms
+     ✓ both ON: the solver's own plan IS the witness `bobsoldier2-l30-torch`  1074ms
+     ✓ both OFF: the dwell refuses (the survey's text), and the keys it drove are `bobsoldier2-l30-dash-stance`  651ms
+     ✓ D2a alone: the stance walk keeps the forecast, and the corpse's PAD refuses the next walk's gate  438ms
+     ✓ D2b alone: the dashed stance walk still runs the dwell out  519ms
+ ✓ frontend/modules/flashPanel/seedlingSolveDemo.test.js (5 tests) 1631ms
+     ✓ pushing the DEFAULT window leaves the L6 demo's solve REQUEST byte-identical; a pushed window is stamped  1620ms
+ ✓ frontend/modules/seedlingDemo/fidelityDash.test.js (8 tests) 8675ms
+     ✓ canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it  2122ms
+     ✓ L16 all: the count is the run's own dashes, and the inner PULL walk's windows are in it  3029ms
+     ✓ the committed plan replays with the same dashes (the count is the tape's, not the planner's)  2915ms
+ ✓ scripts/procgen/seedlingDivergenceSweepHang.test.js (18 tests) 215ms
+ ✓ frontend/modules/seedlingDemo/tapeIndexManifest.test.js (283 tests) 68ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 45ms
+ ✓ frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js (3 tests) 4ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says > ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files
++ FAIL: docsIndex.js DIFFERS from what the code says
++ FAIL: docs/json/developer/procgen/README.md § GENERATED:procgen-docs-index DIFFERS from what the code says
+ ❯ frontend/modules/procgenDocs/generated.test.js:103:35
+ Test Files  1 failed | 41 passed (42)
+      Tests  1 failed | 2198 passed (2199)

@@ -1,0 +1,103 @@
+{
+    "game": "seedling",
+    "name": "prox-l40-turret-contact",
+    "boot": {
+        "level": 40,
+        "x": 488,
+        "y": 376
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 48,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 24
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — THE LIVE BODY'S CONTACT: boots (entity (496,384)) in the corridor 32 px above `iceturret@472,400`'s entity point and walks `down` into its 32x32 body. An alive turret is \"Enemy\", not a solid: the walk enters it and `Enemy.hitPlayer` bills a hit (force 3, damage 1, behind `hitsTimer`) — the contact the run used to REFUSE and now prices. The survey's staging (`r8-solve-11`'s committed block re-pointed at L40 (488,376), keys [0, 1, 2, 3], items [canSwim, hasFire, hasShield, hasTorch]). Hand-authored keys: 48 t, equips []. Authored by scripts/procgen/plan-seedling-proximity-witness.mjs."
+}

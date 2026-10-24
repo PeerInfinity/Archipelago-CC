@@ -1,0 +1,135 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 32,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 32,
+            "tag": 3,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 96,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 2,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "primary",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "primary",
+            "from": 55,
+            "to": 56
+        },
+        {
+            "key": "primary",
+            "from": 64,
+            "to": 65
+        }
+    ],
+    "name": "apb-l32-killed-drop-held",
+    "description": "⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 after the kill, the drop unreported: `swim-u5-bobboss-encounter`'s staging + {32,1} {32,3}. The rock is built fallen and its first frame takes `FallRockLarge.as:123-126` @ccdf189776: the Fire (tag 4), no boss, no BobBossNPC, and `playerPosition` is not rewritten. The door arrival is snapped onto the rock, the Fire is collected and reports {32,4}; no item. Ends 30 idle ticks after its ceremony. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "note": ""
+}

@@ -44,6 +44,8 @@ import {
 
 // Import core settings schemas (top-level scopes; schema-as-default-source)
 import { registerCoreSettingsSchemas } from '../core/coreSettingsSchemas.js';
+import { wirePanelLifecycle, PANEL_MANUALLY_CLOSED_EVENT, LAYOUT_REPLACED_EVENT } from '../core/panelManager.js';
+import { openComponentTypes, reconcileModuleStates } from '../layout/moduleLayoutSync.js';
 
 // Import layout management
 import { initializeLayoutManager } from './layoutManager.js';
@@ -173,6 +175,11 @@ export async function initializeApplication(dependencies) {
 
   // --- Phase 4: Initialize Settings Manager ---
   profiler.start('phase4:settingsManager');
+  // The manager saves to the ACTIVE mode's blob. Tell it the mode now, before
+  // any module initialises: it used to learn it only from phase 13's
+  // app:activeModeDetermined, so a settings write during module init under
+  // ?mode=X landed in the DEFAULT blob (settings-persistence S2, finding 1).
+  settingsManager.setCurrentMode(validatedMode);
   if (combinedModeData.userSettings) {
     logger.debug(
       'init',
@@ -420,8 +427,14 @@ export async function initializeApplication(dependencies) {
 
   logger.info('init', 'ModuleManagerAPI populated.');
 
+  // After a live layout import the layout was rebuilt without closing anything
+  // (panelManager.withLayoutSwap); bring module states into agreement with it.
+  eventBus.subscribe(LAYOUT_REPLACED_EVENT, (payload) => {
+    moduleManagerApi.syncModuleStatesToLayout(payload ?? {});
+  }, 'core');
+
   // Listen for panels being closed manually
-  eventBus.subscribe('ui:panelManuallyClosed', ({ moduleId }) => {
+  eventBus.subscribe(PANEL_MANUALLY_CLOSED_EVENT, ({ moduleId }) => {
     if (!moduleId) return;
     const moduleState = runtimeModuleStates.get(moduleId);
     if (!moduleState || moduleState.enabled === false) return;
@@ -509,19 +522,6 @@ export async function initializeApplication(dependencies) {
   if (usesMobileLayout) {
     hideLoadingScreen(logger);
   }
-
-  // Dispatch initial timer rehoming event
-  setTimeout(() => {
-    if (dispatcher) {
-      logger.debug('init', 'Dispatching initial system:rehomeTimerUI event.');
-      dispatcher.publish(
-        'core',
-        'system:rehomeTimerUI',
-        {},
-        { initialTarget: 'top' }
-      );
-    }
-  }, 0);
 
   // --- Phase 13: Set Global References ---
   window.G_currentActiveMode = validatedMode;
@@ -804,7 +804,23 @@ function createModuleManagerApi(options) {
       logger.info('init', `Module ${moduleId} is already enabled.`);
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       if (componentType && panelManagerInstance) {
-        panelManagerInstance.activatePanel(componentType);
+        // ⛓ An enabled module whose panel the layout has NEVER had (it is not
+        // in the active layout preset — e.g. Discovery in the default layout)
+        // has no tab to activate, and activatePanel only finds tabs: Quick
+        // Launch's button did nothing (measured 2026-10-10). Create the panel
+        // in the module's declared column, as enabling a module does.
+        const inLayout = (window.goldenLayoutInstance?.getAllContentItems?.() ?? [])
+          .some((item) => item.isComponent && item.container?.componentType === componentType);
+        if (window.goldenLayoutInstance && !inLayout) {
+          const info = importedModules.get(moduleId)?.moduleInfo;
+          await panelManagerInstance.createPanelForComponent(
+            componentType,
+            info?.title || info?.name || moduleId,
+            info?.column || null
+          );
+        } else {
+          panelManagerInstance.activatePanel(componentType);
+        }
       }
       return;
     }
@@ -823,8 +839,13 @@ function createModuleManagerApi(options) {
         // Use window.location.href (page URL) as base so this works in both bundled and
         // unbundled modes. Using import.meta.url breaks in bundled mode because the bundle
         // is at frontend/dist/bundle.js — two levels up lands at the repo root, not frontend/.
+        // ⛔ BUNDLED MODE: take the module's copy from the bundle, as moduleLoader.js does at boot. A dynamic
+        // import of its file here loaded a SECOND copy of everything it imports — a fresh stateManager proxy
+        // with no snapshot, its own eventBus — so a panel enabled after boot (not imported then: disabled in
+        // the module config) showed nothing (measured: the Checks panel read "Checked: ?/?" on ?bundled=true).
+        const bundledModules = typeof window !== 'undefined' && window.__BUNDLED_MODULES__;
         const resolvedPath = new URL(moduleDefinition.path, window.location.href).href;
-        const moduleInstance = await import(resolvedPath);
+        const moduleInstance = bundledModules?.[moduleId] ?? await import(resolvedPath);
         const moduleFileName = moduleDefinition.path.split('/').pop() || moduleDefinition.path;
         incrementFileCounter(`${moduleId} (${moduleFileName})`);
         actualModuleObject = moduleInstance.default || moduleInstance;
@@ -900,6 +921,9 @@ function createModuleManagerApi(options) {
                           if (typeof uiProvider.onMount === 'function') {
                             uiProvider.onMount(container, componentState);
                           }
+                          // onShow / onHide / onResize (T4, trap 1404), as
+                          // desktopLayout's factory does.
+                          wirePanelLifecycle(container, uiProvider);
                         } catch (e) {
                           logger.error(
                             'init',
@@ -1061,22 +1085,6 @@ function createModuleManagerApi(options) {
     }
 
     eventBus.publish('module:stateChanged', { moduleId, enabled: true }, 'core');
-
-    // Dispatch rehome event after enabling (if dispatcher is available)
-    if (dispatcher) {
-      logger.debug(
-        'init',
-        `Module ${moduleId} enabled, dispatching system:rehomeTimerUI.`
-      );
-      setTimeout(() => {
-        dispatcher.publish(
-          'core',
-          'system:rehomeTimerUI',
-          {},
-          { initialTarget: 'top' }
-        );
-      }, 0);
-    }
   };
 
   /**
@@ -1086,7 +1094,6 @@ function createModuleManagerApi(options) {
    * 1. Set the module state to disabled
    * 2. Close/destroy the module's panel
    * 3. Publish state change events
-   * 4. Dispatch rehome events
    *
    * Note: Does NOT uninitialize the module or remove it from memory
    */
@@ -1104,7 +1111,6 @@ function createModuleManagerApi(options) {
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       const moduleInstance = importedModules.get(moduleId);
       const allowsMultiple = moduleInstance?.moduleInfo?.allowMultipleInstances;
-      let panelActionTaken = false;
       if (skipPanelDestroy) {
         // Panel already closed by the user — no need to destroy it programmatically.
       } else if (componentType) {
@@ -1122,7 +1128,6 @@ function createModuleManagerApi(options) {
           } else {
             panelManagerInstance.destroyPanelByComponentType(componentType);
           }
-          panelActionTaken = true;
         } else {
           logger.error(
             'init',
@@ -1135,23 +1140,46 @@ function createModuleManagerApi(options) {
           `Module ${moduleId} has no registered panel component type. Cannot close panel.`
         );
       }
-
-      // Dispatch rehome event after disabling
-      if (dispatcher) {
-        logger.debug(
-          'init',
-          `Module ${moduleId} disabled (panel action taken: ${panelActionTaken}), dispatching system:rehomeTimerUI.`
-        );
-        setTimeout(() => {
-          dispatcher.publish(
-            'core',
-            'system:rehomeTimerUI',
-            {},
-            { initialTarget: 'top' }
-          );
-        }, 0);
-      }
     }
+  };
+
+  /**
+   * Make module enabled-states agree with the tabs in the layout — run after a
+   * layout swap (LAYOUT_REPLACED_EVENT, trap 1424). A disabled module whose
+   * panel the layout holds is marked enabled (no panel is created: it exists);
+   * an enabled module whose tab the swap removed (its type is in
+   * `previousComponentTypes`) is disabled without a panel destroy. Decisions:
+   * reconcileModuleStates (app/layout/moduleLayoutSync.js).
+   * @param {{previousComponentTypes?: string[]|null}} [options]
+   * @returns {{toDisable: string[], toEnable: string[]}}
+   */
+  api.syncModuleStatesToLayout = ({ previousComponentTypes = null } = {}) => {
+    const goldenLayout = panelManagerInstance?.goldenLayout;
+    if (!goldenLayout) return { toDisable: [], toEnable: [] };
+    const enabledById = {};
+    for (const [moduleId, state] of runtimeModuleStates.entries()) {
+      enabledById[moduleId] = state.enabled === true;
+    }
+    const result = reconcileModuleStates(
+      enabledById,
+      (moduleId) => centralRegistry.getComponentTypeForModule(moduleId),
+      openComponentTypes(goldenLayout),
+      previousComponentTypes
+    );
+    for (const moduleId of result.toEnable) {
+      runtimeModuleStates.get(moduleId).enabled = true;
+      eventBus.publish('module:stateChanged', { moduleId, enabled: true }, 'core');
+    }
+    for (const moduleId of result.toDisable) {
+      api.disableModule(moduleId, { skipPanelDestroy: true });
+    }
+    if (result.toEnable.length || result.toDisable.length) {
+      logger.info(
+        'init',
+        `Module states synced to the layout: enabled [${result.toEnable.join(', ')}], disabled [${result.toDisable.join(', ')}]`
+      );
+    }
+    return result;
   };
 
   api.getModuleState = (moduleId) => {

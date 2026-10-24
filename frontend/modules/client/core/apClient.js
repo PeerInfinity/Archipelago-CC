@@ -43,11 +43,32 @@ export class ApClient {
 
     this._packetSubscriber = null;
     this._disconnectSubscriber = null;
+    this._refusedSubscription = null;
+    // Bumped on every connect attempt so a slow attempt that resolves after
+    // the user cancelled (or started a newer one) cannot publish its events.
+    this._connectGeneration = 0;
   }
 
   setEventBus(busInstance) {
     log('info', 'Setting EventBus instance');
     this.eventBus = busInstance;
+
+    // An AP-level refusal (bad slot name, wrong game, bad password) leaves the
+    // websocket OPEN but useless: the handshake will never complete, so the
+    // socket must not keep reporting a live session. messageHandler publishes
+    // network:connectionRefused when the packet arrives; reacting to that
+    // event (rather than to the raw packet) keeps the packet bridge intact so
+    // the refusal still reaches the console and the UI.
+    if (typeof this._refusedSubscription === 'function') {
+      try { this._refusedSubscription(); } catch { /* ignore */ }
+      this._refusedSubscription = null;
+    }
+    if (typeof this.eventBus?.subscribe === 'function') {
+      this._refusedSubscription = this.eventBus.subscribe(
+        'network:connectionRefused',
+        () => this._onConnectionRefused()
+      );
+    }
   }
 
   initialize() {
@@ -127,6 +148,14 @@ export class ApClient {
     this.serverAddress = address;
     this.serverPassword = password;
     this.preventReconnect = false;
+    const generation = ++this._connectGeneration;
+
+    // The websocket is now being opened, but nothing is connected yet — the
+    // AP handshake only completes when the server answers Connect. Consumers
+    // showing connection state use this to enter a "connecting" state.
+    this.eventBus?.publish('connection:connecting', {
+      serverAddress: address,
+    });
 
     // Normalize address the same way connection.js does, then let
     // archipelago.js's own URL parsing finish the job.
@@ -154,11 +183,29 @@ export class ApClient {
       roomInfoPacket = await this.client.socket.connect(url);
     } catch (error) {
       log('error', 'Failed to open websocket:', error);
+      // archipelago.js reports every transport failure as the generic
+      // "Failed to connect to Archipelago server." — naming the address is
+      // the part the user can act on, so only append a detail that adds
+      // something (a bad protocol, a malformed URL...).
+      const reason = error?.message || String(error);
+      const detail = /^failed to connect/i.test(reason) ? '' : `: ${reason}`;
       this.eventBus?.publish('connection:error', {
-        message: `Failed to connect: ${error?.message || error}`,
+        message: `Failed to connect to ${url}${detail}`,
       });
       this._teardownSubscriptions();
       this._scheduleReconnect();
+      return false;
+    }
+
+    // The attempt may have been superseded (a newer connect) or cancelled
+    // (disconnect pressed while connecting) while the socket was opening.
+    // Publishing connection:open now would resurrect a state the user left.
+    if (generation !== this._connectGeneration || this.preventReconnect) {
+      log('info', 'Websocket opened after the attempt was cancelled; closing it');
+      this._teardownSubscriptions();
+      if (this.client?.socket?.connected) {
+        try { this.client.socket.disconnect(); } catch { /* ignore */ }
+      }
       return false;
     }
 
@@ -234,15 +281,60 @@ export class ApClient {
     }, 5000);
   }
 
+  /**
+   * Close the connection at the user's request.
+   *
+   * Publishes `connection:close` itself: the subscriptions are torn down
+   * first (so the reconnect loop doesn't fire), which also removes the
+   * socket's own 'disconnected' handler — without an explicit publish here,
+   * nothing would ever tell the UI the connection ended, leaving a stale
+   * "Connected" display and a toggle that acts on the wrong state.
+   */
   disconnect() {
     this.preventReconnect = true;
+    // Supersede any connect attempt still awaiting its socket.
+    this._connectGeneration++;
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    const serverAddress = this.serverAddress;
     this._teardownSubscriptions();
     if (this.client?.socket?.connected) {
       try { this.client.socket.disconnect(); } catch { /* ignore */ }
     }
     this.serverAddress = null;
     this.serverPassword = null;
+    this.eventBus?.publish('connection:close', {
+      serverAddress,
+      requested: true,
+    });
     return true;
+  }
+
+  /**
+   * The server answered Connect with ConnectionRefused. The websocket is
+   * still open but the session will never be established, so drop the
+   * transport and stay down — retrying the same rejected credentials would
+   * only be refused again.
+   */
+  _onConnectionRefused() {
+    log('warn', 'AP handshake refused; closing the websocket');
+    this.preventReconnect = true;
+    this._connectGeneration++;
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    this._teardownSubscriptions();
+    if (this.client?.socket?.connected) {
+      try { this.client.socket.disconnect(); } catch { /* ignore */ }
+    }
+    this.serverAddress = null;
+    this.serverPassword = null;
+    // No connection:close here — the refusal reason is the state the UI
+    // should show, and a close event would overwrite it with a plain
+    // "not connected".
   }
 
   isConnected() {

@@ -1,0 +1,8 @@
+{"arm":"vanilla","apReportBosses":false,"final":{"t":980,"level":32,"x":80,"y":124.99999999999999}}
+{"arm":"vanilla","apReportBosses":true,"final":{"t":980,"level":32,"x":80,"y":124.99999999999999}}
+{"arm":"move-88-128","apReportBosses":false,"final":{"t":980,"level":32,"x":80,"y":124.99999999999999}}
+{"arm":"move-88-128","apReportBosses":true,"final":{"t":980,"level":30,"x":232,"y":204.95000000000002}}
+{"arm":"move-96-128","apReportBosses":false,"final":{"t":980,"level":32,"x":80,"y":124.99999999999999}}
+{"arm":"move-96-128","apReportBosses":true,"final":{"t":980,"level":30,"x":232,"y":204.95000000000002}}
+{"arm":"move-40-128","apReportBosses":false,"final":{"t":980,"level":32,"x":80,"y":124.99999999999999}}
+{"arm":"move-40-128","apReportBosses":true,"final":{"t":980,"level":30,"x":232,"y":204.95000000000002}}

@@ -1,0 +1,134 @@
+diff --git a/frontend/modules/seedlingDemo/dangerMap.js b/frontend/modules/seedlingDemo/dangerMap.js
+index 667c544..b751cb2 100644
+--- a/frontend/modules/seedlingDemo/dangerMap.js
++++ b/frontend/modules/seedlingDemo/dangerMap.js
+@@ -412,7 +412,25 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
+         }
+         const body = chaserBoxAt(c.tag, c.x, c.y);
+         const leash = typeof row.aggro?.range === 'number' ? row.aggro.range : 0;
+-        const pad = row.threatPad ?? 0;
++        /**
++         * ⛓⛓⛓ U7-swim D4 — A FORECAST BODY THAT CARRIES ITS OWN PUNCH IS PRICED
++         * BY IT, NOT BY THE PAD. `threatPad` stands for a reach the map cannot
++         * time; the chaser forecast DOES time the puncher's (`levelRun`
++         * `chaserForecastNow` reports the box `endAnim` tests on the one tick
++         * the wind-up ends, and whether `attackPlayer`'s own `hitsTimer` gate
++         * lets it throw). So per tick, with forecast bodies, the body is
++         * priced bare (`Enemy.hitPlayer`, its contact) and the punch exactly.
++         * ⛔ The WAIT arm, which has no forecast, keeps the pad.
++         */
++        const timed = perTick && bodies !== null && c.punch !== undefined;
++        if (timed && c.punch && c.punch.live
++            && (c.punch.hitsPlayer || rectsOverlap(box, c.punch.rect))) {
++            out.push({ kind: 'chaser', id: c.id,
++                why: 'the punch — the `attackPlayer` box off the body edge ends '
++                    + 'its wind-up THIS tick, and the body own hitsTimer does not refuse it' });
++            continue;
++        }
++        const pad = timed ? 0 : (row.threatPad ?? 0);
+         // The player's centre against the body's, which is what `Bob.update`'s
+         // own `FP.distance(x, y, player.x, player.y)` measures.
+         const px = (box.x + box.right) / 2;
+diff --git a/frontend/modules/seedlingDemo/levelRun.js b/frontend/modules/seedlingDemo/levelRun.js
+index 35cfaa7..869b297 100644
+--- a/frontend/modules/seedlingDemo/levelRun.js
++++ b/frontend/modules/seedlingDemo/levelRun.js
+@@ -6236,9 +6236,31 @@ export function createLevelRun({
+                     // ⛓ U7-swim D2: the wind-up, decided and stepped as the live
+                     // run does, so the chase gate (`getSprite() != "attack"`)
+                     // agrees. ⛔ No punch is thrown: a hit does not happen in a
+-                    // preview — the danger map prices the reach as `threatPad`.
++                    // preview.
+                     c.attack = chaserAttackDecision(c.tag, c, playerPos) ?? c.attack;
+-                    if (c.attack && stepSpriteAnim(c.attack)) c.attack = null;
++                    // only a class that HAS a punch reports one (`punch` absent
++                    // otherwise, so `dangerMap` keeps the pad for every other body)
++                    if (CHASERS[c.tag].attack) c.punch = null;
++                    if (c.attack && stepSpriteAnim(c.attack)) {
++                        c.attack = null;
++                        /**
++                         * ⛓⛓ U7-swim D4 — THE PUNCH IS REPORTED, NOT THROWN: the box
++                         * this tick's `endAnim` would test, and whether
++                         * `attackPlayer` would throw at all (its own `hitsTimer`,
++                         * read AFTER this tick's `hitUpdate`, which the loop below
++                         * applies), and whether it meets the previewed player the
++                         * game tests — where this tick STARTED. `dangerMap` prices
++                         * it per tick in place of the static `threatPad`.
++                         */
++                        const { rect: box } = puncherPunchRect(c.tag, c, playerPos);
++                        const live = (c.hitsTimer > 0 ? c.hitsTimer - 1 : 0) <= 0;
++                        c.punch = {
++                            rect: box,
++                            live,
++                            hitsPlayer: live && rectsOverlap(box,
++                                playerBoxAt(playerPos.x, playerPos.y)),
++                        };
++                    }
+                 }
+                 // ⛓⛓ R9 SLICE 12b — THE I-FRAME RUNS DOWN IN THE FORECAST TOO.
+                 // `enemyHitUpdate` decrements once per enemy update, and a
+@@ -6270,6 +6292,8 @@ export function createLevelRun({
+                         enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                         hits: c.hits,
+                         hitsTimer: c.hitsTimer,
++                        // ⛓ U7-swim D4: this tick's punch, for a class that has one.
++                        ...(c.punch !== undefined ? { punch: c.punch } : {}),
+                     }));
+             },
+             /**
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 00571dd..5e6b4a4 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -8668,7 +8668,6 @@ export function deriveKillByChaser(run, body, contacts,
+         y: (target.rect.y + target.rect.bottom) / 2,
+     };
+     const pitch = DEFAULT_LATTICE;
+-    const here = nodeAt(run.state.x, run.state.y, pitch);
+     const planOpts = solverPlanOpts(run, contacts);
+     const strikeFor = () => strikePolicyFor(run, { dashMode });
+ 
+@@ -8689,19 +8688,31 @@ export function deriveKillByChaser(run, body, contacts,
+     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
+     const inLeash = [];
+     const candidates = [];
+-    for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
+-        for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
+-            const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
+-            const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
+-            if (d > leash) continue;
+-            inLeash.push(c);
+-            if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
+-            if (aimIsPlannable
+-                && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
+-            candidates.push({ ...c, d,
+-                approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
++    const scanAround = (here) => {
++        for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
++            for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
++                const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
++                const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
++                if (d > leash) continue;
++                inLeash.push(c);
++                if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
++                if (aimIsPlannable
++                    && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
++                candidates.push({ ...c, d,
++                    approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
++            }
+         }
+-    }
++    };
++    scanAround(nodeAt(run.state.x, run.state.y, pitch));
++    /**
++     * ⛓⛓ U7-swim D4 — THE FALLBACK SCAN, AROUND THE TARGET. The scan box is
++     * centred on the PLAYER, which is where every committed chaser fight asks
++     * from; L12's ladder asks from the arrival, 470 px from the puncher, and
++     * the box held "0 cell(s) inside its 80 px leash" — the body was never a
++     * hypothesis at all. ⛔ ONLY when the player's box holds no leash cell, so
++     * every stance a committed solve chose is still chosen the same way.
++     */
++    if (inLeash.length === 0) scanAround(nodeAt(targetCentre.x, targetCentre.y, pitch));
+     // Nearest-first only as a SCAN order — the pick below is by score, and
+     // ties are broken by y then x so an emitted tape is not an artifact of
+     // iteration order.

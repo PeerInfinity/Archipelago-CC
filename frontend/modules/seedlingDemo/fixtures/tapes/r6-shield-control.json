@@ -1,0 +1,57 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "name": "r6-shield-control",
+  "description": "R6 slice 5: the two-hits-for-three control — the same tape with the THIRD landing press deleted. The movement is one `up` span and is byte-identical, so the stance, the band and the clock are all unchanged: the third `startStab` fires on the same tick and `movedShield` opens on the same tick. What is missing is the hit that would have called `sit()` — so `endAnim` runs the chain on to \"stab\" and the stab's frames 5..8 land on a player standing in the band. `hits` stops at 2 of 3, `{19,0}` is never written, the body is never removed, and the PLAYER takes the damage the drive's abort buys off. A PREFIX, not an equal: the drive's tail is a corpse, a walk and a ceremony the control has no death to produce.",
+  "boot": {
+    "level": 19,
+    "x": 96,
+    "y": 112
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 19,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "tick_count": 460,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 460
+    },
+    {
+      "key": "primary",
+      "from": 143,
+      "to": 144
+    },
+    {
+      "key": "primary",
+      "from": 276,
+      "to": 277
+    }
+  ]
+}
+

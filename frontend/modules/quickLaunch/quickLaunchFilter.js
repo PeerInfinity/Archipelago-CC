@@ -1,0 +1,158 @@
+/**
+ * quickLaunchFilter — PURE: what the Quick Launch panel draws (the view
+ * model), and the filter box's cut of it.
+ *
+ *   model = { stored: [Node], groups: [Group] }
+ *     stored  the user's tree, resolved (quickLaunchTree.js `resolve`): a ref
+ *             node carries `item` (its catalog entry) or `missing: true`
+ *     Group   { id, label, entries: [{kind, item}], groups: [Group] } — rows, then sub-groups;
+ *             either list may be empty (All panels: only sub-groups, one per
+ *             category; Help: one sub-group per section, a section holding rows
+ *             and sub-groups for its sub-directories; everything else: only rows)
+ *
+ * Both views (tree and cards) draw the same model; the filter box passes it
+ * through `filterView` first. No DOM, no settings.
+ */
+
+import { VIRTUAL_GROUPS, helpDocs, virtualGroups } from './quickLaunchCatalog.js';
+import { NODE_KINDS, resolve, unfiled } from './quickLaunchTree.js';
+
+/**
+ * The model for `tree` over `catalog`: the stored nodes, then Unfiled (only
+ * when the tree holds something — with an empty tree every entry is unfiled
+ * and All panels / Help already show each one), All panels, Help. Unfiled's
+ * docs are the ones Help draws (`helpDocs`): a guide Help leaves out (a panel
+ * guide, a developer doc with the setting off) is not offered there either,
+ * though a stored ref to one still resolves.
+ */
+export function buildViewModel(tree, catalog, categoryOrder) {
+    const loose = tree.nodes.length ? unfiled(tree, { ...catalog, docs: helpDocs(catalog) }) : [];
+    const groups = [];
+    if (loose.length) groups.push({ ...VIRTUAL_GROUPS.unfiled, entries: loose, groups: [] });
+    const toGroup = (g, kind) => ({
+        id: g.id,
+        label: g.label,
+        entries: (g.items ?? []).map((item) => ({ kind, item })),
+        groups: (g.groups ?? []).map((sub) => toGroup(sub, kind)),
+    });
+    for (const group of virtualGroups(catalog, categoryOrder)) {
+        groups.push(toGroup(group, group.id === VIRTUAL_GROUPS.allPanels.id ? NODE_KINDS.panel : NODE_KINDS.doc));
+    }
+    return { stored: resolve(tree, catalog).nodes, groups };
+}
+
+/** The number of rows a model group holds, sub-groups included. */
+export function groupSize(group) {
+    return (group.entries?.length ?? 0) + (group.groups ?? []).reduce((n, g) => n + groupSize(g), 0);
+}
+
+/** The texts a row is matched on: a panel's title and description, a guide's title, a link's label. */
+function rowTexts(kind, item) {
+    if (kind === NODE_KINDS.panel) return [item.title, item.description];
+    if (kind === NODE_KINDS.doc) return [item.title];
+    return [];
+}
+
+/** A stored node's own texts (a group's label; a dangling ref's ref, which is what its row shows). */
+function nodeTexts(node) {
+    if (node.kind === NODE_KINDS.group) return [node.label];
+    if (node.kind === NODE_KINDS.url) return [node.label];
+    if (node.missing) return [node.ref];
+    return rowTexts(node.kind, node.item);
+}
+
+/**
+ * The model cut to what matches `query`: a case-insensitive substring of a
+ * panel's title or description, a guide's title, a group's label or a link's
+ * label (a Help section's or sub-group's label too). A match keeps every group
+ * above it (with only the matching rows); a group whose own label matches
+ * keeps everything in it. A group left empty is dropped. A blank query returns
+ * `model` itself.
+ */
+export function filterView(model, query) {
+    const q = String(query ?? '').trim().toLowerCase();
+    if (!q) return model;
+    const hit = (texts) => texts.some((t) => typeof t === 'string' && t.toLowerCase().includes(q));
+
+    const cutNodes = (nodes) => nodes.flatMap((node) => {
+        if (node.kind !== NODE_KINDS.group) return hit(nodeTexts(node)) ? [node] : [];
+        if (hit(nodeTexts(node))) return [node];
+        const children = cutNodes(node.children);
+        return children.length ? [{ ...node, children }] : [];
+    });
+
+    const cutGroup = (group) => {
+        if (hit([group.label])) return group;
+        const entries = (group.entries ?? []).filter(({ kind, item }) => hit(rowTexts(kind, item)));
+        const groups = (group.groups ?? []).map(cutGroup).filter(Boolean);
+        return entries.length || groups.length ? { ...group, entries, groups } : null;
+    };
+
+    return { stored: cutNodes(model.stored), groups: model.groups.map(cutGroup).filter(Boolean) };
+}
+
+/**
+ * The rows a model draws: every stored node that is not a group (a panel, a
+ * guide, a link, a dangling ref), nested ones too, plus every row of every
+ * virtual group and sub-group. The filter box's count is
+ * `rowCount(filterView(model, q))` of `rowCount(model)`.
+ */
+export function rowCount(model) {
+    const stored = (nodes) => nodes.reduce(
+        (n, node) => n + (node.kind === NODE_KINDS.group ? stored(node.children ?? []) : 1), 0);
+    return stored(model.stored ?? []) + (model.groups ?? []).reduce((n, g) => n + groupSize(g), 0);
+}
+
+/** The filter box's count text: "N of M" rows drawn. */
+export function countText(model, shown) {
+    return `${rowCount(shown)} of ${rowCount(model)}`;
+}
+
+/** The ids of the user's own groups a model draws (stored `group` nodes, nested ones too), in order. */
+export function userGroupIds(model) {
+    const out = [];
+    const walk = (nodes) => {
+        for (const node of nodes) {
+            if (node.kind !== NODE_KINDS.group) continue;
+            out.push(node.id);
+            walk(node.children);
+        }
+    };
+    walk(model.stored);
+    return out;
+}
+
+/** The ids of the virtual groups a model draws (Unfiled, All panels, Help and every sub-group), in order. */
+export function virtualGroupIds(model) {
+    const walk = (group) => [group.id, ...(group.groups ?? []).flatMap(walk)];
+    return model.groups.flatMap(walk);
+}
+
+/** Every group id a model draws: the user's groups, then the virtual groups and sub-groups. */
+export function groupIds(model) {
+    return [...userGroupIds(model), ...virtualGroupIds(model)];
+}
+
+/**
+ * The fold button's write: the `collapsedGroups` value after folding every
+ * group `model` draws — the user's AND the built-in ones (P7) — shut (`open`
+ * false) or open (`open` true), from the value `stored` now. Pass the model as
+ * DRAWN: a group the model does not draw keeps its state. Over an unfiltered
+ * model this is every group id, or [] (plus whatever `stored` held that the
+ * model does not draw — `knownCollapsed` drops the dead ones).
+ */
+export function foldAll(model, open, stored = []) {
+    const ids = groupIds(model);
+    const kept = (Array.isArray(stored) ? stored : []).filter((id) => !ids.includes(id));
+    return open ? kept : [...ids, ...kept];
+}
+
+/**
+ * A `collapsedGroups` value cut to the ids in `known` (every group the panel
+ * can draw), duplicates dropped, order kept: the one filter every write passes
+ * through, so a deleted group's or a retired category's id goes on the next write.
+ */
+export function knownCollapsed(ids, known) {
+    const keep = known instanceof Set ? known : new Set(known);
+    return [...new Set(Array.isArray(ids) ? ids : [])].filter((id) => keep.has(id));
+}

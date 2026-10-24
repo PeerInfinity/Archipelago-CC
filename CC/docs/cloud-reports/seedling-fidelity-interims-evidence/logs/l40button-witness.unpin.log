@@ -1,0 +1,27 @@
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:8660
+    throw new SolverRefusal(`${what}: the hold stands still for up to ${ticks} tick(s) at (${at.x},${at.y}), `
+          ^
+
+SolverRefusal: solverBot(l40button-l41-part0) collect (64,144) stance (ladder-routed: no corridor from (936,104) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold stance (wandlock@176,80) -> hold: the hold stands still for up to 131 tick(s) at (279.41302761753104,215.58073362346732), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (284,217) 56 tick(s) into the wait — a player standing within 256 px of a BombPusher is aimed at and the blast lands one step past the aim, inside its 15 px disc (`bombPusher.js`). A hold cannot move, and no verb waits while moving, so every plan through this wait is a bomb hit (seedling-fidelity-bombpusher: a forced-hit candidate unless a moving wait is built).
+    at lobberHoldRefusal (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:8660:11)
+    at execHold (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:8674:24)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21970:67)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22258:68)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21956:29)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22258:68)
+    at solveSegmentUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:23276:9)
+    at solveSegmentDeadlined (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18323:37)
+    at solveSegment (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18315:12)
+    at solvePass (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/twoPassSolve.js:182:33) {
+  goal: null,
+  obstacle: { kind: 'danger', id: 'bombpusher@112,128' },
+  considered: [],
+  rows: [],
+  perTick: [],
+  pending: null,
+  dangerQueries: [],
+  bound: null
+}
+
+Node.js v22.22.0
+exit 1 at 00:43:50

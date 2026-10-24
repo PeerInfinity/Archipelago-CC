@@ -1,0 +1,7 @@
+PASS: ⛓ the clock is at residue 42, moved by -20 from the committed 17 — seam.time 10052 → 10032
+PASS: ⛓⛓ the solve STALLED for the hammer's phase at least once — [{"body":"spinner@112,48","t":234,"corner":248,"from":238,"ticks":8,"phase":31,"tried":404}]
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":510,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed f1c-l18-phase42 is what this script produces today — byte-identical
+## f1c-l18-phase42: 510 ticks, residue 42, 1 stall(s), {18,0}@450
+
+all checks green

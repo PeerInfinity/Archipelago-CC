@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { findPath, bestPathKey, stepsToInputs, stepsToActions } from './mazeAutopather.js';
+import { createState, createWorld, step } from './mazeRoomEngine.js';
+import { executeMazeEntry } from './mazeQueueExecutor.js';
 
 // Minimal world fixture: tiles array of 0 (floor) / 1 (wall). Caller
 // supplies entrance and exits.
@@ -334,6 +336,51 @@ describe('mazeAutopather — findPath', () => {
             ];
             expect(stepsToInputs(steps)).toEqual(['E', 'WAIT', 'E']);
         });
+
+        // ⛓ S2a — the autopather is UNCHANGED by that slice; what changed is
+        // that its waits now replay through `step` with no side branch. Before
+        // S2a `step(world, state, 'WAIT')` returned null, so a plan carrying a
+        // wait could only be replayed by a surface that intercepted the input
+        // first (the visualizer's private branch). This is the row that says
+        // it no longer needs one.
+        it('a planned path WITH waits replays straight through engine.step', () => {
+            const world = createWorld(4, 2);
+            const steps = [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 }, // E
+                { x: 1, y: 0 }, // wait
+                { x: 1, y: 0 }, // wait
+                { x: 2, y: 0 }, // E
+            ];
+            const inputs = stepsToInputs(steps);
+            expect(inputs).toEqual(['E', 'WAIT', 'WAIT', 'E']);
+            let state = createState(world);
+            for (const input of inputs) {
+                state = step(world, state, input);
+                expect(state).not.toBeNull();
+            }
+            expect(state.player_pos).toEqual({ x: 2, y: 0 });
+            expect(state.turn).toBe(inputs.length);
+        });
+
+        it('...and the ENTRY form of the same plan replays through the executor', () => {
+            const world = createWorld(4, 2);
+            const entries = stepsToActions([
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 0 },
+                { x: 2, y: 0 },
+            ]);
+            expect(entries.map((e) => e.actionType)).toEqual(['move', 'wait', 'move']);
+            let state = createState(world);
+            for (const entry of entries) {
+                const { next, reason } = executeMazeEntry(world, state, entry);
+                expect(reason).toBeNull();
+                state = next;
+            }
+            expect(state.player_pos).toEqual({ x: 2, y: 0 });
+            expect(state.turn).toBe(3);
+        });
     });
 
     describe('stepsToActions', () => {
@@ -342,19 +389,19 @@ describe('mazeAutopather — findPath', () => {
             expect(stepsToActions([{ x: 0, y: 0 }])).toEqual([]);
         });
 
-        it('encodes cardinal moves as {type:move, dir}', () => {
+        it('encodes cardinal moves as shared actionQueue move entries', () => {
             const steps = [
                 { x: 0, y: 0 },
                 { x: 1, y: 0 },
                 { x: 1, y: 1 },
             ];
             expect(stepsToActions(steps)).toEqual([
-                { type: 'move', dir: 'E' },
-                { type: 'move', dir: 'S' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
+                { actionType: 'move', actionId: 'S', substrate: 'maze' },
             ]);
         });
 
-        it('emits {type:wait} for duplicate-tile entries', () => {
+        it('emits a wait entry for duplicate-tile entries', () => {
             const steps = [
                 { x: 0, y: 0 },
                 { x: 1, y: 0 },
@@ -363,11 +410,21 @@ describe('mazeAutopather — findPath', () => {
                 { x: 2, y: 0 },
             ];
             expect(stepsToActions(steps)).toEqual([
-                { type: 'move', dir: 'E' },
-                { type: 'wait' },
-                { type: 'wait' },
-                { type: 'move', dir: 'E' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
+                { actionType: 'wait', actionId: null, substrate: 'maze' },
+                { actionType: 'wait', actionId: null, substrate: 'maze' },
+                { actionType: 'move', actionId: 'E', substrate: 'maze' },
             ]);
+        });
+
+        it('emits ONE entry per step — the run-length fold into `loops` is the'
+            + " RECORDER's, not the planner's", () => {
+            const steps = [
+                { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 3, y: 0 },
+            ];
+            const out = stepsToActions(steps);
+            expect(out).toHaveLength(3);
+            expect(out.every((e) => e.loops === undefined)).toBe(true);
         });
     });
 
@@ -604,5 +661,67 @@ describe('mazeAutopather — findPath', () => {
             const w = makeWorld({ width: 3, height: 3 });
             expect(findPath(w, { x: 0, y: 0 }, { kind: 'made_up' })).toBeNull();
         });
+    });
+});
+
+describe('mazeAutopather — clearanceOpts', () => {
+    // findPath must judge a rule-typed gate with the SAME evaluator the caller
+    // will hand `step`. Without this bag the planner falls back to the
+    // procgen-local subset evaluator and can route through a door the engine
+    // then refuses (or around one that is really open) — the two-evaluator
+    // divergence that made the maze panel's walkTo path disagree with its own
+    // keyboard path.
+    const OBSTACLES = {
+        gate: { clear_set_type: 'rule', clear_rule: { rule: 'CountItem', args: { item: 'x' } } },
+    };
+    // 5x2: row 0 floor, row 1 wall, so the gate at (2,0) is the only way past.
+    const corridor = () => {
+        const tiles = new Int8Array(10);
+        for (let x = 0; x < 5; x++) tiles[5 + x] = 1;
+        const w = makeWorld({ width: 5, height: 2, tiles });
+        w.obstacles = new Map([['2,0', 'gate']]);
+        w.obstacleLib = OBSTACLES;
+        return w;
+    };
+    const walk = (opts) => findPath(corridor(), { x: 0, y: 0 }, { kind: 'tile', x: 4, y: 0 }, opts);
+
+    it('without an evaluator, an unexpressible rule blocks the route', () => {
+        expect(walk({ inventory: new Set() })).toBeNull();
+    });
+
+    it('forwards the bag so the caller\'s evaluator decides', () => {
+        const seen = [];
+        const r = walk({
+            inventory: new Set(),
+            clearanceOpts: { evaluateRule: (rule) => { seen.push(rule.rule); return true; } },
+        });
+        expect(r?.length).toBe(4);
+        expect(seen).toContain('CountItem');
+    });
+
+    it('an evaluator that refuses still blocks', () => {
+        expect(walk({
+            inventory: new Set(),
+            clearanceOpts: { evaluateRule: () => false },
+        })).toBeNull();
+    });
+
+    it('a Map inventory keeps counts, so a count gate needs the count', () => {
+        const w = () => {
+            const c = corridor();
+            c.obstacleLib = {
+                gate: {
+                    clear_set_type: 'rule',
+                    clear_rule: { rule: 'Has', args: { item_name: 'Swim', count: 2 } },
+                },
+            };
+            return c;
+        };
+        const goal = { kind: 'tile', x: 4, y: 0 };
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Map([['Swim', 1]]) })).toBeNull();
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Map([['Swim', 2]]) })?.length).toBe(4);
+        // A count-collapsed Set can never satisfy it — which is precisely why
+        // the panel now carries counts all the way to the planner.
+        expect(findPath(w(), { x: 0, y: 0 }, goal, { inventory: new Set(['Swim']) })).toBeNull();
     });
 });

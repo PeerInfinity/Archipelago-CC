@@ -1,16 +1,81 @@
 import { describe, it, expect } from 'vitest';
 
-import { substrateRegistryEntry } from './mazeRoomLibrary.js';
+import { substrateRegistryEntry, applyMazeContentModules } from './mazeRoomLibrary.js';
 import {
     generateRegionCore,
     placeFromItems,
     placeFromRules,
     extractPathsAndObstacles,
     deserializeMazeWorld,
+    createWorld,
+    setTile,
+    TILE_FLOOR,
 } from './mazeRoomEngine.js';
-import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { createRng } from '../shared/rng.js';
+import { serializeMazeWorld } from './mazeSerializer.js';
+
+/**
+ * The few DOM calls a pipeline-param hook makes, without jsdom (the tree has
+ * none): elements keep children, listeners and a parent, and `remove()` detaches.
+ */
+function withFakeDocument(fn) {
+    const make = (tag) => {
+        const el = {
+            tagName: tag.toUpperCase(), children: [], parent: null, listeners: {}, style: {}, dataset: {},
+            className: '', textContent: '', title: '',
+            appendChild(child) { child.parent = el; el.children.push(child); return child; },
+            remove() { if (el.parent) el.parent.children.splice(el.parent.children.indexOf(el), 1); el.parent = null; },
+            addEventListener(type, handler) { (el.listeners[type] ??= []).push(handler); },
+            fire(type) { for (const h of el.listeners[type] ?? []) h(); },
+        };
+        return el;
+    };
+    const saved = globalThis.document;
+    globalThis.document = { createElement: make, createTextNode: (text) => ({ textContent: text }) };
+    try { return fn(); } finally { globalThis.document = saved; }
+}
+const descendants = (el) => (el.children ?? []).flatMap((c) => [c, ...descendants(c)]);
 
 describe('mazeRoomLibrary substrateRegistryEntry', () => {
+    it('renderProcgenParams renders the hazard toggle, and its three sub-fields only while hazards are on', () => {
+        withFakeDocument(() => {
+            const params = { enableHazards: true, hazardCount: 2, hazardMaxConsecutiveFails: 10, hazardWallOverlapAllowed: false };
+            let saves = 0;
+            const node = substrateRegistryEntry.renderProcgenParams({ params, onChange: () => { saves += 1; } });
+            const inputs = () => descendants(node).filter((el) => el.tagName === 'INPUT');
+            const subFields = () => descendants(node).filter((el) => el.className === 'procgen-pipeline-hazard-fields');
+            expect(inputs()[0].checked).toBe(true);
+            expect(subFields()).toHaveLength(1);
+            expect(inputs().map((el) => el.type)).toEqual(['checkbox', 'number', 'number', 'checkbox']);
+            expect(inputs()[1].value).toBe('2');
+
+            inputs()[0].checked = false;
+            inputs()[0].fire('change');
+            expect(params.enableHazards).toBe(false);
+            expect(subFields()).toHaveLength(0);
+            expect(saves).toBe(1);
+
+            const off = substrateRegistryEntry.renderProcgenParams({ params: { enableHazards: false } });
+            expect(descendants(off).filter((el) => el.className === 'procgen-pipeline-hazard-fields')).toHaveLength(0);
+        });
+    });
+
+    it('declares its pipeline params: hazard and library-connection defaults, the library regionParams in sphere mode only, the two render hooks', () => {
+        expect(substrateRegistryEntry.defaultProcgenParams).toMatchObject({
+            mazeRequireSameWall: false, mazeRequireTileAlign: false,
+            enableHazards: false, hazardCount: 3, hazardMaxConsecutiveFails: 10, hazardWallOverlapAllowed: false,
+        });
+        const build = substrateRegistryEntry.buildLibraryRegionParams;
+        expect(build({ params: { mazeRequireSameWall: 1 }, mode: 'sphere' }))
+            .toEqual({ mazeRequireSameWall: true, mazeRequireTileAlign: false });
+        expect(build({ params: { mazeRequireSameWall: true }, mode: 'topDown' })).toEqual({});
+        expect(typeof substrateRegistryEntry.renderLibraryProcgenParams).toBe('function');
+        expect(typeof substrateRegistryEntry.renderProcgenParams).toBe('function');
+        // The flags are read only by a LIBRARY entry's instantiate, so the maze
+        // contributes nothing to a quota-driven world's regionParams.
+        expect(substrateRegistryEntry.buildRegionParams).toBeUndefined();
+    });
+
     it('declares the maze identity, panel type, and load event', () => {
         expect(substrateRegistryEntry.id).toBe('maze');
         expect(substrateRegistryEntry.panelComponentType).toBe('mazeRoomPanel');
@@ -49,5 +114,97 @@ describe('mazeRoomLibrary substrateRegistryEntry', () => {
         // adapter" describe block.
         expect(typeof substrateRegistryEntry.getPlaybackController).toBe('function');
         expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+    });
+});
+
+describe('applyMazeContentModules — X1 consumable tiles', () => {
+    function makeWorld() {
+        const w = createWorld(6, 6, { entrance: { x: 0, y: 0 }, exit: { x: 5, y: 5 } });
+        for (let y = 0; y < 6; y++) {
+            for (let x = 0; x < 6; x++) setTile(w, x, y, TILE_FLOOR);
+        }
+        return w;
+    }
+    const POOL = [{ substrate: 'omsi', type: 'gold' }];
+
+    it('draws NO rng when consumableTileOpts is absent (byte-inert default)', () => {
+        // This is the property the whole byte-inert-default proof rests
+        // on: with the knobs at defaults the pass must not advance the
+        // shared rng stream, or every existing preset drifts.
+        const w = makeWorld();
+        let draws = 0;
+        const rng = { next: () => { draws++; return 0.5; } };
+        applyMazeContentModules(w, {}, rng);
+        applyMazeContentModules(w, { consumableTileOpts: null }, rng);
+        applyMazeContentModules(w, { consumableTileOpts: { consumableCount: 0, manaCount: 0 } }, rng);
+        expect(draws).toBe(0);
+        expect(w.consumableTiles.size).toBe(0);
+        expect(w.manaTiles.size).toBe(0);
+    });
+
+    it('places tiles when the opts are active', () => {
+        const w = makeWorld();
+        applyMazeContentModules(
+            w,
+            { consumableTileOpts: { consumableCount: 2, pool: POOL, manaCount: 1, manaAmount: 40 } },
+            createRng(1),
+        );
+        expect(w.consumableTiles.size).toBe(2);
+        expect(w.manaTiles.size).toBe(1);
+    });
+
+    it('runs strictly after hazards, so enabling it cannot move hazard placement', () => {
+        // Hazards draw first from the same rng. Same seed + same hazard
+        // opts must give identical hazards whether or not consumable
+        // tiles are also requested.
+        const hazardOpts = { enabled: true, count: 2 };
+        const a = makeWorld();
+        const b = makeWorld();
+        applyMazeContentModules(a, { hazardOpts }, createRng(5));
+        applyMazeContentModules(
+            b,
+            { hazardOpts, consumableTileOpts: { consumableCount: 2, pool: POOL } },
+            createRng(5),
+        );
+        expect(JSON.stringify(b.hazards)).toBe(JSON.stringify(a.hazards));
+        expect(b.consumableTiles.size).toBe(2);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — the maze declares the registry's `describeAction` hook (Q-a A8).
+//
+// One owner of the wording: the panel's icon-row tooltips, loops'
+// `blockAnnotations` item naming and a cross-substrate queue viewer all read
+// this rather than each carrying a copy of "move E" / "check <name>".
+// ---------------------------------------------------------------------------
+
+describe('maze registry entry — describeAction', () => {
+    const describe_ = substrateRegistryEntry.describeAction;
+
+    it('is declared on the entry', () => {
+        expect(typeof describe_).toBe('function');
+    });
+
+    it('says each verb out loud', () => {
+        expect(describe_({ actionType: 'move', actionId: 'E' })).toBe('move E');
+        expect(describe_({ actionType: 'wait', actionId: null })).toBe('wait');
+        expect(describe_({ actionType: 'locationCheck', actionId: 'Sword Room' }))
+            .toBe('check Sword Room');
+    });
+
+    it('the ×n suffix is the CALLER\'s — a folded entry describes as one action', () => {
+        expect(describe_({ actionType: 'move', actionId: 'E', loops: 12 })).toBe('move E');
+    });
+
+    it('an entry it does not know falls back to actionType [+ actionId] rather '
+        + 'than to nothing', () => {
+        expect(describe_({ actionType: 'teleport', actionId: 'hub' })).toBe('teleport hub');
+        expect(describe_({ actionType: 'teleport', actionId: null })).toBe('teleport');
+    });
+
+    it('junk is the empty string, never a throw', () => {
+        expect(describe_(null)).toBe('');
+        expect(describe_({})).toBe('');
     });
 });

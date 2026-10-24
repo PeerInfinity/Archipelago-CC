@@ -1,0 +1,2083 @@
+{
+ "name": "l74leg624-postfall-reentry",
+ "class": "LavaRunner",
+ "source": "/tmp/claude-0/w/d1/tape-postfall-reentry.json",
+ "page": "seedling_bot_ap_p4f",
+ "recordedBy": "scripts/procgen/probe-seedling-chaser-mobiles.mjs --record",
+ "switches": {
+  "SEEDLING_KILLLOCK_BODIES": null
+ },
+ "note": "the GAME's LavaRunner rows (`botMobiles()`) and the player at each sampled tick",
+ "samples": [
+  {
+   "t": 0,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 136,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 1,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 136.8,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 2,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 138.15,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 3,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 139.25,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 4,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 140.1,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 5,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 140.1,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 6,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 140.1,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 7,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 8,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 9,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 10,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 11,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 12,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 13,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 14,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 15,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 16,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 17,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 18,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 19,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 20,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 21,
+   "level": 74,
+   "player": {
+    "x": 296.8,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 22,
+   "level": 74,
+   "player": {
+    "x": 298.2,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 23,
+   "level": 74,
+   "player": {
+    "x": 299.36199285967865,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 24,
+   "level": 74,
+   "player": {
+    "x": 300.285978579036,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 25,
+   "level": 74,
+   "player": {
+    "x": 301.77195715807204,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 26,
+   "level": 74,
+   "player": {
+    "x": 303.01064327686646,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 27,
+   "level": 74,
+   "player": {
+    "x": 304.0020369354193,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 28,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 19
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 29,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 18
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 30,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 17
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 31,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 16
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 32,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 15
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 33,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 14
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 34,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 13
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 35,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 12
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 36,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 11
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 37,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 10
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 38,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 9
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 39,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 8
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 40,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 7
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 41,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 6
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 42,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 5
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 43,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 4
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 44,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 3
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 45,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 2
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 46,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 1
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 47,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 48,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 49,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 50,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 51,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 52,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 53,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 54,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 55,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 56,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 57,
+   "level": 74,
+   "player": {
+    "x": 304.4988456734889,
+    "y": 141,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 58,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 136,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 59,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 136.8,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 60,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 138.15,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 61,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 138.45000000000002,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 62,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 137.70000000000002,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 63,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 136.4,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 64,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 135.35,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 65,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 134.54999999999998,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 66,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 133.2,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 67,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 132.1,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 68,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 131.25,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 69,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 130.65,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  },
+  {
+   "t": 70,
+   "level": 74,
+   "player": {
+    "x": 296,
+    "y": 130.3,
+    "hits": 0,
+    "hits_timer": 0
+   },
+   "bodies": [
+    {
+     "x": 216,
+     "y": 104,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    },
+    {
+     "x": 32,
+     "y": 64,
+     "vx": 0,
+     "vy": 0,
+     "hits": 0,
+     "hits_timer": 0
+    }
+   ]
+  }
+ ],
+ "tape": {
+  "game": "seedling",
+  "name": "l74leg624-postfall-reentry",
+  "boot": {
+   "level": 74,
+   "x": 288,
+   "y": 128
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [
+   {
+    "level": 74,
+    "tag": 2,
+    "note": "fallrock@288,144 — fallen (the arrival button dropped it on an earlier visit)"
+   }
+  ],
+  "equips": [],
+  "pins": [
+   "dead_frames",
+   "sound"
+  ],
+  "save": {
+   "totem_parts": [],
+   "keys": [],
+   "seal_parts": []
+  },
+  "rng": {
+   "seed": 0,
+   "split": false,
+   "cosmetic": 0,
+   "fp": 987286273
+  },
+  "seam": {
+   "items": {
+    "hasSword": true,
+    "hasShield": true,
+    "hasFire": true,
+    "hasWand": true,
+    "canSwim": true,
+    "hasFeather": true,
+    "hasSpear": true,
+    "hasTorch": true
+   }
+  },
+  "tick_count": 70,
+  "inputs": [
+   {
+    "key": "down",
+    "from": 0,
+    "to": 20
+   },
+   {
+    "key": "right",
+    "from": 20,
+    "to": 28
+   },
+   {
+    "key": "down",
+    "from": 28,
+    "to": 40
+   },
+   {
+    "key": "left",
+    "from": 40,
+    "to": 52
+   },
+   {
+    "key": "down",
+    "from": 52,
+    "to": 60
+   },
+   {
+    "key": "up",
+    "from": 60,
+    "to": 66
+   }
+  ],
+  "tape_version": 8
+ }
+}

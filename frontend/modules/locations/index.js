@@ -18,9 +18,11 @@ export const moduleInfo = {
   name: 'locations',
   title: 'Locations',
   componentType: 'locationsPanel',
+  docs: 'docs/json/user/modules/locations.md',
   icon: '📍',
   column: 3, // Right column,
-  description: 'Locations display panel.',
+  category: 'Tracker Panels',
+  description: 'A grid of every location, colored by reachability with its access rule; click a card to check it.',
   requires: ['stateManager', 'commonUI'],
 };
 

@@ -33,11 +33,14 @@ from lib.test_utils import (
     normalize_game_name,
     count_errors_and_warnings,
     check_http_server,
+    http_server_command,
+    test_port,
     build_and_load_world_mapping,
     extract_game_name_from_template,
     load_template_exclude_list,
 )
 from lib.seed_utils import get_seed_id as compute_seed_id
+from lib.worldgen_recipe import world_generator_command
 
 # Global world mapping cache - built once and reused
 _world_mapping: Dict[str, Dict] = {}
@@ -46,7 +49,7 @@ _world_mapping: Dict[str, Dict] = {}
 def start_http_server(project_root: str) -> subprocess.Popen:
     """Start HTTP server in background and return the process."""
     process = subprocess.Popen(
-        [sys.executable, '-m', 'http.server', '8000'],
+        http_server_command(),
         cwd=project_root,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
@@ -297,17 +300,9 @@ def run_world_generator(
         'processing_time_seconds': 0
     }
 
-    cmd = [
-        sys.executable, '-m', 'world_generator',
-        rules_path,
-        '--output', output_dir,
-        '--game-name', game_name,
-        '--force',
-        '--apply-name-substitutions'
-    ]
-
-    if canonical_seed is not None:
-        cmd.extend(['--canonical-seed', str(canonical_seed)])
+    # The one recipe: the package freshness check runs the same command
+    # (scripts/lib/worldgen_recipe.py, scripts/test/check-worldgen-package-freshness.py).
+    cmd = world_generator_command(rules_path, output_dir, game_name, canonical_seed)
 
     start_time = time.time()
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=120)
@@ -969,7 +964,7 @@ def main():
             print("Starting HTTP server...")
             http_server_process = start_http_server(project_root)
             if check_http_server():
-                print("  HTTP server started on port 8000")
+                print(f"  HTTP server started on port {test_port()}")
             else:
                 print("  WARNING: Failed to start HTTP server, spoiler tests may fail")
 

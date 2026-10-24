@@ -5,9 +5,11 @@ export const moduleInfo = {
   name: 'metaGamePanel',
   title: 'Meta Game',
   componentType: 'metaGamePanel',
+  docs: 'docs/json/user/modules/metaGamePanel.md',
   icon: '🎯',
   column: 2, // Middle column,
-  description: 'UI panel for metaGame module configuration and management',
+  category: 'Deprecated Panels',
+  description: 'Loads a scripted scenario from a list, lets you edit and apply its JSON settings, or clears it.',
   requires: ['metaGame'],
 };
 

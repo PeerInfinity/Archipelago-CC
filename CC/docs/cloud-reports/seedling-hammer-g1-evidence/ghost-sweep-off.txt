@@ -1,0 +1,46 @@
+r 0 SOLVE                   336 2.3s 6e90a89d7358 landed 4 
+r 1 SOLVE                   336 1.8s 6e90a89d7358 landed 4 
+r 2 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r 3 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r 4 SOLVE                   336 1.3s 6e90a89d7358 landed 4 
+r 5 SOLVE                   390 10.4s 4e3bdad9b3bd landed 4 
+r 6 SOLVE                   340 10.1s 842144925ea5 landed 4 
+r 7 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r 8 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r 9 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r10 SOLVE                   336 1.3s 6e90a89d7358 landed 4 
+r11 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r12 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r13 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r14 SOLVE                   336 1.7s 6e90a89d7358 landed 4 
+r15 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r16 SOLVE                   336 1.7s 6e90a89d7358 landed 4 
+r17 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r18 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r19 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r20 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r21 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r22 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r23 SOLVE                   336 2.2s 6e90a89d7358 landed 4 
+r24 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r25 SOLVE                   336 1.7s 6e90a89d7358 landed 4 
+r26 SOLVE                   336 1.7s 6e90a89d7358 landed 4 
+r27 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r28 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r29 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r30 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r31 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r32 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r33 SOLVE                   336 1.5s 6e90a89d7358 landed 4 
+r34 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r35 SOLVE                   336 1.6s 6e90a89d7358 landed 4 
+r36 SOLVE                   336 1.3s 6e90a89d7358 landed 4 
+r37 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r38 SOLVE                   336 1.2s 6e90a89d7358 landed 4 
+r39 SOLVE                   336 1.3s 6e90a89d7358 landed 4 
+r40 SOLVE                   336 1.2s 6e90a89d7358 landed 4 
+r41 SOLVE                   336 1.2s 6e90a89d7358 landed 4 
+r42 SOLVE                   336 1.3s 6e90a89d7358 landed 4 
+r43 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+r44 SOLVE                   336 1.4s 6e90a89d7358 landed 4 
+# 45/45 solve; lengths: 336 336 336 336 336 390 340 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336 336

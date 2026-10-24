@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+// DS lab batch (scratch). Every captured request in <dir>/**/requests-*.jsonl, at each window, one fresh process each.
+// node ds-batch.mjs --lab=<lab> --dir=<captures dir> --out=<jsonl> [--windows=85,0] [--jobs=3] [--extra=<args for ds-run>]
+// Resumable: rows already in --out (same id:i:window:tag) are skipped.
+import { readFileSync, readdirSync, statSync, appendFileSync, existsSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const arg = (n, f) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3) ?? f;
+const LAB = arg('lab'); const DIR = arg('dir'); const OUT = arg('out');
+const WINDOWS = arg('windows', '85,0').split(',').map(Number);
+const JOBS = Number(arg('jobs', '3'));
+const TAG = arg('tag', '');
+const EXTRA = arg('extra', '').split(' ').filter(Boolean);
+const ONLY = arg('only', ''); // comma list of id:i
+const RUNNER = arg('runner', join(dirname(fileURLToPath(import.meta.url)), 'ds-run.mjs'));
+const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
+const files = walk(DIR).filter((p) => /requests-\d+\.jsonl$/.test(p));
+const tasks = [];
+for (const f of files) {
+    for (const l of readFileSync(f, 'utf8').split('\n')) {
+        if (!l) continue;
+        const d = JSON.parse(l);
+        for (const r of d.requests) {
+            if (ONLY && !ONLY.split(',').includes(`${d.id}:${r.i}`)) continue;
+            for (const w of WINDOWS) tasks.push({ f, id: d.id, i: r.i, w });
+        }
+    }
+}
+const done = new Set();
+if (existsSync(OUT)) for (const l of readFileSync(OUT, 'utf8').split('\n')) if (l) { const r = JSON.parse(l); done.add(`${r.id}:${r.i}:${r.window}:${r.tag ?? ''}`); }
+const todo = tasks.filter((t) => !done.has(`${t.id}:${t.i}:${t.w}:${TAG}`));
+console.error(`DS-BATCH: ${files.length} file(s), ${tasks.length} task(s), ${todo.length} to do, jobs ${JOBS}`);
+let next = 0; let n = 0; const t0 = Date.now();
+const run = (t) => new Promise((ok) => {
+    const c = spawn(process.execPath, ['--max-old-space-size=3000', RUNNER, `--lab=${LAB}`, `--requests=${t.f}`, `--one=${t.id}:${t.i}`, `--window=${t.w}`, '--detail', ...EXTRA],
+        { stdio: ['ignore', 'pipe', 'pipe'] });
+    let out = ''; let err = '';
+    c.stdout.on('data', (d) => { out += d; }); c.stderr.on('data', (d) => { err += d; });
+    const killer = setTimeout(() => c.kill('SIGKILL'), 600000);
+    c.on('close', (code) => {
+        clearTimeout(killer);
+        const line = out.split('\n').find((l) => l.startsWith('RESULT '));
+        const row = line ? JSON.parse(line.slice(7)) : { id: t.id, i: t.i, window: t.w, error: `exit ${code}: ${err.split('\n').filter(Boolean).slice(-3).join(' | ').slice(0, 400)}` };
+        row.tag = TAG;
+        appendFileSync(OUT, `${JSON.stringify(row)}\n`);
+        n += 1;
+        if (n % 25 === 0) console.error(`DS-BATCH: ${n}/${todo.length} in ${Math.round((Date.now() - t0) / 1000)} s`);
+        ok();
+    });
+});
+await Promise.all(Array.from({ length: JOBS }, async () => { while (next < todo.length) await run(todo[next++]); }));
+console.error(`DS-BATCH: done ${n} in ${Math.round((Date.now() - t0) / 1000)} s`);

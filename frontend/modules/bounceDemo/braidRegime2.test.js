@@ -1,5 +1,5 @@
 /**
- * Step 5 of braid Regime 2 (NewDocs/plans/procedural-generation/braid-regime2.md):
+ * Step 5 of braid Regime 2 (the braid Regime 2 plan):
  * the GATED braid proposer. generateLevelFromSpecs(mode:'braid') now honours each
  * spec's `requirement` by building a fork-free single-platform-per-row chain with
  * ARROW GATE ROWS (gated platform + same-row teleport-to-start host for the

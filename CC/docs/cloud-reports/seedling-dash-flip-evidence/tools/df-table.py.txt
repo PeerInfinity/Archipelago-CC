@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+# DF (scratch): the D1 battery — ON@85 against today (OFF@85) and window 0 (OFF@0), plus the base check vs DB's rows.
+import json, sys, gzip
+from collections import defaultdict
+F, DB = sys.argv[1], sys.argv[2]
+rows = defaultdict(dict)
+for l in open(F):
+    r = json.loads(l); rows[(r['tag'], r['window'])][(r['id'], r['i'])] = r
+db = defaultdict(dict)
+for l in gzip.open(DB, 'rt'):
+    r = json.loads(l); db[(r['tag'], r['window'])][(r['id'], r['i'])] = r
+tk = lambda r: (r.get('shipped') or {}).get('ticks') if r and 'error' not in r else None
+T, Z, O = rows[('off', 85)], rows[('off', 0)], rows[('on', 85)]
+pop = sorted(T)
+print(f'POPULATION {len(pop)}; rows today {len(T)}, window-0 {len(Z)}, ON {len(O)}; errors', sum('error' in r for R in (T, Z, O) for r in R.values()))
+# base faithful vs DB (same requests, the base moved since DB)
+for tag, w, mine in (('off', 85, T), ('off', 0, Z)):
+    d = db[(tag, w)]; same = sum(1 for k in pop if tk(mine[k]) == tk(d.get(k)) and mine[k]['work'] == d[k]['work'])
+    print(f'base vs DB {tag}@{w}: {same}/{len(pop)} equal in ticks and units')
+# DB's all3dw85 for reference
+ticks = lambda R: sum(tk(R[k]) or 0 for k in pop)
+units = lambda R: sum(R[k]['work'] or 0 for k in pop)
+wall = lambda R: sum(R[k]['ms'] for k in pop) / 1000
+avail = sum(tk(T[k]) - tk(Z[k]) for k in pop)
+print(f'today {ticks(T)} t / {units(T)} u / {wall(T):.1f} s;  window 0 {ticks(Z)} t / {units(Z)} u / {wall(Z):.1f} s;  window 0 saves {avail} t')
+for name, R in (('window 0', Z), ('ON (i)+(iii)+dashOnly @85', O)):
+    saved = ticks(T) - ticks(R)
+    better = [k for k in pop if tk(R[k]) < tk(T[k])]; worse = [k for k in pop if (tk(R[k]) or 10**9) > tk(T[k])]
+    worse0 = [k for k in pop if (tk(R[k]) or 10**9) > tk(Z[k])]
+    du = units(R) - units(T); dw = wall(R) - wall(T)
+    worst = max(((R[k]['ms'] - T[k]['ms']) / 1000, k) for k in pop)
+    print(f'{name}: {ticks(R)} t, saved {saved} = {100*saved/avail:.1f} % of window 0; better {len(better)} / worse {len(worse)} vs today; worse vs window 0 {len(worse0)}; '
+          f'units {units(R)} (Δ {du:+}); wall {wall(R):.1f} s (Δ {dw:+.1f}); worst Δ {worst[0]:+.1f} s at {worst[1][0]}:{worst[1][1]}')
+    if name.startswith('ON'):
+        print('  WORSE:', ' '.join(f'{a}:{b}({tk(T[(a,b)])}->{tk(R[(a,b)])})' for a, b in worse) or 'none')
+        print('  worse than window 0:', ' '.join(f'{a}:{b}({tk(Z[(a,b)])}->{tk(R[(a,b)])})' for a, b in worse0) or 'none')
+        print(f'  MOVERS ({len(better)}):', ' '.join(f'{a}:{b}({tk(T[(a,b)])}->{tk(R[(a,b)])})' for a, b in better))
+        unit_movers = [k for k in pop if R[k]['work'] != T[k]['work']]
+        print(f'  units move on {len(unit_movers)} keys; units lower on {sum(R[k]["work"] < T[k]["work"] for k in pop)}, higher on {sum(R[k]["work"] > T[k]["work"] for k in pop)}')
+        read = set(json.dumps(R[k]['read'], sort_keys=True) for k in pop); print('  read stamps:', read)
+        A = db[('all3dw85', 85)]
+        print(f'  DB all3dw85 (incl. (ii)): {sum(tk(A[k]) or 0 for k in pop)} t, units {sum(A[k]["work"] or 0 for k in pop)}; DB dw85keep: {sum(tk(db[("dw85keep",85)][k]) or 0 for k in pop)} t, units {sum(db[("dw85keep",85)][k]["work"] or 0 for k in pop)}')
+        dbk = set(k for k in pop if tk(db[('dw85keep',85)][k]) < tk(db[('off',85)][k]))
+        print(f'  movers vs DB dw85keep\'s movers: mine {len(better)}, DB {len(dbk)}, both {len(set(better)&dbk)}; only mine {sorted(set(better)-dbk)}; only DB {sorted(dbk-set(better))}')

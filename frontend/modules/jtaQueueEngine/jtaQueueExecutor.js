@@ -1,4 +1,5 @@
-// JTAQueueExecutor - drives queue execution by sending eventBus commands to the iframe
+// JTAQueueExecutor - drives queue execution by sending commands through a
+// QueueTransport (legacy eventBus protocol or the substrate bridge channel).
 // Uses ExecutionSnapshot (current list) for execution, leaving ActionQueue (next list) editable
 import { ActionState } from '../shared/actionQueue/actionTypes.js';
 import { ExecutionSnapshot } from '../shared/actionQueue/executionSnapshot.js';
@@ -33,11 +34,8 @@ export class JTAQueueExecutor {
     /** @type {ExecutionSnapshot|null} */
     #snapshot = null;
 
-    /** @type {{ publish: Function, subscribe: Function, unsubscribe: Function }} */
-    #eventBus;
-
-    /** @type {string} */
-    #moduleName;
+    /** @type {import('./jtaQueueTransport.js').QueueTransport} */
+    #transport;
 
     /** @type {number|null} */
     #pollTimer = null;
@@ -62,6 +60,9 @@ export class JTAQueueExecutor {
 
     /** @type {Function|null} */
     #onStatusChange = null;
+
+    /** @type {Function|null} Called (with a reason) when the run pauses on an external block */
+    #onPaused = null;
 
     /** @type {Function|null} Called before creating a new snapshot on energy reset */
     #onBeforeReset = null;
@@ -89,14 +90,12 @@ export class JTAQueueExecutor {
 
     /**
      * @param {import('../shared/actionQueue/actionQueue.js').ActionQueue} queue
-     * @param {{ publish: Function, subscribe: Function, unsubscribe: Function }} eventBus
-     * @param {string} moduleName
+     * @param {import('./jtaQueueTransport.js').QueueTransport} transport
      * @param {ExecutorConfig} [config]
      */
-    constructor(queue, eventBus, moduleName, config = {}) {
+    constructor(queue, transport, config = {}) {
         this.#queue = queue;
-        this.#eventBus = eventBus;
-        this.#moduleName = moduleName;
+        this.#transport = transport;
         this.#config = {
             drainStrategy: config.drainStrategy || DrainStrategy.MOST_DRAINING,
             drainTaskId: config.drainTaskId,
@@ -116,6 +115,14 @@ export class JTAQueueExecutor {
      * @param {Function} cb
      */
     set onStatusChange(cb) { this.#onStatusChange = cb; }
+
+    /**
+     * Set a callback for when the run pauses on an external block (e.g. a
+     * substrate playback walk owns the zone). The snapshot is preserved; the
+     * run can be resumed with start().
+     * @param {Function} cb
+     */
+    set onPaused(cb) { this.#onPaused = cb; }
 
     /**
      * Set a callback called before creating a new snapshot on energy reset.
@@ -195,7 +202,7 @@ export class JTAQueueExecutor {
             // Request initial state before executing first entry
             this.#awaitingInitialState = true;
             this.#notifyStatusChange();
-            this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
+            this.#transport.requestDetailedState();
         }
     }
 
@@ -280,20 +287,19 @@ export class JTAQueueExecutor {
         this.#executeNext();
     }
 
-    /** Subscribe to iframe response events */
+    /** Subscribe to transport response events */
     #subscribeEvents() {
         this.#unsubscribeEvents();
         const sub = (event, handler) => {
-            const unsub = this.#eventBus.subscribe(event, handler);
-            this.#unsubs.push(typeof unsub === 'function' ? unsub : () => this.#eventBus.unsubscribe(event, handler));
+            this.#unsubs.push(this.#transport.on(event, handler));
         };
-        sub('jta:taskClicked', (data) => this.#onTaskClicked(data));
-        sub('jta:itemClicked', (data) => this.#onItemClicked(data));
-        sub('jta:prestigeDone', (data) => this.#onPrestigeDone(data));
-        sub('jta:taskStatus', (data) => this.#onTaskStatus(data));
-        sub('jta:energyDepleted', (data) => this.#onEnergyDepleted(data));
-        sub('jta:gameOverDismissed', (data) => this.#onGameOverDismissed(data));
-        sub('jta:detailedStateSnapshot', (data) => this.#onDetailedState(data));
+        sub('taskClicked', (data) => this.#onTaskClicked(data));
+        sub('itemClicked', (data) => this.#onItemClicked(data));
+        sub('prestigeDone', (data) => this.#onPrestigeDone(data));
+        sub('taskStatus', (data) => this.#onTaskStatus(data));
+        sub('energyDepleted', (data) => this.#onEnergyDepleted(data));
+        sub('gameOverDismissed', (data) => this.#onGameOverDismissed(data));
+        sub('detailedState', (data) => this.#onDetailedState(data));
     }
 
     /** Unsubscribe from all events */
@@ -315,10 +321,10 @@ export class JTAQueueExecutor {
             return;
         }
 
-        log('debug', `Executing: ${entry.label} (${entry.actionType}:${entry.actionId})`);
+        log('debug', `Executing: ${entry.label ?? entry.actionId} (${entry.actionType}:${entry.actionId})`);
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.ACTIVE,
-            energyBefore: this.#lastKnownEnergy,
+            actuals: { energyBefore: this.#lastKnownEnergy },
             startTime: Date.now(),
         });
         this.#notifyStatusChange();
@@ -346,17 +352,30 @@ export class JTAQueueExecutor {
     #executeTask(entry) {
         this.#activeTaskId = entry.actionId;
         this.#waitingForCompletion = false;
-        this.#eventBus.publish('jta:clickTask', { taskId: entry.actionId }, this.#moduleName);
+        this.#transport.clickTask(entry.actionId);
     }
 
     /** Execute a useItem/useAllItems action */
     #executeItem(entry, useAll) {
-        this.#eventBus.publish('jta:clickItem', { itemType: entry.actionId, useAll }, this.#moduleName);
+        this.#transport.clickItem(entry.actionId, useAll);
     }
 
     /** Execute a prestige action */
     #executePrestige(entry) {
-        this.#eventBus.publish('jta:doPrestige', {}, this.#moduleName);
+        this.#transport.doPrestige();
+    }
+
+    /**
+     * Pause the run because an external driver blocks it (substrate playback
+     * walk). Preserves the snapshot + cursor so start() resumes the same entry.
+     */
+    #pauseForBlock(reason) {
+        log('info', `Pausing queue: ${reason}`);
+        this.#stopPolling();
+        this.#waitingForCompletion = false;
+        if (this.#snapshot) this.#snapshot.running = false;
+        if (this.#onPaused) this.#onPaused(reason);
+        this.#notifyStatusChange();
     }
 
     /** Handle jta:taskClicked response */
@@ -365,6 +384,11 @@ export class JTAQueueExecutor {
 
         const entry = this.#snapshot.currentEntry();
         if (!entry || entry.actionType !== JTAActionType.CLICK_TASK) return;
+
+        if (data.walkInFlight) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
+        }
 
         if (!data.success) {
             if (data.alreadyCompleted) {
@@ -390,6 +414,11 @@ export class JTAQueueExecutor {
         if (!entry) return;
         if (entry.actionType !== JTAActionType.USE_ITEM && entry.actionType !== JTAActionType.USE_ALL_ITEMS) return;
 
+        if (data.walkInFlight) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
+        }
+
         // Items are immediate — mark loop completed and check loops
         this.#completeLoop(entry);
     }
@@ -413,6 +442,11 @@ export class JTAQueueExecutor {
     #onTaskStatus(data) {
         if (data.currentEnergy !== undefined) {
             this.#lastKnownEnergy = data.currentEnergy;
+        }
+        // A playback walk started mid-run (substrate) — yield the zone.
+        if (data.walkInFlight && this.#snapshot?.running) {
+            this.#pauseForBlock('playback walk in flight');
+            return;
         }
         if (!this.#snapshot?.running || !this.#waitingForCompletion) {
             // Also handle drain task status
@@ -448,14 +482,17 @@ export class JTAQueueExecutor {
             const now = Date.now();
             this.#snapshot.updateStatus(entry.entryId, {
                 state: ActionState.COMPLETED,
-                energyAfter: this.#lastKnownEnergy,
-                actualEnergyCost: (status.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+                actuals: {
+                    energyAfter: this.#lastKnownEnergy,
+                    actualEnergyCost:
+                        (status.actuals?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+                },
                 endTime: now,
                 actualTimeMs: now - (status.startTime || now),
             });
             // Request detailed state for authoritative skill/energy data (async — fixes arrive in #onDetailedState)
             this.#pendingSkillsEntryId = entry.entryId;
-            this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
+            this.#transport.requestDetailedState();
             this.#snapshot.advance();
             // Track the entry that's about to start so we can fix its energyBefore retroactively
             this.#pendingNextEntryId = this.#snapshot.currentEntry()?.entryId || null;
@@ -501,8 +538,11 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.FAILED,
             error,
-            energyAfter: this.#lastKnownEnergy,
-            actualEnergyCost: (status?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+            actuals: {
+                energyAfter: this.#lastKnownEnergy,
+                actualEnergyCost:
+                    (status?.actuals?.energyBefore ?? this.#lastKnownEnergy) - this.#lastKnownEnergy,
+            },
             endTime: now,
             actualTimeMs: now - (status?.startTime || now),
         });
@@ -525,8 +565,7 @@ export class JTAQueueExecutor {
         this.#snapshot.updateStatus(entry.entryId, {
             state: ActionState.SKIPPED,
             error: reason,
-            energyAfter: this.#lastKnownEnergy,
-            actualEnergyCost: 0,
+            actuals: { energyAfter: this.#lastKnownEnergy, actualEnergyCost: 0 },
             endTime: now,
             actualTimeMs: 0,
         });
@@ -547,7 +586,7 @@ export class JTAQueueExecutor {
     #startPolling() {
         this.#stopPolling();
         this.#pollTimer = setInterval(() => {
-            this.#eventBus.publish('jta:requestTaskStatus', {}, this.#moduleName);
+            this.#transport.requestTaskStatus();
         }, POLL_INTERVAL);
     }
 
@@ -570,7 +609,7 @@ export class JTAQueueExecutor {
         this.#stopPolling();
         this.#waitingForCompletion = false;
         this.#draining = false;
-        this.#eventBus.publish('jta:dismissGameOver', {}, this.#moduleName);
+        this.#transport.dismissGameOver();
     }
 
     /** Handle game-over dismissed (energy reset performed) */
@@ -603,7 +642,7 @@ export class JTAQueueExecutor {
         // Request fresh state before restarting execution
         this.#awaitingInitialState = true;
         this.#notifyStatusChange();
-        this.#eventBus.publish('jta:requestDetailedState', {}, this.#moduleName);
+        this.#transport.requestDetailedState();
     }
 
     /** Handle detailed state snapshot for skill/energy tracking during execution */
@@ -638,24 +677,25 @@ export class JTAQueueExecutor {
             this.#pendingNextEntryId = null;
 
             const status = this.#snapshot.getStatus(entryId);
-            const update = {};
+            const update = { actuals: {} };
 
             // Skill gains: use consecutive "after" snapshots as baseline
             const before = this.#lastSkillSnapshot || {};
-            update.actualSkillGains = computeSkillGainsBetween(before, skillSnap);
+            update.actuals.actualSkillGains = computeSkillGainsBetween(before, skillSnap);
 
             // Energy: retroactively fix energyAfter and actualEnergyCost from authoritative state.
             // The detailed snapshot is read in the iframe BEFORE the next entry starts,
             // so this energy value is the true post-entry energy.
             if (data.state.currentEnergy !== undefined) {
-                update.energyAfter = data.state.currentEnergy;
-                update.actualEnergyCost = (status?.energyBefore ?? data.state.currentEnergy) - data.state.currentEnergy;
+                update.actuals.energyAfter = data.state.currentEnergy;
+                update.actuals.actualEnergyCost =
+                    (status?.actuals?.energyBefore ?? data.state.currentEnergy) - data.state.currentEnergy;
 
                 // Also fix the next entry's energyBefore — it was set with stale #lastKnownEnergy
                 // but the authoritative energy is the true starting point
                 if (nextEntryId) {
                     this.#snapshot.updateStatus(nextEntryId, {
-                        energyBefore: data.state.currentEnergy,
+                        actuals: { energyBefore: data.state.currentEnergy },
                     });
                 }
             }
@@ -688,7 +728,7 @@ export class JTAQueueExecutor {
 
         // Request task status to pick a drain task
         this.#startPolling();
-        this.#eventBus.publish('jta:requestTaskStatus', {}, this.#moduleName);
+        this.#transport.requestTaskStatus();
     }
 
     /** Pick a drain task and send clickTask */
@@ -703,7 +743,7 @@ export class JTAQueueExecutor {
 
         if (taskId !== null) {
             this.#activeTaskId = taskId;
-            this.#eventBus.publish('jta:clickTask', { taskId }, this.#moduleName);
+            this.#transport.clickTask(taskId);
         }
     }
 

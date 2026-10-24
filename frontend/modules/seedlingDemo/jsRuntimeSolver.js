@@ -1,0 +1,1214 @@
+/**
+ * seedlingDemo/jsRuntimeSolver — **THE PLAYBACK BOT'S SOLVER MODE ON THE
+ * SEEDLING JS RUNTIME** (solver-walk S1).
+ *
+ * Opt-in (`flashPanel.seedlingSolverWalk`, default OFF — ⚖ Q3: the solve is
+ * SYNCHRONOUS on the page's main thread until S2's Worker lands). With it on,
+ * the walker asks this module for each tick's keys before walking itself:
+ *
+ *   1. MAP the goal (every room: the vanilla map, ⛓ §5.18 a delivered set
+ *      of real rooms, ⛓ §5.36 a mounted GENERATED set). A walker `exit` →
+ *      `reach-exit {exit}` at the live teleporter the walker resolved (its
+ *      OEL x, y), or ⛓ S4 `reach-pit {pit}` when it resolved a PIT tile
+ *      (`out_pit_*`); a `location` → `collect-placement {placement}` at the
+ *      entity's OEL x, y (a chest, a pickup, or an `apitem` — F2's strategy
+ *      `apitem`). Only a `tile` goal stays on the J2 walker (the solver has
+ *      no tile goal kind).
+ *   2. SHADOW. `createRunForStaging(session.staging)` replayed through the
+ *      session's own `perTick`. Its digest MUST equal the live run's (§1.5):
+ *      a mismatch is a PAGE bug and fails the walk by name — never a solve
+ *      from a state the live page is not in.
+ *   3. SOLVE. `solveSegment({prefix: session.perTick, boot: staging.boot})`
+ *      over a RECORDING Proxy of the shadow: every `advance` the solver makes
+ *      is a row of the EXPECTED trajectory, every `equipNow` an equip at
+ *      that row. (The solver searches no run futures — `solverBot.js` header,
+ *      "NO SEARCH OVER RUN FUTURES" — so the advances ARE the solution.)
+ *   4. PLAY one key set per page tick (the page's clock stays the only clock;
+ *      `jsRuntimeCore` passes `autoAdvanceText: false` while the solver
+ *      drives — the solver already pressed every ceremony X), each equip on
+ *      the tick the solver made it.
+ *   5. CHECK every tick: the live (run, level, x, y, deaths) against the
+ *      expected row. A mismatch (an item re-boot, a host teleport, a death the
+ *      solver did not predict) REFUTES the plan and re-solves from the live
+ *      state; the `MAX_REFUTATIONS`th refutation of one goal FAILS it by name.
+ *   6. A REFUSAL (the solver's own, or the model's inside the solve) DECLINES:
+ *      the walker walks that goal instead, carrying the solver's reason in
+ *      its status — never silently.
+ *   7. `instant` is the core's burst over the planned keys (a page tick each).
+ *
+ * ⛓ S2 — THE WORKER AND THE BUDGET. Steps 2–3 run behind a SOLVE SERVICE
+ * (`solveService`): the page's is a module Worker
+ * (`jsRuntimeSolveService.createWorkerSolveService` →
+ * `jsRuntimeSolveWorker.js`), so the page never freezes; with none (node, and
+ * every S1 row) the solve runs in place, exactly as S1 did. While a solve is
+ * in flight `keysFor` answers `{solving}` and the page HOLDS the model — its
+ * frame clock, paint, queue drain and reports keep running, but the run does
+ * not step — so a plan is always played from the very state it was solved
+ * from (an idle tick would move the enemies under it). A solve whose run was
+ * replaced (a re-boot) or whose session moved meanwhile is STALE: refuted,
+ * never played. ⛓ DETERMINISTIC BUDGET: the solve is bounded in WORK units
+ * (`SOLVER_BUDGET_WORK`, `passShouldStop`) inside the worker, so its answer —
+ * a plan, or a refusal that DECLINES by name (the walker walks and may RETRY,
+ * `jsRuntimeWalker`, `SOLVER_RETRY_*`) — is the same on every machine; the
+ * page only WAITS for it. A solve past the wall-clock backstop
+ * (`SOLVE_BACKSTOP_MS`) FAILS the goal by name — never a different answer.
+ *
+ * ⛔ DOM-FREE AND CLOCK-FREE, like the walker. ⛔ It changes nothing in the
+ * solver or the model: `prefix` (S0) is the only admission it uses.
+ */
+
+import { createRunForStaging } from './tapeRunner.js';
+import {
+    AXE_DODGE_ASK_PER_PREVIEW, DEFAULT_DASH_MODE, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, WAND_TARGET_TAGS, WAND_VERB,
+    solveSegment,
+} from './solverBot.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { TILE_SIZE } from './levelWorld.js';
+// ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
+import { lightsWorldRows } from './lightBossWorld.js';
+// ⛓ BOSS WIRING — the Tentacled Beast's ctor and mouth offsets (`TentacleBeast.as`), so its fight exit is the model's.
+import { TENTACLE_BEAST } from './tentacleBeast.js';
+import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
+import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
+import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
+import { DASH_ONLY_WINDOW, dashOnlyWindowStamp, withDashOnlyWindow } from './dashOnlyWindowHook.js';
+import { dashShapeRead, dashShapeStamp, withDashShape } from './dashShapeHook.js';
+
+/** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
+export const MAX_REFUTATIONS = 3;
+
+/**
+ * ⛓ S2 — a worker that has not STARTED a solve this long after it was asked (a module load that hangs).
+ * ⛓ DETERMINISTIC BUDGET: a backstop like `SOLVE_BACKSTOP_MS` — it FAILS the goal by name, never walks it.
+ */
+export const LOAD_BUDGET_MS = 30000;
+/**
+ * ⛓ S2 — the decline-retry policy (S1 residue): a declined goal is walked,
+ * and the solver is asked AGAIN after a death, a crossing, or this many
+ * walker ticks — §1.6: from W=60 the solver refused the L6 leg (W=71 since swim R4), from W=150 it
+ * solved it — at most `SOLVER_RETRY_MAX` times per goal, each retry named.
+ */
+export const SOLVER_RETRY_AFTER_TICKS = 90;
+export const SOLVER_RETRY_MAX = 3;
+
+const seconds = (ms) => `${Math.round(ms / 100) / 10} s`;
+
+/**
+ * The state a shadow must reproduce: §1.5's digest, plus the selected slot
+ * (`primary`) — an equip rides on no key, so a shadow that missed one would
+ * otherwise match until the next X press.
+ */
+export function runDigest(run) {
+    return JSON.stringify({
+        L: run.level, s: run.state, t: run.ticksCompleted, d: run.playerDeaths.length, p: run.primary,
+        tr: run.transitions.length, c: run.entities('chasers'), sb: run.entities('strikeBodies'),
+    });
+}
+
+/** The per-tick check's row: what the live run must be at, tick by tick. */
+const rowOf = (run) => ({ level: run.level, x: run.state.x, y: run.state.y, deaths: run.playerDeaths.length });
+const sameRow = (a, b) => a.level === b.level && a.x === b.x && a.y === b.y && a.deaths === b.deaths;
+const showRow = (r) => `level ${r.level} (${r.x}, ${r.y}) deaths ${r.deaths}`;
+
+/** A shadow that is not the live run: a PAGE bug (step 2), never a solver verdict. */
+export class ShadowDivergence extends Error {
+    constructor(message) { super(message); this.name = 'ShadowDivergence'; }
+}
+
+/** ⛓ ANYTIME — a pass that would only repeat the one before it (its added strategy is unusable): not run, named. */
+export class PassSkipped extends Error {
+    constructor(message) { super(message); this.name = 'PassSkipped'; }
+}
+
+/**
+ * ⛓ ANYTIME — the optional strategies a later pass ADDS, each with its
+ * availability on the shadow at the solve's start: a reason it is unusable,
+ * or null. Unusable → the pass would search exactly what the pass before it
+ * searched, so it is skipped (a door-only L14 decline would otherwise be
+ * paid twice, 4.9–8.2 s each, measured by slice `seedling-js-l16-budget`).
+ * `sword-dash`: `planSwordDash` and `strikePolicyFor` act only with a sword
+ * in hand (`solverBot.js`: `hasSword || hasGhostSword`), so without one
+ * `dashMode` changes nothing.
+ */
+export const PASS_STRATEGIES = Object.freeze({
+    'sword-dash': (run) => {
+        const inv = run.progress('inventory') ?? {};
+        return inv.hasSword || inv.hasGhostSword ? null : 'the run holds no sword';
+    },
+});
+
+/**
+ * ⛓ ANYTIME (the user, 2026-10-04: *"first search for solutions that don't
+ * involve sword dashes, then if it finds a dashless solution, and runs out of
+ * time while searching the dash options, it falls back on the solution it
+ * already found. This same pattern might work for other expensive and
+ * optional strategies."*) — the passes one solve runs, CHEAPEST FIRST. Each
+ * later pass ADDS one expensive optional strategy (`adds`, `PASS_STRATEGIES`)
+ * and keeps everything the passes before it had; its plan replaces the one in
+ * hand only when it is BETTER (`betterAnswer`). Only what `solveSegment`
+ * already exposes is a pass: today that is `dashMode` (R9 12i). Measured
+ * (slice `seedling-js-l16-budget`, captured live arrivals): dash planning is 62–99 % of the
+ * slow solves (L16, B L14, L71 kit) and in the plan on 9 of 24 legs, each
+ * saving 8–95 ticks; dashless, 23 of 24 captured legs solve in ≤ 1.4 s.
+ * `full` is `DEFAULT_DASH_MODE` — the one search every solve made before.
+ */
+export const ANYTIME_PASSES = Object.freeze([
+    Object.freeze({ pass: 'dashless', dashMode: 'none', stop: 'all' }),
+    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash', stop: 'window' }),
+]);
+
+/**
+ * ⛓ DETERMINISTIC BUDGET (⚖ the user, 2026-10-05: *"Yes, I want plans to be
+ * identical on every machine. And we can increase the limit above one second
+ * if necessary. It used to be at 5 seconds."*) — **A SOLVE'S BUDGETS ARE
+ * WORK, NOT MILLISECONDS.** One WORK UNIT is one call of `solveSegment`'s
+ * `shouldStop(site)` hook (fidelity SF2): the solver asks it before each
+ * optional scan (`DEADLINE_SITES`), the solver reads no clock, so the call
+ * sequence is a pure function of the request (measured by slice
+ * `seedling-js-deterministic-budget`: identical per-site counts and sequence
+ * hashes beside a 12-process CPU hog at 3–5× the wall time). A slow machine
+ * takes LONGER to reach the same answer; it never reaches a different one.
+ *
+ * ⛓ RECALIBRATE — the unit is FINE (`FINE_CHECKPOINTS`, fidelity CHECKPOINTS):
+ * the solver also asks inside its once-silent phases (the TIME rung, the core
+ * `walk`, DETOUR's via set), so a pass that consults no optional scan still
+ * spends units. The ms one unit costs on one box are in `flash.md` "Pass
+ * deadlines".
+ *
+ * `SOLVER_BUDGET_WORK` — every pass of one solve attempt trips every site
+ * once the attempt has spent this many units (the dashless pass's lossy
+ * bound, so a slow refusal refuses by name; the full pass's, which a page
+ * once cut by the wall clock). `SOLVER_UPGRADE_WINDOW_WORK` — once a plan is
+ * in hand, EVERY site of the full pass trips at this many units from the
+ * attempt's start: "upgrade briefly, then ship" (⛓ WINDOW WHOLE PASS).
+ *
+ * ⛓ RECALIBRATED in fine units (slice `seedling-js-recalibrate`, node, the
+ * captured B/D arrivals, the divergence sweep's legs and fidelity CHECKPOINTS'
+ * D3 legs, re-measured on wave 7; was 500 / 40 coarse): 640 lets the slowest
+ * SHIPPING dashless pass measured (swordless L14's DETOUR: 624 fine units,
+ * 492 coarse) ship on its first attempt; 80 is the smallest window that keeps
+ * every leg that upgraded inside the old 1000 ms window upgrading — the
+ * largest, L40 (480,896) → its stairs, makes its last dash ask at unit 80
+ * (28 dashless + 52); L30 (240,80) at 50. Pinned by
+ * `jsRuntimeSolverCalibration.slow.test.js`.
+ *
+ * ⛓ WINDOW WHOLE PASS — the window now bounds the WHOLE full pass (every
+ * site), so an upgrade ships only when the full pass FINISHES inside it.
+ * Measured over 64 legs (the captured B/D arrivals, the sweep's legs, D3's
+ * legs, the sphere-2.2 leg): ONE shipped plan moved at 80 — L40 (480,896),
+ * whose full pass ends at unit 85 (28 + 57): 172 → 417 t; every other
+ * upgrader finishes by unit 76.
+ *
+ * ⛓ WINDOW 85 (⚖ the user, 2026-10-07: "raise the window 80 → 85") — the
+ * calibration rule is now: W = the units the WHOLE full pass needs on the
+ * worst upgrading leg (L40, 85), no longer its last dash ask. At 85 L40
+ * upgrades again (417 → 172 t) and, re-measured over the same 64 legs, no
+ * other shipped plan moves.
+ */
+export const SOLVER_BUDGET_WORK = 640;
+export const SOLVER_UPGRADE_WINDOW_WORK = 85;
+/**
+ * ⛓ RECALIBRATE (fidelity CHECKPOINTS) — every budgeted pass opts in to the solver's FINE checkpoints
+ * (`solveSegment`'s `fineCheckpoints`): the `time` rung, the core `walk` (a trip there REFUSES the segment
+ * by name) and the `detour` via set are asked too, so no stretch of the search runs unasked for long. The
+ * work constants above are counted in these fine units. In place (no budget) nothing is asked at all.
+ */
+export const FINE_CHECKPOINTS = true;
+/**
+ * ⛓ DETERMINISTIC BUDGET — the WALL-CLOCK BACKSTOP of one solve attempt, from
+ * the worker's start. It never decides an answer: when it fires the solve is
+ * terminated and the goal FAILS BY NAME ("the solve exceeded the backstop on
+ * this machine"); a plan in hand is NOT played. ~5× the calibrated worst
+ * SHIPPING attempt (an L40 leg, 62 s on the calibration box; flash.md "Pass
+ * deadlines"). A solve with a longer stretch the units cannot see ends here,
+ * by name — measured: the sphere-2.2 leg L12 (16,80) → its pit, whose
+ * kill-chaser stance scan ran 663 s with no ask on a loaded box (fidelity's to checkpoint).
+ */
+export const SOLVE_BACKSTOP_MS = 300000;
+
+/**
+ * ⛓ SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window a solve gives its
+ * later passes, in work units from the attempt's start: a non-positive /
+ * non-finite / absent window is the WHOLE budget, and a window is never
+ * longer than the budget it runs under. The knob is
+ * `flashPanel.seedlingSolverUpgradeWindowWork` (the JS page's
+ * `?solverUpgradeWindowWork=`).
+ */
+export function upgradeWindowWork(budgetWork, windowWork = null) {
+    const w = Number(windowWork);
+    return windowWork !== null && Number.isFinite(w) && w > 0 ? Math.min(w, budgetWork) : budgetWork;
+}
+
+/** ⛓ DETERMINISTIC BUDGET — one attempt's work clock: the hook calls its passes have made. */
+export function createWorkClock() {
+    let units = 0;
+    return { tick() { units += 1; return units; }, get units() { return units; } };
+}
+
+/**
+ * ⛓ SHOULD-STOP → DETERMINISTIC BUDGET — one pass's `solveSegment` deadline
+ * (`shouldStop`), or null (today's search exactly). It counts every call on
+ * the attempt's `work` clock and answers from the count alone — ⛔ NO CLOCK:
+ *   every pass        every site trips once the attempt has spent `budgetWork`
+ *                     units — LOSSY (a slow refusal refuses by name, the ⏱
+ *                     clause); with a plan in hand nothing a later pass says
+ *                     can replace it but a shorter plan (`betterAnswer`);
+ *   `stop: 'window'` (the full pass) with a plan IN HAND, EVERY site at the
+ *                     UPGRADE WINDOW too (⛓ WINDOW WHOLE PASS, ⚖ the user,
+ *                     2026-10-06: *"Yes, stop the whole pass"*). A trip at
+ *                     `sword-dash` still returns a partial dash schedule; a
+ *                     trip anywhere else refuses the pass by name — and a
+ *                     refusal never replaces the plan in hand (`betterAnswer`),
+ *                     so the cut is LOSSLESS for that plan. What it gives up is
+ *                     an upgrade the pass would have found after the window.
+ *                     With NO plan in hand the full pass is the only search:
+ *                     no window, the whole budget (as before).
+ *   `dashOnly`        ⛓ DASH-ONLY WINDOW (`dashOnlyWindowHook.js`, default
+ *                     OFF; DS's shape (c)) — the window counts ONLY the pass's
+ *                     `sword-dash` asks (one dash preview = one unit) and trips
+ *                     only there; every other site runs on the whole budget.
+ *                     The budget still counts every ask. OFF = the rule above.
+ * `limit` records which bound tripped first ('window' / 'budget'), for the
+ * pass row. No budget (the in-place service) → no deadline at all.
+ */
+export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {}, dashOnly = false }) {
+    if (!(Number.isFinite(budgetWork) && budgetWork > 0)) return null;
+    const windowAt = p.stop === 'window' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
+    if (dashOnly && windowAt !== null) {
+        let dashAsks = 0;
+        return (site) => {
+            const n = work.tick();
+            if (n > budgetWork) { limit.first ??= 'budget'; return true; }
+            if (site !== 'sword-dash') return false;
+            dashAsks += 1;
+            if (dashAsks > windowAt) { limit.first ??= 'window'; return true; }
+            return false;
+        };
+    }
+    return (site) => {
+        const n = work.tick();
+        if (n > budgetWork) { limit.first ??= 'budget'; return true; }
+        if (windowAt !== null && n > windowAt) { limit.first ??= 'window'; return true; }
+        return false;
+    };
+}
+
+/** ⛓ SHOULD-STOP — the deadline a pass's answer tripped (`solveSegment`'s `deadline`), or null. */
+export const deadlineOf = (answer) => (answer?.ok ? answer.plan?.deadline : answer?.deadline) ?? null;
+
+/**
+ * ⛓ ANYTIME — does the answer `next` (a later pass) replace `best` (the one in
+ * hand)? A PLAN beats no plan; between two plans the later replaces the
+ * earlier only with STRICTLY FEWER TICKS (`solution.length` = game ticks to
+ * the goal) — a tie keeps the plan found first, which is the cheaper search's
+ * (L71 kit: both passes the same 527 ticks, the dashless one is kept). With
+ * no plan in hand, a later REFUSAL is the fuller search's word and replaces
+ * an earlier one; a skipped pass never replaces anything.
+ */
+export function betterAnswer(best, next) {
+    if (!next || next.kind === 'skipped') return false;
+    if (!best || best.kind === 'skipped') return true;
+    if (best.ok) return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    // ⛓ DETERMINISTIC BUDGET — a refusal cut by its deadline is not the fuller search's word: it never
+    // replaces a refusal that was not cut (the dashless decline leads, as when a page cut the full pass).
+    if (!next.ok && next.deadline && !best.deadline) return false;
+    return true;
+}
+
+/**
+ * ⛓ ANYTIME — run `passes` in order, each a `solveFromTape` of the same tape,
+ * and answer with the best (`betterAnswer`). `onPass(answer, best, index)`
+ * hears every pass as it lands (the worker posts it: the page keeps `best` as
+ * its PROVISIONAL plan, so a budget expiry in a later pass plays it). A
+ * divergence ends at once (the page's bug — every later pass replays the same
+ * shadow). Every answer is stamped with its `pass`, and the result carries
+ * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
+ */
+export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    // ⛓ DASH-SHAPE STAMP — the DASH-ONLY WINDOW arm below, for solverBot's three SEEDLING DB switches (`dashShape`,
+    // the off-default keys only, `dashShapeHook.js`): solved inside their `with…` scopes in whichever module instance
+    // runs it, and every answer carries the shape (all three keys) the switches READ.
+    if (request.dashShape && typeof request.dashShape === 'object') {
+        const { dashShape, ...rest } = request;
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.dashShape = { ...ran };
+            if (a.ok && a.plan) a.plan.dashShape = { ...ran };
+            return a;
+        };
+        const out = withDashShape(dashShape, () => {
+            ran = dashShapeRead();
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
+    // ⛓ DASH-ONLY WINDOW — the AXE_DODGE arm below, for `DASH_ONLY_WINDOW` (`dashOnlyWindow`, a boolean, off-default
+    // only): solved under it in whichever module instance runs it, and every answer says so.
+    if (typeof request.dashOnlyWindow === 'boolean') {
+        const { dashOnlyWindow, ...rest } = request;
+        // The stamp is the value this instance's switch READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.dashOnlyWindow = ran;
+            if (a.ok && a.plan) a.plan.dashOnlyWindow = ran;
+            return a;
+        };
+        const out = withDashOnlyWindow(dashOnlyWindow, () => {
+            ran = DASH_ONLY_WINDOW.enabled;
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
+    // ⛓ AXE_DODGE HOOK — the CONTACT arm below, for fidelity's `AXE_DODGE_ASK_PER_PREVIEW` (`axeDodgeAskPerPreview`,
+    // a boolean, off-default only): solved under it in whichever module instance runs it, and every answer says so.
+    if (typeof request.axeDodgeAskPerPreview === 'boolean') {
+        const { axeDodgeAskPerPreview, ...rest } = request;
+        // The stamp is the value this instance's switch READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || ran === null) return a;
+            a.axeDodgeAskPerPreview = ran;
+            if (a.ok && a.plan) a.plan.axeDodgeAskPerPreview = ran;
+            return a;
+        };
+        const out = withAxeDodgeAsk(axeDodgeAskPerPreview, () => {
+            ran = AXE_DODGE_ASK_PER_PREVIEW.enabled;
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
+    // ⛓ CONTACT HOOK — the KILLLOCK arm below, for the model's contact switches (`contactFidelity`, off-default
+    // only): solved under the stamped set in whichever module instance runs it, and every answer says so.
+    if (request.contactFidelity) {
+        const { contactFidelity, ...rest } = request;
+        // The stamp is the set this instance's switches READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || !ran) return a;
+            a.contactFidelity = { ...ran };
+            if (a.ok && a.plan) a.plan.contactFidelity = { ...ran };
+            return a;
+        };
+        const out = withContactFidelity(normalizeContactFidelity(contactFidelity), () => {
+            ran = { ...CONTACT_FIDELITY };
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
+    // ⛓ KILLLOCK HOOK — a request stamped with a switch set (`killLockBodies`, off-default only) is solved under
+    // it, in whichever module instance runs it (a worker's own copy included), and every answer says so.
+    if (request.killLockBodies) {
+        const { killLockBodies, ...rest } = request;
+        // The stamp is the set this instance's switches READ while it solved, not the request's echo.
+        let ran = null;
+        const stamp = (a) => {
+            if (!a || !ran) return a;
+            a.killLockBodies = { ...ran };
+            if (a.ok && a.plan) a.plan.killLockBodies = { ...ran };
+            return a;
+        };
+        const out = withKillLockBodies(normalizeKillLockBodies(killLockBodies), () => {
+            ran = { ...KILLLOCK_BODIES };
+            return solveAnytime(rest, { passes, clock, onPass: (one, best, index) => onPass(stamp(one), stamp(best), index) });
+        });
+        return stamp(out);
+    }
+    let best = null;
+    let last = null;
+    const rows = [];
+    // ⛓ DETERMINISTIC BUDGET — the request's budget and upgrade window, in WORK units (absent in place), on
+    // ONE work clock from this attempt's start. `clock` only times the rows (`ms`); it decides nothing.
+    const { budgetWork = null, upgradeWindowWork: windowWork = null, ...tape } = request;
+    const work = createWorkClock();
+    for (let i = 0; i < passes.length; i += 1) {
+        const p = passes[i];
+        const t0 = clock();
+        const w0 = work.units;
+        const limit = {};
+        const shouldStop = passShouldStop(p, { budgetWork, windowWork, planInHand: best?.ok === true, work, limit,
+            ...(DASH_ONLY_WINDOW.enabled ? { dashOnly: true } : {}) });
+        // ⛓ RECALIBRATE — a budgeted pass always asks the FINE checkpoints (`FINE_CHECKPOINTS`): the constants
+        // above are counted in fine units, so every production path (JS page, wasm arrival, continuation,
+        // held retry — all of them requests to this function) spends the unit they were calibrated in.
+        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop,
+            fineCheckpoints: shouldStop !== null && FINE_CHECKPOINTS }));
+        answer.pass = p.pass;
+        if (answer.ok) answer.plan.pass = p.pass;
+        const tripped = deadlineOf(answer);
+        rows.push({ pass: p.pass, ok: answer.ok, kind: answer.kind ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
+            ms: Math.round(clock() - t0), ...(shouldStop ? { work: work.units - w0 } : {}),
+            ...(tripped ? { deadline: tripped.first, limit: limit.first ?? null } : {}) });
+        last = answer;
+        if (betterAnswer(best, answer)) best = answer;
+        try { onPass(answer, best, i); } catch { /* a listener's bug is not the solve's */ }
+        if (answer.kind === 'divergence') { best = answer; break; }
+    }
+    // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
+    // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.
+    best ??= last ?? { ok: false, kind: 'refusal', message: 'no solver pass ran' };
+    const spent = budgetWork !== null ? { work: work.units } : {};
+    return { ...best, passes: rows, ...spent, ...(best.ok ? { plan: { ...best.plan, passes: rows, ...spent } } : {}) };
+}
+
+/**
+ * ⛓ DETERMINISTIC BUDGET — did any pass of this answer's attempt trip its work BUDGET (not the window)?
+ * The deterministic successor of "a page expiry cut the later pass": a plan from an earlier pass is played
+ * with `expired`; a refusal leaves the cut pass unanswered for a held retry.
+ */
+export const budgetCut = (answer) => (answer?.passes ?? answer?.plan?.passes ?? []).some((r) => r.limit === 'budget');
+
+/** ⛓ ANYTIME — the passes not yet answered when a solve was cut (`answered` = how many landed). */
+export const passesAfter = (passes, answered) => passes.slice(Math.max(0, answered | 0));
+
+/** ⛓ ANYTIME — how a plan's pass reads in a note: `dashless` / `full`, and why when it was not the last word. */
+export function passNote(plan, { expired = false } = {}) {
+    if (!plan?.pass) return '';
+    const stopped = (plan.passes ?? []).filter((r) => r.deadline).map((r) => `${r.pass} stopped at its deadline (${r.deadline})`);
+    return [`pass ${plan.pass}`, ...stopped, ...(expired ? ['the later pass ran out of its work budget'] : [])].join(', ');
+}
+
+/**
+ * Step 1 — the solver goal for a walker goal, or `{walker: why}` when the
+ * goal stays on the J2 walker.
+ *
+ * @param {object} goal      the walker's goal (`{kind, level, …}`)
+ * @param {object} ctx
+ * @param {object} ctx.run       the live run
+ * @param {object} ctx.resolved  the walker's resolution (`{target, allowTeleporter}`; ⛓ S5 `latched`
+ *   while the run stands latched on the goal's teleporter — still the door's `reach-exit`: the solver
+ *   steps off a latched door itself, fidelity STEP-OFF)
+ * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL)
+ * @param {Function|null} [ctx.levelSource]  ⛓ BOSS WIRING — `(level) => record`, the room source the run was built
+ *   from: a `FIGHT_EXITS` row whose fight view carries no tag reads it off the room's placement (null = no such row binds)
+ *
+ * ⛓ §5.36 (⚖ the user: the SOLVER for everything) — a mounted GENERATED set's
+ * goals are mapped here too, exactly as a real room's: the old "a generated
+ * level set keeps the J2 walker" arm is gone (measured: the solver solves
+ * every committed generated leg the walker did, and the swim apitem the
+ * walker never reached).
+ */
+export function solverGoalFor(goal, { run, resolved, placement = null, levelSource = null }) {
+    if (goal?.kind === 'exit' && resolved?.pit) {
+        // ⛓ S4 — a pit exit → `reach-pit` at the pit TILE the walker resolved (its rect origin = tile·16).
+        const { tx, ty } = resolved.pit;
+        return { goal: { kind: 'reach-pit', pit: { tx, ty, x: tx * TILE_SIZE, y: ty * TILE_SIZE } } };
+    }
+    if (goal?.kind === 'exit') {
+        // ⛓ S5 → STEP-OFF RETIRE — latched ON the goal's teleporter (an arrival on the door) is the
+        // door's `reach-exit` too: `solveSegment` steps off a latched door and walks back (a `step-off`
+        // verb), or refuses a closed pocket by name (`closed — the run stands LATCHED …`).
+        const tp = run?.world?.teleporters?.[resolved?.allowTeleporter];
+        if (!tp) {
+            // ⛓ LIGHTS WIRING — an exit a boss FIGHT adds (L69's endState Teleporter): the fight, then the exit.
+            const fight = fightExitOf(run, goal, levelSource);
+            // ⛓ BOSS WIRING — a fight already won whose exit is not in the arrival's world yet (the beast's mouth: the
+            // model builds the dead fight, and so the mouth, when the fight is first asked) is the door's plain reach-exit.
+            if (fight?.standing) return { goal: { kind: 'reach-exit', exit: { x: fight.exit.x, y: fight.exit.y } } };
+            if (fight) return fightExitGoal(goal, run, fight);
+            return { walker: 'no live teleporter resolved for the exit' };
+        }
+        return { goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } };
+    }
+    if (goal?.kind === 'location' && goal.encounter) {
+        // ⛓ ENCOUNTERS — an encounter location (L32's Bob Boss, L12's Witch) has no pickup entity: it is the solver's
+        // `encounter` goal (swim U5), anchored at the location's atlas tile, its `drop` the game's own grant.
+        // `then` is read off the room. With `apReportBosses` OFF, an ARENA (a `fallthrough` room whose boss rock
+        // seals the door behind the player — `levelWorld.arenaRockOf`, the row's `thirdBoss`) asks the encounter
+        // for its own 'reach-pit' (L32: the burn with the Fire the drop granted, then the pit to L30).
+        // ⛓ R7 (the p4g rebuild + the L32 rock move): with `apReportBosses` ON the kill {32,3} and the Fire drop
+        // {32,4} are plain location REPORTS (the drop grants nothing; Fire is an ordinary received item), and the
+        // moved rock no longer seals the stairs — the arena is NOT "left only by its pit" any more. So the encounter
+        // ends at the drop and its report (null), and the route's NEXT goal leaves the room: the stairs, or the pit
+        // when the run already holds Fire. (⚖ the user 2026-10-20: no special case for granting Fire.) (The same
+        // terminal rule as `survey-seedling-route.mjs`'s encounter, rules-l32-rock-move e068041a27.)
+        // Any other room is left by the route's NEXT goal (null) — ⚠ a `fallthrough` alone is not enough: L12 has
+        // a control block too, and the Witch's room is left by a door (the survey's step 140 got null from its
+        // door crossing, not from the room).
+        const { at, drop } = goal.encounter;
+        const arena = !!run?.world?.fallthrough && (run.world.fallRocks ?? []).some((r) => r.thirdBoss);
+        return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
+            then: arena && CONTACT_FIDELITY.apReportBosses !== true ? 'reach-pit' : null } };
+    }
+    if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
+    if (goal?.kind === 'location') {
+        if (!placement) return { walker: 'the location names no entity of the room' };
+        return { goal: { kind: 'collect-placement', placement: { x: placement.x, y: placement.y } } };
+    }
+    return { walker: `a ${goal?.kind ?? 'missing'} goal has no solver goal kind` };
+}
+
+/**
+ * ⛓ LIGHTS WIRING (slice `seedling-js-lights-wiring`) — **AN EXIT THAT ONLY A FIGHT OPENS.** A boss whose death adds
+ * the room's exit (L69: `LightBossController.endState()`'s `Teleporter`, appended mid-visit by `lightBoss.withLightsExit`)
+ * has no live teleporter on the exit's cells at the arrival. Each row names the WORLD list the model builds for the
+ * fight's controllers (present only while the fight's switch is ON, so OFF nothing here is reached) and the exit the
+ * model's own world build makes once the controller's tag is cleared (`lightBossWorld.lightsWorldRows`' exit arm).
+ * Nothing is typed: the obstacle, its tag and the exit are the controller row's and the model's.
+ * ⚠ One row per fight SHAPE. Each row is `fightsOf(run, levelSource)` → the uncleared-or-cleared fight rows
+ * `{id, x, y, tag, cleared}` (empty while the switch is OFF) and `exitOf(row)` → the exit the fight's end adds.
+ *
+ * ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — L57's TENTACLED BEAST: its mouth `Teleporter` is added at the end of
+ * "dying" (`TentacleBeast.createMouthEntrance`, `levelWorld.withRuntimeTeleporters`). The fight is the run's
+ * (`run.entities('tentacleBeastFight')`, null while `CONTACT_FIDELITY.tentacleBeastFight` is OFF or the room holds
+ * none); its view names the body (`tentaclebeast@<x>,<y>`, the `.oel` placement) but not the tag, so the tag is the
+ * placement's in the room source. The mouth is the model's ctor and mouth offsets from that placement.
+ */
+export const FIGHT_EXITS = Object.freeze([
+    Object.freeze({
+        fightsOf: (run) => run?.world?.lightsControllers ?? [],
+        exitOf: (c) => lightsWorldRows({ attrs: { fliernum: String(c.flierNum) } }, c.x, c.y, c.tag, new Set([c.tag])).exit,
+    }),
+    Object.freeze({
+        fightsOf: (run, levelSource) => {
+            const view = typeof run?.entities === 'function' ? run.entities('tentacleBeastFight') : null;
+            if (!view || typeof levelSource !== 'function') return [];
+            const p = (levelSource(run.level)?.entities ?? []).filter((e) => `${e.type}@${e.x},${e.y}` === view.id);
+            if (p.length !== 1 || !Number.isInteger(Number(p[0].attrs?.tag))) return [];
+            return [{ id: view.id, x: p[0].x, y: p[0].y, tag: Number(p[0].attrs.tag), cleared: view.beast.dead === true }];
+        },
+        // A cleared {57,0} builds the beast dead WITH its mouth (`TentacleBeast.as:52-60`): the exit stands.
+        standsWhenCleared: true,
+        exitOf: (c) => ({ x: c.x + TENTACLE_BEAST.ctorDx + TENTACLE_BEAST.mouthDx,
+            y: c.y + TENTACLE_BEAST.ctorDy + TENTACLE_BEAST.mouthDy }),
+    }),
+]);
+
+/**
+ * ⛓ LIGHTS WIRING — `{controller, exit}`: an uncleared fight whose exit lands on one of the goal's cells, or null.
+ * ⛓ BOSS WIRING — a row that lists a CLEARED fight (`standing`: the row says the exit already stands in the game) is
+ * answered `{controller, exit, standing: true}`; a row that lists only uncleared ones (Lights') is never asked that.
+ */
+export function fightExitOf(run, goal, levelSource = null) {
+    const tiles = Array.isArray(goal?.tiles) && goal.tiles.length ? goal.tiles : Array.isArray(goal?.tile) ? [goal.tile] : [];
+    for (const row of FIGHT_EXITS) {
+        for (const controller of row.fightsOf(run, levelSource)) {
+            if (controller.cleared && row.standsWhenCleared !== true) continue;
+            const exit = row.exitOf(controller);
+            if (exit && tiles.some(([tx, ty]) => Math.floor(exit.x / TILE_SIZE) === tx && Math.floor(exit.y / TILE_SIZE) === ty)) {
+                return controller.cleared ? { controller, exit, standing: true } : { controller, exit };
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓ LIGHTS WIRING — the fight's goal: a `sequence` (the JS side's own shape, `solverGoalsOf`) of the solver's
+ * `clear-tag` on the controller (its flag `{level, tag}`; the verb is the solver's own `OBSTACLE_STRATEGIES` row,
+ * `lights`) and then `reach-exit` onto the Teleporter the fight's end adds. A verb the tables do not register is
+ * refused BY THE SOLVER'S REASON (`no-verb`), like an event goal.
+ */
+export function fightExitGoal(goal, run, { controller: c, exit }) {
+    const flag = { level: run.level, tag: c.tag };
+    const key = `solid:${c.id.split('@')[0]}`;
+    const { verb, registered } = clearTagVerbOf(key);
+    if (!registered) {
+        const reason = 'no-verb';
+        return { walker: `the exit "${goal?.name ?? 'the exit'}" is opened by a fight (${c.id}, its flag {${flag.level},${flag.tag}}): `
+            + `the solver's clear-tag refuses it — ${reason}: ${verb ? `${key} selects '${verb}', which no clear-tag executor is `
+                + 'registered for' : `no strategy row exists for ${key}`}`,
+        refusal: { kind: 'clear-tag', reason, flag, id: c.id } };
+    }
+    return { goal: { kind: 'sequence', goals: [
+        { kind: 'clear-tag', tag: flag, at: { x: c.x, y: c.y }, obstacle: c.id },
+        { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+    ] } };
+}
+
+/** ⛓ LIGHTS WIRING — the solver goals a mapped goal names: a `sequence`'s, in order, else the one goal. */
+export const solverGoalsOf = (solverGoal) => (solverGoal?.kind === 'sequence' ? solverGoal.goals : [solverGoal]);
+
+/**
+ * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
+ * REGISTERED there: `OBSTACLE_STRATEGIES[key]`, refined by the wand rows `refineStrategy` asks first
+ * (`WAND_VERB`: a `WAND_TARGET_TAGS` solid is the wand's; a `wandlock` is a `Lock`, so `hold`), looked up as
+ * `clearTagExecutor` looks it up (`STRATEGY_EXECUTORS`, plus `wand` while `WAND_VERB` is on — `bait` is NOT the
+ * clear-tag path's). Every later refinement of `hold` (skirt / pulse / kill / weigh) is a registered verb, so it
+ * cannot turn a registered row into a refusal. Read off the solver's own tables, nothing typed;
+ * `jsRuntimeSolverEventGoal.test.js` pins it against the solver's real `no-verb` refusals.
+ */
+export function clearTagVerbOf(key) {
+    const tag = key.slice(key.indexOf(':') + 1);
+    let verb = OBSTACLE_STRATEGIES[key] ?? null;
+    if (WAND_VERB.enabled && key.startsWith('solid:')) {
+        if (WAND_TARGET_TAGS.includes(tag)) verb = 'wand';
+        else if (verb === 'wand' && tag === 'wandlock') verb = 'hold';
+    }
+    // ⛓ fidelity SEALDOOR (`CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor's verb is `approach`, the same answer as
+    // `solverBot.refineStrategy` and its `clearTagExecutor`; OFF the table's (none). Carried in fidelity's flip (js-7 OK).
+    if (CONTACT_FIDELITY.sealDoorApproach && key === 'solid:finaldoor') verb = 'approach';
+    // ⛓ fidelity WATCHERTALK (`CONTACT_FIDELITY.watcherTalkVerb`): the Watcher's verb is `talk`, the same answer as
+    // `solverBot.refineStrategy` and its clear-tag arm; OFF the table's (none). `talk` is a `STRATEGY_EXECUTORS` row.
+    // Carried in fidelity's flip (js-7 OK).
+    if (CONTACT_FIDELITY.watcherTalkVerb && key === 'solid:watcher') verb = 'talk';
+    const registered = verb !== null && (Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, verb)
+        || (verb === 'wand' && WAND_VERB.enabled) || (verb === 'approach' && CONTACT_FIDELITY.sealDoorApproach));
+    return { verb, registered };
+}
+
+/**
+ * ⛓ EVENT GOALS — why an event goal gets no solver goal, BY THE SOLVER'S OWN REASON (`execClearTag`'s refusal
+ * vocabulary: `wrong-level`, `no-verb`): the location's check stays the game's flag, which nothing here writes.
+ */
+export const EVENT_CLEAR_TAG_REFUSAL = (goal, reason, why) => `"${goal.name ?? goal.event?.eventId ?? 'the event'}" is `
+    + `a saved-obstacle EVENT (clear-tag {${goal.event?.tag?.level},${goal.event?.tag?.tag}} ${goal.event?.obstacle}): `
+    + `the solver's clear-tag refuses it — ${reason}: ${why}. Its check stays the game's persistence flag `
+    + `{${goal.event?.tag?.level},${goal.event?.tag?.tag}} turning set, which nothing but the game writes`;
+
+/**
+ * ⛓ EVENT GOALS — an event location (`seedlingPlaybackController.atlasEventGoal`) → the solver's `clear-tag`
+ * (fidelity CLEARTAG + CROSSROOM D3): `{kind: 'clear-tag', tag: {level, tag}, at: {x, y}, obstacle, presser?}`.
+ * Refused here, BY NAME, only where the solver's executor would refuse before its first tick and the tables say so:
+ *   · `wrong-level` — the run stands in another level than the flag's and the goal names no presser of this level;
+ *   · `no-verb` — the verb the obstacle (or, cross-room, the presser) selects is not registered (`clearTagVerbOf`).
+ * Everything else (`cannot-act`, `unresolved`, `prerequisite`, `not-written`, `cross-room-presser`) is the SOLVE's
+ * answer, refused by the solver with its own `obstacle: {kind: 'clear-tag', reason}`. The completion is the game's:
+ * the run's flag is checked by the runtime's collector, never written here (⚖ flags flow game → AP only).
+ *
+ * @returns {{goal: object}|{walker: string, refusal: {kind: 'clear-tag', reason: string, flag: object, id: string}}}
+ */
+function eventSolverGoal(goal, run) {
+    const ev = goal.event;
+    const flag = { level: ev.tag.level, tag: ev.tag.tag };
+    const out = { kind: 'clear-tag', tag: flag, at: { x: ev.at.x, y: ev.at.y },
+        ...(ev.obstacle ? { obstacle: ev.obstacle } : {}), ...(ev.presser ? { presser: { ...ev.presser } } : {}) };
+    const id = ev.obstacle ?? `?@${ev.at.x},${ev.at.y}`;
+    const refused = (reason, why) => ({ walker: EVENT_CLEAR_TAG_REFUSAL(goal, reason, why),
+        refusal: { kind: 'clear-tag', reason, flag: { ...flag }, id } });
+    const here = Number.isInteger(run?.level) ? run.level : goal.level;
+    const crossRoom = here !== flag.level;
+    if (crossRoom && ev.presser?.level !== here) {
+        return refused('wrong-level', `the run stands in level ${here}; the flag is level ${flag.level}'s, and `
+            + (ev.presser ? `its presser ${ev.presser.class}@${ev.presser.x},${ev.presser.y} is in level ${ev.presser.level}`
+                : 'the event names no presser') + ' — only the flag\'s own level holds the obstacle');
+    }
+    const key = crossRoom ? `proximity-hazard:${ev.presser.class}` : `solid:${String(ev.obstacle ?? '').split('@')[0]}`;
+    const { verb, registered } = clearTagVerbOf(key);
+    if (!registered) {
+        return refused('no-verb', verb ? `${key} selects '${verb}', which no clear-tag executor is registered for`
+            : `no strategy row exists for ${key} — the catalogue names no verb that clears it`);
+    }
+    return { goal: out };
+}
+
+/** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */
+export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null, holds = null }) {
+    const shadow = createRunForStaging(staging, levelSource, { scratchPersistence });
+    perTick.forEach((h, i) => {
+        // ⛓ HOLD SEAM — the engine frames a hold ran BEFORE tick i (the game held, its swim channel stepping).
+        if (holds?.get(i)) shadow.stepHeldFrames(holds.get(i));
+        // ⛓ An equip the PLAY made on the live run is not in the session's
+        // keys (a tape carries an equip as a field) — re-made at its tick.
+        const slot = equips?.get(i);
+        if (slot !== undefined) shadow.equipNow(slot);
+        shadow.advance(h);
+    });
+    // ⛓ HOLD SEAM — a hold at the tape's END (the continuation's own seam: the solve starts after it).
+    if (holds?.get(perTick.length)) shadow.stepHeldFrames(holds.get(perTick.length));
+    return shadow;
+}
+
+/**
+ * ⛓⛓ CRUSHER FORK — `solveSegment`'s `forkRun` for a solve from a tape: a FRESH run at the staging's boot,
+ * built the way the shadow is (`createRunForStaging`, the same persistence mode), on which the solver replays
+ * the segment's ticks — the prefix included — before trying a choreography there (`execBait`). The solver
+ * re-makes only its OWN equips on the fork; the PLAY's equips (`equips`, perTick index → slot) are re-made
+ * here, at their index, on the first `prefixLength` advances — the same fold `replayTape` makes. Each call is
+ * a new run: nothing mutable is shared with the shadow or with another fork.
+ */
+export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0, holds = null }) {
+    return () => {
+        const run = createRunForStaging(staging, levelSource, { scratchPersistence });
+        if (!(equips?.size > 0) && !(holds?.size > 0)) return run;
+        let advanced = 0;
+        return new Proxy(run, {
+            get(target, prop) {
+                const v = Reflect.get(target, prop);
+                if (prop === 'advance') {
+                    return (...args) => {
+                        // ⛓ HOLD SEAM — the play's held frames, at their index (`replayTape`'s fold; the prefix's end included).
+                        const held = advanced <= prefixLength ? holds?.get(advanced) : undefined;
+                        if (held) target.stepHeldFrames(held);
+                        const slot = advanced < prefixLength ? equips?.get(advanced) : undefined;
+                        if (slot !== undefined) target.equipNow(slot);
+                        advanced += 1;
+                        return v.apply(target, args);
+                    };
+                }
+                return typeof v === 'function' ? v.bind(target) : v;
+            },
+        });
+    };
+}
+
+/** A shadow whose digest is not the live one: the page's bug, by name. */
+function assertShadow(shadow, live, ticks) {
+    if (runDigest(shadow) !== live.digest) {
+        throw new ShadowDivergence('the shadow replay of the page\'s own session does not reproduce the live run — '
+            + `a page bug, not a solver verdict (${ticks} tick(s) replayed; `
+            + `live ${showRow(live.row)}, shadow ${showRow(rowOf(shadow))})`);
+    }
+    return shadow;
+}
+
+/** What the shadow must reproduce, off the live run: its digest and its row. */
+export const liveOf = (run) => ({ digest: runDigest(run), row: rowOf(run) });
+
+/** Step 2 — the session's own tape replayed into a fresh run, asserted equal to the live run. */
+export function replayShadow(session, levelSource, {
+    // ⛓ S3 — by default the shadow carries the session's own persistence mode.
+    scratchPersistence = session.run?.scratchPersistence === true, equips = null,
+} = {}) {
+    const shadow = replayTape({ staging: session.staging, perTick: session.perTick, levelSource, scratchPersistence, equips });
+    return assertShadow(shadow, liveOf(session.run), session.perTick.length);
+}
+
+/**
+ * ⛓ S2 — steps 2–3 from a TAPE (staging + the session's keys + the live
+ * digest), the form a worker receives: nothing in it is the live run. The
+ * plan it returns is structured-cloneable (Sets, a Map, plain rows).
+ */
+export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
+    scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
+    shouldStop = null, fineCheckpoints = false, holds = null }) {
+    const t0 = clock();
+    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips, holds }), live, perTick.length);
+    const replayMs = clock() - t0;
+    // ⛓ ANYTIME — a pass whose added strategy the run cannot use would replay the pass before it exactly.
+    const available = adds ? PASS_STRATEGIES[adds] : null;
+    const unusable = !adds ? null : available ? available(shadow) : `no strategy is named ${adds}`;
+    if (unusable) throw new PassSkipped(`${adds} is not available here: ${unusable}`);
+    const expected = [rowOf(shadow)];
+    const equipsAt = new Map();
+    // ⛓ WASM EQUIPS — the model's inventory at each equip: a host that ships the equip checks the GAME's slot at
+    // that index holds the same item (`wasmDelivery.equipSlotRefusal`; the game appends a late slot).
+    const equipItems = new Map();
+    const run = new Proxy(shadow, {
+        get(target, prop) {
+            const v = Reflect.get(target, prop);
+            if (prop === 'advance') {
+                return (...args) => {
+                    const out = v.apply(target, args);
+                    expected.push(rowOf(target));
+                    return out;
+                };
+            }
+            if (prop === 'equipNow') {
+                return (slot) => {
+                    const out = v.call(target, slot);
+                    equipsAt.set(expected.length - 1, slot);
+                    equipItems.set(expected.length - 1, { ...target.inventory });
+                    return out;
+                };
+            }
+            return typeof v === 'function' ? v.bind(target) : v;
+        },
+    });
+    const t1 = clock();
+    // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
+    // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
+    // ⛓⛓ CRUSHER — and a fork of the run (`forkRunFor`): `bait` tries a choreography there before committing it.
+    const out = solveSegment({ run, goals: solverGoalsOf(solverGoal), name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
+        forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds }),
+        ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
+    const solveMs = clock() - t1;
+    const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
+    if (solution.length !== expected.length - 1) {
+        // The recording and the tape disagree — the plan cannot be checked tick by tick.
+        throw new ShadowDivergence(`the solve returned ${solution.length} key set(s) but the shadow advanced `
+            + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
+    }
+    // ⛓ TRAILING EQUIP — a selection AFTER the last tick (BURN's sword re-select when the burn is the whole goal:
+    // L24:0's clear-tag, equips [60,1],[114,0] over 114 ticks) is made on an observation no tick follows, so a
+    // tape never fires it and the game would end on the wrong slot. The PLAN gets one idle tick the model plays
+    // (its row checked like any other), so the wasm tape and the JS page play the same plan and both end on the
+    // planned slot. `trailingEquip` names the tick for the JS walker, which settles a done goal before asking.
+    const trailingEquip = equipsAt.has(solution.length);
+    if (trailingEquip) {
+        run.advance(new Set());
+        solution.push(new Set());
+    }
+    const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
+    return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+        ...(trailingEquip ? { trailingEquip } : {}),
+        // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
+        deadline: out.deadline ?? null,
+        ...forcedHitFieldsOf(out) };
+}
+
+/**
+ * ⛓ FORCED-HIT CONSUMER — `solveSegment`'s two optional FORCEDHIT fields, as a plan carries them (plain rows: the
+ * worker posts the plan structured-cloned): `forcedHits` (one row per billed crossing `{tick, what, proof, billed,
+ * candidate, ticks, damage}`) and `damage` (the player's `{hits, lastHitAt, id}` in the world the segment ends in).
+ * Present only when the solver billed a crossing; absent = today's plan, byte for byte.
+ */
+export function forcedHitFieldsOf(out) {
+    return out?.forcedHits?.length ? { forcedHits: out.forcedHits, damage: out.damage ?? null } : {};
+}
+
+/** ⛓ FORCED-HIT CONSUMER — the hits a plan's forced crossings billed (the sum of each row's `billed`), or 0. */
+export const billedHitsOf = (plan) => (plan?.forcedHits ?? []).reduce((n, f) => n + (f.billed?.length ?? 0), 0);
+
+/** ⛓ FORCED-HIT CONSUMER — the note's tail for a plan that billed a forced crossing ('' for any other plan). */
+export function forcedHitNote(plan) {
+    if (!plan?.forcedHits?.length) return '';
+    const d = plan.damage;
+    return `; forced hit: ${billedHitsOf(plan)} hit(s) billed over ${plan.forcedHits.length} crossing(s)`
+        + `${d ? `, the player ends on ${d.hits} hit(s)${d.id ? ` (last ${d.id} at t${d.lastHitAt})` : ''}` : ''}`;
+}
+
+/**
+ * Steps 2–3 — solve `solverGoal` from the session's live state. Returns the
+ * plan: `solution[i]` is the key set for the i-th tick after the solve,
+ * `expected[i]` the row the live run must be at BEFORE that tick
+ * (`expected[solution.length]` = where the solve ended), `equipsAt` maps a
+ * tick index to the slot to equip before it. Throws the solver's refusal.
+ */
+export function solveFromLive({ session, levelSource, solverGoal, name = 'js-runtime-solve', scratchPersistence = false,
+    equips = null, clock = () => Date.now() }) {
+    return solveFromTape({ staging: session.staging, perTick: session.perTick, live: liveOf(session.run), levelSource,
+        solverGoal, name, scratchPersistence, equips, clock });
+}
+
+/**
+ * ⛓ S2 — the answer a solve service settles with: `{ok: true, plan}`, or
+ * `{ok: false, kind, message}` where `kind` is `'divergence'` (the page's
+ * bug — the walk fails), `'refusal'` (the solver's own — declines), or
+ * `'budget'` (terminated — declines). A worker cannot throw a class across
+ * the boundary, so the kind travels as data.
+ */
+export function settleSolve(fn) {
+    try {
+        return { ok: true, plan: fn() };
+    } catch (err) {
+        if (err instanceof ShadowDivergence) return { ok: false, kind: 'divergence', message: String(err.message) };
+        if (err instanceof PassSkipped) return { ok: false, kind: 'skipped', message: String(err.message) };
+        const pending = err?.name === 'PendingDeclaration' ? err.pending ?? null : null;
+        if (pending) return { ok: false, kind: 'refusal', declaration: { ...pending, phases: undefined }, message: declarationRefusal(pending, err) };
+        // ⛓ SHOULD-STOP — a refusal raised after the pass's deadline tripped carries it (and its ⏱ clause).
+        // ⛓ SLOTS CONSUMER (fidelity STEPOFF2) — and the refusal's `obstacle` (`{kind, id, floors?, solids?}`: `closed` /
+        // `hazard-floor` / `inside-solid` …), as plain data, so a consumer reads the NAME rather than the words.
+        return { ok: false, kind: 'refusal', message: String(err?.message ?? err), ...(err?.deadline ? { deadline: err.deadline } : {}),
+            ...(err?.obstacle ? { obstacle: plainObstacle(err.obstacle) } : {}) };
+    }
+}
+
+/** A refusal's obstacle as data that crosses a worker boundary (its own fields; nothing it does not carry). */
+function plainObstacle(o) {
+    try { return JSON.parse(JSON.stringify(o)); } catch { return { kind: o?.kind ?? null, id: o?.id ?? null }; }
+}
+
+/**
+ * ⛓ S3 — a `PendingDeclaration` the page cannot discharge, said by name.
+ *
+ * The page's runs are SCRATCH (`jsRuntimeCore`, ⚖ Q4), so a kill lock's
+ * clear — the `model`-sourced declaration `twoPassSolve`'s discovery arm
+ * exists for — is written by the run itself and never reaches here. What
+ * does is `source: 'game'`: a static `"Enemy"` body whose death §11.4 refuses
+ * to compute, so only the RUNNING GAME's `persistence_cleared` may name its
+ * tick (`twoPassSolve`'s `gameTick` oracle). (L8's sandtrap was the one case
+ * until fidelity F5 lifted §11.4 for the SandTrap; no committed room raises
+ * one now.) The JS page has no game to ask, and a tick the page invented
+ * would be the second writer of that slot — so it declines, and the walker
+ * walks. A `model`-sourced one here would be a scratch run that did not
+ * write its own clear: named as the defect it is.
+ */
+export function declarationRefusal(pending, err = null) {
+    const what = `{${pending.level},${pending.tag}}${pending.body ? ` (${pending.body})` : pending.lock ? ` (${pending.lock})` : ''}`;
+    if (pending.source === 'game') {
+        return `the goal waits on a GAME-sourced declaration ${what}: §11.4 refuses to compute that body's `
+            + 'death, so only the running game may name its tick, and the JS page has no game oracle';
+    }
+    return `the solver raised a ${pending.source}-sourced declaration ${what} on a scratch run, which should `
+        + `have written that clear itself — ${String(err?.message ?? '').split('\n')[0]}`;
+}
+
+/**
+ * ⛓ S2 — the in-place service (no worker): `start` solves synchronously and
+ * returns an already-settled handle. S1's behaviour exactly; the node rows'
+ * default. `request.levelSource` may be given directly here.
+ */
+export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
+    return {
+        kind: 'in-place',
+        start(request) {
+            const levelSource = request.levelSource ?? levelSourceFromAtlas(request.source.records);
+            // ⛓ ANYTIME — no budget in place: every pass runs, the best answer is the result.
+            // ⛓ SHOULD-STOP — so no deadline either (`passShouldStop` answers null without a budget).
+            const { passes = ANYTIME_PASSES, budgetWork, upgradeWindowWork: windowWork, ...rest } = request;
+            // ⛓ KILLLOCK HOOK — an off-default set of this instance is stamped here too, so the plan is labelled.
+            const killLock = rest.killLockBodies ?? killLockBodiesStamp();
+            // ⛓ CONTACT HOOK — and the contact switches' set, the same way.
+            const contact = rest.contactFidelity ?? contactFidelityStamp();
+            // ⛓ AXE_DODGE HOOK — and an off-default `AXE_DODGE_ASK_PER_PREVIEW`, the same way.
+            const axe = rest.axeDodgeAskPerPreview ?? axeDodgeAskStamp();
+            // ⛓ DASH-ONLY WINDOW — and an off-default `DASH_ONLY_WINDOW` (inert here: no budget, no window).
+            const dashOnly = rest.dashOnlyWindow ?? dashOnlyWindowStamp();
+            // ⛓ DASH-SHAPE STAMP — and an off-default dash shape (inert here unless a deadline trips `sword-dash`).
+            const dashShape = rest.dashShape ?? dashShapeStamp();
+            const result = solveAnytime({ ...rest, ...(killLock ? { killLockBodies: killLock } : {}),
+                ...(contact ? { contactFidelity: contact } : {}), ...(axe !== null ? { axeDodgeAskPerPreview: axe } : {}),
+                ...(dashOnly !== null ? { dashOnlyWindow: dashOnly } : {}),
+                ...(dashShape ? { dashShape } : {}),
+                levelSource, clock }, { passes, clock });
+            return { settled: true, started: true, result, cancel() {} };
+        },
+        warm() {},
+        dispose() {},
+    };
+}
+
+/**
+ * The solver mode the walker consults (`createRuntimeWalker`'s `solver` dep).
+ *
+ * @param {object} deps
+ * @param {() => object|null} deps.getSession   the page's live session
+ * @param {() => object|null} deps.getLevelSource  the room source the session was booted from
+ * @param {() => Map|null} [deps.getRecords]  ⛓ S2 — that source's records (level → record), what a worker is sent
+ * @param {object|null} [deps.solveService]  ⛓ S2 — where steps 2–3 run (`createWorkerSolveService`); null = in place (S1)
+ * @param {number} [deps.budgetWork]  ⛓ DETERMINISTIC BUDGET — one solve's budget in WORK units (`SOLVER_BUDGET_WORK`)
+ * @param {number|null} [deps.upgradeWindowWork]  the full pass's dash deadline in work units from the solve's
+ *   start (`upgradeWindowWork`); null = the whole budget
+ * @param {number} [deps.backstopMs]  the wall-clock backstop (`SOLVE_BACKSTOP_MS`): past it the goal FAILS by name
+ * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
+ * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
+ */
+export function createRuntimeSolver({
+    getSession, getLevelSource, getRecords = () => null, placementOf = () => null,
+    onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
+    budgetWork = SOLVER_BUDGET_WORK, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowWork: windowWork = SOLVER_UPGRADE_WINDOW_WORK,
+    backstopMs = SOLVE_BACKSTOP_MS,
+} = {}) {
+    let enabled = false;
+    let plan = null;
+    /** ⛓ S2 — the solve in flight: `{handle, run, session, prefixLength, goal, solverGoal, askedAt}`, or null. */
+    let pending = null;
+    let refutations = 0;
+    let lastRefutation = null;
+    let budget = budgetWork;
+    let upgradeWindow = windowWork;
+    let service = solveService;
+    const inPlace = createInPlaceSolveService({ clock });
+    /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
+    const playedEquips = new WeakMap();
+    const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null, lastDeclineObstacle: null,
+        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0, backstops: 0 };
+
+    const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
+
+    function refute(why) {
+        refutations += 1;
+        stats.refutations += 1;
+        lastRefutation = why;
+        plan = null;
+        emit({ type: 'refuted', message: `[js runtime] solver plan refuted (${refutations}/${maxRefutations}) — ${why}` });
+    }
+
+    /** ⛓ S2 — drop the solve in flight: its worker is TERMINATED, its answer can never be played. */
+    function cancel(why = null) {
+        if (!pending) return;
+        const p = pending;
+        pending = null;
+        stats.solving = false;
+        try { p.handle.cancel(); } catch { /* a dead worker is already cancelled */ }
+        if (why) emit({ type: 'cancelled', message: `[js runtime] solve cancelled — ${why}` });
+    }
+
+    function decline(why, obstacle = null) {
+        stats.declines += 1;
+        stats.lastDecline = why;
+        stats.lastDeclineObstacle = obstacle;
+        emit({ type: 'declined', message: `[js runtime] the solver declined — ${why}` });
+        // ⛓ WAVE-6 CONSUMER — the refusal's obstacle rides with the decline, so the walker reads the NAME
+        // (`arrival-inside-solid` fails the goal at once: walking instead from inside a solid is a stall).
+        return obstacle ? { declined: why, obstacle } : { declined: why };
+    }
+
+    /** Start a solve of `solverGoal` from the session's live state (steps 2–3, behind the service). */
+    function start(run, goal, solverGoal) {
+        const session = getSession();
+        if (!session || session.run !== run) throw new ShadowDivergence('the walker\'s run is not the page session\'s run');
+        const request = {
+            staging: session.staging, perTick: session.perTick, live: liveOf(run), solverGoal,
+            name: `js-runtime-L${goal.level}-${goal.kind}`,
+            // ⛓ S3 — the shadow carries the LIVE run's own persistence mode, never a second answer.
+            scratchPersistence: run.scratchPersistence === true,
+            equips: playedEquips.get(session) ?? null,
+            // ⛓ DETERMINISTIC BUDGET — the worker's pass deadlines, in work units (the in-place service drops both).
+            budgetWork: budget, upgradeWindowWork: upgradeWindow,
+        };
+        const handle = service
+            // ⛓ RETRY ATTEMPT — this solver never re-asks a start at a larger budget: each start is attempt 0
+            ? service.start({ ...request, source: { records: getRecords() } }, { attempt: { retry: 0, budgets: [budget] } })
+            : inPlace.start({ ...request, levelSource: getLevelSource() });
+        pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null };
+        stats.solving = true;
+        if (!handle.settled) {
+            emit({ type: 'solving', message: `[js runtime] solving ${solverGoal.kind} in level ${goal.level} `
+                + `(budget ${budget} work units) — the room is held while the solver thinks` });
+        }
+    }
+
+    /** The answer in hand → a plan, a decline or a failure (null = keep waiting). */
+    function take(run) {
+        const p = pending;
+        const now = clock();
+        // ⛔ A plan is played only from the state it was solved from: a run
+        // replaced while the solver thinks makes its answer STALE at once.
+        if (p.run !== run || p.session !== getSession()) {
+            cancel();
+            stats.stale += 1;
+            refute('the run was re-booted while the solver thought (an item flag or a host teleport) — its answer is stale');
+            return null;
+        }
+        if (!p.handle.settled) {
+            // ⛓ DETERMINISTIC BUDGET — the page WAITS for the worker's answer: its budget is work, bounded in
+            // the worker (`passShouldStop`). The wall clock is only a BACKSTOP, and it never picks an answer —
+            // past it the goal FAILS by name, and a plan already in hand is NOT played.
+            if (p.startedAt === null && p.handle.started) p.startedAt = now;
+            const startedAt = p.startedAt;
+            if (startedAt !== null && now - startedAt > backstopMs) {
+                cancel();
+                stats.backstops += 1;
+                stats.lastWaitMs = now - p.askedAt;
+                return { failed: `the solve exceeded the backstop on this machine (${seconds(backstopMs)}) on `
+                    + `${p.solverGoal.kind} in level ${p.goal.level} (terminated; the solve's own budget is ${budget} work units)` };
+            }
+            if (startedAt === null && now - p.askedAt > loadBudgetMs) {
+                cancel();
+                stats.backstops += 1;
+                return { failed: `the solver did not start within ${seconds(loadBudgetMs)} on this machine (its worker never loaded)` };
+            }
+            return { solving: true };
+        }
+        pending = null;
+        stats.solving = false;
+        stats.lastWaitMs = now - p.askedAt;
+        const r = p.handle.result;
+        // ⛓ DETERMINISTIC BUDGET — a later pass cut at the work budget (the successor of a page expiry).
+        const expired = budgetCut(r);
+        if (expired) stats.expiries += 1;
+        // ⛔ A plan is played only from the state it was solved from.
+        if (p.session.perTick.length !== p.prefixLength) {
+            stats.stale += 1;
+            refute(`the session ticked while the solver thought (${p.prefixLength} → ${p.session.perTick.length} `
+                + 'tick(s)) — its answer is stale');
+            return null;
+        }
+        if (!r.ok) {
+            if (r.kind === 'divergence') return { failed: r.message };
+            return decline(String(r.message).split('\n')[0], r.obstacle ?? null);
+        }
+        const plan0 = r.plan;
+        stats.solves += 1;
+        if (expired) stats.provisionalPlays += 1;
+        stats.lastSolve = { level: p.goal.level, goal: p.solverGoal, keys: plan0.solution.length, verbs: plan0.verbs,
+            replayMs: plan0.replayMs, solveMs: plan0.solveMs, prefix: plan0.prefixLength, waitMs: stats.lastWaitMs,
+            where: service ? service.kind : inPlace.kind,
+            // ⛓ ANYTIME — which pass made the plan, whether a later pass was cut at the budget, and every pass's row
+            pass: plan0.pass ?? null, expired, passes: plan0.passes ?? p.handle.passes ?? null,
+            /** Where the solved shadow ended — the live run must end there too. */
+            end: { ...plan0.expected[plan0.expected.length - 1] },
+            // ⛓ FORCED-HIT CONSUMER — the billed crossings and the damage the plan ends on (absent = none billed)
+            ...forcedHitFieldsOf(plan0) };
+        emit({ type: 'solved', message: `[js runtime] solved ${p.solverGoal.kind} in level ${p.goal.level}: `
+            + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
+            + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''}`
+            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''}${forcedHitNote(plan0)})` });
+        plan = { ...plan0, run, i: 0 };
+        return null;
+    }
+
+    return {
+        get enabled() { return enabled; },
+        set enabled(v) {
+            enabled = Boolean(v);
+            if (!enabled) { plan = null; cancel(); } else service?.warm?.();
+        },
+        /** True while a plan is being played (the core's burst and `autoAdvanceText` read it). */
+        get planning() { return plan !== null; },
+        /** ⛓ S2 — true while a solve is in flight (the page holds the model). */
+        get solving() { return pending !== null; },
+        /** Planned keys not yet played. */
+        get remaining() { return plan ? plan.solution.length - plan.i : 0; },
+        /**
+         * ⛓ TRAILING EQUIP — true while `run`'s plan still owes its trailing equip tick (the idle tick
+         * `solveFromTape` appends for a selection after the last one): the walker plays it before settling
+         * a goal that is already done, so the page ends on the planned slot, as the wasm tape does.
+         */
+        owesTrailingTick(run) {
+            return Boolean(plan?.trailingEquip && plan.run === run && plan.i === plan.solution.length - 1);
+        },
+        get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation, budgetWork: budget }; },
+        /** ⛓ DETERMINISTIC BUDGET — one solve's budget, in work units (a test knob and the page's `?solverBudgetWork=`). */
+        get budgetWork() { return budget; },
+        set budgetWork(n) { if (Number.isFinite(n) && n > 0) budget = n; },
+        /** The upgrade window in work units (`upgradeWindowWork`; null / non-positive = the whole budget). */
+        get upgradeWindowWork() { return upgradeWindow; },
+        set upgradeWindowWork(n) { const v = Number(n); upgradeWindow = n !== null && Number.isFinite(v) && v > 0 ? v : null; },
+        /** The wall-clock backstop, in ms (a test knob; it only ever FAILS a goal by name). */
+        get backstopMs() { return backstopMs; },
+        set backstopMs(ms) { if (Number.isFinite(ms) && ms > 0) backstopMs = ms; },
+        /** ⛓ S2 — swap the solve service (the page's worker; null = in place). Cancels a solve in flight. */
+        setSolveService(next) { cancel(); service = next ?? null; if (enabled) service?.warm?.(); },
+        get solveService() { return service; },
+        /** A new goal (or none): forget the plan, the solve in flight and the refutation count. */
+        clear() { plan = null; cancel(); refutations = 0; lastRefutation = null; },
+        /** ⛓ S2 — the walk left this goal's room or settled: a solve in flight is dropped (named). */
+        cancel(why) { cancel(why); },
+        /**
+         * This tick's keys: `{held}`; `{solving}` (⛓ S2 — hold the room, a
+         * solve is in flight); `{declined: why}` (walk instead); `{failed:
+         * why}` (the goal fails); or null (not the solver's goal — the walker
+         * walks, nothing said).
+         */
+        keysFor(run, goal, resolved) {
+            if (!enabled) return null;
+            const mapped = solverGoalFor(goal, {
+                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null, levelSource: getLevelSource(),
+            });
+            if (mapped.walker) { cancel(); return null; }
+            if (plan) {
+                if (plan.run !== run) refute('the run was re-booted (an item flag or a host teleport) — a new session');
+                else if (plan.i >= plan.solution.length) refute('the plan played out and the goal is not complete');
+                else if (!sameRow(rowOf(run), plan.expected[plan.i])) {
+                    refute(`tick ${plan.i} of the plan: live ${showRow(rowOf(run))}, expected ${showRow(plan.expected[plan.i])}`);
+                }
+            }
+            if (!plan && pending) {
+                const out = take(run);
+                if (out) return out;
+            }
+            if (!plan) {
+                if (refutations >= maxRefutations) {
+                    return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
+                }
+                try {
+                    start(run, goal, mapped.goal);
+                } catch (err) {
+                    if (err instanceof ShadowDivergence) return { failed: err.message };
+                    throw err;
+                }
+                const out = take(run);
+                if (out) return out;
+                if (!plan) {
+                    // A stale in-place answer cannot happen (nothing moves inside a synchronous solve).
+                    return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
+                }
+            }
+            const slot = plan.equipsAt.get(plan.i);
+            if (slot !== undefined) {
+                run.equipNow(slot);
+                const session = getSession();
+                if (!playedEquips.has(session)) playedEquips.set(session, new Map());
+                playedEquips.get(session).set(session.perTick.length, slot);
+            }
+            const held = new Set(plan.solution[plan.i]);
+            plan.i += 1;
+            stats.played += 1;
+            return { held };
+        },
+    };
+}

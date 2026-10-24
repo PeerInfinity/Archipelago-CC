@@ -1,0 +1,6336 @@
+{
+  "options": {
+    "zoneLimit": 15,
+    "maxRuns": 2000,
+    "maxTicksPerRun": 200000,
+    "endZone": 99,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ],
+    "skipBlocked": true,
+    "autoFillOrder": null,
+    "purchasePolicy": {
+      "kind": "cheapest"
+    },
+    "runToBudget": false,
+    "checkpointEvery": 100,
+    "gameDataPatch": [
+      {
+        "id": 16,
+        "cost_multiplier": 0.4983968405993143
+      },
+      {
+        "id": 15,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 13,
+        "cost_multiplier": 13.94857546475959
+      },
+      {
+        "id": 14,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 12,
+        "cost_multiplier": 0.46432893228912414
+      },
+      {
+        "id": 11,
+        "cost_multiplier": 2.1200329705149197
+      },
+      {
+        "id": 10,
+        "cost_multiplier": 1.7990510787385798
+      },
+      {
+        "id": 23,
+        "cost_multiplier": 0.6534597320535871
+      },
+      {
+        "id": 26,
+        "cost_multiplier": 5.700981696540758
+      },
+      {
+        "id": 27,
+        "cost_multiplier": 2.9591756455852765
+      },
+      {
+        "id": 25,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 22,
+        "cost_multiplier": 1.1267848497776771
+      },
+      {
+        "id": 24,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 21,
+        "cost_multiplier": 2.768429791111952
+      },
+      {
+        "id": 20,
+        "cost_multiplier": 1.2955233708274125
+      },
+      {
+        "id": 32,
+        "cost_multiplier": 0.06265799136368777
+      },
+      {
+        "id": 36,
+        "cost_multiplier": 1.9450931471961554
+      },
+      {
+        "id": 37,
+        "cost_multiplier": 0.3199393467812742
+      },
+      {
+        "id": 35,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 31,
+        "cost_multiplier": 30.926487217284688
+      },
+      {
+        "id": 34,
+        "cost_multiplier": 0.15158514830929717
+      },
+      {
+        "id": 33,
+        "cost_multiplier": 0.2361371296128246
+      },
+      {
+        "id": 30,
+        "cost_multiplier": 0.27912482904970737
+      },
+      {
+        "id": 42,
+        "cost_multiplier": 0.23981514711582133
+      },
+      {
+        "id": 45,
+        "cost_multiplier": 0.2186431861320317
+      },
+      {
+        "id": 47,
+        "cost_multiplier": 1.2962353766006407
+      },
+      {
+        "id": 48,
+        "cost_multiplier": 0.1407900776686364
+      },
+      {
+        "id": 46,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 44,
+        "cost_multiplier": 0.6323521596634001
+      },
+      {
+        "id": 41,
+        "cost_multiplier": 0.5166187616175225
+      },
+      {
+        "id": 43,
+        "cost_multiplier": 5.0195293804497
+      },
+      {
+        "id": 40,
+        "cost_multiplier": 2.41758588797223
+      },
+      {
+        "id": 54,
+        "cost_multiplier": 0.16727695937193157
+      },
+      {
+        "id": 57,
+        "cost_multiplier": 0.5341566214092436
+      },
+      {
+        "id": 58,
+        "cost_multiplier": 5.256754167745386
+      },
+      {
+        "id": 52,
+        "cost_multiplier": 0.15712726329683188
+      },
+      {
+        "id": 55,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 53,
+        "cost_multiplier": 0.0799079668714873
+      },
+      {
+        "id": 56,
+        "cost_multiplier": 0.6271826706517688
+      },
+      {
+        "id": 51,
+        "cost_multiplier": 0.6447984539181006
+      },
+      {
+        "id": 50,
+        "cost_multiplier": 0.13116637409292345
+      },
+      {
+        "id": 62,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 61,
+        "cost_multiplier": 0.06317444344854667
+      },
+      {
+        "id": 64,
+        "cost_multiplier": 0.05087653177060972
+      },
+      {
+        "id": 67,
+        "cost_multiplier": 0.2237604231789773
+      },
+      {
+        "id": 66,
+        "cost_multiplier": 0.606923880441315
+      },
+      {
+        "id": 65,
+        "cost_multiplier": 0.12969477736846183
+      },
+      {
+        "id": 63,
+        "cost_multiplier": 0.051205503264899595
+      },
+      {
+        "id": 60,
+        "cost_multiplier": 0.0921572279744318
+      },
+      {
+        "id": 77,
+        "cost_multiplier": 0.10826633983991173
+      },
+      {
+        "id": 74,
+        "cost_multiplier": 1.5080882844458003
+      },
+      {
+        "id": 72,
+        "cost_multiplier": 5.360220421788402
+      },
+      {
+        "id": 69,
+        "cost_multiplier": 0.9532499886290479
+      },
+      {
+        "id": 75,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 68,
+        "cost_multiplier": 0.28549591531084717
+      },
+      {
+        "id": 76,
+        "cost_multiplier": 30.422905007286214
+      },
+      {
+        "id": 73,
+        "cost_multiplier": 0.24004584436457635
+      },
+      {
+        "id": 71,
+        "cost_multiplier": 0.44201398368949296
+      },
+      {
+        "id": 70,
+        "cost_multiplier": 1.2486271586199278
+      },
+      {
+        "id": 83,
+        "cost_multiplier": 0.2782680860250817
+      },
+      {
+        "id": 82,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 84,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 86,
+        "cost_multiplier": 1740.700344664374
+      },
+      {
+        "id": 85,
+        "cost_multiplier": 24.802437369411997
+      },
+      {
+        "id": 81,
+        "cost_multiplier": 11.03821329048973
+      },
+      {
+        "id": 80,
+        "cost_multiplier": 1.539250591063218
+      },
+      {
+        "id": 95,
+        "cost_multiplier": 3.3017236435416244
+      },
+      {
+        "id": 96,
+        "cost_multiplier": 8.67321249712343
+      },
+      {
+        "id": 98,
+        "cost_multiplier": 1.741896264644882
+      },
+      {
+        "id": 93,
+        "cost_multiplier": 0.5192781643279988
+      },
+      {
+        "id": 87,
+        "cost_multiplier": 48.79714858899754
+      },
+      {
+        "id": 89,
+        "cost_multiplier": 72.69484326570239
+      },
+      {
+        "id": 91,
+        "cost_multiplier": 215.48293024950354
+      },
+      {
+        "id": 94,
+        "cost_multiplier": 97.68818088852764
+      },
+      {
+        "id": 99,
+        "cost_multiplier": 0.763019107692957
+      },
+      {
+        "id": 97,
+        "cost_multiplier": 5.659815473776904
+      },
+      {
+        "id": 92,
+        "cost_multiplier": 0.1423875684954663
+      },
+      {
+        "id": 90,
+        "cost_multiplier": 2042.729360263028
+      },
+      {
+        "id": 102,
+        "cost_multiplier": 2.734363528521053
+      },
+      {
+        "id": 106,
+        "cost_multiplier": 9.261890353837579
+      },
+      {
+        "id": 101,
+        "cost_multiplier": 1.099375693790275
+      },
+      {
+        "id": 100,
+        "cost_multiplier": 7.233248275960324
+      },
+      {
+        "id": 117,
+        "cost_multiplier": 4.55116044249894
+      },
+      {
+        "id": 116,
+        "cost_multiplier": 117.02295367703037
+      },
+      {
+        "id": 118,
+        "cost_multiplier": 369.28775122639314
+      },
+      {
+        "id": 104,
+        "cost_multiplier": 4515.194873329015
+      },
+      {
+        "id": 107,
+        "cost_multiplier": 712.1334523124514
+      },
+      {
+        "id": 112,
+        "cost_multiplier": 26.786380600969835
+      },
+      {
+        "id": 111,
+        "cost_multiplier": 522.9114196994605
+      },
+      {
+        "id": 105,
+        "cost_multiplier": 206.18308013892397
+      },
+      {
+        "id": 115,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 114,
+        "cost_multiplier": 52.780113337955704
+      },
+      {
+        "id": 113,
+        "cost_multiplier": 0.1632079303346418
+      },
+      {
+        "id": 110,
+        "cost_multiplier": 19.608560176483877
+      },
+      {
+        "id": 122,
+        "cost_multiplier": 0.1637104215037699
+      },
+      {
+        "id": 127,
+        "cost_multiplier": 6.477616854137063
+      },
+      {
+        "id": 126,
+        "cost_multiplier": 1489.3262709735016
+      },
+      {
+        "id": 121,
+        "cost_multiplier": 46.42651566417424
+      },
+      {
+        "id": 120,
+        "cost_multiplier": 0.5382635288529559
+      },
+      {
+        "id": 134,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 136,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 135,
+        "cost_multiplier": 798.8601763686879
+      },
+      {
+        "id": 133,
+        "cost_multiplier": 0.15793610862136667
+      },
+      {
+        "id": 131,
+        "cost_multiplier": 1762.1449196601434
+      },
+      {
+        "id": 125,
+        "cost_multiplier": 2.188631411932392
+      },
+      {
+        "id": 123,
+        "cost_multiplier": 5.0453684537305215
+      },
+      {
+        "id": 128,
+        "cost_multiplier": 16.1851469518749
+      },
+      {
+        "id": 124,
+        "cost_multiplier": 8495.288165834092
+      },
+      {
+        "id": 132,
+        "cost_multiplier": 0.2571277263360457
+      },
+      {
+        "id": 130,
+        "cost_multiplier": 3.3297773743341157
+      },
+      {
+        "id": 146,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 147,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 144,
+        "cost_multiplier": 8.46223572166142
+      },
+      {
+        "id": 142,
+        "cost_multiplier": 6.36864037983154
+      },
+      {
+        "id": 141,
+        "cost_multiplier": 85.22614384572188
+      },
+      {
+        "id": 140,
+        "cost_multiplier": 43.1202714721516
+      },
+      {
+        "id": 145,
+        "cost_multiplier": 58.24381196279543
+      },
+      {
+        "id": 137,
+        "cost_multiplier": 0.44590216718545506
+      },
+      {
+        "id": 138,
+        "cost_multiplier": 12190.91157888549
+      },
+      {
+        "id": 103,
+        "cost_multiplier": 2.63537694711384
+      },
+      {
+        "id": 143,
+        "cost_multiplier": 0.5410343525123603
+      },
+      {
+        "id": 148,
+        "cost_multiplier": 75.98867823021065
+      },
+      {
+        "id": 157,
+        "cost_multiplier": 337.4041238466168
+      },
+      {
+        "id": 152,
+        "cost_multiplier": 1223.0125259447989
+      },
+      {
+        "id": 151,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 153,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 155,
+        "cost_multiplier": 30.20322423100633
+      },
+      {
+        "id": 150,
+        "cost_multiplier": 153.90391747673527
+      },
+      {
+        "id": 154,
+        "cost_multiplier": 155.97123731490632
+      },
+      {
+        "id": 156,
+        "cost_multiplier": 480.2235972336198
+      },
+      {
+        "id": 13,
+        "perk": 47
+      },
+      {
+        "id": 27,
+        "perk": 47
+      },
+      {
+        "id": 34,
+        "perk": 47
+      },
+      {
+        "id": 37,
+        "perk": 47
+      },
+      {
+        "id": 43,
+        "perk": 47
+      },
+      {
+        "id": 54,
+        "perk": 47
+      },
+      {
+        "id": 58,
+        "perk": 47
+      },
+      {
+        "id": 64,
+        "perk": 47
+      },
+      {
+        "id": 69,
+        "perk": 47
+      },
+      {
+        "id": 74,
+        "perk": 47
+      },
+      {
+        "id": 84,
+        "perk": 47
+      },
+      {
+        "id": 89,
+        "perk": 47
+      },
+      {
+        "id": 90,
+        "perk": 47
+      },
+      {
+        "id": 104,
+        "perk": 47
+      },
+      {
+        "id": 114,
+        "perk": 47
+      },
+      {
+        "id": 118,
+        "perk": 47
+      },
+      {
+        "id": 124,
+        "perk": 47
+      },
+      {
+        "id": 134,
+        "perk": 47
+      },
+      {
+        "id": 138,
+        "perk": 47
+      },
+      {
+        "id": 144,
+        "perk": 47
+      },
+      {
+        "id": 155,
+        "perk": 47
+      }
+    ],
+    "apRuntime": {
+      "perkTaskIds": [
+        13,
+        27,
+        34,
+        37,
+        43,
+        54,
+        58,
+        64,
+        69,
+        74,
+        84,
+        89,
+        90,
+        104,
+        114,
+        118,
+        124,
+        134,
+        138,
+        144,
+        155
+      ],
+      "grants": {
+        "13": "Sunken Treasure",
+        "14": "Village Hero",
+        "21": "Reflections on the Journey",
+        "26": "Minor Time Compression",
+        "31": "Energetic Memory",
+        "36": "High Altitude Climbing",
+        "42": "Deep Sea Diving",
+        "45": "Mysterious Amulet",
+        "46": "Found Lost Temple",
+        "63": "Villager Gratitude",
+        "70": "Understanding of the Reset",
+        "74": "Purged Bureaucracy",
+        "76": "How to Write",
+        "86": "Experienced Traveler",
+        "95": "The Worm",
+        "99": "Walk Without Rhythm",
+        "100": "Attunement",
+        "125": "Energetic Spell",
+        "126": "Goblin Scourge",
+        "148": "How to Read",
+        "152": "Underground Connection"
+      },
+      "foreignPerks": [],
+      "regrantOnEveryCompletion": true
+    },
+    "mods": {
+      "auto_haste": true,
+      "auto_lightning": true,
+      "auto_use_cycle": true,
+      "auto_use_free_items": true,
+      "artifact_tasks_item_cycle_only": true,
+      "auto_dreamcatcher": true,
+      "auto_ring": true,
+      "auto_prioritize": true,
+      "auto_prestige": true,
+      "auto_buy_cheapest": true,
+      "auto_buy_budget_enabled": true,
+      "resume_automation_on_reset": true,
+      "force_automation": true,
+      "auto_continue_energy_reset": true,
+      "suppress_prestige_popup": true,
+      "show_spark_stats": true,
+      "instant_mode_allowed": true,
+      "threshold_master": true,
+      "threshold_perk_affordable_enabled": true,
+      "threshold_perk_unaffordable_enabled": true,
+      "threshold_combat_enabled": true,
+      "threshold_item_enabled": true,
+      "threshold_prestige_enabled": true,
+      "threshold_progression_enabled": true,
+      "threshold_unlocker_enabled": true,
+      "threshold_other_enabled": true,
+      "auto_prestige_stall_enabled": true,
+      "threshold_all_skipped": 2
+    }
+  },
+  "timing": {
+    "wallMs": 9238.345978000001,
+    "ticks": 17034,
+    "runsExecuted": 564,
+    "ticksPerSec": 1844
+  },
+  "stalled": false,
+  "endOfContentRuns": 0,
+  "allCompleted": true,
+  "taskCount": 130,
+  "completedCount": 130,
+  "finalState": {
+    "prestiges": 10,
+    "highestZone": 17,
+    "divineSpark": 3,
+    "repeatableLevels": {
+      "Divine Knowledge": 12,
+      "Unlimited Power": 3,
+      "Divine Appetite": 2,
+      "Gotta Go Fast": 4
+    }
+  },
+  "apRuntime": {
+    "coverage": 130,
+    "coverageTotal": 130,
+    "fullCoverage": true,
+    "uncovered": [],
+    "pollingCompletedCount": 130,
+    "callbackCompletedCount": 130,
+    "firstCompletionRuns": {
+      "10": 2,
+      "11": 2,
+      "12": 2,
+      "13": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "20": 5,
+      "21": 4,
+      "22": 5,
+      "23": 3,
+      "24": 3,
+      "25": 2,
+      "26": 2,
+      "27": 2,
+      "30": 8,
+      "31": 5,
+      "32": 5,
+      "33": 5,
+      "34": 5,
+      "35": 5,
+      "36": 6,
+      "37": 6,
+      "40": 11,
+      "41": 11,
+      "42": 11,
+      "43": 11,
+      "44": 8,
+      "45": 8,
+      "46": 11,
+      "47": 9,
+      "48": 10,
+      "50": 13,
+      "51": 13,
+      "52": 13,
+      "53": 11,
+      "54": 11,
+      "55": 13,
+      "56": 14,
+      "57": 13,
+      "58": 13,
+      "60": 15,
+      "61": 15,
+      "62": 15,
+      "63": 13,
+      "64": 13,
+      "65": 15,
+      "66": 15,
+      "67": 15,
+      "68": 15,
+      "69": 14,
+      "70": 17,
+      "71": 16,
+      "72": 15,
+      "73": 16,
+      "74": 16,
+      "75": 36,
+      "76": 16,
+      "77": 15,
+      "80": 21,
+      "81": 19,
+      "82": 20,
+      "83": 19,
+      "84": 19,
+      "85": 19,
+      "86": 20,
+      "87": 33,
+      "89": 33,
+      "90": 35,
+      "91": 29,
+      "92": 24,
+      "93": 27,
+      "94": 22,
+      "95": 25,
+      "96": 21,
+      "97": 21,
+      "98": 31,
+      "99": 31,
+      "100": 77,
+      "101": 39,
+      "102": 39,
+      "103": 49,
+      "104": 79,
+      "105": 41,
+      "106": 37,
+      "107": 47,
+      "110": 77,
+      "111": 77,
+      "112": 77,
+      "113": 77,
+      "114": 77,
+      "115": 173,
+      "116": 83,
+      "117": 77,
+      "118": 77,
+      "120": 81,
+      "121": 81,
+      "122": 80,
+      "123": 78,
+      "124": 77,
+      "125": 142,
+      "126": 80,
+      "127": 81,
+      "128": 81,
+      "130": 83,
+      "131": 83,
+      "132": 82,
+      "133": 83,
+      "134": 81,
+      "135": 81,
+      "136": 531,
+      "137": 83,
+      "138": 87,
+      "140": 91,
+      "141": 85,
+      "142": 83,
+      "143": 90,
+      "144": 89,
+      "145": 83,
+      "146": 564,
+      "147": 83,
+      "148": 85,
+      "150": 156,
+      "151": 101,
+      "152": 107,
+      "153": 101,
+      "154": 93,
+      "155": 91,
+      "156": 91,
+      "157": 107
+    },
+    "milestones": [
+      {
+        "taskId": 13,
+        "perk": "Sunken Treasure",
+        "run": 1
+      },
+      {
+        "taskId": 14,
+        "perk": "Village Hero",
+        "run": 1
+      },
+      {
+        "taskId": 26,
+        "perk": "Minor Time Compression",
+        "run": 2
+      },
+      {
+        "taskId": 21,
+        "perk": "Reflections on the Journey",
+        "run": 4
+      },
+      {
+        "taskId": 31,
+        "perk": "Energetic Memory",
+        "run": 5
+      },
+      {
+        "taskId": 36,
+        "perk": "High Altitude Climbing",
+        "run": 6
+      },
+      {
+        "taskId": 45,
+        "perk": "Mysterious Amulet",
+        "run": 8
+      },
+      {
+        "taskId": 42,
+        "perk": "Deep Sea Diving",
+        "run": 11
+      },
+      {
+        "taskId": 46,
+        "perk": "Found Lost Temple",
+        "run": 11
+      },
+      {
+        "taskId": 63,
+        "perk": "Villager Gratitude",
+        "run": 13
+      },
+      {
+        "taskId": 74,
+        "perk": "Purged Bureaucracy",
+        "run": 16
+      },
+      {
+        "taskId": 76,
+        "perk": "How to Write",
+        "run": 16
+      },
+      {
+        "taskId": 70,
+        "perk": "Understanding of the Reset",
+        "run": 17
+      },
+      {
+        "taskId": 86,
+        "perk": "Experienced Traveler",
+        "run": 20
+      },
+      {
+        "taskId": 95,
+        "perk": "The Worm",
+        "run": 25
+      },
+      {
+        "taskId": 99,
+        "perk": "Walk Without Rhythm",
+        "run": 31
+      },
+      {
+        "taskId": 100,
+        "perk": "Attunement",
+        "run": 77
+      },
+      {
+        "taskId": 126,
+        "perk": "Goblin Scourge",
+        "run": 80
+      },
+      {
+        "taskId": 148,
+        "perk": "How to Read",
+        "run": 85
+      },
+      {
+        "taskId": 152,
+        "perk": "Underground Connection",
+        "run": 107
+      },
+      {
+        "taskId": 125,
+        "perk": "Energetic Spell",
+        "run": 142
+      }
+    ],
+    "perksGranted": [
+      "Village Hero",
+      "Sunken Treasure",
+      "Minor Time Compression",
+      "Reflections on the Journey",
+      "Energetic Memory",
+      "High Altitude Climbing",
+      "Mysterious Amulet",
+      "Found Lost Temple",
+      "Deep Sea Diving",
+      "Villager Gratitude",
+      "Purged Bureaucracy",
+      "How to Write",
+      "Understanding of the Reset",
+      "Experienced Traveler",
+      "The Worm",
+      "Walk Without Rhythm",
+      "Attunement",
+      "Goblin Scourge",
+      "How to Read",
+      "Underground Connection",
+      "Energetic Spell"
+    ],
+    "perksMissing": [],
+    "foreignPerks": [],
+    "regrants": 189,
+    "prestigeWipes": 10
+  },
+  "purchases": [
+    {
+      "name": "Permanent Automation",
+      "cost": 10,
+      "layer": 0,
+      "run": 112
+    },
+    {
+      "name": "Divine Inspiration",
+      "cost": 10,
+      "layer": 0,
+      "run": 112
+    },
+    {
+      "name": "Look in the Mirror",
+      "cost": 101,
+      "layer": 0,
+      "run": 177
+    },
+    {
+      "name": "Fully Attuned",
+      "cost": 800,
+      "layer": 0,
+      "run": 509
+    }
+  ],
+  "sparkCheckpoints": [
+    {
+      "run": 100,
+      "sparkEarned": 0,
+      "sparkHeld": 0,
+      "prestiges": 0,
+      "highestZone": 14
+    },
+    {
+      "run": 200,
+      "sparkEarned": 300,
+      "sparkHeld": 10,
+      "prestiges": 2,
+      "highestZone": 15
+    },
+    {
+      "run": 300,
+      "sparkEarned": 700,
+      "sparkHeld": 72,
+      "prestiges": 4,
+      "highestZone": 15
+    },
+    {
+      "run": 400,
+      "sparkEarned": 1300,
+      "sparkHeld": 320,
+      "prestiges": 7,
+      "highestZone": 15
+    },
+    {
+      "run": 500,
+      "sparkEarned": 1700,
+      "sparkHeld": 720,
+      "prestiges": 9,
+      "highestZone": 15
+    },
+    {
+      "run": 564,
+      "sparkEarned": 1900,
+      "sparkHeld": 3,
+      "prestiges": 10,
+      "highestZone": 17
+    }
+  ],
+  "completions": [
+    {
+      "id": 10,
+      "name": "Join the Watch",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 11,
+      "name": "Read Noticeboard",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 12,
+      "name": "Train with Weapons",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 13,
+      "name": "Learn How to Read",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 14,
+      "name": "Beg for Food",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 10,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 15,
+      "name": "Hide and Seek",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 16,
+      "name": "Observe Surroundings",
+      "zone": 0,
+      "zoneName": "The Village",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 1,
+      "prestiges": 0
+    },
+    {
+      "id": 20,
+      "name": "Notice Smoke in the Distance",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 21,
+      "name": "Learn Routines",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 4,
+      "prestiges": 0
+    },
+    {
+      "id": 22,
+      "name": "Deal with Drunkards",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 2,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 23,
+      "name": "Chit-chat",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 3,
+      "prestiges": 0
+    },
+    {
+      "id": 24,
+      "name": "Sparring",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 3,
+      "prestiges": 0
+    },
+    {
+      "id": 25,
+      "name": "Fletch Arrows",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 26,
+      "name": "Daydream About Leaving",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 27,
+      "name": "Learn How to Write",
+      "zone": 1,
+      "zoneName": "The Village Watch",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 2,
+      "prestiges": 0
+    },
+    {
+      "id": 30,
+      "name": "Enter the Wilderness",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 8,
+      "prestiges": 0
+    },
+    {
+      "id": 31,
+      "name": "Fight a Goblin",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 32,
+      "name": "Warn Villagers",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 33,
+      "name": "Loot the Fallen",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 34,
+      "name": "Rescue Villager",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 35,
+      "name": "Treat Villager Wounds",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 5,
+      "prestiges": 0
+    },
+    {
+      "id": 36,
+      "name": "Goblin Warlord",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 6,
+      "prestiges": 0
+    },
+    {
+      "id": 37,
+      "name": "Save the Village",
+      "zone": 2,
+      "zoneName": "The Raid",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 6,
+      "prestiges": 0
+    },
+    {
+      "id": 40,
+      "name": "Find Cave Entrance",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 41,
+      "name": "Look for Tracks",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 42,
+      "name": "Survive the Night",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 43,
+      "name": "Find an Amulet",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 44,
+      "name": "Build a Fire",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 8,
+      "prestiges": 0
+    },
+    {
+      "id": 45,
+      "name": "Forage for Mushrooms",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 8,
+      "prestiges": 0
+    },
+    {
+      "id": 46,
+      "name": "Befriend a Deer",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 47,
+      "name": "Angry Ent",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 9,
+      "prestiges": 0
+    },
+    {
+      "id": 48,
+      "name": "Gather Magical Roots",
+      "zone": 3,
+      "zoneName": "The Wilderness",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 10,
+      "prestiges": 0
+    },
+    {
+      "id": 50,
+      "name": "Leave Via Back Entrance",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 51,
+      "name": "Find a Way Through",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 52,
+      "name": "Rescue Captives",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 53,
+      "name": "Steal Supplies",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 54,
+      "name": "Try Casting a Spell",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 11,
+      "prestiges": 0
+    },
+    {
+      "id": 55,
+      "name": "Inspect Wall Paintings",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 56,
+      "name": "Scout the Cave",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 14,
+      "prestiges": 0
+    },
+    {
+      "id": 57,
+      "name": "Goblin Chieftain",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 58,
+      "name": "Wipe Out Goblins",
+      "zone": 4,
+      "zoneName": "The Cave System",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 60,
+      "name": "Get to the City",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 61,
+      "name": "Join a Caravan",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 62,
+      "name": "Scout the Road Ahead",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 63,
+      "name": "Make Travel Equipment",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 64,
+      "name": "Get Used to Traveling",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 13,
+      "prestiges": 0
+    },
+    {
+      "id": 65,
+      "name": "Chat with Travelers",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 66,
+      "name": "Practice Traveling Unnoticed",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 67,
+      "name": "Bandits",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 68,
+      "name": "Loot Bandit Camp",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 4,
+      "hidden": true,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 69,
+      "name": "Study the Amulet",
+      "zone": 5,
+      "zoneName": "The Road to the City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 14,
+      "prestiges": 0
+    },
+    {
+      "id": 70,
+      "name": "Enter the City",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 17,
+      "prestiges": 0
+    },
+    {
+      "id": 71,
+      "name": "Bribe the City Guards",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 72,
+      "name": "Survive a Mugging",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 73,
+      "name": "Buy a Book",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 74,
+      "name": "Negotiate with a Rogue Guard",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 75,
+      "name": "Spar with the Guards",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 37,
+      "prestiges": 0,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 76,
+      "name": "Fend for Yourself",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 16,
+      "prestiges": 0
+    },
+    {
+      "id": 77,
+      "name": "Skulk About",
+      "zone": 6,
+      "zoneName": "The City Outskirts",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 15,
+      "prestiges": 0
+    },
+    {
+      "id": 80,
+      "name": "Embark on a Quest",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 21,
+      "prestiges": 0
+    },
+    {
+      "id": 81,
+      "name": "Investigate Rumors of a Magician",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 19,
+      "prestiges": 0
+    },
+    {
+      "id": 82,
+      "name": "Search the Archives for Magic",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 20,
+      "prestiges": 0
+    },
+    {
+      "id": 83,
+      "name": "Scribe Scroll of Haste",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 19,
+      "prestiges": 0
+    },
+    {
+      "id": 84,
+      "name": "Cast a Spell",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 19,
+      "prestiges": 0
+    },
+    {
+      "id": 85,
+      "name": "Study at the Mage's Guild",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 19,
+      "prestiges": 0
+    },
+    {
+      "id": 86,
+      "name": "Train for Your Quest",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 20,
+      "prestiges": 0
+    },
+    {
+      "id": 87,
+      "name": "Corrupt Mayor",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 33,
+      "prestiges": 0
+    },
+    {
+      "id": 89,
+      "name": "Purge Corrupt Bureacracy",
+      "zone": 7,
+      "zoneName": "The City",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 33,
+      "prestiges": 0
+    },
+    {
+      "id": 90,
+      "name": "Scale the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 35,
+      "prestiges": 0
+    },
+    {
+      "id": 91,
+      "name": "Locate the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 29,
+      "prestiges": 0
+    },
+    {
+      "id": 92,
+      "name": "Make Climbing Gear",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 24,
+      "prestiges": 0
+    },
+    {
+      "id": 93,
+      "name": "Make Camping Equipment",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 27,
+      "prestiges": 0
+    },
+    {
+      "id": 94,
+      "name": "Prepare to Scale the Mountain",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 22,
+      "prestiges": 0
+    },
+    {
+      "id": 95,
+      "name": "Build a Hut",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 25,
+      "prestiges": 0
+    },
+    {
+      "id": 96,
+      "name": "Go Sightseeing",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 21,
+      "prestiges": 0
+    },
+    {
+      "id": 97,
+      "name": "Meet a Magical Creature",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 21,
+      "prestiges": 0
+    },
+    {
+      "id": 98,
+      "name": "Werewolf",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 31,
+      "prestiges": 0
+    },
+    {
+      "id": 99,
+      "name": "Gather Shed Fur from Lair",
+      "zone": 8,
+      "zoneName": "The Forest",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 31,
+      "prestiges": 0
+    },
+    {
+      "id": 100,
+      "name": "Hunt for the First Reagent",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 101,
+      "name": "Convince the Magician",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 39,
+      "prestiges": 0
+    },
+    {
+      "id": 102,
+      "name": "Do a Favor",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 39,
+      "prestiges": 0
+    },
+    {
+      "id": 103,
+      "name": "Steal Some Reagents",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 49,
+      "prestiges": 0
+    },
+    {
+      "id": 104,
+      "name": "Figure Out How to Attune",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 79,
+      "prestiges": 0
+    },
+    {
+      "id": 105,
+      "name": "Give Yourself a Pep Talk",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 41,
+      "prestiges": 0
+    },
+    {
+      "id": 106,
+      "name": "Try to Transform Into an Eagle",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 37,
+      "prestiges": 0
+    },
+    {
+      "id": 107,
+      "name": "Low-oxygen Exercise",
+      "zone": 9,
+      "zoneName": "The Magician",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 47,
+      "prestiges": 0
+    },
+    {
+      "id": 110,
+      "name": "Land on Island",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 111,
+      "name": "Weather a Storm",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 112,
+      "name": "Find the Island",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 113,
+      "name": "Catch Fish",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 114,
+      "name": "Dive as a Squid",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 115,
+      "name": "Look for Land",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 174,
+      "prestiges": 1,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 116,
+      "name": "Practice Transforming",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 117,
+      "name": "Kraken",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 118,
+      "name": "Explore Kraken's Lair",
+      "zone": 10,
+      "zoneName": "The Ocean",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 120,
+      "name": "Hunt for the Second Reagent",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 121,
+      "name": "Gather Reagent",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 122,
+      "name": "Repair Ship",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 80,
+      "prestiges": 0
+    },
+    {
+      "id": 123,
+      "name": "Catch More Fish",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 78,
+      "prestiges": 0
+    },
+    {
+      "id": 124,
+      "name": "Explore the Jungle",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 6,
+      "hidden": false,
+      "run": 77,
+      "prestiges": 0
+    },
+    {
+      "id": 125,
+      "name": "Build Another Hut",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 142,
+      "prestiges": 1
+    },
+    {
+      "id": 126,
+      "name": "Talk to the Local Wildlife",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 80,
+      "prestiges": 0
+    },
+    {
+      "id": 127,
+      "name": "Horde of Lizardfolk",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 128,
+      "name": "Steal Their Oracle Bones",
+      "zone": 11,
+      "zoneName": "The Island",
+      "maxReps": 4,
+      "hidden": true,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 130,
+      "name": "Enter the Oasis",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 131,
+      "name": "Overcome Mirage",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 132,
+      "name": "Find the Oasis",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 82,
+      "prestiges": 0
+    },
+    {
+      "id": 133,
+      "name": "Harvest Cactus",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 134,
+      "name": "Avoid Notice by the Sandworm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 135,
+      "name": "Work on Your Tan",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 81,
+      "prestiges": 0
+    },
+    {
+      "id": 136,
+      "name": "Comb the Desert",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 532,
+      "prestiges": 10,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 137,
+      "name": "Giant Sandworm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 138,
+      "name": "Learn to Dance the Worm",
+      "zone": 12,
+      "zoneName": "The Desert",
+      "maxReps": 1,
+      "hidden": true,
+      "run": 87,
+      "prestiges": 0
+    },
+    {
+      "id": 140,
+      "name": "Return to the Magician",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 91,
+      "prestiges": 0
+    },
+    {
+      "id": 141,
+      "name": "Banish Evil Spirit",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 85,
+      "prestiges": 0
+    },
+    {
+      "id": 142,
+      "name": "Gather Second Reagent",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 143,
+      "name": "Bottle Oasis Water",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 90,
+      "prestiges": 0
+    },
+    {
+      "id": 144,
+      "name": "Reflect on the Journey",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 89,
+      "prestiges": 0
+    },
+    {
+      "id": 145,
+      "name": "Prepare for the Journey Ahead",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 146,
+      "name": "Talk to the Djinn",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 565,
+      "prestiges": 10,
+      "viaZoneSkip": true
+    },
+    {
+      "id": 147,
+      "name": "Sleepy Djinn",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 83,
+      "prestiges": 0
+    },
+    {
+      "id": 148,
+      "name": "Find More Lamps",
+      "zone": 13,
+      "zoneName": "The Oasis",
+      "maxReps": 3,
+      "hidden": true,
+      "run": 85,
+      "prestiges": 0
+    },
+    {
+      "id": 150,
+      "name": "Begin Search for the Next Ritual",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 156,
+      "prestiges": 1
+    },
+    {
+      "id": 151,
+      "name": "Apologize for Stealing Reagents",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 101,
+      "prestiges": 0
+    },
+    {
+      "id": 152,
+      "name": "Rest for a While",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 5,
+      "hidden": false,
+      "run": 107,
+      "prestiges": 0
+    },
+    {
+      "id": 153,
+      "name": "Touch the Divine",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 101,
+      "prestiges": 0
+    },
+    {
+      "id": 154,
+      "name": "Infuse Mystic Incense",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 9,
+      "hidden": false,
+      "run": 93,
+      "prestiges": 0
+    },
+    {
+      "id": 155,
+      "name": "Practice Memorization",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 4,
+      "hidden": false,
+      "run": 91,
+      "prestiges": 0
+    },
+    {
+      "id": 156,
+      "name": "Guided Spellcasting",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 3,
+      "hidden": false,
+      "run": 91,
+      "prestiges": 0
+    },
+    {
+      "id": 157,
+      "name": "Go for a Walk",
+      "zone": 14,
+      "zoneName": "The Ritual",
+      "maxReps": 1,
+      "hidden": false,
+      "run": 107,
+      "prestiges": 0
+    }
+  ],
+  "unreached": [],
+  "runEnds": [
+    {
+      "run": 1,
+      "endZone": 0,
+      "highestZone": 0,
+      "prestiged": false,
+      "ticks": 4
+    },
+    {
+      "run": 2,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 3,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 4,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 5,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 6,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 7,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 8,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 9,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 10,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 11,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 12,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 13,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 14,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 15,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 16,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 17,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 18,
+      "endZone": 6,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 19,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 20,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 21,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 22,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 23,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 24,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 25,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 26,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 27,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 28,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 29,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 30,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 31,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 32,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 33,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 34,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 35,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 36,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 37,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 38,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 39,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 40,
+      "endZone": 8,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 41,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 42,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 43,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 44,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 45,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 46,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 47,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 48,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 49,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 50,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 51,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 52,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 53,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 54,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 55,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 56,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 57,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 58,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 59,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 60,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 61,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 62,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 63,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 64,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 11
+    },
+    {
+      "run": 65,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 66,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 67,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 68,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 69,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 70,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 71,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 72,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 73,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 74,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 75,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 76,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 77,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 78,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 79,
+      "endZone": 9,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 80,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 81,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 82,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 83,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 84,
+      "endZone": 12,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 85,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 86,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 87,
+      "endZone": 12,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 88,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 89,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 90,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 91,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 92,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 93,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 94,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 95,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 96,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 97,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 98,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 99,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 100,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 101,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 102,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 103,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 104,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 105,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 106,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 107,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 108,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 109,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 110,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 111,
+      "endZone": 14,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 38
+    },
+    {
+      "run": 112,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 9
+    },
+    {
+      "run": 113,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 114,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 115,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 116,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 117,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 118,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 51
+    },
+    {
+      "run": 119,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 120,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 121,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 122,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 123,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 124,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 125,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 126,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 127,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 128,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 129,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 130,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 131,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 132,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 133,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 134,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 135,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 136,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 137,
+      "endZone": 10,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 138,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 139,
+      "endZone": 10,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 140,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 141,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 142,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 143,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 144,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 145,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 146,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 147,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 148,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 149,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 150,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 39
+    },
+    {
+      "run": 151,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 152,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 153,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 154,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 155,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 156,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 157,
+      "endZone": 13,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 158,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 159,
+      "endZone": 13,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 160,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 161,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 162,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 163,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 164,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 165,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 166,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 167,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 168,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 169,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 170,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 171,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 172,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 173,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 174,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 175,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 176,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 30
+    },
+    {
+      "run": 177,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 178,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 179,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 180,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 181,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 182,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 56
+    },
+    {
+      "run": 183,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 184,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 185,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 186,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 187,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 188,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 12
+    },
+    {
+      "run": 189,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 190,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 191,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 192,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 193,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 194,
+      "endZone": 10,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 195,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 196,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 197,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 198,
+      "endZone": 12,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 199,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 200,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 201,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 202,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 203,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 204,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 205,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 206,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 207,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 208,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 209,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 210,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 211,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 212,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 213,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 48
+    },
+    {
+      "run": 214,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 215,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 216,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 217,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 218,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 219,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 220,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 221,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 222,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 223,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 224,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 225,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 226,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 227,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 30
+    },
+    {
+      "run": 228,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 229,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 230,
+      "endZone": 5,
+      "highestZone": 5,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 231,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 232,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 58
+    },
+    {
+      "run": 233,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 234,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 235,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 236,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 237,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 11
+    },
+    {
+      "run": 238,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 239,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 14
+    },
+    {
+      "run": 240,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 241,
+      "endZone": 10,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 242,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 243,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 244,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 245,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 246,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 247,
+      "endZone": 12,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 248,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 249,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 250,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 251,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 252,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 253,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 254,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 255,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 256,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 257,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 258,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 259,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 260,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 261,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 262,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 263,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 264,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 265,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 266,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 267,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 268,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 269,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 270,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 271,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 272,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 32
+    },
+    {
+      "run": 273,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 274,
+      "endZone": 2,
+      "highestZone": 2,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 275,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 276,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 277,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 278,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 279,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 280,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 281,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 282,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 283,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 284,
+      "endZone": 10,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 285,
+      "endZone": 9,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 286,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 287,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 288,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 289,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 290,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 291,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 292,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 293,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 294,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 295,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 296,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 297,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 298,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 299,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 300,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 301,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 302,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 303,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 304,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 305,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 306,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 307,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 308,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 309,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 310,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 311,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 312,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 313,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 33
+    },
+    {
+      "run": 314,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 315,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 316,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 317,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 59
+    },
+    {
+      "run": 318,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 319,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 320,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 321,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 322,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 323,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 324,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 325,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 326,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 327,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 328,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 329,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 330,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 331,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 332,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 333,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 334,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 49
+    },
+    {
+      "run": 335,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 336,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 337,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 338,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 339,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 340,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 341,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 342,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 343,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 344,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 345,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 346,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 347,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 348,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 349,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 350,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 351,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 352,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 31
+    },
+    {
+      "run": 353,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 354,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 355,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 356,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 357,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 358,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 8
+    },
+    {
+      "run": 359,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 360,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 361,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 362,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 363,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 364,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 365,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 366,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 367,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 368,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 369,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 370,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 371,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 372,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 373,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 374,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 375,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 376,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 377,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 378,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 379,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 380,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 381,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 382,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 383,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 384,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 385,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 386,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 387,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 388,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 389,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 390,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 391,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 32
+    },
+    {
+      "run": 392,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 393,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 394,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 395,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 396,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 397,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 8
+    },
+    {
+      "run": 398,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 399,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 400,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 401,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 402,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 403,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 404,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 405,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 406,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 407,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 408,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 409,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 410,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 411,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 412,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 413,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 414,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 415,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 416,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 417,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 418,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 419,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 420,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 421,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 422,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 423,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 424,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 425,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 426,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 427,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 428,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 429,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 430,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 32
+    },
+    {
+      "run": 431,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 432,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 433,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 434,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 435,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 436,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 8
+    },
+    {
+      "run": 437,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 438,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 439,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 440,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 441,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 442,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 443,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 444,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 445,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 446,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 447,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 448,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 449,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 450,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 451,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 452,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 453,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 454,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 455,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 456,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 457,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 458,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 459,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 460,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 461,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 462,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 463,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 464,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 465,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 466,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 467,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 468,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 469,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 32
+    },
+    {
+      "run": 470,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 471,
+      "endZone": 3,
+      "highestZone": 3,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 472,
+      "endZone": 6,
+      "highestZone": 6,
+      "prestiged": false,
+      "ticks": 54
+    },
+    {
+      "run": 473,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 60
+    },
+    {
+      "run": 474,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 44
+    },
+    {
+      "run": 475,
+      "endZone": 7,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 8
+    },
+    {
+      "run": 476,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 15
+    },
+    {
+      "run": 477,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 478,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 479,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 18
+    },
+    {
+      "run": 480,
+      "endZone": 11,
+      "highestZone": 11,
+      "prestiged": false,
+      "ticks": 38
+    },
+    {
+      "run": 481,
+      "endZone": 12,
+      "highestZone": 12,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 482,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 50
+    },
+    {
+      "run": 483,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 484,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 485,
+      "endZone": 13,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 486,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 42
+    },
+    {
+      "run": 487,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 488,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 489,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 490,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 45
+    },
+    {
+      "run": 491,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 492,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 493,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 494,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 495,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 496,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 31
+    },
+    {
+      "run": 497,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 498,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 499,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 500,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 501,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 26
+    },
+    {
+      "run": 502,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 503,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 504,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 505,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 25
+    },
+    {
+      "run": 506,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 507,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 508,
+      "endZone": 15,
+      "highestZone": 0,
+      "prestiged": true,
+      "ticks": 32
+    },
+    {
+      "run": 509,
+      "endZone": 1,
+      "highestZone": 1,
+      "prestiged": false,
+      "ticks": 10
+    },
+    {
+      "run": 510,
+      "endZone": 4,
+      "highestZone": 4,
+      "prestiged": false,
+      "ticks": 37
+    },
+    {
+      "run": 511,
+      "endZone": 7,
+      "highestZone": 7,
+      "prestiged": false,
+      "ticks": 62
+    },
+    {
+      "run": 512,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 46
+    },
+    {
+      "run": 513,
+      "endZone": 8,
+      "highestZone": 8,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 514,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 29
+    },
+    {
+      "run": 515,
+      "endZone": 9,
+      "highestZone": 9,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 516,
+      "endZone": 10,
+      "highestZone": 10,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 517,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 51
+    },
+    {
+      "run": 518,
+      "endZone": 13,
+      "highestZone": 13,
+      "prestiged": false,
+      "ticks": 41
+    },
+    {
+      "run": 519,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 47
+    },
+    {
+      "run": 520,
+      "endZone": 14,
+      "highestZone": 14,
+      "prestiged": false,
+      "ticks": 43
+    },
+    {
+      "run": 521,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 52
+    },
+    {
+      "run": 522,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 40
+    },
+    {
+      "run": 523,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 524,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 32
+    },
+    {
+      "run": 525,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 33
+    },
+    {
+      "run": 526,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 30
+    },
+    {
+      "run": 527,
+      "endZone": 15,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 34
+    },
+    {
+      "run": 528,
+      "endZone": 14,
+      "highestZone": 15,
+      "prestiged": false,
+      "ticks": 27
+    },
+    {
+      "run": 529,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 36
+    },
+    {
+      "run": 530,
+      "endZone": 14,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 22
+    },
+    {
+      "run": 531,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 35
+    },
+    {
+      "run": 532,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 533,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 534,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 535,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 536,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 537,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 538,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 539,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 540,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 541,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 542,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 13
+    },
+    {
+      "run": 543,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 544,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 545,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 546,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 547,
+      "endZone": 16,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 23
+    },
+    {
+      "run": 548,
+      "endZone": 15,
+      "highestZone": 16,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 549,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 24
+    },
+    {
+      "run": 550,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 17
+    },
+    {
+      "run": 551,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 552,
+      "endZone": 15,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 553,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 554,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 16
+    },
+    {
+      "run": 555,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 556,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 19
+    },
+    {
+      "run": 557,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 558,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 559,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 560,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 20
+    },
+    {
+      "run": 561,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 562,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 21
+    },
+    {
+      "run": 563,
+      "endZone": 17,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 28
+    },
+    {
+      "run": 564,
+      "endZone": 16,
+      "highestZone": 17,
+      "prestiged": false,
+      "ticks": 21
+    }
+  ],
+  "meta": {
+    "env": "node",
+    "configName": "randomized-pacing-pinned100",
+    "totalMsIncludingBridge": 9257,
+    "generatedAt": "2026-07-09T21:01:17.586Z"
+  }
+}

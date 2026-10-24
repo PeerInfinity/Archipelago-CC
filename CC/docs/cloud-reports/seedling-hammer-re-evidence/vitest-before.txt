@@ -1,0 +1,21 @@
+1078 1078
+./seedlingDemo/dangerMap.test.js
+./seedlingDemo/fidelityL30KeyLock.test.js
+./seedlingDemo/hammerApproach.test.js
+./seedlingDemo/hammerEscape.test.js
+./seedlingDemo/hammerFight.test.js
+./seedlingDemo/hammerFightFallback.test.js
+./seedlingDemo/hammerGhostKillRung.test.js
+./seedlingDemo/hammerGhostSearch.test.js
+./seedlingDemo/hammerGhostSpinner.test.js
+./seedlingDemo/hammerGhostWall.test.js
+./seedlingDemo/hammerPressBombs.test.js
+./seedlingDemo/levelRun.test.js
+./seedlingDemo/pressKillCost.test.js
+./seedlingDemo/presses.test.js
+./seedlingDemo/solveProgress.test.js
+./seedlingDemo/solveProgressTap.test.js
+./seedlingDemo/solverBot.test.js
+./seedlingDemo/solverBotLethalPit.test.js
+./seedlingDemo/solverSpinnerKill.test.js
+./seedlingDemo/tapeRunner.test.js

@@ -1,0 +1,12 @@
+   49.3 s  27.6%  previewWalk            under deriveRefuge
+   41.5 s  23.2%  previewWalk            under deriveStrike
+    7.3 s   4.1%  clearOfHammersAt       under deriveRefuge
+    1.2 s   0.7%  spinnerForecast        under deriveStrike
+    0.4 s   0.2%  clearOfHammersAt       under deriveStrike
+    0.2 s   0.1%  walkableCells          under deriveStrike
+    0.2 s   0.1%  previewWalk            under (other)
+    0.2 s   0.1%  clearOfHammersAt       under execKillByPressOnce
+    0.1 s   0.1%  spinnerForecast        under execKillByPressOnce
+    0.1 s   0.0%  walkableCells          under deriveRefuge
+    0.0 s   0.0%  spinnerForecast        under (other)
+    0.0 s   0.0%  spinnerForecast        under deriveRefuge

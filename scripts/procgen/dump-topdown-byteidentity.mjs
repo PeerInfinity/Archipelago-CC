@@ -1,5 +1,5 @@
-// Byte-identity harness for the top-down stepped-pipeline refactor
-// (NewDocs/plans/procedural-generation/topdown-stepped-pipeline.md, Phase 1a).
+// Byte-identity harness for the top-down stepped pipeline
+// (docs/json/developer/procgen/stepped-pipeline.md).
 // Dumps the FULL serialized output of topDownFromRulesJson + buildRulesJson for
 // a few representative sources (maze-only with multiple regions + gated content,
 // and a mixed maze+bounce layout) so a before/after diff proves the MECHANICAL
@@ -15,6 +15,10 @@ import {
 
 // Serialize a grid's regions deterministically (same shape as the sphere
 // harness): region object minus the runtime Map (exits), rendered as an array.
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {
@@ -40,7 +44,7 @@ function dumpGrid(grid) {
 function mazeSource() {
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'MazeByteIdentity',
         regions: {
             '1': {
@@ -104,7 +108,7 @@ function mazeSource() {
 function mixedSource() {
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'MixedByteIdentity',
         regions: {
             '1': {
@@ -144,7 +148,8 @@ function run(source, opts) {
         const res = topDownFromRulesJson(source, opts);
         const rulesJson = buildRulesJson(res.grid, {
             startCell: res.startCell, seed: opts.seed ?? 1, embedSphereLog: false,
-            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            menuRegion: res.menuRegion ?? null,
+            assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         });
         return {
             grid: dumpGrid(res.grid),

@@ -76,6 +76,8 @@ class RuleBuilderToAST:
             # Composite rules
             'And': self._convert_and,
             'Or': self._convert_or,
+            'AtLeast': self._convert_atleast,
+            'Not': self._convert_not,
 
             # Reachability rules
             'CanReachRegion': self._convert_can_reach_region,
@@ -522,6 +524,35 @@ class RuleBuilderToAST:
 
         return {'type': 'or', 'conditions': filtered}
 
+    def _convert_atleast(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert AtLeast rule to its AST-format semantic twin, count_true.
+
+        Rule Builder: {"rule": "AtLeast", "children": [...], "count": N}
+        AST Format:   {"type": "count_true", "conditions": [...], "count": N}
+
+        count_true means "at least `count` of the conditions are true", which is
+        exactly AtLeast's semantics. Mirror the trivial collapses so the AST
+        stays canonical (count<=0 -> True, count>len -> False, count==1 -> or,
+        count==len -> and).
+        """
+        children = rule.get('children', [])
+        count = rule.get('count', 0)
+        converted = [self._convert_rule(child) for child in children]
+        n = len(converted)
+
+        if isinstance(count, int):
+            if count <= 0:
+                return {'type': 'constant', 'value': True}
+            if n == 0 or count > n:
+                return {'type': 'constant', 'value': False}
+            if count == 1:
+                return self._convert_or({'rule': 'Or', 'children': children})
+            if count == n:
+                return self._convert_and({'rule': 'And', 'children': children})
+
+        return {'type': 'count_true', 'conditions': converted, 'count': count}
+
     # -------------------------------------------------------------------------
     # Reachability Rule Converters
     # -------------------------------------------------------------------------
@@ -582,6 +613,22 @@ class RuleBuilderToAST:
             return self._wrap_with_options(converted_inner, options)
 
         return converted_inner
+
+    def _convert_not(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert Not rule.
+
+        Rule Builder: {"rule": "Not", "child": {...}}  (a WrapperRule: the child sits at the root)
+        AST Format: {"type": "not", "condition": {...}}
+        """
+        child = rule.get('child', (rule.get('args') or {}).get('child'))
+        if not child:
+            self.errors.append("Not rule has no child")
+            return {'type': 'constant', 'value': False}
+        converted = self._convert_rule(child)
+        if converted.get('type') == 'constant' and isinstance(converted.get('value'), bool):
+            return {'type': 'constant', 'value': not converted['value']}
+        return {'type': 'not', 'condition': converted}
 
     def _convert_wrapper(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """

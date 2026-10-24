@@ -1,0 +1,505 @@
+  pass 1: DISCOVERED kill-lock clear(s) [{5,0}] at tick 201
+  pass 2: MODEL-sourced {5,0} at 301 — `chaserKillLockOpens` computed the removal (the last body leaves the world) at 201, and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 301 tick(s) below the declared 301 — {5,0}
+  pass 3: SOLVED in 403 ticks
+PASS: r8-solve-5: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-5: ends at the L6 ARRIVAL (§3.5) — ["403:L6"]
+PASS: r8-solve-5: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-6: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-6: ends at the L7 ARRIVAL (§3.5) — ["294:L7"]
+PASS: r8-solve-6: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-7: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-7: ends at the L8 ARRIVAL (§3.5) — ["146:L8"]
+PASS: r8-solve-7: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-8: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-8: ends at the L9 ARRIVAL (§3.5) — ["827:L9"]
+PASS: r8-solve-8: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-9: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-9: ends at the L10 ARRIVAL (§3.5) — ["122:L10"]
+PASS: r8-solve-9: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r8-solve-10: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-10: ends at the L11 ARRIVAL (§3.5) — ["83:L11"]
+PASS: r8-solve-10: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-11: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-11: ends at the L3 ARRIVAL (§3.5) — ["97:L3"]
+PASS: r9-solve-11: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-3: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-3: ends at the L2 ARRIVAL (§3.5) — ["152:L2"]
+PASS: r9-solve-3: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-2: ends at the L0 ARRIVAL (§3.5) — ["23:L0"]
+PASS: r9-solve-2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-0: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-0: ends at the L13 ARRIVAL (§3.5) — ["145:L13"]
+PASS: r9-solve-0: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-13: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-13: ends at the L14 ARRIVAL (§3.5) — ["36:L14"]
+PASS: r9-solve-13: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-14: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-14: ends at the L15 ARRIVAL (§3.5) — ["103:L15"]
+PASS: r9-solve-14: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-15: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-15: ends at the L16 ARRIVAL (§3.5) — ["456:L16"]
+PASS: r9-solve-15: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-16: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-16: ends at the L18 ARRIVAL (§3.5) — ["655:L18"]
+PASS: r9-solve-16: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+  pass 1: DISCOVERED kill-lock clear(s) [{18,0}] at tick 407
+  pass 2: MODEL-sourced {18,0} at 406 — `spinnerKillLockOpens` computed the removal at 306 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 406 tick(s) below the declared 406 — {18,0}
+  pass 3: SOLVED in 440 ticks
+PASS: r9-solve-18: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-18: ends at the L19 ARRIVAL (§3.5) — ["440:L19"]
+PASS: r9-solve-18: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-19: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-19: ends at the L20 ARRIVAL (§3.5) — ["746:L20"]
+PASS: r9-solve-19: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-20: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-20: ends at the L13 ARRIVAL (§3.5) — ["560:L13"]
+PASS: r9-solve-20: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-13-v2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-13-v2: ends at the L0 ARRIVAL (§3.5) — ["48:L0"]
+PASS: r9-solve-13-v2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-0-v3: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-0-v3: ends at the L12 ARRIVAL (§3.5) — ["313:L12"]
+PASS: r9-solve-0-v3: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-12: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-12: ends at the L21 ARRIVAL (§3.5) — ["2284:L21"]
+PASS: r9-solve-12: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-21: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-21: ends at the L22 ARRIVAL (§3.5) — ["26:L22"]
+PASS: r9-solve-21: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-22: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-22: ends at the L29 ARRIVAL (§3.5) — ["89:L29"]
+PASS: r9-solve-22: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-29: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-29: ends at the L31 ARRIVAL (§3.5) — ["379:L31"]
+PASS: r9-solve-29: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-31: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-31: ends at the L30 ARRIVAL (§3.5) — ["336:L30"]
+PASS: r9-solve-31: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: r9-solve-30: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r9-solve-30: ends at the L32 ARRIVAL (§3.5) — ["210:L32"]
+PASS: r9-solve-30: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:19451
+        throw new SolverRefusal(message, {
+              ^
+
+SolverRefusal: solverBot(r9-solve-32) encounter (64,128)->Fire: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing (`Fire.removed()` @0eda15f785 clears {32,4}; the HOST grants the item): this run holds none.
+    at refuse (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:19451:15)
+    at execBobBossEncounter (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:1346:13)
+    at solveSegmentUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:23936:25)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18927:58
+    at refusingByName (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:435:16)
+    at solveSegmentDeadlined (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18927:37)
+    at solveSegment (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18918:12)
+    at file:///home/user/Archipelago-CC/scripts/procgen/solve-seedling-r9-campaign.mjs:802:15 {
+  goal: {
+    kind: 'encounter',
+    at: { x: 64, y: 128 },
+    drop: { item: 'Fire' },
+    then: 'reach-pit'
+  },
+  obstacle: { kind: 'encounter', id: 'burnabletree@64,0' },
+  considered: [],
+  rows: [
+    {
+      tick: 0,
+      saw: { level: 32, x: 80, y: 128, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'touch' },
+      rejected: [],
+      keys: []
+    },
+    {
+      tick: 10,
+      saw: {
+        level: 32,
+        x: 80,
+        y: 116.85,
+        vx: 0,
+        vy: -0.9500000000000002,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'wait' },
+      rejected: [],
+      keys: []
+    },
+    {
+      tick: 57,
+      saw: {
+        level: 32,
+        x: 80,
+        y: 116.14999999999999,
+        vx: 0,
+        vy: -0.7000000000000002,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#0' }
+    },
+    {
+      tick: 69,
+      saw: {
+        level: 32,
+        x: 85.50823132754638,
+        y: 101.74097802514855,
+        vx: 0.9298989915169332,
+        vy: -1.1744037563726786,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#0' }
+    },
+    {
+      tick: 221,
+      saw: { level: 32, x: 80, y: 120, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'wait' },
+      rejected: [],
+      keys: []
+    },
+    {
+      tick: 340,
+      saw: { level: 32, x: 80, y: 120, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#1' }
+    },
+    {
+      tick: 352,
+      saw: {
+        level: 32,
+        x: 76.49164422430545,
+        y: 105.91615062087756,
+        vx: -1.2693897121402578,
+        vy: -1.3750771786516922,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#1' }
+    },
+    {
+      tick: 382,
+      saw: {
+        level: 32,
+        x: 77.78628712595061,
+        y: 96.00183793421535,
+        vx: 0.8928932188134523,
+        vy: -0.8928932188134523,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#1' }
+    },
+    {
+      tick: 548,
+      saw: { level: 32, x: 80, y: 120, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'wait' },
+      rejected: [],
+      keys: []
+    },
+    {
+      tick: 613,
+      saw: { level: 32, x: 80, y: 120, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#2' }
+    },
+    {
+      tick: 627,
+      saw: {
+        level: 32,
+        x: 85.53840614573294,
+        y: 103.71708132903132,
+        vx: 0.9302370093121629,
+        vy: -1.0076871350136019,
+        danger: []
+      },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'kill' },
+      rejected: [],
+      keys: [],
+      obstacle: { kind: 'bobboss', id: 'bobboss#2' }
+    },
+    {
+      tick: 779,
+      saw: { level: 32, x: 80, y: 120, vx: 0, vy: 0, danger: [] },
+      goal: { kind: 'encounter', at: { x: 64, y: 128 } },
+      strategy: { verb: 'collect' },
+      rejected: [],
+      keys: []
+    }
+  ],
+  perTick: [
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(1) { 'up' },
+    Set(2) { 'up', 'primary' },
+    Set(2) { 'up', 'right' },
+    Set(2) { 'up', 'right' },
+    Set(2) { 'up', 'right' },
+    Set(2) { 'up', 'right' },
+    Set(2) { 'up', 'right' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(1) { 'primary' },
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    Set(0) {},
+    ... 739 more items
+  ],
+  pending: null,
+  dangerQueries: [
+    {
+      where: 'sense',
+      tick: 0,
+      runTick: 0,
+      level: 32,
+      x: 80,
+      y: 128,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 10,
+      runTick: 10,
+      level: 32,
+      x: 80,
+      y: 116.85,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 57,
+      runTick: 57,
+      level: 32,
+      x: 80,
+      y: 116.14999999999999,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 69,
+      runTick: 69,
+      level: 32,
+      x: 85.50823132754638,
+      y: 101.74097802514855,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 221,
+      runTick: 221,
+      level: 32,
+      x: 80,
+      y: 120,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 340,
+      runTick: 340,
+      level: 32,
+      x: 80,
+      y: 120,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 352,
+      runTick: 352,
+      level: 32,
+      x: 76.49164422430545,
+      y: 105.91615062087756,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 382,
+      runTick: 382,
+      level: 32,
+      x: 77.78628712595061,
+      y: 96.00183793421535,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 548,
+      runTick: 548,
+      level: 32,
+      x: 80,
+      y: 120,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 613,
+      runTick: 613,
+      level: 32,
+      x: 80,
+      y: 120,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 627,
+      runTick: 627,
+      level: 32,
+      x: 85.53840614573294,
+      y: 103.71708132903132,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    },
+    {
+      where: 'sense',
+      tick: 779,
+      runTick: 779,
+      level: 32,
+      x: 80,
+      y: 120,
+      danger: false,
+      mode: 'wait',
+      horizon: 0,
+      sources: []
+    }
+  ],
+  bound: null
+}
+
+Node.js v22.22.0

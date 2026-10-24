@@ -1,0 +1,8 @@
+{
+  "name": "prestige-rst-5",
+  "options": {
+    "modOverrides": {
+      "threshold_prestige_resets": 5
+    }
+  }
+}

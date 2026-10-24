@@ -1,0 +1,33 @@
+{
+ "sources": {
+  "ap_rules": "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json",
+  "atlas": "frontend/modules/flashPanel/atlases/seedling-map.json",
+  "set_patches": [
+   "moonrock-removed",
+   "l37-fallrock-removed",
+   "l29-fallrock-moved",
+   "l43-fallrock-2-moved",
+   "l43-fallrock-1-moved",
+   "l43-fallrock-3-moved",
+   "l39-fallrock-removed",
+   "l74-fallrock-removed"
+  ],
+  "spheres": "frontend/modules/flashPanel/atlases/seedling-sphere-order.json"
+ },
+ "rows": [
+  {
+   "step": 48,
+   "level": 29,
+   "verdict": "SOLVED",
+   "ticks": 379,
+   "refusal": null
+  },
+  {
+   "step": 113,
+   "level": 43,
+   "verdict": "REFUSED",
+   "ticks": null,
+   "refusal": "the teleporter at (144,64) in level 43 stands ON a PIT tile (9,4). Walking into it fires the trigger and the pit edge in the same tick, and which one wins is FlashPunk bookkeeping this module does not transcribe — the physics throws on the conflict. Two exist in the extract (L43's exit to L37, L100's to L101); route around them."
+  }
+ ]
+}

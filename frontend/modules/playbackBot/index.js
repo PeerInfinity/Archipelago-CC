@@ -16,21 +16,30 @@
  *     getActivePanel so dispatcher receivers can reach the bot
  *     without a circular import
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackBotPanel } from './playbackBotPanel.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 
 export const moduleInfo = {
     name: 'playbackBot',
     title: 'Playback Bot',
     componentType: 'playbackBotPanel',
+    docs: 'docs/json/user/modules/playbackBot.md',
     icon: '🤖',
-    column: 3,
-    description: 'Sphere-log playback bot — drives the maze panel '
-               + 'visualizer through a recorded playthrough.',
+    column: 2,
+    category: 'Procgen Infrastructure Panels',
+    description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to; or checks any reachable location on a timer.',
     requires: [],
+    storage: [
+        { key: 'playbackBot_intercept', kind: STORAGE_KINDS.state, label: 'Playback Bot: intercept toggle' },
+        { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
+        { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
+        { key: 'playbackBot_targetSource', kind: STORAGE_KINDS.state, label: 'Playback Bot: check next (sphere log / any reachable)' },
+        { key: 'playbackBot_walkOrder', kind: STORAGE_KINDS.state, label: 'Playback Bot: walk order (in order / cheapest in sphere / cheapest reachable)' },
+    ],
 };
 
 // Active-panel singleton. Set by the panel constructor on mount,
@@ -63,6 +72,13 @@ export function register(registrationApi) {
     // panel's visualizer subscribes to (single-trigger remote-control
     // wiring from Phase 5 of the debugging-tools plan).
     registrationApi.registerEventBusPublisher('playback:command');
+    // Seedling JS J2: a controller's late refusal (see onWalkFailed).
+    registrationApi.registerEventBusSubscriberIntent?.(PLAYBACK_WALK_FAILED_EVENT);
+    // ⛓ solver-walk S2: a live walk's note ("solving…") — see onWalkNote.
+    registrationApi.registerEventBusSubscriberIntent?.(PLAYBACK_WALK_NOTE_EVENT);
+    // ⛓ ROPE GOAL: a goal-first BREAK step's event is collected by the game's flag (a local check, no
+    // user:locationCheck) — the snapshot that holds it is the bot's signal (see onSnapshotUpdated).
+    registrationApi.registerEventBusSubscriberIntent?.('stateManager:snapshotUpdated');
 
     // Dispatcher receivers — formerly in presets/index.js. Each one
     // propagates first (so stateManager + downstream handlers see the
@@ -86,7 +102,7 @@ export function register(registrationApi) {
         'user:locationCheck',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:locationCheck', data, 'intercepted');
                 bot.walkToLocation?.(data?.locationName);
                 return; // swallow — do NOT propagate
@@ -135,7 +151,7 @@ export function register(registrationApi) {
         'user:exitClicked',
         (data) => {
             const bot = getActivePanel()?.getBot();
-            if (bot?.isInterceptEnabled?.()) {
+            if (bot?.isInterceptEnabled?.() && !data?.fromBot) {
                 bot.logDispatcherEvent?.('user:exitClicked', data, 'intercepted');
                 bot.walkToExit?.(data?.exitName);
                 return; // swallow — do NOT propagate
@@ -184,7 +200,57 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         dispatcher: _moduleDispatcher,
     });
 
+    // X1: consumable / mana tiles fire neither user:locationCheck nor
+    // user:regionMove, so a bot on a collect detour has no other signal
+    // that the tile was reached. Only meaningful under the opt-in
+    // 'always' policy; the handler no-ops otherwise.
+    const onConsumable = () => {
+        try {
+            getActivePanel()?.getBot()?.onConsumableCollected?.();
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onConsumableCollected threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
+
+    // Seedling JS J2: a controller's LATE refusal (accepted, then found
+    // unwalkable) — see PlaybackBotUI.onWalkFailed.
+    const onWalkFailed = (data) => {
+        try {
+            getActivePanel()?.getBot()?.onWalkFailed?.(data);
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onWalkFailed threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
+
+    // ⛓ solver-walk S2: the live walk's note ("solving…", a decline, a retry).
+    const onWalkNote = (data) => {
+        try {
+            getActivePanel()?.getBot()?.onWalkNote?.(data);
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onWalkNote threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
+
+    // ⛓ ROPE GOAL: an obstacle EVENT is collected as a LOCAL check (`seedlingRegionGlue._eventCollect` →
+    // `collectEvent`, deliberately never user:locationCheck, whose connected path drops a location without a
+    // server id), so a bot that walked to break it first has no other signal that the gated walk now exists.
+    const onSnapshot = () => {
+        try {
+            getActivePanel()?.getBot()?.onSnapshotUpdated?.();
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onSnapshotUpdated threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
+
     return () => {
+        _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };

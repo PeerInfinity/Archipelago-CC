@@ -47,11 +47,13 @@
  */
 
 import {
-    isFloor, getObstacle, getExitAt,
+    isFloor, getObstacle, getExitAt, unposKey,
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    TURN_PREFIX, USE_PREFIX, hasItemActions, mazeVisitedKey, step, worldInputs,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/contentModules/hazardRuntime.js';
+import { moveEntry, waitEntry, turnEntry, useEntry } from './mazeKeys.js';
 
 /**
  * @param {Object} world - maze world (width, height, tiles, exits, etc.)
@@ -65,6 +67,16 @@ import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/co
  *   clear are blocked.
  * @param {Object} [opts.obstacleLib] - obstacle library for inventory-
  *   aware clearance checks. Defaults to `world.obstacleLib`.
+ * @param {Object} [opts.clearanceOpts] - forwarded verbatim to
+ *   `isObstacleCleared`, so a `clear_set_type: 'rule'` obstacle can be
+ *   judged by the caller's own evaluator (the maze panel injects a
+ *   stateManager-backed Rule Builder evaluator here, which understands
+ *   CountItem / helpers / count_check — the procgen-local subset
+ *   evaluator does not). WITHOUT this, a planner and the `step()` that
+ *   executes its plan can disagree about whether a gate is open: the
+ *   walk is planned through a door the engine then refuses, or routed
+ *   around one that is actually open. Pass the SAME bag you pass to
+ *   `step`.
  * @param {boolean} [opts.excludeOtherExits] - when true, exit tiles
  *   other than the goal are blocked (prevents accidental teleports
  *   through off-route exits).
@@ -113,19 +125,21 @@ export function stepsToInputs(steps) {
 }
 
 /**
- * Convert a sequence of tile coordinates into queue action specs
+ * Convert a sequence of tile coordinates into queue entries
  * (move N/S/E/W). Used to translate visualizer-driven walks (loops
  * delegation) into the same verb format the maze action queue uses,
  * so saved best-queues have a single canonical shape regardless of
  * which path produced them.
  *
- * Returns an empty array on bad input or a single-tile path. Output
- * actions carry no id / status — those are queue-level concerns; the
+ * Returns an empty array on bad input or a single-tile path. Entries
+ * carry no entryId / status — those are queue-level concerns; the
  * stored shape is just the verb list (Cavernous's strip-progress-on-
- * save convention).
+ * save convention). One entry per step: the run-length fold into
+ * `loops` happens at RECORD time (mazeQueueExecutor.projectActions),
+ * not here, because the live queue shows one icon per turn.
  *
  * @param {Array<{x:number,y:number}>} steps - 4-connected tile path
- * @returns {Array<{type:'move',dir:'N'|'S'|'E'|'W'}>}
+ * @returns {Array<object>} shared actionQueue entries, substrate 'maze'
  */
 export function stepsToActions(steps) {
     if (!Array.isArray(steps) || steps.length < 2) return [];
@@ -134,7 +148,7 @@ export function stepsToActions(steps) {
         const dx = steps[i].x - steps[i - 1].x;
         const dy = steps[i].y - steps[i - 1].y;
         if (dx === 0 && dy === 0) {
-            out.push({ type: 'wait' });
+            out.push(waitEntry());
             continue;
         }
         let dir = null;
@@ -142,7 +156,90 @@ export function stepsToActions(steps) {
         else if (dx === -1 && dy === 0) dir = 'W';
         else if (dx === 0 && dy === 1) dir = 'S';
         else if (dx === 0 && dy === -1) dir = 'N';
-        if (dir) out.push({ type: 'move', dir });
+        if (dir) out.push(moveEntry(dir));
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ ITEM ACTIONS — **PLAN STRIKES** (⚖ user, 2026-10-21: the autopather
+ * inserts turn + use to break rocks on its way). The tile BFS above walks a
+ * grid; a rock that a strike opens is not a tile fact but STATE (`facing`,
+ * per-visit `broken`), so this plans over the ENGINE ITSELF: a BFS whose nodes
+ * are `step`'s states (de-duplicated by `mazeVisitedKey`) and whose edges are
+ * `worldInputs(world)` — moves, turns and the world's uses. The plan it
+ * returns is therefore exactly a plan `step` accepts (blocks included), and
+ * the shortest one in inputs.
+ *
+ * ⛔ Item-action worlds only (`null` elsewhere — callers keep `findPath`), and
+ * no hazards: a time-expanded state space is the tile planner's, and an
+ * item-action world with hazards is refused BY NAME rather than planned
+ * blind. Other exits are dead ends when `excludeOtherExits` (as in `findPath`).
+ *
+ * @param {object} world
+ * @param {object} state the state to plan FROM (its facing / broken / blocks count)
+ * @param {object} target any `findPath` target kind but `closestUnexplored`
+ * @param {object} [opts]
+ * @param {*} [opts.inventory] the playback inventory (`step`'s override)
+ * @param {object} [opts.clearanceOpts]
+ * @param {boolean} [opts.excludeOtherExits]
+ * @param {number} [opts.cap] state cap (default 200000) — over it, `null`
+ * @returns {{inputs: string[], length: number, end: {x:number,y:number}}|null}
+ */
+export function planItemActions(world, state, target, opts = {}) {
+    if (!hasItemActions(world) || !state) return null;
+    if (Array.isArray(world.hazards) && world.hazards.length > 0) {
+        throw new Error('planItemActions: this item-action world has hazards; '
+            + 'the engine-state planner does not model hazard timing');
+    }
+    const isGoal = makeGoalPredicate(world, target, opts);
+    if (!isGoal) return null;
+    const { inventory, clearanceOpts, excludeOtherExits = false, cap = 200000 } = opts;
+    const at = state.player_pos;
+    if (isGoal(at.x, at.y)) return { inputs: [], length: 0, end: { x: at.x, y: at.y } };
+    const inputs = worldInputs(world);
+    const startKey = mazeVisitedKey(state);
+    const parent = new Map([[startKey, null]]);
+    const queue = [[startKey, state]];
+    for (let head = 0; head < queue.length; head++) {
+        const [key, s] = queue[head];
+        for (const input of inputs) {
+            const next = step(world, s, input, inventory, clearanceOpts);
+            if (next === null) continue;
+            const k = mazeVisitedKey(next);
+            if (parent.has(k)) continue;
+            parent.set(k, { from: key, input });
+            const p = next.player_pos;
+            if (isGoal(p.x, p.y)) {
+                const plan = [];
+                for (let link = parent.get(k); link !== null; link = parent.get(link.from)) {
+                    plan.push(link.input);
+                }
+                plan.reverse();
+                return { inputs: plan, length: plan.length, end: { x: p.x, y: p.y } };
+            }
+            // A different exit tile ends the walk there (the crossing IS the arrival).
+            if (excludeOtherExits && getExitAt(world, p.x, p.y) !== null) continue;
+            queue.push([k, next]);
+        }
+        if (parent.size > cap) return null;
+    }
+    return null;
+}
+
+/**
+ * Engine inputs → queue entries: the inverse of the executor's mapping, so a
+ * strike plan lands in the queue as the same verbs a player would press.
+ */
+export function inputsToEntries(inputs) {
+    const out = [];
+    for (const input of inputs ?? []) {
+        if (input === INPUT_WAIT) out.push(waitEntry());
+        else if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
+            out.push(turnEntry(input.slice(TURN_PREFIX.length)));
+        } else if (typeof input === 'string' && input.startsWith(USE_PREFIX)) {
+            out.push(useEntry(input.slice(USE_PREFIX.length)));
+        } else out.push(moveEntry(input));
     }
     return out;
 }
@@ -166,8 +263,7 @@ function makeGoalPredicate(world, target, opts) {
             let pos = null;
             for (const [key, name] of world.itemLocationNames) {
                 if (name === target.locationName) {
-                    const [x, y] = key.split(',').map(Number);
-                    pos = { x, y };
+                    pos = unposKey(key);
                     break;
                 }
             }
@@ -212,6 +308,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     const obstacleLib = inventory
         ? (opts.obstacleLib ?? world.obstacleLib ?? null)
         : null;
+    const clearanceOpts = opts.clearanceOpts ?? undefined;
     const excludeOtherExits = opts.excludeOtherExits === true;
 
     // Time-expanded mode: when hazards are provided, the BFS tracks
@@ -244,7 +341,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
         if (excludeOtherExits && !isAlsoGoal && getExitAt(world, x, y)) return false;
         if (inventory && obstacleLib) {
             const obstacleId = getObstacle(world, x, y);
-            if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib)) {
+            if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib, clearanceOpts)) {
                 return false;
             }
         }
@@ -355,10 +452,13 @@ function _lcm(a, b) {
     return (a / _gcd(a, b)) * b;
 }
 
-function _parseStateKeyXY(key) {
-    const parts = key.split(',');
-    return { x: Number(parts[0]), y: Number(parts[1]) };
-}
+/**
+ * ⛓ DEDUP M13 — the engine's OWN key reader. A state key is `"x,y"` on the
+ * fast path and `"x,y,t"` when the search is time-expanded, and `unposKey`
+ * takes the first two fields either way — which is the one thing this
+ * reconstruction needed of it.
+ */
+const _parseStateKeyXY = (key) => unposKey(key);
 
 function _reconstructPath(parent, fromKey, toKey) {
     const steps = [_parseStateKeyXY(toKey)];

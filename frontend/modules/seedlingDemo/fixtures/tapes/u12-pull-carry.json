@@ -1,0 +1,46 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 576,
+        "y": 640
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 100,
+    "inputs": [],
+    "name": "u12-pull-carry",
+    "description": "⛓⛓⛓ U12-swim D1 — A PULL CURRENT CARRIES A STANDING PLAYER INTO L12's PIT. L12, booted ON `pull@576,640` — tile (36,40), the funnel's one northern gap between `tree@544,640` and `dungeonspire@592,640` — with step 24's grants (the sword, the shield, `save.keys[0]`) and no key held for 100 ticks. `Pull.update` (`Puzzlements/Pull.as`) writes `e.x += force*cos(dir); e.y -= force*sin(dir)` on every overlapping body, every frame, before the player updates (`loadlevel` adds the pulls after the Player and `World.addUpdate` prepends), in reverse `.oel` order with each pull testing the box the one before it moved. Column 36's three pulls push SOUTH: 1 px a tick, and 2 px on t 7–8 and t 21–22, where the 4x5 box straddles two of them. The pit edge, twenty fall-out ticks (the push still landing while the box touches `pull@576,672`), the swap to L21 and the fall from the ceiling follow. Fixed keys. Authored by scripts/procgen/plan-seedling-u12-pull.mjs.",
+    "note": ""
+}

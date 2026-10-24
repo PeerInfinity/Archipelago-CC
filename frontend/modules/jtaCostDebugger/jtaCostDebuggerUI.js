@@ -175,7 +175,7 @@ export class JTACostDebuggerUI {
     // =========================================================================
 
     async _handleLoad() {
-        this._setStatus('Discovering JTA preset...');
+        this._setStatus('Discovering JtA preset...');
 
         try {
             // Load directly from JTA preset (same pattern as jtaGameDataPanel)
@@ -183,13 +183,13 @@ export class JTACostDebuggerUI {
             const index = await resp.json();
             const jta = index.jta;
             if (!jta || !jta.folders) {
-                this._setStatus('No JTA preset found in preset_files.json');
+                this._setStatus('No JtA preset found in preset_files.json');
                 return;
             }
 
             const folderName = Object.keys(jta.folders)[0];
             if (!folderName) {
-                this._setStatus('No JTA preset folder found');
+                this._setStatus('No JtA preset folder found');
                 return;
             }
 
@@ -200,11 +200,11 @@ export class JTACostDebuggerUI {
             const sphereLogFile = folder.files.find(f => f.endsWith('_sphere_log.jsonl'));
 
             if (!gamedataFile) {
-                this._setStatus('No gamedata file found in JTA preset');
+                this._setStatus('No gamedata file found in JtA preset');
                 return;
             }
             if (!sphereLogFile) {
-                this._setStatus('No sphere log found in JTA preset');
+                this._setStatus('No sphere log found in JtA preset');
                 return;
             }
 

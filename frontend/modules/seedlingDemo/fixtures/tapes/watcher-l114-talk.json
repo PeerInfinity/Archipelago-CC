@@ -1,0 +1,388 @@
+{
+    "game": "seedling",
+    "name": "watcher-l114-talk",
+    "boot": {
+        "level": 114,
+        "x": 64,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 394,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "primary",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "primary",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "primary",
+            "from": 30,
+            "to": 31
+        },
+        {
+            "key": "primary",
+            "from": 39,
+            "to": 40
+        },
+        {
+            "key": "primary",
+            "from": 48,
+            "to": 49
+        },
+        {
+            "key": "primary",
+            "from": 57,
+            "to": 58
+        },
+        {
+            "key": "primary",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "primary",
+            "from": 75,
+            "to": 76
+        },
+        {
+            "key": "primary",
+            "from": 84,
+            "to": 85
+        },
+        {
+            "key": "primary",
+            "from": 93,
+            "to": 94
+        },
+        {
+            "key": "primary",
+            "from": 102,
+            "to": 103
+        },
+        {
+            "key": "primary",
+            "from": 111,
+            "to": 112
+        },
+        {
+            "key": "primary",
+            "from": 120,
+            "to": 121
+        },
+        {
+            "key": "primary",
+            "from": 129,
+            "to": 130
+        },
+        {
+            "key": "primary",
+            "from": 138,
+            "to": 139
+        },
+        {
+            "key": "primary",
+            "from": 147,
+            "to": 148
+        },
+        {
+            "key": "primary",
+            "from": 156,
+            "to": 157
+        },
+        {
+            "key": "primary",
+            "from": 165,
+            "to": 166
+        },
+        {
+            "key": "primary",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "primary",
+            "from": 183,
+            "to": 184
+        },
+        {
+            "key": "primary",
+            "from": 192,
+            "to": 193
+        },
+        {
+            "key": "primary",
+            "from": 201,
+            "to": 202
+        },
+        {
+            "key": "primary",
+            "from": 210,
+            "to": 211
+        },
+        {
+            "key": "primary",
+            "from": 219,
+            "to": 220
+        },
+        {
+            "key": "primary",
+            "from": 228,
+            "to": 229
+        },
+        {
+            "key": "primary",
+            "from": 237,
+            "to": 238
+        },
+        {
+            "key": "primary",
+            "from": 246,
+            "to": 247
+        },
+        {
+            "key": "primary",
+            "from": 255,
+            "to": 256
+        },
+        {
+            "key": "primary",
+            "from": 264,
+            "to": 265
+        },
+        {
+            "key": "primary",
+            "from": 273,
+            "to": 274
+        },
+        {
+            "key": "primary",
+            "from": 282,
+            "to": 283
+        },
+        {
+            "key": "primary",
+            "from": 291,
+            "to": 292
+        },
+        {
+            "key": "primary",
+            "from": 300,
+            "to": 301
+        },
+        {
+            "key": "primary",
+            "from": 309,
+            "to": 310
+        },
+        {
+            "key": "primary",
+            "from": 318,
+            "to": 319
+        },
+        {
+            "key": "primary",
+            "from": 327,
+            "to": 328
+        },
+        {
+            "key": "primary",
+            "from": 336,
+            "to": 337
+        },
+        {
+            "key": "primary",
+            "from": 345,
+            "to": 346
+        },
+        {
+            "key": "primary",
+            "from": 354,
+            "to": 355
+        },
+        {
+            "key": "primary",
+            "from": 362,
+            "to": 363
+        },
+        {
+            "key": "left",
+            "from": 362,
+            "to": 365
+        },
+        {
+            "key": "primary",
+            "from": 364,
+            "to": 365
+        },
+        {
+            "key": "right",
+            "from": 365,
+            "to": 366
+        },
+        {
+            "key": "right",
+            "from": 368,
+            "to": 371
+        },
+        {
+            "key": "primary",
+            "from": 370,
+            "to": 371
+        },
+        {
+            "key": "left",
+            "from": 372,
+            "to": 376
+        },
+        {
+            "key": "right",
+            "from": 376,
+            "to": 377
+        },
+        {
+            "key": "primary",
+            "from": 376,
+            "to": 377
+        },
+        {
+            "key": "left",
+            "from": 377,
+            "to": 378
+        },
+        {
+            "key": "right",
+            "from": 378,
+            "to": 379
+        },
+        {
+            "key": "primary",
+            "from": 382,
+            "to": 383
+        },
+        {
+            "key": "primary",
+            "from": 384,
+            "to": 385
+        },
+        {
+            "key": "down",
+            "from": 362,
+            "to": 391
+        },
+        {
+            "key": "primary",
+            "from": 390,
+            "to": 391
+        },
+        {
+            "key": "up",
+            "from": 391,
+            "to": 393
+        },
+        {
+            "key": "down",
+            "from": 393,
+            "to": 394
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY WATCHER — THE `talk` VERB: L114's SPEAKING `watcher@72,72` with its tag SET. Its 24 px circle cuts the two-tile corridor, so the frontier names `proximity-hazard:watcher`; the solver steps from the corridor's top into the circle, the dialogue opens on proximity, the solver pages it on the ceremony cadence until `doneTalking()` writes `{114,0}`, and walks out to `teleporter@64,144`. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [], items []). The solver's own plan: 394 t, equips []. Authored by scripts/procgen/plan-seedling-watcher-witness.mjs."
+}

@@ -1,4 +1,7 @@
 import { registerTest } from '../testRegistry.js';
+import { stateManagerProxySingleton } from '../../stateManager/index.js';
+import { buildContext } from '../../tutorials/tutorialContext.js';
+import { PICKER } from '../../regionGraph/nodePicker.js';
 
 const PANEL_ID = 'regionGraphPanel';
 const MAX_WAIT_TIME = 10000;
@@ -442,6 +445,70 @@ export async function testNodeSelection(testController) {
   return overallResult;
 }
 
+/**
+ * The "Go to" picker (nodePicker.js): choosing a region does what tapping its
+ * node does (regionGraph:nodeSelected for that node), and choosing a location
+ * checks it as a location-node tap does. The section starts folded. Reloads
+ * the world loaded before, since the picks move the player and check a location.
+ */
+export async function testRegionGraphNodePicker(testController) {
+  const ctx = buildContext({ eventBus: testController.eventBus });
+  const before = ctx.rulesSource();
+  let selected = null;
+  const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => { selected = data; }, 'tests');
+  try {
+    testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    const section = await testController.pollForValue(
+      () => document.querySelector(`.region-graph-panel-container ${PICKER.section}`),
+      'the picker section', 5000, 50);
+    if (!section) throw new Error('no picker section in the Region Graph controls');
+    testController.reportCondition('the picker section starts folded', section.open === false);
+    section.open = true;
+    const listOf = (box) => document.getElementById(section.querySelector(box).getAttribute('list'));
+    const ready = await testController.pollForCondition(
+      () => listOf(PICKER.region).options.length > 0 && listOf(PICKER.location).options.length > 0,
+      'the pick lists filled', MAX_WAIT_TIME, 100);
+    testController.reportCondition('opening the section fills both lists', ready);
+    if (!ready) return testController.getOverallResult();
+    const pick = (box, value) => {
+      const input = section.querySelector(box);
+      input.value = value;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    const status = () => section.querySelector(PICKER.status).textContent;
+
+    const region = listOf(PICKER.region).options[0].value;
+    pick(PICKER.region, region);
+    const sawRegion = await testController.pollForCondition(() => selected?.nodeId === region,
+      `regionGraph:nodeSelected for ${region}`, 3000, 50);
+    testController.reportCondition(`picking region "${region}" selects its node, as a tap does`, sawRegion);
+    testController.reportCondition('the status names the region', status().includes(region));
+
+    const unchecked = [...listOf(PICKER.location).options].map((o) => o.value)
+      .find((name) => !(ctx.snapshot()?.checkedLocations ?? []).includes(name));
+    if (!unchecked) throw new Error('every location is checked already');
+    pick(PICKER.location, unchecked);
+    const checked = await testController.pollForCondition(
+      () => (ctx.snapshot()?.checkedLocations ?? []).includes(unchecked),
+      `${unchecked} checked`, 5000, 100);
+    testController.reportCondition(`picking location "${unchecked}" checks it, as a tap does`, checked);
+
+    pick(PICKER.region, 'No Such Region');
+    testController.reportCondition('an unknown name says so', status().includes('No region "No Such Region"'));
+    section.open = false;
+  } catch (error) {
+    testController.reportCondition(`node picker test error-free: ${error.message}`, false);
+  } finally {
+    unsubscribe?.();
+    if (typeof before === 'string' && before.startsWith('./presets/')) {
+      try { await ctx.loadRulesPath(before); } catch (e) { testController.log(`could not reload ${before}: ${e.message}`); }
+    }
+    ctx.dispose();
+  }
+  return testController.getOverallResult();
+}
+
 // Register all tests
 registerTest({
   id: 'test_region_graph_panel_activation',
@@ -495,4 +562,13 @@ registerTest({
   testFunction: testNodeSelection,
   //enabled: true,
   description: 'Tests node selection and event publishing functionality'
+});
+
+registerTest({
+  id: 'test_region_graph_node_picker',
+  name: 'Region Graph: Go to region / location',
+  category: 'Region Graph',
+  testFunction: testRegionGraphNodePicker,
+  enabled: false, // runs where a roster enrols it (the substrates config)
+  description: 'The folded "Go to" section: picking a region selects its node as a tap does; picking a location checks it; an unknown name says so'
 });

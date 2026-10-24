@@ -1,4 +1,4 @@
 # Dungeons
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/dungeons.md)
 - [Technical Reference](../developer/modules/dungeons.md)

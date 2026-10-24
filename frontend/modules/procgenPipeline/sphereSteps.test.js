@@ -5,16 +5,20 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
-    rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson,
+    rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson, getRegionExits,
+    sphereRebuildRefusal, Grid,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
+import { createHash } from 'node:crypto';
 import {
     SPHERE_STEPS, runStep, runToStep, nextSphereStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
     detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
     appendSphere, truncateSphereWorld, importSphereEnvelope,
+    SPHERE_EDIT_BINDING, invalidateSphereFrom, sphereUndoStep, sphereNodeKey,
 } from './sphereSteps.js';
+import { pushLayoutEdit, popLayoutEdit } from './layoutEdits.js';
 
 function makeConfig(overrides = {}) {
     return {
@@ -32,7 +36,7 @@ function makeConfig(overrides = {}) {
         victoryItem: 'victory',
         exclusiveSpheres: {},
         startingItems: [],
-        lockedCanonicalItems: [],
+        pinnedCanonicalItems: [],
         enableLoopMode: false,
         regionXpEffect: 'cost',
         itemPool: { key_red: 1, key_blue: 1, key_green: 1, victory: 1 },
@@ -68,7 +72,7 @@ function monolithic(config) {
     });
     return buildRulesJson(grid, {
         startCell, seed: config.seed, itemLib: config.itemLib,
-        startingItems: [], lockedCanonicalItems: [],
+        startingItems: [], pinnedCanonicalItems: [],
         enableLoopMode: config.enableLoopMode,
         regionXpEffect: config.regionXpEffect,
         completionConditionItem: config.victoryItem,
@@ -114,7 +118,7 @@ function monolithicBatched(config, spheresPerBatch) {
     const { grid, stats, startCell, tree } = r.value;
     return buildRulesJson(grid, {
         startCell, seed: config.seed, itemLib: config.itemLib,
-        startingItems: [], lockedCanonicalItems: [],
+        startingItems: [], pinnedCanonicalItems: [],
         enableLoopMode: config.enableLoopMode,
         regionXpEffect: config.regionXpEffect,
         completionConditionItem: config.victoryItem,
@@ -168,7 +172,7 @@ describe('sphereSteps runner', () => {
     it('embeds a compact sphere_tree (no grid) sufficient to resume wiring', async () => {
         const config = makeConfig();
         const env = await runToStep(newEnvelope(config));
-        const meta = env.compile.rulesJson.procgen_metadata;
+        const meta = env.compile.rulesJson.procgen_metadata['1'];
         const tree = meta.sphere_tree;
         expect(tree).toBeTruthy();
         expect(tree.nodes.length).toBe(env.nodes.length);
@@ -526,12 +530,76 @@ describe('appendSphere (envelope path)', () => {
         expect(env.compile.oracleErrors).toEqual([]);
     });
 
+    /**
+     * ⛓⛓ P1a — the rules.json branch reads `procgen_metadata[opts.playerId]`:
+     * the same world relabelled to slot 2 reconstructs for slot 2, and is NOT
+     * a rules.json for slot 1 (its metadata is slot 2's). The relabel is derived
+     * — every top-level map keyed by the slot id moves.
+     */
+    it('⛓⛓ P1a — importSphereEnvelope reads the slot opts.playerId names', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const rj = JSON.parse(JSON.stringify(src.compile.rulesJson));
+        for (const [k, v] of Object.entries(rj)) {
+            if (v && typeof v === 'object' && !Array.isArray(v) && Object.hasOwn(v, '1')) {
+                rj[k] = Object.fromEntries(Object.entries(v).map(([p, x]) => [p === '1' ? '2' : p, x]));
+            }
+        }
+        expect(Object.keys(rj.procgen_metadata)).toEqual(['2']);
+        const { env, fromRulesJson } = importSphereEnvelope(rj, { playerId: '2' });
+        expect(fromRulesJson).toBe(true);
+        expect(env.nodes.length).toBe(src.nodes.length);
+        expect(env.config.regionSize).toEqual(makeConfig().regionSize);
+        expect(importSphereEnvelope(rj).fromRulesJson).toBe(false);
+    });
+
     it('importSphereEnvelope deserializes a serialized envelope unchanged', async () => {
         const src = await runToStep(newEnvelope(makeConfig()));
         const { env, fromRulesJson } = importSphereEnvelope(serializeEnvelope(src));
         expect(fromRulesJson).toBe(false);
         expect(env.config.regionSize).toEqual(makeConfig().regionSize);
         expect(detectCompleted(env)).toBe(5);
+    });
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE REFUSAL AND THE THROW ARE ONE
+     * SENTENCE.** The pipeline panel shows a person what it can do with a
+     * document handed to it from the APWorld editor, and it must not invent a
+     * second predicate for *"is this appendable"*: `sphereRebuildRefusal`
+     * answers with the string `rebuildEnvelopeFromRulesJson` would throw.
+     * ⛔ These rows compare the two AGAINST EACH OTHER rather than against a
+     * typed expectation — a guard that read its own constant could not see
+     * either half move.
+     */
+    it('⛓⛓ sphereRebuildRefusal returns null exactly when the rebuild succeeds', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        expect(sphereRebuildRefusal(src.compile.rulesJson)).toBeNull();
+        expect(() => rebuildEnvelopeFromRulesJson(src.compile.rulesJson)).not.toThrow();
+    });
+
+    it('⛓⛓ and its sentence is VERBATIM the one the rebuild throws — zone '
+        + 'substrate, and a document that is not sphere-grown at all', async () => {
+        const zone = await runToStep(newEnvelope(makeConfig({
+            substrateQuotas: { bounce: 99 }, startSubstrate: 'bounce',
+            sphereCount: 2, maxItemsPerRegion: 4, victoryItem: 'Victory',
+            exclusiveSpheres: { 2: ['Springs', 'Victory'] },
+            itemPool: { 'Right arrow': 1, Springs: 1, Jetpacks: 1, Victory: 1 },
+        })));
+        for (const doc of [zone.compile.rulesJson, { regions: { 1: {} } }, {}]) {
+            const said = sphereRebuildRefusal(doc);
+            expect(said).toBeTruthy();
+            let thrown = null;
+            try { rebuildEnvelopeFromRulesJson(doc); } catch (e) { thrown = e.message; }
+            expect(thrown).toBe(said);
+        }
+    });
+
+    it('⛓ names the MISSING SIDECAR by region, not by a count', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const doc = JSON.parse(JSON.stringify(src.compile.rulesJson));
+        const [firstRegion] = Object.keys(doc.preset_sidecars['1']);
+        delete doc.preset_sidecars['1'][firstRegion];
+        expect(sphereRebuildRefusal(doc)).toContain(firstRegion);
+        expect(() => rebuildEnvelopeFromRulesJson(doc)).toThrow(firstRegion);
     });
 
     it('rebuild throws for a zone substrate (bounce) — needs the saved envelope', async () => {
@@ -566,7 +634,7 @@ describe('appendSphere (envelope path)', () => {
             gridDims: { width: 6, height: 6 }, seed: 1, sphereLog,
         });
         const rulesJson = buildRulesJson(grid, {
-            startCell, sphereLog,
+            startCell,
             procgenMetadata: {
                 driver: 'top-down-sphere',
                 sphere_tree: sphereTree,
@@ -595,5 +663,465 @@ describe('appendSphere (envelope path)', () => {
             expect(n.wave).toBeLessThan(2);
             if (n.cell) expect(env.grow.grid.hasRegion(n.cell)).toBe(true);
         }
+    });
+
+    // PIPELINE RELAYOUT R1: the teleporter table is keyed by EXIT, so dropping a
+    // later-wave teleporter child deletes the parent exit that led to IT — a
+    // same-side sibling in a kept wave keeps its mapping (the old hand-built
+    // `cell:side` key deleted both).
+    it('truncateSphereWorld deletes a dropped teleporter child and keeps its same-side sibling', () => {
+        const grid = new Grid({ width: 5, height: 3 });
+        const fwd = (id, target) => [id, { exit_id: id, side: 'E', targetRegion: target, isTeleporter: true }];
+        grid.placeRegion({ gx: 0, gy: 0 }, {
+            region_id: 'Root', exits: new Map([fwd('toKept', 'Kept'), fwd('toDropped', 'Dropped')]),
+            exits_placed: [{ exit_id: 'toKept', side: 'E' }, { exit_id: 'toDropped', side: 'E' }],
+        });
+        grid.placeRegion({ gx: 4, gy: 0 }, { region_id: 'Kept', exits: new Map() });
+        grid.placeRegion({ gx: 4, gy: 2 }, { region_id: 'Dropped', exits: new Map() });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toKept', { gx: 4, gy: 0 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toDropped', { gx: 4, gy: 2 });
+        const env = {
+            nodes: [
+                { index: 0, wave: 0, parent: null, cell: { gx: 0, gy: 0 }, region_id: 'Root' },
+                { index: 1, wave: 0, parent: 0, side: 'E', isTeleporter: true, cell: { gx: 4, gy: 0 }, region_id: 'Kept' },
+                { index: 2, wave: 1, parent: 0, side: 'E', isTeleporter: true, cell: { gx: 4, gy: 2 }, region_id: 'Dropped' },
+            ],
+            grow: { grid },
+        };
+        truncateSphereWorld(env, 1);
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toDropped')).toBeNull();
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toKept')).toEqual({ gx: 4, gy: 0 });
+        expect(grid.teleporters.size).toBe(1);
+    });
+
+    // PIPELINE RELAYOUT C1: a dropped teleporter child whose PARENT is dropped
+    // too — the parent has already left the grid when the child is reached, so
+    // its exit toward the child could not be read and the entry outlived both.
+    // The world is the measured harm case (maze, seed 2, six spheres, keep 1):
+    // the stale `6,5:exit → 0,0` stole the regrown region_6_5's forward exit.
+    it('truncateSphereWorld drops a dropped parent\'s teleporter entries, so a regrow keeps its exits', async () => {
+        const env = await runToStep(newEnvelope(makeConfig({
+            seed: 2, sphereCount: 6, maxItemsPerRegion: 1, fillerCount: 12,
+            substrateQuotas: { maze: 80 },
+            itemPool: { key_red: 3, key_blue: 3, key_green: 3, key_yellow: 3, victory: 1 },
+        })));
+        const cut = env.nodes.findIndex((n) => n.wave >= 1);
+        // Premise: the fixture holds the case — a dropped teleporter child of a dropped parent.
+        expect(env.nodes.some((n, i) => i >= cut && n.isTeleporter && n.parent >= cut)).toBe(true);
+        truncateSphereWorld(env, 1);
+        const grid = env.grow.grid;
+        const orphaned = [...grid.teleporters]
+            .filter(([k, to]) => !grid.cells.has(k.split(':')[0]) || !grid.cells.has(to));
+        expect(orphaned).toEqual([]);
+        await appendSphere(env, { items: ['key_red'], truncateToWave: 1 });
+        const region = env.grow.grid.getRegion({ gx: 6, gy: 5 });
+        expect(region?.region_id).toBe('region_6_5');
+        const exit = getRegionExits(region).get('exit');
+        expect(exit && { side: exit.side, target: exit.targetRegion })
+            .toEqual({ side: 'E', target: 'region_7_5' });
+    });
+});
+
+// --- recorded layout edits (B-d) ---------------------------------------
+//
+// The envelope gains `edits[]`: the composite-grid layout editor's four
+// mutators and the two scalar per-region gestures, RECORDED so that a
+// hand-edited world is `config + seed + edits` — replayed by the runner,
+// undone by popping, and carried by the codec. The rows below pin the three
+// claims that make that true: the replay lands at the right step, it consumes
+// no rng, and undo is byte-exact.
+describe('sphereSteps — recorded layout edits', () => {
+    // A small BOUNCE world: the re-roll and exit-side ops are zone-only (a maze
+    // region's exit tile positions feed adjacency stitching, so the engine
+    // refuses to re-roll one). One gated arrow keeps every region buildable.
+    const bounceConfig = () => makeConfig({
+        substrateQuotas: { bounce: 99 },
+        startSubstrate: 'bounce',
+        regionParams: { fallBehavior: 'current', physicsProfile: 'dj' },
+        itemPool: { 'Left arrow': 1, Victory: 1 },
+        sphereCount: 2,
+        victoryItem: 'Victory',
+        exclusiveSpheres: { 1: ['Left arrow'] },
+        maxItemsPerRegion: 2,
+        fillerCount: 1,
+    });
+
+    const gridSha = (grid) => createHash('sha256').update(JSON.stringify(
+        grid.allRegions()
+            .map((r) => [r.region_id, r.cell.gx, r.cell.gy,
+                JSON.stringify(r.extracted_rules), JSON.stringify(r.exits_placed)])
+            .sort((a, b) => (a[0] < b[0] ? -1 : 1)),
+    )).digest('hex');
+
+    async function grownEnv(config = bounceConfig()) {
+        const env = newEnvelope(config);
+        await runToStep(env, 'regions');
+        return env;
+    }
+
+    // An empty cell the layout editor could move a region into.
+    function emptyCell(grid) {
+        for (let gy = 0; gy < grid.height; gy += 1) {
+            for (let gx = 0; gx < grid.width; gx += 1) {
+                if (!grid.hasRegion({ gx, gy })) return { gx, gy };
+            }
+        }
+        return null;
+    }
+
+    it('an unedited envelope is untouched by the replay (byte-identity)', async () => {
+        const config = makeConfig();
+        const bare = newEnvelope(config);
+        await runToStep(bare, 'compile');
+        const withEmpty = newEnvelope(config);
+        withEmpty.edits = [];
+        await runToStep(withEmpty, 'compile');
+        expect(JSON.stringify(withEmpty.compile.rulesJson))
+            .toBe(JSON.stringify(bare.compile.rulesJson));
+        expect(JSON.stringify(bare.compile.rulesJson)).toBe(JSON.stringify(monolithic(config)));
+    });
+
+    it('a recorded move REPLAYS from config + seed + edits alone', async () => {
+        const config = bounceConfig();
+        const live = await grownEnv(config);
+        const mover = live.grow.grid.allRegions()[1];
+        const to = emptyCell(live.grow.grid);
+        const edit = { op: 'move-region', from: { ...mover.cell }, to };
+        expect(pushLayoutEdit(live, edit, SPHERE_EDIT_BINDING).ok).toBe(true);
+        await runToStep(live, 'compile');
+
+        // A FRESH envelope carrying only the recording reproduces it exactly.
+        const replayed = newEnvelope(config);
+        replayed.edits = [edit];
+        await runToStep(replayed, 'compile');
+        expect(gridSha(replayed.grow.grid)).toBe(gridSha(live.grow.grid));
+        expect(JSON.stringify(replayed.compile.rulesJson))
+            .toBe(JSON.stringify(live.compile.rulesJson));
+
+        // …and it is genuinely a different world from the unedited one.
+        const clean = newEnvelope(config);
+        await runToStep(clean, 'compile');
+        expect(gridSha(replayed.grow.grid)).not.toBe(gridSha(clean.grow.grid));
+    });
+
+    it('the replay consumes NO rng: the post-③ rng snapshot is unmoved', async () => {
+        const config = bounceConfig();
+        const clean = await grownEnv(config);
+        const edited = await grownEnv(config);
+        const mover = edited.grow.grid.allRegions()[1];
+        pushLayoutEdit(edited, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(edited.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        expect(edited.rng.s).toBe(clean.rng.s);
+        expect(edited.regionsRng.s).toBe(clean.regionsRng.s);
+
+        // Same claim on the REPLAY path (a fresh run that applies the recording).
+        const replayed = newEnvelope(config);
+        replayed.edits = [...edited.edits];
+        await runToStep(replayed, 'regions');
+        expect(replayed.rng.s).toBe(clean.rng.s);
+    });
+
+    it('N edits → undo ×N → the never-edited grid, byte for byte', async () => {
+        const config = bounceConfig();
+        const clean = newEnvelope(config);
+        await runToStep(clean, 'compile');
+        const cleanSha = gridSha(clean.grow.grid);
+
+        const env = await grownEnv(config);
+        // Each gesture reads the CURRENT grid, exactly as a second click would.
+        const secondId = env.grow.grid.allRegions()[1].region_id;
+        const liveCell = (id) => ({
+            ...env.grow.grid.allRegions().find((r) => r.region_id === id).cell,
+        });
+        pushLayoutEdit(env, {
+            op: 'move-region', from: liveCell(secondId), to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const thirdId = env.grow.grid.allRegions()
+            .find((r) => r.region_id !== secondId
+                && r.region_id !== env.grow.grid.getRegion(env.grow.startCell).region_id)
+            .region_id;
+        pushLayoutEdit(env, {
+            op: 'swap-regions', a: liveCell(thirdId), b: liveCell(secondId),
+        }, SPHERE_EDIT_BINDING);
+        await runToStep(env, 'compile');
+        expect(env.edits).toHaveLength(2);
+        expect(gridSha(env.grow.grid)).not.toBe(cleanSha);
+        expect(JSON.stringify(env.compile.rulesJson))
+            .not.toBe(JSON.stringify(clean.compile.rulesJson));
+
+        for (let i = 0; i < 2; i += 1) {
+            const popped = popLayoutEdit(env, SPHERE_EDIT_BINDING);
+            invalidateSphereFrom(env, sphereUndoStep(popped.edit));
+            // eslint-disable-next-line no-await-in-loop
+            await resumeEnvelope(env, 'compile');
+        }
+        expect(env.edits).toHaveLength(0);
+        expect(gridSha(env.grow.grid)).toBe(cleanSha);
+        // Not just the grid: the whole compiled world comes back.
+        expect(JSON.stringify(env.compile.rulesJson))
+            .toBe(JSON.stringify(clean.compile.rulesJson));
+        // `completed` must land back at the end of the pipeline — an undo that
+        // re-ran from step 0 would reproduce the grid and still leave this wrong.
+        expect(env.completed).toBe(SPHERE_STEPS.length - 1);
+    });
+
+    it('undo re-runs from the edit s OWN step, not from step 0', async () => {
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const popped = popLayoutEdit(env, SPHERE_EDIT_BINDING);
+        expect(sphereUndoStep(popped.edit)).toBe('regions');
+        invalidateSphereFrom(env, 'regions');
+        // ①②a②b②c survive; only ③④ are gone.
+        expect(env.draft).toBeTruthy();
+        expect(env.tree).toBeTruthy();
+        expect(env.grow).toBeNull();
+        expect(env.completed).toBe(SPHERE_STEPS.indexOf('regions') - 1);
+    });
+
+    it('set-substrate replays at ②c and undoes from ②b (the node it wrote is ②b s)', async () => {
+        const config = bounceConfig();
+        const env = newEnvelope(config);
+        await runToStep(env, 'items');
+        const target = env.nodes[1];
+        const original = target.substrate;
+        const edit = { op: 'set-substrate', region_id: sphereNodeKey(target), substrate: 'maze' };
+        expect(pushLayoutEdit(env, edit, SPHERE_EDIT_BINDING).ok).toBe(true);
+        expect(env.nodes[1].substrate).toBe('maze');
+        await runToStep(env, 'compile');
+        expect(env.grow.grid.allRegions().some((r) => r.substrate === 'maze')).toBe(true);
+
+        // A fresh envelope carrying only the recording lands in the same place —
+        // the replay fires after ②c, before ③ realises anything.
+        const replayed = newEnvelope(config);
+        replayed.edits = [edit];
+        await runToStep(replayed, 'compile');
+        expect(gridSha(replayed.grow.grid)).toBe(gridSha(env.grow.grid));
+
+        // Undo rewinds to ②b, which is what re-derives the node's substrate.
+        expect(sphereUndoStep(edit)).toBe('topology');
+        popLayoutEdit(env, SPHERE_EDIT_BINDING);
+        invalidateSphereFrom(env, 'topology');
+        await resumeEnvelope(env, 'compile');
+        expect(env.nodes[1].substrate).toBe(original);
+    });
+
+    // The measured defect the recording fixes: node.cell fed
+    // buildNodeRealiserSpecs and compactSphereTree, and NOTHING updated it on a
+    // layout move. A re-roll after a swap replaced the region that had moved
+    // INTO the stale cell — duplicating one region_id and losing another,
+    // silently.
+    it('a layout move RESYNCS the tree node cells (and the start cell)', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const [first, second] = grid.allRegions();
+        pushLayoutEdit(env, {
+            op: 'swap-regions', a: { ...first.cell }, b: { ...second.cell },
+        }, SPHERE_EDIT_BINDING);
+        for (const node of env.nodes) {
+            if (!node.region_id) continue;
+            const live = grid.allRegions().find((r) => r.region_id === node.region_id);
+            expect([node.region_id, node.cell]).toEqual([node.region_id, {
+                gx: live.cell.gx, gy: live.cell.gy,
+            }]);
+        }
+        const root = env.nodes.find((n) => n.parent == null);
+        expect(env.grow.startCell).toEqual({ gx: root.cell.gx, gy: root.cell.gy });
+
+        // …so a re-roll AFTER the swap still targets its own region.
+        const rerolled = grid.allRegions().find((r) => r.region_id === first.region_id);
+        const node = env.nodes.find((n) => n.region_id === first.region_id);
+        const before = grid.allRegions().length;
+        const r = pushLayoutEdit(env, {
+            op: 're-roll', region_id: sphereNodeKey(node), n: 1,
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        expect(grid.allRegions()).toHaveLength(before);
+        expect(grid.allRegions().filter((x) => x.region_id === first.region_id)).toHaveLength(1);
+        expect(grid.getRegion(rerolled.cell).region_id).toBe(first.region_id);
+    });
+
+    // The second half of the resync, measured the same way: `node.side` is the
+    // side of the PARENT's exit that leads to this node, and an exit-side edit
+    // moved the grid's exit while leaving the tree's `side` behind. A later
+    // re-roll then rebuilt the region at the TREE's sides and silently REVERTED
+    // the edit (invisible while the pair is adjacent; after a swap they are
+    // teleporter-linked and keyed by SIDE, so the forward link dies and the
+    // oracle reports "sphere count mismatch").
+    it('an exit-side edit RESYNCS the tree node sides', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const exitsOf = (cell) => [...getRegionExits(grid.getRegion(cell)).values()];
+        // Any parent that still has a free side: move its forward exit there.
+        let target = null;
+        for (const child of env.nodes) {
+            if (child.parent == null || !child.region_id) continue;
+            const parentCell = env.nodes[child.parent]?.cell;
+            if (!parentCell || !grid.getRegion(parentCell)) continue;
+            const list = exitsOf(parentCell);
+            const fwd = list.find((e) => !e.isBackExit && e.targetRegion === child.region_id);
+            const used = new Set(list.map((e) => e.side));
+            const free = ['N', 'S', 'E', 'W'].find((x) => !used.has(x));
+            if (fwd && free) { target = { child, parentCell, fwd, free }; break; }
+        }
+        expect(target, 'need a parent with a forward exit and a free side').toBeTruthy();
+        const { child, parentCell, fwd, free } = target;
+        expect(child.side).not.toBe(free); // the row is not vacuous
+
+        const r = pushLayoutEdit(env, {
+            op: 'move-exit-side', cell: { ...parentCell }, exitId: fwd.exit_id, side: free,
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        expect(child.side).toBe(free);
+        // …and the tree can still resolve the parent exit it names, which is the
+        // lookup buildNodeRealiserSpecs throws on when it misses.
+        expect(grid.getRegion(child.cell)).toBeTruthy();
+        expect(grid.getRegion(env.nodes[child.parent].cell).exits_placed
+            .some((e) => e.side === child.side)).toBe(true);
+    });
+
+    // ⛓ PIPELINE RELAYOUT R2 — measured on `check-region-step-editing.mjs` phase K
+    // (red at `62d359ec1a`, green before R1): an exit-side edit that turns a
+    // parent → child link into a TELEPORTER, then a re-roll of that parent. The
+    // re-realised region mints NEW exit ids, and `Grid.teleporters` is keyed by
+    // exit (R1), so the entry kept under the replaced id pointed nowhere, the
+    // child's link was walled off, and the oracle reported "sphere count
+    // mismatch". The re-roll now re-derives each child's teleporter by the law.
+    it('a re-roll after an exit-side edit keeps the parent\'s teleporter to its child (oracle clean)', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const exitsOf = (cell) => [...getRegionExits(grid.getRegion(cell)).values()];
+        let target = null;
+        for (const child of env.nodes) {
+            if (child.parent == null || !child.region_id) continue;
+            const parent = env.nodes[child.parent];
+            if (!parent?.cell || !grid.getRegion(parent.cell)) continue;
+            const list = exitsOf(parent.cell);
+            const fwd = list.find((e) => !e.isBackExit && e.targetRegion === child.region_id);
+            const used = new Set(list.map((e) => e.side));
+            const free = ['N', 'S', 'E', 'W'].find((x) => !used.has(x));
+            if (fwd && free) { target = { child, parent, fwd, free }; break; }
+        }
+        expect(target, 'need a parent with a forward exit and a free side').toBeTruthy();
+        const { child, parent, fwd, free } = target;
+        expect(pushLayoutEdit(env, {
+            op: 'move-exit-side', cell: { ...parent.cell }, exitId: fwd.exit_id, side: free,
+        }, SPHERE_EDIT_BINDING).ok).toBe(true);
+        const moved = exitsOf(parent.cell).find((e) => e.targetRegion === child.region_id);
+        expect(moved.isTeleporter, 'the premise: the edit made the link a teleporter').toBe(true);
+        const r = pushLayoutEdit(env, { op: 're-roll', region_id: sphereNodeKey(parent), n: 1 }, SPHERE_EDIT_BINDING);
+        expect(r.ok, r.error).toBe(true);
+        const after = exitsOf(parent.cell).find((e) => !e.isBackExit && e.side === free);
+        expect(after?.targetRegion).toBe(child.region_id);
+        await runToStep(env, 'compile');
+        expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    it('the codec carries the recording across a serialise/deserialise boundary', async () => {
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const round = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(env))));
+        expect(round.edits).toEqual(env.edits);
+        await runToStep(round, 'compile');
+        expect(gridSha(round.grow.grid)).toBe(gridSha(env.grow.grid));
+    });
+
+    it('the batch gate replays a layout edit ONCE in a sphere-major run', async () => {
+        const config = bounceConfig();
+        const perBatch = newEnvelope({ ...config, spheresPerBatch: 1 });
+        await runToStep(perBatch, 'compile');
+        const mover = perBatch.grow.grid.allRegions()[1];
+        const edit = { op: 'move-region', from: { ...mover.cell }, to: emptyCell(perBatch.grow.grid) };
+
+        const replayed = newEnvelope({ ...config, spheresPerBatch: 1 });
+        replayed.edits = [edit];
+        // Without the gate this throws: the second batch's ③ would find the
+        // source cell already empty and the replay refuses.
+        await expect(runToStep(replayed, 'compile')).resolves.toBeTruthy();
+        expect(replayed.grow.grid.getRegion(edit.to)?.region_id).toBe(mover.region_id);
+    });
+
+    it('procgen_metadata carries the recording — and omits it when unedited', async () => {
+        const clean = newEnvelope(bounceConfig());
+        await runToStep(clean, 'compile');
+        expect('edits' in clean.compile.rulesJson.procgen_metadata['1']).toBe(false);
+
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        await runToStep(env, 'compile');
+        expect(env.compile.rulesJson.procgen_metadata['1'].edits).toEqual(env.edits);
+    });
+
+    // The measured round-trip. Maze, because rebuildEnvelopeFromRulesJson
+    // refuses zone substrates (no path extractor). This is what the node-cell
+    // resync buys: compactSphereTree writes the node's cell, so before B-d an
+    // edited world rebuilt at its PRE-edit placement.
+    it('an edited world rebuilds from its rules.json at the EDITED placement', async () => {
+        const env = newEnvelope(makeConfig());
+        await runToStep(env, 'regions');
+        const mover = env.grow.grid.allRegions()[1];
+        const r = pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        await runToStep(env, 'compile');
+
+        const place = (g) => g.allRegions()
+            .map((x) => `${x.region_id}@${x.cell.gx},${x.cell.gy}`).sort().join(' ');
+        const rebuilt = rebuildEnvelopeFromRulesJson(env.compile.rulesJson, {
+            itemLib: DEFAULT_ITEMS,
+        });
+        expect(place(rebuilt.grow.grid)).toBe(place(env.grow.grid));
+        expect(place(env.grow.grid)).toMatch(new RegExp(`${mover.region_id}@\\d+,\\d+`));
+    });
+
+    // A PRE-EXISTING hazard B-d must not make worse. After a layout edit the
+    // panel keeps the grown grid on screen (_invalidateFrom(4) drops only ④), so
+    // clicking "Run 3 Build regions" enters ③'s CARRY path — and that already
+    // threw before B-d, with no recording anywhere: the raw engine call
+    // `moveSphereRegion` + re-run ③ gives `Grid.replaceRegion: cell (3,2) is
+    // empty` (measured on a control that never touches layoutEdits). The panel's
+    // own message says "re-run from compile", not from ③.
+    //
+    // What B-d owes is that the failure mode is UNCHANGED — the engine's
+    // replaceRegion, never a replay refusal. ⚠ A narrower batch gate ("and that
+    // ③ actually ADVANCED the loop") was written for this and then DELETED: no
+    // test could discriminate it, because ③ throws inside the runner before any
+    // replay is reached. A guard no test can red is a guard that should not ship.
+    it('re-running ③ on the CARRY path fails the SAME way it did before B-d', async () => {
+        const config = bounceConfig();
+        const env = newEnvelope(config);
+        await runToStep(env, 'compile');
+        const mover = env.grow.grid.allRegions()[1];
+        expect(pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING).ok).toBe(true);
+
+        env.completed = SPHERE_STEPS.indexOf('regions');
+        env.compile = null;
+        await expect(runStep('regions', env)).rejects.toThrow(/Grid\.replaceRegion: cell .* is empty/);
+        // The recording survives the failed step — nothing half-applied it.
+        expect(env.edits).toHaveLength(1);
+    });
+
+    it('a refused edit leaves the grid untouched and records nothing', async () => {
+        const env = await grownEnv();
+        const [a, b] = env.grow.grid.allRegions();
+        const before = gridSha(env.grow.grid);
+        const r = pushLayoutEdit(env, {
+            op: 'move-region', from: { ...a.cell }, to: { ...b.cell },
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(false);
+        expect(env.edits ?? []).toHaveLength(0);
+        expect(gridSha(env.grow.grid)).toBe(before);
     });
 });

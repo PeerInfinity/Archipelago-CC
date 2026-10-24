@@ -1,0 +1,220 @@
+{
+    "game": "seedling",
+    "name": "slots-l24-burn-fencepost",
+    "boot": {
+        "level": 24,
+        "x": 96,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 60,
+            "slot": 1
+        },
+        {
+            "t": 81,
+            "slot": 0
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 115,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "right",
+            "from": 15,
+            "to": 18
+        },
+        {
+            "key": "left",
+            "from": 18,
+            "to": 19
+        },
+        {
+            "key": "right",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "left",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "right",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "primary",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "primary",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "primary",
+            "from": 32,
+            "to": 33
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 46
+        },
+        {
+            "key": "up",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "down",
+            "from": 49,
+            "to": 55
+        },
+        {
+            "key": "primary",
+            "from": 60,
+            "to": 61
+        },
+        {
+            "key": "primary",
+            "from": 104,
+            "to": 105
+        },
+        {
+            "key": "left",
+            "from": 104,
+            "to": 107
+        },
+        {
+            "key": "primary",
+            "from": 106,
+            "to": 107
+        },
+        {
+            "key": "right",
+            "from": 107,
+            "to": 109
+        },
+        {
+            "key": "down",
+            "from": 104,
+            "to": 114
+        },
+        {
+            "key": "left",
+            "from": 109,
+            "to": 114
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY SLOTS (D4a, the fencepost) — `slots-l24-burn-cut-80` with its walk one tick earlier: the first key after the wait is on t104, the update before the tree's `goneAt` (t105). The game blocks the player against the still-solid tree on that update and lets it through on the next; the model agrees only with `levelRun.burnedTreeIdsNow` asked at `ticksCompleted` (it was `+ 1`, which the first cut-80 recording refuted). Authored by scripts/procgen/plan-seedling-slots-witness.mjs."
+}

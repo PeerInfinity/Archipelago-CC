@@ -1,0 +1,10 @@
+const root = process.argv[2];
+const m = async (p) => import(`${root}/frontend/modules/seedlingDemo/${p}`);
+const sb = await m('solverBot.js'); const pk = await m('pressKillCost.js'); const gs = await m('ghostSpinnerPress.js');
+const cf = await m('contactFidelity.js'); const js = await m('jsRuntimeSolver.js');
+const en = (o) => (o && typeof o === 'object' && 'enabled' in o ? o.enabled : o);
+const pick = (mod) => Object.fromEntries(Object.keys(mod).filter((k) => /^[A-Z][A-Z0-9_]+$/.test(k) && !/_DEFAULT$|_COUNTS$/.test(k))
+  .map((k) => [k, en(mod[k])]).filter(([, v]) => typeof v === 'boolean' || typeof v === 'number' || typeof v === 'string'));
+console.log(JSON.stringify({ jsRuntimeSolver: { SOLVER_BUDGET_WORK: js.SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK: js.SOLVER_UPGRADE_WINDOW_WORK,
+  SOLVE_BACKSTOP_MS: js.SOLVE_BACKSTOP_MS, FINE_CHECKPOINTS: js.FINE_CHECKPOINTS, ANYTIME_PASSES: js.ANYTIME_PASSES },
+  solverBot: pick(sb), pressKillCost: pick(pk), ghostSpinnerPress: pick(gs), CONTACT_FIDELITY: { ...cf.CONTACT_FIDELITY } }, null, 1));

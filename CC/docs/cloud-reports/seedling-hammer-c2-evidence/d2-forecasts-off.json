@@ -1,0 +1,84 @@
+{
+ "held": 92,
+ "realLandings": [
+  "t27 spinner@48,96 hits 2",
+  "t76 spinner@48,96 hits 4"
+ ],
+ "presses": [
+  {
+   "t": 26,
+   "outcome": "slash",
+   "fOutcome": "slash",
+   "landing": null,
+   "why": "no test's rect reached a body within 40 row(s)",
+   "tests": 0,
+   "firstDiff": {
+    "tick": 27,
+    "real": "[[\"spinner@48,96\",2,30,false,71.7989898732234,80.20101012677651],[\"spinner@112,48\",0,0,false,135.7989898732235,32.20101012677671]]",
+    "fc": "[[\"spinner@48,96\",0,0,false,71.7989898732234,80.20101012677651],[\"spinner@112,48\",0,0,false,135.7989898732235,32.20101012677671]]"
+   }
+  },
+  {
+   "t": 28,
+   "outcome": "dash",
+   "fOutcome": "dash",
+   "landing": null,
+   "why": "no test's rect reached a body within 40 row(s)",
+   "tests": 0,
+   "firstDiff": null
+  },
+  {
+   "t": 34,
+   "outcome": "swallowed",
+   "fOutcome": "swallowed",
+   "landing": null,
+   "why": "the press at t34 opens no window: swallowed (a press with slashDashed true and slashing true: the dash arm is refused by `!slashDashed` and the swing arm by `!slashing`, and `set slashing` has no else. Nothing is played, nothing is knocked back and `slashTimer` is untouched.)",
+   "tests": 0,
+   "firstDiff": null
+  },
+  {
+   "t": 36,
+   "outcome": "dash",
+   "fOutcome": "dash",
+   "landing": null,
+   "why": "no test's rect reached a body within 40 row(s)",
+   "tests": 0,
+   "firstDiff": null
+  },
+  {
+   "t": 44,
+   "outcome": "dash",
+   "fOutcome": "dash",
+   "landing": null,
+   "why": "no test's rect reached a body within 40 row(s)",
+   "tests": 0,
+   "firstDiff": {
+    "tick": 76,
+    "real": "[[\"spinner@48,96\",4,30,true,123.0953148938599,110.93325892195959],[\"spinner@112,48\",0,0,false,135.7989898732235,35.02943725152289]]",
+    "fc": "[[\"spinner@48,96\",2,0,false,123.0953148938599,110.93325892195959],[\"spinner@112,48\",0,0,false,135.7989898732235,35.02943725152289]]"
+   }
+  },
+  {
+   "t": 75,
+   "outcome": "slash",
+   "fOutcome": "slash",
+   "landing": null,
+   "why": "no test's rect reached a body within 40 row(s)",
+   "tests": 0,
+   "firstDiff": {
+    "tick": 76,
+    "real": "[[\"spinner@48,96\",4,30,true,123.0953148938599,110.93325892195959],[\"spinner@112,48\",0,0,false,135.7989898732235,35.02943725152289]]",
+    "fc": "[[\"spinner@48,96\",2,0,false,123.0953148938599,110.93325892195959],[\"spinner@112,48\",0,0,false,135.7989898732235,35.02943725152289]]"
+   }
+  }
+ ],
+ "fight": {
+  "landedTests": [],
+  "tests": 0,
+  "firstDiff": {
+   "tick": 27,
+   "real": "[[\"spinner@48,96\",2,30,false,71.7989898732234,80.20101012677651],[\"spinner@112,48\",0,0,false,135.7989898732235,32.20101012677671]]",
+   "fc": "[[\"spinner@48,96\",0,0,false,71.7989898732234,80.20101012677651],[\"spinner@112,48\",0,0,false,135.7989898732235,32.20101012677671]]"
+  }
+ }
+}

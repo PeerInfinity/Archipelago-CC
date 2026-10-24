@@ -1,0 +1,401 @@
+/**
+ * seedlingDemo/procgenSeedlingElementsCertify.test — **THE SIX-ARM FIXTURE THAT
+ * GRADED SLICE S1, AND IT NOW ASSERTS THE CERTIFICATION BY NAME.**
+ *
+ * PROCGEN ELEMENTS arc 3. ⚖ Ruling 22's shape is
+ *
+ *     goal <- lock B <- buttonroom B (the FLAG) <- lock A <- button A <- weigh the block
+ *
+ * Slice 3 measured that the solver could not drive it and committed this file as
+ * the MEASUREMENT — four REFUSED verdicts asserted by sentence, two positive
+ * controls — precisely so that **slice S1 ("nested openers") would have to FLIP
+ * these rows rather than rediscover the problem.** It did: ARMS 1, 2 and 5 now
+ * SOLVE with the records §10.3 named, and ARM 4's budget burn became a fast named
+ * refusal.
+ *
+ * ⛔ SO EVERY ARM IS STILL A LIVE ROW WITH NO `.skip`, AND THE TWO CONTROLS ARE
+ * UNCHANGED. ARM 3 (the room with nothing in the way) and ARM 6 (the decoration
+ * flag) are what keep the other four honest — without them this file would be a
+ * room that works for reasons nobody had localised, which is the same defect as
+ * one that fails for them.
+ *
+ * ── THE ROOM, DRAWN OUT ───────────────────────────────────────────────
+ *
+ * A 10x10 room built exactly as the binding builds one: the reverse-pull gadget
+ * at `len = 2`, `turns = 0` on the site (3,3) 4x4 with `e = W`, `r1 = S`, plus the
+ * two cells the BINDING adds (the flag one step past the door on the exit lane,
+ * and the flag's lock on a main-path cut with the entry mouth start-side).
+ *
+ *        x 0 1 2 3 4 5 6 7 8 9
+ *    y=0   # # # # # # # # # #
+ *    y=1   # S . . . . . . . #     S = start (1,1); row 1 is the corridor east
+ *    y=2   # # # # # # # # . #
+ *    y=3   # # # F . D . # . #     F = buttonroom(B) (3,3) · D = lock(A) (4,3)
+ *    y=4   # # # # # b # # . #     b = the bypass cell (5,4)
+ *    y=5   # # # # # # B # . #     B = button(A) (6,3)?  no — see below
+ *    y=6   # # # # # # . . . #
+ *    y=7   # # # # # # # # . #
+ *    y=8   # # # g L . . . . #     g = goal (3,8) · L = lock(B) (5,8)
+ *    y=9   # # # # # # # # # #
+ *
+ * ⚠ The picture above is the CORRIDOR; the gadget's own cells are the lane
+ * (6,3)-(6,6), the bypass (5,4) and the exit lane (5,3),(4,3),(3,3). The block
+ * starts at (6,5) and its button is (6,3) — so the block STANDS BETWEEN the entry
+ * mouth (6,7) and the button, by the element's construction.
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import {
+    bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain,
+} from './procgenLevel.js';
+import {
+    DEFAULT_BUDGET, VERDICT, bootStaging, collectGoal, solve,
+} from './procgenOracle.js';
+import { PRE_SWORD_ITEMS } from './procgenPalette.js';
+import { SEEDLING_DEFAULTS, seedlingSeam } from './procgenSeedling.js';
+import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
+import { parseElementSpec } from '../procgenCore/elementSpec.js';
+
+const START = SEEDLING_DEFAULTS.start;
+const GOAL = { tx: 3, ty: 8 };
+const LOCK_B = { tx: 5, ty: 8 };
+const FLAG = { tx: 3, ty: 3 };
+const DOOR_A = { tx: 4, ty: 3 };
+const BUTTON_A = { tx: 6, ty: 3 };
+const BLOCK = { tx: 6, ty: 5 };
+
+/** The GROUND cells — everything else in the interior is wall. */
+const GROUND = [
+    [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1],
+    [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8],
+    [7, 8], [6, 8], [5, 8], [4, 8], [3, 8],
+    [6, 7],                                   // the element's ENTRY MOUTH
+    [6, 6], [6, 5], [6, 4], [6, 3],           // entry port .. push lane .. button
+    [5, 4],                                   // the bypass cell
+    [5, 3], [4, 3], [3, 3],                   // exit lane: button+W, DOOR, FLAG
+];
+
+/** ⛓ Two DISTINCT groups from one placement, as the binding allocates them. */
+const A = 1;
+const B = 2;
+
+function fixtureRoom({ lockA = true, lockB = true, flag = true, block = BLOCK } = {}) {
+    let record = emptyLevel({ level: SEEDLING_DEFAULTS.level, floor: 'wall' });
+    record = withTerrain(record, GROUND.map(([tx, ty]) => ({ tx, ty, terrain: 'ground' })));
+    const ents = [
+        { type: SEEDLING_DEFAULTS.goalClass, ...GOAL, attrs: { tag: '0' } },
+        { type: 'button', ...BUTTON_A, attrs: { tset: String(A) } },
+    ];
+    if (lockA) ents.push({ type: 'lock', ...DOOR_A, attrs: { tset: String(A), tag: '1' } });
+    if (flag) {
+        ents.push({ type: 'buttonroom', ...FLAG,
+            attrs: { tset: String(B), tag: '2', flip: '0', room: '-1' } });
+    }
+    if (block) ents.push({ type: 'pushableblock', ...block });
+    if (lockB) ents.push({ type: 'lock', ...LOCK_B, attrs: { tset: String(B), tag: '3' } });
+    return withEntities(record, ents.map((e) => ({
+        type: e.type, ...oelAtTile(e.tx, e.ty), ...(e.attrs ? { attrs: e.attrs } : {}),
+    })));
+}
+
+function solveArm(name, arm) {
+    const record = fixtureRoom(arm);
+    const staging = bootStaging({
+        boot: bootAtTile(record, START.tx, START.ty),
+        items: PRE_SWORD_ITEMS,
+        pins: ['dead_frames'],
+    });
+    return solve(record, staging, [collectGoal(GOAL.tx * 16, GOAL.ty * 16)],
+        DEFAULT_BUDGET, { name });
+}
+
+const verbsOf = (out) => new Set((out.records ?? []).map((r) => r.strategy));
+
+describe('⛔⛔ D1(a) — THE SOLVER DOES NOT CHAIN, and each arm names its own gate', () => {
+    /**
+     * ⛓⛓⛓ ARM 1 — THE CHAIN, **AND S1 CERTIFIES IT.** Slice 3 measured this row
+     * as REFUSED at the FLAG's own stance; the certification arc-3 §10.3 owed is
+     * exactly this record, so the row is written as the record rather than as a
+     * verdict:
+     *
+     *   `weigh`  — THIS element's block onto THIS element's button, `shove.to`
+     *              the button tile, raised as the PREREQUISITE of the flag's own
+     *              stance (`deriveHoldStance` -> `stancePrerequisite`, mechanism
+     *              arm) and executed BEFORE the walk to it;
+     *   `hold`   — the presser is THIS element's buttonroom, and `lock`(B) is
+     *              what it opens;
+     *   `collect`.
+     */
+    it('ARM 1 — the whole chain SOLVES, `weigh` -> `hold` -> `collect`', () => {
+        const out = solveArm('slice3-chain', {});
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['weigh', 'hold', 'collect']);
+        const weigh = out.records.find((r) => r.strategy === 'weigh');
+        // ⛔ THIS element's block onto THIS element's button — not "a weigh".
+        expect(weigh.shove).toMatchObject({
+            id: 'pushableblock@96,80',
+            from: { tx: BLOCK.tx, ty: BLOCK.ty },
+            to: { tx: BUTTON_A.tx, ty: BUTTON_A.ty },
+            destroys: false,
+        });
+        expect(weigh.presser).toEqual({ x: BUTTON_A.tx * 16, y: BUTTON_A.ty * 16 });
+        // …and the dwell's own observable is `lock`(A), the door the weigh buys.
+        expect(weigh.dwell.until).toMatch(/group t=1 \[lock@64,48\] is open/);
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({
+            x: FLAG.tx * 16, y: FLAG.ty * 16, tag: 'buttonroom', t: B,
+        });
+        // ⛓ and the FLAG is what opened `lock`(B) — the guard is real, not a
+        // route that happened to arrive.
+        expect(held.opened).toEqual(['lock@80,128']);
+    });
+
+    /**
+     * ⛓⛓ ARM 2 — THE ATTRIBUTION, HALF ONE, **AND IT TAKES THE OTHER
+     * PREREQUISITE ARM.** With `lock`(A) removed the block is still in the lane,
+     * and slice 3 measured the SAME refusal sentence — which is what proved the
+     * BLOCK, not the door, was the gate. S1 answers it through the GEOMETRY arm:
+     * no activator wants this block, so it is scenery, and a bare `shove` clears
+     * the lane.
+     *
+     * ⛔ THE VERB IS THE DISCRIMINATOR. If this row ever produced `weigh` it
+     * would mean the mechanism arm had fired on a room with no mechanism to fire
+     * on — which is the failure mode "mechanism before geometry" is ordered to
+     * avoid, read from the other side.
+     */
+    it('ARM 2 — with lock A REMOVED the BLOCK is the prerequisite, and a `shove` '
+        + 'clears it', () => {
+        const out = solveArm('slice3-nolockA', { lockA: false });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['shove', 'hold', 'collect']);
+        const shove = out.records.find((r) => r.strategy === 'shove');
+        expect(shove.id).toBe('pushableblock@96,80');
+        expect(shove.from).toEqual({ tx: BLOCK.tx, ty: BLOCK.ty });
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({ x: FLAG.tx * 16, y: FLAG.ty * 16 });
+    });
+
+    /**
+     * ⛓⛓⛓ ARM 3 — THE ATTRIBUTION, HALF TWO, AND THE POSITIVE CONTROL FOR THE
+     * WHOLE FILE. With the BLOCK removed as well the room SOLVES — so the gate is
+     * the block, a `pushableblock` that `solverBot.stanceHypothesis` (:2113) does
+     * not discharge (it hypothesises ACTIVATORS and shield bosses only) and that
+     * nothing raises a SUB-ORDER to shove.
+     *
+     * ⛓ AND IT IS WHERE THE FLAG'S VERB IS MEASURED: `hold`, not `touch`.
+     */
+    it('ARM 3 — with lock A AND the block removed it SOLVES, by a `hold` on the FLAG', () => {
+        const out = solveArm('slice3-open', { lockA: false, block: null });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect([...verbsOf(out)]).toEqual(['hold', 'collect']);
+        // ⛔ `touch` is the SHIELDLOCK verb (`activators.TOUCH_RESPONDERS`); a
+        // LATCHING `buttonroom` keeps `hold` because `localPublish` is non-null.
+        expect(verbsOf(out).has('touch')).toBe(false);
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({
+            x: FLAG.tx * 16, y: FLAG.ty * 16, tag: 'buttonroom', t: B,
+        });
+        // and the FLAG really is a LATCH: the collect happens after the hold,
+        // with nobody standing on the presser.
+        expect(out.records.map((r) => r.strategy)).toEqual(['hold', 'collect']);
+    });
+
+    /**
+     * ⛓⛓⛓ ARM 4 — THE OPTIMISM, **AND S1 REPLACED IT WITH THE REFUSAL IT WAS
+     * STANDING IN FOR.**
+     *
+     * With the block gone but `lock`(A) in place, slice 3 measured
+     * `BUDGET_EXHAUSTED` after 797 ticks: the stance IS derived (the hypothesis
+     * says `lock`(A) is discharged), the walk is driven, and it grazes a shut
+     * lock for the whole per-target budget.
+     *
+     * ⛔ AND §10.3's READING OF WHY WAS WRONG, WHICH THIS ROW NOW RECORDS. It
+     * said *"no caller raises `lock`(A) as an order"*. One does — the nested
+     * stance walk's own frontier — and the order is a `hold` on a plain
+     * republishing `Button`, taken through `resolveWeighStrategy`'s L16 fallback
+     * because no block can weigh the presser. The player stands on the button,
+     * the lock opens, the player leaves to walk through it, and `Button.update`
+     * shuts it on the same tick. ⇒ the gap is a hypothesis redeemed by an order
+     * that does not OUTLIVE THE WALKER, and guard (iii) makes such an activator a
+     * WALL rather than an optimistic gap.
+     *
+     * ⛓ THE MEASURABLE OUTCOME IS THE POINT: 797 ticks -> **0**, and the sentence
+     * names the lock, its group, its presser and why nothing can redeem it.
+     */
+    it('ARM 4 — block gone, lock A kept ⇒ a FAST NAMED REFUSAL, 0 driven ticks', () => {
+        const out = solveArm('slice3-noblock', { block: null });
+        expect(out.verdict).toBe(VERDICT.REFUSED);
+        // ⛔ THE BUDGET BURN IS GONE, and this is the assertion that says so: the
+        // old row spent 797 ticks reaching a verdict about a budget.
+        expect(out.ticksSpent).toBe(0);
+        expect(out.reasonText).toMatch(/no REACHABLE stance inside buttonroom@48,48/);
+        expect(out.reasonText).toMatch(/THE PREREQUISITES WERE TRIED AND REFUSED/);
+        expect(out.reasonText).toMatch(/lock@64,48 — its group t=1 publishes only while/);
+        expect(out.reasonText).toMatch(/a Solid sits on button@96,48/);
+        expect(out.reasonText).toMatch(/NO block in this room can reach it/);
+        expect(out.reasonText).toMatch(/a `hold` the walker shuts again by leaving/);
+        // ⛔ and NOT the old sentence — a row that matched both would be a row
+        // that had stopped discriminating.
+        expect(out.reasonText).not.toMatch(/grazing \d+ solid\(s\)/);
+    });
+
+    /**
+     * ⛓⛓ ARM 5 — THE THIRD GAP, INDEPENDENT OF THE OTHER TWO, **AND S1 CLOSED
+     * IT WITH THE DWELL ARM.**
+     *
+     * Before S1 the PRE-SOLVED gadget (the block already parked on its button)
+     * refused: `resolveWeighStrategy` had no "already home" answer, so it fell
+     * back to a `hold` on a button the BLOCK occupies and `deriveHoldStance`
+     * refused at a stance nobody needed to stand in.
+     *
+     * ⛓ Now it resolves to the weigh MINUS its shove — `runDwell` alone, no
+     * stance at all, because the presser is held by the block and the player need
+     * not stand anywhere. ⛔ THE RECORD STILL NAMES THIS ELEMENT'S BLOCK AND
+     * BUTTON (`parked`), which is what keeps the lifted-claim reader able to
+     * answer about a gadget that arrived solved.
+     *
+     * ⚠ THIS ARM RAISES NO PREREQUISITE, and that is the fact that makes the
+     * `NESTED_OPENER_DEPTH` mutant discriminating: `lock`(A) is redeemed by the
+     * ORDINARY frontier of the nested stance walk, exactly as it was before S1.
+     */
+    it('ARM 5 — the block ALREADY on button A now SOLVES, by a DWELL-ONLY weigh', () => {
+        const out = solveArm('slice3-preweighed', { block: BUTTON_A });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.records.map((r) => r.strategy)).toEqual(['weigh', 'hold', 'collect']);
+        const weigh = out.records.find((r) => r.strategy === 'weigh');
+        expect(weigh.dwellOnly).toBe(true);
+        // ⛔ NO SHOVE — a lean that moves nothing is a check that cannot fail.
+        expect(weigh.shove).toBeUndefined();
+        expect(weigh.parked).toMatchObject({
+            block: 'pushableblock@96,48',
+            tile: { tx: BUTTON_A.tx, ty: BUTTON_A.ty },
+            sinceTick: 0,
+        });
+        expect(weigh.presser).toEqual({ x: BUTTON_A.tx * 16, y: BUTTON_A.ty * 16 });
+        // and the FLAG is still what opens `lock`(B): the dwell only bought
+        // `lock`(A), and the hold on the buttonroom is the second order.
+        const held = out.records.find((r) => r.strategy === 'hold');
+        expect(held.presser).toMatchObject({
+            x: FLAG.tx * 16, y: FLAG.ty * 16, tag: 'buttonroom', t: B,
+        });
+    });
+
+    /**
+     * ⛓ ARM 6 — THE DECORATION CONTROL. With no `lock`(B) the flag opens nothing,
+     * so the walk goes straight to the goal and the whole gadget is scenery. It
+     * SOLVES, and it must: that is what makes "the level solved" worthless as
+     * evidence about a guard, and it is why the binding refuses
+     * `no-cut-for-the-flag-lock` rather than placing a flag whose lock cuts
+     * nothing.
+     */
+    it('ARM 6 — with no lock B the room SOLVES by walking past the gadget (DECORATION)', () => {
+        const out = solveArm('slice3-decoration', { lockB: false });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect([...verbsOf(out)]).toEqual(['collect']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **AND THE SAME CHAIN THROUGH THE BINDING, ON A GENERATED ROOM** — arc 3
+ * slice S1. The six arms above are a HAND-DRAWN room: they say the solver can
+ * drive ⚖ ruling 22's chain. This says the thing the arc actually ships does,
+ * end to end, through `seedlingSeam` — the one place that answers *"is this
+ * gadget certified"* for both callers.
+ *
+ * ⛔ THE SEED IS A MEASURED PLACING ONE, not a lucky one.
+ *
+ * ⛓⛓⛓ **RE-PICKED TWICE NOW, BY THE RULE 4a WROTE DOWN** (its §13.0.5
+ * stale-subject warning: *re-pick by the same rule that chose them — the
+ * CHEAPEST CERTIFYING CELL under the NEW draw, measured, not guessed*).
+ *
+ *   4a  → `winding` seed 7, killed by the GOAL DRAW (`manhattan >= 3`).
+ *   4c  → `branchy` seed 12 `len = 3`, killed by ARC 5 SLICE 2's ORIENTED SITE
+ *         PICK: a len-3 gadget is now offered 5x4 and 4x5 rather than 5x5, the
+ *         site it draws is a different rectangle, and the composite refuses —
+ *         the cell stopped PLACING, so the row read `certification === null`.
+ *
+ * RE-SCANNED under the oriented pick, same rule, same axes:
+ * `rooms`/`rooms;minRoom=4`/`winding`/`branchy`/`empty` x seeds 1..12 x `len`
+ * in {2,3}, the cells that PLACE (now **23**, up from 15), each through the
+ * seam with its solve, timed:
+ *
+ *   **empty/12/len2         215 ms  CERTIFIED**  <- taken (cheapest certifying)
+ *   rooms;minRoom=4/12/len2 229 · empty/12/len3 244 · branchy/8/len3 287
+ *   rooms;minRoom=4/8/len3 293 · winding/3/len3 303 · winding/8/len3 311
+ *   empty/8/len3 311 · rooms/8/len3 317 · winding/3/len2 330 · branchy/9/len3 330
+ *   branchy/3/len3 338 · winding/9/len3 355 · rooms;minRoom=4/9/len3 358
+ *   branchy/3/len2 379 · branchy/7/len3 382 · rooms;minRoom=4/7/len2 420
+ *   rooms/7/len2 476 · rooms/2/len3 536 · rooms/9/len3 536
+ *   **rooms/12/len2 145 ms REFUSED** (still the cheapest refusing cell, and
+ *   still the control below) · branchy/5/len3 435 REFUSED · branchy/7/len2 456
+ *
+ * ⚠ **20 of the 23 placing cells CERTIFY** (13 of 15 before), and the placing
+ * count itself rose because the oriented pick offers a snug rectangle where it
+ * used to offer a square.
+ *
+ * ⚠ THE TAKEN CELL IS `len = 2`, WHOSE FOOTPRINT **IS** THE OLD SQUARE — so
+ * this subject is one arc 5 slice 2 could not have moved, which makes it a
+ * steadier pin than a `len = 3` one. The cheapest certifying len-3 cell is
+ * `empty`/12 at 244 ms if a longer lane is ever wanted here.
+ */
+describe('⛓⛓⛓ THE BINDING CERTIFIES — the seam, on a generated room', () => {
+    it('empty seed 12, `guard;len=2`: certified, `[weigh, hold, collect]`, and the '
+        + 'LIFTED CLAIM is true', () => {
+        const seam = seedlingSeam({
+            seed: 12,
+            items: PRE_SWORD_ITEMS,
+            skeleton: parseSkeleton('empty', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=2'),
+        });
+        const c = seam.certification;
+        expect(c).not.toBeNull();
+        expect(c.certified).toBe(true);
+        expect(c.verdict).toBe(VERDICT.SOLVED);
+        expect([...c.strategies]).toEqual(['weigh', 'hold', 'collect']);
+        expect(c.gap).toBeNull();
+        /**
+         * ⛔⛔ THE LIFTED CLAIM IS THE NON-VACUOUS HALF, and it is the assertion
+         * slice 3 could not make: `certified` alone says the level was beaten,
+         * and this says the GADGET was the thing that let it be — a block on the
+         * button at the tick the route first crossed the guard door.
+         */
+        expect(c.heldAtDoor).toBe(true);
+        // ⛓ and the element really SHIPPED: a certified gadget is not dropped.
+        expect(seam.model.elements.placed).toHaveLength(1);
+        expect(seam.model.elements.placed[0].door).toEqual({ x: 6, y: 3 });
+    });
+
+    /**
+     * ⛔ THE CONTROL FOR THE ROW ABOVE: the arc's OWN refusing cell. It places a
+     * gadget and its certification solve refuses — and the `gap` it reports is
+     * **not** an opener-chain one, which is the whole reason slice 3's constant
+     * label had to become a classification. A build that labelled every refusal
+     * `the-solver-does-not-chain` would print the same string here and be wrong
+     * about it.
+     *
+     * ⛓⛓ RE-PICKED AT SLICE 4c FROM THE SAME SCAN AS THE ROW ABOVE. `rooms` seed
+     * 4 no longer places; **`rooms` seed 12 at `len=2` is the cheapest of the
+     * two refusing cells (215 ms vs `branchy`/7/len2's 558)** and it refuses
+     * with the SAME gap class the row has always asserted, which is what makes
+     * it a replacement rather than a different claim.
+     */
+    it('rooms seed 12, `guard;len=2`: still REFUSES — and the gap is classified from '
+        + 'the solve\'s own obstacle, not from a constant', () => {
+        const seam = seedlingSeam({
+            seed: 12,
+            items: PRE_SWORD_ITEMS,
+            skeleton: parseSkeleton('rooms', { simulator: false, substrate: 'certify test' }),
+            elements: parseElementSpec('guard;len=2'),
+        });
+        const c = seam.certification;
+        expect(c.certified).toBe(false);
+        expect(c.gap).toBe('the-goal-approach-is-blocked');
+        expect(c.obstacle).toMatchObject({ kind: 'pickup', id: 'torchpickup@32,128' });
+        expect(c.heldAtDoor).toBeNull();
+        // ⛓ …and the geometry SURVIVES the drop, which is what keeps the census
+        // numbers comparable across a refusal.
+        expect(c.geometry).toHaveLength(1);
+        expect(seam.model.elements.placed).toHaveLength(0);
+    });
+});

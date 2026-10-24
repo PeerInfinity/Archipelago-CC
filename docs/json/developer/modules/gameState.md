@@ -28,7 +28,7 @@
 | `allowLoops` | boolean | `true` | Whether backward navigation creates loops or trims the path |
 | `startRegions` | string[] | `['Menu']` | Starting regions; affects initial path and default trim target |
 
-These are path-structural settings. For queue execution settings, see the `loops` module. For a full overview, see [Path and Queue Settings Ownership](../developer/path-and-queue-settings.md).
+These are path-structural settings. For queue execution settings, see the `loops` module. For a full overview, see [Path and Queue Settings Ownership](../path-and-queue-settings.md).
 
 #### Events Published
 

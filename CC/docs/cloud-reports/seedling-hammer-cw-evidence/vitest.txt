@@ -1,0 +1,3 @@
+BEFORE (32 files, --maxWorkers=2): 932 / 932
+AFTER (41 files, --maxWorkers=3): 1206 / 1206
+tapeRunner pairs: 611 75a3c41f0c91f6e71953e82d8259dc60 0 non-pass

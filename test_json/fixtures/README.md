@@ -164,7 +164,6 @@ python -m pytest test_json/test_rule_fixtures.py -v --tb=short
 | `list` | 2 | List literals |
 | `block` | 3 | Block execution |
 | `for_range` | 1 | For loops |
-| `setting_value` | 3 | Setting lookups |
 | `helper` | 4 | Helper function calls |
 | `state_method` | 6 | State manager methods |
 | `can_reach` | 3 | Region reachability |

@@ -1,0 +1,359 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "jta-dataset.schema.json",
+  "title": "JtA synthetic game dataset",
+  "description": "Versioned dataset carrying ALL Journey to Ascension content (skills, zones/tasks, perks, items, prestige, roles, economy, theme) — the spine of the synthetic-data feature (CC/docs/plans/jta-synthetic-data-plan.md §2). Array POSITION is identity everywhere (position == engine enum value); dead engine slots are explicit {placeholder: true} entries. Entries carrying compiled engine behavior declare a behavior key and must occupy that behavior's fixed slot — the key vocabulary and slot indices live in frontend/modules/jtaSubstrateWrapper/datasetBehaviors.js, and datasetValidator.js is the authoritative enforcement of the cross-reference rules this schema cannot express (unique task ids, slot placement, live-index references).",
+  "type": "object",
+  "required": ["schema_version", "dataset_id", "provenance", "skills", "zones", "perks", "items", "prestige", "roles", "economy"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique, stable identifier. Save-compatibility key: numeric ids/indices are save-load-bearing, so saves are stamped with and keyed by this id (plan §3.4)."
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["generator", "fork_save_version"],
+      "properties": {
+        "generator": { "type": "string" },
+        "fork_save_version": { "type": "string", "minLength": 1 },
+        "seed": { "type": ["integer", "string", "null"] },
+        "params_hash": { "type": ["string", "null"] },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}$",
+          "description": "FNV-1a over the canonical (sorted-key) document minus provenance and dataset_id; dataset_id must end with '-<content_hash>'. An edited document must be restamped (datasetValidator.js --restamp) or validation fails — this is what keeps the (seed, dataset_id) Pass-B cache and the dataset-keyed save slot from being silently poisoned."
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "Dataset-level theme hooks (plan §2.5). v1: namebank-driven title/setting/flavor; narrative fields extend here in later schema versions.",
+      "properties": {
+        "title": { "type": ["string", "null"] },
+        "setting": { "type": ["string", "null"] },
+        "tone": { "type": "array", "items": { "type": "string" } },
+        "namebanks": { "type": ["object", "null"] }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/definitions/placeholder" },
+          {
+            "type": "object",
+            "required": ["name", "xp_needed_mult"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "icon": { "type": "string" },
+              "xp_needed_mult": { "type": "number", "exclusiveMinimum": 0 },
+              "theme": { "$ref": "#/definitions/entityTheme" }
+            }
+          }
+        ]
+      }
+    },
+    "zones": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "tasks"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional position-independent zone identity (unique across zones) for topology edges and theme references (post-v1 branching); the engine never reads it."
+          },
+          "theme": { "$ref": "#/definitions/entityTheme" },
+          "raw_drain": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Raw mode only (economy.value_mode 'raw'; validator enforces presence there): the zone's speedup/drain factor, replacing zone_speedup_base^zone at both engine sites (task progress and energy drain per tick)."
+          },
+          "tasks": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/definitions/task" }
+          }
+        }
+      }
+    },
+    "perks": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/definitions/placeholder" },
+          {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "icon": { "type": "string" },
+              "tooltip": { "type": ["string", "null"] },
+              "effects": { "type": "array", "items": { "$ref": "#/definitions/effect" } },
+              "behavior": { "type": ["string", "null"], "description": "Behavior key from datasetBehaviors.js PERK_BEHAVIORS; entry must sit at that key's slot index." },
+              "theme": { "$ref": "#/definitions/entityTheme" }
+            }
+          }
+        ]
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/definitions/placeholder" },
+          {
+            "type": "object",
+            "required": ["name", "name_plural"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "name_plural": { "type": "string" },
+              "icon": { "type": "string" },
+              "tooltip": { "type": ["string", "null"] },
+              "effects": { "type": "array", "items": { "$ref": "#/definitions/effect" } },
+              "behavior": { "type": ["string", "null"], "description": "Behavior key from datasetBehaviors.js ITEM_BEHAVIORS; entry must sit at that key's slot index." },
+              "theme": { "$ref": "#/definitions/entityTheme" }
+            }
+          }
+        ]
+      }
+    },
+    "prestige": {
+      "type": "object",
+      "description": "v1 datasets carry the prestige tables verbatim-vanilla in structure (every unlockable/repeatable slot is behavior-coupled); names/descriptions/theme may vary (plan §2.4).",
+      "required": ["layers", "unlockables", "repeatables", "spark_zone_origin", "sbtv_unlock_task_ids"],
+      "properties": {
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": { "type": "string" },
+              "theme": { "$ref": "#/definitions/entityTheme" }
+            }
+          }
+        },
+        "unlockables": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/placeholder" },
+              {
+                "type": "object",
+                "required": ["name", "layer", "cost", "behavior"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "layer": { "type": "integer", "minimum": 0 },
+                  "cost": { "type": "number", "exclusiveMinimum": 0 },
+                  "description": { "type": ["string", "null"] },
+                  "behavior": { "type": "string" },
+                  "theme": { "$ref": "#/definitions/entityTheme" }
+                }
+              }
+            ]
+          }
+        },
+        "repeatables": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/placeholder" },
+              {
+                "type": "object",
+                "required": ["name", "layer", "initial_cost", "scaling_exponent", "behavior"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "layer": { "type": "integer", "minimum": 0 },
+                  "initial_cost": { "type": "number", "exclusiveMinimum": 0 },
+                  "scaling_exponent": { "type": "number", "exclusiveMinimum": 0 },
+                  "description": { "type": ["string", "null"] },
+                  "behavior": { "type": "string" },
+                  "theme": { "$ref": "#/definitions/entityTheme" }
+                }
+              }
+            ]
+          }
+        },
+        "spark_zone_origin": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zone index where divine-spark gain scaling starts (replaces the engine's hardcoded zone 14)."
+        },
+        "sbtv_unlock_task_ids": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Task ids revealed by the see_beyond_the_veil unlock (replaces the engine's hardcoded id list). May be empty — v1 synthetic generation creates no unlocker-less tasks."
+        }
+      }
+    },
+    "roles": {
+      "type": "object",
+      "description": "The five skill-identity engine couplings, as data (plan §2.4). Indices into skills[] (live entries only).",
+      "required": ["ascension_skill", "travel_skill", "attunement_skills", "power_skills", "spite_skills"],
+      "properties": {
+        "ascension_skill": { "type": "integer", "minimum": 0 },
+        "travel_skill": { "type": "integer", "minimum": 0 },
+        "attunement_skills": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+        "power_skills": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+        "spite_skills": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "economy": {
+      "type": "object",
+      "description": "The global balance backbone, carried explicitly instead of compiled. The formula fields are required in BOTH value modes — under 'raw' they are unused by dataset tasks but remain the fallback formula for runtime-synthesized tasks (host exit tasks, artifact tasks).",
+      "required": ["base_task_cost", "zone_cost_exponent", "boss_cost_exponent", "xp_base", "xp_zone_mult", "level_curve", "zone_speedup_base"],
+      "properties": {
+        "value_mode": {
+          "enum": ["zone_formula", "raw"],
+          "description": "Absent ⇒ 'zone_formula' (vanilla backbone formulas). 'raw' (5g, §7 Q8/Q9 — the DEFAULT for synthetic generation): every task carries raw_cost + raw_xp and every zone raw_drain, all zone-keyed formulas together; the validator enforces completeness."
+        },
+        "base_task_cost": { "type": "number", "exclusiveMinimum": 0 },
+        "zone_cost_exponent": { "type": "number", "exclusiveMinimum": 0 },
+        "boss_cost_exponent": { "type": "number", "exclusiveMinimum": 0 },
+        "xp_base": { "type": "number", "exclusiveMinimum": 0 },
+        "xp_zone_mult": { "type": "number", "exclusiveMinimum": 0 },
+        "level_curve": { "type": "number", "exclusiveMinimum": 0 },
+        "zone_speedup_base": { "type": "number", "exclusiveMinimum": 0, "description": "Per-zone speedup/drain backbone (vanilla 1.05), applied to both task progress and energy drain per tick." }
+      }
+    },
+    "item_groups": {
+      "type": "object",
+      "description": "Named item-index groups read by behavior slots (e.g. note_items for the note_item_floor_on_reset prestige unlock).",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "definitions": {
+    "placeholder": {
+      "type": "object",
+      "description": "Dead slot — keeps array position == engine enum value (REMOVED/DELETED precedent). Also legal at an unused behavior slot.",
+      "required": ["placeholder"],
+      "properties": { "placeholder": { "const": true } },
+      "additionalProperties": false
+    },
+    "entityTheme": {
+      "type": ["object", "null"],
+      "properties": {
+        "flavor": { "type": "string" },
+        "arc_beat": { "type": "string" }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "required": ["kind"],
+      "description": "Declarative effect (vocabulary in datasetBehaviors.js EFFECT_KINDS; grows per-behavior as compiled branches migrate to data).",
+      "oneOf": [
+        {
+          "properties": {
+            "kind": { "const": "skill_speed" },
+            "skill": { "type": "integer", "minimum": 0, "description": "Index into skills[] (live entry)." },
+            "add": { "type": "number", "description": "Added to the skill's speed modifier." }
+          },
+          "required": ["kind", "skill", "add"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "energy_on_consume" },
+            "base_amount": { "type": "number", "exclusiveMinimum": 0, "description": "Energy per unit consumed, before calcItemEnergyGain scaling." }
+          },
+          "required": ["kind", "base_amount"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "xp_all_mult" },
+            "mult": { "type": "number", "exclusiveMinimum": 0, "description": "All-skill XP multiplier applied while the carrying perk is held (calcSkillXp; ascending perk-index application order)." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. \"prestige\" is reserved until the prestige-side XP multipliers migrate (entangled with attunement/spark doubles)." }
+          },
+          "required": ["kind", "mult", "scope"]
+        },
+        {
+          "properties": {
+            "kind": { "const": "starting_energy" },
+            "flat": { "type": "number", "exclusiveMinimum": 0, "description": "Flat variant: added to max energy once when the carrying perk is granted (the tryAddPerk position). Exactly one of flat / per_reset." },
+            "per_reset": { "type": "number", "exclusiveMinimum": 0, "description": "Growth variant: on every energy reset, max energy grows by (current_zone + 1) * per_reset while the carrying perk is held (the calcEnergeticMemoryGain base term)." },
+            "curve": { "enum": ["linear"], "description": "per_reset variant only. \"square\" is reserved — it is the compiled TranscendantMemory modifier (which squares the total growth gain and auto-grants perk slot 19), not yet migrated." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. \"prestige\" is reserved until the prestige-side starting-energy keys migrate (TranscendantMemory / DivineSupremacy are impure — entangled with other engine branches)." }
+          },
+          "required": ["kind", "scope"],
+          "oneOf": [
+            { "required": ["flat"], "not": { "required": ["per_reset"] } },
+            { "required": ["per_reset"], "not": { "required": ["flat"] } }
+          ]
+        },
+        {
+          "properties": {
+            "kind": { "const": "time_compression" },
+            "mult": { "type": "number", "exclusiveMinimum": 0, "description": "Scale variant: task speed AND zone energy drain x mult while the carrying perk is held (the cancellation pair — energy per task unchanged, wall-clock divided), single-tick drain compensated back down, and single-tick tasks complete ALL reps in one tick (declared variant semantics). Exactly one of mult / single_tick_drain_mult." },
+            "single_tick_drain_mult": { "type": "number", "exclusiveMinimum": 0, "description": "Single-tick variant: single-tick tasks drain x this while the carrying perk is held, and zones whose remaining tasks are all free are skipped automatically on energy reset (skipFreeZones — declared variant semantics)." },
+            "scope": { "enum": ["run"], "description": "Perk entries only. MasteryOfTime stays a compiled prestige behavior (it auto-grants perk slots 7/23 by enum identity and zeroes single-tick drain)." }
+          },
+          "required": ["kind", "scope"],
+          "oneOf": [
+            { "required": ["mult"], "not": { "required": ["single_tick_drain_mult"] } },
+            { "required": ["single_tick_drain_mult"], "not": { "required": ["mult"] } }
+          ]
+        }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "name", "type", "skills", "cost_multiplier", "xp_mult", "max_reps", "hidden_by_default", "unlocks_task", "perk", "item", "use_item", "prestige_layer"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9999,
+          "description": "Dataset-scoped, unique, save-load-bearing (TASK_LOOKUP reviver key). Ids >= 10000 are reserved for runtime synthetic injection."
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "enum": ["Normal", "Travel", "Mandatory", "Prestige", "Boss"] },
+        "skills": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 },
+          "description": "Indices into skills[]. May be empty only for Travel tasks (C1: a skill-less task cannot be paced by the balancer)."
+        },
+        "cost_multiplier": { "type": "number", "exclusiveMinimum": 0, "description": "Provisional in Pass-A output; Pass B owns final costs. In raw mode this is the Tier-1 patch lever over raw_cost (generated raw documents fold the profile multiplier into raw_cost and emit 1 here)." },
+        "xp_mult": { "type": "number", "minimum": 0, "description": ">= 0: vanilla has deliberate zero-XP tasks. Applies in both value modes (multiplies raw_xp in raw mode)." },
+        "raw_cost": { "type": "number", "exclusiveMinimum": 0, "description": "Raw mode only (validator enforces presence there): absolute base cost — the zone/Boss exponential backbone pre-dissolved into the value; cost_multiplier still applies." },
+        "raw_xp": { "type": "number", "minimum": 0, "description": "Raw mode only: absolute per-progress XP base, replacing xp_base × zone backbone; xp_mult still applies." },
+        "formula_cost_multiplier": { "type": "number", "exclusiveMinimum": 0, "description": "Raw mode, INFORMATIONAL (engine-blind): the formula-mode cost multiplier this task would carry if the document weren't raw — the raw fold sets cost_multiplier to 1, which erases this strategy-relevant structure from the data (and post-v1 branching makes it non-reconstructable). Stamped by premultiplyDataset()." },
+        "formula_xp_mult": { "type": "number", "minimum": 0, "description": "Raw mode, INFORMATIONAL (engine-blind): the formula-mode xp_mult twin of formula_cost_multiplier. Equals xp_mult in v1 documents (the fold doesn't touch xp_mult) — carried explicitly so the pair is self-contained if the fold policy ever changes." },
+        "max_reps": { "type": "integer", "minimum": 1 },
+        "hidden_by_default": { "type": "boolean" },
+        "unlocks_task": { "type": ["integer", "null"] },
+        "perk": { "type": ["integer", "null"], "description": "Index into perks[] (live entry) or null. zone_id is NOT in the schema — derived from zone array position." },
+        "item": { "type": ["integer", "null"] },
+        "item_schedule": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "integer", "minimum": 0 },
+              {
+                "type": "object",
+                "required": ["substrate", "type"],
+                "properties": {
+                  "substrate": { "type": "string", "minLength": 1 },
+                  "type": { "type": "string", "minLength": 1 },
+                  "count": { "type": "integer", "minimum": 1 }
+                }
+              }
+            ]
+          },
+          "description": "Per-rep award schedule (Fork 1.13): exactly max_reps entries — rep k awards entry k instead of `item`. Integer = local NON-ARTIFACT item index; object = foreign award routed to the cross-substrate grant bus (count defaults 1). Only valid on tasks with a non-null item. Cross-field rules (length == max_reps, non-artifact locals, requires item) are validator-enforced."
+        },
+        "use_item": { "type": ["integer", "null"] },
+        "prestige_layer": { "type": ["integer", "null"], "description": "Required non-null when type is Prestige." },
+        "theme": { "$ref": "#/definitions/entityTheme" }
+      }
+    }
+  }
+}

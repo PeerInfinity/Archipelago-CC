@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+# DS D2 (scratch): where the full pass's work goes, from the window-0 runs' per-preview records.
+# python3 -I ds-d2.py <batch.jsonl> [--tag=]
+import json, sys
+from collections import Counter, defaultdict
+out = sys.argv[1]
+TAG = next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--tag=')), '')
+W = int(next((a.split('=', 1)[1] for a in sys.argv if a.startswith('--window=')), '0'))
+
+tot = Counter(); calls = []
+pv = []  # per preview rows
+for l in open(out):
+    r = json.loads(l)
+    if (r.get('tag') or '') != TAG or r.get('window') != W or 'error' in r: continue
+    full = [p for p in r['passes'] if p['pass'] == 'full']
+    if not full or full[0].get('kind') == 'skipped': continue
+    f = full[0]
+    fu = f.get('work') or 0
+    du = sum(c['units'] for c in r['dashCalls'] if c['pass'] == 'full')
+    tot['full_units'] += fu; tot['dash_units'] += du; tot['other_units'] += fu - du
+    tot['full_ms'] += f.get('ms') or 0
+    shipped_full = (r.get('shipped') or {}).get('pass') == 'full'
+    for c in r['dashCalls']:
+        if c['pass'] != 'full': continue
+        wins = {w['at']: len(w['prefix']) for w in (c.get('windows') or [])}
+        cur = c.get('baseline'); groups = defaultdict(list)
+        for p in c.get('previews') or []: groups[p[0]].append(p)
+        rem_at = {}
+        for at in sorted(groups):
+            rem_at[at] = (cur - at) if cur is not None else None
+            if at in wins:
+                cert = [p for p in groups[at] if p[2] == 'certified']
+                if cert: cur = min(p[3] for p in cert)
+        paid = c['planned'] and shipped_full
+        calls.append(dict(id=r['id'], i=r['i'], units=c['units'], ms=c['ms'], planned=c['planned'], paid=paid, saved=c.get('saved') or 0,
+            baseline=c.get('baseline'), wps=c['wps'], turns=c['turns'], px=c['px'], bodies=c['bodies'], level=c['level'], tick=c['tick'],
+            why=c.get('why'), scanned=c.get('scanned'), nwin=len(wins), stand=c['stand'], narrow=c['narrow']))
+        for p in c.get('previews') or []:
+            at, presses, kind, ticks, ms, samples = p
+            acc = at in wins and wins[at] == presses and kind == 'certified'
+            pv.append(dict(kind=kind, presses=presses, ms=ms, samples=samples, rem=rem_at.get(at), acc=acc, call_planned=c['planned'],
+                paid=paid and acc, frac=(at / c['baseline']) if c.get('baseline') else None))
+
+print(f"FULL PASS (window {W}, {TAG or 'base'}): units {tot['full_units']} = dash previews {tot['dash_units']} ({100*tot['dash_units']/max(1,tot['full_units']):.1f} %) "
+      f"+ the rest (re-plan + drive) {tot['other_units']}; full-pass node wall {tot['full_ms']/1000:.1f} s")
+n = len(pv)
+print(f"PREVIEWS: {n}; accepted {sum(p['acc'] for p in pv)}; accepted AND shipped {sum(p['paid'] for p in pv)}")
+print('by kind:', Counter(p['kind'] for p in pv).most_common())
+print('by presses (prefix length): n / certified / accepted')
+for k in sorted({p['presses'] for p in pv}):
+    s = [p for p in pv if p['presses'] == k]
+    print(f"  {k}: {len(s)} / {sum(p['kind']=='certified' for p in s)} / {sum(p['acc'] for p in s)}")
+print('by remaining ticks after the start (rem = current − at): n / accepted / mean ms')
+edges = [0, 10, 20, 30, 40, 60, 80, 120, 200, 400, 10**9]
+for a, b in zip(edges, edges[1:]):
+    s = [p for p in pv if p['rem'] is not None and a <= p['rem'] < b]
+    if s: print(f"  [{a},{b}): {len(s)} / {sum(p['acc'] for p in s)} / {sum(p['ms'] for p in s)/len(s):.2f}")
+accrem = sorted(p['rem'] for p in pv if p['acc'])
+print('accepted windows: smallest rem', accrem[:10])
+print('calls (corridors asked):', len(calls), 'planned', sum(c['planned'] for c in calls), 'paid (planned and the pass shipped)', sum(c['paid'] for c in calls))
+u_never = sum(c['units'] for c in calls if not c['planned']); u_all = sum(c['units'] for c in calls)
+print(f"units in corridors that planned NOTHING: {u_never} of {u_all} ({100*u_never/max(1,u_all):.1f} %)")
+u_unpaid_calls = sum(c['units'] for c in calls if not c['paid'])
+print(f"units in corridors whose plan did not ship: {u_unpaid_calls} ({100*u_unpaid_calls/max(1,u_all):.1f} %)")
+u_unacc = sum(1 for p in pv if not p['acc'])
+print(f"previews never accepted: {u_unacc} of {n} ({100*u_unacc/max(1,n):.1f} %)")
+print('nothing-planned corridors by why:', Counter((c['why'] or '')[:40] for c in calls if not c['planned']).most_common(8))
+# corridor features vs payoff
+def bucket(c, k, edges):
+    v = c[k]
+    for a, b in zip(edges, edges[1:]):
+        if v is not None and a <= v < b: return f'[{a},{b})'
+    return 'none'
+for k, e in (('baseline', [0, 40, 80, 120, 200, 400, 10**9]), ('turns', [0, 1, 2, 4, 8, 100]), ('bodies', [0, 1, 2, 4, 100]), ('px', [0, 100, 200, 400, 800, 10**9])):
+    print(f'corridors by {k}: n / planned / units / saved ticks / units per saved tick')
+    g = defaultdict(list)
+    for c in calls: g[bucket(c, k, e)].append(c)
+    for b, s in sorted(g.items()):
+        u = sum(c['units'] for c in s); sv = sum(c['saved'] for c in s if c['planned'])
+        print(f"  {b}: {len(s)} / {sum(c['planned'] for c in s)} / {u} / {sv} / {u/sv if sv else float('inf'):.2f}")
+json.dump(dict(calls=calls), open(out + f'.d2{TAG}.json', 'w'))

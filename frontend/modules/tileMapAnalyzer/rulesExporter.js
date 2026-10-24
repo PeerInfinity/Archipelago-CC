@@ -346,10 +346,15 @@ export async function exportRulesJson(categoryGrid, config, onProgress) {
   rules.world['1'].world_directory = gameDirectory;
   rules.game_info['1'].completion_condition = { type: 'item_check', item: 'Victory' };
 
+  // rules F2: the wiring is the SLOT's (`{"<p>": block}`), keyed by the
+  // scaffold's one player like the blocks above.
   if (config.game) {
+    const [player] = Object.keys(rules.player_names);
     rules.flash_panel = {
-      config: gameDirectory + '.json',
-      swf: gameDirectory + '_injected.swf',
+      [player]: {
+        config: gameDirectory + '.json',
+        swf: gameDirectory + '_injected.swf',
+      },
     };
   }
 

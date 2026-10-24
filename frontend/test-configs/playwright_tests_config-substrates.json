@@ -1,54 +1,2000 @@
 {
-  "autoStartTestsOnLoad": true,
-  "hideDisabledTests": true,
-  "randomizeOrder": false,
-  "defaultEnabledState": false,
-  "_comment": "Substrate in-app tests (text-adventure wrapper + flash). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
-  "tests": [
-    {
-      "id": "tasw-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-iframe-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-real-click",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-fresh-procgen",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-loop-mode-passthrough",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "swf-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "swf-location-check-placeholder-click",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-second-entry-shared-panel",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-capability-gating",
-      "enabled": true,
-      "category": "flashSubstrate"
-    }
-  ]
+    "autoStartTestsOnLoad": true,
+    "hideDisabledTests": true,
+    "randomizeOrder": false,
+    "defaultEnabledState": false,
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes). A row's \"batch\" field is the smoke-row override (frontend/modules/tests/testBatches.js): it keeps ONE row of a manual batch on push; delete the line to drop it.",
+    "tests": [
+        {
+            "id": "tasw-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-iframe-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-real-click",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-fresh-procgen",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-loop-mode-passthrough",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-compass-grid-renders-procgen-sides",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-gate-holds-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-concept-prose-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "concept-trial-plays",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-playback-no-double-append",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-playback-instant",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-record-coarse-autoswitch",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-queue-integrity-parked",
+            "enabled": true,
+            "_comment": "Former KNOWN-RED stray-append diagnostic — green since the M3b coarse-capture refactor retired loop-mode end-appends (CC/docs/plans/loops-coarse-capture-plan.md).",
+            "category": "TA block modes"
+        },
+        {
+            "id": "swf-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "swf-location-check-placeholder-click",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-second-entry-shared-panel",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-capability-gating",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "runner-location-check-real-physics",
+            "batch": "fast",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "runner-preset-sidecar-configured",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "runner-summary-record-playback",
+            "enabled": true,
+            "category": "Runner block modes"
+        },
+        {
+            "id": "noiz2sa-region-loop-visit",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N3 (N4c: the move run). Loop mode (the preset carries loop_costs): the move out of 1:1 queued, a Record block parks on it; injected idle fire is hit at frame 240 and the region restarts with nothing checked; a clearing tape (the game's Ace bot, 1002 frames) clears the move span and the clear performs the move, checking nothing; the Record block saves a summary priced by the live time drain; instant Playback spends the repriced summary. Batch fast: the injected input runs 8 game frames per 16 ms, a few seconds of wall clock."
+        },
+        {
+            "id": "noiz2sa-bot-block-trains",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4: the Noiz2sa Bot block and the bot's training. Twice on a fresh load and a fresh trainer (tracks 0, Even): a Bot block on 1:1 hands its exit to the page's humanlike bot (a worker), which clears the move run deathless in 1002 frames, score 17330 (the headless runSegment at tracks 0), and leaves (N4c: the move's clear checks nothing); the visit costs floor(16.032) game seconds x the rate, the bot earns the points of the visit's mana (N5: training = mana; the unpriced preset's pace is 1 per mana) and the tracks rise to 2/2/1/1/1. Once at 1x, once at 2x (the bot-speed setting): the same frames, the same mana. Batch fast: ~16 s + ~8 s of bot play."
+        },
+        {
+            "id": "noiz2sa-priced-world",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N5: a world priced against the Loops cost planner at generation time (noiz2sa_priced_test, built in loop mode by the pipeline). Its first region plays the walk's move span (1:9, skill 0), getRegionInfo and the live loop_costs carry its rate (the latter only with the shared writer's payload-rate rule, feature-detected), the trainer earns at the world's pace. Bot blocks on its move at bot seeds 2 and 3 (fresh Even trainer, 4x): each visit costs floor(game seconds) x the rate and trains the bot by mana x pace to the walk's predicted skill; the mean mana is the planned cost within a factor of 2. Batch fast: two 4x bot clears of one scene (~15 s)."
+        },
+        {
+            "id": "noiz2sa-bot-plays-check",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (c): a Bot block plays a queued check. [check, move] on 1:1 (bot seed 1, tracks 100 By hand: the check span is past the tracks-0 bot, 4x): the bot plays the check run (1:1-1:2, its clearing attempt ends two scenes, 1:1 at 1002 frames), the location is checked and the player stays; then the move run leaves. Back on the region (checked), the check is skipped and the move run plays again: floor(its game seconds) of drain, the visit's points. Batch fast: three 4x bot runs."
+        },
+        {
+            "id": "noiz2sa-first-entry-explores",
+            "batch": "fast",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region (N4c: no location) is fogged (its exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every exit discovered, through loop:exploreCompleted), one explore per exit. Batch fast: no play."
+        },
+        {
+            "id": "noiz2sa-choice-list",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (b): the choice list. Loop mode, nothing queued on 1:1: the page offers every exit and the check; choosing the check queues a locationCheck, the queue parks a Record block and the check run starts; the bot (B, seed 1, tracks 100 By hand, 4x) clears it, the location is checked and the list offers the exits only; choosing the exit queues the move and its clear performs it (the summary holds the check, departing by the exit). Batch fast: two 4x bot clears."
+        },
+        {
+            "id": "noiz2sa-check-then-move",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c follow-up: after a check run clears, the next queued action's run starts at once. A Record block on 1:1 queued [check, move] (B, seed 1, tracks 100 By hand, 4x): the check clears, the move run starts with no key and the bot plays on; its clear performs the move (the summary holds the check). Batch fast: two 4x bot clears."
+        },
+        {
+            "id": "noiz2sa-locations-per-region",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c correction: zero or more locations per region, none by default, each with its own check span. The preset's 1:1 has one location, 1:2-1:3 none, 1:boss-2:1 two; outside loop mode the row visits each: the choice list is the exits plus one entry per location, and 1:boss-2:1's check2 starts its check run on its own span (the default, 1:boss-2:3, the same as check1's). Batch fast: no clear, a few seconds."
+        },
+        {
+            "id": "noiz2sa-queued-check",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (a): a queued locationCheck (no move) on 1:1, a Record block parked on it: the page plays the check run 1:1-1:2 (twice the move's scenes); the bot (B, seed 1, tracks 100 By hand, 4x) clears it in an attempt that ends two scenes (1:1 at 1002 frames), the location is checked and the player stays, the choice list offering the exits only. Batch fast: one 4x bot check clear."
+        },
+        {
+            "id": "noiz2sa-choice-list-outside-loop-mode",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (d): outside loop mode the same choice list. Loop mode off on 1:1: the page offers the exits and the check; the check run starts at once, the bot (B) clears it and the location is checked; back at the choice list (exits only); the exit starts the move run and its clear leaves. No mana moved, and the page asked the host to queue nothing. Batch fast: two 4x bot clears."
+        },
+        {
+            "id": "noiz2sa-bot-seed-per-visit",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (c): a bot seed per visit. Three Record visits on fresh loads, the bot playing each to a clear (B, tracks 0 By hand, 4x): visits 1 and 2 drew different seeds, each in its summary's playStats.botSeed; visit 3 pinned to visit 1's seed plays it exactly again. Batch fast: three 4x bot clears (a random seed may need retries)."
+        },
+        {
+            "id": "noiz2sa-assist-key",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (d): the B key. A Record block on 1:1: B hands the controls to the bot, B hands them back (paused, nothing drains), a game key resumes the player, B again and the bot plays the move run to its clear, which performs the move; the summary's playStats count the bot's frames, the block interior holds no check, the visit cost its game seconds and trained the bot. Batch fast: ~17 s of 1x bot play."
+        },
+        {
+            "id": "noiz2sa-refused-clear-resent",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N3b fix 2 (N4c: on the check run): the shared flash bridge's location ledger. The check of 1:1 queued, a Record block parks on it; with the queue paused the bot's (B) check clear is refused by the loop-mode action gate (loops:clickIgnored); unpaused, on the same visit (no loadRegion), R plays the check again and the resent clear checks the location (loops observes one parked check); the player stays, back at the choice list with the exits only. Batch fast: two 4x bot check clears."
+        },
+        {
+            "id": "runner-bot-block-summary-economy",
+            "enabled": true,
+            "category": "Runner block modes",
+            "_comment": "M6 slice 5c: the summary Bot economy leg. Replaces the deleted scripts/procgen/verify-bounce-loop-mode.mjs (whose premise — auto walkTo with no mode system — is obsolete, and which rotted red for months because nothing gate-ran it). A Bot block hands the queued regionMove to the walkTo solver; the auto-runner plays the flat level on real physics and the pool falls by the per-second TIME drain, not per-action defaults."
+        },
+        {
+            "id": "jta-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-game-reset-triggers-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-latched-run-end-not-masked-by-pin",
+            "enabled": true,
+            "_comment": "The deterministic leg for the reset-authority fix (2026-07-24): the energy pin DECLINES while the fork is latched, and the bridge reports the run end so the host — the sole reset authority — fires the loop reset. Builds the divergence directly (latched at 0 with mana still in the pool, so no drain can ever arrive) and folds setEnergy mutations rather than polling, because the reset erases the state within a beat. Its companion oracle is the bridge's 'breaking a latched energy reset' warning: with this fix that circuit breaker must never fire across a run batch.",
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-pause-resume-on-region-switch",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-energy-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-bot-walkto-exit",
+            "enabled": true,
+            "_comment": "M6: restructured onto the Bot radio and re-enabled. It no longer calls walkTo directly with a hand-rolled reset-retry loop — it parks a BOT block and lets the real queue machinery drive, so the gate exemption, the multi-reset walk, and the fine-substrate economy are under test rather than emulated. The former leg 2 (synthetic exit-task id stability) is now jta-synthetic-exit-task-id-stability.",
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-bot-walkto-location",
+            "enabled": true,
+            "_comment": "JtA investigation B (2026-10-11): the Playback Bot's walk to a zone location. Another zone's location and a tile are refused through playback:walkFailed; the loaded zone's perk location is played to its check by the zone's own automation, and the walk then ends.",
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-synthetic-exit-task-id-stability",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "RE-ENABLED 2026-07-25 (post-D2 cleanup). Its old KNOWN-RED note carried a diagnosis that was WRONG — kept here refuted rather than deleted. That note blamed loadRegion for calling _applyCatchUpResets() BEFORE reading `const completed = _completedThisLoop.has(regionId)`. The ordering is CORRECT: a loop reset genuinely un-plays the zone (doAnyReset rebuilds it) and loadZone({completed:true}) marks every task reps=max_reps FOR FREE, so honoring a pre-reset completion would grant back a zone the reset just took away. The prescribed reorder was also inert — the gameState:loopReset subscriber bumps _hostResetCount and CLEARS _completedThisLoop in the same handler, so a pending catch-up delta always arrives with an already-cleared set (bridge.js now carries a warn-level tripwire in case a refactor ever splits those two). The real defect was this test's own prep: it only pumped ticks, and managed zone play has NO automation unless something arms it (_armWalkAutomation, on a walk), so the zone never completed and the first assertion could never pass. The prep now plays zone 0 with explicit performTask calls, Travel LAST (the fork disables Travel while a Mandatory task is unfinished, and this zone's single exit is item-gated on a perk one of its own tasks awards). A final leg pins the reset semantics the old flake misread. Full ruling: docs/json/developer/procgen/jta.md."
+        },
+        {
+            "id": "jta-starting-energy-bonus-raises-pool",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "RE-ENABLED in M6 slice 5 after an empirical check: this test contains NO walkTo at all. It enters the region with the synthetic-move-exempt moveToRegion helper and then makes pure settings/pool assertions, so the M3b strict gate was never in its way. Its old deferral note (\"drives zone 0 via PlaybackController.walkTo\") described a different test — it was swept into M4's bulk deferral of the four jta walkTo tests. Verified green at HEAD before any M6 slice-5 change touched it."
+        },
+        {
+            "id": "jta-location-check-and-perk-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-balance-solve-at-rules-load",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-randomized-balanced-progression",
+            "enabled": false,
+            "category": "JtA substrate",
+            "_comment": "Randomized+balanced 4-zone progression. MECHANISM (as-written): drives cross-region zone progression with a direct unparked PlaybackController.walkTo (walkOneZone). Since M4 opted jta into the M3b strict action gate, the bridge's fromLoop-less walkTo departure is gate-blocked with no parked block, so the test is NOT runnable on demand in its current form. REVIVAL PATH: restructure each zone leg onto a Bot block (the M6 wake fix, slice 5d, removed the blocker that made this impossible — a fork-propagated reset teleport no longer hard-pauses a bot park; it releases and re-drives). WHY NOT IN-SUITE YET: the normal-ticking runtime wall. These are balance/dataset VALIDATION tests that must run at normal ticking — Instant is affordability-blind (completeTaskInstantly finishes tasks whatever the solved cost, so the test would pass on a wedged world; see jtaBalanceTests.js:173), so a full multi-zone playthrough compounding skills across resets exceeds a practical gate-run budget (240s/zone x multiple legs did not converge in-suite). STATUS: DEFERRED, tracked in the fable->opus handoff queue doc. jta-bot-walkto-exit is the real Bot in-app leg; this test's UNIQUE strata (shuffle non-vacuity, cold balance solve at rules load, AP-authoritative perk accounting) are what it exists for."
+        },
+        {
+            "id": "jta-prestige-perk-regrant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-dataset-world-progression",
+            "enabled": false,
+            "category": "JtA substrate",
+            "_comment": "Synthetic-dataset single-leg progression (dataset detection + (seed,dataset_id) cache + loadGameData). MECHANISM (as-written): drives cross-region zone progression with a direct unparked PlaybackController.walkTo (walkOneZone). Since M4 opted jta into the M3b strict action gate, the bridge's fromLoop-less walkTo departure is gate-blocked with no parked block, so the test is NOT runnable on demand in its current form. REVIVAL PATH: restructure each zone leg onto a Bot block (the M6 wake fix, slice 5d, removed the blocker that made this impossible — a fork-propagated reset teleport no longer hard-pauses a bot park; it releases and re-drives). WHY NOT IN-SUITE YET: the normal-ticking runtime wall. These are balance/dataset VALIDATION tests that must run at normal ticking — Instant is affordability-blind (completeTaskInstantly finishes tasks whatever the solved cost, so the test would pass on a wedged world; see jtaBalanceTests.js:173), so a full multi-zone playthrough compounding skills across resets exceeds a practical gate-run budget (240s/zone x multiple legs did not converge in-suite). STATUS: DEFERRED, tracked in the fable->opus handoff queue doc. jta-bot-walkto-exit is the real Bot in-app leg; this test's UNIQUE strata (shuffle non-vacuity, cold balance solve at rules load, AP-authoritative perk accounting) are what it exists for."
+        },
+        {
+            "id": "jta-record-playback-crosses-zone-boundary",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "M4 fine-grained record→playback round trip across a zone boundary — jta's in-app progression stratum while the four walkTo progression tests stay KNOWN-DEFERRED to M6. Also carries the folded-in energyBonusSync assertion from jta-starting-energy-bonus-raises-pool."
+        },
+        {
+            "id": "jta-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-cross-substrate-foreign-award",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "omsi-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-loop-exhaustion-single-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-clock-runs-only-in-region",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-step-gate-parks-the-clock",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-play-pause-controls-the-clock",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-budget-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-native-budget-raises-pool",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-victory-start-journey",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-award-schedule",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-overlay-boot",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-seed-before-fanout",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-grant-raises-capacity",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-check-fires-once",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-survives-prestige",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-victory-town",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-scaled-world",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-region-split-round-trip",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-region-split-per-region-queues",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-record-playback-crosses-region",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-multi-run-replay-retry",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-bot-crosses-region",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "omsi-bot-multi-reset-walk",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "omsi-playback-instant",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-bot-instant-multi-reset-walk",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "maze-consumable-tile-grants-foreign-item",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-consumable-tile-one-shot-then-respawns",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-mana-tile-refills-pool",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-record-playback-crosses-exit",
+            "enabled": true,
+            "category": "Maze block modes"
+        },
+        {
+            "id": "maze-parked-live-drain",
+            "enabled": true,
+            "category": "Maze block modes"
+        },
+        {
+            "id": "seedling-atlas-maze-boundary-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 5b. The Phase-4 flash flavour of the same atlas can only be a SKIP-able standalone verifier (it needs a gitignored 31 MB wasm artifact); the maze projection of the same geometry runs from the committed repo, which is why these two legs can be enumerated here at all. No batch claims this category, so it rides the default `fast` batch."
+        },
+        {
+            "id": "seedling-atlas-maze-gated-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze"
+        },
+        {
+            "id": "seedling-playthrough-maze-l15-level-world",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Tile-primitives Stage 2: Seedling L15 as ONE shared level world — sword refused, then granted; rocks struck, block pushed onto the button, the held lock crossed into r1c9 with the level's state kept."
+        },
+        {
+            "id": "seedling-atlas-sphere-placed-region",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 6. Same map, but walked in a world sphere growth GREW: the leg that catches an arrival landing inside a wall, which no compile or sphere oracle can."
+        },
+        {
+            "id": "seedling-atlas-sphere-bot-completion",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 8 slice B. The SHIPPED playback bot beats the grown world end to end; the headless witness (atlasMazeBot.slow.test.js) proves the same world beatable by walking tiles directly, so the two strata are independent."
+        },
+        {
+            "id": "seedling-js-runtime-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J1. flashPanel.runtime = js: the JS model's page plays seedling_generated_room by synthetic keys — the apitem check and the door crossing through the unchanged host glue. Needs no wasm artifact, so unlike the wasm flavour (check-seedling-generated-room-play.mjs, a box gate) it can be an in-app row. No batch claims the category, so it rides the default `fast` batch deliberately: a ~20 s walk at 30 ticks/s, not a real-time bot walk."
+        },
+        {
+            "id": "seedling-js-runtime-bot-completes-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J2. flashPanel.runtime = js: the Playback Bot drains seedling_generated_room's sphere log through the flash_seedling_gen PlaybackController (closed-loop walk inside the JS page's tick), then routes through a generated door and a parking door into a maze region and back into the start room — crossings witnessed by gameState's path, no error: status. Fast batch, like the J1 row."
+        },
+        {
+            "id": "seedling-wasm-runtime-bot-names-refusal",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J2; ⛓ WG: generated rooms ARE walked on wasm now, so the row names the refusal that REMAINS — a tile target in a generated room (no tape producer serves it) is refused and the bot's status NAMES it (P0's rule: never a silent wait). The wasm page is loaded but never started."
+        },
+        {
+            "id": "seedling-js-runtime-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js on seedling_atlas_location: the JS page runs the VANILLA map, the atlas arm binds (no delivery), the arrival lands in the real starting house (level 86); keys open its chest (a real user:locationCheck, key_blue arrives) and take its door into the maze child (pendingExit field for field with the wasm game). Fast batch, like the J1/J2 rows."
+        },
+        {
+            "id": "seedling-js-runtime-bot-completes-atlas-location",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js: the Playback Bot drains seedling_atlas_location's sphere log through the flash_seedling controller (the real chest, the real door) and the maze controller — all locations checked, victory held, no error: status, crossings witnessed by gameState's path."
+        },
+        {
+            "id": "seedling-js-runtime-bot-walks-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js on seedling_atlas: the bot walks between REAL atlas rooms — the house door to the chest, then out, down the owl's-nest stairs (a stairsdown) and the descent into the dungeon; four level-change crossings witnessed by gameState's path."
+        },
+        {
+            "id": "seedling-js-runtime-solver-walks-enemy-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
+        },
+        {
+            "id": "seedling-js-runtime-solve-progress-view",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; always does not auto-hide; setting it off unsubscribes. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-pack-boots",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; G2: the player is drawn from the pack (seedling:player/shrum) and ArrowRight/ArrowLeft play side-walk unmirrored/mirrored; the camera switch back to room is applied live (no re-mount). seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-enemies",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 14 (six Bobs): each Bob is drawn as seedling:enemy/bob from the seedling pack, every sheet decodes, the Bobs' frames advance (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-room-bodies",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3b. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 22 (four wallflyers, r2-wallflyer-contact's boot): each is drawn as seedling:enemy/wallflyer from the seedling pack, every sheet decodes, a frame changes (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-hazards",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3c. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (two red spinning axes; the stance no blade reaches): each is drawn as seedling:puzzlement/spinningaxeRed from the seedling pack, every sheet decodes, an angle changes (the renderer's update clock is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-effects",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G4. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (Dungeon 6 rain; G3c's stance out of the axes' reach): the page holds the boot build's 20 dead frames (the fade is drawn, the run waits), the rain is drawn as seedling:fx/droplet and three full hearts as seedling:hud/heart from the seedling pack, the cover is gone after the hold, every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-solver-opens-kill-lock",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S3. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports the real page into level 5 and walks to the teleporter (48, 112) behind the kill lock — the page boots on SCRATCH persistence (⚖ Q4), the solver's kill solves, the run writes the lock's clear itself and the crossing to level 6 is reported; the clear reported once as pendingCheck <seq>|5|0|0 (the game's Lock.turnOff), no AP location checked (no false check), 0 HALT."
+        },
+        {
+            "id": "seedling-js-runtime-solver-steps-off-the-door",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S5. Runtime js + the solver mode ON on seedling_atlas: the vanilla L3 <-> L11 round trip — the solver breaks L3's rock and takes the door to 11, 11's only door lands the player INSIDE L3's door (latched), and the SOLVER steps off onto the rock's cell and walks back on (one step-off,walk plan; STEP-OFF RETIRE: the walker never steps off), the crossing to 11 is reported; 0 HALT, no decline."
+        },
+        {
+            "id": "seedling-js-runtime-solver-budget-falls-back",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S2 → DETERMINISTIC BUDGET. Runtime js + the solver mode ON on seedling_atlas: level 12's door under a 300 ms wall-clock BACKSTOP, the solve held in flight by the ROW (a wrapped page worker that starts and never answers — never the solve's speed) (playback.setSolverBackstopMs; the solve's own budget is work units) — the worker is terminated at the backstop and the goal FAILS BY NAME (\"the solve exceeded the backstop on this machine (0.3 s) …\"); nothing of the solve is played, nothing walked instead."
+        },
+        {
+            "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (the solve that froze the S1 page). The solve runs in the worker, its real answer held to 800 ms by the ROW (a wrapped page worker — never the solve's speed): the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
+        },
+        {
+            "id": "seedling-js-runtime-solver-falls-through-pit",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the sword granted through the AP item path (removed after), the page handle teleports to seedling_playthrough's level_30__r2c10 arrival; the bot walks to out_pit_3_34 (a PIT tile, no teleporter — the page used to refuse it) — the solver's reach-pit BREAKS the rock on the pit and falls to level 31; the walk completes on the fall, no pendingExit (the game writes none for a fall), 0 HALT."
+        },
+        {
+            "id": "seedling-js-runtime-solver-opens-chest",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level 17 arrival and the bot opens the chest (tag 0) through collect-placement (the chest verb); the clear reported once as pendingCheck <seq>|17|0|0, 0 HALT, no refutation."
+        },
+        {
+            "id": "seedling-js-runtime-loop-bot-block-walks-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas_location, loop mode on, the house block set to Bot: loops' walkTo (executeVia solver) walks the queued chest check (the game's own check completes it) and the door (its user:regionMove resumes the park); the queue ends on its own (queueEnd); one mana charge per action at its own price, plus the play clock's drain per GAME second (flash_seedling declares playClock)."
+        },
+        {
+            "id": "seedling-js-runtime-loop-bot-blocks-cross-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode. Runtime js on seedling_atlas, every Seedling block Bot, the sword granted (AP item path) and removed after: the owl's-nest stairs, the descent, then the sword-gated LOGICAL link (credited, its regionMove on the next turn); the queue ends on its own; one charge per action, plus the play clock's drain per game second."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-block-walks-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the WASM runtime (WebGPU — the batch launches Chromium with it): the JS row's house walk under a Bot block, the tapes from the wasm playback engine."
+        },
+        {
+            "id": "seedling-js-runtime-loop-bot-block-walks-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode on GENERATED rooms (flash_seedling_gen declares executeVia solver, locationCheck, playClock). Runtime js on seedling_generated_room, the start room's block Bot: the controller walks the queued apitem check (the game's own check completes it) and the generated teleporter door (its user:regionMove resumes the park); the queue ends on its own; one charge per action plus the play clock's drain per GAME second (loopState._gameClockCharged)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-block-walks-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Re-enabled (2026-10-12) with the seedling-js-tutorial-walk-regression fix: its 2/14 CI flake (tick-1 exact-repeat divergence on region_0_0__key_blue_pickup, expected y 40.8, game y 40) was the wind cutscene leaking past the skip under the explicit start's record; the cold start now waits a showing scene out (seedlingWasmPlayback adoptLive) instead of re-arriving into it. The JS row's generated-room walk on the WASM runtime (WebGPU — the batch launches Chromium with it): the WG engine stages the mounted set, the solver produces the tapes; the game's Game.time drains the start room."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock (⚖ Drain play time too). Runtime js on seedling_atlas_location, loop mode, the house block Bot, every solve held 3 s by the row: the reported clock stops and nothing is charged; the house is charged its drain price per GAME second (substrate:playClock), each action its own price; the queue ends on its own."
+        },
+        {
+            "id": "seedling-js-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock. Runtime js, the house block MANUAL with nobody at the keys: the pool cut to half a second's drain once parked; the idle game's clock runs it out by the drain alone and the loop ends (loopState:loopReset, auto-restart off)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-drains-mana",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's drain and stopped-clock checks; the game's Game.time off botStatus, its solves held by the row (the engine freezes the room)."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-play-clock-mana-out",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling play clock, the WASM runtime (WebGPU): the JS row's mana-out — the idle game's Game.time runs the cut pool out and the loop ends."
+        },
+        {
+            "id": "seedling-wasm-runtime-loop-bot-blocks-cross-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the WASM runtime (WebGPU): the JS row's stairs, descent and logical-link credit under Bot blocks."
+        },
+        {
+            "id": "seedling-flash-runtime-loop-bot-block-names-its-stop",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling loop mode, the Flash (Ruffle) runtime: a Bot block's walkTo is refused by name (no feet), and loops' named stop (loopState:botWalkFailed, loop-mode-bot's fix) carries the controller's lastRefusal. Ruffle is fetched from its CDN; the SWF is not committed, so no game boots."
+        },
+        {
+            "id": "apworld-document-tab-lists-every-schema-key",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. The Document tab is DERIVED from rules.schema.json; this row fetches the schema at run time and asserts the drawn key set EQUALS the declared one, both directions."
+        },
+        {
+            "id": "apworld-set-key-round-trips-through-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. One set-key through the real change event, then the panel's own Undo: the fold over the shorter list is what catches an op that stored the caller's object instead of a copy."
+        },
+        {
+            "id": "apworld-links-tab-covers-every-room-editor-declarer",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H1. The Links tab's substrate rows are derived from the live substrateRegistry's roomEditor declarations; the expected set is read off the registry in the browser, never listed here."
+        },
+        {
+            "id": "apworld-presets-button-opens-the-same-world",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. The button the ⚖ asked for on the opened-preset screen. It only RAISES the hub (ui:activatePanel) — the preset load already published the document app-wide — so the assertion is that the hub's session names the same game and seed, read off the loaded document."
+        },
+        {
+            "id": "apworld-download-writes-the-working-copy",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. Intercepts URL.createObjectURL and asserts the BLOB's bytes, not that a file appeared: a page-initiated download is inert in some sandboxes. A working-copy edit must be in those bytes, which a download reading applied state would fail."
+        },
+        {
+            "id": "apworld-build-downloads-a-loadable-apworld",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "The hub's .apworld button: real world_generator under Pyodide (CDN, booted on first build). Reads the saved Blob back as a zip: named after its root dir, manifest stamped + renamed, a session edit in Locations.py."
+        },
+        {
+            "id": "apworld-build-lossy-toggle",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "rule-node R2c. The .apworld build's lossy toggle on yachtdice (strict-fails: its helper bodies are JS-only). OFF (default): fails naming the helper + game. ON (the real checkbox, saved as a setting): builds, says LOSSY, and the record block lists every placeholder with its count."
+        },
+        {
+            "id": "apworld-apply-keeps-the-sphere-log",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2. Apply published 'apworldEditorApply', which sphereState can neither parse as a preset path nor recognise as one of its four in-memory sources, so it reset the sphere state and loaded nothing for 199 of 205 presets. This row opens a FILE-LOGGED preset, applies, and asserts the log survived."
+        },
+        {
+            "id": "apworld-raw-view-replaces-the-document-as-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2b. The raw tab mounts CodeMirror 6 (editable, whole working copy, the shared extension list's line numbers and fold gutter, no textarea left) and Save JSON writes ONE replace-document op carrying a PARSED OBJECT that one undo folds away byte for byte. H2's size-guard cases are gone with the guard; the largest-preset case moved to its own row."
+        },
+        {
+            "id": "apworld-raw-view-undo-inside-the-editor-is-the-editors",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2b, B-c's undo rule over a widget that is not an <input>. The hub's key handler refuses Ctrl+Z inside anything isContentEditable — a clause that had never had a contenteditable widget under it until CM6 mounted here. Drives BOTH halves: inside the editor the session must not move, on the panel chrome the same keystroke must pop it."
+        },
+        {
+            "id": "apworld-raw-view-opens-the-preset-the-textarea-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H2b. stardew_valley is 2,620,221 pretty bytes — above H2's RAW_VIEW_LIMIT_BYTES = 2,000,000, so at H2 the tab showed it a refusal screen. The row asserts that premise off the document, then that the view holds the WHOLE document to the character: a virtualised editor draws only the visible lines, so a truncated string would look identical on screen."
+        },
+        {
+            "id": "apworld-map-draws-the-documents-grid",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3. The Map tab's canvas is compared against what the document's own preset_sidecars say — region count and grid dimensions derived at run time, never typed — and then a drawn cell's PIXEL is sampled, because a renderer that threw after sizing the canvas would leave every dimension check green."
+        },
+        {
+            "id": "apworld-map-click-selects-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3, plan §3 idea 4. The click→cell mapping is the renderer's exported geometry, the same one the pipeline's hit-tester uses; the row clicks the first placed cell's centre and asserts EXACTLY one region block is marked selected in the Regions tab, then that a click off the grid moves nothing."
+        },
+        {
+            "id": "apworld-map-says-no-map-without-grid-data",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H3, ⚖ 'show the composite grid only for presets that have grid data'. Loads a committed jta preset (one of the 4 of 205 whose sidecars carry no grid_cell), asserts that premise off the document, and then that the tab names the reason and draws NO canvas — the region graph stays its own panel rather than a fallback drawn here."
+        },
+        {
+            "id": "apworld-selector-reads-the-documents-own-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a. The four-player fixture's first row: the combined export (no playerId) opens on the first slot and offers exactly the slots the document carries; the per-player P3 export (playerId \"3\") opens on 3. One document alone cannot tell 'honour playerId' from 'take the first slot' — this row drives both."
+        },
+        {
+            "id": "apworld-map-follows-the-selected-player-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a, retargeted by PRESET SIDECARS M0. One document, four slots, two games: every slot now draws a canvas holding THAT slot's grid_cell count and names the rule that sized its cell (its own payloads for the maze slots, the engine default for the bounce ones). The 'no map' arm this row used to carry is gone with ⚖ 3's reversal, and the row asserts that population is empty so it cannot skip a loop in silence. Switches back at the end — a map that never re-derived passes the walk in order, and that return now crosses a cell-size change."
+        },
+        {
+            "id": "apworld-map-draws-a-zone-world",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M0, reversing hub plan §7 ⚖ 3 on the user's observation that a Bounce demo loaded into the frontend showed no map. The zone-only slot is picked off the document (grid cells everywhere, tile geometry nowhere); the tab must draw one cell per grid_cell at the engine's exported default cell size and say that the DEFAULT is what sized it. The pixels of the first cell are scored against the renderer's own genericBg / textAdventureFg / emptyCell colours, because a canvas of the right dimensions with nothing painted on it satisfies every count."
+        },
+        {
+            "id": "apworld-map-draws-the-other-regions-and-names-the-refused-one",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS C1. A region whose payload its own substrate refuses (AP_11 with one undeclared key added in memory) is skipped by name at play and on the Map: the warehouse keeps the entry's sentence, the Map draws the other gridded regions and a note carries the sentence, 0 handler errors, 0 page errors. Before C1 the same document blanked the Map with a page error (plan §24.7)."
+        },
+        {
+            "id": "apworld-document-tab-slices-preset-sidecars-by-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4a. The Document tab's per-player slice, finally observable: 158 of 192 carriers held {} and every populated one keyed under slot '1', so no committed document could discriminate. The fixture's slots hold 3/3/5/5, and the row asserts the four summaries are not all the same string."
+        },
+        {
+            "id": "apworld-edit-button-is-offered-per-region-and-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4b. Three shapes of answer on two documents: a sidecar-bearing region offers its room, a sidecar-less one draws NO button (an absence, not a disabled control), a substrate with no roomEditor (jta) is disabled without being pressed, and a region whose payload does not round-trip is disabled only AFTER the press — the expensive half of the check deserializes a world, so it runs on demand. H6b moved that case: it used to be the fixture's slot-3 region_1_1 (its spring_gap level's north portal is authored as exit_up and the bounce re-assembly minted side_exit_<side> for every exit), but H6b made the assembler read the level's own portal ids, the bounce door went 15/25 to 25/25 over the committed corpus, and slot 3 now asserts the opposite. The press-then-refuse arm drives a seedling_atlas_maze room instead - the ten rooms written by the atlas derivation rather than serializeMazeWorld, which is the refusal that remains (H6a's to fix). A Seedling region is the fourth shape — its substrate HAS a room editor and declares regionRoundTrip: {refused}, so the title is the substrate's OWN sentence about its payload. Driving that is what kills the mutant that ignores the declaration: without it the button-side use of regionRoundTripOf was uncovered and the mutant stayed green."
+        },
+        {
+            "id": "apworld-edit-opens-the-lab-door-and-its-save-is-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4b. The lab door end to end without an iframe: the host is a PANEL-SHAPED stub (W4's own contract shape, the same one createPageLabTransport implements) and the three phases of labRoomEditor's contract are published on procgenLab:levelChanged. The first version mounted the real maze lab; the page connected inside the row's own poll, opened room 0 for real and published its OWN close, so onSave fired with the page's UNEDITED record and the row measured a no-op — a live page and a synthetic one cannot both author the same conversation. Asserts the handed document is a ONE-ENTRY region library, the navigate asks for ?source=set&room=0, the close returns exactly ONE hub op moving payload AND the one rule the door proved it authored, the exit targets and baked AP location names the library capture strips are restored, and ONE Undo folds it all away."
+        },
+        {
+            "id": "apworld-edit-opens-a-closed-maze-lab",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "region-editor-launch Q1 (the user, 2026-10-19: one shared opener). Closes every real maze lab tab, presses the hub's Edit ▸ on a maze region, and asserts regionEditors.openRoomEditor MADE a maze lab and parked the room session for that region with no refusal — before, the press said 'Open Procgen Lab — maze first'. The made tab is left on screen."
+        },
+        {
+            "id": "apworld-bounce-reverse-link-selects-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H4c. The reverse link that needs no protocol: the bounce region editor and the hub are panels in ONE app, so the door names a region and raises the hub, carrying no document at all (the level in that panel is a working copy nobody saved back). Driven through the bounce module's OWN publisher, not a hand-written publish — the button and the hub's subscriber only meet there. Four answers, not one claim four times: a region of the slot the hub is showing is selected and its block marked; a region no slot holds is SAID SO rather than switching to a tab with nothing highlighted; a named slot the document has moves the selector FIRST and then selects (through _chosenPlayer, because _syncPlayer re-derives playerId on every render and would otherwise undo the move inside the door's own re-render); and a slot the document does not have is refused by name with the hub staying where it was."
+        },
+        {
+            "id": "apworld-region-atlas-door-refuses-a-module-this-app-lacks",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. Two measurements meet here. (1) The region_atlas block in a rules.json is a REFERENCE ({atlas_id, game, map_document}) and never an atlas \u2014 all three committed carriers \u2014 and nothing resolves an atlas id back to its file. (2) module-configs/modules.json disables regionMarkingTool in the DEFAULT mode, so the door would publish ui:activatePanel into a warn-and-return: the first shape of this row waited 8 s for a panel that cannot exist and reported STARVED. The button is therefore SHOWN, DISABLED, with the panel and the config file in its title, while still printing what a save WOULD come back as. The end-to-end save lives in check-region-marking-tool.mjs, under ?mode=flash."
+        },
+        {
+            "id": "apworld-procgen-metadata-door-names-what-the-pipeline-can-do",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. procgenPipeline:loadRules is a SECOND channel beside stateManager:rawJsonDataLoaded on purpose: one means 'the app loaded this', the other 'here is a document nobody applied'. The row asserts the pipeline adopted the hand-off, named the door, and QUOTED the engine's own refusal \u2014 read from sphereRebuildRefusal at run time, never typed. Measured: procgen_maze/AP_1 is grid-growth with no sphere tree, so its answer is TOP-DOWN, not 'append a sphere'."
+        },
+        {
+            "id": "apworld-pipeline-topdown-compile-message-names-its-warnings",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "T1 (plan \u00a730.7 #4). The first in-app row that presses the pipeline's Generate on a hand-off: H5's door, then top-down to compile, then the compile message's ruleItemWarnings (seedling_atlas/AP_1) and menuWarnings (depgraph AP_00679\u2026). Category apworldEditor, not a new procgenPipeline one: the row starts at the hub's door, so it rides the apworld batch with H5 (a new category would fall into fast). Expected names derived from the compiled document, never typed."
+        },
+        {
+            "id": "apworld-validity-report-names-every-undefined-rule-item",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "T1 (plan \u00a730.7 #3). The one committed document the widened validateRules moves (terraria, +16 issues): the hub's report names every name undefinedRuleItems derives."
+        },
+        {
+            "id": "apworld-loop-costs-door-hands-the-working-copy-to-the-debugger",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. Plan \u00a74 priced this link as 'Apply, then open' because the cost debugger reads applied state; the measurement overturned it \u2014 CostPlanner takes its state manager as a constructor argument and touches it through two methods, so a rules.json can wear that face via StateManager.loadFromJSON (4 ms to 306 ms across the corpus). The row asserts the debugger's status line says which world the numbers describe, and that there is a named way back."
+        },
+        {
+            "id": "apworld-loop-costs-panel-says-which-numbers-the-block-carries",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs L3. \u2696 (i) the walk prices EVERY region as coarse because that is how the numbers are derived; writeCostsByClass then drops the ones no block should carry. jta_schedule_test separates them: all three regions are NATIVE, so the block holds 1 of 4 regions and 0 of 23 locations while the plan behind it says 50/35/26 and 100/70/52. Before L3 the panel printed those as prices (cost=100 on a location the block does not price) and Verify scored the runtime 1/32 within tolerance for charging nothing, which was the design. Mutant: _pricingOf returning {priced:true} for NATIVE reds this row and nothing else."
+        },
+        {
+            "id": "apworld-loop-costs-send-writes-the-plan-as-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs L4. \u2696 (user, 2026-09-06) 'the debugger's plan comes back as ONE op'. Driven on omsi_substrate_test because that is the only shape where both halves are real: its committed block is EMPTY (all ten tracked carriers are), its two maze regions are coarse-classed so the block must gain their real prices (L3 measured 16 and 21 against a stored 50), and its omsi region is NATIVE so it must gain nothing. jta_schedule_test would have made 'it became priced' true of one zero. The row also drives the SCHEMA VETO at _acceptEditorOp \u2014 L4 measured it was not on the editor-op path at all (it lived in _applySetKey, the raw-JSON editor's method), so region_atlas's save had been bypassing it since H5. \u26a0 The loop_costs schema is TYPE-only: it refuses a location cost that is not a number, and accepts every semantic error write-by-class is about (a moveCost on a summary region, a missing defaultRegionXpEffect, an entry for a native region) \u2014 reported, not fixed here."
+        },
+        {
+            "id": "apworld-loop-mode-switch-adds-and-removes-the-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs R-a residue 3. \u2696 (user, 2026-09-06) 'take care of the residues'; L4 named the presence switch as an editor action and left it unbuilt. Driven on procgen_maze because it carries NO loop_costs block at all \u2014 the state the enable half is about, which none of the corpus's fourteen carriers can show \u2014 and its four regions make the post-enable readout a real '0 of 4' rather than '0 of 0'. The two undos are the claim: 'no key' and 'an empty block' are different document states, and a gesture that mutated rulesDoc in place would collapse them and still pass the first half."
+        },
+        {
+            "id": "apworld-loop-mode-switch-is-per-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWORLD SUBSTRATE CHANGE P1a. \u2696 (user, 2026-09-27) shape (A): loop_costs is {\"<p>\": block}. On the four-player fixture the row derives the first slot whose substrate differs from slot 1's, switches loop mode ON there and reads loop_costs[thatSlot] with no other slot gaining a block and slot 1's procgen_metadata byte-identical; one Undo takes it back."
+        },
+        {
+            "id": "apworld-send-into-a-replaced-document-is-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "Loop-costs R-a residue 2. L4 measured that onSave applied into whatever session the hub had open NOW \u2014 arc-wide, region_atlas's Save too \u2014 and could not close it without a document identity the hub did not carry. The hub now stamps a monotonic _documentToken at its ONE session boundary and _openDocumentKeyEditor binds it into the onSave closure, so no door can forget it. The SUBJECT here is the SECOND document: procgen_maze must still carry no loop_costs and its op list must not grow. A row that only read the debugger's status line would pass against a hub that printed a refusal and applied the op anyway."
+        },
+        {
+            "id": "apworld-links-tab-reaches-an-editor-with-no-data",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld hub H5. The \u2696 the Links tab exists for: 'even if the current rules.json file doesn't contain any relevant data for them'. On a document with no region_atlas the row must still be there, carry the REGISTRY's own label (the same string the Document tab shows, because both read DOCUMENT_KEY_EDITORS), say the document has nothing for it, and open the editor anyway."
+        },
+        {
+            "id": "apworld-owned-row-carries-its-own-json-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W0. Until W0 a tab-owned Document row drew 'edited in the X tab' and RETURNED, so every field of world except the one the Meta tab draws was reachable only through the whole-document Raw JSON editor \u2014 measured on stardew, where all fourteen owned rows offered neither a toggle nor an input. The subject is the RECORD, not the toggle: the row presses the block's own Save JSON and asserts ONE player-scope set-key on a sub-key no META_FIELDS spec addresses (derived from the Meta tab's own table), the Meta field beside it unmoved, and ONE undo taking the sub-key back out."
+        },
+        {
+            "id": "apworld-sidecars-tab-draws-the-registrys-sidecar-keys",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage S1, \u2696 (user, 2026-09-08) 'a \"Sidecars\" tab, for the data that's specifically in the sidecars'. Driven on procgen_maze, which carries procgen_metadata and three per-region sidecars in slot 1. Asserts the tab draws exactly the keys KEYS_OWNED_BY_TAB.sidecars names, in registry order; that preset_sidecars is a per-slot SUMMARY counted off the document, heading S0's per-region list (its expander in place of the retired Go to Regions button \u2014 the list is its own row); that a key's box on this tab is element-for-element the box the Document tab builds for it (one renderer, two hosts \u2014 a forked renderer that happened to draw a door and a block would still differ); and that the Document rows for the five gained the Sidecars pointer WITHOUT losing their own affordance. \u26d4 This row reads the SAME table the tab filters by, so it is blind to a key REMOVED from that table \u2014 the membership is guarded in documentKeys.test.js, whose population comes from the exporter's own _inject_worldgen_* methods and from the \u2696."
+        },
+        {
+            "id": "apworld-a-row-does-not-point-at-the-tab-it-is-on",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage R1, \u2696 (user, 2026-09-09) 'The sidecar entries in the sidecars tab have the Go to Sidecars button. Is there a simple way to fix that?' S1 gave the Sidecars tab the Document tab's row renderer and the 'Edited in the X tab' pointer came with it. The population is the LAW's \u2014 every key KEYS_OWNED_BY_TAB files under the Sidecars tab \u2014 and the CONTROL is the other host: absent on its own tab (while keeping its editing affordance, so a renderer that skipped the whole owned branch again would not pass), present on the Document tab with a button whose EFFECT is the Sidecars tab, and a key owned by a THIRD tab still pointing. That last row is what separates 'the host suppresses its own pointer' from 'the pointer is gone'."
+        },
+        {
+            "id": "apworld-a-door-can-decline-to-raise-the-hub",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage R1, S1 \u00a78.6 (2) \u2014 S1 shipped the accepted-op focus UNCONDITIONAL, which is a claim about every editor at once: the cost debugger's Send ENDS the visit, but the region marking tool is a workspace whose Save is a checkpoint. \u26d4 _acceptEditorOp is driven DIRECTLY because region_atlas's panel is disabled in the default mode, so no gesture here reaches the seam \u2014 the op's value comes from the schema's own `required` list, so the veto on the accepted path is real. The non-vacuity is inside the row: accepted + applied + the beside-the-row sentence recorded (the half focusHubOnSave does NOT gate) before the no-raise claims, because 'the hub did not come forward' is also true of a seam that refused or never ran. The `true` half is apworld-loop-costs-send-writes-the-plan-as-one-op, so a mutant that ignores the flag reds one row whichever way it is wired."
+        },
+        {
+            "id": "apworld-the-validation-bar-follows-the-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage R1 \u2014 the guard for the memoised validateRules. _renderValidationBar ran the whole pass on every render and every _selectTab renders; _validationIssues() keys it on the record's object identity plus the slot. \u26d4 The subject is validationBar.textContent, not the memo: a row comparing _validationIssues() before and after would be asking the cache about itself. The op sets start_regions to a name BUILT from the document's own region names, so it cannot collide and it is a validateRules finding rather than a schema error \u2014 the only way to get an op that APPLIES and must move the bar. The op having landed is asserted first, Undo must bring the text back verbatim (undo REFOLDS the record), and two no-op tab switches must NOT move it."
+        },
+        {
+            "id": "apworld-viewer-doors-raise-the-panels-they-declare",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W0, \u2696 (user, 2026-09-08) 'we could link to the existing dungeons and helpers panels as viewers'. Both halves come from an authority rather than a string: whether the door is offered is asked of centralRegistry.getAllPanelComponents() \u2014 the same set the hub's own _panelRefusal consults \u2014 and whether the press worked is panelManager.isPanelActive, the panel actually in front. region_atlas is asserted ABSENT from that same set, so 'registered' discriminates instead of describing a mode where everything is on."
+        },
+        {
+            "id": "apworld-placements-tab-draws-every-location-of-the-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3, \u2696 (user, 2026-09-08) 'Yes, canonical placements should have their own tab.' Every count is DERIVED from the fetched document rather than typed, so the row cannot pass by agreeing with the panel. It also asserts the option list is LAZY \u2014 a closed select carries only the blank option and its own value \u2014 because a select per location carrying every item is 1,442,352 elements on dark_souls_3, the largest committed world."
+        },
+        {
+            "id": "apworld-placement-edit-is-one-op-and-one-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3. Both halves are driven because only one of them can make each claim: on procgen_topdown/AP_1 every location is already placed, so a REPLACE is one op that moves the value and moves NEITHER readout, and only the blank '(unplaced)' option moves the tab's summary and the Document row's { n keys }. The op's own refusals are guarded in rulesDocOps.test.js, not here."
+        },
+        {
+            "id": "apworld-placements-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3, on the four-player multiworld fixture. \u26d4 The brief said slot 1's block is ABSENT there; measured, it is PRESENT and empty ({}), and slots 3 and 4 carry six placements each \u2014 so the law driven is that a slot-3 op leaves slot 1's block byte-identical, whatever it holds. Mutant: reading placements from slot '1' instead of the selected slot reds this row."
+        },
+        {
+            "id": "apworld-stale-placements-are-shown-and-removable",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage W3 \u2014 the requirement no other row can see. The schema declares the placement slot additionalProperties: true, so a stale entry validates and no committed preset carries one; this row hands the hub a committed preset with two added on the way in through stateManager:rawJsonDataLoaded, which is what a hand-edited file is. It is also why set-canonical-placement does not validate a DELETE."
+        },
+        {
+            "id": "apworld-block-editor-refuses-an-unplaceable-placement",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage P1, closing W3's \u2696 OPEN 1. Driven through the block editor's OWN Save JSON, because the defect was that one tab's guard was reachable AROUND it. The row also measures that the same op adds ZERO schema errors \u2014 the slot is additionalProperties: true, so the schema veto could never see this. Both directions: an ADD is refused by name, a REMOVE of a pre-existing stale entry is accepted."
+        },
+        {
+            "id": "apworld-a-stale-placement-is-not-counted-as-placed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage P1, closing W3's \u2696 OPEN 3. The same document twice \u2014 as committed, then with one entry's item renamed out of the world \u2014 so the numerator is scored against itself rather than against a typed number. W3 counted such an entry as placed; --canonical-seed cannot place an item the world does not hold."
+        },
+        {
+            "id": "apworld-item-group-add-reaches-the-registry-and-every-picker",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. On procgen_maze/AP_1, whose registry holds one name. Types into the Groups section's own box and presses its own button: the name lands in item_groups[slot] as ONE op, the section draws a row saying nothing carries it with its delete ENABLED, and every item's picker offers it once opened. One undo takes all three back."
+        },
+        {
+            "id": "apworld-item-group-delete-is-refused-while-an-item-carries-it",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1, the \u2696 user ruling of 2026-09-09 (\"Let's go with refuse\"). Drives BOTH guards, which are not the same one: the section's delete button is disabled with the carriers in its title, and the OP refuses when asked past the button \u2014 the path the Document tab's whole-block Save JSON is on. A group nothing carries still deletes, so this is a discrimination."
+        },
+        {
+            "id": "apworld-item-group-rename-carries-the-items-membership",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. On alttp's real 23-name registry over 163 items: a rename through the row's own input moves the registry entry in place AND every carrier's groups field, as ONE op \u2014 so one undo restores both sites in one step."
+        },
+        {
+            "id": "apworld-an-unlisted-item-group-is-shown-and-can-be-listed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. alttp is in the corpus's common divergent state as committed (Event on seven items, in no registry); 155 of the 224 committed slots carry at least one unlisted group. The section shows them greyed with their carrier count and never adds them silently; \"Add to registry\" lists one as ONE op and leaves the items byte-identical."
+        },
+        {
+            "id": "apworld-item-groups-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I1. The four-player multiworld fixture names the SAME group in all four slots but carries it on different numbers of items, so only a count read off the selected slot can tell them apart. Driven through the real toolbar selector in both directions, and asserts the two slots really differ."
+        },
+        {
+            "id": "apworld-progression-cards-draw-the-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. alttp's five mappings include two pooling into one base_item, which is the only shape in which the pool is visible. The expectation classifies each entry the way inventoryManager does (type === 'additive'), so a section that classified some other way disagrees with this row rather than with itself; and the base picker's domain is asserted to be the slot's MAPPING names, measured 137 of 137 over the corpus."
+        },
+        {
+            "id": "apworld-the-additive-progression-kind-draws-as-itself",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. messenger carries the corpus's ONE additive mapping. An additive member is a VALUE the inventory accumulates, not a LEVEL the rule engine compares, so the card must have value boxes, no level box and no reorder control. Mutant: rendering the additive kind as progressive reds this row."
+        },
+        {
+            "id": "apworld-a-progression-level-edit-is-one-op-and-one-undo",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. The undo condition compares the WHOLE entry rather than the level that moved \u2014 a card that wrote only the changed row would still put that one level back. Mutant: writing only the changed row reds the undo condition."
+        },
+        {
+            "id": "apworld-adding-a-progression-mapping-on-an-empty-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. procgen_maze/AP_1's scaffold writes progression_mapping: {\"1\": {}} \u2014 the state the user's ruling is explicitly about. Drives the section's own box, kind select and button; asserts one op, a base pointing at itself, a level naming an item the slot holds, and an undo back to empty."
+        },
+        {
+            "id": "apworld-a-stale-progression-member-is-shown-and-removable",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. smz3 is in this state as committed: 12 members name resolved forms slot 1's items do not hold, because genericLogic.has resolves a name through the mapping. The refusal is asked of the OP, not of the picker (trap 1305) \u2014 no gesture on this section can produce an unknown name. Mutant: dropping the op's item refusal reds this row."
+        },
+        {
+            "id": "apworld-progression-follows-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWorld coverage I2. The four-player multiworld export's slot 2 is the ALTTP world and carries five mappings while slots 1, 3 and 4 carry none, so the discrimination is a real 0-vs-5. Exists because the vitest module is blind to a wrong slot (I1 \u00a713.5 (C))."
+        },
+        {
+            "id": "apworld-sidecar-blocks-follow-the-selected-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0, \u2696 Q2 A (one renderer, two hosts). Walks every populated slot of the four-player fixture through the toolbar selector: one block per sidecar entry of THAT slot under the region of the same name, badge = the document's own substrate for that slot (never a literal), Edit \u25b8 once inside the block and nowhere on a region with no sidecar (H4b's count, unmoved), no JSON built; then the same badge law on seedling_atlas, whose entries carry NO render_hint (the only corpus case where hint and substrate can differ). Mutant A (the block reads slot '1') reds the bounce slots."
+        },
+        {
+            "id": "apworld-a-sidecar-block-shows-its-entrys-json",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0, amended by S1 (saving on; the id dropped '-read-only' with the claim). On a bounce slot, the region picked off the document: Show JSON builds exactly one textarea, byte-equal to JSON.stringify(entry, null, JSON_BLOCK_INDENT), editable with exactly one Save; the facts line carries the payload's UTF-8 pretty size and every top-level key; Edit \u25b8 is this region's; the Regenerate-in-the-pipeline door is pressed and answers as the procgen_metadata door."
+        },
+        {
+            "id": "apworld-sidecars-list-is-collapsed-and-goes-to-the-region",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0, \u2696 user 2026-09-10 'expandable, and collapsed by default'. Non-first slot through the selector: 0 region rows collapsed, then one row per entry in document order with the same block and no JSON; survives a tab round-trip, reset by a reload; Go to region on the LAST row lands on Regions with that region selected and its header in the viewport, after measuring it started outside. Mutant B (list drawn expanded) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-blocks-json-follows-an-applied-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S0. A replace-region-sidecar applied through the session (payload + one marker key, the region's own rules as the total map): the open block's text equals the entry the DOCUMENT holds after the op (trap 1306), and one Undo restores the old text. Mutant C (JSON captured at expand) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-save-writes-the-entry-and-leaves-the-rules",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1 (\u2696 Q1 C, Q3 A). One payload key edited in the block's textarea, the product's Save JSON pressed: one set-region-sidecar recorded; the DOCUMENT after = before with exactly that entry replaced (trap 1306); the region's access rules byte-equal; the answer under the block is the op's description naming what was NOT re-derived; the op asked directly writes the same bytes; one Undo restores; then the WHOLE entry (entry-level fields dropped, grid cell moved) lands as typed. Once per payload family. Mutants A (the op also writes rules) and B (payload-only write - seen only by the whole-entry arm) red it."
+        },
+        {
+            "id": "apworld-a-sidecar-save-is-vetoed-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1. (a) an entry dropping `substrate` - the op's own refusal; (b) a grid_cell without gy - which the op alone would take, so only the whole-document schema veto refuses it. Each: the refusal under the block names the field, no op recorded, the document unmoved. Mutant C (the veto removed) reds arm (b)."
+        },
+        {
+            "id": "apworld-a-sidecar-save-from-the-sidecars-list-is-the-same-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1 (\u2696 Q2 A). The same one-key edit saved from the Regions tab and from the Sidecars list: byte-equal ops, the same document, the answer under the saved block; and a host passing no onSave gets the read-only widget with no Save."
+        },
+        {
+            "id": "apworld-edit-verdict-follows-a-raw-sidecar-save",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S1. Region + tile picked off Edit \u25b8's own inspection: a one-tile raw edit the round trip does not reproduce, saved through Save JSON; Edit \u25b8 pressed opens no room and its title is the inspection's sentence for the document NOW; the original saved back makes it pressable again; the same across Undo (which never goes through _applyOp). Mutant E (the verdict read regardless of its record) reds it."
+        },
+        {
+            "id": "apworld-sidecar-issues-read-zero-on-a-clean-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. The four-player fixture's two slots holding different substrates, each selected through the toolbar: the bar stamps 0 sidecar issues and no sidecar block carries a sentence."
+        },
+        {
+            "id": "apworld-a-raw-save-dropping-a-required-field-is-reported-not-refused",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. A required field (picked off the declaration: the first the deserializer survives losing) dropped through the block's Save: one op (not refused), the bar's count +1, the block's MISSING_REQUIRED sentence names the field, the answer ends with the count, the Sidecars badge, the bar row lands on the region, Undo restores. Mutants A (required check dropped) and B (bar not consulting the report: bar red, block green)."
+        },
+        {
+            "id": "apworld-a-raw-substrate-change-names-the-mismatch",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS V0. Each of two slots' first region takes the other slot's substrate (read off the document): one op lands, the block's SUBSTRATE_MISMATCH sentence names the substrate whose keys the payload has and the one it claims; Undo takes it away. Mutant D (the rule inverted) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-fields-view-lists-the-declaration",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. Both substrates of the four-player fixture: the block's fields view lists the schema's entry fields and the merged declaration's, in order (absent ones included), derived rows badged with the writer; the note under the JSON names the derived fields carried. Mutant C (rows from the payload's keys) reds it."
+        },
+        {
+            "id": "apworld-a-sidecar-field-change-is-one-whole-entry-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. The first non-derived boolean the declaration offers, flipped on both substrate slots: one set-region-sidecar; the entry differs at exactly that path (deep diff); an unchanged value records no op; Undo restores. Mutant A (payload-only write) reds it."
+        },
+        {
+            "id": "apworld-a-derived-sidecar-field-is-disabled-and-names-its-writer",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. Every declared-derived scalar row's control is disabled, titled with its writer; every non-derived control enabled; the JSON stays editable. Mutant B (derived controls enabled) reds it."
+        },
+        {
+            "id": "apworld-the-substrate-picker-offers-the-playable-ids-and-names-the-mismatch",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1. The substrate picker lists the registry's playable ids (sorted) and says it changes the label only; choosing the other slot's substrate records one op, payload untouched, and V0's SUBSTRATE_MISMATCH appears; Undo clears it."
+        },
+        {
+            "id": "apworld-a-pick-opens-the-region-generation-form-with-the-targets-knobs",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "APWORLD SUBSTRATE CHANGE R2 (i). A substrate pick writes the label and opens Region generation: Seed, the size rows the op reads (tiles only), the target hook's knobs, Generate; the same form on the Sidecars and Map hosts."
+        },
+        {
+            "id": "apworld-generate-on-a-maze-target-lands-one-op-with-provenance",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (ii). Generate on a maze target: ONE set-region-sidecar with provenance, 0 sidecar issues, the answer is the regenerate op's own description (the pure op builds the same entry), Undo restores. Mutant: provenance dropped."
+        },
+        {
+            "id": "apworld-a-zone-generate-shows-the-elapsed-ticker-and-lands",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (iii). A zone Generate: the elapsed readout advances while the worker runs, one op lands, no rode-free clause (braid hosts surplus exits natively)."
+        },
+        {
+            "id": "apworld-a-generate-that-runs-out-of-time-records-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (iv). The time-limit setting at 1 s on AP_4 C (R0's never-returning region): the timeout sentence quoting the setting, the worker terminated, nothing recorded, no late answer. Mutant: no terminate() on timeout."
+        },
+        {
+            "id": "apworld-cancel-stops-a-running-generation",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (v). Cancel while the realiser runs: the cancel sentence, the worker terminated, nothing recorded, the ticker cleared."
+        },
+        {
+            "id": "apworld-a-no-realiser-target-prints-the-ops-refusal",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (vi). Every picker id without a realiser: the form prints the op's own refusal and no Generate."
+        },
+        {
+            "id": "apworld-the-form-is-torn-down-on-a-slot-pick-and-a-new-document",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R2 (vii). A live run torn down by a slot pick and by a new document: form gone, worker terminated, no ticker, nothing lands."
+        },
+        {
+            "id": "apworld-the-starting-inventory-block-lists-starting-items",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (a). The Items tab's Starting inventory block = startingInventoryList of the document; each Start input agrees."
+        },
+        {
+            "id": "apworld-a-starting-grant-is-one-op-and-the-need-reads-met",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (b). bounce_worldgen: the need line, a grant = ONE set-starting-count + undo, the need reads met, add is current + 1."
+        },
+        {
+            "id": "apworld-a-generate-after-a-starting-grant-lands-with-the-satisfied-clause",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R3 (c). The form shows the target's need (none for a non-declaring target); Generate after a grant lands bounce region_0_1 with the satisfied-rules clause."
+        },
+        {
+            "id": "apworld-the-source-row-appears-only-for-a-target-with-the-library-hook",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (a). The Source row is drawn for a target that declares instantiateLibraryEntryForSpecs, and not for one that does not (both derived)."
+        },
+        {
+            "id": "apworld-the-library-picker-lists-the-served-entries-and-disables-too-few-slots",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (b). The picker = the served packs' entries of the target's substrate; too-few-slot entries disabled with the op's refusal; no seed row."
+        },
+        {
+            "id": "apworld-a-library-generate-on-a-maze-region-lands-one-op-with-the-source",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (c). four-player slot 1 region_1_0 <- the maze pack's first fitting entry: ONE op, provenance.source, names kept, 0 issues, Undo restores."
+        },
+        {
+            "id": "apworld-a-library-generate-on-a-zone-region-lands-one-op-with-the-source",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (d). four-player slot 3 region_2_0 <- the bounce pack's first fitting entry: ONE op, provenance.source, names kept, 0 issues, Undo restores."
+        },
+        {
+            "id": "apworld-a-library-fetch-failure-prints-its-sentence",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5a (e). A catalog whose fetch throws: the form prints the fetch-failure sentence, no Generate, nothing recorded."
+        },
+        {
+            "id": "apworld-the-source-row-offers-zone-n-for-a-jta-target-only",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (a). jta_dataset_test region_1_0: a non-zone realiser's Source row has no Zone N; jta's = the flow's sources (derived), opened on the zone, no seed row."
+        },
+        {
+            "id": "apworld-the-zone-picker-disables-the-held-zones",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (b). The picker = the host dataset's zones, disabled + named iff another region holds them (zoneHeldBy); own zone selected; the page's jta zoneCount unchanged."
+        },
+        {
+            "id": "apworld-a-zone-generate-lands-one-replace-region-content",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (c). region_1_1 relabelled frees zone 2; region_1_0 takes it: ONE replace-region-content (zone inlined), worker = pure op, Placements lists the displaced items unplaced, Undo restores."
+        },
+        {
+            "id": "apworld-a-held-zone-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (d). A held zone forced into the form: the op's own refusal naming the holder, nothing recorded."
+        },
+        {
+            "id": "apworld-the-host-region-taking-another-zone-keeps-the-dataset",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5b (e). The dataset host region_0_0 takes the freed zone 2: jta_dataset carried, no REF_UNRESOLVED."
+        },
+        {
+            "id": "apworld-the-source-row-offers-atlas-room-for-seedling",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (a). spiral_room region_0_0: maze offers no room source; flash_seedling's Source row = the flow's, the room source labelled with the entry's word."
+        },
+        {
+            "id": "apworld-the-room-picker-lists-the-atlas-rooms",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (b). A 2-exit maze region relabelled to flash_seedling: the recorded atlas's rooms by name, the held one disabled and named, the doorless ones with the reason; the page's atlas unchanged."
+        },
+        {
+            "id": "apworld-an-atlas-room-generate-lands-one-replace-region-content",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (c). sphere_room's 1-exit maze leaf takes a free room with a location: ONE replace-region-content, room inlined, worker = pure op, 0 new sidecar errors, Undo restores."
+        },
+        {
+            "id": "apworld-a-held-atlas-room-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (d). A held room forced into the form: the op's own refusal naming the holder, nothing recorded."
+        },
+        {
+            "id": "apworld-an-unserved-atlas-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5c (e). In memory (set-key): region_atlas names an unserved id: the fetched index refuses by name; a stubbed 404 names the path."
+        },
+        {
+            "id": "apworld-an-atlas-room-keeps-the-documents-placements",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R5d. seedling_atlas_location: the room region picked away and back takes its own room through the atlas-room source: ONE replace-region-content, 0 displaced, the document byte-identical, the answer names the placement kept over the vanilla item."
+        },
+        {
+            "id": "apworld-displaced-filler-leaves-the-pool",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (5). jta_dataset_test, region_1_1 relabelled, region_1_0 takes zone 2: displaced filler leaves the pool (pool = placed + non-filler unplaced), 0 placement issues, the answer's clause. Mutant: the filler kept in the pool."
+        },
+        {
+            "id": "apworld-the-library-picker-disables-too-few-openings",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (2). AP_5, derived: a hub region with the slots but too few openings → every served maze entry disabled with the hook's sentence, no Generate; a fitting region → all enabled. Mutant: the precheck counts slots instead of openings."
+        },
+        {
+            "id": "apworld-re-roll-opens-the-form-on-the-own-substrate-at-the-next-seed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (1). Re-roll ▸ on all three hosts; one press opens the form on the own substrate at the next seed; two Generates at consecutive seeds land different entries; jta's button disabled with the op's refusal. Mutant: the seed counter not advanced."
+        },
+        {
+            "id": "apworld-the-map-draws-a-misfit-regions-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (3), trap 1402. A label-only pick on the Map's block: the painter refuses the region, the block stays with the refusal sentence, V0's mismatch and the form; Generate lands; two Undos repaint. Mutant: the block hidden again."
+        },
+        {
+            "id": "apworld-a-slot-pick-before-the-schema-is-refused-by-name",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6 (4). The pre-schema 'No change' cause: the selector derived no slots and a slot-3 pick fell back to slot 1 silently. Now the selector says why and refuses by name; after the schema the pick lands. Mutant: the refusal reverted."
+        },
+        {
+            "id": "apworld-the-zone-answer-names-the-config-split",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R6b. R5b (c)'s scenario on jta_dataset_test (records nothing): the answer = the op's description + zoneConfigSplitSentence over the read-back's own recorded/assumed split; the provenance records the split and the verified regions."
+        },
+        {
+            "id": "apworld-initialise-lands-one-op-and-the-map-draws",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. adventure: the Map's door → the preview = the page's planInitialise (placed / 0 unplaced / derived return exits); Generate lands ONE initialise-procgen-layout with the result inline; answer = description + V0 count; Map cells = placed; Regions tab sidecar blocks = placed; Undo byte-for-byte + the door back."
+        },
+        {
+            "id": "apworld-initialise-previews-the-grown-room-size",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "C2. The largest committed room (derived from preset_files.json, classic documents): the page's plan grows it; the preview (verbatim initialisePreview) names it with INITIALISE_GROWN_WORDING.room and offers the unbounded-capacity target read off the registry; Generate lands and the size parsed out of the displayed sentence == the realised payload's; Undo byte-for-byte."
+        },
+        {
+            "id": "apworld-initialise-with-return-exits-off-adds-none",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. apcalc with Add return exits cleared: preview 0, op lands 0 return exits, regions block exit count unchanged, answer says OFF."
+        },
+        {
+            "id": "apworld-initialise-previews-and-names-the-return-exits",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. apcalc (one-way): preview count = planInitialise's, the op adds exactly that many exits, the answer names them, 0 sidecar errors."
+        },
+        {
+            "id": "apworld-initialise-door-is-absent-on-a-populated-slot",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. Four-player fixture: every slot carries entries; no door on the Map or the Sidecars tab."
+        },
+        {
+            "id": "apworld-initialise-cancel-lands-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. bomb_rush_cyberfunk (30 regions, slow): the Sidecars tab's door, Generate, Cancel once the ticker reads built N / M: Cancel sentence, terminated, nothing recorded, ticker cleared, no late answer."
+        },
+        {
+            "id": "apworld-initialise-runs-out-of-time-records-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "R7. initialiseTimeoutSeconds = 2 on bomb_rush_cyberfunk: timed out in running, the sentence quotes the setting + built N / M, terminated, nothing recorded; override dropped after."
+        },
+        {
+            "id": "apworld-initialise-declares-the-grants-and-the-buttons-work",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1. adventure -> Initialise as the first need-declaring target (derived): items + starting_items hold the grants, the answer names them, every need line met and every grant button enabled; Undo byte-for-byte."
+        },
+        {
+            "id": "apworld-initialise-as-a-non-granting-target-moves-no-item",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1. adventure -> Initialise as a target that grants nothing: items and starting_items unchanged, the none clause."
+        },
+        {
+            "id": "apworld-a-region-generate-on-an-initialised-slot-declares-its-grants",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S1 (Q1b). adventure initialised as the non-granting target -> a region -> the need-declaring target: the form says 'will be granted', ONE set-region-sidecar with grants, need met."
+        },
+        {
+            "id": "apworld-initialise-settings-size-reaches-every-payload",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure: the Initialise form draws R1's generation form (data-procgen-params derived), the size fields show regionSizeFor's; width +2 re-plans the preview; Generate -> every payload that wide, provenance.bag carries it; Undo byte-for-byte."
+        },
+        {
+            "id": "apworld-initialise-a-hook-knob-reaches-the-build-and-the-record",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure -> the first hooked non-default target whose first knob reaches its realiser (derived): bag reset (size kept), the knob moved through the hook's own control, preview unchanged, provenance.bag carries it, payloads differ from the default-bag build."
+        },
+        {
+            "id": "apworld-a-region-form-reads-back-the-initialise-bag",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S2. adventure -> the first hooked target with a payload read-back that does NOT declare generationCost 'heavy' AND whose read-back knob the hook's own control moves (apworldEditor/test-helpers.js readBackTarget). APWORLD SUBSTRATE CHANGE H1: the registry's order is the page's parallel module-import order, so 'the first hooked target' was a coin flip and drew runner, whose generate-and-test build overruns the 30 s Initialise budget, in 3/6 loads. H2: the cost filter alone promoted the next draw, a light target whose read-back names no knob (its procgenParamsFromPayload({}) answers {}), which failed the row in 0.4 s (2/8 on CI); the knob fact is now asked before the pick, over a detached render of the hook, and the premise names every hooked target skipped and why. Its read-back knob moved on the Initialise form; Generate; Re-roll on a new region: the 'this region was built with' line names it."
+        },
+        {
+            "id": "apworld-map-menu-marker-lists-the-start-exits",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M2. mm3 initialised: the Map's .apworld-map-menu lists the declared start's exits (menuMarkerFor, derived), every one placed; showMenuOnMap OFF (session override) hides it via the settings:changed re-draw, cleared -> drawn again; adventure initialised -> one entry."
+        },
+        {
+            "id": "apworld-menu-hub-restart-returns-to-the-declared-start",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M2. mm3 initialised + Apply (skip ON): no hop (many exits) - the player at the declared start, the menu panel raised with every exit; a press takes the last exit; Restart -> the DECLARED start, path cleared (not procgenPlayer's resolved start). adventure initialised + Apply: one exit, the hop fires."
+        },
+        {
+            "id": "apworld-initialise-loop-mode-writes-loop-costs",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S3. adventure: the page holds the jsonl beside the preset; the loop-mode toggle (OFF by default) ON with the last XP effect -> Generate lands ONE op: loop_costs (no generatedAt, the chosen effect, every placed region priced), manaEnabled on every payload, provenance.loopMode, the op's loop clause as the answer, the Document tab's loop_costs row; Undo takes it back byte for byte; OFF -> no key, no flag."
+        },
+        {
+            "id": "apworld-two-slots-initialise-in-turn",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "P1b′. A DERIVED committed classic multi-slot document (every slot bare) and its two candidate slots (the layout places every reachable region; the largest room under the measured cliff bound): slot A initialised with loop mode OFF, slot B with loop mode ON, through the real controls (each through the MAP tab's door: since APWORLD SUBSTRATE CHANGE H1 the hub asks the reconstruction for no slot fallback, so bare slot B's Map beside populated slot A is its own 'No map' state with the door — asserted; the Sidecars-tab workaround is retired); each slot's procgen_metadata[p]/loop_costs[p] = the op's result, no block under any other slot, slot A's blocks byte-identical after B's run, the Map per slot = its placed count, the Sidecars tab's loop-mode sentence names the selected slot; Undo x2 restores the document byte for byte."
+        },
+        {
+            "id": "apworld-substrate-pickers-show-label-and-card",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "SUBSTRATE CHART S4. The sidecar block's substrate picker (four-player fixture, slot 3) and the Initialise form's target select (adventure): every option's text is the live entry's label and its title cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the sidecar value is still the enum index (id on data-enum-value), the Initialise value the id; each select's title is the chosen option's card, and re-picking a target redraws it. Closes the Initialise form at the end."
+        },
+        {
+            "id": "apworld-m3-a-non-menu-start-is-a-cell-and-the-menu",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M3. apcalc (start C: 4 exits, 1 location - a room, not a pure hub): the door, a preview with no hub clause, the plan places every region, Generate lands C as a cell (its own sidecar entry), 0 sidecar errors, the Map marker names C and lists its exits, all placed."
+        },
+        {
+            "id": "apworld-m3-a-menu-with-locations-is-a-room",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M3. shapez as text_adventure (Menu: 4 exits AND 3 locations - a cell since M3): no hub clause, Menu lands as a cell with a Regions-tab sidecar block, its 3 locations in its payload (derived names), the marker lists its 4 exits."
+        },
+        {
+            "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS D1 (replan ruling 6). The Document row's preset_sidecars door lands on the Sidecars tab. Mutant E (target back to Regions) reds it."
+        },
+        {
+            "id": "apworld-rederive-after-a-raw-save-moves-the-exit-it-changed",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2 (Q1 C). Raw tile edit picked by derivation, then Re-derive rules: one replace-region-sidecar, only that exit's rule and the payload (serializer's form, named) move; one Undo removes only the re-derive. Mutants A (movability from the current payload) and E (payload left raw)."
+        },
+        {
+            "id": "apworld-rederive-is-enabled-where-the-substrate-has-a-round-trip",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2. Enabled exactly where the entry's substrate declares regionRoundTrip, every slot of the four-player fixture; a press with an empty record moves nothing and names Edit."
+        },
+        {
+            "id": "apworld-rederive-is-disabled-by-name-without-a-round-trip",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2 (Q1 C). jta_schedule_test: disabled, title = regionRoundTripOf(substrate).why. Mutant C (enabled without a round trip) reds it."
+        },
+        {
+            "id": "apworld-edit-is-not-weakened-by-a-rederive",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS S2. Edit still refuses the raw-edited room by its baseline sentence; opens only after the re-derive; refuses again after one Undo. Mutant D (check 1 relaxed) reds it."
+        },
+        {
+            "id": "apworld-map-selection-draws-the-regions-block",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The Map tab's selection draws _makeRegionSidecarBlock (hostTab map) under the canvas; a second selection swaps it. Mutant A (slot '1') reds it."
+        },
+        {
+            "id": "apworld-map-second-click-opens-the-selected-regions-room",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The second click on the selected cell presses the block's Edit ▸: roomEditorSession parked, the (stub) lab host raised. Mutant B (second click a no-op) reds it."
+        },
+        {
+            "id": "apworld-map-first-click-opens-nothing",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. A first click only selects (a door that would open stays shut); a refused region's second click prints the button's own refusal beside the block. Mutants C and B."
+        },
+        {
+            "id": "apworld-map-handoff-names-the-slot-and-the-cost",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M1. The hand-off from the map's block names the carried slot and the top-down cost; procgen_topdown/AP_1's sphere answer unchanged. Mutants D and E."
+        },
+        {
+            "id": "apworld-map-move-to-an-empty-cell-records-one-op",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2. Move / swap ▸ then an empty cell: one move-region, the document AFTER is the op's own answer, the block follows, Undo restores."
+        },
+        {
+            "id": "apworld-map-move-onto-a-region-swaps-the-two",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2. Move / swap ▸ then another region: one swap-regions, cells exchanged, links kept."
+        },
+        {
+            "id": "apworld-map-an-armed-move-drops-at-every-boundary",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2 (trap 1320). A slot pick, a tab switch, Esc and a new document each disarm; an empty-cell click after records nothing. Mutant E."
+        },
+        {
+            "id": "apworld-map-a-separating-move-names-the-teleporter",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M2 (Q3 C). A move that separates a link names the teleporter; every placed exit carries the side law's verdict; the connection pairs are kept. Mutant A."
+        },
+        {
+            "id": "apworld-exit-side-move-records-one-op-and-the-map-redraws",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A free side picked on the map's block: one move-exit-side, the document AFTER the op's answer, the drawn tile on the new edge, the canvas digest = a hand-authored document's (G1's witness); Undo restores bytes and digest."
+        },
+        {
+            "id": "apworld-exit-side-pick-of-a-taken-side-swaps",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A side another exit holds is offered as a swap (enabled): one swap-exit-sides, both sides and both portal-map keys exchanged; Undo."
+        },
+        {
+            "id": "apworld-exit-side-undeclared-entry-offers-nothing-and-says-why",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3. A substrate that declares no exitSides: no picker on the Regions tab; the map's block says why in the op's own refusal; no op."
+        },
+        {
+            "id": "apworld-exit-side-move-onto-a-held-side-joins-it",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PIPELINE RELAYOUT R2. procgen_topdown/AP_11, a text-adventure region (exitSides keys empty): the picker offers a held side as a move AND a swap with the holder by id; the move records one move-exit-side; the redrawn block shows both exits on that side; Undo restores."
+        },
+        {
+            "id": "apworld-exit-side-move-plays-in-the-bounce-panel",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "PRESET SIDECARS M3 play witness. bounce_worldgen: the active region's exit moved to a free side and Applied; the bounce game's own portal -> side map (__bounceDebug.portalSides) serves the old side's portal on the new side, the warehouse keys it there, no error event."
+        },
+        {
+            "id": "substrate-registry-panel-shows-every-entry",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R1. The panel draws one block per live substrateRegistry entry (expectation read from getAll() at run time, after the panel's own Refresh)."
+        },
+        {
+            "id": "substrate-registry-panel-matrix-has-a-column-per-entry",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R2. The Matrix mode: header == getAll() ids in order; row count == matrixOf(describeRegistry(getAll(), REGISTRY)); every cell is a glyph or an integer."
+        },
+        {
+            "id": "substrate-registry-panel-columns-can-be-hidden-and-reordered",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE REGISTRY PANEL R3. The Columns section: untick the first live id (header n-1, lacks it); ▼ on the next line (header's first two swap); All + Registry order (header == getAll() ids again). Restores the default columns at the end."
+        },
+        {
+            "id": "substrate-registry-panel-column-order-is-the-saved-substrate-order",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "REGISTRATION ORDER RO2 (user 2026-09-29: a tool for a custom order). The Columns ▼ SAVES the order as moduleSettings.substrateRegistryPanel.substrateOrder; the shared rule + the sidecar picker follow; an outside write is installed (settings:changed); Registry order clears it. Sets no saved order first, restores the one it found."
+        },
+        {
+            "id": "substrate-registry-panel-plain-mode",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE CHART S2. The Plain mode: one row per capabilityRows(getAll()) statement, one cell per live entry, each cell's mark == CELL_MARKS[kind] of the vocabulary's answer, declared live answers overlaid, no console error. Restores Matrix mode at the end."
+        },
+        {
+            "id": "procgen-pipeline-substrate-rows-show-label-and-card",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
+        },
+        {
+            "id": "procgen-pipeline-seedling-gen-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "region-editor-launch S2 (the user, 2026-10-19, Q3): a generated Seedling room opens from the pipeline's Edit ▸ in the REAL Seedling lab (one-room set, EDIT arm, room 0), the row presses the page's own #editRoomClose unedited, and the recompiled rules.json is byte-identical. No stub host: the point is that the page accepts the round trip's document and hands back one save can read."
+        },
+        {
+            "id": "procgen-pipeline-maze-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18: Edit ▸ on a maze region in the pipeline handed the lab door a region and the door refused it to nobody. The row applies Maze demo (sphere growth), Run all, presses the region row's own Edit ▸: no lab mounted → the refusal is in the warning line; a stub host (the hub row's recipe) gets a one-entry region library and room 0; an unedited close recompiles byte-identically; a close with the obstacles removed reaches the grid and the compiled sidecar. Stands real maze lab instances aside and puts them back. Runs in fast."
+        },
+        {
+            "id": "procgen-pipeline-bounce-edit-still-opens",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18 control: the panel door (bounce) beside the new lab route. Maze + bounce (sphere growth) → Run all → region_3_2's Edit ▸ → the Bounce Region Editor holds it in pipeline mode and reads it ✓ valid ((l): the readout derives under the zone's dj physics, the save path's own derive) → its own Save → written back, 4 invalidated → Run all, oracle clean. Runs in fast."
+        },
+        {
+            "id": "quick-launch-button-opens-panel-never-in-layout",
+            "enabled": true,
+            "category": "Quick Launch",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): an enabled module whose panel the layout never had (Discovery in the default layout) — its Quick Launch button did nothing; enableModule now creates the panel in its declared column. Here (not the regression roster) because the full default layout is the one that lacks Discovery. Category Quick Launch is claimed by no batch, so it runs in fast."
+        },
+        {
+            "id": "tutorial-panel-lists-every-tutorial",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-sections-collapse",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL SECTIONS (2026-10-15, \u2696 the user: every section and subsection collapsible, collapsed on load). Manual batch tutorials. Restores the panel (list, merged, collapsed), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-start-splits-and-merge-restores",
+            "enabled": true,
+            "category": "Tutorials",
+            "batch": "fast",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). The tutorials batch's SMOKE row: it stays on push (the batch field), so a shared change that breaks the panel's boot or its split is still caught. Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-cursor-and-outline-reach-tabs",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10). Category Tutorials belongs to the MANUAL batch tutorials (\u2696 the user, 2026-10-10: tutorial tests manual for now). Expectations are read off frontend/modules/tutorials/content/ and the live layout; restores the panel (list, merged), its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-url-request-starts-the-tutorial",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1b (2026-10-10): ?tutorial=<id>&tutorialStep=<n>. Manual batch tutorials. Drives startRequest (the URL parser is a vitest row); restores the panel, its settings and the active tabs."
+        },
+        {
+            "id": "tutorial-guided-tour-plays-every-step",
+            "enabled": true,
+            "category": "Tutorials",
+            "_comment": "TUTORIAL PANEL T1 (2026-10-10): the panel's Play over the whole Guided Tour (the walk rows use Do it). Manual batch tutorials. Restores the panel (list, merged), its settings, the active tabs and the world loaded before."
+        },
+        {
+            "id": "feature-check-storage-panel-mode-key",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "FEATURE CHECKS (2026-10-15, \u2696 the user: a category in the Tutorials panel for scripted walks that test a feature, not tutorials). The walk row of feature check storage-panel-mode-key (one row per check, feature-check-<id>; tutorials.test.js checks each has one). Graded by the same ratchet as a tutorial walk. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-seedling-solve-progress-auto-show",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "SOLVE PROGRESS AUTO-SHOW (slice solve-progress-auto, 2026-10-15). The walk row of feature check seedling-solve-progress-auto-show: runtime js + the solver on + the view on auto (session-only, restored), seedling_atlas loaded, the panel stages the L6 enemy-room solve (flashPanel:stageSolveDemo); the view is hidden but listening, shown on the solve's first running note, hidden after its final (solved) note and still listening. Lifecycle only, never elapsed seconds. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-seedling-dash-window",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "SLOWSOLVE (slice seedling-slowsolve-check, 2026-10-16). The walk row of feature check seedling-dash-window: runtime js + the solver on + the view on always (the user, 2026-10-16) + the upgrade window 85 (session-only, restored), seedling_playthrough loaded, the sword granted through the Inventory panel (slotted), the panel stages the l12-dash-cut demo (divergence leg 108): with the dash-only window OFF (session-only) the full (dash) pass ends refused at the window and the bot crosses to L33; then the dash-only window at its default (ON since the dash flip, the user 2026-10-16), still window 85: the full pass ends solved (328 t, its kept dashes) and the bot crosses again; the world is reloaded. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-maze-lab-closed",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-maze-lab-closed: the maze-sphere-demo world; the Procgen Lab — maze tab CLOSED; a maze region's Edit ▸ re-makes it with the room open; the lab's CLOSE writes it back; Run 4 Compile, oracle ✓. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-generated",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-generated: the generated-host world; a generated room's Edit ▸ opens the real Seedling lab; CLOSE unedited (no flag); a wall painted on a far floor cell (PAINT/wall, canvas clicks in the iframe) → row '✎ edited'; the goal walled in → saved, pipeline warning 'NOT certified', row '⚠ edited, uncertified', and the ⚠ line under Run 4 Compile. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-real-game",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-real-game: the Seedling sphere-leaf world; a real-game (flash_seedling) room's Edit ▸ refuses with 'this is a room from the original Seedling game …'. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-apworld-editor",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-apworld-editor: the generated-host world opened in the APWorld Editor; a generated region's Edit ▸ opens the Seedling lab; CLOSE returns one undoable op (↶ Undo enabled). Manual batch feature-checks."
+        },
+        {
+            "id": "tutorial-walk-guided-tour",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C1 (2026-10-10): the walk row of tutorial guided-tour (one row per tutorial, tutorial-walk-<id>; tutorials.test.js checks each has one). Performs every step with the panel's Do it (outside steps: their stand-in) and grades the result with the ratchet (tutorialWalk.js ratchetVerdict). Manual batch tutorials. Reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-sphere-growth",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-sphere-growth; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-shuffled-spiral",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-shuffled-spiral; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-grid-growth",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-grid-growth; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-top-down",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-top-down; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-settings-and-bot",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-settings-and-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-to-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-to-multiworld; it STOPS at the first terminal step (no stand-in: a test cannot start MultiServer.py), which is its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-bounce-region-editor",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-bounce-region-editor; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-seedling",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-seedling; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-mixed-world",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft procgen-mixed-world; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen. Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-loop-mode-jta",
+            "enabled": true,
+            "category": "Tutorial walks: procgen loops",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the READY tutorial procgen-loop-mode-jta (⚖ the user, 2026-10-14; a draft until then); the ratchet requires every step to work. Manual batch tutorials-procgen-loops (split from tutorials-procgen, 2026-10-12). Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-procgen-loop-mode-everything",
+            "enabled": true,
+            "category": "Tutorial walks: procgen loops",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the READY tutorial procgen-loop-mode-everything (⚖ the user, 2026-10-14; a draft until then); the ratchet requires every step to work. Manual batch tutorials-procgen-loops (split from tutorials-procgen, 2026-10-12). Restores the Procgen Pipeline's saved setup and reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-metamath-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft metamath-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-metamath-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft metamath-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-extras",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-extras; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-depgraph-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft depgraph-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-demo",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-generator",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-generator; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-apcalc-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C2 (2026-10-10): the walk row of the in-progress draft apcalc-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials. Restores the world loaded before."
+        },
+        {
+            "id": "test_region_graph_node_picker",
+            "enabled": true,
+            "category": "Region Graph",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the Region Graph's folded \"Go to\" section (⚖ the user: regions AND locations, collapsed by default) does what a node tap does, so a tutorial step can reach a node. On push (fast batch). Reloads the world loaded before."
+        },
+        {
+            "id": "tutorial-walk-start-workbench",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-workbench; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-start-saving-your-setup",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft start-saving-your-setup; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-tracker-track-a-game",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-track-a-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-path-analyzer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-path-analyzer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-region-graph",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-region-graph; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-dungeons",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-dungeons; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-helpers",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-helpers; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-spoiler-checklist",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-spoiler-checklist; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-timer",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-timer; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-tracker-editor",
+            "enabled": true,
+            "category": "Tutorial walks: tracker",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft tracker-editor; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-tracker."
+        },
+        {
+            "id": "tutorial-walk-loops-adventure",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft loops-adventure; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-embedding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-embedding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-tests",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-tests; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-spoiler-test",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-spoiler-test; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-events",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-events; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-loops-cost-debugger",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-loops-cost-debugger; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-dev-region-marking-tool",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft dev-region-marking-tool; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-other-vibe-coding",
+            "enabled": true,
+            "category": "Tutorial walks",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft other-vibe-coding; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials."
+        },
+        {
+            "id": "tutorial-walk-procgen-runner-demo",
+            "enabled": true,
+            "category": "Tutorial walks: procgen",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-10): the walk row of the in-progress draft procgen-runner-demo; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-procgen."
+        },
+        {
+            "id": "tutorial-walk-seedling-recompile",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-recompile; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-bot",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-bot; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-multiworld",
+            "enabled": true,
+            "category": "Tutorial walks: seedling",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-multiworld; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling (WebGPU)."
+        },
+        {
+            "id": "tutorial-walk-seedling-whole-game",
+            "enabled": true,
+            "category": "Tutorial walks: seedling whole game",
+            "_comment": "TUTORIAL CATALOGUE C3 (2026-10-11): the walk row of the in-progress draft seedling-whole-game; the ratchet grades it against its recorded firstFailingStep. Manual batch tutorials-seedling-whole-game (WebGPU), split from tutorials-seedling on 2026-10-15 (⚖ the user)."
+        },
+        {
+            "id": "playback-bot-direct-play-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
+        },
+        {
+            "id": "playback-bot-walk-order",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "bot-route-chooser: an Adventure seed in direct play, three times — walk order listed, reachable-cheapest, sphere-cheapest. Each finishes with every sphere-log location checked; reachable-cheapest walks fewer region transitions than listed, sphere-cheapest no more."
+        },
+        {
+            "id": "discovery-default-loop-override-unchanged",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-off-in-loop-mode",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-on-in-loop-mode",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-on-without-loops",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "loops-inmemory-load-during-preset-load",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "playback-bot-loop-mode-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S3 (⚖ first target): Adventure in Loop mode, no procgen. Generate Costs (enters Loop mode), Loops queue on Instant, bot Play: the bot writes the Loops queue one loop at a time (explore until found, then check) until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-maze",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S4 (⚖ first substrate target): a generated maze-only world in Loop mode; the runner sets each maze block to Bot and Loops' maze delegation plays the queue until every sphere-log location is checked."
+        },
+        {
+            "id": "playback-bot-loop-mode-mixed",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (Bot/walkTo since ta-loop-bot; coarse → Playback before) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
+        },
+        {
+            "id": "playback-bot-loop-mode-text-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "ta-loop-bot (⚖ user 2026-10-18): a text-adventure-only loop-mode world played to Victory by Bot blocks (walkTo solver; the text adventure's perform takes each move, check and explore). Logs the per-action Bot times (chart L7)."
+        },
+        {
+            "id": "playback-bot-loop-mode-jta",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "loop-mode-bot S6: a generated loop-mode world with JtA zones (locations on) + a maze region; JtA targets are pass-through loops (⚖ the zone's own automation takes the check). Re-enabled by jta-loop-mode (2026-10-12) once the Travel check landed before its regionMove (44bb4af629)."
+        },
+        {
+            "id": "playback-bot-loop-mode-jta-start",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "jta-loop-mode (2026-10-12): a three-zone JtA-only world starting in a JtA zone (the procgen-loop-mode-jta tutorial's shape)."
+        },
+        {
+            "id": "mini-panels-checks-then-bot-then-expand",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "mini-panels-locked-and-draggable",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "mini-panels-quick-launch-section",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "rule-converter-exact-mode-round-trips",
+            "enabled": true,
+            "category": "Rule Converter",
+            "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        }
+    ]
 }

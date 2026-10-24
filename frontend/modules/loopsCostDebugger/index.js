@@ -11,7 +11,6 @@ import { CostPlanner } from './costPlanner.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -27,17 +26,41 @@ export const moduleInfo = {
   name: 'loopsCostDebugger',
   title: 'Loops Cost Debugger',
   componentType: 'loopsCostDebuggerPanel',
-  icon: '',
+  icon: '💰',
   column: 1,
-  description: 'Step-through debugger for Loops cost generation algorithm.',
+  category: 'Loop Mode Modules',
+  description: 'Steps through how loop-mode mana costs are planned from the sphere log, and verifies loaded costs against it.',
   requires: ['loops', 'sphereState'],
 };
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE WORKING-COPY INTAKE.** Published by
+ * the hub's `loop_costs` Document row with `{jsonData, source, player, onSave}`
+ * (`onSave` added by L4: the hub's `_acceptEditorOp`, so the panel's "Send costs
+ * to the document" reaches the working copy as ONE undoable `set-key`).
+ *
+ * ⛔ Before H5 this panel read APPLIED state only (`costDebuggerUI.js:162-163`
+ * marks itself stale on `sphereState:dataLoaded` / `stateManager:rulesLoaded`,
+ * and every number it shows comes through `getCostPlanner()`'s state manager),
+ * so plan §4 priced its hub link as *"Apply, then open"*. The measurement said
+ * otherwise: `CostPlanner` takes its state manager as a constructor argument
+ * and touches it through TWO methods, so a document nobody has applied can wear
+ * that face — see `documentStateManager.js` for the seam and its cost.
+ */
+export const LOOPS_COST_DEBUGGER_LOAD_RULES = 'loopsCostDebugger:loadRules';
 
 // Module-level references
 let thisModuleId = moduleInfo.name;
 let moduleEventBus = null;
 let moduleDispatcher = null;
 let costPlannerInstance = null;
+/**
+ * ⛓ One-shot hand-off slot (the `apworldEditor/index.js` pattern, same measured
+ * reason): the panel's subscription lives on the PANEL, so a door pressed while
+ * this panel has never been mounted would publish into nothing. The module's
+ * `initialize()` always runs; the panel's runs when somebody opens it.
+ */
+let pendingWorkingCopy = null;
 
 /**
  * Registration function
@@ -65,6 +88,11 @@ export function register(registrationApi) {
   );
   registrationApi.registerPublicFunction(moduleInfo.name, 'getSphereLog', getSphereLog);
 
+  // ⛓ H5 — the hub's hand-off. The bus auto-registers a subscriber intent on
+  // subscribe(); declaring it here puts the event in the module's registration
+  // record whether or not the panel is mounted.
+  registrationApi.registerEventBusSubscriberIntent(LOOPS_COST_DEBUGGER_LOAD_RULES);
+
   // Register event publishers
   registrationApi.registerEventBusPublisher('loopsCostDebugger:stepPlanned');
   registrationApi.registerEventBusPublisher('loopsCostDebugger:allPlanned');
@@ -89,6 +117,22 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     eventBus: moduleEventBus,
   });
 
+  // ⛓ H5 — stash a hand-off that arrives before the panel exists; the panel
+  // drains it on mount and its own live subscription clears the slot.
+  moduleEventBus.subscribe(LOOPS_COST_DEBUGGER_LOAD_RULES, (ev) => {
+    if (ev && ev.jsonData) {
+      pendingWorkingCopy = {
+        jsonData: ev.jsonData,
+        source: ev.source ?? null,
+        player: ev.player ?? null,
+        // ⛓ L4 — the hub's return path, carried with the document it belongs
+        //   to. A stash that dropped it would mount a panel whose Send is dead
+        //   for a reason nothing states.
+        onSave: typeof ev.onSave === 'function' ? ev.onSave : null,
+      };
+    }
+  }, moduleInfo.name);
+
   // Expose on window for console debugging
   if (typeof window !== 'undefined') {
     window.costPlanner = costPlannerInstance;
@@ -101,6 +145,7 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     costPlannerInstance = null;
     moduleEventBus = null;
     moduleDispatcher = null;
+    pendingWorkingCopy = null;
     if (typeof window !== 'undefined') {
       delete window.costPlanner;
     }
@@ -115,6 +160,13 @@ export function getCostPlanner() {
   return costPlannerInstance;
 }
 
+/** ⛓ H5 — consume (and clear) a stashed working copy, or null. */
+export function consumePendingWorkingCopy() {
+  const wc = pendingWorkingCopy;
+  pendingWorkingCopy = null;
+  return wc;
+}
+
 export function getModuleEventBus() {
   if (moduleEventBus) return moduleEventBus;
   // Fallback wrapper before initialize() runs
@@ -126,24 +178,48 @@ export function getModuleEventBus() {
 }
 
 /**
- * Get sphere log data from multiple sources.
- * Mirrors the pattern used by loopUI._handleGenerateCostsClick().
+ * True when the raw entries carry the incremental (`new_inventory_details`)
+ * shape the planner reads. A verbose log's raw entries only have cumulative
+ * `inventory_details`, so every itemsReceived would read as 0 — those must go
+ * through the cumulative→delta reconstruction below instead.
+ */
+function rawLogIsIncremental(entries) {
+  const first = entries.find(e => e?.type === 'state_update' && e.player_data);
+  const firstPlayerData = first && Object.values(first.player_data)[0];
+  return !!firstPlayerData && firstPlayerData.new_inventory_details !== undefined;
+}
+
+/**
+ * Get sphere log data for the cost planner, in raw JSONL entry shape
+ * (`{ type: 'state_update', sphere_index, player_data: { <id>: {...} } }`).
+ *
+ * Prefers sphereState's retained raw entries: they carry EVERY player's slice,
+ * so the planner's own player filter decides which one is used. The fallback
+ * rebuilds entries from the current player's parsed (cumulative) sphere data.
+ *
  * @returns {Array|null} Sphere log entries in raw JSONL format
  */
 export function getSphereLog() {
-  // Try 1: From stateManager snapshot (may have raw JSONL data)
-  const snapshot = stateManagerProxySingleton?.getLatestStateSnapshot?.();
-  if (snapshot?.sphereLog && Array.isArray(snapshot.sphereLog) && snapshot.sphereLog.length > 0) {
-    return snapshot.sphereLog;
+  // Preferred: the literal log sphereState parsed, all players intact.
+  const getRawSphereLog = centralRegistry.getPublicFunction('sphereState', 'getRawSphereLog');
+  const rawLog = getRawSphereLog?.();
+  if (Array.isArray(rawLog) && rawLog.length > 0 && rawLogIsIncremental(rawLog)) {
+    return rawLog;
   }
 
-  // Try 2: Get parsed sphere data and convert to raw format
+  // Fallback: parsed sphere data (current player only) converted to raw format
   const getSphereData = centralRegistry.getPublicFunction('sphereState', 'getSphereData');
   if (getSphereData) {
     const sphereData = getSphereData();
     if (sphereData && Array.isArray(sphereData) && sphereData.length > 0) {
       const getIdFn = centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId');
-      const playerId = getIdFn?.() || DEFAULT_PLAYER_ID;
+      // No player-1 default: keying the rebuilt log to a guessed player makes a
+      // mismatch look like a successful load with an empty world.
+      const playerId = getIdFn?.() || stateManagerProxySingleton?.getStaticData?.()?.playerId;
+      if (!playerId) {
+        log('error', 'Cannot build sphere log: no current player id is known');
+        return null;
+      }
       // sphereData.inventoryDetails is CUMULATIVE (accumulated by sphereState).
       // Convert to incremental deltas to match the raw JSONL new_inventory_details format.
       let previousBaseItems = {};

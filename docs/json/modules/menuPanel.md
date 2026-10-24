@@ -1,0 +1,201 @@
+# Menu Panel Module
+
+**Module ID:** `menuPanel` · **Panel:** `menuPanel` (title "Menu", default layout, beside Loops)
+
+**Purpose:** the **start region's substrate**. Every `rules.json` declares a start
+region — `start_regions[<player>].default` — and **the declared start IS the menu,
+named or not; the top-down layout strips it only when it is a pure hub (exits, no
+locations)** (M3). Measured over the 205 committed player-1 slots (2026-09-27): 189
+call it `Menu` (178 with exits and no locations, 7 with locations too, 4 with no
+exit) and 16 do not (`apcalc`'s `C`, `satisfactory`'s `Overworld`, …), every one of
+those a room with locations. This panel is what "plays" it: one button per exit, a
+Restart that works outside loop mode, and the **skip the menu** setting.
+
+- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- Record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5p.
+
+## Why it exists
+
+Before it, nothing owned that region.
+
+- On a **plain** world the only ways out were the Region Graph's navigation
+  clicks and the Exits panel's exit click (`exits` publishes `user:exitClicked`,
+  and the `regions` module turns that into a `user:regionMove`). Neither is a
+  start screen, and neither is reachable as "restart from the beginning".
+- On a **procgen** world `procgenPlayer` synthesizes the `start → first real
+  region` hop at load, so the region is never seen at all.
+- The only restart affordance was the Loops panel's **Hard Reset**, which is a
+  loop-mode control (and until M1 did not clear the path at all — it called
+  `trimPath(1)`, passing the number 1 where a region NAME goes).
+
+## Key files
+
+| File | What it is |
+|------|-----------|
+| `menuPanelEngine.js` | the **whole derivation**, pure — `describeMenu`, `exitsOf`, `firstExitOf`, `restartTargetOf`, `skipsStart` (M2: the ONE start-hop rule), `procgenOwnsStartHop`, and the module's exported constants |
+| `index.js` | the wiring — registrations, the load handshake, the skip hop, `takeExit`, `restart` |
+| `menuPanelUI.js` | the panel; DOM only |
+| `menuPanel.css` | the panel's styles |
+
+## ⛔ Nothing here knows the name "Menu"
+
+The panel's whole state machine is `gameState.isStartRegion(currentRegion)`
+(`describeMenu`'s `atStartRegion`). A world may call its start region anything,
+and `start_regions` is read through
+[`procgenCore/rulesGraph.startRegionsOf`](../developer/procgen/editing-core.md) —
+the one reader for both committed shapes.
+
+## What it shows, and where each field comes from
+
+Everything is derived from the loaded document (⚖ user ruling 2026-09-06:
+*"anything game-specific that the menu displays would need to be sourced from
+the rules.json file"*). The document arrives on
+`stateManager:rawJsonDataLoaded` as `rawJsonData`.
+
+| Shown | Source |
+|-------|--------|
+| game name | `game_name` |
+| seed | `seed_name` |
+| start region(s) | `startRegionsOf(doc, playerId).default` |
+| one button per exit | `regions[<player>][<current start region>].exits[]` — label is the exit's `name` (falling back to the destination), target is `connected_region`; an exit with no `connected_region` is dropped |
+| current position | `gameState.getCurrentRegion()` |
+| instructions | one line, no links — the help module does not exist yet (⚖ Q4) |
+| Skip the menu | `moduleSettings.menuPanel.skipMenu` |
+
+**alttp's three start options ARE three exits.** `Menu` there carries
+`Links House S&Q`, `Sanctuary S&Q` and `Old Man S&Q`, so "one button per exit"
+is also the multi-start UI, with no special case.
+
+Away from a start region the panel shows no exit buttons — only the position,
+the declared start, and Restart.
+
+## An exit press is a real move
+
+```js
+dispatcher.publish('user:regionMove', {
+  sourceRegion, targetRegion, exitName, source: 'menuPanel-exit',
+}, { initialTarget: 'bottom' });
+```
+
+Same shape as `procgenPlayer`'s hop. `menuPanel-*` is a **planning source**
+(`loops/loopModeExemptions.js`): pressing an exit is *authoring* the path, like a
+region-graph click. Without that classification the M3b strict gate would swallow
+the press whenever loop mode is on, and the loop-mode path-append retirement
+would drop the entry — so the queue would have nothing to run.
+
+## Skip the menu — one setting, two publishers
+
+`moduleSettings.menuPanel.skipMenu`, declared in this module's settings schema
+with **default `true`** (the schema is the default source: `settingsManager
+.getSetting` consults it before any call-site fallback). The checkbox in the
+panel writes through `settingsManager.updateSetting`.
+
+At load — when **both** `stateManager:rawJsonDataLoaded` and
+`stateManager:rulesLoaded` have arrived, so the decision does not depend on which
+order they come in:
+
+| skip | start region | world | what happens |
+|------|--------------|-------|--------------|
+| ON | exactly ONE exit | procgen (a warehoused start) | `procgenPlayer` publishes its `procgenPlayer-start` hop; this panel stands down |
+| ON | exactly ONE exit | everything else | this panel publishes that exit as `menuPanel-start` |
+| ON | several exits, or none | either | nobody hops; the panel publishes `ui:activatePanel` for itself |
+| OFF | any | either | nobody hops; the panel publishes `ui:activatePanel` for itself |
+
+⛓ **The skip hop fires only for a ONE-exit start** (APWORLD SUBSTRATE CHANGE M2,
+⚖ user 2026-09-26: *"skipping only when the menu has only one exit"*). A start
+with several exits is a real choice — until M2 the hop took the FIRST of them
+(`mm3` initialised: the first of 13 stages, the other 12 unreachable through the
+panel) — so it is never skipped, whatever the setting. The rule is ONE function,
+`menuPanelEngine.skipsStart(doc, playerId, region, skipEnabled)` — the setting on
+AND exactly one exit — and **both publishers read it**: this panel with its cached
+setting, `procgenPlayer` importing the rule and reading the setting through
+`isSkipMenuEnabled()` as before. A start that is itself WAREHOUSED (its own
+sidecar: `apcalc` initialised, start `C`) is not left by the procgen publish — it
+only loads the start's payload — so that publish keeps the setting alone.
+
+⛔ **Exactly one publisher fires per load**, and the hand-off is not a guess about
+the document. This module asks `procgenPlayer.getResolvedStartRegion()`, which is
+non-null exactly when procgenPlayer *will* publish — so a procgen-shaped document
+whose start does not resolve leaves the hop here, which is correct: otherwise a
+skip-ON load would sit at the menu with nobody to move it.
+
+`procgenPlayer` reads the same setting through this module's
+`isSkipMenuEnabled()` public function, synchronously, inside its rules-loaded
+handler. With `menuPanel` absent from the module set the answer is the schema
+default, i.e. procgenPlayer's pre-M1 unconditional hop.
+
+`menuPanel` sits immediately **after** `procgenPlayer` in `modules.json`'s
+`loadPriority`, so for any event both subscribe to, procgenPlayer's handler runs
+first (the eventBus delivers in subscription order, and modules subscribe in
+initialize order).
+
+⚠ Merging the two publishers into one is a named follow-up, not this slice: every
+procgen in-app row assumes the auto-hop.
+
+## Restart
+
+**Outside loop mode** — the app's only such affordance:
+
+1. `gameState.clearPath()`;
+2. a teleport with the **loops reset's own shape** —
+   `user:regionMove {fromReset: true, updatePath: false, source: 'menuPanel-restart'}` —
+   to the **DECLARED start**, `gameState.startRegions[0]` (`restartTargetOf`),
+   always.
+
+⛓ **Returning to the menu IS Restart** (M2, ⚖ user 2026-09-26: *"when the player
+returns to the menu, I want to clear the path"*). Until M2 the teleport preferred
+`procgenPlayer.getResolvedStartRegion()` — the first WAREHOUSED region — so in a
+procgen world Restart never reached the menu (measured on `mm3` initialised:
+Restart → *Needle Man Stage*, the first placed stage). It now lands on the
+declared start in every world, where the panel lists every exit again. The
+convention it embodies, written nowhere else: **the declared start is always
+accessible** (it is where every AP world's reachability starts). The loops
+module's own reset (`loopState._resolveLoopStartRegion`, S3) follows the same
+place by this module's rule: the resolved start only when `skipsStart` says the
+load skipped the declared start, the declared start otherwise — see
+[Loops › Where a reset puts you](../features/loops.md#where-a-reset-puts-you).
+
+Substrate panels bail out of their mana deduction on `fromReset`, and
+`procgenPlayer` reloads the substrate's payload, so the panel matches the
+position. Mana, XP and discovery are deliberately **untouched** — this restarts
+the run, not the save (the Loops panel's Hard Reset is what clears those).
+
+**In loop mode** it delegates to `loopState.restartFromStart({ autoStart: false })`
+— the same primitive the Loops panel's own Restart button calls, landing paused
+because a menu is not a "go" affordance. Nothing is duplicated here, and the path
+in loop mode stays the loops module's business. It moves nobody: the replay's first move does. On Seedling, that move (`Menu` → the start region) is the start hop, so the game lands at its start spawn; the glue's loop-reset fallback covers a declared start that is itself a Seedling room (see [Flash › Restart](../developer/procgen/flash.md)).
+
+A Restart does **not** re-fire the skip hop: the hop is a *load* event, and
+leaving the player at the start region with the exits showing is the point (⚖ the
+user: *"the way the player resets to the first region when not in loop mode is to
+activate the menu panel and press the button to restart from the first region"*).
+
+⛓ **`menuPanel:restarted`** (`RESTARTED_EVENT`, `{mode, target, from}`) is published after the reset move in both modes (`mode: 'loop'` for the delegation). A substrate whose game keeps its own position listens for it. Seedling's region glue re-takes the load's start hop when the start region is a Seedling room (`procgenPlayer.retakeStartHop`, refused unless `skipsStart` says the load skipped the menu), so the game's player lands where a new game starts. See [Flash › Restart](../developer/procgen/flash.md). The panel's own move is unchanged: Restart still lands on the declared start.
+
+## Registrations
+
+The two a panel module needs, plus two more this one needs (its title, icon and column come from its own `moduleInfo`):
+
+| Where | What |
+|-------|------|
+| `frontend/module-configs/modules.json` | `moduleDefinitions.menuPanel` + `loadPriority` (after `procgenPlayer`) |
+| `frontend/layout-configs/layout_presets.json` | the `default` preset, beside `loopsPanel` |
+| `frontend/init-bundled.js` | the bundled-mode import + map entry |
+| `register()` | `registerDispatcherSender('user:regionMove', 'bottom', 'first')`, `registerEventBusPublisher('ui:activatePanel')` and `registerEventBusPublisher('menuPanel:restarted')` — the eventBus **drops** a publish from an unregistered publisher (a warn, no delivery), so the skip-OFF self-activation and the restart announcement each need theirs |
+
+The panel class follows the GoldenLayout factory contract: constructor
+`(container, componentState, componentType)`, `getRootElement()`, and **no
+self-append** (the factory appends it).
+
+## Tests
+
+| Where | What |
+|-------|------|
+| `menuPanelEngine.test.js` | the derivation, on `alttp` and `adventure` read off disk plus edge documents; `skipsStart` over 0/1/2 exits × skip on/off; `restartTargetOf` = the first declared start |
+| `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, a many-exit / no-exit start not skipped, the exit press, Restart in both modes (to the declared start even with a resolved start registered), and `menuPanel:restarted` after the reset move |
+| `procgenPlayer/index.test.js` | the other publisher's side of the setting, and of `skipsStart` (the hop fires iff the rule answers true) |
+| `tests/testCases/apworldEditorTests.js` | (M2, category `apworldEditor` — the panel has no in-app category of its own) `apworld-menu-hub-restart-returns-to-the-declared-start`: `mm3` initialised + Apply → no hop, the panel lists 13 exits, a press moves, Restart → the declared start; `adventure` initialised → the hop fires |
+| `loops/loopState.test.js` (S3) | the loop start follows `skipsStart`: a one-exit start with skip ON → the resolved start; many exits, or skip OFF → the declared start; the loaded slot, not player 1 |
+| `tests/testCases/apworldEditorTests.js` (S3, category `loops`, `--mode=test-loops-only`) | `loops-reset-lands-on-the-declared-start-of-a-multi-exit-world`: `mm3` initialised WITH loop mode + Apply → loop mode on, a menu press moves, the loops panel's Clear Queue → the declared start |
+| `loops/loopModeExemptions.test.js` | `menuPanel-*` classified as authoring |
+| `tests/testCases/loopsPanelTests.js` | `loops-real-actions-processed` drives Restart → exit press (in loop mode) → queue → processed; `loops-mana-consumption` drives the Start/Pause labels and asserts mana moves |

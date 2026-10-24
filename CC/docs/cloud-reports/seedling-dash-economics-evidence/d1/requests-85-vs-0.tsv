@@ -1,0 +1,871 @@
+id	i	s85	s0	ship85	ship0	t85	t0	w85	w0	dl	f85	f0	dash0	ms85	ms0	key
+0	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	74	90	level_0__r2c13 <- in_L89_160_304 -> exit:out_teleporter_240_0
+1	0	skipped	skipped	dashless	dashless	87	87	6	6	6	0	0	0	81	108	level_0__r8c0 <- in_L1_64_112 -> exit:out_teleporter_0_128
+2	0	skipped	skipped	dashless	dashless	87	87	6	6	6	0	0	0	99	82	level_0__r8c0 <- in_L1_64_112 -> exit:out_teleporter_0_144
+3	0	skipped	skipped	dashless	dashless	105	105	8	8	8	0	0	0	92	94	level_0__r8c0 <- in_L1_64_112 -> exit:out_stairsdown_32_192
+4	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	64	level_0__r8c0 <- in_L1_64_112 -> exit:out_teleporter_80_96
+5	0	skipped	skipped	dashless	dashless	262	262	18	18	18	0	0	0	176	178	level_0__r8c0 <- in_L1_64_112 -> exit:out_teleporter_160_272
+6	0	skipped	skipped	dashless	dashless	194	194	14	14	14	0	0	0	181	186	level_0__r8c0 <- in_L1_64_112 -> exit:out_stairsdown_256_272
+7	0	cut-window	solved	dashless	full	313	203	87	318	20	67	298	281	525	1112	level_0__r8c0 <- in_L1_64_112 -> location:L0 flag 1: breakablerock@288,176 cleared
+9	0	skipped	skipped	dashless	dashless	223	223	14	14	14	0	0	0	202	166	level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_0_128
+10	0	skipped	skipped	dashless	dashless	222	222	14	14	14	0	0	0	180	159	level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_0_144
+11	0	skipped	skipped	dashless	dashless	237	237	16	16	16	0	0	0	153	164	level_0__r8c0 <- in_L2_48_16 -> exit:out_stairsdown_32_192
+12	0	cut-window	solved	dashless	full	253	147	86	95	18	68	77	62	789	764	level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_80_96
+13	0	skipped	skipped	dashless	dashless	159	159	10	10	10	0	0	0	156	123	level_0__r8c0 <- in_L2_48_16 -> exit:out_teleporter_160_272
+14	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	56	57	level_0__r8c0 <- in_L2_48_16 -> exit:out_stairsdown_256_272
+15	0	solved	solved	full	full	54	54	27	27	8	19	19	13	190	224	level_0__r8c0 <- in_L2_48_16 -> location:L0 flag 1: breakablerock@288,176 cleared
+16	0	solved	solved	full	full	121	121	83	83	15	68	68	57	512	528	level_0__r8c0 <- in_L2_48_16 -> location:L0 flag 4: breakablerock@80,112 cleared
+17	0	skipped	skipped	dashless	dashless	133	133	10	10	10	0	0	0	95	90	level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_0_128
+18	0	skipped	skipped	dashless	dashless	117	117	8	8	8	0	0	0	112	105	level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_0_144
+19	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	58	57	level_0__r8c0 <- in_L13_64_144 -> exit:out_stairsdown_32_192
+20	0	cut-window	solved	dashless	full	146	94	86	140	12	74	128	118	362	390	level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_80_96
+21	0	skipped	skipped	dashless	dashless	281	281	18	18	18	0	0	0	161	182	level_0__r8c0 <- in_L13_64_144 -> exit:out_teleporter_160_272
+22	0	skipped	skipped	dashless	dashless	207	207	14	14	14	0	0	0	146	164	level_0__r8c0 <- in_L13_64_144 -> exit:out_stairsdown_256_272
+23	0	cut-window	solved	dashless	full	320	198	87	222	20	67	202	185	569	785	level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 1: breakablerock@288,176 cleared
+24	0	solved	solved	full	full	75	75	80	80	8	72	72	65	333	312	level_0__r8c0 <- in_L13_64_144 -> location:L0 flag 4: breakablerock@80,112 cleared
+25	0	skipped	skipped	dashless	dashless	294	294	20	20	20	0	0	0	144	161	level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_0_128
+26	0	skipped	skipped	dashless	dashless	294	294	20	20	20	0	0	0	156	147	level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_0_144
+27	0	skipped	skipped	dashless	dashless	305	305	20	20	20	0	0	0	147	139	level_0__r8c0 <- in_L86_48_64 -> exit:out_stairsdown_32_192
+28	0	cut-window	solved	dashless	full	330	207	87	132	23	64	109	90	561	644	level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_80_96
+29	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	52	53	level_0__r8c0 <- in_L86_48_64 -> exit:out_teleporter_160_272
+30	0	skipped	skipped	dashless	dashless	109	109	8	8	8	0	0	0	109	81	level_0__r8c0 <- in_L86_48_64 -> exit:out_stairsdown_256_272
+31	0	cut-window	solved	dashless	full	242	175	87	121	15	72	106	93	527	592	level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 1: breakablerock@288,176 cleared
+32	0	cut-window	solved	dashless	full	305	181	87	119	19	68	100	85	542	643	level_0__r8c0 <- in_L86_48_64 -> location:L0 flag 4: breakablerock@80,112 cleared
+33	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	59	55	level_0__r8c0 <- in_L94_304_160 -> exit:out_teleporter_0_128
+34	0	skipped	skipped	dashless	dashless	33	33	4	4	4	0	0	0	87	75	level_0__r8c0 <- in_L94_304_160 -> exit:out_teleporter_0_144
+35	0	skipped	skipped	dashless	dashless	119	119	8	8	8	0	0	0	109	117	level_0__r8c0 <- in_L94_304_160 -> exit:out_stairsdown_32_192
+36	0	solved	solved	full	full	80	80	40	40	12	28	28	18	223	205	level_0__r8c0 <- in_L94_304_160 -> exit:out_teleporter_80_96
+37	0	skipped	skipped	dashless	dashless	314	314	20	20	20	0	0	0	165	149	level_0__r8c0 <- in_L94_304_160 -> exit:out_teleporter_160_272
+38	0	skipped	skipped	dashless	dashless	247	247	16	16	16	0	0	0	133	170	level_0__r8c0 <- in_L94_304_160 -> exit:out_stairsdown_256_272
+39	0	cut-window	solved	dashless	full	380	244	87	261	24	63	237	217	723	1054	level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 1: breakablerock@288,176 cleared
+40	0	solved	solved	full	full	54	54	27	27	8	19	19	13	182	213	level_0__r8c0 <- in_L94_304_160 -> location:L0 flag 4: breakablerock@80,112 cleared
+41	0	skipped	skipped	dashless	dashless	33	33	4	4	4	0	0	0	67	64	level_0__r8c0 <- in_L94_304_176 -> exit:out_teleporter_0_128
+42	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	55	59	level_0__r8c0 <- in_L94_304_176 -> exit:out_teleporter_0_144
+43	0	skipped	skipped	dashless	dashless	106	106	8	8	8	0	0	0	133	117	level_0__r8c0 <- in_L94_304_176 -> exit:out_stairsdown_32_192
+44	0	solved	solved	full	full	85	85	52	52	12	40	40	30	246	264	level_0__r8c0 <- in_L94_304_176 -> exit:out_teleporter_80_96
+45	0	skipped	skipped	dashless	dashless	314	314	20	20	20	0	0	0	155	152	level_0__r8c0 <- in_L94_304_176 -> exit:out_teleporter_160_272
+46	0	skipped	skipped	dashless	dashless	248	248	16	16	16	0	0	0	147	133	level_0__r8c0 <- in_L94_304_176 -> exit:out_stairsdown_256_272
+47	0	cut-window	solved	dashless	full	377	233	87	257	24	63	233	213	652	947	level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 1: breakablerock@288,176 cleared
+48	0	solved	solved	full	full	59	59	39	39	8	31	31	25	210	210	level_0__r8c0 <- in_L94_304_176 -> location:L0 flag 4: breakablerock@80,112 cleared
+49	0	solved	solved	full	full	5	5	9	9	2	7	7	5	80	78	level_0__r11c19 <- in_L12_0_80 -> exit:out_teleporter_304_176
+50	0	solved	solved	full	full	4	4	9	9	2	7	7	5	77	58	level_1 <- in_L0_80_96 -> exit:out_teleporter_64_112
+51	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	51	49	level_2 <- in_L0_256_272 -> exit:out_stairsup_48_16
+52	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	66	61	level_2 <- in_L0_256_272 -> exit:out_teleporter_48_96
+53	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	67	69	level_2 <- in_L3_64_0 -> exit:out_stairsup_48_16
+54	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	51	47	level_2 <- in_L3_64_0 -> exit:out_teleporter_48_96
+55	0	solved	solved	full	full	82	82	81	81	10	71	71	62	208	261	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_0_64
+56	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	57	54	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_64_0
+57	0	skipped	skipped	dashless	dashless	245	245	16	16	16	0	0	0	129	155	level_3__r0c4 <- in_L2_48_96 -> exit:out_teleporter_128_48
+58	0	cut-window	solved	dashless	full	199	166	87	385	16	71	369	354	248	557	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_0_64
+59	0	skipped	skipped	dashless	dashless	235	235	16	16	16	0	0	0	127	143	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_64_0
+60	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	51	52	level_3__r0c4 <- in_L4_0_16 -> exit:out_teleporter_128_48
+61	0	solved	solved	dashless	dashless	34	34	61	61	4	57	57	53	123	120	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_0_64
+62	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	33	33	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_64_0
+63	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	33	33	level_3__r0c4 <- in_L111_304_176 -> exit:out_teleporter_128_48
+64	0	skipped	skipped	None	None	None	None	0	0	0	0	0	0	63	59	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128
+64	1	skipped	skipped	None	None	None	None	0	0	0	0	0	0	67	53	level_3__r8c6 <- in_L11_32_0 -> exit:out_teleporter_96_128
+65	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	54	73	level_4 <- in_L3_128_48 -> exit:out_teleporter_0_16
+66	0	skipped	skipped	dashless	dashless	255	255	19	19	19	0	0	0	147	182	level_4 <- in_L3_128_48 -> exit:out_stairsdown_64_16
+67	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	40	35	level_4 <- in_L5_80_16 -> exit:out_teleporter_0_16
+68	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	53	53	level_4 <- in_L5_80_16 -> exit:out_stairsdown_64_16
+69	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	144	104	level_5__r1c1 <- in_L12_96_240 -> exit:out_stairsup_16_16
+70	0	skipped	skipped	dashless	dashless	403	403	22	22	22	0	0	0	229	184	level_5__r1c5 <- in_L4_64_16 -> exit:out_teleporter_48_112
+71	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	63	65	level_5__r1c5 <- in_L4_64_16 -> exit:out_stairsup_80_16
+72	0	skipped	skipped	dashless	dashless	385	385	23	23	23	0	0	0	168	178	level_5__r1c5 <- in_L6_32_0 -> exit:out_teleporter_48_112
+73	0	skipped	skipped	dashless	dashless	61	61	4	4	4	0	0	0	95	100	level_5__r1c5 <- in_L6_32_0 -> exit:out_stairsup_80_16
+74	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	60	55	level_6 <- in_L5_48_112 -> exit:out_teleporter_32_0
+75	0	skipped	skipped	dashless	dashless	294	294	15	15	15	0	0	0	243	266	level_6 <- in_L5_48_112 -> exit:out_stairsup_224_32
+76	0	skipped	skipped	None	None	None	None	641	641	641	0	0	0	1161	1148	level_6 <- in_L7_16_32 -> exit:out_teleporter_32_0
+76	1	skipped	skipped	None	None	None	None	2561	2561	2561	0	0	0	2860	2850	level_6 <- in_L7_16_32 -> exit:out_teleporter_32_0
+77	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	59	79	level_6 <- in_L7_16_32 -> exit:out_stairsup_224_32
+78	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	64	51	level_7 <- in_L6_224_32 -> exit:out_stairsdown_16_32
+79	0	skipped	skipped	dashless	dashless	146	146	10	10	10	0	0	0	106	92	level_7 <- in_L6_224_32 -> exit:out_stairsdown_192_32
+80	0	skipped	skipped	dashless	dashless	146	146	10	10	10	0	0	0	88	87	level_7 <- in_L8_144_32 -> exit:out_stairsdown_16_32
+81	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	49	57	level_7 <- in_L8_144_32 -> exit:out_stairsdown_192_32
+82	0	skipped	skipped	dashless	dashless	827	827	64	64	64	0	0	0	355	402	level_8 <- in_L7_192_32 -> exit:out_teleporter_96_192
+83	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	62	60	level_8 <- in_L7_192_32 -> exit:out_stairsup_144_32
+84	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	63	60	level_8 <- in_L9_144_0 -> exit:out_teleporter_96_192
+85	0	skipped	skipped	None	None	None	None	170	170	170	0	0	0	17608	17282	level_8 <- in_L9_144_0 -> exit:out_stairsup_144_32
+86	0	skipped	skipped	dashless	dashless	122	122	8	8	8	0	0	0	69	78	level_9 <- in_L8_96_192 -> exit:out_teleporter_16_0
+87	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	50	50	level_9 <- in_L8_96_192 -> exit:out_teleporter_144_0
+88	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	47	51	level_9 <- in_L10_48_96 -> exit:out_teleporter_16_0
+89	0	skipped	skipped	dashless	dashless	122	122	8	8	8	0	0	0	96	103	level_9 <- in_L10_48_96 -> exit:out_teleporter_144_0
+90	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	61	58	level_10 <- in_L9_16_0 -> exit:out_stairsup_48_16
+90	1	solved	solved	full	full	12	12	9	9	2	7	7	5	83	76	level_10 <- in_L9_16_0 -> exit:out_stairsup_48_16
+91	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	65	47	level_10 <- in_L9_16_0 -> exit:out_teleporter_48_96
+92	0	skipped	skipped	dashless	dashless	35	35	4	4	4	0	0	0	54	55	level_10 <- in_L9_16_0 -> location:Level 010 - Sword
+93	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	45	48	level_10 <- in_L11_32_80 -> exit:out_stairsup_48_16
+94	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	58	61	level_10 <- in_L11_32_80 -> exit:out_teleporter_48_96
+94	1	solved	solved	full	full	16	16	12	12	4	8	8	5	86	88	level_10 <- in_L11_32_80 -> exit:out_teleporter_48_96
+95	0	skipped	skipped	dashless	dashless	26	26	2	2	2	0	0	0	53	60	level_10 <- in_L11_32_80 -> location:Level 010 - Sword
+96	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	60	76	level_11 <- in_L3_96_128 -> exit:out_teleporter_32_0
+97	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	60	59	level_11 <- in_L3_96_128 -> exit:out_stairsdown_32_80
+98	0	skipped	skipped	dashless	dashless	35	35	4	4	4	0	0	0	65	52	level_11 <- in_L3_96_128 -> location:Level 011 - Chest
+99	0	skipped	skipped	dashless	dashless	47	47	4	4	4	0	0	0	56	58	level_11 <- in_L10_48_16 -> exit:out_teleporter_32_0
+100	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	54	58	level_11 <- in_L10_48_16 -> exit:out_stairsdown_32_80
+101	0	skipped	skipped	dashless	dashless	26	26	2	2	2	0	0	0	51	75	level_11 <- in_L10_48_16 -> location:Level 011 - Chest
+102	0	solved	solved	full	full	5	5	9	9	2	7	7	5	107	124	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80
+103	0	cut-window	solved	dashless	full	449	274	87	179	30	57	149	125	1567	2192	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352
+104	0	cut-window	solved	dashless	full	449	274	87	179	30	57	149	125	963	1470	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+105	0	solved	solved	full	full	93	93	67	67	10	57	57	49	478	461	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96
+106	0	cut-window	solved	dashless	full	521	328	87	251	34	53	217	189	1360	2212	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368
+107	0	cut-window	solved	dashless	full	367	232	87	125	24	63	101	81	1482	1666	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0
+108	0	cut-window	solved	dashless	full	561	328	87	238	36	51	202	173	1539	2102	level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+109	0	cut-window	solved	dashless	full	620	423	87	253	37	50	216	185	1135	2590	level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+110	0	cut-window	solved	dashless	full	787	771	159	353	158	1	195	37	4137	7744	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+111	0	cut-window	solved	dashless	full	802	777	161	380	160	1	220	61	4177	7229	level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+112	0	cut-window	refused	dashless	dashless	515	515	87	319	34	53	285	230	954	2327	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80
+113	0	cut-window	solved	dashless	full	483	305	87	291	32	55	259	233	871	2530	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+114	0	cut-window	solved	dashless	full	493	292	87	227	32	55	195	169	776	1721	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+115	0	cut-window	solved	dashless	full	418	246	87	275	28	59	247	225	948	2552	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+116	0	cut-window	solved	dashless	full	380	248	87	241	24	63	217	197	967	1890	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368
+117	0	cut-window	solved	dashless	full	492	292	87	283	32	55	251	225	1064	2550	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+118	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	118	131	level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352
+119	0	solved	solved	dashless	dashless	92	92	4	4	2	2	2	0	85	108	level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch
+120	0	cut-window	solved	dashless	full	852	836	142	319	141	1	178	37	5241	9173	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+121	0	cut-window	solved	dashless	full	867	842	144	346	143	1	203	61	4766	9892	level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+122	0	solved	solved	full	full	55	55	24	24	6	18	18	13	277	281	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80
+123	0	cut-window	solved	dashless	full	357	210	87	136	24	63	112	93	1169	1238	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+124	0	cut-window	solved	dashless	full	357	213	87	136	24	63	112	93	1044	1204	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+125	0	solved	solved	full	full	5	5	9	9	2	7	7	5	106	107	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96
+126	0	cut-window	solved	dashless	full	407	242	87	144	26	61	118	97	1065	1477	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368
+127	0	cut-window	solved	dashless	full	248	141	87	106	16	71	90	77	766	801	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+128	0	cut-window	solved	dashless	full	435	270	87	296	28	59	268	245	1089	2338	level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352
+129	0	cut-window	solved	dashless	full	489	320	87	205	29	58	176	153	1168	1641	level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+130	0	cut-window	solved	dashless	full	565	393	87	230	33	54	197	169	1501	2538	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+131	0	cut-window	solved	dashless	full	571	406	87	284	34	53	250	221	1390	3135	level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+132	0	cut-window	refused	dashless	dashless	544	544	87	186	34	53	152	98	1022	1439	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80
+133	0	solved	solved	full	full	95	95	82	82	12	70	70	61	646	561	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+134	0	solved	solved	full	full	94	94	82	82	12	70	70	61	620	665	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368
+135	0	cut-window	solved	dashless	full	447	252	87	147	28	59	119	97	1003	1349	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+136	0	solved	solved	full	full	5	5	9	9	2	7	7	5	138	124	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368
+137	0	cut-window	solved	dashless	full	533	286	87	185	34	53	151	125	974	1733	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+138	0	cut-window	solved	dashless	full	340	238	87	234	22	65	212	193	829	1554	level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+139	0	cut-window	solved	dashless	full	365	254	87	155	21	66	134	117	723	929	level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch
+140	0	cut-window	solved	dashless	full	886	864	169	352	168	1	184	17	4290	7355	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+141	0	cut-window	solved	dashless	full	897	872	171	384	170	1	214	45	4028	8092	level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+142	0	cut-window	refused	dashless	dashless	338	338	87	164	22	65	142	98	924	1203	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80
+143	0	cut-window	solved	dashless	full	400	208	87	119	26	61	93	73	1017	1261	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352
+144	0	cut-window	solved	dashless	full	400	209	87	123	26	61	97	77	1163	1633	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368
+145	0	cut-window	solved	dashless	full	248	125	87	121	16	71	105	93	919	1018	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96
+146	0	cut-window	solved	dashless	full	464	247	87	138	30	57	108	85	1181	1614	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368
+147	0	solved	solved	full	full	5	5	9	9	2	7	7	5	157	113	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+148	0	cut-window	solved	dashless	full	497	296	87	331	32	55	299	273	1166	2352	level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+149	0	cut-window	solved	dashless	full	570	376	87	209	33	54	176	149	1369	2215	level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+150	0	cut-window	solved	dashless	full	464	444	130	294	129	1	165	37	1554	2284	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+151	0	cut-window	solved	dashless	full	472	447	130	306	129	1	177	49	1417	2847	level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+152	0	cut-window	refused	dashless	dashless	451	451	87	167	30	57	137	86	932	1251	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80
+153	0	solved	solved	full	full	5	5	9	9	2	7	7	5	143	114	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352
+154	0	solved	solved	full	full	19	19	12	12	4	8	8	5	180	151	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368
+155	0	cut-window	solved	dashless	full	362	225	87	185	24	63	161	141	918	1575	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+156	0	cut-window	solved	dashless	full	193	122	87	122	14	73	108	97	637	688	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+157	0	cut-window	solved	dashless	full	443	249	87	255	28	59	227	205	942	2139	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+158	0	cut-window	solved	dashless	full	465	270	87	299	30	57	269	245	1099	2122	level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+159	0	cut-window	solved	dashless	full	535	377	87	286	31	56	255	229	1078	2169	level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+160	0	cut-window	solved	dashless	full	680	478	87	312	41	46	271	237	1697	3444	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+161	0	cut-window	solved	dashless	full	696	481	87	367	42	45	325	289	1709	4056	level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+162	0	cut-window	refused	dashless	dashless	460	460	87	255	30	57	225	174	1044	2087	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80
+163	0	solved	solved	full	full	19	19	12	12	4	8	8	5	165	195	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352
+164	0	solved	solved	full	full	5	5	9	9	2	7	7	5	132	148	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+165	0	cut-window	solved	dashless	full	371	217	87	160	24	63	136	117	997	1382	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96
+166	0	cut-window	solved	dashless	full	194	116	87	98	14	73	84	73	589	651	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368
+167	0	cut-window	solved	dashless	full	452	245	87	186	30	57	156	133	1074	1669	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+168	0	cut-window	solved	dashless	full	475	304	87	284	30	57	254	229	1219	2113	level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352
+169	0	cut-window	solved	dashless	full	535	352	87	189	31	56	158	133	917	1567	level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+170	0	cut-window	solved	dashless	full	713	474	87	447	43	44	404	369	1875	4718	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+171	0	cut-window	solved	dashless	full	716	464	87	379	43	44	336	301	1749	4103	level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+172	0	cut-window	solved	dashless	full	691	370	87	227	44	43	183	149	1192	2152	level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+173	0	cut-window	solved	dashless	full	309	252	87	333	17	70	316	301	552	1270	level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+174	0	solved	solved	full	full	5	5	9	9	2	7	7	5	129	122	level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0
+175	0	cut-window	solved	dashless	full	709	431	87	258	43	44	215	181	1254	2589	level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+176	0	solved	solved	full	full	4	4	9	9	2	7	7	5	116	109	level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240
+177	0	solved	solved	full	full	102	102	15	15	5	10	10	5	215	161	level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+178	0	solved	solved	full	full	5	5	9	9	2	7	7	5	136	129	level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688
+179	0	solved	solved	full	full	128	128	36	36	8	28	28	21	263	305	level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+180	0	solved	solved	full	full	5	5	9	9	2	7	7	5	95	148	level_12__r42c29 <- in_L83_32_64 -> exit:out_teleporter_32_848
+181	0	cut-window	solved	dashless	full	366	230	87	129	24	63	105	85	1102	1279	level_12__r42c29 <- in_L83_32_64 -> location:Level 012 - Chest
+184	0	solved	solved	full	full	5	5	9	9	2	7	7	5	123	107	level_12__r44c19 <- in_L34_32_144 -> exit:out_teleporter_336_688
+185	0	skipped	skipped	dashless	dashless	74	74	6	6	6	0	0	0	61	71	level_13 <- in_L0_32_192 -> exit:out_stairsdown_32_32
+186	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	50	46	level_13 <- in_L0_32_192 -> exit:out_stairsup_64_144
+187	0	skipped	skipped	dashless	dashless	74	74	6	6	6	0	0	0	74	63	level_13 <- in_L0_32_192 -> exit:out_stairsdown_96_32
+188	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	49	60	level_13 <- in_L14_176_64 -> exit:out_stairsdown_32_32
+189	0	skipped	skipped	dashless	dashless	77	77	6	6	6	0	0	0	81	86	level_13 <- in_L14_176_64 -> exit:out_stairsup_64_144
+190	0	skipped	skipped	dashless	dashless	60	60	4	4	4	0	0	0	100	73	level_13 <- in_L14_176_64 -> exit:out_stairsdown_96_32
+191	0	skipped	skipped	dashless	dashless	60	60	4	4	4	0	0	0	60	63	level_13 <- in_L20_16_48 -> exit:out_stairsdown_32_32
+192	0	skipped	skipped	dashless	dashless	77	77	6	6	6	0	0	0	79	76	level_13 <- in_L20_16_48 -> exit:out_stairsup_64_144
+193	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	55	48	level_13 <- in_L20_16_48 -> exit:out_stairsdown_96_32
+194	0	skipped	skipped	dashless	dashless	173	173	624	624	624	0	0	0	1069	1170	level_14 <- in_L13_32_32 -> exit:out_stairsdown_32_64
+195	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	65	60	level_14 <- in_L13_32_32 -> exit:out_stairsup_176_64
+196	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	64	53	level_14 <- in_L15_32_64 -> exit:out_stairsdown_32_64
+197	0	skipped	skipped	dashless	dashless	132	132	452	452	452	0	0	0	1036	994	level_14 <- in_L15_32_64 -> exit:out_stairsup_176_64
+198	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	59	55	level_15__r1c5 <- in_L14_32_64 -> exit:out_stairsup_32_64
+199	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	50	55	level_15__r1c9 <- in_L16_16_64 -> exit:out_stairsdown_144_16
+200	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	67	69	level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsup_16_64
+201	0	skipped	skipped	None	None	None	None	637	637	637	0	0	0	16267	16545	level_16__r1c1 <- in_L15_144_16 -> exit:out_stairsdown_112_64
+202	0	skipped	skipped	None	None	None	None	559	559	559	0	0	0	7444	7444	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_7_2
+203	0	skipped	skipped	None	None	None	None	556	556	556	0	0	0	7314	7381	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_2
+204	0	skipped	skipped	None	None	None	None	541	541	541	0	0	0	6941	7187	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_9_2
+205	0	skipped	skipped	None	None	None	None	575	575	575	0	0	0	7557	7605	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_7_3
+206	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	77	82	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3
+207	0	skipped	skipped	None	None	None	None	547	547	547	0	0	0	6314	6455	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_9_3
+208	0	skipped	skipped	None	None	None	None	569	569	569	0	0	0	7657	7477	level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_4
+209	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	38	31	level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64
+210	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	31	40	level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsdown_112_64
+211	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	34	37	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_7_2
+212	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	40	56	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_2
+213	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	37	44	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_9_2
+214	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	34	33	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_7_3
+215	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	44	46	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_3
+216	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	28	32	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_9_3
+217	0	skipped	skipped	None	None	None	None	1	1	1	0	0	0	29	29	level_16__r1c1 <- in_L17_32_48 -> exit:out_pit_8_4
+218	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	72	115	level_16__r4c21 <- in_L18_16_16 -> exit:out_stairsup_352_80
+219	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	65	64	level_17 <- in_L16_112_64 -> exit:out_stairsup_32_48
+220	0	skipped	skipped	dashless	dashless	79	79	6	6	6	0	0	0	83	88	level_17 <- in_L16_112_64 -> location:Level 017 - Chest
+221	0	skipped	skipped	dashless	dashless	60	60	4	4	4	0	0	0	101	119	level_17 <- in_pit_L16_7_2 -> exit:out_stairsup_32_48
+222	0	skipped	skipped	dashless	dashless	20	20	2	2	2	0	0	0	62	69	level_17 <- in_pit_L16_7_2 -> location:Level 017 - Chest
+223	0	skipped	skipped	dashless	dashless	74	74	6	6	6	0	0	0	88	108	level_17 <- in_pit_L16_8_2 -> exit:out_stairsup_32_48
+224	0	skipped	skipped	dashless	dashless	26	26	2	2	2	0	0	0	64	65	level_17 <- in_pit_L16_8_2 -> location:Level 017 - Chest
+225	0	skipped	skipped	dashless	dashless	87	87	6	6	6	0	0	0	107	96	level_17 <- in_pit_L16_9_2 -> exit:out_stairsup_32_48
+226	0	skipped	skipped	dashless	dashless	20	20	2	2	2	0	0	0	83	60	level_17 <- in_pit_L16_9_2 -> location:Level 017 - Chest
+227	0	skipped	skipped	dashless	dashless	61	61	4	4	4	0	0	0	87	95	level_17 <- in_pit_L16_7_3 -> exit:out_stairsup_32_48
+228	0	skipped	skipped	dashless	dashless	30	30	2	2	2	0	0	0	76	99	level_17 <- in_pit_L16_7_3 -> location:Level 017 - Chest
+229	0	skipped	skipped	dashless	dashless	75	75	6	6	6	0	0	0	105	102	level_17 <- in_pit_L16_8_3 -> exit:out_stairsup_32_48
+230	0	skipped	skipped	dashless	dashless	35	35	4	4	4	0	0	0	68	62	level_17 <- in_pit_L16_8_3 -> location:Level 017 - Chest
+231	0	skipped	skipped	dashless	dashless	89	89	6	6	6	0	0	0	120	87	level_17 <- in_pit_L16_9_3 -> exit:out_stairsup_32_48
+232	0	skipped	skipped	dashless	dashless	30	30	2	2	2	0	0	0	69	64	level_17 <- in_pit_L16_9_3 -> location:Level 017 - Chest
+233	0	skipped	skipped	dashless	dashless	74	74	6	6	6	0	0	0	111	114	level_17 <- in_pit_L16_8_4 -> exit:out_stairsup_32_48
+234	0	skipped	skipped	dashless	dashless	43	43	4	4	4	0	0	0	68	69	level_17 <- in_pit_L16_8_4 -> location:Level 017 - Chest
+235	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	53	74	level_18__r1c1 <- in_L16_352_80 -> exit:out_stairsdown_16_16
+236	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	64	level_18__r7c10 <- in_L19_0_144 -> exit:out_teleporter_176_112
+237	0	solved	solved	full	full	4	4	9	9	2	7	7	5	62	62	level_19__r1c1 <- in_L20_192_48 -> exit:out_stairsup_16_96
+238	0	solved	solved	full	full	5	5	9	9	2	7	7	5	62	68	level_19__r5c5 <- in_L18_176_112 -> exit:out_teleporter_0_144
+239	0	cut-window	solved	dashless	full	529	496	87	177	24	63	153	130	384	384	level_19__r5c5 <- in_L18_176_112 -> location:Level 019 - Boss Key 0
+240	0	solved	solved	full	full	5	5	9	9	2	7	7	5	74	66	level_20__r1c4 <- in_L19_16_96 -> exit:out_stairsdown_192_48
+241	0	solved	solved	full	full	99	99	43	43	12	31	31	21	293	331	level_20__r1c4 <- in_L19_16_96 -> location:Level 020 - Shield
+242	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	57	65	level_20__r3c1 <- in_L13_96_32 -> exit:out_stairsup_16_48
+243	0	solved	solved	full	full	27	27	16	16	4	12	12	9	111	106	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_0_80
+244	0	solved	solved	full	full	26	26	16	16	4	12	12	9	116	104	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_80_160
+245	0	solved	solved	full	full	27	27	16	16	4	12	12	9	124	157	level_21 <- in_pit_L12_5_5 -> exit:out_teleporter_160_80
+246	0	solved	solved	full	full	31	31	16	16	4	12	12	9	104	103	level_21 <- in_L22_96_0 -> exit:out_teleporter_0_80
+247	0	solved	solved	full	full	4	4	9	9	2	7	7	5	59	73	level_21 <- in_L22_96_0 -> exit:out_teleporter_80_160
+248	0	solved	solved	full	full	31	31	16	16	4	12	12	9	114	190	level_21 <- in_L22_96_0 -> exit:out_teleporter_160_80
+249	0	solved	solved	full	full	5	5	9	9	2	7	7	5	70	61	level_21 <- in_L23_80_32 -> exit:out_teleporter_0_80
+250	0	solved	solved	full	full	31	31	16	16	4	12	12	9	121	117	level_21 <- in_L23_80_32 -> exit:out_teleporter_80_160
+251	0	solved	solved	full	full	45	45	27	27	8	19	19	13	126	123	level_21 <- in_L23_80_32 -> exit:out_teleporter_160_80
+252	0	solved	solved	full	full	45	45	27	27	8	19	19	13	146	125	level_21 <- in_L29_0_80 -> exit:out_teleporter_0_80
+253	0	solved	solved	full	full	31	31	16	16	4	12	12	9	119	108	level_21 <- in_L29_0_80 -> exit:out_teleporter_80_160
+254	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	93	level_21 <- in_L29_0_80 -> exit:out_teleporter_160_80
+255	0	solved	solved	full	full	113	113	63	63	11	52	52	45	726	668	level_22 <- in_L21_80_160 -> exit:out_teleporter_0_128
+256	0	solved	solved	full	full	5	5	9	9	2	7	7	5	91	77	level_22 <- in_L21_80_160 -> exit:out_teleporter_96_0
+257	0	cut-window	solved	dashless	full	234	120	86	87	13	73	74	65	879	941	level_22 <- in_L21_80_160 -> exit:out_teleporter_96_192
+258	0	solved	solved	full	full	89	89	47	47	10	37	37	29	468	464	level_22 <- in_L21_80_160 -> exit:out_teleporter_192_64
+259	0	solved	solved	full	full	5	5	9	9	2	7	7	5	79	77	level_22 <- in_L25_144_32 -> exit:out_teleporter_0_128
+260	0	solved	solved	full	full	112	112	109	109	34	75	75	69	1039	1056	level_22 <- in_L25_144_32 -> exit:out_teleporter_96_0
+261	0	solved	solved	full	full	75	75	64	64	8	56	56	49	472	433	level_22 <- in_L25_144_32 -> exit:out_teleporter_96_192
+262	0	solved	solved	full	full	229	229	92	92	33	59	59	49	1004	1055	level_22 <- in_L25_144_32 -> exit:out_teleporter_192_64
+263	0	solved	solved	full	full	142	142	132	132	34	98	98	89	1072	1113	level_22 <- in_L29_0_224 -> exit:out_teleporter_0_128
+264	0	solved	solved	full	full	69	69	64	64	8	56	56	49	342	355	level_22 <- in_L29_0_224 -> exit:out_teleporter_96_0
+265	0	cut-window	solved	dashless	full	215	103	87	130	12	75	118	109	671	917	level_22 <- in_L29_0_224 -> exit:out_teleporter_96_192
+266	0	solved	solved	full	full	5	5	9	9	2	7	7	5	86	79	level_22 <- in_L29_0_224 -> exit:out_teleporter_192_64
+267	0	solved	solved	full	full	56	56	23	23	6	17	17	13	366	267	level_22 <- in_L30_64_0 -> exit:out_teleporter_0_128
+268	0	solved	solved	full	full	116	116	67	67	32	35	35	29	785	870	level_22 <- in_L30_64_0 -> exit:out_teleporter_96_0
+269	0	solved	solved	full	full	4	4	9	9	2	7	7	5	102	79	level_22 <- in_L30_64_0 -> exit:out_teleporter_96_192
+270	0	solved	solved	full	full	108	108	91	91	32	59	59	53	1043	811	level_22 <- in_L30_64_0 -> exit:out_teleporter_192_64
+271	0	solved	solved	full	full	11	11	9	9	2	7	7	5	111	75	level_23 <- in_L21_0_80 -> exit:out_stairsup_32_32
+272	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	57	level_23 <- in_L21_0_80 -> exit:out_teleporter_80_32
+273	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	87	level_23 <- in_L24_96_96 -> exit:out_stairsup_32_32
+274	0	solved	solved	full	full	11	11	9	9	2	7	7	5	81	80	level_23 <- in_L24_96_96 -> exit:out_teleporter_80_32
+275	0	solved	solved	full	full	18	18	9	9	2	7	7	5	98	103	level_24 <- in_L12_40_688 -> exit:out_teleporter_32_144
+276	0	solved	solved	full	full	4	4	9	9	2	7	7	5	79	83	level_24 <- in_L12_40_688 -> exit:out_teleporter_48_144
+277	0	solved	solved	full	full	44	44	36	36	6	30	30	25	122	139	level_24 <- in_L12_40_688 -> exit:out_stairsdown_96_96
+279	0	solved	solved	full	full	124	124	72	72	12	60	60	50	281	300	level_24 <- in_L23_32_32 -> exit:out_teleporter_32_144
+280	0	solved	solved	full	full	123	123	72	72	12	60	60	50	234	217	level_24 <- in_L23_32_32 -> exit:out_teleporter_48_144
+281	0	solved	solved	full	full	4	4	9	9	2	7	7	5	61	56	level_24 <- in_L23_32_32 -> exit:out_stairsdown_96_96
+282	0	solved	solved	full	full	115	115	60	60	8	52	52	45	197	242	level_24 <- in_L23_32_32 -> location:L24 flag 0: burnabletree@32,128 cleared
+283	0	cut-window	solved	dashless	full	197	182	86	90	13	73	77	65	885	836	level_25 <- in_L22_0_128 -> exit:out_teleporter_0_96
+284	0	solved	solved	full	full	58	58	27	27	8	19	19	13	244	273	level_25 <- in_L22_0_128 -> exit:out_teleporter_96_128
+285	0	solved	solved	full	full	5	5	9	9	2	7	7	5	109	79	level_25 <- in_L22_0_128 -> exit:out_teleporter_144_32
+286	0	solved	solved	full	full	57	57	24	24	6	18	18	13	235	271	level_25 <- in_L22_0_128 -> location:Level 025 - Chest
+287	0	solved	solved	full	full	5	5	9	9	2	7	7	5	114	109	level_25 <- in_L26_144_32 -> exit:out_teleporter_0_96
+288	0	cut-window	solved	dashless	full	150	106	87	96	10	77	86	77	687	628	level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
+289	0	solved	solved	full	full	135	135	75	75	14	61	61	49	843	738	level_25 <- in_L26_144_32 -> exit:out_teleporter_144_32
+290	0	solved	solved	full	full	128	128	40	40	10	30	30	21	384	359	level_25 <- in_L26_144_32 -> location:Level 025 - Chest
+291	0	solved	solved	full	full	97	97	52	52	10	42	42	33	442	526	level_25 <- in_L28_96_0 -> exit:out_teleporter_0_96
+292	0	solved	solved	full	full	4	4	9	9	2	7	7	5	80	87	level_25 <- in_L28_96_0 -> exit:out_teleporter_96_128
+293	0	solved	solved	full	full	77	77	39	39	10	29	29	21	386	290	level_25 <- in_L28_96_0 -> exit:out_teleporter_144_32
+294	0	solved	solved	full	full	12	12	9	9	2	7	7	5	117	168	level_25 <- in_L28_96_0 -> location:Level 025 - Chest
+295	0	cut-window	solved	dashless	full	286	134	87	281	18	69	263	249	717	1629	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_64_304
+296	0	solved	solved	full	full	5	5	9	9	2	7	7	5	69	82	level_26__r2c4 <- in_L25_0_96 -> exit:out_teleporter_144_32
+297	0	solved	solved	full	full	4	4	9	9	2	7	7	5	75	70	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_64_304
+298	0	cut-window	solved	dashless	full	295	143	87	108	20	67	88	73	751	890	level_26__r2c4 <- in_L27_32_0 -> exit:out_teleporter_144_32
+299	0	solved	solved	full	full	5	5	9	9	2	7	7	5	68	84	level_26__r13c8 <- in_L28_0_96 -> exit:out_teleporter_144_208
+300	0	solved	solved	full	full	5	5	9	9	2	7	7	5	68	74	level_27 <- in_L26_64_304 -> exit:out_teleporter_32_0
+301	0	solved	solved	full	full	74	74	59	59	34	25	25	17	329	265	level_27 <- in_L26_64_304 -> exit:out_teleporter_168_16
+302	0	solved	solved	full	full	126	126	64	64	14	50	50	41	322	300	level_27 <- in_L28_128_304 -> exit:out_teleporter_32_0
+303	0	solved	solved	full	full	5	5	9	9	2	7	7	5	66	66	level_27 <- in_L28_128_304 -> exit:out_teleporter_168_16
+304	0	solved	solved	full	full	58	58	27	27	8	19	19	13	212	260	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+305	0	solved	solved	full	full	5	5	9	9	2	7	7	5	73	73	level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
+306	0	solved	solved	full	full	5	5	9	9	2	7	7	5	92	90	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96
+307	0	solved	solved	full	full	58	58	27	27	8	19	19	13	215	212	level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
+308	0	solved	solved	full	full	5	5	9	9	2	7	7	5	78	86	level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+309	0	solved	solved	full	full	4	4	9	9	2	7	7	5	71	76	level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304
+310	0	solved	solved	full	full	5	5	9	9	2	7	7	5	62	72	level_29__r2c2 <- in_L22_192_64 -> exit:out_teleporter_0_224
+311	0	cut-window	solved	dashless	full	381	342	87	140	28	59	112	85	1016	1164	level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32
+311	1	solved	solved	full	full	63	63	52	52	6	46	46	41	298	338	level_29__r2c2 <- in_L22_192_64 -> exit:out_stairsdown_112_32
+312	0	cut-window	solved	dashless	full	296	278	86	86	23	63	63	41	998	926	level_29__r2c2 <- in_L22_192_64 -> location:Level 029 - Boss Key 1
+313	0	solved	solved	full	full	284	284	65	65	19	46	46	29	479	485	level_29__r2c2 <- in_L31_384_96 -> exit:out_teleporter_0_224
+313	1	solved	solved	full	full	195	195	54	54	13	41	41	29	425	484	level_29__r2c2 <- in_L31_384_96 -> exit:out_teleporter_0_224
+314	0	solved	solved	full	full	5	5	9	9	2	7	7	5	65	69	level_29__r2c2 <- in_L31_384_96 -> exit:out_stairsdown_112_32
+315	0	solved	solved	full	full	59	59	24	24	6	18	18	13	193	197	level_29__r2c2 <- in_L31_384_96 -> location:Level 029 - Boss Key 1
+316	0	solved	solved	full	full	5	5	9	9	2	7	7	5	64	67	level_29__r5c0 <- in_L21_160_80 -> exit:out_teleporter_0_80
+317	0	solved	solved	full	full	5	5	9	9	2	7	7	5	77	73	level_30__r0c4 <- in_L22_96_192 -> exit:out_teleporter_64_0
+318	0	solved	solved	full	full	5	5	9	9	2	7	7	5	79	81	level_30__r2c10 <- in_L28_304_16 -> exit:out_teleporter_0_128
+319	0	solved	solved	full	full	104	104	47	47	12	35	35	25	562	534	level_30__r2c10 <- in_L28_304_16 -> exit:out_stairsdown_192_48
+320	0	solved	solved	full	full	170	170	55	55	13	42	42	30	233	207	level_30__r2c10 <- in_L28_304_16 -> exit:out_pit_3_34
+321	0	solved	solved	full	full	63	63	60	60	6	54	54	49	436	431	level_30__r2c10 <- in_L28_304_16 -> location:Level 030 - Torchpickup
+322	0	solved	solved	full	full	156	156	72	72	10	62	62	53	523	495	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+322	1	solved	solved	full	full	101	101	19	19	5	14	14	9	141	137	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 0: bosslock@64,32 cleared
+323	0	solved	solved	full	full	162	162	44	44	15	29	29	17	329	304	level_30__r2c10 <- in_L28_304_16 -> location:L30 flag 2: bosslock@224,208 cleared
+324	0	solved	solved	full	full	57	57	30	30	10	20	20	13	303	336	level_30__r2c10 <- in_L31_160_384 -> exit:out_teleporter_0_128
+325	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	72	level_30__r2c10 <- in_L31_160_384 -> exit:out_stairsdown_192_48
+326	0	solved	solved	full	full	190	190	69	69	17	52	52	38	500	522	level_30__r2c10 <- in_L31_160_384 -> exit:out_pit_3_34
+327	0	cut-window	solved	dashless	full	165	160	91	184	90	1	94	5	688	990	level_30__r2c10 <- in_L31_160_384 -> location:Level 030 - Torchpickup
+328	0	solved	solved	full	full	191	191	67	67	12	55	55	45	628	566	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 0: bosslock@64,32 cleared
+329	0	solved	solved	full	full	190	190	75	75	17	58	58	45	589	515	level_30__r2c10 <- in_L31_160_384 -> location:L30 flag 2: bosslock@224,208 cleared
+330	0	solved	solved	full	full	98	98	42	42	12	30	30	21	478	461	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
+331	0	solved	solved	full	full	12	12	9	9	2	7	7	5	89	97	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_stairsdown_192_48
+332	0	solved	solved	full	full	249	249	74	74	20	54	54	38	632	630	level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_pit_3_34
+333	0	cut-window	solved	dashless	full	203	202	150	315	149	1	166	17	901	1279	level_30__r2c10 <- in_pit_L32_14_5 -> location:Level 030 - Torchpickup
+334	0	cut-window	solved	dashless	full	301	298	153	345	152	1	193	41	887	1615	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+334	1	solved	solved	full	full	99	99	15	15	5	10	10	5	247	169	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 0: bosslock@64,32 cleared
+335	0	solved	solved	full	full	209	209	83	83	19	64	64	49	578	557	level_30__r2c10 <- in_pit_L32_14_5 -> location:L30 flag 2: bosslock@224,208 cleared
+336	0	solved	solved	full	full	97	97	42	42	12	30	30	21	569	515	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
+337	0	solved	solved	full	full	30	30	16	16	4	12	12	9	137	135	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_stairsdown_192_48
+338	0	solved	solved	full	full	246	246	70	70	20	50	50	34	747	832	level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_pit_3_34
+339	0	cut-window	solved	dashless	full	216	213	143	297	142	1	155	13	688	1135	level_30__r2c10 <- in_pit_L32_15_5 -> location:Level 030 - Torchpickup
+340	0	refused	refused	None	None	None	None	126	126	16	110	110	97	839	939	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 0: bosslock@64,32 cleared
+341	0	cut-window	solved	dashless	full	334	217	87	107	19	68	88	73	712	723	level_30__r2c10 <- in_pit_L32_15_5 -> location:L30 flag 2: bosslock@224,208 cleared
+342	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	71	level_30__r8c13 <- in_L32_72_136 -> exit:out_stairsup_224_160
+343	0	solved	solved	full	full	5	5	9	9	2	7	7	5	68	58	level_31__r5c24 <- in_L29_112_32 -> exit:out_stairsup_384_96
+344	0	cut-window	solved	dashless	full	448	264	86	88	26	60	62	41	622	541	level_31__r5c24 <- in_L29_112_32 -> location:L31 flag 0: bosslock@192,432 cleared
+345	0	cut-window	solved	dashless	full	577	336	87	277	38	49	239	209	549	1438	level_31__r5c24 <- in_pit_L30_3_34 -> exit:out_stairsup_384_96
+346	0	cut-window	solved	dashless	full	331	255	87	184	19	68	165	149	510	604	level_31__r5c24 <- in_pit_L30_3_34 -> location:L31 flag 0: bosslock@192,432 cleared
+347	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	59	level_31__r24c10 <- in_L30_192_48 -> exit:out_stairsup_160_384
+348	0	solved	solved	full	full	8	8	9	9	2	7	7	5	66	68	level_32 <- in_L30_224_160 -> exit:out_stairsdown_72_136
+349	0	refused	refused	dashless	dashless	253	253	28	28	14	14	14	9	162	145	level_32 <- in_L30_224_160 -> exit:out_pit_14_5
+350	0	refused	refused	dashless	dashless	252	252	28	28	14	14	14	9	167	151	level_32 <- in_L30_224_160 -> exit:out_pit_15_5
+351	0	cut-window	solved	dashless	dashless	1049	1049	87	106	38	49	68	30	12984	12444	level_32 <- in_L30_224_160 -> location:Level 032 - Bob Boss
+352	0	solved	solved	full	full	4	4	9	9	2	7	7	5	65	65	level_33 <- in_L12_432_352 -> exit:out_teleporter_32_64
+353	0	solved	solved	full	full	4	4	9	9	2	7	7	5	68	67	level_34 <- in_L12_336_688 -> exit:out_teleporter_32_144
+354	0	cut-window	solved	dashless	full	251	188	87	144	18	69	126	110	482	623	level_34 <- in_L12_336_688 -> exit:out_teleporter_128_0
+355	0	solved	solved	full	full	4	4	9	9	2	7	7	5	69	84	level_35 <- in_L12_112_96 -> exit:out_teleporter_32_64
+356	0	solved	solved	full	full	4	4	9	9	2	7	7	5	65	68	level_36 <- in_L12_168_368 -> exit:out_teleporter_32_128
+357	0	solved	solved	full	full	72	72	42	42	5	37	37	33	222	228	level_36 <- in_L12_168_368 -> location:Level 036 - Chest
+358	0	solved	solved	full	full	5	5	9	9	2	7	7	5	81	73	level_37__r0c18 <- in_L38_144_304 -> exit:out_teleporter_288_0
+359	0	refused	refused	None	None	None	None	112	112	55	57	57	2	452	461	level_37__r0c18 <- in_L43_144_64 -> exit:out_teleporter_288_0
+360	0	solved	solved	dashless	dashless	13	13	0	0	0	0	0	0	60	57	level_37__r9c36 <- in_L97_32_16 -> exit:out_stairsdown_576_144
+361	0	solved	solved	full	full	36	36	17	17	4	13	13	9	173	176	level_37__r12c6 <- in_L12_592_0 -> exit:out_teleporter_0_256
+362	0	solved	solved	full	full	4	4	9	9	2	7	7	5	103	85	level_37__r12c6 <- in_L12_592_0 -> exit:out_teleporter_32_304
+363	0	solved	solved	full	full	5	5	9	9	2	7	7	5	72	94	level_37__r12c6 <- in_L44_144_128 -> exit:out_teleporter_0_256
+364	0	solved	solved	full	full	32	32	16	16	4	12	12	9	180	173	level_37__r12c6 <- in_L44_144_128 -> exit:out_teleporter_32_304
+365	0	cut-window	solved	dashless	full	549	265	87	174	40	47	134	103	479	769	level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_0
+366	0	solved	solved	full	full	4	4	9	9	2	7	7	5	67	67	level_38__r0c9 <- in_L37_288_0 -> exit:out_teleporter_144_304
+367	0	cut-window	solved	dashless	full	462	254	87	184	34	53	150	123	405	580	level_38__r0c9 <- in_L37_288_0 -> location:Level 038 - Chest
+368	0	cut-window	solved	dashless	full	619	333	87	292	45	42	247	211	424	845	level_38__r0c9 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+369	0	solved	solved	full	full	5	5	9	9	2	7	7	5	77	73	level_38__r0c9 <- in_L39_144_624 -> exit:out_teleporter_144_0
+370	0	refused	refused	None	None	None	None	8	8	4	4	4	0	154	121	level_38__r0c9 <- in_L39_144_624 -> exit:out_teleporter_144_304
+371	0	refused	refused	None	None	None	None	8	8	4	4	4	0	112	106	level_38__r0c9 <- in_L39_144_624 -> location:Level 038 - Chest
+373	0	solved	solved	full	full	5	5	9	9	2	7	7	5	102	99	level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+374	0	cut-window	solved	dashless	full	112	75	87	88	8	79	80	73	358	433	level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+375	0	solved	solved	full	full	4	4	9	9	2	7	7	5	102	95	level_39__r2c11 <- in_L38_144_0 -> exit:out_teleporter_144_624
+376	0	solved	solved	full	full	70	70	35	35	10	25	25	17	1072	946	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+377	0	solved	solved	full	full	5	5	9	9	2	7	7	5	174	147	level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+378	0	cut-budget	cut-budget	None	None	None	None	642	642	166	476	476	337	35798	34757	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+378	1	cut-budget	cut-budget	None	None	None	None	2562	2562	None	2562	2562	2423	130722	125593	level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+379	0	solved	solved	full	full	5	5	9	9	2	7	7	5	182	189	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+380	0	solved	solved	full	full	70	70	35	35	10	25	25	17	946	1014	level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+381	0	cut-budget	cut-budget	None	None	None	None	642	642	71	571	571	530	34048	36208	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+381	1	cut-budget	cut-budget	None	None	None	None	2562	2562	None	2562	2562	2521	121324	117763	level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+382	0	solved	solved	full	full	172	172	85	85	28	57	57	37	3386	2891	level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+383	0	solved	solved	full	full	4	4	9	9	2	7	7	5	168	177	level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+384	0	cut-window	cut-budget	dashless	dashless	861	861	87	642	52	35	590	563	4462	27639	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+385	0	cut-window	cut-budget	dashless	dashless	913	913	86	642	78	8	564	513	3782	25396	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+386	0	cut-window	cut-budget	dashless	dashless	1025	1025	88	642	87	1	555	499	4670	34776	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+387	0	cut-window	cut-budget	dashless	dashless	1087	1087	91	642	90	1	552	494	3794	37390	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+388	0	cut-window	cut-budget	dashless	dashless	844	844	87	642	51	36	591	565	3561	32806	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+389	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	9919	8908	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+389	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	24134	21685	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+390	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	11433	10101	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+390	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	27306	28559	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+391	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	9396	10754	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+391	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	29366	29874	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+392	0	cut-window	cut-budget	dashless	dashless	828	828	87	642	50	37	592	566	3123	30989	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+393	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	9467	8844	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+393	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	23580	22661	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+394	0	cut-window	cut-budget	dashless	dashless	809	809	87	642	49	38	593	568	4574	32901	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+395	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	10191	8989	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+395	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	22787	22486	level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+396	0	cut-window	cut-budget	dashless	dashless	494	494	87	642	32	55	610	592	2632	15915	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+397	0	refused	refused	None	None	None	None	72	72	36	36	36	0	15340	13791	level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+398	0	refused	refused	None	None	None	None	8	8	4	4	4	0	729	695	level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+399	0	solved	solved	full	full	5	5	9	9	2	7	7	5	267	256	level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+400	0	cut-window	cut-budget	dashless	dashless	417	417	87	642	28	59	614	598	3165	14566	level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+401	0	cut-window	solved	dashless	full	611	368	87	203	37	50	166	137	4020	6133	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+402	0	cut-window	solved	dashless	full	655	427	86	334	54	32	280	233	3329	10008	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+403	0	cut-window	solved	dashless	full	776	455	86	349	63	23	286	233	4405	13202	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+404	0	cut-window	solved	dashless	full	841	640	86	488	67	19	421	361	4029	22899	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+405	0	cut-window	solved	dashless	full	595	367	87	328	35	52	293	265	4155	10306	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+406	0	cut-window	solved	dashless	full	674	479	86	276	55	31	221	173	2330	8988	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+407	0	cut-window	solved	dashless	full	796	603	86	369	63	23	306	249	3025	15029	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+408	0	cut-window	solved	dashless	full	841	609	86	430	66	20	364	305	3790	17733	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+409	0	cut-window	solved	dashless	full	585	340	87	147	35	52	112	85	4287	4839	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+410	0	cut-window	solved	dashless	full	658	418	86	344	53	33	291	245	3397	9854	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+411	0	cut-window	solved	dashless	full	549	330	87	260	33	54	227	201	3097	9274	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+412	0	cut-window	solved	dashless	full	621	397	87	260	51	36	209	165	3193	8674	level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+413	0	solved	solved	full	full	118	118	73	73	16	57	57	45	1803	1911	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+414	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	45942	46038	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+414	1	cut-budget	cut-budget	None	None	None	None	2563	2563	2562	1	1	0	57858	60622	level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+415	0	refused	refused	None	None	None	None	8	8	4	4	4	0	686	691	level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+416	0	solved	solved	full	full	5	5	9	9	2	7	7	5	126	102	level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+417	0	solved	solved	full	full	4	4	9	9	2	7	7	5	120	106	level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336
+418	0	cut-window	solved	dashless	full	1567	1298	170	446	169	1	277	100	6350	12886	level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+419	0	solved	solved	full	full	4	4	9	9	2	7	7	5	64	82	level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464
+420	0	solved	solved	full	full	96	96	48	48	16	32	32	21	338	304	level_43__r13c7 <- in_L40_320_576 -> location:Level 043 - Wand
+421	0	cut-window	solved	dashless	full	203	97	87	94	14	73	80	69	362	430	level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_464
+422	0	solved	solved	full	full	79	79	51	51	10	41	41	33	258	257	level_43__r13c7 <- in_pit_L40_4_20 -> location:Level 043 - Wand
+423	0	solved	solved	full	full	102	102	54	54	14	40	40	29	298	282	level_43__r13c7 <- in_pit_L40_5_20 -> exit:out_stairsup_176_464
+424	0	solved	solved	full	full	90	90	78	78	12	66	66	57	265	281	level_43__r13c7 <- in_pit_L40_5_20 -> location:Level 043 - Wand
+425	0	solved	solved	full	full	79	79	38	38	12	26	26	17	229	194	level_43__r13c7 <- in_pit_L40_13_20 -> exit:out_stairsup_176_464
+426	0	solved	solved	full	full	90	90	78	78	12	66	66	57	328	286	level_43__r13c7 <- in_pit_L40_13_20 -> location:Level 043 - Wand
+427	0	solved	solved	full	full	68	68	51	51	10	41	41	33	239	267	level_43__r13c7 <- in_pit_L40_14_20 -> exit:out_stairsup_176_464
+428	0	solved	solved	full	full	79	79	51	51	10	41	41	33	279	247	level_43__r13c7 <- in_pit_L40_14_20 -> location:Level 043 - Wand
+429	0	cut-window	solved	dashless	full	203	92	87	89	14	73	75	65	349	396	level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_464
+430	0	solved	solved	full	full	83	83	51	51	10	41	41	33	254	239	level_43__r13c7 <- in_pit_L40_4_21 -> location:Level 043 - Wand
+431	0	solved	solved	full	full	78	78	38	38	12	26	26	17	204	247	level_43__r13c7 <- in_pit_L40_5_21 -> exit:out_stairsup_176_464
+432	0	solved	solved	full	full	72	72	35	35	10	25	25	17	184	225	level_43__r13c7 <- in_pit_L40_5_21 -> location:Level 043 - Wand
+433	0	solved	solved	full	full	65	65	51	51	10	41	41	33	259	353	level_43__r13c7 <- in_pit_L40_13_21 -> exit:out_stairsup_176_464
+434	0	solved	solved	full	full	72	72	35	35	10	25	25	17	169	210	level_43__r13c7 <- in_pit_L40_13_21 -> location:Level 043 - Wand
+435	0	solved	solved	full	full	69	69	67	67	10	57	57	49	336	293	level_43__r13c7 <- in_pit_L40_14_21 -> exit:out_stairsup_176_464
+436	0	solved	solved	full	full	83	83	51	51	10	41	41	33	251	274	level_43__r13c7 <- in_pit_L40_14_21 -> location:Level 043 - Wand
+437	0	cut-window	solved	dashless	full	202	99	87	94	14	73	80	69	349	415	level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_464
+438	0	solved	solved	full	full	79	79	51	51	10	41	41	33	354	290	level_43__r13c7 <- in_pit_L40_4_22 -> location:Level 043 - Wand
+439	0	solved	solved	full	full	101	101	50	50	14	36	36	25	310	338	level_43__r13c7 <- in_pit_L40_5_22 -> exit:out_stairsup_176_464
+440	0	solved	solved	full	full	88	88	70	70	12	58	58	49	267	270	level_43__r13c7 <- in_pit_L40_5_22 -> location:Level 043 - Wand
+441	0	cut-window	solved	dashless	full	221	115	87	90	14	73	76	65	396	361	level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_464
+442	0	solved	solved	full	full	114	114	55	55	12	43	43	33	261	326	level_43__r13c7 <- in_pit_L40_4_23 -> location:Level 043 - Wand
+443	0	cut-window	solved	dashless	full	226	110	87	89	16	71	73	61	335	410	level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_464
+444	0	solved	solved	full	full	103	103	55	55	12	43	43	33	315	278	level_43__r13c7 <- in_pit_L40_5_23 -> location:Level 043 - Wand
+445	0	solved	solved	full	full	5	5	9	9	2	7	7	5	68	62	level_44__r0c4 <- in_L45_112_304 -> exit:out_teleporter_64_0
+446	0	solved	solved	full	full	5	5	9	9	2	7	7	5	77	84	level_44__r4c2 <- in_L87_464_272 -> exit:out_teleporter_0_80
+447	0	solved	solved	full	full	5	5	9	9	2	7	7	5	62	63	level_44__r6c4 <- in_L37_0_256 -> exit:out_teleporter_144_128
+448	0	cut-window	solved	dashless	full	307	239	87	363	20	67	343	325	999	2174	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_0
+449	0	solved	solved	full	full	4	4	9	9	2	7	7	5	81	76	level_45__r0c7 <- in_L44_64_0 -> exit:out_teleporter_112_304
+450	0	solved	solved	full	full	5	5	9	9	2	7	7	5	78	76	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_0
+451	0	cut-window	solved	dashless	full	258	215	87	383	18	69	365	349	851	1988	level_45__r0c7 <- in_L46_240_464 -> exit:out_teleporter_112_304
+452	0	cut-window	solved	dashless	full	403	208	87	147	26	61	121	101	806	1112	level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_176_0
+453	0	solved	solved	full	full	4	4	9	9	2	7	7	5	88	83	level_46__r0c11 <- in_L45_112_0 -> exit:out_teleporter_240_464
+454	0	solved	solved	dashless	dashless	5	5	25	25	2	23	23	21	87	88	level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_176_0
+455	0	cut-window	solved	dashless	full	366	221	87	244	24	63	220	201	820	1744	level_46__r0c11 <- in_L47_240_464 -> exit:out_teleporter_240_464
+456	0	cut-window	solved	dashless	full	337	204	87	153	22	65	131	113	895	1141	level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_216_112
+457	0	solved	solved	full	full	4	4	9	9	2	7	7	5	88	95	level_47__r2c9 <- in_L46_176_0 -> exit:out_teleporter_240_464
+458	0	solved	solved	full	full	5	5	9	9	2	7	7	5	96	95	level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_216_112
+459	0	cut-window	solved	dashless	full	308	182	87	185	20	67	165	149	764	1141	level_47__r2c9 <- in_L48_112_304 -> exit:out_teleporter_240_464
+460	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	87	97	level_48__r7c0 <- in_L53_208_64 -> exit:out_teleporter_0_112
+461	0	solved	solved	full	full	4	4	9	9	2	7	7	5	86	114	level_48__r18c7 <- in_L47_216_112 -> exit:out_teleporter_112_304
+462	0	cut-window	solved	dashless	dashless	88	88	87	365	6	81	359	353	234	490	level_49 <- in_pit_L48_2_2 -> exit:out_teleporter_32_128
+462	1	cut-window	solved	dashless	dashless	60	60	87	249	4	83	245	241	203	379	level_49 <- in_pit_L48_2_2 -> exit:out_teleporter_32_128
+463	0	cut-window	solved	dashless	dashless	70	70	87	293	6	81	287	281	200	341	level_49 <- in_pit_L48_2_2 -> location:Level 049 - Conch
+464	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	82	64	level_49 <- in_L50_32_0 -> exit:out_teleporter_32_128
+465	0	refused	refused	None	None	None	None	2	2	1	1	1	0	32	34	level_49 <- in_L50_32_0 -> location:Level 049 - Conch
+466	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	93	72	level_50 <- in_L49_32_128 -> exit:out_teleporter_32_0
+467	0	cut-window	cut-budget	dashless	dashless	696	696	87	642	44	43	598	574	443	3035	level_50 <- in_L49_32_128 -> exit:out_teleporter_48_304
+468	0	cut-window	cut-budget	dashless	dashless	702	702	87	642	44	43	598	574	616	3731	level_50 <- in_L51_144_0 -> exit:out_teleporter_32_0
+469	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	67	78	level_50 <- in_L51_144_0 -> exit:out_teleporter_48_304
+470	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	79	76	level_51__r3c10 <- in_L50_48_304 -> exit:out_teleporter_144_0
+471	0	cut-window	solved	dashless	full	136	101	87	204	10	77	194	185	382	584	level_51__r3c10 <- in_L50_48_304 -> exit:out_stairsup_176_144
+472	0	cut-window	solved	dashless	full	167	142	87	516	12	75	504	493	290	928	level_51__r3c10 <- in_L53_32_144 -> exit:out_teleporter_144_0
+473	0	solved	solved	full	full	5	5	9	9	2	7	7	5	64	61	level_51__r3c10 <- in_L53_32_144 -> exit:out_stairsup_176_144
+474	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	73	72	level_51__r14c6 <- in_L52_0_112 -> exit:out_teleporter_256_256
+475	0	refused	refused	None	None	None	None	2	2	1	1	1	0	50	72	level_52 <- in_L51_256_256 -> exit:out_teleporter_0_48
+476	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	74	84	level_52 <- in_L51_256_256 -> exit:out_teleporter_0_112
+477	0	refused	refused	None	None	None	None	2	2	1	1	1	0	68	50	level_52 <- in_L51_256_256 -> exit:out_teleporter_112_0
+478	0	cut-window	cut-budget	dashless	dashless	381	381	87	642	24	63	618	604	346	1985	level_52 <- in_L51_256_256 -> exit:out_teleporter_224_112
+479	0	cut-window	cut-budget	dashless	dashless	231	231	87	642	16	71	626	616	341	1195	level_52 <- in_L54_128_464 -> exit:out_teleporter_0_48
+480	0	cut-window	cut-budget	dashless	dashless	242	242	87	642	16	71	626	616	439	1174	level_52 <- in_L54_128_464 -> exit:out_teleporter_0_112
+481	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	71	79	level_52 <- in_L54_128_464 -> exit:out_teleporter_112_0
+482	0	cut-window	solved	dashless	full	243	213	87	580	16	71	564	549	396	1449	level_52 <- in_L54_128_464 -> exit:out_teleporter_224_112
+483	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	72	76	level_52 <- in_L55_80_48 -> exit:out_teleporter_0_48
+484	0	cut-window	solved	dashless	full	190	175	87	573	12	75	561	549	397	1090	level_52 <- in_L55_80_48 -> exit:out_teleporter_0_112
+485	0	refused	refused	None	None	None	None	2	2	1	1	1	0	78	62	level_52 <- in_L55_80_48 -> exit:out_teleporter_112_0
+486	0	cut-window	cut-budget	dashless	dashless	429	429	87	642	28	59	614	598	373	2581	level_52 <- in_L55_80_48 -> exit:out_teleporter_224_112
+487	0	refused	refused	None	None	None	None	2	2	1	1	1	0	56	49	level_52 <- in_L56_0_112 -> exit:out_teleporter_0_48
+488	0	cut-window	cut-budget	dashless	dashless	381	381	87	642	24	63	618	604	406	1773	level_52 <- in_L56_0_112 -> exit:out_teleporter_0_112
+489	0	refused	refused	None	None	None	None	2	2	1	1	1	0	52	84	level_52 <- in_L56_0_112 -> exit:out_teleporter_112_0
+490	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	75	69	level_52 <- in_L56_0_112 -> exit:out_teleporter_224_112
+491	0	solved	solved	full	full	146	146	65	65	18	47	47	33	725	683	level_53__r2c2 <- in_L48_0_112 -> exit:out_stairsdown_32_144
+492	0	solved	solved	full	full	5	5	9	9	2	7	7	5	80	74	level_53__r2c2 <- in_L48_0_112 -> exit:out_teleporter_208_64
+493	0	solved	solved	full	full	5	5	9	9	2	7	7	5	78	79	level_53__r2c2 <- in_L51_176_144 -> exit:out_stairsdown_32_144
+494	0	cut-window	solved	dashless	full	266	138	87	93	18	69	75	61	893	922	level_53__r2c2 <- in_L51_176_144 -> exit:out_teleporter_208_64
+495	0	solved	solved	dashless	dashless	5	5	25	25	2	23	23	21	102	125	level_53__r14c9 <- in_L54_144_0 -> exit:out_teleporter_144_240
+496	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	104	123	level_54__r1c8 <- in_L53_144_240 -> exit:out_teleporter_144_0
+497	0	refused	refused	None	None	None	None	2	2	1	1	1	0	32	38	level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464
+498	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	65	71	level_55 <- in_L52_0_48 -> exit:out_teleporter_80_48
+499	0	cut-window	solved	dashless	full	51	45	87	113	4	83	109	105	195	285	level_55 <- in_L52_0_48 -> location:Level 055 - Boss Key 3
+500	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	71	89	level_56 <- in_L52_224_112 -> exit:out_teleporter_0_112
+501	0	cut-window	solved	dashless	full	280	262	87	302	20	67	282	262	419	846	level_56 <- in_L52_224_112 -> exit:out_pit_6_10
+504	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	72	69	level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112
+505	0	solved	solved	full	full	155	155	76	76	20	56	56	41	684	704	level_59 <- in_L60_0_80 -> exit:out_teleporter_0_128
+506	0	cut-window	solved	dashless	full	317	150	87	104	20	67	84	69	575	644	level_59 <- in_L60_0_80 -> exit:out_teleporter_144_304
+507	0	solved	solved	full	full	131	131	64	64	20	44	44	29	449	464	level_59 <- in_L60_0_80 -> exit:out_teleporter_160_304
+508	0	solved	solved	full	full	5	5	9	9	2	7	7	5	84	65	level_59 <- in_L60_0_80 -> exit:out_teleporter_304_128
+509	0	solved	solved	full	full	5	5	9	9	2	7	7	5	83	74	level_59 <- in_L67_224_112 -> exit:out_teleporter_0_128
+510	0	solved	solved	full	full	131	131	64	64	20	44	44	29	568	546	level_59 <- in_L67_224_112 -> exit:out_teleporter_144_304
+511	0	cut-window	solved	dashless	full	317	176	87	105	20	67	85	69	671	701	level_59 <- in_L67_224_112 -> exit:out_teleporter_160_304
+512	0	cut-window	solved	dashless	full	298	151	87	96	20	67	76	61	481	624	level_59 <- in_L67_224_112 -> exit:out_teleporter_304_128
+513	0	solved	solved	full	full	143	143	84	84	20	64	64	49	519	448	level_59 <- in_L95_32_0 -> exit:out_teleporter_0_128
+514	0	solved	solved	full	full	4	4	9	9	2	7	7	5	75	78	level_59 <- in_L95_32_0 -> exit:out_teleporter_144_304
+515	0	solved	solved	full	full	18	18	9	9	2	7	7	5	100	125	level_59 <- in_L95_32_0 -> exit:out_teleporter_160_304
+516	0	cut-window	solved	dashless	full	301	150	87	92	20	67	72	57	466	502	level_59 <- in_L95_32_0 -> exit:out_teleporter_304_128
+517	0	cut-window	solved	dashless	full	300	151	87	108	20	67	88	73	541	652	level_59 <- in_L95_48_0 -> exit:out_teleporter_0_128
+518	0	solved	solved	full	full	18	18	9	9	2	7	7	5	101	112	level_59 <- in_L95_48_0 -> exit:out_teleporter_144_304
+519	0	solved	solved	full	full	4	4	9	9	2	7	7	5	66	69	level_59 <- in_L95_48_0 -> exit:out_teleporter_160_304
+520	0	solved	solved	full	full	147	147	80	80	20	60	60	45	502	532	level_59 <- in_L95_48_0 -> exit:out_teleporter_304_128
+521	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	69	level_60__r5c0 <- in_L59_304_128 -> exit:out_teleporter_0_80
+522	0	solved	solved	full	full	5	5	9	9	2	7	7	5	83	74	level_60__r5c9 <- in_L61_0_160 -> exit:out_teleporter_160_80
+523	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	68	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160
+524	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	2566	2471	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0
+524	1	cut-window	cut-budget	dashless	dashless	448	448	1570	2562	1569	1	993	0	2319	5491	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0
+525	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	2259	2198	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+525	1	cut-window	solved	dashless	full	462	296	750	1854	749	1	1105	361	1387	3420	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96
+526	0	solved	solved	full	full	303	303	84	84	34	50	50	17	662	650	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160
+527	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	70	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0
+528	0	solved	solved	full	full	99	99	63	63	12	51	51	41	273	317	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96
+529	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	4903	4707	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160
+529	1	cut-budget	cut-budget	None	None	None	None	2562	2562	1976	586	586	0	9254	9299	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160
+530	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	3999	4265	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0
+530	1	cut-budget	cut-budget	None	None	None	None	2562	2562	1976	586	586	0	9133	8756	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0
+531	0	solved	solved	full	full	5	5	9	9	2	7	7	5	89	62	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96
+532	0	solved	solved	full	full	5	5	9	9	2	7	7	5	102	63	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0
+533	0	solved	solved	full	full	49	49	40	40	6	34	34	29	197	186	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48
+534	0	solved	solved	full	full	37	37	57	57	4	53	53	49	246	219	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0
+535	0	solved	solved	full	full	5	5	9	9	2	7	7	5	72	69	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48
+536	0	solved	solved	full	full	5	5	9	9	2	7	7	5	64	68	level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208
+537	0	solved	solved	full	full	4	4	9	9	2	7	7	5	95	85	level_62 <- in_L61_112_0 -> exit:out_teleporter_48_304
+538	0	solved	solved	full	full	120	120	83	83	12	71	71	61	466	552	level_62 <- in_L61_112_0 -> exit:out_teleporter_96_304
+539	0	refused	refused	None	None	None	None	10	10	5	5	5	0	2837	2774	level_62 <- in_L61_112_0 -> exit:out_teleporter_112_64
+540	0	cut-window	solved	dashless	full	257	176	87	130	18	69	112	97	523	654	level_62 <- in_L61_112_0 -> exit:out_teleporter_192_304
+541	0	refused	refused	None	None	None	None	71	71	35	36	36	1	528	610	level_62 <- in_L61_112_0 -> exit:out_teleporter_240_304
+542	0	solved	solved	full	full	117	117	50	50	14	36	36	25	359	418	level_62 <- in_L61_160_0 -> exit:out_teleporter_48_304
+543	0	solved	solved	full	full	4	4	9	9	2	7	7	5	67	76	level_62 <- in_L61_160_0 -> exit:out_teleporter_96_304
+544	0	refused	refused	None	None	None	None	8	8	4	4	4	0	2598	2874	level_62 <- in_L61_160_0 -> exit:out_teleporter_112_64
+545	0	solved	solved	full	full	93	93	67	67	10	57	57	49	367	372	level_62 <- in_L61_160_0 -> exit:out_teleporter_192_304
+546	0	cut-window	solved	dashless	full	335	233	87	125	27	60	98	74	649	730	level_62 <- in_L61_160_0 -> exit:out_teleporter_240_304
+547	0	cut-window	solved	dashless	full	243	153	87	98	16	71	82	69	564	601	level_62 <- in_L63_16_0 -> exit:out_teleporter_48_304
+548	0	solved	solved	full	full	81	81	55	55	10	45	45	37	359	347	level_62 <- in_L63_16_0 -> exit:out_teleporter_96_304
+549	0	refused	refused	None	None	None	None	10	10	5	5	5	0	2854	2836	level_62 <- in_L63_16_0 -> exit:out_teleporter_112_64
+550	0	solved	solved	full	full	4	4	9	9	2	7	7	5	70	76	level_62 <- in_L63_16_0 -> exit:out_teleporter_192_304
+551	0	refused	refused	None	None	None	None	71	71	35	36	36	1	708	671	level_62 <- in_L63_16_0 -> exit:out_teleporter_240_304
+552	0	cut-window	solved	dashless	full	347	209	86	88	23	63	65	46	570	518	level_62 <- in_L63_64_0 -> exit:out_teleporter_48_304
+553	0	cut-window	solved	dashless	full	326	220	87	98	22	65	76	58	509	499	level_62 <- in_L63_64_0 -> exit:out_teleporter_96_304
+554	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	1531	1699	level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64
+554	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	3150	3102	level_62 <- in_L63_64_0 -> exit:out_teleporter_112_64
+555	0	cut-window	solved	dashless	full	361	252	87	124	25	62	99	78	524	669	level_62 <- in_L63_64_0 -> exit:out_teleporter_192_304
+556	0	solved	solved	full	full	4	4	9	9	2	7	7	5	85	70	level_62 <- in_L63_64_0 -> exit:out_teleporter_240_304
+557	0	refused	refused	None	None	None	None	16	16	8	8	8	0	2809	2814	level_62 <- in_L64_32_96 -> exit:out_teleporter_48_304
+558	0	refused	refused	None	None	None	None	16	16	8	8	8	0	2802	2866	level_62 <- in_L64_32_96 -> exit:out_teleporter_96_304
+559	0	solved	solved	dashless	dashless	12	12	53	53	2	51	51	49	137	143	level_62 <- in_L64_32_96 -> exit:out_teleporter_112_64
+560	0	refused	refused	None	None	None	None	16	16	8	8	8	0	2759	2649	level_62 <- in_L64_32_96 -> exit:out_teleporter_192_304
+561	0	refused	refused	None	None	None	None	16	16	8	8	8	0	2777	2836	level_62 <- in_L64_32_96 -> exit:out_teleporter_240_304
+562	0	solved	solved	full	full	79	79	37	37	10	27	27	18	382	372	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48
+563	0	solved	solved	full	full	5	5	9	9	2	7	7	5	85	88	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96
+564	0	solved	solved	full	full	98	98	61	61	12	49	49	38	606	434	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0
+565	0	refused	refused	None	None	None	None	12	12	6	6	6	0	4022	3975	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0
+566	0	solved	solved	full	full	5	5	9	9	2	7	7	5	89	97	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48
+567	0	solved	solved	full	full	84	84	41	41	10	31	31	22	313	342	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96
+568	0	solved	solved	full	full	59	59	24	24	6	18	18	13	282	254	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0
+569	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	2808	2781	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0
+569	1	cut-budget	cut-budget	None	None	None	None	2561	2561	1343	1218	1218	9	7142	6984	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0
+570	0	solved	solved	full	full	50	50	24	24	6	18	18	13	303	286	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48
+571	0	solved	solved	full	full	89	89	44	44	12	32	32	22	389	385	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96
+572	0	solved	solved	full	full	5	5	9	9	2	7	7	5	119	96	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0
+573	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	2039	1928	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0
+573	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2561	1	1	0	4588	5026	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0
+574	0	refused	refused	None	None	None	None	10	10	5	5	5	0	3736	3779	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48
+575	0	refused	refused	None	None	None	None	8	8	4	4	4	0	3757	3477	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96
+576	0	refused	refused	None	None	None	None	10	10	5	5	5	0	3507	3591	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0
+577	0	solved	solved	full	full	5	5	9	9	2	7	7	5	91	107	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0
+578	0	solved	solved	full	full	4	4	9	9	2	7	7	5	90	100	level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304
+579	0	solved	solved	full	full	5	5	9	9	2	7	7	5	82	90	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208
+580	0	cut-window	solved	dashless	full	139	89	87	92	16	71	76	62	589	598	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304
+581	0	refused	refused	None	None	None	None	190	190	95	95	95	0	39578	39783	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208
+582	0	solved	solved	full	full	4	4	9	9	2	7	7	5	83	99	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304
+583	0	solved	solved	full	full	4	4	9	9	2	7	7	5	57	61	level_64 <- in_L62_112_64 -> exit:out_teleporter_32_96
+584	0	solved	solved	full	full	52	52	68	68	6	62	62	57	258	239	level_64 <- in_L62_112_64 -> location:Level 064 - Ghostspear
+585	0	solved	solved	full	full	63	63	55	55	8	47	47	41	325	372	level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_0_128
+586	0	solved	solved	full	full	5	5	9	9	2	7	7	5	131	127	level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_32_0
+587	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	76	level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_0_128
+588	0	solved	solved	full	full	56	56	27	27	8	19	19	13	249	250	level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_32_0
+589	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	78	level_65__r0c8 <- in_L63_128_304 -> exit:out_teleporter_128_0
+590	0	solved	solved	full	full	5	5	9	9	2	7	7	5	107	94	level_65__r4c13 <- in_L68_16_80 -> exit:out_teleporter_184_64
+591	0	refused	refused	None	None	None	None	2	2	1	1	1	0	44	33	level_66__r5c4 <- in_L70_32_64 -> exit:out_teleporter_72_64
+592	0	solved	solved	full	full	5	5	9	9	2	7	7	5	62	61	level_66__r9c8 <- in_L65_0_128 -> exit:out_teleporter_144_144
+593	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	71	level_67__r6c11 <- in_L59_0_128 -> exit:out_teleporter_224_112
+594	0	solved	solved	full	full	4	4	9	9	2	7	7	5	58	58	level_68__r3c1 <- in_L65_184_64 -> exit:out_teleporter_16_80
+595	0	solved	solved	full	full	98	98	15	15	5	10	10	5	91	120	level_68__r3c1 <- in_L65_184_64 -> location:L68 flag 0: bosslock@16,32 cleared
+596	0	solved	solved	full	full	4	4	9	9	2	7	7	5	64	66	level_70 <- in_L66_72_64 -> exit:out_teleporter_32_64
+597	0	cut-budget	cut-budget	None	None	None	None	645	645	644	1	1	0	4084	3935	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+597	1	refused	refused	None	None	None	None	2426	2426	1213	1213	1213	0	17207	17021	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0
+598	0	cut-budget	cut-budget	None	None	None	None	645	645	644	1	1	0	2874	3274	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+598	1	cut-budget	cut-budget	None	None	None	None	2564	2564	1976	588	588	0	10474	10477	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304
+599	0	solved	solved	full	full	5	5	9	9	2	7	7	5	110	97	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96
+600	0	cut-budget	cut-budget	None	None	None	None	645	645	644	1	1	0	3318	3328	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+600	1	cut-budget	cut-budget	None	None	None	None	2563	2563	2251	312	312	0	10623	10813	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest
+601	0	cut-budget	cut-budget	None	None	None	None	645	645	644	1	1	0	3192	3006	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+601	1	cut-budget	cut-budget	None	None	None	None	2563	2563	2237	326	326	0	9506	9322	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared
+602	0	solved	solved	full	full	5	5	9	9	2	7	7	5	96	110	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0
+603	0	cut-window	solved	dashless	full	415	274	87	217	26	61	191	169	1360	2875	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304
+604	0	cut-window	solved	dashless	full	390	352	87	97	37	50	60	25	1829	1850	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96
+605	0	cut-window	solved	dashless	full	475	333	87	325	30	57	295	269	1434	5213	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest
+606	0	cut-window	solved	dashless	full	457	319	87	140	26	61	114	93	1456	1954	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared
+607	0	cut-window	solved	dashless	full	399	303	87	134	22	65	112	93	1404	1772	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0
+608	0	solved	solved	full	full	72	72	32	32	8	24	24	17	362	324	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304
+609	0	solved	solved	full	full	93	93	54	54	12	42	42	33	611	655	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96
+610	0	cut-window	solved	dashless	full	180	134	87	104	12	75	92	81	870	996	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest
+612	0	cut-window	solved	dashless	full	414	311	87	158	24	63	134	113	1671	2190	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0
+613	0	solved	solved	full	full	4	4	9	9	2	7	7	5	83	92	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304
+614	0	solved	solved	full	full	201	201	74	74	27	47	47	21	935	893	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96
+615	0	solved	solved	full	full	63	63	43	43	8	35	35	29	414	431	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest
+616	0	solved	solved	full	full	149	149	32	32	8	24	24	17	330	431	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared
+617	0	solved	solved	full	full	4	4	9	9	2	7	7	5	81	97	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304
+618	0	solved	solved	full	full	5	5	9	9	2	7	7	5	116	108	level_72 <- in_L71_304_96 -> exit:out_teleporter_0_256
+619	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	1757	1739	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0
+619	1	cut-budget	cut-budget	None	None	None	None	2562	2562	737	1825	1825	1100	13286	13379	level_72 <- in_L71_304_96 -> exit:out_teleporter_176_0
+620	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	2339	2337	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256
+620	1	cut-budget	cut-budget	None	None	None	None	2564	2564	2563	1	1	0	12568	12469	level_72 <- in_L73_32_144 -> exit:out_teleporter_0_256
+621	0	solved	solved	full	full	5	5	9	9	2	7	7	5	90	80	level_72 <- in_L73_32_144 -> exit:out_teleporter_176_0
+622	0	cut-window	solved	dashless	dashless	4	4	277	552	276	1	276	0	1636	2968	level_73__r0c4 <- in_L74_288_144 -> exit:out_teleporter_64_0
+623	0	solved	solved	full	full	4	4	9	9	2	7	7	5	74	71	level_73__r3c7 <- in_L72_176_0 -> exit:out_teleporter_32_144
+624	0	cut-window	cut-budget	dashless	dashless	425	425	400	641	399	1	242	0	4036	6179	level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144
+625	0	refused	refused	None	None	None	None	22	22	15	7	7	5	138	145	level_74 <- in_L73_64_0 -> exit:out_teleporter_288_144
+626	0	cut-window	solved	dashless	full	368	284	124	372	123	1	249	129	988	2610	level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield
+627	0	solved	solved	full	full	4	4	9	9	2	7	7	5	99	95	level_74 <- in_L75_64_0 -> exit:out_teleporter_16_144
+628	0	refused	refused	None	None	None	None	57	57	28	29	29	1	730	619	level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144
+629	0	cut-window	solved	dashless	full	276	255	130	291	129	1	162	34	977	1637	level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield
+630	0	cut-budget	cut-budget	None	None	None	None	644	644	643	1	1	0	3617	3255	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0
+630	1	cut-budget	cut-budget	None	None	None	None	2562	2562	2125	437	437	0	11538	11831	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0
+631	0	solved	solved	full	full	4	4	9	9	2	7	7	5	75	73	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_224
+632	0	solved	solved	full	full	5	5	9	9	2	7	7	5	81	107	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_0
+633	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	968	867	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+633	1	cut-window	cut-budget	dashless	dashless	346	346	877	2562	876	1	1686	817	1715	5878	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+633	2	cut-window	cut-budget	dashless	dashless	396	396	550	642	549	1	93	0	587	893	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+633	3	cut-window	cut-budget	dashless	dashless	396	396	550	642	549	1	93	0	645	786	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224
+634	0	solved	solved	full	full	5	5	9	9	2	7	7	5	65	66	level_76 <- in_L71_304_256 -> exit:out_teleporter_0_80
+635	0	cut-window	solved	dashless	full	702	576	152	571	151	1	420	273	410	1585	level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112
+635	1	cut-window	cut-budget	dashless	dashless	672	672	87	642	42	45	600	577	665	3258	level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112
+636	0	cut-window	cut-budget	dashless	dashless	669	669	87	642	42	45	600	577	602	3728	level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80
+637	0	solved	solved	full	full	5	5	9	9	2	7	7	5	82	86	level_76 <- in_L77_0_32 -> exit:out_teleporter_304_112
+638	0	solved	solved	full	full	5	5	9	9	2	7	7	5	90	86	level_77 <- in_L76_304_112 -> exit:out_teleporter_0_32
+639	0	refused	refused	None	None	None	None	2	2	1	1	1	0	64	66	level_77 <- in_L76_304_112 -> exit:out_teleporter_96_304
+640	0	refused	refused	None	None	None	None	2	2	1	1	1	0	46	43	level_77 <- in_L78_256_0 -> exit:out_teleporter_0_32
+641	0	solved	solved	full	full	4	4	9	9	2	7	7	5	93	118	level_77 <- in_L78_256_0 -> exit:out_teleporter_96_304
+642	0	solved	solved	full	full	5	5	9	9	2	7	7	5	92	85	level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0
+643	0	solved	solved	full	full	5	5	9	9	2	7	7	5	88	96	level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0
+644	0	solved	solved	full	full	5	5	9	9	2	7	7	5	60	68	level_79__r0c4 <- in_L80_32_304 -> exit:out_teleporter_64_0
+645	0	solved	solved	full	full	4	4	9	9	2	7	7	5	62	63	level_79__r8c4 <- in_L78_32_0 -> exit:out_teleporter_64_224
+646	0	solved	solved	full	full	43	43	40	40	6	34	34	29	227	213	level_79__r8c4 <- in_L78_32_0 -> location:Level 079 - Darksuit
+647	0	solved	solved	full	full	5	5	9	9	2	7	7	5	83	89	level_80__r0c2 <- in_L71_224_304 -> exit:out_teleporter_32_0
+648	0	solved	solved	full	full	4	4	9	9	2	7	7	5	88	77	level_80__r16c1 <- in_L79_64_0 -> exit:out_teleporter_32_304
+649	0	solved	solved	full	full	18	18	9	9	2	7	7	5	134	134	level_80__r16c1 <- in_L79_64_0 -> exit:out_teleporter_48_304
+650	0	refused	refused	None	None	None	None	49	49	15	34	34	21	339	341	level_82 <- in_pit_L71_10_17 -> exit:out_teleporter_144_0
+652	0	solved	solved	dashless	dashless	11	11	49	49	2	47	47	45	98	104	level_83 <- in_L12_32_848 -> exit:out_teleporter_32_64
+653	0	solved	solved	full	full	85	85	63	63	5	58	58	53	139	162	level_83 <- in_L12_32_848 -> exit:out_pit_2_2
+654	0	refused	refused	None	None	None	None	2	2	1	1	1	0	30	31	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_3
+655	0	solved	solved	dashless	dashless	100	100	11	11	5	6	6	1	57	55	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_3_4
+656	0	refused	refused	None	None	None	None	2	2	1	1	1	0	51	29	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_4
+657	0	refused	refused	None	None	None	None	2	2	1	1	1	0	35	29	level_84__r2c4 <- in_pit_L83_2_2 -> exit:out_pit_4_5
+658	0	solved	solved	full	full	5	5	9	9	2	7	7	5	87	66	level_85 <- in_L71_16_304 -> exit:out_teleporter_80_0
+659	0	solved	solved	full	full	37	37	57	57	4	53	53	49	217	175	level_85 <- in_pit_L84_2_3 -> exit:out_teleporter_80_0
+660	0	solved	solved	full	full	18	18	12	12	4	8	8	5	94	109	level_85 <- in_pit_L84_3_3 -> exit:out_teleporter_80_0
+661	0	solved	solved	full	full	27	27	16	16	4	12	12	9	106	118	level_85 <- in_pit_L84_2_4 -> exit:out_teleporter_80_0
+662	0	solved	solved	full	full	18	18	12	12	4	8	8	5	92	83	level_85 <- in_pit_L84_4_3 -> exit:out_teleporter_80_0
+663	0	solved	solved	full	full	25	25	16	16	4	12	12	9	112	119	level_85 <- in_pit_L84_3_4 -> exit:out_teleporter_80_0
+664	0	solved	solved	full	full	24	24	16	16	4	12	12	9	96	124	level_85 <- in_pit_L84_4_4 -> exit:out_teleporter_80_0
+665	0	solved	solved	full	full	31	31	16	16	4	12	12	9	112	102	level_85 <- in_pit_L84_4_5 -> exit:out_teleporter_80_0
+666	0	solved	solved	full	full	30	30	16	16	4	12	12	9	135	192	level_85 <- in_pit_L84_2_5 -> exit:out_teleporter_80_0
+667	0	solved	solved	full	full	31	31	16	16	4	12	12	9	122	126	level_85 <- in_pit_L84_3_5 -> exit:out_teleporter_80_0
+668	0	skipped	skipped	dashless	dashless	6	6	2	2	2	0	0	0	46	46	level_86 <- in_L0_160_272 -> exit:out_teleporter_48_64
+669	0	skipped	skipped	dashless	dashless	35	35	4	4	4	0	0	0	50	55	level_86 <- in_L0_160_272 -> location:Level 086 - Chest
+670	0	solved	solved	full	full	5	5	9	9	2	7	7	5	89	80	level_87__r0c23 <- in_L93_112_272 -> exit:out_teleporter_368_0
+671	0	cut-window	solved	dashless	full	454	243	87	138	30	57	108	85	650	960	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_0_144
+672	0	cut-window	solved	dashless	full	671	443	87	350	42	45	308	273	1300	3297	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_16_32
+673	0	cut-window	solved	dashless	full	247	148	87	106	16	71	90	77	575	579	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_272_304
+674	0	solved	solved	full	full	27	27	16	16	4	12	12	9	104	116	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_432_304
+675	0	solved	solved	full	full	5	5	9	9	2	7	7	5	69	76	level_87__r1c3 <- in_L44_0_80 -> exit:out_teleporter_464_272
+676	0	cut-window	solved	dashless	full	266	163	87	106	18	69	88	73	506	574	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_0_144
+677	0	cut-window	solved	dashless	full	504	333	87	328	32	55	296	269	902	2212	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_16_32
+678	0	solved	solved	full	full	4	4	9	9	2	7	7	5	84	93	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_272_304
+679	0	cut-window	solved	dashless	full	261	164	87	98	18	69	80	65	502	637	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_432_304
+680	0	cut-window	solved	dashless	full	254	150	87	98	16	71	82	69	645	567	level_87__r1c3 <- in_L88_32_0 -> exit:out_teleporter_464_272
+681	0	cut-window	solved	dashless	full	483	272	87	186	32	55	154	129	641	1130	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_0_144
+682	0	cut-window	solved	dashless	full	683	445	87	341	44	43	297	261	1287	2863	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_16_32
+683	0	cut-window	solved	dashless	full	276	181	87	126	18	69	108	93	599	770	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_272_304
+684	0	solved	solved	dashless	dashless	13	13	0	0	0	0	0	0	79	74	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_432_304
+685	0	solved	solved	full	full	36	36	17	17	4	13	13	9	225	133	level_87__r1c3 <- in_L88_192_0 -> exit:out_teleporter_464_272
+686	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	67	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_0_144
+687	0	cut-window	solved	dashless	full	304	215	87	214	20	67	194	177	700	979	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_16_32
+688	0	solved	solved	full	full	167	167	73	73	20	53	53	37	462	456	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_272_304
+689	0	cut-window	solved	dashless	full	512	269	87	162	32	55	130	105	694	1085	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_432_304
+690	0	cut-window	solved	dashless	full	505	250	87	153	32	55	121	97	785	919	level_87__r1c3 <- in_L89_288_240 -> exit:out_teleporter_464_272
+691	0	cut-window	solved	dashless	full	287	187	87	226	18	69	208	193	601	1068	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_0_144
+692	0	solved	solved	full	full	5	5	9	9	2	7	7	5	78	100	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_16_32
+693	0	cut-window	solved	dashless	full	499	300	87	219	32	55	187	161	923	1579	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_272_304
+694	0	cut-window	solved	dashless	full	682	418	87	253	44	43	209	173	976	2074	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_432_304
+695	0	cut-window	solved	dashless	full	682	411	87	328	44	43	284	249	985	2640	level_87__r1c3 <- in_L92_272_144 -> exit:out_teleporter_464_272
+696	0	solved	solved	full	full	476	476	206	206	46	160	160	133	965	782	level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0
+697	0	solved	solved	full	full	4	4	9	9	2	7	7	5	80	109	level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304
+698	0	solved	solved	full	full	379	379	141	141	45	96	96	73	806	741	level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0
+699	0	solved	solved	full	full	5	5	9	9	2	7	7	5	91	73	level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0
+700	0	refused	refused	None	None	None	None	181	181	50	131	131	86	1000	749	level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304
+701	0	solved	solved	full	full	86	86	78	78	12	66	66	57	314	331	level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0
+702	0	solved	solved	full	full	76	76	35	35	10	25	25	17	210	211	level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0
+703	0	solved	solved	full	full	213	213	151	151	39	112	112	97	662	735	level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304
+704	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	63	level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0
+705	0	refused	refused	None	None	None	None	2	2	1	1	1	0	110	133	level_89__r1c10 <- in_L91_16_144 -> exit:out_teleporter_208_0
+706	0	solved	solved	full	full	5	5	9	9	2	7	7	5	68	78	level_89__r1c15 <- in_L90_48_96 -> exit:out_teleporter_256_0
+707	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	79	98	level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_160_304
+708	0	refused	refused	None	None	None	None	2	2	1	1	1	0	40	32	level_89__r11c12 <- in_L0_240_0 -> exit:out_teleporter_288_240
+709	0	cut-window	solved	dashless	full	204	140	87	359	14	73	345	333	300	842	level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_160_304
+710	0	solved	solved	full	full	5	5	9	9	2	7	7	5	91	71	level_89__r11c12 <- in_L87_0_144 -> exit:out_teleporter_288_240
+711	0	solved	solved	full	full	4	4	9	9	2	7	7	5	160	82	level_90 <- in_L89_256_0 -> exit:out_teleporter_48_96
+712	0	solved	solved	full	full	37	37	20	20	6	14	14	9	99	101	level_90 <- in_L89_256_0 -> location:Level 090 - Chest
+713	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	92	89	level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144
+714	0	refused	refused	None	None	None	None	8	8	4	4	4	0	2686	2566	level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48
+715	0	refused	refused	None	None	None	None	20	20	10	10	10	0	2480	2289	level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144
+716	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	99	level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48
+717	0	solved	solved	full	full	4	4	9	9	2	7	7	5	85	81	level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+718	0	solved	solved	dashless	dashless	11	11	49	49	2	47	47	45	136	109	level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
+719	0	solved	solved	dashless	dashless	8	8	37	37	2	35	35	33	80	89	level_93__r10c7 <- in_L98_112_192 -> exit:out_teleporter_112_80
+720	0	solved	solved	full	full	4	4	9	9	2	7	7	5	80	117	level_93__r14c7 <- in_L87_368_0 -> exit:out_teleporter_112_272
+721	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	109	52	level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_160
+722	0	skipped	skipped	dashless	dashless	33	33	4	4	4	0	0	0	89	60	level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_176
+723	0	skipped	skipped	dashless	dashless	33	33	4	4	4	0	0	0	72	67	level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_160
+724	0	skipped	skipped	dashless	dashless	7	7	2	2	2	0	0	0	53	58	level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_176
+725	0	cut-window	cut-budget	dashless	dashless	575	575	87	642	36	51	606	586	668	2609	level_95 <- in_L12_0_352 -> exit:out_teleporter_32_0
+726	0	cut-window	cut-budget	dashless	dashless	574	574	87	642	36	51	606	586	729	2925	level_95 <- in_L12_0_352 -> exit:out_teleporter_48_0
+727	0	solved	solved	full	full	5	5	9	9	2	7	7	5	69	69	level_95 <- in_L12_0_352 -> exit:out_teleporter_624_64
+728	0	solved	solved	full	full	19	19	12	12	4	8	8	5	108	98	level_95 <- in_L12_0_352 -> exit:out_teleporter_624_80
+729	0	cut-window	cut-budget	dashless	dashless	595	595	87	642	38	49	604	583	620	2817	level_95 <- in_L12_0_368 -> exit:out_teleporter_32_0
+730	0	cut-window	cut-budget	dashless	dashless	595	595	87	642	38	49	604	583	637	2963	level_95 <- in_L12_0_368 -> exit:out_teleporter_48_0
+731	0	solved	solved	full	full	19	19	12	12	4	8	8	5	147	106	level_95 <- in_L12_0_368 -> exit:out_teleporter_624_64
+732	0	solved	solved	full	full	5	5	9	9	2	7	7	5	97	80	level_95 <- in_L12_0_368 -> exit:out_teleporter_624_80
+733	0	solved	solved	full	full	5	5	9	9	2	7	7	5	65	87	level_95 <- in_L59_144_304 -> exit:out_teleporter_32_0
+734	0	solved	solved	full	full	19	19	12	12	4	8	8	5	87	116	level_95 <- in_L59_144_304 -> exit:out_teleporter_48_0
+735	0	cut-window	cut-budget	dashless	dashless	585	585	87	642	38	49	604	583	737	2833	level_95 <- in_L59_144_304 -> exit:out_teleporter_624_64
+736	0	cut-window	cut-budget	dashless	dashless	566	566	87	642	36	51	606	586	848	2920	level_95 <- in_L59_144_304 -> exit:out_teleporter_624_80
+737	0	solved	solved	full	full	19	19	12	12	4	8	8	5	109	86	level_95 <- in_L59_160_304 -> exit:out_teleporter_32_0
+738	0	solved	solved	full	full	5	5	9	9	2	7	7	5	63	65	level_95 <- in_L59_160_304 -> exit:out_teleporter_48_0
+739	0	cut-window	cut-budget	dashless	dashless	598	598	87	642	38	49	604	583	702	3541	level_95 <- in_L59_160_304 -> exit:out_teleporter_624_64
+740	0	cut-window	cut-budget	dashless	dashless	575	575	87	642	36	51	606	586	761	3244	level_95 <- in_L59_160_304 -> exit:out_teleporter_624_80
+741	0	solved	solved	full	full	5	5	9	9	2	7	7	5	65	58	level_96 <- in_L82_144_0 -> exit:out_stairsup_32_32
+742	0	solved	solved	full	full	4	4	9	9	2	7	7	5	57	61	level_96 <- in_L82_144_0 -> exit:out_teleporter_32_64
+743	0	solved	solved	full	full	5	5	9	9	2	7	7	5	63	63	level_97 <- in_L37_576_144 -> exit:out_stairsup_32_16
+744	0	solved	solved	full	full	4	4	9	9	2	7	7	5	55	59	level_97 <- in_L37_576_144 -> exit:out_stairsdown_32_48
+745	0	cut-budget	cut-budget	None	None	None	None	644	644	643	1	1	0	1271	1197	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+745	1	cut-window	solved	dashless	full	808	724	670	1582	669	1	913	250	1345	2606	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+746	0	solved	solved	full	full	4	4	9	9	2	7	7	5	80	89	level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192
+747	0	cut-window	solved	dashless	full	236	177	87	309	17	70	292	277	1120	2149	level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+748	0	cut-budget	cut-budget	None	None	None	None	642	642	19	623	623	177	2557	2552	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+748	1	refused	refused	None	None	None	None	776	776	None	776	776	177	2381	2200	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+749	0	solved	solved	full	full	40	40	20	20	6	14	14	9	193	213	level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192
+750	0	cut-window	solved	dashless	full	194	177	88	274	75	13	199	125	1165	1571	level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+751	0	solved	solved	full	full	5	5	9	9	2	7	7	5	75	73	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96
+752	0	solved	solved	full	full	5	5	9	9	2	7	7	5	87	73	level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112
+753	0	solved	solved	full	full	5	5	9	9	2	7	7	5	111	78	level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96
+754	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	3070	3193	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+754	1	refused	refused	None	None	None	None	1596	1596	798	798	798	0	6803	6892	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96
+755	0	solved	solved	full	full	5	5	9	9	2	7	7	5	71	81	level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96
+756	0	solved	solved	full	full	4	4	9	9	2	7	7	5	95	82	level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96
+757	0	solved	solved	full	full	16	16	12	12	4	8	8	5	94	139	level_102__r5c3 <- in_L101_48_96 -> exit:out_teleporter_0_96
+758	0	solved	solved	full	full	5	5	9	9	2	7	7	5	64	61	level_102__r5c3 <- in_L101_48_96 -> exit:out_stairsdown_64_96
+759	0	solved	solved	full	full	5	5	9	9	2	7	7	5	66	62	level_102__r5c3 <- in_L103_304_144 -> exit:out_teleporter_0_96
+760	0	solved	solved	full	full	16	16	12	12	4	8	8	5	86	114	level_102__r5c3 <- in_L103_304_144 -> exit:out_stairsdown_64_96
+761	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	64	level_102__r5c9 <- in_L101_144_96 -> exit:out_stairsdown_160_96
+762	0	solved	solved	full	full	20	20	12	12	4	8	8	5	86	122	level_102__r5c9 <- in_L101_144_96 -> exit:out_teleporter_224_96
+763	0	solved	solved	full	full	26	26	36	36	4	32	32	29	158	141	level_102__r5c9 <- in_L107_0_48 -> exit:out_stairsdown_160_96
+764	0	solved	solved	dashless	dashless	12	12	0	0	0	0	0	0	55	55	level_102__r5c9 <- in_L107_0_48 -> exit:out_teleporter_224_96
+765	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	1938	1898	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64
+765	1	cut-budget	cut-budget	None	None	None	None	2563	2563	2562	1	1	0	4696	4671	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64
+766	0	solved	solved	full	full	5	5	9	9	2	7	7	5	98	85	level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144
+767	0	solved	solved	full	full	5	5	9	9	2	7	7	5	67	68	level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64
+768	0	cut-budget	cut-budget	None	None	None	None	643	643	642	1	1	0	3500	3468	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144
+768	1	cut-budget	cut-budget	None	None	None	None	2562	2562	1558	1004	1004	0	13703	13805	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144
+769	0	cut-window	solved	dashless	full	337	259	120	329	119	1	210	93	334	1001	level_104 <- in_L103_0_64 -> exit:out_teleporter_0_16
+770	0	solved	solved	full	full	5	5	9	9	2	7	7	5	70	76	level_104 <- in_L103_0_64 -> exit:out_teleporter_144_128
+771	0	solved	solved	full	full	5	5	9	9	2	7	7	5	72	73	level_104 <- in_L105_224_64 -> exit:out_teleporter_0_16
+772	0	cut-window	solved	dashless	full	365	291	87	439	68	19	371	305	516	1203	level_104 <- in_L105_224_64 -> exit:out_teleporter_144_128
+773	0	cut-window	solved	dashless	full	380	267	87	254	24	63	230	209	708	1282	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+773	1	cut-window	solved	dashless	full	396	327	87	137	33	54	104	73	789	777	level_105 <- in_L104_0_16 -> exit:out_teleporter_80_144
+774	0	solved	solved	full	full	5	5	9	9	2	7	7	5	72	74	level_105 <- in_L104_0_16 -> exit:out_teleporter_224_64
+775	0	solved	solved	full	full	4	4	9	9	2	7	7	5	74	82	level_105 <- in_L106_256_0 -> exit:out_teleporter_80_144
+776	0	cut-window	solved	dashless	full	387	293	87	148	31	56	117	89	763	1293	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+776	1	cut-window	solved	dashless	full	387	293	87	148	31	56	117	89	961	1061	level_105 <- in_L106_256_0 -> exit:out_teleporter_224_64
+777	0	solved	solved	full	full	123	123	68	68	18	50	50	37	365	376	level_106 <- in_L105_80_144 -> exit:out_teleporter_64_48
+778	0	solved	solved	full	full	5	5	9	9	2	7	7	5	89	72	level_106 <- in_L105_80_144 -> exit:out_teleporter_256_0
+779	0	solved	solved	full	full	125	125	76	76	18	58	58	45	345	392	level_106 <- in_L105_80_144 -> location:Level 106 - Ghostsword
+780	0	solved	solved	full	full	5	5	9	9	2	7	7	5	77	86	level_107__r0c2 <- in_L102_224_96 -> exit:out_teleporter_0_48
+781	0	refused	refused	None	None	None	None	6	6	3	3	3	0	2375	2469	level_107__r0c2 <- in_L102_224_96 -> exit:out_teleporter_304_176
+782	0	cut-budget	cut-budget	None	None	None	None	642	642	641	1	1	0	1996	2093	level_107__r0c2 <- in_L108_0_32 -> exit:out_teleporter_0_48
+782	1	cut-budget	cut-budget	None	None	None	None	2563	2563	2562	1	1	0	4199	3758	level_107__r0c2 <- in_L108_0_32 -> exit:out_teleporter_0_48
+783	0	solved	solved	full	full	5	5	9	9	2	7	7	5	96	99	level_107__r0c2 <- in_L108_0_32 -> exit:out_teleporter_304_176
+784	0	solved	solved	full	full	5	5	9	9	2	7	7	5	65	75	level_108__r2c0 <- in_L107_304_176 -> exit:out_teleporter_0_32
+785	0	solved	solved	full	full	5	5	9	9	2	7	7	5	71	73	level_108__r11c8 <- in_L109_0_112 -> exit:out_teleporter_224_224
+786	0	solved	solved	full	full	5	5	9	9	2	7	7	5	83	85	level_109 <- in_L108_224_224 -> exit:out_teleporter_0_112
+787	0	solved	solved	full	full	104	104	56	56	10	46	46	37	237	274	level_109 <- in_L108_224_224 -> exit:out_teleporter_160_48
+788	0	cut-window	solved	dashless	full	142	101	87	120	10	77	110	101	320	362	level_109 <- in_L108_224_224 -> location:Level 109 - Firewand
+789	0	solved	solved	full	full	173	173	83	83	14	69	69	57	377	370	level_110 <- in_L101_104_24 -> exit:out_pit_3_2
+790	0	solved	solved	full	full	112	112	68	68	10	58	58	49	299	333	level_111 <- in_L3_0_64 -> exit:out_teleporter_128_48
+791	0	solved	solved	full	full	5	5	9	9	2	7	7	5	60	66	level_111 <- in_L3_0_64 -> exit:out_teleporter_304_176
+792	0	solved	solved	full	full	5	5	9	9	2	7	7	5	81	68	level_111 <- in_L112_32_224 -> exit:out_teleporter_128_48
+793	0	solved	solved	full	full	131	131	76	76	12	64	64	53	414	362	level_111 <- in_L112_32_224 -> exit:out_teleporter_304_176
+794	0	solved	solved	full	full	7	7	35	35	28	7	7	5	107	106	level_112 <- in_L111_128_48 -> exit:out_teleporter_32_224
+795	0	refused	refused	None	None	None	None	2	2	1	1	1	0	160	128	level_112 <- in_L111_128_48 -> exit:out_teleporter_112_0
+797	0	solved	solved	full	full	210	210	107	107	40	67	67	53	549	624	level_112 <- in_L113_64_144 -> exit:out_teleporter_32_224
+798	0	solved	solved	full	full	8	8	35	35	28	7	7	5	114	122	level_112 <- in_L113_64_144 -> exit:out_teleporter_112_0
+800	0	cut-window	solved	dashless	full	132	88	86	87	10	76	77	69	368	298	level_113 <- in_L112_112_0 -> exit:out_teleporter_16_0
+801	0	solved	solved	full	full	90	90	75	75	10	65	65	57	274	240	level_113 <- in_L112_112_0 -> exit:out_teleporter_32_0
+802	0	solved	solved	full	full	4	4	9	9	2	7	7	5	59	57	level_113 <- in_L112_112_0 -> exit:out_teleporter_64_144
+803	0	solved	solved	full	full	18	18	9	9	2	7	7	5	79	73	level_113 <- in_L112_112_0 -> exit:out_teleporter_80_144
+804	0	refused	refused	None	None	None	None	2	2	1	1	1	0	33	32	level_113 <- in_L112_112_0 -> exit:out_teleporter_112_0
+805	0	refused	refused	None	None	None	None	2	2	1	1	1	0	32	39	level_113 <- in_L112_112_0 -> exit:out_teleporter_128_0
+807	0	solved	solved	full	full	5	5	9	9	2	7	7	5	91	60	level_113 <- in_L114_64_144 -> exit:out_teleporter_16_0
+808	0	solved	solved	full	full	19	19	12	12	4	8	8	5	80	78	level_113 <- in_L114_64_144 -> exit:out_teleporter_32_0
+809	0	solved	solved	full	full	77	77	44	44	8	36	36	29	235	229	level_113 <- in_L114_64_144 -> exit:out_teleporter_64_144
+810	0	solved	solved	full	full	76	76	44	44	8	36	36	29	208	224	level_113 <- in_L114_64_144 -> exit:out_teleporter_80_144
+811	0	refused	refused	None	None	None	None	2	2	1	1	1	0	51	34	level_113 <- in_L114_64_144 -> exit:out_teleporter_112_0
+812	0	refused	refused	None	None	None	None	2	2	1	1	1	0	33	34	level_113 <- in_L114_64_144 -> exit:out_teleporter_128_0
+814	0	solved	solved	full	full	19	19	12	12	4	8	8	5	76	76	level_113 <- in_L114_80_144 -> exit:out_teleporter_16_0
+815	0	solved	solved	full	full	5	5	9	9	2	7	7	5	96	57	level_113 <- in_L114_80_144 -> exit:out_teleporter_32_0
+816	0	solved	solved	full	full	78	78	48	48	8	40	40	33	233	239	level_113 <- in_L114_80_144 -> exit:out_teleporter_64_144
+817	0	solved	solved	full	full	77	77	48	48	8	40	40	33	254	188	level_113 <- in_L114_80_144 -> exit:out_teleporter_80_144
+818	0	refused	refused	None	None	None	None	2	2	1	1	1	0	34	33	level_113 <- in_L114_80_144 -> exit:out_teleporter_112_0
+819	0	refused	refused	None	None	None	None	2	2	1	1	1	0	44	35	level_113 <- in_L114_80_144 -> exit:out_teleporter_128_0
+821	0	solved	solved	full	full	114	114	64	64	10	54	54	45	318	326	level_113 <- in_L115_64_144 -> exit:out_teleporter_16_0
+822	0	solved	solved	full	full	112	112	64	64	10	54	54	45	313	349	level_113 <- in_L115_64_144 -> exit:out_teleporter_32_0
+823	0	solved	solved	full	full	77	77	48	48	8	40	40	33	259	276	level_113 <- in_L115_64_144 -> exit:out_teleporter_64_144
+824	0	solved	solved	full	full	78	78	48	48	8	40	40	33	262	247	level_113 <- in_L115_64_144 -> exit:out_teleporter_80_144
+825	0	solved	solved	full	full	5	5	9	9	2	7	7	5	61	72	level_113 <- in_L115_64_144 -> exit:out_teleporter_112_0
+826	0	solved	solved	full	full	19	19	12	12	4	8	8	5	84	92	level_113 <- in_L115_64_144 -> exit:out_teleporter_128_0
+828	0	solved	solved	full	full	115	115	64	64	10	54	54	45	282	235	level_113 <- in_L115_80_144 -> exit:out_teleporter_16_0
+829	0	solved	solved	full	full	115	115	64	64	10	54	54	45	282	276	level_113 <- in_L115_80_144 -> exit:out_teleporter_32_0
+830	0	solved	solved	full	full	76	76	44	44	8	36	36	29	201	287	level_113 <- in_L115_80_144 -> exit:out_teleporter_64_144
+831	0	solved	solved	full	full	77	77	44	44	8	36	36	29	209	227	level_113 <- in_L115_80_144 -> exit:out_teleporter_80_144
+832	0	solved	solved	full	full	19	19	12	12	4	8	8	5	69	89	level_113 <- in_L115_80_144 -> exit:out_teleporter_112_0
+833	0	solved	solved	full	full	5	5	9	9	2	7	7	5	63	55	level_113 <- in_L115_80_144 -> exit:out_teleporter_128_0
+835	0	solved	solved	full	full	4	4	9	9	2	7	7	5	60	56	level_114 <- in_L113_16_0 -> exit:out_teleporter_64_144
+836	0	solved	solved	full	full	18	18	9	9	2	7	7	5	86	79	level_114 <- in_L113_16_0 -> exit:out_teleporter_80_144
+837	0	solved	solved	full	full	18	18	9	9	2	7	7	5	87	99	level_114 <- in_L113_32_0 -> exit:out_teleporter_64_144
+838	0	solved	solved	full	full	4	4	9	9	2	7	7	5	66	72	level_114 <- in_L113_32_0 -> exit:out_teleporter_80_144
+839	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	71	70	level_115__r9c4 <- in_L113_112_0 -> exit:out_teleporter_64_144
+840	0	solved	solved	full	full	29	29	48	48	4	44	44	41	128	135	level_115__r9c4 <- in_L113_112_0 -> exit:out_teleporter_80_144
+841	0	solved	solved	full	full	29	29	48	48	4	44	44	41	132	124	level_115__r9c4 <- in_L113_128_0 -> exit:out_teleporter_64_144
+842	0	solved	solved	dashless	dashless	7	7	33	33	2	31	31	29	69	84	level_115__r9c4 <- in_L113_128_0 -> exit:out_teleporter_80_144

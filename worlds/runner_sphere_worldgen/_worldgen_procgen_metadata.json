@@ -1,0 +1,120 @@
+{
+  "driver": "sphere-growth",
+  "stop_reason": "plan_complete",
+  "sphere_plan": {
+    "seed": 1,
+    "spheres": [
+      {
+        "sphere": 1,
+        "items": [
+          "Blue Platforms"
+        ]
+      },
+      {
+        "sphere": 2,
+        "items": [
+          "Double Jump"
+        ]
+      },
+      {
+        "sphere": 3,
+        "items": [
+          "Victory"
+        ]
+      }
+    ]
+  },
+  "sphere_tree": {
+    "nodes": [
+      {
+        "index": 0,
+        "wave": 0,
+        "parent": null,
+        "side": null,
+        "cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "isTeleporter": false,
+        "substrate": "runner",
+        "gate": [],
+        "gateCounts": {},
+        "usedSides": [
+          "N"
+        ],
+        "childGates": [
+          [
+            {
+              "item": "Blue Platforms",
+              "count": 1
+            }
+          ]
+        ],
+        "isFiller": false
+      },
+      {
+        "index": 1,
+        "wave": 1,
+        "parent": 0,
+        "side": "S",
+        "cell": {
+          "gx": 2,
+          "gy": 3
+        },
+        "isTeleporter": false,
+        "substrate": "runner",
+        "gate": [
+          "Blue Platforms"
+        ],
+        "gateCounts": {
+          "Blue Platforms": 1
+        },
+        "usedSides": [
+          "S",
+          "W"
+        ],
+        "childGates": [
+          [
+            {
+              "item": "Double Jump",
+              "count": 1
+            }
+          ]
+        ],
+        "isFiller": false
+      },
+      {
+        "index": 2,
+        "wave": 2,
+        "parent": 1,
+        "side": "E",
+        "cell": {
+          "gx": 3,
+          "gy": 3
+        },
+        "isTeleporter": false,
+        "substrate": "runner",
+        "gate": [
+          "Double Jump"
+        ],
+        "gateCounts": {
+          "Double Jump": 1
+        },
+        "usedSides": [
+          "E"
+        ],
+        "childGates": [],
+        "isFiller": false
+      }
+    ],
+    "substrateCounts": {
+      "runner": 3
+    },
+    "quotaFallbacks": 0
+  },
+  "region_count": 3,
+  "grid_dims": {
+    "width": 4,
+    "height": 4
+  }
+}

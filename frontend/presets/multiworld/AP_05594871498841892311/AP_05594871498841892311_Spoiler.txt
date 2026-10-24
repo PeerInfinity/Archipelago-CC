@@ -1,0 +1,130 @@
+﻿Archipelago Version 0.6.8  -  Seed: 4
+
+Filling Algorithm:               balanced
+Players:                         4
+Total Location Count:            18
+Plando Options:                  connections, texts, bosses
+
+Player 1: Player1
+Game:                            Procgen Maze WorldGen
+Location Count:                  3
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+Use Canonical Options:           Yes
+
+Player 2: Player2
+Game:                            Procgen Maze WorldGen
+Location Count:                  3
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+Use Canonical Options:           Yes
+
+Player 3: Player3
+Game:                            Bounce Demo WorldGen
+Location Count:                  6
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+Use Canonical Options:           Yes
+
+Player 4: Player4
+Game:                            Bounce Demo WorldGen
+Location Count:                  6
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+Use Canonical Options:           Yes
+
+
+Locations:
+
+region_1_0__key_red_pickup__5_5 (Player1): Left arrow (Player3)
+region_1_0__key_red_pickup__2_4 (Player1): Blue platforms (Player4)
+region_2_0__victory_pickup__2_3 (Player1): Right arrow (Player3)
+region_1_0__key_red_pickup__5_5 (Player2): Victory (Player3)
+region_1_0__key_red_pickup__2_4 (Player2): Springs (Player3)
+region_2_0__victory_pickup__2_3 (Player2): Blue platforms (Player3)
+region_1_0__loc_arrow (Player3): Right arrow (Player4)
+region_2_0__loc_easy (Player3): Jetpacks (Player3)
+region_2_0__loc_easy2 (Player3): Left arrow (Player4)
+region_0_1__loc_right (Player3): Springs (Player4)
+region_0_1__loc_left (Player3): Victory (Player4)
+region_1_1__loc_spring (Player3): key_red (Player1)
+region_1_0__loc_arrow (Player4): victory (Player2)
+region_2_0__loc_easy (Player4): key_red (Player1)
+region_2_0__loc_easy2 (Player4): victory (Player1)
+region_0_1__loc_right (Player4): key_red (Player2)
+region_0_1__loc_left (Player4): key_red (Player2)
+region_1_1__loc_spring (Player4): Jetpacks (Player4)
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  region_1_0__key_red_pickup__5_5 (Player1): Left arrow (Player3)
+  region_2_0__victory_pickup__2_3 (Player1): Right arrow (Player3)
+  region_1_0__key_red_pickup__5_5 (Player2): Victory (Player3)
+  region_2_0__victory_pickup__2_3 (Player2): Blue platforms (Player3)
+  region_1_0__loc_arrow (Player3): Right arrow (Player4)
+  region_1_0__loc_arrow (Player4): victory (Player2)
+}
+2: {
+  region_0_1__loc_left (Player3): Victory (Player4)
+  region_0_1__loc_right (Player3): Springs (Player4)
+  region_2_0__loc_easy (Player3): Jetpacks (Player3)
+  region_2_0__loc_easy2 (Player3): Left arrow (Player4)
+  region_2_0__loc_easy (Player4): key_red (Player1)
+  region_2_0__loc_easy2 (Player4): victory (Player1)
+}
+3: {
+  region_1_0__key_red_pickup__2_4 (Player1): Blue platforms (Player4)
+  region_0_1__loc_right (Player4): key_red (Player2)
+  region_1_1__loc_spring (Player4): Jetpacks (Player4)
+}
+4: {
+  region_1_0__key_red_pickup__2_4 (Player2): Springs (Player3)
+  region_0_1__loc_left (Player4): key_red (Player2)
+}
+5: {
+  region_1_1__loc_spring (Player3): key_red (Player1)
+}

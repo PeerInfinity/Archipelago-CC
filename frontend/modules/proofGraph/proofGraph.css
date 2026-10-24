@@ -57,6 +57,12 @@
   background: #585b70;
 }
 
+/* The two-click connect mode's toggle, while it is on. */
+.pg-btn.pg-btn-active {
+  border-color: #f9e2af;
+  color: #f9e2af;
+}
+
 .pg-btn-check {
   margin-left: auto;
   background: #1e6640;

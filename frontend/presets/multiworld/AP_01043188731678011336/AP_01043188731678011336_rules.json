@@ -17016,7 +17016,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ice Palace)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ice Palace - Spike Room",
@@ -18367,7 +18367,7 @@
                   "rule": "AST_placement_search",
                   "args": {
                     "item": "Big Key (Turtle Rock)",
-                    "player": 1,
+                    "player": 2,
                     "locations": [
                       [
                         "Turtle Rock - Compass Chest",
@@ -18477,7 +18477,7 @@
                   "rule": "AST_placement_search",
                   "args": {
                     "item": "Big Key (Turtle Rock)",
-                    "player": 1,
+                    "player": 2,
                     "locations": [
                       [
                         "Turtle Rock - Compass Chest",
@@ -20187,7 +20187,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -20286,7 +20286,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ganons Tower)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ganons Tower - Bob's Chest",
@@ -20350,7 +20350,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -20449,7 +20449,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -20548,7 +20548,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -20647,7 +20647,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -20746,7 +20746,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -21100,7 +21100,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ganons Tower)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ganons Tower - Randomizer Room - Top Left",
@@ -21183,7 +21183,7 @@
                               "rule": "AST_placement_search",
                               "args": {
                                 "item": "Big Key (Ganons Tower)",
-                                "player": 1,
+                                "player": 2,
                                 "locations": [
                                   [
                                     "Ganons Tower - Randomizer Room - Top Left",
@@ -21210,7 +21210,7 @@
                               "rule": "AST_placement_search",
                               "args": {
                                 "item": "Small Key (Ganons Tower)",
-                                "player": 1,
+                                "player": 2,
                                 "locations": [
                                   [
                                     "Ganons Tower - Firesnake Room",
@@ -21300,7 +21300,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -21381,7 +21381,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -21462,7 +21462,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -21543,7 +21543,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -31099,10 +31099,7 @@
       "Small Key (Thieves Town)": 3,
       "Small Key (Tower of Hera)": 1,
       "Small Key (Turtle Rock)": 6,
-      "Triforce": 1,
-      "__max_boss_heart_container": 10,
-      "__max_heart_piece": 24,
-      "__max_progressive_bottle": 4
+      "Triforce": 1
     },
     "3": {
       "13 Coins": 21,
@@ -33696,7 +33693,7 @@
           {
             "name": "Multiworld Setup Guide",
             "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-            "language": "Espa\u00f1ol",
+            "language": "Español",
             "file_name": "multiworld_es.md",
             "link": "multiworld/es",
             "authors": [
@@ -33706,7 +33703,7 @@
           {
             "name": "Multiworld Setup Guide",
             "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-            "language": "Fran\u00e7ais",
+            "language": "Français",
             "file_name": "multiworld_fr.md",
             "link": "multiworld/fr",
             "authors": [
@@ -33726,7 +33723,7 @@
           {
             "name": "MSU-1 Setup Guide",
             "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
-            "language": "Espa\u00f1ol",
+            "language": "Español",
             "file_name": "msu1_es.md",
             "link": "msu1/es",
             "authors": [
@@ -33736,7 +33733,7 @@
           {
             "name": "MSU-1 Setup Guide",
             "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
-            "language": "Fran\u00e7ais",
+            "language": "Français",
             "file_name": "msu1_fr.md",
             "link": "msu1/fr",
             "authors": [
@@ -34178,7 +34175,7 @@
           {
             "name": "Guide de configuration Multimonde",
             "description": "Un guide pour configurer Adventure MultiWorld",
-            "language": "Fran\u00e7ais",
+            "language": "Français",
             "file_name": "setup_fr.md",
             "link": "setup/fr",
             "authors": [

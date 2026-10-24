@@ -1,0 +1,7 @@
+leg | pass family | members | completed | min contact samples | outcome of the members driven on forks (all members, AXEP_CANDIDATES=80)
+603 | families 1 | 52 | 52 | 1 | {'dies:lava': 20, 'dies:spinningaxe': 32} | first axe hit t47..t99
+603 | families 11 | 572 | 572 | 1 | {'dies:lava': 44, 'dies:spinningaxe': 33, 'dies:?': 3} | first axe hit t44..t99
+636 | families 1 | 60 | 60 | 2 | {'model refuses: shake band': 60} | first axe hit t-..t-
+636 | families 11 | 660 | 660 | 2 | {'model refuses: shake band': 80} | first axe hit t-..t-
+774 | families 1 | 72 | 72 | 1 | {'dies:pit': 72} | first axe hit t153..t156
+774 | families 11 | 792 | 639 | 1 | {'dies:pit': 80} | first axe hit t156..t156

@@ -82,6 +82,9 @@ export class TimerLogic {
     // This prevents duplicate check attempts before state updates
     this.attemptedChecks = new Set();
 
+    // Every user:locationCheck the timer dispatches carries `fromBot: true`: the Playback Bot drives the timer
+    // (its 'Any reachable location' mode), and the bot's click intercept passes fromBot checks through.
+
     // Track fallback delay state for zero-delay mode
     // When delay is 0 and no locations are available, we switch to 0.1s delay
     // for up to 10 cycles to give other code time to catch up
@@ -486,6 +489,7 @@ export class TimerLogic {
             locationName: loc.name,
             regionName: loc.region || loc.parent_region,
             originator: 'TimerModuleAuto',
+            fromBot: true,
             originalDOMEvent: false,
           },
           { initialTarget: 'bottom' }
@@ -509,6 +513,7 @@ export class TimerLogic {
             locationName: locationsToCheck[0].name,
             regionName: locationsToCheck[0].region || locationsToCheck[0].parent_region,
             originator: 'TimerModuleAuto',
+            fromBot: true,
             originalDOMEvent: false,
           },
           { initialTarget: 'bottom' }
@@ -543,6 +548,7 @@ export class TimerLogic {
               locationName: loc.name,
               regionName: loc.region || loc.parent_region,
               originator: 'TimerModuleAuto',
+              fromBot: true,
               originalDOMEvent: false,
             },
             { initialTarget: 'bottom' }
@@ -628,6 +634,7 @@ export class TimerLogic {
                     locationName: loc.name,
                     regionName: loc.region || loc.parent_region,
                     originator: 'TimerModuleAuto',
+                    fromBot: true,
                     originalDOMEvent: false,
                   },
                   { initialTarget: 'bottom' }
@@ -716,6 +723,7 @@ export class TimerLogic {
           locationName: quickCheckTarget.name,
           regionName: quickCheckTarget.region || quickCheckTarget.parent_region,
           originator: 'TimerModuleQuickCheck',
+          fromBot: true,
           originalDOMEvent: false, // This was triggered by a button, but not a direct location click
         },
         { initialTarget: 'bottom' }

@@ -569,8 +569,7 @@
 }
 
 /* Maze action queue (Cavernous-2-style icon row). Sits under the
- * Playback controls section in the panel. See
- * NewDocs/plans/procedural-generation/maze-content-modules.md Phase 1.
+ * Playback controls section in the panel.
  */
 .maze-room-queue {
     padding: 6px 8px;
@@ -659,6 +658,26 @@
 .maze-room-queue-controls {
     display: flex;
     gap: 6px;
+}
+
+/* Item actions (turn + use), shown only on a world with an action_lib. */
+.maze-room-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.maze-room-item-action {
+    font-size: 11px;
+    min-width: 24px;
+}
+
+.maze-room-item-facing {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-left: 4px;
 }
 
 .maze-room-queue-clear {

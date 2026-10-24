@@ -131,7 +131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "S\u00e4dekivi",
+              "name": "Sädekivi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2597,8 +2597,8 @@
         "type": null,
         "max_count": 1
       },
-      "S\u00e4dekivi": {
-        "name": "S\u00e4dekivi",
+      "Sädekivi": {
+        "name": "Sädekivi",
         "id": 110030,
         "groups": [
           "Everything",
@@ -2750,7 +2750,7 @@
       "Refreshing Gourd": 1,
       "Secret Potion": 4,
       "Spell Refresher": 6,
-      "S\u00e4dekivi": 1,
+      "Sädekivi": 1,
       "Tinker with Wands Everywhere Perk": 1,
       "Toxic Immunity Perk": 1,
       "Trap": 10,

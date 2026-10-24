@@ -1,0 +1,49 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 384,
+        "y": 256
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 40
+        }
+    ],
+    "name": "u9-shield-puncher",
+    "description": "⛓⛓⛓ U9-swim D2(b) — THE SHIELD MEETS A PUNCHER, AND THE PUNCHER DOES NOT MOVE. U7's L12 boot (two tiles west of `puncher@416,256`), the SHIELD granted through the seam and `noDamage` FALSE. The player walks EAST for 40 ticks with the 3x7 side box ahead of it, then stands for 20. The model predicts the box touches the puncher at t 13, 14, 15, 35 and `Puncher.knockback` — an EMPTY override (`Puncher.as:167-170`) — moves nothing; the contact and the punch follow (t 15 chaser, 35 punch). A model that shoved it would throw it 5 px/tick east. Authored by scripts/procgen/plan-seedling-u9-shield-bump.mjs.",
+    "note": ""
+}

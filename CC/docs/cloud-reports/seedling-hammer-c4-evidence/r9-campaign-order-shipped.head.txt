@@ -1,0 +1,40 @@
+  pass 1: DISCOVERED kill-lock clear(s) [{5,0}] at tick 201
+  pass 2: MODEL-sourced {5,0} at 301 — `chaserKillLockOpens` computed the removal (the last body leaves the world) at 201, and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 301 tick(s) below the declared 301 — {5,0}
+  pass 3: SOLVED in 403 ticks
+PASS: r8-solve-5: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-solve-5: ends at the L6 ARRIVAL (§3.5) — ["403:L6"]
+PASS: r8-solve-5: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:17336
+        throw new SolverRefusal(message, {
+              ^
+
+SolverRefusal: solverBot(r8-solve-6) reach-exit (224,32)->L7: the combat ladder is EXHAUSTED. The corridor passes through danger at (62.0,24.0) — enemy:sandtrap@64,16 (a static "Enemy" body at its placement (this room is stepped, so this class is unbridged and does not move), priced "static" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:
+  avoid: no admissible corridor with the danger map's 6 volume(s) forbidden — no walkable tile path in level 6 from tile (2,1) to (14,2). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, 
+  time: the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.
+  bait: sandtrap@64,16 is a STATIC census body (`speed 0`, and this room's chaser roster is refused) — it never writes `v`, so there is no straight line to bend and nothing to lure. That is a KILL question, and the kill is the room's own ceiling.
+  kill: static sword arm: sandtrap@64,16: the run's `primary` slot holds NOTHING — the static sword arm is a SWORD press. The sword is a SUB-ORDER the macro layer owes. · the ceiling: level 6 has NO arrow trap, so it has no ceiling to arm. A kill by the room's own weapon needs the room to have one.
+    at refuse (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:17336:15)
+    at climbLadderUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:19483:9)
+    at climbLadder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:19506:59)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:19882:33)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:20041:68)
+    at solveSegmentUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:20869:20)
+    at solveSegmentDeadlined (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:16823:37)
+    at solveSegment (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:16815:12)
+    at file:///home/user/Archipelago-CC/scripts/procgen/solve-seedling-r9-campaign.mjs:802:15 {
+  goal: { kind: 'reach-exit', exit: { x: 224, y: 32 } },
+  obstacle: {
+    kind: 'danger',
+    id: 'sandtrap@64,16',
+    sources: [ 'enemy:sandtrap@64,16' ]
+  },
+  considered: [
+    { option: 'avoid', why: 'attempted' },
+    {
+      option: 'time',
+      why: "no admissible corridor with the danger map's 6 volume(s) forbidden — no walkable tile path in level 6 from tile (2,1) to (14,2). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, "
+    },
+    {
+      option: 'bait',
+      why: 'the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.'

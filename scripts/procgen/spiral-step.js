@@ -1,0 +1,530 @@
+#!/usr/bin/env node
+/**
+ * Headless per-step driver for the stepped SHUFFLED-SPIRAL pipeline. Runs ONE
+ * step (or a range) of arrange → content → regions → compile, reading the prior
+ * step's "envelope" JSON and writing the next. Edit the envelope JSON between
+ * invocations to author each step by hand (e.g. after `arrange`, reorder
+ * arrange.sequence or edit arrange.cells, then re-run from `regions`). Shares the
+ * step wiring with the Procgen Pipeline panel via spiralSteps.js.
+ *
+ * Usage:
+ *   # start fresh (arrange builds the envelope from the substrate quotas):
+ *   node scripts/procgen/spiral-step.js arrange --seed 1 --quota jta=5 --start jta -o s1.json
+ *   node scripts/procgen/spiral-step.js content  -i s1.json -o s2.json
+ *   node scripts/procgen/spiral-step.js regions  -i s2.json -o s3.json
+ *   node scripts/procgen/spiral-step.js compile  -i s3.json -o s4.json --rules-out rules.json
+ *   # run the whole pipeline (or a range) in one process:
+ *   node scripts/procgen/spiral-step.js run --quota maze=4 --quota jta=4 --start maze \
+ *        --items key_red=2 --rules-out rules.json
+ *   # re-run from a step after hand-editing the envelope:
+ *   node scripts/procgen/spiral-step.js run -i s1.json --from regions --rules-out rules.json
+ *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
+ *   # FIRST step whose output is missing (presence = keep, absence = recompute):
+ *   node scripts/procgen/spiral-step.js run -i partial.json --rules-out rules.json
+ * World flags (arrange / run when starting fresh):
+ *   --seed N                rng seed (default 1)
+ *   --region WxH            per-region tile size (default 8x6)
+ *   --quota id=N            per-substrate region quota (repeatable; ≥1 required)
+ *   --start id              start substrate ('auto' or substrate id)
+ *   --items id=N            item pool entry (procedural substrates; repeatable)
+ *   --obstacles id=N        obstacle pool entry (repeatable)
+ *   --no-bidirectional      disable assumeBidirectional (default on)
+ *   --enable-loop-mode      compute loop_costs in the rules.json
+ *   --region-xp-effect E    loop-mode xp effect (default cost)
+ *   --discovery-mode M      follow (default: discovery follows loop mode) | on | off
+ *   --victory-item NAME     completion item for an envelope whose ③ predates the
+ *                           item layer; a fresh ③ names its own goal (`Victory`,
+ *                           or none), which ④ uses instead
+ * JtA ② content dataset flags (arrange / run; Part 3 — generation is Node-only):
+ *   --jta-dataset-file F    install a pre-generated dataset document as ② content
+ *   --jta-generate          generate the dataset from the bundled-less fixtures
+ *   --jta-dataset-seed N    generation seed (default 1)
+ *   --jta-dataset-zones N   generation zone count
+ *   --jta-dataset-theme K   generation theme key
+ *   --jta-dataset-value-mode M   raw (default) | zone_formula
+ *   --jta-original-item-weight W  per-rep chance a scheduled award keeps the
+ *                                 original item (P2/S3; byte-inert default 1)
+ *   --jta-dummy-item-ratio R      per-rep chance an award becomes the minted
+ *                                 inert dummy item (P2; byte-inert default 0)
+ * Award-schedule knobs, GLOBAL (P2/S3 — one pair governs every generator;
+ * the --jta-* spellings above override them for jta only):
+ *   --original-item-weight W      per-award chance the original is kept
+ *                                 (byte-inert default 1); with an omsi quota
+ *                                 this also mints the omsi lootable contents
+ *                                 schedule (Pots/Locks, §9b-pre)
+ *   --dummy-item-ratio R          per-award chance of a dummy (byte-inert
+ *                                 default 0)
+ *   --jta-emit-locations    surface each zone task as an AP location + a Victory
+ *   --jta-goal-zone N       Victory zone (default: deepest zone when emitting)
+ *   --jta-free-zones N      zones requiring no perks (default 1)
+ *   --jta-starting-perks N  perks the player starts with (default 0)
+ *   --jta-perk-shuffle-seed N   seeded cross-zone perk placement
+ * X1 maze consumable-tile knobs (arrange / run; need a maze quota):
+ *   --consumable-tiles N    per-maze-region cross-game consumable tiles
+ *                           (byte-inert default 0). The foreign pool is the
+ *                           union of the OTHER quota'd substrates' registry
+ *                           sharing.items declarations; an empty pool places
+ *                           nothing. These tiles are NOT AP locations and are
+ *                           invisible to winnability logic (D10/D5).
+ *   --consumable-count N    grant count per consumable tile (default 1)
+ *   --mana-tiles N          per-maze-region mana-refill tiles (default 0)
+ *   --mana-tile-amount N    mana per refill tile (default 0; a tile is only
+ *                           placed when this is > 0)
+ * I/O flags (all subcommands):
+ *   -i, --input <envelope.json>   prior step's envelope
+ *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
+ *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
+ *   --from <step>                 (run) resume from this step
+ *   --to <step>                   (run) stop after this step (default compile)
+ *   --config PATH                 read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *   --config-schema               print that JSON Schema and exit
+ *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
+ *   -h, --help                    print this and exit
+ *
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
+ */
+import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
+
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
+import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
+import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';
+import {
+    SPIRAL_STEPS, runSpiralStep, runSpiralToStep, resumeSpiralEnvelope,
+    nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
+    serializeSpiralEnvelope, deserializeSpiralEnvelope,
+} from '../../frontend/modules/procgenPipeline/spiralSteps.js';
+import { discoveryModeConfig } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+
+argvHelp(import.meta.url);
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+
+// Node-only jta dataset generation (the profile/vanilla fixtures aren't
+// bundled — stepped-spiral Part 3, decision "generation stays a Node concern").
+// Reads the two fixtures off disk and runs the pure generator, returning the
+// dataset document the pipeline installs as ② content. Used by the --jta-*
+// flags below so `spiral-step run` can mint a jta-dataset world end-to-end.
+function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode, awards }) {
+    const profile = JSON.parse(readFileSync(
+        resolve(REPO_ROOT, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+    const vanilla = JSON.parse(readFileSync(
+        resolve(REPO_ROOT, 'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+    const params = {
+        ...(zones !== undefined ? { zoneCount: zones } : {}),
+        ...(theme !== undefined ? { theme } : {}),
+        ...(valueMode !== undefined ? { valueMode } : {}),
+        ...(awards !== undefined ? { awards } : {}),
+    };
+    return generateJtaDataset({ seed, profile, vanilla, params }).dataset;
+}
+
+// --- CLI parser ---
+
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '--no-bidirectional': W.noBidirectional,
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
+    '--victory-item': flag('victoryItem', KIND.str),
+    '-i': W.input,
+    '--input': W.input,
+    '-o': W.out,
+    '--out': W.out,
+    '--rules-out': W.rulesOut,
+    '--from': W.from,
+    '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '--jta-dataset-file': flag('jtaDatasetFile', KIND.str),
+    '--jta-generate': flag('jtaGenerate', KIND.on),
+    '--jta-dataset-seed': flag('jtaDatasetSeed', KIND.int),
+    '--jta-dataset-zones': flag('jtaDatasetZones', KIND.int),
+    '--jta-dataset-theme': flag('jtaDatasetTheme', KIND.str),
+    '--jta-dataset-value-mode': flag('jtaDatasetValueMode', KIND.str),
+    '--jta-original-item-weight': flag('jtaOriginalItemWeight', KIND.float),
+    '--jta-dummy-item-ratio': flag('jtaDummyItemRatio', KIND.float),
+    '--original-item-weight': flag('originalItemWeight', KIND.float),
+    '--dummy-item-ratio': flag('dummyItemRatio', KIND.float),
+    '--consumable-tiles': W.consumableTiles,
+    '--consumable-count': W.consumableCount,
+    '--mana-tiles': W.manaTiles,
+    '--mana-tile-amount': W.manaTileAmount,
+    '--jta-emit-locations': flag('jtaEmitLocations', KIND.on),
+    '--jta-goal-zone': flag('jtaGoalZone', KIND.int),
+    '--jta-free-zones': flag('jtaFreeZones', KIND.int),
+    '--jta-starting-perks': flag('jtaStartingPerks', KIND.int),
+    '--jta-perk-shuffle-seed': flag('jtaPerkShuffleSeed', KIND.int),
+    '-h': W.help,
+};
+
+function parseArgs(argv, { configDoc = null } = {}) {
+    return parseFlags(argv, FLAGS, {
+        subcommand: null,
+        seed: 1,
+        region: { width: 8, height: 6 },
+        quotas: {},
+        start: 'auto',
+        items: {},
+        obstacles: {},
+        bidirectional: true,
+        enableLoopMode: false,
+        regionXpEffect: 'cost',
+        victoryItem: null,
+        // X1 maze consumable tiles — byte-inert defaults (all zero).
+        consumableTiles: 0,
+        consumableCount: 1,
+        manaTiles: 0,
+        manaTileAmount: 0,
+        input: null,
+        out: null,
+        rulesOut: null,
+        from: null,
+        to: null,
+        // jta ② content dataset config (stepped-spiral Part 3)
+        jtaDatasetFile: null,
+        jtaGenerate: false,
+        jtaDatasetSeed: 1,
+        jtaDatasetZones: undefined,
+        jtaDatasetTheme: undefined,
+        jtaDatasetValueMode: undefined,
+        jtaOriginalItemWeight: undefined,
+        jtaDummyItemRatio: undefined,
+        jtaEmitLocations: false,
+        jtaGoalZone: undefined,
+        jtaFreeZones: undefined,
+        jtaStartingPerks: undefined,
+        jtaPerkShuffleSeed: undefined,
+    }, { subcommand: true, metaUrl: import.meta.url, configDoc });
+}
+
+// --- file I/O ---
+
+function readJson(path, what) {
+    return readInputJson(path, what);
+}
+
+function writeOut(path, obj, fallbackName) {
+    const json = JSON.stringify(obj, null, 2);
+    const target = path ?? `./spiral-${fallbackName}.json`;
+    if (target === '-') { process.stdout.write(`${json}\n`); return '<stdout>'; }
+    const abs = resolve(target);
+    mkdirSync(dirname(abs), { recursive: true });
+    writeFileSync(abs, json);
+    return abs;
+}
+
+// The first quota'd substrate declaring a victoryItem on its registry entry —
+// mirrors the panel's _resolveVictoryItemId / dump-shuffled-spiral fallback.
+function resolveVictory(quotas) {
+    return Object.entries(quotas)
+        .map(([id, n]) => (n > 0 ? substrateRegistry.get(id)?.victoryItem : null))
+        .find(Boolean) ?? null;
+}
+
+// Foreign award pool (P2, R3): {substrate, type} for every OTHER substrate
+// actually in the mix (quota > 0) that declares sharing.items with a static
+// types list. jta is the donor; getTypes-style dynamic declarations (jta's
+// own) are not foreign targets here.
+function foreignAwardTypes(quotas) {
+    const out = [];
+    for (const [id, n] of Object.entries(quotas ?? {})) {
+        if (!(n > 0) || id === 'jta') continue;
+        const types = substrateRegistry.get(id)?.sharing?.items?.types;
+        if (Array.isArray(types)) for (const t of types) out.push({ substrate: id, type: t });
+    }
+    return out;
+}
+
+// Resolve the jta ② content config from the --jta-* flags (stepped-spiral
+// Part 3), or null when no jta dataset was requested. Either loads a
+// pre-generated document (--jta-dataset-file) or generates one from fixtures
+// (--jta-generate). The result rides config.growthParams.substrateConfig.jta,
+// which ① applySubstrateConfig installs before arrangement.
+function buildJtaSubstrateConfig(args) {
+    let datasetDoc = null;
+    if (args.jtaDatasetFile) {
+        datasetDoc = readJson(args.jtaDatasetFile, '--jta-dataset-file');
+    } else if (args.jtaGenerate) {
+        // Award-schedule knobs (P2/S3): only built when a knob departs from
+        // its byte-inert default; the foreign pool is the co-present
+        // substrates' declared item types (R3) drawn from the registry.
+        // The knobs are GLOBAL (S3: one pair governs every generator);
+        // --jta-* spellings override the global values for jta alone.
+        const w = args.jtaOriginalItemWeight ?? args.originalItemWeight;
+        const r = args.jtaDummyItemRatio ?? args.dummyItemRatio;
+        const awards = (w !== undefined || r !== undefined)
+            ? {
+                ...(w !== undefined ? { originalItemWeight: w } : {}),
+                ...(r !== undefined ? { dummyItemRatio: r } : {}),
+                foreignTypes: foreignAwardTypes(args.quotas),
+            } : undefined;
+        datasetDoc = generateJtaDatasetFromFixtures({
+            seed: args.jtaDatasetSeed,
+            zones: args.jtaDatasetZones,
+            theme: args.jtaDatasetTheme,
+            valueMode: args.jtaDatasetValueMode,
+            awards,
+        });
+    } else {
+        return null;
+    }
+    // A goal zone is required to emit a Victory item; default to the deepest
+    // dataset zone when emitting locations without an explicit --jta-goal-zone.
+    const goalZone = args.jtaGoalZone
+        ?? (args.jtaEmitLocations ? datasetDoc.zones.length - 1 : undefined);
+    return {
+        datasetDoc,
+        emitZoneLocations: args.jtaEmitLocations,
+        ...(goalZone !== undefined ? { goalZone } : {}),
+        ...(args.jtaFreeZones !== undefined ? { freeZones: args.jtaFreeZones } : {}),
+        ...(args.jtaStartingPerks !== undefined ? { startingPerks: args.jtaStartingPerks } : {}),
+        ...(args.jtaPerkShuffleSeed !== undefined ? { perkShuffleSeed: args.jtaPerkShuffleSeed } : {}),
+    };
+}
+
+// Resolve the omsi award-schedule config from the GLOBAL knobs (P2-omsi
+// slice 5; lootables-only scope ruled 2026-07-19), or null when byte-inert.
+// The foreign pool mirrors foreignAwardTypes but must serve omsi: jta's
+// types come from the dataset document IN THIS BUILD when one exists
+// (dataset worlds rename items — the registry's getTypes only reflects an
+// INSTALLED dataset, which happens later, at pipeline ①), falling back to
+// the registry declaration (vanilla names).
+function buildOmsiSubstrateConfig(args, jtaCfg) {
+    if (!(args.quotas.omsi > 0)) return null;
+    if (args.originalItemWeight === undefined && args.dummyItemRatio === undefined) return null;
+    const foreignTypes = [];
+    for (const [id, n] of Object.entries(args.quotas)) {
+        if (!(n > 0) || id === 'omsi') continue;
+        let types = null;
+        if (id === 'jta') {
+            const items = jtaCfg?.datasetDoc?.items;
+            types = items
+                ? items.filter((it) => it && it.behavior == null
+                    && typeof it.name === 'string' && it.name.length > 0).map((it) => it.name)
+                : substrateRegistry.get('jta')?.sharing?.items?.getTypes?.() ?? null;
+        } else {
+            const decl = substrateRegistry.get(id)?.sharing?.items;
+            types = decl?.types ?? decl?.getTypes?.() ?? null;
+        }
+        if (Array.isArray(types)) for (const t of types) foreignTypes.push({ substrate: id, type: t });
+    }
+    const schedule = generateOmsiAwardSchedule({
+        seed: args.seed,
+        ...(args.originalItemWeight !== undefined ? { originalItemWeight: args.originalItemWeight } : {}),
+        ...(args.dummyItemRatio !== undefined ? { dummyItemRatio: args.dummyItemRatio } : {}),
+        foreignTypes,
+    });
+    return schedule ? { awardSchedule: schedule } : null;
+}
+
+// Resolve the X1 maze consumable-tile config from the global knobs, or null
+// when byte-inert. Same discipline as buildOmsiSubstrateConfig above: the null
+// return is what keeps the content pass — and therefore the rng stream and the
+// sidecar keys — untouched at defaults.
+//
+// The foreign pool is the union of every OTHER quota'd substrate's registry
+// sharing.items declaration (D2). jta is read from the dataset document in
+// THIS build when one exists, for exactly the reason buildOmsiSubstrateConfig
+// documents: dataset worlds rename items, and the registry's getTypes only
+// reflects an INSTALLED dataset, which happens later at pipeline ①.
+function buildConsumableTileConfig(args, jtaCfg) {
+    if (!(args.quotas.maze > 0)) return null;
+    const consumableCount = Math.max(0, args.consumableTiles | 0);
+    const manaCount = Math.max(0, args.manaTiles | 0);
+    const manaAmount = Number(args.manaTileAmount) || 0;
+    if (consumableCount === 0 && !(manaCount > 0 && manaAmount > 0)) return null;
+
+    const pool = [];
+    for (const [id, n] of Object.entries(args.quotas)) {
+        if (!(n > 0) || id === 'maze') continue;
+        let types = null;
+        if (id === 'jta') {
+            const items = jtaCfg?.datasetDoc?.items;
+            types = items
+                ? items.filter((it) => it && it.behavior == null
+                    && typeof it.name === 'string' && it.name.length > 0).map((it) => it.name)
+                : substrateRegistry.get('jta')?.sharing?.items?.getTypes?.() ?? null;
+        } else {
+            const decl = substrateRegistry.get(id)?.sharing?.items;
+            types = decl?.types ?? decl?.getTypes?.() ?? null;
+        }
+        if (Array.isArray(types)) {
+            for (const t of types) pool.push({ substrate: id, type: t });
+        }
+    }
+    return {
+        consumableCount,
+        manaCount,
+        manaAmount,
+        countPerTile: Math.max(1, args.consumableCount | 0),
+        pool,
+    };
+}
+
+// Build a fresh envelope from the world flags (the { config, compileIn } shape
+// spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
+function buildEnv(args) {
+    if (Object.keys(args.quotas).length === 0) {
+        throw new UsageError('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
+    }
+    const jtaCfg = buildJtaSubstrateConfig(args);
+    const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
+    const consumableTileOpts = buildConsumableTileConfig(args, jtaCfg);
+    const config = {
+        regionSize: args.region,
+        itemPool: { ...args.items },
+        obstaclePool: { ...args.obstacles },
+        seed: args.seed,
+        regionParams: {},
+        growthParams: {
+            substrateQuotas: args.quotas,
+            assumeBidirectional: args.bidirectional,
+            ...(args.start && args.start !== 'auto' ? { startSubstrate: args.start } : {}),
+            ...(jtaCfg || omsiCfg ? { substrateConfig: {
+                ...(jtaCfg ? { jta: jtaCfg } : {}),
+                ...(omsiCfg ? { omsi: omsiCfg } : {}),
+            } } : {}),
+        },
+        hazardOpts: null,
+        // X1 consumable tiles — null at defaults, so the maze content pass
+        // never runs and the spiral stays byte-identical to pre-X1.
+        consumableTileOpts,
+    };
+    const compileIn = {
+        seed: args.seed,
+        enableLoopMode: args.enableLoopMode,
+        regionXpEffect: args.regionXpEffect,
+        ...discoveryModeConfig(args.discoveryMode),
+        completionConditionItem: args.victoryItem ?? resolveVictory(args.quotas),
+    };
+    return newSpiralEnvelope({ config, compileIn });
+}
+
+// --- main ---
+
+/**
+ * The `run` subcommand's body: run `env` to `args.to` (default compile), from
+ * `args.from` or, without it, from the first step whose output is missing.
+ */
+async function runToEnd(env, args, { log }) {
+    const to = args.to ?? 'compile';
+    if (args.from) {
+        env.completed = SPIRAL_STEPS.indexOf(args.from) - 1;
+        await runSpiralToStep(env, to);
+    } else {
+        const at = detectSpiralCompleted(env) + 1;
+        if (at < SPIRAL_STEPS.length) {
+            log(`[spiral-step] auto-resume from ${SPIRAL_STEPS[at]}\n`);
+        }
+        await resumeSpiralEnvelope(env, to);
+    }
+}
+
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config of a `run`; for `runPipeline`. */
+export const resolveConfig = (doc) => ({ ...parseArgs([], { configDoc: doc }), subcommand: 'run' });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'spiral', tool: 'spiral-step', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * `run`, in-process: a new envelope from the parsed config (or `envelope`, a
+ * serialized one to resume), run to `config.to` (default compile). Writes
+ * nothing (`--jta-dataset-file` is READ); the substrate libraries must
+ * already be loaded.
+ * @returns {Promise<{envelope: object, rulesJson: object|null, summary: object}>}
+ */
+export async function build(config, { envelope = null, log = () => {} } = {}) {
+    const env = envelope ? deserializeSpiralEnvelope(structuredClone(envelope)) : buildEnv(config);
+    await runToEnd(env, config, { log });
+    const rulesJson = env.compile?.rulesJson ?? null;
+    return {
+        envelope: serializeSpiralEnvelope(env),
+        rulesJson,
+        summary: {
+            seed: env.config?.seed ?? null,
+            completed: SPIRAL_STEPS[env.completed] ?? null,
+            driver: rulesJson?.procgen_metadata?.['1']?.driver ?? null,
+            regions: rulesJson ? Object.keys(rulesJson.regions?.['1'] ?? {}).length : null,
+        },
+    };
+}
+
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
+    const sub = args.subcommand;
+    status.subcommand = sub;
+    if (!sub) throw new UsageError(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
+    const isStep = SPIRAL_STEPS.includes(sub);
+    if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
+    await loadPipelineSubstrates();
+    checkSubstrateIds(args, SUBSTRATE_CHECK);
+
+    let env;
+    if (args.input) {
+        env = deserializeSpiralEnvelope(readJson(args.input, '-i'));
+    } else if (sub === 'arrange' || sub === 'run') {
+        env = buildEnv(args);
+    } else {
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
+    }
+
+    if (sub === 'run') {
+        await runToEnd(env, args, { log: (m) => process.stderr.write(m) });
+    } else {
+        await runSpiralStep(sub, env);
+    }
+
+    // For `run`, the rules.json (--rules-out) is the primary output; only write
+    // the envelope when -o is given. Single-step subcommands always write it.
+    if (sub !== 'run' || args.out) {
+        const outPath = writeOut(args.out, serializeSpiralEnvelope(env), sub);
+        process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+        status.outputs.envelope = outPath;
+    } else {
+        process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed}\n`);
+    }
+    status.completed = SPIRAL_STEPS[env.completed] ?? null;
+    status.next = nextSpiralStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
+    if (isStep && sub !== 'compile') {
+        const n = nextSpiralStep(env);
+        if (n) process.stderr.write(`[spiral-step] next: ${n}\n`);
+    }
+
+    if (env.compile) {
+        const { rulesJson } = env.compile;
+        if (args.rulesOut) {
+            const abs = writeOut(args.rulesOut, rulesJson, 'rules');
+            process.stderr.write(`[spiral-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
+        }
+        const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = regions;
+        process.stderr.write(`[spiral-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
+    }
+}
+
+runCli('spiral-step', import.meta.url, main);

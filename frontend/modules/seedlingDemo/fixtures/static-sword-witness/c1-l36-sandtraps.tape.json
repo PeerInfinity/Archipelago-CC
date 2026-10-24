@@ -1,0 +1,274 @@
+{
+    "game": "seedling",
+    "name": "c1-l36-sandtraps",
+    "boot": {
+        "level": 36,
+        "x": 32,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 218,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "left",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "down",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "right",
+            "from": 4,
+            "to": 9
+        },
+        {
+            "key": "up",
+            "from": 4,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "down",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "up",
+            "from": 10,
+            "to": 11
+        },
+        {
+            "key": "left",
+            "from": 9,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "up",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 53,
+            "to": 54
+        },
+        {
+            "key": "primary",
+            "from": 84,
+            "to": 85
+        },
+        {
+            "key": "primary",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "right",
+            "from": 106,
+            "to": 113
+        },
+        {
+            "key": "up",
+            "from": 106,
+            "to": 113
+        },
+        {
+            "key": "primary",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "left",
+            "from": 113,
+            "to": 115
+        },
+        {
+            "key": "down",
+            "from": 113,
+            "to": 115
+        },
+        {
+            "key": "right",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "up",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "left",
+            "from": 116,
+            "to": 117
+        },
+        {
+            "key": "right",
+            "from": 117,
+            "to": 118
+        },
+        {
+            "key": "down",
+            "from": 117,
+            "to": 119
+        },
+        {
+            "key": "left",
+            "from": 119,
+            "to": 120
+        },
+        {
+            "key": "up",
+            "from": 131,
+            "to": 132
+        },
+        {
+            "key": "primary",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "primary",
+            "from": 163,
+            "to": 164
+        },
+        {
+            "key": "primary",
+            "from": 194,
+            "to": 195
+        },
+        {
+            "key": "primary",
+            "from": 216,
+            "to": 217
+        },
+        {
+            "key": "up",
+            "from": 216,
+            "to": 218
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓ SEEDLING HAMMER-PHASE C1 — the static sword arm's game witness: survey step 31's staging (L36 from (32,112), goal the chest (64,48)). Solved with `CHOOSER_HIT_SOURCES` and `STATIC_SWORD_ARM` ON: one stance's three presses kill sandtrap@48,80 AND sandtrap@64,80 (one swing reaches both), then sandtrap@64,64. The solve then refuses on the chest's own stance walk; these are the keys it drove, cut 2 ticks after the third body leaves the census: 218 t. Authored by scripts/procgen/plan-seedling-c1-static-sword.mjs."
+}

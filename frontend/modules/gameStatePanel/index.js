@@ -6,9 +6,11 @@ export const moduleInfo = {
   name: 'gameStatePanel',
   title: 'Game State',
   componentType: 'gameStatePanel',
+  docs: 'docs/json/user/modules/gameStatePanel.md',
   icon: '👤',
   column: 2, // Middle column
-  description: 'Game State display panel.',
+  category: 'Tracker Panels',
+  description: 'Your current region and the moves and checks made so far, plus mana and region XP when loop costs are loaded.',
 };
 
 let _moduleEventBus = null;

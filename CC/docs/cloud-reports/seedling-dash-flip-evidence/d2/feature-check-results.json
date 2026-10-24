@@ -1,0 +1,114 @@
+{
+  "mode": "test-substrates",
+  "batch": null,
+  "testIds": "feature-check-seedling-dash-window",
+  "flavour": "unbundled",
+  "budgetMs": null,
+  "pageDiagnostics": {
+    "consoleErrors": 3,
+    "pageErrors": 0,
+    "handlerErrors": {
+      "logged": 0,
+      "pageCount": 0,
+      "rows": []
+    }
+  },
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 1,
+    "failedCount": 0,
+    "failedConditionsCount": 0,
+    "enabledCount": 1,
+    "notRunCount": 0,
+    "notRunIds": [],
+    "importFailureCount": 0
+  },
+  "testDetails": [
+    {
+      "id": "feature-check-seedling-dash-window",
+      "name": "Feature check: Seedling: the solver's dash pass, cut by the whole-pass window and then by the dash-only window",
+      "status": "passed",
+      "category": "Feature checks",
+      "startTime": "2026-10-17T02:29:18.284Z",
+      "endTime": "2026-10-17T02:30:27.086Z",
+      "durationMs": 68802,
+      "conditions": [
+        {
+          "description": "the Tutorial panel is mounted",
+          "status": "passed",
+          "timestamp": "2026-10-17T02:29:18.387Z"
+        },
+        {
+          "description": "the panel is mounted in its Golden Layout tab",
+          "status": "passed",
+          "timestamp": "2026-10-17T02:29:18.387Z"
+        },
+        {
+          "description": "seedling-dash-window — ready: every step works",
+          "status": "passed",
+          "timestamp": "2026-10-17T02:30:22.672Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[feature-check-seedling-dash-window] Polling for condition: \"the Tutorial panel to be mounted\" (timeout: 10000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2026-10-17T02:29:18.286Z"
+        },
+        {
+          "message": "[feature-check-seedling-dash-window] Condition met for: \"the Tutorial panel to be mounted\".",
+          "type": "info",
+          "timestamp": "2026-10-17T02:29:18.387Z"
+        },
+        {
+          "message": "Condition: \"the Tutorial panel is mounted\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-17T02:29:18.387Z"
+        },
+        {
+          "message": "Condition: \"the panel is mounted in its Golden Layout tab\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-17T02:29:18.387Z"
+        },
+        {
+          "message": "[tutorial-walk-timing] seedling-dash-window: settings 0.0s, load 4.2s, listening 0.1s, sword 1.9s, stage-cut 7.6s, cut 0.9s, walk-cut 18.7s, dash-only 0.2s, reload 3.7s, listening-full 0.1s, sword-full 1.3s, stage-full 6.5s, full 1.2s, walk-full 11.0s, restore 6.7s",
+          "type": "info",
+          "timestamp": "2026-10-17T02:30:22.671Z"
+        },
+        {
+          "message": "seedling-dash-window: ready: every step works",
+          "type": "info",
+          "timestamp": "2026-10-17T02:30:22.672Z"
+        },
+        {
+          "message": "Condition: \"seedling-dash-window — ready: every step works\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-17T02:30:22.672Z"
+        },
+        {
+          "message": "Test completion signal: PASSED",
+          "type": "info",
+          "timestamp": "2026-10-17T02:30:27.085Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-17T02:30:27.086Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-17T02:30:27.086Z"
+        }
+      ]
+    }
+  ],
+  "importFailures": [],
+  "completedAt": "2026-10-17T02:30:27.087Z",
+  "frozen": {
+    "head": "614f6c8c576599d10467bbd9fef8ae4250e6c776",
+    "tracked": "82ecf058a8e21888beede0ae224ed2b4",
+    "trackedLines": 12
+  },
+  "treeMoved": false
+}

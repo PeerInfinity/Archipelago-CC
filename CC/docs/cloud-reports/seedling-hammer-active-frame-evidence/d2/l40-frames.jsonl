@@ -1,0 +1,10 @@
+{"seg":0,"frame":null,"site":"segment","snapshots":32}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:avoid","target":null,"stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"rung","snapshots":8}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:pull","target":null,"stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:time","target":null,"stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:bait","target":null,"stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:kill","target":null,"stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:kill","target":"puncher@128,624","stance":null,"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"kill-chaser","snapshots":254}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:kill/arm:chaser","target":"puncher@128,624","stance":[8,38],"danger":{"source":"puncher@128,624","tick":539,"kind":"forecast","at":[10,39]}},"site":"walk","snapshots":47}
+{"seg":0,"frame":null,"site":"walk","snapshots":27}
+{"ok":true,"tally":{"snapshots":372,"withFrame":313,"nullFrame":59,"noKey":0}}

@@ -5,10 +5,13 @@
  * Cost data contains per-region and per-location mana costs used by the
  * queue analyzer and loop simulation.
  *
- * Cost data can be:
- * - Generated from sphere logs using CostGenerator
- * - Loaded from pre-generated JSON files
- * - Cached in memory for performance
+ * Cost data reaches this store from:
+ * - the `loop_costs` block embedded in a procgen `rules.json` (written at
+ *   compile time by the pure `shared/procgen/loopCostGenerator.js`)
+ * - `loopsCostDebugger/costPlanner.js`, which is what the runtime runs for the
+ *   Loops panel's Generate Costs and for the auto-generate on entering loop mode
+ * - a URL or a user-picked file (`loadFromURL` / `loadFromFile`)
+ * and is cached in memory for performance.
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
@@ -16,19 +19,51 @@ import {
   DEFAULT_REGION_XP_EFFECT,
   normalizeRegionXpEffect,
 } from './xpFormulas.js';
+// The generated-sidecar vocabulary is owned by the generator (a pure
+// module), so reader and writer share one default and cannot drift.
+import {
+  DEFAULT_TIME_DRAIN_PER_SECOND,
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
+
+export { DEFAULT_TIME_DRAIN_PER_SECOND, DEFAULT_REGION_COST, DEFAULT_LOCATION_COST };
 
 const logger = createUniversalLogger('costDataManager');
+
+/**
+ * A source name that carries a scheme fetch() cannot use — `userLoaded:`,
+ * `embedded:`, `hardcodedFallback:` — is a LABEL, not a location. Matched
+ * structurally (RFC 3986's scheme production) rather than by name, and
+ * http/https are the only schemes fetch() resolves in a page. A Windows
+ * drive letter is a single character and so cannot reach this.
+ */
+const _SYNTHETIC_SCHEME = /^(?!https?:)[a-zA-Z][a-zA-Z0-9+.-]+:/;
 
 /**
  * Returns true when the source string looks like a URL or filesystem
  * path that fetch() can resolve. Filters out synthetic source names
  * the rest of the app uses for in-memory loads (procgenPipeline,
- * editorApply, moduleSpecificConfigProvidedRules, hardcodedFallback:*).
+ * editorApply, moduleSpecificConfigProvidedRules) and every LABELLED
+ * source (`userLoaded:…`, `embedded:…`, `hardcodedFallback:…`).
+ *
+ * ⛔⛔ THE SCHEME TEST IS NOT A FOURTH NAME ON THE LIST, and the difference
+ * is a measured defect. `presetUI` labels a hand-loaded document
+ * `userLoaded:<file name>` — which was on no list here and ENDS IN `.json`,
+ * so the inclusive clause below admitted it and `tryLoadEmbedded` fetched
+ * it. The `TypeError` is caught; the console error the BROWSER writes
+ * ("Fetch API cannot load userloaded:… URL scheme "userloaded" is not
+ * supported") is not the caller's to catch, and it is what
+ * `check-preset-bundle-load`'s CLAIM 7 read as a page error once in four CI
+ * runs (S4b (1): green in 8 solo box runs, red on every load once the page
+ * dwells 250 ms longer — the race is against the driver's next navigation).
+ * An enumeration would drop the NEXT label the same way.
+ *
  * @param {string} src
  */
 function _looksLikeRulesPath(src) {
     if (typeof src !== 'string' || src.length === 0) return false;
-    if (src.startsWith('hardcodedFallback:')) return false;
+    if (_SYNTHETIC_SCHEME.test(src)) return false;
     if (src === 'procgenPipeline' || src === 'editorApply'
         || src === 'moduleSpecificConfigProvidedRules') return false;
     // Real paths contain a slash or end in .json; the synthetic names
@@ -198,17 +233,25 @@ export class CostDataManager {
    * — those don't resolve as URLs. Use applyEmbeddedLoopCosts directly
    * with the in-memory jsonData for those flows.
    *
+   * ⛓ P1a — `loop_costs` is per player: the block loaded is `playerId`'s. A
+   * document with no entry for that slot loads nothing (loop mode OFF for it).
+   *
    * @param {string} rulesPath - URL/path to the rules.json
+   * @param {string|number} playerId - the loaded slot (`stateManager:rulesLoaded`'s `playerId`)
+   * @param {{isCurrent?: () => boolean}} [opts] `isCurrent`: checked after the
+   *        fetch; false (a newer world arrived meanwhile) applies nothing, so a
+   *        stale document can never overwrite the newer world's costs
    * @returns {Promise<boolean>} true if embedded loop_costs were found and loaded
    */
-  async tryLoadEmbedded(rulesPath) {
+  async tryLoadEmbedded(rulesPath, playerId, { isCurrent = null } = {}) {
     if (!rulesPath || typeof fetch !== 'function') return false;
     if (!_looksLikeRulesPath(rulesPath)) return false;
     try {
       const response = await fetch(rulesPath);
       if (!response.ok) return false;
       const rulesDoc = await response.json();
-      return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs, rulesPath);
+      if (isCurrent && !isCurrent()) return false;
+      return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs?.[String(playerId)], rulesPath);
     } catch (err) {
       logger.warn(`Could not load embedded loop_costs from ${rulesPath}: ${err.message}`);
       return false;
@@ -281,7 +324,7 @@ export class CostDataManager {
       return regionData.moveCost;
     }
 
-    return this.costData.defaultRegionCost || 50;
+    return this.costData.defaultRegionCost || DEFAULT_REGION_COST;
   }
 
   /**
@@ -320,7 +363,64 @@ export class CostDataManager {
       return locationCost;
     }
 
-    return this.costData.defaultLocationCost || 100;
+    return this.costData.defaultLocationCost || DEFAULT_LOCATION_COST;
+  }
+
+  /**
+   * The EXPLICIT per-region move cost, or null when the sidecar states
+   * none (M5). Distinct from `getRegionCost`, which always answers with a
+   * number by falling back to `defaultRegionCost` / `DEFAULT_REGION_COST`.
+   *
+   * SUMMARY substrates (runner, bounce) are priced by TIME, not per action:
+   * their actions cost mana only where the loop_costs data says so
+   * explicitly (user ruling 2026-07-23). A sidecar-level default is a
+   * fallback for regions the data didn't mention — exactly the case this
+   * must answer "free" for — so it deliberately does NOT count as explicit.
+   *
+   * @param {string} regionName
+   * @returns {number|null}
+   */
+  getExplicitRegionCost(regionName) {
+    const regionData = this.costData?.regions?.[regionName];
+    return (regionData && typeof regionData.moveCost === 'number')
+      ? regionData.moveCost
+      : null;
+  }
+
+  /**
+   * The EXPLICIT per-location check cost, or null when the sidecar states
+   * none (M5). See getExplicitRegionCost for why the sidecar-level default
+   * is not consulted.
+   *
+   * @param {string} locationName
+   * @returns {number|null}
+   */
+  getExplicitLocationCost(locationName) {
+    const cost = this.costData?.locations?.[locationName];
+    return typeof cost === 'number' ? cost : null;
+  }
+
+  /**
+   * Mana drained per second of live play in this region (M5) — the summary
+   * substrates' whole default economy: their visits are priced by how long
+   * they take, not by what they do. Per-region, with a sidecar-level
+   * default and a final fallback of 1/s.
+   *
+   * The value is a BASE cost: callers scale it by region XP through
+   * `applyRegionXpCostEffect`, exactly like every other cost.
+   *
+   * @param {string} regionName
+   * @returns {number} mana per second (>= 0)
+   */
+  getTimeDrainPerSecond(regionName) {
+    const regionData = this.costData?.regions?.[regionName];
+    if (regionData && typeof regionData.timeDrainPerSecond === 'number') {
+      return Math.max(0, regionData.timeDrainPerSecond);
+    }
+    if (typeof this.costData?.defaultTimeDrainPerSecond === 'number') {
+      return Math.max(0, this.costData.defaultTimeDrainPerSecond);
+    }
+    return DEFAULT_TIME_DRAIN_PER_SECOND;
   }
 
   /**
@@ -328,7 +428,7 @@ export class CostDataManager {
    * @returns {number} Default region move cost
    */
   getDefaultRegionCost() {
-    return this.costData?.defaultRegionCost || 50;
+    return this.costData?.defaultRegionCost || DEFAULT_REGION_COST;
   }
 
   /**
@@ -336,7 +436,7 @@ export class CostDataManager {
    * @returns {number} Default location check cost
    */
   getDefaultLocationCost() {
-    return this.costData?.defaultLocationCost || 100;
+    return this.costData?.defaultLocationCost || DEFAULT_LOCATION_COST;
   }
 
   /**
@@ -394,115 +494,6 @@ export class CostDataManager {
       return null;
     }
     return JSON.stringify(this.costData, null, 2);
-  }
-
-  /**
-   * Download cost data as a file
-   * @param {string} filename - Name for the downloaded file
-   */
-  downloadCostData(filename = 'costs.json') {
-    const json = this.exportToJSON();
-    if (!json) {
-      logger.warn('No cost data to download');
-      return;
-    }
-
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-
-    setTimeout(() => {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 0);
-
-    logger.info(`Cost data downloaded as ${filename}`);
-  }
-
-  /**
-   * Derive the costs file path from a rules file path
-   * @param {string} rulesPath - Path to the rules.json file
-   * @returns {string} Path to the corresponding costs.json file
-   */
-  getCostsPathFromRulesPath(rulesPath) {
-    // Rules path: presets/game/AP_SEED/AP_SEED_rules.json
-    // Costs path: presets/game/AP_SEED/AP_SEED_costs.json
-    return rulesPath.replace('_rules.json', '_costs.json');
-  }
-
-  /**
-   * Try to load existing costs from the preset directory
-   * @param {string} rulesPath - Path to the rules.json file
-   * @returns {Object|null} Loaded cost data or null if not found
-   */
-  async tryLoadFromPreset(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-
-    try {
-      logger.info(`Checking for existing costs file: ${costsPath}`);
-      const response = await fetch(costsPath);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (this._validateCostData(data)) {
-          this.costData = data;
-          this.loadedFrom = costsPath;
-          this.loadedAt = new Date().toISOString();
-
-          logger.info(`Loaded existing costs: ${Object.keys(data.regions || {}).length} regions, ${Object.keys(data.locations || {}).length} locations`);
-
-          this.eventBus?.publish('costDataManager:loaded', {
-            source: costsPath,
-            regionCount: Object.keys(data.regions || {}).length,
-            locationCount: Object.keys(data.locations || {}).length,
-            fromExisting: true,
-          });
-
-          return data;
-        }
-      }
-
-      logger.info(`No existing costs file found at ${costsPath}`);
-      return null;
-    } catch (error) {
-      logger.debug(`Could not load costs from ${costsPath}: ${error.message}`);
-      return null;
-    }
-  }
-
-  /**
-   * Save cost data to a file path (for use in Node.js/test environments)
-   * In browser context, this triggers a download with the appropriate filename
-   * @param {string} rulesPath - Path to the rules.json file (used to derive costs path)
-   * @returns {string} The path where costs should be saved
-   */
-  saveCostsToPreset(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-    const filename = costsPath.split('/').pop();
-
-    // In browser context, trigger download with the correct filename
-    this.downloadCostData(filename);
-
-    logger.info(`Cost data should be saved to: ${costsPath}`);
-    return costsPath;
-  }
-
-  /**
-   * Get cost data as a JSON string for external saving
-   * @returns {Object} Object with path and content for saving
-   */
-  getCostDataForSaving(rulesPath) {
-    const costsPath = this.getCostsPathFromRulesPath(rulesPath);
-    return {
-      path: costsPath,
-      content: this.exportToJSON(),
-      filename: costsPath.split('/').pop(),
-    };
   }
 }
 

@@ -1,6 +1,6 @@
 /**
- * mazeRoom — first consumer of the shared simulator-core interface.
- * See NewDocs/plans/procedural-generation/maze-room-generator.md.
+ * mazeRoom — the maze substrate
+ * (docs/json/developer/procgen/maze.md).
  *
  * Engine lives in mazeRoomEngine.js (headless, no DOM). The UI panel
  * lives in mazeRoomUI.js. This file wires the panel into the module
@@ -12,6 +12,8 @@ import { MazeRoomUI } from './mazeRoomUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 export * from './mazeRoomEngine.js';
 export { substrateRegistryEntry } from './mazeRoomLibrary.js';
@@ -20,10 +22,16 @@ export const moduleInfo = {
     name: 'mazeRoom',
     title: 'Maze Room',
     componentType: 'mazeRoomPanel',
+    docs: 'docs/json/user/modules/mazeRoom.md',
     icon: '🧩',
     column: 3,
-    description: 'Generate and play walls-only maze rooms (simulator-core v1 consumer)',
+    category: 'Procgen Substrate Panels',
+    description: 'Generates maze rooms by seed, size and biome, or loads a region\'s room, and plays it with arrow keys or WASD.',
     requires: [],
+    storage: [
+        { key: 'mazeRoom_params', kind: STORAGE_KINDS.state, label: 'Maze Room parameters' },
+        { key: 'mazeRoom_view', kind: STORAGE_KINDS.state, label: 'Maze Room view' },
+    ],
 };
 
 let panelInstance = null;
@@ -33,7 +41,8 @@ let unsubLoadRegion = null;
 
 // Buffer for a maze:loadRegion event that arrived before the panel
 // was mounted. MazeRoomUI's constructor drains it on mount via
-// consumePendingLoadRegion(). See procgen-player.md §"Event flow".
+// consumePendingLoadRegion(). See docs/json/developer/procgen/maze.md
+// §"Panel and runtime".
 let pendingLoadRegion = null;
 
 function handleLoadRegion(payload) {
@@ -98,6 +107,23 @@ export function register(registrationApi) {
     // autopath and signals back to the loops queue when done). Co-
     // register so the eventBus recognizes mazeRoom as a publisher too.
     registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
+
+    // X1: announces a consumed consumable / mana tile. These tiles fire
+    // no AP-level event (not locations, no region change), so this is
+    // the only signal a collect-detouring playback bot can wake on.
+    registrationApi.registerEventBusPublisher('maze:consumableCollected');
+
+    // The Playback Bot's walkTo got stuck in this room ("no path … under
+    // current inventory", a refused step): the bot's named error status.
+    registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
+
+    // X1: the panel clears collected consumable / mana tiles on every
+    // loop reset so they respawn (X1-R1). Declared here rather than
+    // relying on the incidental fromReset regionMove, which can skip
+    // entirely when no start region resolves.
+    if (typeof registrationApi.registerEventBusSubscriberIntent === 'function') {
+        registrationApi.registerEventBusSubscriberIntent('mazeRoom', 'gameState:loopReset');
+    }
 
     // The maze panel is the original source of these AP-level events
     // when the player triggers them by walking around in playback

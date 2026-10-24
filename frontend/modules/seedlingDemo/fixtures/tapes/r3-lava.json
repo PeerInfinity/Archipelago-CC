@@ -1,0 +1,45 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 96,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {},
+    "tick0": null,
+    "hold": false,
+    "tick_count": 70,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 30
+        }
+    ],
+    "name": "r3-lava",
+    "description": "⛓⛓⛓ R3-swim D2 — LAVA WITHOUT THE DARK SUIT. L96 (`Dungeon7/11.oel`), boot (32,64) on its own teleporter, `noDamage` FALSE: `left` ×30 onto the lava, then still to t 70. On the first lava tick (t 9) `checkDrowning`'s lava arm calls `hit(null, 0, null, 0)` ABOVE `super.update()`: no damage and no knockback, but `hitsTimer = 20` (so `input()` stops steering on that very tick) and `Game.shake += 5`. The latch on t 19, the still spiral t 20..38, `die()` on t 39; observation 39 is the respawn at (40,72). Fixed keys, emitted while the model refused the lava death by name and modelled no lava hit. Authored by scripts/procgen/plan-seedling-r3-death.mjs.",
+    "note": ""
+}

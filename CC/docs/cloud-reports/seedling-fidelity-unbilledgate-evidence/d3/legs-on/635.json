@@ -1,0 +1,1 @@
+{"id":635,"key":"level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112","level":76,"goal":"level_76 -> level_77","ms":3274,"ok":true,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":672,"ms":191},{"pass":"full","ok":true,"kind":null,"ticks":515,"ms":3083}],"ticks":515,"verbs":["walk"],"end":{"level":77,"x":24,"y":40,"deaths":0}}

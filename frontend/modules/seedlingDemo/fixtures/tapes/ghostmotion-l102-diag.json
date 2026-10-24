@@ -1,0 +1,75 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 102,
+        "x": 96,
+        "y": 144
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 24,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 24
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 24
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 15,
+            "to": 16
+        }
+    ],
+    "name": "ghostmotion-l102-diag",
+    "description": "⛓⛓⛓ seedling-fidelity-ghostmotion — THE GHOST DASH CLOCK ON A DIAGONAL. L102 at (96,144), open floor, `right`+`down` held: the knockback splits over both axes (2/√2 each). Holding the sword AND the ghost sword, presses at t 0 · 2 · 9 · 15. The game (and the model, GHOSTMOTION ON): 0:slash · 2:dash · 9:dash · 15:swallowed. The ghost \"slash\" is 7 frames at 30 = 7 ticks and its \"slashnarrow\" 4 at 20 = 6 ticks; a dash re-arms only at `slashEnd` (from `sprites()`, BELOW the press), so a press 6 ticks after a ghost dash is SWALLOWED and one 7 ticks after dashes. The model before fidelity GHOSTMOTION released every swing on the SWORD's clock (4 ticks for a dash): 0:slash · 2:dash · 9:dash · 15:dash — (1.41, 1.41) px ahead at t 16. Authored by scripts/procgen/plan-seedling-ghostmotion.mjs.",
+    "note": ""
+}

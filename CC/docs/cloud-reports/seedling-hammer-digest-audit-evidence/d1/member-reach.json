@@ -1,0 +1,380 @@
+{
+ "arrowTrapStates": {
+  "readers": [
+   "arrowTrapStateFor"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "arrowForecast",
+   "entities"
+  ]
+ },
+ "blastStates": {
+  "readers": [
+   "blastsFor",
+   "enterWorld",
+   "stepBlastsNow"
+  ],
+  "members": [
+   "advance",
+   "blastsInFlight"
+  ]
+ },
+ "bombPusherStates": {
+  "readers": [
+   "bombPusherStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "bombPushers",
+   "chaserForecast",
+   "entities",
+   "spitForecast"
+  ]
+ },
+ "bombStates": {
+  "readers": [
+   "bombsFor",
+   "freshVisitState",
+   "enterWorld",
+   "stepBombsNow"
+  ],
+  "members": [
+   "advance",
+   "bombs",
+   "chaserForecast",
+   "entities",
+   "spitForecast"
+  ]
+ },
+ "bossShotStates": {
+  "readers": [
+   "bossShotsFor",
+   "stepBossShotsNow"
+  ],
+  "members": [
+   "advance",
+   "bossShots"
+  ]
+ },
+ "chaserStates": {
+  "readers": [
+   "applyTimedDespawns",
+   "dropWorldIfBuiltStale",
+   "chaserStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "chaserForecast",
+   "chasers",
+   "entities",
+   "strikeBodies"
+  ]
+ },
+ "darkTrapStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "darkTrapStateFor",
+   "freshVisitState",
+   "stepContactsNow"
+  ],
+  "members": [
+   "advance",
+   "darkTraps",
+   "entities"
+  ]
+ },
+ "drillStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "drillStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "corridorBodyForecast",
+   "drills"
+  ]
+ },
+ "finalBossStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "owlStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "finalBosses",
+   "owlPods",
+   "shakeWritersHere"
+  ]
+ },
+ "igneousStates": {
+  "readers": [
+   "freshVisitState",
+   "renderIgneousNow",
+   "igneousTilesNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "igneousTiles"
+  ]
+ },
+ "lavaChainStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepLavaChainsNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "placedGrenadeStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepPlacedGrenadesNow",
+   "run.grenadeForecast",
+   "run.placedGrenades"
+  ],
+  "members": [
+   "advance",
+   "grenadeForecast",
+   "placedGrenades"
+  ]
+ },
+ "podStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "owlStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "finalBosses",
+   "owlPods",
+   "shakeWritersHere"
+  ]
+ },
+ "poleStates": {
+  "readers": [
+   "poleStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "darkTraps",
+   "entities"
+  ]
+ },
+ "shooterStates": {
+  "readers": [
+   "shooterStateFor",
+   "fireStaticRemovals",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "shooters",
+   "spitForecast"
+  ]
+ },
+ "spinningAxeStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepSpinningAxesNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "spitStates": {
+  "readers": [
+   "spitsFor",
+   "freshVisitState",
+   "enterWorld",
+   "stepSpitsNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "shooters",
+   "spitForecast"
+  ]
+ },
+ "staticBodyStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "staticBodyStateFor",
+   "freshVisitState",
+   "stepStaticBodiesNow",
+   "spitForecastNow",
+   "stepContactsNow",
+   "stepShootersNow",
+   "staticBodiesNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "spitForecast",
+   "staticBodies"
+  ]
+ },
+ "talkerStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "talkerStateFor"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "talkCircles"
+  ]
+ },
+ "wallFlyerStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "wallFlyerStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "corridorBodyForecast",
+   "wallFlyers"
+  ]
+ },
+ "wandShotStates": {
+  "readers": [
+   "wandShotsFor",
+   "enterWorld",
+   "stepWandShotsNow"
+  ],
+  "members": [
+   "advance",
+   "wandShotsLive"
+  ]
+ },
+ "watcherStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "watcherStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "watchers"
+  ]
+ },
+ "lightsExits": {
+  "readers": [
+   "visitWorld",
+   "freshVisitState",
+   "stepLightsNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "lightsSpearRepeats": {
+  "readers": [
+   "freshVisitState",
+   "lightsSpearRepeatsNow",
+   "lightsSlashNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlRocks": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlGrenades": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlPendingRocks": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlPendingGrenades": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "sealPiece": {
+  "readers": [
+   "stepChestsNow",
+   "stepSealPieceNow",
+   "run.sealPiece"
+  ],
+  "members": [
+   "advance",
+   "sealPiece"
+  ]
+ },
+ "tileWritesByLevel": {
+  "readers": [
+   "visitWorld",
+   "freshVisitState",
+   "renderIgneousNow",
+   "stepBulbGraphicNow",
+   "run.tileWrites"
+  ],
+  "members": [
+   "advance",
+   "tileWrites"
+  ]
+ },
+ "lightsFights": {
+  "readers": [
+   "freshVisitState",
+   "lightsFightFor",
+   "lightTotemsNow",
+   "lightsSlashNow",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "lightsFight",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ }
+}

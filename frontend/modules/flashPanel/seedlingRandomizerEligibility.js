@@ -1,0 +1,529 @@
+/**
+ * flashPanel/seedlingRandomizerEligibility — **DOES THIS PRESET GET THE
+ * SEEDLING RANDOMIZER?**, answered from DATA (EDITOR INTEGRATION slice P1-a;
+ * plan §17.1, §17.5).
+ *
+ * ── ⚖⚖ THE RULING THIS FILE EXISTS FOR ──────────────────────────────────
+ *
+ * ⚖ USER, 2026-08-29: *every frontend feature DETECTS from the loaded
+ * preset's DATA whether it applies — no opt-in flag*, and *the build-side
+ * half of that detection is a `capabilities` list per build in the wasm
+ * manifest*. So there is no setting, no query parameter and no per-preset
+ * boolean anywhere in this arc: four facts the preset and the build already
+ * carry decide it, and the FIRST one that is false is named out loud.
+ *
+ *   (i)   the panel's transport is the wasm page, and the preset names one
+ *   (ii)  the build the preset names DECLARES `apitem` in `builds.json`
+ *   (v)   the rules carry GENERATED Seedling rooms — ⛓ a DIVERTING check,
+ *         declared between (ii) and (iii); see below
+ *   (vi)  the rules carry REAL Seedling rooms the goal ledger cannot name — a
+ *         second DIVERTING check (G7), declared just before (iii) and decided
+ *         by (iii)'s own count; see `checkAtlas`
+ *   (iii) at least one goal-ledger location resolves against the loaded
+ *         Archipelago placement
+ *   (iv)  the vanilla record set and the room map are reachable
+ *
+ * ── ⛓⛓ THE FIFTH FACT DIVERTS; IT DOES NOT GATE (seedling generated G2) ──
+ *
+ * The four facts decide ONE arm: the vanilla rewrite. A world whose rooms the
+ * pipeline GENERATED (`flash_seedling_gen` sidecars) is a Seedling placement
+ * too, but not of the 116 — (iii) would refuse it (*"0 of 41 goal-ledger
+ * locations resolve"*) and (iv) fetches documents it does not use. So check
+ * `generated` answers one of FOUR things, and the fourth is what makes it
+ * different from the other four checks:
+ *
+ *   pass     no generated room (or no census supplied): the vanilla facts decide
+ *   fail     generated rooms AND a real room of the same game — a MIXED world,
+ *            refused by name, never half-delivered
+ *   unknown  never: the census is read off the rules the panel already holds
+ *   divert   generated rooms and nothing else: the verdict is DECIDED here —
+ *            `eligible` on the `generated` arm — and every later check is
+ *            reported `skipped`, not evaluated (they are the vanilla arm's facts)
+ *
+ * (i) and (ii) still apply to the generated arm (it delivers `<apitem>`s too),
+ * which is why the diverting check comes after them. The census is
+ * `seedlingGenRoomPayload.generatedRoomCensus(rules)`; this module stays
+ * import-free and takes it as an input.
+ *
+ * ── ⛔ WHY THE PREDICATE IS PURE, AND WHY IT ANSWERS `undecided` ─────────
+ *
+ * (iii) and (iv) cannot be evaluated without the heavy half — the 976 KB room
+ * map and the 87-file rewriter graph, which the wiring imports lazily
+ * precisely so the shipped bundle does not carry them (`seedlingRandomizer-
+ * Wiring.js`, and the four-build measurement in its header). (i) and (ii) are
+ * cheap: a rules field and a small JSON fetch.
+ *
+ * ⇒ the caller resolves the inputs IN ORDER and calls this twice: once with
+ * the two cheap ones, and again with everything if the cheap ones passed. An
+ * input that has not been resolved yet is `undefined`, its check answers
+ * `unknown`, and the verdict is `undecided` — which is not a refusal and must
+ * never be logged as one.
+ *
+ * ⛓ A DEFINITE FAILURE OUTRANKS AN EARLIER UNKNOWN. The checks are declared
+ * in the ruled order and a failure is reported by the FIRST failing one, but
+ * a check that is merely `unknown` never hides a later `fail`: the map fetch
+ * dying is what the person needs told, even though (iii) — which is declared
+ * first and needs that very map — could not be evaluated at all.
+ *
+ * ── ⛓ THE VOCABULARY LIVES HERE, AND THE PIN GATE IMPORTS IT ────────────
+ *
+ * `scripts/procgen/check-seedling-wasm-pins.mjs` gates every manifest entry's
+ * `capabilities` against `WASM_BUILD_CAPABILITIES`. It imports the constant
+ * from this file rather than spelling its own copy, because a gate spelled
+ * differently from its consumer tests itself — the same lesson the pin gate's
+ * own `scannable()` learned when the self-test carried a second copy of the
+ * normaliser and a mutant left it green.
+ *
+ * ⚠ THE VOCABULARY IS BROADER THAN THIS PREDICATE. `arm` is in it and is read
+ * by nothing here — see `ARM_CAPABILITY` below.
+ *
+ * ⛔ AND THIS FILE NAMES NO BUILD. The build name is DERIVED from the
+ * preset's own `flash_panel.wasm`; a literal here would both hardcode the
+ * default and register as a pin in the four-way law the pin gate enforces.
+ */
+
+import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
+
+/** The one capability this arc defines: the build carries `Pickups/APItem.as`
+ *  and its `<apitem>` element in `Game.as`'s XML loop. */
+export const AP_ITEM_CAPABILITY = 'apitem';
+
+/**
+ * The build arms in `Bot.update` on the first frame where `FP.world` IS the
+ * world `botStart` constructed (R9 slice 12g′, ⚖ ruling 58's (F)), rather than
+ * setting `armed = true; tick = 0` beside the swap it merely REQUESTED. Its
+ * `botStatus` therefore carries an `arm: {pending, armed_at}` block, and the
+ * pre-swap frame is not counted dead.
+ *
+ * ⛔⛔ THIS ONE HAS NO CONSUMER IN THIS FILE, AND SINCE 2026-09-12 NONE AT
+ * ALL — it stays DECLARED as the manifest's statement of what the default
+ * build can do. Its two consumers were dead-frame corrections that read the
+ * RUNTIME field (`check-seedling-wasm-ship.mjs`'s CLAIM 6 and
+ * `seedlingDemo/r5Acceptance.js`'s `preSwapCorrection`), proved by a build that
+ * LACKED it (p4b, gated by pins row (g)). SEEDLING HEADLESS WEBGPU slice R2
+ * retired p4b on the user's ruling (*"I think it just needs to behave correctly
+ * with the new build"*), folded both corrections to the arm-present value, and
+ * deleted row (g). ⛔ The cost, stated once: a host regression in a branch for
+ * a build without `arm` is undetectable from here on — no shipped bot build
+ * lacks it.
+ *
+ * ⛓ SO THE VOCABULARY IS BROADER THAN THIS PREDICATE'S OWN USE, deliberately.
+ * `WASM_BUILD_CAPABILITIES` is the list a MANIFEST ENTRY may draw on; only
+ * `AP_ITEM_CAPABILITY` is read by the eligibility checks below. Splitting the
+ * two lists would put a second copy of the vocabulary somewhere, which is the
+ * one thing the manifest's own `$comment` forbids.
+ */
+export const ARM_CAPABILITY = 'arm';
+
+/**
+ * ⛓ R9 slice P4E (⚖ 72 (a′)): HOLD-AFTER-LATCH. A build declaring `hold`
+ * reads a tape_version 12 `hold: true` and freezes the room at the tape's seam
+ * latch until the next `botStart` (fork `Bot.holding`, read in `Main.update`).
+ * `watchWasm.shipToWasm` stamps it on every window that HAS a successor, and
+ * only on a build that declares it — a build without it refuses tape_version 12
+ * by name.
+ */
+export const HOLD_CAPABILITY = 'hold';
+
+/**
+ * ⛓ R9 slice P4E (plan ⚖ Q3 option B): `bosskey`, `totempart` and `seed` take
+ * an OPTIONAL `@tag`, and collecting a tagged one writes
+ * `Game.setPersistence(tag, false)` — the `pendingCheck` choke point. Without
+ * it the three are untagged in every level set and the atlas check table
+ * refuses them by name.
+ */
+export const TAG_CAPABILITY = 'tag';
+
+/**
+ * ⛓ seedling-wasm-leak L4 item 4a (⚖ D3, 2026-10-03): A HOST FREEZE. A build
+ * declaring `freeze` exposes `botHold("on"|"off")`: the game stops NOW, mid-tape,
+ * moving no state (no world step, no mixer, no render, the tape's tick and held
+ * keys kept), and resumes exactly. For host-side replanning on a mid-room item
+ * delivery. Declared ahead of its first consumer, as `arm` was.
+ */
+export const FREEZE_CAPABILITY = 'freeze';
+
+/**
+ * ⛓ seedling-wasm-leak L4 item 4c (⚖ D3): `botSeam().sinceBegin` —
+ * `{stepped, dead, input_frames, pressed, held_at_begin, rng_first}`, what a
+ * world has done since its `latchBeginEntry`, for adopting a room the host did
+ * not start.
+ */
+export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
+
+/**
+ * ⛓ The wasm rebuild R2 (R4, 2026-10-19): THE BOSSES REPORT. A build declaring
+ * `bossreport` reports all seven boss kills as locations, and the Witch's dark
+ * sword (L12, `DarkSword.WITCH_TAG`) and the Bob Boss's Fire drop (L32,
+ * `Fire.BOSS_DROP_TAG`; the kill is `BobBoss.KILLED_TAG`) as locations whose
+ * items are ordinary AP items — the game no longer grants Fire or the dark sword. A
+ * build without it grants them itself, so the host refuses the report rows by
+ * name there. Measured by `strings`: the three tag constants.
+ */
+export const BOSS_REPORT_CAPABILITY = 'bossreport';
+
+/**
+ * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
+ * this list — otherwise `"apitm"` would silently mean "this build does not
+ * have it" and the feature would vanish with no error anywhere.
+ */
+export const WASM_BUILD_CAPABILITIES = Object.freeze(
+    [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY]);
+
+/**
+ * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).
+ * The JS page (`seedlingDemo/jsRuntime.html`) is not a build in `builds.json`,
+ * so the capability check cannot read it from the manifest; the runtime
+ * declares its own list HERE, in the same vocabulary, and the wasm path's
+ * answers do not move. It plays the GENERATED arm (J1) and, ⛓ since J3, the
+ * ATLAS arm — which binds real rooms where they stand and delivers nothing, so
+ * the page runs its own vanilla map. ⛓ And, since solver-walk §5.18 (⚖ the
+ * user, 2026-10-03: "the JS runtime takes the vanilla delivery, WITH THE
+ * SOLVER"), the VANILLA arm: the whole rewritten 116-room set is delivered to
+ * the page's `botLoadLevels` like a generated one, and the page tells the two
+ * apart by the set's own provenance (`jsRuntimeCore.mountedKindOf`) so the
+ * real rooms keep the solver. ⛔ No `tag` here: an atlas location that needs a
+ * tag ALLOCATED (P4E) is refused by name, as on a wasm build without it.
+ */
+export const JS_TRANSPORT = 'js';
+/**
+ * ⛓ The JS runtime's list as it stood before R4, `[apitem]`. ⚠ KEPT because it is imported from outside this file:
+ * `seedlingDemo/jsRuntimeCore.js:151` re-exports it (pinned by identity at `jsRuntimeCore.test.js:139`), and
+ * `seedlingRandomizerWiring.js` imported it. The live answer is `jsRuntimeCapabilities()` below.
+ */
+export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+/**
+ * ⛓ fidelity APFLIP D5 — THE JS RUNTIME'S CAPABILITIES, READ LIVE. The JS model reports the boss kills, the Witch's
+ * sword and Bob's Fire drop exactly when its R4 mirror is on (`CONTACT_FIDELITY.apReportBosses`, `apReportBosses.js`),
+ * so `bossreport` is declared then and only then. Read on every call (a toggled switch answers at once), never
+ * cached at import.
+ */
+export function jsRuntimeCapabilities() {
+    return CONTACT_FIDELITY.apReportBosses === true
+        ? [AP_ITEM_CAPABILITY, BOSS_REPORT_CAPABILITY] : [AP_ITEM_CAPABILITY];
+}
+/**
+ * ⛓ J3 — the arms the JS runtime plays, by the arm an eligible verdict names
+ * (`RANDOMIZER_ARMS`: a diverting check's id, or `vanilla` when none diverts).
+ * ⛓ §5.18 — `vanilla` joined.
+ */
+export const JS_RUNTIME_ARMS = Object.freeze(['generated', 'atlas', 'vanilla']);
+
+/** The ids the five checks report themselves by, in the ruled order. */
+export const ELIGIBILITY_CHECK_IDS = Object.freeze(
+    ['transport', 'capability', 'generated', 'atlas', 'placement', 'assets']);
+
+/** The checks whose PASS is a `divert`: the verdict is decided there, on another arm. */
+export const DIVERTING_CHECK_IDS = Object.freeze(['generated', 'atlas']);
+
+/** Which load an eligible verdict names. */
+export const RANDOMIZER_ARMS = Object.freeze({ VANILLA: 'vanilla', GENERATED: 'generated', ATLAS: 'atlas' });
+
+/** The arm each diverting check decides. */
+const ARM_OF_DIVERT = Object.freeze({ generated: RANDOMIZER_ARMS.GENERATED, atlas: RANDOMIZER_ARMS.ATLAS });
+
+/**
+ * The build directory a `flash_panel.wasm` wiring names.
+ * `"seedling_bot_ap_p4d/game.html"` → `"seedling_bot_ap_p4d"`, and the same
+ * for a path or URL with anything in front of it, because the manifest's
+ * `name` is the DIRECTORY and the page is always the file inside it.
+ * @param {string} wasmPath
+ * @returns {string|null}
+ */
+export function buildNameFromWasmPath(wasmPath) {
+    if (typeof wasmPath !== 'string' || wasmPath.trim() === '') return null;
+    const parts = wasmPath.split(/[?#]/)[0].split('/').filter(Boolean);
+    // The page file is the last segment; the build directory is the one before
+    // it. A bare directory (no page) is accepted and names itself.
+    if (parts.length === 0) return null;
+    const last = parts[parts.length - 1];
+    if (last.endsWith('.html')) return parts.length >= 2 ? parts[parts.length - 2] : null;
+    return last;
+}
+
+/**
+ * The manifest entry for a build, and the capabilities it DECLARES.
+ *
+ * ⛔ `null` capabilities is NOT the empty list. An entry with no
+ * `capabilities` field predates the field and says nothing; an entry with
+ * `[]` says "measured, and this build has none". The gate makes the second
+ * one mandatory so the ambiguity cannot ship, and this function keeps the
+ * distinction so a stale manifest is reported as stale rather than as a
+ * build that lost a feature.
+ *
+ * @param {object|null} manifest  the parsed `flashPanel/wasm/builds.json`
+ * @param {string|null} buildName
+ * @returns {{entry: object|null, capabilities: string[]|null}}
+ */
+export function capabilitiesOf(manifest, buildName) {
+    const builds = Array.isArray(manifest?.builds) ? manifest.builds : null;
+    if (!builds || !buildName) return { entry: null, capabilities: null };
+    const entry = builds.find((b) => b?.name === buildName) ?? null;
+    if (!entry) return { entry: null, capabilities: null };
+    return {
+        entry,
+        capabilities: Array.isArray(entry.capabilities) ? entry.capabilities : null,
+    };
+}
+
+const pass = (why) => ({ status: 'pass', why });
+const fail = (why) => ({ status: 'fail', why });
+const unknown = (why) => ({ status: 'unknown', why });
+const divert = (why) => ({ status: 'divert', why });
+const skipped = (why) => ({ status: 'skipped', why });
+
+/**
+ * ── (i) THE TRANSPORT ────────────────────────────────────────────────────
+ *
+ * ⛔ WASM-ONLY, AND IT IS A MEASURED LIMIT RATHER THAN A PREFERENCE. The
+ * `<apitem>` element is built by `Game.as`'s XML loop in a recompiled build;
+ * UNMEASURED is whether Ruffle's AVM2 runs `botLoadLevels` at 116-room scale
+ * (plan §17.1.6, ⚖ low priority). Until someone measures it the Flash
+ * transport gets ONE log line and its vanilla game, which is exactly what it
+ * has today.
+ */
+function checkTransport({ flashPanel, transport }) {
+    if (transport === undefined) return unknown('the panel has not chosen a transport yet');
+    if (transport === JS_TRANSPORT) {
+        return pass('the Seedling JS runtime (seedlingDemo/jsRuntime.html) — no wasm build is consulted');
+    }
+    if (transport !== 'wasm') {
+        return fail(`the panel is on the ${JSON.stringify(transport)} transport — the AP `
+            + 'placement is wasm-only until Ruffle\'s AVM2 is measured against a 116-room '
+            + '`botLoadLevels` (plan §17.1.6)');
+    }
+    if (!flashPanel?.wasm) {
+        return fail('the preset\'s `flash_panel` names no `wasm` page, so there is no build '
+            + 'to ask about capabilities');
+    }
+    return pass(`wasm transport, build page ${flashPanel.wasm}`);
+}
+
+/** ── (ii) THE BUILD'S OWN DECLARATION ──────────────────────────────────── */
+function checkCapability({ flashPanel, manifest, transport }) {
+    if (transport === JS_TRANSPORT) {
+        return jsRuntimeCapabilities().includes(AP_ITEM_CAPABILITY)
+            ? pass(`the JS runtime declares ${AP_ITEM_CAPABILITY}`)
+            : fail(`the JS runtime does not declare ${JSON.stringify(AP_ITEM_CAPABILITY)}`);
+    }
+    const buildName = buildNameFromWasmPath(flashPanel?.wasm);
+    if (manifest === undefined) return unknown('the wasm manifest has not been fetched yet');
+    if (!manifest) {
+        return fail('the wasm manifest `builds.json` could not be read, so no build\'s '
+            + 'capabilities can be known');
+    }
+    const { entry, capabilities } = capabilitiesOf(manifest, buildName);
+    if (!entry) {
+        return fail(`the wasm manifest has no entry named ${JSON.stringify(buildName)} — the `
+            + 'preset points at a build the submodule does not publish');
+    }
+    if (capabilities === null) {
+        return fail(`build ${buildName} declares no \`capabilities\` array — an entry that `
+            + 'predates the field says nothing, which is not the same as saying "none"');
+    }
+    if (!capabilities.includes(AP_ITEM_CAPABILITY)) {
+        return fail(`build ${buildName} does not declare ${JSON.stringify(AP_ITEM_CAPABILITY)}`
+            + ` (it declares ${capabilities.length === 0 ? 'nothing' : capabilities.join(', ')})`
+            + ' — its `Game.as` XML loop would IGNORE every `<apitem>` and the rewritten rooms '
+            + 'would show no pickup at all');
+    }
+    return pass(`build ${buildName} declares ${AP_ITEM_CAPABILITY}`);
+}
+
+/**
+ * ── (v) GENERATED ROOMS — the diverting check (see the header) ───────────
+ *
+ * ⛓ ABSENT IS `pass`, NOT `unknown`: the census is read off the rules the
+ * panel already holds, so a caller that omits it is asking the vanilla
+ * question — and the vanilla arm's own rows pass nothing here.
+ */
+function checkGenerated({ generated }) {
+    if (generated === undefined) {
+        return pass('no generated-room census was supplied — the vanilla facts decide');
+    }
+    const rooms = Array.isArray(generated?.rooms) ? generated.rooms : [];
+    const mixed = Array.isArray(generated?.mixed) ? generated.mixed : [];
+    if (rooms.length === 0) return pass('the rules carry no generated Seedling rooms');
+    if (mixed.length > 0) {
+        return fail(`the rules carry ${rooms.length} generated Seedling room(s) (${rooms.join(', ')}) `
+            + `AND ${mixed.length} real one(s) (${mixed.join(', ')}) — a mixed world is not delivered yet: `
+            + 'the game mounts ONE level set, and the real rooms and the generated ones would each need '
+            + 'it. The game runs its vanilla rooms.');
+    }
+    return divert(`the rules carry ${rooms.length} generated Seedling room(s) (${rooms.join(', ')}) — `
+        + 'their level set is assembled from the rules, so the vanilla placement and its two '
+        + 'documents do not apply');
+}
+
+/**
+ * ── (vi) REAL ROOMS THE LEDGER CANNOT NAME — the second diverting check ──
+ * (seedling generated G7; plan §12.4, §13.)
+ *
+ * A world the pipeline built from REAL atlas rooms (`flash_seedling`
+ * sidecars) names its locations by atlas region (`Starting House - Chest`), so
+ * the vanilla ledger resolves 0 of 41 and (iii) would refuse it — and the chest
+ * in it fired a check nobody bound. This check diverts exactly that world to the
+ * `atlas` arm, which binds the rooms' own locations WITHOUT a rewrite.
+ *
+ * ⛔ THE COUNT DECIDES, NOT THE SIDECARS ALONE. `seedling_playthrough` carries
+ * 250 `flash_seedling` sidecars and resolves all 41 ledger rows: it IS the
+ * vanilla arm's world, so any resolved row keeps the vanilla facts in charge.
+ * ⇒ `unknown` until (iii)'s count exists — the cheap call stays `undecided`,
+ * as it was — and `divert` only on real rooms AND zero resolved.
+ *
+ *   pass     no real-room census supplied, none in the rules, or the ledger resolves ≥1
+ *   unknown  real rooms, and the ledger has not been resolved yet
+ *   divert   real rooms, and 0 ledger rows resolve
+ *
+ * ⚠ (i) and (ii) are still asked first, and (ii) asks for `apitem` although
+ * this arm places none: what it needs is the `pendingCheck` seam, which ships
+ * in the same build and has no capability name of its own (plan §13 Open).
+ */
+function checkAtlas({ atlas, placement }) {
+    if (atlas === undefined) return pass('no real-room census was supplied — the vanilla facts decide');
+    const rooms = Array.isArray(atlas?.rooms) ? atlas.rooms : [];
+    if (rooms.length === 0) return pass('the rules carry no real Seedling rooms');
+    if (placement === undefined) {
+        return unknown(`the rules carry ${rooms.length} real Seedling room(s), and the goal ledger `
+            + 'has not been resolved yet');
+    }
+    const resolved = Number(placement.resolved);
+    if (resolved > 0) {
+        return pass(`the rules carry ${rooms.length} real Seedling room(s) and ${resolved} goal-ledger `
+            + 'location(s) resolve — the vanilla placement applies');
+    }
+    return divert(`the rules carry ${rooms.length} real Seedling room(s) (${rooms.join(', ')}) and 0 `
+        + 'goal-ledger locations resolve — their locations are named by the atlas, so they are bound '
+        + 'where they stand, with no rewrite and no delivery');
+}
+
+/**
+ * ── (iii) THE PLACEMENT ─────────────────────────────────────────────────
+ *
+ * ⛓ THE COUNT IS REPORTED EITHER WAY, and zero is the only refusal. A preset
+ * that resolves SOME of the ledger is a Seedling placement with locations the
+ * host does not own; those stay on the adapter's property path, which is
+ * exactly H6's existing contract (`hostOwnedLocations` is a SET, not a
+ * delete). Zero means the loaded rules are not a Seedling seed at all.
+ */
+function checkPlacement({ placement }) {
+    if (placement === undefined) return unknown('the goal ledger has not been resolved yet');
+    const resolved = Number(placement.resolved);
+    const total = Number(placement.total);
+    if (!Number.isInteger(resolved) || !Number.isInteger(total)) {
+        return fail('the placement resolution did not report integer counts');
+    }
+    if (resolved === 0) {
+        return fail(`0 of ${total} goal-ledger locations resolve against the loaded `
+            + 'placement — these rules are not a Seedling placement');
+    }
+    return pass(`${resolved} of ${total} goal-ledger locations resolve`);
+}
+
+/** ── (iv) THE TWO DOCUMENTS THE REWRITE IS BUILT FROM ──────────────────── */
+function checkAssets({ assets }) {
+    if (assets === undefined) return unknown('the record set and map have not been fetched yet');
+    const missing = ['recordSet', 'map']
+        .filter((k) => !assets[k]?.ok)
+        .map((k) => `${k} (${assets[k]?.url ?? 'no url'}${assets[k]?.source
+            ? `, from ${assets[k].source}` : ''})`);
+    if (missing.length > 0) {
+        return fail(`the rewrite's source documents are not reachable: ${missing.join('; ')}`);
+    }
+    return pass(`recordSet ${assets.recordSet.url}; map ${assets.map.url} `
+        + `(from ${assets.map.source})`);
+}
+
+const CHECKS = Object.freeze([
+    ['transport', checkTransport],
+    ['capability', checkCapability],
+    ['generated', checkGenerated],
+    ['atlas', checkAtlas],
+    ['placement', checkPlacement],
+    ['assets', checkAssets],
+]);
+
+/**
+ * The whole answer, from data.
+ *
+ * @param {object} inputs
+ * @param {object|null} [inputs.flashPanel]  the preset's `flash_panel` wiring
+ * @param {string} [inputs.transport]        'wasm' | 'flash' — what the panel chose
+ * @param {object|null} [inputs.manifest]    the parsed `builds.json`
+ * @param {{resolved: number, total: number, unresolved?: string[]}} [inputs.placement]
+ * @param {{recordSet: {url: string, ok: boolean},
+ *          map: {url: string, ok: boolean, source: string}}} [inputs.assets]
+ * @param {{rooms: string[], mixed: string[]}} [inputs.generated]  `generatedRoomCensus(rules)`
+ * @param {{rooms: string[]}} [inputs.atlas]  the rules' real-room (`flash_seedling`) regions
+ * @returns {{eligible: boolean, verdict: 'eligible'|'ineligible'|'undecided',
+ *           arm: 'vanilla'|'generated'|'atlas'|null, failed: string|null, why: string, checks: object[]}}
+ */
+export function seedlingRandomizerEligibility(inputs = {}) {
+    // ⛓ A DIVERT ENDS THE EVALUATION: the checks after it are the other arm's.
+    const checks = [];
+    let diverted = null;
+    for (const [id, run] of CHECKS) {
+        if (diverted) {
+            checks.push({ id, ...skipped(`not asked — the ${diverted.id} check diverted to another arm`) });
+            continue;
+        }
+        const c = { id, ...run(inputs) };
+        checks.push(c);
+        if (c.status === 'divert') diverted = c;
+    }
+    /**
+     * ⛓ SEEDLING JS J1: the JS runtime is decided BEFORE the vanilla facts are
+     * asked for — a world it cannot play is refused here by name, not left
+     * `undecided` behind a placement and two documents it would never use.
+     * ⛓ J3: the ATLAS divert is the JS runtime's too, and while the atlas
+     * check is still `unknown` (real rooms, the ledger not resolved yet) the
+     * question is OPEN — the verdict stays `undecided` so the heavy load can
+     * answer it. Only a world that is neither is refused.
+     */
+    /**
+     * ⛓ §5.18 — the vanilla arm is the JS runtime's too, so today no world
+     * reaches this refusal; it stays keyed on `JS_RUNTIME_ARMS` so the list is
+     * the one place that says which arms the page plays.
+     */
+    const arm = diverted ? ARM_OF_DIVERT[diverted.id] : RANDOMIZER_ARMS.VANILLA;
+    if (inputs.transport === JS_TRANSPORT && !JS_RUNTIME_ARMS.includes(arm)
+        && checks.find((c) => c.id === 'atlas')?.status !== 'unknown'
+        && !checks.some((c) => c.status === 'fail')) {
+        const why = `the Seedling JS runtime plays the ${JS_RUNTIME_ARMS.join(', ')} arm(s) — these rules `
+            + `are the ${arm} arm's, which it does not take`;
+        Object.assign(checks.find((c) => c.id === 'generated'), fail(why));
+        return { eligible: false, verdict: 'ineligible', arm: null, failed: 'generated',
+            why: `generated: ${why}`, checks };
+    }
+    const firstFail = checks.find((c) => c.status === 'fail');
+    if (firstFail) {
+        return {
+            eligible: false,
+            verdict: 'ineligible',
+            arm: null,
+            failed: firstFail.id,
+            why: `${firstFail.id}: ${firstFail.why}`,
+            checks,
+        };
+    }
+    const firstUnknown = checks.find((c) => c.status === 'unknown');
+    if (firstUnknown) {
+        return {
+            eligible: false,
+            verdict: 'undecided',
+            arm: null,
+            failed: null,
+            why: `${firstUnknown.id}: ${firstUnknown.why}`,
+            checks,
+        };
+    }
+    return {
+        eligible: true,
+        verdict: 'eligible',
+        arm,
+        failed: null,
+        why: checks.filter((c) => c.status !== 'skipped').map((c) => `${c.id}: ${c.why}`).join(' · '),
+        checks,
+    };
+}

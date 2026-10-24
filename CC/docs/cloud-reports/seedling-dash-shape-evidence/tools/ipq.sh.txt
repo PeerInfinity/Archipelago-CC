@@ -1,0 +1,22 @@
+#!/bin/bash
+S=$1; WAIT=$2; O=$S/ev/d2
+while kill -0 $WAIT 2>/dev/null; do sleep 15; done
+cd $S/ip
+for m in L N K; do
+  case $m in L) e=SEEDLING_DASH_LEG_PRECHECK=1;; N) e=SEEDLING_DASH_NO_SWING_PREFIX=1;; K) e=SEEDLING_DASH_KEEP_PARTIAL=1;; esac
+  s=$(date +%s); env $e SEEDLING_PORT=9590 bash scripts/procgen/identity-block.sh . > $O/identity-$m.txt 2>&1
+  echo "identity $m rc=$? s=$(( $(date +%s) - s ))" >> $O/identity-runs.txt
+done
+for p in $(cat $S/plans61.txt); do
+  n=$(basename $p .mjs)
+  for m in off L N; do
+    case $m in off) e=X=1;; L) e=SEEDLING_DASH_LEG_PRECHECK=1;; N) e=SEEDLING_DASH_NO_SWING_PREFIX=1;; esac
+    s=$(date +%s)
+    env $e timeout 2400 node $p --check > $O/plans/$n.$m.out 2>&1
+    rc=$?
+    echo "$n $m rc=$rc s=$(( $(date +%s) - s )) md5=$(grep -av '^# box lock:' $O/plans/$n.$m.out | md5sum | cut -c1-8)" >> $O/plans.txt
+  done
+done
+n=plan-seedling-hammer-dd-walkkill; s=$(date +%s); SEEDLING_DASH_KEEP_PARTIAL=1 timeout 2400 node scripts/procgen/$n.mjs --check > $O/plans/$n.K.out 2>&1
+echo "$n K rc=$? s=$(( $(date +%s) - s )) md5=$(grep -av '^# box lock:' $O/plans/$n.K.out | md5sum | cut -c1-8)" >> $O/plans.txt
+echo IPQ DONE >> $O/plans.txt

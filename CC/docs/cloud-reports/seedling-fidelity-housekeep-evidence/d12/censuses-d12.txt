@@ -1,0 +1,18 @@
+== census-seedling-solver-surface
+RED drift: world:teleporters table {"sites":10,"files":{"botDriverV2.js":5,"solverBot.js":5}} fresh {"sites":11,"files":{"botDriverV2.js":5,"solverBot.js":6}}
+RED drift: import:levelWorld.js#TILE_SIZE table {"sites":195,"files":{"botDriverV2.js":47,"bulbPlacement.js":2,"crusherBait.js":4,"solverBot.js":142}} fresh {"sites":197,"files":{"botDriverV2.js":47,"bulbPlacement.js":2,"crusherBait.js":4,"solverBot.js":144}}
+RED: 8 finding(s) — run --write, then classify
+rc=1
+== census-seedling-constants
+census-seedling-constants --check — 6028 literals; green drift: 1 new + 1 vanished cosmetic/structural, 335 moved
+PASS
+rc=0
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+rc=0
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+rc=0
+== roster
+280

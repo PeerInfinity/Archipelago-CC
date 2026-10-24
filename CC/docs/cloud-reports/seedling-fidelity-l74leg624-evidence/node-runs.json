@@ -1,0 +1,452 @@
+{
+ "note": "scratch node runs of divergence leg 624 (key \"level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144\", id 624 at 8654f02a4c), BUDGET=2560, the LEASH/C4 leg driver (drivers/leg.mjs; leg1p.mjs runs ONE anytime pass) over LEASH sweep-base-solver.jsonl items/slots. env: L=SEEDLING_STRIKE_IFRAME_LAPSE=1, P=SEEDLING_FALLROCK_POSTFALL=1, S=SEEDLING_FORECAST_SPEED_BY_TERRAIN=1. \"final\" = the shipped rule (one spare test + spent); \"draft\" = earlier cuts (no spare test; \"prespent\" = before the spent rule).",
+ "final": {
+  "OFF": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5200
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5495
+    }
+   ],
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.\n  forced-hit: no forced hit is proven from (296.0,136.0): the model refuses to step [primary \u00b7] (tick 2: levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately und) \u2014 an input with no answer leaves the proof open (73 fork step(s))"
+  },
+  "P": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5020
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5007
+    }
+   ],
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (232.2,119.6) \u2014 chaser:lavarunner@208,96 (inside leash 80 (d=9.3), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 3 volume(s) forbidden \u2014 no walkable tile path in level 74 from tile (18,8) to (1,9). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  time: the aim is 272 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: no stance within bulb@48,112's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question.\n  kill: no presser in level 74 arms a trap whose lane covers bulb@48,112 \u2014 the room has 1 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for bulb@48,112 on level 74: the 8-cell box around the player's node held 0 leash cells, so the box around the TARGET was scanned: 81 cell(s) inside its 80 px leash, 20 of those reachable and with a corridor onward, and 20 of THOSE refused by the forecast [(104,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,72): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; (88,56): the APPROACH is dangerous at tick 87 \u2014 chaser:lavarunner@208,96; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 50 the walk can plan to probes clean: 246 candidate corridor(s) previewed with the bodies stepped against each, 46 prefix(es) dangerous before their last via, 246 preview(s) of the 300 bound spent and 445 leg(s) of the 500 planned.\n  forced-hit: no forced hit is proven from (296.0,136.0): the model refuses to step [primary \u00b7] (tick 2: levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately und) \u2014 an input with no answer leaves the proof open (73 fork step(s))"
+  },
+  "S": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 1994
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 3999
+    }
+   ],
+   "message": "level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it."
+  },
+  "L dashless": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 145
+    }
+   ],
+   "message": "level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it."
+  },
+  "L full": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 2233
+    }
+   ],
+   "message": "level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it."
+  },
+  "LP dashless (plan has 5+ deaths, unbilled)": {
+   "ok": true,
+   "ticks": 1442,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 5
+   },
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": true,
+     "kind": null,
+     "ticks": 1442,
+     "ms": 1214
+    }
+   ]
+  },
+  "LP full (plan has 4 deaths, unbilled)": {
+   "ok": true,
+   "ticks": 1269,
+   "verbs": [
+    "kill",
+    "walk"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 4
+   },
+   "passes": [
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 1269,
+     "ms": 2853
+    }
+   ]
+  },
+  "LS (anytime)": {
+   "ok": true,
+   "ticks": 331,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 3224
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 331,
+     "ms": 5993
+    }
+   ]
+  },
+  "LPS dashless": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 3367
+    }
+   ],
+   "message": "levelRun: bulb@48,112 in level 74 was killed and then destroyed by the terrain under it on its armed update (tick 384). The game plays \"drop\" on that body anyway, so its lava write races `Mobile.death`'s fade \u2014 not transcribed; refused by name (fidelity-bulb D2)."
+  },
+  "LPS full": {
+   "ok": true,
+   "ticks": 331,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "passes": [
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 331,
+     "ms": 5839
+    }
+   ]
+  },
+  "LPS anytime (the answer)": {
+   "ok": true,
+   "ticks": 331,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 3075
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 331,
+     "ms": 5888
+    }
+   ]
+  },
+  "leg 622 OFF": {
+   "ok": true,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ]
+  },
+  "leg 622 LPS": {
+   "ok": true,
+   "ticks": 4,
+   "verbs": [
+    "forced-hit"
+   ],
+   "forcedHits": [
+    {
+     "tick": 0,
+     "what": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74",
+     "proof": {
+      "proven": true,
+      "depth": 2,
+      "nodes": 1332,
+      "leaves": 1296,
+      "alphabet": 36,
+      "minHits": 1
+     },
+     "candidate": "corridor-unarmed",
+     "billed": [
+      {
+       "t": 2,
+       "level": 73,
+       "source": "chaser",
+       "id": "lavarunner@72,24",
+       "hits": 1
+      }
+     ],
+     "ticks": 4,
+     "damage": {
+      "hits": 0,
+      "lastHitAt": null,
+      "id": null
+     }
+    }
+   ]
+  },
+  "leg 628 OFF": {
+   "ok": false,
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72)."
+  },
+  "leg 628 LPS": {
+   "ok": false,
+   "message": "solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128): the re-planned corridor failed too \u2014 solverBot(wasm-arrival-solve) reach-exit (288,144)->L73 -> skirt stance (button@288,128) waypoint 2 (72,72): not reached within 400 ticks; stalled at (24,109.74999999999999) v=(-0.30901699437494734,1.9021130325903073) in level 74, aiming at (72,72)."
+  }
+ },
+ "draft": {
+  "L prespent (plan with an unbilled bulb hit at t362, game-confirmed)": {
+   "ok": true,
+   "ticks": 458,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": true,
+     "kind": null,
+     "ticks": 458,
+     "ms": 3430
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5188
+    }
+   ]
+  },
+  "LP prespent": {
+   "ok": true,
+   "ticks": 458,
+   "verbs": [
+    "detour"
+   ],
+   "end": {
+    "level": 75,
+    "x": 72,
+    "y": 24,
+    "deaths": 0
+   },
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": true,
+     "kind": null,
+     "ticks": 458,
+     "ms": 3419
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 5164
+    }
+   ]
+  },
+  "L (no spare)": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 1027
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 911
+    }
+   ],
+   "message": "level 74: the tape clears tag 2, which is a \"fallrock\" at (288,144) \u2014 response \"arm\", and clearing it does not remove it \u2014 it BUILDS IT FALLEN, Solid and live, and its update writes the player's y. A clear list must never name it."
+  },
+  "LP (no spare)": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 1173
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 1026
+    }
+   ],
+   "message": "solverBot(wasm-arrival-solve) reach-exit (16,144)->L75 -> kill (bulb@48,112) by press: the dwell was HIT at tick 26 (hits 1 -> 2, deaths 1 -> 1). The stance was derived to be outside every danger the map can name; the GAME says otherwise, which is the map being a heuristic and the run being the oracle."
+  },
+  "LS (no spare)": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 3085
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4580
+    }
+   ],
+   "message": "levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately under `Game.freezeObjects` \u2014 so the press would do nothing at all. Press outside the freeze."
+  },
+  "LPS (no spare)": {
+   "ok": false,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 2982
+    },
+    {
+     "pass": "full",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 4457
+    }
+   ],
+   "message": "levelRun: a sword press at tick 0 would fire its rect on a FROZEN tick (a button-dropped fallrock), and `genericHit` returns immediately under `Game.freezeObjects` \u2014 so the press would do nothing at all. Press outside the freeze."
+  }
+ }
+}

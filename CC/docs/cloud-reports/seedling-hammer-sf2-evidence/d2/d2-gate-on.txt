@@ -1,0 +1,3 @@
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (16 tests | 1 skipped) 102435ms
+     ✓ t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick  1380ms
+      Tests  15 passed | 1 skipped (16)

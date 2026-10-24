@@ -1,0 +1,492 @@
+/**
+ * textAdventureSubstrateWrapper/textAdventureRoom — **THE TEXT ADVENTURE'S OWN
+ * ROOM WORLD** (⛓ PRESET SIDECARS G2a, Route P; ⚖ user 2026-09-13).
+ *
+ * Until G2a the text adventure registered the MAZE's four procedural hooks and
+ * its serializer: every text-adventure region grew a real maze (tiles, walls,
+ * an entrance, a logic-gate obstacle per rule) that nothing at play ever read —
+ * the wrapper builds its rooms from `staticData.regions` and the compiled
+ * `access_rule` side-table, and reads ONE flag (`manaEnabled`). ⚠ Play reads
+ * it off the WORLD `deserializeWorld` builds (`procgenPlayer.getRegionInfo`
+ * answers `entry.world.manaEnabled` → `mana.js`), never off the payload — so
+ * the deserializer must carry it (G2a-fix). This module is what a text
+ * adventure region actually is:
+ *
+ *   world = {
+ *     region_id,
+ *     exits:     Map<exit_id, {exit_id, side, exitName, targetRegion,
+ *                              isBackExit, isTeleporter, access_rule?}>,
+ *     locations: [{id, item?, access_rule?, name?}],
+ *     manaEnabled?: true,   // deserialized worlds only, iff the payload's is `true`
+ *     prose?: {enterMessage?, exits: {<exit_id>: {…}}, locations: {<id>: {…}}},
+ *                           // concept library T2 — the region's own prose
+ *   }
+ *
+ * — no tiles, no entrance, no obstacles, and ⛔ **NO RNG DRAW anywhere**: a room
+ * has nothing to roll. The exits stand on their SIDES (the entry declares
+ * `regionGeometry: SIDES`), and every rule is AUTHORED: `placeFromRules` records
+ * the document's own rule tree on its exit / location, and the extractor emits
+ * it verbatim, so the compiler's `access_rule`-wins branch emits it unchanged.
+ * `True_` is recorded as ABSENT on the room and EMITTED explicitly by the
+ * extractor — ⚠ `compileAccessRule` turns an absent rule with no paths into
+ * `False_`, not `True_`.
+ *
+ * The payload (`serializeTextAdventureRoom` ⇄ `deserializeTextAdventureRoom`)
+ * carries the room's exits (the envelope's sided records), its gates, and its
+ * locations by AP name — so a rebuild re-emits the rules FROM the payload.
+ *
+ * ⛔ Node-importable: no DOM, no engine import (the engine calls these through
+ * the registry entry in `textAdventureSubstrateWrapperLibrary.js`).
+ */
+
+import { SIDES } from '../shared/procgen/spatialPrimitives.js';
+import { makeLocationName } from '../procgenCore/apLocationNaming.js';
+import {
+    REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
+} from '../procgenCore/sidecarFields.js';
+import { CONCEPTS, conceptOfItem } from '../procgenCore/concepts.js';
+import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
+
+/** The rule every ungated exit / location compiles to. */
+const TRUE_RULE = Object.freeze({ rule: 'True_' });
+const isTrueRule = (rule) => rule?.rule === 'True_';
+const cloneRule = (rule) => structuredClone(rule);
+
+/** ⛓ Every refusal of this module, as a printed SENTENCE. */
+export const TEXT_ADVENTURE_ROOM_REFUSALS = Object.freeze({
+    noRegionId: () => 'text adventure room: a region_id is required',
+    unknownExit: (regionId, exitId) => `text adventure room '${regionId}': a rule names exit '${exitId}', `
+        + 'which the room does not have',
+    duplicateExit: (regionId, exitId) => `text adventure room '${regionId}': exit '${exitId}' is requested twice`,
+});
+
+/**
+ * The side a side-less exit takes. The layout driver leaves an exit without a
+ * side when its target is not a grid neighbour (a teleporter); a room draws no
+ * rng, so it takes the still-FREE sides clockwise first (the zone generator's
+ * law, `generateRegionZoneGen`), then cycles `SIDES` — a text adventure may
+ * hold two exits on one side.
+ */
+function sideAssigner(requested) {
+    const free = SIDES.filter((s) => !requested.some((e) => e.side === s));
+    let cycle = 0;
+    return () => free.shift() ?? SIDES[cycle++ % SIDES.length];
+}
+
+/**
+ * `generateRegionCore` — the room: one exit record per requested exit, on its
+ * requested side, no location yet. `entrances`, `size`, the libraries, `rng`,
+ * `params` and `biome` are accepted and IGNORED (nothing to lay out).
+ *
+ * The default exit id is the maze's (`exit` for a single exit, else `exit_<i>`)
+ * so a region's exit names do not move with its substrate.
+ */
+export function generateTextAdventureRoom(input = {}) {
+    const { region_id, exits = [] } = input;
+    if (!region_id) throw new Error(TEXT_ADVENTURE_ROOM_REFUSALS.noRegionId());
+    const nextSide = sideAssigner(exits);
+    const defaultExitId = (i) => (exits.length === 1 ? 'exit' : `exit_${i}`);
+    const roomExits = new Map();
+    exits.forEach((e, i) => {
+        const exit_id = e.exit_id ?? defaultExitId(i);
+        if (roomExits.has(exit_id)) throw new Error(TEXT_ADVENTURE_ROOM_REFUSALS.duplicateExit(region_id, exit_id));
+        roomExits.set(exit_id, {
+            exit_id,
+            side: e.side ?? nextSide(),
+            exitName: e.exitName ?? exit_id,
+            targetRegion: e.targetRegion ?? null,
+            isBackExit: false,
+            isTeleporter: false,
+        });
+    });
+    return {
+        world: { region_id, exits: roomExits, locations: [] },
+        exits_placed: [...roomExits.values()].map(({ exit_id, side }) => ({ exit_id, side })),
+    };
+}
+
+/**
+ * `placeFromItems` — the spiral / grid-growth placer: each item becomes a
+ * location holding it, named the maze's way (`<item>_pickup`; a second copy of
+ * one item in one room gets `_2`, `_3`…, where the maze would have emitted the
+ * same id twice). ⚠ A room places NO obstacle: a key/door pair has no geometry
+ * to stand between here, so every `obstacles_to_place` entry is reported
+ * unplaced (by omission — the caller's pool keeps it).
+ */
+export function placeTextAdventureItems(world, input = {}) {
+    const { items_to_place = [] } = input;
+    const taken = new Set(world.locations.map((l) => l.id));
+    const placed_items = [];
+    for (const item_id of items_to_place) {
+        let id = `${item_id}_pickup`;
+        for (let n = 2; taken.has(id); n++) id = `${item_id}_pickup_${n}`;
+        taken.add(id);
+        world.locations.push({ id, item: item_id });
+        placed_items.push({ item_id, location_id: id });
+    }
+    return { placed_items, placed_obstacles: [] };
+}
+
+/** The room's `prose` table for `kind` (`exits` / `locations`), made on first write. */
+function proseTableOf(world, kind) {
+    world.prose ??= { exits: {}, locations: {} };
+    world.prose[kind] ??= {};
+    return world.prose[kind];
+}
+
+/**
+ * The realised item concept a placed item IS — its concept id, when the world
+ * offers it and this substrate realises it with prose — else null.
+ */
+function realisedItemConcept(itemId, offered) {
+    if (!offered.length) return null;
+    const cid = conceptOfItem(itemId, CONCEPTS);
+    return cid && offered.includes(cid) && TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid]?.prose ? cid : null;
+}
+
+/**
+ * `placeFromRules` — the top-down placer: every exit rule is recorded on its
+ * exit and every location (ruled first, then item-only — the maze's order) is
+ * added with its item and rule. A `True_` rule is recorded as absent. No
+ * location stands on a tile, so `placed_locations` carry no `position` — the
+ * engine matches them by id.
+ *
+ * ⛓ CONCEPT LIBRARY T2 — the rule SELECTS a realisation
+ * (`selectRealisation`, over the world's offered concepts
+ * `input.params?.concepts`): a selected gate writes its prose on the exit
+ * (`prose.exits[exit_id] = {inaccessibleMessage: blocked, moveMessage:
+ * passedWith}`), and a location holding an offered item concept writes that
+ * item's `checkMessage`. The RULE is recorded exactly as without it. ⛔ No
+ * offered concept (the default) ⇒ no candidate, no draw, no `prose` — the
+ * room is what it was before the library existed.
+ */
+export function placeTextAdventureRules(world, input = {}) {
+    const { exit_rules = {}, location_rules = {}, item_placements = [] } = input;
+    const offered = Array.isArray(input.params?.concepts) ? input.params.concepts : [];
+    for (const [exit_id, rule] of Object.entries(exit_rules)) {
+        const exit = world.exits.get(exit_id);
+        if (!exit) throw new Error(TEXT_ADVENTURE_ROOM_REFUSALS.unknownExit(world.region_id ?? '?', exit_id));
+        if (isTrueRule(rule)) {
+            delete exit.access_rule;
+            continue;
+        }
+        exit.access_rule = cloneRule(rule);
+        const chosen = selectRealisation(rule, TEXT_ADVENTURE_CONCEPT_REALISATIONS, { concepts: CONCEPTS, offered, rng: input.rng });
+        const prose = chosen?.mechanic?.prose;
+        if (!prose) continue;
+        proseTableOf(world, 'exits')[exit_id] = { inaccessibleMessage: prose.blocked, moveMessage: prose.passedWith };
+    }
+    const itemByLocation = Object.fromEntries(item_placements.map((p) => [p.location_id, p.item_id]));
+    const order = [...Object.keys(location_rules),
+        ...item_placements.map((p) => p.location_id).filter((id) => !(id in location_rules))];
+    const placed_items = [];
+    const placed_locations = [];
+    for (const location_id of [...new Set(order)]) {
+        const item_id = itemByLocation[location_id];
+        const rule = location_rules[location_id];
+        world.locations.push({
+            id: location_id,
+            ...(item_id != null ? { item: item_id } : {}),
+            ...(rule && !isTrueRule(rule) ? { access_rule: cloneRule(rule) } : {}),
+        });
+        if (item_id != null) placed_items.push({ item_id, location_id });
+        placed_locations.push({ location_id });
+        const cid = item_id != null ? realisedItemConcept(item_id, offered) : null;
+        if (cid) {
+            proseTableOf(world, 'locations')[location_id] = {
+                checkMessage: TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid].prose.checkMessage,
+            };
+        }
+    }
+    return { placed_logic_gates: [], placed_items, placed_locations };
+}
+
+/**
+ * `extractPathsAndObstacles` — the room's rules, straight off the room: each
+ * exit and location with its AUTHORED rule, `True_` where none. No paths (the
+ * compiler's `access_rule`-wins branch never walks them). A location that
+ * carries its AP `name` (a deserialized payload's) hands it on as `global_name`,
+ * so a rebuild compiles the document's own name.
+ */
+export function extractTextAdventureRules(world, opts = {}) {
+    const regionId = opts.regionId ?? 'text_adventure_room';
+    return {
+        region_id: regionId,
+        exits: [...world.exits.values()].map((e) => ({
+            id: e.exit_id,
+            target_region: e.targetRegion ?? null,
+            access_rule: cloneRule(e.access_rule ?? TRUE_RULE),
+        })),
+        locations: world.locations.map((l) => ({
+            id: l.id,
+            item: l.item ?? null,
+            access_rule: cloneRule(l.access_rule ?? TRUE_RULE),
+            ...(l.name ? { global_name: l.name } : {}),
+        })),
+    };
+}
+
+/**
+ * `serializeWorld` — the room → its payload. The envelope's `exits` (sided
+ * records, fixed order; `exitName`/`targetRegion` from the extracted rules
+ * where given, as the maze's serializer does), `exitGates` (`{exit_id: rule}`,
+ * the gated exits only — a gate cannot ride inside the envelope's exit record,
+ * which a substrate may not redeclare), and `locations` (`{name, item?,
+ * access_rule?}`, the AP name baked from the extracted rules). A clone: no
+ * object of the world is shared with the payload.
+ */
+export function serializeTextAdventureRoom(world, extractedRules) {
+    const extractedExits = new Map((extractedRules?.exits ?? []).map((e) => [e.id, e]));
+    const extractedLocations = new Map((extractedRules?.locations ?? []).map((l) => [l.id, l]));
+    const exitValues = world.exits instanceof Map ? [...world.exits.values()] : [...(world.exits ?? [])];
+    const exits = [];
+    const exitGates = {};
+    for (const e of exitValues) {
+        const ext = extractedExits.get(e.exit_id);
+        exits.push({
+            exit_id: e.exit_id,
+            side: e.side ?? null,
+            exitName: ext?.id ?? e.exitName ?? null,
+            targetRegion: ext?.target_region ?? e.targetRegion ?? null,
+            targetExitId: e.targetExitId ?? null,
+            isBackExit: e.isBackExit ?? false,
+            isTeleporter: e.isTeleporter ?? false,
+        });
+        if (e.access_rule && !isTrueRule(e.access_rule)) exitGates[e.exit_id] = cloneRule(e.access_rule);
+    }
+    const locations = (world.locations ?? []).map((l) => {
+        const ext = extractedLocations.get(l.id);
+        const name = ext?.global_name
+            ?? l.name
+            ?? (extractedRules?.region_id ? makeLocationName(extractedRules.region_id, l.id, null) : l.id);
+        return {
+            name,
+            ...(l.item != null ? { item: l.item } : {}),
+            ...(l.access_rule && !isTrueRule(l.access_rule) ? { access_rule: cloneRule(l.access_rule) } : {}),
+        };
+    });
+    const nameOf = new Map((world.locations ?? []).map((l, i) => [l.id, locations[i].name]));
+    const prose = serializeProse(world.prose, nameOf);
+    return { exits, exitGates, locations, ...(prose ? { prose } : {}) };
+}
+
+/** The message keys a region's `prose` may carry — the per-game file's own, per kind. */
+export const PROSE_KEYS = Object.freeze({
+    region: Object.freeze(['enterMessage']),
+    exit: Object.freeze(['moveMessage', 'inaccessibleMessage']),
+    location: Object.freeze(['checkMessage', 'alreadyCheckedMessage', 'inaccessibleMessage']),
+});
+
+/** The non-empty string messages of `rec` under `keys`, or null when there are none. */
+function proseMessages(rec, keys) {
+    const out = {};
+    for (const k of keys) if (typeof rec?.[k] === 'string' && rec[k] !== '') out[k] = rec[k];
+    return Object.keys(out).length ? out : null;
+}
+
+/**
+ * ⛓ CONCEPT LIBRARY T2 — a room's `prose` → the payload's, or `null` when it
+ * says nothing (⇒ the key is not written, and every payload built without a
+ * concept stays byte-identical). Location prose is keyed by the location's AP
+ * NAME in the payload (the key the per-game file and the bridge use), by its
+ * id on a freshly built room — `nameOf` maps one to the other. Exits stay
+ * keyed by `exit_id`. A clone: the world's strings are copied into new objects.
+ */
+function serializeProse(prose, nameOf) {
+    if (!prose) return null;
+    const out = { exits: {}, locations: {} };
+    const enter = proseMessages(prose, PROSE_KEYS.region);
+    if (enter) Object.assign(out, enter);
+    for (const [exitId, rec] of Object.entries(prose.exits ?? {})) {
+        const m = proseMessages(rec, PROSE_KEYS.exit);
+        if (m) out.exits[exitId] = m;
+    }
+    for (const [locId, rec] of Object.entries(prose.locations ?? {})) {
+        const m = proseMessages(rec, PROSE_KEYS.location);
+        if (m) out.locations[nameOf.get(locId) ?? locId] = m;
+    }
+    const empty = !enter && !Object.keys(out.exits).length && !Object.keys(out.locations).length;
+    return empty ? null : { ...(enter ?? {}), exits: out.exits, locations: out.locations };
+}
+
+/**
+ * `deserializeWorld` — the payload → a room (a CLONE: the payload is never
+ * aliased, M2's mutant H). The exits array becomes a Map keyed by `exit_id` —
+ * the key the engine's own descriptor uses (`insertBackExit`, the bidirectional
+ * post-pass's `get(exit.name)`); every committed text-adventure exit has
+ * `exitName === exit_id`. Each exit takes its gate back from `exitGates`; each
+ * location's AP `name` is also its id.
+ *
+ * ⛔ **ONE FORMAT, NO LEGACY READ** (⚖ the user, 2026-09-13: *"I don't want to
+ * maintain support for the old format. I want to fully replace it with the new
+ * format."*). A payload that does not have the room's shape — a key the room's
+ * own declaration does not know (the tile grid's `tiles`, `items`, …), or a
+ * required key absent (`exitGates`, `locations`) — is REFUSED with a sentence
+ * naming those keys (`textAdventureRoomRefusal`), never read as "its exits and
+ * no locations". The shape is read off `TEXT_ADVENTURE_SIDECAR_FIELDS` (merged
+ * with the envelope), so the refusal and the corpus gate cannot disagree.
+ *
+ * ⛓ G2a-fix — **the play-time flag rides onto the world**: `manaEnabled ===
+ * true` → `world.manaEnabled = true` (the maze's `deserializeMazeWorld` law;
+ * absent otherwise, never `false`). Until the fix the room dropped it and the
+ * wrapper's direct-play mana leg charged nothing (`check-ta-mana-leg`).
+ * `fogEnabled` is NOT carried: no text-adventure reader takes it off a world
+ * (the maze panel's is a maze world's). The serializer writes neither — the
+ * engine stamps both on the envelope after `serializeWorld`.
+ *
+ * ⛓ Concept library T2 — the region's `prose` rides onto the world (a clone)
+ * for the same reason: the bridge reads it off the world
+ * `textAdventure:loadRegion` carries, never off the payload.
+ */
+export function deserializeTextAdventureRoom(payload) {
+    const refusal = textAdventureRoomRefusal(payload);
+    if (refusal) throw new Error(refusal);
+    const gates = payload.exitGates;
+    const exits = new Map();
+    for (const e of payload.exits) {
+        const record = structuredClone(e);
+        if (gates[e.exit_id]) record.access_rule = cloneRule(gates[e.exit_id]);
+        exits.set(e.exit_id, record);
+    }
+    const locations = payload.locations.map((l) => ({
+        id: l.name,
+        name: l.name,
+        ...(l.item != null ? { item: l.item } : {}),
+        ...(l.access_rule ? { access_rule: cloneRule(l.access_rule) } : {}),
+    }));
+    const world = { exits, locations };
+    if (payload.manaEnabled === true) world.manaEnabled = true;
+    if (payload.prose) world.prose = structuredClone(payload.prose);
+    return world;
+}
+
+/** One Rule Builder rule tree, as far as a payload check can say: an object naming its `rule`. */
+const RULE_TREE = Object.freeze({
+    type: 'object',
+    required: Object.freeze(['rule']),
+    properties: Object.freeze({ rule: Object.freeze({ type: 'string', minLength: 1 }) }),
+});
+
+/** One prose message: a non-empty `{var}` template. */
+const PROSE_MESSAGE = Object.freeze({ type: 'string', minLength: 1 });
+/** `{<key>: {<message kind>: template}}` — one prose table (exits or locations) of a region. */
+const proseTable = (kinds) => Object.freeze({
+    type: 'object',
+    additionalProperties: Object.freeze({
+        type: 'object',
+        additionalProperties: false,
+        properties: Object.freeze(Object.fromEntries(kinds.map((k) => [k, PROSE_MESSAGE]))),
+    }),
+});
+
+/**
+ * ⛓⛓ PRESET SIDECARS G2a — **THE TEXT ADVENTURE'S OWN PAYLOAD, DECLARED BESIDE
+ * ITS SERIALIZER** (the registry's `sidecarFields` slot; vocabulary in
+ * `procgenCore/sidecarFields.js`). Until G2a the entry carried the maze's
+ * `TILE_GRID_SIDECAR_FIELDS` object (one payload shape for two substrates);
+ * ⛔ none of the tile keys (`tiles`, `width`, `height`, `entrance`, `obstacles`,
+ * `items`, the two libraries, `longestShortestPath`) is declared, so a payload
+ * that still carries one is refused by name (`UNDECLARED_FIELD`).
+ *
+ * Envelope claims: `exits` and `fogEnabled` (`buildPresetSidecars` writes both on
+ * every region). ⚠ `manaEnabled` is NOT claimed: the engine stamps it only when
+ * the run opted into loop mode, and the committed top-down worlds carry none —
+ * it stays the envelope's optional field.
+ */
+export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
+    exits: REQUIRED_ENVELOPE_FIELD,
+    fogEnabled: REQUIRED_ENVELOPE_FIELD,
+    exitGates: Object.freeze({
+        type: 'object', required: true,
+        description: 'The room\'s AUTHORED exit gates, `{exit_id: rule}` — the document\'s own rule tree for '
+            + 'every gated exit, FORWARD AND BACK (an ungated exit is absent). A back exit\'s gate is its '
+            + 'forward exit\'s compiled rule: the compile\'s bidirectional post-pass writes it on the back '
+            + 'exit\'s record for an AUTHORED substrate (concept library T2c), so the payload says what the '
+            + 'document says. A sibling of the envelope\'s `exits`, because a substrate may not add a field '
+            + 'to that record. Written by `serializeTextAdventureRoom`; a rebuild re-emits the exit rules from it.',
+        schema: Object.freeze({ additionalProperties: RULE_TREE }),
+    }),
+    locations: Object.freeze({
+        type: 'array', required: true,
+        description: 'The room\'s locations `{name, item?, access_rule?}`: `name` is the AP location name '
+            + '(baked from the extracted rules by `serializeTextAdventureRoom`), `item` the placed item, '
+            + '`access_rule` the AUTHORED gate (absent = `True_`).',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['name']),
+                additionalProperties: false,
+                properties: Object.freeze({
+                    name: Object.freeze({ type: 'string', minLength: 1 }),
+                    item: Object.freeze({ type: 'string' }),
+                    access_rule: RULE_TREE,
+                }),
+            }),
+        }),
+    }),
+    prose: Object.freeze({
+        type: 'object',
+        description: 'The region\'s OWN prose (concept library T2): a per-region slice of the per-game custom-data '
+            + 'file\'s shape — `{enterMessage?, exits: {<exit_id>: {moveMessage?, inaccessibleMessage?}}, '
+            + 'locations: {<AP name>: {checkMessage?, alreadyCheckedMessage?, inaccessibleMessage?}}}`, same '
+            + '`{var}` templating. Written by `serializeTextAdventureRoom` only when the room says something (a '
+            + 'concept realisation `placeTextAdventureRules` selected); the bridge resolves each message payload '
+            + 'prose → per-game file → generic line.',
+        schema: Object.freeze({
+            additionalProperties: false,
+            properties: Object.freeze({
+                enterMessage: PROSE_MESSAGE,
+                exits: proseTable(PROSE_KEYS.exit),
+                locations: proseTable(PROSE_KEYS.location),
+            }),
+        }),
+    }),
+});
+
+/** The declaration merged with the envelope — the shape a room payload has. */
+let mergedRoomFields = null;
+
+/**
+ * ⛔ The refusal sentence for a payload that is not a text-adventure room, or
+ * `null` when it is one. Shape only (`UNDECLARED_FIELD` / `MISSING_REQUIRED`, and
+ * a non-object): value errors are the corpus gate's to report, and so is an absent
+ * ENVELOPE field (`fogEnabled` is the engine's to stamp after `serializeWorld`, so
+ * the serializer's own output — which `deserializeWorld` must read back — has none).
+ *
+ * @param {unknown} payload
+ * @returns {string|null}
+ */
+export function textAdventureRoomRefusal(payload) {
+    mergedRoomFields ??= sidecarFieldsOf({ id: 'text_adventure', sidecarFields: TEXT_ADVENTURE_SIDECAR_FIELDS });
+    const errors = sidecarPayloadErrors(mergedRoomFields, payload);
+    if (errors.some((e) => e.field === null)) {
+        return 'this is not a text-adventure room payload — playable_payload is not an object';
+    }
+    const E = SIDECAR_FIELD_ERRORS;
+    const carried = errors.filter((e) => e.code === E.UNDECLARED_FIELD).map((e) => `\`${e.field}\``);
+    const absent = errors.filter((e) => e.code === E.MISSING_REQUIRED
+        && mergedRoomFields[e.field].owner === 'substrate').map((e) => `\`${e.field}\``);
+    if (!carried.length && !absent.length) return null;
+    const parts = [];
+    if (carried.length) parts.push(`it carries ${carried.join(', ')}, which a room does not have`);
+    if (absent.length) parts.push(`it lacks ${absent.join(', ')}, which every room payload carries`);
+    return `this payload is not a text-adventure room — ${parts.join('; ')}. `
+        + 'Only the room format is read (a tile-grid payload written before G2a is not): '
+        + 'regenerate the region through the text adventure\'s own producer.';
+}
+
+/**
+ * ⛓ The registry's `apLocationNamesOf` slot: every `locations[].name`, or `null`
+ * when the payload carries no `locations` array — the slot's contract for "no
+ * location carrier" (such a payload is not a room: the declaration and
+ * `textAdventureRoomRefusal` refuse it).
+ *
+ * @param {object} payload
+ * @returns {string[]|null}
+ */
+export function textAdventureApLocationNames(payload) {
+    if (!Array.isArray(payload?.locations)) return null;
+    return payload.locations.map((l) => l?.name).filter((n) => typeof n === 'string' && n !== '');
+}
+

@@ -1,0 +1,8 @@
+{"process":"undefined","legPre":false,"noSwing":false,"keep":false,"all":"[[0],[0,2],[0,2,8],[0,2,8,14]]"}
+{} work 642 ticks 381 full {"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":2407,"work":618,"deadline":"sword-dash","limit":"budget"}
+{"dashLegPrecheck":true} work 642 ticks 381 full {"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":1165,"work":618,"deadline":"sword-dash","limit":"budget"}
+{"dashShape":{"legPrecheck":true,"noSwingPrefix":true,"keepPartial":true}} work 642 ticks 381 full {"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":1078,"work":618,"deadline":"sword-dash","limit":"budget"}
+{"DASH_LEG_PRECHECK":true} work 642 ticks 381 full {"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":1010,"work":618,"deadline":"sword-dash","limit":"budget"}
+{"SEEDLING_DASH_LEG_PRECHECK":"1"} work 642 ticks 381 full {"pass":"full","ok":false,"kind":"refusal","ticks":null,"ms":1155,"work":618,"deadline":"sword-dash","limit":"budget"}
+--- env ON:
+{} work 49 ticks 381 full {"pass":"full","ok":true,"kind":null,"ticks":381,"ms":148,"work":25}

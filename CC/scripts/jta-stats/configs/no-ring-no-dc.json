@@ -1,0 +1,9 @@
+{
+  "name": "no-ring-no-dc",
+  "options": {
+    "modOverrides": {
+      "auto_ring": false,
+      "auto_dreamcatcher": false
+    }
+  }
+}

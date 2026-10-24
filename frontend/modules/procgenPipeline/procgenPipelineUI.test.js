@@ -1,16 +1,37 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+// Side-effect: register the substrates the refusal check resolves through. ⛔
+// Without them `getAdapter` refuses by ID and the answer below would read
+// "no substrate registered" for every document — a true sentence about the
+// TEST's imports, not about the document.
+import '../mazeRoom/mazeRoomLibrary.js';
+import '../bounceDemo/bounceDemoLibrary.js';
+import '../runnerDemo/runnerDemoLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 import {
-    groupLibraryByFeature,
-    reconstructResultFromSidecars,
-    resolveExitTilePositions,
-    fitTextToWidth,
+    groupLibraryByFeature, ProcgenPipelineUI, HANDOFF_REALISED_SLOT, HANDOFF_TOPDOWN_COST,
 } from './procgenPipelineUI.js';
-import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-// Side-effect import: registers the maze substrate so deserializeWorld
-// resolves through substrateRegistry when reconstructResultFromSidecars
-// runs in the test environment.
-import '../mazeRoom/mazeRoomLibrary.js';
+import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
+import { panelDefaultParams, buildRunFromState } from './presetRun.js';
+import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
+import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS }
+    from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
+import { MAZE_ARRIVAL_ROW_CLASS } from '../mazeRoom/mazeProcgenParams.js';
+
+/**
+ * ⛓ APWORLD EDITOR HUB H3 — three suites LEFT this file with the code they
+ * covered: `reconstructResultFromSidecars`' rows are now
+ * `compositeMapDocument.test.js`, and `resolveExitTilePositions` /
+ * `fitTextToWidth`'s are `procgenCore/compositeMapRenderer.test.js`. What is
+ * left here is what still lives in the panel module.
+ */
 
 // Fixture entries — minimal shape (just id, def.feature, kind) since
 // the grouper only reads `def.feature` from each entry.
@@ -29,6 +50,30 @@ const TEXT_ADVENTURE = {
     id: 'text_adventure',
     supportedFeatures: ['logic_gate'],
 };
+
+describe('T0b — groupLibraryByFeature groups a CONCEPT row under the entries that realise it', () => {
+    const REALISING_MAZE = { ...MAZE, conceptRealisations: MAZE_CONCEPT_REALISATIONS };
+    const REALISING_TA = { ...TEXT_ADVENTURE, conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS };
+    const BARE = { id: 'bounce', supportedFeatures: ['logic_gate'] };
+    const plain = itemRowsOf(CONCEPTS.sword)[0];
+    const row = (def) => [{ id: def.id, def, kind: 'item' }];
+    it('BEFORE the marker: the table row (feature concept_items, which no entry lists) is unsupported', () => {
+        const groups = groupLibraryByFeature(row(plain), [REALISING_MAZE, REALISING_TA]);
+        expect(groups.unsupported.map((e) => e.id)).toEqual(['Progressive Sword']);
+    });
+    it('marked: common when every selected entry realises it; "<realisers> only" when some do', () => {
+        const marked = markConceptRow(plain, 'sword');
+        expect(groupLibraryByFeature(row(marked), [REALISING_MAZE, REALISING_TA]).common.map((e) => e.id))
+            .toEqual(['Progressive Sword']);
+        const some = groupLibraryByFeature(row(marked), [REALISING_MAZE, BARE]);
+        expect(some.substrateSpecific).toEqual([{ label: 'maze only', entries: row(marked) }]);
+        expect(groupLibraryByFeature(row(marked), [BARE]).unsupported.map((e) => e.id)).toEqual(['Progressive Sword']);
+    });
+    it('an UNMARKED row of the same name (a library\'s own) is grouped by its feature alone', () => {
+        const seedlingsOwn = { ...plain, feature: 'seedling_items' };
+        expect(groupLibraryByFeature(row(seedlingsOwn), [REALISING_MAZE]).unsupported).toHaveLength(1);
+    });
+});
 
 describe('groupLibraryByFeature', () => {
     it('with zero substrates selected, every entry falls into unsupported', () => {
@@ -110,191 +155,765 @@ describe('groupLibraryByFeature', () => {
     });
 });
 
-describe('reconstructResultFromSidecars', () => {
-    // Minimum-viable serialized maze region the maze adapter's
-    // deserializeWorld accepts. 3x3 walls-only with a single floor
-    // tile at the center marked as both entrance and exit.
-    const minimalSidecar = (gx, gy) => ({
-        substrate: 'maze',
-        render_hint: 'maze',
-        grid_cell: { gx, gy },
-        playable_payload: {
-            width: 3,
-            height: 3,
-            tiles: [1, 1, 1,  1, 0, 1,  1, 1, 1],
-            entrance: { x: 1, y: 1 },
-            exits: [{ exit_id: 'exit', x: 1, y: 1, side: 'N',
-                exitName: 'exit', targetRegion: null,
-                isBackExit: false, isTeleporter: false }],
-            obstacles: [], items: [], obstacleLib: {}, itemLib: {},
-        },
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **WHAT THE PIPELINE SAYS IT CAN DO WITH A
+ * HANDED-OVER WORKING COPY.** `procgenPipeline:loadRules` adopts a document
+ * that may never have been applied, and `_handoffAnswer` is the sentence a
+ * person reads next. Three answers, and each is DERIVED: the sphere half from
+ * `sphereRebuildRefusal` (the engine's own precondition, sharing the strings
+ * `rebuildEnvelopeFromRulesJson` throws), the top-down half from the document's
+ * own region count.
+ *
+ * ⛔ The rows drive REAL COMMITTED PRESETS, because the claim is about what the
+ * corpus contains. Measured at this tree: `procgen_topdown/AP_1` is the
+ * appendable one (`driver: top-down-sphere`, tree + plan present, maze
+ * substrates); `procgen_maze/AP_1` is `grid-growth` with no sphere tree at all,
+ * so the door's own named fixture answers TOP-DOWN, not "append".
+ */
+const preset = (rel) => JSON.parse(readFileSync(
+    fileURLToPath(new URL(`../../presets/${rel}`, import.meta.url)), 'utf8'));
+
+const answerFor = (doc, label = 'hand-off (the APWorld editor)', carried = null) =>
+    ProcgenPipelineUI.prototype._handoffAnswer.call({ topDownSourceLabel: label }, doc, carried);
+
+/**
+ * ⛓⛓ **THE ADOPTION ITSELF, ON THE REAL PROTOTYPE.** `Object.create` gives the
+ * real methods (`_applyGridDimsFromSource`, `_handoffAnswer`) over a bare
+ * object; only `render` is stubbed, because the claim is about STATE, not
+ * paint. ⛔ A row that stubbed the helpers too would be asserting the row's own
+ * arithmetic.
+ */
+function adopt(doc, source = 'the APWorld editor', carried = null) {
+    const ctx = Object.create(ProcgenPipelineUI.prototype);
+    ctx.useLoadedRules = true;
+    ctx.mode = 'sphereGrowth';
+    ctx.params = { gridWidth: 1, gridHeight: 1 };
+    ctx.renders = 0;
+    ctx.render = () => { ctx.renders += 1; };
+    ctx._adoptHandoffRules(doc, source, carried);
+    return ctx;
+}
+
+describe('_adoptHandoffRules — a WORKING COPY is not applied state', () => {
+    it('⛓⛓⛓ turns "Use currently-loaded rules.json" OFF, so the next app-wide '
+        + 'load cannot silently replace the handed-over document', () => {
+        const ctx = adopt(preset('procgen_maze/AP_1/AP_1_rules.json'));
+        expect(ctx.useLoadedRules).toBe(false);
     });
 
-    it('returns null when rules.json has no preset_sidecars', () => {
-        expect(reconstructResultFromSidecars({})).toBeNull();
-        expect(reconstructResultFromSidecars(null)).toBeNull();
-        expect(reconstructResultFromSidecars({ preset_sidecars: {} })).toBeNull();
+    it('⛓ adopts the document by IDENTITY as the top-down source and NAMES the '
+        + 'door in the label', () => {
+        const doc = preset('procgen_maze/AP_1/AP_1_rules.json');
+        const ctx = adopt(doc, 'the APWorld editor');
+        expect(ctx.topDownSource).toBe(doc);
+        expect(ctx.topDownSourceLabel).toBe('hand-off (the APWorld editor)');
+        expect(ctx.renders).toBe(1);
     });
 
-    it('reconstructs a Grid populated with deserialized regions', () => {
-        const result = reconstructResultFromSidecars({
-            preset_sidecars: {
-                '1': {
-                    region_0_0: minimalSidecar(0, 0),
-                    region_1_0: minimalSidecar(1, 0),
-                },
-            },
-            procgen_metadata: { driver: 'grid-growth', stop_reason: 'pool_empty' },
-        });
-        expect(result).not.toBeNull();
-        expect(result.grid.width).toBe(2);
-        expect(result.grid.height).toBe(1);
-        expect(result.regionSize).toEqual({ width: 3, height: 3 });
-        expect(result.stats.regionsBuilt).toBe(2);
-        expect(result.stats.stopReason).toBe('pool_empty');
-        expect(result.fromLoadedPreset).toBe(true);
-        // Each placed region should expose its deserialized in-memory
-        // world (Map for exits, not a plain array).
-        const r = result.grid.getRegion({ gx: 0, gy: 0 });
-        expect(r.region_id).toBe('region_0_0');
-        expect(r.playable_payload.exits instanceof Map).toBe(true);
+    it('⛓ a hand-off with no named door still says it is a hand-off', () => {
+        expect(adopt(preset('procgen_maze/AP_1/AP_1_rules.json'), null).topDownSourceLabel)
+            .toBe('hand-off');
     });
 
-    it('sizes the canvas grid by max region dimensions across regions', () => {
-        const big = minimalSidecar(0, 0);
-        big.playable_payload.width = 5;
-        big.playable_payload.height = 4;
-        big.playable_payload.tiles = new Array(20).fill(1);
-        big.playable_payload.tiles[2 * 5 + 2] = 0;
-        big.playable_payload.entrance = { x: 2, y: 2 };
-        big.playable_payload.exits[0] = { ...big.playable_payload.exits[0], x: 2, y: 2 };
-        const result = reconstructResultFromSidecars({
-            preset_sidecars: { '1': {
-                region_0_0: big,
-                region_0_1: minimalSidecar(0, 1),  // 3x3
-            } },
-        });
-        expect(result.regionSize).toEqual({ width: 5, height: 4 });
-    });
-
-    it('skips regions whose substrate has no registered deserializer', () => {
-        const sc = minimalSidecar(0, 0);
-        sc.substrate = 'no_such_substrate';
-        const result = reconstructResultFromSidecars({
-            preset_sidecars: { '1': { region_0_0: sc } },
-        });
-        expect(result).toBeNull();
+    it('⛓ switches to the mode whose source picker SHOWS the adopted document', () => {
+        expect(adopt(preset('procgen_maze/AP_1/AP_1_rules.json')).mode).toBe('topDown');
     });
 });
 
-describe('resolveExitTilePositions', () => {
-    const SIZE = { width: 8, height: 6 };
-
-    it('preserves explicit (x, y) verbatim and skips even-distribution', () => {
-        const placed = resolveExitTilePositions([
-            { exit_id: 'a', x: 3, y: 0, side: 'N' },
-            { exit_id: 'b', x: 7, y: 2, side: 'E' },
-        ], SIZE);
-        expect(placed).toEqual([
-            { exit: { exit_id: 'a', x: 3, y: 0, side: 'N' }, x: 3, y: 0 },
-            { exit: { exit_id: 'b', x: 7, y: 2, side: 'E' }, x: 7, y: 2 },
-        ]);
+describe('_handoffAnswer — the three things a handed-over document can be', () => {
+    it('⛓⛓ a SPHERE-GROWN document offers APPEND A SPHERE', () => {
+        const doc = preset('procgen_topdown/AP_1/AP_1_rules.json');
+        // The premise, measured rather than assumed.
+        expect(sphereRebuildRefusal(doc)).toBeNull();
+        const said = answerFor(doc);
+        expect(said).toContain('APPEND A SPHERE');
+        expect(said).toContain('hand-off (the APWorld editor)');
+        expect(said).toContain(`${Object.keys(doc.regions['1']).length} source regions`);
     });
 
-    it('distributes side-only exits evenly along their wall, avoiding corners', () => {
-        // Three N-side exits → fractions 1/4, 2/4, 3/4 of (width-1=7).
-        const placed = resolveExitTilePositions([
-            { exit_id: 'n1', side: 'N' },
-            { exit_id: 'n2', side: 'N' },
-            { exit_id: 'n3', side: 'N' },
-        ], SIZE);
-        expect(placed.map(({ x, y }) => [x, y])).toEqual([[2, 0], [4, 0], [5, 0]]);
-        // None landed on the corners.
-        for (const { x } of placed) {
-            expect(x).toBeGreaterThan(0);
-            expect(x).toBeLessThan(SIZE.width - 1);
+    it('⛓⛓ a document that is NOT sphere-grown offers TOP-DOWN, and QUOTES the '
+        + 'engine on why it cannot be appended to', () => {
+        const doc = preset('procgen_maze/AP_1/AP_1_rules.json');
+        const refusal = sphereRebuildRefusal(doc);
+        expect(refusal).toBeTruthy();
+        const said = answerFor(doc);
+        expect(said).toContain('TOP-DOWN FROM THIS');
+        // ⛔ The engine's sentence, not a summary of it: "zone world" is ONE of
+        //   four reasons and this document's is a different one.
+        expect(said).toContain(refusal);
+        expect(said).not.toContain('APPEND A SPHERE');
+    });
+
+    it('⛓ a document with NO regions for the slot says NOTHING can be built, by '
+        + 'name — never silence', () => {
+        const said = answerFor({ regions: { 2: { Menu: {} } } });
+        expect(said).toContain('NOTHING can be built');
+        expect(said).toContain('player 1');
+        expect(said).toContain(sphereRebuildRefusal({ regions: { 2: { Menu: {} } } }));
+    });
+
+    it('⛔ and an UNREGISTERED substrate is not reported as a ZONE substrate', () => {
+        const doc = preset('seedling_atlas_sphere/AP_1/AP_1_rules.json');
+        // `atlas:seedling` is a real substrate this file does not import; the
+        // refusal must be `getAdapter`'s own sentence, which names the id and
+        // the missing import — not "zone substrate", which would send a reader
+        // looking for a geometry problem that does not exist.
+        const refusal = sphereRebuildRefusal(doc);
+        expect(refusal).toContain("no substrate registered for id 'atlas:seedling'");
+        expect(refusal).not.toContain('zone substrate');
+        expect(answerFor(doc)).toContain('TOP-DOWN FROM THIS');
+    });
+});
+
+/**
+ * ⛓⛓⛓ PRESET SIDECARS M1 — **THE ANSWER NAMES THE SLOT IT CAME FROM, AND
+ * SPEAKS ABOUT THE SLOT THE ROUTES BUILD.** The hub's door publishes the slot
+ * it had selected (`player`); both of this panel's routes build
+ * `HANDOFF_REALISED_SLOT` whatever it is. So a hand-off from another slot is
+ * NAMED first, with its own region count, and everything after it is about
+ * the built slot — an answer that counted slot 3's regions would describe a
+ * world the buttons do not build.
+ *
+ * ⛓ Every count is read off the fixture here, never typed; the slot that
+ * differs is PICKED off the document (the first slot whose region count is
+ * not the built slot's), so the row can tell the two counts apart.
+ */
+describe('_handoffAnswer — the carried slot (M1)', () => {
+    const FOUR = 'multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json';
+    const regionsIn = (doc, slot) => Object.keys(doc.regions?.[slot] ?? {}).length;
+    const otherSlot = (doc) => Object.keys(doc.regions).find(
+        (s) => s !== HANDOFF_REALISED_SLOT && regionsIn(doc, s) !== regionsIn(doc, HANDOFF_REALISED_SLOT));
+
+    it('⛓⛓ a hand-off from ANOTHER slot names that slot and its count first, then '
+        + 'answers about the built slot', () => {
+        const doc = preset(FOUR);
+        const slot = otherSlot(doc);
+        // premise: the fixture has a slot whose count differs from the built slot's
+        expect(slot).toBeTruthy();
+        const said = answerFor(doc, undefined, slot);
+        expect(said).toContain(`sent from player ${slot} (${regionsIn(doc, slot)} source regions)`);
+        expect(said).toContain(`build player slot ${HANDOFF_REALISED_SLOT} only`);
+        expect(said).toContain(`TOP-DOWN FROM THIS (${regionsIn(doc, HANDOFF_REALISED_SLOT)} source regions)`);
+        // ⛔ never the carried slot's count as the thing top-down builds
+        expect(said).not.toContain(`TOP-DOWN FROM THIS (${regionsIn(doc, slot)} source regions)`);
+        // the refusal is the BUILT slot's, quoted
+        expect(said).toContain(sphereRebuildRefusal(doc, { playerId: HANDOFF_REALISED_SLOT }));
+    });
+
+    it('⛓ no slot carried, or the built slot itself (string or number) ⇒ the sentence '
+        + 'without the lead', () => {
+        const doc = preset(FOUR);
+        const plain = answerFor(doc);
+        expect(plain.startsWith('Adopted hand-off (the APWorld editor): TOP-DOWN FROM THIS')).toBe(true);
+        expect(answerFor(doc, undefined, HANDOFF_REALISED_SLOT)).toBe(plain);
+        expect(answerFor(doc, undefined, Number(HANDOFF_REALISED_SLOT))).toBe(plain);
+        expect(plain).not.toContain('sent from player');
+    });
+
+    it('⛓ a per-player export that carries ONLY its own slot says nothing can be built '
+        + 'for the built slot — and still names where it came from', () => {
+        const doc = preset('multiworld/AP_05594871498841892311/AP_05594871498841892311_P3_rules.json');
+        const slot = String(doc.playerId);
+        expect(regionsIn(doc, HANDOFF_REALISED_SLOT)).toBe(0);
+        const said = answerFor(doc, undefined, slot);
+        expect(said).toContain(`sent from player ${slot} (${regionsIn(doc, slot)} source regions)`);
+        expect(said).toContain('NOTHING can be built');
+        expect(said).toContain(`no regions for player ${HANDOFF_REALISED_SLOT}`);
+    });
+
+    it('⛓ the adoption hands the carried slot to the answer', () => {
+        const doc = preset(FOUR);
+        const slot = otherSlot(doc);
+        const ctx = adopt(doc, 'the APWorld editor', slot);
+        expect(ctx.message).toBe(answerFor(doc, undefined, slot));
+        expect(ctx.message).toContain(`sent from player ${slot}`);
+    });
+});
+
+/**
+ * ⛓⛓ M1 — **THE TOP-DOWN ANSWER NAMES ITS COST**: `layoutTopDown` never reads a
+ * sidecar, so the payloads handed over are regenerated. ⛔ The sphere answer
+ * does not change (appending keeps the payloads), and the hub's door says the
+ * same two things — its note is typed in `documentKeys.js` (that module
+ * imports no panel), so it is held to this module's constants HERE.
+ */
+describe('_handoffAnswer — the cost of the top-down route (M1)', () => {
+    it('⛓⛓ TOP-DOWN FROM THIS carries the cost clause', () => {
+        const said = answerFor(preset('procgen_maze/AP_1/AP_1_rules.json'));
+        expect(said).toContain('TOP-DOWN FROM THIS');
+        expect(said).toContain(HANDOFF_TOPDOWN_COST);
+    });
+
+    it('⛔ the sphere answer carries no cost clause and no lead', () => {
+        const doc = preset('procgen_topdown/AP_1/AP_1_rules.json');
+        const said = answerFor(doc, undefined, HANDOFF_REALISED_SLOT);
+        expect(said).toContain('APPEND A SPHERE');
+        expect(said).not.toContain(HANDOFF_TOPDOWN_COST);
+        expect(said).not.toContain('sent from player');
+        expect(said).toBe(answerFor(doc));
+    });
+
+    it('⛓ the hub\'s Regenerate door agrees: it names the built slot and REGENERATES', () => {
+        const note = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor.note;
+        expect(note).toContain(`player slot ${HANDOFF_REALISED_SLOT} only`);
+        expect(note).toContain('REGENERATES');
+        expect(HANDOFF_TOPDOWN_COST).toContain('REGENERATES');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE R1 — the Parameters section after the split
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * R1 moved WHO DRAWS the Parameters section's region half (the shared
+ * `procgenCore/regionGenerationForm.js`) and retired the three substrate
+ * hooks' private `fieldRow`/`numberField` copies. The law of that slice is
+ * BYTE-INERT on the pipeline: the same controls, bound to the same bag keys,
+ * clamping the same way. These rows hold it against fixtures CAPTURED at the
+ * start HEAD `9ab1459239` (before the first edit), by the same fake document
+ * and the same probes as below — so a row here compares today's DOM with
+ * yesterday's, never with a restatement of today's code.
+ *
+ * ⛔ There is no jsdom in this repo. `fakeDocument` records attribute-like
+ * property sets in SET ORDER (a real element's attribute list order) and
+ * keeps value/checked/disabled as properties; `serialize` prints the tree as
+ * an outerHTML-like string with the properties in braces.
+ */
+const ATTR_PROPS = { className: 'class', title: 'title', type: 'type', min: 'min', max: 'max',
+    step: 'step', placeholder: 'placeholder' };
+const STATE_PROPS = ['value', 'checked', 'disabled'];
+function makeElement(tag) {
+    const attrs = new Map();
+    const props = {};
+    const el = {
+        tagName: tag.toUpperCase(), children: [], parent: null, listeners: {}, _text: '',
+        style: {}, dataset: {}, attrs, props,
+        appendChild(child) {
+            if (child.parent) child.remove();
+            child.parent = el; el.children.push(child); return child;
+        },
+        remove() {
+            if (el.parent) el.parent.children.splice(el.parent.children.indexOf(el), 1);
+            el.parent = null;
+        },
+        addEventListener(type, h) { (el.listeners[type] ??= []).push(h); },
+        fire(type) { for (const h of el.listeners[type] ?? []) h({ target: el }); },
+    };
+    for (const [prop, name] of Object.entries(ATTR_PROPS)) {
+        Object.defineProperty(el, prop, {
+            get: () => attrs.get(name) ?? '',
+            set: (v) => attrs.set(name, String(v)),
+        });
+    }
+    for (const p of STATE_PROPS) {
+        Object.defineProperty(el, p, {
+            get: () => props[p] ?? (p === 'value' ? '' : false),
+            set: (v) => { props[p] = p === 'value' ? String(v) : !!v; },
+        });
+    }
+    Object.defineProperty(el, 'textContent', {
+        get: () => el._text + el.children.map((c) => c.textContent).join(''),
+        set: (v) => { el._text = String(v); el.children.length = 0; },
+    });
+    return el;
+}
+function withFakeDocument(fn) {
+    const saved = globalThis.document;
+    globalThis.document = {
+        createElement: makeElement,
+        createTextNode: (t) => ({ nodeType: 3, textContent: String(t), remove() {} }),
+    };
+    try { return fn(); } finally { globalThis.document = saved; }
+}
+function serialize(el) {
+    if (el.nodeType === 3) return el.textContent;
+    const tag = el.tagName.toLowerCase();
+    const a = [...el.attrs].map(([k, v]) => ` ${k}="${v}"`).join('');
+    const d = Object.entries(el.dataset).map(([k, v]) => ` data-${k}="${v}"`).join('');
+    const s = Object.keys(el.style).length ? ` style="${JSON.stringify(el.style)}"` : '';
+    const p = Object.keys(el.props).length
+        ? `{${Object.entries(el.props).map(([k, v]) => `${k}=${v}`).join(',')}}` : '';
+    return `<${tag}${a}${d}${s}${p}>${el._text}${el.children.map(serialize).join('')}</${tag}>`;
+}
+const descendants = (el) => (el.children ?? []).flatMap((c) => [c, ...descendants(c)]);
+const controls = (el) => descendants(el).filter((c) => c.tagName === 'INPUT' || c.tagName === 'SELECT');
+/** Move one control off its current value, the way a person would. */
+function perturb(c) {
+    if (c.type === 'checkbox') { c.checked = !c.checked; return; }
+    if (c.tagName === 'SELECT') {
+        const opts = c.children.filter((o) => !o.disabled).map((o) => o.value);
+        c.value = opts.find((v) => v !== c.value) ?? c.value;
+        return;
+    }
+    c.value = '7';
+}
+/** What each number box is typed in the behaviour probe. */
+const PROBES = ['', '-3', '0', '2.7', '0.5', '99', 'abc'];
+
+// ⛓ CAPTURED at `9ab1459239` (the R1 start HEAD) — do not edit by hand. The
+// hook renders are the substrate's `renderProcgenParams` on its own
+// `defaultProcgenParams` (the maze twice: hazards on, and off); the behaviour
+// rows are, per control, [typed, bag keys that moved off the defaults, the
+// box afterwards, onChange calls]; the key lists are every bag key a
+// Parameters-section control writes, per mode, with maze + bounce + runner
+// active and hazards on (so the maze's sub-fields are drawn).
+const HOOKS_BEFORE_R1 = Object.freeze({
+    'maze-on': "<div><div class=\"procgen-pipeline-field\"><label title=\"Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region\">Enable hazards</label><input type=\"checkbox\"{checked=true}></input></div><div class=\"procgen-pipeline-hazard-fields\"><div class=\"procgen-pipeline-field\"><label title=\"Target hazard count for each region (0 disables)\">Hazards per region</label><input type=\"number\" min=\"0\" step=\"1\"{value=3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Stop early after this many failed placement attempts in a row\">Max consecutive fails</label><input type=\"number\" min=\"1\" step=\"1\"{value=10}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Hazard paths may include wall tiles (still must contain ≥1 floor tile)\">Allow wall overlap</label><input type=\"checkbox\"{checked=false}></input></div></div></div>",
+    'maze-off': "<div><div class=\"procgen-pipeline-field\"><label title=\"Procgen places hazards (2/3/5-tile linear paths or 4/8-tile loops) on every region\">Enable hazards</label><input type=\"checkbox\"{checked=false}></input></div></div>",
+    'bounce': "<div><div class=\"procgen-pipeline-field\"><label title=\"What falling off the level bottom does. Routing never depends on it — every non-start region has a real back portal.\">Fall behavior</label><select{value=current}><option{value=current}>Restart current region</option><option{value=previous}>Return to previous region</option><option{value=start,disabled=true}>Return to starting region (v2)</option></select></div><div class=\"procgen-pipeline-field\"><label title=\"Logic-affecting: access rules derive from the profile's physics, and the profile is stamped into every bounce payload so the world plays under the constants it was generated with. dj is provisional until probe calibration.\">Physics profile</label><select{value=dj}><option{value=dj}>Doodle Jump (measured, 20Hz)</option><option{value=experimental}>Experimental (original model)</option></select></div><div><div class=\"procgen-pipeline-field\"><label title=\"Wrap-ring width in px. 240 is DJ-authentic and fits two simultaneous branches; three need ≥318.\">Braid width</label><input type=\"number\" min=\"0\" step=\"1\"{value=240}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-row horizontal meander in px (clamped to ~one hop's reach). 0 = straight lanes.\">Max jitter</label><input type=\"number\" min=\"0\" step=\"1\"{value=40}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Extra plain climb rows added per region AFTER the logic-gating content (sphere-growth / gated braid only). Spread across the gate segments to make levels taller and lift the hardest exit to the summit. 0 = minimal gated chain.\">Platform rows</label><input type=\"number\" min=\"0\" step=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a blue platform (moving, full-width sweep; 1-lane rows only). Capped per level so the reachability check stays fast.\">Blue chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a brown platform (breaks on landing; terminal only — a pre-merge branch or the top). Capped per level.\">Brown chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a spring (1-lane rows; launches higher, so the gap above grows to the spring window).\">Spring chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.3}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-eligible-platform probability (0–1) of a jetpack (1-lane rows). Launches FAR higher — under dj the gap is ~6200px, making very tall levels. Default 0.\">Jetpack chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Per-extra-row probability (0–1) of a decorative 2-wide fork/merge beside the gated spine (sphere growth). Adds companion platforms BEYOND the platform-rows target; the terminal merge branch breaks at Brown chance. Default 0.\">Fork chance</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div></div></div>",
+    'runner': "<div><div class=\"procgen-pipeline-field\"><label title=\"Logic-affecting: access rules derive from the profile's physics, and the profile is stamped into every runner payload. Profiles that saturate the calibration sweep cannot host physics gates (double-jump / blue-platform gaps are vetoed there).\">Physics profile</label><select{value=celeste}><option{value=toolkit}>Toolkit defaults</option><option{value=celeste}>Celeste-like</option><option{value=nsmbu}>NSMBU-like</option><option{value=sonic}>Sonic-like (no physics gates)</option><option{value=meatboy}>Meat Boy-like (no physics gates)</option></select></div><div class=\"procgen-pipeline-field\"><label title=\"How close plain run gaps sit to the max grounded jump (0–1). 0 = the calibrated default window; 1 = gaps up to the 0.75×reach structural cap. Gate windows never move.\">Gap margin</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Spike-patch probability per eligible plain floor (0–1). Spiked floors always get a flush partner floor.\">Hazard density</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0.35}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Max plain floors between features (1 + random·N) — longer strips per region.\">Length steps</label><input type=\"number\" min=\"0\" step=\"1\" max=\"8\"{value=2}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Vertical placement jitter (0–1): plain floors rise up to jitter × 1.2 units above the base line. Gates and branch tips stay flat — gap windows never move.\">Jitter</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Split-segment probability per plains slot (0–1): a rising ramp forks into a one-way top lane (jump) over a bottom lane (no jump / drop), merging where the lane ends. Route texture only — requirements never change.\">Splits</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Ceiling-hazard probability per plains slot (0–1): a kill slab hung over its own short gap — full jumps clip it, short holds cross underneath. Difficulty texture only — requirements never change. Some physics profiles have no safe ceiling window and skip these.\">Ceiling hazards</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=0}></input></div><div class=\"procgen-pipeline-field\"><label title=\"Margin of error under ceiling hazards (0–1). 1 (default): a plain short hop pressed before the lip crosses — no coyote-time tricks needed. 0: expert — gaps widen so only a late run-off tap fits under the slab. Mid and full jumps are punished at every setting.\">Ceiling margin</label><input type=\"number\" min=\"0\" step=\"0.01\" max=\"1\"{value=1}></input></div></div>",
+});
+const BEHAVIOUR_BEFORE_R1 = Object.freeze({
+    'maze-on': [
+        [["", {"enableHazards": false}, "", 1]],
+        [["", {"hazardCount": 0}, "", 1], ["-3", {"hazardCount": 0}, "-3", 1], ["0", {"hazardCount": 0}, "0", 1], ["2.7", {"hazardCount": 2}, "2.7", 1], ["0.5", {"hazardCount": 0}, "0.5", 1], ["99", {"hazardCount": 99}, "99", 1], ["abc", {"hazardCount": 0}, "abc", 1]],
+        [["", {"hazardMaxConsecutiveFails": 1}, "", 1], ["-3", {"hazardMaxConsecutiveFails": 1}, "-3", 1], ["0", {"hazardMaxConsecutiveFails": 1}, "0", 1], ["2.7", {"hazardMaxConsecutiveFails": 2}, "2.7", 1], ["0.5", {"hazardMaxConsecutiveFails": 1}, "0.5", 1], ["99", {"hazardMaxConsecutiveFails": 99}, "99", 1], ["abc", {"hazardMaxConsecutiveFails": 1}, "abc", 1]],
+        [["", {"hazardWallOverlapAllowed": true}, "", 1]],
+    ],
+    'maze-off': [
+        [["", {"enableHazards": true}, "", 1]],
+    ],
+    'bounce': [
+        [["", {"bounceFallBehavior": "previous"}, "previous", 1]],
+        [["", {"bouncePhysicsProfile": "experimental"}, "experimental", 1]],
+        [["", {"bounceBraidWidth": 0}, "0", 1], ["-3", {}, "240", 1], ["0", {"bounceBraidWidth": 0}, "0", 1], ["2.7", {"bounceBraidWidth": 2.7}, "2.7", 1], ["0.5", {"bounceBraidWidth": 0.5}, "0.5", 1], ["99", {"bounceBraidWidth": 99}, "99", 1], ["abc", {}, "240", 1]],
+        [["", {"bounceJitter": 0}, "0", 1], ["-3", {}, "40", 1], ["0", {"bounceJitter": 0}, "0", 1], ["2.7", {"bounceJitter": 2.7}, "2.7", 1], ["0.5", {"bounceJitter": 0.5}, "0.5", 1], ["99", {"bounceJitter": 99}, "99", 1], ["abc", {}, "40", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"bouncePlatformRows": 2.7}, "2.7", 1], ["0.5", {"bouncePlatformRows": 0.5}, "0.5", 1], ["99", {"bouncePlatformRows": 99}, "99", 1], ["abc", {}, "0", 1]],
+        [["", {"bounceBlueChance": 0}, "0", 1], ["-3", {}, "0.3", 1], ["0", {"bounceBlueChance": 0}, "0", 1], ["2.7", {"bounceBlueChance": 1}, "1", 1], ["0.5", {"bounceBlueChance": 0.5}, "0.5", 1], ["99", {"bounceBlueChance": 1}, "1", 1], ["abc", {}, "0.3", 1]],
+        [["", {"bounceBrownChance": 0}, "0", 1], ["-3", {}, "0.3", 1], ["0", {"bounceBrownChance": 0}, "0", 1], ["2.7", {"bounceBrownChance": 1}, "1", 1], ["0.5", {"bounceBrownChance": 0.5}, "0.5", 1], ["99", {"bounceBrownChance": 1}, "1", 1], ["abc", {}, "0.3", 1]],
+        [["", {"bounceSpringChance": 0}, "0", 1], ["-3", {}, "0.3", 1], ["0", {"bounceSpringChance": 0}, "0", 1], ["2.7", {"bounceSpringChance": 1}, "1", 1], ["0.5", {"bounceSpringChance": 0.5}, "0.5", 1], ["99", {"bounceSpringChance": 1}, "1", 1], ["abc", {}, "0.3", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"bounceJetpackChance": 1}, "1", 1], ["0.5", {"bounceJetpackChance": 0.5}, "0.5", 1], ["99", {"bounceJetpackChance": 1}, "1", 1], ["abc", {}, "0", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"bounceForkChance": 1}, "1", 1], ["0.5", {"bounceForkChance": 0.5}, "0.5", 1], ["99", {"bounceForkChance": 1}, "1", 1], ["abc", {}, "0", 1]],
+    ],
+    'runner': [
+        [["", {"runnerPhysicsProfile": "toolkit"}, "toolkit", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerGapMargin": 1}, "1", 1], ["0.5", {"runnerGapMargin": 0.5}, "0.5", 1], ["99", {"runnerGapMargin": 1}, "1", 1], ["abc", {}, "0", 1]],
+        [["", {"runnerHazardDensity": 0}, "0", 1], ["-3", {}, "0.35", 1], ["0", {"runnerHazardDensity": 0}, "0", 1], ["2.7", {"runnerHazardDensity": 1}, "1", 1], ["0.5", {"runnerHazardDensity": 0.5}, "0.5", 1], ["99", {"runnerHazardDensity": 1}, "1", 1], ["abc", {}, "0.35", 1]],
+        [["", {"runnerLengthSteps": 0}, "0", 1], ["-3", {}, "2", 1], ["0", {"runnerLengthSteps": 0}, "0", 1], ["2.7", {"runnerLengthSteps": 2.7}, "2.7", 1], ["0.5", {"runnerLengthSteps": 0.5}, "0.5", 1], ["99", {"runnerLengthSteps": 8}, "8", 1], ["abc", {}, "2", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerJitter": 1}, "1", 1], ["0.5", {"runnerJitter": 0.5}, "0.5", 1], ["99", {"runnerJitter": 1}, "1", 1], ["abc", {}, "0", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerSplitChance": 1}, "1", 1], ["0.5", {"runnerSplitChance": 0.5}, "0.5", 1], ["99", {"runnerSplitChance": 1}, "1", 1], ["abc", {}, "0", 1]],
+        [["", {}, "0", 1], ["-3", {}, "0", 1], ["0", {}, "0", 1], ["2.7", {"runnerCeilingDensity": 1}, "1", 1], ["0.5", {"runnerCeilingDensity": 0.5}, "0.5", 1], ["99", {"runnerCeilingDensity": 1}, "1", 1], ["abc", {}, "0", 1]],
+        [["", {"runnerCeilingMargin": 0}, "0", 1], ["-3", {}, "1", 1], ["0", {"runnerCeilingMargin": 0}, "0", 1], ["2.7", {}, "1", 1], ["0.5", {"runnerCeilingMargin": 0.5}, "0.5", 1], ["99", {}, "1", 1], ["abc", {}, "1", 1]],
+    ],
+});
+const PARAMETER_KEYS_BEFORE_R1 = Object.freeze({
+    gridGrowth: [
+        'asymmetricExits', 'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior',
+        'bounceForkChance', 'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows',
+        'bounceSpringChance', 'enableHazards', 'enableLoopMode', 'gridHeight', 'gridWidth', 'hazardCount',
+        'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth',
+        'regionXpEffect', 'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity',
+        'runnerJitter', 'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed', 'stopOnPoolEmpty',
+    ],
+    sphereGrowth: [
+        'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
+        'enableHazards', 'enableLoopMode', 'fillerCount', 'hazardCount', 'hazardMaxConsecutiveFails',
+        'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect',
+        'revisitPercent', 'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity',
+        'runnerJitter', 'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed', 'sphereCount',
+        'spheresPerBatch',
+    ],
+    shuffledSpiral: [
+        'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
+        'enableHazards', 'enableLoopMode', 'hazardCount', 'hazardMaxConsecutiveFails', 'hazardWallOverlapAllowed',
+        'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect', 'runnerCeilingDensity',
+        'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity', 'runnerJitter', 'runnerLengthSteps',
+        'runnerPhysicsProfile', 'runnerSplitChance', 'seed',
+    ],
+    topDown: [
+        'bounceBlueChance', 'bounceBraidWidth', 'bounceBrownChance', 'bounceFallBehavior', 'bounceForkChance',
+        'bounceJetpackChance', 'bounceJitter', 'bouncePhysicsProfile', 'bouncePlatformRows', 'bounceSpringChance',
+        'enableHazards', 'enableLoopMode', 'gridHeight', 'gridWidth', 'hazardCount', 'hazardMaxConsecutiveFails',
+        'hazardWallOverlapAllowed', 'maxItemsPerRegion', 'regionHeight', 'regionWidth', 'regionXpEffect',
+        'runnerCeilingDensity', 'runnerCeilingMargin', 'runnerGapMargin', 'runnerHazardDensity', 'runnerJitter',
+        'runnerLengthSteps', 'runnerPhysicsProfile', 'runnerSplitChance', 'seed',
+    ],
+});
+
+/**
+ * ⛓ TUTORIAL BUGS (2026-10-10) — the maze hook's *Maze rooms play as* row
+ * (`mazeArrival`) is NEW after the R1 capture: the R1 pins splice it out (the
+ * `withoutConceptsRow` move), and its own rows follow them.
+ */
+function withoutArrivalRow(el) {
+    el.children = el.children.filter((c) => !String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS));
+    for (const c of el.children) withoutArrivalRow(c);
+    return el;
+}
+
+const HOOK_CASES = Object.freeze([
+    ['maze-on', 'maze', { enableHazards: true }],
+    ['maze-off', 'maze', {}],
+    ['bounce', 'bounce', {}],
+    ['runner', 'runner', {}],
+]);
+
+describe('R1 — the substrate hooks draw with the shared helpers exactly as their own copies did', () => {
+    it.each(HOOK_CASES)('⛓ %s renders the captured fixture DOM (captured at the start HEAD)', (name, id, extra) => {
+        const entry = substrateRegistry.get(id);
+        const html = withFakeDocument(() => serialize(withoutArrivalRow(entry.renderProcgenParams({
+            params: { ...entry.defaultProcgenParams, ...extra }, onChange: () => {},
+        }))));
+        expect(html).toBe(HOOKS_BEFORE_R1[name]);
+    });
+
+    it.each(HOOK_CASES)('⛓ %s clamps, writes and calls onChange as the captured fixture did', (name, id, extra) => {
+        const entry = substrateRegistry.get(id);
+        const bag = () => ({ ...entry.defaultProcgenParams, ...extra });
+        const rows = withFakeDocument(() => {
+            const n = controls(withoutArrivalRow(entry.renderProcgenParams({ params: bag(), onChange: () => {} }))).length;
+            const out = [];
+            for (let i = 0; i < n; i++) {
+                const probes = [];
+                for (const typed of PROBES) {
+                    const b = bag();
+                    let calls = 0;
+                    const c = controls(withoutArrivalRow(entry.renderProcgenParams({ params: b, onChange: () => { calls += 1; } })))[i];
+                    if (c.type !== 'number') {
+                        if (typed !== '') continue;
+                        perturb(c);
+                    } else {
+                        c.value = typed;
+                    }
+                    c.fire('change');
+                    const moved = Object.fromEntries(Object.entries(b).filter(([k, v]) => bag()[k] !== v));
+                    probes.push([typed, moved, c.value, calls]);
+                }
+                out.push(probes);
+            }
+            return out;
+        });
+        expect(rows).toEqual(BEHAVIOUR_BEFORE_R1[name]);
+    });
+});
+
+/**
+ * ⛓ CONCEPT LIBRARY T1 — the concept-list row (`_renderConceptsField`) is NEW
+ * after the R1 capture, so the two R1 pins below splice it out (the same move
+ * as `unwrapForms`) and hold the rest of the section to its fixture; its own
+ * rows are the `concept list` suite after them.
+ */
+function withoutConceptsRow(el) {
+    el.children = el.children.filter((c) => c.className !== 'procgen-pipeline-field procgen-pipeline-concepts');
+    return el;
+}
+
+/**
+ * ⛓ DISCOVERY × LOOPS (2026-10-18) — the *Discovery mode* row is NEW after the
+ * R1 capture: the same splice, and its own rows are the `Discovery mode` suite.
+ */
+const DISCOVERY_ROW_CLASS = 'procgen-pipeline-field procgen-pipeline-discovery-mode';
+function withoutDiscoveryRow(el) {
+    el.children = el.children.filter((c) => c.className !== DISCOVERY_ROW_CLASS);
+    return el;
+}
+
+describe('R1 — the Parameters section binds the same bag keys it bound before the split', () => {
+    it.each(Object.keys(PARAMETER_KEYS_BEFORE_R1))('⛓ %s: every control\'s key, against the captured fixture', (mode) => {
+        const written = new Set();
+        const bag = { ...panelDefaultParams(), enableHazards: true };
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = new Proxy(bag, { set(t, k, v) { written.add(k); t[k] = v; return true; } });
+        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
+        ctx._saveToLocalStorage = () => {};
+        ctx._handEditedGridKeys = new Set();
+        withFakeDocument(() => {
+            for (const c of controls(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams()))))) { perturb(c); c.fire('change'); }
+        });
+        expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
+        // ⛓ F1: a changed grid control records its key as hand-edited (a
+        // top-down save keeps only those); no other control does.
+        expect([...ctx._handEditedGridKeys].sort())
+            .toEqual(PARAMETER_KEYS_BEFORE_R1[mode].filter((k) => k === 'gridWidth' || k === 'gridHeight'));
+    });
+});
+
+/**
+ * ⛓ The WHOLE Parameters section, not only its keys: the serialised DOM per
+ * mode, with each per-substrate `procgen-region-generation-form` wrapper
+ * spliced out (R1 adds that one element per active substrate and nothing
+ * else), hashed. CAPTURED at the start HEAD `9ab1459239` by the same fake
+ * document; the wrapper's own rows are `regionGenerationForm.test.js`'s.
+ * ⛓ `topDown` RE-RECORDED by PROCGEN PIPELINE PRESETS C2 (2026-09-30): its grid
+ * inputs' `max` moved 10 → `TOPDOWN_GRID_INPUT_MAX` by design. With that
+ * constant set back to 10 the R1 capture `666aeec3…` held — the attribute is
+ * the whole delta.
+ */
+const PARAMETERS_SECTION_SHA256_BEFORE_R1 = Object.freeze({
+    gridGrowth: 'f49e89f68ba8a5cb858d3abd74e9b4d1825b42a0f0e98b5d238fb83067e1c298',
+    sphereGrowth: 'd19a7149611d9cd1289e8f9fac457b81da16df18742771c6ff57b049834ea71a',
+    shuffledSpiral: 'cbd1d83f8490db92a82331113efd87544be267f2471c54f6dbe7e9b0f3eecf9b',
+    topDown: '55923d59e185ecb8aeb3ca78347ef9e514d5017888fc651f261b04f2ac9c1585',
+});
+/**
+ * ⛓ TUTORIAL CATALOGUE C2 (2026-10-10) — each number box now carries
+ * `data-param-key` (the bag key it edits; a handle for the tutorials' steps).
+ * It is NEW after the R1 capture, so the pins drop it and hold the rest of
+ * the section to its fixture; that it names the key is asserted below.
+ */
+function withoutParamKeys(el) {
+    delete el.dataset?.paramKey;
+    for (const c of el.children ?? []) withoutParamKeys(c);
+    return el;
+}
+function unwrapForms(el) {
+    el.children = el.children.flatMap((c) => (c.className === 'procgen-region-generation-form'
+        ? c.children.map(unwrapForms) : [unwrapForms(c)]));
+    return el;
+}
+
+describe('R1 — the Parameters section draws the DOM it drew before the split', () => {
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: the section\'s serialised DOM hash is the captured fixture', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), enableHazards: true };
+        ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
+        ctx._saveToLocalStorage = () => {};
+        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))))));
+        expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
+    });
+
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: every number box names the bag key it edits (data-param-key)', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), enableHazards: true };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        ctx._saveToLocalStorage = () => {};
+        ctx._handEditedGridKeys = new Set();
+        withFakeDocument(() => {
+            const boxes = controls(ctx._renderParams()).filter((c) => c.type === 'number' && c.dataset.paramKey);
+            expect(boxes.map((b) => b.dataset.paramKey)).toContain('seed');
+            for (const b of boxes) {
+                b.value = '3';
+                b.fire('change');
+                expect(ctx.params[b.dataset.paramKey]).toBe(3);
+            }
+        });
+    });
+});
+
+describe('DISCOVERY × LOOPS — the *Discovery mode* select (`params.discoveryMode`)', () => {
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('%s: ONE row, follow/on/off, "Same as loop mode" by default; choosing writes the bag key', (mode) => {
+        expect(panelDefaultParams().discoveryMode).toBe('follow');
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams() };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        let saves = 0;
+        ctx._saveToLocalStorage = () => { saves += 1; };
+        ctx._handEditedGridKeys = new Set();
+        withFakeDocument(() => {
+            const rows = ctx._renderParams().children.filter((c) => c.className === DISCOVERY_ROW_CLASS);
+            expect(rows).toHaveLength(1);
+            const [select] = controls(rows[0]);
+            expect(select.dataset.paramKey).toBe('discoveryMode');
+            expect(select.children.map((o) => o.value)).toEqual(['follow', 'on', 'off']);
+            expect(select.value).toBe('follow');
+            select.value = 'off';
+            select.fire('change');
+        });
+        expect(ctx.params.discoveryMode).toBe('off');
+        expect(saves).toBe(1);
+    });
+});
+
+describe('TUTORIAL BUGS — *Maze rooms play as* (`mazeArrival`) on the maze hook', () => {
+    it('one select, zone by default; choosing regions writes mazeArrival and calls onChange', () => {
+        const entry = substrateRegistry.get('maze');
+        expect(entry.defaultProcgenParams.mazeArrival).toBe('zone');
+        const bag = { ...entry.defaultProcgenParams };
+        let calls = 0;
+        withFakeDocument(() => {
+            const wrap = entry.renderProcgenParams({ params: bag, onChange: () => { calls += 1; } });
+            const rows = wrap.children.filter((c) => String(c.className).includes(MAZE_ARRIVAL_ROW_CLASS));
+            expect(rows).toHaveLength(1);
+            const [select] = controls(rows[0]);
+            expect(select.dataset.paramKey).toBe('mazeArrival');
+            expect(select.children.map((o) => o.value)).toEqual(['zone', 'region']);
+            expect(select.value).toBe('zone');
+            select.value = 'region';
+            select.fire('change');
+        });
+        expect(bag.mazeArrival).toBe('region');
+        expect(calls).toBe(1);
+    });
+});
+
+describe('CONCEPT LIBRARY T1 — the concept list (`params.concepts`) on the Parameters section', () => {
+    const conceptsRow = (section) => section.children
+        .filter((c) => c.className === 'procgen-pipeline-field procgen-pipeline-concepts');
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: ONE row, a box per CONCEPTS id, none ticked by default; ticking writes the ids in table order', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams() };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        let saves = 0;
+        ctx._saveToLocalStorage = () => { saves += 1; };
+        withFakeDocument(() => {
+            const rows = conceptsRow(ctx._renderParams());
+            expect(rows).toHaveLength(1);
+            const boxes = controls(rows[0]);
+            expect(boxes.map((b) => b.value)).toEqual(Object.keys(CONCEPTS));
+            expect(boxes.every((b) => b.checked === false)).toBe(true);
+            expect(ctx.params.concepts).toEqual([]);
+            const byId = Object.fromEntries(boxes.map((b) => [b.value, b]));
+            for (const id of ['water', 'sword']) { byId[id].checked = true; byId[id].fire('change'); }
+            expect(ctx.params.concepts).toEqual(['sword', 'water']);
+            byId.water.checked = false; byId.water.fire('change');
+            expect(ctx.params.concepts).toEqual(['sword']);
+            expect(saves).toBe(3);
+        });
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ SEEDLING GENERATED G3 — the generator's knobs, from the form to the run
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * With a generated-room quota active the Parameters section draws that entry's
+ * `renderProcgenParams` (R1's shared form), and an edit there must reach the
+ * core in EVERY mode. ⛔ MEASURED at G3 W0: the spiral and the grid growth
+ * handed every core `regionParams: {}`, so the form drew knobs that reached
+ * nothing there; G3 passes the in-mix hooks through (`presetRun.js`
+ * `buildSpiralRun` / `buildGridRun`). The entry is registered HERE, after every
+ * row above (whose captured fixtures name their own substrates), and read by
+ * its exported id.
+ */
+describe('G3 — a generated-room quota: the knobs are drawn, and an edit reaches the run in every mode', () => {
+    /** Where each mode's run carries the regionParams its cores receive. */
+    const RUN_REGION_PARAMS = Object.freeze({
+        sphereGrowth: (run) => run.config.regionParams,
+        shuffledSpiral: (run) => run.config.regionParams,
+        topDown: (run) => run.regionParams,
+        gridGrowth: (run) => run.grow.regionParams,
+    });
+    const labelled = (root, text) => descendants(root).find((c) => c.tagName === 'DIV'
+        && c.children[0]?.tagName === 'LABEL' && c.children[0].textContent === text)?.children[1] ?? null;
+
+    it.each(Object.keys(RUN_REGION_PARAMS))('⛓⛓ %s: the form is drawn; Obstacle target 2 + Fill shell reach the cores\' regionParams', async (mode) => {
+        const { FLASH_SEEDLING_GEN_SUBSTRATE_ID: GEN, DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS } = await import(
+            '../flashPanel/flashSeedlingGenLibrary.js');
+        const mix = { maze: 1, [GEN]: 1 };
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams(), ...DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS };
+        ctx._activeSubstrateDict = () => mix;
+        ctx._saveToLocalStorage = () => {};
+        const form = withFakeDocument(() => {
+            const section = ctx._renderParams();
+            const f = descendants(section).find((c) => c.dataset?.substrateId === GEN);
+            const target = labelled(f, 'Obstacle target');
+            const fill = labelled(f, 'Fill');
+            target.value = '2';
+            target.fire('change');
+            fill.value = 'shell';
+            fill.fire('change');
+            return f;
+        });
+        expect(form.dataset.procgenParams).toBe('drawn');
+        expect(descendants(form).some((c) => c.textContent === `${GEN} parameters`)).toBe(true);
+        expect(ctx.params).toMatchObject({ seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' });
+
+        const { run } = buildRunFromState({
+            mode, params: ctx.params, scenario: { items: {}, obstacles: {} },
+            substrateQuotas: mix, substrateMix: mix,
+            substrateMode: mode === 'topDown' || mode === 'gridGrowth' ? 'mix' : 'quotas',
+        }, { topDownSource: {} });
+        expect(RUN_REGION_PARAMS[mode](run).seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell' });
+    });
+});
+
+describe('local-storage V1 — a full origin is reported, never a silent success (plan §37.7.5)', () => {
+    const quotaError = () => Object.assign(new Error('exceeded the quota'), { name: 'QuotaExceededError' });
+
+    async function withFullStorage(run) {
+        const { onStorageWriteFailure } = await import('../../app/core/storageQuota.js');
+        const notices = [];
+        const off = onStorageWriteFailure((n) => notices.push(n));
+        const prev = globalThis.localStorage;
+        globalThis.localStorage = {
+            length: 0, key: () => null, getItem: () => null, removeItem: () => {},
+            setItem: () => { throw quotaError(); },
+        };
+        try {
+            await run(notices);
+        } finally {
+            off();
+            if (prev === undefined) delete globalThis.localStorage;
+            else globalThis.localStorage = prev;
+        }
+    }
+
+    function panel() {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.workingLibrary = { entries: [] };
+        ctx.warning = '';
+        ctx.message = '';
+        ctx.renders = 0;
+        ctx.render = () => { ctx.renders += 1; };
+        return ctx;
+    }
+
+    it('a working-library save that does not fit returns false, reports the key and warns it is not saved', async () => {
+        await withFullStorage((notices) => {
+            const ctx = panel();
+            expect(ctx._saveWorkingLibraryToLocalStorage()).toBe(false);
+            expect(notices.map((n) => n.key)).toEqual(['procgenPipeline_workingLibrary']);
+            expect(ctx.warning).toMatch(/NOT saved/);
+        });
+    });
+
+    it('a capture on a full origin says "NOT saved" instead of claiming success', async () => {
+        const sub = { id: 'lsV1Probe', captureLibraryEntry: () => ({ entry_id: 'e1' }), validateLibraryEntry: () => ({ errors: [] }) };
+        const get = vi.spyOn(substrateRegistry, 'get').mockReturnValue(sub);
+        try {
+            await withFullStorage(() => {
+                const ctx = panel();
+                ctx._captureRegionToLibrary({ substrate: 'lsV1Probe' });
+                expect(ctx.message).toMatch(/in this page only, NOT saved/);
+                expect(ctx.warning).toMatch(/NOT saved/);
+                expect(ctx.workingLibrary.entries).toHaveLength(1);
+            });
+        } finally {
+            get.mockRestore();
         }
     });
 
-    it('distributes per-side independently and pins to correct wall', () => {
-        const placed = resolveExitTilePositions([
-            { exit_id: 's1', side: 'S' },
-            { exit_id: 'w1', side: 'W' },
-            { exit_id: 'e1', side: 'E' },
-        ], SIZE);
-        const bySide = Object.fromEntries(placed.map(({ exit, x, y }) => [exit.exit_id, { x, y }]));
-        expect(bySide.s1.y).toBe(SIZE.height - 1);
-        expect(bySide.w1.x).toBe(0);
-        expect(bySide.e1.x).toBe(SIZE.width - 1);
-    });
-
-    it('mixes (x,y)-bearing and side-only exits in the same region', () => {
-        const placed = resolveExitTilePositions([
-            { exit_id: 'fixed', x: 0, y: 3, side: 'W' },
-            { exit_id: 'distributed', side: 'N' },
-        ], SIZE);
-        expect(placed).toHaveLength(2);
-        const fixed = placed.find((p) => p.exit.exit_id === 'fixed');
-        const distributed = placed.find((p) => p.exit.exit_id === 'distributed');
-        expect(fixed).toEqual({ exit: { exit_id: 'fixed', x: 0, y: 3, side: 'W' }, x: 0, y: 3 });
-        expect(distributed.y).toBe(0);  // N wall
-    });
-
-    it('drops exits with neither (x,y) nor a known side', () => {
-        const placed = resolveExitTilePositions([
-            { exit_id: 'orphan' },                       // no side, no coords
-            { exit_id: 'bad_side', side: 'NW' },         // unknown side
-            { exit_id: 'good', x: 1, y: 1 },
-        ], SIZE);
-        expect(placed.map((p) => p.exit.exit_id)).toEqual(['good']);
-    });
-
-    it('returns [] for empty / non-array inputs', () => {
-        expect(resolveExitTilePositions([], SIZE)).toEqual([]);
-        expect(resolveExitTilePositions(undefined, SIZE)).toEqual([]);
-        expect(resolveExitTilePositions(null, SIZE)).toEqual([]);
-    });
-
-    it('accepts the in-memory Map<exit_id, exit> shape from deserializeWorld', () => {
-        // The composite view's just-generated path passes the live
-        // in-memory world's exits Map (not the on-disk Array shape).
-        // Both must work because both feed _drawRegion.
-        const exitsMap = new Map([
-            ['a', { exit_id: 'a', x: 3, y: 0, side: 'N' }],
-            ['b', { exit_id: 'b', x: 7, y: 2, side: 'E' }],
-        ]);
-        const placed = resolveExitTilePositions(exitsMap, SIZE);
-        expect(placed.map(({ exit, x, y }) => [exit.exit_id, x, y]))
-            .toEqual([['a', 3, 0], ['b', 7, 2]]);
+    it('a params save that does not fit reports the key', async () => {
+        await withFullStorage((notices) => {
+            const ctx = panel();
+            Object.assign(ctx, { params: {}, scenario: null, substrateMix: {}, substrateQuotas: {}, substrateMode: null, mode: 'x', activePresetId: null });
+            ctx._serializedLibraries = () => [];
+            ctx.rootElement = null;
+            ctx._saveToLocalStorage({ fromPreset: true });
+            expect(notices.map((n) => n.key)).toEqual(['procgenPipeline_params']);
+            expect(ctx.message).toMatch(/^ERROR/);
+        });
     });
 });
 
-describe('fitTextToWidth', () => {
-    // Stand-in for CanvasRenderingContext2D — measureText returns the
-    // string's character count as the width, so 1px == 1 char and the
-    // tests stay deterministic.
-    const ctx = { measureText: (s) => ({ width: s.length }) };
-
-    it('returns the original string when it already fits', () => {
-        expect(fitTextToWidth(ctx, 'hello', 10)).toBe('hello');
-        expect(fitTextToWidth(ctx, 'hello', 5)).toBe('hello');
-    });
-
-    it('truncates with an ellipsis when over the budget', () => {
-        // "longish text" length 12; budget 8 leaves 7 chars + ellipsis
-        // since the ellipsis itself counts as 1 in the stub.
-        const out = fitTextToWidth(ctx, 'longish text', 8);
-        expect(out.endsWith('…')).toBe(true);
-        expect(out.length).toBe(8);
-    });
-
-    it('returns just the ellipsis when no characters fit', () => {
-        expect(fitTextToWidth(ctx, 'anything', 1)).toBe('…');
-    });
-
-    it('handles empty / nullish input', () => {
-        expect(fitTextToWidth(ctx, '', 100)).toBe('');
-        expect(fitTextToWidth(ctx, null, 100)).toBe('');
-        expect(fitTextToWidth(ctx, undefined, 100)).toBe('');
+describe('a loaded world paints the map but never replaces the panel\'s own generation (tutorial-bugs)', () => {
+    it('result stays the generation; the map shows whichever came last', () => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        const generation = { grid: 'gen-grid', rulesJson: { seed_name: 'g' }, stats: {} };
+        const loaded = { grid: 'loaded-grid', stats: {}, fromLoadedPreset: true };
+        ctx.result = generation;
+        expect(ctx._mapResult()).toBe(generation);
+        // A world load (the rawJsonDataLoaded handler / a hand-off).
+        ctx._showLoaded(loaded);
+        expect(ctx.result).toBe(generation);           // the exports still have their rulesJson
+        expect(ctx.result.rulesJson).toEqual({ seed_name: 'g' });
+        expect(ctx._mapResult()).toBe(loaded);         // the map shows the loaded world
+        // The next generation takes the map back.
+        const next = { grid: 'next-grid', rulesJson: { seed_name: 'n' }, stats: {} };
+        ctx.result = next;
+        expect(ctx._mapResult()).toBe(next);
+        // Clearing the generation does not resurrect the loaded map either.
+        ctx.result = null;
+        expect(ctx._mapResult()).toBe(null);
     });
 });

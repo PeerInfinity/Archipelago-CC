@@ -10,7 +10,9 @@ This document compares two on-disk snapshots kept side-by-side in the repo root 
 | `rule_builder_original/` | Clean upstream `rule_builder/` extracted from `upstream/main` @ `5ccef9802` (2026-06-07; `rules.py` = 2017 lines). |
 | `rule_builder/` (live) | The working module — **reset to the clean upstream base** so fork features can be re-added on top of current upstream. |
 
-> **Merge status (2026-06-25):** the Python-side merge (§7 overlay plan) is **complete** — commits `3b523b214`→`be7ce9efe`. The live `rule_builder/` is the official base + fork overlays (`extra_rules.py`, `world_mixin.py`, `ast_format.py`, `ast_explain.py`, `_ast_utils.py`, `pathfinding.py`) with minimal edits to upstream `rules.py` (additive base methods, `_make_hashable`, `Has` count widened to `int | FieldResolver | Rule`). **Verified:** 129 rule_builder unit tests pass; **Baba Is You** (official `FieldResolver`) now generates *and* exports full rules (794 rule-dicts, 0 errors — previously impossible either way); fork worldgen worlds **APCalc** and **ALttP** pass end-to-end (gen + frontend spoiler). **Remaining = Phase 7 (deferred):** the frontend JS evaluator has no evaluator for game-specific custom rules (e.g. Baba's `HasBlossoms`), so Baba's *frontend* spoiler test fails — frontend + worldgen support for the new constructs is the follow-up.
+> **Merge status (2026-06-25):** the Python-side merge (§7 overlay plan) is **complete** — commits `3b523b214`→`be7ce9efe`. The live `rule_builder/` is the official base + fork overlays (`extra_rules.py`, `world_mixin.py`, `ast_format.py`, `ast_explain.py`, `_ast_utils.py`, `pathfinding.py`) with minimal edits to upstream `rules.py` (additive base methods, `_make_hashable`, `Has` count widened to `int | FieldResolver | Rule`). **Verified:** 129 rule_builder unit tests pass; **Baba Is You** (official `FieldResolver`) now generates *and* exports full rules (794 rule-dicts, 0 errors — previously impossible either way); fork worldgen worlds **APCalc** and **ALttP** pass end-to-end (gen + frontend spoiler).
+
+> **Phase 7 — game-specific custom rules — DONE (2026-06-29, commit `4e0f79933`).** A game's custom `Rule` subclass (e.g. Baba Is You's `HasBlossoms`, whose logic lives in a compiled `Resolved._evaluate`) used to serialize to an opaque `{"rule": "HasBlossoms"}` leaf the frontend couldn't evaluate, so Baba's frontend spoiler test failed. The fix is **entirely export-side** (no frontend change) — see §9 for details. Result: the real Baba frontend spoiler test now **passes** (reaches all 27.2 spheres).
 
 > **Supersedes** the earlier comparison in this doc, which was written against upstream `0de09cd7` (Feb 2026). Upstream has moved on substantially since then — most importantly it introduced the **`field_resolvers.py` / `FieldResolver`** system (see §2) and a new **`AtLeast`** rule. The companion docs [`rule-builder-modifications.md`](rule-builder-modifications.md) (overview vs the original PR #5048) and [`upstream-rule-builder-changes.md`](upstream-rule-builder-changes.md) (upstream's own evolution) remain useful background.
 
@@ -127,7 +129,7 @@ These are edits **inside classes that also exist upstream** — they cannot be m
 
 ### `Resolved` inner classes
 - Fork adds `get_value()` / `get_count()` defaults (overridden by counting rules), `to_dict()`, `_get_args_dict()`, `_rule_class_name`. Counting rules **must** override `get_value()` (see the project memory note on `Compare(CountItem(...), ">=", N)`).
-- **Each concrete rule's `Resolved` must override `_get_args_dict()`** to emit its args for the exporter → `rules.json` → `world_generator`/frontend pipeline. The base default returns `{}`, so a *missing* override silently drops the rule's args (e.g. `CanReachRegion` serializes to `{"rule": "CanReachRegion"}` with no `region_name`), which only surfaces in the worldgen→worldgen2 round-trip as `KeyError: ''` / `FillError`. The arg **names now match upstream's** `from_dict()` keys (`item_names`, `item_counts`, `item_name_group`, `region_name`/`location_name`/`entrance_name`, `item_name`/`count`), so `Resolved.to_dict()` output round-trips through `from_dict()`. (Historically these emitted *fork* names — `items`/`group` — aligned to upstream in `rule-arg-upstream-naming-alignment`; `world_generator` and the frontend evaluator dual-read upstream-then-fork so legacy presets still parse until they are regenerated.) Overrides that must be present in `rules.py`: `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `HasAnyCount`, `HasFromList`, `HasFromListUnique`, `HasGroup`, `HasGroupUnique`, `CanReachLocation`, `CanReachRegion`, `CanReachEntrance` (fork-only rules carry theirs in `extra_rules.py`). Regression guard: `test_json/rule_builder/test_rules.py::TestResolvedToDictArgs`. **History:** the `fa82db22e` upstream reset dropped all of these; Phase 1/2 re-added only the base + `Has`; the remaining 11 were restored in a later fix.
+- **Each concrete *base* rule's `Resolved` must override `_get_args_dict()`** to emit its args for the exporter → `rules.json` → `world_generator`/frontend pipeline. For base rules (those in `DEFAULT_RULES`) the default returns `{}`, so a *missing* override silently drops the rule's args (e.g. `CanReachRegion` serializes to `{"rule": "CanReachRegion"}` with no `region_name`), which only surfaces in the worldgen→worldgen2 round-trip as `KeyError: ''` / `FillError`. **As of `4e0f79933` the base default auto-serializes a rule's dataclass fields for *game-specific custom* rules (those NOT in `DEFAULT_RULES`)** — so a community world's custom `Rule` subclass (e.g. Baba's `HasBlossoms`) no longer needs to override `_get_args_dict()` to round-trip its args (see §9). The base-rule contract above is unchanged because base rules are gated out of the auto path by `DEFAULT_RULES` membership. The arg **names now match upstream's** `from_dict()` keys (`item_names`, `item_counts`, `item_name_group`, `region_name`/`location_name`/`entrance_name`, `item_name`/`count`), so `Resolved.to_dict()` output round-trips through `from_dict()`. (Historically these emitted *fork* names — `items`/`group` — aligned to upstream in `rule-arg-upstream-naming-alignment`; `world_generator` and the frontend evaluator dual-read upstream-then-fork so legacy presets still parse until they are regenerated.) Overrides that must be present in `rules.py`: `Has`, `HasAll`, `HasAny`, `HasAllCounts`, `HasAnyCount`, `HasFromList`, `HasFromListUnique`, `HasGroup`, `HasGroupUnique`, `CanReachLocation`, `CanReachRegion`, `CanReachEntrance` (fork-only rules carry theirs in `extra_rules.py`). Regression guard: `test_json/rule_builder/test_rules.py::TestResolvedToDictArgs`. **History:** the `fa82db22e` upstream reset dropped all of these; Phase 1/2 re-added only the base + `Has`; the remaining 11 were restored in a later fix.
 
 ### `caching_enabled` default
 - Upstream `False`; fork `True` (but `_instantiate` uses `getattr(world, "rule_caching_enabled", False)`, so non-mixin worlds still behave like upstream).
@@ -207,3 +209,81 @@ Goal (per the user): re-add the fork's features on top of clean upstream **with 
 4. `<<` operator (fork convenience).
 5. `__init_subclass__` broader module guard (allows `rule_builder.*` submodules).
 6. Legacy `_simplify_and` / `_simplify_or` kept for external callers (exporter).
+
+---
+
+## 9. Game-specific custom rules: auto-extraction into frontend helpers (Phase 7)
+
+Upstream `rule_builder` lets a world define its own `Rule` subclass whose logic
+lives in a compiled `Resolved._evaluate(self, state)` method. The motivating
+example was Baba Is You's `HasBlossoms` (its apworld lives in
+`custom_worlds_disabled/baba_is_you.apworld`); the **in-repo regression fixture**
+is `worlds/rulebuilder_test` — a tiny hidden world whose `HasTreasure`
+(`worlds/rulebuilder_test/custom_rules.py`) exercises the same path, plus the rest
+of the rule_builder vocabulary, through a frontend spoiler test. The Baba rule:
+
+```python
+class HasBlossoms(Rule[TWorld], game="Baba Is You"):
+    count: int | FieldResolver = 0
+    class Resolved(Rule.Resolved):
+        count: int = 0
+        def _evaluate(self, state):
+            petals = state.count("Blossom Petal", self.player)
+            blossoms = state.count("Blossom", self.player) + (petals // 8)
+            return blossoms >= self.count
+```
+
+**The problem.** Such a rule serialized to an opaque `{"rule": "HasBlossoms"}`
+leaf. The frontend rule engine is *generically* capable (it evaluates arbitrary
+helper bodies — arithmetic incl. `//`, loops, builtins — via
+`frontend/modules/shared/ruleEngine/astHelpers.js`), but it was never *given* a
+body for custom rules, so it returned `undefined` (≈ false) and Baba's frontend
+spoiler test stalled at sphere 0. The gap is therefore **export-side, not a
+missing frontend evaluator**: nothing taught the exporter to turn a custom
+`Rule._evaluate` into a helper body, and the resolved `to_dict()` even dropped the
+rule's args.
+
+**The fix (two export-side changes, commit `4e0f79933`).**
+
+1. **`rule_builder/rules.py` — args survive serialization.** The resolved
+   `to_dict()` uses `_get_args_dict()`, whose base default returned `{}`, so a
+   custom rule that doesn't override it serialized *without its fields* (e.g.
+   `count` was dropped). The base `Rule.Resolved._get_args_dict()` now
+   auto-serializes the rule's own dataclass fields (skipping `player` /
+   `caching_enabled`; `FieldResolver` values via `.to_dict()`) **gated on
+   `self._rule_class_name not in DEFAULT_RULES`**, so base rules are completely
+   unchanged. `HasBlossoms.Resolved(count=3)` now emits
+   `{"rule": "HasBlossoms", "args": {"count": 3}}`. (Cross-reference: this is the
+   companion to the per-rule `_get_args_dict()` overrides in §5 / `Resolved` inner
+   classes — base rules override explicitly; custom rules get the auto default.)
+
+2. **`exporter/games/base/helper_discovery.py` — extract `_evaluate` into a
+   helper.** `_analyze_custom_rules(world)` enumerates a world's custom rules via
+   `CustomRuleRegister.custom_rules[world.game]`; `_build_custom_rule_helper_def`
+   reads `Resolved._evaluate`'s source, rewrites `self.player` → `player` and each
+   `self.<field>` → the bare parameter name (`_SelfAttrRewriter`), synthesizes a
+   `def _custom_rule(state, player, *fields)` and feeds it through the **existing
+   `analyze_rule` pipeline** — the same one used for worldgen helper functions
+   (`_analyze_worldgen_helpers`). The result is keyed by the rule's qualname into
+   the `helpers` section, which matches the `"rule"` value on the rule node, so the
+   frontend's generic helper machinery evaluates it with zero frontend changes.
+   Rules that can't be analyzed (an unmappable `self.<attr>`, an odd signature, an
+   analyzer error) fall back to the opaque leaf — i.e. the pre-existing behaviour,
+   so there is **no regression**. Wired into `get_helper_definitions` for both
+   worldgen and non-worldgen worlds (seeded so it survives every early return).
+
+**Verification.** Developed/verified against Baba (a real `export_game_rules` of a
+solo Baba world emitted the `{"rule": "HasBlossoms", "args": {"count": N}}` nodes +
+a `helpers[player]["HasBlossoms"]` definition; the unmodified frontend evaluator
+matched Python `_evaluate` on all 40 inventory/threshold combinations incl. the
+`petals // 8` division; full Baba spoiler test passed 27.2/27.2 spheres). The
+permanent in-repo guard is `worlds/rulebuilder_test` (frontend spoiler test passes
+3.1/3.1 spheres; `worlds/rulebuilder_test/test/` adds Python-side regression
+checks). 143 rule_builder + 210 exporter tests pass.
+
+**Bonus fix surfaced by the fixture.** Building `rulebuilder_test` exposed that
+`OptionValue.Resolved` had no `_get_args_dict()` override (it is in `DEFAULT_RULES`,
+so the auto-emit above does not apply) — the resolved rule serialized to a bare
+`{"rule": "OptionValue"}` and dropped its option name, so a `Conditional` driven by
+`OptionValue` mis-evaluated on the frontend. Fixed by adding the override
+(`rule_builder/extra_rules.py`) → `{"rule": "OptionValue", "args": {"option": "<name>"}}`.

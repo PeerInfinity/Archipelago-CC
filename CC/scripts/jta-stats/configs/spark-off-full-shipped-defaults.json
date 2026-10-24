@@ -1,0 +1,8 @@
+{
+  "name": "spark-off-full-shipped-defaults",
+  "options": {
+    "modOverrides": {},
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

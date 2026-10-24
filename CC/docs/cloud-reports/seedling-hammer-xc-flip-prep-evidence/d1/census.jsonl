@@ -1,0 +1,10 @@
+{"tag":"solve-seedling-r8-battery","code":0,"calls":{}}
+{"tag":"solve-seedling-r8-d2-chain","code":0,"calls":{"18|-|bound:no-landing":771,"18|-|searched":36}}
+{"tag":"solve-seedling-r8-l18","code":0,"calls":{"18|-|bound:no-landing":771,"18|-|searched":36}}
+{"tag":"solve-seedling-r8-tail","code":0,"calls":{}}
+{"tag":"solve-seedling-r9-l3","code":0,"calls":{}}
+{"tag":"solve-seedling-r9-campaign","code":0,"calls":{"18|-|bound:no-landing":1584,"18|-|searched":42}}
+{"tag":"killgate-2","code":0,"calls":{"900|-|bound:no-landing":585,"900|-|searched":72}}
+{"tag":"killgate-5","code":0,"calls":{"900|-|bound:no-landing":9,"900|-|searched":72}}
+{"tag":"killgate-9","code":0,"calls":{"900|-|bound:no-landing":261,"900|-|searched":81}}
+{"tag":"l18-sweep","code":0,"calls":{"18|-|bound:approach":141,"18|-|bound:line":15,"18|-|bound:no-landing":54471,"18|-|searched":2028}}

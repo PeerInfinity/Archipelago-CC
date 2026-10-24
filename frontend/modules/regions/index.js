@@ -21,9 +21,11 @@ export const moduleInfo = {
   name: 'regions',
   title: 'Regions',
   componentType: 'regionsPanel',
+  docs: 'docs/json/user/modules/regions.md',
   icon: '🗺️',
   column: 3, // Right column
-  description: 'Regions display panel.',
+  category: 'Tracker Panels',
+  description: 'The game\'s regions as blocks of entrances, exits and locations, colored by reachability; click an exit to move.',
   requires: ['stateManager', 'commonUI'],
 };
 

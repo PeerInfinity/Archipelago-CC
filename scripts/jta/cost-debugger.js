@@ -66,7 +66,7 @@ function parseArgs(argv) {
 
 function printUsage() {
     console.log(`
-JTA Cost Debugger - Simulated Playthrough Cost Generator
+JtA Cost Debugger - Simulated Playthrough Cost Generator
 
 Usage:
   node scripts/jta/cost-debugger.js [options]

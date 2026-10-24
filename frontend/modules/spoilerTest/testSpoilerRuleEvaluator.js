@@ -100,6 +100,19 @@ export class TestSpoilerRuleEvaluator {
           }
           break;
           
+        case 'AtLeast':
+        case 'count_true': {
+          // AtLeast (Rule Builder) / count_true (AST): at least N of the children.
+          const required = rule.count ?? rule.args?.count ?? 0;
+          const branches = rule.children || rule.conditions || [];
+          this.log('info', `${indent}AT_LEAST ${required} of ${branches.length} (${resultSymbol}):`);
+          branches.forEach((branch, i) => {
+            const branchResult = this.analyzeRuleTree(branch, snapshotInterface, indent + '  ', depth + 1);
+            this.log('info', `${indent}  Option ${i + 1}: ${branchResult} ${branchResult === true ? '✓' : branchResult === false ? '✗' : '?'}`);
+          });
+          break;
+        }
+
         case 'item_check':
           let itemName, hasItem;
           try {

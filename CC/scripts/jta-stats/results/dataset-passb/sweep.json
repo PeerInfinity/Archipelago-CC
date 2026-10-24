@@ -1,0 +1,442 @@
+[
+  {
+    "datasetSeed": 1,
+    "fillSeed": 1,
+    "seedId": "AP_14089154938208861744",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 10,
+    "thresholdClamped": 9,
+    "unengaged": 2,
+    "unengagedMilestones": 0,
+    "totalResets": 76,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 13,
+    "cmMin": 0.05,
+    "cmP50": 1.2131810095894853,
+    "cmMax": 1453.098258069971,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 25,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 46,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 52,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 1,
+    "fillSeed": 2,
+    "seedId": "AP_01043188731678011336",
+    "converged": false,
+    "failure": "1 stalled entries",
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 1,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 16,
+    "thresholdClamped": 12,
+    "unengaged": 1,
+    "unengagedMilestones": 0,
+    "totalResets": 140,
+    "gapP50": 3,
+    "gapMean": 6.190476190476191,
+    "gapMax": 62,
+    "cmMin": 0.05,
+    "cmP50": 1.406354517130147,
+    "cmMax": 21813.757432549733,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 1
+      },
+      {
+        "bucket": 2,
+        "n": 18,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 37,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 4,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 52,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 6,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 2,
+    "fillSeed": 1,
+    "seedId": "AP_14089154938208861744",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 10,
+    "thresholdClamped": 14,
+    "unengaged": 2,
+    "unengagedMilestones": 0,
+    "totalResets": 94,
+    "gapP50": 4,
+    "gapMean": 4.476190476190476,
+    "gapMax": 19,
+    "cmMin": 0.05,
+    "cmP50": 1.0169717186445082,
+    "cmMax": 13563.776032269563,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 28,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 3,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 44,
+        "floor": 4,
+        "saturated": 0,
+        "threshold": 6,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 35,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 3,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 2,
+    "fillSeed": 2,
+    "seedId": "AP_01043188731678011336",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 21,
+    "thresholdClamped": 20,
+    "unengaged": 4,
+    "unengagedMilestones": 0,
+    "totalResets": 95,
+    "gapP50": 4,
+    "gapMean": 4.380952380952381,
+    "gapMax": 16,
+    "cmMin": 0.05,
+    "cmP50": 0.4530340838208584,
+    "cmMax": 44963.92282038518,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 5,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 28,
+        "floor": 6,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 44,
+        "floor": 7,
+        "saturated": 0,
+        "threshold": 12,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 35,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 5,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 3,
+    "fillSeed": 3,
+    "seedId": "AP_84719271504320872445",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 12,
+    "thresholdClamped": 10,
+    "unengaged": 0,
+    "unengagedMilestones": 0,
+    "totalResets": 87,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 19,
+    "cmMin": 0.05,
+    "cmP50": 0.9140384116286492,
+    "cmMax": 44231.766223840474,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 16,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 18,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 37,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 52,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 6,
+        "stalled": 0
+      }
+    ]
+  },
+  {
+    "datasetSeed": 4,
+    "fillSeed": 4,
+    "seedId": "AP_05594871498841892311",
+    "converged": true,
+    "failure": null,
+    "entries": 130,
+    "milestones": 21,
+    "stalled": 0,
+    "neverStarted": 0,
+    "completedUnsolved": 0,
+    "saturated": 0,
+    "skillless": 0,
+    "floorClamped": 23,
+    "thresholdClamped": 10,
+    "unengaged": 1,
+    "unengagedMilestones": 0,
+    "totalResets": 81,
+    "gapP50": 3,
+    "gapMean": 3.619047619047619,
+    "gapMax": 9,
+    "cmMin": 0.05,
+    "cmP50": 0.21288983254409583,
+    "cmMax": 109113.74135315647,
+    "milestoneTrouble": [],
+    "bandProfile": [
+      {
+        "bucket": 0,
+        "n": 7,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 1,
+        "n": 8,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 2,
+        "n": 8,
+        "floor": 0,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 3,
+        "n": 9,
+        "floor": 2,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 4,
+        "n": 9,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 5,
+        "n": 18,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 0,
+        "stalled": 0
+      },
+      {
+        "bucket": 6,
+        "n": 9,
+        "floor": 4,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      },
+      {
+        "bucket": 7,
+        "n": 18,
+        "floor": 5,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 8,
+        "n": 27,
+        "floor": 3,
+        "saturated": 0,
+        "threshold": 2,
+        "stalled": 0
+      },
+      {
+        "bucket": 9,
+        "n": 17,
+        "floor": 1,
+        "saturated": 0,
+        "threshold": 1,
+        "stalled": 0
+      }
+    ]
+  }
+]

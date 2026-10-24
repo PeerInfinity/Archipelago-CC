@@ -1,0 +1,15 @@
+#!/bin/bash
+# DF D3 timing: interleaved rounds, jobs 1, OFF / ON / ON-without-(i), at window 85, against the base tree with stamps.
+S=$1; OUT=$S/d3/timing.jsonl
+declare -A ST=([off]='{}' [on]='{"dashShape":{"legPrecheck":true,"keepPartial":true},"dashOnlyWindow":true}' [nolp]='{"dashShape":{"keepPartial":true},"dashOnlyWindow":true}')
+for round in 1 2 3; do
+  for k in $(cat $S/d3/keys.txt); do
+    id=${k%%:*}; F=$(grep -al "\"id\":$id," /tmp/claude-0/caps/divergence-shard-*/requests-*.jsonl | head -1)
+    for c in off on nolp; do
+      load=$(cut -d' ' -f1 /proc/loadavg)
+      line=$(node $S/tools/df-run.mjs --lab=$S/base --requests=$F --one=$k --window=85 --stamp="${ST[$c]}" | grep -a '^RESULT ' | cut -c8-)
+      echo "{\"round\":$round,\"config\":\"$c\",\"load\":$load,\"r\":$line}" >> $OUT
+    done
+  done
+done
+echo TIMING DONE

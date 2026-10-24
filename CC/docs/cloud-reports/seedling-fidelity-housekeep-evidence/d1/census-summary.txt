@@ -1,0 +1,16 @@
+modules 93, named fns 2277, reachable fns 1570, plain-Error throws 265, reachable 196
+  162	frontend/modules/seedlingDemo/levelRun.js
+  7	frontend/modules/seedlingDemo/solverBot.js
+  6	frontend/modules/seedlingDemo/spaceTimeReach.js
+  5	frontend/modules/seedlingDemo/r8Acceptance.js
+  4	frontend/modules/seedlingDemo/combat.js
+  2	frontend/modules/seedlingDemo/levelWorld.js
+  2	frontend/modules/seedlingDemo/swimSoundClock.js
+  1	frontend/modules/seedlingDemo/botDriverV1.js
+  1	frontend/modules/seedlingDemo/hazards.js
+  1	frontend/modules/seedlingDemo/solveProgress.js
+  1	frontend/modules/seedlingDemo/ghostSword.js
+  1	frontend/modules/seedlingDemo/beamTower.js
+  1	frontend/modules/seedlingDemo/spinningAxe.js
+  1	frontend/modules/seedlingDemo/pull.js
+  1	frontend/modules/seedlingDemo/dialogue.js

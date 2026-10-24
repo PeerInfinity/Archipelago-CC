@@ -29,6 +29,11 @@ import { createFlashSubstrateEntry } from '../../flashSubstrate/flashSubstrateLi
 
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
+// The id these legs announce as active. ⚠ No registry entry has it (⚖ user,
+// 2026-10-18: the generic `flash` entry is gone); the panel's inactive overlay
+// keys on `componentType`, so the id is only the event's label.
+const PLACEHOLDER_SUBSTRATE_ID = 'flash_placeholder';
+
 /**
  * Find any location in the loaded rules and return
  * { locationName, regionName } so tests don't hard-code names that vary
@@ -59,7 +64,7 @@ function snapshotHasLocation(snapshot, locationName) {
  * assert the snapshot lists it as checked. If this fails, the bug is in
  * host-side handling, not the iframe transport.
  */
-async function locationCheckDirectDispatch(testController) {
+async function swfLocationCheckDirectDispatch(testController) {
     testController.log('Loading procgen_maze preset…');
     await testController.loadRulesFromFile(PROCGEN_RULES_PATH);
     await testController.stateManager.pingWorker('after-rules-load', 3000);
@@ -118,7 +123,7 @@ registerTest({
                + 'user:locationCheck via the host dispatcher with the bridge\'s '
                + 'locationName-keyed payload, and asserts the snapshot lists it as '
                + 'checked. Isolates the host-side chain from the iframe transport.',
-    testFunction: locationCheckDirectDispatch,
+    testFunction: swfLocationCheckDirectDispatch,
     category: 'flashSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
@@ -153,9 +158,9 @@ async function locationCheckPlaceholderClick(testController) {
     // Tell every substrate panel that flash owns the current region,
     // so the panel reveals its iframe (the overlay otherwise hides it).
     testController.eventBus.publish('procgen:activeSubstrateChanged', {
-        substrate: 'flash',
+        substrate: PLACEHOLDER_SUBSTRATE_ID,
         componentType: 'flashSubstratePanel',
-        label: 'Flash',
+        label: 'Flash placeholder',
         regionId: regionName,
     });
 
@@ -415,9 +420,9 @@ async function capabilityGatingSuppressesNonCooperative(testController) {
 
     testController.eventBus.publish('ui:activatePanel', { panelId: 'flashSubstratePanel' });
     testController.eventBus.publish('procgen:activeSubstrateChanged', {
-        substrate: 'flash',
+        substrate: PLACEHOLDER_SUBSTRATE_ID,
         componentType: 'flashSubstratePanel',
-        label: 'Flash',
+        label: 'Flash placeholder',
         regionId: regionName,
     });
 

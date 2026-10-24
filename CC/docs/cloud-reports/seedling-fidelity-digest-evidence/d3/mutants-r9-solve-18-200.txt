@@ -1,0 +1,106 @@
+{
+ "tape": "r9-solve-18",
+ "tick": 200,
+ "level": 18,
+ "mutants": 98,
+ "asPredicted": 98,
+ "bad": []
+}
+OK  flip  boot                         predicted staging  flipped [staging] restored true
+OK  flip  noclip                       predicted staging  flipped [staging] restored true
+OK  flip  noHazards                    predicted staging  flipped [staging] restored true
+OK  flip  noDamage                     predicted staging  flipped [staging] restored true
+OK  flip  grants                       predicted staging  flipped [staging] restored true
+OK  flip  equips                       predicted staging  flipped [staging] restored true
+OK  flip  roles                        predicted staging  flipped [staging] restored true
+OK  flip  pins                         predicted staging  flipped [staging] restored true
+OK  flip  save                         predicted staging  flipped [staging] restored true
+OK  flip  seam                         predicted staging  flipped [staging] restored true
+OK  flip  level                        predicted place    flipped [place] restored true
+OK  flip  ticksCompleted               predicted place    flipped [place] restored true
+OK  flip  firstTickInWorld             predicted place    flipped [place] restored true
+OK  flip  world                        predicted place    flipped [place] restored true
+OK  flip  worlds                       predicted place    flipped [place] restored true
+OK  flip  clock                        predicted clock    flipped [clock] restored true
+OK  flip  clockRefusal                 predicted clock    flipped [clock] restored true
+OK  flip  state                        predicted player   flipped [player] restored true
+OK  flip  damage                       predicted player   flipped [player] restored true
+OK  flip  frozenTimer                  predicted player   flipped [player] restored true
+OK  flip  swordWindow                  predicted player   flipped [player] restored true
+OK  flip  slashState                   predicted player   flipped [player] restored true
+OK  flip  slashEndsAt                  predicted player   flipped [player] restored true
+OK  flip  spearEndsAt                  predicted player   flipped [player] restored true
+OK  flip  ceremony                     predicted player   flipped [player] restored true
+OK  flip  bobArena                     predicted player   flipped [player] restored true
+OK  flip  bobNoInput                   predicted player   flipped [player] restored true
+OK  flip  primary                      predicted player   flipped [player] restored true
+OK  flip  slotOrder                    predicted player   flipped [player] restored true
+OK  flip  inventory                    predicted player   flipped [player] restored true
+OK  flip  grantsByLevel                predicted player   flipped [player] restored true
+OK  flip  equipsByTick                 predicted player   flipped [player] restored true
+OK  flip  clearedByLevel               predicted persist  flipped [persist] restored true
+OK  flip  pendingEarnedClears          predicted persist  flipped [persist] restored true
+OK  flip  despawnedByLevel             predicted persist  flipped [persist] restored true
+OK  flip  staticRemovedTags            predicted persist  flipped [persist] restored true
+OK  flip  unreadRoomWrites             predicted persist  flipped [persist] restored true
+OK  flip  totemParts                   predicted persist  flipped [persist] restored true
+OK  flip  keys                         predicted persist  flipped [persist] restored true
+OK  flip  collectedPickups             predicted persist  flipped [persist] restored true
+OK  flip  lockSnap                     predicted persist  flipped [persist] restored true
+OK  flip  moonrockSet                  predicted persist  flipped [persist] restored true
+OK  flip  chestOpens                   predicted persist  flipped [persist] restored true
+OK  flip  rockFalls                    predicted persist  flipped [persist] restored true
+OK  flip  activatorStates              predicted visit    flipped [visit] restored true
+OK  flip  bridgeStates                 predicted visit    flipped [visit] restored true
+OK  flip  pushableStates               predicted visit    flipped [visit] restored true
+OK  flip  rockStates                   predicted visit    flipped [visit] restored true
+OK  flip  burnStates                   predicted visit    flipped [visit] restored true
+OK  flip  ropeStates                   predicted visit    flipped [visit] restored true
+OK  flip  fallRockStates               predicted visit    flipped [visit] restored true
+OK  flip  moonrockStates               predicted visit    flipped [visit] restored true
+OK  flip  crusherStates                predicted visit    flipped [visit] restored true
+OK  flip  bossStates                   predicted visit    flipped [visit] restored true
+OK  flip  shieldBossStates             predicted visit    flipped [visit] restored true
+OK  flip  finalDoorStates              predicted visit    flipped [visit] restored true
+OK  flip  turretStates                 predicted visit    flipped [visit] restored true
+OK  flip  beamTowerStates              predicted visit    flipped [visit] restored true
+OK  flip  magicalLockStates            predicted visit    flipped [visit] restored true
+OK  flip  chestStates                  predicted visit    flipped [visit] restored true
+OK  flip  pulserStates                 predicted visit    flipped [visit] restored true
+OK  flip  spinnerStates                predicted visit    flipped [visit] restored true
+OK  flip  pullsByLevel                 predicted visit    flipped [visit] restored true
+OK  flip  wandWindows                  predicted visit    flipped [visit] restored true
+OK  flip  fireWindows                  predicted visit    flipped [visit] restored true
+OK  flip  CONTACT_FIDELITY             predicted globals  flipped [globals] restored true
+OK  flip  KILLLOCK_BODIES              predicted globals  flipped [globals] restored true
+OK  flip  PRESS_KILL_COST              predicted globals  flipped [globals] restored true
+OK  flip  GHOST_SPINNER_PRESS          predicted globals  flipped [globals] restored true
+OK  flip  GHOSTSWORD_PRESS             predicted globals  flipped [globals] restored true
+OK  flip  GHOSTSWORD_MOTION            predicted globals  flipped [globals] restored true
+OK  flip  STATIC_SWORD_ARM             predicted globals  flipped [globals] restored true
+OK  flip  PUSH_SPEAR_DIRECTION         predicted globals  flipped [globals] restored true
+OK  flip  WAND_VERB                    predicted globals  flipped [globals] restored true
+OK  flip  PICKUP_REMOVED_NEXT_FRAME    predicted globals  flipped [globals] restored true
+OK  flip  NEAREST_TILE_INDEX           predicted globals  flipped [globals] restored true
+OK  flip  SOLID_GRID                   predicted globals  flipped [globals] restored true
+OK  equal levelSource                  predicted null     flipped [] restored true
+OK  equal crossRoomWriterIndex         predicted null     flipped [] restored true
+OK  equal seamBoot                     predicted null     flipped [] restored true
+OK  equal clockDeclared                predicted null     flipped [null] restored true ERR IMMUTABLE: Assignment to constant variable.
+OK  equal bootCutscene                 predicted null     flipped [null] restored true ERR IMMUTABLE: Assignment to constant variable.
+OK  equal bootSave                     predicted null     flipped [null] restored true ERR IMMUTABLE: Assignment to constant variable.
+OK  equal cutscene                     predicted null     flipped [] restored true
+OK  equal spawn                        predicted null     flipped [] restored true
+OK  equal persistence                  predicted null     flipped [] restored true
+OK  equal declaredClears               predicted null     flipped [] restored true
+OK  equal timedClears                  predicted null     flipped [] restored true
+OK  equal despawn                      predicted null     flipped [] restored true
+OK  equal scratchPersistence           predicted null     flipped [] restored true
+OK  equal scratchClears                predicted null     flipped [] restored true
+OK  equal pendingKillLockThrows        predicted null     flipped [] restored true
+OK  equal spinnerKillLockOpens         predicted null     flipped [] restored true
+OK  equal playerHits                   predicted null     flipped [] restored true
+OK  equal staticBodyDeaths             predicted null     flipped [] restored true
+OK  equal PRESS_KILL_COST_COUNTS       predicted null     flipped [] restored true
+OK  equal world (in place; memo)       predicted null     flipped [] restored true
+OK  flip  world (in place; fresh)      predicted place    flipped [place] restored true

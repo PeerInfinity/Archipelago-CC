@@ -7,9 +7,11 @@ export const moduleInfo = {
   name: 'windowManagerPanel',
   title: 'Window Manager',
   componentType: 'windowManagerPanel',
+  docs: 'docs/json/user/modules/windowManagerPanel.md',
   icon: '🪟',
   column: 2, // Middle column
-  description: 'Window Manager display panel.',
+  category: 'Embedding and Windows',
+  description: 'Opens a known page or a typed URL in a separate browser window, closes them all, and lists connected windows.',
   requires: ['windowAdapter', 'windowPanel'],
 };
 

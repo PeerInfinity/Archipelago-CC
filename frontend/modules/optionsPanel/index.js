@@ -20,7 +20,8 @@ export const moduleInfo = {
   componentType: 'optionsPanel',
   icon: '\u2699',
   column: 2, // Middle column
-  description: 'General application settings and preferences.',
+  category: 'Data and Configuration Panels',
+  description: 'Layout, colorblind and connection options, every module setting (searchable), and the raw settings JSON.',
 };
 
 // Store module-level references

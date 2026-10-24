@@ -1,0 +1,11 @@
+untripped {"baseline":237,"ticks":145,"scanned":64}
+asks	keep OFF ticks	keep ON ticks	windows kept
+1	drop (237)	drop (237)	0
+5	drop (237)	217	1
+10	drop (237)	199	2
+20	drop (237)	179	4
+30	drop (237)	153	6
+40	drop (237)	153	6
+50	drop (237)	153	6
+60	drop (237)	153	6
+64	drop (237)	153	6

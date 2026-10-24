@@ -1,0 +1,1437 @@
+// Seedling HONEST-PLAYTHROUGH overlay — the rulings `seedlingSemantics.js`
+// deliberately refuses (R7 slice 4, kickoff §3.5 + §4 slice 4).
+//
+// `seedlingSemantics.js` is a TRANSCRIPTION: where the source gives no
+// item-shaped rule it says `manual` and splits the region rather than invent
+// one. That is right for a transcription and useless for an AP logic graph — a
+// `manual` crossing is a wall AP can never cross, and a target unreachable in
+// our logic is a defect in the logic until proven otherwise at source (the
+// user's standing instruction, kickoff §3.5).
+//
+// This module is the other half: for every `manual` family, either a rule read
+// off the game's own source, or a REFUSAL that says so in the artifact. It is
+// OPINIONATED where the transcription is not, and every row carries `cite`
+// (the source it was read from) and `why` (what the reading was), because the
+// generator stamps them into the artifact's provenance block.
+//
+// ── THE PUZZLE POLICY (⚖ user, 2026-08-09, R7 design session) ───────────────
+//
+//   An item-dependent puzzle's ITEM dependency is the rule.
+//   A pure-choreography puzzle is FREE in logic — the choreography is the tape
+//   generator's burden, never a pseudo-terrain.
+//
+// So a button-and-lock room is `open` here: AP's fill may route through it, and
+// producing the button presses is M2's problem. A block that only FIRE can push
+// keeps its fire requirement, because no amount of choreography substitutes for
+// the item.
+//
+// ── THE TWO LAWS (R7 §12.9 item 3, source-verified below) ───────────────────
+//
+//   1. A `ButtonRoom` re-publishes its group at every `check()`, so a
+//      room-latched opening is PERMANENT — a durable gate.
+//   2. A GROUPED `Lock` (tSet >= 0) writes persistence and never reads it, so
+//      its persistence write is INERT and must never become a rules row.
+//
+// ── DIRECTION OF TRAVEL (the firewall, §6.3) ────────────────────────────────
+//
+// This module may read the physics model's tables; the physics model imports
+// nothing from here. It is analyzer-side, and the artifact it feeds is
+// generated one way.
+//
+// Headless-safe: no top-level await, no literal node: imports.
+
+import { allOf, anyOf, entitySealedTiles, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
+import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
+import { ropeEventCondition } from './seedlingObstacleEvents.js';
+
+/**
+ * ⛔ THE WEAPON DISJUNCTION, and it is the ONE conservative approximation in
+ * this module — named rather than buried.
+ *
+ * `Player.genericHit` is reached by the sword slash (`Player.as:895`, under
+ * `hasSword`) and by the spear thrust (`Player.as:960`, under `hasSpear`), and
+ * `Enemy.hit` takes damage from either. So "the room can be cleared" is at
+ * least this — and for a room holding an enemy that needs MORE (a boss with an
+ * activation gate, an enemy only one weapon reaches) it is too weak.
+ *
+ * ⚠ THE BOUND, stated: this is a lower bound on the requirement, so a rules row
+ * built on it can be too PERMISSIVE and never too strict. A segment that
+ * reaches such a room and cannot clear it REFUTES the row — which is what
+ * `REFUTATION_LOG` exists to record (a finding, not a quiet edit).
+ */
+export const A_WEAPON = anyOf(flag('hasSword'), flag('hasSpear'));
+
+/** Semantics helpers, matching seedlingSemantics' own shorthand. */
+const OPEN = (cite, why) => ({ kind: 'open', cite, why });
+const GATED = (condition, cite, why) => ({ kind: 'gated', condition, cite, why });
+const WALL = (cite, why) => ({ kind: 'wall', cite, why });
+
+/**
+ * ⛔⛔⛔ THE FIRST FINDING OF THIS SLICE, AND IT REFUTES THE BRIEF.
+ *
+ * The slice-4 brief asked for `wandlock -> wand SHOT`. **A `WandLock` has no
+ * wand logic at all.** `Puzzlements/WandLock.as` is nine lines: it extends
+ * `Lock` and passes a different Spritemap. Nothing else. And the shot cannot
+ * reach it either — `Projectiles/WandShot.as:checkEntity` handles exactly two
+ * cases, `_e is Enemy` and `_e is MagicalLock`, and dies on anything else.
+ *
+ * ⇒ a `wandlock` is a `lock` wearing a different picture, and its rule is the
+ * `lock` rule: kill-lock when `tSet == -1`, choreography otherwise. The wand
+ * belongs to `magicallock`, which the transcription already gates correctly.
+ *
+ * `seedlingSemantics.js`'s own note ("wand-shot puzzle") is misleading for the
+ * same reason, but its CLASSIFICATION (`manual`, no rule) was never wrong, so
+ * that table is left alone.
+ */
+export const WANDLOCK_IS_A_LOCK = Object.freeze({
+    cite: 'Puzzlements/WandLock.as (whole file) + Projectiles/WandShot.as:checkEntity',
+    why: 'WandLock extends Lock and overrides only the sprite; WandShot.checkEntity '
+        + 'handles Enemy and MagicalLock and nothing else, so a wand shot cannot open one.',
+});
+
+/**
+ * The `Activators` family, ruled by its `tSet`.
+ *
+ * `Lock.check()` removes the lock when `tag >= 0 && tSet < 0 &&
+ * !Game.checkPersistence(tag)` — so an UNGROUPED lock honours persistence and a
+ * GROUPED one does not, which is law 2 above, read straight off the guard.
+ * `Lock.checkEnemies()` sets `activate` when `tSet == -1 && totalEnemies() == 0`
+ * — so `tSet == -1` is a KILL-LOCK and `tSet == -2` (the value `ShieldLock`
+ * passes) is neither.
+ */
+const LOCK_FAMILY = new Set(['lock', 'wandlock', 'grasslock', 'rocklock']);
+
+/**
+ * ⛓⛓ EVERY CROSS-LEVEL PERSISTENCE WRITE, as a set of `"<level>:<tag>"`.
+ *
+ * `ButtonRoom.as:93` — `Game.setPersistence(t, persist, room)` — lets a button
+ * in ONE room clear a persistence tag in ANOTHER. Four sites in the game; two
+ * of them move a BLOCKING entity (`probe-seedling-r7-map-triggers.mjs` is the
+ * census). ⛔ It was missed on the first pass because the overlay ruled each
+ * entity from the entity alone, and this mechanism is not visible from there —
+ * the opener is in a different level.
+ */
+export function buildCrossLevelOpeners(mapDoc) {
+    const out = new Set();
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            if (e.type !== 'buttonroom') continue;
+            const room = Number(e.attrs?.room);
+            if (!Number.isInteger(room) || room < 0) continue;
+            out.add(`${room}:${e.attrs.tset}`);
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ RULES re-closing locks — WHICH GROUPED LOCKS THE GAME REBUILDS CLOSED.
+ *
+ * Law 2 above, followed through: `Lock.check()` removes a lock on entry only
+ * when `tag >= 0 && tSet < 0 && !Game.checkPersistence(tag)`, so a GROUPED
+ * lock (tSet >= 0) is rebuilt CLOSED on every entry, whatever its tag says. It
+ * opens only while something re-publishes its group THIS visit:
+ *
+ * - a `ButtonRoom` with `room == -1` re-publishes at every `check()`
+ *   (`ButtonRoom.as:41-44` reads its own tag, then `set activate` walks the
+ *   group, `:80-89`), and a `RopeStart` is removed by its own persistence tag
+ *   (`RopeStart.as:31-46`): LATCHING openers — law 1, a durable gate;
+ * - a plain `Button` publishes `activateAll(this, t, pressed)` only while a
+ *   body sits on it (`Button.as:28-47`), and the lock returns to Solid the
+ *   moment it is released and nothing overlaps it (`Lock.as:activationStep`,
+ *   `returnToNormal`). A HOLDING opener: the opening lasts one visit.
+ *
+ * So a grouped `Lock`/`WandLock`/`GrassLock` whose in-level group holds no
+ * latching opener and at least one holding one RE-CLOSES. Its crossing exists
+ * only from a side where a button can be worked on this visit; an arrival on
+ * the far side meets it closed. `RockLock` is not in the set: its `check()`
+ * honours the tag whatever its tSet (`RockLock.as:31-37`).
+ *
+ * Returns `"<level>:<tset>"` -> `{ latching, holders: [[tx, ty], ...] }`, the
+ * holders as the tiles their buttons stand on.
+ */
+const RECLOSING_LOCK_CLASSES = new Set(['lock', 'wandlock', 'grasslock']);
+const LATCHING_OPENER = (e) => (e.type === 'buttonroom' && Number(e.attrs?.room) === -1) || e.type === 'rope';
+const HOLDING_OPENER = (e) => e.type === 'button';
+
+export function buildGroupOpeners(mapDoc, tileSize = 16) {
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            const latching = LATCHING_OPENER(e);
+            if (!latching && !HOLDING_OPENER(e)) continue;
+            const t = Number(e.attrs?.tset);
+            if (!Number.isInteger(t) || t < 0) continue;
+            const k = `${level.level}:${t}`;
+            if (!out.has(k)) out.set(k, { latching: false, holders: [] });
+            const row = out.get(k);
+            if (latching) row.latching = true;
+            else row.holders.push([Math.floor(e.x / tileSize), Math.floor(e.y / tileSize)]);
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ RULES block-path — WHO CAN HOLD A RE-CLOSING LOCK'S BUTTON, per level.
+ *
+ * The re-closing ruling below prices an entry at "the player reaches a
+ * button". That is not the game: the player cannot hold a button and cross its
+ * lock (the 4x5 box overlaps no button hitbox and a different 16x16 lock tile
+ * at once — `seedlingBlockPaths.js` has the arithmetic and the citations), so
+ * the holder is another body. ⚖ Enemies are not holders (the user,
+ * 2026-10-20: "Enemies don't count"), so the bodies are the PUSHABLE BLOCKS and the rope-opened FALLING ROCKS:
+ *   `blocks`  — every pushable (`PUSHABLE_KINDS`), with the claim its own start
+ *               cell carries (a fire/spear block is a gated cell);
+ *   `pulser`  — a Pulser stands in the room, a second arm that moves a FIRE
+ *               block with no item (`Pulser.as:100`); `pulsers` — their tiles
+ *               (the reach `blockHolderVerdict` reads, rules-l39);
+ *   `fallers` — every `fallrock` opened only by ropes: its landing tile and
+ *               each rope's tiles and cutting condition (`FallRock.as:31-38`),
+ *               plus `event` — ⛓ RULES rope-events: the cut as a cross-visit
+ *               event (`ropeEventCondition`), since the rock is rebuilt fallen
+ *               on every later visit (one rope = one event; several = none).
+ * `buildSeedlingRegionGrid` prices an entry by the block paths where
+ * `blockHolderVerdict` decides it, and keeps the player-reach price, by name,
+ * where it does not.
+ *
+ * @returns {Map<number, {blocks:object[], pulser:boolean, pulsers:object[], fallers:object[]}>}
+ */
+export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
+    const groups = buildGroupOpeners(mapDoc, tileSize);
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        const entities = level.entities ?? [];
+        const reclosing = entities.some((e) => {
+            const g = groups.get(`${level.level}:${Number(e.attrs?.tset)}`);
+            return RECLOSING_LOCK_CLASSES.has(e.type) && Number(e.attrs?.tset) >= 0 && g && !g.latching && g.holders.length > 0;
+        });
+        if (!reclosing) continue;
+        out.set(level.level, {
+            blocks: entities.filter((e) => PUSHABLE_KINDS[e.type]).map((e) => ({
+                tx: Math.floor(e.x / tileSize),
+                ty: Math.floor(e.y / tileSize),
+                kind: e.type,
+                condition: entitySemantics(e)?.condition ?? null,
+            })),
+            pulser: entities.some((e) => e.type === 'pulser'),
+            pulsers: entities.filter((e) => e.type === 'pulser')
+                .map((e) => ({ tx: Math.floor(e.x / tileSize), ty: Math.floor(e.y / tileSize) })),
+            fallers: entities.filter((e) => e.type === 'fallrock').flatMap((e) => {
+                const opener = entities.filter((o) => o !== e && Number(o.attrs?.tset) === Number(e.attrs?.tset)
+                    && !RECLOSING_LOCK_CLASSES.has(o.type) && !['fallrock', 'fallrocklarge', 'cover'].includes(o.type));
+                if (opener.length === 0 || !opener.every((o) => o.type === 'rope')) return [];
+                return [{
+                    tx: Math.floor(e.x / tileSize),
+                    ty: Math.floor(e.y / tileSize),
+                    ...(opener.length === 1 ? {
+                        event: ropeEventCondition({ level: level.level, tag: Number(opener[0].attrs?.tag), x: opener[0].x, y: opener[0].y }),
+                    } : {}),
+                    triggers: opener.map((o) => {
+                        const sem = entitySemantics(o);
+                        return { tiles: entitySealedTiles(o, sem), condition: sem?.condition ?? null };
+                    }),
+                }];
+            }),
+        });
+    }
+    return out;
+}
+
+/** The re-closing ruling's provenance, shared by the overlay row and its tests. */
+export const RECLOSING_LOCK = Object.freeze({
+    cite: 'Puzzlements/Lock.as:check (`tag >= 0 && tSet < 0`) + Lock.as:activationStep (`returnToNormal`) '
+        + '+ Puzzlements/Button.as:28-47 (`activateAll` only while pressed) + Puzzlements/ButtonRoom.as:41-44,80-89',
+    why: 'a GROUPED lock opened only by a plain Button: the game rebuilds it CLOSED on every entry '
+        + '(check() reads persistence only while tSet < 0) and it stays open only while a body holds the '
+        + 'button THIS visit. So it is entered only from a side where a button can be reached freely; '
+        + 'leaving is free (the opener side held it open on the way in).',
+});
+
+/**
+ * ⛔⛔⛔ THE GROUPED-LOCK EXCEPTION — a lock whose PRESSER is item-gated.
+ *
+ * The `tSet >= 0` arm below calls a grouped lock FREE because "its group's
+ * Button/ButtonRoom is pressed by any body, which is choreography". That
+ * premise is a claim about the PRESSER's reachability, and the general rule
+ * never checks it. Where the presser sits behind an item gate, the premise is
+ * false and the lock is exactly as strong as that gate.
+ *
+ * ⛓ ONE SITE IN THE GAME, and it is on the SHIELD (R7 slice 6). L20's chain,
+ * stated by R6 §13.8 from the other end and re-read here at the map:
+ *
+ *   `shield@112,48` -> `hasShield` opens `shieldlocknorm@176,16` (tSet -2, so
+ *   nothing else can) -> which un-walls `buttonroom@192,16` (tSet 0) -> whose
+ *   press opens `lock@32,80` (tSet 0) -> which un-walls `stairsup@16,48`.
+ *
+ * So the lock's group has exactly one presser and that presser is behind the
+ * shield. And the lock is not decoration: `stairsdown@96,32` in L13 drops the
+ * player at (32,48), and tiles (0,3),(1,3),(2,3),(2,4) are a four-cell ALCOVE
+ * whose only other exit is the lock at (2,5). Ruled OPEN, the analyzer folds
+ * the alcove into the room, `level_13 -> level_20` is `True_`, and AP takes
+ * **Level 020 - Shield at sphere 0.4 for free** — through a wall.
+ *
+ * ⇒ GATED on `hasShield`, which is [[feedback_worst_case_rule_gates_its_own_item]]
+ * read in the other direction: the far side of this door holds the key to it,
+ * so the near side reaches nothing. Strictly STRONGER than the computed row,
+ * which is the only shape a hand ruling may take, and the strictness costs
+ * nothing — L20's room is reached from L19's `stairsup@16,96` regardless.
+ *
+ * Keyed by `<level>:<type>@<x>,<y>` so it names ONE placement and cannot
+ * quietly widen to a family.
+ */
+export const GROUPED_LOCK_EXCEPTIONS = Object.freeze({
+    '20:lock@32,80': Object.freeze({
+        condition: flag('hasShield'),
+        cite: 'Dungeon2/7.oel (`lock@32,80 {tset 0, tag 1}` is the ONLY tSet-0 responder '
+            + 'and `buttonroom@192,16` the ONLY presser) + Puzzlements/ShieldLock.as:33 '
+            + '(`shieldlocknorm@176,16` stands between them) + R6 kickoff §13.8',
+        why: 'a GROUPED lock whose group\'s only presser is behind a ShieldLock. The '
+            + 'general rule calls the press choreography; here the choreography is '
+            + 'behind the shield, and the lock seals the L13 arrival into a four-cell '
+            + 'alcove. Without this row AP takes the Shield at sphere 0.4 through it.',
+    }),
+});
+
+/**
+ * ⛓⛓⛓ RULES kill-locks — **WHAT A KILL-LOCK ROOM REALLY COSTS, read from the
+ * game's own kill paths rather than assumed to be "a weapon".**
+ *
+ * A `tset == -1` lock opens when `Game.totalEnemies() == 0`
+ * (`Puzzlements/Lock.as:111`, `RockLock.as:51`). That sum is `classCount` over
+ * 25 EXACT classes (`Game.as:1855-1882`; FlashPunk's `World.classCount` keys by
+ * the instance's own class), so the rule for crossing one is the conjunction,
+ * over the room's COUNTED bodies, of each body's disjunction of ways to die.
+ *
+ * Three tables, each one source-cited, then one function that combines them:
+ *   · `KILL_ARM_ITEMS` — the player's item arms that reach `Enemy.hit`;
+ *   · `KILL_LOCK_BODY_CLASSES` — per placed tag: its counted class and the ways
+ *     the game lets it die with no item (tile deaths, self-removal), or why it
+ *     needs more than a hit (the IceTurret's corpse);
+ *   · `KILL_LOCK_MEASURED_ARMS` — a room whose environmental kill was WITNESSED.
+ * An environmental arm the room holds but nothing measured is UNDECIDED, and an
+ * undecided room keeps today's rule (`A_WEAPON`) — it is listed, never guessed.
+ */
+
+/**
+ * The player's item arms that kill a counted body through `Enemy.hit`
+ * (`Enemies/Enemy.as:138-176`: hits accumulate to `hitsMax`, then `startDeath`).
+ * Each row is a flag and the call site that hands the body to `hit()`.
+ */
+export const KILL_ARM_ITEMS = Object.freeze({
+    hasSword: Object.freeze({ cite: 'Player.as:924 (the slash → genericHit → Enemy.hit, t "Sword"; "Spear" with the Ghost Sword)' }),
+    hasSpear: Object.freeze({ cite: 'Player.as:989 (the thrust → genericHit, t "Spear", damage 2)' }),
+    hasWand: Object.freeze({
+        cite: 'Projectiles/WandShot.as:70 (`solids.push("Enemy")`) + :116 (`Enemy.hit(force, …, damage 0.5, "Wand")`); '
+            + 'the Fire Wand shot is the same class with damage 1 (:57)',
+    }),
+    hasDarkShield: Object.freeze({
+        cite: 'Player.as:1695-1701 (`shieldBump`: `hasDarkShield && o.hitsTimer <= 0` → `o.hit(…, 0.5, "Shield")`); '
+            + 'game-witnessed on L98\'s IceTurret by fidelity KILLLOCK (K5)',
+    }),
+});
+
+/**
+ * The item arms the AS3 offers that this rule does NOT count, each with why.
+ * Leaving one out makes a room STRICTER, so each is a named finding rather
+ * than a silent omission.
+ */
+export const KILL_ARM_EXCLUDED = Object.freeze({
+    hasDarkSuit: 'Player.as:1384-1386 — the suit hits a body only when that body HURTS the player (`hits += d` '
+        + 'on the same call), so a 3-hit body costs 3 player hits = the base `hitsMax`. Whether a kill is '
+        + 'survivable depends on the Health count: UNDECIDED, not counted.',
+    hasFire: 'Enemy.as:145 — `if (hitByFire || t != "Fire")`; every counted class read here keeps `hitByFire` '
+        + 'false, so fire only knocks back. Also `fireDamage` is 0 (Player.as:178).',
+    hasShield: 'Player.as:1703 — the plain shield only KNOCKS BACK (`o.knockback`). It can push a body into a '
+        + 'fatal tile, which is the tile-hazard arm below (geometry: undecided).',
+});
+
+/** The disjunction a body that dies to any player item arm costs. */
+export const KILL_ARM_CONDITION = anyOf(...Object.keys(KILL_ARM_ITEMS).map((f) => flag(f)));
+
+/**
+ * Per PLACED tag (`Game.as:2276-2416`): the counted class, and what the game
+ * lets kill it beyond the item arms. Only the classes that stand in a kill-lock
+ * room are READ; a counted tag missing here makes its room undecided.
+ *   `dies` — the fatal tile types (`Enemy.update`, Enemy.as:63-84: 1 water,
+ *            6 pit, 17 lava), from the class's `dieInWater`/`dieInLava`/
+ *            `canFallInPit` (defaults true, Enemy.as:32-38).
+ *   `self` — the body removes itself with no item (free).
+ *   `corpse` — `death()` keeps a counted corpse until it drowns: the kill
+ *            opens nothing unless the body stands on Water.
+ */
+export const KILL_LOCK_BODY_CLASSES = Object.freeze({
+    bob: Object.freeze({ class: 'Bob', dies: [1, 6, 17], cite: 'Enemies/Bob.as (no override of the three defaults)' }),
+    lavarunner: Object.freeze({
+        class: 'LavaRunner', dies: [1, 6], cite: 'Enemies/LavaRunner.as:38 (`dieInLava = false`), :41 (`hitsMax = 2`); extends Bob',
+    }),
+    spinner: Object.freeze({ class: 'Spinner', dies: [1, 6, 17], cite: 'Enemies/Spinner.as (no override of the three defaults)' }),
+    puncher: Object.freeze({ class: 'Puncher', dies: [1, 6, 17], cite: 'Enemies/Puncher.as (no override of the three defaults)' }),
+    jellyfish: Object.freeze({
+        class: 'Jellyfish', dies: [], cite: 'Enemies/Jellyfish.as:31-37 (`dieInWater`, `dieInLava`, `canFallInPit` all false)',
+    }),
+    iceturret: Object.freeze({
+        class: 'IceTurret', dies: [], corpse: true, centre: [16, 16],
+        cite: 'Enemies/IceTurret.as:135-150 (`death()` consumes the first destroy: the corpse stays counted) '
+            + '+ :56 (`dieInWater = hits >= hitsMax`: a corpse on Water drowns) + :32 (centre = x+16, y+16); '
+            + 'game-witnessed on L98 by fidelity KILLLOCK (corpse t39, removed t50)',
+    }),
+    grenade: Object.freeze({
+        class: 'Grenade', dies: [], self: true,
+        cite: 'Enemies/Grenade.as:70-71 (`hit()` is empty) + :90-104 (the fuse) + :146-148 (`animEnd` removes it): '
+            + 'it leaves once the player comes within 32 px, no item',
+    }),
+});
+
+/** The tags `Game.totalEnemies()` counts that this module has NOT read. A room holding one is undecided. */
+export const KILL_LOCK_UNREAD_COUNTED_TAGS = Object.freeze([
+    'bobsoldier', 'bobboss1', 'bobboss2', 'bobboss3', 'bosstotem', 'finalboss', 'flyer', 'bulb',
+    'tentaclebeast', 'drill', 'sandtrap', 'darktrap', 'turret', 'shieldboss', 'wallflyer',
+]);
+
+/** Entities that SPAWN a counted class at run time (a room holding one is undecided). */
+export const KILL_LOCK_SPAWNERS = Object.freeze({
+    lavaboss: 'Enemies/LavaBoss.as:231 (LavaRunner)',
+    tentaclebeast: 'Enemies/TentacleBeast.as:188 (Tentacle)',
+    lightbosscontroller: 'Enemies/LightBossController.as:79 (LightBoss)',
+    finalboss: 'Enemies/FinalBoss.as:160 (Grenade)',
+    fallrocklarge: 'Scenery/FallRockLarge.as:117 (BobBoss)',
+});
+
+/** Entities whose shots or sweeps HIT ENEMIES — an environmental kill arm. */
+export const KILL_LOCK_ENEMY_HITTERS = Object.freeze({
+    arrowtrap: 'Puzzlements/ArrowTrap.as:57-59 → Projectiles/Arrow.as:52',
+    pulser: 'Puzzlements/Pulser.as:110',
+    crusher: 'Puzzlements/Crusher.as:102',
+    lavachain: 'Puzzlements/LavaChain.as:86',
+    turret: 'Projectiles/TurretSpit.as:56',
+    iceturret: 'Enemies/IceTurret.as:160-163 → Projectiles/IceTurretBlast.as:56 (`hit(0, p)`: d defaults to 1)',
+    lavaboss: 'Enemies/LavaBoss.as:254 → Projectiles/LavaBall.as:72',
+});
+
+/**
+ * Rooms whose environmental kill was WITNESSED in the game. The arm makes the
+ * listed bodies free.
+ */
+export const KILL_LOCK_MEASURED_ARMS = Object.freeze({
+    5: Object.freeze({
+        arm: 'ceiling', bodies: ['bob'],
+        cite: 'tape `f1-l5-lock-removal` (grants [], noDamage false: the three bobs die to the arrow traps at '
+            + 't124/t127/t166, the last leaves the world at t201, the game crosses lock@48,112 to L6 on t303) + '
+            + 'the model\'s ceiling-kill arm (`resolveKillStrategy`, I50)',
+    }),
+});
+
+const tileTypesOf = (level) => {
+    const at = new Map();
+    for (const layer of level?.layers ?? []) {
+        if (layer.name === 'cliffsides') continue;
+        for (const p of layer.tiles ?? []) {
+            const t = tileTypeForPlacement(p);
+            if (t !== null) at.set(`${p[0]},${p[1]}`, t);
+        }
+    }
+    return at;
+};
+
+/** Is the disjunction `d` (flag names) implied by the conjunction `cnf` (an array of flag-name disjunctions)? */
+const impliedBy = (cnf, d) => cnf.some((c) => c.every((f) => d.includes(f)));
+
+/**
+ * ⛓ THE CENSUS AND THE RULING for one level's kill-lock room. Pure: the level
+ * record in, a row out —
+ * `{level, verdict: 'free'|'gated'|'undecided', condition, bodies, hazards, why}`,
+ * or null when the level holds no `tset == -1` lock.
+ *   free      — every counted body has a free arm (measured or self-removal);
+ *   gated     — the conjunction of the bodies' item disjunctions (`condition`);
+ *               a body with an unmeasured environmental arm is absorbed only when
+ *               the conjunction already implies its item disjunction;
+ *   undecided — anything else: today's rule (`A_WEAPON`) is kept and the reason
+ *               is listed.
+ */
+export function killLockRoomRuling(level) {
+    const entities = level?.entities ?? [];
+    const locks = entities.filter((e) => LOCK_FAMILY.has(e.type) && Number(e.attrs?.tset) === -1);
+    if (locks.length === 0) return null;
+    const id = level.level;
+    const tiles = tileTypesOf(level);
+    const present = new Set();
+    for (const t of tiles.values()) present.add(t);
+    const hitters = entities.filter((e) => KILL_LOCK_ENEMY_HITTERS[e.type]).map((e) => `${e.type}@${e.x},${e.y}`);
+    const spawners = entities.filter((e) => KILL_LOCK_SPAWNERS[e.type]).map((e) => `${e.type}@${e.x},${e.y}`);
+    const measured = KILL_LOCK_MEASURED_ARMS[id] ?? null;
+    const items = Object.keys(KILL_ARM_ITEMS);
+    const undecided = [];
+    const bodies = [];
+    for (const e of entities) {
+        const row = KILL_LOCK_BODY_CLASSES[e.type];
+        const at = `${e.type}@${e.x},${e.y}`;
+        if (!row) {
+            if (KILL_LOCK_UNREAD_COUNTED_TAGS.includes(e.type)) undecided.push(`${at}: a counted class this module has not read`);
+            continue;
+        }
+        const body = { at, class: row.class, items, env: 'none', free: false };
+        if (row.self) {
+            body.free = true;
+            body.env = 'self';
+        } else if (measured?.bodies.includes(e.type)) {
+            body.free = true;
+            body.env = `measured:${measured.arm}`;
+        } else if (row.corpse) {
+            const [ox, oy] = row.centre;
+            const t = tiles.get(`${Math.floor((e.x + ox) / 16)},${Math.floor((e.y + oy) / 16)}`);
+            if (t !== 1) {
+                body.items = [];
+                undecided.push(`${at}: its corpse stays counted unless it stands on Water (tile ${t ?? 'none'})`);
+            }
+        } else {
+            // A body standing on lava it survives is reached only across lava
+            // (fidelity KILLLOCK residue 3: L71/L99's lavarunners stay on their
+            // islands, out of their 80 px leash): whether an item arm reaches it
+            // is a REACH question this table cannot answer.
+            const on = tiles.get(`${Math.floor((e.x + 8) / 16)},${Math.floor((e.y + 8) / 16)}`);
+            if (on === 17 && !row.dies.includes(17)) undecided.push(`${at}: stands on lava it survives (reach undecided)`);
+            const fatal = row.dies.filter((t) => present.has(t));
+            const envHits = hitters.filter((h) => !h.startsWith(`${e.type}@${e.x},${e.y}`));
+            if (fatal.length > 0 || envHits.length > 0) {
+                body.env = `unmeasured:${[...fatal.map((t) => `tile${t}`), ...envHits].join('+')}`;
+            }
+        }
+        bodies.push(body);
+    }
+    if (spawners.length > 0) undecided.push(`spawns a counted class at run time: ${spawners.join(', ')}`);
+    const needed = bodies.filter((b) => !b.free && b.env === 'none');
+    const cnf = [];
+    for (const b of needed) {
+        const k = [...b.items].sort();
+        if (!cnf.some((c) => c.join() === k.join())) cnf.push(k);
+    }
+    for (const b of bodies.filter((x) => !x.free && x.env.startsWith('unmeasured:'))) {
+        if (!impliedBy(cnf, b.items)) undecided.push(`${b.at}: an environmental arm nothing measured (${b.env.slice(11)})`);
+    }
+    const base = { level: id, locks: locks.map((l) => `${l.type}@${l.x},${l.y}`), bodies, hazards: { tiles: [...present].filter((t) => [1, 6, 17].includes(t)).sort((a, b) => a - b), hitters, spawners } };
+    if (undecided.length > 0) return { ...base, verdict: 'undecided', condition: A_WEAPON, why: undecided };
+    if (cnf.length === 0) return { ...base, verdict: 'free', condition: null, why: measured ? [measured.cite] : ['every counted body removes itself'] };
+    const condition = allOf(...cnf.map((c) => anyOf(...c.map((f) => flag(f)))));
+    return { ...base, verdict: 'gated', condition, why: [] };
+}
+
+/** `"<level>"` → the room ruling, over every level of the map. */
+export function buildKillLockRulings(mapDoc) {
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        const row = killLockRoomRuling(level);
+        if (row) out.set(level.level, row);
+    }
+    return out;
+}
+
+function lockRuling(entity, ctx) {
+    const tSet = Number(entity.attrs?.tset);
+    const tag = entity.attrs?.tag;
+    if (tSet === -1) {
+        // ⛔ A KILL-LOCK IS NOT ALWAYS A KILL-LOCK. `Lock.check()` honours
+        // persistence whenever `tSet < 0`, so a lock whose tag is cleared by a
+        // ButtonRoom in ANOTHER LEVEL opens from that button too — and the
+        // button half is pure choreography, which the policy makes free. The
+        // weapon rule would be too STRICT here, which is the one direction a
+        // rules row must not be (it seals the map rather than admitting a
+        // hand-authoring row).
+        if (ctx?.crossLevelOpeners?.has(`${ctx.level}:${tag}`)) {
+            return OPEN(
+                'Puzzlements/ButtonRoom.as:93 (`Game.setPersistence(t, persist, room)`) '
+                + '+ Puzzlements/Lock.as:check (the `tSet < 0` persistence guard)',
+                `a kill-lock whose tag is ALSO cleared by a ButtonRoom in another level, so `
+                + '`Or(a weapon, that button)` — and the button half is choreography, which '
+                + 'makes the whole disjunction free. The census is '
+                + '`probe-seedling-r7-map-triggers.mjs`.');
+        }
+        // ⛓ RULES kill-locks — the room's census decides when the caller
+        // supplies it (`buildKillLockRulings`); without one, today's rule.
+        const room = ctx?.killLocks?.get(ctx.level);
+        if (room?.verdict === 'free') {
+            return OPEN(`Puzzlements/Lock.as:111 + Game.as:1855-1882 + ${room.why.join('; ')}`,
+                'a KILL-LOCK whose every counted body dies with no item (`killLockRoomRuling`).');
+        }
+        if (room?.verdict === 'gated') {
+            return GATED(room.condition,
+                'Puzzlements/Lock.as:111 + Game.as:1855-1882 + `KILL_ARM_ITEMS` / `KILL_LOCK_BODY_CLASSES`',
+                `a KILL-LOCK: the conjunction over its counted bodies (${room.bodies.filter((b) => !b.free).map((b) => b.at).join(', ')}) `
+                + `of each one's item arms (\`killLockRoomRuling\`). DURABLE while tSet < 0 (tag ${tag}).`);
+        }
+        return GATED(A_WEAPON,
+            'Puzzlements/Lock.as:checkEnemies + Game.as:1811-1839 (totalEnemies) '
+            + '+ Player.as:895,960 (genericHit\'s two callers)',
+            'a KILL-LOCK: it opens when the room holds no enemy of the 25 counted '
+            + 'classes, which needs a weapon. DURABLE — `Lock.check()` honours '
+            + `persistence while tSet < 0 (this one carries tag ${tag}).`
+            + (room?.verdict === 'undecided' ? ` ⚠ UNDECIDED (kept): ${room.why.join('; ')}` : ''));
+    }
+    if (tSet >= 0) {
+        // ⛔ THE PREMISE IS CHECKED BEFORE IT IS USED. See
+        // `GROUPED_LOCK_EXCEPTIONS`: "any body presses it" is a claim about
+        // the PRESSER's reachability, and at exactly one site in the game the
+        // presser is behind the item the lock's far side holds.
+        const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
+        const ruled = GROUPED_LOCK_EXCEPTIONS[site];
+        if (ruled) return GATED(ruled.condition, ruled.cite, ruled.why);
+        // ⛓ RULES re-closing locks — see `buildGroupOpeners`. `directional`
+        // with no condition: free to cross, but `buildSeedlingRegionGrid`
+        // (under `directionalLocks`) walls every ENTRY from a side that cannot
+        // reach one of `opensFrom` freely.
+        const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
+        if (RECLOSING_LOCK_CLASSES.has(entity.type) && group && !group.latching && group.holders.length > 0) {
+            const heldBy = ctx?.blockHolders?.get(ctx.level);
+            return {
+                kind: 'directional', opensFrom: group.holders, cite: RECLOSING_LOCK.cite, why: RECLOSING_LOCK.why,
+                ...(heldBy ? { heldBy } : {}),
+            };
+        }
+        return OPEN(
+            'Puzzlements/Button.as:activateAll + Puzzlements/Lock.as:check (the '
+            + '`tSet < 0` guard) + Puzzlements/ButtonRoom.as:check',
+            'a GROUPED lock: opened by its group\'s Button/ButtonRoom, which any body '
+            + 'presses — pure choreography, FREE under the puzzle policy. ⛔ LAW 2: its '
+            + '`turnOff()` persistence write is INERT (check() reads persistence only '
+            + 'while tSet < 0), so it is never a rules row.');
+    }
+    // tSet <= -2 reaches here only for a hand-constructed lock; ShieldLock is
+    // classified by tag, not by this path.
+    return null;
+}
+
+/**
+ * The per-tag overlay. Every entry replaces a `manual` row in
+ * `ENTITY_SEMANTICS` — nothing here contradicts a row the transcription already
+ * gave a rule to, which `seedlingPlaythroughOverlay.test.js` asserts.
+ */
+export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
+    // --- choreography: free in logic, per the ruled policy --------------------
+    cover: OPEN('Puzzlements/Cover.as:20,34,48',
+        'a Cover clears while something sits under it — choreography, no item.'),
+    chest: OPEN('Chest.as:62-104',
+        'a Chest is a Solid until opened, and opening it needs no item — it is a '
+        + 'collide-line one pixel below the bottom edge. Choreography.'),
+    pushableblock: OPEN('Puzzlements/PushableBlock.as + Player.as:1092-1098',
+        'the PLAIN block is moved by walking into it. No item, so no rule.'),
+
+    // --- moving solids: they move, so the cell is not permanently blocked -----
+    crusher: OPEN('Puzzlements/Crusher.as', 'a moving hazard sweeps and returns; timing is the tape generator\'s burden, not a wall.'),
+    // ⛓ RULES rules-l39: a Pulser never moves (`Pulser.as:47-48`: `setHitbox(16, 16, 8, 8)`, `type = "Solid"`);
+    // only its pulse grows and shrinks round it, so its own tile is a wall, as BeamTower's.
+    pulser: WALL('Puzzlements/Pulser.as:47-48', 'the PULSER itself is a stationary Solid; only its pulse moves.'),
+    spinningaxe: OPEN('Puzzlements/SpinningAxe.as', 'a moving hazard, as Crusher.'),
+    lavachain: OPEN('Puzzlements/LavaChain.as', 'a moving hazard, as Crusher.'),
+    bombpusher: OPEN('Puzzlements/BombPusher.as', 'a moving hazard, as Crusher.'),
+    beamtower: WALL('Puzzlements/BeamTower.as', 'the TOWER itself is a stationary Solid; only its beam moves.'),
+
+    // --- rocks that are not there yet ----------------------------------------
+    fallrock: OPEN('Scenery/FallRock.as (parked at y = -16, type "")',
+        'a FallRock is off-map with no type until its trigger fires — it blocks '
+        + 'nothing where the .oel places it, and where it LANDS is per-visit run state.'),
+    fallrocklarge: OPEN('Scenery/FallRockLarge.as', 'as fallrock.'),
+
+    // --- bosses whose BODY is the door (layer 3) ------------------------------
+    shieldboss: GATED(flag('hasSword'),
+        'Enemies/ShieldBoss.as (type "ShieldBoss", which Mobile.as:17 lists in '
+        + '`solids`) + Player.as:895',
+        'the ShieldBoss body is a real wall until it dies, and killing it needs a '
+        + 'weapon. The spear is not an option here: it is D6 and this is D2, so the '
+        + 'sword is the only reachable arm — stated as the sword rather than as the '
+        + 'disjunction so the row cannot be read as licensing a spear-first route.'),
+    // ⛓ R4b (rules-totem-gate-as3 D3 finding (3)) — THE WAND, NOT A WEAPON. This row said the totem "takes
+    // damage from either weapon. ⛔ NOT the wand", and the source says the opposite: the constructor sets
+    // `onlyHitBy = "Wand"` (`BossTotem.as:262`) and `Enemy.hit` drops every other `t` (`Enemy.as:149`); the
+    // only `t == "Wand"` caller is `WandShot.checkEntity` (`WandShot.as:116`, fired by `Player.wand()`).
+    // Vanilla never showed it (the Wand lies in this arena and is taken before the fight); a randomized set
+    // can arrive with the sword and no Wand. STRICTER: the crossing past the body now costs the Wand.
+    bosstotem: GATED(allOf(flag('hasTotemPartsAll'), flag('hasWand')),
+        'Enemies/BossTotem.as:262 (`onlyHitBy = "Wand"`) + Enemies/Enemy.as:149 + Projectiles/WandShot.as:116 '
+        + '+ BossTotem.as:715-721 (hit() passes through only while `fullyActivated && activationRestTime <= 0`) '
+        + '+ the five totempart pickups',
+        'the totem must be ACTIVATED by the five parts before any hit registers, and then only a WAND shot '
+        + 'damages it (`onlyHitBy = "Wand"`); the sword and the spear are dropped by `Enemy.hit`.'),
+    finalboss: GATED(A_WEAPON,
+        'Enemies/FinalBoss.as:231-236 (startDeath) + R6 §19.7 (the 109-tick death schedule)',
+        'the Owl dies to shoves and its corpse becomes a Solid; a shove needs a weapon.'),
+    finaldoor: GATED({ seals: 16 },
+        'Puzzlements/FinalDoor.as + End/4.oel:131',
+        'the FinalDoor opens on all sixteen seals plus the {114,0} clear — the seal '
+        + 'count is the item half and the only half a rules row can carry.'),
+
+    // --- ⛓⛓⛓ THE NPC THAT IS A DOOR ----------------------------------------
+    //
+    // `NPCs/Karlore.as:added()` — **`if (Player.hasFire) FP.world.remove(this)`**.
+    // Sardol stands on tile (7,17) of L48, the ONE cell joining the arrival
+    // from L47 to the rest of the room, and his own dialogue says what he is:
+    // *"Coming so quickly to the north. But you are unprepared, fool. … Turn
+    // and come back in due time."* He is the door to Dungeon 5 and his key is
+    // FIRE.
+    //
+    // ⛔ THIS ONE ROW IS WHY 34 REGIONS WERE UNREACHABLE. The transcription
+    // classifies every NPC as an unconditional `wall` — right for the twelve
+    // that are scenery, wrong for the one that is a gate — and D5, D6, D7 and
+    // D8 all hang off it. It was misdiagnosed twice before the source settled
+    // it: first as a 4-connectivity resolution defect, then as a physics-model
+    // one. Neither survived reading `added()`.
+    //
+    // ⛓ THE SWEEP THAT BOUNDS IT, so this is a census and not an anecdote:
+    // every `.as` in the game was searched for a self-removal conditioned on a
+    // `Player` flag. **Karlore is the only BLOCKING one.** `BobBoss` shares
+    // the `hasFire` test but is an Enemy (type "Enemy", absent from
+    // `Mobile.solids`); `BossKey` and `BossTotemPart` are pickups vanishing
+    // once collected. No other solid in the game opens on an item this way.
+    karlore: GATED(flag('hasFire'),
+        'NPCs/Karlore.as:26-33 (`added()` -> `if (Player.hasFire) FP.world.remove(this)`) '
+        + '+ Dungeon5 entrance geometry, L48 tile (7,17)',
+        'an NPC that is a DOOR: Sardol seals the north entrance until the player holds '
+        + 'Fire, and removes himself entirely once they do. Bounded sweep: he is the only '
+        + 'blocking entity in the game with an item-conditional self-removal.'),
+
+    // --- the moonrock: a wall the SHIELD builds ------------------------------
+    moonrock: WALL('Scenery/Moonrock.as:88-118 -> Game.moonrockSet -> Main.rockSet '
+        + '(R7 §8.2 item 2, §8.8 item 5)',
+        'CONSERVATIVE BY CHOICE. Once `rockSet` is written the dropped rock is a 48x48 '
+        + 'Solid that is not otherwise there, and `rockSet` is written on the way to the '
+        + 'shield — i.e. early. A rules row that assumed the OPEN state would be a row '
+        + 'the second half of the run refutes, so the wall is the honest reading and the '
+        + 'cost is at most a split on L0.'),
+
+    // --- refusals that STAY refusals ----------------------------------------
+    // The pixel-mask families. The physics model has their exact outlines
+    // (`seedlingDemo/levelWorld.ENTITY_CLASSES` + `seedlingPixelMasks.js`,
+    // byte-verified against the real game over 121 tapes), and the generator
+    // resolves them THROUGH the model rather than approximating here — see
+    // `pixelMaskTags`. Listed so the census can prove nothing was forgotten.
+});
+
+/**
+ * ⛔ THE ONE ROW THAT OVERRULES A TRANSCRIBED RULING RATHER THAN FILLING A
+ * REFUSAL — an ALLOWLIST, so a second one can never appear silently.
+ *
+ * `seedlingSemantics` classifies every NPC as an unconditional `wall`, which is
+ * right for the twelve that are scenery. `karlore` is the thirteenth and the
+ * source contradicts the table outright: `added()` removes him on `hasFire`.
+ * Overruling a transcription is a stronger act than filling one of its
+ * refusals, so it is enumerated here and the test asserts that every OTHER
+ * overlay row replaces a `manual` one.
+ */
+export const OVERRULES_TRANSCRIPTION = Object.freeze({
+    karlore: 'the transcription calls every NPC an unconditional wall; `Karlore.added()` '
+        + 'removes this one on `Player.hasFire`, so the table is wrong about exactly one '
+        + 'of the thirteen and right about the rest.',
+});
+
+/**
+ * Tags whose outline is a per-pixel mask. The overlay does not rule on them:
+ * the generator asks the physics model, which has the real bitmaps.
+ */
+export const PIXEL_MASK_TAGS = Object.freeze([
+    'building', 'building1', 'building2', 'building3', 'building4',
+    'building5', 'building6', 'building7', 'building8',
+    'treelarge', 'opentree', 'snowhill', 'tentaclebeast',
+]);
+
+/**
+ * The overlay's ruling for one placed entity, or null to keep the
+ * transcription's. Signature matches `buildSeedlingRegionGrid`'s
+ * `entityOverride` hook.
+ */
+export function overlayEntitySemantics(entity, base, ctx = null) {
+    const tag = entity?.type;
+    if (tag === undefined) return null;
+    if (LOCK_FAMILY.has(tag)) {
+        const ruled = lockRuling(entity, ctx);
+        return ruled ? { ...base, ...ruled } : null;
+    }
+    const row = PLAYTHROUGH_ENTITY_OVERLAY[tag];
+    if (!row) return null;
+    return { ...base, ...row };
+}
+
+/**
+ * ⛔ THE TRAP ROOM — never-enter, and the ruling is §6.1's (it named TWO; L57 is lifted, below).
+ *
+ * L57 (TentacleBeast) and L69 (LightBoss) have NO EXIT until their boss dies
+ * (`TentacleBeast.as:213`, `LightBossController.as:104` create the exit
+ * teleporter on death), so a planner that wanders in unprepared soft-locks the
+ * run. §8.1 measured the exclusion's cost as a PAIR against a positive control:
+ * NONE — no item, no key, no goal target is lost in either the never-enter or
+ * the never-touch arm.
+ *
+ * The rules artifact encodes this by refusing to emit the CONNECTIONS into
+ * them: AP's fill can then never route a collectible through a room there are
+ * no collectibles in.
+ *
+ * ⛓ RULES (B) — L82 (LavaBoss) WAS THE THIRD, AND IS NO LONGER (⚖ the user,
+ * 2026-10-04: "Lift; gate both ways"). §8.1's flood ran on a graph whose exits
+ * were auto-detected bidirectional, so Dungeon 7 could "climb back" up its
+ * one-way pits (L83 -> L84 -> L85 -> L71). On the directed graph the exclusion
+ * stranded all of D7 — 23 regions, the Dark Shield and the Dark Suit among
+ * them — because L82 is D7's ONLY exit. It is not a dynamic exit like L57/L69:
+ * its `teleporter@144,0 {to 96}` is static level data, and the boss BODY is the
+ * door (R7 §2.4). The census of exits the AS3 builds at runtime finds exactly
+ * three sites (Moonrock.as:134, TentacleBeast.as:213,
+ * LightBossController.as:104), none in L71-L85. So L82 is wired, and the
+ * arena is gated in BOTH directions by `LAVABOSS_ARENA` below.
+ *
+ * ⛓ RULES game-truth-gaps — L57 (TentacleBeast) IS LIFTED TOO (⚖ the user, 2026-10-06: "lift L57 like
+ * L82"). The L49 pocket (L48 r4c3 back to r2c10 only through `bosslock@48,144`, which `BossLock.as`
+ * tests from the SOUTH only) has a second way out in the game: L56's pit falls into L57, the beast's
+ * death spawns the mouth teleporter (`TentacleBeast.as:213`, the manifest's `tentacle_beast_mouth`) to
+ * L58, and L58's `teleporter@80,16 {to 46}` leaves. Its exit is a RUNTIME exit, so it is wired from the
+ * runtime-exit census as data (`DEATH_EXIT_ARENAS` below), and the arena is gated both ways
+ * (`TENTACLE_ARENA`). L69 is unchanged.
+ */
+// ⛓ R4b (rules-boss-locations) — L69 IS LIFTED TOO, like L57: the Lights kill is a LOCATION now (⚖ the user
+// 2026-10-19, "All 7 bosses"), and a location in a never-entered room is a lost collectible. Its exit is the
+// manifest's `light_boss_exit` (`LightBossController.as:104`), wired as `DEATH_EXIT_ARENAS` data and gated
+// both ways by `LIGHTS_ARENA`. The list stays exported (empty) so a reader of the ruling still finds it.
+export const NEVER_ENTER_LEVELS = Object.freeze([]);
+
+export const NEVER_ENTER_CITE = Object.freeze({});
+
+/**
+ * ⛓ RULES game-truth-gaps — WHAT THE TENTACLE BEAST'S ARENA COSTS, charged on every connection INTO
+ * or OUT OF L57 (the L82 precedent: "gate both ways", so the logic never sends a player in who cannot
+ * get out).
+ *
+ * - The way out is the mouth, created when the beast dies (`TentacleBeast.as:93-103`): it dies once
+ *   `maxTentacles` reaches 0, and each Tentacle that is CUT decrements it (`Tentacle.as:77-88`), eight
+ *   in all (`maxTentacles = 8`).
+ * - A Tentacle is an `Enemy` with `hitsMax = 1` that takes a hit only while it SITS (`canHit`,
+ *   `Tentacle.as:66`); `Enemy.hit` counts any type but `"Fire"` (`hitByFire` false, `Enemy.as:149-151`).
+ *   So it is cut by `Player.genericHit` (the sword slash, the spear thrust: `Player.as:1085`) and by a
+ *   wand shot (`WandShot.checkEntity` -> `Enemy.hit(…, "Wand")`, `WandShot.as:116`). The Dark Suit's
+ *   answer to a blow (`Player.as:1385-1387`) lands while the tentacle is HITTING, when it cannot be hit:
+ *   not a way.
+ * - The arena is water (the R2 landing gates charge Swim on its landings; not repeated here).
+ */
+export const TENTACLE_ARENA = Object.freeze({
+    level: 57,
+    condition: anyOf(flag('hasSword'), flag('hasSpear'), flag('hasWand')),
+    cite: 'Enemies/TentacleBeast.as:29,93-103,213 + Enemies/Tentacle.as:52,66,77-88 + Enemies/Enemy.as:141-160 '
+        + '+ Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-06 (lift L57 like L82)',
+    why: 'the arena is left only by the mouth the beast\'s death creates, and it dies when eight '
+        + 'tentacles are cut — by the sword, the spear or a wand shot, while each sits.',
+});
+
+/**
+ * ⛓ RULES game-truth-gaps — **ARENAS WHOSE EXIT IS CREATED ON DEATH**, one row per arena: the level,
+ * its `named_rooms` manifest key (`levelSetValidator.NAMED_ROOMS`, the runtime-exit census as DATA:
+ * the trigger element, the AS3 site, the vanilla destination) and what the arena costs. The playthrough
+ * generator wires exactly these manifest warps (never the rest of the manifest: the Oracle's and the
+ * Watcher's are not exits of an arena) and gates every connection into or out of the arena. L69's
+ * `light_boss_exit` would be one more row, once it is lifted.
+ */
+/**
+ * ⛓ R4b (rules-boss-locations) — WHAT THE LIGHTS ARENA COSTS, charged on every connection INTO or OUT OF
+ * L69 (the L57 precedent). The way out is the teleporter `LightBossController.endState` creates when the
+ * last flier dies (`LightBossController.as:102-108`; the manifest's `light_boss_exit`, to L36). A
+ * `LightBoss` flier is an `Enemy` with `hitsMax = 3` and no `onlyHitBy` (`LightBoss.as:47`), so, as a
+ * Tentacle, it takes the sword slash, the spear thrust (`Player.genericHit`, `Player.as:1085`) and a wand
+ * shot (`WandShot.as:116`), and never Fire (`hitByFire` false, `Enemy.as:149-151`). The way in is L70's pit.
+ */
+export const LIGHTS_ARENA = Object.freeze({
+    level: 69,
+    condition: anyOf(flag('hasSword'), flag('hasSpear'), flag('hasWand')),
+    cite: 'Enemies/LightBossController.as:79,102-108 + Enemies/LightBoss.as:47 + Enemies/Enemy.as:141-160 '
+        + '+ Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-19 ("All 7 bosses")',
+    why: 'the arena is left only by the teleporter the last flier\'s death creates, and a flier dies to '
+        + 'the sword, the spear or a wand shot.',
+});
+
+export const DEATH_EXIT_ARENAS = Object.freeze([
+    Object.freeze({ level: TENTACLE_ARENA.level, namedRoom: 'tentacle_beast_mouth', ...TENTACLE_ARENA }),
+    Object.freeze({ level: LIGHTS_ARENA.level, namedRoom: 'light_boss_exit', ...LIGHTS_ARENA }),
+]);
+
+/**
+ * ⛓ RULES (B) — WHAT LEAVING THE LAVABOSS ARENA COSTS, charged on BOTH of its
+ * doors so the logic never sends a player in who cannot get out.
+ *
+ * - The way out, `teleporter@144,0 {to 96}` at L82 (9,0), is reached only
+ *   through the lava corridor (columns 9-10, rows 0-8; every cell is lava),
+ *   which is the DARK SUIT.
+ * - The boss body stands in it until the boss dies. A hit counts only inside
+ *   a LavaBall stun window or once `hitByDarkStuff` latches
+ *   (`LavaBoss.as:143-165`), and the latch itself is set only BY a counted
+ *   hit. So the kill needs a REFLECTED LavaBall: `Player.genericHit` reflects
+ *   one with any attack (`Player.as:1129` -> `LavaBall.hit`). Fire never
+ *   counts unless `hitByFire`. That attack is `A_WEAPON`.
+ * - The ctor sends every L82 arrival to (152,176) (`LavaBoss.as:53`), the
+ *   arena floor, whichever door it came by — hence the same gate on the
+ *   way IN from L96. L71's pit needs no charge: it leaves from L71's
+ *   r14c12, which is already behind the Dark Suit, and the weapon is long held.
+ */
+export const LAVABOSS_ARENA = Object.freeze({
+    level: 82,
+    condition: allOf(flag('hasDarkSuit'), A_WEAPON),
+    cite: 'Enemies/LavaBoss.as:53,143-165 + Projectiles/LavaBall.as:45-53 + Player.as:1129 '
+        + '+ Dungeon7 L82 teleporter@144,0 behind the lava corridor + R7 kickoff §2.4 + ⚖ RULES (B) 2026-10-04',
+    why: 'the arena is left only across lava (the Dark Suit) and past the LavaBoss, which dies only to '
+        + 'reflected LavaBalls and a follow-up hit (a weapon); its ctor puts every arrival on the arena floor.',
+});
+
+/**
+ * ⛓ L40's SUBREGION RULE, delivered by slice 3 (§12.9 item 1) and used here
+ * rather than re-derived.
+ *
+ * The east half of L40 has exactly ONE door — `wandlock@512,480` at tile
+ * (32,30) — and `wandlock@448,432 {tag 9}` opens nothing. Slice 3's measured
+ * route reaches it by holding `button@480,384 {t 2}` with the iceturret's
+ * CORPSE while the block makes the long journey, which costs a kill and thirty
+ * four FIRE presses; links 1-3 cost a burnable tree, which is FIRE again.
+ *
+ * ⇒ the ITEM dependency is fire and a weapon; the rest is choreography, which
+ * the policy makes free. The generic `lockRuling` would have said `open` (a
+ * grouped lock), so this row is STRICTLY STRONGER than the general rule, which
+ * is the shape a hand ruling is allowed to take.
+ */
+export const L40_EAST_RULE = Object.freeze({
+    level: 40,
+    door: 'wandlock@512,480',
+    tile: [32, 30],
+    condition: allOf(flag('hasFire'), A_WEAPON),
+    cite: 'R7 kickoff §12.2-12.4 (probe-seedling-r7-l40-holder.mjs, 12 claims) '
+        + '+ Dungeon4/2.oel',
+    why: 'the second holder is a BLOCK (`pushableblockfire@480,480`, 34 fire presses to '
+        + 'the t5 button) and the corpse takes t2 in two — so the half costs FIRE and a '
+        + 'kill, and nothing else an item can buy.',
+});
+
+/**
+ * ⛓ THE D7 APPROACH DOOR — the one exit whose dropped approach cost distorts the
+ * sphere order, hand-ruled where the general charge is refused (R7 slice 5).
+ *
+ * `level_12/out_teleporter_32_848` is the teleporter to L83 and the only way
+ * into Dungeon 7. It sits on a CAVE tile at (2,53); the only approach is from
+ * the south through (2,54), which carries a `bosslock {keyType 4}` and a
+ * `magicallock` stacked in one cell. The exit binds to the component that
+ * reaches it — R7 slice 5's analyzer fix — but the binding does not carry the
+ * charge, and the general charge is measured to seal the map, so this door
+ * carries it by hand.
+ *
+ * THREE INDEPENDENT SOURCES AGREE ON THE SAME GATE, which is why this one is
+ * hand-ruled and the other twenty are logged:
+ *   - the map: the stacked locks at L12 (2,54), read by the analyzer itself as
+ *     `key 4 AND (Wand OR Fire Wand)`;
+ *   - `region1.oel:2969-2971` (R7 §2.4's "with the wand gates the D7 approach");
+ *   - `worlds/seedling/Rules.py`, whose `Dark Shield` wants
+ *     `Conch + Fire + Ghost Spear + Wand + Yellow Key` — the same gate from the
+ *     far side.
+ *
+ * And the symptom it fixes is in the sphere log: without it AP takes the DARK
+ * SHIELD in sphere 1.12, before Fire, the Conch, the Wand and the Ghost Spear.
+ * Strictly stronger than the computed row, which is the only shape a hand
+ * ruling may take.
+ */
+export const CHARGED_DOORS = Object.freeze([
+    Object.freeze({
+        level: 12,
+        exitId: 'out_teleporter_32_848',
+        condition: allOf(key(4), anyOf(flag('hasWand'), flag('hasFireWand'))),
+        cite: 'Dungeon-side region1.oel:2969-2971 + the stacked bosslock{keyType 4} + magicallock '
+            + 'at L12 (2,54) + worlds/seedling/Rules.py Dark Shield',
+        why: 'the door to L83 stands on a cave tile whose only approach crosses the stacked '
+            + 'key-4-and-wand lock, so using it costs what the lock costs.',
+    }),
+    // ⛓⛓⛓ THE ENDGAME DOOR — the same defect standing on the GOAL.
+    //
+    // `finaldoor@112,0 {tag 0}` is a 32x32 Solid at L113 (7,0)..(8,1)
+    // (`Scenery/FinalDoor.as:23-27`), and the two teleporters to L115 sit ON
+    // (7,0) and (8,0). So the door is not BETWEEN anything — it is UNDER the
+    // exits, the binding dropped its cost, and AP took The Seed in sphere 5.3
+    // holding TWELVE of the sixteen seals. The goal itself was ungated.
+    Object.freeze({
+        level: 113,
+        exitId: 'out_teleporter_112_0',
+        condition: { seals: 16 },
+        cite: 'Scenery/FinalDoor.as:52-64 (`SealController.hasAllSealParts() && talkedToWatcher`) '
+            + '+ End/2.oel finaldoor@112,0 sitting under the L115 teleporters',
+        why: 'the FinalDoor opens on all sixteen seals; the teleporters to the Seed room stand on '
+            + 'its own cells, so the seal count has to ride on the exits.',
+    }),
+    Object.freeze({
+        level: 113,
+        exitId: 'out_teleporter_128_0',
+        condition: { seals: 16 },
+        cite: 'Scenery/FinalDoor.as:52-64 + End/2.oel finaldoor@112,0',
+        why: 'the second of the two cells the FinalDoor covers.',
+    }),
+    // ⛓ RULES (B) — the LavaBoss arena's two doors (`LAVABOSS_ARENA`).
+    Object.freeze({
+        level: LAVABOSS_ARENA.level,
+        exitId: 'out_teleporter_144_0',
+        condition: LAVABOSS_ARENA.condition,
+        cite: LAVABOSS_ARENA.cite,
+        why: `the way OUT of the arena: ${LAVABOSS_ARENA.why}`,
+    }),
+    Object.freeze({
+        level: 96,
+        exitId: 'out_teleporter_32_64',
+        condition: LAVABOSS_ARENA.condition,
+        cite: LAVABOSS_ARENA.cite,
+        why: `the way INTO the arena from L96, gated the same so it is never a trap: ${LAVABOSS_ARENA.why}`,
+    }),
+]);
+
+/**
+ * ⚠ THE COMPLETION CONDITION, STATED — and the branch that is NOT the goal.
+ *
+ * The goal is the BLOODLESS Seed: `seed@(4,4)` in L115, whose own text is *"You
+ * have taken a step towards morality"*. Reaching it is the FinalDoor's
+ * condition, which is TWO terms:
+ *
+ *   1. `SealController.hasAllSealParts()` — all sixteen seals. Carried, as the
+ *      `CHARGED_DOORS` rows above.
+ *   2. `talkedToWatcher = !Game.checkPersistence(0, 114)` — the Watcher's speech
+ *      in L114 must have been heard. ⛓ RULES watcher-event: CARRIED as a
+ *      game_state event (`CROSS_ROOM_PREREQUISITES` below). It was once named
+ *      "implied" (L114 is free from L113), but the game keeps the door shut
+ *      without the talk ("Face the Watcher and return", game-witnessed by
+ *      `r6-final-door-control`), and no route visited the Watcher before the
+ *      door — implied is not the same as done.
+ *
+ * ⛔ THE BLOODY BRANCH IS A NAMED NON-GOAL. `NPCs/Watcher.as:97-103` adds a
+ * SECOND Seed — *"covered in the blood of the Watcher"* — when the Watcher is
+ * killed. It is a real second ending and rules v1 does not model it: it would
+ * be an alternate completion reachable without any seals at all, which would
+ * make every seal optional and collapse the collect-everything goal this rung
+ * exists to produce. Excluded deliberately, not overlooked (R7 §13.2d class H
+ * first raised it).
+ */
+export const COMPLETION = Object.freeze({
+    goal: 'the bloodless Seed, L115 seed@(4,4)',
+    witness: 'the credits — menu_state 2',
+    carried: ['all sixteen seals, via CHARGED_DOORS on L113\'s two exits to L115',
+        'the Watcher\'s speech in L114, via CROSS_ROOM_PREREQUISITES (the event flag:L114:0)'],
+    implied: [],
+    excludedBranch: 'the BLOODY seed (NPCs/Watcher.as:97-103) — a second ending reachable with no '
+        + 'seals, which would make every seal optional. A named non-goal.',
+    cite: 'Scenery/FinalDoor.as:52-64 + NPCs/Watcher.as:97-103 + End/4.oel:131',
+});
+
+/**
+ * ⛓⛓ RULES watcher-event — **A FLAG ONE ROOM READS FROM ANOTHER, AND THE ENTITY THAT WRITES IT.** A gated solid
+ * whose opening reads a persistence flag of ANOTHER room carries that flag as a `game_state` event: the solid's
+ * own event and every crossing standing on its footprint need it, and the event sits where the WRITER stands
+ * (`seedlingObstacleEvents.deriveTalkEvents` holds the schema).
+ *
+ * Two rows today, read at source (the second, the L58 Yeti, is commented at its row):
+ *   - `Scenery/FinalDoor.as:50`: `talkedToWatcher = !Game.checkPersistence(0,
+ *     LevelSet.active().namedLevel("watcher_text"))`. The tag 0 is the class's constant; the ROOM is the level
+ *     set's `watcher_text` named room (vanilla 114), so it is read off the set's manifest, never typed here.
+ *   - `NPCs/Watcher.as:126-135`: `doneTalking()` clears the Watcher's own tag in its own room. `NPC.talk()` runs
+ *     only for a non-empty text (`NPCs/NPC.as:188`), so of the game's eleven Watchers only the speaking one can
+ *     write it. Its `keyNeeded = !checkPersistence(tag)` is false before the talk, so the dialogue opens on
+ *     entering the 24 px circle; it needs nothing held. Game-witnessed: `watcher-l114-talk` (the talk writes
+ *     {114,0}), `r6-final-door` (16 seals + {114,0} open the door), `r6-final-door-control` (no talk: shut).
+ */
+export const CROSS_ROOM_PREREQUISITES = Object.freeze([
+    Object.freeze({
+        gated: 'finaldoor',
+        flag: Object.freeze({ namedRoom: 'watcher_text', tag: 0 }),
+        writer: 'watcher',
+        verb: 'talk',
+        cite: 'Scenery/FinalDoor.as:50 + NPCs/Watcher.as:126-135 + NPCs/NPC.as:188',
+        why: 'the FinalDoor opens on all sixteen seals AND the Watcher\'s talk; without the talk the ceremony says '
+            + '"Face the Watcher and return" and the door stays shut.',
+    }),
+    // ⛓ RULES yeti-event — the same rule, generalised in two ways (no room is special-cased): the flag's room is
+    // the WRITER's own room with a tag constant to its class (`flag.room: 'writer'`), and the gated entity reads it
+    // through its OWN tag (`gatedReads: 'ownTag'`).
+    //   - `NPCs/Yeti.as:41-49`: `doneTalking()` clears its own tag AND `setPersistence(1, false)` — no level
+    //     argument, so `Main.level` (`Game.as:1902-1904`): "the portal in DeadBoss.oel must have tag 1". The vanilla
+    //     map has one speaking Yeti, L58 @56,56 (tag 0), and L58's `teleporter@80,16 {to 46}` carries tag 1.
+    //   - `Teleporter.as:86`: `deactivated = tag >= 0 && (!checkPersistence(tag) == invert)`, re-read every update,
+    //     so with `invert` 0 the portal is shut on a fresh room and opens on the frame the talk ends.
+    //   - ⚠ KEY-PRESS, NOT AUTO-TALK: the Yeti keeps `NPC.keyNeeded = true` (`NPCs/NPC.as:41`), so its dialogue opens
+    //     on the talk key released inside the 24 px circle (`NPC.as:190-191,225`), unlike the Watcher's
+    //     `keyNeeded = !checkPersistence(tag)`. Either way nothing is HELD, so the event's item is null; the press
+    //     is the walker's to model (fidelity's `yetiTalk`), not the logic's.
+    Object.freeze({
+        gated: 'teleporter',
+        gatedReads: 'ownTag',
+        flag: Object.freeze({ room: 'writer', tag: 1 }),
+        writer: 'yeti',
+        verb: 'talk',
+        cite: 'NPCs/Yeti.as:41-49 + Teleporter.as:86 + Game.as:1902-1904 + NPCs/NPC.as:41,188,225',
+        why: 'the L58 portal to L46 is shut until the Yeti\'s dialogue ends; its doneTalking clears tag 1 of its own '
+            + 'room, the tag the portal reads.',
+    }),
+]);
+
+/**
+ * ⛔⛔ LOCATION GUARDS — the gate that is not a door (R7 slice 5).
+ *
+ * Terrain analysis can only ever produce CROSSING rules, so an item guarded by
+ * something standing in the same room with it is unguarded in the compiled
+ * graph. Slice 4 met the symptom and named it from the other side: §13.6 found
+ * that the overlay's `bosstotem` row "never reached a compiled rules row, so the
+ * L43 Wand is not gated on the five totem parts". The reason is geometric — the
+ * BossTotem is at L43 tile (9,10) and the Wand at (9,14), both inside the same
+ * 98-cell arena `r8c7`, with the stairs from L40 in it too. There is no crossing
+ * for the rule to live on. It has to be the LOCATION's own rule.
+ *
+ * ⛓ THE SPHERE LOG IS WHAT MADE THE SECOND ONE VISIBLE. AP's first order took
+ * `Level 012 - Witch` in sphere 1.2 and the Wand in 1.12 — the Dark Sword ten
+ * steps before the item the Witch demands for it.
+ *
+ * Every row is a source read, and every row makes the logic STRICTER, which is
+ * the direction a guard may only move with a citation behind it.
+ */
+export const LOCATION_GUARDS = Object.freeze({
+    // ⛔ R4b — NOT `hasWand`, though the totem's kill is (below): this row is the WAND's own location, and a
+    // Wand behind the Wand is a self-lock (vanilla placement unbeatable). Its condition is UNCHANGED; the
+    // weapon half is upstream parity (`Rules.py:625-627` Wand = Fire ∧ Shards), not a source fact about the
+    // kill, since the Wand is taken BEFORE the fight (vanilla `Wand.as:78` waits for the parts only).
+    'wand@L43': Object.freeze({
+        condition: allOf({ flag: 'hasTotemPartsAll' }, A_WEAPON),
+        cite: 'Pickups/Wand.as:78 (inert until `Player.hasAllTotemParts()`) '
+            + '+ Dungeon4/Boss.oel:238 — the Wand and the totem share one arena',
+        why: 'the vanilla Wand cannot be taken until all five parts are held, and it lies in the '
+            + 'totem\'s arena, so this is a location guard and not a crossing. The weapon half is kept '
+            + 'as it stood (stricter than the source; R4b changes no existing guard\'s condition here).',
+    }),
+    'darksword@L12': Object.freeze({
+        condition: flag('hasWand'),
+        cite: 'NPCs/Witch.as:47-52 — `doneTalking()` spawns the DarkSword only under '
+            + '`Main.hasWand && !Main.hasDarkSword`',
+        why: 'the Witch trades the Dark Sword FOR the Wand. The trade is a dialogue in a room '
+            + 'nothing gates, so no crossing can ever carry it.',
+    }),
+    'fire@L32': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/BobBoss.as:185-199 — the THIRD BobBoss\'s death is what adds the Fire; '
+            + 'the fight is started by `FallRockLarge.as:115-117`',
+        why: 'Fire is a boss DROP in an arena you walk into freely, so the fight is the gate and '
+            + 'the location is the only place to hang it.',
+    }),
+    // ⛓⛓ R4b (rules-boss-locations) — THE SEVEN BOSS KILLS. Each fight stands in its arena with no crossing
+    // to hang a rule on, so the kill condition is the location's own guard; the arena's ACCESS is the region
+    // graph's. Each condition is the overlay's own body ruling where one exists, read against the AS3:
+    'owl@L112': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/FinalBoss.as:61 (`onlyHitBy = "Lava"`) + :116-123 (a lava tile hits it) + Enemy.as:173-178 '
+            + '(a filtered hit still knocks back) — the overlay\'s `finalboss` row',
+        why: 'the Owl only takes damage from lava, and the player drives it there by the knockback of any '
+            + 'strike; a strike needs a weapon.',
+    }),
+    'shieldspire@L19': Object.freeze({
+        condition: flag('hasSword'),
+        cite: 'Enemies/ShieldBoss.as:130-150 (hit) + Player.as:1099 — the overlay\'s `shieldboss` row',
+        why: 'the ShieldBoss dies to strikes while its shield is moved; the overlay rules the sword the only '
+            + 'reachable arm in D2.',
+    }),
+    'times@L32': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/BobBoss.as:167-179 (hit, no `onlyHitBy`) + :181-199 (the third death) — as `fire@L32`',
+        why: 'the third BobBoss\'s death IS the kill; the Fire drop (`fire@L32`) is priced the same.',
+    }),
+    'tentacledbeast@L57': Object.freeze({
+        condition: TENTACLE_ARENA.condition,
+        cite: 'Enemies/TentacleBeast.as:93-104 (`maxTentacles <= 0` → dead) + Enemies/Tentacle.as:52,66 '
+            + '(hitsMax 1, `canHit` while sitting; no `onlyHitBy`)',
+        why: 'the beast dies when its eight tentacles are cut — the sword, the spear or a wand shot (`TENTACLE_ARENA`).',
+    }),
+    'totem@L43': Object.freeze({
+        condition: allOf({ flag: 'hasTotemPartsAll' }, flag('hasWand')),
+        cite: 'Enemies/BossTotem.as:262 (`onlyHitBy = "Wand"`) + Enemy.as:149 + r4-boss-report ccdf189 '
+            + '(the fight waits for `Player.hasAllTotemParts()`); upstream Rules.py:660-667',
+        why: 'the fight starts only with all five parts, and only a Wand shot damages the totem.',
+    }),
+    'lights@L69': Object.freeze({
+        condition: LIGHTS_ARENA.condition,
+        cite: 'Enemies/LightBoss.as:47 (hitsMax 3; no `onlyHitBy`) + LightBossController.as:102-108 (endState)',
+        why: 'every LightBoss flier dies to the sword, the spear or a wand shot (`LIGHTS_ARENA`); the '
+            + 'controller clears its tag when the last goes.',
+    }),
+    'kingoffire@L82': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/LavaBoss.as:143-160 (hit needs a LavaBall first) + Projectiles/LavaBall.as:45-53,75 + '
+            + 'Player.as:1129-1132 (a strike reflects the ball)',
+        why: 'the King of Fire is hurt only after its own LavaBall is struck back into it; a strike needs a weapon.',
+    }),
+});
+
+/** The guard on one ledger row, or null. */
+export function locationGuard(ledgerId) {
+    return LOCATION_GUARDS[ledgerId] ?? null;
+}
+
+/**
+ * ⛔⛔⛔ THE IGNEOUS TILE IS FREE, AND SLICE 4's HAND RULING ON IT PUT THE DARK
+ * SUIT BEHIND ITSELF (R7 slice 5 — the refutation log's first real customer).
+ *
+ * §13.5 ruled the Igneous-to-Lava tile (type 31) DARK SUIT, reasoning that "the
+ * honest STATIC reading is the worst case — the tile has already converted".
+ * Three source facts say otherwise, and one topological fact says it cannot be
+ * right whatever the source says:
+ *
+ *   1. **It starts walkable and takes work to convert.** `Tile.as:390-424`:
+ *      the countdown only runs while the player's centre is within
+ *      `sqrt(w²+h²)/2` ≈ 11.3 px, it needs `igneousCounterMax` = 8 render
+ *      frames to set `igneousBreakApart`, and then one whole `sprIgneousLava`
+ *      animation (8 frames apiece) before `t = 17`. Walking across costs
+ *      nothing.
+ *   2. **The conversion never survives the room.** `t` is an instance field on
+ *      a `Tile` ENTITY, and `loadlevel` rebuilds every Tile from the .oel at
+ *      every level entry (`Game.as:1966-2010`, and the build is in `begin()` —
+ *      trap 112). Nothing writes it to `levelPersistence`. So a return visit
+ *      finds igneous, not lava.
+ *   3. **The walk order is choreography**, which the ruled puzzle policy makes
+ *      FREE in logic; it is the tape generator's burden.
+ *
+ * ⛓ AND THE TOPOLOGY IS THE WITNESS. The four igneous tiles of L77 are the
+ * "dry corridor" R4 §8.4 measured; with them ruled DARK SUIT, the only route to
+ * L79 crosses lava, the Dark Suit is the only item beyond L76, and AP's own
+ * fill refuses seven locations. A rule that makes an item a prerequisite for
+ * itself is refuted by that alone — the standing instruction is that our logic
+ * is wrong before the game is unbeatable.
+ */
+export const IGNEOUS_IS_FREE = Object.freeze({
+    tileType: 31,
+    semantics: Object.freeze({ kind: 'open', label: 'igneous' }),
+    cite: 'Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 (loadlevel rebuilds every Tile)',
+    why: 'the tile is walkable until eight frames of standing next to it plus a whole '
+        + 'animation convert it, and the conversion is per-Tile state a level entry rebuilds — '
+        + 'so no reachability question ever meets the converted tile.',
+});
+
+/** Tile-type rulings this overlay makes on top of the transcription. */
+export const PLAYTHROUGH_TILE_OVERLAY = Object.freeze({
+    [IGNEOUS_IS_FREE.tileType]: IGNEOUS_IS_FREE,
+});
+
+/** `tileOverride` for `buildSeedlingRegionGrid`: our ruling, or null to keep the table's. */
+export function overlayTileSemantics(tileType) {
+    return PLAYTHROUGH_TILE_OVERLAY[tileType]?.semantics ?? null;
+}
+
+/**
+ * ⛓⛓⛓ THE LAVATRAP IS A TRANSPORT, NOT A HAZARD — and it is the last structural
+ * door in the map (R7 slice 5).
+ *
+ * `Enemies/LavaTrap.as` reads as a monster and behaves as a one-way lift:
+ *
+ *   :22   `chompRange = 32` — it launches when the player's centre is within
+ *         32 px and nothing typed "Solid" stands on the line between them
+ *         (`:82-90`).
+ *   :56-60 while reeled in, `attached.x/y` are driven along the tongue and
+ *         **`attached.onGround = false`** — and `Player.state`'s pit branch is
+ *         `if (onGround)` (`Player.as:718`), so the ride crosses a pit that
+ *         would otherwise kill.
+ *   :61-72 at the end of the tongue: **`if (Player.hasDarkSuit)` you are
+ *         released standing on the trap's own tile; otherwise `die()`.**
+ *
+ * ⇒ every LavaTrap is a **one-way edge onto its own tile from every tile within
+ * 32 px, gated on the DARK SUIT**. L108 is built out of exactly that: a column
+ * of platforms with a pit between each pair and a trap on every second one, and
+ * the three hops (8,3)->(8,5), (8,6)->(8,8), (8,9)->(8,11) are each 32 px to the
+ * pixel. Without this row the Fire Wand is unreachable and no tile-granular
+ * flood can ever say why, because the crossing is not terrain.
+ *
+ * ⚠ THE BOUND, NAMED and NOT patched: the same disc is LETHAL without the suit,
+ * so every tile within 32 px of a trap should also be gated on the Dark Suit.
+ * Rules v1 does not gate the disc — R4 §8.4 already found the L77/L78 corridors
+ * "covered end to end" by these discs, and turning that into a rule is a
+ * strictness change big enough to seal a dungeon, which is the one direction a
+ * rules row must not move without a driven segment behind it. Logged here and
+ * in the artifact as a PERMISSIVENESS finding, the same treatment §13.6 gave
+ * `Health` and `Shards`.
+ */
+export const LAVATRAP_PULL = Object.freeze({
+    tag: 'lavatrap',
+    chompRange: 32,
+    condition: flag('hasDarkSuit'),
+    cite: 'Enemies/LavaTrap.as:22,56-72,82-90 + Player.as:718 (the pit branch is `if (onGround)`)',
+    why: 'the tongue reels the player onto the trap\'s own tile with onGround false, so it '
+        + 'crosses a pit; the Dark Suit is what makes the arrival survivable rather than a death.',
+});
+
+/**
+ * Every LavaTrap pull in one level: the trap's tile, and the tiles it can grab
+ * the player from. Distances are CENTRE TO CENTRE in pixels, the game's own
+ * measure (`LavaTrap.as:29` centres the entity in its tile, `:81` uses
+ * `FP.distance` on the two centres, and `:83` compares with `<=`).
+ *
+ * The line-of-sight test (`collideLine("Solid", ...)`) is NOT applied: it needs
+ * the per-pixel solid set, and leaving it out can only ADD pulls, which is the
+ * permissive direction. Named here rather than folded into the result.
+ */
+export function lavaTrapPulls(level, tileSize = 16) {
+    const out = [];
+    for (const e of level?.entities ?? []) {
+        if (e.type !== LAVATRAP_PULL.tag) continue;
+        const tx = Math.floor(e.x / tileSize);
+        const ty = Math.floor(e.y / tileSize);
+        const cx = tx * tileSize + tileSize / 2;
+        const cy = ty * tileSize + tileSize / 2;
+        const from = [];
+        const reach = Math.ceil(LAVATRAP_PULL.chompRange / tileSize);
+        for (let y = ty - reach; y <= ty + reach; y += 1) {
+            for (let x = tx - reach; x <= tx + reach; x += 1) {
+                if (x < 0 || y < 0 || x >= level.width || y >= level.height) continue;
+                if (x === tx && y === ty) continue;
+                const dx = (x * tileSize + tileSize / 2) - cx;
+                const dy = (y * tileSize + tileSize / 2) - cy;
+                // `FP.distance` is Euclidean and `d` is coerced to int before
+                // the comparison, so the boundary is a floor, not a round.
+                if (Math.floor(Math.sqrt(dx * dx + dy * dy)) > LAVATRAP_PULL.chompRange) continue;
+                from.push([x, y]);
+            }
+        }
+        out.push({ tile: [tx, ty], from });
+    }
+    return out.sort((a, b) => (a.tile[1] - b.tile[1]) || (a.tile[0] - b.tile[0]));
+}
+
+/**
+ * ⛔ THE REFUTATION LOG — the mechanism §4 slice 4 asks for, built NOW rather
+ * than when the first refutation arrives.
+ *
+ * "A rules row a future segment refutes is a FINDING, not a quiet edit." A row
+ * is refuted when a driven segment reaches its gate holding everything the row
+ * asks for and cannot cross. The entry records the row, the segment that
+ * refuted it, and what the game did instead — and the generator stamps the
+ * whole list into the artifact, so a preset carrying refuted rows says so on
+ * its face.
+ *
+ * EMPTY AT v1, deliberately: no segment has driven any of these gates yet. The
+ * test asserts the SHAPE against a fixture rather than the emptiness, so the
+ * mechanism cannot rot while it waits.
+ */
+export const REFUTATION_LOG = Object.freeze([
+    Object.freeze({
+        row: 'level_76/the Igneous-to-Lava crossing, ruled Has(Dark Suit) at R7 §13.5',
+        refutedBy: 'Generate.py --seed 1 on rules v1 (R7 slice 5) + the offline fixpoint that agrees with it',
+        observed: 'the row makes the DARK SUIT a prerequisite for itself: L76 is the only way into '
+            + 'D7, its every crossing carried the row, and the suit is the only collectible beyond it. '
+            + 'AP refused 7 locations, all of them downstream of Level 079 - Darksuit. At source the '
+            + 'tile is walkable until eight frames of proximity convert it and a level entry rebuilds '
+            + 'it (Tile.as:83-85,390-424) — see IGNEOUS_IS_FREE.',
+        cite: 'Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 + R7 kickoff §14',
+    }),
+    // ⛓ ENTRY 2 — the same defect class with the SIGN REVERSED. Entry 1 was a
+    // row too STRICT (an item behind itself, so AP refused seven locations);
+    // this one is a rule too PERMISSIVE (a wall the analyzer could not see, so
+    // AP walked through it). A permissive defect is quieter by construction:
+    // nothing refuses, the generation is green, and the only symptom is a
+    // sphere order that is wrong about the game.
+    Object.freeze({
+        row: 'lock@32,80 in L20, ruled OPEN by the general tSet >= 0 arm ("any body '
+            + 'presses its button — pure choreography, FREE under the puzzle policy")',
+        refutedBy: 'the map, read against R6 kickoff §13.8 (R7 slice 6)',
+        observed: 'the lock\'s group has exactly ONE presser, `buttonroom@192,16`, and it '
+            + 'stands behind `shieldlocknorm@176,16` — so the press is not free, it costs '
+            + 'the SHIELD. And the lock is the only exit from the four cells L13\'s '
+            + '`stairsdown@96,32` drops the player into ((0,3),(1,3),(2,3),(2,4)), so with '
+            + 'the row ruled OPEN the analyzer folded that alcove into the room and AP took '
+            + '**Level 020 - Shield at sphere 0.4**, before the Red Key it needs, THROUGH A '
+            + 'WALL. Gated on hasShield the alcove becomes its own region, the Shield moves '
+            + 'to sphere 2.1 behind `Level 019 - Boss Key 0` at 1.2, and the walkthrough '
+            + 'cross-check over the intended vocabulary is unchanged.',
+        cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
+            + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
+    }),
+    // ⛓ ENTRY 3 (SWIM T4, plan R-j) — entry 2's sign again: a rule too PERMISSIVE.
+    // This time the analyzer SAW the wall. It then paid it in both directions,
+    // because `bosslock`'s semantics row is `kind: 'gated'` and a gated cell has
+    // no direction. The first driven segment to reach one of these rows from
+    // the far side is what refuted it.
+    Object.freeze({
+        row: 'bosslock@64,32 in L30, ruled two-way Has(Green Key) by the gated arm '
+            + '(level_30__r0c4 <-> level_30__r2c10)',
+        refutedBy: 'survey-seedling-route --through=2.2 --only=29 with the Green Key staged '
+            + '(swim T3, D4): REFUSED, four keylock stances at bosslock@64,32 and no corridor',
+        observed: 'the lock opens only from the SOUTH. BossLock.update probes the ONE-PIXEL ROW '
+            + 'BELOW it (`y - originY + height + 1`; the model\'s keyLine is {x0 66, x1 75, y 49}), '
+            + 'but the route arrives from the NORTH. L22\'s teleporter@96,192 lands at L30@64,16, '
+            + 'the one-tile pocket r0c4 north of the lock, whose only other exit is the teleporter '
+            + 'back. The rule crosses r0c4 -> r2c10 AND r2c10 -> r0c4 on the key. The game honours '
+            + 'only r2c10 -> r0c4, and once the lock is open its persistence tag keeps it open, so '
+            + 'the other direction is never needed. It is one row of a class: '
+            + 'census-seedling-bosslocks reads 11 of the 14 bosslocks as two-way rules the game '
+            + 'does not honour (10 with a far side AP can reach another way). RETIRED by swim T4 '
+            + 'D4: `bosslock`\'s `probe: \'S\'` is read as `enter` gates, so all 11 are one-way '
+            + '(r2c10 -> r0c4 here). The seed-1 sphere order and the 21-step route are '
+            + 'byte-identical, and the through-2.2 route now reaches L30 from L31.',
+        cite: 'Puzzlements/BossLock.as:58-90 (the probe at :62, the persistence at :43,81) '
+            + '+ Dungeon3/9.oel:454 (the lock) + Dungeon3/1.oel:216 (L22\'s teleporter into the '
+            + 'pocket) + CC/docs/cloud-reports/seedling-swim-t3.md § D4 '
+            + '+ CC/docs/cloud-reports/seedling-swim-t4.md § D2',
+    }),
+    // ⛓ ENTRY 4 (RULES re-closing locks) — entry 2's sign once more: too
+    // PERMISSIVE. Law 2 was read right (a grouped lock's persistence write is
+    // inert) and then followed only halfway: the OPEN ruling it led to treated
+    // the lock as open on EVERY visit, when the game rebuilds it closed on
+    // every entry and only its button, worked this visit, opens it.
+    Object.freeze({
+        row: 'lock@128,48 in L15, ruled OPEN by the general tSet >= 0 arm, so the L16 arrival column '
+            + 'was folded into level_15__r1c5 and level_16 -> level_15 -> level_14 crossed on the Sword alone',
+        refutedBy: 'the fidelity RETURN slice\'s game recordings return-l15-walkin (by the door from L16) and '
+            + 'return-l15-reentry / -unclear (with and without the forward trip\'s clears): all three held at '
+            + 'x 146.5 by the lock, the cleared and uncleared streams byte-identical; return-l15-conch solves '
+            + 'the same arrival by swimming',
+        observed: 'the lock is tSet 0, so `Lock.check()` never removes it, whatever `{15,0}` says; it is rebuilt '
+            + 'CLOSED on every entry, and its only opener (`button@112,32` and the block that holds it) is past '
+            + 'it. The arrival column (x 144..159) is sealed by the lock to the west and by water to the south. '
+            + 'RETIRED by `buildGroupOpeners` + the re-closing pass in `buildSeedlingRegionGrid`: a grouped lock '
+            + 'only a plain Button opens is entered only from a side that reaches that button this visit, '
+            + 'priced at what reaching it costs — here level_15__r1c9 -> level_15__r1c5 is Has(Swim). Its class '
+            + 'is thirteen locks in nine levels; six levels split, no location moves sphere.',
+        cite: 'Puzzlements/Lock.as:39-46 (check) + Lock.as:activationStep + Puzzlements/Button.as:28-47 '
+            + '+ Puzzlements/PushableBlock.as (no persistence) + branch '
+            + 'claude/seedling-fidelity-return-l15-l14-3rcmml @ c96dc77bad (D1) / f1aac13107 (D2, the Conch)',
+    }),
+]);
+
+/** The shape every refutation entry must have. Exported for the test and the generator. */
+export const REFUTATION_FIELDS = Object.freeze([
+    'row',        // which rules row: `${level}/${exit_or_subregion}`
+    'refutedBy',  // the segment/tape that drove it
+    'observed',   // what the game did instead
+    'cite',       // the evidence
+]);
+
+/** True when `entry` is a well-formed refutation row. */
+export function isRefutation(entry) {
+    return !!entry && typeof entry === 'object'
+        && REFUTATION_FIELDS.every((f) => typeof entry[f] === 'string' && entry[f].length > 0);
+}
+
+/**
+ * The condition vocabulary this overlay adds beyond the transcription's, and
+ * the Rule Builder tree each resolves to. `hasTotemPartsAll` and the seal count
+ * are not engine FLAGS — they are counts over progressive AP items — so
+ * `resolveCondition` cannot reach them through `games/seedling.json`'s
+ * flag table and the generator supplies them here.
+ */
+export const OVERLAY_CONDITIONS = Object.freeze({
+    hasTotemPartsAll: { rule: 'Has', args: { item_name: 'Totem Shard', count: 5 } },
+});
+
+export const SEAL_ITEM_NAME = 'Seal';
+/**
+ * The Seals the FinalDoor needs by default — the game's own sixteen log slots. ⛓ R4b: no longer the number of
+ * Seals in the pool (23 under the default `boss_location_items: seal`); the world's `seals_required` option moves it.
+ */
+export const SEAL_TOTAL = 16;
+
+/** Resolve an overlay-only condition node, or null when it is not one of ours. */
+export function resolveOverlayCondition(condition) {
+    if (condition == null) return null;
+    if (condition.seals !== undefined) {
+        return { rule: 'Has', args: { item_name: SEAL_ITEM_NAME, count: condition.seals } };
+    }
+    // ⛓ RULES rope-events — a cross-visit event (`ropeEventCondition`): the
+    // generator mints the event; a name it did not mint is refused there.
+    if (condition.event !== undefined) return { rule: 'Has', args: { item_name: condition.event } };
+    if (condition.flag !== undefined && OVERLAY_CONDITIONS[condition.flag]) {
+        return OVERLAY_CONDITIONS[condition.flag];
+    }
+    return null;
+}
+
+export { flag, key, anyOf, allOf };

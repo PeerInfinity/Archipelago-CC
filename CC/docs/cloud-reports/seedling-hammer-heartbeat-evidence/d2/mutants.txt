@@ -1,0 +1,15 @@
+== h1 rc=1
+  passed  ⛓⛓⛓ previewWalk: every output is byte-identical with a hook installed and without, and the
+  passed  ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no ho
+  failed  ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are e :: AssertionError: expected [ 1000, 187 ] to deeply equal [ 1000, 167 ]
+  failed  ⛓⛓ every call site is one null check with a literal key of HEARTBEAT_EVERY (unhooked: no a :: AssertionError: expected 2 to be 1 // Object.is equality
+== h2 rc=1
+  passed  ⛓⛓⛓ previewWalk: every output is byte-identical with a hook installed and without, and the
+  failed  ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no ho :: AssertionError: expected false to be true // Object.is equality
+  failed  ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are e :: AssertionError: expected false to be true // Object.is equality
+  passed  ⛓⛓ every call site is one null check with a literal key of HEARTBEAT_EVERY (unhooked: no a
+== h3 rc=1
+  failed  ⛓⛓⛓ previewWalk: every output is byte-identical with a hook installed and without, and the :: AssertionError: expected '{"samples":[{"x":88,"y":56,"tick":1,"…' to be '{"samples":[{"x":88,"y":56,"tick":1,"…' // Object.is equality
+  passed  ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no ho
+  failed  ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are e :: AssertionError: expected [ 1000, …(1) ] to deeply equal [ 1000, …(1) ]
+  failed  ⛓⛓ every call site is one null check with a literal key of HEARTBEAT_EVERY (unhooked: no a :: AssertionError: expected 2 to be 1 // Object.is equality

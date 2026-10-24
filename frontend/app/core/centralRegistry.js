@@ -5,8 +5,15 @@ function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('centralRegistry', message, ...data);
   } else {
+    // No window.logger. In a browser, info → console.log as before. In Node
+    // (the headless procgen drivers) stdout is the data channel — `-o -` pipes
+    // an envelope into JSON.parse — so every level goes to stderr there.
     const consoleMethod =
-      console[level === 'info' ? 'log' : level] || console.log;
+      level === 'warn' || level === 'error'
+        ? console[level]
+        : typeof window === 'undefined'
+          ? console.error
+          : console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[centralRegistry] ${message}`, ...data);
   }
 }

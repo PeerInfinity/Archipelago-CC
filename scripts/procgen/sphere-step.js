@@ -12,20 +12,56 @@
  *   node scripts/procgen/sphere-step.js topology -i s2a.json -o s2b.json
  *   node scripts/procgen/sphere-step.js items    -i s2b.json -o s2c.json
  *   node scripts/procgen/sphere-step.js regions  -i s2c.json -o s3.json
- *   node scripts/procgen/sphere-step.js compile  -i s3.json  -o rules.json
- *
- *   # run a contiguous range in one process:
- *   node scripts/procgen/sphere-step.js run --from plan --to compile ...args -o rules.json
- *
- *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
- *   # FIRST step whose output is missing (presence = keep, absence = recompute):
- *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
- *
- *   # append a sphere to a FINISHED envelope (grow one wave further + recompile):
- *   #   --items id=N → the new sphere's content; the goal is relocated into it.
- *   #   --truncate-to-wave K → rewind to K leading waves before regrowing.
+ *   node scripts/procgen/sphere-step.js compile  -i s3.json  -o env.json --rules-out rules.json
+ *   # a contiguous range in one process (world flags as for `plan`):
+ *   node scripts/procgen/sphere-step.js run --from plan --to compile ...args -o env.json
+ *   # auto-resume a partial / hand-edited envelope from its first missing step:
+ *   node scripts/procgen/sphere-step.js run -i partial.json -o env.json
+ *   # replay recorded layout edits whose stage already ran:
+ *   node scripts/procgen/sphere-step.js run -i s3.json --from regions -o env.json
+ *   # append a sphere to a FINISHED envelope (or a bare rules.json):
  *   node scripts/procgen/sphere-step.js append -i done.json --items gem=1 \
  *        -o appended.json --rules-out rules.json
+ *   World flags (`plan` / `run` from scratch; later steps read the config from -i):
+ *     --seed N                    rng seed (default 1)
+ *     --region WxH                region tile size (default 8x6)
+ *     --items id=N                item pool entry, repeatable (default: four keys + victory;
+ *                                 for `append`, the NEW sphere's content)
+ *     --spheres N                 sphere count (default 3)
+ *     --victory id                goal item (default: a victory item from the pool)
+ *     --quota id=N                per-substrate region quota, repeatable
+ *     --start id                  start substrate
+ *     --max-items-per-region N    (default 2)
+ *     --fillers N                 filler regions, no items (default 0)
+ *     --revisit P                 revisit ratio for attachments (default 0.25)
+ *     --spheres-per-batch N       grow sphere-major in batches of N (default: all at once)
+ *     --no-arrow-entry            skip bounce's free-arrow prep
+ *     --fall-behavior B           bounce bounceFallBehavior (default: substrate default)
+ *     --physics-profile P         bounce bouncePhysicsProfile (default: substrate default)
+ *     --param key=value           any substrate procgen param, repeatable (numbers coerced)
+ *     --enable-loop-mode          embed loop_costs in the rules.json
+ *     --region-xp-effect E        loop-mode xp effect: cost (default) | speed | both | none
+ *     --discovery-mode M          follow (default: discovery follows loop mode) | on | off
+ *     --truncate-to-wave K        `append` only: keep K leading waves before regrowing
+ *   I/O flags (all subcommands):
+ *     -i, --input PATH            prior envelope JSON (required except for `plan`/`run`)
+ *     -o, --out PATH              next envelope JSON (default ./sphere-<step>.json; `-` = stdout)
+ *     --params PATH               JSON object merged over the envelope's config
+ *     --rules-out PATH            `compile`/`run`/`append`: also write the bare rules.json
+ *     --from STEP                 `run`: start at this step (default: auto-resume)
+ *     --to STEP                   `run`: stop after this step (default compile)
+ *     --config PATH               read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *     --config-schema             print that JSON Schema and exit
+ *     --json-status PATH          write the run's status object (`-` = stdout); see cliRun.js
+ *     -h, --help                  print this and exit
+ *
+ * Recorded layout edits (envelope `edits[]`, see layoutEdits.js) replay after
+ * the step each one addresses — layout ops and re-roll after `regions`,
+ * set-substrate after `items`. An edit hand-added to an envelope whose stage
+ * has ALREADY run does nothing until that step runs again; the run names any
+ * edit it is skipping, so the no-op is never silent.
  *
  * Append semantics: a wave gates on the prior sphere, so the goal can only move
  * one tier later when the kept final sphere has a non-goal item. Default: a
@@ -42,23 +78,11 @@
  * or compile. --spheres-per-batch unset / ≥ sphere count = one batch (all
  * spheres), the byte-identical default.
  *
- * Step subcommands:
- *   plan accepts the same world flags as dump-sphere-growth.js (--seed,
- *   --items, --spheres, --victory, --quota, --start, --region, --fillers,
- *   --revisit, --spheres-per-batch, --max-items-per-region, --physics-profile,
- *   --fall-behavior,
- *   --param key=value, --enable-loop-mode, --region-xp-effect,
- *   --no-arrow-entry). Those flags build the resolved config (via the shared
- *   substrate hooks, like the panel) carried in the envelope; later steps read
- *   the config from -i and don't re-parse world flags.
- *
- * I/O flags (all subcommands):
- *   -i, --input PATH     prior envelope JSON (required except for `plan`/`run`)
- *   -o, --out PATH       next envelope JSON (default ./sphere-<step>.json; `-`=stdout)
- *   --params PATH        JSON object merged over the envelope's config (override knobs)
- *   --rules-out PATH     `compile`/`run`: additionally write the bare rules.json
- *
- * `compile` exits non-zero if the sphere oracle reports a mismatch.
+ * World flags build the resolved config (via the shared substrate hooks, like
+ * the panel) carried in the envelope. `compile` exits 2 if the sphere
+ * oracle reports a mismatch.
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  *
  * The envelope is self-contained (it embeds the resolved item library), so a
  * step can run in its own process without re-deriving world state. The grown
@@ -67,32 +91,70 @@
  * the pipeline at steps ①–②c, or a grown region via the in-app editor.
  */
 
-import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-// Substrate libraries register their adapters on import.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
+
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import {
-    SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
+    SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted, sphereEditsBehind,
     nextSphereStep, resolveSpheresPerBatch, appendSphere,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
-import { rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { discoveryModeConfig, rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
-    mergeSubstrateItemLib, resolveVictoryItem,
+    mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
-function parseArgs(argv) {
-    const out = {
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--items': W.items,
+    '--spheres': W.spheres,
+    '--victory': W.victory,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--max-items-per-region': W.maxItemsPerRegion,
+    '--fillers': W.fillers,
+    '--revisit': W.revisit,
+    '--spheres-per-batch': flag('spheresPerBatch', KIND.int),
+    '--truncate-to-wave': flag('truncateToWave', KIND.int),
+    '--no-arrow-entry': W.noArrowEntry,
+    '--fall-behavior': W.fallBehavior,
+    '--physics-profile': W.physicsProfile,
+    '--param': W.param,
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
+    '-i': W.input,
+    '--input': W.input,
+    '-o': W.out,
+    '--out': W.out,
+    '--params': flag('paramsFile', KIND.str),
+    '--rules-out': W.rulesOut,
+    '--from': W.from,
+    '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
+function parseArgs(argv, { configDoc = null } = {}) {
+    const out = parseFlags(argv, FLAGS, {
         subcommand: null,
         // world flags (used by `plan` / `run`)
         seed: 1,
@@ -123,66 +185,14 @@ function parseArgs(argv) {
         // I/O flags
         input: null,
         out: null,
-        params: null,
+        // `--params PATH` (a JSON file). Its own key: it once shared `params`
+        // with the `--param k=v` map above, so the later literal key nulled the
+        // map and every `--param` threw "Cannot set properties of null".
+        paramsFile: null,
         rulesOut: null,
         from: null,
         to: null,
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) throw new Error(`expected WxH, got '${s}'`);
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    const parseStrKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected key=value, got '${s}'`);
-        return [s.slice(0, i), s.slice(i + 1)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        if (i === 0 && !a.startsWith('-')) { out.subcommand = a; continue; }
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--items': { const [id, n] = parseKv(next()); out.items[id] = n; break; }
-            case '--spheres': out.spheres = parseInt(next(), 10); break;
-            case '--victory': out.victory = next(); break;
-            case '--quota': { const [id, n] = parseKv(next()); out.quotas[id] = n; break; }
-            case '--start': out.start = next(); break;
-            case '--max-items-per-region': out.maxItemsPerRegion = parseInt(next(), 10); break;
-            case '--fillers': out.fillers = parseInt(next(), 10); break;
-            case '--revisit': out.revisit = parseFloat(next()); break;
-            case '--spheres-per-batch': out.spheresPerBatch = parseInt(next(), 10); break;
-            case '--truncate-to-wave': out.truncateToWave = parseInt(next(), 10); break;
-            case '--no-arrow-entry': out.arrowEntry = false; break;
-            case '--fall-behavior': out.fallBehavior = next(); break;
-            case '--physics-profile': out.physicsProfile = next(); break;
-            case '--param': {
-                const [k, v] = parseStrKv(next());
-                out.params[k] = /^-?\d+(\.\d+)?$/.test(v) ? Number(v) : v;
-                break;
-            }
-            case '--enable-loop-mode': out.enableLoopMode = true; break;
-            case '--region-xp-effect': out.regionXpEffect = next(); break;
-            case '-i': case '--input': out.input = next(); break;
-            case '-o': case '--out': out.out = next(); break;
-            case '--params': out.params = next(); break;
-            case '--rules-out': out.rulesOut = next(); break;
-            case '--from': out.from = next(); break;
-            case '--to': out.to = next(); break;
-            case '-h': case '--help':
-                console.log('See the docblock in scripts/procgen/sphere-step.js');
-                process.exit(0);
-                break;
-            default: throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { subcommand: true, metaUrl: import.meta.url, configDoc });
     // Default item pool for world-building subcommands. `append` reads --items
     // as the NEW sphere's content, so an empty list there means "just relocate
     // the goal" — don't inject a default pool.
@@ -200,10 +210,14 @@ function parseArgs(argv) {
 function buildConfig(args) {
     const selectedSubs = new Set(Object.keys(args.quotas));
     if (args.start) selectedSubs.add(args.start);
-    const itemLib = mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs);
-    const victory = resolveVictoryItem({
-        explicit: args.victory, itemPool: args.items, itemLib, selectedIds: selectedSubs,
+    // One goal item (`Victory`): the pool's victory items fold into it, and the
+    // library gains its row.
+    const goal = resolveSphereGoal({
+        explicit: args.victory, itemPool: args.items,
+        itemLib: mergeSubstrateItemLib(DEFAULT_ITEMS, selectedSubs), selectedIds: selectedSubs,
     });
+    const { itemLib } = goal;
+    const victory = goal.goalItem;
 
     // Substrate params: merged defaultProcgenParams overlaid with explicit CLI
     // flags (and --param). The bounce hooks read the bounce*-prefixed keys.
@@ -216,14 +230,14 @@ function buildConfig(args) {
     // bounceFreeArrow regionParam) + the full braid regionParams. --no-arrow-
     // entry skips ONLY the prep; regionParams still carry the braid layout.
     const activeIds = activeSubstrateIds(args.quotas, args.start);
-    const itemPool = { ...args.items };
+    const itemPool = { ...goal.itemPool };
     const prep = args.arrowEntry
         ? collectSphereGrowthPrep({
             activeIds, itemPool, quotas: args.quotas,
             startSubstrate: args.start, seed: args.seed, params,
         })
         : {
-            startingItems: [], lockedCanonicalItems: [],
+            startingItems: [], pinnedCanonicalItems: [],
             exclusiveSpheres: {}, regionParams: {}, note: '',
         };
     const regionParams = assembleRegionParams({
@@ -246,9 +260,10 @@ function buildConfig(args) {
         victoryItem: victory,
         exclusiveSpheres: prep.exclusiveSpheres,
         startingItems: prep.startingItems,
-        lockedCanonicalItems: prep.lockedCanonicalItems,
+        pinnedCanonicalItems: prep.pinnedCanonicalItems,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
+        ...discoveryModeConfig(args.discoveryMode),
         spheresPerBatch: args.spheresPerBatch,
         itemPool,
     };
@@ -256,8 +271,8 @@ function buildConfig(args) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -270,41 +285,115 @@ function writeOut(path, obj, fallbackName) {
     return abs;
 }
 
+// Recorded layout edits (layoutEdits.js) replay after the step each one
+// addresses. Say so — and name the ones this run's START POINT is already past,
+// because those will NOT fire (the step that replays them is not going to run).
+// Re-run with --from <stage> to apply them.
+function announceEdits(env, firstStep, log = (m) => process.stderr.write(m)) {
+    if (!env.edits?.length) return;
+    log(`[sphere-step] ${env.edits.length} recorded edit`
+        + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
+    for (const e of sphereEditsBehind(env, firstStep)) {
+        log(`[sphere-step] \u26a0 '${e.op}' is staged before ${firstStep}`
+            + ' — NOT replayed on this run (re-run with --from <its stage>)\n');
+    }
+}
+
+/**
+ * The `run` subcommand's body: run `env` to `args.to` (default compile), from
+ * `args.from` or, without it, from the first step whose output is missing.
+ */
+async function runToEnd(env, args, { log, onProgress }) {
+    const to = args.to ?? 'compile';
+    if (args.from) {
+        // Explicit override: resume from the named step.
+        announceEdits(env, args.from, log);
+        env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
+        await runToStep(env, to, { onProgress });
+    } else {
+        // Auto-detect the resume point from which step outputs are
+        // present (parity with the panel's Load-envelope behavior) —
+        // a partial / hand-edited envelope resumes from the first step
+        // whose output is missing. presence = keep, absence = recompute.
+        const at = detectCompleted(env) + 1;
+        if (at < SPHERE_STEPS.length) {
+            log(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
+        }
+        announceEdits(env, SPHERE_STEPS[Math.min(at, SPHERE_STEPS.length - 1)], log);
+        await resumeEnvelope(env, to, { onProgress });
+    }
+}
+
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config of a `run`; for `runPipeline`. */
+export const resolveConfig = (doc) => ({ ...parseArgs([], { configDoc: doc }), subcommand: 'run' });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'sphere', tool: 'sphere-step', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * `run`, in-process: a new envelope from the parsed config (or `envelope`, a
+ * serialized one to resume), run to `config.to` (default compile). Writes
+ * nothing; the substrate libraries must already be loaded.
+ * @returns {Promise<{envelope: object, rulesJson: object|null, oracleErrors: string[], summary: object}>}
+ */
+export async function build(config, { envelope = null, log = () => {}, onProgress = null } = {}) {
+    const env = envelope ? deserializeEnvelope(structuredClone(envelope)) : newEnvelope(buildConfig(config));
+    await runToEnd(env, config, { log, onProgress });
+    const rulesJson = env.compile?.rulesJson ?? null;
+    return {
+        envelope: serializeEnvelope(env),
+        rulesJson,
+        oracleErrors: env.compile?.oracleErrors ?? [],
+        summary: {
+            seed: env.config?.seed ?? null,
+            completed: SPHERE_STEPS[env.completed] ?? null,
+            driver: rulesJson?.procgen_metadata?.['1']?.driver ?? null,
+            regions: rulesJson ? Object.keys(rulesJson.regions?.['1'] ?? {}).length : null,
+        },
+    };
+}
+
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
     const sub = args.subcommand;
-    if (!sub) throw new Error('missing subcommand (one of: '
+    status.subcommand = sub;
+    if (!sub) throw new UsageError('missing subcommand (one of: '
         + `${SPHERE_STEPS.join(', ')}, run, append)`);
 
     const isStep = SPHERE_STEPS.includes(sub);
     if (!isStep && sub !== 'run' && sub !== 'append') {
-        throw new Error(`unknown subcommand '${sub}'`);
+        throw new UsageError(`unknown subcommand '${sub}'`);
     }
+    await loadPipelineSubstrates();
+    checkSubstrateIds(args, SUBSTRATE_CHECK);
 
     // Load or create the envelope. `append` accepts EITHER a saved envelope or a
     // bare finished rules.json (reconstructed via its embedded sphere_tree —
     // procedural substrates only; zone substrates must use a saved envelope).
     let env;
     if (sub === 'append') {
-        if (!args.input) throw new Error('append requires -i <rules.json | envelope.json>');
-        const raw = readJson(args.input);
-        env = raw.procgen_metadata
+        if (!args.input) throw new UsageError('append requires -i <rules.json | envelope.json>');
+        const raw = readJson(args.input, '-i');
+        env = raw.procgen_metadata?.['1']
             ? rebuildEnvelopeFromRulesJson(raw, {
                 ...(Object.keys(args.quotas).length ? { substrateQuotas: args.quotas } : {}),
                 maxItemsPerRegion: args.maxItemsPerRegion,
             })
             : deserializeEnvelope(raw);
     } else if (args.input) {
-        env = deserializeEnvelope(readJson(args.input));
+        env = deserializeEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'plan' || sub === 'run') {
         env = newEnvelope(buildConfig(args));
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
     }
     // --params overrides the carried config knobs.
-    if (args.params) Object.assign(env.config, readJson(args.params));
+    if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile, '--params'));
 
     const onProgress = (ev) => {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
@@ -324,28 +413,17 @@ async function main() {
             seed: args.seed,
         }, { onProgress });
     } else if (sub === 'run') {
-        const to = args.to ?? 'compile';
-        if (args.from) {
-            // Explicit override: resume from the named step.
-            env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
-            await runToStep(env, to, { onProgress });
-        } else {
-            // Auto-detect the resume point from which step outputs are
-            // present (parity with the panel's Load-envelope behavior) —
-            // a partial / hand-edited envelope resumes from the first step
-            // whose output is missing. presence = keep, absence = recompute.
-            const at = detectCompleted(env) + 1;
-            if (at < SPHERE_STEPS.length) {
-                process.stderr.write(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
-            }
-            await resumeEnvelope(env, to, { onProgress });
-        }
+        await runToEnd(env, args, { log: (m) => process.stderr.write(m), onProgress });
     } else {
         await runStep(sub, env, { onProgress });
     }
 
     const outPath = writeOut(args.out, serializeEnvelope(env), sub);
     process.stderr.write(`[sphere-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+    status.outputs.envelope = outPath;
+    status.completed = SPHERE_STEPS[env.completed] ?? null;
+    status.next = nextSphereStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
 
     // Sphere-major hint: when batch < all the pipeline LOOPS the middle four
     // phases per batch, so after ③ the next per-step invocation is ②a again
@@ -371,19 +449,19 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[sphere-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.oracle = { checked: true, errors: oracleErrors };
         if (oracleErrors.length > 0) {
+            // ⛓ exit 2 (oracle mismatch), set by runCli from status.oracle.errors.
             process.stderr.write('SPHERE ORACLE FAILED:\n');
             for (const e of oracleErrors) process.stderr.write(`  ${e}\n`);
-            process.exit(1);
+            return;
         }
         process.stderr.write('[sphere-step] oracle OK\n');
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('sphere-step', import.meta.url, main);

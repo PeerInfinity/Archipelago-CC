@@ -1,0 +1,48 @@
+import sys
+p = '/tmp/claude-0/c4b/lab/frontend/modules/seedlingDemo/solverBot.js'
+s = open(p).read()
+anchor = """            removable = [...admitted, ...removable.filter((b) => !ids.has(b.id))];
+        }
+        // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
+"""
+assert s.count(anchor) == 1
+lab = """            removable = [...admitted, ...removable.filter((b) => !ids.has(b.id))];
+        }
+        // ⛓ C4B LAB (scratch) — the census and three append arms.
+        {
+            const env = globalThis.process?.env ?? {};
+            const C4B = env.C4B_MODE ?? '';
+            const before = removable.map((b) => b.id);
+            let headProbe = null;
+            if (removable.length > 0 && (globalThis.__C4B || C4B === 'probe')) {
+                const c = removable[0];
+                try {
+                    const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
+                    const opts = solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without });
+                    const wps = planWaypoints(run.world, run.state, aim, allowTeleporter, opts);
+                    const h = probeCorridor(wps, new Set([c.id]));
+                    headProbe = h ? { hit: true, at: [+h.x.toFixed(1), +h.y.toFixed(1)], eta: h.eta,
+                        sources: h.sources.map((x) => ({ kind: x.kind, id: x.id })) } : { hit: false, wps: wps.length };
+                } catch (e) { headProbe = { threw: String(e.message).slice(0, 300) }; }
+            }
+            const chasers = run.entities('chasers') ?? [];
+            const have = new Set(removable.map((b) => b.id));
+            if (C4B === 'append') {
+                // C4's C4_APPEND, verbatim (its lab placed it before the C1 block; after it here, same for a non-empty list)
+                for (const c of chasers) if (hit.sources.some((sx) => sx.id === c.id) && !have.has(c.id)) removable.push({ ...c, stepped: true, c4: 'appended' });
+            } else if (C4B === 'probe' && removable.length > 0 && headProbe?.hit) {
+                for (const sx of headProbe.sources) {
+                    const c = chasers.find((b) => b.id === sx.id);
+                    if (c && !have.has(c.id)) { removable.push({ ...c, stepped: true, c4: 'probed' }); have.add(c.id); }
+                }
+            }
+            if (globalThis.__C4B) globalThis.__C4B({ at: 'climb', t: perTick.length, level: run.level, what, aim: { x: aim.x, y: aim.y },
+                hit: { at: hit.at ?? [hit.x, hit.y], sources: hit.sources.map((x) => `${x.kind}:${x.id}`) },
+                chooser: before, headProbe, removable: removable.map((b) => b.id),
+                hunted: interceptOrder(removable, hit)[0]?.id ?? null });
+        }
+        // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
+"""
+s = s.replace(anchor, lab)
+open(p, 'w').write(s)
+print('patched')

@@ -1,3 +1,0 @@
-# Overcooked! 2 WorldGen
-
-Generated world package.

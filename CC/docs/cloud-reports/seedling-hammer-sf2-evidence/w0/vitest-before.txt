@@ -1,0 +1,60 @@
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 17064ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands  643ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time  12831ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time  3495ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 27614ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail  3594ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end  15301ms
+     ✓ ⛓⛓⛓ the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick  525ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end  8125ms
+ ✓ frontend/modules/seedlingDemo/hammerPressBombs.test.js (8 tests) 9087ms
+     ✓ t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184)  2898ms
+     ✓ t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast  2206ms
+     ✓ OFF asks nothing (the instrument stays at zero)  1321ms
+     ✓ the model replays the witness tape and meets the game at every sampled tick: the player to the bit, no hit, every Bomb to the bit  928ms
+     ✓ staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's  1726ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js (7 tests) 7261ms
+     ✓ OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE)  2602ms
+     ✓ ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape  1992ms
+     ✓ ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte  2512ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostWall.test.js (6 tests) 546ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (10 tests) 13ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests) 12673ms
+     ✓ OFF writes nothing to the instrument  3920ms
+     ✓ at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised  6344ms
+     ✓ t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)  2403ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 9958ms
+     ✓ the SWORD's certificate is the same ON and OFF  6747ms
+     ✓ ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner  2745ms
+     ✓ reads the row only for its probe and row margins: the ghost's approach at t0 is the same ON and OFF  457ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 103ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (13 tests) 155821ms
+     ✓ t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick  4028ms
+     ✓ t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)  4363ms
+     ✓ ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts  1300ms
+     ✓ ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key  146101ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.test.js (6 tests) 279179ms
+     ✓ OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE)  1677ms
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key  277481ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js > solve progress — observation only, off unless subscribed > at most one post a second of the solve (1000 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work
+AssertionError: expected 2 to be less than or equal to 1
+ ❯ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js:163:33
+    161|             const span = mine[resultAt].at - started.at;
+    162|             const live = posts.filter((g) => !g.msg.final);
+    163|             expect(live.length).toBeLessThanOrEqual(Math.floor(span / …
+       |                                 ^
+    164|             expect(posts.filter((g) => g.msg.final)).toHaveLength(1);
+    165|             expect(mine[resultAt - 1].msg).toMatchObject({ type: SOLVE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 20 passed (21)
+      Tests  1 failed | 412 passed (413)
+   Start at  16:27:05
+   Duration  454.46s (transform 12.95s, setup 0ms, import 48.36s, tests 872.72s, environment 7ms)
+
+rc=1

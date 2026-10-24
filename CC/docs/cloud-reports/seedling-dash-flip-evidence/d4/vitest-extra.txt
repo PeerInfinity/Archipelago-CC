@@ -1,0 +1,10 @@
+448 / 448 passed, failed 0, skipped 0, 9 files
+12/12 scripts/procgen/producerSegments.test.js
+37/37 scripts/procgen/rerecordCampaign.test.js
+9/9 frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js
+44/44 frontend/modules/seedlingDemo/iceTurret.test.js
+22/22 frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js
+130/130 frontend/modules/seedlingDemo/levelRun.test.js
+13/13 frontend/modules/seedlingDemo/procgenPostSword.test.js
+94/94 frontend/modules/seedlingDemo/r8Acceptance.test.js
+87/87 frontend/modules/seedlingDemo/watchOverlays.test.js

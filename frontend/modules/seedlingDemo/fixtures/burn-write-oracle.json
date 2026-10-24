@@ -1,0 +1,42 @@
+{
+  "source": "probe-seedling-burn-write.mjs --record (seedling fidelity BURN)",
+  "build": "seedling_bot_ap_p4f",
+  "tapes": [
+    {
+      "tape": "burn-l24-reach-exit",
+      "tree": "burnabletree@32,128",
+      "level": 24,
+      "tag": 0,
+      "burnedAt": 64,
+      "goneAt": 105,
+      "before": {
+        "ticks": 105,
+        "cleared": false,
+        "error": ""
+      },
+      "write": {
+        "ticks": 106,
+        "cleared": true,
+        "error": ""
+      }
+    },
+    {
+      "tape": "burn-l44-reach-exit",
+      "tree": "burnabletree@48,64",
+      "level": 44,
+      "tag": 0,
+      "burnedAt": 46,
+      "goneAt": 87,
+      "before": {
+        "ticks": 87,
+        "cleared": false,
+        "error": ""
+      },
+      "write": {
+        "ticks": 88,
+        "cleared": true,
+        "error": ""
+      }
+    }
+  ]
+}

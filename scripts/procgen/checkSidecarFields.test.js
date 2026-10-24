@@ -1,0 +1,196 @@
+/**
+ * checkSidecarFields — **THE GATE'S OWN ROWS** (PRESET SIDECARS slice D0).
+ *
+ * ⛓ The PREDICATE is pinned next door (`procgenCore/sidecarFields.test.js`)
+ * and the real declarations in `sidecarFieldsRegistry.test.js`: this file is
+ * about what only the script has — which documents it reads (TRACKED ones, and
+ * untracked ones only under `--fixtures`), what its FAIL line names, and what
+ * it exits with.
+ *
+ * ⛔ EVERY ROW RUNS AGAINST A TEMP GIT TREE, never against `frontend/presets/`:
+ * the corpus's real answer is a MEASUREMENT the slice takes by running the
+ * gate, and CI's checkout carries a different population from a working tree
+ * with untracked fixture presets. The entry each row plants is a REAL committed
+ * one (the multiworld document's first maze region), so the pass row is about
+ * the plumbing and not about a payload this file chose to fit.
+ *
+ * ⛓ PRESET SIDECARS V0 — the gate grew a SECOND layer (`sidecarIssues`, the
+ * hub's validity report), which holds each entry to its DOCUMENT as well: so a
+ * planted document carries the entry's REGION too (without it the report says,
+ * correctly, that nothing reaches the entry). The region is a committed one with
+ * a location, picked by that law, so the location rows below have one to break.
+ */
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const GATE = join(HERE, 'check-sidecar-fields.mjs');
+const REAL = JSON.parse(readFileSync(join(HERE, '..', '..', 'frontend', 'presets', 'multiworld',
+    'AP_05594871498841892311', 'AP_05594871498841892311_P1_rules.json'), 'utf8'));
+const [REGION, ENTRY] = Object.entries(REAL.preset_sidecars['1'])
+    .find(([r]) => (REAL.regions['1'][r]?.locations ?? []).length > 0);
+const DOC_REGION = REAL.regions['1'][REGION];
+
+describe('check-sidecar-fields — the corpus gate', () => {
+    let root;
+    const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' });
+
+    beforeEach(() => {
+        root = mkdtempSync(join(tmpdir(), 'd0-sidecar-fields-'));
+        git('init', '-q');
+    });
+    afterEach(() => {
+        rmSync(root, { recursive: true, force: true });
+    });
+
+    /** ⛓ Write a one-entry document at `frontend/presets/<preset>/AP_1/AP_1_rules.json`. */
+    const write = (preset, entry, { track = true, region = DOC_REGION } = {}) => {
+        const rel = join('frontend', 'presets', preset, 'AP_1', 'AP_1_rules.json');
+        mkdirSync(dirname(join(root, rel)), { recursive: true });
+        writeFileSync(join(root, rel), JSON.stringify({
+            regions: { 1: { [REGION]: region } },
+            preset_sidecars: { 1: { [REGION]: entry } },
+        }));
+        if (track) git('add', rel);
+        return rel;
+    };
+
+    /** ⛓ Output AND exit code — an exit code without a summary is not a verdict. */
+    const run = (...flags) => {
+        try {
+            return { code: 0, out: execFileSync('node', [GATE, `--tree=${root}`, ...flags], { encoding: 'utf8' }) };
+        } catch (err) {
+            return { code: err.status, out: `${err.stdout ?? ''}${err.stderr ?? ''}` };
+        }
+    };
+
+    it('a tracked committed entry passes, and the headline derives its counts', () => {
+        expect(ENTRY.substrate).toBe('maze');
+        write('alpha', ENTRY);
+        const { code, out } = run();
+        expect(out).toContain('documents read   1 (1 with sidecars)');
+        expect(out).toContain('ALL PASS — 1 entries over 1 substrates');
+        expect(out).toContain('0 issue(s), 0 warning(s), 0 not-checked notice(s)');
+        expect(code).toBe(0);
+    });
+
+    it('⛔ an UNDECLARED key FAILs, and the line names file, slot, region, field and cause', () => {
+        const rel = write('beta', { ...ENTRY, playable_payload: { ...ENTRY.playable_payload, surprise: 1 } });
+        const { code, out } = run();
+        expect(out).toContain(`FAIL  ${rel}  slot 1  region ${JSON.stringify(REGION)}  field surprise  `
+            + 'UNDECLARED_FIELD');
+        expect(out).not.toContain('ALL PASS');
+        expect(code).toBe(1);
+    });
+
+    it('an UNTRACKED document is out of scope — until `--fixtures` asks for it', () => {
+        write('alpha', ENTRY);
+        write('gamma', { ...ENTRY, playable_payload: { ...ENTRY.playable_payload, surprise: 1 } },
+            { track: false });
+        const plain = run();
+        expect(plain.out).toContain('documents read   1 ');
+        expect(plain.code).toBe(0);
+        const fixtures = run('--fixtures');
+        expect(fixtures.out).toContain('documents read   2 ');
+        expect(fixtures.out).toContain('field surprise  UNDECLARED_FIELD');
+        expect(fixtures.code).toBe(1);
+    });
+
+    it('a substrate nobody registered is UNREGISTERED — never a skipped entry', () => {
+        write('delta', { ...ENTRY, substrate: 'no_such_substrate' });
+        const { code, out } = run();
+        expect(out).toContain('UNREGISTERED');
+        expect(code).toBe(1);
+    });
+
+    /* ── V0: the second layer ── */
+
+    it('⛓⛓ an issue ONLY the second layer can see FAILs: a document that lost a location the '
+        + 'payload still carries (the first layer passes it — the payload is untouched)', () => {
+        const lost = DOC_REGION.locations[0].name;
+        write('epsilon', ENTRY, { region: { ...DOC_REGION, locations: DOC_REGION.locations.slice(1) } });
+        const { code, out } = run();
+        expect(out).not.toContain('  FAIL  ');
+        expect(out).toContain('ISSUE');
+        expect(out).toContain('LOCATION_UNKNOWN');
+        expect(out).toContain(lost);
+        expect(out).toContain('1 issue(s)');
+        expect(code).toBe(1);
+    });
+
+    it('a WARNING prints and does not fail: a document exit the payload no longer carries', () => {
+        const [dropped, ...kept] = ENTRY.playable_payload.exits;
+        write('zeta', { ...ENTRY, playable_payload: { ...ENTRY.playable_payload, exits: kept } });
+        const { code, out } = run();
+        expect(out).toContain('WARN');
+        expect(out).toContain('EXIT_NOT_CARRIED');
+        expect(out).toContain(dropped.exitName);
+        expect(out).toContain('ALL PASS');
+        expect(out).toContain('0 issue(s), 1 warning(s)');
+        expect(code).toBe(0);
+    });
+
+    /* ── G2b-1: the third layer — rule agreement ── */
+
+    /**
+     * ⛓ The gated text-adventure fixture (plan §24.7), planted WHOLE, and its
+     * first sidecar region whose round trip is AUTHORED with a gated exit plus
+     * a sibling exit ruled differently — picked by that law off the document,
+     * never by a typed region or exit name.
+     */
+    const GATED = JSON.parse(readFileSync(join(HERE, '..', '..', 'frontend', 'presets', 'procgen_topdown',
+        'AP_11', 'AP_11_rules.json'), 'utf8'));
+    const writeDoc = (preset, doc) => {
+        const rel = join('frontend', 'presets', preset, 'AP_1', 'AP_1_rules.json');
+        mkdirSync(dirname(join(root, rel)), { recursive: true });
+        writeFileSync(join(root, rel), JSON.stringify(doc));
+        git('add', rel);
+    };
+    const gatedPick = (doc) => {
+        for (const [slot, regions] of Object.entries(doc.preset_sidecars)) {
+            for (const [name, entry] of Object.entries(regions)) {
+                if (entry.substrate !== 'text_adventure') continue;
+                const exits = doc.regions[slot][name].exits ?? [];
+                const i = exits.findIndex((e) => e.access_rule?.rule !== 'True_');
+                const j = exits.findIndex((e, k) => k !== i
+                    && JSON.stringify(e.access_rule) !== JSON.stringify(exits[i]?.access_rule));
+                if (i >= 0 && j >= 0) return { slot, name, i, j };
+            }
+        }
+        return null;
+    };
+
+    it('⛓⛓ a committed gated document passes the third layer, and prints one RULES line per substrate', () => {
+        writeDoc('eta', GATED);
+        const { code, out } = run();
+        expect(out).toMatch(/RULES {2}text_adventure {2}AUTHORED {2}\d+ region\(s\) · [1-9]\d* gated · (\d+)\/\1 endpoint\(s\) agree/);
+        expect(out).toContain('rule agreement   0 FAIL(S)');
+        expect(out).toContain('ALL PASS');
+        expect(code).toBe(0);
+    });
+
+    it('⛓⛓⛓ a document rule the AUTHORED payload never saw FAILs, naming the endpoint and BOTH rules', () => {
+        const doc = JSON.parse(JSON.stringify(GATED));
+        const pick = gatedPick(doc);
+        expect(pick, 'premise: a text-adventure region with a gated exit and a differently-ruled sibling').not.toBe(null);
+        const exits = doc.regions[pick.slot][pick.name].exits;
+        const was = exits[pick.i].access_rule;
+        exits[pick.i].access_rule = exits[pick.j].access_rule;
+        writeDoc('theta', doc);
+        const { code, out } = run();
+        const line = out.split('\n').find((l) => l.includes('rule-agreement —'));
+        expect(line).toBeTruthy();
+        expect(line).toContain(`region ${JSON.stringify(pick.name)}`);
+        expect(line).toContain(`exit "${exits[pick.i].name}"`);
+        expect(line).toContain(`the document says ${JSON.stringify(exits[pick.j].access_rule)}`);
+        expect(line).toContain(`the payload re-emits ${JSON.stringify(was)}`);
+        expect(out).toContain('rule agreement   1 FAIL(S)');
+        expect(out).not.toContain('ALL PASS');
+        expect(code).toBe(1);
+    });
+});

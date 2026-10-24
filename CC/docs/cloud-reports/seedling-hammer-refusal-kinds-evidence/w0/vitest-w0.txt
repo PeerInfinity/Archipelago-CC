@@ -1,0 +1,114 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/flashPanel/seedlingSolveProgressView.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 11981[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 4230[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 3217[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: at 100 ms and at 1000 ms: the REQUEST, the plan, the digest and the shouldStop total are identical; only the envelope's rate differs [33m 2922[2mms[22m[39m
+     [33m[2m✓[22m[39m at most one post per the envelope's interval (default 100 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work [33m 1599[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 25730[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared [33m 744[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8 with its clears UNDECLARED solves on the run's own sandtrap deaths (F4) [33m 371[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more [33m 607[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ F4: undeclared, L8 derives NO second shove — the walk pushes the block once the sandtrap is gone [33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the two flag states spend the SAME keys — only a PLAN dashes [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ a PLAN presses INSIDE the swing window; neither flag state alone can [33m 473[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓⛓ R9 slice 12c‴: the KEYS no longer part at all — 207 → the whole stand refused, 79 → the whole stand dashing — and the BOUND is what the BODIES still measure [33m 333[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 1920[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 2827[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 1921[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 4578[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ⚖ ruling 45(a): a covered body is MODELLED, not refused — no `would-hit` row survives in a room with no boss-class shake writer [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned [33m 658[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 992[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 1766[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 862[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 1028[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 1537[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way [33m 365[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingSolveProgress.test.js [2m([22m[2m20 tests[22m[2m)[22m[32m 256[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressTap.test.js [2m([22m[2m34 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.test.js [2m([22m[2m21 tests[22m[2m)[22m[33m 75052[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ DK: one window adds at most 48.8 px (derived), and a clean run's floor is its ticks less that ground at its own rate [33m 402[2mms[22m[39m
+     [33m[2m✓[22m[39m the boundary corridors measure leg 1 a clean run at floor 195 and at floor 196 [33m 587[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned [33m 1073[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, sweep request 392:0 solved whole ships the same ticks for less work [33m 62328[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF [33m 752[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585) [33m 9225[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgress.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 54917[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 29148[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 540[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count [33m 13668[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall [33m 9359[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises [33m 1435[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscape.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 22097[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing [33m 14379[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing [33m 6473[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFightFallback.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 96799[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte [33m 6407[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's [33m 37989[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence [33m 1263[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing [33m 9229[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ inert while the fight itself is on (the retry would be the same path) [33m 28044[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged [33m 3490[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged [33m 10274[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSpinner.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 16309[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press) [33m 1073[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press [33m 476[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach [33m 3357[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves the SWORD's solve byte-identical (the committed staging, 518 ticks) [33m 10611[2mms[22m[39m
+ [32m✓[39m scripts/procgen/lintGateLabels.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 210[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFight.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 26840[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail [33m 3708[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end [33m 14619[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end [33m 8310[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerApproach.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 16308[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands [33m 531[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time [33m 10265[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time [33m 5324[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 15849[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE) [33m 2479[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape [33m 1849[2mms[22m[39m
+     [33m[2m✓[22m[39m ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte [33m 2620[2mms[22m[39m
+     [33m[2m✓[22m[39m (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike [33m 5610[2mms[22m[39m
+     [33m[2m✓[22m[39m (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves [33m 3178[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressBombs.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 6472[2mms[22m[39m
+     [33m[2m✓[22m[39m t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184) [33m 1672[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast [33m 1842[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF asks nothing (the instrument stays at zero) [33m 1238[2mms[22m[39m
+     [33m[2m✓[22m[39m the model replays the witness tape and meets the game at every sampled tick: the player to the bit, no hit, every Bomb to the bit [33m 378[2mms[22m[39m
+     [33m[2m✓[22m[39m staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's [33m 1333[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 106084[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 36716[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 68074[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs [33m 1015[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostWall.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 436[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerRefugeCut.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 9604[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF writes nothing to the instrument [33m 2641[2mms[22m[39m
+     [33m[2m✓[22m[39m at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised [33m 5102[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168) [33m 1850[2mms[22m[39m
+ [32m✓[39m frontend/modules/flashPanel/seedlingSolveProgressModes.test.js [2m([22m[2m1 test[22m[2m)[22m[33m 2258[2mms[22m[39m
+     [33m[2m✓[22m[39m off / auto / always: the REQUEST is byte-identical (the ask rides the envelope), and so is the plan; auto shows then hides, always stays shown [33m 2256[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSearch.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 8599[2mms[22m[39m
+     [33m[2m✓[22m[39m the SWORD's certificate is the same ON and OFF [33m 5629[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner [33m 2626[2mms[22m[39m
+     [33m[2m✓[22m[39m reads the row only for its probe and row margins: the ghost's approach at t0 is the same ON and OFF [33m 338[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBotLethalPit.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 192061[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 2890[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 3924[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 4712[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 6414[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 1180[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key [33m 172922[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 404742[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 1591[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key [33m 403131[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m23 passed[39m[22m[90m (23)[39m
+[2m      Tests [22m [1m[32m353 passed[39m[22m[90m (353)[39m
+[2m   Start at [22m 03:21:08
+[2m   Duration [22m 606.36s[2m (transform 8.15s, setup 0ms, import 43.75s, tests 1092.76s, environment 4ms)[22m
+
+rc=0

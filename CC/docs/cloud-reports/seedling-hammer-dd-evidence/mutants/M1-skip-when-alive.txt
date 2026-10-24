@@ -1,0 +1,3 @@
+     × ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte 178084ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 6 passed (7)

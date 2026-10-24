@@ -146,10 +146,10 @@ class PatternDetectionMixin(BaseVisitorMixin):
         # Check if we've reached the world player subscript (state.multiworld.worlds[player])
         if self._is_world_player_subscript(current):
             # Handle .options.<setting> pattern:
-            # - ['options', 'setting_name'] -> 'setting_name' (converted to setting_value)
+            # - ['options', 'setting_name'] -> 'setting_name' (converted to option_value)
             #
             # Direct world attributes like hat_yarn_costs, hat_craft_order should NOT be
-            # converted to setting_value. These are exported in game_info and should be
+            # converted to option_value. These are exported in game_info and should be
             # accessed as world.attr_name, which the frontend resolves from game_info.
             if attrs[0] == 'options' and len(attrs) >= 2:
                 # Do NOT match if pattern ends with .value - let closure_vars resolve it
@@ -175,7 +175,7 @@ class PatternDetectionMixin(BaseVisitorMixin):
                             return mapping_value.get('setting', attr_name)
                         else:
                             return mapping_value
-                # Direct world attributes not in mapping - do NOT convert to setting_value
+                # Direct world attributes not in mapping - do NOT convert to option_value
                 # Let normal attribute handling create {type: 'attribute', object: world, attr: ...}
                 return None
 
@@ -188,7 +188,7 @@ class PatternDetectionMixin(BaseVisitorMixin):
         # IMPORTANT: Do NOT match if the pattern ends with '.value'
         # e.g., self.world.options.LuckyEmblemsRequired.value should NOT match
         # because the .value accessor should be resolved via closure_vars to get
-        # the actual integer value, not create a setting_value lookup.
+        # the actual integer value, not create an option_value lookup.
         if isinstance(current, ast.Name) and current.id == 'self':
             # Check for self.world.options.<setting> pattern
             if len(attrs) >= 3 and attrs[0] == 'world' and attrs[1] == 'options':

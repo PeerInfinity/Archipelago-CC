@@ -1,0 +1,5 @@
+{"name":"l0-4-plug","levels":[0,1],
+ "tape":{"boot":{"level":0,"x":104,"y":128},"tick_count":200,"inputs":[{"key":"up","from":0,"to":30},{"key":"left","from":30,"to":60},{"key":"up","from":60,"to":200}]},
+ "arms":[{"name":"vanilla"},
+  {"name":"move-80-128","ops":[{"op":"move","level":0,"type":"breakablerock","x":80,"y":112,"to":{"x":80,"y":128}}]},
+  {"name":"move-80-128-plug-96-112","ops":[{"op":"move","level":0,"type":"breakablerock","x":80,"y":112,"to":{"x":80,"y":128}},{"op":"add","level":0,"add":{"type":"rock","x":96,"y":112}}]}]}

@@ -1,0 +1,20 @@
+DK D1 — every corridor K40 refuses in the 617, re-solved with NO budget (window 0, pre-check OFF): whether ANY candidate certified
+735:0 level ? L=358 planned=False certified=0 previews=2340 best-candidate-longest-leg=76 solve 16 s shipped={'pass': 'dashless', 'ticks': 585}
+725:0 level ? L=384 planned=False certified=0 previews=2300 best-candidate-longest-leg=335 solve 19 s shipped={'pass': 'dashless', 'ticks': 575}
+726:0 level ? L=384 planned=False certified=0 previews=2296 best-candidate-longest-leg=335 solve 20 s shipped={'pass': 'dashless', 'ticks': 574}
+736:0 level ? L=382 planned=False certified=0 previews=2264 best-candidate-longest-leg=76 solve 18 s shipped={'pass': 'dashless', 'ticks': 566}
+392:0 level ? L=261 planned=False certified=0 previews=2960 best-candidate-longest-leg=221 solve 256 s shipped={'pass': 'dashless', 'ticks': 828}
+384:0 level ? L=261 planned=False certified=0 previews=3084 best-candidate-longest-leg=221 solve 293 s shipped={'pass': 'dashless', 'ticks': 861}
+396:0 level 40 L=261 planned=False certified=0 previews=1976 best-candidate-longest-leg=221 solve 98 s shipped={'pass': 'dashless', 'ticks': 494}
+394:0 level 40 L=261 planned=False certified=0 previews=2892 best-candidate-longest-leg=221 solve 312 s shipped={'pass': 'dashless', 'ticks': 809}
+385:0 level 40 L=261 planned=False certified=0 previews=3284 best-candidate-longest-leg=221 solve 314 s shipped={'pass': 'dashless', 'ticks': 913}
+386:0 level 40 L=261 planned=False certified=0 previews=3756 best-candidate-longest-leg=221 solve 383 s shipped={'pass': 'dashless', 'ticks': 1025}
+387:0 level 40 L=261 planned=False certified=0 previews=3980 best-candidate-longest-leg=221 solve 500 s shipped={'pass': 'dashless', 'ticks': 1087}
+478:0 level 52 L=381 planned=False certified=0 previews=1524 best-candidate-longest-leg=381 solve 7 s shipped={'pass': 'dashless', 'ticks': 381}
+488:0 level 52 L=381 planned=False certified=0 previews=1524 best-candidate-longest-leg=381 solve 9 s shipped={'pass': 'dashless', 'ticks': 381}
+730:0 level 95 L=392 planned=False certified=0 previews=2380 best-candidate-longest-leg=338 solve 19 s shipped={'pass': 'dashless', 'ticks': 595}
+388:0 level 40 L=261 planned=False certified=0 previews=3024 best-candidate-longest-leg=221 solve 350 s shipped={'pass': 'dashless', 'ticks': 844}
+740:0 level 95 L=386 planned=False certified=0 previews=2300 best-candidate-longest-leg=339 solve 26 s shipped={'pass': 'dashless', 'ticks': 575}
+729:0 level 95 L=392 planned=False certified=0 previews=2380 best-candidate-longest-leg=338 solve 25 s shipped={'pass': 'dashless', 'ticks': 595}
+486:0 level 52 L=289 planned=False certified=0 previews=1716 best-candidate-longest-leg=284 solve 14 s shipped={'pass': 'dashless', 'ticks': 429}
+739:0 level 95 L=362 planned=False certified=0 previews=2392 best-candidate-longest-leg=320 solve 32 s shipped={'pass': 'dashless', 'ticks': 598}

@@ -751,6 +751,10 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "is_canonical": true
+  "is_vanilla": {
+    "1": true
+  },
+  "is_canonical": {
+    "1": true
+  }
 }

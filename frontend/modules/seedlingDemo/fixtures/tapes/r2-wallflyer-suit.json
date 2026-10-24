@@ -1,0 +1,43 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 80,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasDarkSuit": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [],
+    "name": "r2-wallflyer-suit",
+    "description": "R2-swim D1: `r2-wallflyer-contact` with the DARK SUIT through the seam. The t 8 contact retaliates `e.hit(1, p, 1, \"Suit\")` into `wallflyer@48,112` (hits 1, i-frame 30), whose `knockback` override REVERSES it; it re-launches east off its own rock on t 12.",
+    "note": ""
+}

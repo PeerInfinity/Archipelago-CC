@@ -1,0 +1,413 @@
+/**
+ * ⛓ VANILLA MAP — the Playback Bot's name → cell map for the VANILLA randomizer arm
+ * (`seedling_playthrough`; walk plan §5.16).
+ *
+ * ⛔ THE FIXTURE IS THE PRODUCTION LOAD: `loadSeedlingRandomizer` over the shipped rules, the shipped
+ * map document and record set, driven in node with an injected importer (the
+ * `seedlingRandomizerWiring.test.js` arrangement). Every count below is read off that load or the rules —
+ * none is typed — so a moved ledger row, a new sidecar or a new link is followed, not pinned.
+ */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import {
+    atlasEventGoal,
+    BOSS_REPORT_REFUSAL,
+    BOUND_BOSS_FIGHTS,
+    ENCOUNTER_REFUSAL,
+    EVENT_GOAL_REFUSAL,
+    runtimeEventsOf,
+    SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+    SeedlingPlaybackController,
+    realRoomLinks,
+    realRoomPlaybackMap,
+    resolveSeedlingAtlasGoal,
+    vanillaArmPlaybackMap,
+} from './seedlingPlaybackController.js';
+import { loadSeedlingRandomizer } from './seedlingRandomizerWiring.js';
+import { ATLAS_CHECK_PLAYER, ATLAS_ROOM_SUBSTRATE_ID } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+import { AP_ITEM_TYPE } from '../seedlingDemo/apPlacementRewriter.js';
+import { R7_GOAL_LEDGER } from '../seedlingDemo/r7Acceptance.js';
+import { loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { CONTACT_FIDELITY, withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { clearTagVerbOf, solverGoalFor } from '../seedlingDemo/jsRuntimeSolver.js';
+
+const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
+const readJson = (rel) => JSON.parse(readFileSync(abs(rel), 'utf8'));
+const BASE = pathToFileURL(abs('../../')).href;
+const GAME_CONFIG = readJson('./games/seedling.json');
+const MANIFEST = readJson('./wasm/builds.json');
+const fetchJson = async (u) => JSON.parse(readFileSync(fileURLToPath(u), 'utf8'));
+
+const rulesOf = (preset) => readJson(`../../presets/${preset}/AP_1/AP_1_rules.json`);
+const locationsOf = (rules) => {
+    const out = new Map();
+    for (const slot of Object.keys(rules.regions ?? {})) {
+        for (const [region, r] of Object.entries(rules.regions[slot])) {
+            for (const loc of r.locations ?? []) out.set(loc.name, { ...loc, region, parent_region_name: region });
+        }
+    }
+    return out;
+};
+const load = (rules, over = {}) => loadSeedlingRandomizer({
+    flashPanel: rules.flash_panel['1'], manifest: MANIFEST, rawRules: rules, locations: locationsOf(rules),
+    playerId: Object.keys(rules.regions)[0], gameConfig: GAME_CONFIG, baseUrl: BASE, fetchJson,
+    importModule: (u) => import(/* @vite-ignore */ u), ...over,
+});
+
+const PT = rulesOf('seedling_playthrough');
+const LOADED = await load(PT);
+const MAP = realRoomPlaybackMap(LOADED, PT);
+const SIDECARS = PT.preset_sidecars[ATLAS_CHECK_PLAYER];
+const realRegion = (r) => SIDECARS[r]?.substrate === ATLAS_ROOM_SUBSTRATE_ID;
+const EXITS = Object.entries(PT.regions[ATLAS_CHECK_PLAYER])
+    .flatMap(([region, r]) => (r.exits ?? []).map((e) => ({ region, ...e })));
+const DOOR_NAMES = new Set(Object.values(SIDECARS).flatMap((s) => (s.playable_payload?.exits ?? [])
+    .map((x) => x.exitName)).filter(Boolean));
+
+describe('the vanilla arm\'s map — seedling_playthrough, every name accounted for', () => {
+    it('the load is the VANILLA arm on wasm, and the map is built from it', () => {
+        expect(LOADED.verdict, LOADED.why).toBe('eligible');
+        expect(LOADED.arm).toBeUndefined();
+        expect(LOADED.set?.rooms?.length).toBeGreaterThan(0);
+        expect(MAP?.arm).toBe('vanilla');
+    });
+
+    it('every location: a goal at the DELIVERED apitem (the table\'s entries), or a BOUND encounter (⛓ ENCOUNTERS)', () => {
+        const locations = locationsOf(PT);
+        const goals = [];
+        const refused = [];
+        const events = [];
+        for (const [name, loc] of locations) {
+            const r = resolveSeedlingAtlasGoal({ kind: 'location', name }, MAP, { region: loc.region });
+            // ⛓ RULES obstacle-events: an AP EVENT (id-less, `event: true` — a saved obstacle's flag) is
+            //   no check: the map never binds it as an ENTRY, so nothing on the check path ever sends it.
+            //   ⛓ EVENT GOALS — a `game_state` one IS a walk goal: the solver's clear-tag, carried as `event`
+            //   (its flag, never a tag to collect); any other AP event resolves to none.
+            if (loc.event === true) {
+                if (loc.event_kind === 'game_state') {
+                    expect(r.goal?.event?.eventId, name).toBe(loc.event_id);
+                    expect(r.goal.tag, name).toBeNull();
+                } else expect(r.goal, name).toBeFalsy();
+                events.push(name);
+                continue;
+            }
+            (r.goal ? goals : refused).push({ name, ...r });
+        }
+        expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
+        expect(goals.length + refused.length + events.length).toBe(locations.size);
+        // ⛓ ENCOUNTERS — the table's entries AND both encounter rows (each has an executor).
+        // ⛓ planning-10's kingOfFireFight flip (⚖ user, 2026-10-21): a boss whose BOUND_BOSS_FIGHTS switch is ON by
+        //   default is a GOAL (the BOSS WIRING rows below pin each one ON and OFF); the rest stay refused.
+        const wired = (r) => CONTACT_FIDELITY[BOUND_BOSS_FIGHTS[r.entityType]] === true;
+        // ⛓ planning-10's lightsBossFight flip (2026-10-22) adds the Lights, its tentacleBeastFight flip the Tentacled Beast
+        //   (report order: L57, L69, L82).
+        expect(LOADED.reports.filter(wired).map((r) => r.entityType)).toEqual(['tentaclebeast', 'lightbosscontroller', 'lavaboss']);
+        expect(goals.map((g) => g.name).sort())
+            .toEqual([...LOADED.entries, ...LOADED.encounters, ...LOADED.reports.filter(wired)].map((e) => e.location).sort());
+        // ⛓ R4b (rules-boss-locations) — the boss kills with no default-ON fight are REFUSED BY NAME, never dropped.
+        expect(refused.map((r) => r.name).sort()).toEqual(LOADED.reports.filter((r) => !wired(r)).map((r) => r.location).sort());
+        expect(LOADED.reports.map((r) => r.ledgerId).sort())
+            .toEqual(R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').map((r) => r.id).sort());
+        for (const r of refused) expect(r.refused, r.name).toContain('is a BOSS KILL');
+        // ⛔ The game plays the REWRITE: each goal names the entity the delivered room holds — the rewriter's
+        // own type — at the table's (level, tag); the map document's vanilla type would not be found there.
+        for (const g of goals) {
+            const e = LOADED.entries.find((x) => x.location === g.name);
+            if (!e) continue;
+            expect(g.goal).toEqual({ kind: 'location', level: e.level, tag: e.tag, entityType: AP_ITEM_TYPE, name: g.name });
+        }
+    });
+
+    it('every exit: a door → its sidecar exit_tiles; a same-level sub-region link → a LINK (credited, §5.17); nothing else but the Menu', () => {
+        const tally = { door: 0, link: 0, other: [] };
+        for (const exit of EXITS) {
+            const r = resolveSeedlingAtlasGoal({ kind: 'exit', name: exit.name }, MAP, { region: exit.region });
+            if (r.goal) {
+                expect(DOOR_NAMES.has(exit.name), exit.name).toBe(true);
+                expect(r.goal.tiles.length, exit.name).toBeGreaterThan(0);
+                expect(r.goal.level).toBe(SIDECARS[exit.region].playable_payload.level);
+                tally.door += 1;
+            } else if (realRegion(exit.region) && realRegion(exit.connected_region)
+                && SIDECARS[exit.region].playable_payload.level === SIDECARS[exit.connected_region].playable_payload.level) {
+                const link = MAP.links.find((l) => l.name === exit.name);
+                // ⛓ LOGICAL LINKS (§5.17) — answered as the link itself; the controller asks the binding to credit it.
+                expect(r.link).toBe(link);
+                tally.link += 1;
+            } else {
+                tally.other.push({ region: exit.region, name: exit.name, refused: r.refused });
+            }
+        }
+        expect(tally.door).toBe([...DOOR_NAMES].filter((n) => EXITS.some((e) => e.name === n)).length);
+        expect(tally.link).toBe(MAP.links.length);
+        expect(tally.door + tally.link + tally.other.length).toBe(EXITS.length);
+        // The only exit out of a non-room region: the AP origin (Menu → the start room), never walked.
+        expect(tally.other.every((o) => !realRegion(o.region))).toBe(true);
+        expect(tally.other.map((o) => o.refused)).toEqual(tally.other.map((o) => `"${o.name}" is not an exit of the atlas rooms`));
+    });
+
+    it('a link is DERIVED: both ends real rooms of one level, and no sidecar door of that name', () => {
+        const regions = MAP.regions;
+        expect(MAP.links.length).toBeGreaterThan(0);
+        for (const l of MAP.links) {
+            expect(regions.get(l.from).level).toBe(l.level);
+            expect(regions.get(l.to).level).toBe(l.level);
+            expect(DOOR_NAMES.has(l.name)).toBe(false);
+        }
+        expect(realRoomLinks(PT, regions)).toEqual(MAP.links);
+    });
+});
+
+describe('⛓ OBSTACLE EVENTS — a game-state event is the map\'s THIRD class (neither a pickup nor a refusal)', () => {
+    const gameState = [...locationsOf(PT).values()].filter((l) => l.event_kind === 'game_state').map((l) => l.name).sort();
+
+    it('BOUND: entries + refusals + events = every location; the events are exactly the rules\' game_state ones', () => {
+        expect(gameState.length).toBeGreaterThan(0);
+        expect(MAP.events.map((e) => e.location).sort()).toEqual(gameState);
+        expect(MAP.entries.length + MAP.refused.length + MAP.events.length).toBe(locationsOf(PT).size);
+        for (const e of MAP.events) {
+            const loc = locationsOf(PT).get(e.location);
+            expect(e).toMatchObject({ eventId: loc.event_id, level: loc.obstacle.level, tag: loc.obstacle.tag, side: loc.side });
+        }
+    });
+
+    it('⛓ EVENT GOALS — a walk to an event is the solver\'s clear-tag goal, in the room the rules reach it from', () => {
+        const ev = MAP.events.find((e) => e.eventId === 'flag:L0:1');
+        const r = resolveSeedlingAtlasGoal({ kind: 'location', name: ev.location }, MAP, { region: ev.side });
+        expect(r).toEqual({ goal: atlasEventGoal(ev, 0) });
+        expect(r.goal).toEqual({ kind: 'location', level: 0, tag: null, entityType: null, name: ev.location,
+            event: { eventId: 'flag:L0:1', tag: { level: 0, tag: 1 }, at: { x: 288, y: 176 }, obstacle: 'breakablerock@288,176' } });
+        // ⛓ CROSSROOM — the one event whose flag is not its arrival room's: L39's wandlock, pressed from L38
+        const plug = MAP.events.find((e) => e.eventId === 'flag:L39:8');
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: plug.location }, MAP, {}).goal).toMatchObject({
+            level: 38, event: { tag: { level: 39, tag: 8 }, obstacle: 'wandlock@144,592',
+                presser: { level: 38, class: 'buttonroom', x: 32, y: 48 } } });
+        // every event is a goal (none refused at the map) — whether the solver executes it is the mapping's question
+        for (const e of MAP.events) expect(resolveSeedlingAtlasGoal({ kind: 'location', name: e.location }, MAP, {}).goal?.event).toBeTruthy();
+    });
+
+    it('⛓ EVENT GOALS — an event record with no obstacle cell is refused BY NAME at the map (none is guessed)', () => {
+        const ev = MAP.events.find((e) => e.eventId === 'flag:L0:1');
+        const broken = { ...ev, obstacle: { ...ev.obstacle, x: undefined } };
+        const r = resolveSeedlingAtlasGoal({ kind: 'location', name: ev.location }, { ...MAP, events: [broken] }, {});
+        expect(r).toEqual({ refused: EVENT_GOAL_REFUSAL(broken) });
+        expect(r.refused).toContain('breakablerock@undefined,176 in level 0');
+        expect(r.refused).toContain('names no integer flag {level, tag} or no obstacle cell');
+        expect(r.refused).not.toContain('does not execute yet');
+    });
+
+    it('⛔ FAIL-CLOSED: an UNKNOWN event_kind is refused by name, never bound as a pickup (nor listed as an event)', () => {
+        const rules = structuredClone(PT);
+        const loc = Object.values(rules.regions['1']).flatMap((r) => r.locations ?? []).find((l) => l.event_id === 'flag:L0:4');
+        loc.event_kind = 'some_future_kind';
+        const map = vanillaArmPlaybackMap({ entries: LOADED.entries, encounters: LOADED.encounters, reports: LOADED.reports,
+            set: LOADED.set, regions: MAP.regions, rules });
+        expect(map.events.map((e) => e.location)).not.toContain(loc.name);
+        expect(map.entries.map((e) => e.location)).not.toContain(loc.name);
+        expect(map.refused.find((r) => r.location === loc.name)?.why).toMatch(/kind "some_future_kind".*not bound as a pickup/);
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: loc.name }, map, {}).goal).toBeUndefined();
+        expect(map.entries.length + map.refused.length + map.events.length).toBe(locationsOf(rules).size);
+        // and a kindless event is not the playback map's at all
+        expect(runtimeEventsOf({ regions: { 1: { R: { locations: [{ name: 'logic', id: null, event: true }] } } } }))
+            .toEqual({ events: [], refused: [] });
+    });
+});
+
+describe('the mutants\' rows', () => {
+    it('THE MAP NOT BOUND: the panel\'s one decision binds a map for the vanilla arm (null was "no name → cell map")', () => {
+        expect(realRoomPlaybackMap(LOADED, PT)).not.toBeNull();
+        expect(realRoomPlaybackMap(LOADED, PT).entries.length).toBe(LOADED.entries.length + LOADED.encounters.length);
+        // …and none for a refused load, or the generated arm (that map is the other instance's report).
+        expect(realRoomPlaybackMap({ ...LOADED, eligibility: { eligible: false } }, PT)).toBeNull();
+        expect(realRoomPlaybackMap({ ...LOADED, arm: 'generated' }, PT)).toBeNull();
+    });
+
+    it('AN EXIT WITHOUT TILES is refused by name, never handed over as a goal with nothing to walk onto', () => {
+        const door = EXITS.find((e) => DOOR_NAMES.has(e.name));
+        const regions = new Map([...MAP.regions].map(([id, p]) => [id, id !== door.region ? p
+            : { ...p, exits: p.exits.map((x) => (x.exitName === door.name ? { ...x, exit_tiles: [] } : x)) }]));
+        const r = resolveSeedlingAtlasGoal({ kind: 'exit', name: door.name }, { ...MAP, regions }, { region: door.region });
+        expect(r).toEqual({ refused: `the atlas exit "${door.name}" marks no exit tiles to walk onto` });
+    });
+
+    it('an entry the DELIVERED room does not hold is refused by name (the rewrite did not land)', () => {
+        const [first] = LOADED.entries;
+        const set = { ...LOADED.set, rooms: LOADED.set.rooms.map((room) => (room.id !== first.level ? room
+            : { ...room, source: { record: { ...room.source.record, entities: room.source.record.entities
+                .filter((e) => !(e.x === first.entity.x && e.y === first.entity.y)) } } })) };
+        const map = vanillaArmPlaybackMap({ entries: LOADED.entries, encounters: [], set, regions: MAP.regions, rules: PT });
+        expect(map.entries.some((e) => e.location === first.location)).toBe(false);
+        expect(map.refused.find((x) => x.location === first.location)?.why)
+            .toBe(`the delivered level ${first.level} holds no entity with tag ${first.tag} at (${first.entity.x}, `
+                + `${first.entity.y}) — the rewrite did not land there`);
+    });
+});
+
+describe('the atlas arm keeps its map (J3), and gains only the links', () => {
+    it('seedling_atlas: the same entries/refused/regions as before, plus its own sub-region links', async () => {
+        const rules = rulesOf('seedling_atlas');
+        const loaded = await load(rules);
+        expect(loaded.arm).toBe('atlas');
+        const map = realRoomPlaybackMap(loaded, rules);
+        expect(map.entries).toBe(loaded.entries);
+        expect(map.refused).toBe(loaded.refused);
+        expect([...map.regions.keys()].sort()).toEqual(Object.keys(rules.preset_sidecars['1'])
+            .filter((r) => rules.preset_sidecars['1'][r].substrate === ATLAS_ROOM_SUBSTRATE_ID).sort());
+        expect(map.links.length).toBeGreaterThan(0);
+        for (const l of map.links) {
+            expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: l.name }, map).link).toBe(l);
+        }
+    });
+});
+
+describe('the wasm engine stages the DELIVERED rooms (solver flow)', () => {
+    it('the controller loads the engine with the surface\'s delivered set, and hands it the apitem goal', async () => {
+        const goals = [];
+        const loads = [];
+        const engine = { walkTo: (g) => { goals.push(g); return { ok: true }; }, liveLevel: () => 0, stop() {},
+            status: () => ({ phase: 'idle', goal: null }), dispose() {} };
+        const game = { botStatus() {} };
+        const surface = { transport: 'wasm', setting: 'auto', atlas: MAP, region: null,
+            wasm: { getGame: () => game, getWin: () => null, teleport: () => true, mapPath: 'm.json', deliveredSet: LOADED.set } };
+        const c = new SeedlingPlaybackController({ getSurface: () => surface, substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true,
+            wasmDeliveredSetOf: (s) => s?.wasm?.deliveredSet ?? null,
+            timers: { setInterval: () => 1, clearInterval: () => {} },
+            loadWasmEngine: async (d) => { loads.push(d); return engine; } });
+        const [first] = LOADED.entries;
+        expect(c.walkTo({ kind: 'location', name: first.location })).toBe(true);
+        await new Promise((r) => { setTimeout(r, 0); });
+        expect(loads).toHaveLength(1);
+        expect(loads[0].deliveredSet).toBe(LOADED.set);
+        expect(c.walkTo({ kind: 'location', name: first.location })).toBe(true);
+        expect(goals.at(-1)).toMatchObject({ level: first.level, tag: first.tag, entityType: AP_ITEM_TYPE });
+    });
+
+    it('the engine loader: a delivered set is the rooms (no map fetched) and the engine stays a SOLVER engine', async () => {
+        let fetched = 0;
+        const engine = await loadWasmPlaybackEngine({ mapPath: 'never.json', deliveredSet: LOADED.set, baseUrl: BASE,
+            fetchImpl: async () => { fetched += 1; throw new Error('no fetch'); }, getGame: () => null, teleport: () => false,
+            timers: { setTimeout: () => 0, clearTimeout: () => {} } });
+        expect(fetched).toBe(0);
+        expect(engine.generated).toBe(false);
+        engine.dispose();
+    });
+});
+
+describe('⛓ §5.18 — the JS runtime TAKES the vanilla arm; a load that binds no map is still heard at once', () => {
+    it('the load on js is the vanilla arm and binds the SAME map as on wasm (the map is arm-, not transport-keyed)', async () => {
+        const js = await load(PT, { transport: 'js', manifest: null });
+        expect(js.verdict, js.why).toBe('eligible');
+        expect(js.eligibility.arm).toBe('vanilla');
+        expect(js.set.set_id).toBe(LOADED.set.set_id);
+        const map = realRoomPlaybackMap(js, PT);
+        expect(map?.arm).toBe('vanilla');
+        expect(JSON.stringify(map)).toBe(JSON.stringify(MAP));
+    });
+
+    it('a load refused by name (here: the flash transport) — the controller refuses by that reason, not a 60 s hold', async () => {
+        const refused = await load(PT, { transport: 'flash', manifest: null });
+        expect(refused.eligibility.eligible).toBe(false);
+        expect(refused.why).toMatch(/^transport: /);
+        expect(realRoomPlaybackMap(refused, PT)).toBeNull();
+        const page = { walkTo: () => ({ ok: true }) };
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: null, apRefusal: refused.why, jsRuntime: { playback: page } }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+            timers: { setInterval: () => { throw new Error('a refusal is never held'); }, clearInterval: () => {} } });
+        expect(c.walkTo({ kind: 'location', name: LOADED.entries[0].location })).toBe(false);
+        expect(c.lastRefusal).toBe(`no name → cell map for the atlas rooms: the AP placement load bound none — ${refused.why}`);
+    });
+
+    it('while the load is still running (no refusal yet) the goal is HELD as before', () => {
+        let held = 0;
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'wasm', atlas: null, apRefusal: null, wasm: { getGame: () => null } }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true,
+            timers: { setInterval: () => { held += 1; return 1; }, clearInterval: () => {} } });
+        expect(c.walkTo({ kind: 'location', name: LOADED.entries[0].location })).toBe(true);
+        expect(held).toBe(1);
+    });
+});
+
+describe('⛓ LIGHTS WIRING — leg 608: a wired boss kill is its fight\'s clear-tag while its switch is ON', () => {
+    const LIGHTS = LOADED.reports.find((r) => r.entityType === 'lightbosscontroller');
+    const resolve = (on) => withContactFidelity({ lightsBossFight: on },
+        () => resolveSeedlingAtlasGoal({ kind: 'location', name: LIGHTS.location }, MAP, {}));
+
+    it('BOUND_BOSS_FIGHTS is PINNED to the solver\'s tables: each verb registered with its switch ON, absent OFF', () => {
+        for (const [type, sw] of Object.entries(BOUND_BOSS_FIGHTS)) {
+            expect(withContactFidelity({ [sw]: false }, () => clearTagVerbOf(`solid:${type}`)), type).toEqual({ verb: null, registered: false });
+            expect(withContactFidelity({ [sw]: true }, () => clearTagVerbOf(`solid:${type}`).registered), type).toBe(true);
+            // and each names a boss row the vanilla arm reports (a stale row is a red, not a silent no-op)
+            expect(LOADED.reports.map((r) => r.entityType), type).toContain(type);
+        }
+    });
+
+    it('OFF: byte-identical — the boss kill stays refused by its old text', () => {
+        expect(resolve(false)).toEqual({ refused: `"${LIGHTS.location}" is a location the vanilla arm's map did NOT bind — `
+            + BOSS_REPORT_REFUSAL(LIGHTS) });
+        // the map still accounts for it as a refusal (entries + refused + events = every location)
+        expect(MAP.refused.map((r) => r.location)).toContain(LIGHTS.location);
+    });
+
+    it('the map\'s boss row: the report address and the body the DELIVERED room holds (only the listed fights)', () => {
+        // ⛓ BOSS WIRING — and fidelity BOSSKILLS' two (the rows are listed whatever the switches; only the resolve binds)
+        const byType = new Map(MAP.bosses.map((b) => [b.entityType, b]));
+        expect(MAP.bosses.length).toBe(3);
+        expect(byType.get('lightbosscontroller')).toEqual({ location: LIGHTS.location, level: 69, entityType: 'lightbosscontroller',
+            address: { level: 69, tag: 0 }, at: { x: 72, y: 72 } });
+        expect(byType.get('lavaboss')).toEqual({ location: 'Level 082 - King of Fire', level: 82, entityType: 'lavaboss',
+            address: { level: 82, tag: 0 }, at: { x: 112, y: 48 } });
+        expect(byType.get('tentaclebeast')).toEqual({ location: 'Level 057 - Tentacled Beast', level: 57,
+            entityType: 'tentaclebeast', address: { level: 57, tag: 0 }, at: { x: 80, y: 48 } });
+    });
+
+    it('ON: the event-shaped goal, and the solver mapping hands the clear-tag on the body', () => {
+        const r = resolve(true);
+        expect(r).toEqual({ goal: { kind: 'location', level: 69, tag: null, entityType: null, name: LIGHTS.location,
+            event: { eventId: null, tag: { level: 69, tag: 0 }, at: { x: 72, y: 72 }, obstacle: 'lightbosscontroller@72,72' } } });
+        const mapped = withContactFidelity({ lightsBossFight: true }, () => solverGoalFor(r.goal, { run: { level: 69 } }));
+        expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level: 69, tag: 0 }, at: { x: 72, y: 72 },
+            obstacle: 'lightbosscontroller@72,72' } });
+    });
+});
+
+/**
+ * ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — legs 506/508 (`Level 057 - Tentacled Beast`) and 665/667
+ * (`Level 082 - King of Fire`): each boss kill is its fight's `clear-tag` while its switch is ON, and keeps its old
+ * refusal, byte for byte, while it is OFF. The goals are fidelity BOSSKILLS' own (`fidelityTentacleBeast.test.js`'s
+ * clear-tag on `tentaclebeast@80,48`; `lavaboss@112,48`, the body `fidelityKingOfFire.test.js`'s fight is built from).
+ *
+ * ── THE MUTATION LIST ──
+ *   m1 drop a row from BOUND_BOSS_FIGHTS   -> its "ON" row reds (the old refusal comes back).
+ *   m2 the row's switch name misspelt      -> the PIN row above reds (registered OFF / not ON).
+ *   m3 wiredBossOf ignores the switch      -> the "OFF" row reds (a goal where the refusal stood).
+ */
+describe('⛓ BOSS WIRING — legs 506/508 + 665/667: the Tentacled Beast and the King of Fire', () => {
+    const ROWS = [
+        { type: 'tentaclebeast', sw: 'tentacleBeastFight', level: 57, at: { x: 80, y: 48 } },
+        { type: 'lavaboss', sw: 'kingOfFireFight', level: 82, at: { x: 112, y: 48 } },
+    ];
+    for (const { type, sw, level, at } of ROWS) {
+        const report = LOADED.reports.find((r) => r.entityType === type);
+        const resolve = (on) => withContactFidelity({ [sw]: on },
+            () => resolveSeedlingAtlasGoal({ kind: 'location', name: report.location }, MAP, {}));
+
+        it(`${type} OFF: byte-identical — the old refusal`, () => {
+            expect(resolve(false)).toEqual({ refused: `"${report.location}" is a location the vanilla arm's map did NOT bind — `
+                + BOSS_REPORT_REFUSAL(report) });
+        });
+
+        it(`${type} ON: the event-shaped goal → the solver's clear-tag on the body`, () => {
+            const obstacle = `${type}@${at.x},${at.y}`;
+            const r = resolve(true);
+            expect(r).toEqual({ goal: { kind: 'location', level, tag: null, entityType: null, name: report.location,
+                event: { eventId: null, tag: { level, tag: 0 }, at, obstacle } } });
+            const mapped = withContactFidelity({ [sw]: true }, () => solverGoalFor(r.goal, { run: { level } }));
+            expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level, tag: 0 }, at, obstacle } });
+        });
+    }
+});

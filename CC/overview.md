@@ -11,7 +11,6 @@ The primary and most current documentation for this project is located in the `d
 -   **[Main Documentation Portal (`docs/json/README.md`)](./docs/json/README.md)**: The central hub for all user and developer documentation.
 -   **User Guides (`docs/json/user/`)**: Contains the **[Quick Start Guide](./docs/json/user/quick-start.md)** and other manuals for using the web client.
 -   **Developer Guides (`docs/json/developer/`)**: Contains the **[Developer Getting Started Guide](./docs/json/developer/getting-started.md)**, a deep dive into the **[System Architecture](./docs/json/developer/architecture.md)**, and detailed guides on the **[Module System](./docs/json/developer/guides/module-system.md)**, **[Event System](./docs/json/developer/guides/event-system.md)**, and **[State Management](./docs/json/developer/guides/state-management.md)**.
--   **[Project Roadmap (`docs/json/project-roadmap.md`)](./docs/json/project-roadmap.md)**: Outlines the latest status, known issues, and future plans.
 
 The `CC/` directory contains supplementary design documents and Claude Code collaboration files. The `NewDocs/` directory contains historical planning files. While they provide valuable context, the `docs/json/` directory should be considered the authoritative source for the project's current state.
 
@@ -226,7 +225,7 @@ Each subdirectory in `frontend/modules/` represents a distinct, self-contained f
 -   **`testPlaythroughs/`**: A developer tool for replaying a game's progression event-by-event to validate the `StateManager`.
 -   **`spoilerTest/`**: A powerful validation tool that replays a game's logical progression against its spoiler log to confirm the accuracy of the exported rules.
 -   **`tests/`**: A comprehensive in-app framework for discovering, running, and debugging automated feature tests. It is the core of the project's Playwright-based end-to-end testing strategy.
--   **`timer/` & `timerPanel/`**: Manages the logic and UI for the automated location checking timer ("Begin" / "Quick Check").
+-   **`timer/`**: The headless location-check timer (check reachable locations on a delay); the Playback Bot's "any reachable location" mode is its UI.
 -   **Communication Adapters**:
     -   **`iframeAdapter/`**, **`iframePanel/`**, **`iframeManagerPanel/`**: A system to host external web content in an `<iframe>` and bridge communication with the main application's state and event bus.
     -   **`windowAdapter/`**, **`windowPanel/`**, **`windowManagerPanel/`**: A similar system for content running in a separate browser window.

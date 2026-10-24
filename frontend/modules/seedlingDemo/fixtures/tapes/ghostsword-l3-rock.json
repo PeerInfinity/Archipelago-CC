@@ -1,0 +1,60 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 3,
+        "x": 96,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 43,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "up",
+            "from": 10,
+            "to": 43
+        }
+    ],
+    "name": "ghostsword-l3-rock",
+    "description": "⛓⛓⛓ seedling-fidelity-ghostsword — THE PLAIN ROCK UNDER THE GHOST SWORD. L3's arrival pocket, holding the sword and the ghost sword: one tick of `up`, then ONE press. `genericHit`'s rock arm passes the FLAG — `hasGhostSword ? 1 : 0` — not the swing's `t`, so the ghost swing (24 x 48, seven tests) breaks `breakablerock@96,112` (rockType 0) at its first test; the rock is gone at t 8 and the walk north passes where it stood. Authored by scripts/procgen/plan-seedling-ghostsword.mjs.",
+    "note": ""
+}

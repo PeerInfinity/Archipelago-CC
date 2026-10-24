@@ -1,0 +1,23 @@
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index 9cdb0e4..9d92d5c 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -19161,7 +19161,8 @@ function solveSegmentUnder({
+             const weapon = run.progress('primaryWeapon');
+             const [tagPart, xy] = target.id.split('@');
+             const [cx, cy] = xy.split(',').map(Number);
+-            let press = weapon === 'sword'
++            const rungPresses = weapon === 'sword' || spinnerStrikePress(weapon) !== SWORD_SPINNER_PRESS; // D-MUTANT
++            let press = rungPresses
+                 ? derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts)
+                 : null;
+             /**
+@@ -19188,7 +19189,7 @@ function solveSegmentUnder({
+                     admitted.why = 'the admission with the fight on found no strike either';
+                 }
+             }
+-            if (weapon !== 'sword') {
++            if (!rungPresses) {
+                 killWhy = `${target.id} is a live Spinner whose removal the run OBSERVES (the `
+                     + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the '
+                     + `run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`

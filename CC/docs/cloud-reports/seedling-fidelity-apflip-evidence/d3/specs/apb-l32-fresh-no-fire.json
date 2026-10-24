@@ -1,0 +1,1 @@
+{"name": "apb-l32-fresh-no-fire", "levels": [11, 12, 30, 31, 32, 40, 43], "tapeFile": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l32-fresh-no-fire.json", "tapePatch": {"inputsUntil": 1000000000, "tick_count": 869}, "arms": [{"name": "game"}]}

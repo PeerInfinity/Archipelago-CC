@@ -1,0 +1,5 @@
+      shift 0 misses 1 of 588 sample(s): t 184
+      shift 0's first miss: t 184 game player (152, 402.5500000000001) model (152, 401.90000000000015)
+FAIL: the sample clock is the model's — 588 sampled tick(s) inside the tape; shifts that fit every player x: [] (must be exactly [0])
+PASS: the Spinner's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 1764 comparison(s), worst |Δ| 2.842170943040401e-14
+wrote CC/docs/cloud-reports/seedling-hammer-d-evidence/d2-game-bodies.json

@@ -1,0 +1,14 @@
+wl               base       on-bw0     off-bw1    on-bw1    
+A-sword          7c279226   7c279226   7c279226   7c279226  
+A-ghost          b3b38f55   b3b38f55   b3b38f55   b3b38f55  
+leg-397-ghost    4720caab   4720caab   4720caab   4720caab  
+leg-414-ghost    489a9482   489a9482   489a9482   489a9482  
+leg-381-sword    d38ea9c0   d38ea9c0   d38ea9c0   d38ea9c0  
+leg-378-sword    1c2e9305   1c2e9305   1c2e9305   1c2e9305  
+leg381-mwbombs   e958767b   e958767b   e958767b   e958767b  
+leg-384-sword    26b9204f   26b9204f   26b9204f   26b9204f  
+leg-396-sword    54ec94b7   54ec94b7   54ec94b7   54ec94b7  
+leg-400-sword    0a85d42f   0a85d42f   0a85d42f   0a85d42f  
+l18              864ab175   864ab175   864ab175   864ab175  
+ghost-sweep      1ca7eed5   1ca7eed5   1ca7eed5   1ca7eed5  
+campaign         4199d181   4199d181   4199d181   4199d181  

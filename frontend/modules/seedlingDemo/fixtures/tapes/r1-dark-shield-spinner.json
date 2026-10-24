@@ -1,0 +1,65 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 18,
+        "x": 48,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasShield": true,
+            "hasDarkShield": true
+        },
+        "hits_max": 3,
+        "time": 4800,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 60
+        },
+        {
+            "key": "primary",
+            "from": 4,
+            "to": 5
+        }
+    ],
+    "name": "r1-dark-shield-spinner",
+    "description": "⛓⛓⛓ R1-swim D3 — THE DARK SHIELD HITS A SPINNER, AND ITS LATCH LETS A SWORD THROUGH THE I-FRAME. L18 (48,80), north of `spinner@48,96`, the shield, the DARK shield and a sword through the seam (`r8-hammer-arm`'s clock block) and `noDamage` FALSE; `down` for 60 ticks with one press at held index 4. `Spinner` overrides no `hit`, so `shieldBump` calls `Enemy.hit(5, playerPoint, 0.5, \"Shield\")` on t 4: `hits` 0.5, a 30-tick i-frame, a shove of 5, and `hitByDarkStuff` latched. The press lands THROUGH that i-frame on the latch (`hits` 1.5, a fresh i-frame) and the sword's knockback throws it again. The player is never hit. Fixed keys. Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.",
+    "note": ""
+}

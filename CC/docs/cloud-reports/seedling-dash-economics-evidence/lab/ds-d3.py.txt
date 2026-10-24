@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+# DS D3 (scratch): every shape × window against today (d1 window 85) and the window-0 answer (d1 window 0).
+import json, sys
+from collections import defaultdict
+S = sys.argv[1]
+base = {}
+for l in open(f'{S}/d1.jsonl'):
+    r = json.loads(l)
+    if 'error' in r: continue
+    base[(r['id'], r['i'], r['window'])] = r
+pop = [tuple(map(int, x.split(':'))) for x in open(f'{S}/d3pop.txt').read().split(',')]
+shapes = defaultdict(dict)
+for l in open(f'{S}/d3.jsonl'):
+    r = json.loads(l)
+    shapes[(r['tag'], r['window'])][(r['id'], r['i'])] = r
+for w in (85, 0):
+    shapes[('today' if w == 85 else 'window0', w)] = {k: base[(k[0], k[1], w)] for k in pop}
+tk = lambda r: (r.get('shipped') or {}).get('ticks') if r and 'error' not in r else None
+T85 = {k: tk(base[(k[0], k[1], 85)]) for k in pop}
+T0 = {k: tk(base[(k[0], k[1], 0)]) for k in pop}
+W85 = {k: base[(k[0], k[1], 85)]['work'] for k in pop}
+M85 = {k: base[(k[0], k[1], 85)]['ms'] for k in pop}
+avail = sum(T85[k] - T0[k] for k in pop if T85[k] and T0[k])
+print(f'POPULATION {len(pop)} requests (dashless plan in hand, full pass runs). Window 0 saves {avail} t over today.')
+print('shape            win  n    ticks Σ   saved vs today  % of w0  better/worse vs today  worse vs w0  units Σ (Δ today)   wall s (Δ today)  attempt ≤85u  errors  net s @30fps')
+order = ['firstcert', 'cap60keep', 'cap150keep', 'cheap3dw85keep', 'cheap2', 'cheap2dw40keep', 'cheap2dw85keep', 'cheap2dw130keep', 'today', 'window0', 'noswing', 'legpre40', 'stride2', 'tail10', 'cheap', 'dw85keep', 'dw40keep', 'cheapdw85keep', 'cheapdw40keep']
+for tag in order:
+    for w in (85, 0):
+        rows = shapes.get((tag, w))
+        if not rows: continue
+        n = len(rows); err = sum(1 for r in rows.values() if 'error' in r)
+        ks = [k for k in pop if k in rows and 'error' not in rows[k]]
+        ticks = sum(tk(rows[k]) or 0 for k in ks)
+        saved = sum((T85[k] or 0) - (tk(rows[k]) or T85[k] or 0) for k in ks)
+        better = sum(1 for k in ks if tk(rows[k]) and T85[k] and tk(rows[k]) < T85[k])
+        worse = sum(1 for k in ks if (tk(rows[k]) or 10**9) > (T85[k] or 10**9) or (T85[k] and not tk(rows[k])))
+        worse0 = sum(1 for k in ks if T0[k] and (tk(rows[k]) or 10**9) > T0[k])
+        units = sum(rows[k]['work'] or 0 for k in ks); du = units - sum(W85[k] or 0 for k in ks)
+        wall = sum(rows[k]['ms'] for k in ks) / 1000; dw = wall - sum(M85[k] for k in ks) / 1000
+        fit = sum(1 for k in ks if (rows[k]['work'] or 0) <= 85 or tk(rows[k]) == T85[k])
+        print(f'{tag:16} {w:>3} {n:>4} {ticks:>9} {saved:>10} {100*saved/avail:>9.1f} {better:>9}/{worse:<9} {worse0:>8} {units:>10} ({du:+7}) {wall:>9.1f} ({dw:+7.1f}) {fit:>9} {err:>4}  {saved/30-dw:+8.1f}')
+# per-request detail for the regressions of the semantic shapes
+for tag in ('dw85keep', 'cheapdw85keep', 'cheap'):
+    for w in (85, 0):
+        rows = shapes.get((tag, w)) or {}
+        bad = [(k, T85[k], T0[k], tk(rows[k])) for k in pop if k in rows and 'error' not in rows[k] and T0[k] and (tk(rows[k]) or 10**9) > T0[k]]
+        if bad: print(f'\n{tag}@{w}: worse than window 0 on {len(bad)}: (id,i) today w0 shape —', bad[:30])

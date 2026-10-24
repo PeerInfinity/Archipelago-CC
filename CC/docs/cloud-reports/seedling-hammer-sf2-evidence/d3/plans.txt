@@ -1,0 +1,7 @@
+plan-seedling-f1c-l18-phase on rc=1 s=2 md5=934d9871
+plan-seedling-hammer-a-escape on rc=1 s=9 md5=65742bdc
+plan-seedling-hammer-b1-approach on rc=1 s=5 md5=866666cd
+plan-seedling-hammer-b2-fight on rc=1 s=8 md5=2cd6b74f
+plan-seedling-hammer-g1-ghostkill on rc=1 s=57 md5=5acf8d97
+plan-seedling-hammer-bw-bombstand on rc=1 s=389 md5=8963e3d1
+PLANSDONE

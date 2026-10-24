@@ -21,7 +21,8 @@ export const moduleInfo = {
   componentType: 'testsPanel',
   icon: '✅',
   column: 1, // Left column,
-  description: 'Automated application feature testing.',
+  category: 'Developer and Testing Panels',
+  description: 'Lists the in-app automated tests to enable, reorder and run, with each test\'s conditions and an export.',
 };
 
 let appInitializationApi = null;
@@ -71,6 +72,7 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('window:loadUrl'); // For window-base tests
   registrationApi.registerEventBusPublisher('procgen:activeSubstrateChanged'); // flashSubstrate tests
   registrationApi.registerEventBusPublisher('flash:loadRegion'); // flashSubstrate tests
+  registrationApi.registerEventBusPublisher('runner:loadRegion'); // runnerDemo tests
   registrationApi.registerEventBusPublisher('tests:allTestsChanged');
   
   // Progress bar test events
@@ -85,6 +87,9 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('progressBar:destroy');
   registrationApi.registerEventBusPublisher('progressBar:show');
   registrationApi.registerEventBusPublisher('progressBar:hide');
+
+  // The tutorial walk rows leave Loop mode when a walk stopped inside it.
+  registrationApi.registerEventBusPublisher('loops:setLoopMode');
 
   registrationApi.registerEventBusPublisher('iframe:loadUrl');
 
@@ -116,10 +121,17 @@ export function register(registrationApi) {
         testLogic.shouldAutoStartTests()
       );
 
-      // Optionally, trigger a UI refresh if the panel might already be open
-      _moduleEventBus.publish('tests:listUpdated', {
-        tests: await testLogic.getTests(),
-      });
+      // Optionally, trigger a UI refresh if the panel might already be open.
+      // Init applies mode data (phase 6) BEFORE it initialises modules, so
+      // when applyLoadedState resolves before initialize() — bundled, where
+      // discovery is instant — there is no bus yet, and no panel to refresh
+      // either (it mounts later and reads the list itself). Publishing on the
+      // null bus threw "Cannot read properties of null (reading 'publish')".
+      if (_moduleEventBus) {
+        _moduleEventBus.publish('tests:listUpdated', {
+          tests: await testLogic.getTests(),
+        });
+      }
     },
   });
 

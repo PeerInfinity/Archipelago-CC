@@ -1,0 +1,23 @@
+import sys
+src=open(sys.argv[1]).read(); m=sys.argv[2]
+def rep(a,b,cnt=1):
+    global src
+    assert src.count(a)==cnt,(m,a[:60],src.count(a)); src=src.replace(a,b)
+if m=='K+1': rep('export const DASH_LEG_PRECHECK_MARGIN = 40;','export const DASH_LEG_PRECHECK_MARGIN = 41;')
+elif m=='K-1': rep('export const DASH_LEG_PRECHECK_MARGIN = 40;','export const DASH_LEG_PRECHECK_MARGIN = 39;')
+elif m=='>=': rep('    if (longest <= cut) return null;','    if (longest < cut) return null;')
+elif m=='dashed-walk':
+    rep('    const legCut = dashLegPrecheck(legsOf(base));','    const legCut = null;')
+    rep('            const got = evaluateAt(at, pattern);\n','            const got = evaluateAt(at, pattern);\n            { const c = dashLegPrecheck(legsOf(got.walk)); if (c !== null) return { ...refuse(c), baseline }; }\n')
+elif m=='noswing-every-mode':
+    rep("    if (mode === 'full') return Object.freeze([ghost ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN]);",
+        "    if (mode === 'full') return Object.freeze([ghost ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN].slice(DASH_NO_SWING_PREFIX.enabled ? 1 : 0));")
+elif m=='keep-other-site':
+    rep("            if (deadlineReached('sword-dash')) {\n","            if (DASH_KEEP_PARTIAL.enabled && activeDeadline?.first != null && windows.length) return planOf(true);\n            if (deadlineReached('sword-dash')) {\n")
+elif m=='keep-uncertified':
+    rep("return DASH_KEEP_PARTIAL.enabled && windows.length ? planOf(true)","return DASH_KEEP_PARTIAL.enabled && windows.length ? (windows.push({ at, pattern }), planOf(true))")
+elif m=='keep-inflight-best':
+    rep("return DASH_KEEP_PARTIAL.enabled && windows.length ? planOf(true)","return DASH_KEEP_PARTIAL.enabled && windows.length ? (best && windows.push({ at, pattern: best.row.prefix }), planOf(true))")
+elif m=='keep-zero':
+    rep("return DASH_KEEP_PARTIAL.enabled && windows.length ? planOf(true)","return DASH_KEEP_PARTIAL.enabled ? planOf(true)")
+open(sys.argv[1],'w').write(src)

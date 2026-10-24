@@ -1,0 +1,4 @@
+ON (i)+(iii)+window: 94359 t, 70.4 % of window 0, better 165 / worse 0, units 50094 (Δ +15158), wall 699.1 s (Δ +37.1), errors 0
+(iii)+window, no (i): 94359 t, 70.4 % of window 0, better 165 / worse 0, units 51709 (Δ +16773), wall 752.6 s (Δ +90.5), errors 0
+ticks differ ON vs no-(i) on 0 keys []
+units: (i) saves 1615 units at 85; keys where units differ 19

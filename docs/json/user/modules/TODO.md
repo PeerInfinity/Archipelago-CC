@@ -25,17 +25,30 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Spoiler Checklist](./spoilerChecklist.md) — Sphere log progression checklist
 - [Spoiler Test](./spoilerTest.md) — Game logic validation against spoiler log
 - [Text Adventure](./textAdventure.md) — Text-based game world interface
-- [Timer Panel](./timerPanel.md) — Automated location checking timer
 - [Iframe Panel](./iframePanel.md) — Generic iframe host panel
 - [Iframe Manager Panel](./iframeManagerPanel.md) — Loading content into iframe panels
 - [Window Panel](./windowPanel.md) — Status display for a connected browser window
 - [Window Manager Panel](./windowManagerPanel.md) — Opening and managing separate windows
 - [Proof Queue](./proofQueue.md) — Table-based proof interface for MetaMath games
 - [Proof Graph](./proofGraph.md) — Visual graph of proof dependencies for MetaMath games
+- [Procgen Pipeline](./procgenPipeline.md) — Generating a procgen world and loading it to play
+- [Playback Bot](./playbackBot.md) — Letting the bot play a world's sphere log
+- [APWorld Editor](./apworldEditor.md) — Editing a world's rules and building a .apworld
+- [Maze Room](./mazeRoom.md) — Playing a generated world's maze regions
+- [Loops](./loops.md) — Running a world in Loop mode: the queue, mana and experience
+- [Loop Stats](./loopStats.md) — Each queued action's cost and the mana left, this loop and the last
+- [Bounce Demo](./bounceDemo.md) — Playing a generated world's bounce regions
+- [Noiz2sa](./noiz2sa.md) — Playing a generated world's Noiz2sa regions, and training its bot
+- [Bounce Region Editor](./bounceRegionEditor.md) — Editing a generated bounce zone's platforms and seeing the rules they make
+- [Procgen Lab](./procgenLab.md) — The maze and Seedling room labs inside the app
+- [Substrate Registry](./substrateRegistry.md) — Every kind of region a world can be built from, and what each can do
+- [Flash Panel](./flashPanel.md) — Playing Seedling as part of an Archipelago world
 
 ## Core Service Modules
 
-Background modules that power the UI panels — useful for users who want to understand what's happening behind the scenes.
+These are the modules the [module index](../../modules/README.md) lists under *Core Service Modules* (its eleven categories; every panel module above belongs to one of the others).
+
+Background modules that power the UI panels — useful for users who want to understand what's happening behind the scenes:
 
 - [ ] stateManager.md — Game state, logic evaluation, and accessibility
 - [ ] client.md — WebSocket connection to the Archipelago server
@@ -44,9 +57,7 @@ Background modules that power the UI panels — useful for users who want to und
 - [ ] sphereState.md — Sphere log data and progression tracking
 - [ ] metaGame.md — Scripted/tutorial experience orchestration
 
-## Utility Modules
-
-Lower priority — primarily useful to developers.
+Lower priority — shared utilities, primarily useful to developers:
 
 - [ ] commonUI.md
 - [ ] editorCore.md

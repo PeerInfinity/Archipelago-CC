@@ -1,0 +1,7 @@
+ Test Files  84 passed (84)
+      Tests  3047 passed (3047)
+   Start at  21:28:21
+   Duration  488.22s (transform 10.50s, setup 0ms, import 60.24s, tests 902.36s, environment 9ms)
+
+JSON report written to /tmp/claude-0/-home-user-Archipelago-CC/c23ac379-8125-5180-a86f-96127ed60ce2/scratchpad/after-vitest.json
+rc=0

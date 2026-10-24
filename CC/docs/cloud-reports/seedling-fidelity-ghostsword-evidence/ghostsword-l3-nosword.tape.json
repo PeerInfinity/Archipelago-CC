@@ -1,0 +1,60 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 3,
+        "x": 28,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasGhostSword": true,
+            "canSwim": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 43,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "left",
+            "from": 10,
+            "to": 33
+        }
+    ],
+    "name": "ghostsword-l3-nosword",
+    "description": "EVIDENCE ONLY (not a fixture): ghostsword-l3-rockghost with the SWORD removed from the seam. Player.update calls slash() only if (hasSword), so the press plays and never tests: the rock stays and the walk west never reaches the teleporter.",
+    "note": ""
+}

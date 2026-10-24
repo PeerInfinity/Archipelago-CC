@@ -1,0 +1,40 @@
+[
+ {
+  "arm": "game",
+  "set_id": "seedling-vanilla-record-ce77a823",
+  "game": {
+   "obs": 870,
+   "transitions": [],
+   "final": {
+    "t": 869,
+    "level": 32,
+    "x": 80,
+    "y": 80.70000000000002
+   },
+   "cleared": [
+    {
+     "tag": 1,
+     "level": 32
+    },
+    {
+     "tag": 3,
+     "level": 32
+    },
+    {
+     "tag": 4,
+     "level": 32
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 869,
+    "level": 32,
+    "x": 80,
+    "y": 80.70000000000002
+   }
+  }
+ }
+]

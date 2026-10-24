@@ -1,0 +1,218 @@
+{
+ "view": "/tmp/claude-0/-home-user-Archipelago-CC/f67fa899-7a7b-532f-82e5-bb4433913e4b/scratchpad/w0/step-50-boot.json",
+ "boot": {
+  "level": 30,
+  "x": 32,
+  "y": 112
+ },
+ "goals": "collect:64,64;exit:224,160",
+ "env": {
+  "SEEDLING_PRESS_KILL_DONE_ON_WALK": "1"
+ },
+ "verdict": "SOLVED",
+ "ticks": 381,
+ "keysMd5": "6e7f30956b15ebe292681991a4951a3d",
+ "records": [
+  {
+   "arm": "chaser",
+   "target": "bobsoldier@48,80",
+   "ledger": null
+  }
+ ],
+ "hits": [],
+ "deaths": 0,
+ "staticDeaths": [],
+ "end": {
+  "level": 32,
+  "x": 80,
+  "y": 128
+ },
+ "bombEvents": 0,
+ "targetTimeline": [
+  {
+   "t": 1,
+   "inSB": true,
+   "ch": {
+    "x": 56,
+    "y": 88,
+    "hits": 0,
+    "dying": false,
+    "destroy": false
+   },
+   "keys": "primary+right"
+  },
+  {
+   "t": 49,
+   "inSB": true,
+   "ch": {
+    "x": 68.78,
+    "y": 106.21,
+    "hits": 1,
+    "dying": false,
+    "destroy": false
+   },
+   "keys": "up"
+  },
+  {
+   "t": 138,
+   "inSB": true,
+   "ch": {
+    "x": 68.94,
+    "y": 82.28,
+    "hits": 2,
+    "dying": false,
+    "destroy": false
+   },
+   "keys": "down+left"
+  },
+  {
+   "t": 171,
+   "inSB": false,
+   "ch": {
+    "x": 68.79,
+    "y": 92.27,
+    "hits": 3,
+    "dying": true,
+    "destroy": true
+   },
+   "keys": "left+up"
+  },
+  {
+   "t": 182,
+   "inSB": false,
+   "ch": null,
+   "keys": "down+right"
+  }
+ ],
+ "targetPresses": [
+  {
+   "t": 43,
+   "fired": 48,
+   "weapon": "sword",
+   "direction": 1,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": true,
+     "killed": false,
+     "hits": 1
+    }
+   ]
+  },
+  {
+   "t": 136,
+   "fired": 137,
+   "weapon": "sword",
+   "direction": 3,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": true,
+     "killed": false,
+     "hits": 2
+    }
+   ]
+  },
+  {
+   "t": 136,
+   "fired": 138,
+   "weapon": "sword",
+   "direction": 3,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": false,
+     "killed": false,
+     "hits": 2
+    }
+   ]
+  },
+  {
+   "t": 169,
+   "fired": 170,
+   "weapon": "sword",
+   "direction": 0,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": true,
+     "killed": true,
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "t": 169,
+   "fired": 171,
+   "weapon": "sword",
+   "direction": 0,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": false,
+     "killed": false,
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "t": 169,
+   "fired": 172,
+   "weapon": "sword",
+   "direction": 0,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": false,
+     "killed": false,
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "t": 169,
+   "fired": 173,
+   "weapon": "sword",
+   "direction": 0,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": false,
+     "killed": false,
+     "hits": 3
+    }
+   ]
+  },
+  {
+   "t": 169,
+   "fired": 174,
+   "weapon": "sword",
+   "direction": 0,
+   "hits": [
+    {
+     "as3": "Enemy",
+     "id": "bobsoldier@48,80",
+     "landed": false,
+     "killed": false,
+     "hits": 3
+    }
+   ]
+  }
+ ],
+ "ghost": false,
+ "primary": "sword",
+ "landings": [],
+ "weapons": [
+  "sword"
+ ],
+ "ms": 2572,
+ "sites": {},
+ "msgMd5": "b9773a1ceb24de451533b3fac09275b6"
+}

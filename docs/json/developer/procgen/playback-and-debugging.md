@@ -1,0 +1,123 @@
+# Playback and Debugging Tools
+
+Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.
+
+Most of them are driven by a **sphere log**: the recorded order in which a playthrough collects progression items, in the JSONL format `exporter/sphere_logger.py` writes during seed generation.
+
+## The playback bot (`frontend/modules/playbackBot/`)
+
+A sphere-log-driven walker that auto-drives substrate panels through a recorded playthrough. It is substrate-agnostic above the controller boundary:
+
+- It builds its visit queue from `sphereState`'s parsed sphere log, resolves each location's region via an index built from stateManager's static region data (`buildLocationIndex`), and uses the shared `PathFinder` for inter-region routing.
+- For the current region it resolves the substrate's PlaybackController through the substrate registry and calls it directly (`play` / `stop` / `step` / `instant` / `reset` / `setRate` / `walkTo`) — bypassing the eventBus. Cross-region playback happens the same way keyboard play would: the substrate's exit-cross produces a `user:regionMove`, and the bot follows.
+- The module owns the `playbackBotPanel` Golden Layout panel, registers the `playback:command` publisher, and subscribes to `user/system:locationCheck` and `user:regionMove` on the dispatcher, forwarding them to the active panel's bot. An active-panel singleton (`setActivePanel`/`getActivePanel`) lets those dispatcher receivers reach the bot without circular imports — the same pattern mazeRoom and procgenPipeline use.
+- A persisted click-intercept toggle (`playbackBot_intercept`, off by default) and a bounded dispatcher event log (last 200 events) live in the panel UI.
+
+**Walk order (which sphere-log row next).** The walk loop's next target is the panel's setting `playbackBot_walkOrder` (`playbackBot/walkOrder.js`):
+- `sphere-in-order` (the default) is the queue head, and the walk loop's code path is the one it always had.
+- `sphere-cheapest` takes the lowest open integer sphere's unchecked rows. It adds the POCKET SWEEP: before a Restart out of a room no walk leaves, it takes any accessible row a walk from there reaches.
+- `reachable-cheapest` takes every unchecked row the live snapshot holds accessible.
+- Both price each candidate with `planRoute` (its hops, and whether it begins with a Restart) over ONE accessibility map of the flushed snapshot (`frozenFindPath`). They rank with `procgenCore/routeChooser.js` `chooseNext`: the fewest Restarts, then the fewest hops, the goal row last, ties progression-first then listed.
+- The chosen row is kept until it is checked. The run's counts (`getRouteStats`: restarts, region transitions, legs) show on their own line.
+- Loop mode keeps the sphere order.
+- The orderings were priced offline before the bot used one (`scripts/procgen/measure-bot-route-orders.mjs`). Seedling playthrough: listed 5 Restarts / 392 region transitions, `reachable-cheapest` 1 / 289, `sphere-cheapest` 1 / 357. Greedy is not always better (bakingadventure seed 01043188731678011336: 23 → 27).
+- The in-app row is `playback-bot-walk-order`.
+
+**Direct play (a plain rules.json).** A region with no substrate sidecar, whose controller is missing or refuses the walk (the maze fallback has no tile for it), is played by the bot itself: it publishes its own `user:locationCheck` / `user:regionMove` (tagged `fromBot`), one per tick at the bot's rate, at once under Instant, once under Step. Nothing in it is game-specific, so any non-procgen preset plays this way (the in-app row `playback-bot-direct-play-adventure`).
+- An event counts only when it LANDED: a check once the stateManager snapshot holds it, a move once gameState's current region is its target. A check or move the loop-mode gate (or the worker) refused leaves the cursor where it was, and the status says `blocked: …`.
+- In loop mode the bot never acts directly: only the Loops queue may (a direct check in a plain region would cost no mana).
+
+**Loop mode (the bot writes the Loops queue).** ⚖ In loop mode the bot plays by authoring the Loops queue, one target per loop (`playbackBot/loopDriver.js` plans, `playbackBot/loopModeRunner.js` acts). Each loop it reads the live state, plans ONE loop toward the next unchecked sphere-log location, writes it with `gameState.setPath`, runs it with `loopState.restartFromStart`, and plans again when the loop ends (`loopState:queueCompleted`, or `loopState:loopReset` when the mana runs out).
+- Real discovery is random (each explore reveals one random undiscovered location or exit of its region), and the queue only moves through a discovered exit. So the route stops at the FRONTIER: the first region whose next exit is still hidden, or the target's region while the target is. Until then each loop is moves plus a repeating explore there. Once the route and the target are discovered, the loop is moves plus the check.
+- What a loop does when its task is not affordable yet is the panel's setting (`playbackBot_manaStrategy`): explore as far along the route as the mana allows (the default), explore the target region only (farming the start region when even the walk is out of reach), keep attempting the task (the mana spent still earns region XP), or a random available explore or check each loop.
+- ⚖ The Loops speed settings stay the user's (the in-app row sets Instant). Auto-restart is the runner's while it plays, and the user's choice comes back on Stop. No costs → it says `Generate Costs first` and waits. It never gives up: a loop that cannot run waits and retries until the user stops it.
+- ⚖ Substrate regions: the queue stays the only actor, and the runner sets each substrate block on the queue to the mode that lets the queue's OWN entries be played there. A substrate with a Bot solver (`loopState.regionSolver`: maze delegation on `manaEnabled` regions, the walkTo solvers, Seedling) runs them under Bot. That wins over the capture shape: Seedling is coarse, and under Playback its moves would complete on the generic timer with the game not playing. A coarse substrate WITHOUT a solver (text adventure: its actions are the Loops actions) runs them under Playback. A substrate with neither cannot be played by the queue yet, and the runner waits, naming it. The modes it set are restored on Stop. A maze region of a world generated WITHOUT loop mode has no `manaEnabled`, so no solver.
+- A substrate that charges mana itself (maze delegation, per tile) ends the loop on its own reset path (`gameState:loopReset`), which the runner also listens for. Loops' named stop for a Bot walk that cannot happen (`loopState:botWalkFailed`, from a `walkTo` answering false or a matching `playback:walkFailed` while parked) becomes a status, and the runner tries again.
+- ⚠ A substrate explore with nothing left to find can be FREE (a maze with no fog left), and a repeating explore re-queues itself forever, so the mana never ends that loop. Measured on a maze world: 1255 free explores in one loop. So an explore loop ends as soon as its region hides nothing more. Any loop is also ended after 200 consecutive completions that spent no mana, and that region is never explored for XP again in the run. An XP-farming explore only goes where something is still hidden; otherwise the loop attempts the task itself.
+- ⚖ A COARSE substrate that declares `loopSupport.playClock` (Seedling) is also time-drained ("Drain play time too", 2026-10-12): `loopState._regionDrainsTime` adds it beside the summary shape, its `timeDrain` is priced like a summary region's (per reported game second), and its queue actions keep their own prices.
+- A substrate whose queue takes no explore action (bounce, runner) cannot be explored by the queue: what it holds is found by playing it. For planning, its exits and locations count as discovered, so its Bot walks straight to the target, and a landed check discovers the location.
+- A loop that reaches a region it never planned (a substrate's walk crossed an exit it was not asked to, outside a reset) is ended, and the next plan starts again from the loop start. Every loop goes back to the start by Loops' own `clearQueue` (a `fromReset` move a substrate panel loads on), never by a silent `setPath`.
+- A target in a region whose queue takes moves only (JtA) is a PASS: the loop moves into the region and out through one of its exits under its Bot block, and the substrate's own automation takes the checks on the way (`walkTo` of the exit). A move-only region with no exit is named unreachable.
+- A loop that ended WITHOUT a loop reset (its queue completed, or the runner ended it early or off-plan) is followed by `gameState.triggerLoopReset()` before the next one. `restartFromStart` refills the mana but publishes no `gameState:loopReset`, and that is what a substrate resets its run on. Without it JtA loaded every zone already completed, each later pass crossed it for free, and a task unlocked after the zone's first completion never ran (measured: 1790 loops in 300 s).
+- The mixed row `playback-bot-loop-mode-mixed` (maze + text adventure + bounce in loop mode) finishes in about 7 loops. The JtA rows: `playback-bot-loop-mode-jta` (two JtA zones and a maze start, about 10 loops) and `playback-bot-loop-mode-jta-start` (a three-zone JtA-only world whose loops start in a JtA zone).
+- Not yet: more than one target per loop.
+- The in-app row for substrates is `playback-bot-loop-mode-maze` (a generated maze-only world in loop mode, every sphere-log location checked).
+- The in-app row is `playback-bot-loop-mode-adventure` (Adventure, Generate Costs, Instant: every sphere-log location checked in about 28 loops).
+
+**Restart as a route step (return to menu).** Where the slot declares `exporter[p].return_to_menu` (`procgenCore/restartWarp.js`), returning to the menu is always possible, and the bot's planner knows it without any edge into `Menu`. `procgenCore/restartRoute.js` `planRoute` answers the graph's walk from the player's region. Only when no walk exists, and the restart target (the Menu panel's `restartTargetOf`, `Menu`) has one, does it answer a route that BEGINS with a RESTART step (`steps[1].restart: true`). The tie-break is `ROUTE_TIE_BREAK` (`walk-before-restart`): a walk always wins, however long it is.
+- The bot executes the step by calling the Menu panel's own Restart (the `menuPanel.restart` public function, the button's path), never an exit `walkTo`.
+- It then waits on the restart target. The substrate takes the start hop (on Seedling the glue warps the game to `seedlingStartSpawn`), and the bot routes on from the arrival.
+- The bot never takes the Restart while the active controller's leg is still playing. It first asks the controller's optional `settleBeforeRestart()`. A controller without it, or one that answers null, restarts at once, as before. The Seedling wasm controller answers its engine's `legEnd()`: a promise when a plan tape is playing, which resolves at the tape's held end. Until then the bot's status names the wait. A stop, a reset or a region move during the wait drops it. A leg that does not end within `RESTART_LEG_WAIT_MS` (30 s) is cut, and the status says so. Measured before this: the Restart after L17's chest stopped the 42-tick chest tape about 1.15 s in, at a wall-clock tick, so the room's clock at the start hop differed between runs. `getRestartDeferrals()` records each wait. On Seedling the glue then pushes the start hop's teleport in the Restart's own turn, because the stop released the room before the hop queued it. If the hop's load arrives in a later turn, the glue pushes at that load instead (`stats.restartPushes`, `at`: `restart` / `start-hop`). Before the push, the stop let the released room run, and the clock after the Restart differed by 0–2 ticks. The glue also tells the stopped wasm engines to expect the hop's arrival (`engine.expectArrival`, the crossing watch), so the landing is held and staged even when it beats the bot's next goal. Without that, 2 of 14 runs found an unwatched room: the adoption refused it (the player holds the Sword) and a forced re-arrival cost 2 frames. Measured on logical-links B (CI runs at one SHA): every clock after the Restart is the same relative to the start on every run, with 0 forced re-arrivals.
+- Without the flag (fail-closed), the refusal is the old one, word for word: `error: no path from <region> to <goal>`.
+- The bot also refuses by name when no Restart is wired, when Restart does not answer, or when Restart reports loop mode (loops' restart warps nobody).
+- The region graph's one-step move takes the same step. The path analyzer and `analyzePathToRegion` answer AP reachability from the start and never need it.
+- The live witness is `scripts/procgen/probe-seedling-restart-route.mjs` (a census RESTART-ONLY pocket, W and J; `--flag=off` is the fail-closed row).
+
+**An arrival inside a solid escapes by its way out.** A Seedling arrival can land the player's box INSIDE a solid whose saved flag still holds, such as L12's door into L0 at (288,176) with the rock unbroken (an out-of-order arrival). The solver then refuses before any search, with `obstacle.kind: 'arrival-inside-solid'` and a `wayOut`: the Menu's Restart, plus the level's other arrivals.
+- Both runtimes surface the refusal by name. The wasm engine's failure carries the `obstacle`. The JS page's walker fails the goal at once instead of walking from inside the solid.
+- The Seedling controller translates `wayOut` into the bot's terms (`flashPanel/seedlingArrivalEscape.js`): it keeps the Restart offer and maps each other arrival to the AP exit whose sidecar door it is.
+- When Restart is offered and the slot declares `return_to_menu`, the bot takes the same Restart step as above.
+- The bot also remembers the entrance that landed inside. Every later route avoids it, through one of the refusal's other arrivals (`planRoute`'s `avoid`).
+- Without the flag or a Restart offer, or when the player lands inside again, the bot makes a named stop that says which way out it could not take. ⚖ Nothing acts from inside the solid (no swing from inside).
+- The live witness is `scripts/procgen/probe-seedling-arrival-escape.mjs` (W and J; `--flag=off` is the named stop, and `--expect=refusal` is the control).
+- `scripts/procgen/probe-seedling-restart-held-items.mjs` measures that a Restart keeps the game's items, slot order and keys, and the AP inventory.
+
+**A saved obstacle is broken before first use.** ⚖ The user ruled that a persisted obstacle is *"break before first use"*. The rules carry one event per saved obstacle flag (`event_kind: 'game_state'`, `flashPanel/seedlingObstacleEvents.js`): it sits on the obstacle's open side (`side`), names its far side (`across`), and gates every door whose landing is inside the obstacle.
+- The state manager never collects such an event when it becomes reachable (`stateManager/core/eventKinds.js`). The runtime collects it when the GAME's flag is set (`flashPanel/seedlingEventCollector.js`, in the region glue): a cleared `pendingCheck` of its `{level, tag}`, which both runtimes report, or `botStatus().persistence_cleared` at load. After every live clear it re-reads that table too: `pendingCheck` is one polled slot, so a second write in the same frame hides the first (L38's `ButtonRoom` clears `{39,8}`, then writes its own `{38,4}`). It is collected as a local event check, never a server check, because the location has no id.
+- ⚖ The direction is game → AP only. Nothing stages a flag the game did not set: the game is the authority for a broken rock. Every staged boot already carries the game's own clears (the wasm arrival staging, a continuation's declarations, the mid-room re-stage, and every JS boot).
+- The bot never queues a game-state event: walking to one would break the obstacle eagerly. Where the graph has no walk, `procgenCore/eventRoute.js` plans one (`planRoute`'s `eventPath`, before any Restart). A hop through the obstacle at its own cost CREDITS the event, and the bot remembers the credit until the collector sees the flag. An event the route still needs is a goal visited first (a BREAK step).
+- The playback map lists the events beside its entries and refusals; an unknown event kind is refused by name. A walk to an event is the solver goal `clear-tag` (`atlasEventGoal` → `jsRuntimeSolver.solverGoalFor`; executor `solverBot`'s, fidelity CLEARTAG). The goal is anchored in the room the rules reach the event from (its `side`). When the flag is another level's, it carries the rules' `action.presser` (L39's flag 8, pressed from L38). The check is still the game's flag, collected as above. The wasm runtime walks it; the JS page refuses it by name, as it does an encounter.
+- Where the solver's tables already say no, the mapping refuses BY THE SOLVER'S REASON (`wrong-level`, `no-verb`: L112's `rocklock`, L113's `finaldoor`). Any other refusal (`cannot-act`, `unresolved`, `prerequisite`, …) is the solve's own.
+- The live witness is `scripts/procgen/probe-seedling-obstacle-events.mjs` (W and J): the walk breaks L0's rock, the event is collected live and at load, and L12's door into L0 then lands clear of it.
+
+When no sphere log is loaded, the bot acts as a plain remote control: it starts the substrate's own clock and leaves target choice to the substrate (the maze visualizer picks the alphabetically-first uncollected item or unvisited exit in the current region).
+
+## The PlaybackController contract and iframe proxies
+
+Substrates expose playback through `getPlaybackController()` on their registry entry; the contract (methods, `walkTo` target shape, null semantics) is specified in the [Substrate Registry Reference](./substrate-registry.md#playback).
+
+For in-process substrates (maze), the controller is the live panel's own object. For iframe-hosted substrates there is no host-side object to call, so `textAdventureSubstrateWrapper/playbackProxy.js` provides the host-side **PlaybackProxy**: each method publishes the invocation as an eventBus event, and the in-iframe `playbackBridge.js` subscribes and executes it. Methods are fire-and-forget — the bot never awaits them; progress comes back through the ordinary dispatcher events (`user:locationCheck`, `user:regionMove`), identically for in-process and iframe substrates.
+
+The proxy is reusable: it takes a `controlEvent` parameter, so other iframe substrates use the same class on their own channel — bounce constructs one on `bounce:playbackControl`, received by the shared flash bridge's playback receiver and translated into bot-driver targets ([Bounce Substrate](./bounce.md)).
+
+A proxy cannot refuse a target, because its methods return nothing. Seedling rooms, both generated (`flash_seedling_gen`) and real atlas rooms (`flash_seedling`), need to refuse: generated rooms can only be walked on the Flash Panel's JS runtime, real rooms on the JS or the wasm runtime, and the bot must say so rather than wait. Their controller (`flashPanel/seedlingPlaybackController.js`, one instance per substrate) is therefore a host-side object that calls into the same-origin game page directly. `walkTo` returns `false` with a `lastRefusal` reason on a runtime it cannot walk. On the JS runtime the walk runs inside the page's own tick ([Flash Substrate](./flash.md#the-playback-bot-on-the-js-runtime)); on the wasm runtime a real room is solved at its arrival and played as one host tape ([Wasm playback](./flash.md#wasm-playback-solver-walk-w1-w2)). A refusal that comes after the target was accepted is published as `playback:walkFailed`; the bot turns both kinds into a named `error:` status. With the Flash Panel's `seedlingSolverWalk` setting on (on by default), the page asks the real solver for an atlas room's plan and plays its keys one per tick, re-solving when the game leaves the plan. The solve runs in a worker, and the room is held while it does. A solve that passes its 5 s budget is stopped. A goal the solver declines is walked by the walker, with the solver's reason in the status, and offered to the solver again later. While a solve is in flight the controller publishes `playback:walkNote` (*solving… (budget 5 s)*), and the bot shows the note after its status ([the solver mode](./flash.md#the-solver-mode-flashpanelseedlingsolverwalk)).
+
+## Shared timing and UI primitives (`frontend/modules/shared/`)
+
+- **`playbackClock.js`** — the substrate-neutral timing primitive: drives `onTick` at a configurable Hz with start/stop/single-step/rate controls. `_tick(nowMs)` is a pure decision function; production wraps it in a requestAnimationFrame scheduler, tests call it directly with controlled timestamps.
+- **`playbackControlBar.js`** — the pure-DOM widget with instant / step / play / stop buttons and a speed slider (0.5–30 Hz). Callers wire the buttons to any controller-shaped object via the `actions` argument; it has no layout integration of its own. The maze panel and the playback bot panel both mount one.
+
+Both live in the `shared/` git submodule.
+
+## The forward simulator (`frontend/modules/shared/procgen/forwardSimulator.js`)
+
+A substrate-neutral playthrough walker over `rules.json`, with two entry points sharing one set of accessibility primitives:
+
+- `generateSphereLog(rulesDoc, opts)` — runs a full walk and returns a sphere log as JSONL-compatible entries. This is how the procgen pipeline embeds a sphere log into a compiled `rules.json`.
+- `pickNextTarget(model, state)` — given current inventory and checked locations, returns the next `{ region, location, item, accessRule }` to seek. Nothing in the app calls it; the maze visualizer and the playback bot choose targets themselves.
+
+Its faithfulness contract against Python: **integer-sphere contents must match `MultiWorld.get_spheres` exactly** (sphere boundaries snapshot reachability at sphere start; locations that become reachable mid-sphere belong to the next sphere), while fractional ordering *within* a sphere may differ (the walker picks alphabetically). The emitted format matches `exporter/sphere_logger.py`: a metadata entry, a `0` integer-header with initial accessibility sets, then one fractional entry per advancement-item pickup; filler items never appear as `sphere_locations`.
+
+## The shared simulator core (`frontend/modules/shared/simulatorCore.js`)
+
+Genre-agnostic search machinery shared by playbots, reachability analyzers, and generators:
+
+- `reach(world, solver, startState, goalPred, options)` — a query wrapper over a pluggable solver.
+- `makeBfsSolver({ step, inputs, visitedKey })` — a generic-search **feasibility** oracle closed over a per-game step function; bounce's `canJump` and the maze autopather both plug into it. A returned plan is the input sequence itself.
+- A random-walker solver factory — a **difficulty** oracle: runs randomized trials through `step` and reports what fraction reach the goal within a step budget. Feasibility and difficulty are separate oracles, used together.
+
+World/state/input shapes, step functions, and goal predicates are all per-game; only the contract is shared.
+
+## Per-substrate visualizers
+
+The maze panel's playthrough visualizer (`frontend/modules/mazeRoom/mazeRoomVisualizer.js`) drives an automated tile-walk through the loaded region, surfacing each step's outcome (move, pickup, exit-cross, blocked — with rule-evaluation context when blocked). It owns a PlaybackClock and its *own* simulated per-region state, publishing `playback:snapshotUpdated` for opt-in subscribers rather than touching `stateManager:snapshotUpdated`. Bounce's equivalent "watch it play" surface is the bot driver itself ([Bounce Substrate](./bounce.md)).
+
+## Headless verification
+
+The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `dump-*-byteidentity.mjs` and `check-spiral-byteidentity.mjs` check the [byte-identity contract](./stepped-pipeline.md#the-byte-identity-contract), and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
+
+## Related documentation
+
+- [Architecture](./architecture.md) — where playback sits in the runtime flow
+- [Substrate Registry Reference](./substrate-registry.md) — the PlaybackController contract
+- [Bounce Substrate](./bounce.md) — the bot driver and playback proxy in a real substrate

@@ -1,0 +1,356 @@
+{
+ "what": "414/i0",
+ "seamTime": 5131,
+ "budgetWork": 640,
+ "upgradeWindowWork": 85,
+ "fidelity": "defaults",
+ "ok": false,
+ "kind": "refusal",
+ "work": 196,
+ "ticks": null,
+ "answer": "bde7a26a",
+ "message": "solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,853.7) — chaser:bob@736,800 (inside leash 80 (d=5.9), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 215 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE t",
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 41608,
+   "work": 98
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 37588,
+   "work": 98
+  }
+ ],
+ "wallMs": 79196,
+ "points": 22394,
+ "sites": {
+  "segment": 2,
+  "goal": 2,
+  "walk": 198,
+  "heartbeat": 2486,
+  "preview": 19678,
+  "climb": 4,
+  "rung": 22,
+  "done": 2
+ },
+ "wallAfterSiteMs": {
+  "preview": 56477,
+  "heartbeat": 17126,
+  "walk": 4606,
+  "rung": 822,
+  "done": 17,
+  "start": 17,
+  "goal": 13,
+  "segment": 11,
+  "climb": 8
+ },
+ "topPairs": {
+  "preview→preview": {
+   "n": 17196,
+   "ms": 35573,
+   "maxMs": 174
+  },
+  "preview→heartbeat": {
+   "n": 2420,
+   "ms": 20243,
+   "maxMs": 93
+  },
+  "heartbeat→preview": {
+   "n": 2452,
+   "ms": 16706,
+   "maxMs": 118
+  },
+  "walk→walk": {
+   "n": 130,
+   "ms": 2625,
+   "maxMs": 68
+  },
+  "walk→preview": {
+   "n": 28,
+   "ms": 1211,
+   "maxMs": 169
+  },
+  "walk→heartbeat": {
+   "n": 34,
+   "ms": 752,
+   "maxMs": 140
+  },
+  "rung→heartbeat": {
+   "n": 2,
+   "ms": 673,
+   "maxMs": 394
+  },
+  "preview→walk": {
+   "n": 62,
+   "ms": 661,
+   "maxMs": 148
+  },
+  "heartbeat→heartbeat": {
+   "n": 30,
+   "ms": 339,
+   "maxMs": 39
+  },
+  "rung→rung": {
+   "n": 18,
+   "ms": 112,
+   "maxMs": 47
+  },
+  "heartbeat→walk": {
+   "n": 4,
+   "ms": 81,
+   "maxMs": 38
+  },
+  "rung→preview": {
+   "n": 2,
+   "ms": 37,
+   "maxMs": 22
+  },
+  "done→segment": {
+   "n": 1,
+   "ms": 17,
+   "maxMs": 17
+  },
+  "start→segment": {
+   "n": 1,
+   "ms": 17,
+   "maxMs": 17
+  },
+  "goal→walk": {
+   "n": 2,
+   "ms": 13,
+   "maxMs": 9
+  }
+ },
+ "segments": [
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "refused",
+   "asks": {
+    "walk": 98
+   },
+   "work": {
+    "shouldStop": 98,
+    "ticks": 2132,
+    "previews": 9839,
+    "previewStates": 635300,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 9,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 3,
+    "bound": 2,
+    "does-not-apply": 2,
+    "other": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 2,
+    "rung": 13,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,853.7) — chaser:bob@736,800 (inside leash 80 (d=5.9), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 215 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [chaser:bob@736,800] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine(\"Player\", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) at (889.0,849.9)\n  detour: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands\n  forced-hit: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverRefusal"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1242
+   },
+   "topNodes": [
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 2,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:narrow",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:detour",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:forced-hit",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  },
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "refused",
+   "asks": {
+    "walk": 98
+   },
+   "work": {
+    "shouldStop": 98,
+    "ticks": 2132,
+    "previews": 9839,
+    "previewStates": 635300,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 9,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "danger": 6,
+    "exhausted": 3,
+    "bound": 2,
+    "does-not-apply": 2,
+    "other": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 2,
+    "rung": 13,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (743.9,853.7) — chaser:bob@736,800 (inside leash 80 (d=5.9), box grown 0.5 px/tick x 0 + pad 0) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,51) in level 40 — for (888,824) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 215 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [chaser:bob@736,800] and this room's live roster is [bob@320,112, bob@288,112, bob@288,80, bob@304,144, bob@272,112, bobsoldier@880,832, bob@736,752, bob@736,800, bob@192,480, bob@352,448, bob@352,416, bob@208,448, bob@224,496, puncher@128,624, puncher@816,128]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine(\"Player\", …)` from 8 to 16 px off the body crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)) at (889.0,849.9)\n  detour: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands\n  forced-hit: COVERED GOAL (coveredGoalRefusal): the aim (888,824)'s own tile (55,51) lies inside the live body bobsoldier@880,832's volume (a stepped bobsoldier at its LIVE position), so the danger map forbids the goal itself — every DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands",
+    "kind": "danger",
+    "key": "segment/goal#0/walk/climb",
+    "name": "SolverRefusal"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 2486
+   },
+   "topNodes": [
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 2,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 2,
+     "rej": 2
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 2,
+     "rej": 1
+    },
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:narrow",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:detour",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:forced-hit",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  }
+ ],
+ "cpu": null
+}

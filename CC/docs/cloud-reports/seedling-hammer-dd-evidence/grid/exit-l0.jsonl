@@ -1,0 +1,266 @@
+{"x":16,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":32,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":48,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":80,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":96,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":112,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":128,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":144,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":160,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":176,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":240,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":256,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":272,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":32,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":48,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":32,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (72,40) in level 30 is INSIDE boss"}
+{"x":80,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":96,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":112,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":128,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":144,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":160,"y":32,"verdict":"SOLVED 211","already":false,"msg":""}
+{"x":176,"y":32,"verdict":"SOLVED 207","already":false,"msg":""}
+{"x":192,"y":32,"verdict":"SOLVED 227","already":false,"msg":""}
+{"x":208,"y":32,"verdict":"SOLVED 267","already":false,"msg":""}
+{"x":224,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":256,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":272,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":32,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":48,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":64,"y":48,"verdict":"SOLVED 237","already":false,"msg":""}
+{"x":80,"y":48,"verdict":"SOLVED 255","already":false,"msg":""}
+{"x":96,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":112,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":128,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":144,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":160,"y":48,"verdict":"SOLVED 199","already":false,"msg":""}
+{"x":176,"y":48,"verdict":"SOLVED 210","already":false,"msg":""}
+{"x":192,"y":48,"verdict":"SOLVED 211","already":false,"msg":""}
+{"x":208,"y":48,"verdict":"SOLVED 253","already":false,"msg":""}
+{"x":224,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":256,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208): "}
+{"x":48,"y":64,"verdict":"SOLVED 218","already":false,"msg":""}
+{"x":64,"y":64,"verdict":"SOLVED 302","already":false,"msg":""}
+{"x":80,"y":64,"verdict":"SOLVED 223","already":false,"msg":""}
+{"x":96,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":112,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":128,"y":64,"verdict":"SOLVED 206","already":false,"msg":""}
+{"x":144,"y":64,"verdict":"SOLVED 203","already":false,"msg":""}
+{"x":160,"y":64,"verdict":"SOLVED 193","already":false,"msg":""}
+{"x":176,"y":64,"verdict":"SOLVED 204","already":false,"msg":""}
+{"x":192,"y":64,"verdict":"SOLVED 214","already":false,"msg":""}
+{"x":208,"y":64,"verdict":"SOLVED 228","already":false,"msg":""}
+{"x":224,"y":64,"verdict":"SOLVED 227","already":false,"msg":""}
+{"x":240,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":64,"verdict":"SOLVED 259","already":false,"msg":""}
+{"x":272,"y":64,"verdict":"SOLVED 240","already":false,"msg":""}
+{"x":288,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":304,"y":64,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":80,"verdict":"SOLVED 206","already":false,"msg":""}
+{"x":48,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid) reach-exit (224,160)->L32: the danger map forbids (56,88) — chas"}
+{"x":64,"y":80,"verdict":"SOLVED 216","already":false,"msg":""}
+{"x":80,"y":80,"verdict":"SOLVED 214","already":false,"msg":""}
+{"x":96,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":112,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":128,"y":80,"verdict":"SOLVED 204","already":false,"msg":""}
+{"x":144,"y":80,"verdict":"SOLVED 193","already":false,"msg":""}
+{"x":160,"y":80,"verdict":"SOLVED 199","already":false,"msg":""}
+{"x":176,"y":80,"verdict":"SOLVED 193","already":false,"msg":""}
+{"x":192,"y":80,"verdict":"SOLVED 217","already":false,"msg":""}
+{"x":208,"y":80,"verdict":"SOLVED 220","already":false,"msg":""}
+{"x":224,"y":80,"verdict":"SOLVED 229","already":false,"msg":""}
+{"x":240,"y":80,"verdict":"SOLVED 237","already":false,"msg":""}
+{"x":256,"y":80,"verdict":"SOLVED 248","already":false,"msg":""}
+{"x":272,"y":80,"verdict":"SOLVED 257","already":false,"msg":""}
+{"x":288,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":304,"y":80,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":96,"verdict":"SOLVED 192","already":false,"msg":""}
+{"x":48,"y":96,"verdict":"SOLVED 220","already":false,"msg":""}
+{"x":64,"y":96,"verdict":"SOLVED 211","already":false,"msg":""}
+{"x":80,"y":96,"verdict":"SOLVED 197","already":false,"msg":""}
+{"x":96,"y":96,"verdict":"SOLVED 195","already":false,"msg":""}
+{"x":112,"y":96,"verdict":"SOLVED 194","already":false,"msg":""}
+{"x":128,"y":96,"verdict":"SOLVED 198","already":false,"msg":""}
+{"x":144,"y":96,"verdict":"SOLVED 198","already":false,"msg":""}
+{"x":160,"y":96,"verdict":"SOLVED 193","already":false,"msg":""}
+{"x":176,"y":96,"verdict":"SOLVED 207","already":false,"msg":""}
+{"x":192,"y":96,"verdict":"SOLVED 215","already":false,"msg":""}
+{"x":208,"y":96,"verdict":"SOLVED 219","already":false,"msg":""}
+{"x":224,"y":96,"verdict":"SOLVED 231","already":false,"msg":""}
+{"x":240,"y":96,"verdict":"SOLVED 229","already":false,"msg":""}
+{"x":256,"y":96,"verdict":"SOLVED 229","already":false,"msg":""}
+{"x":272,"y":96,"verdict":"SOLVED 238","already":false,"msg":""}
+{"x":288,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":304,"y":96,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":112,"verdict":"SOLVED 178","already":false,"msg":""}
+{"x":48,"y":112,"verdict":"SOLVED 180","already":false,"msg":""}
+{"x":64,"y":112,"verdict":"SOLVED 198","already":false,"msg":""}
+{"x":80,"y":112,"verdict":"SOLVED 198","already":false,"msg":""}
+{"x":96,"y":112,"verdict":"SOLVED 198","already":false,"msg":""}
+{"x":112,"y":112,"verdict":"SOLVED 195","already":false,"msg":""}
+{"x":128,"y":112,"verdict":"SOLVED 193","already":false,"msg":""}
+{"x":144,"y":112,"verdict":"SOLVED 201","already":false,"msg":""}
+{"x":160,"y":112,"verdict":"SOLVED 191","already":false,"msg":""}
+{"x":176,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":240,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":112,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":128,"verdict":"SOLVED 182","already":false,"msg":""}
+{"x":32,"y":128,"verdict":"SOLVED 177","already":false,"msg":""}
+{"x":48,"y":128,"verdict":"SOLVED 172","already":false,"msg":""}
+{"x":64,"y":128,"verdict":"SOLVED 180","already":false,"msg":""}
+{"x":80,"y":128,"verdict":"SOLVED 195","already":false,"msg":""}
+{"x":96,"y":128,"verdict":"SOLVED 191","already":false,"msg":""}
+{"x":112,"y":128,"verdict":"SOLVED 200","already":false,"msg":""}
+{"x":128,"y":128,"verdict":"SOLVED 190","already":false,"msg":""}
+{"x":144,"y":128,"verdict":"SOLVED 192","already":false,"msg":""}
+{"x":160,"y":128,"verdict":"SOLVED 178","already":false,"msg":""}
+{"x":176,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":128,"verdict":"SOLVED 12","already":false,"msg":""}
+{"x":224,"y":128,"verdict":"SOLVED 11","already":false,"msg":""}
+{"x":240,"y":128,"verdict":"SOLVED 12","already":false,"msg":""}
+{"x":256,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":128,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":144,"verdict":"SOLVED 240","already":false,"msg":""}
+{"x":32,"y":144,"verdict":"SOLVED 174","already":false,"msg":""}
+{"x":48,"y":144,"verdict":"SOLVED 174","already":false,"msg":""}
+{"x":64,"y":144,"verdict":"SOLVED 173","already":false,"msg":""}
+{"x":80,"y":144,"verdict":"SOLVED 166","already":false,"msg":""}
+{"x":96,"y":144,"verdict":"SOLVED 187","already":false,"msg":""}
+{"x":112,"y":144,"verdict":"SOLVED 178","already":false,"msg":""}
+{"x":128,"y":144,"verdict":"SOLVED 179","already":false,"msg":""}
+{"x":144,"y":144,"verdict":"SOLVED 191","already":false,"msg":""}
+{"x":160,"y":144,"verdict":"SOLVED 173","already":false,"msg":""}
+{"x":176,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":144,"verdict":"SOLVED 12","already":false,"msg":""}
+{"x":208,"y":144,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":224,"y":144,"verdict":"SOLVED 4","already":false,"msg":""}
+{"x":240,"y":144,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":256,"y":144,"verdict":"SOLVED 27","already":false,"msg":""}
+{"x":272,"y":144,"verdict":"SOLVED 31","already":false,"msg":""}
+{"x":288,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":304,"y":144,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":160,"verdict":"SOLVED 177","already":false,"msg":""}
+{"x":48,"y":160,"verdict":"SOLVED 173","already":false,"msg":""}
+{"x":64,"y":160,"verdict":"SOLVED 166","already":false,"msg":""}
+{"x":80,"y":160,"verdict":"SOLVED 173","already":false,"msg":""}
+{"x":96,"y":160,"verdict":"SOLVED 162","already":false,"msg":""}
+{"x":112,"y":160,"verdict":"SOLVED 179","already":false,"msg":""}
+{"x":128,"y":160,"verdict":"SOLVED 174","already":false,"msg":""}
+{"x":144,"y":160,"verdict":"SOLVED 177","already":false,"msg":""}
+{"x":160,"y":160,"verdict":"SOLVED 175","already":false,"msg":""}
+{"x":176,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":160,"verdict":"SOLVED 11","already":false,"msg":""}
+{"x":208,"y":160,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":224,"y":160,"verdict":"SOLVED 12","already":false,"msg":""}
+{"x":240,"y":160,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":256,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":288,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":160,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":176,"verdict":"SOLVED 182","already":false,"msg":""}
+{"x":48,"y":176,"verdict":"SOLVED 180","already":false,"msg":""}
+{"x":64,"y":176,"verdict":"SOLVED 171","already":false,"msg":""}
+{"x":80,"y":176,"verdict":"SOLVED 164","already":false,"msg":""}
+{"x":96,"y":176,"verdict":"SOLVED 157","already":false,"msg":""}
+{"x":112,"y":176,"verdict":"SOLVED 158","already":false,"msg":""}
+{"x":128,"y":176,"verdict":"SOLVED 169","already":false,"msg":""}
+{"x":144,"y":176,"verdict":"SOLVED 167","already":false,"msg":""}
+{"x":160,"y":176,"verdict":"SOLVED 168","already":false,"msg":""}
+{"x":176,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":176,"verdict":"SOLVED 12","already":false,"msg":""}
+{"x":208,"y":176,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":224,"y":176,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":240,"y":176,"verdict":"SOLVED 5","already":false,"msg":""}
+{"x":256,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":176,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":192,"verdict":"SOLVED 213","already":false,"msg":""}
+{"x":48,"y":192,"verdict":"SOLVED 178","already":false,"msg":""}
+{"x":64,"y":192,"verdict":"SOLVED 175","already":false,"msg":""}
+{"x":80,"y":192,"verdict":"SOLVED 168","already":false,"msg":""}
+{"x":96,"y":192,"verdict":"SOLVED 163","already":false,"msg":""}
+{"x":112,"y":192,"verdict":"SOLVED 157","already":false,"msg":""}
+{"x":128,"y":192,"verdict":"SOLVED 151","already":false,"msg":""}
+{"x":144,"y":192,"verdict":"SOLVED 166","already":false,"msg":""}
+{"x":160,"y":192,"verdict":"SOLVED 164","already":false,"msg":""}
+{"x":176,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":192,"verdict":"SOLVED 11","already":false,"msg":""}
+{"x":240,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":272,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":192,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":208,"verdict":"SOLVED 207","already":false,"msg":""}
+{"x":48,"y":208,"verdict":"SOLVED 214","already":false,"msg":""}
+{"x":64,"y":208,"verdict":"SOLVED 168","already":false,"msg":""}
+{"x":80,"y":208,"verdict":"SOLVED 163","already":false,"msg":""}
+{"x":96,"y":208,"verdict":"SOLVED 158","already":false,"msg":""}
+{"x":112,"y":208,"verdict":"SOLVED 160","already":false,"msg":""}
+{"x":128,"y":208,"verdict":"SOLVED 155","already":false,"msg":""}
+{"x":144,"y":208,"verdict":"SOLVED 149","already":false,"msg":""}
+{"x":160,"y":208,"verdict":"SOLVED 154","already":false,"msg":""}
+{"x":176,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":192,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":208,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":224,"y":208,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (232,216) in level 30 is INSIDE bo"}
+{"x":240,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":256,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":272,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":208,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":16,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":32,"y":224,"verdict":"SOLVED 225","already":false,"msg":""}
+{"x":48,"y":224,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (56,232) in level 30 is INSIDE bre"}
+{"x":64,"y":224,"verdict":"SOLVED 163","already":false,"msg":""}
+{"x":80,"y":224,"verdict":"SOLVED 159","already":false,"msg":""}
+{"x":96,"y":224,"verdict":"SOLVED 156","already":false,"msg":""}
+{"x":112,"y":224,"verdict":"SOLVED 155","already":false,"msg":""}
+{"x":128,"y":224,"verdict":"SOLVED 146","already":false,"msg":""}
+{"x":144,"y":224,"verdict":"SOLVED 143","already":false,"msg":""}
+{"x":160,"y":224,"verdict":"SOLVED 140","already":false,"msg":""}
+{"x":176,"y":224,"verdict":"SOLVED 132","already":false,"msg":""}
+{"x":192,"y":224,"verdict":"SOLVED 128","already":false,"msg":""}
+{"x":208,"y":224,"verdict":"SOLVED 117","already":false,"msg":""}
+{"x":224,"y":224,"verdict":"SOLVED 105","already":false,"msg":""}
+{"x":240,"y":224,"verdict":"SOLVED 117","already":false,"msg":""}
+{"x":256,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@224,208's key line in level 30 — 2 ce"}
+{"x":272,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":288,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}
+{"x":304,"y":224,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal reach-exit toward (232,168) in level 30. O"}

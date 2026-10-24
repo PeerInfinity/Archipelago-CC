@@ -2,7 +2,7 @@
 // Extracted from init.js lines 1385-1590
 
 import { setupDesktopLayout } from '../layout/desktopLayout.js';
-import { getModuleMetadata } from '../core/moduleMetadata.js';
+import { completeModuleInfo } from './completeModuleInfo.js';
 
 /**
  * Initializes the appropriate layout manager based on device type
@@ -216,8 +216,8 @@ async function setupMobileLayout(options) {
                              importedModules.get(factoryDetails.moduleId)?.moduleInfo ||
                              {};
 
-        // Use the centralized metadata helper to ensure complete module info
-        const moduleInfo = getModuleMetadata(componentType, rawModuleInfo);
+        // Fill the defaults (title/name → componentType); the data itself lives in moduleInfo
+        const moduleInfo = completeModuleInfo(componentType, rawModuleInfo);
 
         // Priority: title first, then name, then componentType
         const title = moduleInfo.title ||

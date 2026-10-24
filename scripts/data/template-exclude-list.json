@@ -47,7 +47,12 @@
     }
   ],
   "ut_fuzz_exclude_list_comment": "Excluded from UT fuzz tests (bundled worlds) -- typically hangs or timeouts.",
-  "ut_fuzz_exclude_list": [],
+  "ut_fuzz_exclude_list": [
+    {
+      "name": "SMZ3.yaml",
+      "reason": "Logic is TotalSMZ3's Progression object model (lambda items: …), which this system cannot evaluate: the JS reaches 107/316 locations with no items AND with all items (spoiler test fails at sphere 0: +70 locations), and world_generator needs --lossy (313 True_() placeholders). No Progression port (user ruling 2026-10-21)."
+    }
+  ],
   "main_test_exclude_list_comment": "Excluded from spoiler-minimal and multiclient tests, and from worldgen preset generation.",
   "main_test_exclude_list": [
     {
@@ -80,7 +85,7 @@
     },
     {
       "name": "Jak and Daxter The Precursor Legacy.yaml",
-      "reason": "Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test."
+      "reason": "Spoiler test passes (134.7 s with generation, seed 1); multiclient reaches 224/239 because Reachable Orbs is not computed live, and no game-specific module will be added (user ruling 2026-10-23)."
     },
     {
       "name": "Pokemon Emerald.yaml",
@@ -96,7 +101,7 @@
     },
     {
       "name": "SMZ3.yaml",
-      "reason": "Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items."
+      "reason": "Logic is TotalSMZ3's Progression object model (lambda items: …), which this system cannot evaluate: the JS reaches 107/316 locations with no items AND with all items (spoiler test fails at sphere 0: +70 locations), and world_generator needs --lossy (313 True_() placeholders). No Progression port (user ruling 2026-10-21)."
     },
     {
       "name": "Yacht Dice.yaml",
@@ -115,7 +120,7 @@
     },
     {
       "name": "Bomb Rush Cyberfunk.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 1 helper name(s) with no definition in the rules file's helpers block (graffiti_spots ×78; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "Celeste (Open World).yaml",
@@ -135,19 +140,19 @@
     },
     {
       "name": "Lingo.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 3 helper name(s) with no definition in the rules file's helpers block (lingo_can_use_entrance ×287, _lingo_can_satisfy_requirements ×155, lingo_can_use_level_2_location ×1; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "Raft.yaml",
-      "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds."
+      "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. (Strict world_generator generates it since 2026-10-24: the exporter now reads a LogicMixin's self.has(item, player) as an item check, not a helper named has.)"
     },
     {
       "name": "Secret of Evermore.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 1 helper name(s) with no definition in the rules file's helpers block (has ×376; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "Starcraft 2.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 14 helper name(s) with no definition in the rules file's helpers block (e.g. terran_competent_comp ×37, terran_gates_of_hell_requirement ×13; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "Stardew Valley.yaml",
@@ -155,7 +160,7 @@
     },
     {
       "name": "Super Metroid.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 45 helper name(s) with no definition in the rules file's helpers block (e.g. SMBool ×114, wand ×60, wor ×32; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "The Witness.yaml",
@@ -167,7 +172,7 @@
     },
     {
       "name": "Yacht Dice.yaml",
-      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 1 helper name(s) with no definition in the rules file's helpers block (dice_simulation_state_change ×90; the bodies live only in the JS gameLogic module), so it generates only with --lossy."
     },
     {
       "name": "DOOM 1993.yaml",
@@ -200,6 +205,53 @@
     {
       "name": "Mega Man 3.yaml",
       "reason": "Temporarily excluded. WorldGen variant intermittently fails test_explicit_indirect_conditions_spheres with Fill.FillError on certain pytest seeds (e.g. 57516062135983689099)."
+    },
+    {
+      "name": "Links Awakening DX.yaml",
+      "reason": "Temporarily excluded. Same mode as Mega Man 3: the WorldGen variant intermittently fails test/general/test_items.py::test_item_links with 'Fill.FillError: No more spots to place 270 items' on certain pytest seeds (CI run 31572464285, 2026-08-12; green on the next run with no change). worlds/ladx_worldgen is still committed, so ladx_worldgen is ALSO parked in conftest.py's KNOWN_FLAKY_WORLDS until a regeneration run removes the directory."
+    },
+    {
+      "name": "Pokemon Red and Blue.yaml",
+      "reason": "Strict world_generator refuses it (rule-node F1, 2026-10-23): 18 helper name(s) with no definition in the rules file's helpers block (e.g. can_surf ×50, evolve_level ×45, card_key ×32; the bodies live only in the JS gameLogic module), so it generates only with --lossy. It is on main_test_exclude_list too, for a different reason."
+    },
+    {
+      "name": "Yu-Gi-Oh! 2006.yaml",
+      "reason": "Strict world_generator refuses it (rule-node F1, 2026-10-23): 9 helper name(s) with no definition in the rules file's helpers block (e.g. yugioh06_difficulty ×49; the bodies live only in the JS gameLogic module), so it generates only with --lossy. It is on main_test_exclude_list too, for a different reason."
+    }
+  ],
+  "worldgen_generation_whitelist_comment": "WHITELIST (not an exclude list): the ONLY base templates for which scripts/utils/generate_all_templates.sh (run by generate-presets.yml) generates and commits a worlds/<x>_worldgen world and its frontend/presets/<x>_worldgen preset -- applied via list-template-files.py --include, AFTER the exclude lists. Everything else's worldgen variant is transient: test-world-generator.py builds and deletes it. bounce/runner/runner_sphere are hand-committed worldgen worlds, not produced by the script, and are preserved at release by scripts/release/preserved-dev-presets.txt.",
+  "worldgen_generation_whitelist": [
+    {
+      "name": "A Link to the Past.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "APCalc.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Baking Adventure.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Coding Adventure.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "DepGraph.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Metamath.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "TOEM original.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "TOEM rule builder.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
     }
   ],
   "ut_fuzz_apworld_exclude_list_comment": "Excluded from UT fuzz tests for community apworlds (incompatible rule patterns or apworld bugs). APWorlds have no worldgen variants, so this list is not expanded.",

@@ -1,0 +1,23 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-f5bdb07d · control seedling-vanilla-record-ce77a823
+# box lock: BUSY — probe-seedling-wasm-logical-links.mjs (pid 1039794, browser) since 2026-10-20T02:09:42.313Z; queuing for up to 3600s
+# box lock: TAKEN by probe-seedling-l32-rock-move.mjs (browser, pid 1069027) — head 01a2634cf, 13 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"walkout","arm":"delivered","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":981,"transitions":[{"t":886,"from":32,"to":30,"at":{"x":232,"y":184}}],"out":{"t":886,"from":32,"to":30,"at":{"x":232,"y":184}},"byStairs":true,"clears":["10,0","32,1","32,3","32,4","5,0","8,0","8,1"],"final":{"t":980,"x":232,"y":204.95000000000002,"level":30},"model":{"refused":null,"transitions":[],"final":{"t":980,"x":80,"y":124.99999999999999,"level":32}}}
+PASS: walkout delivered: the game ran the tape to its end on the mounted set — 981 obs, seedling-vanilla-record-f5bdb07d
+PASS: walkout delivered: the fight is vanilla's — {32,1}{32,3}{32,4} cleared, the tree NOT burned — 10,0 32,1 32,3 32,4 5,0 8,0 8,1
+PASS: walkout delivered: WITHOUT Fire, L32 → L30 by the STAIRS (arrival 232,184) — {"t":886,"from":32,"to":30,"at":{"x":232,"y":184}}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"walkout","arm":"control","set_id":"seedling-vanilla-record-ce77a823","mounted":"seedling-vanilla-record-ce77a823","observations":981,"transitions":[],"out":null,"byStairs":false,"clears":["10,0","32,1","32,3","32,4","5,0","8,0","8,1"],"final":{"t":980,"x":80,"y":124.99999999999999,"level":32},"model":{"refused":null,"transitions":[],"final":{"t":980,"x":80,"y":124.99999999999999,"level":32}}}
+PASS: walkout control: the game ran the tape to its end on the mounted set — 981 obs, seedling-vanilla-record-ce77a823
+PASS: walkout control: the fight is vanilla's — {32,1}{32,3}{32,4} cleared, the tree NOT burned — 10,0 32,1 32,3 32,4 5,0 8,0 8,1
+PASS: walkout control: the vanilla seal is reproduced — the player stays in L32 — {"t":980,"x":80,"y":124.99999999999999,"level":32}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"fire-pit","arm":"delivered","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":1057,"transitions":[{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}}],"out":{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}},"byStairs":false,"clears":["10,0","32,0","32,1","32,3","32,4","5,0","8,0","8,1"],"final":{"t":1056,"x":232,"y":88,"level":30},"model":{"refused":null,"transitions":[{"t":971,"from":32,"to":30,"at":{"x":248,"y":5}}],"final":{"t":1056,"x":248,"y":88,"level":30}}}
+PASS: fire-pit delivered: the game ran the tape to its end on the mounted set — 1057 obs, seedling-vanilla-record-f5bdb07d
+PASS: fire-pit delivered: WITH Fire, the tree burns and the pit falls to L30 after it (not by the stairs) — {"out":{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}},"clears":["10,0","32,0","32,1","32,3","32,4","5,0","8,0","8,1"]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"fire-pit","arm":"control","set_id":"seedling-vanilla-record-ce77a823","mounted":"seedling-vanilla-record-ce77a823","observations":1057,"transitions":[{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}}],"out":{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}},"byStairs":false,"clears":["10,0","32,0","32,1","32,3","32,4","5,0","8,0","8,1"],"final":{"t":1056,"x":232,"y":88,"level":30},"model":{"refused":null,"transitions":[{"t":971,"from":32,"to":30,"at":{"x":248,"y":5}}],"final":{"t":1056,"x":248,"y":88,"level":30}}}
+PASS: fire-pit control: the game ran the tape to its end on the mounted set — 1057 obs, seedling-vanilla-record-ce77a823
+PASS: fire-pit control: WITH Fire, the tree burns and the pit falls to L30 after it (not by the stairs) — {"out":{"t":976,"from":32,"to":30,"at":{"x":232,"y":5}},"clears":["10,0","32,0","32,1","32,3","32,4","5,0","8,0","8,1"]}
+wrote 4 witness file(s) to CC/docs/cloud-reports/rules-l32-rock-move-evidence/witness
+ALL CHECKS PASSED

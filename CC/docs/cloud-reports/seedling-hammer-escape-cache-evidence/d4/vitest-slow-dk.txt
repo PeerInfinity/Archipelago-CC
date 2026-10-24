@@ -1,0 +1,5 @@
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js (1 test) 32196ms
+     ✓ ON, sweep request 392:0 solved whole ships the same ticks for less work  32194ms
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Duration  34.90s (transform 1.88s, setup 0ms, import 2.57s, tests 32.20s, environment 0ms)

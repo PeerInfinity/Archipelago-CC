@@ -1,0 +1,121 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m13 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 102099[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 1[2mms[22m[39m
+     [32m✓[39m withStrikeEtaFloor sets and restores it, also on a throw[32m 1[2mms[22m[39m
+[31m     [31m×[31m ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED[39m[32m 8[2mms[22m[39m
+[31m     [31m×[31m the tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m a knocked-back start: an axis faster than the cap bounds the walk at its own speed[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m ice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m a waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk[39m[32m 1[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 1207[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 1565[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ the walk: three ghost landings on spinner@880,848, the kill at t1616 (OFF's walk, G1's witness, kills at t2114), and the chaser's three hits[32m 2[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 409[2mms[22m[39m
+     [32m✓[39m ⛓⛓⛓ THE GAME AGREES: its rows of the killed Spinner (position, hits, hits_timer) are the model's at every sampled tick, and it reaches hits 4[32m 5[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key [33m 98889[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mstrikeEtaFloorOf — the admissible floor's edges[2m > [22mground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WALK_SPEED
+[31m[1mAssertionError[22m: expected 200 to be 100 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 100[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m59:38[22m[39m
+    [90m 57| [39m    it('ground: (reach − 1) / 1.6, rounded up — 2·WALK_SPEED, never WA…
+    [90m 58| [39m        [35mconst[39m run [33m=[39m [34mstub[39m()[33m;[39m
+    [90m 59| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m161[39m[33m,[39m [34m0[39m))[33m.[39m[34mtoBe[39m([34m100[39m)[33m;[39m
+    [90m   | [39m                                     [31m^[39m
+    [90m 60| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m161.1[39m[33m,[39m [34m0[39m))[33m.[39m[34mtoBe[39m([34m101[39m)[33m;[39m
+    [90m 61| [39m        expect(floorTo(run, -40, 161)).toBe(100); // the longer axis, …
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mstrikeEtaFloorOf — the admissible floor's edges[2m > [22mthe tolerance: a cell within 1 px on both axes is 0 ticks away, and 2.6 px is one
+[31m[1mAssertionError[22m: expected 2 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 2[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m69:40[22m[39m
+    [90m 67| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m11[39m[33m,[39m [34m9[39m))[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m 68| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m10[39m[33m,[39m [34m10[39m))[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m 69| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m12.6[39m[33m,[39m [34m10[39m))[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   | [39m                                       [31m^[39m
+    [90m 70| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m12.61[39m[33m,[39m [34m10[39m))[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+    [90m 71| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mstrikeEtaFloorOf — the admissible floor's edges[2m > [22ma knocked-back start: an axis faster than the cap bounds the walk at its own speed
+[31m[1mAssertionError[22m: expected 134 to be 100 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 100[39m
+[31m+ 134[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m77:62[22m[39m
+    [90m 75| [39m        [34mexpect[39m([34mfloorTo[39m([34mstub[39m({ vy[33m:[39m [33m-[39m[34m2.5[39m })[33m,[39m [34m0[39m[33m,[39m [34m161[39m))[33m.[39m[34mtoBe[39m([34m64[39m)[33m;[39m
+    [90m 76| [39m        [90m// a start under the cap changes nothing[39m
+    [90m 77| [39m        [34mexpect[39m([34mfloorTo[39m([34mstub[39m({ vx[33m:[39m [34m1.2[39m[33m,[39m vy[33m:[39m [33m-[39m[34m0.4[39m })[33m,[39m [34m161[39m[33m,[39m [34m0[39m))[33m.[39m[34mtoBe[39m([34m100[39m)[33m;[39m
+    [90m   | [39m                                                             [31m^[39m
+    [90m 78| [39m    })[33m;[39m
+    [90m 79| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mstrikeEtaFloorOf — the admissible floor's edges[2m > [22mice: a walkable ice tile in the room, or the sticky `onIce` flag, caps an axis at 2·SLIDING_SPEED
+[31m[1mAssertionError[22m: expected 160 to be 80 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 80[39m
+[31m+ 160[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m81:73[22m[39m
+    [90m 79| [39m
+    [90m 80| [39m    it('ice: a walkable ice tile in the room, or the sticky `onIce` fl…
+    [90m 81| [39m        expect(floorTo(stub({ tiles: [0, PROFILE.iceState] }), 161, 0)…
+    [90m   | [39m                                                                        [31m^[39m
+    [90m 82| [39m        [34mexpect[39m([34mfloorTo[39m([34mstub[39m({ onIce[33m:[39m [35mtrue[39m })[33m,[39m [34m161[39m[33m,[39m [34m0[39m))[33m.[39m[34mtoBe[39m([34m80[39m)[33m;[39m
+    [90m 83| [39m        expect(floorTo(stub({ tiles: [0, PROFILE.waterState] }), 161, …
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js[2m > [22mstrikeEtaFloorOf — the admissible floor's edges[2m > [22ma waterfall: its push adds to v.y past any cap, so only the horizontal axis bounds the walk
+[31m[1mAssertionError[22m: expected 200 to be 100 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 100[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js:[2m89:40[22m[39m
+    [90m 87| [39m        [35mconst[39m run [33m=[39m [34mstub[39m({ tiles[33m:[39m [[33mPROFILE[39m[33m.[39mwaterfallState] })[33m;[39m
+    [90m 88| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m0[39m[33m,[39m [34m161[39m))[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m 89| [39m        [34mexpect[39m([34mfloorTo[39m(run[33m,[39m [34m161[39m[33m,[39m [34m400[39m))[33m.[39m[34mtoBe[39m([34m100[39m)[33m;[39m
+    [90m   | [39m                                       [31m^[39m
+    [90m 90| [39m    })[33m;[39m
+    [90m 91| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 06:53:25
+[2m   Duration [22m 106.31s[2m (transform 2.02s, setup 0ms, import 4.01s, tests 102.10s, environment 0ms)[22m
+

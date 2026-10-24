@@ -1,0 +1,11 @@
+{
+  "name": "buy-reserve-10",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "purchasePolicy": {
+      "kind": "reserve",
+      "f": 1
+    }
+  }
+}

@@ -1,0 +1,90 @@
+--- <scratch>/base-solverBot.js	2026-10-14 19:00:09.556812304 +0000
++++ <scratch>/lab/frontend/modules/seedlingDemo/solverBot.js	2026-10-14 17:48:19.887544709 +0000
+@@ -9424,8 +9424,69 @@
+     let best = null;
+     // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
+     const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
++    // ── RE LAB (scratch only) ──
++    const LAB = globalThis.process?.env?.RE_LAB ?? '';
++    const rec = LAB === 'census' ? { t: run.ticksCompleted, n: clear.length, c: [] } : null;
++    let simBest = null;          // the cut's own choice, simulated beside the full one
++    let simThrew = null;
+     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
+-        const walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
++        const cut = best ? best.eta : Infinity;
++        if (LAB === 'lb' || LAB === 'lbwall') {
++            const lbT = Math.ceil(Math.max(0, Math.max(Math.abs(c.x - run.state.x), Math.abs(c.y - run.state.y))
++                - DEFAULT_TOLERANCE) / WALK_SPEED);
++            if (best && lbT > best.eta) { RE_LAB_COUNTS.lbSkipped += 1; continue; }
++        }
++        if (LAB === 'wall' || LAB === 'lbwall') {
++            if (run.collideLineSolid(run.state.x, run.state.y, c.x, c.y)) { RE_LAB_COUNTS.wallSkipped += 1; continue; }
++        }
++        let walk;
++        if (rec) {
++            let n = 0;
++            const lb = minTicksBetween(run.state, c);
++            const wall = run.collideLineSolid(run.state.x, run.state.y, c.x, c.y) ? 1 : 0;
++            const simCut = simBest ? simBest.eta : Infinity;
++            const lbT = Math.ceil(Math.max(0, Math.max(Math.abs(c.x - run.state.x), Math.abs(c.y - run.state.y))
++                - DEFAULT_TOLERANCE) / WALK_SPEED);
++            const row = { x: c.x, y: c.y, cut: Number.isFinite(cut) ? cut : -1, lb, lbT, wall, cl: c.clearance };
++            rec.c.push(row);
++            try {
++                walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: () => { n += 1; return false; } });
++            } catch (e) {
++                row.threw = String(e?.name) + ': ' + String(e?.message).slice(0, 160);
++                row.len = n;
++                row.hidCut = n >= cut + 1 ? 1 : 0;
++                row.hidLb = best && lb > best.eta ? 1 : 0;
++                row.hidWall = wall;
++                if (simThrew === null && !(n >= simCut + 1)) simThrew = row.threw;
++                globalThis.__RE_LAB_SINK?.(rec);
++                throw e;
++            }
++            row.len = walk.samples.length;
++            row.kind = walk.truncated?.kind ?? null;
++            row.hidCut = (row.kind === 'lethal-pit' || row.kind === 'drowned') && row.len >= cut + 1 ? 1 : 0;
++            row.hidLb = (row.kind === 'lethal-pit' || row.kind === 'drowned') && best && lb > best.eta ? 1 : 0;
++            row.cutLen = Math.min(row.len, Number.isFinite(cut) ? cut + 1 : Infinity);
++            if (!walk.truncated && walk.samples.length < lb) row.lbViolated = 1;
++            if (!walk.truncated && walk.samples.length < lbT) row.lbTViolated = 1;
++            // the cut's own simulated pass over this candidate
++            const simCutHere = row.len >= simCut + 1;
++            if (!walk.truncated && bombs) row.bl = refugeBlast(run, walk, c, untilIndex) !== null ? 1 : 0;
++            if (!simCutHere && !walk.truncated) {
++                const blasted = bombs && row.bl === 1;
++                if (!blasted) {
++                    const eta = walk.samples.length;
++                    if (!simBest || eta < simBest.eta || (eta === simBest.eta && c.clearance > simBest.clearance)) {
++                        simBest = { x: c.x, y: c.y, clearance: c.clearance, eta };
++                    }
++                }
++            }
++        } else if (LAB === 'cut' || LAB === 'lb' || LAB === 'wall' || LAB === 'lbwall') {
++            walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE,
++                best ? { stopWhen: () => (++walkN) > best.eta } : {});
++            walkN = 0;
++        } else {
++            walk = previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
++        }
+         if (walk.truncated) continue;
+         const eta = walk.samples.length;
+         if (bombs) {
+@@ -9440,8 +9501,16 @@
+             best = { x: c.x, y: c.y, clearance: c.clearance, eta };
+         }
+     }
++    if (rec) {
++        rec.best = best ? [best.x, best.y, best.eta] : null;
++        rec.sim = simBest ? [simBest.x, simBest.y, simBest.eta] : null;
++        rec.simThrew = simThrew;
++        globalThis.__RE_LAB_SINK?.(rec);
++    }
+     return best;
+ }
++let walkN = 0;
++export const RE_LAB_COUNTS = { lbSkipped: 0, wallSkipped: 0 };
+ 
+ /** How many clear cells a refuge derivation previews. Named, not generous. */
+ const REFUGE_CANDIDATES = 12;

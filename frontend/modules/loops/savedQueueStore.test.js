@@ -1,11 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
+import { convertPerformedActionsToQueue } from '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import {
     SAVED_QUEUE_PER_REGION_LIMIT,
     getSavedQueues,
+    getSavedQueueByTag,
     saveQueue,
     clearForRegion,
+    hasPlayableRecording,
+    hasSummaryRecording,
     _testOnly_clearAll,
+    _testOnly_resetCache,
+    _testOnly_snapshotRaw,
+    _testOnly_restoreRaw,
 } from './savedQueueStore.js';
 
 const RULES_HASH = 'a1b2c3d4';
@@ -16,7 +23,7 @@ function makeQueue(overrides = {}) {
         substrate: 'maze',
         arrivalExitId: 'entrance',
         departureExitId: 'east',
-        actions: [{ type: 'move', dir: 'E' }],
+        actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
         manaAtEntry: 100,
         manaAtExit: 80,
         manaMin: 75,
@@ -43,7 +50,7 @@ describe('savedQueueStore', () => {
         expect(queues[0]).toMatchObject({
             arrivalExitId: 'entrance',
             departureExitId: 'east',
-            actions: [{ type: 'move', dir: 'E' }],
+            actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
             manaAtEntry: 100,
             manaAtExit: 80,
             manaMin: 75,
@@ -52,49 +59,81 @@ describe('savedQueueStore', () => {
         expect(typeof queues[0].recordedAt).toBe('number');
     });
 
-    it('returns "duplicate" for identical (arrival, departure, actions) triples', () => {
+    it('returns "duplicate" for a byte-identical re-record (same tag, departure, actions)', () => {
         saveQueue(RULES_HASH, makeQueue());
         const status = saveQueue(RULES_HASH, makeQueue({ manaMin: 1 }));
-        // Mana fields differ but arrival/departure/actions match.
+        // Mana fields differ but tag/departure/actions match.
         expect(status).toBe('duplicate');
         expect(getSavedQueues(RULES_HASH, 'region_0_0', 'maze')).toHaveLength(1);
     });
 
-    it('treats different arrival exits as distinct queues', () => {
+    it('treats different arrival exits as distinct queues (distinct tags)', () => {
         saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'entrance' }));
         saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'south' }));
         expect(getSavedQueues(RULES_HASH, 'region_0_0', 'maze')).toHaveLength(2);
     });
 
-    it('treats different departure exits as distinct queues', () => {
-        saveQueue(RULES_HASH, makeQueue({ departureExitId: 'east' }));
-        saveQueue(RULES_HASH, makeQueue({ departureExitId: 'north' }));
+    it('treats different ordinals (same arrival) as distinct queues (distinct tags)', () => {
+        saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'entrance', ordinal: 0 }));
+        saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'entrance', ordinal: 1 }));
         expect(getSavedQueues(RULES_HASH, 'region_0_0', 'maze')).toHaveLength(2);
     });
 
-    it('treats different action sequences as distinct queues', () => {
-        saveQueue(RULES_HASH, makeQueue({ actions: [{ type: 'move', dir: 'E' }] }));
-        saveQueue(RULES_HASH, makeQueue({
-            actions: [{ type: 'move', dir: 'E' }, { type: 'wait' }],
+    it('REPLACES the same-tag entry on re-record (different departure)', () => {
+        saveQueue(RULES_HASH, makeQueue({ departureExitId: 'east', recordedAt: 1000 }));
+        const status = saveQueue(RULES_HASH, makeQueue({ departureExitId: 'north', recordedAt: 2000 }));
+        expect(status).toBe('saved');
+        const queues = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');
+        // Same tag (entrance, ordinal 0) → the second recording replaced the first.
+        expect(queues).toHaveLength(1);
+        expect(queues[0].departureExitId).toBe('north');
+    });
+
+    it('REPLACES the same-tag entry on re-record (different actions)', () => {
+        saveQueue(RULES_HASH, makeQueue({ actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }] }));
+        const status = saveQueue(RULES_HASH, makeQueue({
+            actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }, { actionType: 'move', actionId: 'W', substrate: 'maze', loops: 1 }],
         }));
-        expect(getSavedQueues(RULES_HASH, 'region_0_0', 'maze')).toHaveLength(2);
+        expect(status).toBe('saved');
+        const queues = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');
+        expect(queues).toHaveLength(1);
+        expect(queues[0].actions).toHaveLength(2);
     });
 
-    it('FIFO-evicts the oldest entry when saving beyond the cap', () => {
-        // Save (cap + 2) distinct queues; verify the bucket holds only
-        // the cap, and the oldest two were dropped.
+    it('getSavedQueueByTag returns the matching entry or null', () => {
+        saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'entrance', ordinal: 0, departureExitId: 'east' }));
+        saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'south', ordinal: 0, departureExitId: 'north' }));
+        expect(getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'entrance', 0))
+            .toMatchObject({ arrivalExitId: 'entrance', departureExitId: 'east' });
+        expect(getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'south', 0))
+            .toMatchObject({ arrivalExitId: 'south', departureExitId: 'north' });
+        // No such tag → null.
+        expect(getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'entrance', 1)).toBeNull();
+        expect(getSavedQueueByTag(RULES_HASH, 'nope', 'maze', 'entrance', 0)).toBeNull();
+    });
+
+    it('getSavedQueueByTag defaults ordinal to 0 and reads legacy (ordinal-less) entries', () => {
+        // Legacy entry saved without an ordinal reads back at ordinal 0.
+        saveQueue(RULES_HASH, makeQueue({ arrivalExitId: 'entrance' }));
+        expect(getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'entrance'))
+            .toMatchObject({ arrivalExitId: 'entrance' });
+    });
+
+    it('FIFO-evicts the oldest entry when saving beyond the cap (distinct tags)', () => {
+        // Save (cap + 2) distinct-tag queues; verify the bucket holds only
+        // the cap, and the oldest two were dropped. Vary ordinal so each is
+        // a distinct recording tag (varying departure would replace).
         for (let i = 0; i < SAVED_QUEUE_PER_REGION_LIMIT + 2; i++) {
             saveQueue(RULES_HASH, makeQueue({
-                departureExitId: `exit_${i}`,
+                ordinal: i,
                 recordedAt: 1000 + i, // explicit timestamps so eviction is deterministic
             }));
         }
         const queues = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');
         expect(queues).toHaveLength(SAVED_QUEUE_PER_REGION_LIMIT);
-        // First two are gone; oldest remaining is exit_2.
-        expect(queues[0].departureExitId).toBe('exit_2');
-        expect(queues[queues.length - 1].departureExitId)
-            .toBe(`exit_${SAVED_QUEUE_PER_REGION_LIMIT + 1}`);
+        // First two are gone; oldest remaining is ordinal 2.
+        expect(queues[0].ordinal).toBe(2);
+        expect(queues[queues.length - 1].ordinal).toBe(SAVED_QUEUE_PER_REGION_LIMIT + 1);
     });
 
     it('returns defensive copies — caller mutations do not affect the store', () => {
@@ -143,5 +182,297 @@ describe('savedQueueStore', () => {
         saveQueue(RULES_HASH, makeQueue({ name: 'my-custom-queue' }));
         const [q] = getSavedQueues(RULES_HASH, 'region_0_0', 'maze');
         expect(q.name).toBe('my-custom-queue');
+    });
+});
+
+describe('savedQueueStore — the M4 universal envelope', () => {
+    // An ACTIONS-LESS entry is how a COARSE-ONLY substrate stores its
+    // annotations: its recording is the block's own queue interior, so the
+    // store holds economy metadata and nothing replayable.
+    function makeAnnotationsOnly(overrides = {}) {
+        return {
+            regionName: 'region_0_0',
+            substrate: 'text_adventure',
+            arrivalExitId: 'entrance',
+            departureExitId: null,
+            actions: [],
+            annotations: { items: { 'text_adventure/Lamp': { net: 1, min: 0 } }, xp: { net: 20 } },
+            ...overrides,
+        };
+    }
+
+    it('hasPlayableRecording separates a real recording from an annotations envelope', () => {
+        expect(hasPlayableRecording(makeQueue())).toBe(true);
+        expect(hasPlayableRecording(makeAnnotationsOnly())).toBe(false);
+        expect(hasPlayableRecording(null)).toBe(false);
+        expect(hasPlayableRecording({})).toBe(false);
+    });
+
+    it('stores and returns annotations alongside a recording', () => {
+        saveQueue(RULES_HASH, makeQueue({ annotations: { items: {}, xp: { net: 5 } } }));
+        const q = getSavedQueueByTag(RULES_HASH, 'region_0_0', 'maze', 'entrance');
+        expect(q.annotations).toEqual({ items: {}, xp: { net: 5 } });
+    });
+
+    it('changed annotations are NOT a duplicate, even with identical actions', () => {
+        // The coarse case: actions are [] and departure null on every
+        // re-record, so annotations are the only thing that can differ. If
+        // the duplicate check ignored them the stale economy would stick.
+        expect(saveQueue(RULES_HASH, makeAnnotationsOnly())).toBe('saved');
+        expect(saveQueue(RULES_HASH, makeAnnotationsOnly())).toBe('duplicate');
+        const changed = makeAnnotationsOnly({
+            annotations: { items: { 'text_adventure/Lamp': { net: 4, min: -1 } }, xp: { net: 20 } },
+        });
+        expect(saveQueue(RULES_HASH, changed)).toBe('saved');
+
+        // Replace-on-tag: still exactly one entry, carrying the new economy.
+        const bucket = getSavedQueues(RULES_HASH, 'region_0_0', 'text_adventure');
+        expect(bucket).toHaveLength(1);
+        expect(bucket[0].annotations.items['text_adventure/Lamp']).toEqual({ net: 4, min: -1 });
+    });
+});
+
+describe('savedQueueStore — the M5 summary envelope', () => {
+    // A SUMMARY entry is how a summary substrate (runner, bounce) stores the
+    // net result of a visit: how long it took, which checks it performed,
+    // which explicitly-costed actions it ran. Also actions-less — its
+    // "recording" is not a replayable script — so the two guards must not
+    // confuse it with either of the other categories.
+    function makeSummary(overrides = {}) {
+        return {
+            regionName: 'region_2_2',
+            substrate: 'runner',
+            arrivalExitId: 'entrance',
+            departureExitId: 'Right arrow',
+            actions: [],
+            annotations: { items: { 'runner/Coin': { net: 1, min: 0 } }, xp: { net: 12 } },
+            summary: { durationSeconds: 4, checks: ['Coin 1'], costedActions: [] },
+            ...overrides,
+        };
+    }
+
+    it('hasSummaryRecording separates a summary from the other two categories', () => {
+        expect(hasSummaryRecording(makeSummary())).toBe(true);
+        // A fine recording is not a summary...
+        expect(hasSummaryRecording(makeQueue())).toBe(false);
+        // ...and a summary is not a playable (fine) recording: it is
+        // actions-less by design, so it must never bind to a replay.
+        expect(hasPlayableRecording(makeSummary())).toBe(false);
+        expect(hasSummaryRecording(null)).toBe(false);
+        expect(hasSummaryRecording({})).toBe(false);
+        // durationSeconds is what replay-time repricing multiplies by, so a
+        // summary without it is not usable.
+        expect(hasSummaryRecording(makeSummary({ summary: { checks: [] } }))).toBe(false);
+        expect(hasSummaryRecording(makeSummary({ summary: [] }))).toBe(false);
+    });
+
+    it('a changed summary is NOT a duplicate, even with identical actions and annotations', () => {
+        // The same trap as annotations (M4): a summary entry always agrees on
+        // `actions: []`, so if the duplicate check ignored `summary` a
+        // re-record that took a different amount of time — the very thing
+        // Playback prices off — would be discarded and the stale duration
+        // would survive forever.
+        expect(saveQueue(RULES_HASH, makeSummary())).toBe('saved');
+        expect(saveQueue(RULES_HASH, makeSummary())).toBe('duplicate');
+
+        const slower = makeSummary({
+            summary: { durationSeconds: 9, checks: ['Coin 1'], costedActions: [] },
+        });
+        expect(saveQueue(RULES_HASH, slower)).toBe('saved');
+
+        // Replace-on-tag: still exactly one entry, carrying the new duration.
+        const bucket = getSavedQueues(RULES_HASH, 'region_2_2', 'runner');
+        expect(bucket).toHaveLength(1);
+        expect(bucket[0].summary.durationSeconds).toBe(9);
+    });
+});
+
+describe('actionQueue-vocabulary recordings (format slice Q-a)', () => {
+    // A jta visit, converted the way the substrate converts it. Before A1 the
+    // converter minted `aq_${Date.now()}_n` ids INTO the recording, so two
+    // captures of the same visit never compared equal and the 'duplicate'
+    // no-op was dead for every actionQueue substrate (plan §23.1 Q1).
+    const jtaVisit = () => [
+        { type: 'task', name: 'Chop Wood', task_id: 12, reps: 5 },
+        { type: 'item', name: 'Food', item: 7, count: 2 },
+    ];
+    const jtaQueue = () => ({
+        regionName: 'region_1_0',
+        substrate: 'jta',
+        arrivalExitId: 'entrance',
+        departureExitId: 'east',
+        actions: convertPerformedActionsToQueue(jtaVisit()),
+        manaAtEntry: 100,
+        manaAtExit: 80,
+        manaMin: 75,
+        locationsChecked: [],
+        itemsPickedUp: [],
+    });
+
+    it('a re-record of an unchanged jta visit reads "duplicate"', () => {
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('saved');
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('duplicate');
+    });
+
+    it('a CHANGED jta visit still reads "saved"', () => {
+        expect(saveQueue(RULES_HASH, jtaQueue())).toBe('saved');
+        const changed = jtaQueue();
+        changed.actions = convertPerformedActionsToQueue([
+            { type: 'task', name: 'Chop Wood', task_id: 12, reps: 6 },
+        ]);
+        expect(saveQueue(RULES_HASH, changed)).toBe('saved');
+    });
+
+    it('REFUSES a malformed actionQueue recording as invalid (A6)', () => {
+        const bad = jtaQueue();
+        bad.actions = [{ actionType: 'clickTask', actionId: 1, loops: 1 }, { actionType: 'clickTask', loops: 1.5 }];
+        expect(saveQueue(RULES_HASH, bad)).toBe('invalid');
+        expect(getSavedQueues(RULES_HASH, 'region_1_0', 'jta')).toEqual([]);
+    });
+
+    it('leaves a recording in ANOTHER vocabulary alone', () => {
+        // The maze's native shape has no `actionType` — not this gate's business.
+        expect(saveQueue(RULES_HASH, makeQueue())).toBe('saved');
+    });
+
+    it('accepts a legacy entry that still carries entryId and label', () => {
+        const legacy = jtaQueue();
+        legacy.actions = [{
+            entryId: 'aq_1700000000000_3', actionType: 'useItem', actionId: 7,
+            label: 'Food', loops: 2, disabled: false,
+        }];
+        expect(saveQueue(RULES_HASH, legacy)).toBe('saved');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// Slice Q-b — legacy maze recordings are DISCARDED on read.
+//
+// The user ruled there are no saved maze queues worth keeping compatible, so
+// `loadCache` drops a `substrate:'maze'` entry whose actions carry the retired
+// `type` key rather than upgrading it. No upgrade code, no version dance; the
+// store key stays `v1`, because jta and omsi entries are already
+// actionQueue-shaped and are not the maze's to drop.
+// ---------------------------------------------------------------------------
+
+describe('savedQueueStore — the legacy-maze filter (Q-b)', () => {
+    const KEY = 'loops:savedQueues:v1';
+    let store;
+    let warnings;
+    let realLocalStorage;
+    let realConsoleWarn;
+
+    function seed(obj) {
+        store.set(KEY, JSON.stringify(obj));
+        _testOnly_resetCache();
+    }
+
+    beforeEach(() => {
+        store = new Map();
+        warnings = [];
+        realLocalStorage = globalThis.localStorage;
+        realConsoleWarn = console.warn;
+        globalThis.localStorage = {
+            getItem: (k) => (store.has(k) ? store.get(k) : null),
+            setItem: (k, v) => store.set(k, v),
+            removeItem: (k) => store.delete(k),
+        };
+        console.warn = (msg) => warnings.push(String(msg));
+    });
+
+    afterEach(() => {
+        globalThis.localStorage = realLocalStorage;
+        console.warn = realConsoleWarn;
+        _testOnly_clearAll();
+    });
+
+    const legacyMaze = {
+        regionName: 'Forest', substrate: 'maze',
+        arrivalExitId: 'entrance', departureExitId: 'east',
+        actions: [{ type: 'move', dir: 'E' }, { type: 'wait' }],
+        manaAtEntry: 100, manaAtExit: 80, manaMin: 75,
+        locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
+    };
+    const currentMaze = {
+        ...legacyMaze,
+        actions: [{ actionType: 'move', actionId: 'E', substrate: 'maze', loops: 2 }],
+        recordedAt: 2,
+    };
+
+    it('drops a maze recording whose actions carry the retired `type` key', () => {
+        seed({ [`h1|maze|Forest`]: [legacyMaze, currentMaze] });
+        const queues = getSavedQueues('h1', 'Forest', 'maze');
+        expect(queues).toHaveLength(1);
+        expect(queues[0].recordedAt).toBe(2);
+    });
+
+    it('names how many it dropped on the console', () => {
+        seed({ [`h1|maze|Forest`]: [legacyMaze, { ...legacyMaze, recordedAt: 3 }] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect(warnings.join('\n')).toMatch(/dropped 2 maze recordings/);
+    });
+
+    it('says nothing when there is nothing to drop', () => {
+        seed({ [`h1|maze|Forest`]: [currentMaze] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect(warnings.join('\n')).not.toMatch(/dropped/);
+    });
+
+    it('a NON-maze recording in another vocabulary is NOT the maze\'s to drop', () => {
+        const textAdventure = {
+            ...legacyMaze, substrate: 'text_adventure',
+            actions: [{ type: 'go', dir: 'north' }], recordedAt: 4,
+        };
+        seed({ [`h1|text_adventure|Forest`]: [textAdventure] });
+        expect(getSavedQueues('h1', 'Forest', 'text_adventure')).toHaveLength(1);
+    });
+
+    it('an ACTIONS-LESS maze entry (a coarse annotations envelope) survives', () => {
+        const annotationsOnly = { ...legacyMaze, actions: [], recordedAt: 5 };
+        seed({ [`h1|maze|Forest`]: [annotationsOnly] });
+        expect(getSavedQueues('h1', 'Forest', 'maze')).toHaveLength(1);
+    });
+
+    it('the store key is still v1 — the ruling was DISCARD, not migrate', () => {
+        seed({ [`h1|maze|Forest`]: [currentMaze] });
+        getSavedQueues('h1', 'Forest', 'maze');
+        expect([...store.keys()]).toEqual(['loops:savedQueues:v1']);
+    });
+});
+
+describe('_testOnly_snapshotRaw / _testOnly_restoreRaw — an in-app row puts the saved queues back (local-storage V1)', () => {
+    let store;
+    let real;
+    beforeEach(() => {
+        store = new Map();
+        real = globalThis.localStorage;
+        globalThis.localStorage = {
+            getItem: (k) => (store.has(k) ? store.get(k) : null),
+            setItem: (k, v) => store.set(k, String(v)),
+            removeItem: (k) => store.delete(k),
+        };
+        _testOnly_resetCache();
+    });
+    afterEach(() => {
+        globalThis.localStorage = real;
+        _testOnly_resetCache();
+    });
+
+    it('a row that records a queue leaves the store byte-identical to what it found', () => {
+        saveQueue(RULES_HASH, makeQueue({ regionName: 'mine' }));
+        const raw = _testOnly_snapshotRaw();
+        saveQueue('otherhash', makeQueue({ regionName: 'test_region' }));
+        _testOnly_restoreRaw(raw);
+        expect(store.get('loops:savedQueues:v1')).toBe(raw);
+        expect(getSavedQueues('otherhash', 'test_region', 'maze')).toEqual([]);
+        expect(getSavedQueues(RULES_HASH, 'mine', 'maze')).toHaveLength(1);
+    });
+
+    it('an absent key stays absent', () => {
+        const raw = _testOnly_snapshotRaw();
+        expect(raw).toBe(null);
+        saveQueue(RULES_HASH, makeQueue());
+        _testOnly_restoreRaw(raw);
+        expect(store.has('loops:savedQueues:v1')).toBe(false);
     });
 });

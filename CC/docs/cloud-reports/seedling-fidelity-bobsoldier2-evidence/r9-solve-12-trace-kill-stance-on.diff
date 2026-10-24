@@ -1,0 +1,13 @@
+108,119d107
+<                 },
+<                 {
+<                     "option": "sword-dash window: leg-bound",
+<                     "why": "3350 of 3368 scanned preview(s) — first at walk-offset 0: its longest leg is 388 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
+<                 },
+<                 {
+<                     "option": "sword-dash window: stalled",
+<                     "why": "18 of 3368 scanned preview(s) — first at walk-offset 411: the dashed corridor STALLS — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further"
+<                 },
+<                 {
+<                     "option": "sword-dash",
+<                     "why": "no dash window certified faster than the undashed 842 tick(s) — 842 start tick(s) x 4 preview(s) = 3368 scanned, each with its own reason"

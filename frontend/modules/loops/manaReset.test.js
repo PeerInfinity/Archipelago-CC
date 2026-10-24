@@ -346,20 +346,22 @@ describe('OOM — gameState.deductMana semantics', () => {
   });
 });
 
-describe('OOM — recalculateMaxMana caps currentMana', () => {
+describe('OOM — recalculateMaxMana does NOT cap currentMana (max = starting mana, not a ceiling)', () => {
   let loopState, gs;
   beforeEach(() => {
     ({ loopState, gs } = makeWired());
   });
 
-  it('shrinks currentMana if new max is lower', () => {
+  it('leaves currentMana above the new max (maxMana is starting mana, not a cap)', () => {
     gs.maxMana = 200;
     gs.currentMana = 150;
     gs.manaPerItem = 10;
-    // Snapshot with no items → base 100. New maxMana = 100.
+    // Snapshot with no items → base 100. New maxMana = 100, but currentMana
+    // is NOT clamped down to it: maxMana is the loop's STARTING mana (and the
+    // mana-bar max), never a ceiling. Matches gameState state.test.js.
     loopState._gs().recalculateMaxMana({ inventory: {} });
     expect(gs.maxMana).toBe(100);
-    expect(gs.currentMana).toBe(100);
+    expect(gs.currentMana).toBe(150);
   });
 
   it('leaves currentMana alone when below the new max', () => {

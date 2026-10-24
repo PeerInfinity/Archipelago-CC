@@ -1,0 +1,12 @@
+D3 — leg 202 (level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_7_2), ON (SEEDLING_ARROW_LANE_CROSSING=1), node,
+drivers/leg.mjs with FH_BUDGET=60000 (FORCED_HITS.nodeBudget 2000 -> 60000; depthMax 3 unchanged). 51 s wall.
+
+  forced-hit: no forced hit is proven from (40.0,72.0): 46656 prefix(es) of 3 tick(s) are still hitless
+  (first [· · ·]) — no hit is proven forced inside the bound (47988 fork step(s))
+
+At the default budget the same rung stops at depth 2 ("1296 prefix(es) of 2 tick(s) are still hitless ... depth 3
+needs 46656 more fork step(s) than the budget's 668"). With the budget lifted, depth 3 completes and EVERY one of the
+46,656 three-tick prefixes is hitless (0 leaves): the forced-hit proof is not a budget wall at this state, there is
+no forced hit to prove. The wall is a missing rung: with no weapon (sphere 0) the Bobs ringing the pits
+(bob@208,32, bob@192,80, bob@224,96) can be neither killed nor baited, AVOID's corridor (now through the lanes,
+ON) meets bob@208,32 at (199.2,40.8), and DETOUR finds no clean corridor within 2 vias.

@@ -1,0 +1,505 @@
+## THE ROUTE — derived from AP's own region rules, the atlas, and the sphere order
+
+LEG 0.1  Level 010 - Sword  (+Progressive Sword)
+  items held entering: {none}
+  levels: L0 → L2 → L3 → L4 → L5 → L6 → L7 → L8 → L9 → L10
+  regions: level_0__r8c0 > level_2 > level_3__r0c4 > level_4 > level_5__r1c5 > level_6 > level_7 > level_8 > level_9 > level_10
+  FORCED rooms (no route avoids them): level_2, level_3__r0c4, level_4, level_5__r1c5, level_6, level_7, level_8, level_9
+  alternatives: NONE — every room on this leg is forced
+LEG 0.2  Level 011 - Chest  (+Seal)
+  items held entering: {Progressive Sword}
+  levels: L10 → L11
+  regions: level_10 > level_11
+  FORCED rooms (no route avoids them): none
+  alternatives: NONE — every room on this leg is forced
+LEG 0.3  Level 017 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal}
+  levels: L11 → L3 → L2 → L0 → L13 → L14 → L15 → L16 → L17
+  regions: level_11 > level_3__r8c6 > level_3__r0c4 > level_2 > level_0__r8c0 > level_13 > level_14 > level_15__r1c5 > level_15__r1c9 > level_16__r1c1 > level_17
+  FORCED rooms (no route avoids them): level_3__r0c4, level_2, level_0__r8c0, level_13, level_14, level_15__r1c5, level_15__r1c9, level_16__r1c1
+  alternative (without level_3__r8c6): L11 → L10 → L9 → L8 → L7 → L6 → L5 → L4 → L3 → L2 → L0 → L13 → L14 → L15 → L16 → L17 — 16 rooms vs 9 chosen
+LEG 0.4  Level 086 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal}
+  levels: L17 → L0 → L86
+  regions: level_17 > Menu > level_0__r8c0 > level_86
+  FORCED rooms (no route avoids them): Menu, level_0__r8c0
+  alternatives: NONE — every room on this leg is forced
+LEG 1.1  Level 019 - Boss Key 0  (+Red Key)
+  items held entering: {Progressive Sword, Seal}
+  levels: L86 → L0 → L13 → L14 → L15 → L16 → L18 → L19
+  regions: level_86 > level_0__r8c0 > level_13 > level_14 > level_15__r1c5 > level_15__r1c9 > level_16__r1c1 > level_16__r4c21 > level_18__r1c1 > level_18__r7c10 > level_19__r5c5
+  FORCED rooms (no route avoids them): level_0__r8c0, level_13, level_14, level_15__r1c5, level_15__r1c9, level_16__r1c1, level_16__r4c21, level_18__r1c1, level_18__r7c10
+  alternatives: NONE — every room on this leg is forced
+LEG 1.2  Level 036 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key}
+  levels: L19 → L0 → L12 → L36
+  regions: level_19__r5c5 > Menu > level_0__r8c0 > level_0__r11c19 > level_12__r0c19 > level_36
+  FORCED rooms (no route avoids them): Menu, level_0__r8c0, level_0__r11c19, level_12__r0c19
+  alternatives: NONE — every room on this leg is forced
+LEG 2.1  Level 020 - Shield  (+Progressive Shield)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared}
+  levels: L36 → L12 → L0 → L13 → L14 → L15 → L16 → L18 → L19 → L20
+  regions: level_36 > level_12__r0c19 > level_0__r11c19 > level_0__r8c0 > level_13 > level_14 > level_15__r1c5 > level_15__r1c9 > level_16__r1c1 > level_16__r4c21 > level_18__r1c1 > level_18__r7c10 > level_19__r5c5 > level_19__r3c3 > level_19__r1c1 > level_20__r1c4
+  FORCED rooms (no route avoids them): level_12__r0c19, level_0__r11c19, level_0__r8c0, level_13, level_14, level_15__r1c5, level_15__r1c9, level_16__r1c1, level_16__r4c21, level_18__r1c1, level_18__r7c10, level_19__r5c5, level_19__r3c3, level_19__r1c1
+  alternatives: NONE — every room on this leg is forced
+LEG 2.2  Level 025 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield}
+  levels: L20 → L13 → L0 → L12 → L21 → L22 → L25
+  regions: level_20__r1c4 > level_20__r3c1 > level_13 > level_0__r8c0 > level_0__r11c19 > level_12__r0c19 > level_12__r0c37 > level_21 > level_22 > level_25
+  FORCED rooms (no route avoids them): level_20__r3c1, level_13, level_0__r8c0, level_0__r11c19, level_12__r0c19, level_12__r0c37, level_21, level_22
+  alternatives: NONE — every room on this leg is forced
+LEG 2.3  Level 029 - Boss Key 1  (+Green Key)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield}
+  levels: L25 → L22 → L29
+  regions: level_25 > level_22 > level_29__r2c2
+  FORCED rooms (no route avoids them): none
+  alternative (without level_22): L25 → L26 → L27 → L28 → L30 → L31 → L29 — 7 rooms vs 3 chosen
+LEG 2.4  Level 030 - Torchpickup  (+Light)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key}
+  levels: L29 → L31 → L30
+  regions: level_29__r2c2 > level_31__r5c24 > level_31__r24c10 > level_30__r2c10
+  FORCED rooms (no route avoids them): none
+  alternative (without level_31__r5c24): L29 → L22 → L25 → L26 → L27 → L28 → L30 — 7 rooms vs 3 chosen
+LEG 3.1  Level 032 - Bob Boss  (+Fire)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light}
+  levels: L30 → L32
+  regions: level_30__r2c10 > level_30__r8c13 > level_32
+  FORCED rooms (no route avoids them): level_30__r8c13
+  alternatives: NONE — every room on this leg is forced
+LEG 4.1  Level 012 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire}
+  levels: L32 → L30 → L22 → L21 → L23 → L24 → L12
+  regions: level_32 > level_30__r2c10 > level_30__r0c4 > level_22 > level_21 > level_23 > level_24 > level_12__r40c4 > level_12__r0c19 > level_12__r0c37 > level_12__r42c29
+  FORCED rooms (no route avoids them): level_30__r2c10, level_22, level_21, level_23, level_24, level_12__r40c4, level_12__r0c19, level_12__r0c37
+  alternative (without level_30__r0c4): L32 → L30 → L31 → L29 → L22 → L21 → L23 → L24 → L12 — 9 rooms vs 7 chosen
+LEG 4.2  Level 038 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared}
+  levels: L12 → L37 → L38
+  regions: level_12__r42c29 > level_12__r0c37 > level_37__r12c6 > level_37__r0c18 > level_38__r0c9
+  FORCED rooms (no route avoids them): level_12__r0c37, level_37__r12c6, level_37__r0c18
+  alternatives: NONE — every room on this leg is forced
+LEG 4.3  Level 049 - Conch  (+Progressive Swim)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared}
+  levels: L38 → L37 → L44 → L45 → L46 → L47 → L48 → L49
+  regions: level_38__r0c9 > level_37__r0c18 > level_37__r12c6 > level_44__r6c4 > level_44__r0c4 > level_45__r0c7 > level_46__r0c11 > level_47__r2c9 > level_48__r18c7 > level_48__r2c10 > level_49
+  FORCED rooms (no route avoids them): level_37__r0c18, level_37__r12c6, level_44__r0c4, level_45__r0c7, level_46__r0c11, level_47__r2c9, level_48__r18c7, level_48__r2c10
+  alternative (without level_44__r6c4): L38 → L37 → L12 → L21 → L23 → L24 → L12 → L88 → L87 → L44 → L45 → L46 → L47 → L48 → L49 — 15 rooms vs 8 chosen
+LEG 5.1  Level 015 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim}
+  levels: L49 → L0 → L13 → L14 → L15
+  regions: level_49 > Menu > level_0__r8c0 > level_13 > level_14 > level_15__r1c5 > level_15__r6c8
+  FORCED rooms (no route avoids them): Menu, level_0__r8c0, level_13, level_14, level_15__r1c5
+  alternatives: NONE — every room on this leg is forced
+LEG 5.2<flag:L39:8  L39 flag 8: wandlock@144,592 cleared  (+L39 flag 8: wandlock@144,592 cleared)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim}
+  levels: L15 → L14 → L13 → L0 → L12 → L37 → L38
+  regions: level_15__r6c8 > level_15__r1c5 > level_14 > level_13 > level_0__r8c0 > level_0__r11c19 > level_12__r0c19 > level_12__r0c37 > level_37__r12c6 > level_37__r0c18 > level_38__r0c9
+  FORCED rooms (no route avoids them): level_13, level_0__r8c0, level_0__r11c19, level_12__r0c19, level_37__r12c6, level_37__r0c18
+  alternative (without level_15__r1c5): L15 → L16 → L18 → L19 → L20 → L13 → L0 → L12 → L37 → L38 — 10 rooms vs 7 chosen
+  alternative (without level_12__r0c37): L15 → L14 → L13 → L0 → L12 → L88 → L87 → L44 → L37 → L38 — 10 rooms vs 7 chosen
+LEG 5.2  Level 039 - Totem Part 72,40  (+Totem Shard)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared}
+  levels: L38 → L39
+  regions: level_38__r0c9 > level_39__r2c11 > level_39__r0c9
+  FORCED rooms (no route avoids them): level_39__r2c11
+  alternatives: NONE — every room on this leg is forced
+LEG 5.3  Level 040 - Boss Key 2  (+Purple Key)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard}
+  levels: L39 → L40
+  regions: level_39__r0c9 > level_40__r23c29 > level_40__r32c36
+  FORCED rooms (no route avoids them): level_40__r23c29
+  alternatives: NONE — every room on this leg is forced
+LEG 5.4  Level 040 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key}
+  levels: L40
+  regions: level_40__r32c36 > level_40__r23c29
+  FORCED rooms (no route avoids them): none
+  alternatives: NONE — every room on this leg is forced
+LEG 5.5  Level 040 - Totem Part 160,640  (+Totem Shard)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key}
+  levels: L40
+  regions: level_40__r23c29
+  FORCED rooms (no route avoids them): none
+  alternatives: NONE — every room on this leg is forced
+LEG 5.6  Level 046 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key}
+  levels: L40 → L0 → L12 → L37 → L44 → L45 → L46
+  regions: level_40__r23c29 > Menu > level_0__r8c0 > level_0__r11c19 > level_12__r0c19 > level_12__r0c37 > level_37__r12c6 > level_44__r6c4 > level_44__r0c4 > level_45__r0c7 > level_46__r0c11 > level_46__r1c26
+  FORCED rooms (no route avoids them): Menu, level_0__r8c0, level_0__r11c19, level_12__r0c19, level_12__r0c37, level_37__r12c6, level_44__r6c4, level_44__r0c4, level_45__r0c7, level_46__r0c11
+  alternatives: NONE — every room on this leg is forced
+LEG 5.7  Level 048 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key}
+  levels: L46 → L47 → L48
+  regions: level_46__r1c26 > level_46__r0c11 > level_47__r2c9 > level_48__r18c7 > level_48__r2c10 > level_48__r11c9
+  FORCED rooms (no route avoids them): level_46__r0c11, level_47__r2c9, level_48__r18c7, level_48__r2c10
+  alternatives: NONE — every room on this leg is forced
+LEG 5.8  Level 055 - Boss Key 3  (+Blue Key)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key}
+  levels: L48 → L49 → L50 → L51 → L52 → L55
+  regions: level_48__r11c9 > level_48__r2c10 > level_49 > level_50 > level_51__r3c10 > level_51__r14c6 > level_52 > level_55
+  FORCED rooms (no route avoids them): level_48__r2c10, level_49, level_50, level_51__r3c10, level_52
+  alternative (without level_51__r14c6): L48 → L49 → L50 → L51 → L53 → L54 → L52 → L55 — 8 rooms vs 6 chosen
+LEG 5.9  Level 089 - Feather  (+Progressive Swim)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key}
+  levels: L55 → L52 → L56 → L57 → L58 → L46 → L45 → L44 → L87 → L89
+  regions: level_55 > level_52 > level_56 > level_57 > level_58__r4c1 > level_58__r1c4 > level_46__r6c24 > level_46__r0c11 > level_45__r0c7 > level_44__r0c4 > level_44__r4c2 > level_87__r1c3 > level_89__r11c12 > level_89__r9c6
+  FORCED rooms (no route avoids them): level_52, level_56, level_57, level_58__r4c1, level_58__r1c4, level_46__r6c24, level_46__r0c11, level_45__r0c7, level_44__r0c4, level_87__r1c3
+  alternative (without level_44__r4c2): L55 → L52 → L56 → L57 → L58 → L46 → L45 → L44 → L37 → L12 → L88 → L87 → L89 — 13 rooms vs 10 chosen
+  alternative (without level_89__r11c12): L55 → L52 → L56 → L57 → L58 → L46 → L45 → L44 → L87 → L92 → L91 → L89 — 12 rooms vs 10 chosen
+LEG 5.10  Level 090 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key}
+  levels: L89 → L90
+  regions: level_89__r9c6 > level_89__r1c15 > level_90
+  FORCED rooms (no route avoids them): level_89__r1c15
+  alternatives: NONE — every room on this leg is forced
+LEG 6.1  Level 040 - Totem Part 64,144  (+Totem Shard)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key}
+  levels: L90 → L89 → L87 → L44 → L37 → L38 → L39 → L40
+  regions: level_90 > level_89__r1c15 > level_89__r11c12 > level_87__r1c3 > level_44__r4c2 > level_44__r6c4 > level_37__r12c6 > level_37__r0c18 > level_38__r0c9 > level_39__r2c11 > level_39__r0c9 > level_40__r23c29 > level_40__r0c53
+  FORCED rooms (no route avoids them): level_89__r1c15, level_37__r12c6, level_37__r0c18, level_38__r0c9, level_39__r2c11, level_39__r0c9, level_40__r23c29
+  alternative (without level_89__r11c12): L90 → L89 → L91 → L92 → L87 → L44 → L37 → L38 → L39 → L40 — 10 rooms vs 8 chosen
+  alternative (without level_87__r1c3): L90 → L89 → L0 → L12 → L37 → L38 → L39 → L40 — 8 rooms vs 8 chosen
+  alternative (without level_44__r4c2): L90 → L89 → L87 → L88 → L12 → L37 → L38 → L39 → L40 — 9 rooms vs 8 chosen
+LEG 6.2  Level 041 - Totem Part 240,144  (+Totem Shard)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared}
+  levels: L40 → L41
+  regions: level_40__r0c53 > level_41__r4c3 > level_41__r4c15 > level_41__r7c15
+  FORCED rooms (no route avoids them): level_41__r4c3, level_41__r4c15
+  alternatives: NONE — every room on this leg is forced
+LEG 6.3  Level 042 - Totem Part 184,152  (+Totem Shard)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared}
+  levels: L41 → L40 → L42
+  regions: level_41__r7c15 > level_41__r4c15 > level_41__r4c3 > level_40__r0c53 > level_42
+  FORCED rooms (no route avoids them): level_41__r4c15, level_41__r4c3, level_40__r0c53
+  alternatives: NONE — every room on this leg is forced
+LEG 7.1  Level 043 - Wand  (+Wand)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared}
+  levels: L42 → L40 → L43
+  regions: level_42 > level_40__r0c53 > level_40__r23c29 > level_43__r13c7
+  ⚠ OUT OF AP's ORDER: deferred 6.4 — no path from level_42; blocked by level_43__r8c7 -> level_43__r3c8 {"rule":"Or","children":[{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"And","children":[{"rule":"Has","args":{"item_name":"Fire Wand Fusion"}},{"rule":"Has","args":{"item_name":"Wand"}},{"rule":"Has","args":{"item_name":"Fire"}}]}]}
+  FORCED rooms (no route avoids them): level_40__r0c53, level_40__r23c29
+  alternatives: NONE — every room on this leg is forced
+LEG 6.4<flag:L62:0  L62 flag 0: lightpole@120,200 cleared  (+L62 flag 0: lightpole@120,200 cleared)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand}
+  levels: L43 → L37 → L12 → L95 → L59 → L60 → L61 → L63
+  regions: level_43__r13c7 > level_43__r8c7 > level_43__r3c8 > level_37__r0c18 > level_37__r12c6 > level_12__r0c37 > level_12__r42c29 > level_12__r0c19 > level_95 > level_59 > level_60__r5c0 > level_60__r5c9 > level_61__r0c7 > level_63__r0c1
+  FORCED rooms (no route avoids them): level_43__r8c7, level_43__r3c8, level_37__r0c18, level_37__r12c6, level_12__r0c19, level_95, level_59, level_60__r5c0, level_60__r5c9, level_61__r0c7
+  alternative (without level_12__r0c37): L43 → L37 → L44 → L87 → L88 → L12 → L95 → L59 → L60 → L61 → L63 — 11 rooms vs 8 chosen
+LEG 6.4  Level 064 - Ghostspear  (+Ghost Spear)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared}
+  levels: L63 → L62 → L64
+  regions: level_63__r0c1 > level_62 > level_64
+  FORCED rooms (no route avoids them): level_62
+  alternatives: NONE — every room on this leg is forced
+LEG 7.2  Level 067 - Boss Key 4  (+Yellow Key)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear}
+  levels: L64 → L62 → L61 → L60 → L59 → L67
+  regions: level_64 > level_62 > level_61__r0c7 > level_60__r5c9 > level_60__r5c0 > level_59 > level_67__r6c11 > level_67__r3c2
+  FORCED rooms (no route avoids them): level_62, level_61__r0c7, level_60__r5c9, level_60__r5c0, level_59, level_67__r6c11
+  alternatives: NONE — every room on this leg is forced
+LEG 8.1  Level 012 - Witch  (+Progressive Sword)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key}
+  levels: L67 → L59 → L95 → L12
+  regions: level_67__r3c2 > level_67__r6c11 > level_59 > level_95 > level_12__r0c19
+  FORCED rooms (no route avoids them): level_67__r6c11, level_59, level_95
+  alternatives: NONE — every room on this leg is forced
+LEG 8.2  Level 068 - Health  (+Health)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key}
+  levels: L12 → L95 → L59 → L60 → L61 → L63 → L65 → L68
+  regions: level_12__r0c19 > level_95 > level_59 > level_60__r5c0 > level_60__r5c9 > level_61__r0c7 > level_63__r0c1 > level_63__r6c9 > level_65__r0c8 > level_65__r4c13 > level_68__r3c1 > level_68__r1c1
+  FORCED rooms (no route avoids them): level_95, level_59, level_60__r5c0, level_60__r5c9, level_61__r0c7, level_63__r0c1, level_63__r6c9, level_65__r0c8, level_65__r4c13, level_68__r3c1
+  alternatives: NONE — every room on this leg is forced
+LEG 8.3  Level 071 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health}
+  levels: L68 → L65 → L63 → L61 → L60 → L59 → L95 → L12 → L83 → L84 → L85 → L71
+  regions: level_68__r1c1 > level_68__r3c1 > level_65__r4c13 > level_65__r0c8 > level_63__r6c9 > level_63__r0c1 > level_61__r0c7 > level_60__r5c9 > level_60__r5c0 > level_59 > level_95 > level_12__r0c19 > level_12__r42c29 > level_83 > level_84__r2c4 > level_85 > level_71__r13c7 > level_71__r11c7 > level_71__r0c6
+  FORCED rooms (no route avoids them): level_68__r3c1, level_65__r4c13, level_65__r0c8, level_63__r6c9, level_63__r0c1, level_61__r0c7, level_60__r5c9, level_60__r5c0, level_59, level_95, level_12__r0c19, level_12__r42c29, level_83, level_84__r2c4, level_85, level_71__r13c7, level_71__r11c7
+  alternatives: NONE — every room on this leg is forced
+LEG 8.4  Level 074 - Darkshield  (+Progressive Shield)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health}
+  levels: L71 → L75 → L74
+  regions: level_71__r0c6 > level_75 > level_74
+  FORCED rooms (no route avoids them): none
+  alternative (without level_75): L71 → L72 → L73 → L74 — 4 rooms vs 3 chosen
+LEG 9.1  Level 079 - Darksuit  (+Dark Suit)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health}
+  levels: L74 → L75 → L71 → L76 → L77 → L78 → L79
+  regions: level_74 > level_75 > level_71__r0c6 > level_71__r16c19 > level_76 > level_77 > level_78__r0c16 > level_78__r0c2 > level_79__r8c4
+  FORCED rooms (no route avoids them): level_71__r0c6, level_71__r16c19, level_76, level_77, level_78__r0c16, level_78__r0c2
+  alternative (without level_75): L74 → L73 → L72 → L71 → L76 → L77 → L78 → L79 — 8 rooms vs 7 chosen
+LEG 10.1  Level 063 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit}
+  levels: L79 → L78 → L77 → L76 → L71 → L82 → L96 → L97 → L37 → L12 → L95 → L59 → L60 → L61 → L63
+  regions: level_79__r8c4 > level_78__r0c2 > level_78__r0c16 > level_77 > level_76 > level_71__r0c6 > level_71__r14c12 > level_82 > level_96 > level_97 > level_37__r9c36 > level_37__r5c33 > level_37__r0c18 > level_37__r12c6 > level_12__r0c37 > level_12__r42c29 > level_12__r0c19 > level_95 > level_59 > level_60__r5c0 > level_60__r5c9 > level_61__r0c7 > level_63__r0c1 > level_63__r6c9 > level_63__r5c14
+  FORCED rooms (no route avoids them): level_71__r0c6, level_71__r14c12, level_82, level_96, level_97, level_37__r9c36, level_37__r5c33, level_37__r0c18, level_37__r12c6, level_12__r0c19, level_95, level_59, level_60__r5c0, level_60__r5c9, level_61__r0c7, level_63__r0c1, level_63__r6c9
+  alternative (without level_78__r0c2): L79 → L80 → L71 → L82 → L96 → L97 → L37 → L12 → L95 → L59 → L60 → L61 → L63 — 13 rooms vs 15 chosen
+  alternative (without level_12__r0c37): L79 → L78 → L77 → L76 → L71 → L82 → L96 → L97 → L37 → L44 → L87 → L88 → L12 → L95 → L59 → L60 → L61 → L63 — 18 rooms vs 15 chosen
+LEG 10.2  Level 080 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit}
+  levels: L63 → L61 → L60 → L59 → L95 → L12 → L83 → L84 → L85 → L71 → L80
+  regions: level_63__r5c14 > level_63__r6c9 > level_63__r0c1 > level_61__r0c7 > level_60__r5c9 > level_60__r5c0 > level_59 > level_95 > level_12__r0c19 > level_12__r42c29 > level_83 > level_84__r2c4 > level_85 > level_71__r13c7 > level_71__r11c7 > level_71__r0c6 > level_80__r0c2 > level_80__r8c1
+  FORCED rooms (no route avoids them): level_63__r6c9, level_63__r0c1, level_61__r0c7, level_60__r5c9, level_60__r5c0, level_59, level_95, level_12__r0c19, level_12__r42c29, level_83, level_84__r2c4, level_85, level_71__r13c7, level_71__r11c7, level_71__r0c6
+  alternative (without level_80__r0c2): L63 → L61 → L60 → L59 → L95 → L12 → L83 → L84 → L85 → L71 → L76 → L77 → L78 → L79 → L80 — 15 rooms vs 11 chosen
+LEG 10.3  Level 098 - Chest  (+Seal)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit}
+  levels: L80 → L71 → L82 → L96 → L97 → L37 → L44 → L87 → L93 → L98
+  regions: level_80__r8c1 > level_80__r0c2 > level_71__r0c6 > level_71__r14c12 > level_82 > level_96 > level_97 > level_37__r9c36 > level_37__r5c33 > level_37__r0c18 > level_37__r12c6 > level_44__r6c4 > level_44__r4c2 > level_87__r1c3 > level_87__r0c23 > level_93__r14c7 > level_93__r10c7 > level_98
+  FORCED rooms (no route avoids them): level_80__r0c2, level_71__r0c6, level_71__r14c12, level_82, level_96, level_97, level_37__r9c36, level_37__r5c33, level_37__r0c18, level_37__r12c6, level_87__r1c3, level_87__r0c23, level_93__r14c7, level_93__r10c7
+  alternative (without level_44__r6c4): L80 → L71 → L82 → L96 → L97 → L37 → L12 → L88 → L87 → L93 → L98 — 11 rooms vs 10 chosen
+LEG 10.4  Level 106 - Ghostsword  (+Ghost Sword Fusion)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit}
+  levels: L98 → L99 → L100 → L101 → L102 → L103 → L104 → L105 → L106
+  regions: level_98 > level_99__r2c7 > level_99__r2c4 > level_100__r2c3 > level_100__r4c10 > level_101__r4c2 > level_102__r5c3 > level_103 > level_104 > level_105 > level_106
+  FORCED rooms (no route avoids them): level_99__r2c7, level_99__r2c4, level_100__r2c3, level_100__r4c10, level_101__r4c2, level_102__r5c3, level_103, level_104, level_105
+  alternatives: NONE — every room on this leg is forced
+LEG 11.1  Level 109 - Firewand  (+Fire Wand Fusion)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit, Ghost Sword Fusion}
+  levels: L106 → L101 → L102 → L107 → L108 → L109
+  regions: level_106 > level_101__r4c2 > level_101__r4c9 > level_102__r5c9 > level_107__r0c2 > level_108__r2c0 > level_108__r5c8 > level_108__r8c8 > level_108__r11c8 > level_109
+  FORCED rooms (no route avoids them): level_101__r4c2, level_101__r4c9, level_102__r5c9, level_107__r0c2, level_108__r2c0, level_108__r5c8, level_108__r8c8, level_108__r11c8
+  alternatives: NONE — every room on this leg is forced
+LEG 12.1<flag:L114:0  L114 flag 0: watcher@72,72 cleared  (+L114 flag 0: watcher@72,72 cleared)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit, Ghost Sword Fusion, Fire Wand Fusion}
+  levels: L109 → L101 → L110 → L2 → L3 → L111 → L112 → L113 → L114
+  regions: level_109 > level_101__r4c2 > level_101__r0c6 > level_110 > level_2 > level_3__r0c4 > level_111 > level_112 > level_113 > level_114
+  FORCED rooms (no route avoids them): level_101__r4c2, level_101__r0c6, level_110, level_2, level_3__r0c4, level_111, level_112, level_113
+  alternatives: NONE — every room on this leg is forced
+LEG 12.1  Level 115 - The Seed  (+The Seed)
+  items held entering: {Progressive Sword, Seal, Red Key, L0 flag 1: breakablerock@288,176 cleared, L19 flag 1: bosslock@48,32 cleared, Progressive Shield, Green Key, L31 flag 0: bosslock@192,432 cleared, Light, L30 flag 2: bosslock@224,208 cleared, Fire, L30 flag 0: bosslock@64,32 cleared, L12 flag 3: bosslock@80,656 cleared, Progressive Swim, L39 flag 8: wandlock@144,592 cleared, Totem Shard, Purple Key, Blue Key, L40 flag 8: bosslock@480,352 cleared, Wand, L62 flag 0: lightpole@120,200 cleared, Ghost Spear, Yellow Key, L68 flag 0: bosslock@16,32 cleared, Health, L71 flag 2: shieldlock@288,256 cleared, Dark Suit, Ghost Sword Fusion, Fire Wand Fusion, L114 flag 0: watcher@72,72 cleared}
+  levels: L114 → L113 → L115
+  regions: level_114 > level_113 > level_115__r9c4 > level_115__r4c4
+  FORCED rooms (no route avoids them): level_113, level_115__r9c4
+  alternatives: NONE — every room on this leg is forced
+
+## THE D2 ENTRY — L13 has a direct stairs to L20; what is behind it
+  level_13 -> level_20__r3c1: enter {"rule":"True_"}
+    onward to level_20__r1c4: [{"rule":"Has","args":{"item_name":"Progressive Shield"}}]
+    reaches the shield without already holding it? NO
+
+## 212 STEPS (one per level visit)
+
+ 1  L0  visit 1  boot=true-start:r8-solve-1  goals: reach-exit(stairsdown@256,272 → L2)
+ 2  L2  visit 1  boot=committed:r8-solve-2  goals: reach-exit(teleporter@48,96 → L3)
+ 3  L3  visit 1  boot=committed:r8-solve-3  goals: reach-exit(teleporter@128,48 → L4)
+ 4  L4  visit 1  boot=committed:r8-solve-4  goals: reach-exit(stairsdown@64,16 → L5)
+ 5  L5  visit 1  boot=committed:r8-solve-5  goals: reach-exit(teleporter@48,112 → L6)
+ 6  L6  visit 1  boot=committed:r8-solve-6  goals: reach-exit(stairsup@224,32 → L7)
+ 7  L7  visit 1  boot=committed:r8-solve-7  goals: reach-exit(stairsdown@192,32 → L8)
+ 8  L8  visit 1  boot=committed:r8-solve-8  goals: reach-exit(teleporter@96,192 → L9)
+ 9  L9  visit 1  boot=committed:r8-solve-9  goals: reach-exit(teleporter@16,0 → L10)
+10  L10 visit 1  boot=committed:r8-solve-10  goals: collect-placement(Level 010 - Sword (sphere 0.1) → Progressive Sword) then reach-exit(stairsup@48,16 → L11)
+11  L11 visit 1  boot=committed:r8-solve-11  goals: collect-placement(Level 011 - Chest (sphere 0.2) → Seal) then reach-exit(teleporter@32,0 → L3)
+12  L3  visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,0 → L2)
+13  L2  visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@48,16 → L0)
+14  L0  visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,192 → L13)
+15  L13 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,32 → L14)
+16  L14 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,64 → L15)
+17  L15 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@144,16 → L16)
+18  L16 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@112,64 → L17)
+19  L17 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 017 - Chest (sphere 0.3) → Seal)
+20  L0  visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@160,272 → L86)
+21  L86 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 086 - Chest (sphere 0.4) → Seal) then reach-exit(teleporter@48,64 → L0)
+22  L0  visit 4  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,192 → L13)
+23  L13 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,32 → L14)
+24  L14 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,64 → L15)
+25  L15 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@144,16 → L16)
+26  L16 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@352,80 → L18)
+27  L18 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@176,112 → L19)
+28  L19 visit 1  boot=committed:r8-d2-19  goals: collect-placement(Level 019 - Boss Key 0 (sphere 1.1) → Red Key)
+29  L0  visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,176 → L12)
+30  L12 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@168,368 → L36)
+31  L36 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 036 - Chest (sphere 1.2) → Seal) then reach-exit(teleporter@32,128 → L12)
+32  L12 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L0)
+33  L0  visit 6  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,192 → L13)
+34  L13 visit 3  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,32 → L14)
+35  L14 visit 3  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,64 → L15)
+36  L15 visit 3  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@144,16 → L16)
+37  L16 visit 3  boot=staged:r8-solve-11  goals: reach-exit(stairsup@352,80 → L18)
+38  L18 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@176,112 → L19)
+39  L19 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@16,96 → L20)
+40  L20 visit 1  boot=committed:r8-d2-20  goals: collect-placement(Level 020 - Shield (sphere 2.1) → Progressive Shield) then reach-exit(stairsup@16,48 → L13)
+41  L13 visit 4  boot=staged:r8-solve-11  goals: reach-exit(stairsup@64,144 → L0)
+42  L0  visit 7  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,176 → L12)
+43  L12 visit 3  boot=staged:r8-solve-11  goals: reach-pit(pit@576,688 (out_pit_5_5, tile 36,43) → L21)
+44  L21 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@80,160 → L22)
+45  L22 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,128 → L25)
+46  L25 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 025 - Chest (sphere 2.2) → Seal) then reach-exit(teleporter@144,32 → L22)
+47  L22 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@192,64 → L29)
+48  L29 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 029 - Boss Key 1 (sphere 2.3) → Green Key) then reach-exit(stairsdown@112,32 → L31)
+49  L31 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@160,384 → L30)
+50  L30 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 030 - Torchpickup (sphere 2.4) → Light) then reach-exit(stairsup@224,160 → L32)
+51  L32 visit 1  boot=staged:r8-solve-11  goals: encounter(Level 032 - Bob Boss (sphere 3.1) → Fire)
+52  L30 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,0 → L22)
+53  L22 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@96,0 → L21)
+54  L21 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L23)
+55  L23 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@32,32 → L24)
+56  L24 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,144 → L12)
+57  L12 visit 4  boot=staged:r8-solve-11  goals: collect-placement(Level 012 - Chest (sphere 4.1) → Seal) then reach-exit(teleporter@592,0 → L37)
+58  L37 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@288,0 → L38)
+59  L38 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 038 - Chest (sphere 4.2) → Seal) then reach-exit(teleporter@144,304 → L37)
+60  L37 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,256 → L44)
+61  L44 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,0 → L45)
+62  L45 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,0 → L46)
+63  L46 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@176,0 → L47)
+64  L47 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@216,112 → L48)
+65  L48 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@176,48 (out_pit_2_2, tile 11,3) → L49)
+66  L49 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 049 - Conch (sphere 4.3) → Progressive Swim)
+67  L0  visit 8  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,192 → L13)
+68  L13 visit 5  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,32 → L14)
+69  L14 visit 4  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@32,64 → L15)
+70  L15 visit 4  boot=staged:r8-solve-11  goals: collect-placement(Level 015 - Chest (sphere 5.1) → Seal) then reach-exit(stairsup@32,64 → L14)
+71  L14 visit 5  boot=staged:r8-solve-11  goals: reach-exit(stairsup@176,64 → L13)
+72  L13 visit 6  boot=staged:r8-solve-11  goals: reach-exit(stairsup@64,144 → L0)
+73  L0  visit 9  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,176 → L12)
+74  L12 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@592,0 → L37)
+75  L37 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@288,0 → L38)
+76  L38 visit 2  boot=staged:r8-solve-11  goals: clear-tag(L39 flag 8: wandlock@144,592 cleared (flag:L39:8) — broken before row 5.2 walks its landing) then reach-exit(teleporter@144,0 → L39)
+77  L39 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 039 - Totem Part 72,40 (sphere 5.2) → Totem Shard) then reach-exit(teleporter@144,0 → L40)
+78  L40 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 040 - Boss Key 2 (sphere 5.3) → Purple Key) then collect-placement(Level 040 - Chest (sphere 5.4) → Seal) then collect-placement(Level 040 - Totem Part 160,640 (sphere 5.5) → Totem Shard)
+79  L0  visit 10  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,176 → L12)
+80  L12 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@592,0 → L37)
+81  L37 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,256 → L44)
+82  L44 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,0 → L45)
+83  L45 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,0 → L46)
+84  L46 visit 2  boot=staged:r8-solve-11  goals: collect-placement(Level 046 - Chest (sphere 5.6) → Seal) then reach-exit(teleporter@176,0 → L47)
+85  L47 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@216,112 → L48)
+86  L48 visit 2  boot=staged:r8-solve-11  goals: collect-placement(Level 048 - Chest (sphere 5.7) → Seal) then reach-pit(pit@176,48 (out_pit_2_2, tile 11,3) → L49)
+87  L49 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,128 → L50)
+88  L50 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@48,304 → L51)
+89  L51 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@256,256 → L52)
+90  L52 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,48 → L55)
+91  L55 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 055 - Boss Key 3 (sphere 5.8) → Blue Key) then reach-exit(teleporter@80,48 → L52)
+92  L52 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,112 → L56)
+93  L56 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@96,16 (out_pit_6_10, tile 6,1) → L57)
+94  L57 visit 1  boot=staged:r8-solve-11  goals: none
+95  L58 visit 1  boot=no-arrival:null  goals: reach-exit(teleporter@80,16 → L46)
+96  L46 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@240,464 → L45)
+97  L45 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,304 → L44)
+98  L44 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L87)
+99  L87 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,144 → L89)
+100  L89 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 089 - Feather (sphere 5.9) → Progressive Swim) then reach-exit(teleporter@256,0 → L90)
+101  L90 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 090 - Chest (sphere 5.10) → Seal) then reach-exit(teleporter@48,96 → L89)
+102  L89 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@288,240 → L87)
+103  L87 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@464,272 → L44)
+104  L44 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,128 → L37)
+105  L37 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@288,0 → L38)
+106  L38 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L39)
+107  L39 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L40)
+108  L40 visit 2  boot=staged:r8-solve-11  goals: collect-placement(Level 040 - Totem Part 64,144 (sphere 6.1) → Totem Shard) then reach-exit(teleporter@944,96 → L41)
+109  L41 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 041 - Totem Part 240,144 (sphere 6.2) → Totem Shard) then reach-exit(teleporter@0,160 → L40)
+110  L40 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@848,0 → L42)
+111  L42 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 042 - Totem Part 184,152 (sphere 6.3) → Totem Shard) then reach-exit(teleporter@240,336 → L40)
+112  L40 visit 4  boot=staged:r8-solve-11  goals: reach-exit(stairsdown@320,576 → L43)
+113  L43 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 043 - Wand (sphere 7.1) → Wand) then reach-exit(teleporter@144,64 → L37)
+114  L37 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,304 → L12)
+115  L12 visit 7  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,352 → L95)
+116  L95 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,0 → L59)
+117  L59 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,128 → L60)
+118  L60 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@160,80 → L61)
+119  L61 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,96 → L63)
+120  L63 visit 1  boot=staged:r8-solve-11  goals: clear-tag(L62 flag 0: lightpole@120,200 cleared (flag:L62:0) — broken before row 6.4 walks its landing) then reach-exit(teleporter@16,0 → L62)
+121  L62 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,64 → L64)
+122  L64 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 064 - Ghostspear (sphere 6.4) → Ghost Spear) then reach-exit(teleporter@32,96 → L62)
+123  L62 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@48,304 → L61)
+124  L61 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,160 → L60)
+125  L60 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L59)
+126  L59 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,128 → L67)
+127  L67 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 067 - Boss Key 4 (sphere 7.2) → Yellow Key) then reach-exit(teleporter@224,112 → L59)
+128  L59 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,304 → L95)
+129  L95 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@624,64 → L12)
+130  L12 visit 8  boot=staged:r8-solve-11  goals: encounter(Level 012 - Witch (sphere 8.1) → Progressive Sword) then reach-exit(teleporter@0,352 → L95)
+131  L95 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,0 → L59)
+132  L59 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,128 → L60)
+133  L60 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@160,80 → L61)
+134  L61 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,96 → L63)
+135  L63 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@128,304 → L65)
+136  L65 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@184,64 → L68)
+137  L68 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 068 - Health (sphere 8.2) → Health) then reach-exit(teleporter@16,80 → L65)
+138  L65 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@128,0 → L63)
+139  L63 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,96 → L61)
+140  L61 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,160 → L60)
+141  L60 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L59)
+142  L59 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,304 → L95)
+143  L95 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@624,64 → L12)
+144  L12 visit 9  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,848 → L83)
+145  L83 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@32,16 (out_pit_2_2, tile 2,1) → L84)
+146  L84 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@48,16 (out_pit_4_3, tile 3,1) → L85)
+147  L85 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@80,0 → L71)
+148  L71 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 071 - Chest (sphere 8.3) → Seal) then reach-exit(teleporter@96,0 → L75)
+149  L75 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,0 → L74)
+150  L74 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 074 - Darkshield (sphere 8.4) → Progressive Shield) then reach-exit(teleporter@16,144 → L75)
+151  L75 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@64,224 → L71)
+152  L71 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,256 → L76)
+153  L76 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,112 → L77)
+154  L77 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@96,304 → L78)
+155  L78 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,0 → L79)
+156  L79 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 079 - Darksuit (sphere 9.1) → Dark Suit) then reach-exit(teleporter@64,224 → L78)
+157  L78 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@256,0 → L77)
+158  L77 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,32 → L76)
+159  L76 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L71)
+160  L71 visit 3  boot=staged:r8-solve-11  goals: reach-pit(pit@192,208 (out_pit_10_17, tile 12,13) → L82)
+161  L82 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L96)
+162  L96 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@32,32 → L97)
+163  L97 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@32,16 → L37)
+164  L37 visit 7  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,304 → L12)
+165  L12 visit 10  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,352 → L95)
+166  L95 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,0 → L59)
+167  L59 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,128 → L60)
+168  L60 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@160,80 → L61)
+169  L61 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,96 → L63)
+170  L63 visit 4  boot=staged:r8-solve-11  goals: collect-placement(Level 063 - Chest (sphere 10.1) → Seal) then reach-exit(teleporter@0,96 → L61)
+171  L61 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,160 → L60)
+172  L60 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L59)
+173  L59 visit 7  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,304 → L95)
+174  L95 visit 6  boot=staged:r8-solve-11  goals: reach-exit(teleporter@624,64 → L12)
+175  L12 visit 11  boot=staged:r8-solve-11  goals: reach-exit(teleporter@32,848 → L83)
+176  L83 visit 2  boot=staged:r8-solve-11  goals: reach-pit(pit@32,16 (out_pit_2_2, tile 2,1) → L84)
+177  L84 visit 2  boot=staged:r8-solve-11  goals: reach-pit(pit@48,16 (out_pit_4_3, tile 3,1) → L85)
+178  L85 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@80,0 → L71)
+179  L71 visit 4  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,304 → L80)
+180  L80 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 080 - Chest (sphere 10.2) → Seal) then reach-exit(teleporter@32,0 → L71)
+181  L71 visit 5  boot=staged:r8-solve-11  goals: reach-pit(pit@192,208 (out_pit_10_17, tile 12,13) → L82)
+182  L82 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@144,0 → L96)
+183  L96 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@32,32 → L97)
+184  L97 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@32,16 → L37)
+185  L37 visit 8  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,256 → L44)
+186  L44 visit 5  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,80 → L87)
+187  L87 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@368,0 → L93)
+188  L93 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,80 → L98)
+189  L98 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 098 - Chest (sphere 10.3) → Seal) then reach-exit(stairsup@112,112 → L99)
+190  L99 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@48,96 → L100)
+191  L100 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@288,96 → L101)
+192  L101 visit 1  boot=staged:r8-solve-11  goals: reach-exit(stairsup@48,96 → L102)
+193  L102 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,96 → L103)
+194  L103 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,64 → L104)
+195  L104 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,16 → L105)
+196  L105 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@80,144 → L106)
+197  L106 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 106 - Ghostsword (sphere 10.4) → Ghost Sword Fusion) then reach-exit(teleporter@64,48 → L101)
+198  L101 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@144,96 → L102)
+199  L102 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,96 → L107)
+200  L107 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@304,176 → L108)
+201  L108 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@224,224 → L109)
+202  L109 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 109 - Firewand (sphere 11.1) → Fire Wand Fusion) then reach-exit(teleporter@160,48 → L101)
+203  L101 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@104,24 → L110)
+204  L110 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@64,64 (out_pit_3_2, tile 4,4) chained via L0 stairs@256,272 → L2)
+205  L2  visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@48,96 → L3)
+206  L3  visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,64 → L111)
+207  L111 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@128,48 → L112)
+208  L112 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,0 → L113)
+209  L113 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@16,0 → L114)
+210  L114 visit 1  boot=staged:r8-solve-11  goals: clear-tag(L114 flag 0: watcher@72,72 cleared (flag:L114:0) — broken before row 12.1 walks its landing) then reach-exit(teleporter@64,144 → L113)
+211  L113 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,0 → L115)
+212  L115 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 115 - The Seed (sphere 12.1) → The Seed)
+
+wrote /tmp/claude-0/rockmove-wt/.cache/seedling-survey/through-end/route.json
+
+## THE ADDENDUM — 0 step(s) of the alternative leg 2 that the chosen route never walks
+
+== step 48 — L29 ... SOLVED 379 ticks, 5 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 686 ms
+
+== step 113 — L43 ... REFUSED — the teleporter at (144,64) in level 43 stands ON a PIT tile (9,4). Walking into it fires the trigger and the pit edge in the same tick, and which one wins is Fl
+
+wrote /tmp/claude-0/survey-move.json
+
+## HEADLINE: 1/2 route steps SOLVE today
+  step 113 L43: REFUSED — unclassified — see the refusal text

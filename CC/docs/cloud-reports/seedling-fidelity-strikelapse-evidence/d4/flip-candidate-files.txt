@@ -1,0 +1,41 @@
+ frontend/modules/seedlingDemo/contactFidelity.js   |   11 
+ .../modules/seedlingDemo/contactFidelity.test.js   |    7 
+ .../seedlingDemo/fidelityBobSoldier2.test.js       |   21 
+ frontend/modules/seedlingDemo/fidelityDash.test.js |   23 
+ frontend/modules/seedlingDemo/fidelityF1c.test.js  |    5 
+ .../seedlingDemo/fidelityIceTurretSpear.test.js    |    8 
+ .../seedlingDemo/fidelityL30KeyLock.test.js        |   29 
+ .../modules/seedlingDemo/fidelityL74Leg624.test.js |   10 
+ .../modules/seedlingDemo/fidelityLeash.test.js     |    7 
+ .../fixtures/expectations/r9-solve-12.json         | 2134 ++++++++-------
+ .../fixtures/expectations/r9-solve-14.json         |  412 ++-
+ .../fixtures/expectations/r9-solve-16.json         | 2814 +++++++++-----------
+ .../fixtures/expectations/r9-solve-18.json         | 1894 +++++--------
+ .../modules/seedlingDemo/fixtures/tapes/index.json |    6 
+ .../seedlingDemo/fixtures/tapes/r9-solve-0-v3.json |    4 
+ .../seedlingDemo/fixtures/tapes/r9-solve-12.json   |  517 ++--
+ .../fixtures/tapes/r9-solve-13-v2.json             |    4 
+ .../seedlingDemo/fixtures/tapes/r9-solve-14.json   |  240 +-
+ .../seedlingDemo/fixtures/tapes/r9-solve-15.json   |    8 
+ .../seedlingDemo/fixtures/tapes/r9-solve-16.json   |  885 +++---
+ .../seedlingDemo/fixtures/tapes/r9-solve-18.json   |  494 +---
+ .../seedlingDemo/fixtures/tapes/r9-solve-19.json   |    8 
+ .../seedlingDemo/fixtures/tapes/r9-solve-20.json   |    4 
+ .../seedlingDemo/fixtures/tapes/r9-solve-21.json   |   10 
+ .../seedlingDemo/fixtures/tapes/r9-solve-22.json   |    6 
+ .../seedlingDemo/fixtures/tapes/r9-solve-29.json   |    6 
+ .../seedlingDemo/fixtures/tapes/r9-solve-30.json   |    6 
+ .../seedlingDemo/fixtures/tapes/r9-solve-31.json   |    6 
+ .../seedlingDemo/fixtures/tapes/r9-solve-32.json   |    6 
+ .../fixtures/traces/r9-solve-12.trace.json         |   78 -
+ .../fixtures/traces/r9-solve-14.trace.json         |    6 
+ .../fixtures/traces/r9-solve-16.trace.json         |  183 -
+ .../fixtures/traces/r9-solve-18.trace.json         |   30 
+ frontend/modules/seedlingDemo/playthroughWalk.js   |    4 
+ frontend/modules/seedlingDemo/ropeSword.test.js    |    7 
+ .../modules/seedlingDemo/seedlingCanCross.test.js  |   14 
+ .../modules/seedlingDemo/seedlingRobust.test.js    |   25 
+ frontend/modules/seedlingDemo/solverBot.test.js    |   79 -
+ .../modules/seedlingDemo/solverDeadline.test.js    |    5 
+ frontend/modules/seedlingDemo/spearPush.test.js    |    7 
+ 40 files changed, 4615 insertions(+), 5408 deletions(-)

@@ -1,0 +1,8 @@
+import json,sys
+j=json.load(open(sys.argv[1]))
+print(f"{j['numPassedTests']} / {j['numTotalTests']} passed, failed {j['numFailedTests']}, skipped {j['numPendingTests']}, {len(j['testResults'])} files")
+for f in j['testResults']:
+    a=f['assertionResults']; p=sum(x['status']=='passed' for x in a)
+    print(f"{p}/{len(a)} {f['name'].split('Archipelago-CC/')[-1].split('scratchpad/')[-1]}" + ('' if f['status']=='passed' else f"  FILE {f['status'].upper()}: {f.get('message','')[:200]}"))
+    for x in a:
+        if x['status']=='failed': print('   FAIL', x['fullName'][:200])

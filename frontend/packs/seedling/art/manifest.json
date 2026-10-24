@@ -1,0 +1,3187 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/procgen/extract-seedling-art-packs.mjs — do not edit; regenerate and --check",
+  "clocks": {
+    "world": {
+      "ticksPerFrame": 45,
+      "as3": "Game.as:488 timePerFrame; Game.as:1962 worldFrame(n, loops)"
+    }
+  },
+  "sheets": {
+    "Shore": {
+      "file": "sheets/Shore.png",
+      "w": 256,
+      "h": 16
+    },
+    "Water": {
+      "file": "sheets/Water.png",
+      "w": 32,
+      "h": 16
+    },
+    "Stone": {
+      "file": "sheets/Stone.png",
+      "w": 256,
+      "h": 16
+    },
+    "Brick": {
+      "file": "sheets/Brick.png",
+      "w": 16,
+      "h": 16
+    },
+    "Dirt": {
+      "file": "sheets/Dirt.png",
+      "w": 256,
+      "h": 16
+    },
+    "DungeonTile": {
+      "file": "sheets/DungeonTile.png",
+      "w": 16,
+      "h": 16
+    },
+    "Pit": {
+      "file": "sheets/Pit.png",
+      "w": 16,
+      "h": 16
+    },
+    "ShieldTile": {
+      "file": "sheets/ShieldTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "ForestTile": {
+      "file": "sheets/ForestTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "Cliff": {
+      "file": "sheets/Cliff.png",
+      "w": 16,
+      "h": 16
+    },
+    "CliffStairs": {
+      "file": "sheets/CliffStairs.png",
+      "w": 16,
+      "h": 16
+    },
+    "Wood": {
+      "file": "sheets/Wood.png",
+      "w": 256,
+      "h": 16
+    },
+    "WoodWalk": {
+      "file": "sheets/WoodWalk.png",
+      "w": 256,
+      "h": 16
+    },
+    "Cave": {
+      "file": "sheets/Cave.png",
+      "w": 16,
+      "h": 16
+    },
+    "WoodTree": {
+      "file": "sheets/WoodTree.png",
+      "w": 256,
+      "h": 16
+    },
+    "DarkTile": {
+      "file": "sheets/DarkTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "IgneousTile": {
+      "file": "sheets/IgneousTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "Lava2": {
+      "file": "sheets/Lava2.png",
+      "w": 64,
+      "h": 16
+    },
+    "BlueStone": {
+      "file": "sheets/BlueStone.png",
+      "w": 368,
+      "h": 16
+    },
+    "BlueStoneWall": {
+      "file": "sheets/BlueStoneWall.png",
+      "w": 256,
+      "h": 16
+    },
+    "BlueStoneWallDark": {
+      "file": "sheets/BlueStoneWallDark.png",
+      "w": 256,
+      "h": 16
+    },
+    "Snow": {
+      "file": "sheets/Snow.png",
+      "w": 256,
+      "h": 16
+    },
+    "Ice": {
+      "file": "sheets/Ice.png",
+      "w": 64,
+      "h": 16
+    },
+    "IceWall": {
+      "file": "sheets/IceWall.png",
+      "w": 128,
+      "h": 16
+    },
+    "IceWallLit": {
+      "file": "sheets/IceWallLit.png",
+      "w": 128,
+      "h": 16
+    },
+    "Waterfall": {
+      "file": "sheets/Waterfall.png",
+      "w": 128,
+      "h": 16
+    },
+    "Body": {
+      "file": "sheets/Body.png",
+      "w": 64,
+      "h": 16
+    },
+    "BodyWall": {
+      "file": "sheets/BodyWall.png",
+      "w": 64,
+      "h": 16
+    },
+    "GhostTile": {
+      "file": "sheets/GhostTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "OpenBridge": {
+      "file": "sheets/OpenBridge.png",
+      "w": 304,
+      "h": 16
+    },
+    "GhostTileStep": {
+      "file": "sheets/GhostTileStep.png",
+      "w": 16,
+      "h": 16
+    },
+    "IgneousLava": {
+      "file": "sheets/IgneousLava.png",
+      "w": 48,
+      "h": 16
+    },
+    "OddTile": {
+      "file": "sheets/OddTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "FuchTile": {
+      "file": "sheets/FuchTile.png",
+      "w": 256,
+      "h": 16
+    },
+    "OddTileWall": {
+      "file": "sheets/OddTileWall.png",
+      "w": 256,
+      "h": 16
+    },
+    "RockTile": {
+      "file": "sheets/RockTile.png",
+      "w": 64,
+      "h": 16
+    },
+    "RockyTile": {
+      "file": "sheets/RockyTile.png",
+      "w": 64,
+      "h": 16
+    },
+    "PitShadow": {
+      "file": "sheets/PitShadow.png",
+      "w": 16,
+      "h": 16
+    },
+    "CliffSide": {
+      "file": "sheets/CliffSide.png",
+      "w": 80,
+      "h": 16
+    },
+    "Tree2": {
+      "file": "sheets/Tree2.png",
+      "w": 512,
+      "h": 32
+    },
+    "TreeBare": {
+      "file": "sheets/TreeBare.png",
+      "w": 32,
+      "h": 32
+    },
+    "OpenTree": {
+      "file": "sheets/OpenTree.png",
+      "w": 512,
+      "h": 32
+    },
+    "TreeLarge": {
+      "file": "sheets/TreeLarge.png",
+      "w": 640,
+      "h": 192
+    },
+    "Pole": {
+      "file": "sheets/Pole.png",
+      "w": 128,
+      "h": 16
+    },
+    "Rock": {
+      "file": "sheets/Rock.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock2": {
+      "file": "sheets/Rock2.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock3": {
+      "file": "sheets/Rock3.png",
+      "w": 16,
+      "h": 16
+    },
+    "Rock4": {
+      "file": "sheets/Rock4.png",
+      "w": 16,
+      "h": 16
+    },
+    "Building": {
+      "file": "sheets/Building.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building1": {
+      "file": "sheets/Building1.png",
+      "w": 48,
+      "h": 40
+    },
+    "Building2": {
+      "file": "sheets/Building2.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building3": {
+      "file": "sheets/Building3.png",
+      "w": 48,
+      "h": 104
+    },
+    "Building4": {
+      "file": "sheets/Building4.png",
+      "w": 144,
+      "h": 136
+    },
+    "Building5": {
+      "file": "sheets/Building5.png",
+      "w": 64,
+      "h": 56
+    },
+    "Building6": {
+      "file": "sheets/Building6.png",
+      "w": 80,
+      "h": 128
+    },
+    "Building7": {
+      "file": "sheets/Building7.png",
+      "w": 80,
+      "h": 96
+    },
+    "Building8": {
+      "file": "sheets/Building8.png",
+      "w": 192,
+      "h": 64
+    },
+    "Statues": {
+      "file": "sheets/Statues.png",
+      "w": 96,
+      "h": 40
+    },
+    "BrickPole": {
+      "file": "sheets/BrickPole.png",
+      "w": 16,
+      "h": 20
+    },
+    "BrickWell": {
+      "file": "sheets/BrickWell.png",
+      "w": 18,
+      "h": 20
+    },
+    "DungeonSpire": {
+      "file": "sheets/DungeonSpire.png",
+      "w": 16,
+      "h": 24
+    },
+    "RuinedPillar": {
+      "file": "sheets/RuinedPillar.png",
+      "w": 32,
+      "h": 48
+    },
+    "Bed": {
+      "file": "sheets/Bed.png",
+      "w": 16,
+      "h": 32
+    },
+    "Bar": {
+      "file": "sheets/Bar.png",
+      "w": 64,
+      "h": 20
+    },
+    "Barstool": {
+      "file": "sheets/Barstool.png",
+      "w": 8,
+      "h": 12
+    },
+    "Dresser": {
+      "file": "sheets/Dresser.png",
+      "w": 32,
+      "h": 24
+    },
+    "ShieldStatue": {
+      "file": "sheets/ShieldStatue.png",
+      "w": 32,
+      "h": 43
+    },
+    "OracleStatue": {
+      "file": "sheets/OracleStatue.png",
+      "w": 64,
+      "h": 48
+    },
+    "PlantTorch": {
+      "file": "sheets/PlantTorch.png",
+      "w": 48,
+      "h": 16
+    },
+    "BoneTorch": {
+      "file": "sheets/BoneTorch.png",
+      "w": 48,
+      "h": 24
+    },
+    "BoneTorch2": {
+      "file": "sheets/BoneTorch2.png",
+      "w": 48,
+      "h": 24
+    },
+    "SnowHill": {
+      "file": "sheets/SnowHill.png",
+      "w": 96,
+      "h": 64
+    },
+    "ShrumBlue": {
+      "file": "sheets/ShrumBlue.png",
+      "w": 144,
+      "h": 32
+    },
+    "ShrumDark": {
+      "file": "sheets/ShrumDark.png",
+      "w": 144,
+      "h": 48
+    },
+    "Slash": {
+      "file": "sheets/Slash.png",
+      "w": 80,
+      "h": 32
+    },
+    "SlashDark": {
+      "file": "sheets/SlashDark.png",
+      "w": 80,
+      "h": 32
+    },
+    "GhostSword": {
+      "file": "sheets/GhostSword.png",
+      "w": 120,
+      "h": 7
+    },
+    "Bob": {
+      "file": "sheets/Bob.png",
+      "w": 56,
+      "h": 8
+    },
+    "LavaRunner": {
+      "file": "sheets/LavaRunner.png",
+      "w": 380,
+      "h": 20
+    },
+    "Jellyfish": {
+      "file": "sheets/Jellyfish.png",
+      "w": 168,
+      "h": 15
+    },
+    "Bulb": {
+      "file": "sheets/Bulb.png",
+      "w": 304,
+      "h": 16
+    },
+    "Flyer": {
+      "file": "sheets/Flyer.png",
+      "w": 486,
+      "h": 26
+    },
+    "Puncher": {
+      "file": "sheets/Puncher.png",
+      "w": 200,
+      "h": 80
+    },
+    "BobSoldier": {
+      "file": "sheets/BobSoldier.png",
+      "w": 30,
+      "h": 10
+    },
+    "LameSword": {
+      "file": "sheets/LameSword.png",
+      "w": 16,
+      "h": 5
+    },
+    "Spinner": {
+      "file": "sheets/Spinner.png",
+      "w": 36,
+      "h": 9
+    },
+    "Arrow": {
+      "file": "sheets/Arrow.png",
+      "w": 8,
+      "h": 3
+    },
+    "WallFlyer": {
+      "file": "sheets/WallFlyer.png",
+      "w": 180,
+      "h": 16
+    },
+    "Drill": {
+      "file": "sheets/Drill.png",
+      "w": 176,
+      "h": 16
+    },
+    "IceTurret": {
+      "file": "sheets/IceTurret.png",
+      "w": 224,
+      "h": 32
+    },
+    "IceBlast": {
+      "file": "sheets/IceBlast.png",
+      "w": 96,
+      "h": 7
+    },
+    "Turret": {
+      "file": "sheets/Turret.png",
+      "w": 144,
+      "h": 16
+    },
+    "TurretSpit": {
+      "file": "sheets/TurretSpit.png",
+      "w": 24,
+      "h": 8
+    },
+    "BobBoss1": {
+      "file": "sheets/BobBoss1.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBoss2": {
+      "file": "sheets/BobBoss2.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBoss3": {
+      "file": "sheets/BobBoss3.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBossWeapons": {
+      "file": "sheets/BobBossWeapons.png",
+      "w": 72,
+      "h": 5
+    },
+    "SpinningAxe": {
+      "file": "sheets/SpinningAxe.png",
+      "w": 36,
+      "h": 20
+    },
+    "SpinningAxeRed": {
+      "file": "sheets/SpinningAxeRed.png",
+      "w": 36,
+      "h": 20
+    },
+    "Crusher": {
+      "file": "sheets/Crusher.png",
+      "w": 32,
+      "h": 32
+    },
+    "LavaChain": {
+      "file": "sheets/LavaChain.png",
+      "w": 832,
+      "h": 16
+    },
+    "BossTotem": {
+      "file": "sheets/BossTotem.png",
+      "w": 96,
+      "h": 48
+    },
+    "BossTotemShot": {
+      "file": "sheets/BossTotemShot.png",
+      "w": 60,
+      "h": 20
+    },
+    "BombPusher": {
+      "file": "sheets/BombPusher.png",
+      "w": 192,
+      "h": 48
+    },
+    "Bomb": {
+      "file": "sheets/Bomb.png",
+      "w": 16,
+      "h": 16
+    },
+    "Grenade": {
+      "file": "sheets/Grenade.png",
+      "w": 128,
+      "h": 16
+    },
+    "Explosion": {
+      "file": "sheets/Explosion.png",
+      "w": 1024,
+      "h": 128
+    },
+    "SlashHit": {
+      "file": "sheets/SlashHit.png",
+      "w": 64,
+      "h": 16
+    },
+    "Droplet": {
+      "file": "sheets/Droplet.png",
+      "w": 54,
+      "h": 5
+    },
+    "Health": {
+      "file": "sheets/Health.png",
+      "w": 24,
+      "h": 12
+    },
+    "NPCs/AdnanCharacterPic": {
+      "file": "sheets/NPCs/AdnanCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/ForestCharacterPic": {
+      "file": "sheets/NPCs/ForestCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/HermitPic": {
+      "file": "sheets/NPCs/HermitPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/IntroCharacterPic": {
+      "file": "sheets/NPCs/IntroCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/KarlorePic": {
+      "file": "sheets/NPCs/KarlorePic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/OraclePic": {
+      "file": "sheets/NPCs/OraclePic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/RekcahdamPic": {
+      "file": "sheets/NPCs/RekcahdamPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/SenseiPic": {
+      "file": "sheets/NPCs/SenseiPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/WatcherPic": {
+      "file": "sheets/NPCs/WatcherPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/WitchPic": {
+      "file": "sheets/NPCs/WitchPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/YetiPic": {
+      "file": "sheets/NPCs/YetiPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss1Pic": {
+      "file": "sheets/NPCs/BobBoss1Pic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss2Pic": {
+      "file": "sheets/NPCs/BobBoss2Pic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss3Pic": {
+      "file": "sheets/NPCs/BobBoss3Pic.png",
+      "w": 16,
+      "h": 16
+    },
+    "Sword": {
+      "file": "sheets/Sword.png",
+      "w": 48,
+      "h": 16
+    },
+    "Shield": {
+      "file": "sheets/Shield.png",
+      "w": 28,
+      "h": 7
+    },
+    "DarkShield": {
+      "file": "sheets/DarkShield.png",
+      "w": 9,
+      "h": 9
+    },
+    "Conch": {
+      "file": "sheets/Conch.png",
+      "w": 24,
+      "h": 8
+    },
+    "Feather": {
+      "file": "sheets/Feather.png",
+      "w": 96,
+      "h": 12
+    },
+    "WandPickup": {
+      "file": "sheets/WandPickup.png",
+      "w": 30,
+      "h": 9
+    },
+    "FireWandPickup": {
+      "file": "sheets/FireWandPickup.png",
+      "w": 30,
+      "h": 9
+    },
+    "GhostSpear": {
+      "file": "sheets/GhostSpear.png",
+      "w": 40,
+      "h": 7
+    },
+    "GhostSwordPickup": {
+      "file": "sheets/GhostSwordPickup.png",
+      "w": 48,
+      "h": 7
+    },
+    "DarkSuit": {
+      "file": "sheets/DarkSuit.png",
+      "w": 10,
+      "h": 10
+    },
+    "TorchPickup": {
+      "file": "sheets/TorchPickup.png",
+      "w": 24,
+      "h": 12
+    },
+    "HealthPickup": {
+      "file": "sheets/HealthPickup.png",
+      "w": 48,
+      "h": 8
+    },
+    "BossTotemParts": {
+      "file": "sheets/BossTotemParts.png",
+      "w": 120,
+      "h": 24
+    },
+    "Chest": {
+      "file": "sheets/Chest.png",
+      "w": 32,
+      "h": 16
+    },
+    "Seed": {
+      "file": "sheets/Seed.png",
+      "w": 27,
+      "h": 13
+    },
+    "BossKey": {
+      "file": "sheets/BossKey.png",
+      "w": 84,
+      "h": 16
+    },
+    "BossKey1": {
+      "file": "sheets/BossKey1.png",
+      "w": 48,
+      "h": 16
+    },
+    "BossKey2": {
+      "file": "sheets/BossKey2.png",
+      "w": 48,
+      "h": 16
+    },
+    "BossKey3": {
+      "file": "sheets/BossKey3.png",
+      "w": 48,
+      "h": 16
+    },
+    "BossKey4": {
+      "file": "sheets/BossKey4.png",
+      "w": 48,
+      "h": 16
+    },
+    "SeedlingFont": {
+      "file": "sheets/SeedlingFont.png",
+      "w": 64,
+      "h": 48,
+      "authored": "scripts/procgen/make-seedling-font.mjs — ORIGINAL glyphs (not 04B_03), MIT (the repository licence)"
+    }
+  },
+  "sprites": {
+    "seedling:tile/ground": {
+      "sheet": "Shore",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:219 sprGround"
+    },
+    "seedling:tile/water": {
+      "sheet": "Water",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "anims": {
+        "flow": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:221 sprWater; Tile.as:138 worldFrame(2) + random phase"
+    },
+    "seedling:tile/stone": {
+      "sheet": "Stone",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:223 sprStone"
+    },
+    "seedling:tile/brick": {
+      "sheet": "Brick",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:225 sprBrick"
+    },
+    "seedling:tile/dirt": {
+      "sheet": "Dirt",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:227 sprDirt"
+    },
+    "seedling:tile/dungeonTile": {
+      "sheet": "DungeonTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:229 sprDungeonTile; Tile.as:151 random 90° rotation"
+    },
+    "seedling:tile/pit": {
+      "sheet": "Pit",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:231 sprPit"
+    },
+    "seedling:tile/shieldTile": {
+      "sheet": "ShieldTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:233 sprShieldTile"
+    },
+    "seedling:tile/forest": {
+      "sheet": "ForestTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:235 sprForest"
+    },
+    "seedling:tile/cliff": {
+      "sheet": "Cliff",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:237 sprCliff"
+    },
+    "seedling:tile/cliffStairs": {
+      "sheet": "CliffStairs",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:302 sprCliffStairs"
+    },
+    "seedling:tile/wood": {
+      "sheet": "Wood",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:239 sprWood"
+    },
+    "seedling:tile/walkableWood": {
+      "sheet": "WoodWalk",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:241 sprWoodWalk"
+    },
+    "seedling:tile/cave": {
+      "sheet": "Cave",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:243 sprCave"
+    },
+    "seedling:tile/woodNatural": {
+      "sheet": "WoodTree",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:245 sprWoodTree"
+    },
+    "seedling:tile/darkStone": {
+      "sheet": "DarkTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:247 sprDarkTile"
+    },
+    "seedling:tile/igneousStone": {
+      "sheet": "IgneousTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:249 sprIgneousTile"
+    },
+    "seedling:tile/lava": {
+      "sheet": "Lava2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "flow": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:251 sprLava; Tile.as:205 worldFrame(4) + random phase"
+    },
+    "seedling:tile/blueTile": {
+      "sheet": "BlueStone",
+      "fw": 16,
+      "fh": 16,
+      "frames": 23,
+      "as3": "Game.as:253 sprBlueTile (23 frames; 15..22 are the img-15 variants)"
+    },
+    "seedling:tile/blueWall": {
+      "sheet": "BlueStoneWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:255 sprBlueTileWall"
+    },
+    "seedling:tile/blueWallDark": {
+      "sheet": "BlueStoneWallDark",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:257 sprBlueTileWallDark"
+    },
+    "seedling:tile/snow": {
+      "sheet": "Snow",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:259 sprSnow"
+    },
+    "seedling:tile/ice": {
+      "sheet": "Ice",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:261 sprIce; Tile.as:267 random frame"
+    },
+    "seedling:tile/iceWall": {
+      "sheet": "IceWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "shimmer": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:263 sprIceWall; Tile.as:271 worldFrame(8, 2)"
+    },
+    "seedling:tile/iceWallGlowing": {
+      "sheet": "IceWallLit",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "shimmer": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:265 sprIceWallLit; Tile.as:286 worldFrame(8, 2)"
+    },
+    "seedling:tile/waterfall": {
+      "sheet": "Waterfall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "anims": {
+        "fall": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "loops": 0.8
+        },
+        "fallContinuous": {
+          "clock": "world",
+          "frames": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "loops": 0.8
+        }
+      },
+      "as3": "Game.as:267 sprWaterfall; Tile.as:301 worldFrame(4, 0.8) + random phase, +4 if continuous"
+    },
+    "seedling:tile/bodyFloor": {
+      "sheet": "Body",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "pulse": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:269 sprBody; Tile.as:317 bodyFrames on the world clock"
+    },
+    "seedling:tile/bodyWall": {
+      "sheet": "BodyWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "anims": {
+        "pulse": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:271 sprBodyWall; Tile.as:326 bodyFrames, 2 loops"
+    },
+    "seedling:tile/ghostTile": {
+      "sheet": "GhostTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:273 sprGhostTile"
+    },
+    "seedling:tile/bridge": {
+      "sheet": "OpenBridge",
+      "fw": 16,
+      "fh": 16,
+      "frames": 19,
+      "anims": {
+        "closed": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 2
+        },
+        "open": {
+          "clock": "world",
+          "frames": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "Game.as:275 sprBridge; Tile.as:75-77,347 closedBridge/openBridge, 2 loops"
+    },
+    "seedling:tile/ghostTileStep": {
+      "sheet": "GhostTileStep",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:277 sprGhostTileStep"
+    },
+    "seedling:tile/igneousToLava": {
+      "sheet": "IgneousLava",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "as3": "Game.as:279 sprIgneousLava (frame 0 until the player breaks it)"
+    },
+    "seedling:tile/oddTile": {
+      "sheet": "OddTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:281 sprOddTile"
+    },
+    "seedling:tile/fuchsiaTile": {
+      "sheet": "FuchTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:283 sprFuchTile"
+    },
+    "seedling:tile/oddTileWall": {
+      "sheet": "OddTileWall",
+      "fw": 16,
+      "fh": 16,
+      "frames": 16,
+      "as3": "Game.as:285 sprOddTileWall"
+    },
+    "seedling:tile/rockWallDark": {
+      "sheet": "RockTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:287 sprRockTile; Tile.as:468 round(randVal), random 180°"
+    },
+    "seedling:tile/rockWall": {
+      "sheet": "RockTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:287 sprRockTile; Tile.as:473 round(randVal) + 2, random 180°"
+    },
+    "seedling:tile/rockWallFloor": {
+      "sheet": "RockyTile",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "as3": "Game.as:289 sprRockyTile; Tile.as:479 round(randVal) * 4, random flips"
+    },
+    "seedling:tile/pitShadow": {
+      "sheet": "PitShadow",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:391 sprPitShadow; Tile.as:305 drawn over a pit waterfall"
+    },
+    "seedling:scenery/cliffside": {
+      "sheet": "CliffSide",
+      "fw": 16,
+      "fh": 16,
+      "frames": 5,
+      "as3": "Game.as:294 sprCliffSides; CliffSide.as:39 frame = the cliffsides layer column"
+    },
+    "seedling:scenery/tree": {
+      "sheet": "Tree2",
+      "fw": 32,
+      "fh": 32,
+      "frames": 16,
+      "as3": "Game.as:372 sprTree (centerOO) at Tree(x+16, y+16); Tree.as:59-66 neighbour frame"
+    },
+    "seedling:scenery/treebare": {
+      "sheet": "TreeBare",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "as3": "Game.as:374 sprTreeBare (centerOO); one frame, so every neighbour mask wraps to 0"
+    },
+    "seedling:scenery/opentree": {
+      "sheet": "OpenTree",
+      "fw": 32,
+      "fh": 32,
+      "frames": 16,
+      "as3": "Game.as:376 sprOpenTree (centerOO); OpenTree.as render, the Tree frame"
+    },
+    "seedling:scenery/treelarge": {
+      "sheet": "TreeLarge",
+      "fw": 160,
+      "fh": 192,
+      "frames": 4,
+      "anims": {
+        "shine": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "loops": 3
+        }
+      },
+      "as3": "TreeLarge.as: Spritemap(160, 192) centerOO at (x+80, y+96); shine [0,1,2,3,2,1] on worldFrame(100, 3) (the cross-fade between frames is not drawn)"
+    },
+    "seedling:scenery/pole": {
+      "sheet": "Pole",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "as3": "Game.as:367 sprPole (centerOO) at Pole(x+8, y+8); Pole.as check(): +1 right, +2 left, +4 below"
+    },
+    "seedling:scenery/rock": {
+      "sheet": "Rock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[0] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock2": {
+      "sheet": "Rock2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[1] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock3": {
+      "sheet": "Rock3",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[2] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/rock4": {
+      "sheet": "Rock4",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "as3": "Game.as:352-363 rocks[3] (an Image at the OEL position); Rock.as"
+    },
+    "seedling:scenery/building": {
+      "sheet": "Building",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[0]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building1": {
+      "sheet": "Building1",
+      "fw": 48,
+      "fh": 40,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[1]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building2": {
+      "sheet": "Building2",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[2]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building3": {
+      "sheet": "Building3",
+      "fw": 48,
+      "fh": 104,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[3]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building4": {
+      "sheet": "Building4",
+      "fw": 144,
+      "fh": 136,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[4]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building5": {
+      "sheet": "Building5",
+      "fw": 64,
+      "fh": 56,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[5]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building6": {
+      "sheet": "Building6",
+      "fw": 80,
+      "fh": 128,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[6]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building7": {
+      "sheet": "Building7",
+      "fw": 80,
+      "fh": 96,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Game.as:306-341 buildings[7]; Building.as:21 graphic y = -8"
+    },
+    "seedling:scenery/building8": {
+      "sheet": "Building8",
+      "fw": 64,
+      "fh": 64,
+      "frames": 3,
+      "anims": {
+        "mound": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "Game.as:338 sprBuilding8 Spritemap(64, 64); Building.as:39 y = 0; Building.as:51 moundFrames [0,1,2,1] on the world clock"
+    },
+    "seedling:scenery/statue1": {
+      "sheet": "Statues",
+      "fw": 48,
+      "fh": 40,
+      "frames": 2,
+      "only": [
+        0
+      ],
+      "origin": [
+        8,
+        16
+      ],
+      "as3": "Game.as:348 sprStatues; Statue.as:20 at (x+16, y+8), NPC centerOO (x -24), render y = -24"
+    },
+    "seedling:scenery/statue2": {
+      "sheet": "Statues",
+      "fw": 48,
+      "fh": 40,
+      "frames": 2,
+      "only": [
+        1
+      ],
+      "origin": [
+        8,
+        24
+      ],
+      "as3": "Game.as:348 sprStatues; Statue.as:20 at (x+16, y-8), NPC centerOO (x -24), render y = -16"
+    },
+    "seedling:scenery/brickpole": {
+      "sheet": "BrickPole",
+      "fw": 16,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        0,
+        4
+      ],
+      "as3": "BrickPole.as: y = -4"
+    },
+    "seedling:scenery/brickwell": {
+      "sheet": "BrickWell",
+      "fw": 18,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        1,
+        4
+      ],
+      "as3": "BrickWell.as: x = -1, y = -4"
+    },
+    "seedling:scenery/dungeonspire": {
+      "sheet": "DungeonSpire",
+      "fw": 16,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "DungeonSpire.as: y = -8"
+    },
+    "seedling:scenery/ruinedpillar": {
+      "sheet": "RuinedPillar",
+      "fw": 32,
+      "fh": 48,
+      "frames": 1,
+      "origin": [
+        0,
+        16
+      ],
+      "as3": "RuinedPillar.as: y = -16"
+    },
+    "seedling:scenery/bed": {
+      "sheet": "Bed",
+      "fw": 16,
+      "fh": 32,
+      "frames": 1,
+      "as3": "Bed.as: at the OEL position"
+    },
+    "seedling:scenery/bar": {
+      "sheet": "Bar",
+      "fw": 64,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        0,
+        4
+      ],
+      "as3": "Bar.as: y = -4"
+    },
+    "seedling:scenery/barstool": {
+      "sheet": "Barstool",
+      "fw": 8,
+      "fh": 12,
+      "frames": 1,
+      "origin": [
+        -4,
+        0
+      ],
+      "as3": "Barstool.as: at (x+4, y+4), y = -4"
+    },
+    "seedling:scenery/dresser": {
+      "sheet": "Dresser",
+      "fw": 32,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Dresser.as: y = -8"
+    },
+    "seedling:scenery/shieldstatue": {
+      "sheet": "ShieldStatue",
+      "fw": 32,
+      "fh": 43,
+      "frames": 1,
+      "origin": [
+        -8,
+        11
+      ],
+      "as3": "ShieldStatue.as: at (x+8, y), y = -11"
+    },
+    "seedling:scenery/oraclestatue": {
+      "sheet": "OracleStatue",
+      "fw": 32,
+      "fh": 48,
+      "frames": 2,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "idle": {
+          "clock": "world",
+          "frames": [
+            0,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "OracleStatue.as: y = -16; render worldFrame(2)"
+    },
+    "seedling:scenery/planttorch": {
+      "sheet": "PlantTorch",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 1
+        }
+      },
+      "as3": "PlantTorch.as: at (x+8, y+8), x/y = -8; frames [0,1,2,1] worldFrame(4, 1)"
+    },
+    "seedling:scenery/bonetorch": {
+      "sheet": "BoneTorch",
+      "fw": 16,
+      "fh": 24,
+      "frames": 3,
+      "origin": [
+        0,
+        8
+      ],
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "BoneTorch.as type 0: at (x+8, y+8), x = -8, y = -16; frames [0,1,2,1] worldFrame(4, 2)"
+    },
+    "seedling:scenery/bonetorch2": {
+      "sheet": "BoneTorch2",
+      "fw": 16,
+      "fh": 24,
+      "frames": 3,
+      "origin": [
+        0,
+        8
+      ],
+      "anims": {
+        "burn": {
+          "clock": "world",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "loops": 2
+        }
+      },
+      "as3": "BoneTorch.as type 1: as type 0"
+    },
+    "seedling:scenery/snowhill": {
+      "sheet": "SnowHill",
+      "fw": 96,
+      "fh": 64,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "SnowHill.as: Game.sprSnowHill y = -8"
+    },
+    "seedling:player/shrum": {
+      "sheet": "ShrumBlue",
+      "fw": 16,
+      "fh": 16,
+      "frames": 18,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "down-walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 15
+        },
+        "down-stand": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 1
+        },
+        "side-walk": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            4
+          ],
+          "fps": 15
+        },
+        "side-stand": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 1
+        },
+        "up-walk": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7,
+            8,
+            7
+          ],
+          "fps": 15
+        },
+        "up-stand": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7
+          ],
+          "fps": 1
+        },
+        "swim-down-walk": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10,
+            11,
+            10
+          ],
+          "fps": 5
+        },
+        "swim-down-stand": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10
+          ],
+          "fps": 1
+        },
+        "swim-side-walk": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            13
+          ],
+          "fps": 5
+        },
+        "swim-side-stand": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 1
+        },
+        "swim-up-walk": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16,
+            17,
+            16
+          ],
+          "fps": 5
+        },
+        "swim-up-stand": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Player.as:35-37 imgShrum → sprShrum; Player.as:383 centerOO; Player.as:635-660 addAnimations (walk fps 15 / swim 5, stand fps 1)"
+    },
+    "seedling:player/shrumDark": {
+      "sheet": "ShrumDark",
+      "fw": 16,
+      "fh": 16,
+      "frames": 27,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "down-walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 15
+        },
+        "down-stand": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 1
+        },
+        "side-walk": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            4
+          ],
+          "fps": 15
+        },
+        "side-stand": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 1
+        },
+        "up-walk": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7,
+            8,
+            7
+          ],
+          "fps": 15
+        },
+        "up-stand": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7
+          ],
+          "fps": 1
+        },
+        "swim-down-walk": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10,
+            11,
+            10
+          ],
+          "fps": 5
+        },
+        "swim-down-stand": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10
+          ],
+          "fps": 1
+        },
+        "swim-side-walk": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            13
+          ],
+          "fps": 5
+        },
+        "swim-side-stand": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 1
+        },
+        "swim-up-walk": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16,
+            17,
+            16
+          ],
+          "fps": 5
+        },
+        "swim-up-stand": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Player.as:38-39 sprShrumDark (row 2 = the final scene's \"die\", not drawn); Player.as:383 centerOO; Player.as:635-660 addAnimations (walk fps 15 / swim 5, stand fps 1)"
+    },
+    "seedling:player/slash": {
+      "sheet": "Slash",
+      "fw": 16,
+      "fh": 32,
+      "frames": 5,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:40-41 sprSlash; :390-393 — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)"
+    },
+    "seedling:player/slashDark": {
+      "sheet": "SlashDark",
+      "fw": 16,
+      "fh": 32,
+      "frames": 5,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:42-43 sprSlashDark; :394-397 — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)"
+    },
+    "seedling:player/ghostSword": {
+      "sheet": "GhostSword",
+      "fw": 24,
+      "fh": 7,
+      "frames": 5,
+      "origin": [
+        0,
+        3.5
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            2,
+            3,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:44-45 sprGhostSword; :399-405 slash [0,1,2,2,3,3,4] at 30, slashnarrow [0,1,2,3] at 20"
+    },
+    "seedling:enemy/bob": {
+      "sheet": "Bob",
+      "fw": 8,
+      "fh": 8,
+      "frames": 7,
+      "origin": [
+        4,
+        4
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "Enemies/Bob.as:15-16 Spritemap(8, 8); :35 centerOO; :36 walk sitFrames [0,1,2,1] fps 10 one-shot; :37 die [3..6] fps 5"
+    },
+    "seedling:enemy/lavarunner": {
+      "sheet": "LavaRunner",
+      "fw": 20,
+      "fh": 20,
+      "frames": 19,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            2,
+            3,
+            4
+          ],
+          "fps": 15
+        },
+        "swim": {
+          "clock": "fps",
+          "frames": [
+            5,
+            7,
+            8,
+            9
+          ],
+          "fps": 15
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Enemies/LavaRunner.as:13-14 Spritemap(20, 20); :31 centerOO; :32-34 walk/swim/die fps 15"
+    },
+    "seedling:enemy/jellyfish": {
+      "sheet": "Jellyfish",
+      "fw": 14,
+      "fh": 15,
+      "frames": 12,
+      "origin": [
+        7,
+        7.5
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "fps": 15,
+          "loop": false
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      },
+      "as3": "Enemies/Jellyfish.as:14-15 Spritemap(14, 15); :28 centerOO; :29 walk [0,1,2,3,2,1] fps 15 one-shot; :30 die [4..11] fps 7 one-shot"
+    },
+    "seedling:enemy/bulb": {
+      "sheet": "Bulb",
+      "fw": 16,
+      "fh": 16,
+      "frames": 19,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 8
+        },
+        "drop": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 8
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "fps": 8
+        }
+      },
+      "as3": "Enemies/Bulb.as:14-15 Spritemap(16, 16); :21 centerOO; :22-25 walk/drop/die at animSpeed 8"
+    },
+    "seedling:enemy/flyer": {
+      "sheet": "Flyer",
+      "fw": 18,
+      "fh": 26,
+      "frames": 27,
+      "origin": [
+        9,
+        13
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        },
+        "fall": {
+          "clock": "fps",
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+          ],
+          "fps": 30
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            23,
+            24,
+            25,
+            26
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/Flyer.as:14-15 Spritemap(18, 26); :30 centerOO; :31 walk fps 15; :32 fall [4..22] fps 30; :33 die [23..26] fps 10"
+    },
+    "seedling:enemy/puncher": {
+      "sheet": "Puncher",
+      "fw": 20,
+      "fh": 20,
+      "frames": 40,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk-side": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 4
+        },
+        "walk-up": {
+          "clock": "fps",
+          "frames": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "fps": 4
+        },
+        "walk-down": {
+          "clock": "fps",
+          "frames": [
+            26,
+            27,
+            28,
+            29
+          ],
+          "fps": 4
+        },
+        "attack-side": {
+          "clock": "fps",
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "fps": 12
+        },
+        "attack-up": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 12
+        },
+        "attack-down": {
+          "clock": "fps",
+          "frames": [
+            22,
+            23,
+            24,
+            25
+          ],
+          "fps": 12
+        },
+        "stand-side": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2
+        },
+        "stand-up": {
+          "clock": "fps",
+          "frames": [
+            10,
+            11
+          ],
+          "fps": 2
+        },
+        "stand-down": {
+          "clock": "fps",
+          "frames": [
+            20,
+            21
+          ],
+          "fps": 2
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/Puncher.as:14-15 Spritemap(20, 20); :30 centerOO; :32-44 walk fps 4, attack fps 12, stand fps 2, die fps 10"
+    },
+    "seedling:enemy/bobsoldier": {
+      "sheet": "BobSoldier",
+      "fw": 10,
+      "fh": 10,
+      "frames": 3,
+      "origin": [
+        5,
+        5
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobSoldier.as:27-28 Spritemap(10, 10); :58 centerOO; :59 walk [0,1,2,1] fps 10"
+    },
+    "seedling:enemy/lameSword": {
+      "sheet": "LameSword",
+      "fw": 16,
+      "fh": 5,
+      "frames": 1,
+      "origin": [
+        0,
+        3
+      ],
+      "as3": "Enemies/BobSoldier.as:24-25 Spritemap(16, 5); :62-63 y = -3, originY = 3 (x = originX = 0); :187-198 angle = swordSpin deg"
+    },
+    "seedling:enemy/spinner": {
+      "sheet": "Spinner",
+      "fw": 18,
+      "fh": 9,
+      "frames": 2,
+      "origin": [
+        5,
+        5
+      ],
+      "as3": "Enemies/Spinner.as:16-17 Spritemap(18, 9); :35-38 x = y = -5, origin 5; :97-121 frame 1 (the hammer) turned, then frame 0 (the body)"
+    },
+    "seedling:projectile/arrow": {
+      "sheet": "Arrow",
+      "fw": 8,
+      "fh": 3,
+      "frames": 1,
+      "origin": [
+        4,
+        1.5
+      ],
+      "as3": "Projectiles/Arrow.as:15-16 Image; :24 centerOO; :32,41 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/wallflyer": {
+      "sheet": "WallFlyer",
+      "fw": 20,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        12,
+        8
+      ],
+      "anims": {
+        "jump": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        },
+        "jumping": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 7
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/WallFlyer.as:17 Spritemap(20, 16); :29-31 centerOO, x = -12, originX = 12; :32-34 jump fps 15, jumping [3,4] fps 7, die [5..8] fps 10"
+    },
+    "seedling:enemy/drill": {
+      "sheet": "Drill",
+      "fw": 16,
+      "fh": 16,
+      "frames": 11,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "drill": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 20,
+          "loop": false
+        },
+        "undrill": {
+          "clock": "fps",
+          "frames": [
+            3,
+            2,
+            1,
+            0
+          ],
+          "fps": 20,
+          "loop": false
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "hit": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Enemies/Drill.as:16 Spritemap(16, 16); :25 centerOO; :26-30 sit [0], drill [0..4] / undrill [3,2,1,0] fps 20 one-shot, die [5..10] fps 10 one-shot, hit [3,4] fps 20"
+    },
+    "seedling:enemy/iceturret": {
+      "sheet": "IceTurret",
+      "fw": 32,
+      "fh": 32,
+      "frames": 7,
+      "origin": [
+        12,
+        16
+      ],
+      "anims": {
+        "startshot": {
+          "clock": "fps",
+          "frames": [
+            0
+          ],
+          "fps": 10
+        },
+        "finishshot": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/IceTurret.as:16 Spritemap(32, 32); :34-37 originX 12, originY 16; :39-42 startshot [0] / finishshot [1..5] fps 10, hit [1], dead [6]"
+    },
+    "seedling:projectile/iceblast": {
+      "sheet": "IceBlast",
+      "fw": 16,
+      "fh": 7,
+      "frames": 6,
+      "origin": [
+        8,
+        4
+      ],
+      "as3": "Projectiles/IceTurretBlast.as:15 Spritemap(16, 7); :23-26 x = -8, y = -4, origin (8, 4); :34,44 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/turret": {
+      "sheet": "Turret",
+      "fw": 16,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "startshot": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2
+          ],
+          "fps": 10
+        },
+        "finishshot": {
+          "clock": "fps",
+          "frames": [
+            2,
+            1
+          ],
+          "fps": 10
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/Turret.as:15 Spritemap(16, 16); :28 centerOO; :30-33 startshot [1,2] / finishshot [2,1] fps 10, hit [0], die [3..8] fps 10"
+    },
+    "seedling:projectile/turretspit": {
+      "sheet": "TurretSpit",
+      "fw": 12,
+      "fh": 8,
+      "frames": 2,
+      "origin": [
+        8,
+        4
+      ],
+      "as3": "Projectiles/TurretSpit.as:17 Spritemap(12, 8); :23-26 x = -8, y = -4, origin (8, 4); :35 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/bobboss0": {
+      "sheet": "BobBoss1",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:17 imgBobBoss1; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobboss1": {
+      "sheet": "BobBoss2",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:18 imgBobBoss2; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobboss2": {
+      "sheet": "BobBoss3",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:19 imgBobBoss3; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobbossWeapons": {
+      "sheet": "BobBossWeapons",
+      "fw": 24,
+      "fh": 5,
+      "frames": 3,
+      "origin": [
+        0,
+        3
+      ],
+      "as3": "Enemies/BobBoss.as:22-23 Spritemap(24, 5); :53-55 y = -3, originY = 3, frame = the form; BobSoldier.as:187-198 angle = swordSpin deg"
+    },
+    "seedling:puzzlement/spinningaxe": {
+      "sheet": "SpinningAxe",
+      "fw": 36,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        4,
+        10
+      ],
+      "as3": "Puzzlements/SpinningAxe.as:15-16,26-35 Image (SpinningAxe.png, _colorType 0); :37-40 originX 4, originY = height / 2; :52 angle += spinRate"
+    },
+    "seedling:puzzlement/spinningaxeRed": {
+      "sheet": "SpinningAxeRed",
+      "fw": 36,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        4,
+        10
+      ],
+      "as3": "Puzzlements/SpinningAxe.as:15-16,26-35 Image (SpinningAxeRed.png, _colorType 1); :37-40 originX 4, originY = height / 2; :52 angle += spinRate"
+    },
+    "seedling:puzzlement/crusher": {
+      "sheet": "Crusher",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Puzzlements/Crusher.as:18-19 Spritemap(32, 32), no anims (frame 0); :38 centerOO; :109-113 angle += 8 while v ≠ 0, else 0"
+    },
+    "seedling:puzzlement/lavachain": {
+      "sheet": "LavaChain",
+      "fw": 64,
+      "fh": 16,
+      "frames": 13,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/LavaChain.as:18-19 Spritemap(64, 16); :34-37 origin (8, 8); :39-42 sit [0], extend [1,2] fps 15, hit [3,4,5,5,5,5,4,3] fps 15, retract [6..12] fps 25; :52 angle = 90 · direction"
+    },
+    "seedling:enemy/bosstotem": {
+      "sheet": "BossTotem",
+      "fw": 32,
+      "fh": 48,
+      "frames": 3,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Enemies/BossTotem.as:18-19 Spritemap(32, 48): frame 0 the head, 1 an arm, 2 a leg; :605-640 each part sets its own origin (legs (0,0), arms (armsBase.x · scaleX, 0), head headOrigin (16, 47))"
+    },
+    "seedling:projectile/bosstotemshot": {
+      "sheet": "BossTotemShot",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "fly": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Projectiles/BossTotemShot.as:17-18 Spritemap(20, 20); :27 centerOO; :28-29 fly [0,1,2] fps 10, played in the ctor"
+    },
+    "seedling:enemy/bombpusher": {
+      "sheet": "BombPusher",
+      "fw": 48,
+      "fh": 48,
+      "frames": 4,
+      "origin": [
+        24,
+        24
+      ],
+      "anims": {
+        "shoot": {
+          "clock": "fps",
+          "frames": [
+            0,
+            2,
+            1,
+            2,
+            3
+          ],
+          "fps": 5
+        },
+        "sit": {
+          "clock": "fps",
+          "frames": [
+            0,
+            3
+          ],
+          "fps": 2
+        }
+      },
+      "as3": "Enemies/BombPusher.as:15-16 Spritemap(48, 48); :27 centerOO; :29-30 shoot [0,2,1,2,3] fps 5, sit [0,3] fps 2"
+    },
+    "seedling:projectile/bomb": {
+      "sheet": "Bomb",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Projectiles/Bomb.as:15-16 Spritemap(16, 16), no anims; :29 centerOO; :41-51 scale from t, angle += 15 a tick"
+    },
+    "seedling:enemy/grenade": {
+      "sheet": "Grenade",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "explode": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2,
+            0,
+            3,
+            4,
+            3
+          ],
+          "fps": 12
+        },
+        "hit": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7
+          ],
+          "fps": 12
+        },
+        "sit": {
+          "clock": "fps",
+          "frames": [
+            0,
+            4
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)"
+    },
+    "seedling:fx/explosion": {
+      "sheet": "Explosion",
+      "fw": 128,
+      "fh": 128,
+      "frames": 8,
+      "origin": [
+        64,
+        64
+      ],
+      "anims": {
+        "explode": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Projectiles/Explosion.as:15-16 Spritemap(128, 128, endAnim); :29-31 explode [0..7] fps 20, centerOO; :38 scale = r·2/128; :39 angle = Rng.cos()·360"
+    },
+    "seedling:fx/slashhit": {
+      "sheet": "SlashHit",
+      "fw": 32,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        16,
+        8
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Scenery/SlashHit.as:13-14 Spritemap(32, 16, endAnim); :19-21 centerOO, slash [0,1] fps 15; :22 scale = sc/32 + 0.35"
+    },
+    "seedling:fx/droplet": {
+      "sheet": "Droplet",
+      "fw": 9,
+      "fh": 5,
+      "frames": 6,
+      "origin": [
+        4.5,
+        2.5
+      ],
+      "as3": "Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render"
+    },
+    "seedling:hud/heart": {
+      "sheet": "Health",
+      "fw": 12,
+      "fh": 12,
+      "frames": 2,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored"
+    },
+    "seedling:portrait/AdnanCharacter": {
+      "sheet": "NPCs/AdnanCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/AdnanCharacter.as:21 myPic = new Image(AdnanCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/ForestCharacter": {
+      "sheet": "NPCs/ForestCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/ForestCharacter.as:21 myPic = new Image(ForestCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Hermit": {
+      "sheet": "NPCs/HermitPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Hermit.as:23 myPic = new Image(HermitPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/IntroCharacter": {
+      "sheet": "NPCs/IntroCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/IntroCharacter.as:22 myPic = new Image(IntroCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Karlore": {
+      "sheet": "NPCs/KarlorePic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Karlore.as:21 myPic = new Image(KarlorePic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Oracle": {
+      "sheet": "NPCs/OraclePic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Oracle.as:52 myPic = new Image(OraclePic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Rekcahdam": {
+      "sheet": "NPCs/RekcahdamPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Rekcahdam.as:22 myPic = new Image(RekcahdamPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Sensei": {
+      "sheet": "NPCs/SenseiPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Sensei.as:23 myPic = new Image(SenseiPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Watcher": {
+      "sheet": "NPCs/WatcherPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Watcher.as:44 myPic = new Image(WatcherPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Witch": {
+      "sheet": "NPCs/WitchPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Witch.as:27 myPic = new Image(WitchPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Yeti": {
+      "sheet": "NPCs/YetiPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Yeti.as:24 myPic = new Image(YetiPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss0": {
+      "sheet": "NPCs/BobBoss1Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[0] myPic = new Image(BobBoss1Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss1": {
+      "sheet": "NPCs/BobBoss2Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[1] myPic = new Image(BobBoss2Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss2": {
+      "sheet": "NPCs/BobBoss3Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[2] myPic = new Image(BobBoss3Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:pickup/sword": {
+      "sheet": "Sword",
+      "fw": 16,
+      "fh": 16,
+      "frames": 3,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"sword\" → [Sword.png, 16, 16]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/shield": {
+      "sheet": "Shield",
+      "fw": 7,
+      "fh": 7,
+      "frames": 4,
+      "origin": [
+        3.5,
+        3.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"shield\" → [Shield.png, 7, 7]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/darkshield": {
+      "sheet": "DarkShield",
+      "fw": 9,
+      "fh": 9,
+      "frames": 1,
+      "origin": [
+        4.5,
+        4.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"darkshield\" → [DarkShield.png, 0, 0] (an Image: the whole 9x9 file); :171 centerOO, frame 0"
+    },
+    "seedling:pickup/conch": {
+      "sheet": "Conch",
+      "fw": 8,
+      "fh": 8,
+      "frames": 3,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"conch\" → [Conch.png, 8, 8]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/feather": {
+      "sheet": "Feather",
+      "fw": 12,
+      "fh": 12,
+      "frames": 8,
+      "origin": [
+        6,
+        6
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"feather\" → [Feather.png, 12, 12]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/wand": {
+      "sheet": "WandPickup",
+      "fw": 5,
+      "fh": 9,
+      "frames": 6,
+      "origin": [
+        2.5,
+        4.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"wand\" → [WandPickup.png, 5, 9]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/firewand": {
+      "sheet": "FireWandPickup",
+      "fw": 5,
+      "fh": 9,
+      "frames": 6,
+      "origin": [
+        2.5,
+        4.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"firewand\" → [FireWandPickup.png, 5, 9]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/ghostspear": {
+      "sheet": "GhostSpear",
+      "fw": 20,
+      "fh": 7,
+      "frames": 2,
+      "origin": [
+        10,
+        3.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"ghostspear\" → [GhostSpear.png, 20, 7]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/ghostsword": {
+      "sheet": "GhostSwordPickup",
+      "fw": 24,
+      "fh": 7,
+      "frames": 2,
+      "origin": [
+        12,
+        3.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"ghostsword\" → [GhostSwordPickup.png, 24, 7]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/darksuit": {
+      "sheet": "DarkSuit",
+      "fw": 10,
+      "fh": 10,
+      "frames": 1,
+      "origin": [
+        5,
+        5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"darksuit\" → [DarkSuit.png, 0, 0] (an Image: the whole 10x10 file); :171 centerOO, frame 0"
+    },
+    "seedling:pickup/torchpickup": {
+      "sheet": "TorchPickup",
+      "fw": 12,
+      "fh": 12,
+      "frames": 2,
+      "origin": [
+        6,
+        6
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"torchpickup\" → [TorchPickup.png, 12, 12]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/health": {
+      "sheet": "HealthPickup",
+      "fw": 8,
+      "fh": 8,
+      "frames": 6,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"health\" → [HealthPickup.png, 8, 8]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/totempart": {
+      "sheet": "BossTotemParts",
+      "fw": 24,
+      "fh": 24,
+      "frames": 5,
+      "origin": [
+        12,
+        12
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"totempart\" → [BossTotemParts.png, 24, 24]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/chest": {
+      "sheet": "Chest",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"chest\" → [Chest.png, 16, 16]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/seed": {
+      "sheet": "Seed",
+      "fw": 9,
+      "fh": 13,
+      "frames": 3,
+      "origin": [
+        4.5,
+        6.5
+      ],
+      "as3": "Pickups/APItem.as:94-104 \"seed\" → [Seed.png, 9, 13]; :171 centerOO, frame 0"
+    },
+    "seedling:pickup/bosskey0": {
+      "sheet": "BossKey",
+      "fw": 12,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        6,
+        8
+      ],
+      "as3": "Game.as:432-433 sprBossKey; Game.as:444 bossKeys[0]; APItem.as:155-162 \"bosskey0\""
+    },
+    "seedling:pickup/bosskey1": {
+      "sheet": "BossKey1",
+      "fw": 12,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        6,
+        8
+      ],
+      "as3": "Game.as:434-435 sprBossKey1; Game.as:444 bossKeys[1]; APItem.as:155-162 \"bosskey1\""
+    },
+    "seedling:pickup/bosskey2": {
+      "sheet": "BossKey2",
+      "fw": 12,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        6,
+        8
+      ],
+      "as3": "Game.as:436-437 sprBossKey2; Game.as:444 bossKeys[2]; APItem.as:155-162 \"bosskey2\""
+    },
+    "seedling:pickup/bosskey3": {
+      "sheet": "BossKey3",
+      "fw": 12,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        6,
+        8
+      ],
+      "as3": "Game.as:438-439 sprBossKey3; Game.as:444 bossKeys[3]; APItem.as:155-162 \"bosskey3\""
+    },
+    "seedling:pickup/bosskey4": {
+      "sheet": "BossKey4",
+      "fw": 12,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        6,
+        8
+      ],
+      "as3": "Game.as:440-441 sprBossKey4; Game.as:444 bossKeys[4]; APItem.as:155-162 \"bosskey4\""
+    },
+    "seedling:font/default": {
+      "sheet": "SeedlingFont",
+      "fw": 4,
+      "fh": 8,
+      "frames": 96,
+      "as3": "Game.as:1677-1757 talk(), Text.size = 8 (04B_03, Preloader.as:30, not shipped); frame = char code − 32"
+    }
+  }
+}

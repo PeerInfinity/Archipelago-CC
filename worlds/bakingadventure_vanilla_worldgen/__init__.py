@@ -10,7 +10,7 @@ import types
 from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld

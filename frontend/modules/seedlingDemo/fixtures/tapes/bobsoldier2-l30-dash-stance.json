@@ -1,0 +1,371 @@
+{
+    "game": "seedling",
+    "name": "bobsoldier2-l30-dash-stance",
+    "boot": {
+        "level": 30,
+        "x": 176,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        },
+        {
+            "level": 19,
+            "tag": 1
+        },
+        {
+            "level": 12,
+            "tag": 4
+        },
+        {
+            "level": 12,
+            "tag": 5
+        },
+        {
+            "level": 31,
+            "tag": 0
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 145,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 22
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "down",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "up",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "down",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "up",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "up",
+            "from": 31,
+            "to": 33
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 35
+        },
+        {
+            "key": "primary",
+            "from": 34,
+            "to": 35
+        },
+        {
+            "key": "right",
+            "from": 35,
+            "to": 37
+        },
+        {
+            "key": "down",
+            "from": 36,
+            "to": 38
+        },
+        {
+            "key": "left",
+            "from": 37,
+            "to": 42
+        },
+        {
+            "key": "up",
+            "from": 40,
+            "to": 42
+        },
+        {
+            "key": "right",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "primary",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "left",
+            "from": 43,
+            "to": 46
+        },
+        {
+            "key": "down",
+            "from": 44,
+            "to": 46
+        },
+        {
+            "key": "right",
+            "from": 47,
+            "to": 49
+        },
+        {
+            "key": "up",
+            "from": 48,
+            "to": 50
+        },
+        {
+            "key": "down",
+            "from": 53,
+            "to": 54
+        },
+        {
+            "key": "up",
+            "from": 58,
+            "to": 63
+        },
+        {
+            "key": "left",
+            "from": 63,
+            "to": 64
+        },
+        {
+            "key": "primary",
+            "from": 64,
+            "to": 65
+        },
+        {
+            "key": "right",
+            "from": 65,
+            "to": 67
+        },
+        {
+            "key": "primary",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "left",
+            "from": 67,
+            "to": 71
+        },
+        {
+            "key": "right",
+            "from": 71,
+            "to": 72
+        },
+        {
+            "key": "left",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "primary",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "right",
+            "from": 73,
+            "to": 76
+        },
+        {
+            "key": "left",
+            "from": 76,
+            "to": 77
+        },
+        {
+            "key": "up",
+            "from": 65,
+            "to": 79
+        },
+        {
+            "key": "right",
+            "from": 77,
+            "to": 79
+        },
+        {
+            "key": "primary",
+            "from": 78,
+            "to": 79
+        },
+        {
+            "key": "down",
+            "from": 79,
+            "to": 82
+        },
+        {
+            "key": "left",
+            "from": 80,
+            "to": 84
+        },
+        {
+            "key": "up",
+            "from": 82,
+            "to": 84
+        },
+        {
+            "key": "right",
+            "from": 84,
+            "to": 85
+        },
+        {
+            "key": "left",
+            "from": 85,
+            "to": 86
+        },
+        {
+            "key": "down",
+            "from": 85,
+            "to": 87
+        },
+        {
+            "key": "right",
+            "from": 86,
+            "to": 87
+        },
+        {
+            "key": "left",
+            "from": 87,
+            "to": 88
+        },
+        {
+            "key": "down",
+            "from": 124,
+            "to": 125
+        },
+        {
+            "key": "primary",
+            "from": 125,
+            "to": 126
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY BOBSOLDIER2 D1 — the BEFORE: survey step 50's staging (`r8-solve-11`'s block re-pointed at L30 (176,48), keys [0, 1], the shield, the five clears the route has earned), solved with `KILL_STANCE_AS_FORECAST` and `SWORD_GATE_TIMED` OFF. These are the keys it drove before the kill arm's dwell refused: 145 t — the walk to the stance (88,56) dashed (planSwordDash) and arrived at t92 with bobsoldier@48,80 on one hit; the forecast had priced an undashed walk arriving at t145 with it on two. At the 53-tick bound the body is alive on two hits. Authored by scripts/procgen/plan-seedling-bobsoldier2.mjs."
+}

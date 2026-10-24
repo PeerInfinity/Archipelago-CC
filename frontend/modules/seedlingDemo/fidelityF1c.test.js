@@ -1,0 +1,281 @@
+/**
+ * fidelityF1c — Seedling fidelity F1c: the press kill survives any HAMMER
+ * PHASE (the HAMMER-PHASE rung, `solverBot.hammerPhaseRung`).
+ *
+ * F1b measured the wall: on `r9-solve-18`'s committed staging, moving
+ * `seam.time` alone across the 45 residues of `Game.time mod 45` (the phase
+ * `spinner.hammerLine` swings at) refused 12 of them `HAMMER_SAFETY`, among
+ * them residue 42 — the one the campaign chain's re-record puts L18 at. There
+ * the press lands at t234, the knocked-back body comes off the wall, and at
+ * t249 every key set meets the line: a corner deeper than `stepToward`'s
+ * lookahead. The rung previews the executor's own approach one hammer period
+ * ahead and, cornered, searches a hold that meets the line at another phase.
+ *
+ * Every residue below is DERIVED from the committed tape's own clock: the
+ * shift that puts it at residue r is `((r − time mod 45) mod 45) − 45`. Since
+ * F1c's D3 the committed `r9-solve-18` IS the chain-residue solve (512 t).
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *
+ *   m1 the rung off (`hammerPhaseRung` returns `{fired: false}`)
+ *        -> the chain-residue row red (HAMMER_SAFETY, "There is no step out.");
+ *           the no-corner row and the remainder row stay green
+ *
+ *   m2 (F5) the spinner ledger's old stamp (`removedAt = ticksCompleted + 1`)
+ *        -> the two F5 game-equality rows red (the v9 reading crosses t445
+ *           against the game's t444; the game's 416 against the ledger's 417);
+ *           the solver-spelling row and the game-sourced replay stay green
+ *
+ * D2 (the spinner arm's declared spelling) was a GAME MEASUREMENT at F1c:
+ * `f1c-l18-lock-removal` (recorded twice) crosses on the tick the model
+ * reaches only under `{18,0}@416`. F1c found two errors adding to two ticks —
+ * the spinner ledger stamped one step late (`removePending`), and the arm
+ * declared the pending-spelled `removal + 101` — and stopped at the fix,
+ * because it moved generated certifications and the `r8-d2` cascade.
+ * ⚖ The user (2026-10-03) licensed it; F5 landed both edits. The D2 rows now
+ * pin the model's reading AS the game's: the ledger's own removal spelled v9
+ * is the game-sourced 416, and the solver declares exactly that spelling.
+ */
+import { describe, expect, it } from 'vitest';
+
+import { loadExpectation, loadTape } from './fixtures/index.js';
+import { heldKeysAt } from './tapeFormat.js';
+import { atlasLevelSource } from './levelSource.js';
+import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { HAMMER_ESCAPE, HAMMER_PHASE_RUNG, HAMMER_SAFETY, withHammerEscape } from './solverBot.js';
+import { twoPassSolve } from './twoPassSolve.js';
+import { SPINNER } from './spinner.js';
+import { RESPONDERS, opensOnTick } from './activators.js';
+
+const NAME = 'r9-solve-18';
+const TAPE = loadTape(NAME);
+const STAGING = stagingFromTape(TAPE);
+const PERIOD = SPINNER.hammerPeriod;
+const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
+/**
+ * The chain's committed L18 residue. F1b's window-5 re-solve moved it 17 → 42 (F1b D2);
+ * ⛓ SEEDLING FIDELITY DASHFLIP moved it 42 → 40: windows 16 and 18 re-derived (−20 + 63 t),
+ * so `r9-solve-18`'s `seam.time` is 9897 → 9940. Measured: the solve at 40 is the committed
+ * window key for key (510 t, the same keys the window had at 42), stalls and all.
+ * ⛓ LINEFLIP (W1 ON) kept the residue at 40 (window 19's own clock is upstream of the move) and re-solved the window
+ * 510 → 519 t with no stall; the 510 t walk is now the solve at 42 only.
+ * ⛓ FLIP CANDIDATE (strikelapse D4; the hammer arc's pin, HELD): `strikeIframeLapse` ON re-records windows 16–30
+ * (fidelity FLIP14's campaign patch) — `r9-solve-18` re-solves 518 → 440 t from `-16`'s new latch and its
+ * `seam.time` is 9940 → 9912, so the chain's residue moves 40 → 12.
+ */
+const CHAIN_RESIDUE = 12;
+/** The residue `f1c-l18-phase42` was cut and game-recorded at: the chain's, F1c to DASH. */
+const WITNESS_RESIDUE = 42;
+/** The committed residue BEFORE F1c re-recorded the window (`seam.time` 10052): no corner forms. */
+const PRE_F1C_RESIDUE = 17;
+/** A residue the rung names rather than solves: a landing's rebound (the sweep's 18–21). */
+const REBOUND_RESIDUE = 18;
+const shiftTo = (r) => ((((r - RESIDUE) % PERIOD) + PERIOD) % PERIOD) - PERIOD;
+const TELEPORTER = { x: 176, y: 112 };
+
+/**
+ * ⛓ HAMMER-PHASE A2 — `HAMMER_ESCAPE` is ON by default (⚖ user 2026-10-07). With it a press is taken only with a
+ * certified way out of its own landing, and over all 45 residues of this staging NO corner forms for the rung to hold
+ * against (`sweep-seedling-l18-residues --twice`: 45/45 solve, 0 hits, no stall). The rung's own evidence is therefore
+ * exercised with the escape OFF, through the switch (`solveOffAt`): the rows below that pin a STALL, or the rebound
+ * remainder's refusal, ask the solver the question F1c asked. Beside each, a row pins what the default does there.
+ */
+const solveOffAt = (shift) => withHammerEscape(false, () => solveAt(shift));
+
+/** `twoPassSolve` exactly as `solve-seedling-r9-campaign` calls it, at a shifted clock. */
+async function solveAt(shift) {
+    const seam = { ...STAGING.seam, time: STAGING.seam.time + shift };
+    const makeRun = (persistence) => createRunForStaging(
+        { ...STAGING, seam, persistence, equips: [] }, atlasLevelSource());
+    return twoPassSolve({
+        makeRun,
+        goals: [{ kind: 'reach-exit', exit: TELEPORTER }],
+        name: NAME,
+        boot: STAGING.boot,
+        persistence: STAGING.persistence.filter((c) => c.at === undefined),
+        gameTick: async () => { throw new Error('no game oracle here'); },
+    });
+}
+
+const pressRecords = (out) => (out.records ?? []).filter((r) => r.arm === 'press');
+
+describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s phases)', () => {
+    it('⛓ its bounds are the hammer\'s own: one period of horizon, every other phase of hold, one stall per landing', () => {
+        expect(HAMMER_PHASE_RUNG).toEqual({
+            horizon: PERIOD,
+            maxTicks: PERIOD - 1,
+            step: 1,
+            maxPerKill: SPINNER.hitsMax,
+        });
+    });
+
+    it('⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c)', async () => {
+        const r = await solveAt(shiftTo(PRE_F1C_RESIDUE));
+        expect(pressRecords(r.out).length).toBeGreaterThan(0);
+        expect(pressRecords(r.out).every((p) => p.phaseStalls === undefined)).toBe(true);
+    }, 120_000);
+
+    /**
+     * ⛓ LINEFLIP (W1 `collideLinePointsExact` ON): the hammer's `collideLine` samples the player's fractional box
+     * untruncated, and at the chain's residue 40 no corner forms on the press kill's approach any more. The window
+     * re-solved 510 → 519 t (re-recorded on the game) with NO phase stall. Measured over all 45 residues: W1 OFF
+     * solves 37 (4 with a stall), W1 ON 35 (4 with a stall); the rung's own evidence is the next row.
+     */
+    it('⛓⛓⛓ the committed window IS at the chain\'s residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19', async () => {
+        expect(RESIDUE).toBe(CHAIN_RESIDUE);
+        const r = await solveAt(0);
+        expect(r.out.perTick.length).toBe(TAPE.tick_count);
+        for (let t = 0; t < TAPE.tick_count; t += 1) {
+            expect([...r.out.perTick[t]].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
+        }
+        expect(pressRecords(r.out).length).toBeGreaterThan(0);
+        expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])).toEqual([]);
+        const run = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
+        for (const held of r.out.perTick) run.advance(held);
+        expect(run.playerHits).toEqual([]);
+        expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+    }, 300_000);
+
+    it('⛓⛓⛓ where a corner DOES form (the witness\'s residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
+        const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
+        const stalls = pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []);
+        expect(stalls.length).toBeGreaterThan(0);
+        for (const s of stalls) {
+            expect(s.corner).toBeGreaterThan(s.from);
+            expect(s.ticks).toBeGreaterThanOrEqual(1);
+            expect(s.ticks).toBeLessThanOrEqual(HAMMER_PHASE_RUNG.maxTicks);
+            expect(s.corner - s.t).toBeLessThan(HAMMER_PHASE_RUNG.horizon);
+        }
+        const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(WITNESS_RESIDUE) };
+        const run = createRunForStaging({ ...STAGING, seam, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
+        for (const held of r.out.perTick) run.advance(held);
+        expect(run.playerHits).toEqual([]);
+        expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+    }, 300_000);
+
+    /**
+     * ⛓ HAMMER-PHASE A2: with the escape ON (the default) the corner never forms at 42 — the solve needs no stall
+     * (503 t, measured) — and the rebound residue solves (445 t). Both pinned here, beside the rung's OFF rows.
+     */
+    it('⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness\'s) and 18 (the rebound\'s), no hit, the crossing to L19', async () => {
+        expect(HAMMER_ESCAPE.enabled).toBe(true);
+        for (const [residue, ticks] of [[WITNESS_RESIDUE, 503], [REBOUND_RESIDUE, 445]]) {
+            const r = await solveAt(shiftTo(residue));
+            expect(r.out.perTick.length).toBe(ticks);
+            expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])).toEqual([]);
+            expect(pressRecords(r.out).flatMap((p) => p.escapes ?? []).length).toBeGreaterThan(0);
+            const seam = { ...STAGING.seam, time: STAGING.seam.time + shiftTo(residue) };
+            const run = createRunForStaging({ ...STAGING, seam, persistence: r.persistence, equips: [] },
+                atlasLevelSource());
+            for (const held of r.out.perTick) run.advance(held);
+            expect(run.playerHits).toEqual([]);
+            expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+        }
+    }, 300_000);
+
+    it('⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing\'s rebound makes refuses with the landing in its words', async () => {
+        let raised = null;
+        try { await solveOffAt(shiftTo(REBOUND_RESIDUE)); } catch (e) { raised = e; }
+        expect(raised?.code).toBe(HAMMER_SAFETY);
+        expect(raised.message).toMatch(/There is no step out\./);
+        expect(raised.message).toMatch(/LANDED at t\d+: a landing's knockback is player-coupled/);
+        expect(raised.message).toMatch(/HAMMER_PHASE_RUNG/);
+    }, 300_000);
+});
+
+/** Replay a committed tape's keys under a persistence block; the run. */
+function replay(name, persistence = null) {
+    const tape = loadTape(name);
+    const st = stagingFromTape(tape);
+    const run = createRunForStaging({ ...st, ...(persistence ? { persistence } : {}) },
+        atlasLevelSource());
+    for (let t = 0; t < tape.tick_count; t += 1) run.advance(heldKeysAt(tape, t));
+    return run;
+}
+
+describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice)', () => {
+    const WITNESS = 'f1c-l18-phase42';
+    /**
+     * ⛓ DASHFLIP: the chain's clock moved under the witness (residue 42 → 40, and the
+     * transported `rng.cosmetic` with it), so the witness is the committed boot at its
+     * own F1c-era residue — the clock and the unmodelled cosmetic stream moved, nothing
+     * else. The walk the two residues solve to is one (the row below).
+     */
+    it('⛓⛓ the witness IS the committed boot at its own residue: only the clock and the cosmetic stream moved', () => {
+        const w = stagingFromTape(loadTape(WITNESS));
+        expect(((w.seam.time % PERIOD) + PERIOD) % PERIOD).toBe(WITNESS_RESIDUE);
+        expect({ ...w.seam, time: null }).toEqual({ ...STAGING.seam, time: null });
+        expect({ ...w.rng, cosmetic: null }).toEqual({ ...STAGING.rng, cosmetic: null });
+        expect(w.boot).toEqual(STAGING.boot);
+    });
+
+    /**
+     * ⛓ F5: the window re-solved with the spinner ledger's fix (510 t, `{18,0}@450`), and the witness — game-recorded
+     * at F1c, declaring the F1c-era `@452` — was not re-cut (no licence covers a witness tape).
+     * ⛓ LINEFLIP: the window at residue 40 is now the rung-free 519 t walk, so the witness is no longer the window's
+     * keys. It IS the rung's solve at its OWN residue (42), key for key through its declared tick: the game recorded
+     * the walk the W1 model plans there. After that tick the witness waits out its later declaration.
+     */
+    // ⛓ HAMMER-PHASE A2: the witness is the RUNG's solve, asked with the escape OFF by the switch (as its planner).
+    it('⛓⛓ the witness walks the rung\'s solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock', async () => {
+        const w = loadTape(WITNESS);
+        const wAt = w.persistence.find((p) => p.level === 18 && p.tag === 0).at;
+        const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
+        expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []).length).toBeGreaterThan(0);
+        for (let t = 0; t <= wAt; t += 1) {
+            expect([...heldKeysAt(w, t)].sort()).toEqual([...r.out.perTick[t]].sort());
+        }
+    }, 300_000);
+
+    it('⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did', () => {
+        const run = replay(WITNESS);
+        expect(run.playerHits).toEqual([]);
+        expect(run.spinnerContacts).toEqual([]);
+        expect(run.transitions.map((x) => x.t))
+            .toEqual(loadExpectation(WITNESS).stream.transitions.map((x) => x.t));
+    });
+});
+
+describe('F1c D2 — L18\'s spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice)', () => {
+    const WITNESS = 'f1c-l18-lock-removal';
+    const GAME_AT = loadTape(WITNESS).persistence.find((p) => p.level === 18 && p.tag === 0).at;
+    const GAME_CROSSING = loadExpectation(WITNESS).stream.transitions.map((x) => x.t);
+    const untimed = stagingFromTape(loadTape(WITNESS)).persistence.filter((p) => p.at === undefined);
+    const at = (n) => untimed.concat([{ level: 18, tag: 0, at: n }]);
+    const removal = replay(WITNESS).ledger('spinnerKillLockOpens')
+        .filter((o) => !o.nil && o.level === 18).map((o) => o.t);
+    const V9_FADE = opensOnTick(RESPONDERS.lock.fade) - 1;
+
+    it('⛓⛓ under the game-sourced declaration the model crosses when the game did', () => {
+        expect(replay(WITNESS).transitions.map((x) => x.t)).toEqual(GAME_CROSSING);
+    });
+
+    it('⛓⛓⛓ F5: the model\'s reading IS the game\'s — the ledger\'s own removal spelled v9 crosses when the game did, and the old readings cross one and two ticks late', () => {
+        expect(removal.length).toBe(1);
+        const v9 = replay(WITNESS, at(removal[0] + V9_FADE)).transitions.map((x) => x.t);
+        const oldStamp = replay(WITNESS, at(removal[0] + 1 + V9_FADE)).transitions.map((x) => x.t);
+        const oldArm = replay(WITNESS, at(removal[0] + 1 + V9_FADE + 1)).transitions.map((x) => x.t);
+        expect(v9).toEqual(GAME_CROSSING);
+        expect(oldStamp).toEqual(GAME_CROSSING.map((t) => t + 1));
+        expect(oldArm).toEqual(GAME_CROSSING.map((t) => t + 2));
+    });
+
+    it('⛓⛓ F5: the game-sourced tick IS the spinner ledger\'s stamp spelled v9 (the chaser convention, one rule)', () => {
+        expect(GAME_AT).toBe(removal[0] + V9_FADE);
+    });
+
+    it('⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game\'s spelling — its pending row is the ledger\'s removal + the v9 fade', async () => {
+        const r = await solveAt(0);
+        const p = r.persistence.find((c) => c.level === 18 && c.tag === 0);
+        const led = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
+        for (const held of r.out.perTick) led.advance(held);
+        const rem = led.ledger('spinnerKillLockOpens').filter((o) => !o.nil && o.level === 18);
+        expect(rem.length).toBe(1);
+        expect(p.at).toBe(rem[0].t + V9_FADE);
+        expect(led.playerHits).toEqual([]);
+        expect(led.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+    }, 300_000);
+});

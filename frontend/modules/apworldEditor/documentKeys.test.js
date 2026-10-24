@@ -1,0 +1,969 @@
+/**
+ * apworldEditor/documentKeys — **THE REGISTRY IS THE SCHEMA, AND THESE ROWS ARE
+ * WHAT MAKES THAT ENFORCEABLE** (APWORLD EDITOR HUB slice H1).
+ *
+ * ⛔ The point of every parity row below is that a SECOND key list cannot exist
+ * quietly: a key in `rules.schema.json` and not in the registry is a key the
+ * Document tab would not draw, and a registry key absent from the schema is a
+ * row about a key nothing produces. Both directions red.
+ *
+ * ⛓ The schema is the REAL one (`loadRulesSchema()`), not a fixture — a
+ * registry proven only against a hand-written schema is a registry for that
+ * schema. The per-player and unknown-key rows use fixtures, because those are
+ * about SHAPES rather than about this repository's corpus, and the four-player
+ * rows read committed multiworld presets because that is the only place a
+ * player-2 slice actually exists.
+ */
+
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+import { describe, expect, it, vi } from 'vitest';
+
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
+import {
+    DOCUMENT_KEY_EDITORS,
+    DOCUMENT_TAB_ID,
+    EDITOR_RETURN_KINDS,
+    regionAtlasSetKeyOp,
+    KEYS_OWNED_BY_TAB,
+    PLACEMENTS_TAB_KEY,
+    SIDECARS_TAB_ID,
+    SIDECARS_TAB_SUMMARY_KEY,
+    buildDocumentKeys,
+    defaultPlayerOf,
+    documentKeyRows,
+    labelForKey,
+    playerSlotsOf,
+    PLAYER_SLOTS_NEED_SCHEMA,
+    playerSlotsWaitSentence,
+    summarizeValue,
+} from './documentKeys.js';
+import { ITEM_GROUPS_KEY, PROGRESSION_MAPPING_KEY } from './rulesDocOps.js';
+
+const SCHEMA = loadRulesSchema();
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..', '..');
+const MULTIWORLD = join(REPO, 'frontend', 'presets', 'multiworld', 'AP_01043188731678011336');
+const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
+
+/** ⛓ The four-player export, all four slots in one document. */
+const combined = () => readJson(join(MULTIWORLD, 'AP_01043188731678011336_rules.json'));
+/** ⛓ The player-SPECIFIC export of slot 2 — its only slot is "2". */
+const playerTwo = () => readJson(join(MULTIWORLD, 'AP_01043188731678011336_P2_rules.json'));
+
+describe('the registry IS the schema', () => {
+    /**
+     * ⛓⛓⛓ **THE PARITY ROW, AND IT IS THE MUTANT TARGET.** Dropping one key
+     * from `buildDocumentKeys`' derivation reds here, in both directions.
+     */
+    it('⛓⛓ one entry per schema property — EQUAL sets, both directions', () => {
+        const registry = buildDocumentKeys(SCHEMA).map((e) => e.key);
+        const schemaKeys = Object.keys(SCHEMA.properties);
+        expect(registry).toEqual(schemaKeys);
+        expect([...registry].sort()).toEqual([...schemaKeys].sort());
+        // ⛔ Non-vacuity: the schema really does declare a corpus of keys, and
+        //    the extension keys H0 added are among them.
+        expect(schemaKeys.length).toBeGreaterThan(30);
+        for (const key of ['regions', 'items', 'preset_sidecars', 'playerId', 'provenance']) {
+            expect(registry).toContain(key);
+        }
+    });
+
+    it('⛓ every entry quotes the schema\'s own description — which NAMES the producer', () => {
+        for (const entry of buildDocumentKeys(SCHEMA)) {
+            expect(entry.description, entry.key)
+                .toBe(SCHEMA.properties[entry.key].description ?? '');
+        }
+        // H0 wrote a `Producer:` line into each of the nine keys it declared.
+        const byKey = Object.fromEntries(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        expect(byKey.loop_costs.description).toContain('Producer');
+        expect(byKey.playerId.description).toContain('exporter');
+    });
+
+    /**
+     * ⛓⛓ **PER-PLAYER IS READ OFF `patternProperties`, NOT LISTED.** The row
+     * re-derives the answer from the schema independently and compares sets, so
+     * a hand list smuggled into the module would disagree with the file.
+     */
+    it('⛓⛓ `perPlayer` is exactly the set of `^[0-9]+$` slot maps', () => {
+        const fromRegistry = buildDocumentKeys(SCHEMA).filter((e) => e.perPlayer).map((e) => e.key);
+        const fromSchema = Object.entries(SCHEMA.properties)
+            .filter(([, v]) => Object.prototype.hasOwnProperty.call(
+                v.patternProperties ?? {}, '^[0-9]+$'))
+            .map(([k]) => k);
+        expect(fromRegistry.sort()).toEqual(fromSchema.sort());
+        expect(fromRegistry).toContain('regions');
+        expect(fromRegistry).not.toContain('game_name');
+        expect(fromRegistry.length).toBeGreaterThan(1);
+    });
+
+    /**
+     * ⛓⛓ P1a (⚖ user 2026-09-27, shape (A)) — `procgen_metadata` and
+     * `loop_costs` are slot maps like `preset_sidecars`: the row layer, the
+     * loop-mode switch and the raw editor are per slot BECAUSE the schema says
+     * so. ⛔ Mutant: the schema's `patternProperties` removed from either key
+     * reds here, by key.
+     */
+    it('⛓⛓ P1a — `procgen_metadata` and `loop_costs` are per-player slot maps, read off the schema', () => {
+        const perPlayer = new Set(buildDocumentKeys(SCHEMA).filter((e) => e.perPlayer).map((e) => e.key));
+        for (const key of ['procgen_metadata', 'loop_costs']) {
+            expect(perPlayer.has(key), key).toBe(true);
+            // ⛔ No second shape: nothing but slot ids may sit at the top of the map.
+            expect(SCHEMA.properties[key].additionalProperties, key).toBe(false);
+        }
+    });
+
+    it('⛓ `required` mirrors the schema\'s own required list', () => {
+        const req = buildDocumentKeys(SCHEMA).filter((e) => e.required).map((e) => e.key).sort();
+        expect(req).toEqual([...SCHEMA.required].sort());
+    });
+
+    it('refuses anything that is not a parsed schema, BY NAME', () => {
+        expect(() => buildDocumentKeys(null)).toThrow(/rules\.schema\.json/);
+        expect(() => buildDocumentKeys({})).toThrow(/properties/);
+    });
+});
+
+describe('the tab-ownership table', () => {
+    const panelSource = readFileSync(join(HERE, 'apworldEditorUI.js'), 'utf8');
+
+    /**
+     * ⛓ The panel's own `TABS` ids, read from its source — the authority for
+     * *"a row may only point at a tab somebody can click"*.
+     *
+     * ⛓⛓ R1 — an entry may name its id with a CONSTANT rather than a literal,
+     * and then the constant has to be one this module publishes: an id spelled
+     * in a name only `apworldEditorUI.js` knows would put the panel's tab list
+     * and the ownership table back on two authorities. An unresolvable name
+     * lands here as `undefined` and the row below refuses it.
+     */
+    const TAB_ID_CONSTANTS = { SIDECARS_TAB_ID, DOCUMENT_TAB_ID };
+    const panelTabIds = () => [...panelSource.matchAll(/\{ id: (?:'(\w+)'|(\w+)), label: '/g)]
+        .map((m) => m[1] ?? TAB_ID_CONSTANTS[m[2]]);
+
+    it('⛓ every owned key is a real schema key', () => {
+        for (const [tab, keys] of Object.entries(KEYS_OWNED_BY_TAB)) {
+            for (const key of keys) {
+                expect(Object.keys(SCHEMA.properties), `${tab} → ${key}`).toContain(key);
+            }
+        }
+    });
+
+    /**
+     * ⛔ A row pointing at a tab nobody can click is worse than no row: the
+     * Document tab's "edited in the X tab" line draws a BUTTON that selects it.
+     * The panel's own `TABS` list is the authority, read from its source.
+     */
+    it('⛓ every tab named by the table is a tab the panel actually has', () => {
+        expect(panelTabIds()).toContain(DOCUMENT_TAB_ID);
+        expect(panelTabIds()).toContain('links');
+        for (const tab of Object.keys(KEYS_OWNED_BY_TAB)) expect(panelTabIds()).toContain(tab);
+    });
+
+    /**
+     * ⛓⛓⛓ **R1 — THE HOST IDS THE ROW RENDERER COMPARES.**
+     * `_renderDocumentRow(row, hostTab)` skips a key's *"edited in the X tab"*
+     * pointer when `X === hostTab` (⚖ user, 2026-09-09), so the id the Sidecars
+     * tab passes and the key `KEYS_OWNED_BY_TAB` files its list under must be
+     * ONE string — they are (`[SIDECARS_TAB_ID]:` is the computed key), and this
+     * row is what says so.
+     *
+     * ⛔ **AND `DOCUMENT_TAB_ID` MUST NOT BECOME A TABLE KEY.** The Document tab
+     * is the everything-fallback: `ownedByTab` is `null` there, never
+     * `'document'`. Filing keys under it would give them a pointer to the tab
+     * they are already on — the defect R1 closes — and would do it on the tab
+     * that has no other home to offer.
+     */
+    it('⛓⛓⛓ the two host ids are the ownership table\'s own key, and its non-key', () => {
+        expect(Object.keys(KEYS_OWNED_BY_TAB)).toContain(SIDECARS_TAB_ID);
+        expect(Object.keys(KEYS_OWNED_BY_TAB)).not.toContain(DOCUMENT_TAB_ID);
+        expect(panelTabIds()).toContain(SIDECARS_TAB_ID);
+        expect(panelTabIds()).toContain(DOCUMENT_TAB_ID);
+        // ⛔ Non-vacuity: the scan resolved every id, so a `TABS` entry naming a
+        //   constant this file does NOT export cannot pass as an `undefined`.
+        expect(panelTabIds()).not.toContain(undefined);
+    });
+
+    /**
+     * ⛓⛓ The Meta half is DERIVED from `META_FIELDS` — the same table the Meta
+     * tab's rows and the `set-meta` op read — so a meta row that moved to a new
+     * key moves this table with it.
+     */
+    it('⛓⛓ the meta half covers every META_FIELDS path root', async () => {
+        const { META_FIELDS } = await import('./rulesDocOps.js');
+        for (const spec of Object.values(META_FIELDS)) {
+            expect(KEYS_OWNED_BY_TAB.meta).toContain(spec.path('1')[0]);
+        }
+    });
+
+    /**
+     * ⛓⛓ **W0 — THE POINTER IS NO LONGER THE WHOLE ROW.** H1 drew the "edited
+     * in the X tab" line and RETURNED, so an owned key had no editor at all for
+     * whatever its home tab does not draw (the Meta tab edits ONE field of
+     * `world`). The registry's answer is unchanged — `ownedByTab` still NAMES
+     * the tab that knows the shape — and what changed is the panel, which now
+     * draws the pointer AND the same JSON block every other row gets. The DOM
+     * half is the in-app row `apworld-owned-row-carries-its-own-json-block`;
+     * this row is about the registry it reads.
+     */
+    it('⛓ an owned key NAMES its home tab, and an unowned one names none', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        expect(byKey.regions.ownedByTab).toBe('regions');
+        expect(byKey.items.ownedByTab).toBe('items');
+        expect(byKey.game_name.ownedByTab).toBe('meta');
+        expect(byKey.preset_sidecars.ownedByTab).toBeNull();
+    });
+
+    /**
+     * ⛓⛓⛓ **W3 — THE PLACEMENTS TAB'S MEMBERSHIP, AGAINST AN AUTHORITY OUTSIDE
+     * THE TABLE.** ⛔ The tab's own in-app row cannot see this: it reads the
+     * locations off the document, so dropping the key from the table would make
+     * the tab draw nothing while the row still measured the document (W0's and
+     * S1's mutant B, both times). The authority here is the OP's own source —
+     * `set-canonical-placement` writes one top-level key, and the tab that owns
+     * that key is the one whose pointer the Document row draws. A key the op
+     * writes with no home tab is a Document row pointing nowhere.
+     */
+    it('⛓⛓ the key set-canonical-placement writes is the key the Placements tab owns', () => {
+        const opSource = readFileSync(join(HERE, 'rulesDocOps.js'), 'utf8');
+        const written = [...opSource.matchAll(
+            /setPath\(doc, \['(\w+)', p, location\]/g)].map((m) => m[1]);
+        expect(new Set(written), 'the op writes exactly one top-level key').toEqual(
+            new Set([PLACEMENTS_TAB_KEY]));
+        expect(KEYS_OWNED_BY_TAB.placements ?? [],
+            'the tab that owns the key the op writes').toContain(PLACEMENTS_TAB_KEY);
+    });
+
+    /**
+     * ⛓ And the Document row for it POINTS at that tab — the surface a person
+     * meets. ⛔ `is_canonical` is a different key (the exporter's stamp) and
+     * stays unowned, so "the placements key is owned" is a discrimination
+     * rather than a tab that claimed everything with `canonical` in its name.
+     */
+    /**
+     * ⛓ rules F3: `is_vanilla` / `is_canonical` / `preset_label` are slot maps, so
+     * they derive `perPlayer`, and their `slotType` (the one slot's declared type)
+     * is what the Document tab's editor follows — a checkbox / a text box for the
+     * selected slot, never a JSON block around one scalar. Document-scope keys
+     * have none.
+     */
+    it('⛓ rules F3: the per-slot flags derive perPlayer and their SLOT type', () => {
+        const byKey = Object.fromEntries(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const [key, slotType] of [['is_vanilla', 'boolean'], ['is_canonical', 'boolean'],
+            ['preset_label', 'string']]) {
+            expect(byKey[key].perPlayer, key).toBe(true);
+            expect(byKey[key].type, key).toBe('object');
+            expect(byKey[key].slotType, key).toBe(slotType);
+        }
+        expect(byKey.regions.slotType).toBe('object');
+        expect(byKey.seed_name.slotType).toBeNull();
+        const doc = { ...combined(), preset_label: { 1: 'canth s4' } };
+        const row = documentKeyRows(doc, SCHEMA, { player: '1' }).find((r) => r.key === 'preset_label');
+        expect(row.value).toBe('canth s4');
+        expect(documentKeyRows(doc, SCHEMA, { player: '2' }).find((r) => r.key === 'preset_label').present)
+            .toBe(false);
+    });
+
+    it('⛓ the placements key names its home tab, and is_canonical does not', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        expect(byKey[PLACEMENTS_TAB_KEY].ownedByTab).toBe('placements');
+        expect(byKey.is_canonical.ownedByTab).toBeNull();
+    });
+
+    /**
+     * ⛓⛓⛓ **I1 — THE ITEMS TAB'S GROUP KEY, AGAINST AN AUTHORITY OUTSIDE THE
+     * TABLE**, the same way and for the same reason (W3's mutant C, W0's and
+     * S1's mutant B): the Groups section reads the registry off the DOCUMENT,
+     * so dropping the key from `KEYS_OWNED_BY_TAB` leaves the section drawing
+     * and only the Document row's pointer wrong — which no in-app row on the
+     * Items tab can see. The authority is the ops' own source: every per-slot
+     * write made through an EXPORTED constant, and the set of those constants.
+     *
+     * ⛓ I2 — and the same authority carries `progression_mapping`, whose op
+     * writes one level deeper (`[KEY, p, name]`), so the scan reads the slot
+     * position rather than requiring the path to END there.
+     */
+    it('⛓⛓ the keys the item ops write are the keys the Items tab owns', () => {
+        const opSource = readFileSync(join(HERE, 'rulesDocOps.js'), 'utf8');
+        // ⛓ The IDENTIFIER-keyed form only: every other per-slot write in that
+        //   module spells its key as a string literal (`setPath(doc, ['regions',
+        //   p], …)`), so this picks out exactly the writes made through an
+        //   exported constant — which is the thing the table has to agree with.
+        const written = [...opSource.matchAll(
+            /setPath\(doc, \[([A-Za-z_]\w*), p[,\]]/g)].map((m) => m[1]);
+        expect(new Set(written)).toEqual(new Set(['ITEM_GROUPS_KEY', 'PROGRESSION_MAPPING_KEY']));
+        expect(ITEM_GROUPS_KEY).toBe('item_groups');
+        expect(PROGRESSION_MAPPING_KEY).toBe('progression_mapping');
+        for (const key of [ITEM_GROUPS_KEY, PROGRESSION_MAPPING_KEY]) {
+            expect(KEYS_OWNED_BY_TAB.items, `the tab that owns ${key}`).toContain(key);
+        }
+    });
+
+    /**
+     * ⛓ And the Document row POINTS at that tab. ⛔ `itempool_counts` is a
+     * different key the same tab owns and `starting_items` a third, while
+     * `helpers` — the neighbouring per-player block nothing edits — is still
+     * unowned, so "the items keys are owned" is a discrimination rather than a
+     * tab that claimed every per-player map.
+     */
+    it('⛓ the two item vocabulary keys name the Items tab, and helpers does not', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        expect(byKey[ITEM_GROUPS_KEY].ownedByTab).toBe('items');
+        expect(byKey[PROGRESSION_MAPPING_KEY].ownedByTab).toBe('items');
+        expect(byKey.items.ownedByTab).toBe('items');
+        expect(byKey.helpers.ownedByTab).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓⛓ **S1 — THE SIDECARS TAB'S MEMBERSHIP, AGAINST ITS AUTHORITY.**
+ *
+ * ⛔ **THESE ROWS EXIST BECAUSE THE TAB'S OWN ROW CANNOT SEE THIS.** The in-app
+ * row that draws the tab reads its expected key set from
+ * `KEYS_OWNED_BY_TAB.sidecars` — the same table the panel filters by — so it
+ * guards the RENDERER and is blind to the membership: drop a key from the table
+ * and the tab draws one row fewer against an expectation that shrank with it.
+ * (W0 measured exactly that shape in its own mutant B: a derived row whose
+ * POPULATION is selected by the field under test filters its own mutant out.)
+ * What makes the membership falsifiable is an authority OUTSIDE the table, and
+ * the two halves have two different ones.
+ */
+describe('S1 — the Sidecars tab knows which keys are sidecar data, and why', () => {
+    const REPO_FILE = (...parts) => readFileSync(join(REPO, ...parts), 'utf8');
+
+    /**
+     * ⛓⛓⛓ **THE FIRST HALF IS THE WORLDGEN ROUND TRIP, AND IT IS READ OFF THE
+     * PYTHON THAT PERFORMS IT.** `world_generator/generator.py` writes the
+     * `_worldgen_*.json` files beside a generated world; `exporter/games/base/
+     * handler.py`'s `_inject_worldgen_*` methods read them back and merge them
+     * into the export. The keys those methods write ARE the definition of
+     * "data that travels in a sidecar file" in this tree.
+     *
+     * ⛔ Derived from the two files, never listed: a fourth sidecar added to the
+     * round trip reds this row until the tab hosts it, which is the whole point
+     * of not typing the answer here.
+     */
+    const sidecarMergeTargets = () => {
+        const handler = REPO_FILE('exporter', 'games', 'base', 'handler.py');
+        // ⛔ BOUNDED at the next top-level `def`: a naked split runs each chunk
+        //    to the end of the file, so an unrelated `export_data['x']` written
+        //    anywhere below the last inject method would be read as a sidecar.
+        const methods = handler.split(/\n    def _inject_worldgen_/).slice(1)
+            .map((chunk) => chunk.split(/\n    def /)[0]);
+        const keys = new Set();
+        for (const body of methods) {
+            for (const m of body.matchAll(/export_data(?:\.setdefault)?[[(]'([a-z_]+)'/g)) {
+                keys.add(m[1]);
+            }
+        }
+        return [...keys].sort();
+    };
+
+    it('⛓⛓ the exporter really does merge a sidecar file back into more than one '
+        + 'top-level key — the premise these rows rest on', () => {
+        const targets = sidecarMergeTargets();
+        expect(targets.length).toBeGreaterThan(1);
+        // ⛓ And the writer's side names a file per target, so the pairing is
+        //   not an accident of this regex.
+        const generator = REPO_FILE('world_generator', 'generator.py');
+        for (const key of targets) {
+            const file = key === SIDECARS_TAB_SUMMARY_KEY ? 'sidecars' : key;
+            expect(generator, key).toContain(`_worldgen_${file}.json`);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **THE LAW: every key the sidecar round trip merges is EITHER the
+     * Sidecars tab's, OR the one the Regions tab kept.** `preset_sidecars` is
+     * edited PER REGION over there (H4b's Edit ▸) and the ⚖ that created this
+     * tab did not move it — the tab summarises it and points at Regions. Every
+     * OTHER merge target is a Sidecars key.
+     *
+     * ⛔ This is the row mutant B reds: removing `loop_costs` (or
+     * `procgen_metadata`) from `KEYS_OWNED_BY_TAB.sidecars` fails here NAMING
+     * the key, because the expectation comes from the Python and not from the
+     * table under test.
+     */
+    it('⛓⛓⛓ every key the exporter merges out of a sidecar file is owned by the '
+        + 'Sidecars tab — except the one the Regions tab kept', () => {
+        for (const key of sidecarMergeTargets()) {
+            if (key === SIDECARS_TAB_SUMMARY_KEY) {
+                expect(KEYS_OWNED_BY_TAB.sidecars, key).not.toContain(key);
+                expect(KEYS_OWNED_BY_TAB.regions, `${key} stays a per-region edit`)
+                    .not.toContain(key);
+                continue;
+            }
+            expect(KEYS_OWNED_BY_TAB.sidecars, `${key} is merged from a sidecar file`)
+                .toContain(key);
+        }
+    });
+
+    /**
+     * ⛓⛓ **THE SECOND HALF IS A ⚖, AND A ⚖ HAS NO DERIVATION.** *"Let's put
+     * region_atlas, flash_panel, and provenance in the sidecars tab for now"*
+     * (user, 2026-09-08). Nothing in the tree makes those three sidecar data —
+     * they are the region ATLAS compiler's outputs — so the ruling is the
+     * authority and this row is where it is written down. "For now" is on the
+     * record too: their real home is a replan question (plan §5).
+     */
+    it('⛓⛓ and the three the ⚖ of 2026-09-08 put there are there', () => {
+        for (const key of ['region_atlas', 'flash_panel', 'provenance']) {
+            expect(KEYS_OWNED_BY_TAB.sidecars, `⚖ 2026-09-08 → ${key}`).toContain(key);
+        }
+    });
+
+    /**
+     * ⛓⛓ rules F2 — the three are slot maps in the schema, so `perPlayer`
+     * DERIVES true and a row is the SELECTED slot's block: slot 2's row never
+     * shows slot 1's atlas.
+     */
+    it('⛓⛓ rules F2: the three derive `perPlayer` and a row is the selected slot\'s block', () => {
+        const byKey = Object.fromEntries(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const key of ['region_atlas', 'flash_panel', 'provenance']) {
+            expect(byKey[key].perPlayer, key).toBe(true);
+        }
+        const doc = { region_atlas: { 1: { atlas_id: 'a', game: 'seedling' }, 2: { atlas_id: 'b', game: 'seedling' } } };
+        const row = (player) => documentKeyRows(doc, SCHEMA, { player }).find((r) => r.key === 'region_atlas');
+        expect(row('1').value).toEqual({ atlas_id: 'a', game: 'seedling' });
+        expect(row('2').value).toEqual({ atlas_id: 'b', game: 'seedling' });
+        expect(row('3').present).toBe(false);
+        expect(playerSlotsOf(doc, SCHEMA)).toEqual(['1', '2']);
+    });
+
+    /**
+     * ⛔ A key owned by TWO tabs is a row whose pointer is decided by the
+     * inversion's iteration order — a second home nobody chose. Asserted over
+     * the whole table rather than about the new tab, because that is the law.
+     */
+    it('⛓ no key has two home tabs', () => {
+        const seen = new Map();
+        for (const [tab, keys] of Object.entries(KEYS_OWNED_BY_TAB)) {
+            for (const key of keys) {
+                expect(seen.has(key), `${key}: ${seen.get(key)} and ${tab}`).toBe(false);
+                seen.set(key, tab);
+            }
+        }
+    });
+
+    /**
+     * ⛓ The summary key is a REAL key of a REAL document, so the Sidecars tab's
+     * one-line summary is about something. Read off a committed preset rather
+     * than a fixture: the claim is that the corpus carries it.
+     */
+    it('⛓ the summary key is a schema key the corpus really carries', () => {
+        expect(Object.keys(SCHEMA.properties)).toContain(SIDECARS_TAB_SUMMARY_KEY);
+        expect(Object.prototype.hasOwnProperty.call(combined(), SIDECARS_TAB_SUMMARY_KEY))
+            .toBe(true);
+    });
+
+    /**
+     * ⛓⛓ **AND THE ROWS THE TAB DRAWS ARE THE DOCUMENT TAB'S ROWS** — the same
+     * `documentKeyRows` output, carrying the same `editor` doors and the same
+     * per-player slice. The panel filters; it does not build a second row.
+     */
+    it('⛓⛓ every sidecar key gets a full registry row, doors included', () => {
+        const rows = documentKeyRows(combined(), SCHEMA, { player: '1' });
+        const byKey = Object.fromEntries(rows.map((r) => [r.key, r]));
+        for (const key of KEYS_OWNED_BY_TAB.sidecars) {
+            expect(byKey[key], key).toBeTruthy();
+            expect(byKey[key].ownedByTab, key).toBe('sidecars');
+            expect(byKey[key].editor, key).toBe(DOCUMENT_KEY_EDITORS[key] ?? null);
+        }
+        // ⛓ Non-vacuity: some of them really do carry a door, and some do not —
+        //   which is what the tab's intro sentence tells a person apart.
+        const doors = KEYS_OWNED_BY_TAB.sidecars.filter((k) => byKey[k].editor);
+        expect(doors.length).toBeGreaterThan(0);
+        expect(doors.length).toBeLessThan(KEYS_OWNED_BY_TAB.sidecars.length);
+    });
+});
+
+describe('the editor slot — FILLED by H5', () => {
+    /**
+     * ⛓⛓⛓ H1 built the slot and asserted it EMPTY; H5 fills it, and this is
+     * the row that flipped. What replaces "it is empty" is not "it has five
+     * entries" — a count in a row is an allowlist key and says nothing about
+     * whether the entries are usable. What replaces it is the PARITY and the
+     * CONTRACT: every editor key is a schema key, every entry carries the four
+     * fields a Document row draws, and every `returns` is one of the three the
+     * module names.
+     */
+    it('⛓⛓ every editor key is a SCHEMA key — a row about a key nothing '
+        + 'produces would draw a button on a document that cannot have it', () => {
+        const schemaKeys = new Set(buildDocumentKeys(SCHEMA).map((e) => e.key));
+        for (const key of Object.keys(DOCUMENT_KEY_EDITORS)) {
+            expect(schemaKeys.has(key), key).toBe(true);
+        }
+    });
+
+    it('⛓⛓ and `buildDocumentKeys` hangs each one on its own row, leaving the '
+        + 'rest null — derived, never listed twice', () => {
+        const byKey = new Map(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(byKey.get(key).editor, key).toBe(editor);
+        }
+        for (const [key, entry] of byKey) {
+            if (!(key in DOCUMENT_KEY_EDITORS)) expect(entry.editor, key).toBeNull();
+        }
+    });
+
+    it('⛓⛓ every entry carries the whole contract, and `returns` is one of the '
+        + 'THREE the module names', () => {
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(typeof editor.label, key).toBe('string');
+            expect(editor.label.length, key).toBeGreaterThan(0);
+            expect(typeof editor.note, key).toBe('string');
+            expect(typeof editor.open, key).toBe('function');
+            expect(Object.keys(EDITOR_RETURN_KINDS), key).toContain(editor.returns);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **R1 — EVERY `op` DOOR SAYS WHETHER ITS SAVE BOUNCES THE PERSON BACK
+     * TO THE HUB** (S1 §8.6 (2); ⚖ user, 2026-09-09). S1's `_acceptEditorOp`
+     * raised the panel, selected the key's home tab and scrolled to the row on
+     * EVERY accepted op — right for the cost debugger's Send, wrong for the
+     * marking tool, which is a place a person keeps working.
+     *
+     * ⛔ **THE POPULATION IS THE LAW, NOT THE FLAG.** `returns === 'op'` is what
+     * makes a door capable of coming back through `_acceptEditorOp` at all, so
+     * that is what selects the rows here. Selecting by `focusHubOnSave !==
+     * undefined` — the field under test — would let a door that DROPPED the
+     * declaration filter itself out of its own guard, which is W0's mutant-B
+     * shape and S1's §8.1 (2) both over again.
+     *
+     * ⛓ The VALUES are pinned too, and they have no derivation: which doors
+     * bounce is a ⚖, so this row is where the ruling is written down.
+     */
+    it('⛓⛓⛓ every `op` door declares `focusHubOnSave`, and the ⚖ says which way',
+        () => {
+            const opDoors = Object.entries(DOCUMENT_KEY_EDITORS)
+                .filter(([, editor]) => editor.returns === 'op')
+                .map(([key]) => key);
+            // ⛔ Non-vacuity: the law has to select somebody.
+            expect(opDoors.length).toBeGreaterThan(0);
+            for (const key of opDoors) {
+                expect(typeof DOCUMENT_KEY_EDITORS[key].focusHubOnSave, key).toBe('boolean');
+            }
+            // ⚖ user 2026-09-08 — Send IS the hand-back, so the hub comes forward.
+            expect(DOCUMENT_KEY_EDITORS.loop_costs.focusHubOnSave).toBe(true);
+            // ⚖ user 2026-09-09 — the marking tool is a workspace, not a hand-back.
+            expect(DOCUMENT_KEY_EDITORS.region_atlas.focusHubOnSave).toBe(false);
+        });
+
+    /**
+     * ⛓⛓ S0 — **…AND NO OTHER DOOR DECLARES IT.** The flag answers *"does this
+     * door's save bounce the person back?"*, and a door that cannot save has no
+     * answer — so a `focusHubOnSave` on a `document` or `none` door is a claim
+     * about nothing, and it is the shape R1's `preset_sidecars` declaration had
+     * (`false` "because unreachable") until S0 made that door `none`. The
+     * population is every door whose `returns` is NOT `op` — the law again,
+     * never the flag.
+     */
+    it('⛔ S0 — no door that cannot return an op declares `focusHubOnSave`', () => {
+        const others = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns !== 'op');
+        expect(others.length).toBeGreaterThan(0);
+        for (const [key, editor] of others) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'focusHubOnSave'), key)
+                .toBe(false);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ S0 — **`preset_sidecars` IS A TAB SWITCH, AND IT SAYS SO** (R1 §11.8
+     * (3); plan §2.4). Its `open` takes only `goToTab`, so nothing it does can
+     * reach `_acceptEditorOp` — measured off the door's own source — and the
+     * honest `returns` is `none`. Its note names BOTH hosts the key is drawn on,
+     * because the question a reader of the Document row has is "where is this
+     * key shown", and the answer is two tabs.
+     */
+    it('⛓⛓ S0 — the `preset_sidecars` door returns nothing, and its note names BOTH '
+        + 'hosts', () => {
+        const door = DOCUMENT_KEY_EDITORS.preset_sidecars;
+        expect(door.returns).toBe('none');
+        expect(String(door.open)).not.toContain('onSave');
+        expect(door.note).toContain('Regions tab');
+        expect(door.note).toContain('Sidecars tab');
+        // ⛓ D1 — and it says which is which: LISTED on Sidecars (where the door
+        //   goes), DRAWN on Regions.
+        expect(door.note).toMatch(/LISTED[^.]*Sidecars tab/);
+        expect(door.note).toMatch(/DRAWN[^.]*Regions tab/);
+    });
+
+    /**
+     * ⛓⛓ S0 — **THE HAND-OFF DOOR'S WORDS ON A REGION'S BLOCK ARE THE DOOR'S
+     * OWN** (plan §9.2). The block presses `procgen_metadata`'s `open`; what it
+     * adds is one sentence naming the COST — the payloads are REGENERATED — so
+     * a reader choosing the pipeline road knows the payloads will not be theirs.
+     */
+    it('⛓⛓ S0 — `procgen_metadata` declares its region-block words, and they name '
+        + 'the regeneration', () => {
+        const words = DOCUMENT_KEY_EDITORS.procgen_metadata.regionDoor;
+        expect(typeof words.label).toBe('string');
+        expect(words.label.length).toBeGreaterThan(0);
+        expect(words.note).toContain('REGENERATES');
+        // ⛓ one sentence: a single terminal full stop.
+        expect(words.note.trim().split(/\.\s/).length).toBe(1);
+        expect(words.note.trim().endsWith('.')).toBe(true);
+    });
+
+    it('⛔ NO DOOR IMPORTS ITS PANEL AT MODULE LOAD — this module is loaded by '
+        + 'node rows and by both tabs', () => {
+        // The measurement is textual because the alternative is to import the
+        // panels here, which is the thing being forbidden. Every `open` that
+        // reaches another module does it inside the function body.
+        const src = readFileSync(fileURLToPath(new URL('./documentKeys.js', import.meta.url)),
+            'utf8');
+        const staticImports = [...src.matchAll(/^import .*from '([^']+)';$/gm)].map((m) => m[1]);
+        expect(staticImports).toEqual(['./rulesDocOps.js']);
+        // …and every module a door reaches is reached DYNAMICALLY. ⛔ The
+        // check is on the SOURCE, not on `String(fn)`: the test runner rewrites
+        // `import(` to its own helper, so a stringified function proves nothing
+        // about what the file says.
+        for (const module of [
+            '../regionMarkingTool/index.js',
+            '../procgenPipeline/regionAtlasCompiler.js',
+            '../procgenPipeline/index.js',
+            '../loopsCostDebugger/index.js',
+        ]) {
+            expect(src, module).toContain(`import('${module}')`);
+            expect(staticImports, module).not.toContain(module);
+        }
+    });
+
+    it('⛓ `region_atlas` returns an op and `procgen_metadata` does not — the '
+        + "arc's rule that generation is not an edit", () => {
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.returns).toBe('op');
+        expect(DOCUMENT_KEY_EDITORS.procgen_metadata.returns).toBe('document');
+    });
+
+    it('⛓⛓ `region_atlas`\'s note SAYS the block is a reference — the fact the '
+        + 'door is built on', () => {
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('REFERENCE');
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.note).toContain('atlas_id');
+    });
+
+    it('⛓⛓ every door that raises a panel DECLARES which one, so the hub can ask '
+        + 'whether this app even loads it', () => {
+        // ⛔ Measured, and the reason the field exists: `module-configs/modules.json`
+        //    has `regionMarkingTool` DISABLED in the default mode, so its door
+        //    would publish `ui:activatePanel` into a warn-and-return.
+        expect(DOCUMENT_KEY_EDITORS.region_atlas.panelId).toBe('regionMarkingTool');
+        expect(DOCUMENT_KEY_EDITORS.preset_sidecars.panelId).toBeNull();
+        for (const [key, editor] of Object.entries(DOCUMENT_KEY_EDITORS)) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'panelId'), key).toBe(true);
+        }
+    });
+
+    it('⛓ `regionAtlasSetKeyOp` is the op the marking tool\'s save becomes — one '
+        + 'PLAYER-scope set-key carrying the reference verbatim (rules F2: the block is the slot\'s)', () => {
+        const reference = { atlas_id: 'seedling-deadbeef', game: 'seedling' };
+        expect(regionAtlasSetKeyOp('region_atlas', reference)).toEqual({
+            op: 'set-key', key: 'region_atlas', value: reference, scope: 'player',
+        });
+        // ⛔ The reference goes in BY IDENTITY: the door derives it once, from
+        //    the stamped document, and nothing here re-shapes it.
+        expect(regionAtlasSetKeyOp('region_atlas', reference).value).toBe(reference);
+    });
+
+    it('⛓ the two APPLIED-state doors say so, and the working-copy ones do not '
+        + 'claim it', () => {
+        expect(DOCUMENT_KEY_EDITORS.sphere_log.note).toContain('APPLIED STATE');
+        expect(DOCUMENT_KEY_EDITORS.loop_costs.note).toContain('WORKING COPY');
+    });
+
+    /**
+     * ⛓⛓⛓ **W0 — THE TWO VIEWER DOORS** (⚖ user, 2026-09-08: *"If it's easy to
+     * implement, we could link to the existing dungeons and helpers panels as
+     * viewers."*). What makes them viewers rather than editors is not the label:
+     * it is `returns: 'none'` plus a note that says which state the panel shows,
+     * because a person who presses a door and sees an unchanged document has no
+     * way to tell "this reads applied state" from "this is broken".
+     */
+    it('⛓⛓ W0 — `helpers` and `dungeons` are VIEWER doors: they name their '
+        + 'panel, return nothing, and say they read APPLIED state', () => {
+        for (const key of ['helpers', 'dungeons']) {
+            const editor = DOCUMENT_KEY_EDITORS[key];
+            expect(editor, key).toBeTruthy();
+            expect(editor.returns, key).toBe('none');
+            expect(editor.note, key).toContain('APPLIED STATE');
+            // ⛔ …and it names the way this key IS changed, which is the ⚖'s
+            //    "editable through raw json for now" — the block on the row.
+            expect(editor.note, key).toContain('raw block');
+        }
+        expect(DOCUMENT_KEY_EDITORS.helpers.panelId).toBe('helpersPanel');
+        expect(DOCUMENT_KEY_EDITORS.dungeons.panelId).toBe('dungeonsPanel');
+    });
+
+    /**
+     * ⛓⛓⛓ **W0 — AND A VIEWER RAISES THE PANEL IT DECLARED, NOT A SECOND
+     * STRING.** The declaration is what the hub asks the component registry
+     * about (`_panelRefusal`) and the publish is what actually happens, so a
+     * door whose two halves disagree is a button the hub reports as live and
+     * that raises something else — or nothing. Derived over every viewer door
+     * rather than written per key, so a door added later is covered by being a
+     * viewer, not by somebody remembering this row.
+     */
+    /**
+     * ⛓⛓ S0 — **AND A `none` DOOR WITH NO PANEL SWITCHES THE HUB'S TAB
+     * INSTEAD.** `preset_sidecars` became `none` in S0 (it only ever took
+     * `goToTab`), so the viewer population grew a door that raises nothing and
+     * moves the hub instead. The law is therefore "exactly ONE visible thing":
+     * a declared panel is raised, or — `panelId: null` — one tab is selected.
+     * ⛔ Still no filter on the field under test: a panel door that LOST its
+     * `panelId` would still publish its `ui:activatePanel`, and the null arm
+     * reds on exactly that publish.
+     */
+    it('⛓⛓ W0 — every viewer door does exactly ONE visible thing: raises the panel '
+        + 'its declaration names, or (declaring none) switches the hub\'s tab', async () => {
+        const viewers = Object.entries(DOCUMENT_KEY_EDITORS)
+            .filter(([, editor]) => editor.returns === 'none');
+        // ⛔ Non-vacuity: there really are viewer doors to check.
+        expect(viewers.length).toBeGreaterThan(1);
+        /**
+         * ⛔ **A DOOR THAT RETURNS NOTHING HAS TO DO SOMETHING**, or pressing
+         * it does nothing at all — so every viewer DECLARES `panelId` (null
+         * included), and the filter above does NOT skip a door that lost it.
+         * (A door filtered out by its own missing field is a guard that goes
+         * quiet on the defect it exists for.)
+         */
+        for (const [key, editor] of viewers) {
+            expect(Object.prototype.hasOwnProperty.call(editor, 'panelId'), key).toBe(true);
+        }
+        for (const [key, editor] of viewers) {
+            const published = [];
+            const tabs = [];
+            await editor.open({
+                key,
+                record: {},
+                player: '1',
+                value: undefined,
+                eventBus: { publish: (event, payload) => published.push({ event, payload }) },
+                onSave: () => { throw new Error(`${key}: a viewer door must not save`); },
+                goToTab: (tab) => tabs.push(tab),
+            });
+            if (editor.panelId) {
+                expect(published.map((p) => p.event), key).toEqual(['ui:activatePanel']);
+                expect(published[0].payload.panelId, key).toBe(editor.panelId);
+                expect(tabs, key).toEqual([]);
+            } else {
+                expect(published, key).toEqual([]);
+                expect(tabs.length, key).toBe(1);
+                expect(typeof tabs[0], key).toBe('string');
+            }
+        }
+        // ⛓ …and the one tab-switch door goes where its label says: since D1
+        //   (the replan's ruling 6) the SIDECARS tab, where the key is listed —
+        //   the tab's own registered id, not a second spelling of it.
+        const sidecarsTabs = [];
+        await DOCUMENT_KEY_EDITORS.preset_sidecars.open({ goToTab: (t) => sidecarsTabs.push(t) });
+        expect(sidecarsTabs).toEqual([SIDECARS_TAB_ID]);
+        expect(DOCUMENT_KEY_EDITORS.preset_sidecars.label).toContain('Sidecars tab');
+    });
+
+    /**
+     * ⛓⛓⛓ **L4 — the `loop_costs` door RETURNS AN OP** (⚖ user, 2026-09-06).
+     * H5 shipped it `returns: 'none'` and said in its own note that the
+     * write-back was "one door away"; this is that door. The note has to say
+     * two things a person cannot see from the button: what comes back (ONE
+     * `set-key`, one undo), and that a block's PRESENCE is the loop-mode switch
+     * — ⚖ (f) *"keep 'block presence means loop mode on'"* — so sending costs
+     * to a document that had no block turns loop mode ON for that world.
+     */
+    it('⛓⛓ L4 — `loop_costs` returns an op, and its note names ONE set-key and '
+        + 'the loop-mode switch', () => {
+        expect(DOCUMENT_KEY_EDITORS.loop_costs.returns).toBe('op');
+        const note = DOCUMENT_KEY_EDITORS.loop_costs.note;
+        expect(note).toContain('set-key loop_costs');
+        expect(note).toContain('undo');
+        // ⛔ The switch, in the door's own words rather than in a doc nobody
+        //    reads at the moment they press it.
+        expect(note).toContain('PRESENCE');
+        expect(note).toContain('enables loop mode');
+    });
+
+    /**
+     * ⛓⛓⛓ **L4 — `onSave` REACHES THE PANEL, BY IDENTITY.** The gesture that
+     * fires it happens long after `open()` returns (a person plans, then
+     * presses Send), so the door cannot hold it: it goes through the hand-off
+     * payload beside the document.
+     *
+     * ⛔ The panel module is MOCKED, not imported. Importing
+     * `loopsCostDebugger/index.js` here would drag the Golden-Layout panel
+     * graph into this file — the exact thing the "no door imports its panel"
+     * row above forbids — while proving nothing extra about the door.
+     */
+    it('⛓⛓⛓ L4 — the `loop_costs` door passes `onSave` through the hand-off '
+        + 'payload, by identity', async () => {
+        vi.doMock('../loopsCostDebugger/index.js', () => ({
+            LOOPS_COST_DEBUGGER_LOAD_RULES: 'loopsCostDebugger:loadRules',
+        }));
+        const published = [];
+        const eventBus = { publish: (event, payload) => published.push({ event, payload }) };
+        const record = { regions: { 1: {} } };
+        const onSave = () => {};
+
+        await DOCUMENT_KEY_EDITORS.loop_costs.open({
+            record, player: '1', key: 'loop_costs', value: undefined, eventBus, onSave,
+        });
+
+        expect(published.map((p) => p.event)).toEqual([
+            'loopsCostDebugger:loadRules', 'ui:activatePanel']);
+        const handoff = published[0].payload;
+        // ⛔ BY IDENTITY on both: a copied document would be a second answer to
+        //    "what is being edited", and a wrapped `onSave` would be a second
+        //    return path the hub never sees.
+        expect(handoff.jsonData).toBe(record);
+        expect(handoff.onSave).toBe(onSave);
+        expect(handoff.source).toBe('the APWorld editor');
+        expect(handoff.player).toBe('1');
+        vi.doUnmock('../loopsCostDebugger/index.js');
+    });
+});
+
+describe('rows over a real document', () => {
+    it('⛓ a per-player row is the SELECTED slot\'s slice, not the first one', () => {
+        const doc = combined();
+        const forOne = documentKeyRows(doc, SCHEMA, { player: '1' });
+        const forThree = documentKeyRows(doc, SCHEMA, { player: '3' });
+        const regionsOf = (rows) => rows.find((r) => r.key === 'regions');
+        expect(regionsOf(forOne).value).toBe(doc.regions['1']);
+        expect(regionsOf(forThree).value).toBe(doc.regions['3']);
+        expect(regionsOf(forOne).player).toBe('1');
+        // ⛔ Non-vacuity: the two slices are genuinely different documents.
+        expect(regionsOf(forOne).value).not.toEqual(regionsOf(forThree).value);
+    });
+
+    it('⛓ a slot the document does not carry reads ABSENT, not player 1\'s data', () => {
+        const rows = documentKeyRows(playerTwo(), SCHEMA, { player: '1' });
+        const regions = rows.find((r) => r.key === 'regions');
+        expect(regions.topLevelPresent).toBe(true);
+        expect(regions.present).toBe(false);
+        expect(regions.value).toBeUndefined();
+        expect(regions.summary.kind).toBe('absent');
+    });
+
+    /**
+     * ⛓⛓⛓ **H0's CARRY (b): AN UNDECLARED KEY IS STILL DRAWN.** The schema is
+     * strict now, so a committed preset cannot carry one — but a user-loaded
+     * file can carry anything, and a tab that rendered only declared keys would
+     * silently drop what is visibly in the document.
+     */
+    it('⛓⛓ a key the schema does not name gets a RAW row, marked unknown', () => {
+        const doc = { ...combined(), _stub: 'a hand-typed placeholder', weird: { a: 1 } };
+        const rows = documentKeyRows(doc, SCHEMA, { player: '1' });
+        const unknown = rows.filter((r) => r.unknown).map((r) => r.key);
+        expect(unknown).toEqual(['_stub', 'weird']);
+        const stub = rows.find((r) => r.key === '_stub');
+        expect(stub.description).toContain('NOT declared');
+        expect(stub.summary.kind).toBe('scalar');
+        expect(rows.find((r) => r.key === 'weird').summary.kind).toBe('object');
+        // ⛔ And the declared keys are all still there — the unknown rows are
+        //    APPENDED, they do not displace the registry.
+        expect(rows.length).toBe(Object.keys(SCHEMA.properties).length + 2);
+    });
+
+    it('⛓ summarizeValue sizes containers and shows scalars inline', () => {
+        expect(summarizeValue(undefined)).toMatchObject({ kind: 'absent' });
+        expect(summarizeValue(null)).toMatchObject({ kind: 'scalar', inline: 'null' });
+        expect(summarizeValue(7)).toMatchObject({ kind: 'scalar', inline: '7' });
+        expect(summarizeValue([1])).toMatchObject({ kind: 'array', inline: '[ 1 item ]', size: 1 });
+        expect(summarizeValue({ a: 1, b: 2 }))
+            .toMatchObject({ kind: 'object', inline: '{ 2 keys }', size: 2 });
+    });
+
+    it('⛓ a label is a label, not a second name', () => {
+        expect(labelForKey('preset_sidecars')).toBe('Preset sidecars');
+        expect(labelForKey('playerId')).toBe('PlayerId');
+    });
+});
+
+describe('the player slots, and which one is the default', () => {
+    /**
+     * ⛓⛓ The union is over EVERY per-player key, which is why the
+     * player-SPECIFIC export also reports four: it carries `player_names` for
+     * all four players while keying `regions`/`items` under `"2"` alone. That is
+     * the honest answer — the document names four slots — and it is exactly what
+     * makes the absent-slice row above the display rule for the other three.
+     */
+    it('⛓⛓ the four-player exports report four slots, over the union of per-player keys', () => {
+        expect(playerSlotsOf(combined(), SCHEMA)).toEqual(['1', '2', '3', '4']);
+        expect(playerSlotsOf(playerTwo(), SCHEMA)).toEqual(['1', '2', '3', '4']);
+        expect(Object.keys(playerTwo().regions)).toEqual(['2']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE DEFAULT IS `playerId` FIRST, AND THAT IS WHY.** The
+     * player-specific export of slot 2 carries `playerId: "2"` and keys
+     * `regions`/`items` under `"2"` ALONE — a panel defaulting to `"1"` (which
+     * this one did, as a module constant, until H1) shows an EMPTY world for a
+     * document that is not empty at all.
+     */
+    it('⛓⛓⛓ a player-specific export defaults to ITS OWN slot, not to "1"', () => {
+        const doc = playerTwo();
+        expect(doc.playerId).toBe('2');
+        expect(defaultPlayerOf(doc, SCHEMA)).toBe('2');
+        expect(Object.keys(doc.regions)).toEqual(['2']);
+        // ⛔ Non-vacuity: slot "1" is exactly the wrong answer here, and it is
+        //    also the first key of `player_names`, so the fallback alone fails.
+        expect(Object.keys(doc.player_names)[0]).toBe('1');
+        expect(doc.regions['1']).toBeUndefined();
+    });
+
+    it('⛓ with no `playerId`, the first named player wins', () => {
+        const doc = combined();
+        expect(doc.playerId).toBeUndefined();
+        expect(defaultPlayerOf(doc, SCHEMA)).toBe('1');
+    });
+
+    it('⛓ a `playerId` naming a slot the document does not hold is IGNORED', () => {
+        const doc = { ...combined(), playerId: '9' };
+        expect(defaultPlayerOf(doc, SCHEMA)).toBe('1');
+    });
+
+    it('⛓ a document with no slots at all falls back', () => {
+        expect(defaultPlayerOf({}, SCHEMA)).toBe('1');
+        expect(defaultPlayerOf({}, SCHEMA, '7')).toBe('7');
+        expect(playerSlotsOf({}, SCHEMA)).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ **NO SCHEMA IS AN ANSWER, NOT A THROW — and this row is a defect H1's
+     * own first in-app run found.** The panel fetches the schema
+     * asynchronously and renders before it lands, so a throwing slot derivation
+     * took out the whole `stateManager:rawJsonDataLoaded` handler on the first
+     * render (the event bus logged `buildDocumentKeys`' refusal sentence out of
+     * `_syncPlayer`). The refusal belongs to the REGISTRY builder, which is
+     * asked for something that does not exist without a schema; "which slots
+     * does this document have" is answerable as "none I can see".
+     */
+    it('⛓⛓ without a schema: no slots, and the default still reads the document', () => {
+        expect(playerSlotsOf(combined(), null)).toEqual([]);
+        expect(playerSlotsOf(combined(), {})).toEqual([]);
+        expect(defaultPlayerOf(playerTwo(), null)).toBe('2');
+        expect(defaultPlayerOf(combined(), null)).toBe('1');
+        expect(defaultPlayerOf({}, null, '4')).toBe('4');
+        // ⛔ The registry builder still refuses — the tolerance is scoped.
+        expect(() => buildDocumentKeys(null)).toThrow();
+    });
+
+    /**
+     * ⛓⛓ R6 — **THE ONE-SLOT OFFER WITHOUT A SCHEMA IS SAID, NOT IMPLIED.** The
+     * selector's sentence names the schema as the reason, pending or failed, so
+     * "one slot" is never read as "this document has one slot".
+     */
+    it('⛓⛓ R6: the selector wait sentence names the schema, pending and failed', () => {
+        expect(playerSlotsOf(combined(), null)).toEqual([]);
+        const pending = playerSlotsWaitSentence(null);
+        const failed = playerSlotsWaitSentence('./schema/rules.schema.json: HTTP 404');
+        for (const s of [pending, failed]) expect(s).toContain(PLAYER_SLOTS_NEED_SCHEMA);
+        expect(pending).toContain('not loaded yet');
+        expect(failed).toContain('HTTP 404');
+        expect(failed).not.toBe(pending);
+    });
+});

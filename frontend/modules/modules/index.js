@@ -36,9 +36,11 @@ export const moduleInfo = {
   name: 'modules',
   title: 'Modules',
   componentType: 'modulesPanel',
+  docs: 'docs/json/user/modules/modules.md',
   icon: '📦',
   column: 1, // Left column,
-  description: 'Panel to manage modules.',
+  category: 'Data and Configuration Panels',
+  description: 'Every loaded module with its description: search, enable or disable one, or load an external module.',
 };
 
 /**

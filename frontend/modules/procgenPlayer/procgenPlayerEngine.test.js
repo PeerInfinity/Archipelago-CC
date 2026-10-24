@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { WorldWarehouse, buildWarehouse, findStartRegion } from './procgenPlayerEngine.js';
+import { WorldWarehouse, buildWarehouse, findStartRegion, sharesWorld } from './procgenPlayerEngine.js';
 
 // Minimal substrate registry mock — just the get() shape buildWarehouse
 // uses. Tests construct it explicitly so we don't depend on real
@@ -85,6 +85,62 @@ describe('buildWarehouse', () => {
         expect(wh.size()).toBe(0);
         expect(warnings[0]).toMatch(/no deserializeWorld/);
     });
+
+    it('resolves jta_dataset_ref against the single-carrier region (dataset carriage)', () => {
+        const JTA_ENTRY = {
+            id: 'jta',
+            loadRegionEvent: 'jta:loadRegion',
+            deserializeWorld: (payload) => ({ ...payload }),
+        };
+        const doc = { dataset_id: 'synthetic-x-s1-z2', schema_version: 1, zones: [{}, {}] };
+        const ref = { dataset_id: 'synthetic-x-s1-z2', schema_version: 1 };
+        const rules = makeRulesJson({
+            preset_sidecars: {
+                1: {
+                    region_0_0: {
+                        substrate: 'jta',
+                        playable_payload: { jtaZone: 0, jta_dataset: doc, jta_dataset_ref: ref },
+                    },
+                    region_1_0: {
+                        substrate: 'jta',
+                        playable_payload: { jtaZone: 1, jta_dataset_ref: ref },
+                    },
+                },
+            },
+        });
+        const wh = buildWarehouse(rules, '1', makeRegistry([JTA_ENTRY]));
+        // The carrier keeps its document; the ref-only region gets the SAME
+        // document object attached (resolved host-side, not re-parsed).
+        expect(wh.get('region_0_0').world.jta_dataset).toBe(doc);
+        expect(wh.get('region_1_0').world.jta_dataset).toBe(doc);
+        expect(wh.get('region_1_0').world.jtaZone).toBe(1);
+    });
+
+    it('warns when a jta_dataset_ref has no carrier and leaves the payload unresolved', () => {
+        const JTA_ENTRY = {
+            id: 'jta',
+            loadRegionEvent: 'jta:loadRegion',
+            deserializeWorld: (payload) => ({ ...payload }),
+        };
+        const warnings = [];
+        const rules = makeRulesJson({
+            preset_sidecars: {
+                1: {
+                    region_0_0: {
+                        substrate: 'jta',
+                        playable_payload: {
+                            jtaZone: 0,
+                            jta_dataset_ref: { dataset_id: 'missing-doc', schema_version: 1 },
+                        },
+                    },
+                },
+            },
+        });
+        const wh = buildWarehouse(rules, '1', makeRegistry([JTA_ENTRY]),
+            { logger: { warn: (msg) => warnings.push(msg) } });
+        expect(wh.get('region_0_0').world.jta_dataset).toBeUndefined();
+        expect(warnings[0]).toMatch(/references dataset 'missing-doc'/);
+    });
 });
 
 describe('findStartRegion', () => {
@@ -148,5 +204,41 @@ describe('findStartRegion', () => {
         expect(withWarehouse(rules, ['region_real'])).toEqual({
             region: 'region_real', sourceRegion: 'Menu', exitName: 'GameStart',
         });
+    });
+});
+
+describe('buildWarehouse — shared level world aliases (tile-primitives Stage 2)', () => {
+    const registry = makeRegistry([{
+        id: 'maze',
+        loadRegionEvent: 'maze:loadRegion',
+        deserializeWorld: (payload) => ({ tag: payload.tag }),
+    }]);
+    const rules = (extra = {}) => ({
+        preset_sidecars: {
+            1: {
+                L__a: { substrate: 'maze', shared_world: 'L', playable_payload: { tag: 'level', shared_world: { key: 'L' } } },
+                L__b: { substrate: 'maze', shared_world: 'L' },
+                other: { substrate: 'maze', playable_payload: { tag: 'other' } },
+                ...extra,
+            },
+        },
+    });
+
+    it('an alias resolves to the carrier\'s VERY SAME world object', () => {
+        const w = buildWarehouse(rules(), '1', registry, { logger: { warn: () => {} } });
+        expect(w.get('L__b').world).toBe(w.get('L__a').world);
+        expect(w.get('L__b').sharedWorld).toBe('L');
+        expect(sharesWorld(w, 'L__a', 'L__b')).toBe(true);
+        expect(sharesWorld(w, 'L__a', 'other')).toBe(false);
+        expect(sharesWorld(w, 'other', 'other')).toBe(false); // no shared world, so never "same world"
+    });
+
+    it('an alias whose carrier is absent is REFUSED by name, not loaded', () => {
+        const warn = [];
+        const w = buildWarehouse(rules({ M__x: { substrate: 'maze', shared_world: 'M' } }), '1', registry,
+            { logger: { warn: (m) => warn.push(m) } });
+        expect(w.has('M__x')).toBe(false);
+        expect(w.refused.get('M__x')).toMatch(/alias of shared world 'M'.*no warehoused region carries/);
+        expect(warn.some((m) => m.includes('M__x'))).toBe(true);
     });
 });

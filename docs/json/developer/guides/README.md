@@ -1,5 +1,7 @@
 # Developer Guides
 
+<!-- quick-launch-help: order=110 audience=developer -->
+
 This directory contains in-depth guides covering specific architectural components and development workflows for the Archipelago JSON Export Tools project.
 
 ## Core Architecture Guides
@@ -19,7 +21,7 @@ Practical guides for common development tasks:
 - **[Creating Modules](./creating-modules.md)**: Step-by-step guide to building a new frontend module
 - **[External Module Security](./external-module-security.md)**: Trust model and security hardening for iframe/window-hosted external modules
 - **[Testing Pipeline](./testing-pipeline.md)**: How the automated testing system validates game logic accuracy
-- **[Test Results](./test-results.md)**: Understanding and generating test result reports
+- **[Test Results](../test-results/test-results-summary.md)**: Current template test result charts
 - **[Fuzzer Debugging](./fuzzer-debugging.md)**: Running the UT fuzzer and debugging logic mismatches
 
 ## Conversion Tools

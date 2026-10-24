@@ -9,19 +9,36 @@ import os
 import inspect
 import shutil
 from functools import lru_cache, partial
-from typing import Any, Dict, List, Set, Optional, Tuple
+from typing import Any, Dict, List, Set, Optional, Sequence, Tuple
 from collections import defaultdict
 
 import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+from . import format_fallback
+# The import failure, kept AS TEXT: when it is set, a rule_builder/both export
+# falls back to AST format and says why (format_fallback.py).
+# ⛔ Never keep the exception object itself: its traceback's frames chain (f_back)
+# up to whoever imported this module — the JSON Tools export hook, whose frame
+# holds the Spoiler and so the MultiWorld — and Generate.py's leak assert fires.
+_CONVERTER_IMPORT_ERROR: Optional[str] = None
+_CONVERTER_IMPORT_TRACEBACK: Optional[str] = None
 try:
     from .converter import convert_rules_file_to_rule_builder
-except (ImportError, AttributeError):
-    # Converter requires the fork's extended rule_builder package.
-    # When unavailable, rule_builder format is not supported — ast format still works.
+except (ImportError, AttributeError) as _e:
+    # Converter requires the fork's extended rule_builder package. When it does
+    # not import, the rule_builder format is not supported — ast format still
+    # works. The cause may be a missing module OR a bug in the import chain, so
+    # it is kept and named rather than assumed.
+    _CONVERTER_IMPORT_ERROR = format_fallback.describe_exception(_e)
+    _CONVERTER_IMPORT_TRACEBACK = format_fallback.format_traceback(_e)
     convert_rules_file_to_rule_builder = None  # type: ignore[assignment]
+from .foreign_rule_builder import (
+    ForeignRuleSerializationError,
+    is_foreign_resolved_rule,
+    serialize_foreign_resolved_rule,
+)
 from .constants import (
     MAX_RULE_SIZE_KB,
     MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
@@ -37,9 +54,46 @@ auto_enable_from_env()
 logger = logging.getLogger(__name__)
 
 
+def _json_dumps_at_indent(data: Any, indent: int) -> str:
+    """json.dumps at `indent`, where indent 0 means MINIFIED.
+
+    EDITOR v3 E1c. ``json.dumps(obj, indent=0)`` is NOT minified in
+    Python: it still emits a newline before every element and a space
+    after every colon, so `{"a": [1, 2]}` becomes 7 lines. JavaScript's
+    ``JSON.stringify(obj, null, 0)`` IS minified (measured, both ways).
+    The two writers have to agree, so 0 maps to `separators` here.
+    """
+    if indent == 0:
+        return json.dumps(data, separators=(',', ':'), ensure_ascii=False)
+    return json.dumps(data, indent=indent, ensure_ascii=False)
+
+
+def _rules_json_indent() -> int:
+    """The `json_tools.rules_json_indent` setting, or its declared default.
+
+    EDITOR v3 E1c. Read HERE rather than threaded through six call frames,
+    and read from the settings Group so the default has exactly one home
+    (`worlds/json_tools_installer/json_tools_settings.py`) — an absent or
+    unreadable host.yaml falls back to that Group's own default, never to
+    a literal typed here.
+    """
+    try:
+        from worlds.json_tools_installer.json_tools_settings import (
+            JSONToolsSettings, get_json_tools_settings,
+        )
+        return int(getattr(get_json_tools_settings(), 'rules_json_indent',
+                           JSONToolsSettings.rules_json_indent))
+    except Exception:
+        return 2
+
+
 def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     """Serialize a rules.json-shaped dict to a string with `indent`,
     but collapse each sidecar's `tiles` array onto a single line.
+
+    `indent=0` MINIFIES (see `_json_dumps_at_indent`) — the sidecar
+    splice is then a no-op in effect, since a compact tiles array is
+    already what a minified dump writes.
 
     Procgen output carries per-region playable_payload.tiles arrays
     of width*height integers; the default json.dump(indent=2) puts
@@ -49,14 +103,32 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     the compact array back in.
 
     Mirrors stringifyRulesJson in
-    frontend/modules/procgenPipeline/procgenPipelineEngine.js so
-    files written here look the same as files downloaded from the
-    procgen panel.
+    frontend/modules/shared/rulesJsonBuilder.js so files written here
+    look the same as files downloaded from the procgen panel.
+    (`procgenPipeline/procgenPipelineEngine.js` only RE-EXPORTS it; the
+    body this mirrors lives in `shared/`.)
+
+    EDITOR v3 W1 — the mirror was FALSE OF THE BYTES until this slice, in
+    two places, both now fixed and pinned by
+    `test/test_rules_json_writer_agreement.py`:
+
+    * the splice below re-inserts `json.dumps(tiles, separators=(',', ':'))`;
+      the default separators put a SPACE after every tile integer and
+      `JSON.stringify(array)` does not.
+    * `_json_dumps_at_indent` passes `ensure_ascii=False`; `json.dumps`
+      escapes `§` to a six-character ``\\u00a7`` where
+      `JSON.stringify` writes the character itself — at indent 0 as much
+      as at indent 2. Safe because the
+      ONE production caller opens its file with `encoding='utf-8'`.
+
+    ⛓ The trailing newline is the WRITE SITE's, not the writer's — neither
+    function emits one (`scripts/utils/generate-procgen-rules.js` appends
+    ``text + '\\n'`` itself; the Python write site appends nothing).
 
     No-op for inputs without a `preset_sidecars` key.
     """
     if not isinstance(data, dict) or 'preset_sidecars' not in data:
-        return json.dumps(data, indent=indent)
+        return _json_dumps_at_indent(data, indent)
 
     import copy as _copy
     marker = '__PROCGEN_TILES_'
@@ -76,10 +148,10 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
                     captured.append(pp['tiles'])
                     pp['tiles'] = f'{marker}{idx}__'
 
-    text = json.dumps(patched, indent=indent)
+    text = _json_dumps_at_indent(patched, indent)
     for i, tiles in enumerate(captured):
         placeholder = f'"{marker}{i}__"'
-        compact = json.dumps(tiles)
+        compact = json.dumps(tiles, separators=(',', ':'))
         text = text.replace(placeholder, compact, 1)
     return text
 
@@ -1128,7 +1200,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
 
         # Get exporter-specific settings
         try:
-            exporter_settings = game_handler.get_exporter_settings()
+            exporter_settings = game_handler.get_exporter_settings(world)
             if exporter_settings:
                 export_data['exporter'][player_str] = exporter_settings
         except Exception as e:
@@ -1313,28 +1385,24 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
             export_data['canonical_placements'][player_str] = {}
 
-    # Determine is_vanilla and is_canonical from world class attributes
-    # Check all players' worlds for these flags
-    is_vanilla = False
-    is_canonical = False
+    # rules F3: `is_vanilla` / `is_canonical` / `preset_label` are facts about ONE
+    # slot's world, so each is a per-player map (`{"<p>": value}`) holding only
+    # the slots that declare it — never one value OR'd (or first-wins) over the
+    # whole multiworld. A key no slot declares is omitted. They are in
+    # PLAYER_SPECIFIC_KEYS, so a `_P<n>` slice carries its own slot's only.
+    per_slot_flags = {'is_vanilla': {}, 'is_canonical': {}, 'preset_label': {}}
     for player in multiworld.player_ids:
         world = multiworld.worlds[player]
-        if getattr(world.__class__, 'is_vanilla', False) or getattr(world, 'is_vanilla', False):
-            is_vanilla = True
-        if getattr(world.__class__, 'is_canonical', False) or getattr(world, 'is_canonical', False):
-            is_canonical = True
-    if is_vanilla:
-        export_data['is_vanilla'] = True
-    if is_canonical:
-        export_data['is_canonical'] = True
-
-    # Pick up preset_label from any player's world
-    for player in multiworld.player_ids:
-        world = multiworld.worlds[player]
+        player_str = str(player)
+        for flag in ('is_vanilla', 'is_canonical'):
+            if getattr(world.__class__, flag, False) or getattr(world, flag, False):
+                per_slot_flags[flag][player_str] = True
         preset_label = getattr(world, 'preset_label', None)
         if preset_label:
-            export_data['preset_label'] = preset_label
-            break
+            per_slot_flags['preset_label'][player_str] = preset_label
+    for key, slots in per_slot_flags.items():
+        if slots:
+            export_data[key] = slots
 
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
@@ -1444,6 +1512,34 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback
+
+            # Rule Builder rules from a *foreign* (vendored upstream) rule_builder:
+            # same frozen-dataclass shape, but no fork-only to_dict(). AST analysis
+            # cannot read them at all (inspect.getfile() on a dataclass instance
+            # raises), so serialize them structurally instead.
+            elif is_foreign_resolved_rule(rule_func):
+                try:
+                    rb_dict = serialize_foreign_resolved_rule(rule_func)
+                    rb_dict = _make_rule_dict_serializable(rb_dict)
+                    if game_handler and hasattr(game_handler, 'expand_rule'):
+                        rb_dict = game_handler.expand_rule(rb_dict)
+                    _rule_analysis_cache[cache_key] = rb_dict
+                    logger.debug(
+                        f"Exported foreign Rule Builder format for {target_type} "
+                        f"'{rule_target_name}': {rb_dict.get('rule', 'unknown')}"
+                    )
+                    return rb_dict
+                except ForeignRuleSerializationError as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization failed for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
+                    # Fall through to the normal analysis path
+                except Exception as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization errored for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
 
             # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
@@ -1981,17 +2077,16 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     original_type = extract_type_value(getattr(location.item, 'type', None))
                                     effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
 
-                                    # Check for canonical_placement_advancements to preserve original advancement values
-                                    # This ensures cross-validation works correctly for worldgen worlds
-                                    advancement = getattr(location.item, 'advancement', False)
-                                    canonical_advancements = getattr(world.__class__, 'canonical_placement_advancements', None)
-                                    if canonical_advancements and location_name in canonical_advancements:
-                                        advancement = canonical_advancements[location_name]
-
+                                    # The placed item's own advancement. A worldgen world's
+                                    # canonical_placement_advancements is per LOCATION; at a seed
+                                    # where Fill places a different item there, stamping it would
+                                    # misclassify that item. Per-instance values (e.g. ALTTP's
+                                    # Boss Heart Container) already travel with the item through
+                                    # its classification_counts pool copies.
                                     location_data['item'] = {
                                         'name': item_name,
                                         'player': getattr(location.item, 'player', None),
-                                        'advancement': advancement,
+                                        'advancement': getattr(location.item, 'advancement', False),
                                         'type': effective_type
                                     }
 
@@ -2549,8 +2644,209 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
         return {}
 
 
+# Suffixes of the artifacts JSON Tools writes into Archipelago's output directory.
+# They are deliberately kept out of Main's zip staging directory (see
+# worlds/json_tools_installer/monkey_patches/hooks.py), because a stock WebHost
+# rejects an upload whose archive contains them. The output directory is shared
+# by every seed, so the preset copy picks this generation's artifacts out BY
+# NAME (see _preset_artifact_names) instead of mirroring the whole folder the
+# way it can for a per-seed staging directory.
+PRESET_ARTIFACT_SUFFIXES = ("_rules.json", "_rules-ast.json", "_sphere_log.jsonl")
+
+
+def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = ()) -> List[str]:
+    """
+    The exact basenames this generation's export can have written into the
+    shared output directory: the combined rules (+AST), one per-player rules
+    (+AST) file per player when there is more than one, and the sphere log.
+
+    A prefix match on the seed name is NOT enough: seed names collide across
+    generations (a 4-player multiworld at --seed 1 and every single-player
+    --seed 1 preset all share AP_14089154938208861744), so a stale
+    AP_<seed>_P1_rules.json left by an earlier multiworld run would otherwise
+    be swept into every later single-player preset (2026-08-30, 148 dirs).
+    """
+    names = [f"{filename_base}_rules.json", f"{filename_base}_rules-ast.json"]
+    if len(player_ids) > 1:
+        for player in player_ids:
+            names.append(f"{filename_base}_P{player}_rules.json")
+            names.append(f"{filename_base}_P{player}_rules-ast.json")
+    names.append(f"{filename_base}_sphere_log.jsonl")
+    return names
+
+
+def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str,
+                                 player_ids: Sequence[int] = ()) -> List[str]:
+    """
+    Collect the files that should be mirrored into a preset directory.
+
+    Args:
+        output_dir: Archipelago's output directory — shared by all seeds AND by
+            earlier generations of the same seed name, so only the artifacts
+            this generation can have written (by exact name) are taken from it.
+        staging_dir: Main's per-seed zip staging directory, when the export runs
+            from the Spoiler.to_file hook. It only ever holds this seed's files
+            (multidata, spoiler, per-player game files), so all of them are taken.
+        filename_base: Base name for this seed's output files
+        player_ids: This multiworld's player ids; per-player artifacts are
+            expected only when there is more than one.
+
+    Returns:
+        Sorted list of absolute-or-relative source paths, one per basename.
+    """
+    sources: Dict[str, str] = {}
+
+    if (staging_dir and os.path.isdir(staging_dir)
+            and os.path.abspath(staging_dir) != os.path.abspath(output_dir)):
+        for name in os.listdir(staging_dir):
+            path = os.path.join(staging_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    if os.path.isdir(output_dir):
+        for name in _preset_artifact_names(filename_base, player_ids):
+            path = os.path.join(output_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    return [sources[name] for name in sorted(sources)]
+
+
+# --- The export's key order and its per-player slicing (module scope) ---
+# ⛓ APWORLD SUBSTRATE CHANGE P1b′ — lifted out of `export_game_rules`, where they
+# were locals, so a test can slice a committed document through the exporter's
+# OWN logic (`test/test_export_player_slicing.py` holds the `_P<n>` files to it).
+# Byte-inert: the export writes exactly what it wrote when they were nested.
+
+DESIRED_KEY_ORDER = [
+    'schema_version',
+    'game_name',
+    'game_directory',
+    'playerId',  # Player ID for player-specific exports
+    'archipelago_version',
+    'generation_seed',
+    'seed_name',
+    'player_names',
+    'regions',
+    'dungeons',
+    'start_regions',
+    'items',
+    'item_groups',
+    'itempool_counts',
+    'canonical_placements',
+    'progression_mapping',
+    'starting_items',
+    'provenance',
+    'region_atlas',
+    'flash_panel',
+    'preset_sidecars',
+    'procgen_metadata',
+    'loop_costs',
+    'discovery_mode',
+    'world',
+    'exporter',
+    'game_info',
+    'helpers',
+    # rules F3: after `helpers` — where these keys sat when they were flat
+    # (unlisted keys go last), so the per-slot move changed no key order.
+    'is_vanilla',
+    'is_canonical',
+    'preset_label',
+]
+
+# Player-specific keys contain data nested under player IDs
+PLAYER_SPECIFIC_KEYS = [
+    'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
+    'world', 'exporter', 'start_regions', 'itempool_counts',
+    'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars',
+    # APWORLD SUBSTRATE CHANGE P1a: both blocks are per-player maps now
+    # (`{"<p>": block}`), so a per-player export slices them like the rest.
+    'procgen_metadata', 'loop_costs',
+    # the world's Discovery-mode choice (`{"<p>": {"enabled": bool}}`).
+    'discovery_mode',
+    # rules F2: the region-atlas compile's blocks are per-player maps too, so a
+    # `_P<n>` slice carries only its own slot's (never slot 1's wiring).
+    'provenance', 'region_atlas', 'flash_panel',
+    # rules F3: per-world facts, so per-slot maps (a multiworld's `_P1` no
+    # longer inherits slot 3's `is_canonical`).
+    'is_vanilla', 'is_canonical', 'preset_label',
+]
+
+
+def create_ordered_export_data(data, game_name=None, player_id=None):
+    """
+    Create an ordered dictionary with fields in the desired order.
+    
+    Args:
+        data: The data to order
+        game_name: Game name to include (if provided)
+        player_id: If provided, extract only this player's data from player-specific fields
+        
+    Returns:
+        Dict with fields in desired order (Python 3.7+ maintains insertion order)
+    """
+    ordered_data = {}
+    
+    # Process each key in the desired order
+    for key in DESIRED_KEY_ORDER:
+        # Special handling for game_name
+        if key == 'game_name':
+            if game_name:
+                ordered_data[key] = game_name
+            continue
+
+        # Special handling for game_directory
+        if key == 'game_directory':
+            if game_name:
+                # Use the get_world_directory_name function to get the directory name
+                game_directory = get_world_directory_name(game_name)
+                ordered_data[key] = game_directory
+            continue
+
+        # Special handling for playerId - only include in player-specific exports
+        if key == 'playerId':
+            if player_id is not None:
+                ordered_data[key] = player_id
+            continue
+
+        # Special handling for dungeons (only include if it exists)
+        if key == 'dungeons':
+            if key in data:
+                if player_id is not None:
+                    # For player-specific exports, only include this player's dungeons
+                    if player_id in data[key]:
+                        ordered_data[key] = {player_id: data[key][player_id]}
+                else:
+                    # For combined exports, include all dungeons
+                    ordered_data[key] = data[key]
+            continue
+            
+        # Handle player-specific fields
+        if key in PLAYER_SPECIFIC_KEYS and key in data:
+            if player_id is not None:
+                # For player-specific exports, only include this player's data
+                if player_id in data[key]:
+                    ordered_data[key] = {player_id: data[key][player_id]}
+            else:
+                # For combined exports, include all data
+                ordered_data[key] = data[key]
+            continue
+            
+        # Handle normal fields
+        if key in data:
+            ordered_data[key] = data[key]
+    
+    # Add any keys not in the desired order at the end
+    for key, value in data.items():
+        if key not in ordered_data and key not in PLAYER_SPECIFIC_KEYS:
+            ordered_data[key] = value
+            logger.warning(f"Key '{key}' was not in DESIRED_KEY_ORDER, added to end of export")
+            
+    return ordered_data
+
+
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None, format_fallback_from: Optional[Dict[str, str]] = None) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2566,6 +2862,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             collection. Disabled by default as it invalidates the multiworld object.
         clear_game_presets: If True, delete all existing presets for the current game before generating
         clear_all_presets: If True, delete all existing presets for ALL games before generating
+        staging_dir: Optional per-seed staging directory (Main's zip staging folder) whose
+            files are mirrored into the preset directory alongside this seed's artifacts.
+        format_fallback_from: Set by a caller that already fell back to "ast" before
+            calling ({"requested": ..., "reason": ...}); the export is then recorded
+            and summarised as a fallback (format_fallback.py).
 
     Returns:
         Dict containing paths to generated files
@@ -2593,40 +2894,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # --- Configuration for Excluded Fields (now defined globally) ---
     
     # --- Field Exclusion Helpers (now defined globally) --- 
-    
-    # --- Define key categories and order ---
-    desired_key_order = [
-        'schema_version',
-        'game_name',
-        'game_directory',
-        'playerId',  # Player ID for player-specific exports
-        'archipelago_version',
-        'generation_seed',
-        'seed_name',
-        'player_names',
-        'regions',
-        'dungeons',
-        'start_regions',
-        'items',
-        'item_groups',
-        'itempool_counts',
-        'canonical_placements',
-        'progression_mapping',
-        'starting_items',
-        'preset_sidecars',
-        'loop_costs',
-        'world',
-        'exporter',
-        'game_info',
-        'helpers'
-    ]
 
-    # Player-specific keys contain data nested under player IDs
-    player_specific_keys = [
-        'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'world', 'exporter', 'start_regions', 'itempool_counts',
-        'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars'
-    ]
+    # --- Key order and per-player slicing: DESIRED_KEY_ORDER, PLAYER_SPECIFIC_KEYS,
+    #     create_ordered_export_data (module scope, above) ---
 
     # Prepare the combined export data for all players using the helper
     with profiler.section("get_cleaned_rules_data"):
@@ -2646,9 +2916,29 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     ast_data = cleaned_data
     rb_data = None
 
+    # A fallback from the requested format, when one happens: the record that
+    # goes into every slot's exporter block and the end-of-run summary.
+    fallback_record = None
+    if format_fallback_from is not None:
+        # The caller (the JSON Tools export hook) already fell back before calling.
+        fallback_record = format_fallback.make_record(
+            format_fallback_from.get("requested", "rule_builder"), "ast",
+            format_fallback_from.get("reason", "unknown"))
+        # An import-time fallback: expected on a compiled install (WARNING there).
+        format_fallback.log_fallback(fallback_record, expected=format_fallback.is_compiled_install())
+
     if rules_json_format in ("rule_builder", "both"):
         if convert_rules_file_to_rule_builder is None:
-            logger.warning("Rule Builder converter not available (extended rule_builder not installed), falling back to AST format")
+            expected = format_fallback.is_compiled_install()
+            if _CONVERTER_IMPORT_ERROR is not None:
+                reason = "the Rule Builder converter failed to import: " + _CONVERTER_IMPORT_ERROR
+                format_fallback.log_traceback_once(
+                    "exporter.converter import failed", _CONVERTER_IMPORT_TRACEBACK or "", expected)
+            else:
+                reason = "the Rule Builder converter is not available"
+            fallback_record = format_fallback.make_record(rules_json_format, "ast", reason)
+            # An import-time fallback: expected on a compiled install (WARNING there).
+            format_fallback.log_fallback(fallback_record, expected=expected)
             rules_json_format = "ast"
 
     if rules_json_format in ("rule_builder", "both"):
@@ -2663,86 +2953,17 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     if len(conversion_warnings) > 5:
                         logger.debug(f"  ... and {len(conversion_warnings) - 5} more warnings")
             except Exception as e:
-                logger.error(f"Error converting to Rule Builder format: {e}")
+                reason = "converting to Rule Builder format raised " + format_fallback.describe_exception(e)
+                logger.debug("Rule Builder conversion traceback", exc_info=True)
                 if rules_json_format == "rule_builder":
-                    logger.warning("Falling back to AST format due to conversion error")
+                    fallback_record = format_fallback.make_record("rule_builder", "ast", reason)
                     rules_json_format = "ast"
                 else:
-                    logger.warning("Skipping Rule Builder output due to conversion error")
+                    # "both": the primary file is AST as well; the _rules-ast.json is still written.
+                    fallback_record = format_fallback.make_record("both", "ast", reason, "dropped")
                     rb_data = None
+                format_fallback.log_fallback(fallback_record)
 
-    # --- Helper function to create an ordered dictionary with proper field ordering ---
-    def create_ordered_export_data(data, game_name=None, player_id=None):
-        """
-        Create an ordered dictionary with fields in the desired order.
-        
-        Args:
-            data: The data to order
-            game_name: Game name to include (if provided)
-            player_id: If provided, extract only this player's data from player-specific fields
-            
-        Returns:
-            Dict with fields in desired order (Python 3.7+ maintains insertion order)
-        """
-        ordered_data = {}
-        
-        # Process each key in the desired order
-        for key in desired_key_order:
-            # Special handling for game_name
-            if key == 'game_name':
-                if game_name:
-                    ordered_data[key] = game_name
-                continue
-
-            # Special handling for game_directory
-            if key == 'game_directory':
-                if game_name:
-                    # Use the get_world_directory_name function to get the directory name
-                    game_directory = get_world_directory_name(game_name)
-                    ordered_data[key] = game_directory
-                continue
-
-            # Special handling for playerId - only include in player-specific exports
-            if key == 'playerId':
-                if player_id is not None:
-                    ordered_data[key] = player_id
-                continue
-
-            # Special handling for dungeons (only include if it exists)
-            if key == 'dungeons':
-                if key in data:
-                    if player_id is not None:
-                        # For player-specific exports, only include this player's dungeons
-                        if player_id in data[key]:
-                            ordered_data[key] = {player_id: data[key][player_id]}
-                    else:
-                        # For combined exports, include all dungeons
-                        ordered_data[key] = data[key]
-                continue
-                
-            # Handle player-specific fields
-            if key in player_specific_keys and key in data:
-                if player_id is not None:
-                    # For player-specific exports, only include this player's data
-                    if player_id in data[key]:
-                        ordered_data[key] = {player_id: data[key][player_id]}
-                else:
-                    # For combined exports, include all data
-                    ordered_data[key] = data[key]
-                continue
-                
-            # Handle normal fields
-            if key in data:
-                ordered_data[key] = data[key]
-        
-        # Add any keys not in the desired order at the end
-        for key, value in data.items():
-            if key not in ordered_data and key not in player_specific_keys:
-                ordered_data[key] = value
-                logger.warning(f"Key '{key}' was not in desired_key_order, added to end of export")
-                
-        return ordered_data
-    
     # --- Helper function to write export data to a file ---
     def write_export_data(data, filepath):
         """
@@ -2772,10 +2993,30 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # onto a single line — Python's default json.dump puts
             # every tile integer on its own line, which makes the
             # file ~10× larger than it needs to be. Mirrors
-            # stringifyRulesJson in
-            # frontend/modules/procgenPipeline/procgenPipelineEngine.js.
+            # stringifyRulesJson in frontend/modules/shared/rulesJsonBuilder.js
+            # (procgenPipelineEngine.js only re-exports it) — byte for byte
+            # since EDITOR v3 W1, pinned by test/test_rules_json_writer_agreement.py.
+            # EDITOR v3 E1c — the indent is a SETTING (`json_tools.rules_json_indent`,
+            # default 2, mirrored by the frontend's `rulesJson.indent`).
+            # ⛔ THE DEFAULT DOES NOT MOVE — but NOT for the reason this comment
+            # used to give. It claimed the committed presets were "byte-pinned at
+            # 2 (29 byte-identity dumps, test_schema_validation.py, every
+            # --check)". EDITOR v3 W1 opened all three and none of them pins a
+            # byte: scripts/procgen/dump-*-byteidentity.mjs (four of them) read
+            # frontend/presets/ ZERO times — they pin in-process generator
+            # determinism; test/general/test_schema_validation.py is json.load +
+            # jsonschema.validate, blind to formatting; and no workflow runs a
+            # --check over presets. The presets are committed DATA, regenerated
+            # only on demand by .github/workflows/generate-presets.yml
+            # (workflow_dispatch, onto a `generated-presets` branch).
+            # The default stays 2 because it is the frontend's default and the
+            # committed corpus is indented at 2; `indent=0` is only ever
+            # something a person asked for, per output.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
             with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(_dump_with_compact_sidecar_tiles(filtered_data, indent=2))
+                f.write(_dump_with_compact_sidecar_tiles(
+                    filtered_data, indent=_rules_json_indent()))
 
             # Check final file size against limit
             file_size_bytes = os.path.getsize(filepath)
@@ -2815,6 +3056,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     else:
         # For "rule_builder" or "both", use Rule Builder format as primary
         primary_data = rb_data if rb_data is not None else ast_data
+
+    if fallback_record is not None:
+        format_fallback.stamp(primary_data, fallback_record, multiworld.player_ids)
 
     combined_rules_path = os.path.join(output_dir, f"{filename_base}_rules.json")
     ordered_data = create_ordered_export_data(primary_data, game_name=combined_game_name)
@@ -2858,6 +3102,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 if write_export_data(player_ast_data, player_ast_path):
                     results[f"rules_p{player_str}_ast"] = player_ast_path
 
+    if fallback_record is not None:
+        # The files written in a format other than the one asked for: the
+        # primary rules.json and the per-player files (never the _rules-ast.json).
+        format_fallback.note(fallback_record, [
+            path for key, path in results.items()
+            if not key.endswith('_ast') and not str(path).startswith('ERROR')])
+
     # If save_presets is False, skip the preset saving parts
     if not save_presets:
         return results
@@ -2891,8 +3142,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             clean_game_name = get_world_directory_name(game_name)
             logger.info(f"Detected single game world ({game_name}), using '{clean_game_name}' preset folder.")
 
-        # Determine preset directories
-        presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
+        # Determine preset directories. Resolve via local_path, not relative to
+        # this file: on compiled installs the exporter lives in lib/ while the
+        # frontend is extracted to the install root.
+        from Utils import local_path
+        presets_dir = local_path('frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
 
         # Clear all presets if requested (must be done before creating game directory)
@@ -2926,7 +3180,13 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # If this world has vanilla placements and the game directory doesn't already
         # include "_vanilla" (e.g. alttp_vanilla_worldgen already has it), route it to
         # a dedicated {game}_vanilla directory instead of the standard game directory.
-        if cleaned_data.get('is_vanilla') and '_vanilla' not in clean_game_name:
+        # rules F3 (⚖ user 2026-10-10, ruling A): `is_vanilla` is per slot, so only a
+        # ONE-slot document routes — its slot's flag is the document's. A multi-slot
+        # document never routes (no all/any rule over its slots).
+        only_slot = [str(p) for p in multiworld.player_ids]
+        if (len(only_slot) == 1
+                and (cleaned_data.get('is_vanilla') or {}).get(only_slot[0])
+                and '_vanilla' not in clean_game_name):
             clean_game_name = f"{clean_game_name}_vanilla"
             game_dir = os.path.join(presets_dir, clean_game_name)
 
@@ -2966,19 +3226,27 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Create a folder for this specific preset
         preset_dir = os.path.join(game_dir, filename_base)
 
+        # The files that make up this preset: this seed's artifacts from the output
+        # directory plus everything Main staged for the ZIP.
+        preset_sources = _collect_preset_source_files(
+            output_dir, staging_dir, filename_base, list(multiworld.player_ids))
+        source_json_paths = {
+            os.path.basename(path): path for path in preset_sources if path.endswith('.json')
+        }
+
         # --- Check if preset update is needed ---
-        needs_update = True 
+        needs_update = True
         if os.path.exists(preset_dir):
             try:
-                # Compare files in output_dir and preset_dir
-                output_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.json') and os.path.isfile(os.path.join(output_dir, f))])
+                # Compare the source files against those already in preset_dir
+                output_files = sorted(source_json_paths)
                 preset_files = sorted([f for f in os.listdir(preset_dir) if f.endswith('.json') and os.path.isfile(os.path.join(preset_dir, f))])
 
                 if set(output_files) == set(preset_files):
                     # Same files exist in both dirs, compare content
                     all_match = True
                     for filename in output_files:
-                        output_path = os.path.join(output_dir, filename)
+                        output_path = source_json_paths[filename]
                         preset_path = os.path.join(preset_dir, filename)
                         try:
                             with open(output_path, 'r', encoding='utf-8') as f_out, open(preset_path, 'r', encoding='utf-8') as f_pre:
@@ -3020,17 +3288,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     except Exception as e:
                         logger.error(f"Error removing item {item_path}: {e}")
 
-            # Copy files from output_dir to preset_dir
+            # Copy this preset's source files to preset_dir
             files_copied = 0
-            for file_name in os.listdir(output_dir):
-                src_file = os.path.join(output_dir, file_name)
-                if os.path.isfile(src_file):
-                    try:
-                        dst_file = os.path.join(preset_dir, file_name)
-                        shutil.copy2(src_file, dst_file)
-                        files_copied += 1
-                    except Exception as e:
-                        logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
+            for src_file in preset_sources:
+                try:
+                    dst_file = os.path.join(preset_dir, os.path.basename(src_file))
+                    shutil.copy2(src_file, dst_file)
+                    files_copied += 1
+                except Exception as e:
+                    logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
             
             logger.info(f"Copied {files_copied} files to preset directory {preset_dir}")
             
@@ -3068,11 +3334,21 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             for player_id in multiworld.player_ids:
                 # Use getattr to safely access player_name and provide a default
                 player_name = getattr(multiworld, 'player_name', {}).get(player_id, f"Player {player_id}")
-                player_game_data.append({
+                game_entry = {
                     "player": player_id,
                     "name": player_name,
                     "game": multiworld.game.get(player_id, "Unknown Game")
-                })
+                }
+                # rules F3 (⚖ user 2026-10-10, ruling A): the placement flags and
+                # the button label are the SLOT's, so they sit on its `games[i]`
+                # entry — nothing at folder level.
+                for flag in ('is_vanilla', 'is_canonical'):
+                    if (cleaned_data.get(flag) or {}).get(str(player_id)):
+                        game_entry[flag] = True
+                slot_label = (cleaned_data.get('preset_label') or {}).get(str(player_id))
+                if slot_label:
+                    game_entry["label"] = slot_label
+                player_game_data.append(game_entry)
 
             # Update preset entry
             folder_entry = {
@@ -3081,19 +3357,10 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                 "files": preset_files
             }
 
-            # Add placement flags if present in export data
-            if cleaned_data.get('is_vanilla'):
-                folder_entry["is_vanilla"] = True
-            if cleaned_data.get('is_canonical'):
-                folder_entry["is_canonical"] = True
-            if cleaned_data.get('preset_label'):
-                folder_entry["label"] = cleaned_data['preset_label']
             # Procgen data flag — true when the rules.json carries
             # preset_sidecars (i.e. the world was generated via the
             # procgen pipeline). Powers the Presets panel's "has
-            # procgen data" filter. Absent = false. See NewDocs/plans/
-            # presets-panel-overhaul.md §"Procgen detection at index
-            # time".
+            # procgen data" filter. Absent = false.
             preset_sidecars = cleaned_data.get('preset_sidecars')
             if preset_sidecars and len(preset_sidecars) > 0:
                 folder_entry["has_procgen_data"] = True

@@ -13,18 +13,60 @@ source .venv/bin/activate
 | Test single game | `python scripts/test/test-all-templates.py --include-list "[GameName].yaml"` |
 | Spoiler test only | `npm test -- --mode=test-spoilers --game=[gamename] --seed=1` |
 | Regression test | `npm test --mode=test-regression` |
-| Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "http.server"`) |
-| Start dev server | `python -m http.server 8000` (only if not already running) |
-| Stop dev server | `pkill -f "http.server"` |
+| Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
+| Start dev server | `python scripts/serve-nocache.py 8000` (only if not already running) — no stale cached merge halves |
+| Test against ANOTHER server (a worktree) | `npm test -- --port=8123 …` or `TEST_PORT=8123` — one variable moves the page URL, Playwright's probe, the health check and the Python drivers (`scripts/test/testServer.js` / `test_utils.test_port()`); no port is hardcoded in the harness |
+| Test the BUNDLED boot (what a deployed site serves) | `npm test -- --bundled …` — runs `npm run build` first (under the box lock; `--no-build` reuses `frontend/dist/bundle.js`) and drives `?bundled=true` instead of the ES modules. The results JSON is stamped `flavour`; `compare-runs.js` refuses to diff a bundled run against an unbundled one. Detail: `docs/json/developer/guides/testing-pipeline.md` § *The bundled boot* |
+| `npm test` TAKES THE BOX LOCK | `scripts/test/run-tests.js` takes `~/.cache/seedling-box/lock.json` (kind `browser`, name `npm test <mode>[ batch=][ test=]`) before Playwright starts. A held box → it refuses by name, exit 1; `npm test -- --wait-for-box=<sec> …` queues instead. Under a holder that exported its token it passes through. The results JSON records `frozen` (the head it ran at) and `treeMoved`; `compare-runs.js` warns on a moved tree |
+| Refuse commits under a FOREIGN box lock | `git config --worktree core.hooksPath scripts/git-hooks` in each clone/worktree (⚠ `--worktree`: plain `git config` in a worktree writes the SHARED config and installs it on every tree). The pre-commit hook refuses when a live lock names THIS tree and you are not its holder; a lock on another tree does not refuse. Override: `BOX_LOCK_COMMIT_ANYWAY=1 git commit …` |
+| New worktree for a slice | `scripts/dev/new-worktree.sh <name> [<base>=origin/main]` (`--dry-run`, `--with-wasm`, `--help`) — worktree + branch, submodules except the wasm builds, submodule identity, `npm ci`, the hook, then step 6: the getting-started guide's steps 3–4 in the worktree (`Players/Templates` + a `minimal-spoilers` `host.yaml` — the recipe the committed presets were generated under, so a regenerated preset matches them — so the `Generate.py` gates run there) with the primary's venv ACTIVATED, not copied; prints `python -m http.server <port>` and `npm test -- --port=<port>` on a free port. Creation only |
+| Stop dev server | `ss -ltnp \| grep ":8000"` → read `pid=NNN` → `kill NNN`. ⛔ NOT `pkill` in any form: a PreToolUse hook refuses every pattern kill, brackets or no brackets |
 
 ## Important Gotchas
 - **Path in Generate.py**: Use `"Templates/[GameName].yaml"` NOT `"Players/Templates/[GameName].yaml"` - the latter will fail
 - **Name formats differ**: Template files use title case with spaces (`A Link to the Past.yaml`), but preset directories use lowercase identifiers (`alttp`)
 - **Don't modify**: Original Archipelago code files or original world files in `worlds/`
-- **Commit directly to `main`**: This project commits directly to `main` — do NOT create a feature branch before committing (ignore any default "branch first" guidance). Commit each completed step/phase separately as you go; still only push when asked.
+- **Commit directly to `main`**: This project commits directly to `main` — do NOT create a feature branch before committing (ignore any default "branch first" guidance). Commit each completed step/phase separately as you go.
+- **PUSH BY DEFAULT** (user ruling 2026-07-19; this retired the older "only push when asked" rule, which this file carried until 2026-09-04). Push without asking once **all** of these hold: the gate battery for that work is green; it is a branch on a fork we own; nothing downstream consumes it yet (no gitlink pinning it, no open PR built on it, nobody else's work based on it); and the push triggers no deploy/release/publish. ⛑ The property that makes a push recoverable is that **nothing downstream has consumed it yet** — evaluate that per push rather than asking every time.
+  - **GITLINK BUMPS JOIN PUSH BY DEFAULT** (user ruling 2026-09-13: *"I don't remember encountering a situation where I don't want the gitlink bump"* → *"I agree. Please make that update."*). Bump the outer pointer without asking once **both** mechanical preconditions hold and are MEASURED: (1) the submodule commit is an ancestor of the submodule remote's default branch (`git -C <path> fetch && git -C <path> merge-base --is-ancestor <sha> origin/<default>`) — a dangling gitlink breaks every clone and CI checkout; (2) the submodule push itself met the push-by-default tests above. The bump commit names what moved and why. **ONE standing exception, still ASK FIRST: `frontend/modules/flashPanel/wasm`** (the Seedling binaries; its pointer is pinned by the headless CI gate, so a bump there is a pins re-record, not a pointer move).
+  - **STILL ASK FIRST for:** a force-push or any history rewrite; the wasm-submodule gitlink bump (above); a **deploy-triggering branch** (concretely, omsi-loops `static.yml` deploys to GitHub Pages on push to `dmchurch`); and the **first publication of anything that might not be meant to be public** — these repos are public, so DISCLOSURE is the non-undoable part: a force-push drops the ref, but the commit stays reachable by SHA and may be cached, forked or indexed.
+  - ⚠ **A clean tree does not mean you are done.** Wrap-up slipped three times in three consecutive sessions (2026-07-20), each on a different leg: the record written but uncommitted; committed but not pushed ("no push was asked" — main-branch docs commits are exactly the push-by-default case); and the record never written at all, where a clean tree *looked* like a complete wrap-up. Check all three: the record is WRITTEN, committed, and pushed — `git status -sb` shows a clean tree **and** no `[ahead N]`.
 - **Seed 1 always produces**: `AP_14089154938208861744`
-- **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "http.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
-- **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
+- **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "[h]ttp.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
+- **`pgrep -f` MATCHES ITS OWN SHELL — a finished job reads as still running.** Commands run here are wrapped in `/bin/bash -c '... eval "<your command>" ...'`, so *every pattern you type* is in the wrapper's own `/proc/<pid>/cmdline`. `pgrep -f "foo"` hits even when nothing called `foo` exists (measured: 2 — the wrapper plus the `$(...)` subshell). Always a *false positive*: it never says "done" when a job is live; it says "running" forever after it finished.
+  - **IN A WAIT LOOP, DO NOT USE `pgrep` AT ALL.** Capture the PID at launch (`nohup cmd & echo $!`) and poll `kill -0 <pid>`. This is the only form immune to the trap. A `pgrep` wait loop that self-matches spins until you kill it.
+  - **Anywhere else, bracket EVERY pattern on the line** — `[h]ttp.server`, not `http.server` (verified 0 hits vs 2). ⚠ **One unbracketed pattern anywhere re-arms the trap for the whole line**, including a *different* name in a second `pgrep`:
+    ```bash
+    # SPINS FOREVER — the 2nd pattern matches this very shell, so the loop never exits
+    until ! pgrep -f "[b]ench.mjs" && ! pgrep -f "checkout -q HEAD"; do sleep 10; done
+    ```
+    Checking "did I bracket it?" is not enough; the check is "did I bracket **all of them**?"
+  - **⛔ `pkill`/`killall` ARE REFUSED OUTRIGHT — bracketing is not the answer any more.** A `PreToolUse(Bash)` hook (`~/.claude/hooks/block-pattern-kill.sh`) denies every pattern kill, every `xargs … kill`, and any `kill` fed from a `ps`/`pgrep` harvest — brackets included, because a bracketed pattern still matches by pattern. It exists because pattern kills SIGTERMed live Claude sessions twice (seven sessions on 2026-08-11; a live session at rc=143 plus batches of siblings inside 30 ms on 2026-08-16).
+    **Kill by a PID you can point at instead:**
+    ```bash
+    p=$(ss -ltnp | grep ":8000" | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)
+    kill "$p"                      # a literal PID: allowed, and it cannot hit a sibling
+    ```
+    ⛑ The old advice here was *"bracket it, and restart in two commands because a restart one-liner kills itself"* — measured then and true then (plain form → exit **144**, the rest of the line never running). It is now moot: the pattern form does not run at all, and the PID form has no wrapper to SIGTERM, so a restart one-liner is fine again. **What survives is the `pgrep` half above** — that is a miscount, not a kill, and it is still live.
+    If you genuinely have no PID to point at, append `# PATTERN-KILL-OK` to override the guard; if it fired on the word as *text* (an `echo`, a `grep`, a comment, a heredoc) that is a bug in the guard — its regression net is `~/.claude/hooks/test-block-pattern-kill.py`.
+  - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
+- **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill: **list** the strays — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'` — then **read the PIDs off that output and `kill <pid> <pid>`**. Both listings pass the guard, and so does the whole thing on one line (`pgrep -af "^sleep"; kill 111 222` — measured). ⛔ **Do NOT discharge the "and kill those too" step by piping the listing into `xargs kill` or wrapping it in `$(…)`** — `kill $(pgrep …)`, `pgrep … | xargs kill` and `for p in $(pgrep …); do kill $p; done` are all denied by the guard above, and they are the whole reason it exists: the match set is whatever happened to contain the string, siblings included.
+
+- **⛔ `grep` SILENTLY SKIPS NUL-BEARING FILES — use `grep -a` (NOT `LC_ALL=C`).** **Four** tracked sources carry stray NUL bytes (measured 2026-09-15 at `a2468a0c03` over every tracked `.js/.mjs/.cjs/.py/.html/.ts/.json/.md/.yaml/.yml`, submodules excluded): `frontend/modules/regionMarkingTool/regionMarkingToolUI.js` (3), `frontend/modules/procgenPipeline/regionAtlasAnalyzer.js` (2), `scripts/procgen/check-procgen-docs.mjs` (2), `scripts/procgen/probe-seedling-killlock-span1.mjs` (2). The list MOVES (the 2026-09-04 list named `procgenPipelineUI.js`, which has none now, and missed both `scripts/` files), so re-measure rather than trust it:
+  ```bash
+  git ls-files -z | python3 -c "import sys,os; [print(p, n) for p in sys.stdin.read().split('\0') if p.endswith(('.js','.mjs','.cjs','.py','.html','.ts','.json','.md','.yaml','.yml')) and os.path.isfile(p) and not os.path.islink(p) and (n := open(p,'rb').read().count(b'\0'))]"
+  ```
+  grep classifies those files as binary and suppresses its output: the match is there, you get no output, no error, and **exit 1** — a silent false negative that reads exactly like "not found". Measured 2026-09-15 on `frontend/modules/regionMarkingTool/regionMarkingToolUI.js`, searching a string that IS present on line 59:
+  ```bash
+  grep -c "export class" frontend/modules/regionMarkingTool/regionMarkingToolUI.js           # no output, exit 1
+  LC_ALL=C grep -c "export class" frontend/modules/regionMarkingTool/regionMarkingToolUI.js  # no output, exit 1  ⛔ does NOT help
+  grep -ac "export class" frontend/modules/regionMarkingTool/regionMarkingToolUI.js          # 1, exit 0          ✅
+  rg -c "export class" frontend/modules/regionMarkingTool/                                   # lists 2 OTHER files, exit 0  ⛔ the NUL file is silently absent
+  rg -ac "export class" frontend/modules/regionMarkingTool/                                  # lists all 3                  ✅
+  ```
+  ⚠ **`LC_ALL=C` is a folk remedy that does not work** — it was the advice in `CC/docs/cleanup-backlog.md` until 2026-09-04, and it was measured failing. The cause is NUL bytes, not emoji or multibyte UTF-8 (that same file has 1,375 non-ASCII bytes, which are harmless on their own). ⚠ **`rg` over a DIRECTORY skips the file too** (naming the file explicitly does match) — and its exit stays 0 when other files matched, so the omission hides inside a green result. **Use `grep -a` or `rg -a`.** A sweep that reports "zero hits" (or a count) over these trees without `-a` has not measured anything.
+
+- **Submodule paths**: there are NINE git submodules (authoritative list: `.gitmodules`): `frontend/modules/shared/`, `frontend/modules/textAdventureEngine/`, `frontend/modules/journey-to-ascension/`, `frontend/modules/omsi-loops/`, `frontend/modules/cavernous-ii/`, `frontend/modules/bulletml-dodge/` (Noiz2sa, `PeerInfinity/bulletml-dodge`, for the `noiz2sa` substrate), `frontend/modules/flashPanel/wasm/` (the SWFRecomp Seedling builds, `PeerInfinity/seedling-wasm`), `frontend/modules/swfRecompilerPanel/browser/` (SWFRecomp-CC's built in-browser recompiler page, `PeerInfinity/swfrecomp-browser`, latest release only, ~5 MB — driven by the SWF Recompiler panel; `check-seedling-source-pin.mjs` row (iv) holds its `release.json` `source.commit` equal to the default build's `source.recompiler`, so moving it is a re-release or a re-pin, not a pointer bump) and `vendor/seedling/` (the Seedling AS3 source, `PeerInfinity/Seedling`, pinned at the default build's source commit — `check-seedling-source-pin.mjs` holds the two together; a pin move there is a rebuild question, not a pointer bump). Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
 ---
 
@@ -116,6 +158,16 @@ python Generate.py --weights_file_path "Templates/[GameName].yaml" --multi 1 --s
 
 ## Testing
 
+- **⛔ A `pytest` run DIRTIES THE TREE, including a TRACKED file.** `python -m pytest test/` generates an APQuest
+  seed as a side effect. Measured 2026-09-09 at `a6dd8a0360` on the smallest run that does it,
+  `python -m pytest test/programs/test_generate.py` (6 passed, 1.5 s): it creates the untracked
+  `frontend/presets/apquest/AP_07758176404715800194/` (4 files) **and edits the tracked
+  `frontend/presets/preset_files.json`** — `git diff --numstat` = **17 insertions, 1 deletion**. The seed id is
+  deterministic (the same one D1 saw on 2026-09-08), so it is recognisable. **Revert BOTH before staging**
+  — `git checkout -- frontend/presets/preset_files.json` and `rm -rf` the new `apquest/AP_*` dir — and say in
+  the record that the dirt was the test run's: a slice that stages by path and then reads `git status` will
+  otherwise see changes it did not make, and the next reader will attribute them to the slice.
+
 ### Main Test Script
 `scripts/test/test-all-templates.py` - run with `--help` for all options.
 
@@ -139,7 +191,138 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
 
 **Output:**
 - `playwright-report.json` (project root)
-- `test-results/in-app-tests/test-results-[TIMESTAMP].json`
+- `test-results/in-app-tests/test-results-[TIMESTAMP].json` — the most recent
+  runs are kept and older ones pruned, so runs can be compared against each
+  other. The retention is `KEEP_RUNS` in `test_json/e2e/app.spec.js` (Playwright's
+  own cleanup is a different thing, scoped to `test-results/playwright/`).
+
+### Test batches
+The in-app runner races the whole roster against one wall-clock budget
+(`AUTO_START_TIMEOUT_MS` in `frontend/modules/tests/testLogic.js`).
+`test-substrates` outgrew it, so run it in batches instead:
+```
+npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
+npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS/wasm runtime rows
+npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows (generated worlds played to the end, Loop mode too)
+npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
+npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
+npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
+npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
+npm test -- --mode=test-substrates --batch=tutorials     # MANUAL: the Tutorial panel rows + one walk row per tutorial (but procgen's, the tracker's and Seedling's)
+npm test -- --mode=test-substrates --batch=tutorials-procgen  # MANUAL: the procgen tutorials' walk rows
+npm test -- --mode=test-substrates --batch=tutorials-procgen-loops  # MANUAL: the procgen loop-mode tutorials' walk rows (WebGPU)
+npm test -- --mode=test-substrates --batch=tutorials-tracker  # MANUAL: the tracker tutorials' walk rows
+npm test -- --mode=test-substrates --batch=tutorials-seedling  # MANUAL: the Seedling tutorials' walk rows (WebGPU)
+npm test -- --mode=test-substrates --batch=tutorials-seedling-whole-game  # MANUAL: the Seedling whole-game tutorial's walk row alone (WebGPU)
+npm test -- --mode=test-substrates --batch=feature-checks  # MANUAL: the feature checks' walk rows (Tutorial panel walks that test a feature, not tutorials)
+```
+⛔ **No roster counts or durations are quoted here on purpose** — they go stale
+silently and then get trusted. To derive today's numbers, read
+`frontend/test-configs/playwright_tests_config-substrates.json` (note
+`defaultEnabledState`, and that a test counts only if its own `enabled` says so)
+and group by `category`; each batch's `categories` in `testBatches.js` say which it
+claims, and `fast` takes the rest. The authoritative number is a run.
+
+**On push vs manual.** A batch marked `manual: true` never runs on push. CI reads
+the on-push list off the module (`node scripts/test/list-test-batches.js --on-push`)
+and runs each as its own PARALLEL job in `test-templates.yml`, so one batch's red
+cannot skip another; `test-substrates-manual.yml` (`workflow_dispatch`, input
+`batch` = one manual batch or `all`) runs the manual ones. **Smoke rows:** one row
+of a manual substrate may carry `"batch": "fast"` in the substrates config, so a
+shared-code change that breaks that substrate's boot is still caught on push.
+`testBatches.js` accepts that override ONLY for a manual category's row moving to an
+on-push batch, and at most one per manual batch; deleting the line drops it.
+A batch with `pushPaths` in `testBatches.js` (today `apworld`) is on push but runs
+only when a pushed path hits its globs or the derived import closure of its rows
+(`list-test-batches.js --on-push --changed=`); `test-substrates-manual.yml` takes it
+by name (`-f batch=apworld`).
+
+**Budget headroom.** After each CI batch, `node scripts/test/check-batch-headroom.js
+--mode=test-substrates --batch=<b>` grades the newest results file of that batch:
+it FAILS on NEVER STARTED / CUT OFF rows or a span over the budget, and WARNS when
+the span passes `HEADROOM_WARN_FRACTION` of it — split the batch then, before it
+drops its tail. Runnable locally against any results on disk (no `--batch` = every
+batch's newest run).
+
+Batches select whole **categories** (the smoke rows are the one per-row exception) and live in `frontend/modules/tests/testBatches.js`.
+`fast` is the default batch: it absorbs every category no other batch claims, so
+a new test category still *runs* even if nobody classified it. Omitting `--batch`
+runs the whole roster — which for `test-substrates` currently exceeds the budget.
+
+A run that blows the budget no longer reports green: it prints
+`IN-APP RUN DID NOT FINISH ITS ROSTER`, naming the cause, the test cut off
+mid-flight, and the ones that never started, then fails. Results are stamped with
+their batch so `compare-runs.js` never diffs a `fast` run against a full one.
+`TEST_AUTO_START_TIMEOUT_MS=<ms> npm test …` shrinks the budget for one run (→ the
+page's `?autoStartTimeoutMs=`) — drive the budget expiry in minutes, not ten.
+
+### Reading a run
+Any `npm test` mode emits one line per in-app test as it finishes:
+```
+grep '^\[PROGRESS' <logfile>     # [PROGRESS 24/50] omsi-out-of-mana-loop-reset PASSED 1.5s
+```
+Use it to tell a run in flight from a stalled one. A red run prints an
+`IN-APP TEST(S) FAILED` block naming each failing test and the condition it died
+on, before Playwright's own output.
+A subscriber that threw inside the event bus fails the run even when every row is
+green (zero tolerance): an `IN-APP HANDLER ERRORS` block names the row(s). A flake's
+RATE comes from CI, not the box: dispatch `test-substrates-repeat.yml` (`-f test=<id>
+-f repeat=8`; its summary's first line is `Rate: k/N passed` — a green job only means
+it ran N times; a `--test` row takes WebGPU from its batch, so a wasm row needs no flag). Detail: `docs/json/developer/guides/testing-pipeline.md`.
+
+A poll that times out reports why, so a red run does not need a rerun to
+attribute:
+- `STUCK` — the poll ran its expected iterations; the condition really never
+  became true. **This one is a real defect.**
+- `STARVED` — the page did not get scheduled (app work on the main thread, or
+  machine load). Re-run solo before believing it.
+- `CHECK-BOUND` — the condition function itself ate the poll budget; fix the
+  check, not the code under test.
+
+### Comparing two runs
+```
+node scripts/test/compare-runs.js            # newest two runs
+node scripts/test/compare-runs.js --list     # what is on disk
+node scripts/test/compare-runs.js <prev> <curr>
+```
+Prints new failures (with the condition), fixed tests, roster changes, and
+duration outliers; exits 1 when the current run has failures the previous did
+not. This is the fast answer to "is this red mine?" — it replaces stashing the
+change and running a control. The default baseline is the newest earlier run of
+the **same mode** (results carry the mode that produced them); comparing a
+substrates run against a regression one would report the whole roster as
+changed.
+
+### JS unit tests (vitest) — a separate suite from `npm test`
+
+Everything above drives the BROWSER (Playwright + the in-app runner). The
+JavaScript unit tests are a different suite entirely, run by vitest, in three
+tiers:
+
+```
+npm run test:unit          # default tier — the fast one; excludes *.slow and *.calib
+npm run test:unit:slow     # heavy generate-and-test property suites, run SERIALLY
+npm run test:unit:calib    # demoted calibration sweeps, manual only, never in CI
+```
+
+The tiers exist because the slow suites are synchronous and CPU-bound: they pass
+alone but flake with `STACK_TRACE_ERROR` under the default run's parallelism,
+because vitest's `testTimeout` cannot interrupt synchronous work. `test:unit:slow`
+sets `fileParallelism: false` so each file gets the whole CPU.
+
+⚠ **`vitest.slow.config.js` carries deliberate exclusions with reasons in the
+file** — read the comment block before concluding a suite is missing. The
+runnerDemo slow battery is excluded by a ⚖ user ruling ahead of a runner
+redesign, and the patterns there are deliberately BROAD, so a newly written
+`runnerDemo/*.slow.test.js` would also be skipped. That is the opposite of
+`testBatches.js`'s default-batch rule, and it is why the config says so out loud.
+
+⛔ **⚖ RULING 52 (user, 2026-08-25): do NOT run the local unfiltered vitest.**
+- Pre-push check = `npx vitest run <the test paths you touched>`, bounded.
+- The SUITE number comes from CI at the pushed SHA, never from a local run:
+  `node scripts/procgen/ci-vitest-summary.mjs <sha> [--wait]`.
+- Any standing `suite: vitest (unfiltered)` row is QUOTED from CI, not measured
+  here.
 
 ### Configure Spoiler Settings
 ```
@@ -170,6 +353,7 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Exporter | [exporter/](exporter/README.md) |
 | World generator | [world_generator/](world_generator/README.md) |
 | Rule Builder | [rule_builder/](rule_builder/README.md) |
+| Procgen (pipeline, substrates, playback) | [docs/json/developer/procgen/](docs/json/developer/procgen/README.md) — start with architecture.md; gotchas.md preempts the common confusions |
 | Frontend | [frontend/](frontend/README.md) |
 | Claude Code | [CC/](CC/README.md) |
 | Planning docs | [CC/docs/plans/](CC/docs/plans/README.md) |

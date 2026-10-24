@@ -1,0 +1,12 @@
+BEFORE (base 3a53894a9a worktree, 187 files)
+  files 187 tests 5660 passed 5660 failed 0 skipped 0 pairs md5 04fd1344eeb9ded325f3180b37a31ec5
+AFTER default OFF (+fidelityCeremonyShove.test.js; ran before the census re-writes)
+  files 188 tests 5678 passed 5676 failed 2 skipped 0 pairs md5 b7149b5de0d618b23f9c8bbd2dd8d782
+  RED seedlingConstantsCensus.test.js | the mutants — each in a temp copy of the closure (b) PREDICTED GREEN: a new literal inside a cosmetic table
+  RED seedlingSolverSurface.test.js | the committed contract equals a fresh census (i) every static row's files and site counts match
+AFTER SEEDLING_CEREMONY_SHOVE=1 (the whole bounded set ON)
+  files 188 tests 5678 passed 5673 failed 4 skipped 1 pairs md5 726c47a74cd38ff041243727b3b41c8d
+  RED seedlingConstantsCensus.test.js | the mutants — each in a temp copy of the closure (b) PREDICTED GREEN: a new literal inside a cosmetic table
+  RED seedlingSolverSurface.test.js | the committed contract equals a fresh census (i) every static row's files and site counts match
+  RED fidelityStrikeLapse.test.js | STRIKELAPSE D1 — the collect stand and the ceremony arm `ceremonyBesideLiveBody`: a live body inside its pad, a dying body anywhere and an i-framed body refuse
+  RED fidelityStrikeLapse.test.js | STRIKELAPSE D1 — the collect stand and the ceremony arm ON: survey step 50 solves in 413 t with zero hits; the body dies on the walk, gone before the ceremony

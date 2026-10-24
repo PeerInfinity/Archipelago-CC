@@ -3,6 +3,8 @@
 -   **ID:** `metaGame`
 -   **Purpose:** An event orchestration system for creating scripted, narrative, or tutorial-like experiences. It operates by loading a configuration file that defines how to react to game events (like moving to a region) and what actions to perform in response (like showing a progress bar).
 
+> ⚠ **Deprecated** (2026-10-11). The Meta Game and Progress Bars panels and their MetaGame / ProgressBar modules are kept in the code but disabled in every launch mode, and are no longer maintained. See [Deprecated Panels](../../modules/README.md#deprecated-panels).
+
 ---
 
 #### Key Files

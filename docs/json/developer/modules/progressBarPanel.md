@@ -3,6 +3,8 @@
 -   **ID:** `progressBarPanel`
 -   **Purpose:** Provides a dedicated, standalone Golden Layout panel whose primary purpose is to act as a "host" for the UI elements created by the `ProgressBar` module.
 
+> ⚠ **Deprecated** (2026-10-11). The Meta Game and Progress Bars panels and their MetaGame / ProgressBar modules are kept in the code but disabled in every launch mode, and are no longer maintained. See [Deprecated Panels](../../modules/README.md#deprecated-panels).
+
 ---
 
 #### Key Files

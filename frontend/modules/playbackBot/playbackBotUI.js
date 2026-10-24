@@ -12,19 +12,51 @@
  * responsible for injecting dependencies; the bot itself is a plain
  * widget exercised directly by tests.
  *
- * Plan references:
- *   - NewDocs/plans/procedural-generation/debugging-tools.md (Phase 5)
- *   - NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackControlBar } from '../shared/playbackControlBar.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { planRoute, isRestartStep, restartTargetFor } from '../procgenCore/restartRoute.js';
+import { returnToMenu } from '../procgenCore/restartWarp.js';
+import { creditsOfHop, eventPathFinder, gameStateEventsOf, isBreakStep } from '../procgenCore/eventRoute.js';
+import { evaluateRule } from '../shared/ruleEngine.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { LoopModeRunner } from './loopModeRunner.js';
+import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
+import { WALK_ORDERS, WALK_ORDER_LABELS, chooseWalkTarget, frozenFindPath, rowMetaOf } from './walkOrder.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
 // any per-session bot state because it's a settings-level switch
 // (off by default; matches the behaviour the plan specifies).
 const LS_INTERCEPT_KEY = 'playbackBot_intercept';
+// LS key for the X1 maze collect policy. MAZE-ONLY and BOT-ONLY (S6):
+// human keyboard play always collects. Values: 'never' (default) |
+// 'always'. The default is what keeps existing playback byte-identical
+// (X1-R3) — with 'never' the bot's queue behaviour is exactly what it
+// was before X1, no detours, no extra walkTo commands.
+//
+// A mana-optimizing policy (decide per tile by which choice nets more
+// mana) is a recorded FUTURE item, not built: it needs cost/benefit
+// modelling and its own slice.
+const LS_MAZE_COLLECT_KEY = 'playbackBot_mazeCollect';
+// ⛓ LOOP MODE — what a loop does when its task is not affordable yet (⚖ the user: a setting). loopDriver.js.
+const LS_MANA_STRATEGY_KEY = 'playbackBot_manaStrategy';
+// ⛓ TARGET SOURCE — what the bot checks next: the sphere log's order (default), or ANY reachable location, the
+// old Timer panel's behaviour (the `timer` module's TimerLogic does the picking and pacing; see `timer` below).
+const LS_TARGET_SOURCE_KEY = 'playbackBot_targetSource';
+export const TARGET_SOURCES = Object.freeze({ sphere: 'sphere', reachable: 'reachable' });
+const TARGET_SOURCE_LABELS = Object.freeze({
+    sphere: 'Sphere log, in order',
+    reachable: 'Any reachable location (timer)',
+});
+// ⛓ WALK ORDER (bot-route-chooser) — which sphere-log row the WALK loop goes to next (walkOrder.js): the listed order
+// (default — the walk loop's old code path, untouched), or the cheapest route by Restarts then region transitions.
+const LS_WALK_ORDER_KEY = 'playbackBot_walkOrder';
+export { WALK_ORDERS };
+const COLLECT_NEVER = 'never';
+const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
 // panel stays bounded across long sessions.
 const DISPATCHER_LOG_CAP = 200;
@@ -71,12 +103,17 @@ export function buildLocationIndex(staticData) {
  *
  * Pure function — exported for testing.
  *
+ * ⛓ OBSTACLE EVENTS — `exclude` (a Set of location names) drops rows: the bot passes the slot's GAME-STATE events
+ * (`event_kind: 'game_state'`, a saved obstacle's flag). The sphere log orders them like pickups, but walking to one
+ * would break the obstacle EAGERLY: the game breaks it when a route passes through, or the route visits it first
+ * when it needs it (`procgenCore/eventRoute.js`), and the runtime's collector checks it on the game's flag.
+ *
  * Returns: [{ locationName, regionName, sphereIndex, fractionalIndex }, ...]
  *   sphereIndex / fractionalIndex are preserved verbatim so the bot's
  *   status line can show "Sphere 0.3 → ..." instead of just a queue
  *   index.
  */
-export function buildSphereQueue(sphereData, locationIndex) {
+export function buildSphereQueue(sphereData, locationIndex, { exclude = null } = {}) {
     const queue = [];
     if (!Array.isArray(sphereData)) return queue;
     if (!locationIndex || typeof locationIndex.get !== 'function') return queue;
@@ -84,6 +121,8 @@ export function buildSphereQueue(sphereData, locationIndex) {
         const locations = entry?.locations;
         if (!Array.isArray(locations)) continue;
         for (const locationName of locations) {
+            // ⛓ OBSTACLE EVENTS — a game-state event is never a queue row (break before first use, never eager).
+            if (exclude?.has(locationName)) continue;
             const regionName = locationIndex.get(locationName);
             if (!regionName) continue;
             queue.push({
@@ -120,6 +159,22 @@ export function formatSphereTag(entry) {
 // owned by PlaybackBotPanel; dispatcher receivers in playbackBot/index.js
 // reach it via `getActivePanel()?.getBot()`.
 
+
+/**
+ * ⛓ WAVE-6 CONSUMER — the words a NAMED STOP adds for an `arrival-inside-solid` the bot does not escape: what the
+ * refusal offered and why it was not taken (no Restart offer, `return_to_menu` off, or the entrance landed inside
+ * twice), and the other arrivals by AP exit.
+ */
+export function escapeStopWords(escape, region, flag) {
+    const solids = (escape?.solids ?? []).join(', ') || 'a solid';
+    const others = (escape?.arrivals ?? []).map((a) => a.exit);
+    const why = !escape?.restart ? 'the refusal offers no Restart'
+        : !flag ? 'the way out is the Menu\'s Restart, and this slot does not declare return_to_menu'
+            : 'the route landed inside it again after a Restart';
+    return `arrival-inside-solid: the player's box in ${region ?? '?'} is inside ${solids} and no walk leaves it; `
+        + `${why}${others.length ? `; other arrivals: ${others.join(', ')}` : ''}`;
+}
+
 export class PlaybackBotUI {
     constructor({
         getSphereData,
@@ -128,7 +183,72 @@ export class PlaybackBotUI {
         pathFinder = null,
         stateManagerProxy = null,
         getActiveController = null,
+        getPlayerId = null,
+        restart = null,
+        publish = null,
+        getCurrentRegion = null,
+        isLoopModeActive = null,
+        loopRunnerDeps = null,
+        timer = null,
     } = {}) {
+        // ⛓ TARGET SOURCE 'reachable' — the bot drives the timer module's TimerLogic instead of the sphere queue:
+        // `timer` is `{ begin, stop, quickCheck, isRunning, onRunningChanged(fn) → unsubscribe }` (the panel builds it
+        // from the timer module's public functions). Play = Begin, Step = Quick Check, Instant = Play (the timer has
+        // its own pacing: its check delay, the Console's /delay), Stop = Stop. Its checks carry `fromBot`, so the
+        // click intercept never swallows them.
+        this._timer = timer;
+        this._targetSource = loadTargetSourceFromLS();
+        this._walkOrder = loadWalkOrderFromLS();
+        // ⛓ WALK ORDER — the row a non-default order chose, kept until it is checked (the measured replay is sticky);
+        // and the run's route metrics, shown on their own line (never in the transition log).
+        this._chosen = null;
+        this._routeStats = { restarts: 0, transitions: 0, legs: 0 };
+        this._statsHead = null;
+        this._offTimerRunning = timer?.onRunningChanged?.((running) => this._onTimerRunningChanged(running)) ?? null;
+        // ⛓ LOOP MODE (loop-mode-bot S3) — in loop mode the bot plays by AUTHORING THE LOOPS QUEUE, one loop at a
+        // time (LoopModeRunner over loopDriver.js); `loopRunnerDeps` is what the runner reads from the live game.
+        this._loopRunnerDeps = loopRunnerDeps;
+        this._loopRunner = null;
+        this._manaStrategy = loadManaStrategyFromLS();
+        // ⛓ DIRECT PLAY (loop-mode-bot S1) — a region with no substrate and no controller (a plain rules.json:
+        // Adventure, any non-procgen preset without the Maze panel) is played straight through the dispatcher:
+        // `publish(eventName, payload)` sends the bot's own user:locationCheck / user:regionMove, one per tick.
+        // `getCurrentRegion` is gameState's — the AUTHORITY for where the player is (a gated move never lands,
+        // so the event alone says nothing); `isLoopModeActive` keeps direct play out of loop mode, where only
+        // the Loops queue may act honestly.
+        this._publish = publish;
+        this._getCurrentRegion = getCurrentRegion;
+        this._isLoopModeActive = isLoopModeActive;
+        this._directTimer = null;
+        this._instantMode = false;
+        // ⛓ RETURN TO MENU (procgenCore/restartRoute.js): the slot's player id (default '1') and the Menu panel's
+        // Restart (`menuPanel.restart`, the button's own path). A route whose first step is RESTART calls it; the
+        // bot never walks an edge for it.
+        this._getPlayerId = getPlayerId;
+        this._restart = restart;
+        // `{from, target}` while a Restart the bot asked for has not yet landed past the restart target.
+        this._restartPending = null;
+        // ⛓ WALK IDENTITY (b) — a Restart DEFERRED until the controller's playing leg reached its end
+        // (`settleBeforeRestart`): `{from, statusText}` while it waits; the token drops a wait a stop / reset / move outlived.
+        this._restartDeferred = null;
+        this._restartDeferToken = 0;
+        // Every deferral that resolved (`{from, ended, timedOut, waitedMs}`), for readouts and rows.
+        this._restartDeferrals = [];
+        // ⛓ WAVE-6 CONSUMER — exits whose crossing LANDED INSIDE A SOLID (an `arrival-inside-solid` walk failure):
+        // exit name → the refusal's other arrivals as AP exits. Every route avoids them (`planRoute`'s `avoid`).
+        this._avoidExits = new Map();
+        // The exit the last region move came through (`user:regionMove.exitName`), or null (a teleport / Restart).
+        this._lastArrivalExit = null;
+        // ⛓ WAVE-6 CONSUMER — escapes taken (`{from, exit, solids, at}`), for readouts and rows.
+        this._escapes = [];
+        // ⛓ OBSTACLE EVENTS — game-state event ITEMS a hop the bot took CREDITED (it passed through the obstacle at the
+        // event's own cost, so the game breaks it on that walk): held for routing until the collector sees the flag.
+        this._creditedEvents = new Set();
+        // ⛓ ROPE GOAL — the event location a goal-first BREAK step is walking to (`_takeBreakStep`), until a snapshot
+        // holds it checked (`onSnapshotUpdated`) or the bot publishes another target. null = no break step pending.
+        this._pendingBreak = null;
+        // The game-state event rows the queue left to the game (never walked eagerly), for readouts.
+        this._leftToGame = [];
         this._getSphereData = getSphereData;
         this._getStaticData = getStaticData;
         // Returns the loaded rules.json (the panel caches it from
@@ -176,6 +296,7 @@ export class PlaybackBotUI {
         // pickup event), and the cursor would stall.
         this._checkedSoFar = new Set();
         this._status = 'idle';
+        this._walkNote = null;
         // Append-only log of bot state transitions (one entry per
         // status change). _render paints the most-recent entries into
         // the widget so the user can scroll back through what the bot
@@ -196,6 +317,8 @@ export class PlaybackBotUI {
         // walkToExit instead. Persisted to LS so the choice survives
         // page reloads.
         this._interceptEnabled = loadInterceptFromLS();
+        // X1 collect policy (maze-only, bot-only, default 'never').
+        this._mazeCollect = loadMazeCollectFromLS();
         // Append-only log of dispatcher events the module received,
         // each tagged with the disposition (intercepted / propagated).
         // Surfaced in the panel so the user can see the seam working.
@@ -215,6 +338,9 @@ export class PlaybackBotUI {
     }
 
     destroy() {
+        this._loopRunner?.stop();
+        if (typeof this._offTimerRunning === 'function') this._offTimerRunning();
+        this._offTimerRunning = null;
         if (this._controlBar) this._controlBar.destroy();
         if (this._element?.parentNode) {
             this._element.parentNode.removeChild(this._element);
@@ -233,6 +359,10 @@ export class PlaybackBotUI {
 
     async play(rateHz = this._rate) {
         this._rate = rateHz;
+        if (this._usesTimer()) return this._timerBegin();
+        if (this._inLoopMode()) return this._playLoops();
+        this._instantMode = false;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -256,21 +386,44 @@ export class PlaybackBotUI {
         // Pause without clearing the cursor — calling play() again
         // resumes from the same head.
         this._isActive = false;
+        this._restartPending = null;
+        this._dropRestartDeferral();
+        this._cancelDirectTimer();
+        this._directOnce = false;
+        this._loopRunner?.stop();
+        if (this._timer?.isRunning?.()) this._timer.stop();
         this._dispatch('stop');
+        this._syncControlBar();
     }
 
-    step() {
+    async step() {
+        if (this._usesTimer()) return this._timerQuickCheck();
+        if (this._inLoopMode()) return this._playLoops({ once: true });
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
             this._dispatch('step');
             return;
         }
-        this._publishNextWalkTo();
+        // Awaited, as play() does: the walkTo is published after the
+        // snapshot flush, and the step must not tick before it lands.
+        // A direct-play step performs exactly one action.
+        if (this._isPlainRegion()) {
+            this._directOnce = true;
+            this._lastPublishedTarget = null;
+        }
+        await this._publishNextWalkTo();
         this._dispatch('step');
     }
 
     async instant() {
+        // The timer keeps its own check delay: Instant there is Play.
+        if (this._usesTimer()) return this._timerBegin();
+        // Loop mode keeps the user's Loops speed settings (⚖): Instant there is Play.
+        if (this._inLoopMode()) return this._playLoops();
+        this._instantMode = true;
+        this._syncCurrentRegion();
         this._ensureQueueBuilt();
         this._seedCheckedFromSnapshot();
         if (this._queue.length === 0) {
@@ -291,9 +444,27 @@ export class PlaybackBotUI {
         this._lastPublishedTarget = null;
         this._currentRegion = null;
         this._status = 'idle';
+        this._walkNote = null;
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
+        this._chosen = null;
+        this._routeStats = { restarts: 0, transitions: 0, legs: 0 };
+        this._statsHead = null;
+        this._restartPending = null;
+        this._dropRestartDeferral();
+        this._restartDeferrals = [];
+        this._avoidExits = new Map();
+        this._lastArrivalExit = null;
+        this._escapes = [];
+        this._creditedEvents = new Set();
+        this._pendingBreak = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
+        this._cancelDirectTimer();
+        this._directOnce = false;
+        this._instantMode = false;
+        this._loopRunner?.stop();
+        this._loopRunner = null;
+        if (this._timer?.isRunning?.()) this._timer.stop();
         this._dispatch('reset');
         this._render();
     }
@@ -316,10 +487,24 @@ export class PlaybackBotUI {
     getQueueLength() { return this._queue?.length ?? 0; }
     getCurrentRegion() { return this._currentRegion; }
     isActive() { return this._isActive; }
+
+    // Every write of the active flag reaches the control bar, so ⏹ Stop is enabled
+    // (and ▶ Play disabled) exactly while the bot plays, whichever path ended the walk.
+    get _isActive() { return this._active; }
+    set _isActive(value) {
+        this._active = !!value;
+        this._syncControlBar();
+    }
+
+    /** True while the sphere queue walks, a Loops run (a stepped loop included) is in flight, or the timer runs. */
+    _syncControlBar() {
+        this._controlBar?.setRunning(this._active || !!this._loopRunner?.isActive() || this._timerRunning());
+    }
     getLog() { return this._log.slice(); }
     isInterceptEnabled() { return this._interceptEnabled; }
     getDispatcherLog() { return this._dispatcherLog.slice(); }
     getCurrentHead() {
+        if (this._ordersByCost()) return this._chosen && !this._checkedSoFar.has(this._chosen.locationName) ? { ...this._chosen } : null;
         if (!this._queue || this._cursor >= this._queue.length) return null;
         return { ...this._queue[this._cursor] };
     }
@@ -467,10 +652,26 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
-        const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, targetRegion);
-        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
-            this._setStatus(`error: no path from ${this._currentRegion ?? '?'} to ${targetRegion}`);
+        const { route: path, why } = this._planRoute(this._currentRegion, targetRegion);
+        if (!path) {
+            this._setStatus(`error: ${why}`);
             this._pendingManualTarget = null;
+            this._render();
+            return;
+        }
+        const dest = target.kind === 'location'
+            ? `"${target.name}"`
+            : `(${targetRegion} ${target.x},${target.y})`;
+        if (isRestartStep(path.steps[1])) {
+            // The target stays pending: the arrival past the restart target re-enters this method.
+            const dropTarget = () => { this._pendingManualTarget = null; };
+            if (!this._takeRestart(`restarting (no walk from ${this._currentRegion}) → ${dest}`, dropTarget)) dropTarget();
+            this._render();
+            return;
+        }
+        if (isBreakStep(path.steps[1])) {
+            // ⛓ OBSTACLE EVENTS — the route needs an obstacle broken first: walk to it (the target stays pending).
+            this._takeBreakStep(path.steps[1], dest);
             this._render();
             return;
         }
@@ -481,10 +682,8 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        this._noteHopCredits(path.steps[1]);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
-        const dest = target.kind === 'location'
-            ? `"${target.name}"`
-            : `(${targetRegion} ${target.x},${target.y})`;
         this._setStatus(`routing via "${nextExit}" → ${dest}`);
         this._render();
     }
@@ -540,18 +739,55 @@ export class PlaybackBotUI {
     onLocationCheck(data) {
         const name = data?.locationName;
         if (!name) return;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — a user:locationCheck is a REQUEST: the loop-mode action gate (or the
+        // worker, for an inaccessible location) can refuse it after the bot heard it. The bot used to count it
+        // anyway and move its cursor past a location that was never checked (the JtA investigation, 2026-10-11:
+        // "8/23" with nothing checked). With a snapshot to ask, the check counts only once the snapshot holds it.
+        const proxy = this._stateManagerProxy;
+        if (proxy?.pingWorker && proxy?.getLatestStateSnapshot) {
+            this._flushSnapshot().then(() => {
+                const checked = proxy.getLatestStateSnapshot()?.checkedLocations;
+                if (Array.isArray(checked) && !checked.includes(name)) {
+                    if (this._walking()) {
+                        this._setStatus(`blocked: the check of "${name}" did not land`);
+                        this._render();
+                    }
+                    return;
+                }
+                this._acceptLocationCheck(name);
+            });
+            return;
+        }
+        this._acceptLocationCheck(name);
+    }
+
+    _acceptLocationCheck(name) {
         this._checkedSoFar.add(name);
         // If this matches the pending manual target, the route is
         // complete — clear it.
         if (this._pendingManualTarget?.name === name) {
             this._pendingManualTarget = null;
         }
-        if (this._isActive) this._publishNextWalkTo();
+        if (this._walking()) this._publishNextWalkTo();
         this._render();
     }
 
     onRegionMove(data) {
         const target = data?.targetRegion;
+        // ⛓ BLOCKED EVENTS (loop-mode-bot S1) — gameState moves the player synchronously inside the dispatcher chain
+        // the bot's receiver forwards on BEFORE calling here, so a move the gate swallowed has left the player where
+        // it was. Then nothing happened: keep the region and the cursor (the bot used to report "in" a region the
+        // player never reached).
+        const actual = this._getCurrentRegion?.() ?? null;
+        if (target && actual && actual !== target) {
+            if (this._walking()) {
+                this._setStatus(`blocked: the move to ${target} did not land (still in ${actual})`);
+                this._render();
+            }
+            return;
+        }
+        // ⛓ WALK IDENTITY (b) — the leg moved the player while a Restart waited on it: the route is re-planned from here.
+        if (target && this._restartDeferred && target !== this._restartDeferred.from) this._dropRestartDeferral();
         if (target) {
             // When the new region's substrate differs from the previous
             // region's, the previous substrate's controller would
@@ -559,13 +795,26 @@ export class PlaybackBotUI {
             // events tell it to stop). Explicitly stop it on the way
             // out so the only running clock is the active substrate's.
             const prevSubstrate = this._resolveSubstrateId(this._currentRegion);
+            if (this._walking() && this._currentRegion && target !== this._currentRegion) this._routeStats.transitions += 1;
             this._currentRegion = target;
+            this._lastArrivalExit = typeof data?.exitName === 'string' && data.exitName ? data.exitName : null;
             const newSubstrate = this._resolveSubstrateId(target);
             if (prevSubstrate && prevSubstrate !== newSubstrate) {
                 substrateRegistry.get(prevSubstrate)?.getPlaybackController?.()?.stop?.();
             }
         }
-        if (this._isActive) this._publishNextWalkTo();
+        // ⛓ RETURN TO MENU — the Restart the bot asked for: its reset move lands on the restart target (`Menu`) and
+        // the start hop carries the player on (procgenPlayer.retakeStartHop; the Seedling glue warps the game to
+        // seedlingStartSpawn). Plan nothing ON the restart target — route on from the arrival past it.
+        if (this._restartPending && target) {
+            if (target === this._restartPending.target) {
+                this._setStatus(`restarted at ${target} — waiting for the start hop`);
+                this._render();
+                return;
+            }
+            this._restartPending = null;
+        }
+        if (this._walking()) this._publishNextWalkTo();
         // Manual cross-region routes are progressed one exit at a
         // time; re-dispatch the pending target now that the bot is
         // in a new region (it'll either walk to the location or
@@ -585,7 +834,12 @@ export class PlaybackBotUI {
             return;
         }
         const idx = buildLocationIndex(staticData);
-        this._queue = buildSphereQueue(sphereData, idx);
+        const events = new Set(gameStateEventsOf(this._getRulesJson?.() ?? null, String(this._getPlayerId?.() ?? '1'))
+            .map((e) => e.name));
+        this._queue = buildSphereQueue(sphereData, idx, { exclude: events });
+        this._rowMeta = null;
+        this._chosen = null;
+        this._leftToGame = sphereData.flatMap((e) => (e?.locations ?? []).filter((n) => events.has(n)));
         this._cursor = 0;
         this._lastPublishedTarget = null;
     }
@@ -603,6 +857,199 @@ export class PlaybackBotUI {
      * Called at the play/step/instant entry points; mid-run checks
      * arrive through the normal event path.
      */
+    /** True while the bot walks the sphere queue itself (not while the Loop runner plays loops). */
+    _walking() {
+        return this._isActive && !this._loopRunner?.isActive();
+    }
+
+    /** Loop mode, and the panel gave the bot what the Loop runner needs. */
+    _inLoopMode() {
+        return !!this._loopRunnerDeps && !!this._isLoopModeActive?.();
+    }
+
+    getTargetSource() { return this._targetSource; }
+
+    /**
+     * Switch what the bot checks next. A running walk or timer stops first: the two never run together.
+     * 'reachable' is refused without a timer (the timer module is not loaded).
+     */
+    setTargetSource(source) {
+        if (!Object.values(TARGET_SOURCES).includes(source) || source === this._targetSource) return;
+        if (source === TARGET_SOURCES.reachable && !this._timer) return;     // no timer module loaded
+        if (this._isActive || this._loopRunner?.isActive() || this._timerRunning()) this.stop();
+        this._targetSource = source;
+        saveTargetSourceToLS(source);
+        if (this._targetSourceSelect) this._targetSourceSelect.value = source;
+        if (this._walkOrderSelect) this._walkOrderSelect.disabled = source !== TARGET_SOURCES.sphere;
+        this._status = 'idle';
+        this._render();
+    }
+
+    getWalkOrder() { return this._walkOrder; }
+
+    /**
+     * ⛓ WALK ORDER — which sphere-log row the walk loop goes to next (`walkOrder.js`). A running walk stops first, as
+     * `setTargetSource` does; the next Play chooses afresh. Loop mode keeps the sphere order whatever this says.
+     */
+    setWalkOrder(order) {
+        if (!Object.values(WALK_ORDERS).includes(order) || order === this._walkOrder) return;
+        if (this._isActive && !this._loopRunner?.isActive()) this.stop();
+        this._walkOrder = order;
+        this._chosen = null;
+        saveWalkOrderToLS(order);
+        if (this._walkOrderSelect) this._walkOrderSelect.value = order;
+        this._render();
+    }
+
+    /** The run's route metrics: Restarts taken, region transitions walked, legs (targets) begun. */
+    getRouteStats() { return { ...this._routeStats }; }
+
+    /** A non-default walk order is in force (the walk loop's sphere source only). */
+    _ordersByCost() {
+        return this._walkOrder !== WALK_ORDERS.inOrder && this._targetSource === TARGET_SOURCES.sphere;
+    }
+
+    /**
+     * ⛓ WALK ORDER — the next target by route cost: the row chosen earlier while it is unchecked (sticky), else
+     * `chooseWalkTarget` over the queue, priced by `planRoute` on ONE accessibility map of the flushed snapshot.
+     */
+    _chooseByCost() {
+        if (this._chosen && !this._checkedSoFar.has(this._chosen.locationName)) return this._chosen;
+        this._chosen = null;
+        if (!this._queue.some((e) => !this._checkedSoFar.has(e.locationName))) return null;
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const staticData = this._getStaticData?.() ?? null;
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        let snapshotInterface = null;
+        try { snapshotInterface = snapshot && staticData ? createSnapshotInterface(snapshot, staticData) : null; } catch { snapshotInterface = null; }
+        const findPath = frozenFindPath(this._pathFinder, { staticData, snapshot, snapshotInterface });
+        if (!this._rowMeta) this._rowMeta = rowMetaOf(rules, playerId);
+        const here = this._currentRegion;
+        const price = (entry) => {
+            if (!here) return { hops: 0, restart: false };
+            if (entry.regionName === here) return { hops: 0, restart: false };
+            const { route, kind } = this._planRoute(here, entry.regionName, findPath);
+            return route ? { hops: route.length, restart: kind === 'restart' } : null;
+        };
+        const home = returnToMenu(rules, playerId) ? this._restartHome(rules, playerId) : null;
+        const { entry, swept } = chooseWalkTarget({
+            order: this._walkOrder,
+            queue: this._queue,
+            checked: this._checkedSoFar,
+            isAccessible: snapshotInterface ? (name) => {
+                try { return snapshotInterface.isLocationAccessible(name) === true; } catch { return false; }
+            } : null,
+            meta: this._rowMeta,
+            price,
+            inPocket: () => !!home && !!here && here !== home && !findPath(here, home),
+        });
+        if (swept && entry) this._log.push(`sweeping "${entry.locationName}" before the Restart out of ${here}`);
+        this._chosen = entry;
+        return entry;
+    }
+
+    /** Where a Restart walks on from: the restart target's `GameStart` exit (its first exit), or null. */
+    _restartHome(rules, playerId) {
+        const target = restartTargetFor(rules, playerId);
+        const exits = rules?.regions?.[playerId]?.[target]?.exits ?? [];
+        return (exits.find((e) => e?.name === 'GameStart') ?? exits[0])?.connected_region ?? null;
+    }
+
+    /** The 'reachable' source, and the panel wired a timer. */
+    /** The panel wired a timer: the 'reachable' source is available. */
+    hasTimer() {
+        return !!this._timer;
+    }
+
+    _usesTimer() {
+        return this._targetSource === TARGET_SOURCES.reachable && !!this._timer;
+    }
+
+    _timerRunning() {
+        return !!this._timer?.isRunning?.();
+    }
+
+    _timerBegin() {
+        if (!this._timerRunning()) this._timer.begin();
+        this._syncControlBar();
+    }
+
+    async _timerQuickCheck() {
+        const sent = await this._timer.quickCheck();
+        this._setStatus(sent ? 'checked one reachable location' : 'no unchecked location is reachable');
+        this._render();
+    }
+
+    _onTimerRunningChanged(running) {
+        if (this._targetSource !== TARGET_SOURCES.reachable) return;
+        this._setStatus(running ? 'checking reachable locations…' : 'stopped');
+        this._syncControlBar();
+        this._render();
+    }
+
+    getManaStrategy() { return this._manaStrategy; }
+
+    setManaStrategy(strategy) {
+        if (!Object.values(MANA_STRATEGIES).includes(strategy)) return;
+        this._manaStrategy = strategy;
+        saveManaStrategyToLS(strategy);
+        if (this._manaStrategySelect) this._manaStrategySelect.value = strategy;
+    }
+
+    /** The Loop runner (made on first use, and again after a reset). */
+    getLoopRunner() {
+        if (!this._loopRunner && this._loopRunnerDeps) {
+            this._loopRunner = new LoopModeRunner({
+                ...this._loopRunnerDeps,
+                flush: () => this._flushSnapshot(),
+                nextTarget: () => this._nextLoopTarget(),
+                getStrategy: () => this._manaStrategy,
+                onStatus: (text) => { this._setStatus(text); this._render(); },
+                onFinished: () => { this._isActive = false; this._render(); },
+            });
+        }
+        return this._loopRunner;
+    }
+
+    /**
+     * ⛓ LOOP MODE — play loops: the runner writes one loop at a time into the Loops queue and runs it, until every
+     * sphere-log location is checked (or the user stops it — it never gives up). `once` plays a single loop.
+     */
+    async _playLoops({ once = false } = {}) {
+        this._ensureQueueBuilt();
+        if (!this._queue.length) {
+            this._setStatus('no sphere log');
+            this._render();
+            return;
+        }
+        const runner = this.getLoopRunner();
+        if (runner.isActive()) return;
+        this._isActive = !once;
+        runner.start({ once });
+        this._syncControlBar();
+        this._render();
+    }
+
+    /** The next sphere-log location the snapshot does not hold as checked, or null when all are. */
+    _nextLoopTarget() {
+        const checked = new Set(this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? []);
+        for (const name of checked) this._checkedSoFar.add(name);
+        this._advanceCursor();
+        const head = this._queue?.[this._cursor];
+        return head ? { locationName: head.locationName, regionName: head.regionName } : null;
+    }
+
+    /**
+     * Seed `_currentRegion` from gameState when the bot has not heard a move yet: a plain preset's start region
+     * arrives before the panel's receivers are wired, and a direct-play run has no substrate to report it.
+     */
+    _syncCurrentRegion() {
+        if (this._currentRegion) return;
+        const here = this._getCurrentRegion?.() ?? null;
+        if (here) this._currentRegion = here;
+    }
+
     _seedCheckedFromSnapshot() {
         const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
         if (!Array.isArray(checked)) return;
@@ -614,6 +1061,137 @@ export class PlaybackBotUI {
      * `_checkedSoFar`. Called both before issuing each walkTo and
      * after each event so the cursor never sits on a stale head.
      */
+    /**
+     * The next consumable / mana tile to detour to, or null.
+     *
+     * Returns null unconditionally under the default 'never' policy, so
+     * the queue behaves exactly as it did before X1 (X1-R3) — no extra
+     * controller calls, no extra walkTo commands, byte-identical
+     * playback.
+     *
+     * The controller slot is OPTIONAL: substrates with no consumable
+     * tiles don't implement listUncollectedConsumables, and the policy
+     * degrades to a no-op without the bot needing to know which
+     * substrate it is driving.
+     */
+    _nextCollectDetour() {
+        if (this._mazeCollect !== COLLECT_ALWAYS) return null;
+        const controller = this._resolveController();
+        const list = controller?.listUncollectedConsumables;
+        if (typeof list !== 'function') return null;
+        try {
+            const tiles = list();
+            return Array.isArray(tiles) && tiles.length > 0 ? tiles[0] : null;
+        } catch (_e) {
+            return null;
+        }
+    }
+
+    /** Current collect policy ('never' | 'always'). */
+    getMazeCollectPolicy() {
+        return this._mazeCollect;
+    }
+
+    /**
+     * Set the collect policy and persist it. Anything other than
+     * 'always' normalises to 'never' so a bad LS value or a typo can't
+     * silently enable detours.
+     */
+    setMazeCollectPolicy(policy) {
+        this._mazeCollect = policy === COLLECT_ALWAYS ? COLLECT_ALWAYS : COLLECT_NEVER;
+        saveMazeCollectToLS(this._mazeCollect);
+        this._render();
+        return this._mazeCollect;
+    }
+
+    /**
+     * A consumable / mana tile was consumed (maze:consumableCollected).
+     *
+     * Needed because these tiles fire neither user:locationCheck nor
+     * user:regionMove — the two events that normally advance the bot. On
+     * a collect detour the bot would otherwise reach the tile and stall
+     * with nothing to wake it. No-op when idle or when detours are off.
+     */
+    onWalkFailed(data) {
+        // ⛓ Seedling JS J2 — `playback:walkFailed`: a controller that accepted a
+        // walkTo and only LATER found it cannot be walked (its runtime came up
+        // as one without feet; the live walk gave up) says so here, so the bot
+        // shows a terminal, named status instead of waiting for a check or a
+        // crossing that will not come. Same wording as a synchronous refusal.
+        const reason = data?.reason;
+        if (typeof reason !== 'string' || !reason) return;
+        const t = data.target ?? {};
+        const tail = t.kind === 'tile' ? `${t.x},${t.y}` : `${t.name}`;
+        this._lastPublishedTarget = null;
+        if (data.escape && this._escapeInsideSolid(data.escape)) { this._render(); return; }
+        this._setStatus(`error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${t.kind ?? 'target'} "${tail}" — ${reason}`
+            + (data.escape ? ` — ${escapeStopWords(data.escape, this._currentRegion, this._escapeFlag())}` : ''));
+        this._render();
+    }
+
+    /** ⛓ WAVE-6 CONSUMER — does the slot declare `return_to_menu` (the Restart a refusal's `wayOut` offers)? */
+    _escapeFlag() {
+        return returnToMenu(this._getRulesJson?.() ?? null, String(this._getPlayerId?.() ?? '1'));
+    }
+
+    /**
+     * ⛓ WAVE-6 CONSUMER — the walk failed because the player's box ARRIVED INSIDE A SOLID (fidelity ARRIVAL's
+     * `arrival-inside-solid`; ⚖ the user: no swing from inside). No walk leaves a solid, so the way out is the
+     * refusal's `wayOut`: when it offers the Menu's Restart and the slot declares `return_to_menu`, take the
+     * EXISTING Restart step (`_takeRestart`, §5.29) and remember the entrance that landed inside, so every later
+     * route avoids it and goes by one of the refusal's OTHER arrivals (`planRoute`'s `avoid`). Returns false
+     * (the caller's named stop) without the flag, without a Restart offer, or when the same entrance landed
+     * inside twice (a route that cannot avoid it is a loop, not a way out).
+     */
+    _escapeInsideSolid(escape) {
+        const from = this._currentRegion;
+        const entered = this._lastArrivalExit;
+        if (!escape.restart || !this._escapeFlag()) return false;
+        const at = escape.at ?? null;
+        const again = this._escapes.some((e) => (entered && e.exit === entered)
+            || (at && e.at && e.from === from && e.at.level === at.level && e.at.x === at.x && e.at.y === at.y));
+        if (again) return false;
+        if (entered) this._avoidExits.set(entered, (escape.arrivals ?? []).filter((a) => a.exit !== entered));
+        this._escapes.push({ from, exit: entered, solids: [...(escape.solids ?? [])], at });
+        const ok = this._takeRestart(`escaping arrival-inside-solid (${(escape.solids ?? []).join(', ') || 'a solid'}`
+            + `${escape.at ? ` at L${escape.at.level} (${escape.at.x},${escape.at.y})` : ''}) in ${from ?? '?'} — Restart`
+            + `${entered ? `, then routing around "${entered}"` : ''}`, () => { this._isActive = false; this._dispatch('stop'); });
+        if (!ok) {
+            this._isActive = false;
+            this._dispatch('stop');
+        }
+        return true;
+    }
+
+    /** ⛓ WAVE-6 CONSUMER — the escapes taken (`{from, exit, solids, at}`) and the exits now avoided. */
+    getEscapes() {
+        return { escapes: this._escapes.map((e) => ({ ...e })), avoided: [...this._avoidExits.keys()] };
+    }
+
+    /**
+     * ⛓ solver-walk S2 — `playback:walkNote`: a controller's live walk has a
+     * note beside the bot's status (the Seedling JS runtime's solver mode:
+     * `solving… (budget 5 s)` while a worker thinks and the room is held, a
+     * decline, a retry). Shown after the status, logged once; `note: null`
+     * clears it. Never terminal — that is `onWalkFailed`.
+     */
+    onWalkNote(data) {
+        const note = typeof data?.note === 'string' && data.note ? data.note : null;
+        if (note === this._walkNote) return;
+        this._walkNote = note;
+        if (note && this._log[this._log.length - 1] !== `${this._status} — ${note}`) this._log.push(`${this._status} — ${note}`);
+        this._render();
+    }
+
+    /** ⛓ S2 — the live walk's note, or null. */
+    getWalkNote() { return this._walkNote ?? null; }
+
+    onConsumableCollected() {
+        if (!this._isActive) return;
+        if (this._mazeCollect !== COLLECT_ALWAYS) return;
+        this._publishNextWalkTo();
+    }
+
     _advanceCursor() {
         if (!this._queue) return;
         while (this._cursor < this._queue.length
@@ -630,27 +1208,70 @@ export class PlaybackBotUI {
      */
     async _publishNextWalkTo() {
         if (!this._queue) return;
-        this._advanceCursor();
-        const head = this._queue[this._cursor];
+        // Flush any pending worker snapshot FIRST, before any branch decides.
+        // Every branch reads it: the cross-region one through PathFinder (a
+        // just-unlocked region would read 'unreachable'), and the same-region
+        // one through the controller — the Maze panel hands the snapshot's
+        // inventory to its tile planner on each walkTo, so a walk published
+        // right after a pickup planned without the key just picked up and
+        // stuck: "walkToTile: no path … under current inventory" (the
+        // tutorial drafts' procgen-shuffled-spiral and procgen-grid-growth,
+        // 2026-10-10: the next location sat behind the door that key opens).
+        // Everything below is decided AFTER the round trip, from the state as
+        // it is then — a check or a crossing may have landed meanwhile.
+        const flush = this._flushSnapshot();
+        if (flush) {
+            await flush;
+            if (!this._queue) return;
+        }
+        const byCost = this._ordersByCost();
+        let head;
+        if (byCost) {
+            head = this._chooseByCost();
+        } else {
+            this._advanceCursor();
+            head = this._queue[this._cursor];
+        }
+        if (head && head.locationName !== this._statsHead) {
+            this._statsHead = head.locationName;
+            this._routeStats.legs += 1;
+        }
         if (!head) {
             // Queue drained — terminate cleanly. The bot publishes a
             // single 'stop' so the visualizer halts; no greedy
             // fallback runs because controlled mode is sticky on the
             // visualizer side.
-            this._setStatus(`finished — ${this._cursor} location${this._cursor === 1 ? '' : 's'} visited`);
+            const visited = byCost ? this._queue.length : this._cursor;
+            this._setStatus(`finished — ${visited} location${visited === 1 ? '' : 's'} visited`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._dispatch('stop');
             this._render();
             return;
         }
-        const progress = `(${this._cursor + 1}/${this._queue.length})`;
+        const progress = byCost
+            ? `(${this._queue.filter((e) => this._checkedSoFar.has(e.locationName)).length + 1}/${this._queue.length})`
+            : `(${this._cursor + 1}/${this._queue.length})`;
         const sphereTag = formatSphereTag(head);
         if (!this._currentRegion) {
             // First user:regionMove hasn't arrived yet — wait for it.
             // Don't fail; just keep idle. The next event will retrigger
             // this method.
             this._setStatus(`${sphereTag}waiting for region ${progress}`);
+            this._render();
+            return;
+        }
+        // X1 collect detour (opt-in, X1-R3). Before heading for the
+        // queue head, sweep any uncollected consumable / mana tiles in
+        // the CURRENT region. Detours only ever LENGTHEN playback — they
+        // never change which locations get checked or in what order, so
+        // winnability is untouched (D5). Each collected tile drops out
+        // of the list, so successive calls walk the sweep down to empty
+        // and then fall through to the head as normal.
+        const detour = this._nextCollectDetour();
+        if (detour) {
+            this._setStatus(`${sphereTag}collecting tile (${detour.x},${detour.y}) ${progress}`);
+            this._publishWalkTo({ kind: 'tile', x: detour.x, y: detour.y });
             this._render();
             return;
         }
@@ -661,31 +1282,27 @@ export class PlaybackBotUI {
             return;
         }
         // Cross-region: route via the PathFinder against the real
-        // snapshot, so accessibility reflects keys collected so far.
-        // Flush any pending worker snapshot first — without this, the
-        // bot can race ahead of the just-collected pickup, leaving the
-        // newly-unlocked region marked 'unreachable' in the snapshot
-        // and PathFinder unable to find a route through it.
-        const flush = this._flushSnapshot();
-        if (flush) await flush;
-        // Re-check current region after the flush: an onRegionMove
-        // may have fired while we were awaiting the worker round-trip
-        // (visualizer crossed an exit on its own clock), and the
-        // sphere's target region may now match — in which case we
-        // should walk to the location, not call PathFinder with
-        // (X, X) and treat its zero-length return as an error.
-        if (head.regionName === this._currentRegion) {
-            this._setStatus(`${sphereTag}walking to "${head.locationName}" ${progress}`);
-            this._publishWalkTo({ kind: 'location', name: head.locationName });
-            this._render();
-            return;
-        }
-        const path = this._pathFinder?.findPathWithExits?.(this._currentRegion, head.regionName);
-        if (!path || !Array.isArray(path.steps) || path.steps.length < 2) {
-            this._setStatus(`error: no path from ${this._currentRegion} to ${head.regionName}`);
+        // snapshot (flushed above), so accessibility reflects keys
+        // collected so far.
+        const { route: path, why } = this._planRoute(this._currentRegion, head.regionName);
+        if (!path) {
+            this._setStatus(`error: ${why}`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._dispatch('stop');
+            this._render();
+            return;
+        }
+        if (isRestartStep(path.steps[1])) {
+            // ⛓ RETURN TO MENU — no walk from here, one from the start: Restart, then route on from the arrival.
+            const halt = () => { this._isActive = false; this._dispatch('stop'); };
+            if (!this._takeRestart(`${sphereTag}restarting (no walk from ${this._currentRegion}) → ${head.regionName} ${progress}`, halt)) halt();
+            this._render();
+            return;
+        }
+        if (isBreakStep(path.steps[1])) {
+            // ⛓ OBSTACLE EVENTS — break before first use: the route needs this obstacle broken, so it is visited FIRST.
+            this._takeBreakStep(path.steps[1], `${head.regionName} ${progress}`, sphereTag);
             this._render();
             return;
         }
@@ -698,10 +1315,200 @@ export class PlaybackBotUI {
             this._render();
             return;
         }
+        this._noteHopCredits(path.steps[1]);
         this._setStatus(`${sphereTag}routing via "${nextExit}" → ${head.regionName} ${progress}`);
         this._publishWalkTo({ kind: 'exit', name: nextExit });
         this._render();
     }
+
+    /**
+     * ⛓ RETURN TO MENU — the bot's route from `from` to `to` (procgenCore/restartRoute.js): the graph's walk, or,
+     * when the slot declares `return_to_menu` and no walk exists, a route that begins with RESTART. Without the
+     * flag the refusal is today's `no path from <from> to <to>`.
+     */
+    _planRoute(from, to, findPath = null) {
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const eventPath = this._eventPath(rules, playerId);
+        return planRoute({
+            from,
+            to,
+            // ⛓ WALK ORDER — a choice prices every candidate over one frozen map (`walkOrder.frozenFindPath`).
+            findPath: findPath ?? ((a, b) => this._pathFinder?.findPathWithExits?.(a, b) ?? null),
+            rules,
+            playerId,
+            // ⛓ WAVE-6 CONSUMER — never back through an entrance that landed inside a solid.
+            ...(this._avoidExits.size > 0 ? { avoid: this._avoidExits } : {}),
+            // ⛓ OBSTACLE EVENTS — where the graph has no walk, meet the game-state events the route needs.
+            ...(eventPath ? { eventPath } : {}),
+        });
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — the BREAK-BEFORE-FIRST-USE walk for `planRoute` (`procgenCore/eventRoute.js`): crossing
+     * credit and goal-first BREAK steps, judged against the state manager's latest snapshot with the events the bot's
+     * own hops credited counted as held. null without a snapshot or without game-state events in the slot.
+     */
+    _eventPath(rules, playerId) {
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        const staticData = this._getStaticData?.() ?? null;
+        if (!snapshot || !staticData) return null;
+        const interfaces = new Map();
+        const ruleHolds = (rule, extra) => {
+            const names = [...new Set([...this._creditedEvents, ...(extra ?? [])])].sort();
+            const key = names.join('\u0000');
+            if (!interfaces.has(key)) {
+                const inventory = { ...(snapshot.inventory ?? {}) };
+                for (const n of names) inventory[n] = Math.max(1, Number(inventory[n] ?? 0));
+                interfaces.set(key, createSnapshotInterface({ ...snapshot, inventory }, staticData));
+            }
+            try { return evaluateRule(rule, interfaces.get(key)) === true; } catch { return false; }
+        };
+        const held = () => [...new Set([...this._creditedEvents,
+            ...Object.keys(snapshot.inventory ?? {}).filter((n) => Number(snapshot.inventory[n]) > 0)])];
+        return eventPathFinder({ rules, playerId, ruleHolds, held });
+    }
+
+    /** ⛓ OBSTACLE EVENTS — remember the events the hop about to be walked CREDITS (the game breaks them on it). */
+    _noteHopCredits(step) {
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const events = gameStateEventsOf(rules, playerId);
+        if (events.length === 0) return;
+        for (const e of creditsOfHop({ regions: rules?.regions?.[playerId], events, from: this._currentRegion, step,
+            held: [...this._creditedEvents] })) {
+            this._creditedEvents.add(e.item);
+            this._log.push(`crossing "${step.exitUsed}" passes through ${e.obstacle?.class ?? 'the obstacle'}`
+                + `@${e.obstacle?.x},${e.obstacle?.y} at its own cost — credits "${e.name}"`);
+        }
+    }
+
+    /**
+     * ⛓ OBSTACLE EVENTS — a goal-first BREAK step: walk to the event location (the controller maps it to the
+     * obstacle, or refuses it by name). The route's target stays where it was; the next region move or check
+     * re-plans, and once the game's flag is collected the gated walk exists.
+     */
+    _takeBreakStep(step, toward, sphereTag = '') {
+        const ev = step.event;
+        this._setStatus(`${sphereTag}breaking ${ev.obstacle?.class ?? 'an obstacle'}@${ev.obstacle?.x},${ev.obstacle?.y} `
+            + `first (${ev.eventId ?? ev.name}) — the route to ${toward} needs it`);
+        this._publishWalkTo({ kind: 'location', name: ev.name });
+        this._pendingBreak = ev.name;
+    }
+
+    /**
+     * ⛓ ROPE GOAL — `stateManager:snapshotUpdated`: the re-plan after a goal-first BREAK step. The game's flag collects
+     * the event as a LOCAL check (`seedlingRegionGlue._eventCollect`), never a `user:locationCheck`, so neither of the
+     * two events that advance the bot (`onLocationCheck`, `onRegionMove`) comes — the walk ended on the broken obstacle
+     * and nothing asked for the next one (measured: L16's rope cut and collected, then the bot silent to the budget).
+     * The snapshot that holds the event location checked is the signal; any other snapshot is a no-op.
+     */
+    onSnapshotUpdated() {
+        const name = this._pendingBreak;
+        if (!name || !this._walking()) return;
+        const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
+        if (!Array.isArray(checked) || !checked.includes(name)) return;
+        this._pendingBreak = null;
+        this._log.push(`"${name}" collected by the game — re-planning the route`);
+        this._publishNextWalkTo();
+        this._render();
+    }
+
+    /** ⛓ OBSTACLE EVENTS — the queue rows left to the game, and the events the bot's hops credited. */
+    getEventState() {
+        return { leftToGame: [...this._leftToGame], credited: [...this._creditedEvents] };
+    }
+
+    /**
+     * Execute a RESTART step: the Menu panel's Restart (the button's own path — a reset move to the restart
+     * target, then `menuPanel:restarted`, which the substrate answers with the start hop). Never an exit walkTo.
+     * Returns false (with a named status) when no Restart is wired or it did not move the player.
+     *
+     * ⛓ WALK IDENTITY (b) — never at a wall-clock tick of a PLAYING leg: the active controller's
+     * `settleBeforeRestart()` answers null (restart now — every controller without it, and one with nothing
+     * playing) or a promise that resolves when its leg reached its end. The Restart is then taken in that turn;
+     * meanwhile `_takeRestart` answers true (the step is pending) and `onFail` is the caller's own stop for a
+     * Restart that, taken later, did not answer. A stop / reset / region move during the wait drops it.
+     */
+    _takeRestart(statusText, onFail = null) {
+        if (typeof this._restart !== 'function') {
+            this._setStatus(`error: ${this._currentRegion ?? '?'}: the route needs a Restart and no Restart is wired`);
+            return false;
+        }
+        const controller = this._resolveController();
+        let wait = null;
+        try {
+            wait = typeof controller?.settleBeforeRestart === 'function' ? controller.settleBeforeRestart() : null;
+        } catch (_e) {
+            wait = null;
+        }
+        if (!wait || typeof wait.then !== 'function') return this._restartNow(statusText);
+        const token = ++this._restartDeferToken;
+        const from = this._currentRegion;
+        this._restartDeferred = { from, statusText };
+        this._lastPublishedTarget = null;
+        this._setStatus(`${statusText} — waiting for the leg to reach its end`);
+        wait.then((r) => r, () => null).then((r) => {
+            if (token !== this._restartDeferToken) return;
+            this._restartDeferred = null;
+            const ended = r?.ended === true;
+            this._restartDeferrals.push({ from, ended, timedOut: r?.timedOut === true, waitedMs: r?.waitedMs ?? null });
+            const ok = this._restartNow(ended ? statusText : `${statusText} (the leg did not reach its end: cut)`);
+            if (!ok && typeof onFail === 'function') onFail();
+            this._render();
+        });
+        return true;
+    }
+
+    /** ⛓ WALK IDENTITY (b) — drop a deferred Restart (its wait resolves into nothing). */
+    _dropRestartDeferral() {
+        this._restartDeferToken += 1;
+        this._restartDeferred = null;
+    }
+
+    /** The Restart itself (the Menu panel's), in this turn. */
+    _restartNow(statusText) {
+        const from = this._currentRegion;
+        const rules = this._getRulesJson?.() ?? null;
+        const target = restartTargetFor(rules, this._getPlayerId?.() ?? '1');
+        this._lastPublishedTarget = null;
+        this._walkNote = null;
+        this._setStatus(statusText);
+        // Pending BEFORE the call: the reset move and the start hop may be delivered synchronously inside it.
+        this._restartPending = { from, target };
+        let result = null;
+        try {
+            result = this._restart();
+        } catch (e) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart threw — ${e?.message ?? e}`);
+            return false;
+        }
+        if (!result) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: the route needs a Restart and the Menu panel's Restart did not answer`);
+            return false;
+        }
+        if (result.mode === 'world' && !result.target) {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart has no target (no declared start region)`);
+            return false;
+        }
+        if (result?.mode && result.mode !== 'world') {
+            this._restartPending = null;
+            this._setStatus(`error: ${from ?? '?'}: Restart answered mode "${result.mode}", which does not return to the menu`);
+            return false;
+        }
+        this._routeStats.restarts += 1;
+        return true;
+    }
+
+    /** ⛓ RETURN TO MENU — the Restart the bot is waiting on (`{from, target}`), or null. */
+    getRestartPending() { return this._restartPending ? { ...this._restartPending } : null; }
+
+    /** ⛓ WALK IDENTITY (b) — the Restart waiting on the leg (`{from, statusText}`), or null; and the resolved waits. */
+    getRestartDeferred() { return this._restartDeferred ? { ...this._restartDeferred } : null; }
+    getRestartDeferrals() { return this._restartDeferrals.map((d) => ({ ...d })); }
 
     /**
      * Round-trip a ping through the stateManager worker so any pending
@@ -719,6 +1526,8 @@ export class PlaybackBotUI {
     }
 
     _publishWalkTo(target) {
+        // ⛓ ROPE GOAL — any other target ends the pending BREAK step (the route moved on without it).
+        if (this._pendingBreak !== null && !(target.kind === 'location' && target.name === this._pendingBreak)) this._pendingBreak = null;
         // De-dupe identical consecutive walkTo: an event mid-leg can
         // re-enter _publishNextWalkTo without changing the head, and
         // re-issuing the same walkTo would just have the controller
@@ -735,7 +1544,53 @@ export class PlaybackBotUI {
         const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
-        this._dispatch('walkTo', [target]);
+        // ⛓ S2 — a new target: the last walk's note is stale.
+        this._walkNote = null;
+        if (this._isPlainRegion() && !this._resolveController()) {
+            this._directAct(target, tail);
+            return;
+        }
+        // A substrate whose registry entry declares NO controller (flash and
+        // both Seedling entries today) can never take this target. `_dispatch`
+        // reads that as "no panel mounted yet" and returns undefined, so the
+        // bot used to wait forever for a check that could never come — the
+        // same silent stall as the unresolved-target case below. A controller
+        // that is declared but returns null (a panel still mounting) is
+        // transient and keeps the silent path.
+        const undeclared = this._undeclaredControllerSubstrate();
+        if (undeclared) {
+            this._setStatus(
+                `error: ${this._currentRegion ?? '?'} is a ${undeclared} region, and `
+                + `${undeclared} has no playback controller — the bot cannot walk it`,
+            );
+            return;
+        }
+        // A controller that cannot RESOLVE the target reports false. That
+        // happens when the router picks an exit the substrate has no tile for
+        // — e.g. a region-atlas crossing the maze projection deliberately
+        // walled, which the AP graph still lists. Before this the panel logged
+        // a console.warn and returned, the visualizer got no target, and the
+        // bot waited for a transition that could never come: a SILENT STALL,
+        // indistinguishable from slow progress. Make it terminal and named.
+        if (this._dispatch('walkTo', [target]) === false) {
+            // ⛓ DIRECT PLAY — a plain region's controller (the Maze Room panel, mounted for another preset) has no
+            // tile for it: the bot plays the region itself.
+            if (this._isPlainRegion()) {
+                this._directAct(target, tail);
+                return;
+            }
+            // ⛓ Seedling JS J2 — a controller that knows WHY it refused says
+            // so (`lastRefusal`): e.g. a generated Seedling room under the wasm
+            // runtime, which has no feet. Without one, the router's case.
+            const why = this._resolveController()?.lastRefusal;
+            this._setStatus(typeof why === 'string' && why
+                ? `error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${target.kind} "${tail}" — ${why}`
+                : `error: ${this._currentRegion ?? '?'} has no tile for `
+                + `${target.kind} "${tail}" — the router picked a target the `
+                + 'substrate cannot reach',
+            );
+            return;
+        }
         // Make sure the controller's clock is ticking. The sphere
         // queue's play() pattern is "set target, then start clock";
         // manual walkTos (intercept, manual input, cross-region
@@ -743,6 +1598,70 @@ export class PlaybackBotUI {
         // executes the plan instead of sitting on a target with a
         // stopped clock.
         this._dispatch('play', [this._rate]);
+    }
+
+    /**
+     * ⛓ DIRECT PLAY (loop-mode-bot S1) — true when the current region has no substrate (no preset sidecar) and the
+     * bot can publish: a plain rules.json region. It is played through the dispatcher when no controller resolves
+     * for it, or when the one that resolves (the maze fallback) refuses the walk. A region a substrate owns never
+     * qualifies (its controller may still be mounting).
+     */
+    _isPlainRegion() {
+        if (!this._publish || !this._currentRegion) return false;
+        const rulesJson = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        return !rulesJson?.preset_sidecars?.[playerId]?.[this._currentRegion];
+    }
+
+    /** The region an exit of `regionName` leads to, from static data (null when unknown). */
+    _exitTargetRegion(regionName, exitName) {
+        const exits = this._getStaticData?.()?.regions?.get?.(regionName)?.exits;
+        if (!Array.isArray(exits)) return null;
+        return exits.find((e) => e?.name === exitName)?.connected_region ?? null;
+    }
+
+    /**
+     * Perform `target` directly, one action per tick at the bot's rate (immediately under Instant, once under
+     * Step). The outcome comes back through the bot's own receivers (onLocationCheck / onRegionMove), which only
+     * count what LANDED, so a refused action leaves the cursor where it was and the status says why.
+     */
+    _directAct(target, tail) {
+        const here = this._currentRegion;
+        if (this._isLoopModeActive?.()) {
+            // Loop mode: only the Loops queue may act honestly (a direct check in a plain region would cost no mana).
+            this._setStatus(`waiting: ${here} is a plain region in loop mode — the bot does not play loop mode yet`);
+            return;
+        }
+        let eventName;
+        let payload;
+        if (target.kind === 'location') {
+            eventName = 'user:locationCheck';
+            payload = { locationName: target.name, regionName: here, originator: 'PlaybackBot', fromBot: true };
+        } else if (target.kind === 'exit') {
+            const to = this._exitTargetRegion(here, target.name);
+            if (!to) {
+                this._setStatus(`error: ${here} has no exit "${target.name}" in the static data`);
+                return;
+            }
+            eventName = 'user:regionMove';
+            payload = { sourceRegion: here, targetRegion: to, exitName: target.name, originator: 'PlaybackBot', fromBot: true };
+        } else {
+            this._setStatus(`error: ${here} is a plain region — it has no ${target.kind} "${tail}" to walk to`);
+            return;
+        }
+        this._cancelDirectTimer();
+        const delayMs = this._instantMode ? 0 : Math.round(1000 / Math.max(0.01, this._rate || DEFAULT_RATE_HZ));
+        this._directTimer = setTimeout(() => {
+            this._directTimer = null;
+            if (!this._isActive && !this._directOnce) return;
+            this._directOnce = false;
+            this._publish(eventName, payload);
+        }, delayMs);
+    }
+
+    _cancelDirectTimer() {
+        if (this._directTimer) clearTimeout(this._directTimer);
+        this._directTimer = null;
     }
 
     /**
@@ -758,18 +1677,21 @@ export class PlaybackBotUI {
      */
     _dispatch(method, args = []) {
         const controller = this._resolveController();
-        if (!controller) return;
+        if (!controller) return undefined;
         const fn = controller[method];
-        if (typeof fn !== 'function') return;
+        if (typeof fn !== 'function') return undefined;
         try {
             const result = fn.apply(controller, args);
             if (result && typeof result.then === 'function') {
                 result.catch(() => { /* fire-and-forget */ });
+                return undefined;
             }
+            return result;
         } catch (e) {
             if (typeof window !== 'undefined' && window.logger) {
                 window.logger.warn('playbackBot', `controller.${method} threw`, e);
             }
+            return undefined;
         }
     }
 
@@ -786,6 +1708,20 @@ export class PlaybackBotUI {
         if (this._getActiveController) return this._getActiveController() ?? null;
         const substrateId = this._resolveSubstrateId(this._currentRegion);
         return substrateRegistry.get(substrateId)?.getPlaybackController?.() ?? null;
+    }
+
+    /**
+     * The current region's substrate id when its registry entry is present
+     * and declares no `getPlaybackController` at all; null otherwise
+     * (including whenever a `getActiveController` resolver was injected,
+     * and for an unregistered id, which says nothing either way).
+     */
+    _undeclaredControllerSubstrate() {
+        if (this._getActiveController) return null;
+        const substrateId = this._resolveSubstrateId(this._currentRegion);
+        const entry = substrateRegistry.get(substrateId);
+        if (!entry || typeof entry.getPlaybackController === 'function') return null;
+        return substrateId;
     }
 
     /**
@@ -831,7 +1767,10 @@ export class PlaybackBotUI {
         // pathfinder instead of being applied immediately. Setting
         // is consulted by the dispatcher receivers in
         // playbackBot/index.js via isInterceptEnabled().
+        root.appendChild(this._mountTargetSource());
+        root.appendChild(this._mountWalkOrder());
         root.appendChild(this._mountInterceptToggle());
+        root.appendChild(this._mountManaStrategy());
 
         // Phase 2 — current target line. Mirrors the bot's queue head
         // (or an active manual walkTo target) in plain text below the
@@ -841,6 +1780,12 @@ export class PlaybackBotUI {
         targetEl.className = 'playback-bot-target';
         root.appendChild(targetEl);
         this._targetEl = targetEl;
+
+        // ⛓ WALK ORDER — the run's route metrics, on their own line (the transition log stays as it was).
+        const statsEl = document.createElement('div');
+        statsEl.className = 'playback-bot-route-stats';
+        root.appendChild(statsEl);
+        this._routeStatsEl = statsEl;
 
         // Phase 2 — manual walkTo input. Region picker + (x, y)
         // coords + Go button. Disabled while the sphere queue is
@@ -879,11 +1824,74 @@ export class PlaybackBotUI {
 
         const hint = document.createElement('div');
         hint.className = 'playback-bot-hint';
-        hint.textContent = 'Drives the maze panel — open it in another column to watch the bot walk.';
+        hint.textContent = 'Drives each region\'s own game (Maze Room, Text Adventure, Bounce, …), or the Loops queue in loop mode — open that panel in another column to watch the bot play.';
         root.appendChild(hint);
 
         this._element = root;
         this._render();
+    }
+
+    _mountTargetSource() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-target-source';
+        const text = document.createElement('span');
+        text.textContent = 'Check next: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(TARGET_SOURCES)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = TARGET_SOURCE_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._targetSource;
+        select.disabled = !this._timer;
+        select.addEventListener('change', () => this.setTargetSource(select.value));
+        wrap.appendChild(select);
+        this._targetSourceSelect = select;
+        return wrap;
+    }
+
+    _mountWalkOrder() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-walk-order';
+        wrap.title = 'Which sphere-log location the bot walks to next. Loop mode keeps the sphere order.';
+        const text = document.createElement('span');
+        text.textContent = 'Walk order: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(WALK_ORDERS)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = WALK_ORDER_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._walkOrder;
+        select.disabled = this._targetSource !== TARGET_SOURCES.sphere;
+        select.addEventListener('change', () => this.setWalkOrder(select.value));
+        wrap.appendChild(select);
+        this._walkOrderSelect = select;
+        return wrap;
+    }
+
+    _mountManaStrategy() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-mana-strategy';
+        const text = document.createElement('span');
+        text.textContent = 'Loop mode, when a task is not affordable: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(MANA_STRATEGIES)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = MANA_STRATEGY_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._manaStrategy;
+        select.addEventListener('change', () => this.setManaStrategy(select.value));
+        wrap.appendChild(select);
+        this._manaStrategySelect = select;
+        return wrap;
     }
 
     _mountInterceptToggle() {
@@ -1007,7 +2015,10 @@ export class PlaybackBotUI {
         // sphere log is available.
         if (this._statusEl) {
             if (this._status && this._status !== 'idle') {
-                this._statusEl.textContent = this._status;
+                // ⛓ S2 — a live walk's note ("solving…") rides after the status.
+                this._statusEl.textContent = this._walkNote ? `${this._status} — ${this._walkNote}` : this._status;
+            } else if (this._usesTimer()) {
+                this._statusEl.textContent = 'Any reachable location: Play checks them on the timer, Step checks one now.';
             } else {
                 const data = this._getSphereData?.() ?? [];
                 const total = Array.isArray(data) ? data.length : 0;
@@ -1015,6 +2026,7 @@ export class PlaybackBotUI {
                     ? `Sphere log loaded: ${total} entries.`
                     : 'No sphere log loaded.';
             }
+            this._statusEl.title = this._statusEl.textContent;   // the mini view cuts the line short
         }
 
         // Phase 2 — current target line.
@@ -1027,6 +2039,13 @@ export class PlaybackBotUI {
             } else {
                 this._targetEl.textContent = 'Target: —';
             }
+        }
+
+        if (this._routeStatsEl) {
+            const st = this._routeStats;
+            this._routeStatsEl.textContent = `Walk order: ${WALK_ORDER_LABELS[this._walkOrder]}`
+                + (this._inLoopMode() ? ' (loop mode: sphere order)' : '')
+                + ` — restarts ${st.restarts}, region transitions ${st.transitions}, legs ${st.legs}`;
         }
 
         // Phase 2 — intercept toggle stays in sync with model state
@@ -1112,6 +2131,70 @@ export class PlaybackBotUI {
         const time = new Date(entry.timestamp).toLocaleTimeString();
         row.textContent = `[${time}] ${entry.eventName} "${entry.target}" (${entry.disposition})`;
         return row;
+    }
+}
+
+function loadManaStrategyFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_MANA_STRATEGY_KEY);
+        return Object.values(MANA_STRATEGIES).includes(v) ? v : DEFAULT_MANA_STRATEGY;
+    } catch (_e) {
+        return DEFAULT_MANA_STRATEGY;
+    }
+}
+
+function saveManaStrategyToLS(strategy) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_MANA_STRATEGY_KEY, strategy);
+    } catch (_e) { /* storage unavailable */ }
+}
+
+function loadTargetSourceFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_TARGET_SOURCE_KEY);
+        return Object.values(TARGET_SOURCES).includes(v) ? v : TARGET_SOURCES.sphere;
+    } catch (_e) {
+        return TARGET_SOURCES.sphere;
+    }
+}
+
+function saveTargetSourceToLS(source) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_TARGET_SOURCE_KEY, source);
+    } catch (_e) { /* storage unavailable */ }
+}
+
+function loadWalkOrderFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_WALK_ORDER_KEY);
+        return Object.values(WALK_ORDERS).includes(v) ? v : WALK_ORDERS.inOrder;
+    } catch (_e) {
+        return WALK_ORDERS.inOrder;
+    }
+}
+
+function saveWalkOrderToLS(order) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_WALK_ORDER_KEY, order);
+    } catch (_e) { /* storage unavailable */ }
+}
+
+function loadMazeCollectFromLS() {
+    if (typeof localStorage === 'undefined') return COLLECT_NEVER;
+    try {
+        return localStorage.getItem(LS_MAZE_COLLECT_KEY) === COLLECT_ALWAYS
+            ? COLLECT_ALWAYS : COLLECT_NEVER;
+    } catch (_e) {
+        return COLLECT_NEVER;
+    }
+}
+
+function saveMazeCollectToLS(policy) {
+    if (typeof localStorage === 'undefined') return;
+    try {
+        localStorage.setItem(LS_MAZE_COLLECT_KEY, policy);
+    } catch (_e) {
+        // ignore (private browsing, quota, etc.)
     }
 }
 

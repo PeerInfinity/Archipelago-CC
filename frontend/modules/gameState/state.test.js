@@ -103,6 +103,40 @@ describe('GameState — loop-mode resource API', () => {
     });
   });
 
+  describe('gainMana', () => {
+    it('increases currentMana and emits gameState:manaChanged', () => {
+      gs.deductMana(50);
+      bus.events.length = 0;
+      gs.gainMana(20);
+      expect(gs.getCurrentMana()).toBe(70);
+      const ev = bus.events.find((e) => e.name === 'gameState:manaChanged');
+      expect(ev).toBeDefined();
+      expect(ev.data).toEqual({ current: 70, max: 100 });
+    });
+
+    it('is NOT clamped — maxMana is starting mana, not a ceiling', () => {
+      gs.deductMana(10);
+      gs.gainMana(50);
+      expect(gs.getCurrentMana()).toBe(140);
+      gs.gainMana(60);
+      expect(gs.getCurrentMana()).toBe(200);
+    });
+
+    it('ignores zero, negative, and non-numeric amounts', () => {
+      gs.deductMana(50);
+      bus.events.length = 0;
+      expect(gs.gainMana(0)).toBe(50);
+      expect(gs.gainMana(-10)).toBe(50);
+      expect(gs.gainMana('nope')).toBe(50);
+      expect(bus.events.length).toBe(0);
+    });
+
+    it('handles fractional gains and returns the new value', () => {
+      gs.deductMana(50);
+      expect(gs.gainMana(4.17)).toBeCloseTo(54.17, 5);
+    });
+  });
+
   describe('recalculateMaxMana', () => {
     it('recomputes maxMana from a snapshot inventory', () => {
       const snapshot = { inventory: { sword: 1, shield: 2, key: 0 } };
@@ -111,14 +145,14 @@ describe('GameState — loop-mode resource API', () => {
       expect(gs.getMaxMana()).toBe(130);
     });
 
-    it('caps currentMana when new max is lower', () => {
+    it('does NOT cap currentMana when new max is lower (max = starting mana, not ceiling)', () => {
       gs.currentMana = 100;
-      gs.recalculateMaxMana({ inventory: {} }); // → max 100, no clamp needed
+      gs.recalculateMaxMana({ inventory: {} }); // → max 100
       expect(gs.getCurrentMana()).toBe(100);
 
       gs.currentMana = 200;
       gs.recalculateMaxMana({ inventory: {} });
-      expect(gs.getCurrentMana()).toBe(100);
+      expect(gs.getCurrentMana()).toBe(200);
     });
 
     it('emits gameState:manaChanged', () => {
@@ -268,11 +302,11 @@ describe('GameState — loop-mode resource API', () => {
       expect(bus.events.find((e) => e.name === 'gameState:manaChanged')).toBeDefined();
     });
 
-    it('caps currentMana when a bonus is removed and max drops below it', () => {
+    it('does NOT cap currentMana when a bonus is removed (max = starting mana, not ceiling)', () => {
       gs.setSubstrateMaxManaBonus('jta', 100); // max 200
       gs.currentMana = 200;
       gs.setSubstrateMaxManaBonus('jta', 0);   // max back to 100
-      expect(gs.getCurrentMana()).toBe(100);
+      expect(gs.getCurrentMana()).toBe(200);
     });
 
     it('getAllSubstrateMaxManaBonuses returns a copy', () => {

@@ -1,0 +1,8 @@
+{
+  "name": "stall-5",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_resets": 5
+    }
+  }
+}

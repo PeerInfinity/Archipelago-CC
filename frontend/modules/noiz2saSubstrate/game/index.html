@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noiz2sa region</title>
+<!-- the engine's BulletML parser imports @xmldom/xmldom; in a browser it is the page's own DOMParser -->
+<script type="importmap">{ "imports": { "@xmldom/xmldom": "../../bulletml-dodge/web/xmldom-shim.js" } }</script>
+<style>
+  :root { color-scheme: dark; }
+  html, body { height: 100%; margin: 0; background: #0a0d10; color: #cdd6dd; font: 13px system-ui, sans-serif; }
+  body { display: flex; flex-direction: column; }
+  #status { padding: 4px 8px; background: #121a22; border-bottom: 1px solid #234; font: 12px monospace; color: #8ab;
+            flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #main { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px; }
+  #wrap { position: relative; flex: 1; min-height: 0; width: 100%; display: flex; justify-content: center; }
+  #screen { height: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: contain; display: block; background: #000;
+            image-rendering: pixelated; outline: none; cursor: pointer; }
+  #screen:focus { box-shadow: 0 0 0 1px #345; }
+  #exits { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; flex-shrink: 0; }
+  #exits button { font: 12px monospace; background: #121a22; color: #dde; border: 1px solid #345; border-radius: 3px;
+                  padding: 4px 10px; cursor: pointer; }
+  #exits button:disabled { opacity: .45; cursor: default; }
+  #exits .note { color: #789; font-size: 12px; align-self: center; }
+</style>
+</head>
+<body>
+  <div id="status">Noiz2sa — loading…</div>
+  <div id="main">
+    <div id="wrap"><canvas id="screen" width="640" height="480" tabindex="0" aria-label="Noiz2sa"></canvas></div>
+    <div id="exits"></div>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

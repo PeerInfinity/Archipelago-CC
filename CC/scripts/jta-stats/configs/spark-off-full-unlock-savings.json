@@ -1,0 +1,10 @@
+{
+  "name": "spark-off-full-unlock-savings",
+  "options": {
+    "modOverrides": {
+      "auto_buy_budget_enabled": true
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

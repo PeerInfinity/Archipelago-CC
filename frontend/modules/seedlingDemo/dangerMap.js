@@ -1,0 +1,2046 @@
+/**
+ * dangerMap — the UNION of the four hazard APIs, over LIVE run state.
+ *
+ * Region-atlas Phase 8, rung R8 (the live solver bot), slice 1. Kickoff:
+ * the R8 kickoff §3.3.
+ *
+ * ⛔⛔⛔ A SEARCH HEURISTIC, NEVER AN ORACLE — and that sentence is
+ * `spinnerForecast`'s doctrine repeated on purpose rather than paraphrased.
+ * A `danger: false` here is NOT a claim that the tick is safe; it is a claim
+ * that none of the four ingredients below could name a reason. The GAME
+ * adjudicates, through the differential. What this is FOR is pruning: a
+ * policy that must choose a cell this tick, and a `mover.findEarliestArrival`
+ * whose `forbiddenAt` hook has been waiting for a timeline since R5.
+ *
+ * ⇒ so the return value is a REASON LIST, never a boolean alone. A caller
+ * that only wants the bit can read `.danger`; a caller that has to explain
+ * itself — the decision trace, a red pair, a refusal — needs `.sources`, and
+ * a heuristic that could not say WHY it forbade a cell is unauditable.
+ *
+ * ── THE FOUR INGREDIENTS, AND WHY THEY WERE FOUR APIs ─────────────────
+ *
+ * Everything here already existed, in four modules, with no combiner:
+ *
+ *   a. **arrows** — `run.arrowsInFlight` (position + lifetime, no pricing:
+ *      R7's carried debt) and `arrowTrap.arrowLaneForPlacement` +
+ *      `arrowTrap.arrowLaneRect` for the ARMED traps' columns. The lane is a
+ *      PLAN-time shape and the flight is a LIVE one; this is the first
+ *      consumer that needs both at once.
+ *      ⛓ Both adapters are `arrowTrap`'s BECAUSE OF THIS MODULE: the four
+ *      call sites below each retyped the placement and each wrote the
+ *      lane→rect arithmetic out by hand, until the editor arc's slice 8
+ *      hoisted them to the module that owns the geometry.
+ *   b. **hazard volumes** — `hazards.hazardVolume`'s per-class rects and
+ *      discs, with their `verdict`. Orphaned from the shipping driver since
+ *      R5: imported by probe scripts only.
+ *   c. **stepped enemies** — `run.chasers`, grown by `combat.stepBoundFor`
+ *      plus the class's `threatPad`, using `encounters.chaseEnvelope`'s
+ *      arithmetic while the body is inside its leash.
+ *   d. **crushers** — `run.crushers` for the live BODY, and the trigger
+ *      lanes recomputed at that live position rather than at the `.oel` one
+ *      (`hazardVolume`'s crusher arm is keyed on the census placement, and a
+ *      crusher is the one hazard on the roster that moves).
+ *
+ * ── THE HORIZON IS PART OF THE QUESTION ──────────────────────────────
+ *
+ * `dangerAt(run, tick, box)` takes an ABSOLUTE tick, exactly so it can be
+ * handed to `mover.findEarliestArrival`'s `forbiddenAt(tick, x, y)` without
+ * an adapter that has to remember which clock it is on. The horizon is
+ * `tick - run.ticksCompleted`, clamped at zero: a query about the past is a
+ * query about NOW, and every growth term is `horizon x bound`.
+ *
+ * ⚠ THE GROWTH IS AN OVER-APPROXIMATION AND IS MEANT TO BE. `chaseEnvelope`
+ * grows a body by its whole `moveSpeed` per tick rather than by
+ * `moveSpeed - friction`, and this does the same, for the same reason: an
+ * envelope has to dominate, and a bound loose by a quarter pixel a tick is
+ * cheap. A search that refuses a few extra cells finds a longer plan; one
+ * that admits a cell it should not have finds a plan the game refutes.
+ *
+ * ⚠ IT BUILDS NO LIVE-GEOMETRY BAG. Every query here is over rects the run
+ * already exposes, so there is no `liveSolidOpts` to brand — R8 slice 0's
+ * contract applies to bags handed to `collidesSolid`/`plannerBlockerAt`, and
+ * this module hands none. Named rather than left to be inferred from an
+ * absence.
+ */
+
+import {
+    arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
+    contactPricing, contactRect, ENEMY_CLASSES, plannerContactFree, stepBoundFor,
+    chaserBoxAt, chaserHasSword, collideLineSolid, isBridgedChaser, chaserDropOf,
+    rect, rectsOverlap,
+    SPINNER, hammerHitsPlayer, spinnerRect,
+    TURRET_SPIT,
+    // ⛓ seedling-fidelity-bombpusher D3: the lobber and its bombs.
+    BOMB, stepBomb, stepBombPusher,
+    // ⛓ LADDER2: the placed grenade, and the player's hitbox origin (its entity point).
+    HITBOX, PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
+    // ⛓ fidelity IGNEOUS D3: the rect `getState` compares a tile against, and the type-31 tile's clock (pure; the
+    // run's state comes through `entities('igneousTiles')`).
+    terrainProbeRect, igneousInRange, igneousRendersToLava, stepIgneousRender,
+    // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped forward by the model's own functions.
+    LIGHT_BOSS, SCREEN_H, SCREEN_W, cloneLightsFight, lightBossRect, stepLightBossFlier, stepLightBossFlierGraphic,
+    stepLightBossShot, stepLightsController,
+    // ⛓ fidelity DRILL D2: a stepped drill is priced at its live box.
+    CONTACT_FIDELITY,
+    // ⛓ seedling-fidelity-residue D-B: the Tentacled Beast's whirlpools.
+    WHIRLPOOL, whirlpoolRect,
+} from './solverView.js';
+import {
+    hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
+    BEAM_BOB_SPAN, beamRect as beamRectAt, createBeamTower, createLavaChainState, lavaChainRect,
+    rectTouchesBox, stepBeamTower, stepLavaChain,
+} from './hazards.js';
+// ⛓ SEEDLING FIDELITY CRUSHER — the sight-aware arm, behind `CRUSHER_BAIT`.
+import { CRUSHER_BAIT, crusherSightDanger } from './crusherBait.js';
+
+/**
+ * ⛓⛓⛓ fidelity IGNEOUS D3 — THE IGNEOUS-TO-LAVA TILES' CLOCKS, as danger (`run.entities('igneousTiles')`; `null` — so
+ * nothing — while `CONTACT_FIDELITY.igneousLava` is off).
+ *
+ *   breaking   the clock runs with nobody near (`Tile.as:410-421`): lava at `now + igneousRendersToLava`. A box whose
+ *              terrain probe touches the tile at or after that tick is the lava death — BOTH modes (a dwell that spans
+ *              the tick stands there at it; a transit that reaches the cell after it walks onto lava).
+ *   unbroken   only the player's own presence advances it, and walking THROUGH is fine (the run steps the break and
+ *              the clock above takes over). WAIT mode only: a dwell IN RANGE (origin within sqrt(512)/2 of the centre)
+ *              long enough to break it (`counter + 1` renders) is danger — the break is the point of no return, so
+ *              no stance is chosen that starts the fuse under or beside itself.
+ *
+ * ⚠ THE RENDER COUNT IS TAKEN AS THE TICK COUNT: true on screen and while nothing freezes (the run refuses a dead
+ * span over a live tile by name), and the probe is the CONSERVATIVE half of `getState` (rect overlap without the
+ * nearest-tile test). Each source names the tile and its clock.
+ */
+export function igneousDanger(run, box, tick, mode = 'wait') {
+    const tiles = run.entities('igneousTiles');
+    if (!tiles) return [];
+    const ox = box.x + HITBOX.originX;
+    const oy = box.y + HITBOX.originY;
+    const probe = terrainProbeRect(ox, oy);
+    const now = run.ticksCompleted;
+    const out = [];
+    for (const t of tiles) {
+        if (t.lava) continue;
+        if (t.breaking) {
+            const lavaAt = now + igneousRendersToLava(t);
+            if (tick >= lavaAt && rectsOverlap(probe, t.rect)) {
+                out.push({ kind: 'igneous', id: `igneous@${t.tx},${t.ty}`, lavaAt,
+                    why: `Igneous-to-Lava tile (${t.tx},${t.ty}) is breaking (frame ${t.frame}, counter ${t.counter}) `
+                        + `and is LAVA from tick ${lavaAt}; the box stands on it at ${tick}` });
+            }
+        } else if (mode === 'wait' && tick - now >= t.counter + 1 && igneousInRange(t, ox, oy)) {
+            out.push({ kind: 'igneous', id: `igneous@${t.tx},${t.ty}`, breaksAt: now + t.counter + 1,
+                why: `a dwell to tick ${tick} within ${Math.sqrt(512) / 2} px of Igneous-to-Lava tile (${t.tx},${t.ty}) `
+                    + `breaks it at tick ${now + t.counter + 1} (counter ${t.counter}) — lava ${igneousRendersToLava(t)} `
+                    + 'renders from now' });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ fidelity IGNEOUS D3 — THE TILES' CLOCKS ALONG ONE PREVIEWED WALK. `igneousDanger` prices a box at a tick and
+ * cannot see the player's OWN dwell, which is what breaks an unbroken tile — the leg 649 shape: a phase stall parked
+ * on tile (2,5) for 25 ticks certifies clean box by box, and the tile turns under the walk at t38. So the samples are
+ * replayed through the render's own state machine (`stepIgneousRender`), each sample one rendered frame at its
+ * position (a tick gap renders the previous position again), from the run's live clocks: the first sample whose
+ * terrain probe touches a tile that turned at an EARLIER render (the update reads the previous frame's `t`) is the
+ * lava death, named with the tile and its clock. Every tile is taken as on screen (the conservative direction for a
+ * walk beside it). `null` while the family is (`CONTACT_FIDELITY.igneousLava` off) or nothing turns under the walk.
+ */
+export function igneousWalkDanger(run, samples) {
+    const tiles = run.entities('igneousTiles');
+    if (!tiles || samples.length === 0) return null;
+    const live = tiles.map((t) => ({ t, s: t, breakAt: t.breaking ? run.ticksCompleted : null, lavaAt: null }));
+    let prevTick = run.ticksCompleted;
+    let prev = null;
+    const render = (x, y, tick) => {
+        for (const e of live) {
+            if (e.s.lava) continue;
+            const r = stepIgneousRender(e.s, igneousInRange(e.t, x, y));
+            e.s = r.state;
+            if (r.event === 'break') e.breakAt = tick;
+            if (r.event === 'lava') e.lavaAt = tick;
+        }
+    };
+    for (const sm of samples) {
+        if (prev !== null) for (let k = prevTick + 1; k < sm.tick; k += 1) render(prev.x, prev.y, k);
+        const probe = terrainProbeRect(sm.x, sm.y);
+        const under = live.find((e) => e.s.lava && rectsOverlap(probe, e.t.rect));
+        if (under) {
+            const { tx, ty } = under.t;
+            return { x: sm.x, y: sm.y, tick: sm.tick, danger: true, mode: 'transit', horizon: sm.tick - run.ticksCompleted,
+                sources: [{ kind: 'igneous', id: `igneous@${tx},${ty}`, lavaAt: under.lavaAt ?? run.ticksCompleted,
+                    breakAt: under.breakAt,
+                    why: `Igneous-to-Lava tile (${tx},${ty}) turns to LAVA at the tick-${under.lavaAt ?? run.ticksCompleted} `
+                        + `render (broken at ${under.breakAt ?? 'an earlier visit'}) under this walk, which stands on it at `
+                        + `${sm.tick} — the lava death` }] };
+        }
+        render(sm.x, sm.y, sm.tick);
+        prev = sm;
+        prevTick = sm.tick;
+    }
+    return null;
+}
+
+export class DangerMapError extends Error {
+    constructor(message) { super(message); this.name = 'DangerMapError'; }
+}
+const fail = (m) => { throw new DangerMapError(m); };
+
+/**
+ * `Crusher.as:63-74` — the four trigger rects, each the 32x32 body grown by
+ * `intDist` along ONE axis. Transcribed in `hazards.hazardVolume`'s crusher
+ * arm against the CENSUS placement; re-derived here at the LIVE centre,
+ * because a crusher is the one hazard on the roster that moves and the whole
+ * point of a live map is not to ask about where it used to be.
+ */
+export const CRUSHER_TRIGGER = Object.freeze({
+    half: 16,
+    intDist: 64,
+    src: 'Enemies/Crusher.as:63-74, via hazards.hazardVolume(\'crusher\')',
+});
+
+/** The four trigger lanes plus the body, at a live centre. */
+export function crusherVolumesAt(cx, cy) {
+    const h = CRUSHER_TRIGGER.half;
+    const d = CRUSHER_TRIGGER.intDist;
+    return [
+        { r: rect(cx - h, cy - h, h * 2, h * 2), why: 'the 32x32 body — damage 1000' },
+        { r: rect(cx - h, cy - h, h * 2 + d, h * 2), why: 'trigger lane, +x (intDist 64)' },
+        { r: rect(cx - h - d, cy - h, h * 2 + d, h * 2), why: 'trigger lane, -x' },
+        { r: rect(cx - h, cy - h - d, h * 2, h * 2 + d), why: 'trigger lane, -y' },
+        { r: rect(cx - h, cy - h, h * 2, h * 2 + d), why: 'trigger lane, +y' },
+    ];
+}
+
+/** Grow a rect by `n` on every side. */
+const grow = (r, n) => rect(r.x - n, r.y - n, r.w + n * 2, r.h + n * 2);
+
+/**
+ * ⛓ INGREDIENT (a) — LIVE ARROWS, swept forward, and the ARMED traps' lanes.
+ *
+ * Two shapes, one ingredient, and they answer different halves:
+ *
+ *   · an arrow IN FLIGHT is a 4x4 box at a known position moving at a known
+ *     speed, so its danger over a horizon is the box swept `speed x horizon`
+ *     along its travel. ⚠ `run.arrowsInFlight` carries POSITION AND LIFETIME
+ *     ONLY (R7's debt says so in as many words) — no velocity — so the sweep
+ *     uses `ARROW.speed` DOWNWARD, which is the only direction an `ArrowTrap`
+ *     ever fires. A trap that fired sideways would need the getter widened,
+ *     and the constant is cited rather than typed so that shows up as a
+ *     source change.
+ *   · an ARMED trap is a column that may fire at any moment, so its lane is
+ *     dangerous for ANY horizon at all — including zero. A map that only
+ *     knew about arrows already in the air would call the tick before a
+ *     volley safe, which is the tick a policy most needs warning on.
+ */
+export function arrowDanger(run, box, horizon) {
+    const out = [];
+    for (const a of run.entities('arrowsInFlight') ?? []) {
+        const body = rect(a.x - ARROW.hitbox.originX, a.y - ARROW.hitbox.originY,
+            ARROW.hitbox.w, ARROW.hitbox.h);
+        const swept = rect(body.x, body.y, body.w, body.h + ARROW.speed * horizon);
+        if (rectsOverlap(box, swept)) {
+            out.push({ kind: 'arrow', id: a.id, why: `live arrow swept ${ARROW.speed} px/tick `
+                + `x ${horizon} tick(s)` });
+        }
+    }
+    const armed = run.entities('armedArrowTraps');
+    // ⚠ `null` under `noclip` and an empty SET otherwise — the two mean
+    // different things and only one of them is "no trap is armed".
+    if (armed) {
+        const world = run.worldFor(run.level);
+        for (const trap of (world.arrowTraps ?? [])) {
+            if (!armed.has(trap.id)) continue;
+            const lane = arrowLaneForPlacement(trap);
+            const laneRect = arrowLaneRect(lane, world.world.height);
+            if (rectsOverlap(box, laneRect)) {
+                out.push({ kind: 'arrowLane', id: trap.id,
+                    why: 'an ARMED trap\'s lane — dangerous at horizon 0, because the '
+                        + 'volley that has not fired yet is the one a policy needs '
+                        + 'warning about' });
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — WHERE THE ARROWS WILL BE, BY `stepArrow`'s OWN
+ * ARITHMETIC. ⚖ §13.10a ruling 2.
+ *
+ * ⛔ AN ARROW IN FLIGHT IS AUTONOMOUS: nothing about its trajectory reads the
+ * player, so where it will be in `horizon` ticks is not a forecast, it is
+ * arithmetic — and the arithmetic already exists. This runs the SAME
+ * `stepArrow` the run steps its arrows with, over CLONES, rather than
+ * multiplying speed by a horizon. A summary would be a second model of the
+ * flight, and `Mobile.moveY`'s 1 px sub-steps are exactly the kind of detail a
+ * summary drops (trap 118).
+ *
+ * ⛔ COVER IS INCLUDED, AND THAT IS THE HALF A SWEEP CANNOT DO. An arrow that
+ * will die on `torch@48,64` two ticks from now is not a hazard at the cell
+ * below it — which is the whole of L5's column-3 shadow, asked forwards.
+ *
+ * ⚠ BODIES ARE DELIBERATELY EXCLUDED, and the direction is stated: a body that
+ * would eat an arrow may have moved or died by the horizon, so pricing it
+ * would make arrows vanish that the game still has in the air. Leaving it out
+ * lets an arrow fly FURTHER than it might, which forbids more cells and never
+ * fewer. An over-approximation, like `chaseEnvelope`'s growth, and for the
+ * same reason.
+ *
+ * ⚠ AND A FADING ARROW IS NOT A HAZARD. `stepArrow` gates its hit test on
+ * `v.length > 0`, and an arrow that has hit something has `v = 0` and is
+ * spending its eleven fade ticks. `run.arrowFlights` carries `v` precisely so
+ * this can be asked rather than assumed.
+ *
+ * @param {object} run
+ * @param {number} horizon ticks from NOW; 0 returns the live positions
+ * @returns {Array<{id: string, x: number, y: number, rect: object}>}
+ */
+export function predictArrows(run, horizon) {
+    if (!Number.isInteger(horizon) || horizon < 0) {
+        fail(`predictArrows: the horizon must be a non-negative integer tick count, got `
+            + `${horizon}. A fractional horizon is a caller that has a distance and wants `
+            + 'a time.');
+    }
+    const flights = (run.entities('arrowFlights') ?? []).map((a) => ({
+        ...a, v: { x: a.v.x, y: a.v.y },
+    }));
+    if (flights.length === 0) return [];
+    const world = run.worldFor(run.level);
+    const bound = { w: world.world.width, h: world.world.height };
+    const coverAt = run.arrowCoverAt;
+    for (let i = 0; i < horizon; i += 1) {
+        for (const a of flights) {
+            if (a.removed) continue;
+            // ⚠ `frozen: false` — a ceremony would park the volley, and a
+            // corridor is planned for a walk, not for a cutscene. `bodies: []`
+            // per the docblock.
+            stepArrow(a, { frozen: false, bound, coverAt, bodies: [] });
+        }
+    }
+    return flights
+        .filter((a) => !a.removed && (a.v.x !== 0 || a.v.y !== 0))
+        .map((a) => ({ id: a.id, x: a.x, y: a.y, rect: arrowRect(a) }));
+}
+
+/**
+ * ⛓⛓⛓ INGREDIENT (a), THE TRANSIT READING — ⚖ §13.10a's TRANSIT half.
+ *
+ * The WAIT reading (`arrowDanger`) sweeps each arrow's box `speed x horizon`,
+ * which is the union over the whole window — the honest answer to *"may I
+ * stand here for the next N ticks"*. A WALK is a different question: the
+ * player is at THIS cell at THIS tick and nowhere near it before or after, so
+ * the union over the window forbids a corridor the arrows have already left.
+ * That is trap 161 exactly, and §13.2's deadlock was made of it.
+ *
+ * ⛔ THE LANE ARM IS UNCHANGED, and that is not an oversight. An ARMED trap
+ * may fire at any moment (§9.9 decision 2), which is a STATE question — the
+ * caller that knows the group is about to be unpublished is the one holding
+ * the presser, and it excludes the lane BY ID. Trap 160's law: the state layer
+ * answers the state question and the kinematic layer answers this one.
+ */
+export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
+    const out = [];
+    /**
+     * ⛔ A CALLER THAT IS PREVIEWING A WALK HANDS ITS OWN FORECAST, and it
+     * must: a walk decides whether the traps keep FIRING, so the arrows at
+     * tick T are a function of the walk and not of the room alone. The
+     * fallback — `predictArrows`, the arrows already in the air — is the
+     * honest answer for a caller with no walk to offer, and it is strictly
+     * weaker: it cannot see a volley that has not been fired yet. `r8-solve-5`
+     * was hit by exactly such a volley.
+     */
+    for (const a of (arrows ?? predictArrows(run, horizon))) {
+        if (rectsOverlap(box, a.rect)) {
+            out.push({ kind: 'arrow', id: a.id, why: `a live arrow AT ITS PREDICTED `
+                + `POSITION (${a.x},${a.y}) ${horizon} tick(s) on, by \`stepArrow\`'s own `
+                + 'arithmetic with cover' });
+        }
+    }
+    const armed = run.entities('armedArrowTraps');
+    if (armed) {
+        const world = run.worldFor(run.level);
+        for (const trap of (world.arrowTraps ?? [])) {
+            if (!armed.has(trap.id)) continue;
+            const lane = arrowLaneForPlacement(trap);
+            const laneRect = arrowLaneRect(lane, world.world.height);
+            if (rectsOverlap(box, laneRect)) {
+                out.push({ kind: 'arrowLane', id: trap.id,
+                    why: 'an ARMED trap\'s lane — a STATE question, and still danger at '
+                        + 'every horizon: the volley that has not fired yet is the one a '
+                        + 'walk needs warning about' });
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ U15-swim D2 — INGREDIENT (g), THE TURRET SPITS.
+ *
+ * TRANSIT: the spits AT THE CELL'S OWN ETA, from the walk's own forecast
+ * (`run.spitForecast()`, which `previewWalk` steps beside the arrows and the
+ * chasers and hands each sample as `spits`). A turret aims at the player and
+ * its clock re-arms on range, so only a caller previewing a WALK can say where
+ * the next spit will fly; a spit the forecast saw the shield or a tree take is
+ * already gone from it. A transit caller with no walk gets the spits already
+ * in the air, carried to the horizon by `stepTurretSpit`'s own sweep.
+ *
+ * WAIT: the spits already in the air, each box swept along its own velocity
+ * for the horizon — `arrowDanger`'s union over the window. ⚠ A turret that has
+ * not fired yet is NOT priced here: whether it fires, and where, is a question
+ * about where the player will be, which is a walk's question.
+ */
+export function spitDanger(run, box, horizon, spits = null, mode = 'wait') {
+    const out = [];
+    if (spits) {
+        for (const s of spits) {
+            if (s.kind === 'bomb') {
+                if (bombBlastHits(s, box)) {
+                    out.push({ kind: 'bomb', id: s.id, why: `a Bomb's Explosion at (${s.x},${s.y}), r ${s.radius} `
+                        + '(`Explosion.as:52-56`: the square, then the origin-to-origin disc), the bomb aimed and '
+                        + 'stepped with the walk by `bombPusher.js` against the previewed player' });
+                }
+                continue;
+            }
+            if (rectsOverlap(box, s.rect)) {
+                out.push({ kind: 'spit', id: s.id, why: `a TurretSpit AT ITS PREDICTED POSITION `
+                    + `(${s.x.toFixed(1)},${s.y.toFixed(1)}), stepped with the walk by `
+                    + '`turret.js` against the previewed player' });
+            }
+        }
+        return out;
+    }
+    const hb = TURRET_SPIT.hitbox;
+    for (const t of run.entities('shooters') ?? []) {
+        for (const s of t.spits) {
+            const x1 = s.x + s.v.x * horizon;
+            const y1 = s.y + s.v.y * horizon;
+            const swept = rect(Math.min(s.x, x1) - hb.originX, Math.min(s.y, y1) - hb.originY,
+                Math.abs(x1 - s.x) + hb.w, Math.abs(y1 - s.y) + hb.h);
+            if (rectsOverlap(box, swept)) {
+                out.push({ kind: 'spit', id: s.id, why: `a live TurretSpit swept along its `
+                    + `velocity x ${horizon} tick(s)` });
+            }
+        }
+    }
+    // ⛓ seedling-fidelity-bombpusher D3: a WAIT only — a transit caller with no walk has no standing player.
+    if (mode !== 'transit') out.push(...lobberWaitDanger(run, box, horizon));
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase LD — THE L69 LIGHTS FIGHT, PRICED (`run.entities('lightsFight')`; `null` — so nothing — in every
+ * other room and while `CONTACT_FIDELITY.lightsBossFight` is OFF).
+ *
+ * The victim (fidelity LIGHTSARR's hand-over 1): survey step 159's reach-exit walk to the Teleporter took a hit at
+ * t811 from a `LightBossShot` fired before the kill (t806). Nothing here saw the fight.
+ *
+ * ⛔ STEPPED, NOT SWEPT — `predictArrows`' doctrine. A shot is autonomous: `TurretSpit.update` moves it by its own `v`
+ * (friction 0), tests the Player only, and `LightBossShot.update` culls it at `onScreen()` margin 0. So where it is in
+ * `k` ticks is the model's own stepper run `k` times on a COPY (`cloneLightsFight`, `stepLightBossShot`), with the cull
+ * against the camera at rest (L69 is the 160x160 screen, so `view()` clamps it to (0,0) — `lightsVerb.js`'s
+ * `restingOnScreen`). The fliers ride the controller's `goto`, written on `Game.worldFrame` (the verb's `time + 1` per
+ * tick), so they are stepped too and shoot where the model says they shoot.
+ *
+ * ⚠ The copy is stepped with NO player (`playerBox: null`): a shot that would hit the walk earlier stays in the air
+ * and a flier is neither struck nor shoved. Both only make the forecast hold MORE danger, never less — the
+ * `predictArrows` direction (it excludes the bodies that might eat an arrow for the same reason).
+ *
+ * ⚠ THE FRAME. Update `T + 1` steps each shot and flier and then tests the box the player left at `T`, so the box
+ * of a cell at horizon `h` meets the frame `h + 1`. Both `h` and `h + 1` are priced (one tick of a 1 px/t shot), so
+ * the tick a sample means is not a question this arm has to settle. TRANSIT prices those two frames; WAIT the union
+ * of `0 … h + 1`.
+ *
+ * A shot is reported as kind `spit` — a `LightBossShot` IS a `TurretSpit` (`LightBossShot.as`), and the ladder's DODGE
+ * rung is the one that answers a projectile on the walk's timing (`lights: true` marks the arm). A flier's contact
+ * (`Enemy.hitPlayer`: not dying, `hitsTimer <= 0` after its `hitUpdate`) is kind `lightBoss`.
+ */
+const lightsForecasts = new WeakMap();
+const restingOnScreen = (b) => !(b.right < 0 || b.bottom < 0 || b.x > SCREEN_W || b.y > SCREEN_H);
+const lightsShotRect = (s) => {
+    const b = LIGHT_BOSS.shot.hitbox;
+    return rect(s.x - b.originX, s.y - b.originY, b.w, b.h);
+};
+
+/** One frame: the shots in the air and the fliers in the world, as the copy stands. */
+function lightsFrame(F) {
+    return {
+        shots: F.shots.filter((s) => !s.removed).map((s) => ({ id: s.id, x: s.x, y: s.y, rect: lightsShotRect(s) })),
+        fliers: F.bodies.filter((b) => !b.removed).map((b) => ({ id: b.id, x: b.x, y: b.y, rect: lightBossRect(b),
+            armed: b.dieAnim === null && b.hitsTimer <= 0 })),
+    };
+}
+
+/**
+ * Nothing more can enter the air: no shot, no flier, and the controller either spent its spawn or is held by the
+ * intro (whose removal is the player's, and the copy has none) — or it has no `Game.time` to step on.
+ */
+const lightsQuiet = (F, time) => F.shots.every((s) => s.removed) && F.bodies.every((b) => b.removed)
+    && (F.madeFliers || F.introUp || time === null);
+
+/** One tick of the copy, in `lightsVerb.forecastTick`'s order without the player. */
+function stepLightsCopy(m) {
+    const F = m.fight;
+    for (let i = F.shots.length - 1; i >= 0; i -= 1) {
+        if (!F.shots[i].removed) stepLightBossShot(F.shots[i], { playerBox: null, onScreen: restingOnScreen });
+    }
+    F.shots = F.shots.filter((s) => !s.removed);
+    for (let i = F.bodies.length - 1; i >= 0; i -= 1) {
+        const b = F.bodies[i];
+        if (b.removed) continue;
+        stepLightBossFlier(b, { playerBox: null });
+        if (stepLightBossFlierGraphic(b)) b.removing = true;
+    }
+    if (m.time !== null) {
+        m.time += 1;
+        stepLightsController(F, { time: m.time });
+    }
+    for (const b of F.bodies) if (b.removing) { b.removing = false; b.removed = true; }
+}
+
+/**
+ * The frames `0 … k` of this run's fight, memoised per run on the tick and the fight's own state (a walk's probe asks
+ * one cell per sample, each a horizon further on). `null`: no fight in this room.
+ */
+function lightsFramesTo(run, k) {
+    const fight = run.entities('lightsFight')?.[0] ?? null;
+    if (!fight) return null;
+    const { events: _events, ...state } = fight;
+    const sig = `${run.ticksCompleted}|${JSON.stringify(state)}`;
+    let m = lightsForecasts.get(run);
+    if (!m || m.sig !== sig) {
+        m = { sig, fight: cloneLightsFight(fight), time: fight.time, frames: [lightsFrame(fight)], quietAt: null };
+        if (lightsQuiet(m.fight, m.time)) m.quietAt = 0;
+        lightsForecasts.set(run, m);
+    }
+    while (m.quietAt === null && m.frames.length <= k) {
+        stepLightsCopy(m);
+        m.frames.push(lightsFrame(m.fight));
+        if (lightsQuiet(m.fight, m.time)) m.quietAt = m.frames.length - 1;
+    }
+    return m;
+}
+
+export function lightsDanger(run, box, horizon, mode = 'wait') {
+    const m = lightsFramesTo(run, horizon + 1);
+    if (!m) return [];
+    const out = [];
+    const seen = new Set();
+    for (let k = mode === 'transit' ? horizon : 0; k <= horizon + 1; k += 1) {
+        if (m.quietAt !== null && k >= m.quietAt) break;
+        const fr = m.frames[k];
+        for (const s of fr.shots) {
+            if (seen.has(s.id) || !rectsOverlap(box, s.rect)) continue;
+            seen.add(s.id);
+            out.push({ kind: 'spit', id: s.id, lights: true, why: `a LightBossShot AT (${s.x.toFixed(1)},${s.y.toFixed(1)}) `
+                + `${k} tick(s) on, stepped by \`stepLightBossShot\` on a copy of the fight (the 4x4 box, Player only, `
+                + 'culled at onScreen margin 0)' });
+        }
+        for (const f of fr.fliers) {
+            if (!f.armed || seen.has(f.id) || !rectsOverlap(box, f.rect)) continue;
+            seen.add(f.id);
+            out.push({ kind: 'lightBoss', id: f.id, why: `a LightBoss flier's contact AT (${f.x.toFixed(1)},`
+                + `${f.y.toFixed(1)}) ${k} tick(s) on, stepped on the controller's \`Game.worldFrame\` pattern` });
+        }
+    }
+    return out;
+}
+
+/** `Explosion.added()` against the player whose box this is: the prefilter square, then the disc on the ORIGIN. */
+function bombBlastHits(b, box) {
+    if (!rectsOverlap(box, b.rect)) return false;
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    return Math.sqrt((b.x - px) ** 2 + (b.y - py) ** 2) <= b.radius;
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-bombpusher D3 — THE LOBBER, PRICED FOR A WAIT.
+ *
+ * WAIT: the player stands at the box's origin from now for the horizon, and the room's lobbers and bombs are
+ * stepped against that standing player with `bombPusher.js`'s own functions (`run.entities('bombPushers' /
+ * 'bombs')`, copies). ⛔ A STANDING PLAYER IN RANGE IS ALWAYS HIT: a bomb is aimed at the player and explodes one
+ * step PAST the aim, and a step is at most 256/30 ≈ 8.5 px — inside the 15 px disc. So any wait that outlasts the
+ * lobber's next shot plus 61 ticks is a hit; measured on the game as L40BUTTON's 101-tick fade on
+ * `buttonroom@272,208` (157 px from `bombpusher@112,128`). Empty while the key is OFF (no lobber is listed).
+ */
+function lobberWaitDanger(run, box, horizon) {
+    const pushers = run.entities('bombPushers') ?? [];
+    const live = run.entities('bombs') ?? [];
+    if (pushers.length === 0 && live.length === 0) return [];
+    const p = { x: box.x + HITBOX.originX, y: box.y + HITBOX.originY };
+    const lobbers = pushers.map((b) => ({ ...b, spawned: null }));
+    const air = live.filter((b) => !b.removed).map((b) => ({ ...b, v: { ...b.v } }));
+    const out = [];
+    let pending = [];
+    for (let k = 0; k <= horizon; k += 1) {
+        for (const b of pending) {
+            if (bombBlastHits({ ...b, rect: rect(b.x - BOMB.explosionHitRadius, b.y - BOMB.explosionHitRadius,
+                BOMB.explosionHitRadius * 2, BOMB.explosionHitRadius * 2), radius: BOMB.explosionHitRadius }, box)) {
+                out.push({ kind: 'bomb', id: b.id, why: `a Bomb's Explosion at (${b.x},${b.y}) ${k} tick(s) into `
+                    + 'the wait — a player standing within 256 px of a BombPusher is aimed at and the blast lands '
+                    + 'one step past the aim, inside its 15 px disc (`bombPusher.js`)' });
+                return out;
+            }
+        }
+        if (k === horizon) break;
+        pending = [];
+        for (const s of air) {
+            const r = stepBomb(s, { frozen: false });
+            if (r.exploded) pending.push({ id: s.id, ...r.exploded });
+        }
+        for (let i = air.length - 1; i >= 0; i -= 1) if (air[i].removed) air.splice(i, 1);
+        for (const b of lobbers) {
+            stepBombPusher(b, { player: p });
+            if (b.spawned) air.unshift(b.spawned);
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛔⛔⛔ THE CENSUS ARM DOES NOT PRICE A FAMILY ANOTHER INGREDIENT PRICES
+ * LIVE — and this is a TABLE, not two `continue`s buried in a loop.
+ *
+ * `hazardVolume` is keyed on the CENSUS PLACEMENT and on the census's static
+ * reading of the entity. For two families that reading is not the run's:
+ *
+ *   `crusher`    is the one hazard on the roster that MOVES (§9.9 decision
+ *                4). Its census volume is a 96 px trigger lane wherever
+ *                `loadlevel` left it — a wall that is not there for a run
+ *                that has parked one somewhere else, and a hole where the
+ *                real one is. Priced at the LIVE centre by `crusherDanger`.
+ *
+ *   `arrowtrap`  ⛓⛓⛓ R8 SLICE 3b, AND THE ROW'S OWN `why` SAID SO ALL
+ *                ALONG: *"an Activators group gates it, so whether it fires
+ *                at all is a STATE question, not a timing one."* The census
+ *                arm asked it as if it were unconditional, so **a DISARMED
+ *                trap's whole column was forbidden for ever** — which in L4
+ *                is the only way north out of the room, and the walk that
+ *                takes it does so with the button released and the trap
+ *                inert. Priced by ARMED STATE in `arrowDanger`, which has
+ *                had exactly that arm since slice 1 (§9.9 decision 2).
+ *
+ * ⛓ FOUND BY DRIVING, NOT BY READING. The corridor probe refused L4's
+ * post-shove walk naming `hazard:arrowtrap@48,16` on a tick when
+ * `run.armedArrowTraps` was EMPTY — two cost models for one hazard, and the
+ * static one won. [[feedback_two_cost_models_must_agree]]
+ *
+ * ⚠ THE EXCLUSION IS ONLY HONEST IF THE OTHER INGREDIENT REALLY FIRES, so
+ * `by` names it and `dangerMap.test.js` drives the PAIR: armed -> still
+ * reported (through the live arm), disarmed -> silent. An exclusion with no
+ * positive beside it is a hole with a docblock.
+ */
+export const HAZARDS_PRICED_LIVE = Object.freeze({
+    crusher: Object.freeze({
+        by: 'crusherDanger',
+        why: 'the census volume is keyed on the `.oel` placement and a crusher MOVES',
+    }),
+    arrowtrap: Object.freeze({
+        by: 'arrowDanger',
+        why: 'the census volume is unconditional and a trap\'s firing is an ACTIVATOR '
+            + 'GROUP\'s state — the volume\'s own `why` says so',
+    }),
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY AXE — **THE SPINNING AXE IS PRICED AT ITS OWN UPDATE
+ * COUNT IN TRANSIT, NOT AS THE DISC IT SWEEPS.**
+ *
+ * The census volume (`hazardVolume('spinningaxe')`) is the union over every
+ * angle: a 32 px disc tested at the box CENTRE. Every route that must pass the
+ * axe — ten survey steps (L48, L61 ×6, L71, L75, L101) — crosses that disc, and
+ * no rung could clear it: AVOID routes around rects (the disc is not one), TIME
+ * is a 48 px last-mile search, and BAIT/KILL need a body. The game lets a player
+ * through by timing (the J2 walker crossed L61, L71 and L76 axe rooms), because
+ * the blade is ONE LINE whose angle is a function of the visit's tick index
+ * alone — autonomous, like the spinner's hammer (§14.2's criterion).
+ *
+ * ⇒ a TRANSIT question at frame `tick` asks `hazards.axeHitsPlayer` at update
+ * `tick − V + AXE_UPDATE_OFFSET`, where V is the observation index of the
+ * visit's arrival (`axeVisitClock`). A transit sample's box is the PRE-move box
+ * of frame `tick` (`previewWalk` records the position before it steps), which
+ * is the box the axe tests, because it updates before the Player
+ * (`hazards.axeHitsPlayer`'s docblock). `AXE_UPDATE_OFFSET` is 0: the game
+ * agrees on every arm of `probe-seedling-axe-phase.mjs` (the AXE report, D1).
+ *
+ * ⛔ THE DISC STAYS where the count is not known — a WAIT question (a union over
+ * a dwell window), or a visit whose clock `axeVisitClock` cannot vouch for —
+ * which is what is TRUE when the phase is unknowable.
+ */
+export const AXE_UPDATE_OFFSET = 0;
+
+/** One revolution of an axe, in updates (`360 / |rate|`, rounded up). */
+export function axePeriod(rate) {
+    const r = Math.abs(Number(rate));
+    return r > 0 ? Math.ceil(360 / r) : Infinity;
+}
+
+/**
+ * The visit's arrival observation `v`, or `v: null` with the reason the axe's
+ * update count cannot be read off the tape's tick index.
+ *
+ * `v` is the last transition's `t` (the arrival observation, `levelRun`'s
+ * `enterWorld`), or 0 for a run that has not left its boot level. ⛔ Refused —
+ * and the disc kept — when (a) the last transition does not arrive HERE, (b) a
+ * death or an ending reboot rebuilt the world inside this visit (a second build,
+ * a second ctor), or (c) any dead-frame span lands at or after `v`: a dead frame
+ * spends `Game.update`s the tape does not count, and whether `World.update` ran
+ * in them is per-kind, so the count would be a guess.
+ */
+export function axeVisitClock(run) {
+    const level = run.level;
+    const trs = run.transitions ?? [];
+    const last = trs.at(-1) ?? null;
+    if (last && last.to_level !== level) {
+        return { v: null, why: `the last transition arrives in L${last.to_level}, not L${level}` };
+    }
+    const v = last ? last.t : 0;
+    const rebuilt = [...(run.ledger('playerDeaths') ?? []), ...(run.endingReboots ?? [])]
+        .find((r) => Number.isFinite(r.t) && r.t >= v);
+    if (rebuilt) return { v: null, why: `the world was rebuilt at t${rebuilt.t}, inside the visit` };
+    const dead = (run.deadFrameSpans ?? []).find((s) => s.t !== null && s.t >= v);
+    if (dead) {
+        return { v: null, why: `${dead.frames} dead frame(s) (${dead.kind}) at t${dead.t}, inside the visit` };
+    }
+    return { v, why: null };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — **THE LAVA CHAIN AND THE BEAM TOWER ARE
+ * PRICED AT THEIR OWN UPDATE IN TRANSIT, NOT AS THE VOLUMES THEY SWEEP.**
+ *
+ * The census volumes (`hazardVolume`) are unions over every phase: the chain's
+ * whole 48 px arm widened to the body's 16 px, and the beam's band swept over
+ * the bob. Both are TRUE where the phase is unknowable and both forbid every
+ * corridor that crosses them. The game's answer is a function of the visit's
+ * clock (`probe-seedling-ladder2-phase.mjs`, K = 0 on every arm):
+ *
+ *   - LavaChain: the arm is out while its anim is `extend`/`hit`, which starts
+ *     on the frames with `Game.time % 90 < 1.5` (`hazards.stepLavaChain`) — a
+ *     4 px x 48 px rect for ~20 of every 90 updates.
+ *   - BeamTower: the beam is up on the second frame of each side's anim, its
+ *     side turning by `rate` (`hazards.stepBeamTower`), at the bob's y.
+ *
+ * ⇒ update `u = tick − V` of the visit (`axeVisitClock`, whose refusals are
+ * the right ones: a rebuild re-runs the ctor, and a dead frame spends a
+ * `Game.time` the tape does not count). Its `Game.time` is `run.gameTime +
+ * (tick − ticksCompleted − 1)`. The rect is tested INCLUSIVELY
+ * (`Entity.collideRect`) against the PRE-move box the sample carries — both
+ * are added after the Player. Where the visit clock is refused, `null`: the
+ * caller keeps the volume. A chain with no `Game.time` is refused too; a beam
+ * with none keeps its exact firing and widens its rect by the bob.
+ *
+ * Timelines are memoised per (level, id, V, Game.time at V) — the inputs
+ * that determine them — so a probe that asks hundreds of ticks pays once.
+ */
+const PHASE_TIMELINES = new Map();
+const PHASE_TIMELINE_CAP = 64;
+
+function phaseTimeline(h, v, timeAtV, size) {
+    const key = `${h.tag}@${h.x},${h.y}|${v}|${timeAtV}`;
+    let tl = PHASE_TIMELINES.get(key);
+    if (!tl) {
+        if (PHASE_TIMELINES.size >= PHASE_TIMELINE_CAP) PHASE_TIMELINES.clear();
+        tl = { rects: [null], state: h.tag === 'lavachain' ? createLavaChainState() : createBeamTower(h, size) };
+        PHASE_TIMELINES.set(key, tl);
+    }
+    return tl;
+}
+
+/** The rect the hazard tests on update `u` (1-based) of the visit, or null. */
+function phaseRectAt(h, tl, u, timeAtV) {
+    while (tl.rects.length <= u) {
+        const k = tl.rects.length; // the update being stepped
+        // Update k runs in frame V + k, whose `Game.time` is (time at V+1) + k − 1.
+        const time = timeAtV === null ? null : timeAtV + k - 1;
+        if (h.tag === 'lavachain') {
+            const reaching = stepLavaChain(tl.state, time);
+            tl.rects.push(reaching ? lavaChainRect(h.cx, h.cy, h.attrs?.dir ?? 0) : null);
+        } else {
+            tl.rects.push(stepBeamTower(tl.state, time));
+        }
+    }
+    return tl.rects[u];
+}
+
+export function phaseHazardHit(run, h, clock, tick, box) {
+    if (clock.v === null) return null;
+    const now = run.gameTime;
+    if (h.tag === 'lavachain' && !Number.isFinite(now)) return null;
+    const u = tick - clock.v;
+    if (u < 1) return { hit: null };
+    // `Game.time` in frame V + 1, read off the run's clock now.
+    const timeAtV = Number.isFinite(now) ? now + (clock.v + 1 - run.ticksCompleted - 1) : null;
+    const tl = phaseTimeline(h, clock.v, timeAtV, run.worldFor(run.level).world);
+    let r = phaseRectAt(h, tl, u, timeAtV);
+    if (!r) return { hit: null };
+    if (timeAtV === null) r = { x: r.x, y: r.y - BEAM_BOB_SPAN, w: r.w, h: r.h + 2 * BEAM_BOB_SPAN };
+    if (!rectTouchesBox(r, box)) return { hit: null };
+    const what = h.tag === 'lavachain'
+        ? `a LavaChain's ${48}x4 arm, out on its update ${u} of this visit (Game.time `
+            + `${timeAtV + u - 1} — the extend starts where Game.time % 90 < 1.5)`
+        : `a BeamTower's beam on its update ${u} of this visit (side ${['right', 'up', 'left', 'down'][tl.state.direction] ?? '?'}`
+            + `${timeAtV === null ? ', no Game.time: the rect widened by the bob' : ''})`;
+    return {
+        hit: {
+            kind: 'hazard', id: `${h.tag}@${h.x},${h.y}`, arm: h.tag === 'lavachain' ? 'chain' : 'beam',
+            phase: { tag: h.tag, updates: u, v: clock.v, rect: { x: r.x, y: r.y, w: r.w, h: r.h } },
+            why: `${what} — the exact \`collideRect\` at THIS tick, not the volume`,
+        },
+    };
+}
+
+/**
+ * Can this chain or beam reach the box at ANY phase? The union of its rects:
+ * the chain's one arm; every side a tower's `rate` visits, each widened by the
+ * bob both ways. ⚠ A conservative "yes" — the DOORSTEP test of the ladder's
+ * PHASE arm (where a walk may stand and wait), not a danger verdict.
+ */
+export function phaseHazardCanReach(h, box, size) {
+    if (h.tag === 'lavachain') return rectTouchesBox(lavaChainRect(h.cx, h.cy, h.attrs?.dir ?? 0), box);
+    const t = createBeamTower(h, size);
+    const sides = new Set();
+    for (let d = t.direction, i = 0; i < 4; i += 1, d = (d + t.rate + 4) % 4) sides.add(d);
+    for (const d of sides) {
+        const r = beamRectAt(t, d);
+        if (rectTouchesBox({ x: r.x, y: r.y - BEAM_BOB_SPAN, w: r.w, h: r.h + 2 * BEAM_BOB_SPAN }, box)) return true;
+    }
+    return false;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY LADDER2 — INGREDIENT (g): THE PLACED GRENADES' BLAST.
+ *
+ * A placed grenade has no contact (`combat.contactPricing('grenade')` is
+ * `stepped` by `levelRun.stepPlacedGrenadesNow`), so `staticEnemyDanger`
+ * leaves it to this. Its one arm is the blast: the player's ENTITY point
+ * within 20 px of `(x, endY)` on the update the `"explode"` callback fires.
+ * The run steps it (`run.placedGrenades`, the current visit's), so:
+ *
+ *   - ARMED: the blast update B is the grenade's own, independent of the
+ *     player from here on (a clone stepped forward). Danger at `tick` iff its
+ *     update IS B (TRANSIT), or B lies in [next, its update] (WAIT).
+ *   - NOT ARMED: the walk itself may arm it on the very next update, so no
+ *     blast can come before `updates + 1 + fuse`; danger at or after that.
+ *     Exact-safe — it never misses a blast, and a walk that passes and leaves
+ *     before the earliest one is clean.
+ *   - REMOVED, or already blasted: nothing.
+ *
+ * The update at `tick` is `updates + (tick − ticksCompleted)`: one live update
+ * per frame, inside the visit (a dead frame would not step it).
+ */
+export function grenadeDanger(run, box, tick, mode = 'wait', blasts = null) {
+    const world = run.worldFor(run.level);
+    const census = (world.combat?.enemies ?? []).filter((inst) => inst.tag === 'grenade');
+    if (census.length === 0) return [];
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    const out = [];
+    /**
+     * ⛓ THE EXACT ARM: a TRANSIT sample from `previewWalk` carries the blasts
+     * its own walk set off on this update (`run.grenadeForecast()`, stepped
+     * against the previewed point). Then the question is only whether one of
+     * them reaches this box's entity point.
+     */
+    if (blasts !== null) {
+        for (const b of blasts) {
+            const g = { x: b.x, endY: b.endY };
+            if (!blastReaches(g, px, py)) continue;
+            out.push({
+                kind: 'enemy', id: b.id, arm: 'blast',
+                grenade: { cx: b.x, endY: b.endY, armed: true, updates: b.updates, blastAt: b.updates },
+                why: `a placed Grenade's ${PLACED_GRENADE.hitRadius} px blast on its update ${b.updates}, `
+                    + `armed by this walk ${b.armedAt !== null ? `on its update ${b.armedAt}` : ''} — the `
+                    + 'box\'s entity point is inside it (the walk\'s own forecast)',
+            });
+        }
+        return out;
+    }
+    const live = run.placedGrenades ?? [];
+    for (const inst of census) {
+        const id = `${inst.tag}@${inst.x},${inst.y}`;
+        const g = live.find((x) => x.id === id) ?? createPlacedGrenade(inst.cx, inst.cy, { id });
+        if (g.removed || g.blastAt !== null) continue;
+        if (!blastReaches(g, px, py)) continue;
+        const u = g.updates + Math.max(1, tick - run.ticksCompleted);
+        const fuse = grenadeFuseFrom(g, world);
+        const armed = g.armedAt !== null;
+        const earliest = armed ? g.updates + fuse : g.updates + 1 + fuse;
+        const hit = !Number.isFinite(earliest) ? false
+            : armed
+                ? (mode === 'transit' ? u === earliest : earliest <= u)
+                : earliest <= u;
+        if (!hit) continue;
+        out.push({
+            kind: 'enemy', id, arm: 'blast',
+            grenade: { cx: g.x, endY: g.endY, armed, updates: u, blastAt: earliest },
+            why: `a placed Grenade's ${PLACED_GRENADE.hitRadius} px blast ${armed
+                ? `on its update ${earliest} (armed at ${g.armedAt})`
+                : `no earlier than its update ${earliest} (not armed yet: the walk may arm it next update)`}`
+                + ` — the box's entity point is inside it at update ${u}`,
+        });
+    }
+    return out;
+}
+
+/**
+ * Updates from `g`'s current state to its blast when armed NOW (or on the next
+ * update, if it is not), simulated on a copy. `Infinity` if it never blasts.
+ */
+function grenadeFuseFrom(g, world) {
+    const c = { ...g };
+    const solidAt = (b) => !!world.collidesSolid(b);
+    const start = c.updates;
+    for (let i = 0; i < 2000; i += 1) {
+        const ev = stepPlacedGrenade(c, c.x, c.endY, { solidAt });
+        if (ev === 'blast') return c.blastAt - start - (g.armedAt !== null ? 0 : 1);
+    }
+    return Infinity;
+}
+
+/**
+ * ⛓ INGREDIENT (b) — the placed puzzlement hazards' verdict volumes,
+ * excluding the families `HAZARDS_PRICED_LIVE` names. ⛓ AXE: a spinning axe in
+ * TRANSIT is its exact blade and hub at `tick` (see `AXE_UPDATE_OFFSET`).
+ */
+export function hazardDanger(run, box, tick = null, mode = 'wait') {
+    const out = [];
+    const world = run.worldFor(run.level);
+    // ⛓ AXE: asked once per call, and only when a spinning axe is placed here.
+    let axeClock;
+    for (const h of (world.combat?.hazards ?? [])) {
+        if (HAZARDS_PRICED_LIVE[h.tag]) continue;
+        if (h.tag === 'spinningaxe' && mode === 'transit' && Number.isFinite(tick)) {
+            axeClock ??= axeVisitClock(run);
+            if (axeClock.v !== null) {
+                const axe = { cx: h.cx, cy: h.cy, rate: Number(h.attrs?.rate ?? 0) };
+                const updates = tick - axeClock.v + AXE_UPDATE_OFFSET;
+                const hit = updates >= 1 ? axeHitsPlayer(axe, updates, box) : null;
+                if (hit) {
+                    out.push({ kind: 'hazard', id: `${h.tag}@${h.x},${h.y}`, arm: hit.arm,
+                        axe: { cx: axe.cx, cy: axe.cy, rate: axe.rate, period: axePeriod(axe.rate), updates },
+                        why: `a SpinningAxe's ${hit.arm === 'hub' ? `${SPINNING_AXE.endRectSide}x`
+                            + `${SPINNING_AXE.endRectSide} hub rect` : `${SPINNING_AXE.length} px blade`} `
+                            + `on its update ${updates} of this visit (rate ${axe.rate}, `
+                            + `${(((hit.line.deg % 360) + 360) % 360)}°) — the exact \`collideLine\`/`
+                            + '`collideRect` at THIS tick, not the disc' });
+                }
+                continue;
+            }
+        }
+        // ⛓⛓⛓ LADDER2: a lava chain or a beam tower in TRANSIT is its own
+        // timeline at `tick` (`phaseHazardHit`), the volume where it cannot run.
+        if ((h.tag === 'lavachain' || h.tag === 'beamtower') && mode === 'transit'
+            && Number.isFinite(tick)) {
+            axeClock ??= axeVisitClock(run);
+            const at = phaseHazardHit(run, h, axeClock, tick, box);
+            if (at !== null) {
+                if (at.hit) out.push(at.hit);
+                continue;
+            }
+        }
+        const vol = hazardVolume(h, world.world);
+        const hit = volumeHitsBox(vol, box);
+        if (hit) {
+            out.push({ kind: 'hazard', id: `${h.tag}@${h.x},${h.y}`,
+                why: `${vol.verdict} (${vol.exactness}) — ${hit.kind}: ${hit.why}` });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓ INGREDIENT (c) — the STEPPED enemy bodies, grown by their own bound.
+ *
+ * ⛔ THE GROWTH IS CONDITIONAL ON THE LEASH, which is `chaseEnvelope`'s
+ * arithmetic and not a simplification of it: a chaser outside `runRange` is
+ * not pushed at all, so growing its box by `moveSpeed x horizon` would
+ * hard-avoid half a room around a body that is standing still. Inside the
+ * leash — measured from the NEAREST point of the envelope, not from the
+ * spawn, for the reason `chaseEnvelope` gives — it grows by the full bound
+ * per tick.
+ *
+ * ⚠ AND THE PAD IS NOT DECORATION (`chaseEnvelope` again): a `bobsoldier`'s
+ * body is 8x8 and its sword line reaches 16 px past it. `threatPad` is added
+ * outside the growth so a class whose THREAT exceeds its body cannot be
+ * declared clear by a body-sized measurement.
+ *
+ * ⛔ AND `run.chasers` IS EMPTY UNDER `noDamage`/`noclip` BY CONSTRUCTION.
+ * That is the bridge's own gate showing through, not a bug: under those
+ * flags the run does not step a chaser, so it has no live position to offer
+ * and this must not invent one from the census.
+ */
+export function chaserDanger(run, box, horizon, bodies = null, { perTick = false, swordTick = null } = {}) {
+    const out = [];
+    /**
+     * ⛓⛓ seedling-fidelity-bobsoldier2 D2b — THE DECISION GATE TIMES A SWORD IT CAN TIME (`swordTick`, opt-in:
+     * `solverBot.SWORD_GATE_TIMED`). The WAIT arm below prices every body untimed — a pad stands for a reach without
+     * a clock. A BobSoldier's blade HAS a clock: `run.chasers` carries its spin state and `chaserForecastNow` steps it
+     * exactly. So when the caller hands `swordTick` — the chaser forecast stepped ONE tick against the player standing
+     * at this box (the walk's own first sample, `previewWalk`'s pairing: post-step bodies, pre-move player) — a sworded
+     * body is priced by that tick's lines and its bare body, as the TRANSIT arm prices it, and the pad is not added.
+     * Every other body, and every caller that hands nothing, is the code below unchanged.
+     */
+    const swordTimedNow = swordTick !== null && !perTick;
+    if (swordTimedNow) {
+        for (const s of (swordTick.swordsOnCorpses ?? [])) {
+            if ((s.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+                out.push({ kind: 'chaser', id: s.id,
+                    why: 'a CORPSE\'s sword, timed (one forecast tick at this box): `BobSoldier.update` swings with '
+                        + 'no `destroy` gate until `FP.world.remove`' });
+            }
+        }
+    }
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — **THE BODIES MAY BE A FORECAST'S**, and when they are
+     * they are already AT the ETA.
+     *
+     * `run.chasers` is where the bodies are NOW. In TRANSIT that was the whole
+     * defect: `coupledHorizon` is 0, so `r` below is 0, so every cell along a
+     * corridor was priced against the ungrown box at the plan-time position —
+     * and a bob spends the walk closing on the player. `previewWalk` now steps
+     * them against the candidate path and hands each sample its own bodies, so
+     * the position IS the answer to "where will it be when I get there" rather
+     * than a growth radius standing in for one.
+     *
+     * ⚠ THE GROWTH TERM IS NOT REMOVED, because the two readings share this
+     * function: a caller that passes nothing still gets the live bodies and
+     * still needs `bound * horizon` (the WAIT question, `dangerAt`'s other
+     * mode, asks exactly that). With forecast bodies the horizon is 0 and the
+     * growth is correctly nil — the same constant, for the opposite reason.
+     * `threatPad` applies either way: a class whose THREAT exceeds its body is
+     * not measured by its body.
+     */
+    // ⛓ fidelity-bobsoldier D3: a forecast's CORPSE swords ride beside its bodies (`chaserForecastNow`'s
+    // `swordsOnCorpses`) — a destroyed BobSoldier leaves the projection (the kill arm's death tick reads its
+    // absence) and its blade swings on until the removal.
+    for (const s of (bodies?.swordsOnCorpses ?? [])) {
+        if ((s.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+            out.push({ kind: 'chaser', id: s.id,
+                why: 'a CORPSE\'s sword: `BobSoldier.update` swings with no `destroy` gate until `FP.world.remove`' });
+        }
+    }
+    for (const c of bodies ?? run.entities('chasers') ?? []) {
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **A BODY THE GAME'S OWN GATE SAYS
+         * CANNOT FIRE IS NOT A CONTACT.**
+         *
+         * `Enemy.hitPlayer` (`Enemies/Enemy.as:211`) gates the player-damaging
+         * contact on the ENEMY's `hitsTimer`, so a struck body is harmless for
+         * its whole 30-tick i-frame — it keeps steering (`Bob.update` has no
+         * such gate) and the player walks through it (`"Enemy"` is not in
+         * `Mobile.solids`). `levelRun`'s stepped-chaser arm has asked
+         * `enemyHitPlayerFires` since R6 slice 3 and files the refusal as a
+         * `contactsSuppressed` row; this map never asked at all, and carried
+         * ZERO `hitsTimer` terms. So the danger map priced the safest window
+         * in the game as danger. It is the same predicate, CALLED (⚖ ruling
+         * 17, trap 566), through the planner's wrapper — which prices an
+         * `uncertain` or off-screen verdict as DANGER rather than as safety.
+         *
+         * ⛔ **PER-TICK ONLY, AND THAT IS A CLAIM AND NOT AN OVERSIGHT.** In
+         * TRANSIT the sample carries the bodies as of ITS OWN tick and the
+         * horizon is 0, so "can this body damage me HERE" is exactly the
+         * question `Enemy.hitPlayer` answers at that tick. The WAIT arm prices
+         * a whole dwell window through `bound * horizon`; a window has no
+         * single tick to ask the predicate about, and an i-frame that expires
+         * inside it would be a claim about the wrong moment.
+         *
+         * ⛓ THE VERDICT IS `'on'`: this map holds no camera, and assuming the
+         * body IS drawn is the reading that lets its own state do all the
+         * refusing.
+         */
+        /**
+         * ⛓⛓ fidelity-bobsoldier D3 — A SWORD IS NOT THE BODY'S CONTACT, AND NEITHER OF THE TWO GATES BELOW IS
+         * ITS GATE. `BobSoldier.swordHitting` has no `hitsTimer` test and no `destroy` test (`bobSoldier.js` notes
+         * 1 and 3): a struck body's blade still cuts through its i-frame, and a corpse's blade cuts through its
+         * eleven-tick fade. So for a class with a sword the i-frame skip removes only the BODY term, and a
+         * destroyed body keeps its sword term.
+         */
+        /**
+         * ⛓⛓ fidelity LAPSECOST D2 (`contactFidelity.flyerLive`) — A FLYER IS PRICED BY ITS DROP, NEVER BY ITS BODY.
+         * `Flyer.hitPlayer` is overridden EMPTY, and the drop has no enemy i-frame gate (`Flyer.as:64-67`), so neither
+         * `plannerContactFree` nor the leash pad is its question. A FORECAST body carries `drop` — the update where its
+         * "fall" shows frame 10 (`chaserForecastNow`): danger iff the previewed player's start-of-tick box holds the
+         * point, which is this sample's `box`. The WAIT arm and the live bodies have no clock: they price the column
+         * from the body's top down to its drop point, grown as every untimed body is.
+         */
+        const drop = chaserDropOf(c.tag);
+        if (drop) {
+            if (c.destroy || c.dying) continue;
+            if (perTick && bodies !== null && c.drop !== undefined) {
+                const p = c.drop?.point;
+                if (c.drop && (c.drop.hitsPlayer || (p.x >= box.x && p.x < box.right && p.y >= box.y && p.y < box.bottom))) {
+                    out.push({ kind: 'chaser', id: c.id,
+                        why: 'the drop: its "fall" shows frame 10 THIS tick and the player\'s box holds (x, y+10) — '
+                            + '`p.hit(null, dropForce, …, damage 2)`, no enemy i-frame gate' });
+                }
+                continue;
+            }
+            const bound = stepBoundFor(c.tag);
+            const hb = ENEMY_CLASSES[c.tag].hitbox;
+            const column = rect(c.x - hb.ox, c.y - hb.oy, hb.w, hb.oy + 11);
+            const leash = ENEMY_CLASSES[c.tag].aggro?.range ?? 0;
+            const px = (box.x + box.right) / 2;
+            const py = (box.y + box.bottom) / 2;
+            const d = Math.hypot(px - c.x, py - c.y);
+            const r = d <= leash ? bound * horizon : 0;
+            if (rectsOverlap(box, grow(column, r))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: `the drop column (body to its (x, y+10) point), untimed: grown ${bound} px/tick x ${horizon}` });
+            }
+            continue;
+        }
+        const sworded = chaserHasSword(c.tag);
+        if (swordTimedNow && sworded) {
+            // A corpse's blade was priced above (the forecast drops `destroy` from the projection).
+            if (c.destroy) continue;
+            const f = swordTick.find((x) => x.id === c.id);
+            if (!f) {
+                fail(`chaserDanger: the timed sword tick has no row for the live ${c.id} — a forecast that lost a `
+                    + 'live body would price it as absent, which is the one reading that is never safe.');
+            }
+            if ((f.sword?.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the sword, timed (one forecast tick at this box): `swordHitting`\'s `collideLine("Player", …)` '
+                        + 'from 8 to 16 px off the body crosses it' });
+                continue;
+            }
+            if (!plannerContactFree(f, 'on').contactFree && rectsOverlap(box, chaserBoxAt(f.tag ?? c.tag, f.x, f.y))) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the BobSoldier\'s 8x8 body, bare, one forecast tick on (its sword is timed)' });
+            }
+            continue;
+        }
+        // ⛓ fidelity CORRIDOR: a forecast body that carries its contact gate's own timer is asked with it
+        // (`contactHitsTimer`, `corridorBodyPricing` ON only) — the Player's later write in the tick is not the gate's.
+        const bodyFree = perTick && plannerContactFree(c.contactHitsTimer !== undefined
+            ? { ...c, hitsTimer: c.contactHitsTimer } : c, 'on').contactFree;
+        if (bodyFree && !sworded) continue;
+        /**
+         * ⛓⛓⛓ SEEDLING SWIM U10, D3 — **A DESTROYED BODY IS A CORPSE, NOT A
+         * THREAT** (U7 § D4's wall 3, measured here rather than as the brief
+         * guessed it).
+         *
+         * Step 24's decision gate refused at (377.34,251.98) against
+         * `puncher@416,256` "inside leash 80 (d=7.9) … pad 8" — and the body
+         * it priced was DEAD: killed by press at t 1781, `dying` and `destroy`
+         * both set, its fade running (`alpha` 1). The kill arm's dwell ends
+         * when the body leaves `strikeBodies` (which drops `destroy`), but
+         * `run.chasers` keeps it through the fade, and this arm priced it
+         * with the pad at the walk's very next gate.
+         *
+         * ⛔ THE GAME'S GATE, CALLED BY NAME: `Enemy.update` runs
+         * `hitUpdate(); hitPlayer();` only `if (!destroy)`, and `play("die")`
+         * replaced any wind-up, so a destroyed body neither touches nor
+         * punches — `levelRun`'s stepper bills nothing for one ("A DESTROYED
+         * BODY STOPS DEAD"). Its witness is `u7-puncher-kill`: the corpse
+         * stands at the player's side through the whole fade and the player's
+         * `hits` stays 0 in the game. ⚠ `dying` alone is NOT skipped — a body
+         * whose die animation is still playing has not reached that gate.
+         * (Forecast bodies never carry one: the forecast drops `destroy`.)
+         */
+        if (c.destroy && !sworded) continue;
+        const row = ENEMY_CLASSES[c.tag];
+        const bound = stepBoundFor(c.tag);
+        if (bound === null) {
+            fail(`chaserDanger: "${c.tag}" has no step bound — a boss (or an unpriced tag) `
+                + 'is an ENCOUNTER SCRIPT, and 0 would read as "static" and prove the '
+                + 'arena clear.');
+        }
+        const body = chaserBoxAt(c.tag, c.x, c.y);
+        const leash = typeof row.aggro?.range === 'number' ? row.aggro.range : 0;
+        /**
+         * ⛓⛓⛓ SEEDLING SWIM U10, D2 — **A FORECAST BODY THAT CARRIES ITS OWN
+         * PUNCH IS PRICED BY IT, NOT BY THE PAD** (U7 § D4's wall 2).
+         *
+         * `threatPad` stands for a reach this map cannot TIME. The chaser
+         * forecast does time the puncher's: `chaserForecastNow` reports the
+         * box `punchNow` tests on the one tick the wind-up ends, and whether
+         * `attackPlayer`'s own `hitsTimer` gate lets it throw. So per tick,
+         * with forecast bodies, the body is priced bare (its contact —
+         * `Puncher.solids` carries `"Player"`, so the contact needs the player
+         * to walk INTO it) and the punch exactly. The relaxation's game
+         * witness is `u10-puncher-dwell` (both arms).
+         *
+         * ⛔ THE WAIT ARM AND THE LIVE BODIES KEEP THE PAD: neither carries a
+         * forecast, and a pad is what a reach without a clock costs (trap
+         * candidate: a pad priced where a forecast exists — and its converse,
+         * a forecast assumed where none was taken).
+         */
+        const timed = perTick && bodies !== null && c.punch !== undefined;
+        if (timed && c.punch && c.punch.live
+            && (c.punch.hitsPlayer || rectsOverlap(box, c.punch.rect))) {
+            out.push({ kind: 'chaser', id: c.id,
+                why: 'the punch: the `attackPlayer` box off the body\'s edge ends its '
+                    + 'wind-up THIS tick, and the body\'s own hitsTimer does not refuse it' });
+            continue;
+        }
+        /**
+         * ⛓⛓ fidelity-bobsoldier D3 — A FORECAST BODY THAT CARRIES ITS OWN SWORD IS PRICED BY IT, NOT BY THE PAD
+         * (the punch's rule, one class over). `chaserForecastNow` steps the blade's state machine on its clone and
+         * reports this tick's hit LINES (`bobSoldierSwordTail`); this sample's `box` is the pre-move player — the
+         * box `swordHitting`'s `collideLine("Player", …)` tests — so the crossing is asked exactly. The body is then
+         * priced bare (its contact), or not at all while its own i-frame/`destroy` refuses the contact.
+         * ⛔ The WAIT arm and the live bodies keep `threatPad` 16 (a reach without a clock).
+         */
+        const swordTimed = perTick && bodies !== null && sworded && c.sword !== undefined;
+        if (swordTimed) {
+            const crossed = (c.sword?.lines ?? []).some((l) => collideLineSolid([box], l.x0, l.y0, l.x1, l.y1));
+            if (crossed) {
+                out.push({ kind: 'chaser', id: c.id,
+                    why: 'the sword: `swordHitting`\'s `collideLine("Player", …)` from 8 to 16 px off the body '
+                        + 'crosses this box THIS tick (no enemy i-frame and no `destroy` gate refuses it)' });
+                continue;
+            }
+            if (bodyFree || c.destroy) continue;
+            if (rectsOverlap(box, chaserBoxAt(c.tag, c.x, c.y))) {
+                out.push({ kind: 'chaser', id: c.id, why: 'the BobSoldier\'s 8x8 body, bare (its sword is timed)' });
+            }
+            continue;
+        }
+        // ⛓ an untimed sword (the WAIT arm, a live corpse, an i-framed body) is the pad around the body.
+        const pad = timed ? 0 : (row.threatPad ?? 0);
+        // The player's centre against the body's, which is what `Bob.update`'s
+        // own `FP.distance(x, y, player.x, player.y)` measures.
+        const px = (box.x + box.right) / 2;
+        const py = (box.y + box.bottom) / 2;
+        const d = Math.hypot(px - c.x, py - c.y);
+        const woken = d <= leash;
+        const r = woken ? bound * horizon : 0;
+        if (rectsOverlap(box, grow(body, r + pad))) {
+            out.push({ kind: 'chaser', id: c.id,
+                why: woken
+                    ? `inside leash ${leash} (d=${d.toFixed(1)}), box grown ${bound} px/tick `
+                        + `x ${horizon} + pad ${pad}`
+                    : `outside leash ${leash} (d=${d.toFixed(1)}) — the BODY only, ungrown, `
+                        + 'because a chaser out of leash is not pushed at all' });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ INGREDIENT (e) — R8 SLICE 3b — THE STATIC `"Enemy"` BODIES, AND THE
+ * MAP HAD NO ARM FOR THEM AT ALL.
+ *
+ * ⛔ THE GAP WAS MEASURED, NOT GUESSED. Slice 1 built ingredient (c) for
+ * STEPPED bodies (`run.chasers`) and (b) for placed PUZZLEMENT hazards
+ * (`world.combat.hazards`). L6's four `sandtrap`s are NEITHER: a `SandTrap`
+ * is an `"Enemy"` census row with `speed 0`, so nothing on the roster asked
+ * about it — and slice 2's free oracle is the receipt, the GAME hitting
+ * `sandtrap@64,16` at t=20 and killing the player TWICE in a room every
+ * ingredient of the map called calm (§10.3). A map whose ingredients are
+ * three of the four kinds of body in the game is not a union.
+ *
+ * ⛔ AND THE TWO `"Enemy"` ROSTERS ARE NOT INTERCHANGEABLE — the same law
+ * `arrowBodiesNow` states one file over. A body this room STEPS belongs to
+ * ingredient (c) at its LIVE position, whether it is alive (in `run.chasers`)
+ * or dead (absent from it). Pricing it here as well would (i) double-count a
+ * live one at the cell it left on its first chasing tick and (ii) forbid a
+ * DEAD one's placement for ever, which is trap 157 wearing the danger map's
+ * clothes. The predicate is the RUN's own verdict, never a second reading of
+ * it.
+ *
+ * ⚠ A body in a room the verdict REFUSES is priced HERE, at its placement,
+ * and the `why` says that is a placement rather than a position. That is the
+ * honest reading available: the model has no live position for it, and a
+ * heuristic that said nothing would be a hole exactly where the refusal is.
+ *
+ * ⚠ A BOSS IS AN ENCOUNTER SCRIPT, not a body — `contactPricing`'s own split
+ * — and is skipped here for the reason `stepBoundFor` refuses one in (c): a
+ * bound of zero would read as "static" and prove the arena clear.
+ */
+/**
+ * ⛓⛓ SEEDLING SWIM U6 — **THE SPINNERS THIS RUN STEPS, LIVE OR KILLED**: the
+ * ids the static ingredient must NOT price at their placements.
+ *
+ * ⛔ THE LIVE ROSTER ALONE WAS HALF THE ANSWER. A spinner the press arm killed
+ * leaves `run.spinnerBodies`, and the exclusion above then let its census row
+ * fall through to "a static Enemy body at its placement" — trap 157 for the
+ * DEAD half, which this file's own chaser paragraph names (*"forbid a DEAD
+ * one's placement for ever"*). The census chamber's (2,2) is what it cost once
+ * the transit clock was paired (U6 D2): the kill ends with the player on the
+ * body's placement tile and the next danger gate refused *"the danger map
+ * forbids (40.02,39.95) — enemy:spinner@32,32 (a static "Enemy" body …)"* with
+ * no body in the room.
+ *
+ * ⇒ the run's own verdict, through the one ledger the solver family reads: a
+ * body with a LANDED press hit (`spinnerPressHits`) is one this run stepped, so
+ * if it is not in the live roster now, the run removed it. A spinner the run
+ * never steps (a room whose roster is not tracked) has no such row and is still
+ * priced at its placement, which is the honest reading there.
+ */
+function spinnersTheRunSteps(run) {
+    const ids = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
+    for (const h of (run.ledger('spinnerPressHits') ?? [])) if (h.landed) ids.add(h.id);
+    return ids;
+}
+
+/**
+ * ⛓ STATICLADDER D2 — THE DARKTRAPS THE LIGHT HAS REACHED, which are HARMLESS: `DarkTrap.update` skips
+ * `super.update()` (and so `hitPlayer`) from its `startDying` tick on, and a removed one is gone. The run's own
+ * verdict (`darkTraps` is `null` while `CONTACT_FIDELITY.darkTrapLight` is off, so this set is empty then).
+ */
+function darkTrapsHarmless(run) {
+    return new Set((run.entities('darkTraps') ?? []).filter((b) => b.startDying || b.removed).map((b) => b.id));
+}
+
+export function staticEnemyDanger(run, box) {
+    const out = [];
+    const world = run.worldFor(run.level);
+    const stepped = run.chaserRoomVerdict(run.level).stepped;
+    /**
+     * ⛔ R8 SLICE 6 — AND THE SPINNERS ARE EXCLUDED BY THE RUN'S OWN ROSTER,
+     * for the reason the bridged chasers are: this room STEPS them, so they
+     * belong to ingredient (f) at their LIVE positions. Pricing them here as
+     * well would forbid a cell every spinner in the game leaves on tick one —
+     * trap 157 wearing the danger map's clothes, which §12.4 named for the
+     * live half and this is the other half of.
+     *
+     * ⛓ U6 — AND A SPINNER THE RUN KILLED IS NOT AT ITS PLACEMENT EITHER
+     * (`spinnersTheRunSteps`).
+     */
+    const live = spinnersTheRunSteps(run);
+    const harmless = darkTrapsHarmless(run);
+    /**
+     * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a drill the run STEPS is not at its placement once it has hopped — the
+     * spinners' trap 157 one class over. It sits between hops, so it is priced as a static box at its LIVE position
+     * (`run.entities('drillBodies')`), and a removed one not at all. OFF: every drill at its placement, as before.
+     */
+    const liveDrills = CONTACT_FIDELITY.drillMixedRooms
+        ? new Map((run.entities('drillBodies') ?? []).map((d) => [d.id, d])) : null;
+    for (const inst of (world.combat?.enemies ?? [])) {
+        if (stepped && isBridgedChaser(inst.tag)) continue;
+        if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (harmless.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        const pricing = contactPricing(inst.tag);
+        if (pricing.kind === 'boss') continue;
+        // ⛓ LADDER2: a placed grenade has no contact — its blast is ingredient (g).
+        if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
+        const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
+        if (liveDrill?.removed) continue;
+        const r = liveDrill ? liveDrill.rect : contactRect(inst);
+        if (!r) continue;
+        if (rectsOverlap(box, r)) {
+            out.push({
+                kind: 'enemy',
+                id: `${inst.tag}@${inst.x},${inst.y}`,
+                why: liveDrill ? `a stepped drill, priced as a static box where it stands now (${liveDrill.x},${liveDrill.y}) `
+                    + '(`drillMixedRooms`: it hops only when the player is in its run range with a clear line)'
+                    : `a static "Enemy" body at its ${stepped ? 'placement (this room is '
+                    + 'stepped, so this class is unbridged and does not move)'
+                    : 'PLACEMENT — this room\'s chaser roster is REFUSED, so the model has '
+                        + 'no live position for it'}, priced "${pricing.kind}" by `
+                    + '`contactPricing`',
+            });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ INGREDIENT (f) — THE LIVE SPINNER BODIES, AND SINCE R8 SLICE 8 IT IS
+ * THE **EXACT** MECHANISM RATHER THAN THE UNION THAT COVERS IT.
+ *
+ * ⛔ SLICE 6's DEFECT, KEPT ON THE RECORD, because it is the reason the
+ * ingredient exists at all: a `Spinner` was VISIBLE TO INGREDIENT (e) AT ITS
+ * PLACEMENT — a cell it leaves on the first tick of the visit and never
+ * returns to — so the map forbade a cell nothing is in and called the cell the
+ * body is actually in calm. A wrong "closed" seals the map and a wrong "open"
+ * gets you hit; that managed both at once.
+ *
+ * ── ⚖ AND SLICE 6's CURE WAS TOO WIDE, WHICH IS ITS OWN DEFECT ────────
+ *
+ * The cure priced the body grown by the hammer's whole reach — the union over
+ * all 45 phases, `spinner.hammerReach`'s 13 px disc — on the grounds that
+ * *"this model does not carry `Game.time`"*. ⚖ THE USER'S CORRECTION
+ * (kickoff §16.8): *"the hammer spins in a predictable pattern; opportunistic
+ * means waiting until the hammer isn't in the way, or standing where it won't
+ * be. Forbidding the whole disc it passes through is wrong."*
+ *
+ * It is right, and the same 60 walkable cells of L18 over the same 600-tick
+ * horizon measure how right:
+ *
+ * ```
+ *   priced by            clear for the whole horizon   ...AND 3 separated presses
+ *   the 13 px disc                    1 (behind a lock)              0
+ *   the exact hammer line            16                              3
+ * ```
+ *
+ * ⇒ the conservative ingredient had not merely cost routes, it had
+ * MANUFACTURED the policy problem the slice then solved with a moving press
+ * schedule ([[feedback_conservative_ingredient_makes_the_problem]]).
+ *
+ * ── ⛓⛓ WHAT IS PRICED NOW: BOTH ARMS, AT THE CELL'S OWN TICK ─────────
+ *
+ * `Spinner.update` damages twice per frame and the map prices both, because
+ * narrowing to the line alone would open a hole exactly the size of the body
+ * the disc used to cover:
+ *
+ *   (1) `Enemy.hitPlayer` — `collide("Player", x, y)`, the 7x7 BOX, force 3
+ *   (2) the hammer — `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)`
+ *       at `hammerAngle = (Game.time % 45) / 45 · 2π`, force 4
+ *
+ * and the ANGLE comes from `run.gameTimeAt(horizon − 1)` — the clock forecast
+ * row `horizon − 1` swings under (U6 D2) — which is the clock's own
+ * arithmetic and not a second one.
+ *
+ * ⛔ THE DISC SURVIVES AS THE FALLBACK, AND ITS CONDITION IS NAMED. Where the
+ * clock cannot run — a tape with no `pins: ["dead_frames"]`, or a `cutscene[0]`
+ * boot — `run.gameTimeAt` answers `null` and the union over all 45 phases is
+ * once again the honest quantity. That is the accurate wall, not a permissive
+ * refusal: it is what is TRUE when the phase is unknowable
+ * ([[feedback_accurate_wall_beats_permissive_refusal]]).
+ *
+ * ⚠ CARRIED FORWARD IN TIME UNDER §14.2's LAW, and a spinner is the cleanest
+ * AUTONOMOUS body on the roster: `runRange` is 0, so its chase arm is dead
+ * code and its trajectory is a function of the level's geometry and the tick
+ * index ALONE — it cannot read the player even in principle. With the clock,
+ * the HAMMER is autonomous-given-the-walk too: the phase is a function of the
+ * same tick index.
+ *
+ * ⚠ THE ENTITY POINT IS RECOVERED FROM THE RECT BY ITS ORIGIN, NOT BY ITS
+ * CENTRE. `spinnerRect` is `[x-4, x+3)`, whose centre is `x - 0.5` — so the
+ * disc slice 6 drew was half a pixel off its own body, invisible under a
+ * 13 px pad and NOT invisible to a raycast from the point.
+ */
+export function spinnerDanger(run, box, horizon) {
+    const bodies = run.entities('spinnerBodies') ?? [];
+    if (bodies.length === 0) return [];
+    // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
+    // and it is a list of RECTS in the same order `spinnerBodies` reports.
+    const ahead = horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null;
+    /**
+     * ⛓⛓ SEEDLING SWIM U6 (D2) — **ROW `h − 1` SWINGS AT `gameTimeAt(h − 1)`.**
+     * `advance` steps the spinners, bills their contacts at `clock.now()`, and
+     * only then ticks, so a forecast row and its clock share one index
+     * (`spinnerClockPairing.test.js`, the same law U4b D1 applied to
+     * `solverBot.clearOfHammersAt`). This line used to read `gameTimeAt(h)`:
+     * the transit arm priced every body one hammer phase ahead of the contact
+     * the run bills. Horizon 0 reads the bodies as they stand, at
+     * `gameTimeAt(0)`, as it always did.
+     */
+    const at = typeof run.gameTimeAt === 'function'
+        ? run.gameTimeAt(Math.max(0, horizon - 1)) : null;
+    const out = [];
+    bodies.forEach((b, i) => {
+        const r = ahead?.[i] ?? null;
+        // ⛔ `+ originX`, not the rect's centre — see the docblock.
+        const ex = r ? r.x + SPINNER.originX : b.x;
+        const ey = r ? r.y + SPINNER.originY : b.y;
+        const at13 = ` — the UNION over all ${SPINNER.hammerPeriod} phases, because `
+            + `\`Game.time\` is not countable on this tape`;
+        const where = `(${ex.toFixed(1)},${ey.toFixed(1)})`
+            + (horizon > 0 ? ` at horizon ${horizon}` : '');
+        if (at === null) {
+            const disc = {
+                x: ex - SPINNER.hammerLength,
+                y: ey - SPINNER.hammerLength,
+                right: ex + SPINNER.hammerLength,
+                bottom: ey + SPINNER.hammerLength,
+            };
+            if (!rectsOverlap(box, disc)) return;
+            out.push({
+                kind: 'spinner',
+                id: b.id,
+                arm: 'disc',
+                why: `a live Spinner body at ${where} grown by its hammer's `
+                    + `${SPINNER.hammerLength} px reach${at13}`,
+            });
+            return;
+        }
+        // (1) `Enemy.hitPlayer` — the 7x7 body, at the position this horizon has it.
+        const bodyRect = r ?? spinnerRect(b);
+        if (rectsOverlap(box, bodyRect)) {
+            out.push({
+                kind: 'spinner',
+                id: b.id,
+                arm: 'body',
+                why: `a live Spinner BODY at ${where} — \`Enemy.hitPlayer\`'s `
+                    + `${SPINNER.w}x${SPINNER.h} \`collide("Player", x, y)\` at force 3`,
+            });
+            return;
+        }
+        // (2) the hammer, at THIS tick's phase and no other.
+        const line = hammerHitsPlayer({ x: ex, y: ey }, at, box);
+        if (!line) return;
+        out.push({
+            kind: 'spinner',
+            id: b.id,
+            arm: 'hammer',
+            why: `a live Spinner's HAMMER at ${where} — the exact `
+                + `${SPINNER.hammerLength} px \`collideLine\` at `
+                + `Game.time ${at} (phase ${at % SPINNER.hammerPeriod}/`
+                + `${SPINNER.hammerPeriod}, angle ${(line.angle * 180 / Math.PI).toFixed(1)}°)`,
+        });
+    });
+    return out;
+}
+
+/**
+ * ⛓ INGREDIENT (d) — the crushers, at the position the run has them in.
+ *
+ * ⛔ TRIGGER LANES AS WELL AS BODIES, and the lanes are the larger claim:
+ * entering one ARMS a 1 px/tick charge that runs until a solid stops it, so
+ * the lane is where a route stops being able to change its mind. Damage 1000
+ * means a contact is `die()` at any `hitsMax` — there is no stance that
+ * survives one, which is why `hazardVolume` calls the whole family
+ * `hard-avoid`.
+ *
+ * ⚠ A SNAPSHOT, and the run's own getter says so: a charging crusher does
+ * not re-derive `v`, so a plan made against this is sound only while
+ * `run.crushersParked`. The caller is told, in the source it consulted.
+ */
+export function crusherDanger(run, box) {
+    /**
+     * ⛓⛓ SEEDLING FIDELITY CRUSHER — **A LANE THE CRUSHER CANNOT SEE DOWN IS NOT
+     * A TRIGGER.** `Crusher.update` takes `collideLine("Solid", …)` to the player's
+     * entity point FIRST and returns on any hit (`scanCrusher`'s early exit), and
+     * its lanes are `World.collideRect` — inclusive. The four rects below are
+     * neither: they reach through walls, and in L42 they price the whole return
+     * corridor (rows 13-14, under A's south lane behind a wall) as danger, so no
+     * walk to a bait stance plans at all. Behind the flag, the danger is the
+     * game's own question (`crusherBait.crusherSightDanger`); off, the rects.
+     */
+    if (CRUSHER_BAIT.enabled) {
+        return crusherSightDanger(run, box, { x: box.x + HITBOX.originX, y: box.y + HITBOX.originY },
+            (id) => run.world.solidBoxesForMover(run.liveGeometryOpts(), id));
+    }
+    const out = [];
+    const live = run.entities('crushers');
+    if (!live) return out;
+    for (const [id, c] of live) {
+        for (const v of crusherVolumesAt(c.x, c.y)) {
+            if (!rectsOverlap(box, v.r)) continue;
+            out.push({ kind: 'crusher', id, why: `${v.why} (LIVE centre ${c.x},${c.y})` });
+            break;
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3b — THE MAP AS VOLUMES, for the AVOID rung.
+ *
+ * `dangerAt` answers "is THIS box dangerous"; a static re-plan needs the
+ * other shape — the rects themselves, so `plannerObstacleAt`'s
+ * `extraVolumes` hook can route the corridor AROUND them. Same ingredients,
+ * same reasons, one derivation: a second reading of "where the danger is"
+ * would drift from the reading the probe then uses to check the answer.
+ *
+ * ⚠ IT IS THE STATIC HALF OF THE MAP, and says so. A live arrow's swept box
+ * and a chaser's growth are functions of a HORIZON, and a tile path has no
+ * time axis at all — so those enter at the horizon the caller names (0 for a
+ * plan made now) and the ladder's next rung, TIME, is the one that owns the
+ * timeline. An AVOID that pretended to price a moving body over a whole walk
+ * would be the timing rung, done badly.
+ */
+/**
+ * ⛓ seedling-fidelity-residue D-B (`CONTACT_FIDELITY.whirlpoolDrown`; OFF: nothing) — A WHIRLPOOL'S PULL, AS DANGER.
+ * `Whirlpool.update` (`Whirlpool.as:44-97`) decrements its timer, and while it is LIVE (`dies <= timer < live + dies`,
+ * after the decrement) writes the player's position whenever `collide("Player")` and the player's point lies within
+ * the radius (16): the pull spirals in a pixel a tick and drowns the player at the centre (`Player.drown()` every
+ * update, `die()` on the twentieth). A box is priced when it overlaps the whirlpool's 32x32 box with its entity point
+ * (`HITBOX`'s origin) inside the radius — on the update(s) the question covers: TRANSIT the one at `tick` (its own
+ * timer), WAIT every one from the next to `tick` (a growing whirlpool comes alive inside a long dwell).
+ */
+export function whirlpoolDanger(run, box, tick, mode = 'wait') {
+    if (!CONTACT_FIDELITY.whirlpoolDrown) return [];
+    const view = run.entities?.('tentacleBeastFight') ?? null;
+    if (!view || !(view.whirlpools?.length > 0)) return [];
+    const now = run.ticksCompleted;
+    const last = Math.max(1, tick - now);
+    const first = mode === 'transit' ? last : 1;
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    const out = [];
+    for (const w of view.whirlpools) {
+        const r = whirlpoolRect(w);
+        if (!(box.x < r.right && box.right > r.x && box.y < r.bottom && box.bottom > r.y)) continue;
+        if (Math.hypot(w.x - px, w.y - py) >= WHIRLPOOL.radius) continue;
+        // the update u ticks on reads `timer - u` (it decrements first); live in [dies, live + dies)
+        const liveFrom = Math.max(first, w.timer - (WHIRLPOOL.live + WHIRLPOOL.dies) + 1);
+        const liveTo = Math.min(last, w.timer - WHIRLPOOL.dies);
+        if (liveFrom > liveTo) continue;
+        out.push({ kind: 'whirlpool', id: w.id, why: `a whirlpool's pull at (${w.x},${w.y}) r ${WHIRLPOOL.radius}, live `
+            + `on update(s) +${liveFrom}…+${liveTo} of this question (timer ${w.timer}) — it drowns at its centre` });
+    }
+    return out;
+}
+
+export function dangerVolumes(run, horizon = 0) {
+    const out = [];
+    const level = run.level;
+    const world = run.worldFor(level);
+    const armed = run.entities('armedArrowTraps');
+    if (armed) {
+        for (const trap of (world.arrowTraps ?? [])) {
+            if (!armed.has(trap.id)) continue;
+            const lane = arrowLaneForPlacement(trap);
+            out.push({
+                level, kind: 'danger', id: trap.id,
+                rect: arrowLaneRect(lane, world.world.height),
+                why: 'an ARMED trap\'s lane',
+            });
+        }
+    }
+    for (const a of (run.entities('arrowsInFlight') ?? [])) {
+        const body = rect(a.x - ARROW.hitbox.originX, a.y - ARROW.hitbox.originY,
+            ARROW.hitbox.w, ARROW.hitbox.h);
+        out.push({
+            level, kind: 'danger', id: a.id,
+            rect: rect(body.x, body.y, body.w, body.h + ARROW.speed * horizon),
+            why: `a live arrow swept ${ARROW.speed} px/tick x ${horizon}`,
+        });
+    }
+    for (const h of (world.combat?.hazards ?? [])) {
+        if (HAZARDS_PRICED_LIVE[h.tag]) continue;
+        const vol = hazardVolume(h, world.world);
+        for (const r of (vol.rects ?? [])) {
+            out.push({ level, kind: 'danger', id: `${h.tag}@${h.x},${h.y}`, rect: r.r ?? r,
+                why: `${vol.verdict}: ${r.why ?? vol.why}` });
+        }
+        /**
+         * ⚠ A DISC IS NOT A RECT AND IS NOT APPROXIMATED BY ONE HERE. The
+         * point test in `volumeHitsBox` is what prices a disc, and `dangerAt`
+         * still runs it — so a disc-only hazard is INVISIBLE to the AVOID
+         * rung's corridor and CAUGHT by the probe that checks the corridor.
+         * That is a named weakness of this rung rather than a hole: the
+         * escalation exists precisely because AVOID can fail.
+         */
+    }
+    const stepped = run.chaserRoomVerdict(level).stepped;
+    for (const c of (run.entities('chasers') ?? [])) {
+        const row = ENEMY_CLASSES[c.tag];
+        const bound = stepBoundFor(c.tag) ?? 0;
+        const body = chaserBoxAt(c.tag, c.x, c.y);
+        out.push({
+            level, kind: 'danger', id: c.id,
+            rect: grow(body, bound * horizon + (row.threatPad ?? 0)),
+            why: `a stepped ${c.tag} at its LIVE position`,
+        });
+    }
+    /**
+     * ⛔ R8 SLICE 6 — AND THE SPINNERS ARE EXCLUDED BY THE RUN'S OWN ROSTER,
+     * for the reason the bridged chasers are: this room STEPS them, so they
+     * belong to ingredient (f) at their LIVE positions. Pricing them here as
+     * well would forbid a cell every spinner in the game leaves on tick one —
+     * trap 157 wearing the danger map's clothes, which §12.4 named for the
+     * live half and this is the other half of. ⛓ U6: the killed ones too
+     * (`spinnersTheRunSteps`).
+     */
+    const live = spinnersTheRunSteps(run);
+    const harmless = darkTrapsHarmless(run);
+    for (const inst of (world.combat?.enemies ?? [])) {
+        if (stepped && isBridgedChaser(inst.tag)) continue;
+        if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (harmless.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (contactPricing(inst.tag).kind === 'boss') continue;
+        // ⛓ LADDER2: no contact rect for a placed grenade (`grenadeDanger`).
+        if (contactPricing(inst.tag).pricedBy === 'stepPlacedGrenadesNow') continue;
+        const r = contactRect(inst);
+        if (!r) continue;
+        out.push({
+            level, kind: 'danger', id: `${inst.tag}@${inst.x},${inst.y}`, rect: r,
+            why: 'a static "Enemy" body',
+        });
+    }
+    for (const [id, c] of (run.entities('crushers') ?? [])) {
+        for (const v of crusherVolumesAt(c.x, c.y)) {
+            out.push({ level, kind: 'danger', id, rect: v.r, why: v.why });
+        }
+    }
+    // ⛓ seedling-fidelity-residue D-B: a whirlpool not yet dying, at its 32x32 box (the pull's disc lies inside it).
+    if (CONTACT_FIDELITY.whirlpoolDrown) {
+        for (const w of (run.entities('tentacleBeastFight')?.whirlpools ?? [])) {
+            if (w.timer - 1 < WHIRLPOOL.dies) continue;
+            const r = whirlpoolRect(w);
+            out.push({ level, kind: 'danger', id: w.id, rect: rect(r.x, r.y, r.w, r.h),
+                why: 'a whirlpool (its pull drowns at the centre)' });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3b — THE REGIONS THAT KILL A *BODY*, which is a different
+ * question from the regions that kill the PLAYER and has to be asked
+ * separately.
+ *
+ * ⚖ §11.8a ruling 2's BAIT rung derives its stance from
+ * `ARROW_KILL_PLAN.baitRule` — *"choose the stance so the straight line from
+ * body to player crosses a lane"* — and the mechanism catalog a room offers
+ * is what "a lane" means in it. L5's is an armed arrow lane. L6's is the
+ * WATER: `Enemy.update`'s terrain switch (transcribed at slice 1, and the
+ * arm that already drowns `bob@112,48` in this model) kills a body that walks
+ * into water or lava, and slice 3's pit descent kills one that walks into a
+ * pit. All three are transcribed mechanism data, which is the other half of
+ * the ruling's own law.
+ *
+ * ⚠ NOT THE SAME SET AS THE PLAYER'S DANGER. A chaser drowns where the
+ * player merely cannot walk, and an arrow lane is lethal to both — so a
+ * policy that reused one list for both questions would bait bodies into
+ * cells that do nothing to them and refuse stances that are perfectly safe.
+ */
+export function bodyKillRegions(run) {
+    const out = [];
+    const level = run.level;
+    const world = run.worldFor(level);
+    const armed = run.entities('armedArrowTraps');
+    if (armed) {
+        for (const trap of (world.arrowTraps ?? [])) {
+            if (!armed.has(trap.id)) continue;
+            const lane = arrowLaneForPlacement(trap);
+            out.push({
+                kind: 'arrowLane', id: trap.id,
+                rect: arrowLaneRect(lane, world.world.height),
+                why: 'an ARMED trap\'s lane — `Enemy.hit` through `hitsMax` i-frames',
+            });
+        }
+    }
+    for (const t of (world.lethalTerrainTiles ?? [])) {
+        out.push({
+            kind: 'terrain', id: `tile:${t.tx},${t.ty}`, rect: t.rect,
+            why: `\`Enemy.update\`'s terrain switch — t=${t.t} sets \`destroy\``,
+        });
+    }
+    for (const t of (world.pitTiles ?? [])) {
+        out.push({
+            kind: 'pit', id: `pit:${t.tx},${t.ty}`, rect: t.rect,
+            why: '`Enemy.update`\'s `case 6` — a SCHEDULE (lerp, spin, 20-tick fade), '
+                + 'during which the body cannot damage the player at all',
+        });
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 5 — THE TWO DERIVED QUESTIONS, KEPT APART BY NAME.
+ *
+ * ⚖ §13.10a: the PRIMITIVE stays `dangerAt(run, tick, box)` — it was built
+ * time-indexed at §9.9 and the collapse was the CALLER's. What the ruling adds
+ * is that the two questions a policy asks of it are different questions, and
+ * trap 154's law is that they must not share a name:
+ *
+ *   `wait`     may I OCCUPY this box from now to `tick`? The union over the
+ *              dwell window — a swept arrow, an armed lane, a chaser grown by
+ *              its bound. UNCHANGED, and the default, because a stance, a
+ *              settle and a bait are all this question.
+ *   `transit`  will something be AT this box when I am, at `tick`? The arrows
+ *              at their PREDICTED positions rather than swept through every
+ *              position they will pass. This is the question a corridor asks,
+ *              and asking it in the other mode is what refuted `r8-solve-5`.
+ *
+ * ⚠ ONLY THE ARROW ARM DIFFERS, and every other ingredient is shared rather
+ * than re-derived. A chaser's growth by `bound x horizon` is already the right
+ * shape for both (it is where the body COULD be, and it could be there at the
+ * arrival tick); the hazard volumes and the static bodies do not move at all;
+ * the crusher is a snapshot whose own getter says so. A second union would be
+ * a second cost model.
+ */
+export const DANGER_MODES = Object.freeze({
+    wait: Object.freeze({
+        arrows: 'swept `speed x horizon` — the UNION over the dwell window',
+        asks: 'may I occupy this box for the whole window',
+        cite: 'trap 154 — the question a stance/settle/bait asks',
+    }),
+    transit: Object.freeze({
+        arrows: 'predicted by `stepArrow`\'s own arithmetic, cover included',
+        asks: 'will something be at this box at this tick',
+        cite: '⚖ §13.10a / trap 161 — the question a corridor asks',
+    }),
+});
+
+/**
+ * ⛓⛓⛓ WHICH INGREDIENTS A TRANSIT QUESTION MAY CARRY FORWARD IN TIME — AND
+ * THE CRITERION IS **AUTONOMY**, not convenience. Measured, not chosen.
+ *
+ * ⚖ §13.10a ruling 2 gives the reason in its own words: *"arrows in flight are
+ * autonomous and exactly predictable from run state — their flight does not
+ * read the player."* That sentence is a PARTITION, and this table is it.
+ *
+ *   AUTONOMOUS — an arrow. Its trajectory is a function of its own state, so
+ *   "where will it be at tick T" is arithmetic and the answer is exact.
+ *
+ *   PLAYER-COUPLED — a chaser. `Bob.update` steers at the PLAYER, so a
+ *   forecast of it along a walk that has not happened is a forecast of the
+ *   walk, not of the body. Growing its envelope by `bound x horizon` over a
+ *   whole corridor is formally sound and practically useless: at 0.5 px/tick
+ *   over a 120-tick walk the envelope is 60 px in every direction and the
+ *   room is one solid refusal. ⛔ MEASURED, not argued — doing it that way
+ *   made L6's ladder escalate for ever, in the one room the arc has already
+ *   recorded byte-exact.
+ *
+ * ⇒ a TRANSIT query reads the player-coupled ingredients at HORIZON ZERO,
+ * exactly as the static corridor probe always did, and what prices them along
+ * the walk is ⚖ §13.10a point 3: **the per-tick next-cell check**, live, every
+ * tick, against bodies that have actually moved. The probe PRUNES; the tick
+ * ADJUDICATES. A heuristic that tried to be the oracle here would be
+ * `spinnerForecast`'s own doctrine broken by its own map.
+ *
+ * ⚠ THE STATIC INGREDIENTS TAKE NO HORIZON AT ALL and are listed anyway, so
+ * this is a partition of the union rather than a note about two of its arms.
+ */
+export const TRANSIT_INGREDIENTS = Object.freeze({
+    arrows: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: '`stepArrow` reads only the arrow: velocity, the level bound, and cover',
+    }),
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — THIS ROW USED TO BE FALSE, AND THE FALSE HALF WAS THE
+     * SENTENCE THAT SOUNDED LIKE A MECHANISM.
+     *
+     * It read *"Read LIVE; priced along the corridor by the per-tick next-cell
+     * check"*. There was no such check — not in `botDriverV2.drive`, not
+     * anywhere — so the corridor was priced against the plan-time box at every
+     * ETA and the claim covered for it. L14's survey walk is what collected:
+     * a hit at tick 44 from a body priced seventeen pixels from where it stood.
+     *
+     * ⇒ the coupling was read as a reason the arm COULD NOT be carried to the
+     * ETA. It is the opposite: the coupling is what makes a forecast over a
+     * CANDIDATE PATH the only honest answer, because the bodies' future is a
+     * function of the walk being considered. `previewWalk` steps them against
+     * that path and hands each sample its own bodies.
+     */
+    chasers: Object.freeze({
+        coupling: 'player-coupled',
+        atEta: true,
+        why: '`chaseImpulse` steers at the player, so where a bob will BE is a function '
+            + 'of the walk being considered — which is why it is forecast against the '
+            + 'CANDIDATE PATH (`previewWalk` steps `chaserStep` per tick) and each '
+            + 'sample carries the bodies as of its own tick, rather than read LIVE and '
+            + 'grown by a horizon',
+    }),
+    armedLanes: Object.freeze({
+        coupling: 'state',
+        atEta: false,
+        why: 'whether a trap fires at all is its GROUP\'s state (trap 160) — danger at '
+            + 'every horizon while armed, and the caller holding the presser is the one '
+            + 'that may exclude it by id',
+    }),
+    hazards: Object.freeze({
+        coupling: 'static', atEta: false, why: 'placed volumes do not move',
+    }),
+    /**
+     * ⛓⛓⛓ R8 SLICE 8 — THE ROW'S OWN COMMENT DEMANDED THIS BE SAID OUT LOUD,
+     * AND HERE IT IS: **THE HAMMER IS AUTONOMOUS-GIVEN-THE-WALK NOW TOO.**
+     *
+     * The row used to carry a caveat — *"what is NOT predictable is the HAMMER
+     * ANGLE; it rides on `Game.time`, which counts dead frames"* — and that
+     * caveat is what made the ingredient price a DISC. §14.2 ruling 1's
+     * criterion is autonomy given the walk, and a quantity that is a function
+     * of the tick index alone meets it as squarely as the arrow subsystem
+     * does: `gameClock` counts the dead frames the caveat named, so the phase
+     * at horizon `h` is `run.gameTimeAt(h − 1)` (row `h − 1`'s own clock, U6 D2)
+     * and the ingredient prices the
+     * EXACT LINE at that phase.
+     *
+     * ⚠ The coupling is unchanged — `runRange` is 0, so `Spinner.update`'s
+     * chase block is dead code and neither the body nor the hammer can read
+     * the player even in principle. What changed is that the second arm is no
+     * longer over-approximated.
+     */
+    spinners: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: '⛓ THE CLEANEST AUTONOMOUS BODY ON THE ROSTER — `runRange` is 0, so '
+            + '`Spinner.update`\'s chase block is dead code and the trajectory is a '
+            + 'function of the level geometry and the tick index alone. It cannot read '
+            + 'the player even in principle, so `spinnerForecast` (the run\'s OWN '
+            + 'stepper, run forward) is exact. ⛓ AND SO IS THE HAMMER: its phase is '
+            + '`(Game.time % 45)/45·2π` and `gameClock` counts `Game.time` exactly, so '
+            + 'the ingredient prices BOTH arms the game runs — `hitPlayer`\'s 7x7 body '
+            + 'and the 13 px `collideLine` at THIS tick\'s angle. ⛔ Where the clock '
+            + 'cannot run (`run.gameTimeAt` is null) it falls back to the union over all '
+            + '45 phases, the 13 px disc, which is what is TRUE when the phase is '
+            + 'unknowable.',
+    }),
+    staticEnemies: Object.freeze({
+        coupling: 'static', atEta: false, why: 'a `speed 0` census body at its placement',
+    }),
+    /**
+     * ⛓ U15-swim D2 — the turret spits. The SHOOTER is player-coupled (it aims
+     * and re-arms on range) and the SPIT is autonomous, so the pair is forecast
+     * against the candidate path exactly as the chasers are.
+     */
+    spits: Object.freeze({
+        coupling: 'player-coupled',
+        atEta: true,
+        why: 'a turret aims at the player and its 40-tick clock re-arms out of range, so '
+            + 'where its next spit flies is a function of the walk — `previewWalk` steps '
+            + '`run.spitForecast()` per tick and each sample carries the spits as of its '
+            + 'own tick',
+    }),
+    /**
+     * ⛓ hammer LD — the L69 Lights fight (`lightsDanger`). A shot never reads the player once fired, and a flier
+     * steers on the controller's `goto` (written on `Game.worldFrame`), so both are carried to the cell's own ETA by
+     * the model's own steppers on a copy. ⚠ The player CAN reach a flier (the sword, the shield's shove): the copy
+     * leaves that out, which keeps every body and shot in the air longer — more danger, never less.
+     */
+    lights: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: 'a `LightBossShot` moves by its own `v` (friction 0) and is culled at `onScreen` margin 0; a flier steers '
+            + 'on the `goto` the controller writes on `Game.worldFrame`. Both are stepped forward on a copy of '
+            + '`run.entities(\'lightsFight\')` by `lightBoss.js`\'s own functions, with no player in it',
+    }),
+    crushers: Object.freeze({
+        coupling: 'snapshot', atEta: false,
+        why: 'a charging crusher does not re-derive `v`; the run\'s own getter says the '
+            + 'plan is sound only while `crushersParked`',
+    }),
+});
+
+/**
+ * ⛓⛓ fidelity CORRIDOR D2 (`CONTACT_FIDELITY.corridorBodyPricing`) — THE LIVE WALLFLYERS AND DRILLS, PRICED ALONG THE
+ * WALK AT THE TICKS IT PASSES THEM.
+ *
+ * Neither class had an arm here: `staticEnemyDanger` priced both at their `.oel` PLACEMENTS, so a corridor was clean
+ * where a flyer that had launched across it, or a drill that had hopped onto it, hit the drive (the forecast was in
+ * the wrong PLACE). Both are player-coupled, so `previewWalk` steps them against the candidate path
+ * (`run.corridorBodyForecast`) and hands each sample its own rows. This prices a row's `hitsPlayer` — the class's own
+ * `hitPlayer` gate firing against this sample's START-of-tick box and landing through the player's i-frame — and
+ * an `uncertain` on-screen verdict (the live step refuses there; a walk planned through it is planned through a
+ * refusal). Kind `chaser`: a player-coupled body priced per tick, which is what admits the ladder's DETOUR rung.
+ *
+ * ⚠ ADDITIVE: the placement arm is untouched, so the switch only ever forbids more (the trap-157 cost of the
+ * placement — a cell a launched flyer has left — is kept, and named as residue).
+ *
+ * @param {object[]} bodies one sample's `corridorBodies` (`{kind, id, hitsPlayer, uncertain?}`)
+ */
+export function corridorBodyDanger(bodies) {
+    const out = [];
+    for (const b of bodies ?? []) {
+        if (b.hitsPlayer) {
+            out.push({ kind: 'chaser', id: b.id, body: b.kind,
+                why: `the ${b.kind}'s contact: its \`hitPlayer\` gate fires against the player's start-of-tick box `
+                    + `THIS tick (body at (${b.x.toFixed(1)},${b.y.toFixed(1)}), forecast along the walk)` });
+        } else if (b.uncertain) {
+            out.push({ kind: 'chaser', id: b.id, body: b.kind,
+                why: `the ${b.kind}'s on-screen verdict is UNCERTAIN under the shake band this tick — the live step `
+                    + 'refuses there, so the walk is not planned through it' });
+        }
+    }
+    return out;
+}
+
+/**
+ * The union, over one box at one absolute tick.
+ *
+ * @param {object} run  a live `createLevelRun` view
+ * @param {number} tick ABSOLUTE — the same clock `forbiddenAt(tick, …)` uses
+ * @param {object} box  a player box (`playerPhysicsV2.playerBoxAt`)
+ * @param {object} [opts]
+ * @param {'wait'|'transit'} [opts.mode] see `DANGER_MODES`; `wait` by default,
+ *   because it is the older, wider claim and a caller that has not thought
+ *   about the difference should get the one that forbids more.
+ * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
+ */
+export function dangerAt(run, tick, box, {
+    mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null, swordTick = null,
+    corridorBodies = null,
+} = {}) {
+    if (!run || typeof run.level !== 'number') {
+        fail('dangerAt: needs a live run — the whole point is that the positions are the '
+            + 'ones the run has NOW, not the ones a level record was authored with.');
+    }
+    if (!Number.isFinite(tick)) fail(`dangerAt: tick must be finite, got ${tick}`);
+    if (!box || !Number.isFinite(box.x) || !Number.isFinite(box.right)) {
+        fail('dangerAt: needs a rect with `right`/`bottom` — a literal without them NEVER '
+            + 'overlaps, silently ([[feedback_rect_literal_never_overlaps]]).');
+    }
+    // ⚠ CLAMPED, NOT REFUSED. A search asks about ticks in its own future and
+    // a policy asks about NOW; a negative horizon is the second question
+    // spelled with the first question's clock.
+    const horizon = Math.max(0, tick - run.ticksCompleted);
+    if (!DANGER_MODES[mode]) {
+        fail(`dangerAt: "${mode}" is not a mode. The two questions are `
+            + `[${Object.keys(DANGER_MODES).join(', ')}] and they are kept apart by name `
+            + 'on purpose (trap 154) — a caller that wants a third one has a third '
+            + 'question and should say what it is.');
+    }
+    // ⛔ THE PLAYER-COUPLED ARM READS LIVE IN TRANSIT MODE — see
+    // `TRANSIT_INGREDIENTS` for the criterion and for the measurement that
+    // forced it. The horizon is the ARROW arm's alone.
+    const coupledHorizon = mode === 'transit' ? 0 : horizon;
+    const sources = [
+        ...(mode === 'transit'
+            ? arrowDangerDuringTransit(run, box, horizon, arrows)
+            : arrowDanger(run, box, horizon)),
+        // ⛓ AXE: the tick and the mode, so a spinning axe in TRANSIT is its blade at `tick`.
+        ...hazardDanger(run, box, tick, mode),
+        ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null,
+            { perTick: mode === 'transit', ...(swordTick !== null && horizon === 0 ? { swordTick } : {}) }),
+        // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
+        // carried to the cell's own ETA in transit mode exactly as an arrow is.
+        ...spinnerDanger(run, box, horizon),
+        ...staticEnemyDanger(run, box),
+        // ⛓ LADDER2: the placed grenades' blast, at its own update.
+        ...grenadeDanger(run, box, tick, mode, mode === 'transit' ? grenades : null),
+        ...crusherDanger(run, box),
+        // ⛓ U15-swim D2: the spits — the walk's own forecast in TRANSIT.
+        ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null, mode),
+        // ⛓ fidelity CORRIDOR D2: the walk's own wallflyer/drill forecast — TRANSIT only, and only when handed.
+        ...(mode === 'transit' && corridorBodies ? corridorBodyDanger(corridorBodies) : []),
+        // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks (OFF: the family is null, so nothing).
+        ...igneousDanger(run, box, tick, mode),
+        // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped on a copy (OFF / any other room: nothing).
+        ...lightsDanger(run, box, horizon, mode),
+        // ⛓ seedling-fidelity-residue D-B: a whirlpool's pull (OFF: nothing).
+        ...whirlpoolDanger(run, box, tick, mode),
+    ];
+    return { danger: sources.length > 0, horizon, mode, sources };
+}
+
+/**
+ * ⚖ §13.10a's TRANSIT question, named. `tick` is the cell's own ETA.
+ *
+ * ⛔ THE ETA IS THE CALLER'S TO DERIVE, and it must come from the controller
+ * that will actually drive (`botDriverV1.chooseHeld` plus the run's own
+ * physics) — never from a distance divided by a speed. Trap 118's direction
+ * applies to time exactly as it does to space: a cruder movement model
+ * produces a schedule the walk does not keep, and a probe checked against a
+ * schedule nobody drives is a probe of nothing.
+ */
+export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null,
+    spits = null, grenades = null, corridorBodies = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits, grenades,
+        ...(corridorBodies ? { corridorBodies } : {}) });
+}
+
+/**
+ * ⚖ §13.10a's WAIT question, named — the union over a dwell window.
+ *
+ * ⚠ THE WINDOW STARTS AT `run.ticksCompleted`, NOT AT `from`, and that is the
+ * conservative direction: a dwell that begins in the future is priced from now
+ * instead, which can only forbid more. Stated rather than left to be inferred
+ * from the horizon arithmetic — a caller that needs the tighter window is
+ * asking a question this map has never been able to answer.
+ */
+export function dangerWhileWaiting(run, untilTick, box) {
+    return dangerAt(run, untilTick, box, { mode: 'wait' });
+}
+
+/**
+ * `mover.findEarliestArrival`'s `forbiddenAt(tick, x, y)`, over this map.
+ *
+ * ⛔ THE ADAPTER EXISTS SO THE BOX IS BUILT ONE WAY. `forbiddenAt` is handed
+ * a POSITION and every ingredient here asks about a BOX; a caller that built
+ * its own would be a second reading of the player's hitbox, which is the
+ * defect this whole package keeps paying for one class at a time.
+ *
+ * @param {object}   run
+ * @param {Function} playerBoxAt `(x, y) => rect` — injected rather than
+ *   imported so a caller with a different mover (a block, a probe) can hand
+ *   its own box builder and get the same union.
+ */
+export function forbiddenByDanger(run, playerBoxAt) {
+    if (typeof playerBoxAt !== 'function') {
+        fail('forbiddenByDanger: pass the box builder. Solidity — and threat — is a '
+            + 'property of the thing MOVING, so the box cannot be assumed.');
+    }
+    return (tick, x, y) => dangerAt(run, tick, playerBoxAt(x, y)).danger;
+}

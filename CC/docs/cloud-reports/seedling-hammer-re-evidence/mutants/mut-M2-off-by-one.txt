@@ -1,0 +1,69 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [31m❯[39m frontend/modules/seedlingDemo/hammerRefugeCut.test.js [2m([22m[2m6 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 6148[2mms[22m[39m
+     [32m✓[39m ships OFF[32m 2[2mms[22m[39m
+     [32m✓[39m withRefugeEtaCut sets and restores it, also on a throw[32m 1[2mms[22m[39m
+[31m     [31m×[31m the cut stops at the (eta + 1)-th sample, never at the eta-th (a tie still arrives)[39m[32m 12[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF writes nothing to the instrument [33m 1536[2mms[22m[39m
+     [33m[2m✓[22m[39m at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised [33m 3373[2mms[22m[39m
+[31m     [31m×[31m t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)[39m[33m 1220[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerRefugeCut.test.js[2m > [22mREFUGE_ETA_CUT — the switch and the cut[2m > [22mthe cut stops at the (eta + 1)-th sample, never at the eta-th (a tie still arrives)
+[31m[1mAssertionError[22m: expected [ false, false, true, true, true ] to deeply equal [ false, false, false, true, true ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    false,[22m
+[2m    false,[22m
+[32m-   false,[39m
+[31m+   true,[39m
+[2m    true,[22m
+[2m    true,[22m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerRefugeCut.test.js:[2m66:29[22m[39m
+    [90m 64| [39m    it('the cut stops at the (eta + 1)-th sample, never at the eta-th …
+    [90m 65| [39m        const calls = (eta, n) => { const f = refugeEtaCut(eta); retur…
+    [90m 66| [39m        [34mexpect[39m([34mcalls[39m([34m3[39m[33m,[39m [34m5[39m))[33m.[39m[34mtoEqual[39m([[35mfalse[39m[33m,[39m [35mfalse[39m[33m,[39m [35mfalse[39m[33m,[39m [35mtrue[39m[33m,[39m [35mtrue[39m])[33m;[39m
+    [90m   | [39m                            [31m^[39m
+    [90m 67| [39m        [34mexpect[39m([34mcalls[39m([34m0[39m[33m,[39m [34m2[39m))[33m.[39m[34mtoEqual[39m([[35mtrue[39m[33m,[39m [35mtrue[39m])[33m;[39m
+    [90m 68| [39m        [90m// one predicate per preview: a second one starts its own count[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/hammerRefugeCut.test.js[2m > [22mREFUGE_ETA_CUT — with BW's PRESS_KILL_BOMBS ON (leg 381's MOVINGWAIT witness walk)[2m > [22mt1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)
+[31m[1mAssertionError[22m: expected { x: 248, y: 200, …(2) } to deeply equal { x: 232, y: 200, …(2) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "clearance": 5.159379566433699,[39m
+[31m+   "clearance": -2.895923599142975,[39m
+[2m    "eta": 22,[22m
+[32m-   "x": 232,[39m
+[31m+   "x": 248,[39m
+[2m    "y": 200,[22m
+[2m  }[22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/hammerRefugeCut.test.js:[2m129:20[22m[39m
+    [90m127| [39m        [35mconst[39m { off[33m,[39m on } [33m=[39m [34mboth[39m(run)[33m;[39m
+    [90m128| [39m        [34mexpect[39m([off[33m.[39mx[33m,[39m off[33m.[39my])[33m.[39m[34mtoEqual[39m([[34m232[39m[33m,[39m [34m200[39m])[33m;[39m
+    [90m129| [39m        [34mexpect[39m(on)[33m.[39m[34mtoEqual[39m(off)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m130| [39m    }[33m,[39m [34m120_000[39m)[33m;[39m
+    [90m131| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 19:01:34
+[2m   Duration [22m 9.03s[2m (transform 2.00s, setup 0ms, import 2.71s, tests 6.15s, environment 0ms)[22m
+

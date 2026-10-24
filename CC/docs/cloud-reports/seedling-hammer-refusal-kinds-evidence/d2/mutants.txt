@@ -1,0 +1,24 @@
+== k1: 2 red, 12 green
+   RED ⛓⛓⛓ L18 hammer room (residue 21): v1's fields are W0's bytes; every rejection has ONE kind, none of them `other`
+       AssertionError: expected 10 to be +0 // Object.is equality
+   RED ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message
+       AssertionError: expected 'other' to be 'pending' // Object.is equality
+== k2: 5 red, 9 green
+   RED ⛓⛓⛓ L18 hammer room (residue 21): v1's fields are W0's bytes; every rejection has ONE kind, none of them `other`
+       AssertionError: expected [ '0', '1', '2', '3' ] to deeply equal [ 'why', 'kind', 'key' ]
+   RED ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): v1's fields are W0's bytes; every rejection has ONE kind, none of them `other`
+       AssertionError: expected [ '0', '1', '2' ] to deeply equal [ 'why', 'kind', 'key' ]
+   RED ⛓⛓⛓ L6 ladder climb: v1's fields are W0's bytes; every rejection has ONE kind, none of them `other`
+       AssertionError: expected [ '0', '1' ] to deeply equal [ 'why', 'kind', 'key' ]
+   RED ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message
+       AssertionError: expected undefined to be 'levelRun: spinner@112,48\'s removal a…' // Object.is equality
+   RED ⛓⛓ lastWhy is a refused rung's why verbatim: L40's and L6's last rejections are rows of their own traces
+       AssertionError: expected [ …(6) ] to include undefined
+== k3: 1 red, 13 green
+   RED ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is loo
+       AssertionError: expected [ 167, 171 ] to deeply equal [ 167, 167 ]
+== k4: 2 red, 12 green
+   RED ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is loo
+       AssertionError: expected 4 to be +0 // Object.is equality
+   RED ⛓⛓ only an install reaches a kind: solverBot never calls the lookup, and the lookup reads no deadline
+       AssertionError: expected '/**\n * seedlingDemo/solverBot — the …' not to match /\bprogress(?:Kind|Why)\(|\bkindEntere…/

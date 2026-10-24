@@ -1,0 +1,417 @@
+{
+    "game": "seedling",
+    "name": "robust-l16-l18-sword-conch",
+    "boot": {
+        "level": 16,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasDarkSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasDarkShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasFeather": false,
+            "hasSpear": false,
+            "hasDarkSuit": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 797,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "down",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "down",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 25
+        },
+        {
+            "key": "left",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "right",
+            "from": 26,
+            "to": 29
+        },
+        {
+            "key": "up",
+            "from": 31,
+            "to": 64
+        },
+        {
+            "key": "primary",
+            "from": 65,
+            "to": 66
+        },
+        {
+            "key": "right",
+            "from": 67,
+            "to": 148
+        },
+        {
+            "key": "primary",
+            "from": 148,
+            "to": 149
+        },
+        {
+            "key": "right",
+            "from": 149,
+            "to": 173
+        },
+        {
+            "key": "primary",
+            "from": 173,
+            "to": 174
+        },
+        {
+            "key": "right",
+            "from": 174,
+            "to": 205
+        },
+        {
+            "key": "left",
+            "from": 205,
+            "to": 206
+        },
+        {
+            "key": "primary",
+            "from": 206,
+            "to": 207
+        },
+        {
+            "key": "right",
+            "from": 207,
+            "to": 225
+        },
+        {
+            "key": "left",
+            "from": 226,
+            "to": 228
+        },
+        {
+            "key": "down",
+            "from": 232,
+            "to": 259
+        },
+        {
+            "key": "primary",
+            "from": 259,
+            "to": 260
+        },
+        {
+            "key": "down",
+            "from": 260,
+            "to": 272
+        },
+        {
+            "key": "up",
+            "from": 274,
+            "to": 276
+        },
+        {
+            "key": "right",
+            "from": 280,
+            "to": 288
+        },
+        {
+            "key": "left",
+            "from": 318,
+            "to": 319
+        },
+        {
+            "key": "primary",
+            "from": 319,
+            "to": 320
+        },
+        {
+            "key": "left",
+            "from": 320,
+            "to": 321
+        },
+        {
+            "key": "primary",
+            "from": 321,
+            "to": 322
+        },
+        {
+            "key": "up",
+            "from": 322,
+            "to": 332
+        },
+        {
+            "key": "down",
+            "from": 332,
+            "to": 333
+        },
+        {
+            "key": "up",
+            "from": 333,
+            "to": 334
+        },
+        {
+            "key": "down",
+            "from": 334,
+            "to": 335
+        },
+        {
+            "key": "up",
+            "from": 335,
+            "to": 336
+        },
+        {
+            "key": "down",
+            "from": 338,
+            "to": 339
+        },
+        {
+            "key": "right",
+            "from": 322,
+            "to": 362
+        },
+        {
+            "key": "left",
+            "from": 362,
+            "to": 363
+        },
+        {
+            "key": "right",
+            "from": 363,
+            "to": 365
+        },
+        {
+            "key": "left",
+            "from": 366,
+            "to": 368
+        },
+        {
+            "key": "up",
+            "from": 372,
+            "to": 383
+        },
+        {
+            "key": "down",
+            "from": 383,
+            "to": 384
+        },
+        {
+            "key": "up",
+            "from": 384,
+            "to": 385
+        },
+        {
+            "key": "down",
+            "from": 385,
+            "to": 386
+        },
+        {
+            "key": "up",
+            "from": 386,
+            "to": 387
+        },
+        {
+            "key": "right",
+            "from": 391,
+            "to": 392
+        },
+        {
+            "key": "primary",
+            "from": 392,
+            "to": 393
+        },
+        {
+            "key": "right",
+            "from": 412,
+            "to": 423
+        },
+        {
+            "key": "left",
+            "from": 423,
+            "to": 424
+        },
+        {
+            "key": "right",
+            "from": 424,
+            "to": 425
+        },
+        {
+            "key": "left",
+            "from": 427,
+            "to": 429
+        },
+        {
+            "key": "right",
+            "from": 432,
+            "to": 433
+        },
+        {
+            "key": "down",
+            "from": 412,
+            "to": 466
+        },
+        {
+            "key": "up",
+            "from": 467,
+            "to": 469
+        },
+        {
+            "key": "left",
+            "from": 473,
+            "to": 500
+        },
+        {
+            "key": "right",
+            "from": 502,
+            "to": 504
+        },
+        {
+            "key": "up",
+            "from": 508,
+            "to": 519
+        },
+        {
+            "key": "down",
+            "from": 519,
+            "to": 520
+        },
+        {
+            "key": "up",
+            "from": 520,
+            "to": 522
+        },
+        {
+            "key": "down",
+            "from": 523,
+            "to": 525
+        },
+        {
+            "key": "up",
+            "from": 529,
+            "to": 567
+        },
+        {
+            "key": "down",
+            "from": 677,
+            "to": 711
+        },
+        {
+            "key": "up",
+            "from": 712,
+            "to": 714
+        },
+        {
+            "key": "right",
+            "from": 718,
+            "to": 771
+        },
+        {
+            "key": "left",
+            "from": 771,
+            "to": 772
+        },
+        {
+            "key": "right",
+            "from": 772,
+            "to": 773
+        },
+        {
+            "key": "right",
+            "from": 777,
+            "to": 788
+        },
+        {
+            "key": "left",
+            "from": 788,
+            "to": 789
+        },
+        {
+            "key": "right",
+            "from": 789,
+            "to": 790
+        },
+        {
+            "key": "left",
+            "from": 793,
+            "to": 795
+        },
+        {
+            "key": "up",
+            "from": 777,
+            "to": 797
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓ SEEDLING FIDELITY CANCROSS — a `canCross` witness: level 16 → 18, inventory [sword, conch], arrival the door from level 15 at (32,64) (assumed: persistence, save, rng, beam, rockSet, hitsMax, time, primary, cutscene), dashMode none: 797 ticks, 0 hit(s). Written by scripts/procgen/can-cross-seedling.mjs --witness."
+}

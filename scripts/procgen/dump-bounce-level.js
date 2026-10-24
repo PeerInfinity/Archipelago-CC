@@ -4,8 +4,7 @@
  * with a scripted input policy, and ASCII-renders the level plus the
  * resulting trajectory. Sibling of dump-grid-growth.js /
  * dump-shuffled-spiral.js for the DJ-Metroidvania substrate
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md, build
- * order step 1).
+ * (docs/json/developer/procgen/bounce.md).
  *
  * Usage:
  *   node scripts/procgen/dump-bounce-level.js

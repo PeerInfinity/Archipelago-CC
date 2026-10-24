@@ -1,0 +1,183 @@
+{
+    "game": "seedling",
+    "name": "hammer-d-l39-ghostwall",
+    "boot": {
+        "level": 39,
+        "x": 144,
+        "y": 608
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 39,
+            "tag": 8,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": true,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 590,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 182
+        },
+        {
+            "key": "primary",
+            "from": 182,
+            "to": 183
+        },
+        {
+            "key": "right",
+            "from": 286,
+            "to": 302
+        },
+        {
+            "key": "left",
+            "from": 302,
+            "to": 303
+        },
+        {
+            "key": "right",
+            "from": 303,
+            "to": 304
+        },
+        {
+            "key": "left",
+            "from": 307,
+            "to": 309
+        },
+        {
+            "key": "right",
+            "from": 311,
+            "to": 313
+        },
+        {
+            "key": "left",
+            "from": 315,
+            "to": 317
+        },
+        {
+            "key": "right",
+            "from": 319,
+            "to": 321
+        },
+        {
+            "key": "left",
+            "from": 323,
+            "to": 325
+        },
+        {
+            "key": "right",
+            "from": 327,
+            "to": 328
+        },
+        {
+            "key": "up",
+            "from": 195,
+            "to": 378
+        },
+        {
+            "key": "down",
+            "from": 378,
+            "to": 379
+        },
+        {
+            "key": "up",
+            "from": 379,
+            "to": 380
+        },
+        {
+            "key": "down",
+            "from": 383,
+            "to": 384
+        },
+        {
+            "key": "right",
+            "from": 572,
+            "to": 573
+        },
+        {
+            "key": "primary",
+            "from": 573,
+            "to": 574
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING HAMMER-PHASE D, D2 — THE GHOST SWORD PRESSES A SPINNER THROUGH A WALL (the line `Player.slash` waives for the ghost sword, `Player.as:917`). L39 from the L38 door (144,608): divergence leg 375's arrival, its wandlock flag {39,8} declared, on C1's witness staging (`r8-solve-11`'s, re-booted) with the sword AND the ghost sword. The walk climbs the shaft, cuts rope@96,384 with a ghost press, climbs to the mouth, walks to (168,184) beside the dark Blue Wall block, aims right and presses at t573: the landing at t574 on spinner@224,112 is from 21.21 px (past the sword's 16) and the line from (169.10,184.29) to the body's entity point (192.40,197.07) crosses tile:Blue Wall (dark). hits 0 → 2; no hit on the player. 590 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-d-ghostwall.mjs."
+}

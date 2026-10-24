@@ -418,8 +418,7 @@ def main():
     parser.add_argument(
         "--investigation-dir",
         type=Path,
-        default=Path.home()
-        / "CC/SWFRecomp-CC/ruffle-tests/tests/swfs/avm1/_investigation",
+        required=True,
     )
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
     args = parser.parse_args()

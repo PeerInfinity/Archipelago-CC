@@ -1,6 +1,7 @@
 name: Native Code Static Analysis
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - '**.c'

@@ -1,0 +1,2 @@
+{"sites":269,"residue":1,"branchDependent":0}
+{"line":23599,"form":"refuse","kinds":["other","exhausted","unmodelled"],"other":["`7: the placement is INSIDE 7 (7) — a pickup in a solid is an obstacle, not a stance problem. 7`, { goal, obstacle: blocker }","`7: the placement is INSIDE 7 (7) — a pickup in a solid is an obstacle, not a stance problem. Strategy '7' 7.`, { goal, obstacle: blocker }"]}

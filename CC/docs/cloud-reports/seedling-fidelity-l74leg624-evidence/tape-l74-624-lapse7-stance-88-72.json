@@ -1,0 +1,283 @@
+{
+ "game": "seedling",
+ "name": "l74leg624-lapse-stance-88-72",
+ "boot": {
+  "level": 74,
+  "x": 288,
+  "y": 128
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 591,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 11
+  },
+  {
+   "key": "down",
+   "from": 11,
+   "to": 12
+  },
+  {
+   "key": "up",
+   "from": 12,
+   "to": 14
+  },
+  {
+   "key": "down",
+   "from": 16,
+   "to": 19
+  },
+  {
+   "key": "up",
+   "from": 20,
+   "to": 22
+  },
+  {
+   "key": "left",
+   "from": 26,
+   "to": 55
+  },
+  {
+   "key": "primary",
+   "from": 55,
+   "to": 56
+  },
+  {
+   "key": "left",
+   "from": 56,
+   "to": 79
+  },
+  {
+   "key": "right",
+   "from": 79,
+   "to": 81
+  },
+  {
+   "key": "primary",
+   "from": 81,
+   "to": 82
+  },
+  {
+   "key": "left",
+   "from": 82,
+   "to": 84
+  },
+  {
+   "key": "right",
+   "from": 84,
+   "to": 85
+  },
+  {
+   "key": "left",
+   "from": 85,
+   "to": 87
+  },
+  {
+   "key": "right",
+   "from": 88,
+   "to": 90
+  },
+  {
+   "key": "up",
+   "from": 94,
+   "to": 121
+  },
+  {
+   "key": "down",
+   "from": 122,
+   "to": 124
+  },
+  {
+   "key": "left",
+   "from": 128,
+   "to": 139
+  },
+  {
+   "key": "right",
+   "from": 139,
+   "to": 140
+  },
+  {
+   "key": "left",
+   "from": 140,
+   "to": 142
+  },
+  {
+   "key": "right",
+   "from": 144,
+   "to": 146
+  },
+  {
+   "key": "up",
+   "from": 150,
+   "to": 188
+  },
+  {
+   "key": "down",
+   "from": 188,
+   "to": 189
+  },
+  {
+   "key": "up",
+   "from": 189,
+   "to": 190
+  },
+  {
+   "key": "down",
+   "from": 190,
+   "to": 191
+  },
+  {
+   "key": "up",
+   "from": 191,
+   "to": 192
+  },
+  {
+   "key": "down",
+   "from": 192,
+   "to": 193
+  },
+  {
+   "key": "up",
+   "from": 193,
+   "to": 194
+  },
+  {
+   "key": "down",
+   "from": 197,
+   "to": 198
+  },
+  {
+   "key": "left",
+   "from": 150,
+   "to": 253
+  },
+  {
+   "key": "right",
+   "from": 253,
+   "to": 254
+  },
+  {
+   "key": "left",
+   "from": 254,
+   "to": 257
+  },
+  {
+   "key": "right",
+   "from": 259,
+   "to": 261
+  },
+  {
+   "key": "down",
+   "from": 265,
+   "to": 276
+  },
+  {
+   "key": "left",
+   "from": 276,
+   "to": 277
+  },
+  {
+   "key": "primary",
+   "from": 277,
+   "to": 278
+  },
+  {
+   "key": "right",
+   "from": 278,
+   "to": 280
+  },
+  {
+   "key": "left",
+   "from": 282,
+   "to": 284
+  },
+  {
+   "key": "right",
+   "from": 286,
+   "to": 288
+  },
+  {
+   "key": "down",
+   "from": 278,
+   "to": 291
+  },
+  {
+   "key": "left",
+   "from": 290,
+   "to": 292
+  },
+  {
+   "key": "up",
+   "from": 293,
+   "to": 295
+  },
+  {
+   "key": "right",
+   "from": 294,
+   "to": 296
+  },
+  {
+   "key": "left",
+   "from": 298,
+   "to": 299
+  },
+  {
+   "key": "down",
+   "from": 300,
+   "to": 301
+  },
+  {
+   "key": "left",
+   "from": 302,
+   "to": 303
+  },
+  {
+   "key": "primary",
+   "from": 303,
+   "to": 304
+  }
+ ],
+ "tape_version": 8
+}

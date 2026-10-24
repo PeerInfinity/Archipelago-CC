@@ -1,0 +1,3 @@
+# capture: row acceptance (path off) exit 0, stdout md5 76602ae80b1671b9630cd62e57ec44db, 102.6 s
+# 23 spinner record(s); modes off, chooser, chooserorder, c1
+# 23 record(s); solved {"off":19,"chooser":19,"chooserorder":19,"c1":19}; chooser: refused→solved 0; chooserorder: refused→solved 0; c1: refused→solved 0; seconds {"off":13.8,"chooser":12.8,"chooserorder":13.1,"c1":12.6}; replay mismatches 0; ⛔ solved→refused 0

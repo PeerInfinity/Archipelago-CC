@@ -12,7 +12,6 @@
  *       --quota maze=2 --quota text_adventure=2 \
  *       --start maze \
  *       -o /tmp/dump.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --grid WxH               grid dims (default 3x3)
@@ -30,6 +29,12 @@
  *   --asymmetric add|remove  cross-branch one-way exit reconciliation
  *                            (default add)
  *   -o, --out PATH           output JSON path (default ./grid-growth-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
+ *   -h, --help               print this and exit
  *
  * Output JSON shape:
  *   {
@@ -43,20 +48,47 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-// Substrate libraries register their adapters on import. growMaze
-// needs at least one registered substrate to build regions.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, oneOf, parseFlags } from './cliFlags.js';
+import { runCli, parseOrUsage } from './cliRun.js';
+
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { growMaze, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 
+argvHelp(import.meta.url);
+
 // --- CLI parser ---
 
-function parseArgs(argv) {
-    const out = {
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--grid': W.grid,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--mix': W.mixCounts,
+    '--start': W.start,
+    '--stop-on-pool-empty': flag('stopOnPoolEmpty', KIND.on),
+    '--max-regions': flag('maxRegions', KIND.int),
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '--branch': flag('branch', KIND.float),
+    '--no-bidirectional': W.noBidirectional,
+    '--asymmetric': flag('asymmetric', oneOf('add', 'remove')),
+    '-o': W.out,
+    '--out': W.out,
+    // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
+function parseArgs(argv, { configDoc = null } = {}) {
+    const out = parseFlags(argv, FLAGS, {
         seed: 1,
         grid: { width: 3, height: 3 },
         region: { width: 8, height: 6 },
@@ -71,96 +103,13 @@ function parseArgs(argv) {
         bidirectional: true,
         asymmetric: 'add',
         out: './grid-growth-dump.json',
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) {
-            throw new Error(`expected WxH, got '${s}'`);
-        }
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--grid': out.grid = parseWxH(next()); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--quota': {
-                const [id, n] = parseKv(next());
-                out.quotas[id] = n;
-                break;
-            }
-            case '--mix': {
-                const [id, n] = parseKv(next());
-                out.mix[id] = n;
-                break;
-            }
-            case '--start': out.start = next(); break;
-            case '--stop-on-pool-empty': out.stopOnPoolEmpty = true; break;
-            case '--max-regions': out.maxRegions = parseInt(next(), 10); break;
-            case '--items': {
-                const [id, n] = parseKv(next());
-                out.items[id] = n;
-                break;
-            }
-            case '--obstacles': {
-                const [id, n] = parseKv(next());
-                out.obstacles[id] = n;
-                break;
-            }
-            case '--branch': out.branch = parseFloat(next()); break;
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--asymmetric': {
-                const v = next();
-                if (v !== 'add' && v !== 'remove') {
-                    throw new Error(`--asymmetric expects 'add' or 'remove', got '${v}'`);
-                }
-                out.asymmetric = v;
-                break;
-            }
-            case '-o':
-            case '--out': out.out = next(); break;
-            case '-h':
-            case '--help':
-                console.log(extractHelpText());
-                process.exit(0);
-                break;
-            default:
-                throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.quotas).length > 0 && Object.keys(out.mix).length > 0) {
         throw new Error('--quota and --mix are mutually exclusive');
     }
     return out;
 }
 
-function extractHelpText() {
-    // Mirror the docblock at the top of the file.
-    return [
-        'Usage: node scripts/procgen/dump-grid-growth.js [flags]',
-        '',
-        '  --seed N',
-        '  --grid WxH                 (default 3x3)',
-        '  --region WxH               (default 8x6)',
-        '  --quota id=N               repeat per substrate',
-        '  --mix id=W                 mutually exclusive with --quota',
-        '  --start id                 substrate id or "auto" (default auto)',
-        '  --stop-on-pool-empty',
-        '  --max-regions N',
-        '  --items id=N',
-        '  --obstacles id=N',
-        '  --branch P                 branchProbability (default 0.5)',
-        '  --no-bidirectional',
-        '  -o, --out PATH             (default ./grid-growth-dump.json)',
-    ].join('\n');
-}
 
 // --- Output shaping ---
 
@@ -195,9 +144,20 @@ function shapeRegions(grid) {
 
 // --- main ---
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config; for `runPipeline`. */
+export const resolveConfig = (doc) => parseArgs([], { configDoc: doc });
 
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'grid', tool: 'dump-grid-growth', counts: { quotas: '--quota', mix: '--mix' }, start: 'start',
+});
+
+/**
+ * Build the dump from a parsed config. Writes nothing; the substrate
+ * libraries must already be loaded (`loadPipelineSubstrates`).
+ * @returns {Promise<{dump: object, rulesJson: object, summary: object}>}
+ */
+export async function build(config) {
     const growthParams = {
         branchProbability: config.branch,
         assumeBidirectional: config.bidirectional,
@@ -224,18 +184,38 @@ async function main() {
     const rulesJson = buildRulesJson(grid, { startCell, seed: config.seed });
 
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'grid-growth-dump',
+        envelope_version: 1,
         config,
         startCell,
         stats,
         regions: shapeRegions(grid),
         rulesJson,
     };
+    const summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    return { dump, rulesJson, summary };
+}
+
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, SUBSTRATE_CHECK);
+    const { dump, summary } = await build(config);
+    const { stats } = dump;
 
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = summary;
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
 }
@@ -244,9 +224,4 @@ async function main() {
 // The substrate libraries we import pull in modules with background
 // timers (stateManagerProxy etc.), which keeps Node alive after main
 // returns. Force-exit on success so the script doesn't hang.
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-grid-growth', import.meta.url, main);

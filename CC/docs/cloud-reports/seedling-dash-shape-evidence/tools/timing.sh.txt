@@ -1,0 +1,15 @@
+#!/bin/bash
+S=$1; cd $S; OUT=$S/timing.jsonl
+fileof() { grep -l "\"id\":$1," $(find /tmp/claude-0/caps -name 'requests-*.jsonl') | head -1; }
+for round in 1 2 3; do
+  for k in $(cat timing-keys.txt); do
+    f=$(fileof ${k%%:*})
+    for cfg in off85 all3dw85 cheap2_0 off0; do
+      case $cfg in off85) e="X=1"; w=85;; all3dw85) e="LAB_DASH_WINDOW=85 SEEDLING_DASH_LEG_PRECHECK=1 SEEDLING_DASH_NO_SWING_PREFIX=1 SEEDLING_DASH_KEEP_PARTIAL=1"; w=85;;
+        cheap2_0) e="SEEDLING_DASH_LEG_PRECHECK=1 SEEDLING_DASH_NO_SWING_PREFIX=1"; w=0;; off0) e="X=1"; w=0;; esac
+      t0=$(date +%s%N); line=$(env $e node tools/db-run.mjs --lab=$S/lab --requests=$f --one=$k --window=$w | grep '^RESULT'); t1=$(date +%s%N)
+      echo "{\"round\":$round,\"key\":\"$k\",\"cfg\":\"$cfg\",\"e2e_ms\":$(( (t1-t0)/1000000 )),\"load\":\"$(cut -d' ' -f1 /proc/loadavg)\",\"r\":${line#RESULT }}" >> $OUT
+    done
+  done
+done
+echo TIMING DONE >> $S/timing.log

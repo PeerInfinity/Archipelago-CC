@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "timestamp": "2026-08-30T17:03:42.617728+00:00",
+    "seed": 1,
+    "phase": "generate-test-worlds",
+    "canonical_seed": 1,
+    "total_templates": 1,
+    "successful_generations": 1,
+    "failed_generations": 0,
+    "successful_test_worlds": 1,
+    "failed_test_worlds": 0,
+    "rules_comparison_passed": 0,
+    "rules_comparison_failed": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 0
+  },
+  "results": {
+    "TOEM rule builder": {
+      "template": "TOEM rule builder.yaml",
+      "game_name": "TOEM rule builder",
+      "timestamp": "2026-08-30T17:03:45.703738+00:00",
+      "original": {
+        "generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 3.21
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "unknown",
+          "note": "Skipped"
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_rule_builder_worldgen",
+          "error": null,
+          "processing_time_seconds": 0.55
+        },
+        "seed_generation": {
+          "success": false
+        },
+        "rules_comparison": {
+          "success": false,
+          "pass_fail": "unknown"
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "unknown"
+        },
+        "cross_validation": {
+          "success": false,
+          "pass_fail": "unknown"
+        },
+        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_rule_builder_worldgen",
+        "test_game_name": "TOEM rule builder WorldGen",
+        "test_template_name": "TOEM rule builder WorldGen.yaml"
+      },
+      "errors": {
+        "generation": [],
+        "testing": []
+      }
+    }
+  }
+}

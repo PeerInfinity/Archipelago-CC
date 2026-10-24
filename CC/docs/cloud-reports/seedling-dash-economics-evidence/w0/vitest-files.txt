@@ -1,0 +1,7 @@
+frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+frontend/modules/seedlingDemo/jsRuntimeSolverAnytime.test.js
+frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js
+frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js
+frontend/modules/seedlingDemo/solveProgress.test.js
+frontend/modules/seedlingDemo/fidelityDash.test.js
+frontend/modules/seedlingDemo/solverDeadline.test.js

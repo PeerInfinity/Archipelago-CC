@@ -25,9 +25,11 @@ export const moduleInfo = {
   name: 'loopStats',
   title: 'Loop Stats',
   componentType: 'loopStatsPanel',
+  docs: 'docs/json/user/modules/loopStats.md',
   icon: '📊',
   column: 1, // Left column (narrow width design)
-  description: 'Detailed action queue analysis with mana cost predictions.',
+  category: 'Loop Mode Modules',
+  description: 'Each queued action\'s mana cost and the mana left after it, this loop beside the last; click a row for details.',
   requires: ['loops'],
 };
 
@@ -83,23 +85,6 @@ export function register(registrationApi) {
 
   // Register events that loopStats publishes
   registrationApi.registerEventBusPublisher('loopStats:analysisUpdated');
-
-  // Register settings schema
-  registrationApi.registerSettingsSchema({
-    type: 'object',
-    properties: {
-      showManaCost: {
-        type: 'boolean',
-        default: false,
-        label: 'Show Mana Cost',
-      },
-      showRemainingMana: {
-        type: 'boolean',
-        default: true,
-        label: 'Show Remaining Mana',
-      },
-    },
-  });
 
   log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }

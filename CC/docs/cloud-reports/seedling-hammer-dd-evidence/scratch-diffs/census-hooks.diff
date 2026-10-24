@@ -1,0 +1,93 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index 2da329b..e4976f0 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -1903,6 +1903,7 @@ function runDwell(run, perTick, dwell, what) {
+             + 'presenting the player to, and what is supposed to happen to it.');
+     }
+     if (until.test(run)) {
++        if (globalThis.process?.env?.DD_CENSUS_FILE) globalThis.process.getBuiltinModule('node:fs').appendFileSync(globalThis.process.env.DD_CENSUS_FILE, JSON.stringify({ ev: 'runDwell-already-true', t: run.ticksCompleted, what: String(what).slice(-160), pid: globalThis.process.pid, argv: globalThis.process.argv.slice(1).join(' ').slice(0, 160) }) + '\n');
+         fail(`${what}: the dwell's condition (${until.why}) is ALREADY TRUE before a tick `
+             + 'is spent, so waiting for it proves nothing. Either an earlier step did the '
+             + 'work or the policy is baiting a body that is not there.');
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index cada890..a5cc0c4 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -16345,6 +16345,45 @@ export function withKeylockWaitPriced(enabled, fn) {
+     return withSwitch(KEYLOCK_WAIT_PRICED, enabled, fn);
+ }
+ 
++/**
++ * ⛓⛓⛓ SEEDLING HAMMER-PHASE DD — **A PRESS KILL WHOSE TARGET DIED ON THE WALK IS A KILL DONE**
++ * (`PRESS_KILL_DONE_ON_WALK`, OFF).
++ *
++ * The kill rung's chaser arm in `solveSegmentUnder` (`what` `-> kill (<id>) by press`) walks to the stance
++ * `deriveKillByChaser` priced and then dwells (`runDwell`) until the body has left `strikeBodies`. The walk carries
++ * the one strike policy, so its own presses can kill the body before the stance is reached; the dwell's `until` is
++ * then true before a tick is spent, and `runDwell` refuses by design (*"waiting for it proves nothing"*). MEASURED:
++ * survey step 50 (L30 Torchpickup → L32) under `strikeIframeLapse` + `ceremonyShove`: the walk's sword press (pressed
++ * t169, fired t170, `killed: true`) kills `bobsoldier@48,80`, and the dwell refuses at t192.
++ *
++ * ON: when the target has left `strikeBodies` at the dwell's start AND the run's press ledger (`run.presses`) holds a
++ * press fired during this arm's walk that KILLED it (`killedOnWalk`), the arm records the kill as done (the record
++ * carries `killedOnWalk`: the killing press's tick, fire tick, weapon and direction; `ticks: 0`) and returns to the
++ * ladder exactly as a finished dwell does. Any other "already true" (gone, but no press of this walk killed it)
++ * still reaches `runDwell` and is still its refusal. `runDwell` itself is untouched: its guard is real for every
++ * other caller. OFF the arm is byte-for-byte the BEFORE one (the walk-start tick is read, nothing is decided by it).
++ * `SEEDLING_PRESS_KILL_DONE_ON_WALK=1` opts a process in; `withPressKillDoneOnWalk` for a test.
++ */
++export const PRESS_KILL_DONE_ON_WALK = {
++    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_DONE_ON_WALK === '1',
++};
++export const PRESS_KILL_DONE_ON_WALK_DEFAULT = false;
++
++/** Run `fn` with `PRESS_KILL_DONE_ON_WALK` set to `enabled`, restoring the previous value (also on a throw). */
++export function withPressKillDoneOnWalk(enabled, fn) {
++    return withSwitch(PRESS_KILL_DONE_ON_WALK, enabled, fn);
++}
++
++/**
++ * The press of THIS walk that killed `id`: the last `run.presses` row fired after `since` whose hit on `id` says
++ * `killed`, as `{pressedAt, firedAt, weapon, direction}`; `null` when no press of the walk killed it.
++ */
++export function killedOnWalk(run, id, since) {
++    const kill = (run.presses ?? []).filter((p) => p.fired > since
++        && p.hits.some((h) => h.id === id && h.killed === true)).at(-1);
++    return kill ? { pressedAt: kill.t, firedAt: kill.fired, weapon: kill.weapon, direction: kill.direction } : null;
++}
++
+ export function deriveKillByChaser(run, body, contacts,
+     /**
+      * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
+@@ -20139,6 +20178,7 @@ function solveSegmentUnder({
+                      * names, and spending a re-plan on it would put an
+                      * ARRIVED row in the trace for a walk nobody took.
+                      */
++                    const walkFrom = run.ticksCompleted;
+                     if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
+                         walkTo(goal, hunt.stance, {
+                             what: `${what} -> kill (${hunted.id}) stance`,
+@@ -20146,6 +20186,22 @@ function solveSegmentUnder({
+                             ...(KILL_STANCE_AS_FORECAST.enabled ? { undashed: true } : {}),
+                         });
+                     }
++                    /**
++                     * ⛓⛓⛓ HAMMER-PHASE DD (`PRESS_KILL_DONE_ON_WALK`, OFF) — the walk's own presses killed the
++                     * body: the kill is done, said by the press ledger, and the ladder re-plans as after a dwell.
++                     */
++                    const walkKill = PRESS_KILL_DONE_ON_WALK.enabled
++                        && !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id)
++                        ? killedOnWalk(run, hunted.id, walkFrom) : null;
++                    if (globalThis.process?.env?.DD_CENSUS_FILE) globalThis.process.getBuiltinModule('node:fs').appendFileSync(globalThis.process.env.DD_CENSUS_FILE, JSON.stringify({ ev: 'press-arm-dwell-start', t: run.ticksCompleted, target: hunted.id, walkFrom, gone: !(run.entities('strikeBodies') ?? []).some((c) => c.id === hunted.id), killedOnWalk: killedOnWalk(run, hunted.id, walkFrom), on: PRESS_KILL_DONE_ON_WALK.enabled, what: String(what).slice(-120), pid: globalThis.process.pid, argv: globalThis.process.argv.slice(1).join(' ').slice(0, 160) }) + '\n');
++                    if (walkKill) {
++                        records.push({
++                            goal: goal.kind, strategy: 'kill', arm: 'chaser',
++                            target: hunted.id, stance: hunt.stance, clears: hunt.clears,
++                            kind: 'dwell', ticks: 0, bound: hunt.ticks, why: hunt.why, killedOnWalk: walkKill,
++                        });
++                        return { escalations };
++                    }
+                     /**
+                      * ⛔ THE BOUND IS THE FORECAST'S OWN MEASUREMENT, plus the
+                      * slack — and that is the repair. Slice 12b's

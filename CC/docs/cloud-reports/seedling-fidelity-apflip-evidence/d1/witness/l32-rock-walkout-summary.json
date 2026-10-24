@@ -1,0 +1,214 @@
+[
+ {
+  "arm": "vanilla",
+  "set_id": "seedling-vanilla-record-ce77a823",
+  "game": {
+   "obs": 981,
+   "transitions": [],
+   "final": {
+    "t": 980,
+    "level": 32,
+    "x": 80,
+    "y": 124.99999999999999
+   },
+   "cleared": [
+    {
+     "tag": 1,
+     "level": 32
+    },
+    {
+     "tag": 3,
+     "level": 32
+    },
+    {
+     "tag": 4,
+     "level": 32
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 980,
+    "level": 32,
+    "x": 80,
+    "y": 124.99999999999999
+   }
+  }
+ },
+ {
+  "arm": "move-88-128",
+  "set_id": "seedling-vanilla-record-f5bdb07d",
+  "game": {
+   "obs": 981,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   },
+   "cleared": [
+    {
+     "tag": 1,
+     "level": 32
+    },
+    {
+     "tag": 3,
+     "level": 32
+    },
+    {
+     "tag": 4,
+     "level": 32
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   }
+  }
+ },
+ {
+  "arm": "move-96-128",
+  "set_id": "seedling-vanilla-record-4e0fa460",
+  "game": {
+   "obs": 981,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   },
+   "cleared": [
+    {
+     "tag": 1,
+     "level": 32
+    },
+    {
+     "tag": 3,
+     "level": 32
+    },
+    {
+     "tag": 4,
+     "level": 32
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   }
+  }
+ },
+ {
+  "arm": "move-40-128",
+  "set_id": "seedling-vanilla-record-9e5464c9",
+  "game": {
+   "obs": 981,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   },
+   "cleared": [
+    {
+     "tag": 1,
+     "level": 32
+    },
+    {
+     "tag": 3,
+     "level": 32
+    },
+    {
+     "tag": 4,
+     "level": 32
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 886,
+     "from": 32,
+     "to": 30,
+     "at": {
+      "x": 232,
+      "y": 184
+     }
+    }
+   ],
+   "final": {
+    "t": 980,
+    "level": 30,
+    "x": 232,
+    "y": 204.95000000000002
+   }
+  }
+ }
+]

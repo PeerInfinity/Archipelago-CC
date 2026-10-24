@@ -1,0 +1,24 @@
+maze byte-identity                             246dfbceff75c1cc27fdb347469a77d7
+acceptance batch                               76602ae80b1671b9630cd62e57ec44db
+empty pairs c3                                 4937da806072ceddebca4f317617c36a
+empty pairs c6                                 430573e9aa483a45b49d5041eb0f8915
+carved pairs c4                                b9d2185d33c68dc2d3efcd8feb089272
+ENEMY census default                           30bcc49ca8ae998fe24600ac647ae1a4
+guard census (elements)                        a6d18d49ae256c321d175f45ec76dccc
+AREA census default    [*]                     02b22525a2f36abf8657d996f89b79db
+killgate s2            [*]                     006b063920a079dae670765d2b968c95
+killgate s5            [*]                     7d4cb820c71a476abfb89a10b6d1ece6
+killgate s9            [*]                     49e23d85e2b7b9561385513d82833882
+level pre-sword s1     [*]                     e28c1e5d6522dcca4682c44e7333a32f
+level post-sword s1    [*]                     fb1a59e5433e71fea436db1ea4b2ae57
+generated set                                  OK
+--- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---
+solve-seedling-r8-battery --check              405d9c4bb37a0ab00fb0ef9a99194783 [exit 0]
+solve-seedling-r8-d2-chain --check             b76f648331c7a56e8fc11f89d5a4daf8 [exit 0]
+solve-seedling-r8-l18 --check                  465a8b469896813dc7efc8c1ce3937d2 [exit 0]
+solve-seedling-r8-tail --check                 35456fbc07e7151ddbc4c2a1fd00c789 [exit 0]
+solve-seedling-r9-l3 --check                   6cd35fe1414af6bf5beb7605f235cb8e [exit 0]
+solve-seedling-r9-campaign --check             13b8d51f4479cd12f939eb560f137337 [exit 0]
+--- reference ---
+6 GENERATED MODULE(S)/REGION(S) DIFFER — run the generator with no --check
+[*] = command chosen by this script; NOT ruling 8's original — see the header.

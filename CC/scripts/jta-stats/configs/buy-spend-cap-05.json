@@ -1,0 +1,11 @@
+{
+  "name": "buy-spend-cap-05",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "purchasePolicy": {
+      "kind": "spendCap",
+      "g": 0.5
+    }
+  }
+}

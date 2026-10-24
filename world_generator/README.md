@@ -16,6 +16,7 @@ The tracker's [hybrid mode](../worlds/tracker/docs/hybrid-mode.md) automatically
 
 - **Testing and validation** — Generate a worldgen copy of any game and compare its behavior against the original to verify the export pipeline.
 - **Bootstrapping new worlds** — Start from an exported rules file and customize the generated code, rather than writing everything from scratch.
+- **Procedurally generated worlds** — The frontend's [procgen pipeline](../docs/json/developer/procgen/architecture.md) compiles generated worlds to `rules.json`; the world generator turns those into real APWorlds. Procgen-specific top-level keys (`preset_sidecars`, `procgen_metadata`, `loop_costs` — per-player maps; the package keeps the generated player's entry) are preserved into package-local `_worldgen_*.json` files and re-injected by the exporter at export time, so the round-trip keeps generated worlds playable in the frontend (see [The Python round-trip](../docs/json/developer/procgen/architecture.md#the-python-round-trip)).
 
 Generated worlds use the `_worldgen` suffix by convention (e.g., `tunic_worldgen`) to avoid conflicts with the original world.
 
@@ -41,9 +42,11 @@ python -m world_generator rules.json --dry-run
 | `--game-name` | Override game name (useful to avoid conflicts) |
 | `--force` | Overwrite existing files |
 | `--dry-run` | Preview output without writing |
+| `--lossy` | Emit an always-true placeholder for a rule kind with no codegen path or a helper name with no definition, listing each one (default: fail, naming the kind or helper and the game) |
 | `--validate` | Validate JSON and report issues only |
 | `--canonical-seed N` | Enable seed=N canonical placement |
 | `--player-id` | Player ID to extract for multiworld (default: '1') |
+| `--apworld DIR` | Write `DIR/<game_directory>.apworld` instead of a world directory |
 | `-v, --verbose` | Verbose output |
 
 ## Directory Structure
@@ -58,7 +61,9 @@ world_generator/
 ├── rule_codegen.py       # Rule → Python code generation
 ├── templates.py          # File template generation
 ├── json_world_builder.py # Live world instantiation from JSON
-└── constants.py          # Configuration constants
+├── constants.py          # Configuration constants
+└── ext_template/         # Vendored rule_builder compat package (copied
+                          # into each generated world as _ext/)
 ```
 
 ## Generated Output
@@ -75,8 +80,20 @@ worlds/{game_directory}/
 ├── Options.py            # Game-specific options
 ├── archipelago.json      # APWorld manifest
 ├── _worldgen_options.json # Options for canonical seed
+├── _ext/                 # Vendored rule_builder compatibility package
+│                         # (fork rule_builder when present, else vanilla
+│                         # rule_builder.rules + vendored extras/mixin)
 └── docs/en/setup.md      # Setup guide
 ```
+
+Generated worlds are **self-contained**: all rule-builder names are imported
+from the world's own `_ext/` package, which prefers the fork's extended
+`rule_builder` and falls back to vanilla Archipelago's `rule_builder.rules`
+plus vendored copies of the fork-only rule types and `RuleWorldMixin`
+(registered under the world's game name via vanilla's per-game
+`CustomRuleRegister`). A generated world therefore runs unchanged on this
+fork, on unmodified vanilla Archipelago source (0.6.7+), and on compiled
+(frozen) installs when packed as an `.apworld`.
 
 ## Python API
 
@@ -94,6 +111,24 @@ generator = WorldGenerator(
 generator.load()
 generator.generate()
 ```
+
+### Build an .apworld
+
+```python
+from world_generator.apworld import build_apworld
+
+built = build_apworld('path/to/rules.json', game_name='My Game WorldGen')
+open(built['file_name'], 'wb').write(built['data'])   # <game_directory>.apworld
+```
+
+Generates into a temporary directory and packs it with the same rule as
+`scripts/build/pack_apworld.py` (which imports it): `<game_directory>/` at the
+archive root, `__pycache__` skipped, `compatible_version` stamped into
+`archipelago.json`. Use the returned `file_name` — AP loads an apworld only
+when its file name matches its directory.
+
+The APWorld Editor's `⭳ .apworld` button calls this same function in the
+browser, under Pyodide ([module docs](../docs/json/modules/apworldEditor.md#the-apworld-button)).
 
 ### Instantiate a World from JSON
 
@@ -177,6 +212,20 @@ See [Name Substitutions](../docs/json/developer/guides/world-generator.md#name-s
 
 The generator expands helper function references into self-contained rules, making the generated code independent of external helper modules.
 
+### Option Effects
+
+A rules.json may declare what the world's own options do, in `world[<player>].option_effects` (next to the
+`option_definitions` that create the options). The document's rules stay the defaults; the effects act only in
+the generated world, and an export resolves them to constants. Two kinds:
+
+- `item_count` `{option, item, count}`: every `Has(item, count)` becomes `Has(item, FromOption(<Option>))`, and
+  `generate_early` refuses, by name, a value larger than the pool holds.
+- `location_items` `{option, value, item, locations}`: while the option holds `value`, the listed locations hold
+  `item` instead of their canonical item, and the pool trades one for one.
+
+The block is opt-in: a document without it generates byte for byte as before. Seedling Playthrough's
+`seals_required` and `boss_location_items` are the first use (`_template_option_effects.py`).
+
 ### State Counter Detection
 
 Automatically detects counter item patterns like:
@@ -195,12 +244,15 @@ Automatically detects counter item patterns like:
 
 ## Dependencies
 
-The world generator uses only:
-- Python standard library
-- Archipelago base classes (`BaseClasses`, `Options`, `worlds.AutoWorld`)
-- `rule_builder` module (for `RuleWorldMixin`)
+The generator itself imports only the Python standard library (`rule_builder`
+is used when present, with a fallback). That is a requirement, not an accident:
+the browser runs it under Pyodide, and
+`test/test_world_generator_apworld.py` builds from an isolated copy with
+`python -I` to hold it.
 
-No external packages required.
+The worlds it WRITES import Archipelago's base classes (`BaseClasses`,
+`Options`, `worlds.AutoWorld`) and `rule_builder` (vendored as `_ext/`), so
+they need an Archipelago install (0.6.7+) to load.
 
 ## Related Documentation
 

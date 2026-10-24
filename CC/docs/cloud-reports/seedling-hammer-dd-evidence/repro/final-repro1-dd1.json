@@ -1,0 +1,42 @@
+{
+ "view": "/tmp/claude-0/-home-user-Archipelago-CC/f67fa899-7a7b-532f-82e5-bb4433913e4b/scratchpad/w0/step-50-boot.json",
+ "boot": {
+  "level": 30,
+  "x": 176,
+  "y": 48
+ },
+ "goals": "collect:64,64;exit:224,160",
+ "env": {
+  "SEEDLING_STRIKE_IFRAME_LAPSE": "1",
+  "SEEDLING_PRESS_KILL_DONE_ON_WALK": "1",
+  "SEEDLING_CEREMONY_SHOVE": "1"
+ },
+ "verdict": "SOLVED",
+ "ticks": 395,
+ "keysMd5": "87ef16f882223eda43d846717e8b5d9e",
+ "records": [
+  {
+   "arm": "chaser",
+   "target": "bobsoldier@48,80",
+   "ledger": null
+  }
+ ],
+ "hits": [],
+ "deaths": 0,
+ "staticDeaths": [],
+ "end": {
+  "level": 32,
+  "x": 80,
+  "y": 128
+ },
+ "bombEvents": 0,
+ "ghost": false,
+ "primary": "sword",
+ "landings": [],
+ "weapons": [
+  "sword"
+ ],
+ "ms": 1049,
+ "sites": {},
+ "msgMd5": "b9773a1ceb24de451533b3fac09275b6"
+}

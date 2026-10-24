@@ -1,0 +1,2105 @@
+{
+ "source": "rockmove-evidence/census.mjs",
+ "rows": [
+  {
+   "level": 28,
+   "path": "assets/levels/Dungeon3/7.oel",
+   "size": "20x20",
+   "entity": "fallrock@112,240",
+   "attrs": {
+    "tset": "1",
+    "tag": "1"
+   },
+   "writers": [
+    "rope@160,64 t1 (same room)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "teleporter@128,304->L27 (5 tiles)",
+   "nearestEdge": "bottom (4 tiles)",
+   "perLanding": [
+    {
+     "landing": "L25 teleporter@96,128 -> (96,16)",
+     "parked": {
+      "tiles": 52,
+      "doors": [
+       "tp@0,96->L26",
+       "tp@96,0->L25"
+      ]
+     },
+     "fallen": {
+      "tiles": 52,
+      "doors": [
+       "tp@0,96->L26",
+       "tp@96,0->L25"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "L26 teleporter@144,208 -> (16,96)",
+     "parked": {
+      "tiles": 52,
+      "doors": [
+       "tp@0,96->L26",
+       "tp@96,0->L25"
+      ]
+     },
+     "fallen": {
+      "tiles": 52,
+      "doors": [
+       "tp@0,96->L26",
+       "tp@96,0->L25"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "L27 teleporter@168,16 -> (128,288)",
+     "parked": {
+      "tiles": 65,
+      "doors": [
+       "tp@128,304->L27"
+      ]
+     },
+     "fallen": {
+      "tiles": 64,
+      "doors": [
+       "tp@128,304->L27"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "L30 teleporter@0,128 -> (288,16)",
+     "parked": {
+      "tiles": 50,
+      "doors": [
+       "tp@304,16->L30"
+      ]
+     },
+     "fallen": {
+      "tiles": 50,
+      "doors": [
+       "tp@304,16->L30"
+      ]
+     },
+     "lostWhenFallen": []
+    }
+   ],
+   "moves": [],
+   "doorsHere": null
+  },
+  {
+   "level": 29,
+   "path": "assets/levels/Dungeon3/8.oel",
+   "size": "12x20",
+   "entity": "fallrock@112,112",
+   "attrs": {
+    "tset": "0",
+    "tag": "0"
+   },
+   "writers": [
+    "button@112,128 t0 (same room)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "stairsdown@112,32->L31 (5 tiles)",
+   "nearestEdge": "right (4 tiles)",
+   "perLanding": [
+    {
+     "landing": "L21 teleporter@160,80 -> (16,80)",
+     "parked": {
+      "tiles": 5,
+      "doors": [
+       "tp@0,80->L21"
+      ]
+     },
+     "fallen": {
+      "tiles": 5,
+      "doors": [
+       "tp@0,80->L21"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "L22 teleporter@192,64 -> (16,224)",
+     "parked": {
+      "tiles": 89,
+      "doors": [
+       "stairs@112,32->L31",
+       "tp@0,224->L22"
+      ]
+     },
+     "fallen": {
+      "tiles": 58,
+      "doors": [
+       "tp@0,224->L22"
+      ]
+     },
+     "lostWhenFallen": [
+      "stairs@112,32->L31"
+     ]
+    },
+    {
+     "landing": "L31 stairsup@384,96 -> (96,32)",
+     "parked": {
+      "tiles": 89,
+      "doors": [
+       "stairs@112,32->L31",
+       "tp@0,224->L22"
+      ]
+     },
+     "fallen": {
+      "tiles": 30,
+      "doors": [
+       "stairs@112,32->L31"
+      ]
+     },
+     "lostWhenFallen": [
+      "tp@0,224->L22"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 128,
+      "y": 112,
+      "why": "one tile right, off the 1-tile neck (7,8)->(7,7)"
+     },
+     "why": "one tile right, off the 1-tile neck (7,8)->(7,7)",
+     "into": [
+      "128,112:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L21 teleporter@160,80 -> (16,80)",
+       "tiles": 5,
+       "doors": [
+        "tp@0,80->L21"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "L22 teleporter@192,64 -> (16,224)",
+       "tiles": 88,
+       "doors": [
+        "stairs@112,32->L31",
+        "tp@0,224->L22"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@112,32->L31"
+       ],
+       "gapTilesVsFallen": 30
+      },
+      {
+       "landing": "L31 stairsup@384,96 -> (96,32)",
+       "tiles": 88,
+       "doors": [
+        "stairs@112,32->L31",
+        "tp@0,224->L22"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "tp@0,224->L22"
+       ],
+       "gapTilesVsFallen": 59
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 32,
+   "path": "assets/levels/Dungeon3/11.oel",
+   "size": "10x10",
+   "entity": "fallrocklarge@64,128",
+   "attrs": {
+    "tset": "0",
+    "tag": "1",
+    "bossrock": "1",
+    "thirdboss": "1"
+   },
+   "writers": [
+    "self: bossrock, player above it (FallRockLarge.as:70-79)"
+   ],
+   "onDoor": [
+    "stairsdown@72,136->L30"
+   ],
+   "nearestDoor": "stairsdown@72,136->L30 (1 tiles)",
+   "nearestEdge": "bottom (0 tiles)",
+   "perLanding": [
+    {
+     "landing": "L30 stairsup@224,160 -> (72,120)",
+     "parked": {
+      "tiles": 39,
+      "doors": [
+       "door@80,144",
+       "stairs@72,136->L30"
+      ]
+     },
+     "fallen": {
+      "tiles": 37,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "door@80,144",
+      "stairs@72,136->L30"
+     ]
+    },
+    {
+     "landing": "Lin_L30_224_160 sweep-arrival -> (64,112)",
+     "parked": {
+      "tiles": 38,
+      "doors": [
+       "door@80,128",
+       "stairs@72,136->L30"
+      ]
+     },
+     "fallen": {
+      "tiles": 36,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "door@80,128",
+      "stairs@72,136->L30"
+     ]
+    }
+   ],
+   "moves": [],
+   "doorsHere": null
+  },
+  {
+   "level": 39,
+   "path": "assets/levels/Dungeon4/1.oel",
+   "size": "19x40",
+   "entity": "fallrock@144,624",
+   "attrs": {
+    "tset": "6",
+    "tag": "10"
+   },
+   "writers": [
+    "rope@96,384 t6 (same room)"
+   ],
+   "onDoor": [
+    "teleporter@144,624->L38"
+   ],
+   "nearestDoor": "teleporter@144,624->L38 (0 tiles)",
+   "nearestEdge": "bottom (0 tiles)",
+   "perLanding": [
+    {
+     "landing": "L38 teleporter@144,0 -> (144,608)",
+     "parked": {
+      "tiles": 2,
+      "doors": [
+       "tp@144,624->L38"
+      ]
+     },
+     "fallen": {
+      "tiles": 1,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "tp@144,624->L38"
+     ]
+    },
+    {
+     "landing": "L40 teleporter@480,912 -> (144,16)",
+     "parked": {
+      "tiles": 10,
+      "doors": [
+       "tp@144,0->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 10,
+      "doors": [
+       "tp@144,0->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 144,
+      "y": 608,
+      "why": "one tile up = the L38 arrival tile, the only interior neighbour (1-wide shaft)"
+     },
+     "why": "one tile up = the L38 arrival tile, the only interior neighbour (1-wide shaft)",
+     "into": [
+      "144,608:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L38 teleporter@144,0 -> (144,608)",
+       "tiles": 2,
+       "doors": [
+        "tp@144,624->L38"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "tp@144,624->L38"
+       ],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "L40 teleporter@480,912 -> (144,16)",
+       "tiles": 10,
+       "doors": [
+        "tp@144,0->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 43,
+   "path": "assets/levels/Dungeon4/Boss.oel",
+   "size": "19x35",
+   "entity": "fallrock@96,336",
+   "attrs": {
+    "tset": "0",
+    "tag": "2"
+   },
+   "writers": [
+    "wand@144,224 pickup (Wand.as:58-68, tset 0)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "stairsup@176,464->L40 (13 tiles)",
+   "nearestEdge": "left (6 tiles)",
+   "perLanding": [
+    {
+     "landing": "L40 stairsdown@320,576 -> (176,448)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 66,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 66,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 66,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 66,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 66,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 8,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 112,
+      "y": 336,
+      "why": "one tile in (east), the alcove mouth's only neighbour"
+     },
+     "why": "one tile in (east), the alcove mouth's only neighbour",
+     "into": [
+      "112,336:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 65,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 65,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 65,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 65,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 65,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 9,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      }
+     ]
+    },
+    {
+     "to": {
+      "x": 128,
+      "y": 336,
+      "why": "two tiles in"
+     },
+     "why": "two tiles in",
+     "into": [
+      "128,336:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 9
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 9
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 9
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 9
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 9
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 66
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 43,
+   "path": "assets/levels/Dungeon4/Boss.oel",
+   "size": "19x35",
+   "entity": "fallrock@192,336",
+   "attrs": {
+    "tset": "0",
+    "tag": "1"
+   },
+   "writers": [
+    "wand@144,224 pickup (Wand.as:58-68, tset 0)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "stairsup@176,464->L40 (9 tiles)",
+   "nearestEdge": "right (6 tiles)",
+   "perLanding": [
+    {
+     "landing": "L40 stairsdown@320,576 -> (176,448)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 4,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 4,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 4,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 4,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 70,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 176,
+      "y": 336,
+      "why": "one tile in (west), the alcove mouth's only neighbour"
+     },
+     "why": "one tile in (west), the alcove mouth's only neighbour",
+     "into": [
+      "176,336:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 5,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 5,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 5,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 5,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 69,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      }
+     ]
+    },
+    {
+     "to": {
+      "x": 160,
+      "y": 336,
+      "why": "two tiles in"
+     },
+     "why": "two tiles in",
+     "into": [
+      "160,336:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 70
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 70
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 70
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 70
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 5
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 43,
+   "path": "assets/levels/Dungeon4/Boss.oel",
+   "size": "19x35",
+   "entity": "fallrock@176,384",
+   "attrs": {
+    "tset": "0",
+    "tag": "3"
+   },
+   "writers": [
+    "wand@144,224 pickup (Wand.as:58-68, tset 0)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "stairsup@176,464->L40 (5 tiles)",
+   "nearestEdge": "right (7 tiles)",
+   "perLanding": [
+    {
+     "landing": "L40 stairsdown@320,576 -> (176,448)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 5,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    },
+    {
+     "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+     "parked": {
+      "tiles": 75,
+      "doors": [
+       "stairs@176,464->L40"
+      ]
+     },
+     "fallen": {
+      "tiles": 69,
+      "doors": []
+     },
+     "lostWhenFallen": [
+      "stairs@176,464->L40"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 176,
+      "y": 368,
+      "why": "one tile up, the neck's only interior neighbour"
+     },
+     "why": "one tile up, the neck's only interior neighbour",
+     "into": [
+      "176,368:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 6,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 68,
+       "doors": [],
+       "lostVsParked": [
+        "stairs@176,464->L40"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      }
+     ]
+    },
+    {
+     "to": {
+      "x": 160,
+      "y": 368,
+      "why": "up-left, off the neck column"
+     },
+     "why": "up-left, off the neck column",
+     "into": [
+      "160,368:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L40 stairsdown@320,576 -> (176,448)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 69
+      },
+      {
+       "landing": "Lin_pit_L40_4_20 sweep-arrival -> (64,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_5_20 sweep-arrival -> (80,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_13_20 sweep-arrival -> (208,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_14_20 sweep-arrival -> (224,320)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_4_21 sweep-arrival -> (64,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_5_21 sweep-arrival -> (80,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_13_21 sweep-arrival -> (208,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_14_21 sweep-arrival -> (224,336)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_4_22 sweep-arrival -> (64,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_5_22 sweep-arrival -> (80,352)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_4_23 sweep-arrival -> (64,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      },
+      {
+       "landing": "Lin_pit_L40_5_23 sweep-arrival -> (80,368)",
+       "tiles": 74,
+       "doors": [
+        "stairs@176,464->L40"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "stairs@176,464->L40"
+       ],
+       "gapTilesVsFallen": 6
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 74,
+   "path": "assets/levels/Dungeon7/3.oel",
+   "size": "20x10",
+   "entity": "fallrock@288,144",
+   "attrs": {
+    "tset": "0",
+    "tag": "2"
+   },
+   "writers": [
+    "button@288,128 t0 (same room)"
+   ],
+   "onDoor": [
+    "teleporter@288,144->L73"
+   ],
+   "nearestDoor": "teleporter@288,144->L73 (0 tiles)",
+   "nearestEdge": "bottom (0 tiles)",
+   "perLanding": [
+    {
+     "landing": "L73 teleporter@64,0 -> (288,128)",
+     "parked": {
+      "tiles": 54,
+      "doors": [
+       "tp@16,144->L75",
+       "tp@288,144->L73"
+      ]
+     },
+     "fallen": {
+      "tiles": 53,
+      "doors": [
+       "tp@16,144->L75"
+      ]
+     },
+     "lostWhenFallen": [
+      "tp@288,144->L73"
+     ]
+    },
+    {
+     "landing": "L75 teleporter@64,0 -> (16,128)",
+     "parked": {
+      "tiles": 54,
+      "doors": [
+       "tp@16,144->L75",
+       "tp@288,144->L73"
+      ]
+     },
+     "fallen": {
+      "tiles": 53,
+      "doors": [
+       "tp@16,144->L75"
+      ]
+     },
+     "lostWhenFallen": [
+      "tp@288,144->L73"
+     ]
+    }
+   ],
+   "moves": [
+    {
+     "to": {
+      "x": 288,
+      "y": 128,
+      "why": "one tile up = the button / L73 arrival tile, the door's only neighbour"
+     },
+     "why": "one tile up = the button / L73 arrival tile, the door's only neighbour",
+     "into": [
+      "288,128:open"
+     ],
+     "perLanding": [
+      {
+       "landing": "L73 teleporter@64,0 -> (288,128)",
+       "tiles": 54,
+       "doors": [
+        "tp@16,144->L75",
+        "tp@288,144->L73"
+       ],
+       "lostVsParked": [],
+       "gainedVsFallen": [
+        "tp@288,144->L73"
+       ],
+       "gapTilesVsFallen": 1
+      },
+      {
+       "landing": "L75 teleporter@64,0 -> (16,128)",
+       "tiles": 52,
+       "doors": [
+        "tp@16,144->L75"
+       ],
+       "lostVsParked": [
+        "tp@288,144->L73"
+       ],
+       "gainedVsFallen": [],
+       "gapTilesVsFallen": 0
+      }
+     ]
+    }
+   ],
+   "doorsHere": null
+  },
+  {
+   "level": 82,
+   "path": "assets/levels/Dungeon7/Boss.oel",
+   "size": "20x24",
+   "entity": "fallrocklarge@128,224",
+   "attrs": {
+    "tset": "0",
+    "tag": "1",
+    "bossrock": "1",
+    "thirdboss": "0"
+   },
+   "writers": [
+    "self: bossrock, player above it (FallRockLarge.as:70-79)"
+   ],
+   "onDoor": [],
+   "nearestDoor": "teleporter@144,0->L96 (15 tiles)",
+   "nearestEdge": "left (8 tiles)",
+   "perLanding": [
+    {
+     "landing": "L96 teleporter@32,64 -> (144,16)",
+     "parked": {
+      "tiles": 1,
+      "doors": []
+     },
+     "fallen": {
+      "tiles": 1,
+      "doors": []
+     },
+     "lostWhenFallen": []
+    },
+    {
+     "landing": "Lin_pit_L71_10_17 sweep-arrival -> (160,272)",
+     "parked": {
+      "tiles": 62,
+      "doors": []
+     },
+     "fallen": {
+      "tiles": 12,
+      "doors": []
+     },
+     "lostWhenFallen": []
+    }
+   ],
+   "moves": [],
+   "doorsHere": null
+  }
+ ]
+}

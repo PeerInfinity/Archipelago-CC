@@ -1,0 +1,5 @@
+{"sites":373,"byKind":{"error":51,"other":66,"precondition":24,"exhausted":43,"unmodelled":15,"deadline":7,"diverged":86,"does-not-apply":19,"bound":22,"already-true":1,"n/a (planSwordDash window row)":7,"danger":27,"pending":5},"otherWrappers":62,"residue":4}
+2142	refuse	`the dialogue opened with the box at (${run.state.x},${run.state.y}) on the live Seed the watcher holds out on pages ${WATCHER_SEED_PAGES} — collecting it is a soft-lock.`
+6021	refuse	'deadline'
+8959	refuse	`${label}: after the lean the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} as route step ${i + 1} requires. The search priced the world one way and the run answered another — a rock, a Solid or a sink the transcription does not know about.'
+8973	refuse	`${label}: after the thrust the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} as route step ${i + 1} requires.`

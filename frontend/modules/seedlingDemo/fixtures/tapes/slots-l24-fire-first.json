@@ -1,0 +1,173 @@
+{
+    "game": "seedling",
+    "name": "slots-l24-fire-first",
+    "boot": {
+        "level": 24,
+        "x": 96,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [
+        {
+            "level": 24,
+            "items": [
+                "sword"
+            ]
+        }
+    ],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 164,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 40
+        },
+        {
+            "key": "right",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "left",
+            "from": 41,
+            "to": 42
+        },
+        {
+            "key": "right",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "down",
+            "from": 48,
+            "to": 75
+        },
+        {
+            "key": "up",
+            "from": 77,
+            "to": 79
+        },
+        {
+            "key": "down",
+            "from": 83,
+            "to": 88
+        },
+        {
+            "key": "primary",
+            "from": 94,
+            "to": 95
+        },
+        {
+            "key": "left",
+            "from": 148,
+            "to": 159
+        },
+        {
+            "key": "right",
+            "from": 159,
+            "to": 160
+        },
+        {
+            "key": "left",
+            "from": 160,
+            "to": 161
+        },
+        {
+            "key": "right",
+            "from": 161,
+            "to": 162
+        },
+        {
+            "key": "left",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "down",
+            "from": 148,
+            "to": 164
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY SLOTS (D2) — the slot array in ARRIVAL order. BURN's L24 leg (route step 93) with the seam holding Fire and not the sword, and a grant of the sword at L24: the game holds [1, 0], so slot 0 is Fire. The keys are the solver's plan for the same leg with no sword held (164 t, one X press on t94, no equips): the one press burns `burnabletree@32,128` only because slot 0 holds Fire. In the fresh-game order [0, 1] it is a slash, the tree stands and the walk never reaches `teleporter@32,144`. Authored by scripts/procgen/plan-seedling-slots-witness.mjs."
+}

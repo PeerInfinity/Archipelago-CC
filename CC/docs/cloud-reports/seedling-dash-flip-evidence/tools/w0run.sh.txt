@@ -1,0 +1,11 @@
+#!/bin/bash
+# W0 bank: identity block, censuses, roster, 61 producers --check. $1=scratch $2=tag
+S=$1; T=$2; O=$S/$T; mkdir -p $O/plans; cd /home/user/Archipelago-CC
+s=$(date +%s); SEEDLING_PORT=9592 bash scripts/procgen/identity-block.sh . > $O/identity.txt 2>&1; echo "identity rc=$? s=$(( $(date +%s)-s ))" > $O/runs.txt
+{ for c in census-seedling-solver-surface census-seedling-constants witness-seedling-entities witness-seedling-profile; do echo "== $c --check"; node scripts/procgen/$c.mjs --check 2>&1 | grep -av '^# box lock' | tail -3; echo rc=$?; done
+  echo "== roster"; node -e "const j=require('./frontend/modules/seedlingDemo/fixtures/tapes/index.json'); console.log('roster', (j.tapes??j.entries??j).length ?? Object.keys(j).length)"; } > $O/censuses.txt 2>&1
+for p in $(cat $S/plans61.txt); do n=$(basename $p .mjs); s=$(date +%s)
+  SEEDLING_PORT=9592 timeout 2400 node $p --check > $O/plans/$n.out 2>&1; rc=$?
+  echo "$n rc=$rc s=$(( $(date +%s)-s )) md5=$(grep -av '^# box lock:' $O/plans/$n.out | md5sum | cut -c1-8)" >> $O/plans.txt
+done
+echo W0RUN DONE >> $O/runs.txt

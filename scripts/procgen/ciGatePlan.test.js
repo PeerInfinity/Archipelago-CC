@@ -1,0 +1,1203 @@
+/**
+ * ciGatePlan — **THE PARTITION, INTERROGATED WITHOUT SPENDING A RUNNER**
+ * (standing-values CI arc, slice S3; ⚖ 72).
+ *
+ * ⛔⛔ WHY THIS FILE EXISTS AT ALL. The rule it pins decides how many CI jobs
+ * there are and which arm lands in which one — and the only other way to ask
+ * it a question is to push and wait twenty minutes
+ * (`feedback_ci_fix_untested_environment`: a CI-config change's first
+ * execution is production). Everything here is pure: a roster stub, a bank
+ * stub, no network, no box, no browser.
+ *
+ * ⛓ THE ROWS THAT USE THE LIVE ROSTER are the ones whose whole content is
+ * *"and this agrees with the tree"*, and each is guarded against vacuity by a
+ * non-empty assertion first (trap 824).
+ */
+
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { describe, expect, it } from 'vitest';
+
+import {
+    CI_ARM_COSTS_FILE,
+    CI_FIXED_SHARD_LIMIT_MS,
+    CI_HEADLESS_SHARDS,
+    CI_SHARD_BUDGET_MS,
+    armName,
+    auditRunShards,
+    ciGateArms,
+    ciGatePlanFor,
+    ciArmlessIdentityRows,
+    ciIdentityArms,
+    ciUnrunnableIdentityRows,
+    ciRunnable,
+    ciSourced,
+    lastRunShardAudit,
+    planCiShards,
+    planFixedShards,
+} from './ciGatePlan.js';
+import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
+import { readStandingValues, standingRows } from './standingValues.js';
+import { EXCLUDED as PRODUCER_EXCLUDED, enrolled as producerChecksEnrolled } from './ci-producer-checks.mjs';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+
+/** ⛓ An arm shaped like `ciGateArms`' output, with only the fields the
+ *  partition reads — the planner must not need a real gate to be asked. */
+const arm = (key, file = `check-${key}.mjs`) => ({
+    gate: { file }, label: null, argv: [], bankKey: key, key,
+});
+const bankOf = (msByKey) => ({
+    rows: Object.fromEntries(Object.entries(msByKey).map(([k, ms]) => [k, { ms }])),
+});
+/** ⛓ …and what the partition ACTUALLY prices off since S5b: the runner's own
+ *  `here=` seconds, keyed by the arm's CI key. */
+const costsOf = (msByKey) =>
+    Object.fromEntries(Object.entries(msByKey).map(([k, ms]) => [k, { ms }]));
+
+describe('ciRunnable — what a runner can answer', () => {
+    /**
+     * ⛓⛓ V3b — **THE REFUSED SET IS EXACTLY `windows ∪ @ci-box`, AND BOTH
+     * HALVES ARE ASSERTED NON-VACUOUSLY.** Before V3b the refusal was the
+     * Windows rows alone; the `verify-*` rename put 47 gates on the roster
+     * that the box answers and CI does not, each declaring its own reason.
+     * ⛔ The equality is stated as a SET over files, not a count, and each
+     * half is proved non-empty first (trap 824): a clause that stopped
+     * matching would otherwise pass by emptiness.
+     */
+    it('rejects exactly the Windows rows and the @ci-box rows', () => {
+        const roster = gateRoster({ repo: REPO });
+        expect(roster.length).toBeGreaterThan(20);
+        const refused = roster.filter((g) => !ciRunnable(g));
+        expect(refused.length).toBeGreaterThan(0);
+        expect(refused.every((g) => g.windows || g.ciBox)).toBe(true);
+        /** ⛓ H2 — the Windows half is EMPTY on the live tree: every gate that
+         *  holds the Windows driver path also has a headless channel, so it is
+         *  `dual`. The half is proved non-vacuous on a fixture instead
+         *  (`ciSourced … Windows row` below, and `gateRoster.test.js`'s scratch
+         *  classifier), and the live `dual` population is asserted ACCEPTED
+         *  here — a predicate that still refused them would red this row. */
+        const dual = roster.filter((g) => g.dual);
+        expect(dual.length).toBeGreaterThan(0);
+        expect(dual.filter((g) => !ciRunnable(g) && !g.ciBox)).toEqual([]);
+        expect(ciRunnable({ windows: true, ciBox: null })).toBe(false);
+        expect(roster.filter((g) => g.ciBox).length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.windows || g.ciBox).map((g) => g.file).sort())
+            .toEqual(refused.map((g) => g.file).sort());
+    });
+
+    /**
+     * ⛔⛔ V3b — **AND A GATE THAT DECLARES NEITHER IS STILL ACCEPTED**, which
+     * is the half that keeps the new clause from being a blanket. If a later
+     * edit made `ciRunnable` false for everything, every row above would still
+     * pass — this one would not.
+     */
+    it('accepts every gate that declares neither', () => {
+        const plain = gateRoster({ repo: REPO }).filter((g) => !g.windows && !g.ciBox);
+        expect(plain.length).toBeGreaterThan(10);
+        expect(plain.filter((g) => !ciRunnable(g))).toEqual([]);
+    });
+
+    /**
+     * ⛔ THE HALF THAT WOULD HAVE CAUGHT THE OLD REFUSAL. Before S3 a browser
+     * gate was refused by `ci-summary` by name; if this predicate ever starts
+     * rejecting browser rows again, every browser standing row silently loses
+     * its CI answer while the workflow keeps printing lines for it.
+     */
+    it('accepts every browser gate — that is what S3 bought', () => {
+        /** ⛓ V3b — `&& !g.ciBox`: the population S3 bought is the browser gates
+         *  CI is ASKED to run, and a box-only gate was never in it. Widening
+         *  the filter instead of the assertion would have let the new clause
+         *  swallow this row silently. */
+        const browser = gateRoster({ repo: REPO })
+            .filter((g) => g.browser && !g.windows && !g.ciBox);
+        expect(browser.length).toBeGreaterThan(15);
+        expect(browser.filter((g) => !ciRunnable(g))).toEqual([]);
+    });
+});
+
+describe('ciGateArms — the arms, and BOTH of an arm\'s keys', () => {
+    it('the browser set is the browser gates, their declared arms and the browser '
+        + 'IDENTITY arms', () => {
+        const roster = gateRoster({ repo: REPO });
+        /** ⛓ V3b — `ciRunnable` is the predicate `ciGateArms` itself filters
+         *  on, so the expectation is stated through it rather than through a
+         *  copy of its clauses that a fifth one could go stale against. */
+        const gates = roster.filter((g) => g.browser && ciRunnable(g));
+        const variants = gates.reduce((n, g) => n + (g.variants?.length ?? 0), 0);
+        expect(gates.length).toBeGreaterThan(15);
+        const arms = ciGateArms({ repo: REPO, set: 'browser' });
+        /** ⛓⛓ S4c — the identity arms are DERIVED into the same population, so
+         *  the equality is stated against `ciIdentityArms` rather than loosened
+         *  to an inequality. A count typed here is the wrong-and-green this arc
+         *  has produced repeatedly. */
+        const identity = ciIdentityArms({ repo: REPO }).filter((a) => a.browser);
+        expect(identity.length).toBeGreaterThan(0);
+        expect(arms.length).toBe(gates.length + variants + identity.length);
+        /** ⛓ …and a declared arm is a SECOND standing row, keyed apart. */
+        expect(new Set(arms.map((a) => a.key)).size).toBe(arms.length);
+    });
+
+    /**
+     * ⛔⛔ S4c — **THE TWO SETS PARTITION THE ARMS, and an arm that fell out of
+     * both would be a standing row CI silently stopped answering.** `browser`
+     * and `headless` are complementary filters over one population now that
+     * identity arms are in it; before S4c they were two different roster
+     * filters and nothing said they were exhaustive.
+     */
+    it('⛔ browser ∪ headless = all, with no arm in both', () => {
+        const all = ciGateArms({ repo: REPO, set: 'all' }).map((a) => a.key).sort();
+        const b = ciGateArms({ repo: REPO, set: 'browser' }).map((a) => a.key);
+        const h = ciGateArms({ repo: REPO, set: 'headless' }).map((a) => a.key);
+        expect(all.length).toBeGreaterThan(30);
+        expect(b.length).toBeGreaterThan(0);
+        expect(h.length).toBeGreaterThan(0);
+        expect([...b, ...h].sort()).toEqual(all);
+    });
+
+    it('the headless set holds gates and identity rows, and a @ci-face still '
+        + 'replaces the prefix', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'headless' });
+        expect(arms.length).toBeGreaterThan(3);
+        /** ⛓ S4c — non-vacuity: the headless set really did gain identity arms. */
+        expect(arms.filter((a) => !a.gate).length).toBeGreaterThan(0);
+        const faced = arms.filter((a) => a.gate?.ciFace);
+        expect(faced.length).toBeGreaterThan(0);
+        for (const a of faced) {
+            expect(a.key.startsWith(`${a.gate.ciFace.prefix}:`)).toBe(true);
+            expect(a.bankKey.startsWith('gate:')).toBe(true);
+            /** ⛔ the face's argv is what CI RUNS — a bounded claim, its own key. */
+            expect(a.argv).toEqual(a.gate.ciFace.argv);
+        }
+    });
+
+    it('a browser arm is pointed at the caller\'s host, both shapes of it', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'browser', host: 'http://h:1' })
+            /** ⛓ S4c — an identity arm's command is the shell pipeline
+             *  `identity-block.sh` prints; it has no argv to point anywhere. */
+            .filter((a) => a.gate);
+        const hosted = arms.filter((a) => a.argv.some((x) => x.startsWith('--host=')));
+        const rooted = arms.filter((a) => a.argv.some((x) => x.startsWith('--root=')));
+        expect(hosted.length).toBeGreaterThan(0);
+        expect(rooted.length).toBeGreaterThan(0);
+        /** ⛔ `--root=` is the PAGES-shaped origin: getting this wrong is not a
+         *  failure, it is a gate that passes against the wrong tree. */
+        for (const a of rooted) expect(a.argv).toContain('--root=http://h:1/frontend');
+        for (const a of hosted) expect(a.argv).toContain('--host=http://h:1');
+    });
+
+    it('refuses an unknown set BY NAME', () => {
+        expect(() => ciGateArms({ repo: REPO, set: 'windows' })).toThrow(/unknown set/);
+    });
+
+    /**
+     * ⛓⛓⛓ S5 — **THE ARGV PROPERTY, FROM BOTH ENDS, AND IT IS THE THIRD
+     * COSTUME'S DOOR.** P4b (D) froze a row because a key was published under
+     * a prefix the reader did not ask for; S4's second costume was a key that
+     * resolved to no file. Both were caught by asserting the two populations
+     * COMPOSE. `@ci-argv` opens a third door onto the same defect, one level
+     * down: an arm can now publish under the STANDING key while running argv
+     * the standing row does not — and a flag that NARROWS the question
+     * (`--only=`, `--doors=ci`) would bank a bounded number under the full
+     * claim's key with nothing red anywhere.
+     *
+     * ⇒ the invariant, asserted over the live tree: **a standing-keyed arm's
+     * argv is the LOCAL argv plus exactly the flags its gate DECLARES** — the
+     * local argv is never dropped (a substitution is what a `@ci-face` does,
+     * and a faced arm is never standing-keyed), and an undeclared extra flag
+     * is a red naming the arm and the flag.
+     */
+    it('⛔ a standing-keyed arm runs the LOCAL argv plus exactly its declared CI flags', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all', host: 'http://h:1' });
+        const standing = arms.filter((a) => a.gate && a.key === a.bankKey);
+        /** ⛓ non-vacuity, both halves (trap 824): there ARE standing-keyed
+         *  arms, and at least one of them needs argv to address its world. */
+        expect(standing.length).toBeGreaterThan(20);
+        expect(standing.filter((a) => a.argv.length > 0).length).toBeGreaterThan(0);
+        for (const a of standing) {
+            /** ⛔ a faced gate publishes under its OWN prefix; if one ever
+             *  reaches this list the face has stopped replacing the key. */
+            expect(a.gate.ciFace).toBe(null);
+            const base = a.label
+                ? (a.gate.variants.find((v) => v.label === a.label)?.argv ?? [])
+                : argvFor(a.gate, 'local', { host: 'http://h:1' });
+            for (const f of base) expect(a.argv).toContain(f);
+            const extra = a.argv.filter((f) => !base.includes(f));
+            expect(extra).toEqual(a.gate.ciArgv?.argv ?? []);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ S5 — **THE DECLARER, AND WHAT ITS DECLARATION DOES.** Non-vacuity
+     * for the property above (trap 824): without a gate that declares
+     * `@ci-argv`, "the extras are exactly the declared flags" is `[] === []`
+     * for every arm and the append could be deleted with nothing red.
+     * ⛔ The gate is found by its DECLARATION, not by name — a row that typed
+     * `check-procgen-help.mjs` would go red the day the declaration moves to
+     * a second gate, which is the direction that should stay green.
+     */
+    it('⛔ the gate that declares @ci-argv runs CI with those flags, under its STANDING key', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all' });
+        const declared = arms.filter((a) => a.gate?.ciArgv);
+        expect(declared.length).toBeGreaterThan(0);
+        for (const a of declared) {
+            /** ⛔ the same claim ⇒ the same key. This is the clause that keeps
+             *  `@ci-argv` from becoming a face by accident. */
+            expect(a.key).toBe(a.bankKey);
+            expect(a.key.startsWith('gate:')).toBe(true);
+            for (const f of a.gate.ciArgv.argv) expect(a.argv).toContain(f);
+        }
+    });
+
+    /** ⛓ …and the OTHER end of the same property: an arm whose published key
+     *  differs from its bank key is a FACE, and its argv is the face's own —
+     *  a substitution, never an append. */
+    it('⛔ …and every arm that is NOT standing-keyed is a declared face', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'all', host: LOCAL_HOST });
+        const faced = arms.filter((a) => a.key !== a.bankKey);
+        expect(faced.length).toBeGreaterThan(0);
+        for (const a of faced) {
+            expect(a.gate).not.toBe(null);
+            expect(a.gate.ciFace).not.toBe(null);
+            expect(a.key.startsWith(`${a.gate.ciFace.prefix}:`)).toBe(true);
+            expect(a.argv).toEqual(a.gate.ciFace.argv);
+        }
+    });
+});
+
+describe('planCiShards — the partition', () => {
+    it('is a COVER: every arm lands in exactly one shard', () => {
+        const arms = ciGateArms({ repo: REPO, set: 'browser' });
+        const shards = planCiShards({ arms, costs: {}, budgetMs: 300000 });
+        const placed = shards.flatMap((s) => s.keys);
+        expect(placed.length).toBeGreaterThan(0);
+        expect(placed.slice().sort()).toEqual(arms.map((a) => a.key).sort());
+        expect(new Set(placed).size).toBe(placed.length);
+    });
+
+    /**
+     * ⛔⛔ THE COVER IS LOAD-BEARING FOR SG1's DEMOS DEDUP, and this is where
+     * that is asserted rather than hoped. `check-procgen-demos` skips a `cli`
+     * row that invokes a roster gate on the licence that *"the battery runs it
+     * as its own row"*; sharding splits the battery across JOBS, so the
+     * licence now rests on every licensed sibling being somewhere in the plan.
+     */
+    it('holds every gate the demos catalogue dedups against', () => {
+        const { arms } = ciGatePlanFor({ repo: REPO, set: 'browser' });
+        const names = new Set(arms.filter((a) => a.gate).map((a) => a.gate.file));
+        for (const f of ['check-seedling-editor-generate.mjs', 'check-seedling-editor-sequence.mjs',
+            'check-seedling-editor-arm.mjs', 'check-maze-lab.mjs']) {
+            expect({ f, held: names.has(f) }).toEqual({ f, held: true });
+        }
+    });
+
+    it('gives an arm at or above the budget a shard of its own', () => {
+        const arms = [arm('a'), arm('big'), arm('b')];
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, big: 999, b: 10 }),
+            budgetMs: 100 });
+        const alone = shards.find((s) => s.keys.includes('big'));
+        expect(alone.keys).toEqual(['big']);
+    });
+
+    /**
+     * ⛔ THE UNPRICED ROW IS THE ONE A "0 ms" DEFAULT WOULD HAVE HIDDEN. A gate
+     * added today has nothing banked; pricing that at zero packs it into a
+     * shard for free and the shard silently becomes the slow one.
+     */
+    it('prices an arm NO RUNNER has measured at the whole budget, so it lands alone', () => {
+        const arms = [arm('a'), arm('brand-new'), arm('b')];
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, b: 10 }), budgetMs: 100 });
+        const alone = shards.find((s) => s.keys.includes('brand-new'));
+        expect(alone.keys).toEqual(['brand-new']);
+        expect(alone.unpriced).toBe(1);
+        /** ⛓ …and the control: the priced pair still share one shard. */
+        expect(shards.filter((s) => !s.keys.includes('brand-new'))
+            .flatMap((s) => s.keys).sort()).toEqual(['a', 'b']);
+    });
+
+    it('an empty costs file makes every arm its own shard, and never drops one', () => {
+        const arms = [arm('a'), arm('b'), arm('c')];
+        const shards = planCiShards({ arms, costs: {}, budgetMs: 100 });
+        expect(shards.length).toBe(3);
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(['a', 'b', 'c']);
+    });
+
+    it('no shard exceeds the budget unless a single arm does', () => {
+        const arms = [arm('a'), arm('b'), arm('c'), arm('d')];
+        const shards = planCiShards({ arms, costs: costsOf({ a: 60, b: 50, c: 40, d: 30 }),
+            budgetMs: 100 });
+        for (const s of shards) expect(s.ms).toBeLessThanOrEqual(100);
+    });
+
+    /**
+     * ⛔⛔ THE PLAN IS COMPUTED TWICE BY TWO PROCESSES — the job that publishes
+     * the matrix and the job that takes shard *i* out of it — and they must
+     * agree without talking. A tie broken by iteration order would put a
+     * different arm in shard 1 on the two sides.
+     */
+    it('is deterministic, ties broken by name', () => {
+        const arms = [arm('z'), arm('y'), arm('x')];
+        const costs = costsOf({ x: 50, y: 50, z: 50 });
+        const a = planCiShards({ arms, costs, budgetMs: 100 });
+        const b = planCiShards({ arms: arms.slice().reverse(), costs, budgetMs: 100 });
+        expect(a.map((s) => s.keys)).toEqual(b.map((s) => s.keys));
+        expect(a[0].keys).toEqual(['x', 'y']);
+    });
+
+    it('names a shard for its heaviest member', () => {
+        const arms = [arm('a'), arm('b')];
+        const shards = planCiShards({ arms, costs: costsOf({ a: 10, b: 80 }), budgetMs: 100 });
+        expect(shards[0].name).toBe('b +1');
+    });
+
+    /**
+     * ⛔⛔ F2 task 5 — **THE HEADROOM IS THE ARMS' OWN MEASURED SPREAD.** The
+     * fixture is F1's spill in miniature: a heavy arm whose max fills the bin
+     * with a light one exactly to the budget (F1's 600.0 s shard), while its
+     * min is far below — the next run's seconds land anywhere in between.
+     */
+    it('a bin holds budget − the widest spread among its arms, so a volatile heavy arm stops filling to the budget', () => {
+        const arms = [arm('ship'), arm('light'), arm('steady')];
+        const costs = { ship: { ms: 80, minMs: 60 }, light: { ms: 20, minMs: 19 }, steady: { ms: 10, minMs: 10 } };
+        const shards = planCiShards({ arms, costs, budgetMs: 100 });
+        const withShip = shards.find((s) => s.keys.includes('ship'));
+        expect(withShip.headroomMs).toBe(20);
+        expect(withShip.ms).toBeLessThanOrEqual(100 - 20);
+        expect(withShip.keys).toEqual(['ship']);
+        expect(shards.find((s) => s.keys.includes('light')).keys).toEqual(['light', 'steady']);
+        // ⛓ the control: WITHOUT the min (a pre-F2 costs file) the old packing, to the budget
+        const old = planCiShards({ arms, costs: costsOf({ ship: 80, light: 20, steady: 10 }), budgetMs: 100 });
+        expect(old[0].keys).toEqual(['ship', 'light']);
+        expect(old[0].ms).toBe(100);
+        expect(old[0].headroomMs).toBe(0);
+    });
+
+    it('the headroom is the MAX spread in the bin, not the sum — two steady arms still share', () => {
+        const arms = [arm('a'), arm('b'), arm('c')];
+        const costs = { a: { ms: 40, minMs: 35 }, b: { ms: 40, minMs: 35 }, c: { ms: 15, minMs: 10 } };
+        const shards = planCiShards({ arms, costs, budgetMs: 100 });
+        // 40 + 40 + 15 = 95 ≤ 100 − max(5,5,5); a SUM (15) would refuse c
+        expect(shards.map((s) => s.keys)).toEqual([['a', 'b', 'c']]);
+        expect(shards[0].headroomMs).toBe(5);
+    });
+
+    it('stays deterministic with spreads, ties broken by name', () => {
+        const arms = [arm('z'), arm('y'), arm('x')];
+        const costs = { x: { ms: 45, minMs: 40 }, y: { ms: 45, minMs: 40 }, z: { ms: 45, minMs: 40 } };
+        const a = planCiShards({ arms, costs, budgetMs: 100 });
+        const b = planCiShards({ arms: arms.slice().reverse(), costs, budgetMs: 100 });
+        expect(a).toEqual(b);
+        expect(a[0].keys).toEqual(['x', 'y']);
+    });
+});
+
+/**
+ * ⛔⛔ H2 — **THE MANUAL-ONLY RULING, AT THE PLAN LEVEL.** The full tier (the
+ * 150-tape differential roster) runs in CI only by `workflow_dispatch:`
+ * (`seedling-full-tier.yml`, asserted by its own row). The differential's
+ * DEFAULT tier is `full`, so ANY per-push arm of it that does not name a
+ * non-`full` tier would run the whole roster on every push. Its `@ci-face`
+ * is what prevents that; delete the face and this row reds.
+ */
+/**
+ * ⛓ H2 — **THE TWO `paths:` LISTS ARE ONE LIST, AND THE COSTS FILE IS ON IT.**
+ * `unittests_frontend.yml` spells its push and pull_request `paths:` twice, by
+ * hand; they were byte-identical and nothing said so. A re-priced
+ * `ci-arm-costs.json` re-shards the browser plan, so a costs-only commit must
+ * run the workflow (H1 found it ran nothing and dispatched one by hand).
+ */
+describe('H2 — unittests_frontend.yml paths', () => {
+    const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+    const pathsUnder = (trigger) => {
+        const lines = wf.split('\n');
+        const at = lines.findIndex((l) => l === `  ${trigger}:`);
+        expect(at).toBeGreaterThan(-1);
+        const out = [];
+        for (const l of lines.slice(at + 1)) {
+            if (/^ {2}\S/.test(l) || /^\S/.test(l)) break;
+            const m = /^ {6}- '([^']+)'/.exec(l);
+            if (m) out.push(m[1]);
+        }
+        return out;
+    };
+    it('push and pull_request list the same paths, in the same order', () => {
+        expect(pathsUnder('push').length).toBeGreaterThan(5);
+        expect(pathsUnder('pull_request')).toEqual(pathsUnder('push'));
+    });
+    it('the CI arm costs file is on both', () => {
+        expect(pathsUnder('push')).toContain(CI_ARM_COSTS_FILE);
+    });
+});
+
+/**
+ * ⛓ G1 (seedling-headless) — **THE SEEDLING SOURCE IS UNSHALLOWED BEFORE
+ * ANYTHING READS ITS HISTORY.** The job's checkout is depth 1, submodules
+ * included; `check-seedling-source-pin` (iii) and the ogmo `--check` row need
+ * the fork's ancestry. A step that ran AFTER vitest or the gates would be
+ * green in its own log and fix nothing — so the row pins the ORDER, and the
+ * guard that keeps a full checkout from a failing `--unshallow`.
+ */
+describe('G1 — the vitest job AND the gates job unshallow vendor/seedling first', () => {
+    const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+    /** ⛓ ci-split C2: the gates left the Vitest job for `headless-gates`, so
+     *  the order is pinned in EACH job, over that job's own slice.
+     *  ⛓ ci-jsut-split: and the slow tier left the shards for its own job. */
+    const jobs = {
+        'javascript-tests': [wf.indexOf('  javascript-tests:'), wf.indexOf('\n  javascript-tests-slow:'),
+            ['Run Vitest tests']],
+        'javascript-tests-slow': [wf.indexOf('  javascript-tests-slow:'), wf.indexOf('\n  headless-gates:'),
+            ['Run slow Vitest tests']],
+        'headless-gates': [wf.indexOf('  headless-gates:'), wf.indexOf('\n  browser-gate-plan:'),
+            ['Run headless procgen gates']],
+    };
+    for (const [id, [from, to, later]] of Object.entries(jobs)) {
+        const job = wf.slice(from, to);
+        const at = (name) => job.indexOf(`- name: ${name}`);
+        it(`${id}: the step sits after the checkout and before ${later.join(', ')}`, () => {
+            expect(from).toBeGreaterThan(-1);
+            expect(to).toBeGreaterThan(from);
+            const step = at('Unshallow the Seedling source submodule');
+            expect(step).toBeGreaterThan(at('Checkout repository'));
+            for (const name of later) expect(at(name), name).toBeGreaterThan(step);
+        });
+        it(`${id}: it is guarded on --is-shallow-repository and fetches --unshallow`, () => {
+            const body = job.slice(at('Unshallow the Seedling source submodule'), at('Set up Node.js'));
+            expect(body).toContain('git -C vendor/seedling rev-parse --is-shallow-repository');
+            expect(body).toContain('git -C vendor/seedling fetch --unshallow');
+        });
+    }
+});
+
+describe('H2 — no per-push arm runs the differential full tier', () => {
+    it('every CI arm of the differential names an explicit, non-full --tier=', () => {
+        const { arms } = ciGatePlanFor({ repo: REPO, set: 'all' });
+        const diff = arms.filter((a) => a.gate?.file === 'check-seedling-bot-differential.mjs');
+        expect(diff.length).toBeGreaterThan(0);
+        for (const a of diff) {
+            const tiers = a.argv.filter((x) => x.startsWith('--tier=')).map((x) => x.slice(7));
+            expect(`${a.key}: ${tiers.join(',') || '(default = full)'}`).toMatch(/: (?!full\b)[a-z-]+$/);
+        }
+    });
+});
+
+describe('ciGatePlanFor — the live tree', () => {
+    /**
+     * ⛓ THE ONE ROW THAT ASSERTS A SHAPE OF TODAY'S ANSWER rather than a rule.
+     * ⛔ It deliberately does NOT pin the shard COUNT or the arm count: those
+     * move whenever a gate is added or the bank is re-measured, and a number
+     * typed here is the wrong-and-green this arc has already produced three
+     * times. What it pins is the PROPERTY the workflow depends on.
+     */
+    it('partitions the live browser set into shards that cover it', () => {
+        const { arms, shards, budgetMs } = ciGatePlanFor({ repo: REPO, set: 'browser' });
+        expect(arms.length).toBeGreaterThan(15);
+        expect(shards.length).toBeGreaterThan(0);
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(arms.map((a) => a.key).sort());
+        expect(budgetMs).toBe(CI_SHARD_BUDGET_MS);
+        /** ⛓ a multi-arm shard is inside the budget; a lone heavy arm may not be. */
+        for (const s of shards) {
+            if (s.keys.length > 1) expect(s.ms).toBeLessThanOrEqual(budgetMs);
+        }
+    });
+
+    it('armName carries the declared arm\'s label', () => {
+        expect(armName({ gate: { file: 'check-a-b.mjs' }, label: null })).toBe('a-b');
+        expect(armName({ gate: { file: 'check-a-b.mjs' }, label: 'own server' }))
+            .toBe('a-b (own server)');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `ciSourced` — WHICH ROWS THE BANK QUOTES FROM CI (⚖ 72, S4)
+ *
+ * ⛓ MOVED HERE FROM `boxLock.test.js` / `standingValues.test.js` WITH THE
+ * FUNCTION, and widened with it. The two old homes each asserted a piece of
+ * the rule with a hand-spread argument list, and one of them had already gone
+ * stale that way once (its own note records asserting a question production
+ * had stopped asking). The rule now takes the ROSTER ROW, so every row here
+ * hands it the same shape production does.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ A roster row with only the fields the rule reads. */
+const g = (o = {}) => ({
+    file: 'check-x.mjs', browser: false, windows: false, ciFace: null, ciShallow: null, ...o,
+});
+
+describe('ciSourced — the four clauses, each on its own', () => {
+    it('selects a CI-runnable row only once it stops being cheap', () => {
+        expect(ciSourced({ gate: g(), cheap: false })).toBe(true);
+        expect(ciSourced({ gate: g(), cheap: true })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ THE WIDENING S4 IS: a BROWSER row is CI-sourced now. Before S3 CI ran
+     * no browser at all and this arm read `false`; the arms exist and are
+     * measured, so quoting them is the economy ⚖ 54 (6) asked for.
+     */
+    it('⛓ a BROWSER row is CI-sourced — S3 gave those arms answers', () => {
+        expect(ciSourced({ gate: g({ browser: true }), cheap: false })).toBe(true);
+    });
+
+    /** ⛓ A row nothing has measured has no `cheap` yet: the first measurement
+     *  is the box's, and it is what decides. */
+    it('does not select a row nothing has measured', () => {
+        expect(ciSourced({ gate: g(), cheap: undefined })).toBe(false);
+    });
+
+    it('⛔ never selects a Windows row, at any cost (⚖ 72 (a))', () => {
+        expect(ciSourced({ gate: g({ windows: true }), cheap: false })).toBe(false);
+        expect(ciSourced({ gate: g({ windows: true }), cheap: true })).toBe(false);
+    });
+
+    it('⛔ never selects a declared @ci-face (P4b (D))', () => {
+        expect(ciSourced({ gate: g({ ciFace: { prefix: 'gate-help-ci' } }), cheap: false }))
+            .toBe(false);
+    });
+
+    it('⛔ never selects a declared @ci-shallow (S4, trap 1058)', () => {
+        expect(ciSourced({ gate: g({ ciShallow: { reason: 'depth-1' } }), cheap: false }))
+            .toBe(false);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE ROW S4c CHANGED, AND IT IS THE SAME SENTENCE READ FORWARDS.**
+     *
+     * It used to read *"a row with no gate is never CI-sourced"*, and the
+     * reason it gave was TRUE at the time: CI printed `## CI-GATE |` lines
+     * under GATE keys only, so an identity row could never have a ⚖ 72 (b)
+     * streak and flipping one would bank a value nothing had ever published.
+     * ⛔ It is NOT deleted, because the property it was protecting has not gone
+     * away — it has become conditional on the thing S4c built. The rule is now
+     * *"a gate-less row is CI-sourced when an arm publishes a line under its
+     * key"*, and these rows assert both directions of that.
+     */
+    it('⛓ S4c — a gate-less row with NO row handed over is still never CI-sourced', () => {
+        expect(ciSourced({ gate: null, cheap: false })).toBe(false);
+        expect(ciSourced({ gate: null, row: null, cheap: false })).toBe(false);
+    });
+
+    it('⛓ S4c — a gate-less row an ARM publishes IS CI-sourced, at ¬cheap', () => {
+        const identity = ciIdentityArms({ repo: REPO });
+        expect(identity.length).toBeGreaterThan(0);
+        const row = identity[0].row;
+        expect(ciSourced({ gate: null, row, cheap: false })).toBe(true);
+        /** ⛔ …and `¬cheap` is asked of these rows too — ⚖ 52's criterion, the
+         *  clause that keeps the twenty cheap identity rows on the box. */
+        expect(ciSourced({ gate: null, row, cheap: true })).toBe(false);
+        expect(ciSourced({ gate: null, row, cheap: undefined })).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ **⚖ 72 (a) FOR AN IDENTITY ROW, ASSERTED AT `cheap: false`** — the
+     * same shape as the `@ci-shallow` row below and for the same reason. All
+     * four Windows-driving identity rows are `cheap` today, so a rule that
+     * excluded them only by the timing band would pass every row that used
+     * their real `cheap` value and go silently wrong the day one crossed it.
+     * This hands the rule the value that would otherwise have selected them.
+     */
+    it('⛔ S4c — a Windows-driving identity row is excluded EVEN AT `cheap: false`', () => {
+        const win = ciUnrunnableIdentityRows({ repo: REPO });
+        expect(win.length).toBeGreaterThan(0);
+        for (const row of win) expect(ciSourced({ gate: null, row, cheap: false })).toBe(false);
+    });
+
+    /** ⛔ …and a row of a kind that has no arms at all — the `ci-suite` row is
+     *  `alwaysQuoted` and CI answers it through its OWN helper, never here. */
+    it('⛔ S4c — a non-identity gate-less row is never CI-sourced', () => {
+        expect(ciSourced({ gate: null, cheap: false,
+            row: { key: 'suite: vitest (unfiltered)', kind: 'ci-suite', command: 'x' } }))
+            .toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE LIVE ROSTER AND THE COMMITTED BANK — the rows whose whole content
+ * is *"and this agrees with the tree"*, each guarded against vacuity first.
+ */
+describe('ciSourced over the live tree', () => {
+    const roster = gateRoster({ repo: REPO });
+    const bank = readStandingValues({ repo: REPO });
+    const gateOf = (command) => roster.find((r) => command.includes(r.path)) ?? null;
+    const rows = standingRows({ repo: REPO });
+    const selected = rows.filter((r) => ciSourced({
+        gate: r.kind === 'gate' ? gateOf(r.command) : null, row: r,
+        cheap: bank?.rows?.[r.key]?.cheap,
+    }));
+
+    /**
+     * ⛔⛔ **THE GUARD THE BRIEF ASKED FOR, AND IT IS ASSERTED AT `cheap:
+     * false` ON PURPOSE.** Both declaring gates are UNDER the 60 s band today,
+     * so a rule that only excluded them by `¬cheap` would pass every row that
+     * used their real `cheap` value — and would go silently wrong the day
+     * `slice-records` (30.8 s and growing with every recorded slice) crossed
+     * it. This row hands the rule the value that would have selected them.
+     */
+    it('⛔ a declared @ci-shallow gate is excluded EVEN AT `cheap: false`', () => {
+        const declaring = roster.filter((r) => r.ciShallow);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const gate of declaring) expect(ciSourced({ gate, cheap: false })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓⛓ S5 — **THE ROW THE WHOLE SLICE IS ABOUT.** P4b (D) measured this
+     * gate frozen: CI-runnable, `cheap: false`, selected by the rule and then
+     * REFUSED BY NAME by the reader, so the CI path could never answer it and
+     * the local path was never chosen again. It is CI-sourced now because its
+     * face is retired and CI answers the FULL claim under the standing key —
+     * ⛔ and NOT because any clause was loosened, which the row below (the
+     * remaining faced gate, still excluded) is the control for.
+     */
+    it('⛓ a gate that declares @ci-argv IS CI-sourced — the same claim, same key', () => {
+        const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciArgv);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const g of declaring) expect(ciSourced({ gate: g, cheap: false })).toBe(true);
+    });
+
+    it('⛔ …and so is a declared @ci-face, at the same value', () => {
+        const faced = roster.filter((r) => r.ciFace);
+        expect(faced.length).toBeGreaterThan(0);
+        for (const gate of faced) expect(ciSourced({ gate, cheap: false })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ **A STATED NON-ZERO.** Until S4 this file's ancestor asserted the
+     * rule selected ZERO rows, which was the honest reading then. S4's whole
+     * point is that the number is no longer zero — so the row asserts the
+     * direction, never the count (a count typed here is the wrong-and-green
+     * this arc has produced four times).
+     */
+    it('selects a NON-EMPTY set at this head, out of a non-empty roster', () => {
+        expect(rows.length).toBeGreaterThan(20);
+        expect(selected.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE COMPOSITION PROPERTY, AND IT IS THE ONE THAT CANNOT BE TRUE
+     * BY CONSTRUCTION.** A selected row's `command` becomes `ci-summary
+     * --gate=<its key>`, which can only be answered if CI PRINTS A LINE UNDER
+     * THAT EXACT KEY. `ciGateArms` is what the workflow runs, and an arm whose
+     * gate declares a `@ci-face` publishes under a DIFFERENT key — so a rule
+     * that selected such a row would freeze it at its last local value with a
+     * polite reason, forever, which is precisely P4b (D)'s defect. Asserting
+     * the two sets compose is the only thing that catches a fifth clause
+     * arriving on one side and not the other.
+     */
+    it('⛔ every selected row has an arm publishing a line under the SAME key', () => {
+        const published = new Set(ciGateArms({ repo: REPO, set: 'all' })
+            .filter((a) => !a.gate?.ciFace).map((a) => a.key));
+        expect(published.size).toBeGreaterThan(0);
+        expect(selected.length).toBeGreaterThan(0);
+        for (const row of selected) expect(published.has(row.key)).toBe(true);
+    });
+
+    /** ⛓ …and no selected row is one the bank has never measured, because the
+     *  `cheap` clause is a MEASURED field and an unmeasured row has none. */
+    it('every selected row is banked, not cheap, and CI-runnable', () => {
+        /** ⛓ S4c — non-vacuity for the identity half: the set really holds
+         *  rows of both kinds, so neither branch below is unreached. */
+        expect(selected.some((r) => r.kind === 'gate')).toBe(true);
+        expect(selected.some((r) => r.kind === 'identity')).toBe(true);
+        const identityKeys = new Set(ciIdentityArms({ repo: REPO }).map((a) => a.key));
+        for (const row of selected) {
+            expect(bank.rows[row.key]?.cheap).toBe(false);
+            if (row.kind !== 'gate') {
+                /** ⛔ the identity clause IS "an arm publishes under this key",
+                 *  so this is that sentence and not a second spelling of it. */
+                expect(identityKeys.has(row.key)).toBe(true);
+                continue;
+            }
+            const gate = gateOf(row.command);
+            expect(ciRunnable(gate)).toBe(true);
+            expect(gate.ciFace).toBe(null);
+            expect(gate.ciShallow).toBe(null);
+        }
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE OTHER CONSUMER OF `ciRunnable` — `ci-summary.mjs`'s REFUSAL LADDER.
+ *
+ * ⛔⛔ EVERY ROW HERE IS OFF-NETWORK BY CONSTRUCTION, and that is asserted
+ * rather than hoped: the refusals all fire BEFORE the first `gh` call, and the
+ * one row that must get PAST them runs with a `PATH` that holds no `gh` at
+ * all — so a row that stopped refusing would fail at the network instead of
+ * quietly querying GitHub from a unit test. ⛓ Every key is DERIVED from the
+ * live roster; a typed gate name here would be the hand list this arc keeps
+ * finding wrong-and-green.
+ */
+describe('ci-summary.mjs — the refusal ladder, derived from the same predicate', () => {
+    const CI_SUMMARY = join(HERE, 'ci-summary.mjs');
+    const roster = gateRoster({ repo: REPO });
+    const nameOf = (g) => g.file.replace(/^check-/, '').replace(/\.mjs$/, '');
+    const runCi = (args) => {
+        try {
+            const out = execFileSync(process.execPath, [CI_SUMMARY, ...args], {
+                cwd: REPO,
+                encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'pipe'],
+                timeout: 60000,
+                env: { ...process.env, PATH: '/nonexistent' },
+            });
+            return { code: 0, out };
+        } catch (e) {
+            return { code: e.status ?? -1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
+        }
+    };
+
+    /**
+     * ⛓ H2 — **NO LIVE GATE IS WINDOWS-ONLY ANY MORE**, so the gate-level
+     * Windows rung of the ladder has no subject on this tree (its identity-row
+     * twin below still does). What CAN be asserted off the live roster is the
+     * other direction, and it is the one H2 could break: a `dual` gate is never
+     * refused as though it only ran on Windows.
+     */
+    it('does NOT refuse a DUAL gate as a Windows row — it has a headless channel', () => {
+        const dual = roster.filter((g) => g.dual);
+        expect(dual.length).toBeGreaterThan(0);
+        expect(roster.filter((g) => g.windows)).toEqual([]);
+        for (const gate of dual) {
+            const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(gate)}`]);
+            expect(`${gate.file}: ${r.out}`).not.toMatch(/drives the Windows Python driver/);
+        }
+    });
+
+    it('REFUSES a gate that is not on the roster at all, exit 5', () => {
+        const r = runCi(['deadbeef1', '--gate=gate: no-such-gate-anywhere']);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/no gate named/);
+    });
+
+    it('REFUSES a @ci-face gate asked under its `gate:` key, exit 5', () => {
+        const faced = roster.find((g) => g.ciFace);
+        expect(faced).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(faced)}`]);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/@ci-face/);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE ROW S4 OWES ITS OWN DEFECT TO — THE READER SIDE OF THE
+     * COMPOSITION PROPERTY.** `ciGatePlan.test.js` already asserts that every
+     * CI-sourced row has an ARM PUBLISHING a line under its key. That is only
+     * half of it: the row's `command` is `ci-summary --gate=<key>`, so the
+     * READER must also be able to ask for that key. It could not — the ladder
+     * derived a gate FILE from the key, and `gate: seedling-editor-generate
+     * (own server)` names no file, so S4's first `--write` KEPT that row with
+     * *"no gate named …"*. A row frozen by its own reader, which is P4b (D)
+     * one costume over. ⛓ Every key here is DERIVED from the rule.
+     */
+    it('⛔ does NOT refuse any key `ciSourced` selects — arm labels included', () => {
+        const bank = readStandingValues({ repo: REPO });
+        const gateOf = (command) => roster.find((x) => command.includes(x.path)) ?? null;
+        const selected = standingRows({ repo: REPO }).filter((r) => ciSourced({
+            gate: r.kind === 'gate' ? gateOf(r.command) : null, row: r,
+            cheap: bank?.rows?.[r.key]?.cheap,
+        }));
+        expect(selected.length).toBeGreaterThan(0);
+        /** ⛓ …and the population really does hold a labelled arm, or this row
+         *  would pass without ever testing the case it was written for. */
+        expect(selected.some((r) => /\(.+\)$/.test(r.key))).toBe(true);
+        for (const row of selected) {
+            const r = runCi(['deadbeef1', `--gate=${row.key}`]);
+            expect(`${row.key}: ${r.out}`).not.toMatch(/REFUSED/);
+            expect(r.code).not.toBe(5);
+        }
+    });
+
+    /**
+     * ⛔⛔ S4's OWN RUNG — THE SECOND LOCK. `ciSourced` never routes a
+     * `@ci-shallow` row down this path; if a later widening forgot the clause,
+     * THIS is what turns a silently-banked depth-1 answer into a red naming
+     * the gate. ⛓ It is the same shape as the `@ci-face` rung above and it is
+     * asserted the same way, off the live roster.
+     */
+    it('REFUSES a @ci-shallow gate by name, exit 5, before any network call', () => {
+        const shallow = roster.find((x) => x.ciShallow);
+        expect(shallow).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(shallow)}`]);
+        expect(r.code).toBe(5);
+        expect(r.out).toMatch(/@ci-shallow/);
+        expect(r.out).toContain(shallow.ciShallow.reason);
+    });
+
+    /**
+     * ⛔⛔⛔ S4c — **THE ⚖ 72 (a) RUNG FOR AN IDENTITY ROW.** `ciSourced` never
+     * routes such a row down this path (it has no arm), so this is the SECOND
+     * LOCK — the same role the `@ci-shallow` rung plays for gates. ⛓ And it
+     * had to be written: before it, the ladder derived a gate FILE from the
+     * key, found none named `generated set`, and refused with a sentence about
+     * `check-*.mjs` — a true refusal for a reason that is not the reason.
+     */
+    it('REFUSES a Windows-driving IDENTITY row by name, exit 5, off-network', () => {
+        const win = ciUnrunnableIdentityRows({ repo: REPO });
+        expect(win.length).toBeGreaterThan(0);
+        for (const row of win) {
+            const r = runCi(['deadbeef1', `--gate=${row.key}`]);
+            expect(r.code).toBe(5);
+            expect(r.out).toMatch(/REFUSED/);
+            expect(r.out).toMatch(/Windows Python driver/);
+        }
+    });
+
+    /**
+     * ⛔⛔ THE ROW S3 EXISTS FOR. Before this slice a browser key was refused
+     * BY NAME — *"needs a browser and CI runs neither, so no answer for it
+     * exists at any SHA"* — and that sentence is now false. A refusal that
+     * outlives the thing it refused is the quietest way to make a working
+     * production side look broken.
+     */
+    it('does NOT refuse a browser key any more — it goes on to ask CI', () => {
+        /** ⛓ V3b — a browser gate CI IS ASKED TO RUN. The first browser gate on
+         *  the roster is now a `@ci-box` one, and refusing that one is correct;
+         *  the row S3 exists for is about a gate with an arm. */
+        const browser = roster.find((g) => g.browser && ciRunnable(g));
+        expect(browser).toBeTruthy();
+        const r = runCi(['deadbeef1', `--gate=gate: ${nameOf(browser)}`]);
+        expect(r.out).not.toMatch(/REFUSED/);
+        expect(r.code).not.toBe(5);
+        /** ⛓ …and it died at the NETWORK, which is what "got past the ladder"
+         *  looks like when there is no `gh` on the PATH. */
+        expect(r.out).toMatch(/ENOENT|spawnSync|gh/);
+    });
+});
+
+/**
+ * ⛔⛔⛔ S5b — **THE PARTITION PRICES IN THE RUNNER'S OWN SECONDS, AND A
+ * STANDING ROW'S `ms` CAN NO LONGER REACH IT** (trap 1068).
+ *
+ * ⛓ THE INCIDENT THIS FILE FAILED TO SEE, IN MINIATURE AND WITH ITS OWN
+ * NUMBERS. S4's write replaced six CI-sourced rows' banked `ms` — the GATE's
+ * cost — with the `ci-summary` NETWORK READ, and `planCiShards` priced off
+ * exactly that field. `seedling-wasm-element` fell 934.7 s -> 5.5 s, the 24
+ * browser arms priced at 391.9 s total, the partition collapsed to ONE shard
+ * and the job ran 23 m 01 s against a 15 m 27 s baseline. Every row in the
+ * `planCiShards` describe above stayed GREEN, because every one of them
+ * prices its stub bank itself: a budget assertion over prices cannot see
+ * prices that are wrong.
+ *
+ * ⛔ THE FIX IS STRUCTURAL, NOT A CLAUSE: the function no longer takes a bank.
+ * These rows pass BOTH — the corrupted bank AND the runner's own costs — and
+ * assert the plan is the costs'. Against the pre-fix module they fail, because
+ * the pre-fix module reads `bank.rows[key].ms` and there is nothing a caller
+ * can pass that stops it.
+ */
+describe('planCiShards — S5b: the price is CI\'s own measurement, never the bank\'s `ms`', () => {
+    /** ⛓ The real thing, measured: `here=` off run 33563524638 (head
+     *  `e172d631f`) against the corrupted bank at that same head. */
+    const CI_MS = { 'seedling-wasm-element': 901200, 'seedling-wasm-pages': 160500,
+        'seedling-editor-arm': 43800, 'maze-lab': 33200 };
+    const CORRUPT_MS = { 'seedling-wasm-element': 5507, 'seedling-wasm-pages': 5930,
+        'seedling-editor-arm': 59999, 'maze-lab': 6282 };
+    const armsOf = (o) => Object.keys(o).map((k) => arm(k));
+
+    it('gives the heavy arm its own shard even when the BANK says it is cheap', () => {
+        const shards = planCiShards({
+            arms: armsOf(CI_MS), bank: bankOf(CORRUPT_MS), costs: costsOf(CI_MS),
+            budgetMs: 600000,
+        });
+        const alone = shards.find((s) => s.keys.includes('seedling-wasm-element'));
+        expect(alone.keys).toEqual(['seedling-wasm-element']);
+        expect(shards.length).toBe(2);
+    });
+
+    /**
+     * ⛔ THE INPUT REFUSAL, which is the row the brief asked for: an arm the
+     * runner has never priced is UNPRICED — it does NOT fall back to the
+     * bank's `ms`. A fallback here reinstates the defect exactly
+     * (`feedback_fallback_reinstates_the_defect`).
+     */
+    it('an arm with no CI cost is UNPRICED even when the bank has an `ms` for it', () => {
+        const shards = planCiShards({
+            arms: [arm('a'), arm('never-run-in-ci'), arm('b')],
+            bank: bankOf({ a: 10, 'never-run-in-ci': 10, b: 10 }),
+            costs: costsOf({ a: 10, b: 10 }),
+            budgetMs: 100,
+        });
+        const alone = shards.find((s) => s.keys.includes('never-run-in-ci'));
+        expect(alone.keys).toEqual(['never-run-in-ci']);
+        expect(alone.unpriced).toBe(1);
+    });
+});
+
+/**
+ * ⛓⛓⛓ S5b — **THE AUDIT, WHICH READS NOTHING THIS MODULE PRICED.**
+ *
+ * ⛔ Its inputs are the runner's own `here=` seconds and each job's own shard
+ * note. That is the whole reason it can see what every priced assertion in
+ * this file could not: the 24-arm shard whose PRICED total was 423.8 s ran
+ * 1,388.8 s, and only the second number is in here.
+ */
+describe('auditRunShards — did the partition hold, by the runner\'s own clock?', () => {
+    const job = (name, shard, arms) => ({ name, shard,
+        arms: Object.entries(arms).map(([key, ms]) => ({ key, ms })) });
+
+    /** ⛓ The regression itself: run 33563524638's one browser job, rounded. */
+    it('REDS a multi-arm shard over budget — the collapsed partition', () => {
+        const a = auditRunShards({
+            jobs: [job('shard', { id: 0, of: 1 },
+                { element: 901200, pages: 160500, arm: 43800, rest: 283300 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(false);
+        expect(a.over.map((r) => r.ms)).toEqual([1388800]);
+    });
+
+    /**
+     * ⛔ THE CONTROL WITHOUT WHICH THE ROW ABOVE IS VACUOUS. A guard that reds
+     * on every run is not a guard, and the shape it must NOT red on is the
+     * module's own rule working: `seedling-wasm-element` is 901 s and there is
+     * nowhere smaller to put it.
+     */
+    it('allows a ONE-ARM shard over budget — that is `planCiShards`\' own rule', () => {
+        const a = auditRunShards({
+            jobs: [job('element', { id: 0, of: 2 }, { element: 901200 }),
+                job('rest', { id: 1, of: 2 }, { pages: 160500, arm: 43800 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.rows.map((r) => r.over)).toEqual([false, false]);
+    });
+
+    /** ⛔ An unsharded job was never partitioned under a budget; holding it to
+     *  one is an exclusion by a number nobody chose for it. */
+    it('reports an unsharded job and never judges it', () => {
+        const a = auditRunShards({
+            jobs: [job('headless', null, { help: 700000 })], budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.rows[0].sharded).toBe(false);
+    });
+
+    /** ⛓ …and the OTHER direction, reported and not red — the pre-S4 box-proxy
+     *  over-split, which run 33548827760 shows at 466.7 s across two shards. */
+    it('names over-splitting as `loose`, without failing on it', () => {
+        const a = auditRunShards({
+            jobs: [job('a', { id: 0, of: 3 }, { p: 158000, q: 137000 }),
+                job('b', { id: 1, of: 3 }, { r: 44400, s: 127300 }),
+                job('c', { id: 2, of: 3 }, { element: 896500 })],
+            budgetMs: 600000,
+        });
+        expect(a.ok).toBe(true);
+        expect(a.loose.ms).toBe(466700);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ `lastRunShardAudit` — THE WIRING, NOT THE ARITHMETIC.
+ *
+ * `auditRunShards` is already covered above. What these rows hold is the part
+ * that decides whether the guard EXISTS in practice: that a run which cannot be
+ * read produces a NAMED reason rather than silence, and that a real
+ * underpricing still comes back red once it is behind an injected reader.
+ * ⛔ Every no-answer path is asserted to be `available: false` WITH a `why`,
+ * because a quiet skip reads exactly like a healthy partition.
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('lastRunShardAudit — the last run, audited where somebody is looking', () => {
+    const RUN = { databaseId: 42, headSha: 'abcdef1234567890', conclusion: 'success' };
+    const runs = () => [RUN];
+    const jobs = (list) => () => ({ jobs: list, unreadable: [] });
+
+    /** ⛓ one 2-arm shard over budget — the trap-1068 shape. */
+    const OVER = [{ name: 'browser (2)', shard: '0 of 1', arms: [
+        { key: 'gate: a', ms: 500_000 }, { key: 'gate: b', ms: 400_000 }] }];
+    /** ⛓ the healthy two-shard shape S5b shipped. */
+    const HELD = [
+        { name: 'browser (1)', shard: '0 of 2', arms: [{ key: 'gate: heavy', ms: 901_000 }] },
+        { name: 'browser (2)', shard: '1 of 2', arms: [
+            { key: 'gate: a', ms: 200_000 }, { key: 'gate: b', ms: 289_000 }] },
+    ];
+
+    it('⛔ reds on an UNDERPRICED multi-arm shard, and names the job', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(true);
+        expect(r.audit.ok).toBe(false);
+        expect(r.audit.over).toHaveLength(1);
+        expect(r.audit.over[0].name).toBe('browser (2)');
+    });
+
+    it('⛓ passes the shape S5b shipped — and a ONE-arm shard over budget is not red', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs(HELD) });
+        expect(r.available).toBe(true);
+        expect(r.audit.ok).toBe(true);
+        expect(r.audit.rows.find((x) => x.arms === 1).ms).toBeGreaterThan(600_000);
+    });
+
+    it('⛔ a run list that THROWS is unavailable BY NAME, never a crash and never green', () => {
+        const r = lastRunShardAudit({
+            recentRuns: () => { throw new Error('gh: not authenticated'); },
+            runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(false);
+        expect(r.audit).toBeUndefined();
+        expect(r.why).toMatch(/not authenticated/);
+    });
+
+    it('⛔ NO successful run is unavailable BY NAME', () => {
+        const r = lastRunShardAudit({ recentRuns: () => [], runShardCosts: jobs(OVER) });
+        expect(r.available).toBe(false);
+        expect(r.why).toMatch(/no SUCCESSFUL run/);
+    });
+
+    it('⛔ logs that cannot be read are unavailable BY NAME, with the run identified', () => {
+        const r = lastRunShardAudit({ recentRuns: runs,
+            runShardCosts: () => { throw new Error('404'); } });
+        expect(r.available).toBe(false);
+        expect(r.run.databaseId).toBe(42);
+        expect(r.why).toMatch(/logs could not be read/);
+    });
+
+    it('⛔ a run that published no `ms |` lines is unavailable BY NAME, not an empty PASS', () => {
+        const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs([]) });
+        expect(r.available).toBe(false);
+        expect(r.why).toMatch(/no .*ms \| <key> \| here=.* lines/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — **THE HEADLESS SET, IN A FIXED PAIR.**
+ * Longest-first into the lighter bin, priced off the same costs file as the
+ * browser plan; an unpriced arm at the MEDIAN priced arm, never at the budget.
+ */
+describe('planFixedShards — the headless set, longest-first into a fixed count', () => {
+    const a = (key) => ({ key, gate: null });
+    const costs = { 'x: help': { ms: 337_000 }, 'x: bomb': { ms: 299_000 },
+        'x: c6': { ms: 96_000 }, 'x: sf': { ms: 88_000 }, 'x: c3': { ms: 75_000 },
+        'x: c4': { ms: 73_000 }, 'x: g1': { ms: 55_000 }, 'x: acc': { ms: 41_000 },
+        'x: s1': { ms: 7_000 }, 'x: s2': { ms: 6_000 } };
+    const arms = Object.keys(costs).map(a);
+
+    it('places every arm exactly once, in CI_HEADLESS_SHARDS shards, balanced', () => {
+        const shards = planFixedShards({ arms, costs });
+        expect(shards).toHaveLength(CI_HEADLESS_SHARDS);
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(arms.map((x) => x.key).sort());
+        const ms = shards.map((s) => s.ms);
+        expect(Math.max(...ms) - Math.min(...ms)).toBeLessThanOrEqual(Math.max(...Object.values(costs).map((c) => c.ms)));
+        expect(shards.every((s) => s.fixed === true)).toBe(true);
+        /** the two heaviest arms never share a shard */
+        expect(shards.find((s) => s.keys.includes('x: help')).keys).not.toContain('x: bomb');
+    });
+
+    it('is a pure function of (arms, costs) — order of the input does not matter', () => {
+        expect(planFixedShards({ arms: [...arms].reverse(), costs }))
+            .toEqual(planFixedShards({ arms, costs }));
+    });
+
+    it('⛔ an unpriced arm is priced at the MEDIAN priced arm, and counted', () => {
+        const shards = planFixedShards({ arms: [...arms, a('x: new')], costs });
+        const withNew = shards.find((s) => s.keys.includes('x: new'));
+        expect(withNew.unpriced).toBe(1);
+        const sorted = Object.values(costs).map((c) => c.ms).sort((p, q) => p - q);
+        const median = sorted[Math.floor((sorted.length - 1) / 2)];
+        const total = shards.reduce((n, s) => n + s.ms, 0);
+        expect(total).toBe(Object.values(costs).reduce((n, c) => n + c.ms, 0) + median);
+    });
+
+    it('the tree\'s own headless plan is fixed and covers every headless arm', () => {
+        const { arms: h, shards } = ciGatePlanFor({ repo: REPO, set: 'headless' });
+        expect(shards).toHaveLength(Math.min(CI_HEADLESS_SHARDS, h.length));
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(h.map((x) => x.key).sort());
+    });
+
+    it('unittests_frontend.yml runs one headless job per shard, by --shard=', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const job = wf.slice(wf.indexOf('  headless-gates:'), wf.indexOf('\n  browser-gate-plan:'));
+        const list = JSON.parse(/^ {8}shard: (\[.*\])$/m.exec(job)[1]);
+        expect(list).toEqual(Array.from({ length: CI_HEADLESS_SHARDS }, (_, i) => i));
+        expect(job).toContain('node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }}');
+        expect(job).toMatch(/fail-fast: false/);
+    });
+});
+
+describe('auditRunShards — a FIXED shard is held to its kill deadline, not the bin budget', () => {
+    const fixed = (ms, n = 30) => ({ name: 'Headless procgen gates (shard 0)',
+        shard: { id: 0, of: 2, fixed: true },
+        arms: Array.from({ length: n }, (_, i) => ({ key: `k${i}`, ms: ms / n })) });
+    it('a 700 s multi-arm fixed shard is NOT over (the budget does not apply)', () => {
+        expect(auditRunShards({ jobs: [fixed(700_000)] }).ok).toBe(true);
+    });
+    it('⛔ a fixed shard past CI_FIXED_SHARD_LIMIT_MS IS over — the deadline truncates silently', () => {
+        const r = auditRunShards({ jobs: [fixed(CI_FIXED_SHARD_LIMIT_MS + 30_000)] });
+        expect(r.ok).toBe(false);
+        expect(r.over[0].name).toMatch(/Headless/);
+    });
+});
+
+describe('ci-manual-moves — the identity rows CI runs no arm for, each with a derived reason', () => {
+    const armless = ciArmlessIdentityRows({ repo: REPO });
+    const kindOf = new Map(armless.map((r) => [r.row.key, r.kind]));
+    const armKeys = new Set(ciGateArms({ repo: REPO, set: 'all' }).map((a) => a.key));
+    const bank = readStandingValues({ repo: REPO })?.rows ?? {};
+
+    it('D1 — every producer row Producer --checks runs has no arm, unless the bank quotes CI for it', () => {
+        const covered = producerChecksEnrolled(REPO).map((p) => p.split('/').pop().replace(/\.mjs$/, ''))
+            .filter((n) => PRODUCER_EXCLUDED[n] === undefined);
+        expect(covered.length).toBeGreaterThan(0);
+        for (const name of covered) {
+            const key = `producer: ${name} --check`;
+            if (!standingRows({ repo: REPO }).some((r) => r.key === key)) continue;
+            if (bank[key]?.ciSourced) {
+                expect(armKeys.has(key), `${key} is CI-sourced, so it keeps its arm`).toBe(true);
+            } else {
+                expect(kindOf.get(key), key).toBe('producer');
+                expect(armKeys.has(key), key).toBe(false);
+            }
+        }
+        /** ⛔ the two the brief named: one CI-sourced, one EXCLUDED from the job. */
+        expect(armKeys.has('producer: plan-seedling-r7-attribution --check')).toBe(true);
+        expect(armKeys.has('producer: plan-seedling-r7-ends-meet --check')).toBe(true);
+    });
+
+    it('D2 — an identity row that runs a CI-runnable gate\'s own script rides that gate\'s arm', () => {
+        expect(kindOf.get('identity: generated set')).toBe('gate');
+        expect(armKeys.has('identity: generated set')).toBe(false);
+        expect(armKeys.has('gate: seedling-generated-set')).toBe(true);
+    });
+
+    it('B4/B6 — the kind-pair censuses and the solve-seedling chain declare @ci-box and get no arm', () => {
+        for (const key of ['identity: empty pairs c3', 'identity: empty pairs c6', 'identity: carved pairs c4',
+            'identity: solve-seedling-r9-campaign --check', 'identity: solve-seedling-r8-d2-chain --check',
+            'producer: solve-seedling-r8-d2 --check']) {
+            expect(kindOf.get(key), key).toBe('ci-box');
+            expect(armKeys.has(key), key).toBe(false);
+        }
+        /** ⛓ no `solve-seedling-*` row of any kind keeps an arm (⚖ the chain stays manual). */
+        expect([...armKeys].filter((k) => /solve-seedling-/.test(k))).toEqual([]);
+    });
+
+    it('the Windows rows keep their own reason, and ciUnrunnableIdentityRows is exactly them', () => {
+        const win = armless.filter((r) => r.kind === 'windows').map((r) => r.row.key).sort();
+        expect(ciUnrunnableIdentityRows({ repo: REPO }).map((r) => r.key).sort()).toEqual(win);
+    });
+
+    it('every armless row has a reason a reader can act on, and no armless row is an arm', () => {
+        for (const r of armless) {
+            expect(['windows', 'ci-box', 'producer', 'gate']).toContain(r.kind);
+            expect(r.why.length).toBeGreaterThan(10);
+            expect(armKeys.has(r.row.key)).toBe(false);
+        }
+    });
+});
+
+describe('ci-manual-moves — a @ci-paths gate gets its OWN shard, after the partition', () => {
+    const plan = ciGatePlanFor({ repo: REPO, set: 'browser' });
+    const pathShards = plan.shards.filter((s) => s.pathFiltered);
+
+    it('seedling-wasm-ship is path-filtered and in no packed shard', () => {
+        expect(pathShards.map((s) => s.keys)).toEqual([['gate: seedling-wasm-ship']]);
+        const packed = plan.shards.filter((s) => !s.pathFiltered).flatMap((s) => s.keys);
+        expect(packed).not.toContain('gate: seedling-wasm-ship');
+    });
+
+    it('path shards are numbered after every packed shard, so dropping one moves no id', () => {
+        const ids = plan.shards.map((s) => s.id);
+        expect(ids).toEqual(ids.map((_, i) => i));
+        const firstPath = plan.shards.findIndex((s) => s.pathFiltered);
+        expect(plan.shards.slice(firstPath).every((s) => s.pathFiltered)).toBe(true);
+    });
+
+    it('the shards still cover every browser arm exactly once', () => {
+        const keys = plan.shards.flatMap((s) => s.keys).sort();
+        expect(keys).toEqual(plan.arms.map((a) => a.key).sort());
+    });
+});

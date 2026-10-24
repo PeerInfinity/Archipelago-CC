@@ -1,0 +1,6 @@
+total 5662 passed 5655 failed 5 skipped 2 files 155
+FAIL frontend/modules/seedlingDemo/fidelityLapseCost.test.js > LAPSECOST D1 — the narrow strike policy ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (215 t)
+FAIL frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js > fidelity UNBILLEDGATE — a solve with damage no plan billed OFF: step 47 SOLVES with the unbilled hit (the census window sees it, decides nothing)
+FAIL frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js > fidelity UNBILLEDGATE — a solve with damage no plan billed ON: step 47 is REFUSED by name — obstacle.kind unbilled-damage, its tick, source and count
+FAIL frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js > fidelity UNBILLEDGATE — a solve with damage no plan billed ON: a hit inside a replayed PREFIX is the prefix's, not the segment's — the rest of step 47 solves
+FAIL frontend/modules/seedlingDemo/seedlingCanCross.test.js > canCross — one real case per verdict cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal

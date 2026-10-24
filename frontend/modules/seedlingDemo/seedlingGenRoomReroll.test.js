@@ -1,0 +1,584 @@
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G5 — **THE RE-ROLL FOR WHAT THE CORE DID NOT
+ * SEE** (⚖ planner 2026-09-26: design (i) for engine-added doors, (B) for
+ * locations — one function, one counter, one budget, no engine rng).
+ *
+ * G2's re-roll covered the doors the CORE mints. Two cases still refused where a
+ * re-roll builds, both MEASURED at G5 W0 (the census in the plan's §10.1):
+ *   1. an ENGINE-added door — sphere growth's back exit, grid growth's links —
+ *      bound at serialize time: the sphere LEAF at 8×6 refused at 9/40 seeds,
+ *      grid growth 3×3 at 8×6 at seeds 2/4/8 and at 10×10 at seed 7;
+ *   2. LOCATIONS a room cannot seat safely — top-down Adventure seed 6's
+ *      `Overworld` (11 locations, 10 free cells).
+ * Each row names the world it was measured on.
+ *
+ * ⛓⛓ G8 — **A ROOM THE BUDGET CANNOT SEAT GROWS** (⚖ user 2026-09-26, replan 2
+ * S2): after `GEN_ROOM_DOOR_REROLLS` at a size the room grows `GEN_ROOM_GROW_STEP`
+ * a side (capped at the room contract's 60) and the same sequence runs on, inside
+ * the one core call. The census's last refusals — a room too SMALL for its doors
+ * (grid growth 8×6 seeds 1/3/6, the host state at 8×6 seeds 26/27/36/39) — and
+ * G5's own refusal rows below now BUILD, each at the size it grew to. (Since
+ * APWORLD SUBSTRATE CHANGE H1 the G8 row FINDS its growers by census rather than
+ * listing those seeds — see `growerCensus`.)
+ */
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, it, expect } from 'vitest';
+
+import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { buildRunFromState, runPresetHeadless } from '../procgenPipeline/presetRun.js';
+import { SEEDLING_GENERATED_HOST_STATE, SEEDLING_GENERATED_LEAF_STATE } from '../procgenPipeline/presetDefs.js';
+import { installSeedlingGenRoom } from '../flashPanel/flashSeedlingGenLibrary.js';
+import * as room from './seedlingGenRoom.js';
+import { walkableCellsFrom } from './levelSetExits.js';
+import { generateSeedlingLevel } from './procgenSeedling.js';
+import { ROOM_TILES_MAX } from './procgenLevel.js';
+import { buildLevelWorld } from './levelWorld.js';
+import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
+
+const {
+    GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, GEN_ROOM_GROW_STEP, GEN_ROOM_MAX_SIDE, GEN_ROOM_REFUSALS, GEN_ROOM_REROLL_CAUSES,
+    extractGenRules, goalHoldsWithDoorsAsWalls, lastAttempt, rerollGenRoom, rerollSeed, roomCanHold, sizeOfAttempt,
+    sizesTried,
+} = room;
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+for (const rel of REGISTRY_LIBRARIES) {
+    // eslint-disable-next-line no-await-in-loop
+    await import(join(ROOT, rel));
+}
+const GEN = 'flash_seedling_gen';
+const committed = (name) => JSON.parse(readFileSync(join(ROOT, `frontend/presets/${name}/AP_1/AP_1_rules.json`), 'utf8'));
+
+const build = async (state, ctx) => (await runPresetHeadless(buildRunFromState(structuredClone(state), ctx))).rulesJson;
+const withSeed = (state, seed, extra = {}) => ({ ...state, params: { ...state.params, seed, ...extra } });
+const rooms = (rulesJson) => Object.entries(rulesJson.preset_sidecars['1'])
+    .filter(([, s]) => s.substrate === GEN).map(([id, s]) => [id, s.playable_payload]);
+const GRID = (seed, w, h) => ({
+    mode: 'gridGrowth', params: { seed, gridWidth: 3, gridHeight: 3, regionWidth: w, regionHeight: h },
+    scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
+    substrateQuotas: {}, substrateMix: { maze: 1, [GEN]: 1 }, substrateMode: 'mix',
+});
+
+const ADV = 'frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744';
+const ADVENTURE = {
+    topDownSource: JSON.parse(readFileSync(join(ROOT, `${ADV}_rules.json`), 'utf8')),
+    sphereLog: readFileSync(join(ROOT, `${ADV}_sphere_log.jsonl`), 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l)),
+};
+const adventure = (seed, w, h) => ({
+    mode: 'topDown', params: { seed, regionWidth: w, regionHeight: h }, scenario: { items: {}, obstacles: {} },
+    substrateQuotas: {}, substrateMix: { [GEN]: 1 }, substrateMode: 'mix',
+});
+
+/** The world built with a spy on every core call, per region. */
+async function spied(state, ctx) {
+    const calls = {};
+    installSeedlingGenRoom({ ...room, generateGenRoom: (input) => {
+        calls[input.region_id] = (calls[input.region_id] ?? 0) + 1;
+        return room.generateGenRoom(input);
+    } });
+    try {
+        return { calls, rulesJson: await build(state, ctx) };
+    } catch (error) {
+        return { calls, error };
+    } finally {
+        installSeedlingGenRoom(room);
+    }
+}
+
+/**
+ * ⛓ G8's census (H1). `GROWERS_WANTED` per state; the scan's bound is DERIVED from
+ * that count and the widest gap between consecutive growers measured over seeds
+ * 1–40 at H1 (2026-09-29, main `279d75d451`): grid growth 3×3 at 8×6 grew at 12
+ * seeds (3, 6, 9, 10, 18, 19, 20, 24, 27, 32, 35, 36), the host state at 8×6 at 4
+ * (26, 27, 36, 39) — the widest gap is the host's first, 26 seeds. Doubled, so the
+ * bound binds only where the growers have thinned to half that density; within it
+ * the scan stops at the count wanted, so the bound costs nothing while they are there.
+ */
+const GROWERS_WANTED = 4;
+const WIDEST_GROWER_GAP = 26;
+const growerSeedBound = (want) => want * WIDEST_GROWER_GAP * 2;
+/** The first `want` seeds of `make(seed)` whose world holds a GROWN generated room (at most `growerSeedBound(want)` scanned). */
+async function growerCensus(make, want) {
+    const found = [];
+    let seed = 0;
+    while (found.length < want && seed < growerSeedBound(want)) {
+        seed += 1;
+        // eslint-disable-next-line no-await-in-loop
+        const { calls, rulesJson, error } = await spied(make(seed));
+        if (error) throw new Error(`G8 census: seed ${seed} did not build — ${error.message}`);
+        const grown = Object.fromEntries(rooms(rulesJson).filter(([, p]) => p.generation.grownFrom)
+            .map(([id, p]) => [id, { rerolls: p.generation.rerolls, cause: p.generation.rerollCause,
+                size: `${p.size.width}x${p.size.height}` }]));
+        if (Object.keys(grown).length) found.push({ seed, calls, rulesJson, grown });
+    }
+    found.scanned = seed;
+    return found;
+}
+
+const key = (c) => `${c.tx},${c.ty}`;
+const cellOf = ([tx, ty]) => ({ tx, ty });
+/** ⛔ The test's OWN hazard read and flood — never the subject's (a probe sharing its subject's assumption agrees with the bug). */
+const hazardsOf = (record) => {
+    const w = buildLevelWorld(record);
+    return new Set([...w.lethalTerrainTiles, ...w.pitTiles].map((t) => `${Math.floor(t.x / 16)},${Math.floor(t.y / 16)}`));
+};
+function safeFlood(record, start, walls) {
+    const flood = walkableCellsFrom(record, start);
+    const seen = new Set([key(start)]);
+    const queue = [start];
+    for (let i = 0; i < queue.length; i += 1) {
+        for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+            const c = { tx: queue[i].tx + dx, ty: queue[i].ty + dy };
+            if (seen.has(key(c)) || walls.has(key(c)) || !flood.has(key(c))) continue;
+            seen.add(key(c));
+            queue.push(c);
+        }
+    }
+    return seen;
+}
+
+/**
+ * The laws a room answers AFTER any re-roll, read off its PAYLOAD: the seed is
+ * the one the generator built; the record is the generator's own for that seed and
+ * those knobs; every approach and location reachable safely with every door and
+ * hazard a wall (the goal too, when the door-free safe flood reaches it — G2's law); and the generator's OWN solver re-certifies the goal on
+ * the FINAL record with the final doors as walls (planner condition 4).
+ */
+function assertRoomLawful(id, p) {
+    const g = p.generation;
+    const out = generateSeedlingLevel({
+        seed: p.seed, palette: GEN_ROOM_BIOMES[g.biome], defaults: { width: p.size.width, height: p.size.height },
+        bounds: { obstacleTarget: g.obstacleTarget, triesPerStep: g.triesPerStep, saturationK: g.saturationK },
+    });
+    expect(out.record.layers, `${id}: the record is the generator's own for its seed`).toEqual(p.record.layers);
+    expect([p.record.width, p.record.height], `${id}: \`size\` is the record's own (G8)`).toEqual([p.size.width, p.size.height]);
+    const doors = p.exits.map((e) => cellOf(e.exit_tiles[0]));
+    const hazards = hazardsOf(p.record);
+    const reach = safeFlood(p.record, p.start, new Set([...hazards, ...doors.map(key)]));
+    // G2's law: a cell past a solid the SOLVER clears (the goal, often) is no door's to seal — the
+    // oracle below certifies it; what the door-FREE safe flood reaches, the doors must not cut off.
+    const free = safeFlood(p.record, p.start, hazards);
+    for (const e of p.exits) {
+        expect(reach.has(key({ tx: e.entrance_spawn.x / 16, ty: e.entrance_spawn.y / 16 })), `${id} ${e.exitName}'s approach`).toBe(true);
+    }
+    for (const [i, l] of p.locations.entries()) {
+        if (i === 0 && !free.has(key(l.cell))) continue; // location 0 IS the goal cell
+        expect(reach.has(key(l.cell)), `${id} ${l.name}`).toBe(true);
+    }
+    if (free.has(key(p.goal_cell))) expect(reach.has(key(p.goal_cell)), `${id}: the goal`).toBe(true);
+    expect(goalHoldsWithDoorsAsWalls(out, doors, GEN_ROOM_BIOMES[g.biome].items ?? null), `${id}: re-certified`).toBe(true);
+}
+
+describe('the re-roll\'s record — one counter, one cause, nothing on a first draw', () => {
+    it('the causes are four SPELLED sentences; the budget is still G2\'s K', () => {
+        // ⛓ S1, D4 added `require` (a draw whose directive the differential did not meet).
+        expect(GEN_ROOM_REROLL_CAUSES).toEqual({ doors: 'doors', require: 'require',
+            engineDoors: 'engine-added door', locations: 'locations' });
+        expect(GEN_ROOM_DOOR_REROLLS).toBe(8);
+    });
+
+    it('a FIRST-DRAW world is byte-identical: the committed leaf and host rebuild to their files, no `rerollCause`, no drawn seed', async () => {
+        for (const [name, state] of [['seedling_generated_leaf', SEEDLING_GENERATED_LEAF_STATE],
+            ['seedling_generated_host', SEEDLING_GENERATED_HOST_STATE]]) {
+            const rulesJson = await build(state);
+            expect(rulesJson, name).toEqual(committed(name));
+            for (const [id, p] of rooms(rulesJson)) {
+                expect(p.generation.rerolls, id).toBe(0);
+                expect(Object.hasOwn(p.generation, 'rerollCause'), id).toBe(false);
+                expect(Object.hasOwn(p, 'drawnSeed'), id).toBe(false);
+            }
+        }
+    }, 60_000);
+});
+
+describe('case 1 — an ENGINE-added door re-rolls the room at serialize time (design (i))', () => {
+    /**
+     * ⛓ MEASURED at G5 W0: the committed leaf state at 8×6 refused at seeds 10,
+     * 11, 12, 16, 18, 25, 31, 35, 36 (of 1–40) — each its back exit, the room's one
+     * door, inserted by the ENGINE after the core ran.
+     */
+    const LEAF_REFUSED_AT_BASE = [10, 11, 12, 16, 18, 25, 31, 35, 36];
+    it.each(LEAF_REFUSED_AT_BASE)('the sphere LEAF, seed %i: builds, re-rolled for its engine-added door, lawful', async (seed) => {
+        const rulesJson = await build(withSeed(SEEDLING_GENERATED_LEAF_STATE, seed));
+        const generated = rooms(rulesJson);
+        expect(generated).toHaveLength(1);
+        const [id, p] = generated[0];
+        expect(p.generation.rerolls, id).toBeGreaterThan(0);
+        expect(p.generation.rerollCause, id).toBe(GEN_ROOM_REROLL_CAUSES.engineDoors);
+        expect(p.exits).toHaveLength(1);
+        assertRoomLawful(id, p);
+    }, 60_000);
+
+    it.each([
+        ['8x6', 2, 8, 6], ['8x6', 4, 8, 6], ['10x10', 7, 10, 10],
+    ])('grid growth 3x3 at %s, seed %i (refused at the base): builds; each engine-door re-roll recorded; every room lawful', async (_s, seed, w, h) => {
+        const rulesJson = await build(GRID(seed, w, h));
+        const generated = rooms(rulesJson);
+        expect(generated.some(([, p]) => p.generation.rerollCause === GEN_ROOM_REROLL_CAUSES.engineDoors)).toBe(true);
+        for (const [id, p] of generated) assertRoomLawful(id, p);
+    }, 60_000);
+
+    // ⛓ G5 had grid growth 8×6 seed 8 REFUSE here (`region_1_0`, 2 engine-added
+    //   doors, the budget spent). Since G8 it GROWS — the row is in the G8 census below.
+
+    /**
+     * ⛓ Planner condition 2 — a regeneration keeps the AP LOGIC. The host preset,
+     * with every room's regeneration FORCED at serialize time (`rerollGenRoom`
+     * over the final exit list, as the engine-door path calls it): the extracted
+     * rules are deep-equal, the rules.json outside `preset_sidecars` is
+     * deep-equal, and inside the room's sidecar only the fields a room's GEOMETRY
+     * writes move.
+     */
+    it('a FORCED regeneration on the host preset moves no rule: extracted rules and the rules.json outside the sidecars unmoved', async () => {
+        const seen = [];
+        installSeedlingGenRoom({
+            ...room,
+            serializeGenRoom: (world, extracted, o, i, context) => {
+                const rows = world.locations.map(({ cell: _c, tag: _t, ...row }) => row);
+                const forced = rerollGenRoom(world, [...world.exits.entries()], rows, GEN_ROOM_REROLL_CAUSES.engineDoors);
+                expect(forced.err).toBeUndefined();
+                seen.push({ before: extractGenRules(world), after: extractGenRules(forced.room), room: forced.room });
+                return room.serializeGenRoom(forced.room, extracted, o, i, context);
+            },
+        });
+        let forcedJson;
+        try {
+            forcedJson = await build(SEEDLING_GENERATED_HOST_STATE);
+        } finally {
+            installSeedlingGenRoom(room);
+        }
+        const base = committed('seedling_generated_host');
+        expect(seen).toHaveLength(1);
+        expect(seen[0].after).toEqual(seen[0].before);
+        const { preset_sidecars: forcedSidecars, ...forcedRest } = forcedJson;
+        const { preset_sidecars: baseSidecars, ...baseRest } = base;
+        expect(forcedRest).toEqual(baseRest);
+        const GEOMETRY = ['seed', 'record', 'start', 'goal_cell', 'generation', 'locations', 'exits'];
+        for (const [id, s] of Object.entries(baseSidecars['1'])) {
+            const f = forcedSidecars['1'][id];
+            if (s.substrate !== GEN) { expect(f, id).toEqual(s); continue; }
+            const strip = (p) => Object.fromEntries(Object.entries(p).filter(([k]) => !GEOMETRY.includes(k)));
+            expect(strip(f.playable_payload), id).toEqual(strip(s.playable_payload));
+            expect(f.playable_payload.seed, `${id}: it DID re-roll`).not.toBe(s.playable_payload.seed);
+            // what a location and a door keep: every name, item, rule, AP exit name and target
+            const logicOfLoc = (l) => ({ name: l.name, item: l.item, access_rule: l.access_rule });
+            expect(f.playable_payload.locations.map(logicOfLoc)).toEqual(s.playable_payload.locations.map(logicOfLoc));
+            const logicOfExit = ({ exit_id: _d, exit_tiles: _t, entrance_tile: _e, entrance_spawn: _s, ...rest }) => rest;
+            expect(f.playable_payload.exits.map(logicOfExit)).toEqual(s.playable_payload.exits.map(logicOfExit));
+            expect(f.playable_payload.generation).toMatchObject({ rerolls: 1, rerollCause: GEN_ROOM_REROLL_CAUSES.engineDoors });
+            assertRoomLawful(id, f.playable_payload);
+        }
+    }, 60_000);
+});
+
+describe('case 2 — LOCATIONS the room cannot seat re-roll it at place time ((B), every driver)', () => {
+    /** An rng whose first draw yields `seed` as the room's drawn seed. */
+    const rngDrawing = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
+    const unitRoom = (drawn) => room.generateGenRoom({
+        region_id: 'u', exits: [{ exit_id: 'a' }], size: { width: 8, height: 6 }, rng: rngDrawing(drawn), params: {},
+    }).world;
+
+    /**
+     * ⛓ MEASURED (G5): drawn seed 1's 8×6 one-door room offers 4 location cells on
+     * its first draw; five items seat on re-roll 1. The world object and its exit
+     * record keep their IDENTITY (the engine holds both), the exit keeps its key,
+     * name and rule, every item keeps its location id.
+     */
+    it('placeGenItems (the spiral / grid growth placer): five items in a four-cell room seat on re-roll 1, in place', () => {
+        const world = unitRoom(1);
+        const exitRecord = world.exits.get('a');
+        exitRecord.access_rule = { rule: 'Has', args: { item_name: 'key_blue' } };
+        const firstSeed = world.seed;
+        const placed = room.placeGenItems(world, { items_to_place: ['i', 'i', 'i', 'i', 'i'] });
+        expect(placed.placed_items.map((p) => p.location_id)).toEqual(['i_pickup', 'i_pickup_2', 'i_pickup_3', 'i_pickup_4', 'i_pickup_5']);
+        expect(world.generation).toMatchObject({ rerolls: 1, rerollCause: GEN_ROOM_REROLL_CAUSES.locations });
+        expect(world.seed).not.toBe(firstSeed);
+        expect(world.exits.get('a')).toBe(exitRecord);
+        expect(exitRecord).toMatchObject({ exit_id: 'a', exitName: 'a', access_rule: { rule: 'Has', args: { item_name: 'key_blue' } } });
+        expect(world.locations.map((l) => [l.id, l.item])).toEqual(placed.placed_items.map((p) => [p.location_id, p.item_id]));
+        const p = room.serializeGenRoom(world, room.extractGenRules(world), null, null, undefined);
+        assertRoomLawful('u', p);
+        expect(new Set(p.locations.map((l) => l.tag)).size).toBe(5);
+    });
+
+    it('the first draw\'s free cells, measured: drawn seed 1 offers exactly 4 (so the row above needs a re-roll)', () => {
+        // a room with no drawn seed cannot re-roll (or grow, G8): it refuses on its first draw's cells
+        const world = unitRoom(1);
+        delete world.drawnSeed;
+        expect(() => room.placeGenItems(world, { items_to_place: ['i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i'] }))
+            .toThrow(/must hold 30 AP location\(s\), and only 4 cell\(s\) are free/);
+    });
+
+    /**
+     * ⛓ G5 had this REFUSE (drawn seed 2, 13 items: no draw in the 8×6 budget seats
+     * them). G8, MEASURED: the room grows once, to 10×8, and seats all 13 on
+     * attempt 9 — the first draw at the new size.
+     */
+    it('no draw in the budget seats them → the room GROWS and seats them (drawn seed 2, 13 items: 10x8, attempt 9)', () => {
+        const world = unitRoom(2);
+        room.placeGenItems(world, { items_to_place: Array(13).fill('i') });
+        expect(world.locations).toHaveLength(13);
+        expect(world.size).toEqual({ width: 10, height: 8 });
+        expect(world.record).toMatchObject({ width: 10, height: 8 });
+        expect(world.generation).toMatchObject({ rerolls: GEN_ROOM_DOOR_REROLLS + 1, rerollCause: GEN_ROOM_REROLL_CAUSES.locations,
+            grownFrom: { width: 8, height: 6 } });
+        expect(world.seed).toBe(rerollSeed(2, GEN_ROOM_DOOR_REROLLS + 1));
+        assertRoomLawful('u', room.serializeGenRoom(world, room.extractGenRules(world), null, null, undefined));
+    }, 60_000);
+
+    /**
+     * ⛓ MEASURED (G5 W0): top-down Adventure seed 6 at 10×10 REFUSED at the base —
+     * `Overworld` must hold 11 locations, 10 cells free. Through the ROOM's re-roll
+     * (planner condition 1): the core ran ONCE per region, so the engine's own
+     * retry-then-grow loop (which would draw fresh engine rng and move every later
+     * region) was never entered.
+     */
+    it('top-down Adventure seed 6 (refused at the base): builds — Overworld re-rolled for its locations, ONE core call per region', async () => {
+        const { calls, rulesJson, error } = await spied(adventure(6, 10, 10), ADVENTURE);
+        expect(error).toBeUndefined();
+        const generated = rooms(rulesJson);
+        expect(generated).toHaveLength(9);
+        for (const [id] of generated) expect(calls[id], id).toBe(1);
+        const [, overworld] = generated.find(([id]) => id === 'Overworld');
+        expect(overworld.locations).toHaveLength(11);
+        expect(overworld.size).toEqual({ width: 10, height: 10 });
+        expect(overworld.generation).toMatchObject({ rerolls: 2, rerollCause: GEN_ROOM_REROLL_CAUSES.locations });
+        for (const [id, p] of generated) assertRoomLawful(id, p);
+    }, 60_000);
+
+    /**
+     * ⛓ G5 had this REFUSE: no 9×8 draw seats `Overworld`'s 11. G8, MEASURED: it
+     * GROWS to 11×10 and seats them on attempt 10 — inside the room's own call
+     * (the core ran once per region: the engine's retry-then-grow never entered),
+     * and no other region moves size.
+     */
+    it('top-down Adventure seed 6 at 9x8: Overworld GROWS to 11x10 for its 11 locations — the core ran ONCE per region', async () => {
+        const { calls, rulesJson, error } = await spied(adventure(6, 9, 8), ADVENTURE);
+        expect(error).toBeUndefined();
+        const generated = rooms(rulesJson);
+        for (const [id] of generated) expect(calls[id], id).toBe(1);
+        const [, overworld] = generated.find(([id]) => id === 'Overworld');
+        expect(overworld.locations).toHaveLength(11);
+        expect(overworld.size).toEqual({ width: 11, height: 10 });
+        expect(overworld.generation).toMatchObject({ rerolls: 10, rerollCause: GEN_ROOM_REROLL_CAUSES.locations,
+            grownFrom: { width: 9, height: 8 } });
+        for (const [id, p] of generated) {
+            if (id !== 'Overworld') expect([id, p.size, p.generation.grownFrom]).toEqual([id, { width: 9, height: 8 }, undefined]);
+            assertRoomLawful(id, p);
+        }
+    }, 60_000);
+});
+
+describe('a re-rolled room is PLAYED like any other — G2\'s assembler takes it (no committed witness needed)', () => {
+    /**
+     * ⛓ What play reads off a payload — `record`, `start`, `exits`, `locations`,
+     * `level` — has the same shape after a re-roll; `generation` is provenance the
+     * assembler never reads. So every world that builds only by a re-roll ASSEMBLES
+     * into a valid level set (`validateLevelSet` inside the assembler refuses
+     * otherwise), one apitem per location, one level per room + the parking room.
+     */
+    const byName = (rules) => {
+        const m = new Map();
+        for (const region of Object.values(rules.regions['1'])) for (const l of region.locations ?? []) m.set(l.name, l.item ?? null);
+        return (name) => (m.get(name) ? { name: m.get(name).name, player: m.get(name).player } : null);
+    };
+    it.each([
+        ['the sphere leaf, seed 10 (engine-added door)', () => withSeed(SEEDLING_GENERATED_LEAF_STATE, 10), undefined],
+        ['grid growth 10x10 seed 7 (engine-added door)', () => GRID(7, 10, 10), undefined],
+        ['top-down Adventure seed 6 (locations)', () => adventure(6, 10, 10), ADVENTURE],
+    ])('%s: assembles into a valid set', async (_name, state, ctx) => {
+        const rules = await build(state(), ctx);
+        const generated = rooms(rules);
+        expect(generated.some(([, p]) => p.generation.rerolls > 0)).toBe(true);
+        const out = assembleGeneratedSeedlingSet(rules, { locationItemOf: byName(rules), selfPlayer: 1 });
+        expect(out.report.rooms).toBe(generated.length);
+        expect(out.report.apitems).toHaveLength(generated.reduce((n, [, p]) => n + p.locations.length, 0));
+        expect(out.report.unjoined).toEqual([]);
+    }, 60_000);
+});
+
+describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, replan 2 S2)', () => {
+    it('the step, the cap and the attempt law: attempts 0…K are the pre-G8 size, then one step per spent budget, each side capped', () => {
+        expect(GEN_ROOM_GROW_STEP).toBe(2); // MEASURED at G8 W0: 1 needs more grows and draws (plan §14)
+        expect(GEN_ROOM_MAX_SIDE).toBe(ROOM_TILES_MAX);
+        expect(ROOM_TILES_MAX).toBe(60);
+        const K = GEN_ROOM_DOOR_REROLLS;
+        for (let a = 0; a <= K; a += 1) expect(sizeOfAttempt({ width: 8, height: 6 }, a)).toEqual({ width: 8, height: 6 });
+        expect(sizeOfAttempt({ width: 8, height: 6 }, K + 1)).toEqual({ width: 10, height: 8 });
+        expect(sizeOfAttempt({ width: 8, height: 6 }, 2 * K + 2)).toEqual({ width: 12, height: 10 });
+        expect(sizeOfAttempt({ width: 59, height: 40 }, K + 1)).toEqual({ width: 60, height: 42 });
+        expect(lastAttempt({ width: 8, height: 6 })).toBe(28 * (K + 1) - 1);
+        expect(lastAttempt({ width: 60, height: 60 })).toBe(K);
+        const tried = sizesTried({ width: 8, height: 6 }, lastAttempt({ width: 8, height: 6 }));
+        expect(tried).toHaveLength(28);
+        expect(tried.at(-2)).toEqual({ width: 60, height: 58 });
+        expect(tried.at(-1)).toEqual({ width: 60, height: 60 });
+        for (const z of tried) expect(Math.max(z.width, z.height)).toBeLessThanOrEqual(ROOM_TILES_MAX);
+        expect(roomCanHold({ width: 3, height: 3 }, 0)).toBe(true);
+        expect(roomCanHold({ width: 3, height: 3 }, 1)).toBe(false); // the one interior cell is the start
+        expect(roomCanHold({ width: 60, height: 60 }, 58 * 58 - 1)).toBe(true);
+        expect(roomCanHold({ width: 60, height: 60 }, 58 * 58)).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ THE POPULATION, BY CENSUS (APWORLD SUBSTRATE CHANGE H1, plan §46; trap
+     * 1464). Until H1 this row LISTED its worlds — the census's refusals at
+     * `1fd1f66317` (plan §14 W0: a room too SMALL for its doors, its budget spent at
+     * 8×6), grid seeds 1/3/6/8 and host seeds 26/27/36/39. C1 (plan §42) moved the
+     * list by hand when the maze's key filter moved the draws (grid 1, 8 → 9, 35;
+     * trap 1506), and the next placer change would have moved it again. The row now
+     * FINDS its worlds: per state, the first `GROWERS_WANTED` seeds in which some
+     * generated room grew, scanning at most `growerSeedBound(GROWERS_WANTED)` seeds.
+     *
+     * What each grower's readers see is asserted unchanged in meaning: the world
+     * builds; the core ran ONCE per region (growth is inside the room's call — the
+     * engine's own loop never entered); every grown room was asked at 8×6, spent a
+     * whole budget there (its attempt is past `GEN_ROOM_DOOR_REROLLS`), names a
+     * re-roll cause, and is built at the size of that attempt (`sizeOfAttempt` —
+     * 10×8 for every grower measured); every other room is 8×6; every room lawful.
+     */
+    const HOST = (seed) => withSeed(SEEDLING_GENERATED_HOST_STATE, seed, { regionWidth: 8, regionHeight: 6 });
+    const ASKED = { width: 8, height: 6 };
+    it.each([
+        ['grid growth 3x3 at 8x6', (seed) => GRID(seed, ASKED.width, ASKED.height)],
+        ['the host state at 8x6', HOST],
+    ])('%s: the first worlds whose room GROWS (found by census) build — each grown room at the size of its attempt', async (name, make) => {
+        const found = await growerCensus(make, GROWERS_WANTED);
+        // eslint-disable-next-line no-console
+        console.log(`G8 census, ${name}: ${found.map((f) => `seed ${f.seed} (${Object.entries(f.grown)
+            .map(([id, g]) => `${id} ${g.rerolls}/${g.cause} → ${g.size}`).join(', ')})`).join('; ')}`
+            + ` — ${found.scanned} seeds scanned`);
+        expect(found.map((f) => f.seed), `${name}: ${GROWERS_WANTED} growers within ${growerSeedBound(GROWERS_WANTED)} seeds`)
+            .toHaveLength(GROWERS_WANTED);
+        for (const { seed, calls, rulesJson } of found) {
+            const generated = rooms(rulesJson);
+            let grew = 0;
+            for (const [id, p] of generated) {
+                const at = `${name} seed ${seed} ${id}`;
+                expect(calls[id], at).toBe(1);
+                if (p.generation.grownFrom) {
+                    grew += 1;
+                    expect(p.generation.grownFrom, at).toEqual(ASKED);
+                    expect(p.generation.rerolls, `${at}: a grown room spent a whole budget`).toBeGreaterThan(GEN_ROOM_DOOR_REROLLS);
+                    expect(Object.values(GEN_ROOM_REROLL_CAUSES), at).toContain(p.generation.rerollCause);
+                    expect(p.size, at).toEqual(sizeOfAttempt(ASKED, p.generation.rerolls));
+                    expect(p.size, at).not.toEqual(ASKED);
+                } else {
+                    expect(p.size, at).toEqual(ASKED);
+                }
+                assertRoomLawful(id, p);
+            }
+            expect(grew, `${name} seed ${seed}: the census found a world with a GROWN room`).toBeGreaterThan(0);
+        }
+    }, 300_000);
+
+    /**
+     * ⛓ A world that built BEFORE G8 is byte-identical — its rooms never spent a
+     * budget, so no attempt past K was drawn. The md5 (first 8) of the whole
+     * rules.json, MEASURED at the base `1fd1f66317` (the census): the worst re-roll
+     * counts there (grid 8×6 seed 2 has a room at re-roll 8, the budget's last).
+     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE P1a (2026-09-27): `procgen_metadata`
+     * became `{"1": block}`; with slot 1's block unwrapped each build still hashes to
+     * its base value (174df082 / 00589206 / c4aba6c4 — measured), so the wrap is the
+     * whole move and the property this row pins is unchanged.
+     * ⛓ RE-MEASURED at R9 slice DEF (2026-09-27): the compiler's
+     * `flash_panel.wasm` moved p4d → p4e (the default move). Each build names it
+     * ONCE, and with `seedling_bot_ap_p4e/game.html` substituted back to p4d
+     * each still hashes to the value above (9af2ee8e / 3601cc0d / 638b4110 —
+     * measured), so the wiring is the whole move.
+     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE C1 (2026-09-28, plan §42) — the
+     * MAZE placer moved, no Seedling room re-rolled, and no room here grew:
+     *   · grid 8×6 seed 2 (9f77cf55 → 8c9983b5): the placer's draw is uniform
+     *     over reachable tiles (the fixpoint); ONE maze room moved one pickup —
+     *     `region_1_0`'s `key_blue` (1,4) → (0,4), so its location name (which
+     *     carries the tile) moved with it in `regions`, `canonical_placements`
+     *     and `sphere_log`; nothing else.
+     *   · grid 10×10 seed 7 (c395917a → 714ac4ef): a gate-and-key placement no
+     *     longer drops a key onto an earlier key (PM0's finding). The base build
+     *     LOST `key_red` that way — `key_blue` was dropped on its tile in
+     *     `region_1_0`, 2 locations of 3 — and now has all 3, so the draws after
+     *     that pair moved.
+     * ⛓ RE-MEASURED at rules F1 (2026-10-03): `assume_bidirectional_exits` moved
+     * from the top level into `exporter["1"]`. With it moved back (top level after
+     * `starting_items`, `exporter: {}`) each build still hashes to the value above
+     * (8c9983b5 / 714ac4ef / a4303571 — measured), so the move is the whole delta.
+     * ⛓ RE-MEASURED at the seedling-wasm-leak L4 rebuild (2026-10-04): the
+     * compiler's `flash_panel.wasm` moved p4e → p4f (the default move, ⚖ D2).
+     * Each build names it ONCE, and with `seedling_bot_ap_p4f` substituted back
+     * to p4e each hashes to its previous value (96e9e65a / 980ca6eb / c6830310 —
+     * measured), so the wiring is the whole move.
+     * ⛓ RE-MEASURED at rules F2 (2026-10-05): `flash_panel` became `{"1": block}`
+     * (the slot's). With slot 1's block unwrapped each build still hashes to
+     * its previous value (855fb31a / c581247e / aa6355f2 — measured), so the
+     * wrap is the whole move.
+     * ⛓ RE-MEASURED at RETURN TO MENU (2026-10-05): a realised flash_seedling_gen declares `restartWarp`, so each
+     * build's exporter["1"] gains `return_to_menu: true`. With that one key deleted, all three hash to their F2
+     * values (ded222c9 / 9556080c / cc038eaa — measured), so the flag is the whole move.
+     * ⛓ RE-MEASURED at SPIRAL VICTORY (2026-10-11, one goal item): the host state's scenario `victory` is placed as
+     * `Victory`, and the maze room holding it carries the goal's library row. With that row emptied and the name
+     * set back, the host build hashes to its previous value (5b7eb2d2 — measured), so those two are the whole move;
+     * the two grid builds hold no goal and do not move.
+     * ⛓ RE-MEASURED at the wasm rebuild R2 (2026-10-19): `flash_panel.wasm` moved p4f → p4g (the default
+     * move). With `flashPanelWiring.json` set back to `seedling_bot_ap_p4f` all three hash to their previous
+     * values (e3d1d044 / 1b2ff6ee / 938da86e — measured), so the wiring is the whole move.
+     */
+    it.each([
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'b6ac142d'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '29ef3164'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '377b4639'],
+    ])('%s built before G8: byte-identical', async (_name, state, md5) => {
+        const rulesJson = await build(state());
+        expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);
+        for (const [id, p] of rooms(rulesJson)) expect(p.generation.grownFrom, id).toBeUndefined();
+    }, 60_000);
+
+    /**
+     * ⛓ THE CAP. A demand no size up to 60 holds REFUSES — naming every size it
+     * tried, each ≤ 60 — and at once: a size whose interior cannot count-hold the
+     * demand is skipped without a draw (`roomCanHold`), so the refusal generates
+     * nothing past the sizes that could.
+     */
+    const rngDrawing = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
+    const tried = (origin) => sizesTried(origin, lastAttempt(origin)).map((z) => `${z.width}x${z.height}`);
+    it('4000 doors: no size up to 60 holds them — REFUSED, naming all 28 sizes, 8x6 … 60x60', () => {
+        const exits = Array.from({ length: 4000 }, (_, i) => ({ exit_id: `e${i}` }));
+        const t0 = Date.now();
+        let message = '';
+        try {
+            room.generateGenRoom({ region_id: 'huge', exits, size: { width: 8, height: 6 }, rng: rngDrawing(1), params: {} });
+        } catch (e) { message = e.message; }
+        expect(Date.now() - t0).toBeLessThan(5_000);
+        expect(message).toContain(`generated Seedling room 'huge'`);
+        expect(message).toContain(`must hold 4000 door(s)`);
+        expect(message).toContain(`re-rolled up to ${GEN_ROOM_DOOR_REROLLS} time(s) at each of ${tried({ width: 8, height: 6 }).join(', ')} `
+            + `(it grows ${GEN_ROOM_GROW_STEP} a side after each budget, up to ${ROOM_TILES_MAX} tiles`);
+        expect(message).not.toMatch(/Raise the region size/);
+        for (const [, w, h] of message.matchAll(/(\d+)x(\d+)/g)) expect(Math.max(Number(w), Number(h))).toBeLessThanOrEqual(ROOM_TILES_MAX);
+    });
+
+    it('a room ALREADY at the cap cannot grow: 60x60, 4000 doors — the sentence says so', () => {
+        const exits = Array.from({ length: 4000 }, (_, i) => ({ exit_id: `e${i}` }));
+        expect(() => room.generateGenRoom({ region_id: 'huge', exits, size: { width: 60, height: 60 }, rng: rngDrawing(1), params: {} }))
+            .toThrow(/re-rolled up to 8 time\(s\) at 60x60 \(already at the room contract's maximum, 60 tiles, so it cannot grow\)/);
+    });
+
+    // ⛓ G9: G8's 4000 now meets the level's 30-tag budget before any draw — no
+    //   size holds a 31st location, so the refusal no longer walks the sizes.
+    it('31 locations in drawn seed 1\'s 8x6 room: REFUSED by the tag budget at once, in place — no draw, never short', () => {
+        const world = room.generateGenRoom({ region_id: 'u', exits: [{ exit_id: 'a' }], size: { width: 8, height: 6 }, rng: rngDrawing(1), params: {} }).world;
+        const before = { seed: world.seed, size: { ...world.size }, generation: { ...world.generation } };
+        // no draw: a re-roll at 8x6 costs 0.1-1.5 s a room (G8 measured every size to 60 for 4000)
+        const t0 = Date.now();
+        expect(() => room.placeGenItems(world, { items_to_place: Array(31).fill('i') }))
+            .toThrow(GEN_ROOM_REFUSALS.tagBudget('u', 31, 30));
+        expect(Date.now() - t0).toBeLessThan(100);
+        expect(() => room.placeGenItems(world, { items_to_place: Array(4000).fill('i') }))
+            .toThrow(GEN_ROOM_REFUSALS.tagBudget('u', 4000, 30));
+        expect({ seed: world.seed, size: world.size, generation: world.generation }).toEqual(before);
+        expect(world.locations).toEqual([]);
+    });
+});

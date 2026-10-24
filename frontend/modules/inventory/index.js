@@ -22,9 +22,11 @@ export const moduleInfo = {
   name: 'inventory',
   title: 'Inventory',
   componentType: 'inventoryPanel',
+  docs: 'docs/json/user/modules/inventory.md',
   icon: '🎒',
   column: 1, // Left column
-  description: 'Inventory display panel.',
+  category: 'Tracker Panels',
+  description: 'Every item as a button: click adds one, Shift+click removes one; show unowned items or group by category.',
 };
 
 // // Store instances or state needed by the module

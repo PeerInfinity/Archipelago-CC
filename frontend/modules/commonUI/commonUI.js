@@ -1458,14 +1458,16 @@ class CommonUI {
         const ifDetails = document.createElement('div');
         ifDetails.style.marginLeft = '10px';
 
-        if (rule.condition) {
+        // The exporter writes the if_statement's condition as `test`.
+        const ifCondition = rule.test ?? rule.condition;
+        if (ifCondition) {
           const condLabel = document.createElement('div');
           condLabel.textContent = 'Condition:';
           ifDetails.appendChild(condLabel);
           const condNode = document.createElement('div');
           condNode.style.marginLeft = '10px';
           condNode.appendChild(
-            this.renderLogicTree(rule.condition, useColorblind, stateSnapshotInterface)
+            this.renderLogicTree(ifCondition, useColorblind, stateSnapshotInterface)
           );
           ifDetails.appendChild(condNode);
         }
@@ -1509,19 +1511,6 @@ class CommonUI {
 
       case 'continue': {
         root.appendChild(document.createTextNode(' continue'));
-        break;
-      }
-
-      case 'setting_value': {
-        const settingName = rule.setting || '?';
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
-        break;
-      }
-
-      case 'setting_check': {
-        const settingName = rule.setting || '?';
-        const value = rule.value;
-        root.appendChild(document.createTextNode(` setting: ${settingName} == ${JSON.stringify(value)}`));
         break;
       }
 
@@ -2184,6 +2173,27 @@ class CommonUI {
         break;
       }
 
+      // Composite: AtLeast — at least N of the children
+      case 'AtLeast': {
+        const required = rule.count ?? args.count ?? 0;
+        root.appendChild(
+          document.createTextNode(` (at least ${required} of ${children.length})`)
+        );
+        const conditionsContainer = document.createElement('div');
+        conditionsContainer.classList.add('logic-conditions');
+        conditionsContainer.style.marginLeft = '10px';
+        children.forEach((childRule, index) => {
+          const conditionLabel = document.createElement('div');
+          conditionLabel.textContent = `Option #${index + 1}:`;
+          conditionsContainer.appendChild(conditionLabel);
+          conditionsContainer.appendChild(
+            this.renderLogicTree(childRule, useColorblind, stateSnapshotInterface)
+          );
+        });
+        root.appendChild(conditionsContainer);
+        break;
+      }
+
       // Wrapper: Not
       case 'Not': {
         root.appendChild(document.createTextNode(' (negation)'));
@@ -2524,13 +2534,6 @@ class CommonUI {
         break;
       }
 
-      // AST_setting_value: setting value lookup
-      case 'AST_setting_value': {
-        const settingName = args.setting || args.name;
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
-        break;
-      }
-
       // AST_prog_item_count: progressive item count
       case 'AST_prog_item_count': {
         const itemName = args.item;
@@ -2705,13 +2708,6 @@ class CommonUI {
       case 'CountGroupUnique': {
         const groupName = args.group;
         root.appendChild(document.createTextNode(` count unique in group: ${groupName}`));
-        break;
-      }
-
-      // SettingValue: get setting value
-      case 'SettingValue': {
-        const settingName = args.setting;
-        root.appendChild(document.createTextNode(` setting: ${settingName}`));
         break;
       }
 

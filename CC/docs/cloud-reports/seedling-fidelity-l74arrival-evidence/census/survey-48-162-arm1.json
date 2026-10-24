@@ -1,0 +1,306 @@
+[
+ {
+  "step": 48,
+  "level": 29,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L29@16,224 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 29,
+    "x": 16,
+    "y": 224
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0
+    ],
+    "items": [
+     "hasShield"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 40,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     }
+    ],
+    "unpresentable": [
+     {
+      "step": 11,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 1 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 19,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 2 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 21,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 3 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 31,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 4 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 46,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 5 has no rung (progressive_items: null)"
+     }
+    ]
+   }
+  },
+  "verdict": "SOLVED",
+  "ticks": 379,
+  "refusal": null,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 31,
+   "transitions": [
+    "undefined->undefined@379"
+   ],
+   "earnedClears": []
+  }
+ },
+ {
+  "step": 162,
+  "level": 74,
+  "boot": {
+   "kind": "staged",
+   "source": "r8-solve-11",
+   "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L74@16,128 \u2014 R8 slice 8's construction for r8-solve-18",
+   "block": {
+    "level": 74,
+    "x": 16,
+    "y": 128
+   },
+   "check": null,
+   "strippedTimedClears": [],
+   "saveGrant": {
+    "keys": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "items": [
+     "canSwim",
+     "hasDarkSword",
+     "hasFeather",
+     "hasFire",
+     "hasShield",
+     "hasSpear",
+     "hasTorch",
+     "hasWand"
+    ],
+    "latched": [
+     "hasSword"
+    ],
+    "from": [
+     {
+      "step": 10,
+      "item": "Progressive Sword",
+      "grants": "latched hasSword"
+     },
+     {
+      "step": 28,
+      "item": "Red Key",
+      "grants": "save.keys[0]"
+     },
+     {
+      "step": 40,
+      "item": "Progressive Shield",
+      "grants": "seam.items.hasShield"
+     },
+     {
+      "step": 48,
+      "item": "Green Key",
+      "grants": "save.keys[1]"
+     },
+     {
+      "step": 50,
+      "item": "Light",
+      "grants": "seam.items.hasTorch"
+     },
+     {
+      "step": 51,
+      "item": "Fire",
+      "grants": "seam.items.hasFire"
+     },
+     {
+      "step": 66,
+      "item": "Progressive Swim",
+      "grants": "seam.items.canSwim"
+     },
+     {
+      "step": 78,
+      "item": "Purple Key",
+      "grants": "save.keys[2]"
+     },
+     {
+      "step": 91,
+      "item": "Blue Key",
+      "grants": "save.keys[3]"
+     },
+     {
+      "step": 107,
+      "item": "Ghost Spear",
+      "grants": "seam.items.hasSpear"
+     },
+     {
+      "step": 116,
+      "item": "Progressive Swim",
+      "grants": "seam.items.hasFeather"
+     },
+     {
+      "step": 132,
+      "item": "Yellow Key",
+      "grants": "save.keys[4]"
+     },
+     {
+      "step": 140,
+      "item": "Wand",
+      "grants": "seam.items.hasWand"
+     },
+     {
+      "step": 142,
+      "item": "Progressive Sword",
+      "grants": "seam.items.hasDarkSword"
+     }
+    ],
+    "unpresentable": [
+     {
+      "step": 11,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 1 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 19,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 2 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 21,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 3 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 31,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 4 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 46,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 5 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 57,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 6 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 59,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 7 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 70,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 8 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 77,
+      "item": "Totem Shard",
+      "why": "flash item 'totem0' is not in items"
+     },
+     {
+      "step": 78,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 9 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 78,
+      "item": "Totem Shard",
+      "why": "flash item 'totem1' is not in items"
+     },
+     {
+      "step": 84,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 10 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 86,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 11 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 117,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 12 has no rung (progressive_items: null)"
+     },
+     {
+      "step": 124,
+      "item": "Totem Shard",
+      "why": "flash item 'totem2' is not in items"
+     },
+     {
+      "step": 125,
+      "item": "Totem Shard",
+      "why": "flash item 'totem3' is not in items"
+     },
+     {
+      "step": 127,
+      "item": "Totem Shard",
+      "why": "flash item 'totem4' is not in items"
+     },
+     {
+      "step": 149,
+      "item": "Health",
+      "why": "'health' \u2192 hitsMax is not a boolean grant ({\"flash_name\":\"health\",\"class\":\"main\",\"property\":\"hitsMax\",\"op\":\"add\",\"value\":1,\"base\":3}) \u2014 a boot presentation declares a flag, it cannot add."
+     },
+     {
+      "step": 160,
+      "item": "Seal",
+      "why": "progressive '!seal' copy 13 has no rung (progressive_items: null)"
+     }
+    ]
+   }
+  },
+  "verdict": "SOLVED",
+  "ticks": 321,
+  "refusal": null,
+  "replay": {
+   "hits": 0,
+   "deaths": 0,
+   "endLevel": 75,
+   "transitions": [
+    "undefined->undefined@321"
+   ],
+   "earnedClears": [
+    "{74,0}"
+   ]
+  }
+ }
+]

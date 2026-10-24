@@ -11,6 +11,10 @@ import {
   truncateDescription,
   analyzeQueue,
 } from '../shared/queueAnalysis.js';
+import {
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 
 // Re-export shared functions for backwards compatibility
 export { calculateActionCost, getActionDescription, truncateDescription };
@@ -37,11 +41,13 @@ export class QueueAnalyzer {
     // Current analysis cache
     this.currentAnalysis = null;
 
-    // Fallback base costs for each action type
+    // Fallback base costs for each action type — the SAME exported defaults
+    // the store and the charging path use (⚖ 2026-09-06: exported constants,
+    // never typed numbers). This table was a fifth independent copy until L2.
     this.baseCosts = {
-      customAction: 50,
-      locationCheck: 100,
-      regionMove: 50,
+      customAction: DEFAULT_REGION_COST,
+      locationCheck: DEFAULT_LOCATION_COST,
+      regionMove: DEFAULT_REGION_COST,
     };
   }
 
@@ -51,7 +57,7 @@ export class QueueAnalyzer {
    * @returns {number} Base mana cost
    */
   getBaseCost(actionType) {
-    return this.baseCosts[actionType] || 50;
+    return this.baseCosts[actionType] || DEFAULT_REGION_COST;
   }
 
   /**

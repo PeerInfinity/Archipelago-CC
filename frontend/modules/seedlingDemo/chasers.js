@@ -1,0 +1,812 @@
+/**
+ * chasers — the EXACT step for the two classes R5 slice 3 fights.
+ *
+ * Region-atlas Phase 8, subtractive ladder rung R5, slice 3.
+ *
+ * `encounters.chaseEnvelope` is an OVER-APPROXIMATION and deliberately so:
+ * it grows the enemy's box by `moveSpeed` per tick and reports UNDECIDED
+ * whenever the grown box meets the path. That is sound for "this crossing
+ * cannot be touched" and useless for "stand HERE and swing THEN", which is
+ * what a kill needs. This module is the exact arithmetic for `bob` and
+ * `jellyfish` — the two classes the first live kill and R4's own route
+ * actually meet — and nothing else. A third class gets transcribed when a
+ * rung fights it, not speculatively.
+ *
+ * ⛓ U7-swim: the third is `puncher`, which L12's pit forced (U4-swim § D1).
+ *
+ * ── THE PLACEMENTS COME FROM `combat.js`, NEVER FROM HERE ─────────────
+ * Slice 2's headline defect was a second transcription of the constructor
+ * offsets that disagreed with the first by eight pixels on every enemy on
+ * the map. So this module IMPORTS `ENEMY_CLASSES` for the ctor offset, the
+ * hitbox, the speed and the leash, and adds only what a census has no
+ * business carrying: the per-tick arithmetic, the freeze gate, and the
+ * death animation's length.
+ *
+ * ── THE FOUR THINGS THAT ARE NOT OBVIOUS ──────────────────────────────
+ *
+ * 1. **The freeze gate differs BY CLASS.** `Bob.update` returns on
+ *    `destroy || currentAnim == "die" || Game.freezeObjects`;
+ *    `Jellyfish.update` returns on `destroy || currentAnim == "die"` and
+ *    **does not test the freeze at all**. `Mobile.mobileUpdate` skips the
+ *    move while frozen either way — so a frozen jellyfish still ACCUMULATES
+ *    chase velocity and lurches when the freeze lifts, and a frozen bob does
+ *    not. Reading one class and generalising gets this backwards for
+ *    whichever one you did not read.
+ *
+ * 2. **The off-screen return does not stop the chase.** `Enemy.update`'s
+ *    first statement is `if (!activeOffScreen && !onScreen()) return;` —
+ *    but that is `super.update()`, and both subclasses run their chase
+ *    block AFTER it. So an off-screen chaser ACCUMULATES velocity every
+ *    tick and moves none of it, because both the friction and the move live
+ *    in the part that returned. Its `hitUpdate` does not run either, so an
+ *    off-screen enemy's i-frames do not tick down.
+ *
+ *    ⚠ It does NOT grow without bound, and this file said it did until the
+ *    arithmetic was written out. The impulse is `v.x += sign(toV.x - v.x) *
+ *    moveSpeed` — bang-bang TOWARD `toV`, not a constant push — so once
+ *    `v.x` reaches `toV.x` the sign is 0 and the term vanishes. The
+ *    accumulation converges on `moveSpeed` (oscillating within one step of
+ *    it when the angle moves), so what the camera's arrival releases is one
+ *    ordinary step of velocity, not a stored-up lurch. The wrong version of
+ *    this note would have made the planner treat every off-screen wake as
+ *    unbounded and hard-avoid rooms that are fine.
+ *
+ * 3. **Friction runs BEFORE the move, and the chase impulse lands AFTER
+ *    it.** Order per tick: `friction()`, `moveX(v.x)`, `moveY(v.y)` (inside
+ *    `super.update()`), then the subclass's chase block adds to `v`. So the
+ *    velocity a tick MOVES is the one the previous tick's chase left, minus
+ *    this tick's friction.
+ *
+ * 4. **Death is an ANIMATION, and the body is still in the world during
+ *    it.** Both classes override `startDeath` to `play("die")` WITHOUT
+ *    setting `destroy`; `endAnim` does that when the animation completes.
+ *    `Game.totalEnemies()` counts entities, so a kill lock does not open on
+ *    the killing blow — it opens ~25 ticks later for a bob and ~35 for a
+ *    jellyfish. A window floor that stopped at the last press would leave
+ *    the lock shut and the walk standing at it.
+ */
+
+import { ENEMY_CLASSES, PUNCHER_ATTACK_RANGE } from './combat.js';
+import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
+import { MODELLED_ENEMY_CLASSES } from './spinner.js';
+import { PROFILE } from './seedlingProfile.js';
+import { defineRecord } from './entityRecords.js';
+import { killLockBridged } from './killLockBodies.js';
+import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { pointLength, pointNormalize } from './playerPhysicsV1.js';
+
+export class ChaserError extends Error {
+    constructor(message) { super(message); this.name = 'ChaserError'; }
+}
+const fail = (m) => { throw new ChaserError(m); };
+
+/**
+ * `FP.elapsed`, and it is a CONSTANT for this bot.
+ *
+ * `Engine.as:161-162` computes it from the wall clock and then clamps at
+ * `MAX_ELAPSED` = 0.0333 — a 30 fps floor. The bot runs at ~24 fps on the
+ * Windows path and ~0.4 fps on SwiftShader; both are under 30, so both
+ * clamp, and every animation on every recording this arc has made stepped
+ * at exactly this number (R5 slice 2, kickoff §11.4).
+ *
+ * ⚠ It is a fact about the REGIME, not about the engine. A browser running
+ * the page ABOVE 30 fps would step animations faster and every count below
+ * would be wrong.
+ */
+export const FP_ELAPSED = PROFILE.fpElapsed;
+
+/** `Mobile.DEFAULT_FRICTION`. An `Enemy` never changes `f`. */
+export const FRICTION = PROFILE.friction;
+
+/** `Mobile.friction`'s dead zone — a component under this is ZEROED. */
+export const VELOCITY_EPSILON = PROFILE.velocityEpsilon;
+
+/**
+ * How many ticks a FlashPunk animation takes to reach its callback.
+ *
+ * `Spritemap.update` is `_timer += _frameRate * FP.elapsed` (FP.fixed is
+ * false — `Main` constructs `Engine(160, 160, FPS)` with `fixed` defaulted)
+ * and steps `_index` once per whole unit. The callback fires when `_index`
+ * reaches `_frameCount`, so the tick count is `ceil(frameCount / step)`.
+ *
+ * ⚠ The step is 0.999 for a 30 fps animation, NOT 1. The "slash" anim's
+ * five frames therefore take SIX ticks, not five — a fencepost that decides
+ * how long `slashing` is up and therefore how many ticks the hit test runs.
+ */
+export function animTicks(frameCount, frameRate) {
+    if (!Number.isInteger(frameCount) || frameCount <= 0) {
+        fail(`animTicks: frameCount must be a positive integer, got ${frameCount}`);
+    }
+    if (!(frameRate > 0)) fail(`animTicks: frameRate must be positive, got ${frameRate}`);
+    return Math.ceil(frameCount / (frameRate * FP_ELAPSED));
+}
+
+/**
+ * ⛓⛓⛓ R8 SLICE 3 — `Spritemap.update` AS THE LOOP IT IS, because a death
+ * this model now CAUSES has to be staged rather than counted.
+ *
+ * `animTicks` above is the closed form and it is right; it answers "how many
+ * updates until the callback". What an arrow kill needs is the STATE — a body
+ * whose animation is 12 updates in is still an entity `totalEnemies()` counts,
+ * and the run has to carry that between ticks. Both live here and
+ * `chasers.test.js` asserts the loop and the closed form agree, which is the
+ * only way two derivations of one number stay one number
+ * ([[feedback_two_cost_models_must_agree]]).
+ *
+ * ```
+ *   _timer += (FP.fixed ? _frameRate : _frameRate * FP.elapsed) * rate;
+ *   if (_timer >= 1) { while (_timer >= 1) { _timer--; _index++;
+ *       if (_index == _frameCount) { ... _index = _frameCount - 1;
+ *           complete = true; if (callback != null) callback(); break; } } }
+ * ```
+ *
+ * ⛔ AND THE CALLBACK IS THE FENCEPOST, NOT THE LAST FRAME. `_index` reaching
+ * `_frameCount` is what fires it — one past the last frame — which is why a
+ * four-frame animation at rate 5 takes 25 updates and not 24.
+ */
+export function createSpriteAnim(frames, rate) {
+    if (!Number.isInteger(frames) || frames <= 0) {
+        fail(`createSpriteAnim: frames must be a positive integer, got ${frames}`);
+    }
+    if (!(rate > 0)) fail(`createSpriteAnim: rate must be positive, got ${rate}`);
+    return {
+        frames, rate, timer: 0, index: 0, complete: false,
+    };
+}
+
+/**
+ * ONE graphic update of a playing animation.
+ *
+ * ⛔⛔ THE GRAPHIC UPDATE IS NOT THE ENTITY UPDATE, AND THE GAME'S OWN LOOP IS
+ * WHY THIS IS A SEPARATE CALL. `World.update` is
+ * `if (e.active) { … e.update(); } if (e._graphic && e._graphic.active)
+ * e._graphic.update();` — the graphic advances AFTER the entity's own update,
+ * in the same iteration, and it is OUTSIDE the `active` test and outside
+ * `Enemy.update`'s off-screen early return. So a corpse's animation runs while
+ * the camera has lost it and while the body is frozen, and the caller steps
+ * this unconditionally.
+ *
+ * ⛓⛓ THIS IS WHAT MAKES THE REMOVAL DELAY DEPEND ON *WHO* KILLED THE BODY.
+ * An `Arrow` is added at run time and `World.addUpdate` PREPENDS, so it
+ * updates BEFORE every `loadlevel` entity: an arrow's killing hit lands
+ * before the body's own graphic update, so the animation gets its FIRST
+ * update on the killing tick. The Player updates LAST, so a press's would
+ * not. One tick, and it decides when `totalEnemies()` moves.
+ *
+ * @returns {boolean} true on the update the callback fires (`endAnim`).
+ */
+export function stepSpriteAnim(anim) {
+    if (anim.complete) return false;
+    anim.timer += anim.rate * FP_ELAPSED;
+    let fired = false;
+    while (anim.timer >= 1) {
+        anim.timer -= 1;
+        anim.index += 1;
+        if (anim.index === anim.frames) {
+            anim.index = anim.frames - 1;
+            anim.complete = true;
+            fired = true;
+            break;
+        }
+    }
+    return fired;
+}
+
+/**
+ * ⛓ U7-swim: `Puncher.as:44` — `add("die", [30, …, 39], 10)`: ten frames at
+ * rate 10, so 31 updates from `startDeath` to `endAnim` (`animTicks`).
+ */
+export const PUNCHER_DIE_ANIM = Object.freeze({
+    frames: PROFILE.puncherDieAnimFrames,
+    rate: PROFILE.puncherDieAnimRate,
+});
+
+/**
+ * ⛓ U7-swim: `Puncher.as:36-38` — `add("attack-side"|"attack-up"|"attack-down",
+ * [four frames], attackAnimSpeed 12)`. Every direction is four frames at 12, so
+ * the wind-up does not depend on which one plays: 11 updates (`animTicks`).
+ */
+export const PUNCHER_ATTACK_ANIM = Object.freeze({
+    frames: PROFILE.puncherAttackAnimFrames,
+    rate: PROFILE.puncherAttackAnimRate,
+});
+
+/** `Puncher.as:24` — `punchForce`, the knockback `attackPlayer` hands `p.hit`. */
+export const PUNCHER_PUNCH_FORCE = PROFILE.puncherPunchForce;
+
+/** `Puncher.as:201` — `const r:int = 8`, the punch box's depth off the body edge. */
+export const PUNCHER_PUNCH_REACH = PROFILE.puncherPunchReach;
+
+/**
+ * The "die" animation of a transcribed chaser, ready to step — or NULL for a class whose `startDeath` is
+ * `Enemy`'s (`destroy` at the blow, no animation: the BobSoldier).
+ */
+export function createDieAnim(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`createDieAnim: "${tag}" is not a transcribed chaser`);
+    if (c.dieAnim === null) return null;
+    return createSpriteAnim(c.dieAnim.frames, c.dieAnim.rate);
+}
+
+/**
+ * The per-class facts a census does not carry, per the header.
+ *
+ * `dieAnim` is `Spritemap.add("die", frames, rate)`'s own arguments, so the
+ * derived tick count is one arithmetic step from the source rather than a
+ * number somebody measured once.
+ */
+export const CHASERS = defineRecord('chasers', {
+    bob: Object.freeze({
+        as3: 'Bob',
+        // ⚠ `d` is measured to `player + targetOffset`, and `targetOffset`
+        // is a PUBLIC field the subclasses write. Bob's own is (0,0);
+        // carrying it explicitly is what keeps a subclass from inheriting a
+        // silently wrong leash centre.
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        freezesOnGameFreeze: true,
+        dieAnim: Object.freeze({ frames: 4, rate: 5, src: 'Bob.as:36 add("die", [3,4,5,6], 5)' }),
+        // ⛔ `Bob.as:39` — `solids.push("Enemy")`. See `SOLIDS_BY_MOVER.chaser`.
+        solidsMover: 'chaser',
+        // `Enemy.knockback`, inherited (`Enemy.as:247-255`).
+        knocksBack: true,
+        src: 'Enemies/Bob.as:44-83',
+    }),
+    jellyfish: Object.freeze({
+        as3: 'Jellyfish',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // ⛔ NOT a copy-paste of the line above — see header note 1.
+        freezesOnGameFreeze: false,
+        dieAnim: Object.freeze({ frames: 8, rate: 7, src: 'Jellyfish.as:36 add("die", dieFrames, 7)' }),
+        // ⛔ `Jellyfish.as:35` — the same push, and NOT a copy-paste: the
+        // sweep swept every `Enemies/*.as` and this class really has one.
+        solidsMover: 'chaser',
+        knocksBack: true,
+        src: 'Enemies/Jellyfish.as:44-75',
+    }),
+    /**
+     * ⛓ SEEDLING FIDELITY KILLLOCK (K2, `killLockBodies.KILLLOCK_BODIES.lavaRunnerLive`) — `LavaRunner extends Bob`,
+     * so the chase block is Bob's (`chaseImpulse`, no target offset). What is its own:
+     *   · `update()` opens with `if (Game.freezeObjects) return;` (`LavaRunner.as:47-48`), ABOVE `super.update()` —
+     *     a frozen lavarunner runs nothing at all, not even `Enemy`'s terrain switch, `hitUpdate` or the fade
+     *     (`freezeSkipsUpdate`);
+     *   · `moveSpeed` is re-chosen AFTER `super.update()` by the tile under the body — `swim()` (1) on water or lava,
+     *     `walk()` (1.5) elsewhere (`:82-92`) — so the chase on tick N reads the speed tick N − 1 chose
+     *     (`speedByTerrain`; the ctor's `normalSpeed` on the first);
+     *   · the "die" anim is nine frames at rate 15 (`:34`).
+     * The `inAir` jump arm is reached only from `LavaBoss.as:234`; no placed lavarunner jumps.
+     */
+    lavarunner: Object.freeze({
+        as3: 'LavaRunner',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        freezesOnGameFreeze: true,
+        freezeSkipsUpdate: true,
+        dieAnim: Object.freeze({ frames: 9, rate: 15, src: 'LavaRunner.as:34 add("die", [10..18], 15)' }),
+        // ⚠ `solids.push("LavaBoss", "Enemy")` (`:41`): the chaser list plus "LavaBoss". A room with a LavaBoss is
+        // refused by `assertChaserSolidsBound` (the over-reach is computed from this mover); no lavarunner room
+        // holds one.
+        solidsMover: 'chaser',
+        knocksBack: true,
+        speedByTerrain: Object.freeze({
+            swim: 1, walk: 1.5, swimTiles: Object.freeze([TILE_TYPE_IDS.water, TILE_TYPE_IDS.lava]),
+            src: 'LavaRunner.as:17-18,82-92,103-117',
+        }),
+        src: 'Enemies/LavaRunner.as:45-93',
+    }),
+    /**
+     * ⛓⛓⛓ U7-swim — THE THIRD ROW, AND THE SECOND BRIDGED ONE.
+     *
+     * `Puncher.update`'s chase block (`:62-73`) is Bob's eleven lines with no
+     * `targetOffset` (`d` is measured to `player.x, player.y` directly), so
+     * `chaseImpulse` is reused rather than re-derived. What is NOT Bob's:
+     *
+     *   · the gate is `destroy || currentAnim == "die"` (`:56`) — NO freeze
+     *     test, so a frozen puncher keeps accumulating `v` like a jellyfish;
+     *   · its `solids` carries `"Player"` as well as `"Enemy"` (`:48`), so it
+     *     stops AGAINST the player — `SOLIDS_BY_MOVER.puncher`;
+     *   · the die animation is ten frames at rate 10 (`:44`): 31 ticks.
+     */
+    puncher: Object.freeze({
+        as3: 'Puncher',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // ⛔ `Puncher.as:56` tests `destroy` and "die" only — header note 1.
+        freezesOnGameFreeze: false,
+        dieAnim: Object.freeze({
+            frames: PUNCHER_DIE_ANIM.frames,
+            rate: PUNCHER_DIE_ANIM.rate,
+            src: 'Puncher.as:44 add("die", [30..39], 10)',
+        }),
+        // ⛔ `Puncher.as:48` — `solids.push("Enemy", "Player")`.
+        solidsMover: 'puncher',
+        // ⛔ D3: `override public function knockback(...) { }` (`Puncher.as:167-170`)
+        // — a landed hit arms the i-frame and moves the count, and shoves nothing.
+        knocksBack: false,
+        /**
+         * ⛓ D2 — the ATTACK, which no other row has (`Puncher.as:111-117`,
+         * `endAnim` `:127-143`, `attackPlayer` `:172-218`). `range` decides,
+         * the anim is the wind-up, and `reach`/`force` are the punch.
+         */
+        attack: Object.freeze({
+            range: PUNCHER_ATTACK_RANGE,
+            anim: Object.freeze({ frames: PUNCHER_ATTACK_ANIM.frames, rate: PUNCHER_ATTACK_ANIM.rate }),
+            reach: PUNCHER_PUNCH_REACH,
+            force: PUNCHER_PUNCH_FORCE,
+            src: 'Enemies/Puncher.as:111-117,127-143,172-218',
+        }),
+        src: 'Enemies/Puncher.as:53-119',
+    }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bobsoldier D1 — THE FOURTH ROW: the BobSoldier, a chaser with a spinning sword
+     * (`bobSoldier.js` holds the sword). `playerActions`' chase block is Bob's eleven lines with no `targetOffset`,
+     * so `chaseImpulse` is reused (moveSpeed 0.8, runRange 80 — the census row). What is NOT Bob's:
+     *
+     *   · the gate is the FREEZE alone (`BobSoldier.as:76-77`): no `destroy || "die"` return, so a killed body keeps
+     *     chasing (and swinging) through its fade — `chasesWhileDying`;
+     *   · `startDeath` is `Enemy`'s: `destroy` on the killing blow, NO die animation (`dieAnim: null`, a `fade`
+     *     corpse — `enemyDamage.CORPSE_COUNTING.BobSoldier`);
+     *   · its `solids` is `Mobile`'s base list — the ctor pushes nothing (`SOLIDS_BY_MOVER.enemy`), so other
+     *     "Enemy" bodies do NOT stop it.
+     */
+    bobsoldier: Object.freeze({
+        as3: 'BobSoldier',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // `if (Game.freezeObjects) return;` right below `super.update()` (`BobSoldier.as:76-77`).
+        freezesOnGameFreeze: true,
+        // ⛔ `Enemy.startDeath` — `destroy = true` at the blow; the Spritemap has no "die" (`BobSoldier.as:51-62`).
+        dieAnim: null,
+        // ⛔ No `destroy` test anywhere in `update()` — the chase and the sword run on a corpse.
+        chasesWhileDying: true,
+        // ⛔ The ctor pushes nothing onto `Mobile.solids` (`BobSoldier.as:51-62`).
+        solidsMover: 'enemy',
+        // `Enemy.knockback`, inherited.
+        knocksBack: true,
+        /** ⛓ The sword: `bobSoldier.js` (`swordSpinningBeginCheck`/`Step`/`swordHitting`). */
+        sword: Object.freeze({ module: 'bobSoldier.js', src: 'Enemies/BobSoldier.as:111-170' }),
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.bobSoldierLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'bobSoldierLive',
+        src: 'Enemies/BobSoldier.as:72-170',
+    }),
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bulb D2 — THE SIXTH ROW: the Bulb (`bulb.js` holds its death). `Bulb extends Bob` and
+     * calls `super.update()` while alive, so the chase is `chaseImpulse` (moveSpeed 0.65, runRange 80, no target
+     * offset) behind Bob's `destroy || "die" || freeze` gate, and its `solids` carry Bob's "Enemy" push. What is NOT
+     * Bob's is the death (`dropDeath`): `startDeath` is EMPTY, the update after the blow is an ordinary living one that
+     * ends in `play("drop")`, "drop" slides the body to its tile's centre and its `endAnim` writes LAVA under it, and
+     * "die"'s `endAnim` removes it — no `destroy`, no fade (`dieAnim: null`; `deathTicks` sums the two anims).
+     */
+    bulb: Object.freeze({
+        as3: 'Bulb',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // `Bob.update`'s gate, reached through `super.update()` while alive.
+        freezesOnGameFreeze: true,
+        // ⛔ Not Bob's "die": the death is `dropDeath`, staged by `bulb.js`.
+        dieAnim: null,
+        dropDeath: Object.freeze({
+            drop: Object.freeze({ frames: 7, rate: 8, src: 'Bulb.as:24 add("drop", [5..11], animSpeed 8)' }),
+            die: Object.freeze({ frames: 7, rate: 8, src: 'Bulb.as:25 add("die", [12..18], animSpeed 8)' }),
+            becomes: TILE_TYPE_IDS.lava,
+            src: 'Enemies/Bulb.as:35-86',
+        }),
+        // ⛔ `Bob.as:39` — `solids.push("Enemy")`, inherited.
+        solidsMover: 'chaser',
+        // `Enemy.knockback`, inherited (a non-killing hit is a dark shield's 0.5).
+        knocksBack: true,
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.bulbLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'bulbLive',
+        src: 'Enemies/Bulb.as:35-61 (+ Enemies/Bob.as:44-83 via super.update())',
+    }),
+    /**
+     * ⛓⛓ seedling-fidelity-lapsecost D2 — THE SEVENTH ROW: the Flyer (`Flyer extends Bob`). Alive and not falling it
+     * runs `super.update()` — `Bob.update`'s chase (`chaseImpulse`, moveSpeed 1, runRange 80) to the player PLUS
+     * `targetOffset` (0,-10), so it hovers ten pixels above them. What is NOT Bob's:
+     *
+     *   · `update()` opens with `if (Game.freezeObjects) return;` (`Flyer.as:51-52`), above everything
+     *     (`freezeSkipsUpdate`);
+     *   · `solids = new Array()` (`:45`) — it flies through tiles, Solids and Enemies (`SOLIDS_BY_MOVER.none`);
+     *   · `hitPlayer()` is overridden EMPTY (`:83-85`) — its body never damages (`contactHits: false`);
+     *   · THE DROP (`drop`, `:59-69`): when the player's box holds the point (x, y+10) it plays "fall"; while "fall"
+     *     plays it stands (`v = 0`), runs `hitUpdate()` and NOT `super.update()`, and on the update where the
+     *     Spritemap shows frame 10 (`droppedFrame`; "fall" is frames 4..22, so index 6) a player still on that point
+     *     takes `p.hit(null, dropForce 1, (x,y), damage 2)` — no enemy i-frame gate and no `e` (no dark-suit shove);
+     *     `Bob.endAnim` ends the anim (`play("")`) and the next update may fall again;
+     *   · its terrain is the census row's (`dieInWater`/`dieInLava` false, `canFallInPit` false — `terrainFromCensus`);
+     *   · "die" is four frames at rate 10 (`:42`), Bob's `startDeath`.
+     */
+    flyer: Object.freeze({
+        as3: 'Flyer',
+        targetOffset: Object.freeze({ x: 0, y: -10 }),
+        freezesOnGameFreeze: true,
+        freezeSkipsUpdate: true,
+        dieAnim: Object.freeze({ frames: 4, rate: 10, src: 'Flyer.as:42 add("die", [23,24,25,26], 10)' }),
+        solidsMover: 'none',
+        // `Enemy.knockback`, inherited.
+        knocksBack: true,
+        // ⛔ `override public function hitPlayer():void { }` (`Flyer.as:83-85`).
+        contactHits: false,
+        terrainFromCensus: true,
+        drop: Object.freeze({
+            anim: Object.freeze({ frames: 19, rate: 30 }),
+            // `droppedFrame` 10 in "fall"'s list [4..22].
+            hitIndex: 6,
+            force: 1,
+            src: 'Enemies/Flyer.as:17-19,40,58-69',
+        }),
+        /** ⛓ Bridged only while `contactFidelity.CONTACT_FIDELITY.flyerLive` is on (OFF = the BEFORE model). */
+        liveSwitch: 'flyerLive',
+        src: 'Enemies/Flyer.as:47-77 (+ Enemies/Bob.as:44-83 via super.update())',
+    }),
+}, { doc: ['src'], src: 'chasers.js' });
+
+/**
+ * ⛓⛓⛓ R8 SLICE 1 — WHICH CHASERS ARE BRIDGED INTO THE TICK LOOP, DERIVED.
+ *
+ * A class is bridged when BOTH tables say so: it has a transcription here
+ * (`CHASERS`) and a row in `spinner.MODELLED_ENEMY_CLASSES` whose `module`
+ * names this file. Neither table alone is the answer —
+ *
+ *   · a transcription with no roster row is what `chasers.js` was for three
+ *     rungs: exact, tested, and called by nothing;
+ *   · a roster row naming a module that does not transcribe the class would
+ *     be a permission with no implementation behind it.
+ *
+ * ⚠ DERIVED, NEVER TYPED. A third list of bridged tags beside these two is
+ * trap 89 exactly — and this is the roster `levelRun` gates its stepper on,
+ * `combat.CONTACT_STEPPED_FAMILIES` is cross-asserted against, and
+ * `r8Acceptance`'s exposure prediction is measured with.
+ *
+ * @returns {string[]} CENSUS TAGS (`bob`), sorted — not AS3 class names. The
+ *   roster is keyed on the class and every consumer here holds a census row.
+ */
+export function bridgedChaserTags() {
+    return Object.entries(CHASERS)
+        .filter(([tag, c]) => (MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' && chaserSwitchOn(c)) || killLockBridged(tag))
+        .map(([tag]) => tag)
+        .sort();
+}
+
+/**
+ * ⛓ U7-swim D3: does `Enemy.hit`'s `knockback(f, p)` move this class? False for
+ * the puncher, whose override is empty. Throws for an untranscribed tag.
+ */
+export function chaserKnocksBack(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserKnocksBack: "${tag}" is not a transcribed chaser`);
+    return c.knocksBack === true;
+}
+
+/**
+ * ⛓ fidelity-bobsoldier: a row may name a `contactFidelity` switch it is bridged under (`liveSwitch`), read at CALL
+ * time like every switch — so `SEEDLING_CONTACT_FIDELITY=none` (or `withContactFidelity`) is the BEFORE model.
+ */
+function chaserSwitchOn(c) {
+    return !c.liveSwitch || CONTACT_FIDELITY[c.liveSwitch] === true;
+}
+
+/** Is this census tag one the tick loop steps? */
+export function isBridgedChaser(tag) {
+    const c = CHASERS[tag];
+    return !!c && ((MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js' && chaserSwitchOn(c)) || killLockBridged(tag));
+}
+
+/**
+ * The solids list one chaser's own `moveX`/`moveY` sweep collides against.
+ *
+ * ⚠ PER CLASS, and it throws for a class with no `solidsMover` rather than
+ * defaulting to the base list: a default here is the exact silence R5 slice
+ * 12 spent a whole shaft on, one family over.
+ */
+export function chaserSolids(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserSolids: "${tag}" is not a transcribed chaser`);
+    const list = SOLIDS_BY_MOVER[c.solidsMover];
+    if (!list) {
+        fail(`chaserSolids: "${tag}" names solids mover "${c.solidsMover}", which `
+            + `levelWorld.SOLIDS_BY_MOVER does not define (knows `
+            + `[${Object.keys(SOLIDS_BY_MOVER).join(', ')}]). Solidity is a property of `
+            + 'the thing MOVING and a default would answer the wrong mover\'s question.');
+    }
+    return list;
+}
+
+/**
+ * Ticks from the killing blow to `destroy` — see header note 4. ZERO for a class with no die animation
+ * (`dieAnim: null`): `Enemy.startDeath` sets `destroy` on the blow itself.
+ */
+export function deathTicks(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`deathTicks: "${tag}" is not a transcribed chaser (know ${Object.keys(CHASERS)})`);
+    // ⛓ fidelity-bulb: a drop death is two anims back to back ("drop" then "die"), the removal at the second's end.
+    if (c.dropDeath) {
+        return animTicks(c.dropDeath.drop.frames, c.dropDeath.drop.rate)
+            + animTicks(c.dropDeath.die.frames, c.dropDeath.die.rate);
+    }
+    if (c.dieAnim === null) return 0;
+    return animTicks(c.dieAnim.frames, c.dieAnim.rate);
+}
+
+/** ⛓ fidelity-bobsoldier: does this class's own tail keep running after `destroy` (no `destroy` gate)? */
+export function chaserChasesWhileDying(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserChasesWhileDying: "${tag}" is not a transcribed chaser`);
+    return c.chasesWhileDying === true;
+}
+
+/** ⛓ fidelity LAPSECOST D2: the class's drop (`CHASERS[tag].drop`, the Flyer's), or null. */
+export function chaserDropOf(tag) {
+    return CHASERS[tag]?.drop ?? null;
+}
+
+/** ⛓ fidelity LAPSECOST D2: does this class's body damage on contact (`Enemy.hitPlayer`)? False for the Flyer. */
+export function chaserContactHits(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserContactHits: "${tag}" is not a transcribed chaser`);
+    return c.contactHits !== false;
+}
+
+/**
+ * ⛓ fidelity LAPSECOST D2 — the point a dropping class tests the player against (`Flyer.as:58`
+ * `collidePoint("Player", x - targetOffset.x, y - targetOffset.y)`), and whether the player's box holds it
+ * (`Entity.collidePoint`: the half-open box, `playerBox` from `playerPhysicsV2.playerBoxAt`).
+ */
+export function dropPoint(tag, enemy) {
+    const c = CHASERS[tag];
+    if (!c?.drop) fail(`dropPoint: "${tag}" has no drop`);
+    return { x: enemy.x - c.targetOffset.x, y: enemy.y - c.targetOffset.y };
+}
+export function dropPointCovered(tag, enemy, playerBox) {
+    const p = dropPoint(tag, enemy);
+    return p.x >= playerBox.x && p.x < playerBox.right && p.y >= playerBox.y && p.y < playerBox.bottom;
+}
+
+/** ⛓ fidelity LAPSECOST D2: a fresh "fall" Spritemap for a dropping class. */
+export function createDropFallAnim(tag) {
+    const d = chaserDropOf(tag);
+    if (!d) fail(`createDropFallAnim: "${tag}" has no drop`);
+    return createSpriteAnim(d.anim.frames, d.anim.rate);
+}
+
+/** ⛓ fidelity-bobsoldier: does this class carry the BobSoldier's spinning sword (`bobSoldier.js`)? */
+export function chaserHasSword(tag) {
+    return !!CHASERS[tag]?.sword;
+}
+
+/**
+ * ⛔ THE TILE TYPES `Enemy.update`'s TERRAIN SWITCH DESTROYS A BODY ON.
+ *
+ * `Enemies/Enemy.as:68-103` — `case 1: //Water` and `case 17: //Lava` each
+ * set `destroy = true` outright (gated on `dieInWater`/`dieInLava`, both
+ * `true` on the base class and on `Bob`); `case 6` starts the PIT fall, which
+ * is a schedule rather than an instant and is not in this pair.
+ *
+ * ⚠ NOT TRANSCRIBED BY `chaserStep`, ON PURPOSE — see the header. The switch
+ * sits ABOVE `super.update()`, runs through a freeze, and its removal is what
+ * R7 slice 6e's L6 `despawn` DECLARES. This constant exists so a consumer can
+ * ASSERT the gap rather than discover it: a stepped body standing here is one
+ * the game has already destroyed.
+ */
+export const ENEMY_TERRAIN_DESTROYS = defineRecord('enemyTerrainDestroys', { water: TILE_TYPE_IDS.water, lava: TILE_TYPE_IDS.lava }, { doc: [], src: 'chasers.js' });
+
+/**
+ * `Enemy.update`'s `case 6` — the PIT, which is a SCHEDULE and not an
+ * instant, and is therefore refused rather than transcribed here. It lerps
+ * the body a tenth of the way to its tile centre per tick, spins the graphic
+ * by `fallSpinSpeed` and fades it by `fallAlphaSpeed` 0.05, and only sets
+ * `destroy` when the alpha runs out.
+ */
+export const ENEMY_PIT_TILE = PROFILE.enemyPitTile;
+
+/** The class's box at a centre, from the CENSUS's hitbox. */
+export function chaserBoxAt(tag, cx, cy) {
+    const row = ENEMY_CLASSES[tag];
+    if (!row?.hitbox) fail(`chaserBoxAt: "${tag}" has no hitbox in ENEMY_CLASSES`);
+    const { w, h, ox, oy } = row.hitbox;
+    return rect(cx - ox, cy - oy, w, h);
+}
+
+/**
+ * ⛓⛓ fidelity-bobsoldier W5 (once the switch `chaserPointExact`, retired) — `Point.length` and
+ * `FP.distance` are `Math.sqrt(x*x + y*y)`, and `Point.normalize(t)` MULTIPLIES by `t / length`
+ * (`playerPhysicsV1.pointNormalize`, the runtime's `point_normalize`). This file spelled both the refuted way
+ * (`Math.hypot`, `(x / m) * t`), which R9 slice 12e⁗ measured off the player's diagonals: 1-ulp velocity drift. The
+ * BobSoldier captures (L30 legs 308/309) read it off a chaser: the game's `vx` at t38 is `0.7884788477227912`, the
+ * refuted spelling's `…911`, and the one-ulp position it grows into moved the sword's knockback by 7e-15 px.
+ * ⚖ The OFF arm (the refuted spelling) was RETIRED at the wave-8 harvest (user, 2026-10-07): the one-spelling law
+ * (`scripts/procgen/oneSpelling.js`, an empty allow-list) forbids a second `Point.length` spelling in the model's reach.
+ */
+const vlen = (x, y) => pointLength(x, y);
+
+/** `flash.geom.Point.normalize(len)` — a no-op on the zero point. */
+function normalize(v, len) {
+    return pointNormalize(v.x, v.y, len);
+}
+
+/** `Mobile.friction()`. */
+export function applyFriction(v, f = FRICTION) {
+    const m = vlen(v.x, v.y);
+    let out = normalize(v, Math.max(m - f, 0));
+    out = { x: Math.abs(out.x) < VELOCITY_EPSILON ? 0 : out.x,
+        y: Math.abs(out.y) < VELOCITY_EPSILON ? 0 : out.y };
+    return out;
+}
+
+/**
+ * `FP.sign` — 0 for zero, NOT 1. `Math.sign` agrees; spelled out because
+ * the chase block's `sign(toV.x - v.x) * moveSpeed` reaching exactly zero
+ * is the case where an enemy at its target speed stops accelerating, and a
+ * sign function that returned 1 there would make it oscillate.
+ */
+const sign = (n) => (n < 0 ? -1 : (n > 0 ? 1 : 0));
+
+/**
+ * The chase block, exactly (`Bob.as:57-75` / `Jellyfish.as:52-70` — the two
+ * are the same eleven lines, which is why they are one function here).
+ *
+ * Returns the velocity the block leaves. `d > runRange` returns `v`
+ * untouched: a chaser out of leash does not decelerate, it just stops being
+ * pushed, and friction is what brings it down.
+ */
+export function chaseImpulse(tag, enemy, player) {
+    const row = ENEMY_CLASSES[tag];
+    const c = CHASERS[tag];
+    if (!row || !c) fail(`chaseImpulse: "${tag}" is not a transcribed chaser`);
+    // ⛓ KILLLOCK K2: a body whose speed its own update re-chooses (`speedByTerrain`) carries it; every other reads
+    // the census row.
+    const ms = enemy.moveSpeed ?? row.speed;
+    // ⛓ bosskills D2: a body that writes its own `runRange` (the King of Fire's runners, 1000) carries it.
+    const range = enemy.runRange ?? row.aggro.range;
+    const tx = player.x + c.targetOffset.x;
+    const ty = player.y + c.targetOffset.y;
+    const d = vlen(tx - enemy.x, ty - enemy.y);
+    if (d > range) return { ...enemy.v };
+    const a = Math.atan2(ty - enemy.y, tx - enemy.x);
+    const toV = { x: ms * Math.cos(a), y: ms * Math.sin(a) };
+    // ⚠ `pushed` is measured BEFORE the impulse. It is what stops a
+    // knocked-back enemy from having its knockback cancelled by the
+    // re-normalise on the very next tick, which is why a hit reads as a
+    // knockback rather than as a wall.
+    const pushed = vlen(enemy.v.x, enemy.v.y) > ms;
+    let v = {
+        x: enemy.v.x + sign(toV.x - enemy.v.x) * ms,
+        y: enemy.v.y + sign(toV.y - enemy.v.y) * ms,
+    };
+    if (!pushed && vlen(v.x, v.y) > ms) v = normalize(v, ms);
+    return v;
+}
+
+/**
+ * One whole tick for one chaser.
+ *
+ * @param {string} tag
+ * @param {object} enemy  `{x, y, v: {x, y}, dying?}`
+ * @param {object} player `{x, y}`
+ * @param {object} opts
+ * @param {boolean=} opts.onScreen  `Enemy.update`'s first gate. Default
+ *   TRUE — but pass it, because false is the interesting case and a default
+ *   that hid it would make the growth in note 2 invisible.
+ * @param {boolean=} opts.frozen    `Game.freezeObjects`.
+ * @param {function=} opts.move     `(x, y, dx, dy) => {x, y}` — the solid
+ *   sweep. Default is a FREE move, which is the over-approximation the
+ *   planner already uses; a caller that has the level's solids passes the
+ *   real one. It is a parameter rather than an import so this module has no
+ *   opinion about which world it is stepping.
+ * @param {function=} opts.hitPlayer ⛓ R1-swim D1 — `Enemy.update`'s TAIL,
+ *   `hitUpdate(); hitPlayer();`, at its own place: AFTER `super.update()`'s
+ *   move and BEFORE the subclass block. `({x, y, v, iframesTicked}) =>
+ *   ?{v, dying}` — the caller's contact, which under the dark suit can write
+ *   the body's `v` (the `"Suit"` knockback) or kill it (`startDeath` plays
+ *   "die"), and the chase below must read both: `Bob.update`'s `pushed` test
+ *   sees the shove, and its `destroy || "die"` return skips the chase. Absent,
+ *   nothing is read back (the forecast's shape).
+ */
+export function chaserStep(tag, enemy, player, {
+    onScreen = true, frozen = false, move = null, hitPlayer = null,
+} = {}) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserStep: "${tag}" is not a transcribed chaser`);
+    let { x, y } = enemy;
+    let v = { ...enemy.v };
+
+    // ── super.update() ────────────────────────────────────────────────
+    // The off-screen return skips the WHOLE of `Mobile.mobileUpdate`, so
+    // neither friction nor the move happens — and neither does `hitUpdate`,
+    // which is why an off-screen enemy's i-frames do not tick down either.
+    let iframesTicked = false;
+    if (onScreen) {
+        if (!frozen) {
+            v = applyFriction(v);
+            const moved = move ? move(x, y, v.x, v.y) : { x: x + v.x, y: y + v.y };
+            x = moved.x;
+            y = moved.y;
+        }
+        iframesTicked = true;
+    }
+
+    // ── `Enemy.update`'s tail: `hitUpdate(); hitPlayer();` ──────────────
+    let dying = enemy.dying === true;
+    if (hitPlayer) {
+        const after = hitPlayer({ x, y, v, iframesTicked });
+        if (after) {
+            v = after.v;
+            dying = after.dying === true;
+        }
+    }
+
+    // ── the subclass block ────────────────────────────────────────────
+    // ⚠ Runs whether or not the super returned early (note 2), and its
+    // freeze gate is PER CLASS (note 1).
+    // ⛓ U7-swim: and a puncher mid-attack does not chase — `Puncher.update`'s
+    // block is `if (player && getSprite() != "attack")` (`:60`).
+    // ⛓ fidelity-bobsoldier: a class with no `destroy`/"die" return (`chasesWhileDying`) chases on.
+    const blocked = (dying && c.chasesWhileDying !== true) || (c.freezesOnGameFreeze && frozen)
+        || (enemy.attack !== null && enemy.attack !== undefined);
+    if (!blocked) v = chaseImpulse(tag, { x, y, v, moveSpeed: enemy.moveSpeed, runRange: enemy.runRange }, player);
+
+    return { x, y, v, iframesTicked };
+}
+
+/**
+ * ⛓⛓⛓ U7-swim D2 — `Puncher.update`'s TAIL: does the body DECIDE to punch
+ * this tick? (`:111-117`.)
+ *
+ * It sits inside the same `if (player && getSprite() != "attack")` as the
+ * chase, below the `destroy || "die"` return, and measures `d` from the
+ * position this tick's move LEFT (`chaserStep`'s `x, y`) to the player's
+ * entity point — the player updates last, so that is where the previous
+ * tick left them. A body already attacking does not decide again: the
+ * running wind-up is not restarted (`Spritemap.play` returns early on the
+ * same name, and the block is skipped anyway).
+ *
+ * @returns {?object} a fresh attack animation to install, or null
+ */
+export function chaserAttackDecision(tag, enemy, player) {
+    const a = CHASERS[tag]?.attack;
+    if (!a) return null;
+    if (enemy.dying === true || enemy.destroy === true) return null;
+    if (enemy.attack !== null && enemy.attack !== undefined) return null;
+    const d = vlen(player.x - enemy.x, player.y - enemy.y);
+    return d <= a.range ? createSpriteAnim(a.anim.frames, a.anim.rate) : null;
+}
+
+/**
+ * ⛓⛓⛓ U7-swim D2 — `attackPlayer()`'s box (`Puncher.as:179-211`), from the
+ * body's entity point and the player's.
+ *
+ * The facing is RE-AIMED at the punch, from where the player is now, and not
+ * the facing the chase left: `|dx| > |dy|` picks the side (0 east, 2 west),
+ * else `dy > 0` is 3 (south) and anything else 1 (north). The box is `r` deep
+ * off the body's edge on that side, as wide as the body.
+ *
+ * @returns {{direction: number, rect: object}}
+ */
+export function puncherPunchRect(tag, enemy, player) {
+    const a = CHASERS[tag]?.attack;
+    const row = ENEMY_CLASSES[tag];
+    if (!a || !row?.hitbox) fail(`puncherPunchRect: "${tag}" has no attack`);
+    const { w, h, ox, oy } = row.hitbox;
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+    let direction;
+    if (Math.abs(dx) > Math.abs(dy)) direction = dx > 0 ? 0 : 2;
+    else direction = dy > 0 ? 3 : 1;
+    const left = enemy.x - ox;
+    const top = enemy.y - oy;
+    const r = a.reach;
+    const rects = [
+        rect(left + w, top, r, h),
+        rect(left, top - r, w, r),
+        rect(left - r, top, r, h),
+        rect(left, top + h, w, r),
+    ];
+    return { direction, rect: rects[direction] };
+}
+
+/**
+ * The window a kill has to HOLD, from the last landed hit.
+ *
+ * The `+1` is the hit test's own one-tick lag off the press
+ * (`combatVerbs`, header note 1); the rest is the death animation, during
+ * which the body is still an entity `Game.totalEnemies()` counts.
+ */
+export function killWindowTicks(tag) {
+    return 1 + deathTicks(tag);
+}

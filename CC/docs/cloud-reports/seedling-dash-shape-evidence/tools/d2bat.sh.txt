@@ -1,0 +1,18 @@
+#!/bin/bash
+S=$1; cd $S
+while kill -0 $2 2>/dev/null; do sleep 20; done
+run() { # tag windows env...
+  local tag=$1 win=$2; shift 2
+  env "$@" node tools/ds-batch.mjs --lab=$S/lab --runner=$S/tools/db-run.mjs --dir=/tmp/claude-0/caps --out=$S/d2bat.jsonl --windows=$win --tag=$tag --only=$(cat pop617.txt) --jobs=3 2>&1 | tail -1 | sed "s/^/$tag: /"
+}
+L=SEEDLING_DASH_LEG_PRECHECK=1; N=SEEDLING_DASH_NO_SWING_PREFIX=1; K=SEEDLING_DASH_KEEP_PARTIAL=1
+run off 85,0 X=1
+run legpre 85,0 $L
+run noswing 85,0 $N
+run keep 85,0 $K
+run cheap2 85,0 $L $N
+run all3 85,0 $L $N $K
+run dw85 85 LAB_DASH_WINDOW=85
+run dw85keep 85 LAB_DASH_WINDOW=85 $K
+run all3dw85 85 LAB_DASH_WINDOW=85 $L $N $K
+echo ALLDONE

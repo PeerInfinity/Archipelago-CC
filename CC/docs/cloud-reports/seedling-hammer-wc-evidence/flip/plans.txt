@@ -1,0 +1,15 @@
+plan-seedling-f1c-l18-phase off rc=0 s=10 md5=01ec5f9f
+plan-seedling-f1c-l18-phase on rc=1 s=1 md5=934d9871
+plan-seedling-hammer-a-escape off rc=0 s=8 md5=29891f04
+plan-seedling-hammer-a-escape on rc=1 s=9 md5=65742bdc
+plan-seedling-hammer-b1-approach off rc=0 s=6 md5=78925b77
+plan-seedling-hammer-b1-approach on rc=1 s=6 md5=866666cd
+plan-seedling-hammer-b2-fight off rc=0 s=8 md5=9709cfc1
+plan-seedling-hammer-b2-fight on rc=1 s=8 md5=2cd6b74f
+plan-seedling-hammer-g1-ghostkill off rc=0 s=100 md5=cf514694
+plan-seedling-hammer-g1-ghostkill on rc=1 s=60 md5=5acf8d97
+plan-seedling-hammer-bw-bombstand off rc=1 s=398 md5=6f844bd4
+plan-seedling-hammer-bw-bombstand on rc=1 s=411 md5=d7d6b54c
+plan-seedling-hammer-sf-strikefloor off rc=0 s=193 md5=eb04d6f4
+plan-seedling-hammer-sf-strikefloor on rc=1 s=185 md5=b5faf6f4
+PLANS DONE

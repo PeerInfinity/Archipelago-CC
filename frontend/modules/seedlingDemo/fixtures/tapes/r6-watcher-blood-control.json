@@ -1,0 +1,67 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-watcher-blood-control",
+  "description": "R6 slice 6d: the one-press-fewer control — the same tape with the FOURTH and last sword press deleted, and every span after it, which is what makes this a PREFIX rather than an equal: every later `primary` in the drive is a DIALOGUE release, and a dialogue release in a room with no dialogue is a sword swing that would land the very hit this arm exists to withhold. Three hits is one short of `hits > dieFrames.length` (`dieFrames` is `[7,8,9]`), so `Watcher.update`'s `createdSeed` latch never fires, no `Seed` is ever added to the world, no ceremony runs, no cover fades and no reboot happens. The arm ends where it started, in L114, with `Game.cutscene` untouched — and that level sequence is the pair's discriminator, because BOTH endings can produce a menu and neither can produce the other's room.",
+  "boot": {
+    "level": 114,
+    "x": 72,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 114,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 114,
+      "tag": 0,
+      "note": "the Watcher's dialogue — what `r6-watcher-talk` earns. `Watcher.hit()` gates on `!Game.checkPersistence(tag)`, so this is what makes the sword count at all; it also silences `talk()` and with it the live Seed."
+    }
+  ],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 93,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 1
+    },
+    {
+      "key": "primary",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "key": "primary",
+      "from": 27,
+      "to": 28
+    },
+    {
+      "key": "primary",
+      "from": 53,
+      "to": 54
+    }
+  ]
+}
+

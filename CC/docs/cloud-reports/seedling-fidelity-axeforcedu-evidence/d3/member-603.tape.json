@@ -1,0 +1,278 @@
+{
+ "game": "seedling",
+ "name": "axeforcedu-l603-member",
+ "boot": {
+  "level": 71,
+  "x": 288,
+  "y": 96
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 5412,
+  "primary": 0
+ },
+ "tick_count": 416,
+ "inputs": [
+  {
+   "key": "left",
+   "from": 0,
+   "to": 11
+  },
+  {
+   "key": "right",
+   "from": 11,
+   "to": 12
+  },
+  {
+   "key": "left",
+   "from": 12,
+   "to": 13
+  },
+  {
+   "key": "down",
+   "from": 0,
+   "to": 14
+  },
+  {
+   "key": "right",
+   "from": 13,
+   "to": 14
+  },
+  {
+   "key": "left",
+   "from": 16,
+   "to": 17
+  },
+  {
+   "key": "right",
+   "from": 20,
+   "to": 21
+  },
+  {
+   "key": "left",
+   "from": 48,
+   "to": 92
+  },
+  {
+   "key": "right",
+   "from": 92,
+   "to": 93
+  },
+  {
+   "key": "left",
+   "from": 93,
+   "to": 94
+  },
+  {
+   "key": "right",
+   "from": 94,
+   "to": 95
+  },
+  {
+   "key": "left",
+   "from": 95,
+   "to": 96
+  },
+  {
+   "key": "right",
+   "from": 99,
+   "to": 101
+  },
+  {
+   "key": "left",
+   "from": 103,
+   "to": 105
+  },
+  {
+   "key": "right",
+   "from": 108,
+   "to": 109
+  },
+  {
+   "key": "left",
+   "from": 128,
+   "to": 172
+  },
+  {
+   "key": "right",
+   "from": 172,
+   "to": 173
+  },
+  {
+   "key": "left",
+   "from": 173,
+   "to": 174
+  },
+  {
+   "key": "right",
+   "from": 174,
+   "to": 175
+  },
+  {
+   "key": "left",
+   "from": 175,
+   "to": 176
+  },
+  {
+   "key": "right",
+   "from": 179,
+   "to": 181
+  },
+  {
+   "key": "left",
+   "from": 183,
+   "to": 185
+  },
+  {
+   "key": "right",
+   "from": 188,
+   "to": 189
+  },
+  {
+   "key": "left",
+   "from": 208,
+   "to": 252
+  },
+  {
+   "key": "right",
+   "from": 252,
+   "to": 253
+  },
+  {
+   "key": "left",
+   "from": 253,
+   "to": 254
+  },
+  {
+   "key": "right",
+   "from": 254,
+   "to": 255
+  },
+  {
+   "key": "left",
+   "from": 255,
+   "to": 256
+  },
+  {
+   "key": "right",
+   "from": 259,
+   "to": 261
+  },
+  {
+   "key": "left",
+   "from": 263,
+   "to": 265
+  },
+  {
+   "key": "right",
+   "from": 268,
+   "to": 269
+  },
+  {
+   "key": "left",
+   "from": 288,
+   "to": 332
+  },
+  {
+   "key": "right",
+   "from": 332,
+   "to": 333
+  },
+  {
+   "key": "left",
+   "from": 333,
+   "to": 334
+  },
+  {
+   "key": "right",
+   "from": 334,
+   "to": 335
+  },
+  {
+   "key": "left",
+   "from": 335,
+   "to": 336
+  },
+  {
+   "key": "right",
+   "from": 339,
+   "to": 341
+  },
+  {
+   "key": "left",
+   "from": 343,
+   "to": 345
+  },
+  {
+   "key": "right",
+   "from": 348,
+   "to": 349
+  },
+  {
+   "key": "left",
+   "from": 368,
+   "to": 412
+  },
+  {
+   "key": "right",
+   "from": 412,
+   "to": 413
+  },
+  {
+   "key": "left",
+   "from": 413,
+   "to": 414
+  },
+  {
+   "key": "right",
+   "from": 414,
+   "to": 415
+  },
+  {
+   "key": "down",
+   "from": 16,
+   "to": 416
+  },
+  {
+   "key": "left",
+   "from": 415,
+   "to": 416
+  }
+ ],
+ "tape_version": 8
+}

@@ -1,0 +1,82 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-13",
+    "tick_count": 36,
+    "boot": {
+        "level": 13,
+        "x": 64,
+        "y": 128
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 13,
+                "x": 72,
+                "y": 136,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 40,
+                    "y": 40
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 36,
+                    "baseline": 74,
+                    "saved": 38,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 20,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        36
+                    ],
+                    "scanned": 8,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 40
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "2 of 8 scanned preview(s) — first at walk-offset 0: 74 tick(s) against 74 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "left",
+                "primary",
+                "up"
+            ]
+        }
+    ]
+}

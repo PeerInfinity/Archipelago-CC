@@ -1,7 +1,5 @@
 # Journey to Ascension
 
-**[Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)**
-
 ## What is Journey to Ascension?
 
 [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) is an incremental/idle game where you progress through 27 zones by completing tasks, leveling skills, and collecting perks. Each zone has tasks that consume energy; when your energy runs out, you reset and start the zone over — but your skills and perks carry forward, letting you push further each time.

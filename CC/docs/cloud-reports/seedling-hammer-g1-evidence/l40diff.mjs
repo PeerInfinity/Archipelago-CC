@@ -1,0 +1,12 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { atlasLevelSource } = await import(R + 'levelSource.js');
+const { mountedRecordsOf } = await import(R + 'wasmWalkTape.js');
+const { levelSourceFromAtlas } = await import(R + 'atlasSource.js');
+const dump = JSON.parse(readFileSync('dump.json', 'utf8'));
+const a = levelSourceFromAtlas(mountedRecordsOf(dump.deliveredSet))(40), b = atlasLevelSource()(40);
+const key = (e) => JSON.stringify(e);
+const A = new Set(a.entities.map(key)), B = new Set(b.entities.map(key));
+console.log('only delivered:', [...A].filter((x) => !B.has(x)));
+console.log('only atlas:', [...B].filter((x) => !A.has(x)));
+console.log('layers equal', JSON.stringify(a.layers) === JSON.stringify(b.layers), a.width, b.width);

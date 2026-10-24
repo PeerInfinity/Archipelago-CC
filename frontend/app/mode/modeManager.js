@@ -1,21 +1,41 @@
 // modeManager.js - Mode determination and management
 // Extracted from init.js lines 484-590
 
+import { LAST_WORLD_KEY } from '../../modules/stateManager/worldPersistence.js';
+import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from './modePersistenceDefaults.js';
+
 // Constants for localStorage keys
 const LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
 const LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY = 'archipelagoToolSuite_lastActiveMode';
+
+/**
+ * Drop the persisted last-loaded world so an explicit reset boots the default
+ * preset, not the previously-restored world. Best-effort — sessionStorage may
+ * be unavailable (e.g. sandboxed iframe).
+ */
+function clearLastWorld() {
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem(LAST_WORLD_KEY);
+    }
+  } catch {
+    /* ignore */
+  }
+}
 
 /**
  * Reads the autoLoadMode and autoSaveMode settings.
  * Since this runs before settingsManager is initialized, we need to:
  * 1. Check localStorage for saved mode data that might contain settings
  * 2. Fall back to fetching defaults from settings.json
+ * 3. Fall back to the shared defaults (modePersistenceDefaults.js — the
+ *    same values the settings schema declares)
  *
  * @param {Object} logger - Logger instance
  * @returns {Promise<{autoLoadMode: boolean, autoSaveMode: boolean}>}
  */
-async function getAutoModeSettings(logger) {
-  const defaults = { autoLoadMode: false, autoSaveMode: false };
+export async function getAutoModeSettings(logger) {
+  const defaults = { autoLoadMode: AUTO_LOAD_MODE_DEFAULT, autoSaveMode: AUTO_SAVE_MODE_DEFAULT };
 
   try {
     // First, try to get settings from localStorage mode data
@@ -101,6 +121,7 @@ export async function determineActiveMode(logger) {
     try {
       localStorage.removeItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
       localStorage.removeItem(LOCAL_STORAGE_MODE_PREFIX + 'default'); // Clear default mode's saved data specifically
+      clearLastWorld();
       logger.info(
         'init',
         'Cleared last active mode and "default" mode data from localStorage for mode=reset.'
@@ -126,6 +147,7 @@ export async function determineActiveMode(logger) {
       localStorage.removeItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
       // Clear data for the specific mode being reset TO
       localStorage.removeItem(LOCAL_STORAGE_MODE_PREFIX + modeToLoadDefaultsFor);
+      clearLastWorld();
       logger.info(
         'init',
         `Cleared last active mode and "${modeToLoadDefaultsFor}" mode data from localStorage for reset=true.`

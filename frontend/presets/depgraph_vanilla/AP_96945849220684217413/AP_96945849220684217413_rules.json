@@ -12001,6 +12001,10 @@
     }
   },
   "helpers": {},
-  "is_vanilla": true,
-  "preset_label": "recipe_chain v"
+  "is_vanilla": {
+    "1": true
+  },
+  "preset_label": {
+    "1": "recipe_chain v"
+  }
 }

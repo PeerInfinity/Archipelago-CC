@@ -1,0 +1,1149 @@
+/**
+ * procgenCore/elementSpec — **THE ONE SPELLING OF "WHICH ELEMENT", FOR EVERY
+ * CHANNEL.**
+ *
+ * PROCGEN ELEMENTS arc 2, slice 3 (the arc-2 kickoff
+ * §3.3). The maze binding takes an `elements:` spec; the maze CLI
+ * takes `--elements=<string>`; the sweep takes `--elements=<string>`; and slice
+ * 4's lab page will take `?elements=<string>`. ⛔ ONE CODEC, mirroring
+ * `areaSpec.js` — which itself mirrors `skeletonKinds`' `parse`/`format`/
+ * `normalize` trio — so no fourth grammar is invented at the page.
+ *
+ * ── THE STRING ────────────────────────────────────────────────────────
+ *
+ *     <name>[;key=value]…      `none` · `guard` · `guard;len=4;turns=2;binds=any`
+ *
+ * The HEAD is the ELEMENT the run asks for, because that is the choice a caller
+ * actually makes. ⛓ **`none` IS THE DEFAULT AND IT MEANS THE BINDING DOES NOT
+ * RUN THE ELEMENT MACHINERY AT ALL** — ⚖ arc-2 ruling 5: no site is drawn, no
+ * element is instantiated, `construct` is never called, no draw is spent, and
+ * every maze md5 is byte-identical by a code path that never executes. The
+ * `keys: 0` law (arc 1) and the `chambers=0` law (constructive §14.2) applied
+ * one layer further out.
+ *
+ * ── ⛔ ONE SCHEMA, NOT A SECOND COPY OF THE ELEMENT'S DOMAINS ─────────
+ *
+ * `len` and `turns` are NOT restated here. The table below names the ELEMENT
+ * and the schema is `element.params` — the very array `defineElement` drew from
+ * and `assertElement` swept. A codec that re-listed `[2,3,4,5,6]` would be a
+ * second spelling of a domain, and the day the element grew a value the spec
+ * would refuse it. What this file adds is `binds`, which is a fact about the
+ * BINDING (what the area graph may do with the gadget), not about the geometry
+ * — so it lives with the caller's vocabulary and not in the element.
+ *
+ * ⛓ A parameter the spec names is an OVERRIDE and spends NO draw; one it omits
+ * is DRAWN from the element's own domain at `instantiate` (⚖ slice 2 §9.3). So
+ * `--elements=guard` is "any gadget the stream gives me" and
+ * `--elements=guard;len=4;turns=2` is one particular size — both legal, and the
+ * payload records the RESOLVED parameters either way.
+ *
+ * ⛔ NO DOM AND NO NODE IMPORTS: the lab page loads this in a browser.
+ */
+
+import { ARENA } from './elements/arena.js';
+import { BLOCK_POCKET } from './elements/blockPocket.js';
+import { KILL_GATE } from './elements/killGate.js';
+import { OPEN_CHAMBER } from './elements/openChamber.js';
+import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
+import { ROAM } from './elements/roam.js';
+import {
+    CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
+    WATERFALL_GATE,
+} from './elements/soloDoor.js';
+import { LAW_CUT } from './elements.js';
+import { parseRequireList } from './areaSpec.js';
+import {
+    assertDrawable, assertParamSchema, describeDomain, enumerableValues, enumerateValues,
+    isParamSubset, paramSubset, valueInDomain,
+} from './templateContract.js';
+
+export class ElementSpecError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ElementSpecError';
+    }
+}
+
+const fail = (message) => { throw new ElementSpecError(message); };
+
+/**
+ * ⛓⛓⛓ **`binds` — WHAT THE AREA GRAPH MAY DO WITH THE GADGET**, and both
+ * values were MEASURED before either was declared (the ELEMENTS CENSUS, §10.1).
+ *
+ * ⚖ arc-2 ruling 1 says the gadget GUARDS the flag switch. Whether it actually
+ * does is not up to the element — it is up to which area `placeKeys` hands a
+ * symbol to, and the gadget's area is one candidate among four or five. The
+ * census measured both arms on `rooms`/`branchy`/`bushy`/`loopy`/`open`/
+ * `winding` at 11x11 and 15x15, seeds 1..12:
+ *
+ *   `any`  — the gadget's area competes like any other: the graph ACCEPTS 15-40
+ *            runs in 96, and the gadget ends up guarding a symbol in only about
+ *            one accepted run in seven. The other six place a gadget that
+ *            guards NOTHING, which is ⚖ ruling 1 not happening.
+ *   `item` — the gadget's area is the ONLY one whose `capacity.item` is true, so
+ *            every symbol the graph places is placed behind the door. Acceptance
+ *            falls to 9-17 in 96 and EVERY accepted run is guarded.
+ *
+ * ⛔ `item` is the DEFAULT because a gadget that guards nothing is the vacuous
+ * half of ⚖ ruling 1, and the acceptance it costs is published rather than
+ * bought back by widening a bound. `capacity` is the module's OWN lever (⚖ arc-1
+ * §3.1: *"per-area capacity hints"*), so this is a declared use of it and not a
+ * coercion invented here.
+ *
+ * ⚠ AT `binds=item` A RUN AT `--areas=2` REFUSES AT EVERY SEED, because `K1`
+ * needs a SECOND item-bearing area at key level 1 and there is only one. That is
+ * said here, is what the census shows, and is a refusal by name rather than a
+ * silently-dropped key.
+ */
+export const BINDS_PARAM = Object.freeze({
+    key: 'binds',
+    domain: Object.freeze(['item', 'any']),
+    default: 'item',
+    why: 'whether the gadget\'s area is the ONLY one that may hold a key symbol. `item` '
+        + '(default) makes the gadget a GUARD at every accepted seed (⚖ ruling 1) and costs '
+        + 'acceptance; `any` lets it compete, which accepts more runs and guards about one '
+        + 'in seven. Measured both ways — see the ELEMENTS CENSUS.',
+});
+
+/**
+ * ⛓ THE TABLE — the element a head names, and the knobs the BINDING adds to the
+ * element's own. v1 has ONE entry (⚖ §3.3: "v1 ONE gadget"); a second element is
+ * a row here plus its own module, exactly as a skeleton kind is.
+ *
+ * ⛔ The head is the FAMILY word (`guard`), not the module's name
+ * (`reverse-pull-block`): the caller is choosing what the thing DOES, and when a
+ * second guard exists the head stays and a parameter picks between them.
+ */
+export const ELEMENT_TABLE = Object.freeze({
+    guard: Object.freeze({
+        element: REVERSE_PULL_BLOCK,
+        why: 'The reverse-pull block gadget (⚖ design ruling 2 / arc-2 §3.2.1): a block '
+            + 'pulled backwards off its button, whose door is held open only while the '
+            + 'block sits there — and the area graph\'s key lives behind that door.',
+        extra: Object.freeze([BINDS_PARAM]),
+    }),
+    /**
+     * ⛓⛓⛓ THE TWO ROOM-AWARE DOOR ELEMENTS (arc 3, slice 4a). ⛔ NEITHER TAKES
+     * A PARAMETER, and that is the finding rather than an omission: the door
+     * templates they supersede had to carry `span`/`ori`/`gap` because a
+     * pass-2 template writes a RELATIVE footprint and cannot know the room, and
+     * slice 2 measured what that cost (`span`'s domain is `{1,8}` — two values
+     * for two rooms — and half the kill family's `empty` draws became NO_ANCHOR
+     * by construction). An `on-connector` element GROWS its wall to the room it
+     * is standing in, so the parameter has nothing left to say. ⚠ `binds` is
+     * absent too: neither element holds or grants a symbol, so there is nothing
+     * for the area graph to bind (§7c's `bodies = n` is the first knob either
+     * will want, and it is NOT this slice).
+     */
+    killgate: Object.freeze({
+        element: KILL_GATE,
+        why: 'The room-aware KILL GATE (design catalogue #4): a `tset:-1` lock on a main-path '
+            + 'cut with its wall GROWN to seal the room, and the body whose death opens it in '
+            + 'a start-side pocket. Certified by the existing `kill`.',
+        extra: Object.freeze([]),
+        /**
+         * ⛓⛓⛓ **THE ONLY ELEMENT IN THE ARC A PRE-SWORD BOOT CANNOT CLEAR**, and
+         * it is the same fact `KILL_LOCK_TEMPLATES` encodes by living only in
+         * `POST_SWORD_TEMPLATES`: `weaponForPress` returns null with no sword
+         * slot, so the press is a silent no-op and the lock never opens.
+         *
+         * ⛔ A BINDING FACT, LIKE `binds` — not a parameter of the geometry. The
+         * gate FITS a pre-sword room perfectly well; what it cannot do there is
+         * be SOLVED, and discovering that from a certification solve would spend
+         * a full solver budget to learn something the boot flags already say.
+         * ⇒ the seam refuses BY NAME and for free.
+         *
+         * ⚠ This is the shape ⚖ §3.5's `require:['hasSword']` (slice 4b) will
+         * generalise: a directive that cannot be met is a REFUSED run with the
+         * reason. It is spelled here now because the element would otherwise
+         * ship a biome in which it never certifies, and a yield table that
+         * measured that would be measuring the boot rather than the gate.
+         */
+        needs: Object.freeze(['hasSword']),
+    }),
+    blockpocket: Object.freeze({
+        element: BLOCK_POCKET,
+        why: 'The room-aware BLOCK POCKET (design catalogue #2): a `pushableblock` on a '
+            + 'main-path cut with a REST POCKET carved beyond it in the push direction, so '
+            + 'the shove that clears the corridor has somewhere to put the block. Certified '
+            + 'by the existing `shove`.',
+        extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ELEMENT THAT IS SPACE** (PROCGEN ELEMENTS arc 5, slice 3;
+     * ⚖ design ruling 24, §3.3). ⛔ NO `binds` AND NO `needs`, and both
+     * absences are claims rather than omissions:
+     *
+     *  · `binds` asks WHICH AREA MAY HOLD A KEY SYMBOL, and it is a knob on
+     *    the GUARD because the guard's whole point is that the key lives
+     *    behind its door (⚖ ruling 1). A chamber holds no door. Its area
+     *    competes for a symbol exactly like a carved chamber's does, which is
+     *    the `any` arm by construction — and saying so with a parameter fixed
+     *    at one value would be a knob with one setting.
+     *  · `needs` names an ITEM the biome must grant. A chamber is floor: a
+     *    pre-sword boot walks into it exactly as a post-sword one does.
+     *
+     * ⛓⛓⛓ **AND IT JOINED BOTH SEEDLING BIOME DEFAULTS AT THE ARC'S CLOSE**
+     * (slice 6a; ⚖ ruling 8), which is the re-record ⚖ ruling 6 reserved and
+     * slice 2 left unspent. ⛔ It goes in as `chamber;w=2;h=3` and NOT bare,
+     * and the named params are the measurement rather than a preference: `w`
+     * and `h` run to 6, a 6x6 blob's reserved rectangle is 8x8 — the whole
+     * interior of the pinned 10x10 room — so a bare head in that list would
+     * refuse five times in six (§11.9). ⚠ A caller who types the head bare on
+     * a CLI still gets the full domain; only the default is named.
+     */
+    chamber: Object.freeze({
+        element: OPEN_CHAMBER,
+        why: 'The OPEN CHAMBER (arc-5 §3.3): an open floor blob DECLARED as an area, so a '
+            + 'room whose skeleton offers no chamber at all has somewhere a key can live. '
+            + 'Slice 1 measured the hole it fills — a BARE TREE KIND accepts `--areas=2` on '
+            + '0 of 264 cells at every size, because a bigger tree room grows CORRIDOR and '
+            + 'not areas.',
+        extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE CHAMBER WEAPONISED** (arc 5, slice 4; §3.4). Same blob, same
+     * declared area, same four mouths — plus BODIES and a kill lock. ⛔ The two
+     * heads are DELIBERATELY NOT ONE with a `bodies=0` setting (⚖ the user's
+     * standing ruling for this arc: *chamber = free supply, arena = the gate*):
+     * a chamber costs a room nothing and an arena costs it a fight, and a
+     * caller choosing between them is choosing between those, not between two
+     * values of a number.
+     *
+     * ⛓ `needs: ['hasSword']` for the SAME reason `killgate` carries it, and
+     * it is a BINDING fact rather than a parameter of the geometry: the
+     * payload is a spinner, `weaponForPress` returns null with no sword slot,
+     * so a pre-sword boot can never make `totalEnemies() == 0` true. The seam
+     * refuses BY NAME and for free rather than spending a solver budget to
+     * learn what the boot flags already say.
+     *
+     * ⛔ IT SHIPPED IN NO BIOME DEFAULT. ⚖ Ruling 8 put `chamber` in the close
+     * slice's bundled re-record and explicitly did NOT rule on `arena`; this
+     * arc shipped it OPT-IN, with the numbers a default decision would need.
+     * ⛓ Seedling swim U8 (⚖ Q13) folded it into every sword biome's default
+     * as `arena;w=2;h=3` (`procgenSeedling.BIOME_DEFAULT_FOLD`).
+     */
+    arena: Object.freeze({
+        element: ARENA,
+        why: 'The ARENA (arc-5 §3.4; design catalogue #4/#6): the chamber\'s own blob with '
+            + '`bodies` enemies in it and a KILL LOCK on the room\'s main path, opened by the '
+            + 'game\'s own `totalEnemies() == 0`. ⛓ Arc-3 §15.9 is why it is a chamber and '
+            + 'not a nub: 20 of 23 enemy classes solve a 6x6 chamber and 20 of 23 refuse a '
+            + '1-wide corridor.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ROCK GATE** (seedling substrate, slice S1; plan §2.1 G-a). A
+     * `breakablerock` on a main-path cut — the kill gate's door with no body.
+     * ⛔ It was never a missing ELEMENT so much as a missing VERB: the palette
+     * excluded `breakable-rock` as *"VERB-MISSING — no `break` executor"* until
+     * R9 slice L15 wrote `solverBot.resolveBreakStrategy`. Measured at S1's W0
+     * on a hand-drawn corridor: post-sword SOLVED 111 ticks, pre-sword REFUSED.
+     *
+     * ⛓ `needs: ['hasSword']` for the kill gate's reason, one class over: a
+     * rockType-0 rock breaks under a sword swing, and with no sword slot
+     * `weaponForPress` is null and the press is a silent no-op — the seam
+     * refuses BY NAME and for free. It shipped OPT-IN (plan ⚖ Q5: new heads
+     * ship opt-in; a default change is ⚖ elements ruling 8's bundled re-record),
+     * and ⚖ Q13's re-record (swim U8) folded it into every sword biome's default.
+     */
+    rockgate: Object.freeze({
+        element: ROCK_GATE,
+        why: 'The ROCK GATE (seedling substrate S1): a `breakablerock` on a main-path cut with '
+            + 'its wall GROWN to seal the room, broken by a sword swing from its start side. '
+            + 'Certified by the existing `break` (R9 L15). No body, so no pocket and no A10.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE SHORTCUT, REGISTERED AT LAST — AS A ROCK** (seedling substrate
+     * S1, D2; arc 5 slice 5's "ONE LINE on the day any one of the three walls
+     * moves"). The wall that moved is the first: the solver DERIVES `break` now
+     * (R9 L15), so a rock on a cycle's short arc is a shortcut it can see —
+     * measured at S1's W0 on arc 5's own loop room, **148 ticks with the sword,
+     * 244 without** (§13.6's probe 1 read 244/244 before the verb existed).
+     *
+     * ⛔ THE HEAD IS `soloDoor.ROCK_SHORTCUT`, NOT `shortcut.js`'s kill-lock
+     * element, and that is the other two walls still standing: an OPTIONAL kill
+     * either exhausts the combat ladder or throws A10 at the dialogued goal with
+     * the spinner alive. A rock has no body, so neither can fire. `shortcut.js`
+     * stays the written, unregistered kill-lock mechanism.
+     *
+     * ⛓ `needs: ['hasSword']` is the SEAM's gate (pre-sword the rock is a wall
+     * and the room is a plain loop — nothing to certify as a shortcut). ⛔ It is
+     * NOT a requirement, and `headsNeeding` says so by the element's declared
+     * LAW: a shortcut is BY DEFINITION a level that solves without the item, so
+     * a `require` directive can never be met by one (its grade is SHORTENS, never
+     * STRONG).
+     */
+    shortcut: Object.freeze({
+        element: ROCK_SHORTCUT,
+        why: 'The SHORTCUT (arc-5 §4.7, seedling substrate S1): a `breakablerock` on the SHORT '
+            + 'ARC of a cycle the room already has — with it unbroken the goal is still '
+            + 'reachable, the long way. The differential grades the sword SHORTENS. Realised as '
+            + 'a rock, not a kill lock: an optional kill cannot ship (A10).',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE SHIELD GATE — THE FIRST GATE ON AN ITEM THAT IS NOT THE SWORD**
+     * (seedling substrate S1, D3; plan §2.1 G-c). A `shieldlocknorm` on a cut
+     * whose START side is its WEST neighbour (`ShieldLock.update` collides at
+     * `x - 1`). ⛔ `shieldlocknorm`, not `shieldlock`: `Game.as:2324` builds the
+     * latter with `_type = 1`, the DARK shield's lock.
+     *
+     * ⛓ `needs: ['hasShield']` — the seam refuses it BY NAME on every biome but
+     * `post-shield` (the only boot that grants the flag), and
+     * `headsNeeding('hasShield')` is exactly this head, so `require:['hasShield']`
+     * resolves to it. ⚠ THE DIRECTIVE CANNOT BE MET TODAY, and the reason is the
+     * solver's, measured at S1's W0 and ROUTED TO L16 (the planner, 2026-09-26):
+     * `solverBot.execTouch`'s no-shield arm `fail()`s — a `SolverBotError`, not a
+     * `SolverRefusal` — so the without-arm THROWS and the differential grades it
+     * WEAK, never STRONG. One line in L16's file; re-measure after it merges.
+     */
+    shieldgate: Object.freeze({
+        element: SHIELD_GATE,
+        why: 'The SHIELD GATE (seedling substrate S1): a `shieldlocknorm` on a main-path cut '
+            + 'entered from the WEST, its wall grown to seal the room, opened by walking into '
+            + 'its west face holding the shield. Certified by the existing `touch`.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasShield']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATER GATE — THE THIRD PHYSICAL GATE** (seedling swim S1, D3).
+     * The rock gate's geometry with the obstacle swapped for ONE WATER CELL on
+     * the cut: no entity, no tag — the binding paints the door as terrain
+     * (`procgenSeedlingElements.WATER_DOOR_IDS`). ⛓ It rests on two solver
+     * facts landed in the same slice: the solver's plan bag carries the boot's
+     * inventory (D1, so `canSwim` prices water as passable) and the staging's
+     * `'sound'` pin is derived from the record (D2, so the wet tick is legal).
+     *
+     * ⛓ `needs: ['canSwim']` — the seam refuses it BY NAME on every biome but
+     * `post-swim`. Shipped opt-in (⚖ Q5); in the post-swim and post-feather
+     * defaults since ⚖ Q13 (swim U8).
+     */
+    watergate: Object.freeze({
+        element: WATER_GATE,
+        why: 'The WATER GATE (seedling swim S1): one water cell on a main-path cut with its '
+            + 'wall GROWN to seal the room, crossed only holding the conch (`canSwim`, AP '
+            + '`Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is '
+            + 'the key.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['canSwim']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATER SHORTCUT** (seedling swim S1, D4) — the `shortcut`
+     * head's rock swapped for one water cell on the cycle's short arc. ⛓
+     * `needs: ['canSwim']` is the SEAM's gate, and — as for `shortcut` — NOT a
+     * requirement: `headsNeeding` excludes it by its declared law, because a
+     * shortcut grades SHORTENS by definition, never STRONG.
+     */
+    watershortcut: Object.freeze({
+        element: WATER_SHORTCUT,
+        why: 'The WATER SHORTCUT (seedling swim S1): one water cell on the SHORT ARC of a cycle '
+            + 'the room already has — without the conch the goal is reachable the long way, '
+            + 'with it the player swims across. The differential grades the conch SHORTENS.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['canSwim']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATERFALL GATE — THE FEATHER'S GATE** (seedling swim T2, D3).
+     * One waterfall cell on a cut whose start side is the cell BELOW it: without
+     * the feather the climb is refused (`botDriverV2.climbsArmedWaterfall`, the
+     * planner's one directed edge rule; the game stalls the swimmer on the
+     * face), with it the player climbs through. No entity, no tag — the binding
+     * paints the door as terrain (`procgenSeedlingElements.WATER_DOOR_IDS`).
+     *
+     * ⛓ `needs: ['hasFeather']` — the seam refuses it BY NAME on every biome but
+     * `post-feather`, and `headsNeeding('hasFeather')` is exactly this head.
+     * Shipped opt-in; in the post-feather default since ⚖ Q13 (swim U8).
+     */
+    waterfallgate: Object.freeze({
+        element: WATERFALL_GATE,
+        why: 'The WATERFALL GATE (seedling swim T2): one waterfall cell on a main-path cut '
+            + 'entered from BELOW, its wall GROWN to seal the room, climbed only holding the '
+            + 'feather (`hasFeather`, the second AP `Progressive Swim`). Certified by the '
+            + 'solver WALKING it — no verb, the boot is the key.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasFeather']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ROAMING ENEMY — A BODY WITHOUT A KILL LOCK** (concept library
+     * F1, D3). ⚖ The user ruled a THIRD head (2026-09-29) rather than `arena`
+     * with the lock off: `chamber` is free supply, `arena` is the gate, and a
+     * roaming body costs a room something different again — a DANGER on the
+     * route and no gate across it. So a caller choosing among the three is
+     * choosing among those three costs, not among values of a number.
+     *
+     * ⛔ **NO `needs`**, and that is the point of it: its body is never killed
+     * FOR anything, so a pre-sword boot that cannot swing places it exactly as
+     * a post-sword one does. (The arena needs the sword because only a kill
+     * opens its lock; this has no lock.) ⛔ And NO `binds`, the chamber's
+     * reason: there is no door for the area graph to bind to.
+     *
+     * It shipped OPT-IN (a default change is a bundled re-record F1 did not
+     * own). ⚖ Q13 (swim U8) folded it into the sword biomes' defaults, bare.
+     * It joins WITH THE SWORD, not pre-sword, although it declares no `needs`:
+     * pre-sword the solver can only dodge it, and the pre-sword list is the one
+     * the shipped generated rooms draw from.
+     *
+     * ⛓ It is placed LAST so no existing head moves in `ELEMENT_NAMES`.
+     */
+    roam: Object.freeze({
+        element: ROAM,
+        why: 'The ROAMING ENEMY (concept library F1): the chamber\'s own blob with `bodies` '
+            + 'spinners in it and NO lock. Two measured reasons it did not exist: a DIALOGUED '
+            + 'goal (`torchpickup`) throws `levelRun`\'s live-spinner guard at the collect — '
+            + 'the binding certifies against a TEXTLESS goal instead — and the solver has no '
+            + 'room-crossing answer at some body positions (*"the combat ladder is '
+            + 'EXHAUSTED"*), which the binding REFUSES by name rather than redraws.',
+        extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE CORRIDOR BODY — A BODY ON THE MAIN PATH** (seedling swim U3,
+     * D3; the user's *"fix the solver so that enemies can be placed on the main
+     * path"*). `buildSoloDoor`'s cut search (the rock gate's, `LAW_CUT`) with the
+     * one obstacle a lock-less SPINNER: the walk cannot go round it, which is
+     * the geometry F1b's through-room lacked on 158 of 168 cells.
+     *
+     * ⛓ `needs: ['hasSword']` — the kill gate's reason, lock-less: the solver
+     * crosses a body on a cut by KILLING it (U1 D3's lock-less press, U3 D2's
+     * line of sight), and pre-sword it has no press. The seam refuses it BY NAME
+     * on `pre-sword`; `require:['hasSword']` resolves to it too (its law is
+     * `cut`), graded by the sword differential. ⛔ The certification goal is the
+     * TEXTLESS one (F1's rule) and a refused solve is
+     * `the-solver-cannot-cross-the-roaming-body` — both decided by the binding
+     * from the committed record (bodies, no kill lock), as for `roam`.
+     *
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It shipped OPT-IN;
+     * ⚖ Q13 (swim U8) folded it into the sword biomes' default DRAW. ⛔ The
+     * draw only: ⚖ Q29 keeps it out of `require` (`meetsRequire`, below).
+     */
+    corridorbody: Object.freeze({
+        element: CORRIDOR_BODY,
+        why: 'The CORRIDOR BODY (seedling swim U3): a lock-less `spinner` on a main-path cut, '
+            + 'its wall grown to seal the room, so the walk must cross the body. Certified by '
+            + 'the solver\'s lock-less kill (or a dodge) against the textless goal. Pre-sword the '
+            + 'seam refuses it by name; the sword differential grades it SHORTENS where the '
+            + 'billiard bounces clear of the cut, so it is not a head `require` can force.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+        /**
+         * ⛔ **NOT A HEAD `require` CAN FORCE** — measured, not assumed (U3 D3).
+         * The sword differential grades a corridor body SHORTENS, not STRONG:
+         * pre-sword the solver walks past the billiard when it bounces clear
+         * of the cut (`--require=hasSword --elements=corridorbody` refuses
+         * `the-item-is-not-required: SHORTENS` on the certified seeds). A
+         * directive's head must grade STRONG, so `headsNeeding` leaves it out
+         * — which also keeps every `--require=hasSword` room where it was (the
+         * `+` list it would have joined spends one pick over its members).
+         */
+        meetsRequire: false,
+    }),
+});
+
+/** ⛓ `none` is a HEAD, not a missing value: it is what "the machinery does not
+ *  run" is spelled as on a URL and a shell argument, the way `areaSpec`'s `0`
+ *  is. Declared in the domain so a reader can type it. */
+export const NONE = 'none';
+
+export const ELEMENT_NAMES = Object.freeze([NONE, ...Object.keys(ELEMENT_TABLE)]);
+
+/** ⛓ The default: the element machinery does not run. `{name: 'none'}`. */
+export const DEFAULT_ELEMENTS = Object.freeze({ name: NONE });
+
+/**
+ * ⛓⛓⛓ **THE `+` LIST — "ONE OF THESE, DRAWN" — arc 3, slice 4a.**
+ *
+ *     `guard+killgate+blockpocket`   ·   `none+killgate`
+ *
+ * ⛔ IT IS A CHOICE, NOT A CONJUNCTION, and the reason is a standing law rather
+ * than a preference: arc-2 §3.1-AS-BUILT is **ONE BLOCK PER LEVEL**, and two of
+ * the three heads put a `pushableblock` in the room. A `+` that meant *"both"*
+ * would spell a level the solver's own bound forbids, and the codec would be
+ * offering a run nothing can build.
+ *
+ * ⛓ WHAT IT IS FOR is D5's default spec: *one element per level, drawn from the
+ * certified set*. Without it a DEFAULT can only ever name one element, and the
+ * room that element refuses gets nothing — which is the whole reason the door
+ * TEMPLATES cannot simply be deleted (a default generator with no doors at all).
+ * ⛔ `none` is a legal member, so *"and sometimes nothing"* is sayable too.
+ *
+ * ── THE SHAPE ─────────────────────────────────────────────────────────
+ *
+ * `{any: [spec, spec, …]}` — each member is an ordinary `{name[, params]}`,
+ * normalized by the SAME single-head path, so a member cannot mean anything a
+ * bare head could not. ⛔ A one-member list is REFUSED: `guard` already spells
+ * it, and two spellings of one run is what this file exists to prevent. So is a
+ * repeated head — `guard+guard` names no distribution a reader can act on.
+ *
+ * ⛔ AND THE DRAW IS THE BINDING'S, SPENT ONCE, BEFORE `instantiate`
+ * (`drawElementHead`). A list is one `pick` over the members in the order the
+ * caller wrote them; a bare head spends none. That difference is the same one
+ * `namedParams` exists for, one level up.
+ */
+export const isElementList = (spec) => Boolean(spec && typeof spec === 'object'
+    && Array.isArray(spec.any));
+
+const LIST_SEP = '+';
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **`len=2|3|4` — THE SUBSET, THE CODEC'S THIRD SPELLING OF A
+ * PARAMETER** (SEEDLING BOT R9, slice 1, D1; arc-5 §14.12(2) is the
+ * measurement that asked for it).
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The SHAPE is `templateContract`'s (`{pick:[…]}`, where the draw is spent);
+ * this is the only file that knows how it is WRITTEN. The three spellings, and
+ * the stream each one spends:
+ *
+ *   `guard`          OMITTED  — ONE `rng.pick` over the whole declared domain
+ *   `guard;len=2|3|4` SUBSET  — ONE `rng.pick` over the members, as written
+ *   `guard;len=4`    PIN      — the value, and NO draw at all
+ *
+ * ⛔ **THE WHOLE DOMAIN SPELLED AS A SUBSET IS NOT THE BARE PARAMETER.** They
+ * spend the same draw and land on the same distribution, and they are still two
+ * different specs: `namedParams` reports the first as NAMED and the second as
+ * omitted, which is the two-streams law (`namedParams`' docblock) and not a
+ * cosmetic difference — `format` keeps a subset exactly as it was written, the
+ * way it keeps a named parameter at its default value.
+ *
+ * ⛓ **ORDER IS KEPT AS WRITTEN**, so `len=4|2` formats back as `len=4|2`:
+ * `format` is the fixed point of `parse`, and the draw is `rng.pick` over that
+ * array, so re-ordering the members would silently be a different run.
+ *
+ * ⛓ A ONE-MEMBER SUBSET IS THE PIN and collapses to it in `namedParams` (there
+ * is no way to WRITE one — `len=2|` is an empty member and refuses — but the
+ * object path can build it, and the two paths must agree).
+ *
+ * ⚖ `|` rather than `,`: `,` is taken twice OUTSIDE this codec (`--elements=`
+ * splits on it into ARMS in `census-seedling-areas.mjs`, and
+ * `parseItemRequireList` reads a comma list), and `|` is unused by every
+ * grammar on the loop. It rides through a URL percent-encoded whole, like every
+ * other character in this value. There is no `2..4` range sugar: one spelling.
+ */
+const SUBSET_SEP = '|';
+
+/** ⛓ RE-EXPORTED from `templateContract` (where the draw is spent) so a reader
+ *  of the CODEC has one import for the spelling AND the shape. */
+export { isParamSubset, paramSubset };
+
+/** ⛓ How a parameter VALUE is spelled — a subset by its members, in order; any
+ *  other value by itself. ⛔ ONE function, so the identity line, the payload,
+ *  the density block, the URL writer and the catalogue cannot disagree. */
+export const formatParamValue = (value) => (isParamSubset(value)
+    ? value.pick.join(SUBSET_SEP) : String(value));
+
+function assertList(members, raw) {
+    if (members.length < 2) {
+        fail(`elementSpec: ${JSON.stringify(raw)} is a "${LIST_SEP}" list with `
+            + `${members.length} member(s). A list is a CHOICE among two or more heads; one `
+            + 'member is the head itself, and two spellings of one run is exactly what this '
+            + 'codec exists to prevent.');
+    }
+    const seen = new Set();
+    for (const m of members) {
+        if (seen.has(m.name)) {
+            fail(`elementSpec: ${JSON.stringify(raw)} names "${m.name}" TWICE. A list is a `
+                + 'distribution over DISTINCT heads; a repeated one names no run a reader can '
+                + 'act on, and weighting is not a thing this codec offers.');
+        }
+        seen.add(m.name);
+    }
+    return members;
+}
+
+/** The members of a list spec, normalized — `[]` for a bare head. */
+export function elementListMembers(spec) {
+    return isElementList(spec) ? spec.any.map((m) => normalizeElementSpec(m)) : [];
+}
+
+/**
+ * ⛓⛓ **THE HEAD THIS RUN USES** — a bare spec unchanged and spending NOTHING,
+ * a list resolved by ONE `pick` over its members.
+ *
+ * ⛔ The pick is `rng.pick`, the same draw every other choice in this pipeline
+ * spends, and it happens BEFORE the element's own parameters are instantiated —
+ * so the stream position of every geometry draw after it is a declared function
+ * of the list's length.
+ */
+export function drawElementHead(spec, rng) {
+    if (!isElementList(spec)) return normalizeElementSpec(spec ?? DEFAULT_ELEMENTS);
+    const members = elementListMembers(spec);
+    assertList(members, formatElementSpec(spec));
+    return rng.pick(members);
+}
+
+/**
+ * ⛔ THE SCHEMA OF ONE HEAD — the ELEMENT's own params, then the binding's.
+ * There is no third source and nothing is copied.
+ */
+export function paramSchemaFor(name) {
+    const entry = ELEMENT_TABLE[name];
+    return entry ? [...entry.element.params, ...(entry.extra ?? [])] : [];
+}
+
+for (const name of Object.keys(ELEMENT_TABLE)) {
+    assertParamSchema(paramSchemaFor(name), `element spec head ${JSON.stringify(name)}`);
+    // ⛓ P2: this codec TYPES a string by matching it against the domain's
+    // values, so every head parameter (drawn or the binding's own) must
+    // enumerate — refused here, by name, at load.
+    for (const p of paramSchemaFor(name)) assertDrawable(p, `element spec head ${JSON.stringify(name)}`);
+}
+
+/** Every declared combination of one head — what a sweep enumerates. */
+export function enumerateElementValues(name) {
+    return enumerateValues({ params: paramSchemaFor(name) });
+}
+
+/** ⛔ ONE SENTENCE for "that value is not in the domain", used by BOTH the
+ *  object path and the string path — `areaSpec`'s §9.6 defect 3, not repeated. */
+const outOfDomain = (name, p, value) => `elementSpec: parameter "${p.key}" of element `
+    + `"${name}" was given ${JSON.stringify(value)}, which is not in its declared domain `
+    + `${describeDomain(p)}.`;
+
+/** ⛓ The parameters the ELEMENT itself declares — the ones `instantiate` DRAWS.
+ *  The binding's own knobs (`binds`) are resolved, never drawn, which is the
+ *  fact the subset refusal below turns on. */
+const drawsParam = (name, key) => (ELEMENT_TABLE[name]?.element.params ?? [])
+    .some((q) => q.key === key);
+
+/**
+ * ⛓⛓ **ONE CHECK FOR A PARAMETER VALUE, AND IT KNOWS ABOUT ALL THREE
+ * SPELLINGS** — used by the object path and, through `normalizeElementSpec`, by
+ * the string path, so `guard;len=9` and `{params:{len:9}}` meet ONE sentence.
+ *
+ * ⛔ A SUBSET ON A KNOB NOBODY DRAWS REFUSES BY NAME. `binds` is the BINDING's
+ * question (which area may hold a symbol) and `namedParams({elementOnly})` drops
+ * it before `instantiate` ever sees it — so `binds=item|any` would name a draw
+ * that has no stream to come out of, and would silently resolve to the default
+ * instead. That is exactly the "a link that names a gadget it did not build"
+ * failure this codec refuses everywhere else.
+ */
+function assertParamValue(name, p, value) {
+    if (!isParamSubset(value)) {
+        if (!valueInDomain(p, value)) fail(outOfDomain(name, p, value));
+        return;
+    }
+    if (!drawsParam(name, p.key)) {
+        fail(`elementSpec: parameter "${p.key}" of element "${name}" was given the SUBSET `
+            + `${JSON.stringify(formatParamValue(value))}, and "${p.key}" is the BINDING's `
+            + 'own knob — it is RESOLVED, never DRAWN, so there is no draw for a subset to '
+            + `narrow. Name ONE value (\`${p.key}=${enumerableValues(p)[0]}\`) or leave it out.`);
+    }
+    const members = value.pick;
+    if (members.length === 0) {
+        fail(`elementSpec: parameter "${p.key}" of element "${name}" was given an EMPTY `
+            + 'subset. A subset is the set of values the draw may land on; omit the '
+            + `parameter to draw from its whole declared domain ${describeDomain(p)}.`);
+    }
+    const seen = new Set();
+    for (const m of members) {
+        if (!valueInDomain(p, m)) fail(outOfDomain(name, p, m));
+        if (seen.has(m)) {
+            fail(`elementSpec: parameter "${p.key}" of element "${name}" names `
+                + `${JSON.stringify(m)} TWICE in the subset `
+                + `${JSON.stringify(formatParamValue(value))}. A subset is a SET — a `
+                + 'repeated member would WEIGHT the draw, and weighting is not a thing this '
+                + 'codec offers.');
+        }
+        seen.add(m);
+    }
+}
+
+/**
+ * ⛓⛓ THE ONE VALIDATOR — an unknown head, an unknown key or an out-of-domain
+ * value refuses BY NAME, with what WAS declared.
+ *
+ * @returns {object} `{name}` at `none`; otherwise `{name}` plus every declared
+ *   parameter with its default filled in — what the binding runs under.
+ */
+export function resolveElementSpec(spec = {}) {
+    /**
+     * ⛔ A LIST HAS NO RESOLVED PARAMETERS AND SAYS SO. Its members do, and the
+     * caller gets them by DRAWING one (`drawElementHead`) — an answer that
+     * merged the members' parameters would be a fourth thing the string could
+     * mean, and a caller that took it would run a gadget nobody named.
+     */
+    if (isElementList(spec)) {
+        fail(`elementSpec: ${JSON.stringify(formatElementSpec(spec))} is a "${LIST_SEP}" list `
+            + '— a CHOICE among heads — so it has no resolved parameters of its own. Draw a '
+            + 'head first (`drawElementHead(spec, rng)`) and resolve that.');
+    }
+    const name = spec?.name ?? DEFAULT_ELEMENTS.name;
+    if (!ELEMENT_NAMES.includes(name)) {
+        fail(`elementSpec: \`name\` was given ${JSON.stringify(name)}, and the declared `
+            + `elements are [${ELEMENT_NAMES.join(', ')}]. ⛓ "${NONE}" is the default and `
+            + 'means no site is drawn, no element is constructed and no draw is spent.');
+    }
+    const values = spec?.params ?? {};
+    const schema = paramSchemaFor(name);
+    if (name === NONE && Object.keys(values).length > 0) {
+        fail(`elementSpec: "${NONE}" carries parameter(s) `
+            + `[${Object.keys(values).join(', ')}]. There is no element to give them to — a `
+            + 'spec that both says "no element" and sizes one does not name a run.');
+    }
+    for (const key of Object.keys(values)) {
+        const p = schema.find((q) => q.key === key);
+        if (!p) {
+            fail(`elementSpec: element "${name}" has no parameter ${JSON.stringify(key)}. It `
+                + `declares [${schema.map((q) => q.key).join(', ')}]. ⛔ A silently ignored `
+                + 'parameter is a link that names a gadget it did not build.');
+        }
+        assertParamValue(name, p, values[key]);
+    }
+    const out = { name };
+    for (const p of schema) {
+        out[p.key] = Object.prototype.hasOwnProperty.call(values, p.key)
+            ? values[p.key] : p.default;
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ **WHICH PARAMETERS THE CALLER ACTUALLY NAMED** — and this is NOT
+ * derivable from the resolved values, which is why it is its own function.
+ *
+ * A parameter the caller named is an OVERRIDE and spends NO draw; one it omitted
+ * is DRAWN (⚖ slice 2 §9.3). ⛔ So `guard;len=3` and `guard` are DIFFERENT RUNS
+ * even though `len` resolves to 3 in both — the second spends a draw the first
+ * does not, and every geometry draw after it lands one step further along the
+ * stream. A binding that read the resolved values and passed them all as
+ * overrides would silently turn every run into the first kind.
+ *
+ * ⇒ `normalize`/`format` spell a value at its default by ABSENCE (the
+ * `normalizeSkeleton` rule), and THAT ABSENCE IS LOAD-BEARING here rather than
+ * cosmetic: it is the difference between a drawn parameter and a given one.
+ */
+export function namedParams(spec, { elementOnly = false } = {}) {
+    const name = spec?.name ?? DEFAULT_ELEMENTS.name;
+    resolveElementSpec(spec);          // validate; throws on anything undeclared
+    const given = spec?.params ?? {};
+    /**
+     * ⛔ `elementOnly` DROPS THE BINDING'S OWN KNOBS, and a caller handing these
+     * to `instantiate` MUST pass it. `binds` is not a parameter of the element —
+     * `defineTemplate`'s `instantiate` refuses an override it does not declare,
+     * by name, which is the right answer to a caller who mixed the two
+     * vocabularies. The mix is easy to make precisely because ONE string carries
+     * both, so the split is a named argument rather than a convention.
+     */
+    const schema = elementOnly
+        ? (ELEMENT_TABLE[name]?.element.params ?? []) : paramSchemaFor(name);
+    const out = {};
+    for (const p of schema) {
+        if (!Object.prototype.hasOwnProperty.call(given, p.key)) continue;
+        const v = given[p.key];
+        /**
+         * ⛓⛓ **A ONE-MEMBER SUBSET COLLAPSES TO THE PIN, HERE, ONCE** — so
+         * `format` prints `len=2` and `instantiate` spends NO draw for it,
+         * whichever door the spec came through. `templateContract` asserts the
+         * same law at the draw itself; this is the SPELLING half of it.
+         */
+        out[p.key] = (isParamSubset(v) && v.pick.length === 1) ? v.pick[0] : v;
+    }
+    return out;
+}
+
+/**
+ * ⛓ THE CANONICAL `{name[, params]}` — `params` OMITTED when the caller named
+ * nothing, the same both-sides-default rule `normalizeAreaSpec` follows, so a
+ * payload written before this slice normalizes to the object a caller at the
+ * default produces and AGREES rather than diverging on a field it could not have
+ * had.
+ *
+ * ⚠ Unlike `normalizeAreaSpec` this keeps a named parameter EVEN AT ITS DEFAULT
+ * VALUE, because of `namedParams` above: dropping `len=3` would convert a given
+ * parameter into a drawn one and move every draw after it. The rule is "keep
+ * what the caller SAID", not "keep what differs from the default".
+ */
+export function normalizeElementSpec(spec) {
+    if (isElementList(spec)) {
+        const members = spec.any.map((m) => normalizeElementSpec(m));
+        assertList(members, members.map((m) => formatElementSpec(m)).join(LIST_SEP));
+        return Object.freeze({ any: Object.freeze(members) });
+    }
+    const full = resolveElementSpec(spec);
+    const named = namedParams(spec);
+    return Object.keys(named).length === 0
+        ? Object.freeze({ name: full.name })
+        : Object.freeze({ name: full.name, params: Object.freeze({ ...named }) });
+}
+
+/**
+ * `guard;len=4;binds=any` — the ONE spelling, used by both CLIs, the sweep's row
+ * labels, the identity line and (slice 4) the URL writer. A spec that named no
+ * parameter formats as its bare head.
+ *
+ * ⛔ PARAMETERS ARE EMITTED IN **SCHEMA ORDER**, not in the caller's typing
+ * order, so two callers who typed the same set in different orders produce one
+ * string and the payload comparison is about the RUN rather than about the
+ * keystrokes.
+ */
+export function formatElementSpec(spec) {
+    if (isElementList(spec)) {
+        return spec.any.map((m) => formatElementSpec(m)).join(LIST_SEP);
+    }
+    const norm = normalizeElementSpec(spec);
+    const params = norm.params ?? {};
+    const parts = paramSchemaFor(norm.name)
+        .filter((p) => Object.prototype.hasOwnProperty.call(params, p.key))
+        .map((p) => `${p.key}=${formatParamValue(params[p.key])}`);
+    return parts.length === 0 ? norm.name : `${norm.name};${parts.join(';')}`;
+}
+
+/**
+ * ⛓⛓ **THE SPEC, OUT OF EITHER SHAPE THE KEY `elements` CARRIES** — arc 2
+ * slice 4.
+ *
+ * Two writers put something under that key and they are deliberately different
+ * things: the LAB PAGE's payload carries the SPEC (a reproduction recipe), and
+ * `generate-maze-level.mjs --json` carries `elementSummaryOf`'s block —
+ * `{spec, ran, placed, refused}`, a REPORT of what was built. A page that
+ * accepted only its own shape would die on the very payload it was handed to
+ * explain, and a page that accepted only the CLI's could not read its own
+ * download back.
+ *
+ * ⛔ ONE function knows both, and it knows them by the presence of `spec` — a
+ * key no element spec has, because `name` is the head. Everything downstream
+ * (the URL writer, the identity line, `agreementWithPayload`, `mazeModel`) then
+ * meets exactly one shape.
+ */
+export function elementSpecOf(block) {
+    if (block && typeof block === 'object' && !Array.isArray(block)
+        && Object.prototype.hasOwnProperty.call(block, 'spec')) {
+        return block.spec;
+    }
+    return block;
+}
+
+/**
+ * ⛓⛓⛓ THE ONE PARSER — `<name>[;key=value]…` → `{name[, params]}`.
+ *
+ * ⛔ SIX DISTINGUISHED REFUSALS, the same six `parseAreaSpec` makes, because a
+ * reader can act on each: a head that is not a declared element, an empty
+ * clause, a clause with no `=`, a duplicated key, a key the head does not
+ * declare, and a value outside a declared domain (with the domain).
+ *
+ * ⚠ VALUES ARE MATCHED AGAINST THE DOMAIN BY STRING, so the object carries the
+ * domain's own typed member (the number `4`, never `"4"`) — which is what makes
+ * a payload comparison and the round-trip fixed point comparable at all.
+ */
+export function parseElementSpec(value) {
+    const raw = String(value ?? '').trim();
+    /**
+     * ⛔ THE LIST IS SPLIT FIRST, because `+` binds LOOSER than `;` — each
+     * member carries its own parameter clauses (`guard;len=2+killgate`), and
+     * every member then goes through the SAME single-head parser below.
+     */
+    if (raw.includes(LIST_SEP)) {
+        const members = raw.split(LIST_SEP).map((part) => {
+            if (part.trim() === '') {
+                fail(`elementSpec: ${JSON.stringify(raw)} carries an EMPTY list member. Each `
+                    + `member is a head with its own clauses, separated by "${LIST_SEP}".`);
+            }
+            return parseElementSpec(part);
+        });
+        assertList(members, raw);
+        return Object.freeze({ any: Object.freeze(members) });
+    }
+    const [head, ...clauses] = raw.split(';');
+    const name = head.trim();
+    if (!ELEMENT_NAMES.includes(name)) {
+        fail(`elementSpec: ${JSON.stringify(raw)} starts with ${JSON.stringify(name)}, and the `
+            + `head of an element spec is the ELEMENT — one of [${ELEMENT_NAMES.join(', ')}]. `
+            + `⛓ "${NONE}" is the default and means the element machinery does not run.`);
+    }
+    const schema = paramSchemaFor(name);
+    /**
+     * ⛔ ASKED HERE, BEFORE THE CLAUSE WALK, so `none;len=3` meets THE SAME
+     * SENTENCE from the string path and the object path. Left to the walk it
+     * would come back as *"element none has no parameter len"* — technically
+     * true, unhelpful, and a second spelling of one mistake, which is
+     * `areaSpec`'s own §9.6 defect 3 repeating itself one file later.
+     */
+    if (name === NONE && clauses.some((c) => c.trim() !== '')) resolveElementSpec({
+        name, params: Object.fromEntries(clauses.map((c) => [c.split('=')[0].trim(), null])),
+    });
+    const params = {};
+    for (const clause of clauses) {
+        const text = clause.trim();
+        if (text === '') {
+            fail(`elementSpec: ${JSON.stringify(raw)} carries an EMPTY parameter clause. Each `
+                + 'clause is `key=value`, separated by `;` — an empty one is a typo the reader '
+                + 'can fix, not a value.');
+        }
+        const eq = text.indexOf('=');
+        if (eq <= 0) {
+            fail(`elementSpec: the clause ${JSON.stringify(text)} in ${JSON.stringify(raw)} is `
+                + `not \`key=value\`. Element "${name}" declares `
+                + `[${schema.map((q) => q.key).join(', ') || '(nothing)'}].`);
+        }
+        const key = text.slice(0, eq).trim();
+        const rawValue = text.slice(eq + 1).trim();
+        if (Object.prototype.hasOwnProperty.call(params, key)) {
+            fail(`elementSpec: ${JSON.stringify(raw)} names "${key}" TWICE. One knob, one `
+                + 'value — a link that sets a parameter twice does not say which gadget it '
+                + 'means.');
+        }
+        const p = schema.find((q) => q.key === key);
+        if (!p) {
+            fail(`elementSpec: element "${name}" has no parameter ${JSON.stringify(key)}. It `
+                + `declares [${schema.map((q) => q.key).join(', ') || '(nothing)'}].`);
+        }
+        /**
+         * ⛓⛓⛓ THE SUBSET (R9 slice 1, D1) — `len=2|3|4`. Split on `|`, each
+         * member matched BY STRING against the domain exactly as a single value
+         * is, so the object carries the domain's OWN typed members (the numbers
+         * `2, 3, 4`, never the strings) and the round trip and a payload
+         * comparison stay comparable. ⛔ An EMPTY member refuses here rather
+         * than downstream, because `len=2|` is a typo a reader can fix and a
+         * silently dropped member would be a narrower draw than the link says.
+         * Membership, duplication and the binding-knob rule are
+         * `assertParamValue`'s, through `normalizeElementSpec` below — ONE set
+         * of sentences for both paths.
+         */
+        if (rawValue.includes(SUBSET_SEP)) {
+            const members = rawValue.split(SUBSET_SEP).map((m) => m.trim());
+            for (const m of members) {
+                if (m === '') {
+                    fail(`elementSpec: the clause ${JSON.stringify(text)} in `
+                        + `${JSON.stringify(raw)} carries an EMPTY subset member. A subset `
+                        + `is \`key=v1${SUBSET_SEP}v2\` — the values the draw may land on.`);
+                }
+            }
+            params[key] = paramSubset(members.map((m) => {
+                const t = enumerableValues(p).find((v) => String(v) === m);
+                if (t === undefined) fail(outOfDomain(name, p, m));
+                return t;
+            }));
+            continue;
+        }
+        const typed = enumerableValues(p).find((v) => String(v) === rawValue);
+        if (typed === undefined) fail(outOfDomain(name, p, rawValue));
+        params[key] = typed;
+    }
+    return normalizeElementSpec({ name, params });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **`require:[X]` — THE RULE-DIRECTED RUN** (PROCGEN ELEMENTS arc 3,
+ * slice 4d, D1; ⚖ design §3.5 *"`require:['hasSword']` (family J′)"*)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * A directive is a property of the WHOLE RUN — it is MET, or the run is
+ * REFUSED BY NAME (arc-1 §10.1, the maze's own `require:[K]`, one substrate
+ * over). Nothing here retries, relaxes a bound or picks a second seed.
+ *
+ * ── ⛔⛔ ONE MECHANISM: THE HEAD IS DERIVED FROM `needs` ───────────────
+ *
+ * `--require=hasSword` does NOT name an element. It names an ITEM, and the
+ * ELEMENT is looked up: the heads whose `needs` include it. Today that is
+ * exactly `killgate`, and the point of deriving it rather than writing it is
+ * that a SECOND sword-gated element is a row in `ELEMENT_TABLE` and nothing
+ * else — no second table, no `if (item === 'hasSword')` anywhere.
+ *
+ * ⚠ AND THE DIRECTIVE THEREFORE MOVES THE ROOM. A biome DEFAULT is a `+` list
+ * and a list spends ONE `pick` before `instantiate`; a FORCED head is a BARE
+ * head and spends NONE (arc-2's law, `drawElementHead`). ⇒ `--require=hasSword`
+ * at seed S and the bare default at seed S are DIFFERENT ROOMS even when the
+ * default happens to draw `killgate` — the stream position of every geometry
+ * draw after the head differs by one. That is trap 321's shape (a named
+ * parameter spends no draw) and it is SAID rather than hidden: the identity
+ * line names the spec the run actually used.
+ *
+ * ── THE REFUSALS, EACH BY NAME ────────────────────────────────────────
+ *
+ * `no-element-needs-this-item`             nothing in the catalogue is gated on it
+ * `no-single-element-can-carry-every-required-item`
+ *                                          two items, no ONE head needs both —
+ *                                          and ONE ELEMENT PER LEVEL is arc-2's
+ *                                          standing law, not a limitation here
+ * `the-biome-lacks-the-item`               the boot does not grant it. ⛔ THE
+ *                                          SAME item gate the seam already
+ *                                          asks (`needs` vs `items`), asked
+ *                                          earlier — never a second one
+ * `the-directive-and-the-spec-disagree`    an explicit `--elements=` that is
+ *                                          not a BARE required head
+ *
+ * The three the RUN can only discover afterwards — the element was refused, it
+ * did not certify, the differential did not grade it REQUIRED — belong to the
+ * caller that has a finished level, not here.
+ */
+
+/**
+ * ⛓ THE ITEMS THE CATALOGUE KNOWS HOW TO REQUIRE — the union of every head's
+ * `needs`, READ FROM THE TABLE. ⛔ Never spelled a second time: a new gated
+ * element widens this by existing.
+ */
+export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
+    Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
+
+/**
+ * The heads whose `needs` include this item, in the TABLE's own order.
+ *
+ * ⛓ S1 — **A SHORTCUT-LAW ELEMENT IS NEVER A HEAD THAT CAN MEET A DIRECTIVE.**
+ * Its `needs` is the seam's item gate (what opens it), and its law is that the
+ * goal stays reachable WITHOUT opening it — so the differential grades it
+ * SHORTENS, never STRONG, and a directive that forced it would be refused
+ * `the-item-is-not-required` on every seed. ⛔ Read off the element's DECLARED
+ * `law`, not its head name (the `ELEMENT_LAWS` rule: one table of which
+ * elements are shortcuts). A table row with no `element` (a test double) is
+ * read as the cut law.
+ *
+ * ⛓ F1 (D2/D3) — **AND ONLY THE CUT LAW CAN.** `ELEMENT_LAWS` grew a third
+ * member, `none` (the roaming enemy: no door cell at all), so the test is now
+ * spelled POSITIVELY — the element's law IS `cut` — rather than "is not a
+ * shortcut", which would have let any future law through by omission. ⛔ It
+ * answers the shipped table exactly as before: every row that was a head is a
+ * `cut`, and `roam` declares no `needs`, so it could not be a head either way.
+ */
+export function headsNeeding(item, table = ELEMENT_TABLE) {
+    return Object.freeze(Object.keys(table)
+        .filter((n) => (table[n].needs ?? []).includes(item)
+            && (table[n].element?.law ?? LAW_CUT) === LAW_CUT
+            // ⛓ U3 D3 — a cut head whose differential is MEASURED to grade
+            // SHORTENS declares it (`corridorbody`); see its table row.
+            && table[n].meetsRequire !== false));
+}
+
+/**
+ * ⛓ The item `require` list, through the ONE grammar (`areaSpec.parseRequireList`).
+ *
+ * ⛔ `member` IS `null` — any well-formed name parses. Membership is the RUN's
+ * refusal by name (`no-element-needs-this-item`), which is arc-1's own split
+ * between a PARSE error at the parameter (exit 2) and a DIRECTIVE the room
+ * could not meet (exit 6). A parser that refused an unknown item would collapse
+ * the two and report a room's failure as a typo.
+ */
+export function parseItemRequireList(value) {
+    return parseRequireList(value, {
+        what: 'item flag',
+        member: null,
+        vocabulary: () => `The items some element NEEDS are [${ITEMS_ELEMENTS_NEED.join(', ')}].`,
+    });
+}
+
+/**
+ * Resolve `require:[…]` against the biome's boot flags and whatever the caller
+ * asked for in `elements`.
+ *
+ * @returns {{asked, heads, elements, forced, refused}}  `refused` is
+ *   `{reason, detail}` or `null`; `elements` is the spec the run should use —
+ *   the FORCED head when the directive holds and the caller said nothing, and
+ *   otherwise EXACTLY what the caller passed (a refused directive still shows
+ *   what the run produced, arc-1's rule).
+ */
+/**
+ * ⛓⛓ **THE CENSUS KEY FOR THE `?require=` DIRECTIVE (the ITEM vocabulary)** —
+ * every name `resolveRequireDirective` can refuse by (PROCGEN DOCS · P5).
+ *
+ * ⛔ It lives HERE and not in a Seedling module because this codec is
+ * `procgenCore`'s and the maze reads it too; the maze's own directive answers
+ * in a different vocabulary (AREA-GRAPH SYMBOLS) and keeps its own list,
+ * `mazeRoom/procgenMaze.js`'s `MAZE_REQUIRE_REFUSALS`. ⛓ Gate:
+ * `procgenCore/refusalCensus.test.js`.
+ */
+export const REQUIRE_DIRECTIVE_REFUSALS = Object.freeze([
+    'no-element-needs-this-item',
+    'no-single-element-can-carry-every-required-item',
+    'the-biome-lacks-the-item',
+    'the-directive-and-the-spec-disagree',
+]);
+
+export function resolveRequireDirective({ require, elements, items, table = ELEMENT_TABLE } = {}) {
+    const asked = Object.freeze([...(require ?? [])]);
+    const out = (refused, spec = elements, heads = []) => Object.freeze({
+        asked, heads: Object.freeze(heads), elements: spec, forced: false, refused,
+    });
+    if (asked.length === 0) return out(null);
+
+    for (const item of asked) {
+        if (headsNeeding(item, table).length === 0) {
+            return out(Object.freeze({
+                reason: 'no-element-needs-this-item',
+                detail: `nothing in the element catalogue declares \`needs\` on `
+                    + `${JSON.stringify(item)}. The items some element needs are `
+                    + `[${[...new Set(Object.values(table).flatMap((e) => e.needs ?? []))]
+                        .sort().join(', ') || '(none)'}]. ⛔ A directive is met by an ELEMENT `
+                    + 'whose clearer wants the item; an item no element is gated on names no '
+                    + 'run this generator can build, so it is refused rather than quietly '
+                    + 'satisfied by a level that happens to grant it.',
+            }));
+        }
+    }
+    /**
+     * ⛔ ONE ELEMENT PER LEVEL is arc-2's standing law (two heads put a
+     * `pushableblock` in the room and the solver's own bound is one free
+     * block), so two required items must be carried by ONE head.
+     */
+    const heads = Object.keys(table)
+        .filter((n) => asked.every((item) => headsNeeding(item, table).includes(n)));
+    if (heads.length === 0) {
+        return out(Object.freeze({
+            reason: 'no-single-element-can-carry-every-required-item',
+            detail: `each of [${asked.join(', ')}] is needed by some element and NO ONE `
+                + 'element needs them all. ⛔ A level holds ONE element (arc-2\'s standing '
+                + 'law: two heads put a `pushableblock` in the room and the solver\'s bound '
+                + 'is one free block), so a directive naming items that live in different '
+                + 'elements cannot be met by any room this generator builds.',
+        }));
+    }
+    for (const item of asked) {
+        if (items?.[item] !== true) {
+            return out(Object.freeze({
+                reason: 'the-biome-lacks-the-item',
+                detail: `the run's boot does not grant ${JSON.stringify(item)} `
+                    + `(items: ${JSON.stringify(items ?? null)}), and [${heads.join(', ')}] `
+                    + 'needs it. ⛔ THIS IS THE SEAM\'S OWN ITEM GATE ASKED EARLIER, not a '
+                    + 'second one: the element would be refused for free anyway '
+                    + '(`the-element-needs-an-item-this-biome-does-not-grant`), and the '
+                    + 'directive says so BEFORE a room is built rather than after.',
+            }, ), elements, heads);
+        }
+    }
+    /**
+     * ⛓⛓ **NOBODY SAID ⇒ THE DIRECTIVE SAYS.** An omitted `elements` reaches
+     * the biome default; a directive REPLACES that default with the required
+     * head — a BARE head when exactly one qualifies (spending NO draw), a `+`
+     * list of them when more than one does (spending exactly one `pick`, over
+     * heads every one of which meets the directive).
+     */
+    if (elements === undefined) {
+        return Object.freeze({
+            asked,
+            heads: Object.freeze(heads),
+            elements: heads.length === 1
+                ? { name: heads[0] } : { any: heads.map((n) => ({ name: n })) },
+            forced: true,
+            refused: null,
+        });
+    }
+    /**
+     * ⛔⛔ **AN EXPLICIT SPEC IS NEVER SILENTLY OVERRIDDEN, AND NEVER NARROWED.**
+     * The only explicit spec that can meet the directive is a BARE required
+     * head. A `+` LIST is a DISTRIBUTION and the directive is a property of the
+     * WHOLE RUN: a list that might draw a non-required member cannot be
+     * guaranteed to meet it, and narrowing it to the required member would both
+     * override what the caller wrote and MOVE THE STREAM (a list spends a pick,
+     * a bare head does not). ⇒ refused by name, with the two spellings that
+     * work.
+     */
+    const norm = normalizeElementSpec(elements);
+    if (!isElementList(norm) && heads.includes(norm.name)) {
+        return Object.freeze({
+            asked, heads: Object.freeze(heads), elements, forced: false, refused: null,
+        });
+    }
+    return out(Object.freeze({
+        reason: 'the-directive-and-the-spec-disagree',
+        detail: `the directive requires [${asked.join(', ')}], which only `
+            + `[${heads.join(', ')}] can carry, and the run was given `
+            + `\`elements=${formatElementSpec(norm)}\`. ⛔ An explicit spec is honoured or `
+            + 'refused, never narrowed: a `+` list is a DISTRIBUTION and a directive is a '
+            + 'property of the WHOLE RUN, so a list that might draw a member the directive '
+            + 'does not accept cannot meet it — and narrowing it would move the draw stream '
+            + `as well as override the caller. Ask for \`--elements=${heads[0]}\`, or leave `
+            + '`--elements=` out entirely and let the directive pick the head.',
+    }));
+}

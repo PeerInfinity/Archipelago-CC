@@ -1,0 +1,32 @@
+{
+ "id": 622,
+ "ok": false,
+ "ms": 364,
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 223
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 140
+  }
+ ],
+ "keys": [
+  "ok",
+  "kind",
+  "message",
+  "obstacle",
+  "pass",
+  "passes"
+ ],
+ "kind": "refusal",
+ "message": "solverBot(wasm-arrival-solve) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (72.8,24.0) \u2014 chaser:lavarunner@72,24 (inside leash 80 (d=9.1), box grown 1.5 px/tick x 0 + pad 0) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (72.8,24.0) \u2014 chaser:lavarunner@72,24 (inside leash 80 (d=9.1), box grown 1.5 px/tick x 0 + pad 0). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the search returned a NEGATIVE, and it names its own bound: the reachable set was exhausted (maxTicks=600, dwell=4, quant={\"pos\":0.25,\"vel\":0.05} \u2014 a coarser grid merges states and a dwell above 1 skips decision points, so this is \"no path at this granularity\", NOT \"no path\").\n  bait: no bait stance for lavarunner@72,24 survives the chaser forecast: 80 cell(s) in its leash (80), 39 crossing a kill region, 6 previewed and refused [(56,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (88,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (40,-8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; \u2026]\n  kill: no presser in level 73 arms a trap whose lane covers lavarunner@72,24 \u2014 the room has 0 presser(s) and 0 trap(s), and a button that arms nothing over the body is not a weapon. A PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one (trap 101).\n         chaser arm: no stance derives for lavarunner@72,24 on level 73: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 80 cell(s) inside its 80 px leash, 7 of those reachable and with a corridor onward, and 7 of THOSE refused by the forecast [(72,24): the WAIT is dangerous at tick 2 \u2014 chaser:lavarunner@72,24; (72,8): the preview did not settle \u2014 the preview crossed to level 74; the danger map is scoped to one room; (88,24): the APPROACH is dangerous at tick 2 \u2014 chaser:lavarunner@72,24; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant.\n  detour: no corridor bent through at most 2 via cell(s) of the 5 the walk can plan to probes clean: 5 candidate corridor(s) previewed with the bodies stepped against each, 5 prefix(es) dangerous before their last via, 5 preview(s) of the 300 bound spent and 104 leg(s) of the 500 planned.",
+ "forcedRung": []
+}

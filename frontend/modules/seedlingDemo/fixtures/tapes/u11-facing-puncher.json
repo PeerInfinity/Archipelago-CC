@@ -1,0 +1,64 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 400,
+        "y": 248
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 50,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "right",
+            "from": 33,
+            "to": 34
+        },
+        {
+            "key": "primary",
+            "from": 34,
+            "to": 35
+        }
+    ],
+    "name": "u11-facing-puncher",
+    "description": "⛓⛓⛓ U11-swim D2 — THE FACING DURING A KNOCKBACK'S I-FRAME, U10's control extended past the punch. L12 at (400,248), inside `puncher@416,256`'s leash, with a sword and `noDamage` FALSE; the kill arm's preview keys at this boot (a one-tick lean east, then a press, at t 1-2 and t 34-35), 50 ticks. The punch at t 34 parks the facing EAST; the press on t 35 swings EAST and lands (the puncher reads `hits` 2 from t 36). The punch's knockback is absorbed by the wall west of the player, so the PLAYER stream is the same under either facing: the observable is the puncher's `hits`, read by `probe-seedling-u9-shield-mobiles.mjs --class=Puncher`. Authored by scripts/procgen/plan-seedling-u11-facing.mjs.",
+    "note": ""
+}

@@ -1,0 +1,206 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 0,
+        "x": 48,
+        "y": 192
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        },
+        {
+            "level": 17,
+            "tag": 29,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 4,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0
+        ],
+        "seal_parts": [
+            0
+        ]
+    },
+    "rng": {
+        "seed": 85136665,
+        "split": true,
+        "cosmetic": 1995363572,
+        "fp": 1341168923
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": true,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 12241,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 192,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 20,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        }
+    ],
+    "name": "u14-moonrock-beam",
+    "description": "⛓⛓⛓ U14-swim D1 — THE MOONROCK BEAM, WITNESSED. L0 booted exactly as route step 23 boots (r9-solve-13-v2's measured latch: `beam: true`, `rock_set: false`, the shield, the Red Key), at (56,200). Sword pressed t0, released t1, pressed again t2; `right` held t0–t9; nothing to t20. `Moonrock.update` (`Scenery/Moonrock.as:66-153`) updates before the Player: F1 (t0) is live and starts the 300-frame beam (`Main.FPS` 60 * 5); F2 (t1) is a live tape tick with a frozen player; then 451 DEAD frames — the rest of the beam, the 63-frame fall from y −1000 to 256, the 90-frame camera hold — and a release frame on which the player steps once, unobserved, under `right`. `slash()`'s 20-frame double-tap window drains through the freeze, so t2's press is a fresh swing, not a dash. The landing sets `rockSet`, `Game.shake = 60`, and replaces `stairsdown@256,272` with a teleporter to `moonrock_target`, clearing {2,0}. Fixed keys. Authored by scripts/procgen/plan-seedling-u14-moonrock.mjs.",
+    "note": ""
+}

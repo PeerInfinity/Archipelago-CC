@@ -1,0 +1,7 @@
+ FAIL  frontend/modules/seedlingDemo/ghostSword.test.js [ frontend/modules/seedlingDemo/ghostSword.test.js ]
+ FAIL  frontend/modules/seedlingDemo/watchGenOverlay.test.js [ frontend/modules/seedlingDemo/watchGenOverlay.test.js ]
+ FAIL  frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js [ frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js ]
+ FAIL  frontend/modules/seedlingDemo/procgenRoam.test.js [ frontend/modules/seedlingDemo/procgenRoam.test.js ]
+ Test Files  4 failed | 70 passed (74)
+      Tests  2465 passed | 2 skipped (2467)
+exit 1

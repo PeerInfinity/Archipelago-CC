@@ -1,6 +1,7 @@
 /**
  * bounceRegionEditor — a Golden Layout panel that edits ONE bounce region's
- * geometry. See NewDocs/plans/procedural-generation/region-step-editing.md §5.
+ * geometry. See docs/json/developer/procgen/stepped-pipeline.md
+ * §"Region editors".
  *
  * Launched two ways:
  *   - pipeline: the procgen panel's 3 Edit ▸ calls openBounceRegionEditor({
@@ -9,22 +10,29 @@
  *   - standalone: the panel boots itself with a fixture when no session is
  *     pending (own load/save).
  *
- * The editor registers itself in the procgen regionEditors registry so Edit ▸
- * routes bounce regions here (chunk 5 wires the write-back save path).
+ * ⛓ EDITOR INTEGRATION W3: the SUBSTRATE ENTRY declares this launcher
+ * (`bounceDemoLibrary` → `roomEditor: {kind: 'panel', open}`) and
+ * `regionEditors.getRegionEditor` resolves Edit ▸ through the registry. This
+ * module registers nothing any more.
  */
 import { BounceRegionEditorUI } from './bounceRegionEditorUI.js';
-import { registerRegionEditor } from '../procgenPipeline/regionEditors.js';
 
 export const LOAD_EVENT = 'bounceRegionEditor:load';
+/** ⛓ H4c — spelled here, and `apworldEditor/index.js` exports the same literal:
+ *  importing that module for one string would put the hub's whole panel graph
+ *  (and `centralRegistry`'s printing init) behind this one. */
+export const APWORLD_EDITOR_SELECT_REGION = 'apworldEditor:selectRegion';
 export const BOUNCE_EDITOR_COMPONENT_TYPE = 'bounceRegionEditorPanel';
 
 export const moduleInfo = {
     name: 'bounceRegionEditor',
     title: 'Bounce Region Editor',
     componentType: BOUNCE_EDITOR_COMPONENT_TYPE,
+    docs: 'docs/json/user/modules/bounceRegionEditor.md',
     icon: '🪀',
     column: 3,
-    description: 'Per-region geometry editor for the bounce substrate',
+    category: 'Procgen Infrastructure Panels',
+    description: 'Edits one bounce level\'s platforms, pickups and portals on a canvas and shows the access rules they derive.',
     requires: [],
 };
 
@@ -44,6 +52,16 @@ export function register(registrationApi) {
     registrationApi.registerPanelComponent(BOUNCE_EDITOR_COMPONENT_TYPE, BounceRegionEditorUI);
     registrationApi.registerEventBusPublisher(LOAD_EVENT);
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK.** This panel and the
+     * hub are Golden Layout panels in the SAME app, so the door needs no
+     * protocol: it raises the hub and names the region this editor is on.
+     * ⛔ REGISTERED HERE because the bus DROPS an unregistered publisher with a
+     * warn line and no throw — the H4b lesson, met once on the way to it. And
+     * registered in `register()` rather than `initialize()` for the reason the
+     * docblock two paragraphs down gives: `register` runs for every module.
+     */
+    registrationApi.registerEventBusPublisher(APWORLD_EDITOR_SELECT_REGION);
 }
 
 export async function initialize(_moduleId, _priorityIndex, initializationApi) {
@@ -51,8 +69,15 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     dispatcher = initializationApi.getDispatcher?.() ?? null;
     BounceRegionEditorUI.setModuleApis({ eventBus, dispatcher });
 
-    // Route the procgen panel's 3 Edit ▸ for bounce regions here.
-    registerRegionEditor('bounce', openBounceRegionEditor);
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W3 — **THE REGISTRATION IS GONE, AND THE ENTRY
+     * CARRIES IT INSTEAD.** `bounceDemoLibrary.createBounceSubstrateEntry`
+     * declares `roomEditor: {kind: 'panel', open}` and
+     * `procgenPipeline/regionEditors.getRegionEditor` resolves Edit ▸ through
+     * the substrate registry, so this module no longer has to have RUN for the
+     * panel to know bounce has an editor — which is the property the maze and
+     * Seedling lab PAGES need, since a page never calls `initialize()`.
+     */
 
     return () => {
         panelInstance = null;
@@ -63,8 +88,16 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 }
 
 /**
- * Launch the editor on a region (the regionEditors registry entry — chunk 5
- * registers this). Pipeline mode passes onSave; standalone omits it.
+ * Launch the editor on a region — the function the substrate entry's
+ * `roomEditor.open` names. Pipeline mode passes onSave; standalone omits it.
+ *
+ * ⚠ THE ENTRY REACHES IT WITH A **DYNAMIC** IMPORT, and the measurement is
+ * why: importing this module from `bounceDemoLibrary.js` statically puts the
+ * whole GL-panel graph — and `centralRegistry`'s init, which PRINTS — into
+ * every headless consumer of that library (the reference generator, ~30
+ * `check-*.mjs` gates). Measured on `1eed5988a`: the library alone loads
+ * silently, the library plus this module prints
+ * `[centralRegistry] CentralRegistry initialized`.
  */
 export function openBounceRegionEditor({ region, contract, onSave } = {}) {
     pendingSession = { region, contract, onSave };
@@ -72,6 +105,26 @@ export function openBounceRegionEditor({ region, contract, onSave } = {}) {
         eventBus.publish(LOAD_EVENT, { regionId: region?.region_id ?? null });
         eventBus.publish('ui:activatePanel', { panelId: BOUNCE_EDITOR_COMPONENT_TYPE });
     }
+}
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB, H4c — **THE REVERSE LINK, PUBLISHED FROM HERE.**
+ * Two events, the app's own pair: name the region, then raise the hub. ⛔ In
+ * that order — reversed, the panel would come forward showing whatever it was
+ * showing before and jump a frame later.
+ *
+ * ⛓ IT LIVES BESIDE `openBounceRegionEditor` and not in the UI class because
+ * the MODULE bus is the one with the two-argument `publish` (the raw singleton
+ * takes a third, the publisher's name), and this module already keeps every
+ * publish on this side of that line.
+ *
+ * @returns {boolean} whether the pair went out — `false` before `initialize()`.
+ */
+export function openRegionInApworldEditor(regionId) {
+    if (!regionId || !eventBus) return false;
+    eventBus.publish(APWORLD_EDITOR_SELECT_REGION, { region: regionId, player: null });
+    eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+    return true;
 }
 
 /** Consume (and clear) the pending hand-off session, or null. */

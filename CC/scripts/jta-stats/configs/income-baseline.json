@@ -1,0 +1,9 @@
+{
+  "name": "income-baseline",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "runToBudget": true,
+    "checkpointEvery": 50
+  }
+}

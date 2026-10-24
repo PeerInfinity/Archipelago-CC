@@ -6,7 +6,6 @@ The Iframe Manager controls what content is loaded into [Iframe Panel](iframePan
 
 Choose content in two ways:
 1. **Known pages dropdown** — Select from predefined pages:
-   - "Text Adventure (Standalone)" — A standalone text adventure running in an iframe
    - "Iframe Base" — A basic connection status demo
 2. **Custom URL** — Type any URL into the input field.
 

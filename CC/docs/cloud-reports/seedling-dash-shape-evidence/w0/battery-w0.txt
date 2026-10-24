@@ -1,0 +1,12 @@
+today: DS-BATCH: done 617 in 249 s
+window0: DS-BATCH: done 617 in 421 s
+cheap2: DS-BATCH: done 1234 in 580 s
+ALLDONE
+POPULATION 617; today rows 617, window-0 rows 617; window 0 saves 22512 t over today
+row          win    n   ticks  saved    %w0  better/worse worse-w0    units (Δ today)   wall s (Δ today) worst Δ s err   net s
+today         85  617  110216      0    0.0      0/0           170     34936 (     +0)    469.3 (   +0.0)      +0.0   0    +0.0   worst at (842, 0)
+window0        0  617   87704  22512  100.0    170/0             0     77780 ( +42844)    997.3 ( +528.1)     +36.2   0  +222.3   worst at (386, 0)
+cheap2        85  617  107927   2289   10.2     25/0           146     32901 (  -2035)    443.7 (  -25.6)      +3.1   0  +101.9   worst at (405, 0)
+cheap2         0  617   87429  22787  101.2    173/0             3     59015 ( +24079)    734.3 ( +265.0)     +17.2   0  +494.5   worst at (400, 0)
+
+[exited with code 0]

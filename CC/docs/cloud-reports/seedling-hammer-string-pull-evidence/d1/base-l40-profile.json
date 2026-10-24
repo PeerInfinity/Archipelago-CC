@@ -1,0 +1,99 @@
+{
+ "totalMs": 8769,
+ "inclusive": {
+  "planWaypoints": {
+   "ms": 4752,
+   "pct": 54.2
+  },
+  "controllerPathClear": {
+   "ms": 4610,
+   "pct": 52.6
+  },
+  "plannerObstacleAt": {
+   "ms": 4549,
+   "pct": 51.9
+  },
+  "planTilePath": {
+   "ms": 122,
+   "pct": 1.4
+  },
+  "isWalkableTile": {
+   "ms": 278,
+   "pct": 3.2
+  },
+  "plannerBlockerAt": {
+   "ms": 412,
+   "pct": 4.7
+  },
+  "coerceTerrainState": {
+   "ms": 1116,
+   "pct": 12.7
+  },
+  "twoPassSolve": {
+   "ms": 7251,
+   "pct": 82.7
+  }
+ },
+ "topSelf": [
+  [
+   "plannerObstacleAt",
+   2837,
+   32.3
+  ],
+  [
+   "(garbage collector)",
+   1184,
+   13.5
+  ],
+  [
+   "coerceTerrainState",
+   1116,
+   12.7
+  ],
+  [
+   "(anon)",
+   333,
+   3.8
+  ],
+  [
+   "controllerPathClear",
+   290,
+   3.3
+  ],
+  [
+   "solidCandidates",
+   217,
+   2.5
+  ],
+  [
+   "step",
+   209,
+   2.4
+  ],
+  [
+   "chaserDanger",
+   157,
+   1.8
+  ],
+  [
+   "plannerBlockerAt",
+   130,
+   1.5
+  ],
+  [
+   "get lethalTerrainTiles",
+   128,
+   1.5
+  ],
+  [
+   "grow",
+   124,
+   1.4
+  ],
+  [
+   "dangerAt",
+   94,
+   1.1
+  ]
+ ]
+}

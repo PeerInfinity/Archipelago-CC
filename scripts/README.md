@@ -117,6 +117,18 @@ See [World Generator Test Guide](../docs/json/developer/tests/test-world-generat
   python scripts/test/test-json-world-builder.py
   ```
 
+- **`test/check-helper-script-pyodide.mjs`** - The helper-script converter
+  (`exporter/script_api.py`, Python ⇄ the rules.json `helpers` format) in a REAL
+  Pyodide from Node: the two manifests' files plus `helperScriptCore.js`'s
+  `convertInPyodide`, the function the page's worker calls. Round-trips a
+  hand-written script and the alttp_worldgen preset's helpers, and fails if
+  anything outside the served files was imported. Needs the pinned `pyodide`
+  package, which is not a repo dependency (exit 2 without it).
+  ```bash
+  npm i --no-save pyodide@0.28.3
+  node scripts/test/check-helper-script-pyodide.mjs
+  ```
+
 #### Integration Tests
 
 - **`test/run_multiclient_test.py`** - Orchestrate multiclient integration tests
@@ -171,6 +183,16 @@ See [World Generator Test Guide](../docs/json/developer/tests/test-world-generat
   python scripts/test/test_ast_format_parsing.py
   ```
 
+- **`test/generate-jta-substrate-test-preset.py`** - Generate the `jta_substrate_test` dev preset (linear JtA-substrate test world)
+  ```bash
+  python scripts/test/generate-jta-substrate-test-preset.py
+  ```
+
+- **`test/generate-jta-mixed-test-preset.py`** - Generate the `jta_mixed_test` dev preset (cross-substrate JtA test world)
+  ```bash
+  python scripts/test/generate-jta-mixed-test-preset.py
+  ```
+
 #### Supporting Test Modules (scripts/lib/)
 
 These modules are imported by `test-all-templates.py` and are not meant to be run directly:
@@ -193,6 +215,32 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```bash
   python scripts/build/pack_apworld.py <world_name>
   ```
+  The packing rule itself lives in `world_generator/apworld.py`, shared with
+  `python -m world_generator rules.json --apworld DIR` and the APWorld Editor's
+  in-browser `⭳ .apworld` button.
+
+- **`build/world-generator-files.mjs`** - The file list the APWorld Editor's
+  in-browser build fetches (`frontend/modules/apworldBuild/worldGeneratorFiles.json`,
+  derived from `git ls-files world_generator`). Re-run with `--write` after
+  adding or removing a file under `world_generator/`; `apworldBuild.test.js`
+  fails while it is stale.
+  ```bash
+  node scripts/build/world-generator-files.mjs           # check
+  node scripts/build/world-generator-files.mjs --write   # regenerate
+  ```
+
+- **`build/helper-script-files.mjs`** - The SUBSET of `exporter/` the page fetches
+  to run `exporter.script_api` (Python ⇄ the rules.json `helpers` format) under
+  Pyodide (`frontend/modules/helperScript/helperScriptFiles.json`; its `INCLUDE`
+  list names the files, `git ls-files` resolves them). Re-run with `--write` after
+  adding or removing a file there; `helperScriptFiles.test.js` fails while it is
+  stale. `--stage <dir>` copies exactly those files (the Pages deploy does
+  `--stage frontend/exporter`).
+  ```bash
+  node scripts/build/helper-script-files.mjs                          # check
+  node scripts/build/helper-script-files.mjs --write                  # regenerate
+  node scripts/build/helper-script-files.mjs --stage frontend/exporter
+  ```
 
 - **`build/bundle-frontend.js`** - Bundle the frontend for production using esbuild
   ```bash
@@ -205,6 +253,35 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```bash
   python scripts/build/pack_json_tools_installer.py            # Create installer apworld
   python scripts/build/pack_json_tools_installer.py --dry-run  # Preview what would be packaged
+  ```
+
+- **`build/generate_romless_patches.py`** - Snapshot the repo's already-patched romless worlds + infrastructure into `json_tools_patches/<version>/romless/` for the installer
+  ```bash
+  python scripts/build/generate_romless_patches.py
+  ```
+
+### Data Scripts (scripts/data/)
+
+- **`data/extract_metamath_symbols.py`** - Extract MetaMath symbol definitions used to build the MetaMath world
+  ```bash
+  python scripts/data/extract_metamath_symbols.py
+  ```
+
+### Procgen Scripts (scripts/procgen/)
+
+Headless CLI drivers and verification harnesses for the procedural-generation substrates. See **[scripts/procgen/README.md](./procgen/README.md)** for full usage.
+
+### Rule-Kind Census (scripts/rules/)
+
+The cross-layer rule-node kind census. See **[rule-kind-registry.md](../docs/json/developer/reference/rule-kind-registry.md)**.
+
+- **`rules/ruleKindCensus.js`** - Print every layer's gaps against the registry `frontend/schema/rule-kinds.json`. The gate is `rules/ruleKindCensus.test.js` (vitest)
+  ```bash
+  node scripts/rules/ruleKindCensus.js [--json]
+  ```
+- **`rules/rule_kind_vocab.py`** - Regenerate the Python layers' vocabulary snapshot `frontend/schema/rule-kinds.python-vocab.json` (pytest checks it is fresh)
+  ```bash
+  python scripts/rules/rule_kind_vocab.py --write   # or --check
   ```
 
 ### Documentation and Reporting Scripts (scripts/docs/)
@@ -332,6 +409,12 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   bash scripts/release/sync-to-stable.sh /path/to/stable/Archipelago
   ```
 
+- **`release/apply-post-preset-merge.sh`** - Apply post-merge preset fix-ups after a preset regen: snapshot the canonical `preset_files.live.json` and restore the preserved dev/demo presets so the dev index = canonical + preserved (see the release checklist Phase 2.5)
+  ```bash
+  scripts/release/apply-post-preset-merge.sh --dry-run   # preview
+  scripts/release/apply-post-preset-merge.sh             # apply
+  ```
+
 ### Utility Scripts (scripts/utils/)
 
 - **`utils/cleanup-output-directories.py`** - Clean up test output directories
@@ -390,6 +473,8 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   | `GENERATE_WORLDGEN` | `false` | Generate WorldGen worlds from exported rules |
   | `WORLDGEN_CANONICAL_SEED` | `1` | Canonical seed number for WorldGen (empty to disable) |
   | `GENERATE_WORLDGEN2` | `false` | Generate WorldGen2 worlds from WorldGen worlds |
+  | `GENERATE_TOPDOWN_PRESETS` | `true` | Generate the `procgen_topdown` presets (top-down driver over committed sources) |
+  | `GENERATE_MAZE_PRESETS` | `true` | Generate the three `procgen_maze` tiers (grid-growth driver; `procgen/check-procgen-maze-recipe.mjs` checks them) |
 
   Some games are excluded (commented out) because they take too long: Jak and Daxter, Pokemon Emerald, Pokemon Red and Blue, SMZ3, Yu-Gi-Oh! 2006. Their preset data may be stale.
 
@@ -404,6 +489,26 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```
 
 - **`utils/generated_commands.sh`** - Auto-generated script output from `generate_all_templates.sh --script`. Not intended to be run directly; produced for CI workflow use.
+
+- **`utils/generate-procgen-rules.js`** - Generate a procgen substrate `rules.json` from CLI flags (`--help` lists them; `--stop-on-pool-empty` ends growth when the item pool empties — off by default, as in the engine)
+  ```bash
+  node scripts/utils/generate-procgen-rules.js
+  ```
+
+- **`utils/generate-topdown-preset.js`** - Generate a top-down procgen preset
+  ```bash
+  node scripts/utils/generate-topdown-preset.js
+  ```
+
+- **`utils/register-preset.py`** - Register a generated preset directory in `frontend/presets/preset_files.json`
+  ```bash
+  python scripts/utils/register-preset.py
+  ```
+
+- **`utils/sync-module-config.py`** - Sync the frontend module configuration (`modules.json` / bundled-module registration)
+  ```bash
+  python scripts/utils/sync-module-config.py
+  ```
 
 ### Configuration Scripts (scripts/setup/)
 
@@ -441,19 +546,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 
   ```bash
   # Basic installation (monkey patching, tests with Adventure)
-  python scripts/install_json_tools.py --dev --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --target-dir <target-dir>
 
   # ROM-less + ALTTP test
-  python scripts/install_json_tools.py --dev --romless --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --romless --target-dir <target-dir>
 
   # Fresh install (delete existing target first)
-  python scripts/install_json_tools.py --dev --fresh --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --fresh --target-dir <target-dir>
 
   # Dev version with all components, skip tests
-  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --all --skip-tests --target-dir <target-dir>
 
   # Dry run (preview what would be done)
-  python scripts/install_json_tools.py --dev --dry-run --target-dir ~/Archipelago-vanilla
+  python scripts/install_json_tools.py --dev --dry-run --target-dir <target-dir>
   ```
 
   **Key options:**
@@ -575,6 +680,30 @@ Tools for placing items in their vanilla (original game) locations in A Link to 
     -g path/to/gamedata.json \
     -s path/to/sphere_log.jsonl \
     --port 8000
+  ```
+
+### Vibe Coding Simulator Scripts (scripts/vibe-coding-simulator/)
+
+Tooling for the Vibe Coding Simulator game (a DepGraph-backed world). See **[balance.md](vibe-coding-simulator/balance.md)** for the balance variables that tune a playthrough.
+
+- **`vibe-coding-simulator/engine.py`** - Core simulation engine (task execution, review, rewind)
+  ```bash
+  python scripts/vibe-coding-simulator/engine.py
+  ```
+
+- **`vibe-coding-simulator/game.py`** - Playable command-line front end over the simulation engine
+  ```bash
+  python scripts/vibe-coding-simulator/game.py
+  ```
+
+- **`vibe-coding-simulator/extract_depgraph.py`** - Extract a DepGraph from a simulated project for use as the world backend
+  ```bash
+  python scripts/vibe-coding-simulator/extract_depgraph.py
+  ```
+
+- **`vibe-coding-simulator/add_plan_meta_to_completed.py`** - Annotate completed-task records with plan metadata
+  ```bash
+  python scripts/vibe-coding-simulator/add_plan_meta_to_completed.py
   ```
 
 ## Test Output Directories

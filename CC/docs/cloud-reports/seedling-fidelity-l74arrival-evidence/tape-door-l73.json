@@ -1,0 +1,64 @@
+{
+ "game": "seedling",
+ "name": "l74arrival-door-l73-up",
+ "boot": {
+  "level": 73,
+  "x": 64,
+  "y": 16
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": false,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": false,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": false,
+   "hasTorch": true
+  },
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 130,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 8
+  },
+  {
+   "key": "left",
+   "from": 110,
+   "to": 130
+  }
+ ],
+ "tape_version": 8,
+ "description": "fidelity L74ARRIVAL D2 \u2014 the L73 door arrival onto button@288,128: leg 622's L73 staging, up through teleporter@64,0, then still through the arrival freeze, then left."
+}

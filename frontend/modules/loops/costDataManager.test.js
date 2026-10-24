@@ -5,7 +5,9 @@
  * Stubs fetch and the eventBus.
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { CostDataManager } from './costDataManager.js';
+import {
+  CostDataManager, DEFAULT_REGION_COST, DEFAULT_LOCATION_COST,
+} from './costDataManager.js';
 
 function makeBus() {
   const events = [];
@@ -35,12 +37,12 @@ describe('CostDataManager — getters with no data loaded', () => {
     expect(mgr.isLoaded()).toBe(false);
   });
 
-  it('getRegionCost falls back to default 50', () => {
-    expect(mgr.getRegionCost('Anywhere')).toBe(50);
+  it('getRegionCost falls back to DEFAULT_REGION_COST', () => {
+    expect(mgr.getRegionCost('Anywhere')).toBe(DEFAULT_REGION_COST);
   });
 
-  it('getLocationCost falls back to default 100', () => {
-    expect(mgr.getLocationCost('Anywhere')).toBe(100);
+  it('getLocationCost falls back to DEFAULT_LOCATION_COST', () => {
+    expect(mgr.getLocationCost('Anywhere')).toBe(DEFAULT_LOCATION_COST);
   });
 
   it('getRegionXpEffect returns the global default ("cost")', () => {
@@ -113,9 +115,9 @@ describe('CostDataManager — setCostData and lookups', () => {
     expect(mgr.getLocationCost('Unknown')).toBe(100);
   });
 
-  it('getLocationCost falls back to literal 100 when defaultLocationCost is missing', () => {
+  it('getLocationCost falls back to DEFAULT_LOCATION_COST when defaultLocationCost is missing', () => {
     mgr.setCostData({ regions: {}, locations: { L: 5 } });
-    expect(mgr.getLocationCost('Other')).toBe(100);
+    expect(mgr.getLocationCost('Other')).toBe(DEFAULT_LOCATION_COST);
   });
 });
 
@@ -289,19 +291,83 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  it('fetches and applies embedded loop_costs when the URL resolves', async () => {
+  /**
+   * ⛔⛔ **A SYNTHETIC SOURCE NAME IS NOT A URL, AND THE FILTER MUST NOT
+   * ENUMERATE THEM** — S4b (1), and this is the `preset-bundle-load` flake's
+   * whole mechanism.
+   *
+   * `presetUI` labels every hand-loaded document `userLoaded:<file name>`
+   * (and a bundle member `userLoaded:<zip> → <entry>`). That name is not on
+   * the exact-match list above, and it ENDS IN `.json` — so the inclusive
+   * clause admitted it, `tryLoadEmbedded` fetched it, and Chrome logged
+   * *"Fetch API cannot load userloaded:… URL scheme "userloaded" is not
+   * supported"* as a page CONSOLE ERROR. The `try`/`catch` here swallows the
+   * `TypeError`; the browser's own error line is not the caller's to swallow,
+   * and `check-preset-bundle-load`'s CLAIM 7 counted it.
+   *
+   * ⛓ MEASURED both ways: the gate is green in 8 solo box runs because it
+   * navigates to the next page as soon as `files:jsonLoaded` publishes — and
+   * red on EVERY load once the page is made to dwell **250 ms** longer, which
+   * is the whole race and is why a slower runner read `9/1` once in four.
+   *
+   * ⇒ the test is STRUCTURAL, not another name on a list: a source carrying a
+   * scheme `fetch` cannot use is a label, whatever it ends in. A list would
+   * drop the next label the same way ([[feedback_op_enumerates_so_a_new_field
+   * _reaches_nothing]]).
+   */
+  it('⛔ returns false (no fetch) for a `userLoaded:` label — including one ENDING IN .json', async () => {
+    const fetchSpy = vi.fn();
+    globalThis.fetch = fetchSpy;
+    expect(await mgr.tryLoadEmbedded('userLoaded:AP_1_rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('userLoaded:AP_1_bundle.zip \u2192 rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('embedded:./presets/x/AP_1/AP_1_rules.json')).toBe(false);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('⛓ a REAL scheme is still a URL — http(s) and a bare path both fetch', async () => {
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({}) }));
+    globalThis.fetch = fetchSpy;
+    await mgr.tryLoadEmbedded('https://example.test/AP_1_rules.json');
+    await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json');
+    expect(fetchSpy.mock.calls.map((c) => c[0])).toEqual([
+      'https://example.test/AP_1_rules.json',
+      './presets/x/AP_1/AP_1_rules.json',
+    ]);
+  });
+
+  it('fetches and applies the loaded slot\'s embedded loop_costs when the URL resolves', async () => {
     globalThis.fetch = vi.fn(async () => ({
       ok: true,
-      json: async () => ({ loop_costs: validData() }),
+      json: async () => ({ loop_costs: { 1: validData() } }),
     }));
-    expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(true);
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '1')).toBe(true);
     expect(mgr.isLoaded()).toBe(true);
     expect(mgr.loadedFrom).toBe('embedded:/path/to/rules.json');
   });
 
+  /**
+   * ⛓⛓ P1a (⚖ user 2026-09-27) — `loop_costs` is per player and the runtime
+   * reads the LOADED slot's block: player 2 loads slot 2's, and a document
+   * that carries only slot 1's loads NOTHING for player 2 — loop mode OFF for
+   * that player. ⛔ No fallback to another present slot (the ruling).
+   */
+  it('⛓⛓ P1a — player 2 loads slot 2\'s block; with only slot 1\'s, player 2 loads nothing (loop mode OFF for player 2)', async () => {
+    const two = { ...validData(), defaultRegionCost: 77 };
+    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({ loop_costs: { 1: validData(), 2: two } }) }));
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '2')).toBe(true);
+    expect(mgr.getCostData().defaultRegionCost).toBe(77);
+
+    const fresh = new CostDataManager(makeBus());
+    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({ loop_costs: { 1: validData() } }) }));
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', '2')).toBe(false);
+    expect(fresh.isLoaded()).toBe(false);
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', 2)).toBe(false);
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', 1)).toBe(true);
+  });
+
   it('returns false (no apply) when rules.json has no loop_costs', async () => {
     globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({}) }));
-    expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '1')).toBe(false);
     expect(mgr.isLoaded()).toBe(false);
   });
 
@@ -309,39 +375,15 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
     globalThis.fetch = vi.fn(async () => { throw new Error('network'); });
     expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(false);
   });
-});
 
-describe('CostDataManager — tryLoadFromPreset', () => {
-  let mgr;
-  beforeEach(() => {
-    mgr = new CostDataManager();
-  });
-  afterEach(() => {
-    delete globalThis.fetch;
-  });
-
-  it('derives the costs path from the rules path', () => {
-    expect(mgr.getCostsPathFromRulesPath('presets/g/AP_X/AP_X_rules.json'))
-      .toBe('presets/g/AP_X/AP_X_costs.json');
-  });
-
-  it('loads when the preset directory has a costs.json next to it', async () => {
-    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => validData() }));
-    const data = await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json');
-    expect(data).not.toBeNull();
-    expect(mgr.loadedFrom).toBe('presets/g/AP_X/AP_X_costs.json');
-  });
-
-  it('returns null and stays unloaded when costs file is 404', async () => {
-    globalThis.fetch = vi.fn(async () => ({ ok: false, status: 404 }));
-    const result = await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json');
-    expect(result).toBeNull();
+  it('B4: a document fetched for a load a newer world has overtaken applies nothing (isCurrent false)', async () => {
+    const doc = { loop_costs: { 1: validData() } };
+    globalThis.fetch = vi.fn(async () => ({ ok: true, status: 200, json: async () => doc }));
+    expect(await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json', '1', { isCurrent: () => false })).toBe(false);
     expect(mgr.isLoaded()).toBe(false);
-  });
-
-  it('returns null when fetch throws', async () => {
-    globalThis.fetch = vi.fn(async () => { throw new Error('boom'); });
-    expect(await mgr.tryLoadFromPreset('presets/g/AP_X/AP_X_rules.json')).toBeNull();
+    // the same document for a load still current applies, as before
+    expect(await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json', '1', { isCurrent: () => true })).toBe(true);
+    expect(mgr.isLoaded()).toBe(true);
   });
 });
 
@@ -367,11 +409,59 @@ describe('CostDataManager — clear / exportToJSON', () => {
     expect(typeof text).toBe('string');
     expect(JSON.parse(text)).toMatchObject({ regions: { Forest: { moveCost: 30 } } });
   });
+});
 
-  it('getCostDataForSaving bundles path/filename/content', () => {
-    const out = mgr.getCostDataForSaving('presets/g/AP_X/AP_X_rules.json');
-    expect(out.path).toBe('presets/g/AP_X/AP_X_costs.json');
-    expect(out.filename).toBe('AP_X_costs.json');
-    expect(JSON.parse(out.content)).toMatchObject({ regions: { Forest: { moveCost: 30 } } });
+describe('CostDataManager — explicit-only costs and the time drain (M5)', () => {
+  // Summary substrates (runner, bounce) are priced by TIME. Their per-action
+  // costs apply only where the sidecar names one EXPLICITLY — a sidecar-level
+  // default exists precisely for regions the data did not mention, which is
+  // the case that must read as free.
+  function loaded(data) {
+    const m = new CostDataManager();
+    m.setCostData(data, 'test');
+    return m;
+  }
+
+  const SIDECAR = {
+    regions: {
+      Costed: { moveCost: 30 },
+      Timed: { timeDrainPerSecond: 4 },
+      Bare: {},
+    },
+    locations: { CostedLoc: 70 },
+    defaultRegionCost: 50,
+    defaultLocationCost: 100,
+  };
+
+  it('explicit lookups answer null where the sidecar states nothing', () => {
+    const m = loaded(SIDECAR);
+    expect(m.getExplicitRegionCost('Costed')).toBe(30);
+    expect(m.getExplicitRegionCost('Bare')).toBeNull();
+    expect(m.getExplicitRegionCost('Unmentioned')).toBeNull();
+    expect(m.getExplicitLocationCost('CostedLoc')).toBe(70);
+    expect(m.getExplicitLocationCost('Unmentioned')).toBeNull();
+
+    // ...while the ordinary lookups still answer with the fallbacks. The
+    // whole point of the split: the summary economy must not see these.
+    expect(m.getRegionCost('Unmentioned')).toBe(50);
+    expect(m.getLocationCost('Unmentioned')).toBe(100);
+  });
+
+  it('the drain rate falls back per-region → sidecar → 1/s', () => {
+    const m = loaded(SIDECAR);
+    expect(m.getTimeDrainPerSecond('Timed')).toBe(4);
+    expect(m.getTimeDrainPerSecond('Costed')).toBe(1);
+
+    const withDefault = loaded({ ...SIDECAR, defaultTimeDrainPerSecond: 7 });
+    expect(withDefault.getTimeDrainPerSecond('Timed')).toBe(4);
+    expect(withDefault.getTimeDrainPerSecond('Costed')).toBe(7);
+
+    // Nothing loaded at all → the 1/s default, not a crash.
+    expect(new CostDataManager().getTimeDrainPerSecond('Anything')).toBe(1);
+  });
+
+  it('a negative rate is clamped to zero (a drain never refunds mana)', () => {
+    const m = loaded({ ...SIDECAR, regions: { ...SIDECAR.regions, Timed: { timeDrainPerSecond: -5 } } });
+    expect(m.getTimeDrainPerSecond('Timed')).toBe(0);
   });
 });

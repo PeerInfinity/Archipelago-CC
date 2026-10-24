@@ -260,7 +260,14 @@ class EnemyShuffleState:
     randomized_overworld_areas: dict[int, RandomizedOverworldEnemyArea]
 
 
-def generate_enemy_shuffle_state(world: "ALTTPWorld") -> EnemyShuffleState:
+def generate_enemy_shuffle_state(world: "ALTTPWorld") -> Optional[EnemyShuffleState]:
+    # Enemy shuffle is a ROM-level effect with no logic impact. In ROM-less
+    # generation the base ROM is absent, so skip building the state (it is only
+    # consumed when patching the ROM, which is itself skipped). The state stays
+    # None, exactly as initialized. See worlds/RomlessUtils.py.
+    from worlds.RomlessUtils import check_rom_available
+    if not check_rom_available(get_base_rom_path(), world.game):
+        return None
     rom_bytes = _get_base_patched_rom_bytes()
     moved_header_bank = _get_enemizer_symbol("moved_room_header_bank_value_address")
     bush_spawn_table_address = _get_enemizer_symbol("sprite_bush_spawn_table_overworld")

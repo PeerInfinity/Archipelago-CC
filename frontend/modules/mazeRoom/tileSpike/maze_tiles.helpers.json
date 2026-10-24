@@ -1,0 +1,357 @@
+{
+  "cleared": {
+    "params": [
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "obstacle"
+          },
+          "op": "is",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "broken"
+        },
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "all_of",
+            "element_rule": {
+              "type": "compare",
+              "left": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "subscript",
+                    "value": {
+                      "type": "name",
+                      "name": "p"
+                    },
+                    "index": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "p"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            },
+            "iterator_info": {
+              "type": "comprehension_details",
+              "target": {
+                "type": "name",
+                "name": "p"
+              },
+              "iterator": {
+                "type": "name",
+                "name": "combo"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "combo"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "clear_set"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "player_may_enter": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "floor"
+        },
+        {
+          "type": "helper",
+          "name": "cleared",
+          "args": [
+            {
+              "type": "name",
+              "name": "tile"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "block_may_enter": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "floor"
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "block"
+          }
+        },
+        {
+          "type": "helper",
+          "name": "cleared",
+          "args": [
+            {
+              "type": "name",
+              "name": "tile"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "presses": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block"
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "player"
+        }
+      ]
+    }
+  },
+  "strikes": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "obstacle"
+          },
+          "op": "is not",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "struck"
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "broken"
+          }
+        }
+      ]
+    }
+  },
+  "lane_armed": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "not",
+            "condition": {
+              "type": "item_check",
+              "item": {
+                "type": "name",
+                "name": "t"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "t"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "lane_unless"
+            }
+          }
+        },
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "item_check",
+            "item": {
+              "type": "name",
+              "name": "t"
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "t"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "lane_while"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "rope_cut": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "broken"
+        },
+        {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "event"
+              },
+              "op": "is not",
+              "right": {
+                "type": "constant",
+                "value": null
+              }
+            },
+            {
+              "type": "item_check",
+              "item": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "event"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

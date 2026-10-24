@@ -16,9 +16,11 @@ export const moduleInfo = {
   name: 'pathAnalyzerPanel',
   title: 'Path Analyzer',
   componentType: 'pathAnalyzerPanel',
+  docs: 'docs/json/user/modules/pathAnalyzerPanel.md',
   icon: '🛤️',
   column: 2, // Middle column,
-  description: 'A dedicated panel for path analysis with configurable settings.',
+  category: 'Analysis Panels',
+  description: 'Type a region name to see the routes that reach it and the items each needs, with adjustable limits.',
 };
 
 let thisModuleId = moduleInfo.name;

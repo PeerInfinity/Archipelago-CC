@@ -15,7 +15,6 @@ export async function simulateReceivedItemsTest(testController) {
       archipelago_version: '0.6.1',
       generation_seed: 456,
       player_names: { 1: 'ClientSimPlayer' },
-      world_classes: { 1: 'ALTTPWorld' },
       plando_options: [],
       start_regions: {
         1: { default: ['Menu'], available: [{ name: 'Menu', type: 1 }] },

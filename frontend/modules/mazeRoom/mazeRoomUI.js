@@ -6,20 +6,18 @@
 
 import { setPanelInstance, getModuleApis, consumePendingLoadRegion } from './index.js';
 import {
-    TILE_WALL,
-    INPUT_N, INPUT_S, INPUT_E, INPUT_W,
     createState,
-    getTile,
-    getObstacle, getItem,
-    step,
+    getItem,
     detectStepEvents,
     generateMaze,
     extractPathsAndObstacles,
     isExit,
+    hasItemActions,
+    armedTraps,
+    sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import {
-    DEFAULT_ITEMS, DEFAULT_OBSTACLES,
-    isObstacleCleared, getItemRenderHints,
+    DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared,
 } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
@@ -38,19 +36,59 @@ import { MazeRoomVisualizer } from './mazeRoomVisualizer.js';
 import { BIOMES, DEFAULT_BIOME_ID } from './mazeRoomBiomeLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
-import { findPath, stepsToActions } from './mazeAutopather.js';
+import {
+    xpAdjustedCost,
+    chargeMana,
+    gainMana,
+    grantItem,
+    fireLoopResetTeleport,
+} from '../resourceChannels/resourceChannelsLibrary.js';
+import { findPath, stepsToActions, planItemActions, inputsToEntries } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
-import { saveQueue, getSavedQueues } from '../loops/savedQueueStore.js';
+import { getSavedQueues } from '../loops/savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
+import { ACTION_QUEUE_FORMAT, ActionQueue, ActionState } from '../shared/actionQueue/index.js';
 import {
-    MazeRoomQueue,
+    MAZE_SUBSTRATE,
     ACTION_MOVE,
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
-} from './mazeRoomQueue.js';
-import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
+    ACTION_TURN,
+    ACTION_USE,
+    ACTION_CROSS,
+    describeMazeAction,
+    keyToMazeEntry,
+    locationCheckEntry,
+    turnEntry,
+    useEntry,
+    useKeyBindings,
+    waitEntry,
+} from './mazeKeys.js';
+import {
+    executeMazeEntry,
+    expandEntries,
+    expandedLength,
+    intendedTileFor,
+    isRefused,
+    mazeWorldDigest,
+    projectActions,
+    refuseReplayPreconditions,
+    stampRecordingPreconditions,
+} from './mazeQueueExecutor.js';
+// ⛓ CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5): the canvas draw, the tile
+// size and the palette left this file so `mazeRoom/lab.html` can draw the
+// same worlds with the same pixels. `_drawWorld` is now an adapter that
+// builds `drawWorld`'s `view` out of this panel's own state.
+import { TILE_PX, drawWorld } from './mazeRoomRender.js';
+import { resolveMazeArrival } from './mazeArrival.js';
+/**
+ * ⛓ DEDUP M6 — the ONE pixel→tile conversion, DOM-free and unit-tested. The
+ * lab page's canvas has used it since editor v3; the panel divided by the
+ * INTRINSIC `TILE_PX` instead, which is a live bug under any CSS scaling.
+ */
+import { tileAtPoint } from '../procgenCore/labView.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import {
     tickHazards,
     resetHazards,
@@ -60,15 +98,22 @@ import {
 } from '../shared/procgen/contentModules/hazardRuntime.js';
 
 // stateManager's snapshot.inventory is a plain object { itemName: count }.
-// Convert to a Set of item ids that the player currently holds (count > 0)
-// — that's what step() and the rendering code want.
+// Convert to a Map<itemName, count> of what the player currently holds.
+//
+// A Map, NOT a Set: `isObstacleCleared`'s local evaluator reads counts
+// straight off a Map (`inventoryCount`), so a `Has(item, count: 2)` gate
+// needs two copies to open. Collapsing to a Set made every count gate open
+// at ONE copy on the paths that use the local evaluator — the walkTo
+// planner's, which is the whole reason the two evaluators disagreed.
+// Everything downstream only calls `.has` / `.size` / iterates `.keys()`,
+// all of which a Map answers the same way.
 function inventoryFromSnapshot(snapshot) {
-    if (!snapshot || !snapshot.inventory) return new Set();
-    const set = new Set();
+    const out = new Map();
+    if (!snapshot || !snapshot.inventory) return out;
     for (const [id, count] of Object.entries(snapshot.inventory)) {
-        if (count > 0) set.add(id);
+        if (count > 0) out.set(id, count);
     }
-    return set;
+    return out;
 }
 
 // Snapshot's checkedLocations is a Set in some code paths, an Array
@@ -96,56 +141,7 @@ const DEFAULT_PARAMS = {
     biomeId: DEFAULT_BIOME_ID,
 };
 
-const TILE_PX = 20;
-const COLORS = {
-    floor: '#2a2a2a',
-    wall: '#000000',
-    // §5 tile-rendering rules:
-    // - Entrance: 2px solid green border
-    // - Exit (no gate / open gate): solid green fill
-    // - Exit (closed gate): solid red fill
-    // - Location (closed gate): item sprite + 2px solid red border
-    // - Both entrance and exit: follow the exit row
-    entrance: '#3aa85a',
-    exit: '#3aa85a',
-    exitBlocked: '#d04040',
-    locationBlocked: '#d04040',
-    player: '#4aa8ff',
-    grid: '#1a1a1a',
-};
 
-// Maps DOM key strings to queue action specs. Queue verbs are the
-// substrate-neutral representation; the move executor translates
-// dir→engine input via MOVE_DIR_TO_INPUT.
-const KEY_MAP = {
-    ArrowUp:    { type: ACTION_MOVE, dir: 'N' },
-    w:          { type: ACTION_MOVE, dir: 'N' },
-    W:          { type: ACTION_MOVE, dir: 'N' },
-    ArrowDown:  { type: ACTION_MOVE, dir: 'S' },
-    s:          { type: ACTION_MOVE, dir: 'S' },
-    S:          { type: ACTION_MOVE, dir: 'S' },
-    ArrowLeft:  { type: ACTION_MOVE, dir: 'W' },
-    a:          { type: ACTION_MOVE, dir: 'W' },
-    A:          { type: ACTION_MOVE, dir: 'W' },
-    ArrowRight: { type: ACTION_MOVE, dir: 'E' },
-    d:          { type: ACTION_MOVE, dir: 'E' },
-    D:          { type: ACTION_MOVE, dir: 'E' },
-    ' ':        { type: ACTION_WAIT },
-};
-
-const MOVE_DIR_TO_INPUT = {
-    N: INPUT_N,
-    S: INPUT_S,
-    E: INPUT_E,
-    W: INPUT_W,
-};
-
-const MOVE_DIR_TO_DELTA = {
-    N: { dx: 0, dy: -1 },
-    S: { dx: 0, dy: 1 },
-    E: { dx: 1, dy: 0 },
-    W: { dx: -1, dy: 0 },
-};
 
 export class MazeRoomUI {
     static moduleApis = null;
@@ -153,8 +149,29 @@ export class MazeRoomUI {
 
     constructor(container, componentState) {
         this.container = container;
+        /**
+         * ⛓ T2b F4 — THE PANEL THAT BECOMES VISIBLE TAKES THE KEYBOARD. A
+         * `maze:loadRegion` asks for activation and then focuses the root, but
+         * measured on the box the root was still HIDDEN when `focus()` ran
+         * (Golden Layout shows the tab afterwards), so the focus was refused and
+         * the page's focus fell to BODY when the flash iframe was hidden: the
+         * maze's keys were dead until a click. `onPanelShow` (render + focus)
+         * existed with nothing calling it; the container's own 'show' does now.
+         */
+        this.container?.on?.('show', () => this.onPanelShow());
         this.params = { ...DEFAULT_PARAMS };
         this.world = null;
+        /**
+         * ⛓ T4 (finding 3) — where the current visit came in, as TWO facts.
+         * `arrivedFromExitId` is the saved-queue STORE's key: the recording's
+         * `arrivedFrom.exit_id` (null → 'entrance'), which
+         * `loops/blockIdentity.arrivalKeyOf` mirrors. `arrivalDoorId` is the
+         * exit `resolveMazeArrival` placed the player on — the hazard reset's
+         * door. In a world with no reverse links they differ. Both were read
+         * and never assigned before T4.
+         */
+        this.arrivedFromExitId = null;
+        this.arrivalDoorId = null;
         this.state = null;
         this.stats = null;
         this.isGenerating = false;
@@ -203,6 +220,8 @@ export class MazeRoomUI {
         this._isLoopModeActive = false;
         this._costDataManager = null; // lazy via centralRegistry
         this._unsubLoopMode = null;
+        this._unsubLoopReset = null;
+        this._lastConsumableResetCount = null;
         this._unsubManaChanged = null;
 
         // Region-visit recording for the savedQueueStore. Populated
@@ -254,17 +273,35 @@ export class MazeRoomUI {
             onExitCross: (exit, sourceRegion) => this._onVisualizerExitCross(exit, sourceRegion),
             onLocationCheck: (locationName, itemId, regionId) =>
                 this._onVisualizerLocationCheck(locationName, itemId, regionId),
+            // X1: bot-mode equivalents of the keyboard path's
+            // consumable_pickup / mana_pickup branches in
+            // _publishPlaybackEvents. Same panel methods, so both
+            // surfaces deliver grants identically.
+            onConsumableGrant: (grant) => this._grantConsumableTile(grant),
+            onManaGrant: (amount) => this._grantManaTile(amount),
+            onRegionCross: (crossing) => this._onVisualizerRegionCross(crossing),
         });
 
         // Tile-level action queue (Cavernous-2-style). Player keydowns
-        // route through this rather than calling step() directly. The
-        // executor is bound here so the queue can run actions
-        // synchronously; the UI re-renders after each handleInput in
-        // _handleKeydown. Cleared on region transitions. See
-        // NewDocs/plans/procedural-generation/maze-content-modules.md.
-        this._mazeQueue = new MazeRoomQueue({
-            executor: (action) => this._executeQueueAction(action),
-        });
+        // route through this rather than calling step() directly.
+        //
+        // Slice Q-b: this is the SHARED `ActionQueue` (shared/actionQueue),
+        // the same class jta and omsi record into — the maze-private
+        // `MazeRoomQueue` is gone. Two consequences the panel owns:
+        //   - the EDIT CURSOR is panel state (`_editCursor`), because the
+        //     shared class refuses an insert into the done region by throwing
+        //     rather than clamping. `_clampedEditIndex()` is the clamp.
+        //   - `stepOne(executor)` advances even on FAILED, so STOPPING is the
+        //     driver's job: `_startReplayDriver` halts at the first refused
+        //     entry and names it (census gap R2).
+        // See docs/json/developer/procgen/maze.md ("The action queue").
+        this._mazeQueue = new ActionQueue();
+        // Where a keypress inserts. null = tail (the default). Clicking
+        // between icons sets it; it can never point into the done region.
+        this._editCursor = null;
+        // The reason the last entry was refused, shown under the icon row and
+        // set by the replay driver when it stops.
+        this._queueRefusal = null;
 
         // Replay driver state. Non-null while a saved best-queue is
         // being replayed; holds the setInterval handle so direct input
@@ -301,6 +338,9 @@ export class MazeRoomUI {
         // explore is walking, false otherwise. Mutually exclusive with
         // _loopsDrivenAction so the two chains don't fight.
         this._directExploreActive = false;
+        // The Playback Bot's current walkTo target, until its leg finishes or
+        // sticks (`_reportBotWalk`).
+        this._botWalkTarget = null;
 
         // Phase 8 panel cleanup. genControlsVisible hides the
         // generation-only sections (Parameters, Generate / Reset
@@ -355,6 +395,7 @@ export class MazeRoomUI {
         this._subscribeToSnapshotUpdates();
         this._subscribeToDiscoveryEvents();
         this._subscribeToLoopMode();
+        this._subscribeToLoopReset();
         this._subscribeToManaChanges();
         this._subscribeToCostDataChanges();
         this._subscribeToLoopsQueue();
@@ -437,6 +478,43 @@ export class MazeRoomUI {
         eventBus.subscribe('gameState:loopModeChanged', handler, 'mazeRoom');
         this._unsubLoopMode =
             () => eventBus.unsubscribe?.('gameState:loopModeChanged', handler, 'mazeRoom');
+    }
+
+    /**
+     * X1-R1: collected consumable / mana tiles become available again
+     * on every loop reset.
+     *
+     * This is an EXPLICIT subscription rather than a piggyback on the
+     * incidental `fromReset` user:regionMove → _adoptLoadedRegion →
+     * setWorld({freshStart}) path, which is fragile in two concrete
+     * ways:
+     *   - fireLoopResetTeleport calls triggerLoopReset() unconditionally
+     *     but SKIPS the regionMove dispatch when no start region
+     *     resolves — the reset happens and tile state would survive into
+     *     the next loop.
+     *   - it is region-scoped, so a reset that teleports into the region
+     *     you already occupy (or state held for other regions) never
+     *     clears.
+     *
+     * Idempotent on resetCount, matching how the jta / omsi bridges
+     * guard their own reset handlers against replays.
+     *
+     * Only collectible tiles reset. AP location checks stay checked
+     * between loops (D10) — and each receiving substrate resets its own
+     * inventory on its own loop; the maze never tracks or compensates
+     * for that.
+     */
+    _subscribeToLoopReset() {
+        if (!eventBus?.subscribe) return;
+        const handler = (data) => {
+            const count = data?.resetCount;
+            if (Number.isFinite(count) && count === this._lastConsumableResetCount) return;
+            this._lastConsumableResetCount = Number.isFinite(count) ? count : null;
+            this._visualizer?.resetCollectedConsumables?.();
+        };
+        eventBus.subscribe('gameState:loopReset', handler, 'mazeRoom');
+        this._unsubLoopReset =
+            () => eventBus.unsubscribe?.('gameState:loopReset', handler, 'mazeRoom');
     }
 
     /**
@@ -555,10 +633,43 @@ export class MazeRoomUI {
         this._visitRecording = {
             regionName: payload?.region_id ?? null,
             arrivalExitId,
-            actionsAtStart: this._mazeQueue?.executionIndex ?? 0,
+            actionsAtStart: this._mazeQueue?.cursor ?? 0,
             manaAtEntry,
             manaMin: manaAtEntry,
+            // Census gap R1: filled as the visit runs (both play surfaces call
+            // _notePickupForVisit), where it used to be a literal [] at flush.
+            itemsPickedUp: [],
+            // ⛓ SLICE R-b (gaps R3/R4) — the level this visit is driven on, read
+            // off the PAYLOAD: this runs BEFORE `_adoptLoadedRegion` has adopted
+            // it, so `this.world` is still the previous region's.
+            world: payload?.world ?? null,
+            // Filled by `_noteVisitStart` once the panel HAS adopted the world —
+            // at this instant `this.state` and `this.externalInventory` are both
+            // still the region the player is leaving.
+            startPos: null,
+            startInventory: null,
         };
+    }
+
+    /**
+     * ⛓ SLICE R-b — **WHERE THIS VISIT BEGAN**, for `deriveRequires`: the
+     * arrival cell and the inventory the player carried in.
+     *
+     * ⛔ A SECOND CALL SITE RATHER THAN A FIELD IN `_startVisitRecording`, and
+     * the ordering is the reason: the recording opens at the TOP of
+     * `_adoptLoadedRegion` (it has to — `actionsAtStart` must align with the
+     * queue it just cleared), and the world, the spawn cell and the playback
+     * inventory are all established further down. Reading them at the top would
+     * record the region the player just LEFT.
+     */
+    _noteVisitStart() {
+        const rec = this._visitRecording;
+        if (!rec) return;
+        rec.world = this.world ?? rec.world;
+        rec.startPos = this.state
+            ? { x: this.state.player_pos.x, y: this.state.player_pos.y }
+            : null;
+        rec.startInventory = new Set(this.externalInventory ?? this.state?.inventory ?? []);
     }
 
     /** Rolling-minimum update for the current visit's mana tracker. */
@@ -573,10 +684,16 @@ export class MazeRoomUI {
     }
 
     /**
-     * Snapshot the visit recording and hand it to savedQueueStore.
-     * Called from _onVisualizerExitCross with the departure exit id.
-     * Skips persistence when rules data isn't cached yet (e.g. tests
-     * that drive the panel directly without a stateManager).
+     * Snapshot the visit recording into a pending stash. Called from
+     * _onVisualizerExitCross with the departure exit id.
+     *
+     * As of M2 the recorder no longer persists directly: loops is the sole
+     * persister. loopState pulls this stash via the substrate registry's
+     * `takeLastRecording` ONLY when a Record-mode block completes through
+     * its expected exit — so a wrong exit / mana-out simply leaves the stash
+     * to be overwritten by the next visit (discarded, per the M2 ruling).
+     * The stash carries substrate-native fields; the persistent recording
+     * tag (arrivalKey, ordinal) is stamped by loopState at persist time.
      */
     _finalizeVisitOnExit(departureExitId) {
         const rec = this._visitRecording;
@@ -585,28 +702,27 @@ export class MazeRoomUI {
             return;
         }
         this._visitRecording = null;
-        const rulesHash = this._cachedRulesData ? hashRulesData(this._cachedRulesData) : null;
-        if (!rulesHash) return;
 
-        const executionIndex = this._mazeQueue?.executionIndex ?? 0;
-        const queueActions = this._mazeQueue?.actions ?? [];
-        const sliceStart = Math.min(rec.actionsAtStart ?? 0, executionIndex);
-        const actions = queueActions.slice(sliceStart, executionIndex).map((a) => {
-            const out = { type: a.type };
-            if (a.dir !== undefined) out.dir = a.dir;
-            if (a.locationName !== undefined) out.locationName = a.locationName;
-            return out;
-        });
+        // The recording is the slice of the live queue this visit executed,
+        // projected into the stored shape: id-less, status-less, and run-length
+        // folded through the shared `loops` field (mazeQueueExecutor).
+        const snap = this._mazeQueue?.snapshot() ?? { cursor: 0, entries: [] };
+        const sliceStart = Math.min(rec.actionsAtStart ?? 0, snap.cursor);
+        const actions = projectActions(snap.entries, sliceStart, snap.cursor);
         const locationsChecked = actions
-            .filter((a) => a.type === 'locationCheck' && a.locationName)
-            .map((a) => a.locationName);
+            .filter((a) => a.actionType === ACTION_LOCATION_CHECK && a.actionId)
+            .map((a) => a.actionId);
 
         const gs = (() => { try { return getGameStateSingleton?.(); } catch { return null; } })();
         const manaAtExit = typeof gs?.getCurrentMana === 'function' ? gs.getCurrentMana() : rec.manaMin;
 
-        saveQueue(rulesHash, {
+        this._lastVisitRecording = {
             regionName: rec.regionName,
-            substrate: 'maze',
+            substrate: MAZE_SUBSTRATE,
+            // Census gap R5: the actions' own vocabulary, named on the
+            // envelope. Additive — loops ignores it; an importer outside the
+            // browser (the lab's walk box, S2b) refuses an unknown one by name.
+            format: ACTION_QUEUE_FORMAT,
             arrivalExitId: rec.arrivalExitId,
             departureExitId: departureExitId ?? null,
             actions,
@@ -614,8 +730,64 @@ export class MazeRoomUI {
             manaAtExit,
             manaMin: rec.manaMin,
             locationsChecked,
-            itemsPickedUp: [],
-        });
+            itemsPickedUp: (rec.itemsPickedUp ?? []).slice(),
+        };
+
+        /**
+         * ⛓⛓⛓ SLICE R-b — **THE PRECONDITIONS, STAMPED BY THE SAME FUNCTION THE
+         * LAB CALLS.** `worldDigest` says which level this walk was driven on
+         * (a region EDITED through `layout.edits[]` does not move the
+         * `rulesHash` bucket this recording is filed under — plan §20 R4) and
+         * `requires` says what the walker had to be carrying. Both are OPTIONAL
+         * top-level fields: `savedQueueStore.saveQueue` spreads `...queue`, so
+         * they survive persistence, and loops reads neither.
+         *
+         * ⚠ Derived from the visit's OWN start (`_noteVisitStart`), not from
+         * where the player is standing now — `deriveRequires` re-walks the
+         * recorded actions, and re-walking them from the EXIT would answer a
+         * question about a route nobody took.
+         */
+        /**
+         * ⚠ ONLY WHEN THE VISIT'S START WAS RECORDED. `_noteVisitStart` runs on
+         * the one path that opens a recording (`_adoptLoadedRegion`), so in the
+         * app this is always true; a recording assembled without it — a harness
+         * that calls `_startVisitRecording` on a hand-made world — gets the
+         * envelope it always got. ⛔ The RECORDING matters more than its
+         * preconditions: an enrichment that could throw on an unexpected world
+         * shape would destroy the thing it was decorating.
+         */
+        const world = rec.world ?? this.world;
+        if (world && rec.startPos) {
+            const startState = createState(world);
+            if (rec.startPos) startState.player_pos = { ...rec.startPos };
+            for (const id of rec.startInventory ?? []) startState.inventory.add(id);
+            stampRecordingPreconditions(this._lastVisitRecording, world, startState);
+        }
+    }
+
+    /**
+     * Census gap R1 — remember an item this visit picked up. Called from BOTH
+     * play surfaces (`_publishPlaybackEvents`' pickup branch for keyboard and
+     * replay, `_onVisualizerLocationCheck` for bot / loops-delegated walks), so
+     * the recording says what the walk collected regardless of who drove it.
+     * Before this slice `itemsPickedUp` was written as a literal `[]`.
+     */
+    _notePickupForVisit(itemId) {
+        if (!itemId || !this._visitRecording) return;
+        const seen = this._visitRecording.itemsPickedUp;
+        if (Array.isArray(seen) && !seen.includes(itemId)) seen.push(itemId);
+    }
+
+    /**
+     * Pull-and-clear the last finalized visit recording (loops' sole
+     * persister protocol). Returns the stashed SavedQueue-shaped payload
+     * or null. Clearing on read makes a second pull for the same visit a
+     * no-op, so a discarded (wrong-exit) recording is never double-counted.
+     */
+    _takeLastRecording() {
+        const rec = this._lastVisitRecording ?? null;
+        this._lastVisitRecording = null;
+        return rec;
     }
 
     /**
@@ -734,9 +906,9 @@ export class MazeRoomUI {
     _populateLoopsDrivenQueue(action, startPos, target) {
         if (!this._mazeQueue) return;
         // Clear any in-flight pending — loops-driven walks own the
-        // queue while they run. (clearPending preserves done history
+        // queue while they run. (_clearPendingEntries preserves done history
         // from prior loops actions in the same region.)
-        this._mazeQueue.clearPending();
+        this._clearPendingEntries();
         // findPath requires world.tiles + width/height to BFS through.
         // Test fixtures often stub world without these, in which case
         // we skip queue population and let the visualizer drive
@@ -745,10 +917,24 @@ export class MazeRoomUI {
             || typeof this.world.width !== 'number'
             || typeof this.world.height !== 'number') {
             if (action.type === 'locationCheck' && action.locationName) {
-                this._mazeQueue.append({
-                    type: 'locationCheck',
-                    locationName: action.locationName,
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
+            }
+            return;
+        }
+        // ⛓ ITEM ACTIONS (⚖ "Plan strikes"): the visualizer plans an
+        // item-action world over engine states (`_planTilePath`), so the queue
+        // mirror is filled from the SAME planner, from the panel's own state —
+        // turn and use entries included.
+        if (this._plansItemActions()) {
+            const planned = planItemActions(this.world, this.state,
+                { kind: 'tile', x: target.x, y: target.y }, {
+                    inventory: this.externalInventory ?? undefined,
+                    clearanceOpts: this._planningClearanceOpts(),
+                    excludeOtherExits: true,
                 });
+            if (planned) this._appendEntries(inputsToEntries(planned.inputs));
+            if (action.type === 'locationCheck' && action.locationName) {
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
             }
             return;
         }
@@ -764,8 +950,8 @@ export class MazeRoomUI {
                     // Null/empty falls back to the plain (faster) BFS.
                     hazards: this.world?.hazards,
                     // Loops-delegated walks tolerate waits in the
-                    // plan — the visualizer's tick loop knows to
-                    // INPUT_WAIT (no engine.step, advance turn) and
+                    // plan — INPUT_WAIT is an engine input (S2a), so the
+                    // visualizer's tick loop steps it like any other and
                     // _onVisualizerChange mirrors waits into the
                     // queue + ticks hazards.
                     allowWait: true,
@@ -779,21 +965,30 @@ export class MazeRoomUI {
             // terminal verb for location targets so the queue
             // reflects what's about to happen.
             if (action.type === 'locationCheck' && action.locationName) {
-                this._mazeQueue.append({
-                    type: 'locationCheck',
-                    locationName: action.locationName,
-                });
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
             }
             return;
         }
-        const moves = stepsToActions(path.steps);
-        if (moves.length > 0) this._mazeQueue.appendAll(moves);
+        this._appendEntries(stepsToActions(path.steps));
         if (action.type === 'locationCheck' && action.locationName) {
-            this._mazeQueue.append({
-                type: 'locationCheck',
-                locationName: action.locationName,
-            });
+            this._mazeQueue.add(locationCheckEntry(action.locationName));
         }
+    }
+
+    /**
+     * Drop the PENDING entries, keeping the done region (the visit recorder
+     * slices it on exit). `ActionQueue.clear()` would take the history with it,
+     * so this removes from the tail down to the cursor.
+     */
+    _clearPendingEntries() {
+        const q = this._mazeQueue;
+        if (!q) return 0;
+        let dropped = 0;
+        for (let i = q.length - 1; i >= q.cursor; i--) {
+            if (q.removeAt(i)) dropped++;
+        }
+        this._editCursor = null;
+        return dropped;
     }
 
     /**
@@ -872,6 +1067,11 @@ export class MazeRoomUI {
      * becomes seen on arrival via _onVisualizerChange's per-step fog
      * expansion — that primes the next chain leg.
      */
+    /** ⛓ ITEM ACTIONS: plan over engine states (strikes included) on this world? */
+    _plansItemActions() {
+        return hasItemActions(this.world) && !(this.world.hazards?.length > 0) && !!this.state;
+    }
+
     _resolveExploreTarget() {
         if (!this.fogEnabled) return { alreadyComplete: true };
         const seenTiles = this.seenTilesByRegion.get(this._seenSetKey());
@@ -884,6 +1084,17 @@ export class MazeRoomUI {
         }
         const fromPos = this.state?.player_pos;
         if (!fromPos) return { alreadyComplete: true };
+        if (this._plansItemActions()) {
+            // ⛓ ITEM ACTIONS: a frontier past an unbroken rock is reachable by a strike.
+            const planned = planItemActions(this.world, this.state, { kind: 'closestUnexplored' }, {
+                seenTiles,
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            });
+            if (!planned || planned.length === 0) return { alreadyComplete: true };
+            return { x: planned.end.x, y: planned.end.y, name: null };
+        }
         const result = findPath(
             this.world,
             fromPos,
@@ -892,6 +1103,7 @@ export class MazeRoomUI {
                 seenTiles,
                 inventory: this.externalInventory,
                 obstacleLib: this.world?.obstacleLib,
+                clearanceOpts: this._planningClearanceOpts(),
                 excludeOtherExits: true,
                 hazards: this.world?.hazards,
             },
@@ -945,16 +1157,23 @@ export class MazeRoomUI {
             let bestByDistance = null;
             let bestDistance = Infinity;
             for (const exit of candidates) {
-                const result = findPath(
-                    this.world, fromPos,
-                    { kind: 'tile', x: exit.x, y: exit.y },
-                    {
-                        inventory: this.externalInventory,
-                        obstacleLib: this.world?.obstacleLib,
+                const result = this._plansItemActions()
+                    ? planItemActions(this.world, this.state, { kind: 'tile', x: exit.x, y: exit.y }, {
+                        inventory: this.externalInventory ?? undefined,
+                        clearanceOpts: this._planningClearanceOpts(),
                         excludeOtherExits: true,
-                        hazards: this.world?.hazards,
-                    },
-                );
+                    })
+                    : findPath(
+                        this.world, fromPos,
+                        { kind: 'tile', x: exit.x, y: exit.y },
+                        {
+                            inventory: this.externalInventory,
+                            obstacleLib: this.world?.obstacleLib,
+                            clearanceOpts: this._planningClearanceOpts(),
+                            excludeOtherExits: true,
+                            hazards: this.world?.hazards,
+                        },
+                    );
                 if (result && result.length < bestDistance) {
                     bestDistance = result.length;
                     bestByDistance = exit;
@@ -987,7 +1206,22 @@ export class MazeRoomUI {
     _shouldDeductMazeMana() {
         if (!this.world?.manaEnabled) return false;
         if (this._loopsDrivenAction) return true;
-        if (this._isLoopModeActive) return false;
+        if (this._isLoopModeActive) {
+            // M3b rule 2 (session 66b): parked Manual/Record live play
+            // drains, and the maze — a fine-grained substrate — owns its
+            // live-play economy natively (per-tile, the same charging its
+            // delegated walks use), so live play and playback share one
+            // economy. Loops charges nothing for fine-grained substrates.
+            // Outside a parked live-play block, loop-mode hand play stays
+            // free — the strict action gate blocks its coarse effects
+            // anyway.
+            try {
+                const livePlayRegion = centralRegistry.getPublicFunction?.('loops', 'livePlayRegion')?.();
+                return livePlayRegion != null && livePlayRegion === this.currentRegionId;
+            } catch {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -1036,13 +1270,8 @@ export class MazeRoomUI {
     }
 
     _applyXpReduction(cost) {
-        if (!this.currentRegionId) return cost;
         try {
-            const gs = getGameStateSingleton?.();
-            if (!gs) return cost;
-            const xpData = gs.getRegionXP(this.currentRegionId);
-            const effect = this._getCostDataManager()?.getRegionXpEffect?.(this.currentRegionId);
-            return applyRegionXpCostEffect(cost, xpData?.level ?? 0, effect);
+            return xpAdjustedCost(cost, this.currentRegionId);
         } catch {
             return cost;
         }
@@ -1082,9 +1311,15 @@ export class MazeRoomUI {
         const cost = isUncheckedLocation
             ? this._locationTileCost(locationName)
             : this._perTileMoveCost();
-        gs.deductMana(cost);
-        if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
-        if (gs.getCurrentMana() <= 0) {
+        // Charges the shared pool + awards 1:1 region XP via the
+        // resourceChannels helper; depletion is reported back so the
+        // maze-specific pre-reset cleanup in _fireLoopReset runs first.
+        const { depleted } = chargeMana({
+            substrateId: 'maze',
+            amount: cost,
+            regionId: this.currentRegionId,
+        });
+        if (depleted) {
             this._fireLoopReset();
         }
         return cost;
@@ -1107,9 +1342,7 @@ export class MazeRoomUI {
      */
     _fireLoopReset() {
         const gs = getGameStateSingleton?.();
-        const dispatcher = this.apis?.dispatcher;
         if (!gs) return;
-        const startRegion = this._resolveStartRegion(gs);
         const sourceRegion = this.currentRegionId;
 
         // Notify loops first — clear the queue-driven tracking and
@@ -1126,28 +1359,11 @@ export class MazeRoomUI {
         // continue into the new region after teleport.
         this._visualizer?.stop?.();
 
-        gs.triggerLoopReset();
-        if (startRegion && dispatcher?.publish) {
-            dispatcher.publish('user:regionMove', {
-                sourceRegion,
-                targetRegion: startRegion,
-                fromReset: true,
-                updatePath: false,
-            }, { initialTarget: 'bottom' });
-        }
-    }
-
-    _resolveStartRegion(gs) {
-        try {
-            const fn = centralRegistry.getPublicFunction?.(
-                'procgenPlayer', 'getResolvedStartRegion',
-            );
-            const resolved = fn?.();
-            if (resolved) return resolved;
-        } catch {
-            // procgenPlayer not loaded; fall through.
-        }
-        return gs.startRegions?.[0] ?? null;
+        fireLoopResetTeleport({
+            sourceRegion,
+            dispatcher: this.apis?.dispatcher,
+            dispatchOpts: { initialTarget: 'bottom' },
+        });
     }
 
     /**
@@ -1332,6 +1548,17 @@ export class MazeRoomUI {
     }
 
     /**
+     * The clearance bag every PLANNER in this panel must use, so a route is
+     * planned against the same gate verdicts the engine will enforce when it
+     * walks it. Undefined when stateManager isn't loaded — callers then fall
+     * back to the local subset evaluator, exactly as `step` does.
+     */
+    _planningClearanceOpts() {
+        const ruleEvaluator = this._currentRuleEvaluator();
+        return ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
+    }
+
+    /**
      * Apply a region payload published via maze:loadRegion. Called by
      * the module-level handler when this panel is already mounted, and
      * (via constructor) on initial mount with any buffered payload.
@@ -1341,6 +1568,18 @@ export class MazeRoomUI {
     }
 
     _adoptLoadedRegion(payload, { skipRender = false } = {}) {
+        // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): a crossing between two
+        // AP regions of ONE level world is a walk inside it. procgenPlayer marks
+        // it `sameWorld`; the panel keeps the player, the blocks, what was
+        // broken, the queue, the replay, the fog and the visit recording, and
+        // only the region changes. Anything else is an ordinary entry below.
+        if (payload?.sameWorld === true && payload.world && payload.world === this.world && this.state) {
+            this.currentRegionId = payload.region_id ?? this.currentRegionId;
+            this.message = `Crossed into ${this.currentRegionId}`;
+            this._visualizer?.setRegion?.(this.currentRegionId);
+            if (!skipRender) this.render();
+            return;
+        }
         // Payload shape (per procgen-player.md §"Event flow"):
         //   { region_id, world, arrivedFrom }
         // arrivedFrom.exit_id (when present) names the exit IN THE
@@ -1356,12 +1595,14 @@ export class MazeRoomUI {
         // queue" rule applies. Also stop any in-flight replay driver
         // — its actions are for the previous region.
         this._stopReplay?.();
-        this._mazeQueue?.clearAll();
+        this._mazeQueue?.clear();
+        this._editCursor = null;
+        this._queueRefusal = null;
         // Start a new saved-queue visit recording. Any in-flight
         // recording from a previous region (not finalized by an exit
         // cross) is discarded — that path was non-departing and not
         // useful to save. The new recording's actionsAtStart aligns
-        // with the now-cleared maze queue's executionIndex (0).
+        // with the now-cleared maze queue's cursor (0).
         this._startVisitRecording(payload);
         // Reset direct-walk tracking. Items / locations are session-
         // scoped to the region; cost accumulates from the entrance.
@@ -1372,13 +1613,35 @@ export class MazeRoomUI {
         // new world start at phase 0. resetHazards no-ops when the
         // world has no hazards.
         resetHazards(payload?.world?.hazards);
+        // Drop the consumable-reset dedupe memo. It remembers the
+        // gameState loop-reset COUNT that last cleared the collected set
+        // (_subscribeToLoopReset), but that counter restarts at 0 with
+        // every new ruleset — so a value remembered from a PREVIOUS world
+        // can collide with the new world's first reset, silently skipping
+        // the clear and leaving collected tiles permanently un-respawned
+        // (X1-R1). Clearing it here scopes the memo to the loaded world;
+        // the clear it gates is idempotent, so the only thing a dropped
+        // memo can cost is a redundant no-op.
+        this._lastConsumableResetCount = null;
         this.world = payload.world;
         this.state = createState(this.world);
-        const arrivedExitId = payload.arrivedFrom?.exit_id;
+        // ⛓ T2b F1 — `exit_id`, else the exit leading back to
+        // `arrivedFrom.source_region` (a world with no reverse links, e.g. a
+        // return from a placed Seedling room), else the entrance.
+        const arrival = resolveMazeArrival(this.world, payload.arrivedFrom);
+        this.arrivedFromExitId = payload?.arrivedFrom?.exit_id ?? null;
+        this.arrivalDoorId = arrival?.exitId ?? null;
         let spawnAt = null;
-        if (arrivedExitId && this.world.exits?.has(arrivedExitId)) {
-            const exit = this.world.exits.get(arrivedExitId);
-            spawnAt = { x: exit.x, y: exit.y };
+        // ⛓ A fresh entry into a shared level world with no arrival exit lands
+        // on the ENTERED region's own entrance (the world's `entrance` is its
+        // carrier's).
+        const ownEntrance = arrival ? null
+            : this.world?.sharedWorld?.entrances?.[payload?.region_id] ?? null;
+        if (arrival) {
+            spawnAt = { x: arrival.x, y: arrival.y };
+            this.state.player_pos = spawnAt;
+        } else if (ownEntrance) {
+            spawnAt = { x: ownEntrance.x, y: ownEntrance.y };
             this.state.player_pos = spawnAt;
         }
         this.stats = null;
@@ -1411,6 +1674,9 @@ export class MazeRoomUI {
         const snapshot = stateManagerProxySingleton.getSnapshot();
         this.externalInventory = inventoryFromSnapshot(snapshot);
         this.externalCheckedLocations = checkedLocationsFromSnapshot(snapshot);
+        // ⛓ SLICE R-b: the world, the spawn cell and the entry inventory are all
+        // settled now — remember them for this visit's `requires` derivation.
+        this._noteVisitStart();
         // Discovery semantics depend on fog of war:
         //   - Panel fog rendering ON: only tiles within the spawn's
         //     visibility are revealed. Further tiles uncover as the
@@ -1431,7 +1697,7 @@ export class MazeRoomUI {
         }
         if (!skipRender) {
             this.render();
-            this.rootElement?.focus();
+            this._focusWhenVisible();
         }
     }
 
@@ -1444,6 +1710,7 @@ export class MazeRoomUI {
         if (this._unsubDiscoveryMode) { this._unsubDiscoveryMode(); this._unsubDiscoveryMode = null; }
         if (this._unsubDiscoveryChanged) { this._unsubDiscoveryChanged(); this._unsubDiscoveryChanged = null; }
         if (this._unsubLoopMode) { this._unsubLoopMode(); this._unsubLoopMode = null; }
+        if (this._unsubLoopReset) { this._unsubLoopReset(); this._unsubLoopReset = null; }
         if (this._unsubManaChanged) { this._unsubManaChanged(); this._unsubManaChanged = null; }
         if (this._unsubCostData) { this._unsubCostData(); this._unsubCostData = null; }
         if (this._unsubLoopsBegan) { this._unsubLoopsBegan(); this._unsubLoopsBegan = null; }
@@ -1452,9 +1719,32 @@ export class MazeRoomUI {
         if (this._playbackBar) { this._playbackBar.destroy(); this._playbackBar = null; }
         if (this._visualizer) { this._visualizer.stop(); this._visualizer = null; }
         this._stopReplay();
+        if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
         setPanelInstance(null);
     }
-    onPanelShow() { this.render(); this.rootElement?.focus(); }
+    onPanelShow() { this.render(); this._focusWhenVisible(); }
+
+    /**
+     * ⛓ T2b F4 — focus the root ONCE IT IS DISPLAYED. Measured: both the load's
+     * focus and Golden Layout's 'show' ran while the root had no layout box
+     * (`getClientRects()` empty: the tab is shown after the event), and a hidden
+     * element refuses focus. So the attempt is retried briefly until it has one.
+     */
+    _focusWhenVisible() {
+        if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
+        const delays = [0, 50, 150, 400, 1000];
+        const attempt = (i) => {
+            this._focusTimer = null;
+            const el = this.rootElement;
+            if (!el) return;
+            const shown = typeof el.getClientRects !== 'function' || el.getClientRects().length > 0;
+            if (shown) { el.focus?.(); return; }
+            if (i + 1 < delays.length) {
+                this._focusTimer = setTimeout(() => attempt(i + 1), delays[i + 1] - delays[i]);
+            }
+        };
+        attempt(0);
+    }
     onPanelResize() {}
 
     render() {
@@ -1619,12 +1909,19 @@ export class MazeRoomUI {
         const world = this.world;
         if (!world) {
             console.warn('[mazeRoom] walkTo received before world loaded; ignoring');
-            return;
+            return false;
         }
         const tile = this._resolveWalkToTile(target, world);
         if (!tile) {
+            // Report the failure to the CALLER rather than only to the console.
+            // A router that picks an exit this world has no tile for (a
+            // region-atlas crossing the projection walled, still present in the
+            // AP graph) would otherwise leave the bot waiting on a transition
+            // that can never happen — a silent stall, which reads exactly like
+            // slow progress. The playback bot turns this `false` into a named
+            // error status.
             console.warn('[mazeRoom] walkTo: could not resolve target', target);
-            return;
+            return false;
         }
         // Refresh externalInventory from the latest cached snapshot
         // before the visualizer's tile-pathfinder runs. The snapshot
@@ -1649,7 +1946,18 @@ export class MazeRoomUI {
             this.externalCheckedLocations = checkedLocationsFromSnapshot(snap);
             this._visualizer.setInventory?.(this.externalInventory);
         }
+        // ONE evaluator, both paths. The keyboard / queue path has always
+        // stepped through _currentRuleEvaluator (the full Rule Builder schema
+        // over stateManager's snapshot interface); the walkTo path planned and
+        // stepped with only the procgen-local subset evaluator, so the two
+        // could disagree about any gate the subset cannot express — and did.
+        const ruleEvaluator = this._currentRuleEvaluator();
+        this._visualizer.setClearanceOpts?.(ruleEvaluator ? { evaluateRule: ruleEvaluator } : null);
+        // Set BEFORE walkToTile: an unreachable tile sets the visualizer stuck
+        // synchronously, and _onVisualizerChange reports it to the bot then.
+        this._botWalkTarget = { ...target };
         this._visualizer.walkToTile({ x: tile.x, y: tile.y, name: target.name ?? null });
+        return true;
     }
 
     /**
@@ -1669,6 +1977,9 @@ export class MazeRoomUI {
                 setRate: (rateHz) => this._visualizer?.setRate(rateHz),
                 walkTo:  (target) => this._handleWalkToCommand(target),
                 replayActions: (actions, opts) => this._replaySavedActions(actions, opts),
+                // X1: optional slot — lets a collect-policy-driven bot
+                // find detour targets without knowing it drives a maze.
+                listUncollectedConsumables: () => this.listUncollectedConsumables(),
             };
         }
         return this._playbackController;
@@ -1681,12 +1992,135 @@ export class MazeRoomUI {
      * Returns true if a replay was started; false when actions is
      * empty or invalid.
      */
-    _replaySavedActions(actions, { onComplete } = {}) {
-        if (!Array.isArray(actions) || actions.length === 0) return false;
-        this._stopReplay();
-        this._mazeQueue.appendAll(actions);
-        this._startReplayDriver({ onComplete });
+    /**
+     * ⛓⛓⛓ SLICE R-b — **THE PRECONDITION GATE, BEFORE STEP 0.** `null` when the
+     * recording may run here; a sentence when it may not, already published as
+     * the panel's message.
+     *
+     * ⛔ THE BLOCK IS LEFT **PARKED** — the caller returns `false`, no completion
+     * is fired and no departure is crossed. That is the S2b/Q-b shape: a
+     * completion withheld is a loops block that stays where it is instead of
+     * reporting a walk it did not make.
+     */
+    _refuseReplayPreconditions(recording) {
+        if (!recording || !this.world) return null;
+        const problem = refuseReplayPreconditions(recording, {
+            world: this.world,
+            startInventory: this.externalInventory ?? this.state?.inventory ?? null,
+        });
+        if (problem === null) return null;
+        this.message = `Replay refused before it started: ${problem}`;
+        this._queueRefusal = problem;
+        // eslint-disable-next-line no-console
+        console.warn(`[mazeRoom] ${this.message}`);
         this.render();
+        return problem;
+    }
+
+    _replaySavedActions(actions, {
+        onComplete, departureExitId = null, instant = false, recording = null,
+    } = {}) {
+        const hasActions = Array.isArray(actions) && actions.length > 0;
+        // Nothing to replay AND no exit to cross — genuinely a no-op.
+        if (!hasActions && !departureExitId) return false;
+        // ⛓ R-b: the RECORDING (loops passes the whole envelope) is asked before
+        // anything is queued. A caller that passes only actions — a pre-R-b
+        // recording, or a test — is unaffected: absent fields answer `null`.
+        if (this._refuseReplayPreconditions(recording) !== null) return false;
+        this._stopReplay();
+        // A maze region recording captures only the INTERIOR moves — the
+        // exit-crossing move is NOT in the slice (see _finalizeVisitOnExit;
+        // this mirrors textAdventure recordings excluding their departure).
+        // So after the interior moves drain we must physically cross the
+        // recorded departure exit, or Playback stalls one tile short and the
+        // parked loops block never departs. Cross it in the completion.
+        const onReplayComplete = () => {
+            if (departureExitId) this._crossRecordedDeparture(departureExitId);
+            if (typeof onComplete === 'function') {
+                try { onComplete(); } catch { /* best-effort UI signal */ }
+            }
+        };
+        if (hasActions) {
+            // A recording is run-length COMPRESSED (`loops: n`); the live
+            // queue is one entry per turn, so expand before adding.
+            this._appendEntries(expandEntries(actions));
+            if (instant) {
+                // Instant (M3): drain the whole interior synchronously (no
+                // animation clock), then cross the departure in the same
+                // frame. The interior advances the panel engine state exactly
+                // as the ticked driver would — just without the 200ms/step
+                // wait — so _crossRecordedDeparture still issues the transition
+                // from the (now-at-exit) engine state.
+                // stepOne() runs the executor (advances the engine state),
+                // unlike drainPending() which only moves the cursor — we need
+                // the real position advance so the departure crosses from the
+                // exit.
+                let guard = this._mazeQueue.length + 1;
+                let refused = false;
+                while (!this._mazeQueue.isExhausted() && guard-- > 0) {
+                    const index = this._mazeQueue.cursor;
+                    const out = this._mazeQueue.stepOne(this._runEntry);
+                    // R2: same rule as the ticked driver — the first refused
+                    // entry stops the drain and the departure is NOT crossed,
+                    // so the loops block stays parked instead of reporting a
+                    // walk it did not make.
+                    if (out?.state === ActionState.FAILED) {
+                        this._abortReplay(index, out);
+                        refused = true;
+                        break;
+                    }
+                }
+                if (!refused) onReplayComplete();
+            } else {
+                this._startReplayDriver({ onComplete: onReplayComplete });
+            }
+        } else {
+            // Empty-interior recording (arrival tile is the exit tile): no
+            // driver needed, just cross the exit.
+            onReplayComplete();
+        }
+        this.render();
+        return true;
+    }
+
+    /**
+     * Cross the recorded departure exit after a Playback replay's interior
+     * moves drain. The recording excludes the exit-crossing move, so replaying
+     * the interior alone leaves the region unchanged and a parked loops block
+     * never departs.
+     *
+     * We ISSUE the region transition directly (mirroring textAdventure's
+     * _issueDeparture) rather than physically re-walking. The interior replay
+     * runs through the maze QUEUE (_executeMoveAction), which advances the
+     * PANEL's engine state (this.state) — NOT the visualizer, which keeps its
+     * own separate position tracker still sitting at the entrance. Driving the
+     * visualizer here therefore restarts the walk from the entrance and
+     * double-walks the whole region before crossing. Publishing the regionMove
+     * straight from the (already-at-the-exit) engine state avoids that.
+     *
+     * fromLoop:true so gameState skips the duplicate path entry the parked
+     * Playback block already holds (updatePath appends forward moves); the
+     * block advances on the resulting gameState:regionChanged wake.
+     * Returns true when the transition was issued.
+     */
+    _crossRecordedDeparture(departureExitId) {
+        if (!departureExitId || !this.world) return false;
+        const dispatcher = this.apis?.dispatcher;
+        if (!dispatcher?.publish) return false;
+        const exits = this.world.exits;
+        const exit = exits?.get?.(departureExitId)
+            ?? [...(exits?.values?.() ?? [])].find(
+                (e) => e.exit_id === departureExitId || e.exitName === departureExitId);
+        if (!exit?.targetRegion) {
+            console.warn('[mazeRoom] playback departure: no target region for exit', departureExitId);
+            return false;
+        }
+        dispatcher.publish('user:regionMove', {
+            sourceRegion: this.currentRegionId,
+            targetRegion: exit.targetRegion,
+            exitName: exit.exitName ?? null,
+            fromLoop: true,
+        }, { initialTarget: 'bottom' });
         return true;
     }
 
@@ -1745,6 +2179,22 @@ export class MazeRoomUI {
      * region into this panel via maze:loadRegion. The visualizer
      * itself paused on _awaitingRegionLoad until setWorld arrives.
      */
+    /**
+     * ⛓ SHARED LEVEL WORLD: a visualizer walk (the bot, an explore target)
+     * crossed into another AP region of the same world. Same publish as a
+     * keyboard `cross` — the walk itself never pauses, the world is the same.
+     */
+    _onVisualizerRegionCross(crossing) {
+        this.currentRegionId = crossing.targetRegion;
+        const fromLoop = this._loopsDrivenAction != null;
+        this.apis?.dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: crossing.sourceRegion,
+            targetRegion: crossing.targetRegion,
+            exitName: crossing.exitName ?? null,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+    }
+
     _onVisualizerExitCross(exit, sourceRegion) {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
@@ -1818,6 +2268,9 @@ export class MazeRoomUI {
         // touched during this action. (No longer used for saved-queue
         // serialization — that reads from _mazeQueue.actions in
         // _finalizeVisitOnExit.)
+        // R1: same visit-recording bookkeeping as the keyboard path's
+        // _publishPlaybackEvents, so a bot-driven walk records its pickups too.
+        this._notePickupForVisit(itemId);
         if (this._loopsDrivenAction) {
             if (Array.isArray(this._loopsDrivenLocations)
                 && !this._loopsDrivenLocations.includes(locationName)) {
@@ -1852,6 +2305,115 @@ export class MazeRoomUI {
     }
 
     /**
+     * Claim a consumable / mana tile for the keyboard-play path,
+     * delegating to the visualizer's collected set so both play
+     * surfaces share one source of truth (and one loop-reset clear).
+     * Returns true only on the first claim within the current loop.
+     */
+    _claimConsumableTile(position) {
+        const claim = this._visualizer?.claimConsumable;
+        if (typeof claim !== 'function') return true;
+        return this._visualizer.claimConsumable(
+            this.currentRegionId, position.x, position.y,
+        );
+    }
+
+    /**
+     * Deliver a cross-game consumable tile's grant (X1).
+     *
+     * Calls resourceChannels' grantItem DIRECTLY rather than publishing
+     * the `substrate:itemGrant` router event. The router leg is a thin
+     * unwrap-and-forward into this very function; it exists to give
+     * IFRAME BRIDGES a contract surface across the postMessage boundary.
+     * The maze is a native in-process panel module with no bridge — it
+     * already imports chargeMana / fireLoopResetTeleport from this same
+     * library — so routing through the eventBus would add a hop and buy
+     * nothing.
+     *
+     * Direction matters: we grant OUT of the maze (`from: 'maze'`),
+     * which only requires the maze to be a registered substrate. The
+     * maze needs no `sharing.items` declaration of its own — that would
+     * only be required to grant INTO it.
+     *
+     * A rejected grant (unknown substrate, undeclared type — e.g. a
+     * world generated against a substrate that isn't co-present in this
+     * session) is warned by the bus and dropped. Deliberately NOT fatal:
+     * these tiles are logic-inert (D5), so a dropped grant can never
+     * make a world unwinnable.
+     */
+    _grantConsumableTile(grant, position) {
+        if (!grant?.substrate || !grant?.type) return false;
+        const ok = grantItem({
+            to: grant.substrate,
+            from: 'maze',
+            itemType: grant.type,
+            count: Number.isInteger(grant.count) && grant.count > 0 ? grant.count : 1,
+        });
+        if (!ok) {
+            console.warn('[mazeRoom] consumable tile grant rejected', { grant, position });
+        }
+        this._announceConsumableCollected(position);
+        return ok;
+    }
+
+    /**
+     * Announce that a consumable / mana tile was consumed.
+     *
+     * These tiles fire NEITHER user:locationCheck NOR user:regionMove —
+     * they are not locations and don't move you — so without this signal
+     * a playback bot on a collect detour would have nothing to wake it
+     * up and would stall mid-walk. Published even when the underlying
+     * grant was rejected: the tile is spent either way, and a stalled
+     * bot is worse than a dropped grant.
+     */
+    _announceConsumableCollected(position) {
+        eventBus?.publish?.('maze:consumableCollected', {
+            regionName: this.currentRegionId,
+            x: position?.x ?? null,
+            y: position?.y ?? null,
+        }, 'mazeRoom');
+    }
+
+    /**
+     * Deliver a mana-refill tile (X1-R4). The mana channel's gain leg is
+     * unclamped by design — maxMana is the loop's STARTING mana, not a
+     * ceiling — so a refill can legitimately carry the pool above max.
+     */
+    _grantManaTile(amount, position) {
+        const amt = Number(amount) || 0;
+        if (amt <= 0) return false;
+        gainMana({ substrateId: 'maze', amount: amt });
+        this._announceConsumableCollected(position);
+        return true;
+    }
+
+    /**
+     * Uncollected consumable / mana tiles in the CURRENT region, as
+     * {x, y} pairs in a stable row-major order.
+     *
+     * Optional slot on the PlaybackController contract: substrates that
+     * don't carry consumable tiles simply don't implement it, and the
+     * bot's collect policy degrades to a no-op rather than needing to
+     * know which substrate it is driving.
+     */
+    listUncollectedConsumables() {
+        const world = this.world;
+        if (!world) return [];
+        const out = [];
+        const keys = new Set([
+            ...(world.consumableTiles?.keys() ?? []),
+            ...(world.manaTiles?.keys() ?? []),
+        ]);
+        for (const key of keys) {
+            const [x, y] = key.split(',').map(Number);
+            if (this._visualizer?.isConsumableCollected?.(this.currentRegionId, x, y)) continue;
+            out.push({ x, y });
+        }
+        out.sort((a, b) => (a.y !== b.y ? a.y - b.y : a.x - b.x));
+        return out;
+    }
+
+    /**
      * Visualizer ticked — mirror its player_pos into the panel's
      * state so the canvas redraws show the bot moving. The
      * visualizer's inventory + checkedLocations flow through the
@@ -1868,7 +2430,30 @@ export class MazeRoomUI {
             const oldPos = this.state.player_pos;
             newPos = { ...vState.player_pos };
             stepHappened = !!oldPos && (oldPos.x !== newPos.x || oldPos.y !== newPos.y);
-            this.state.player_pos = newPos;
+            /**
+             * ⛓⛓⛓ D5 — **THE TURN IS COPIED BESIDE THE POSITION**, in the one
+             * statement, because they are one fact about one tick. Before this
+             * the mirror carried `player_pos` alone, so during a loops-delegated
+             * walk the panel's own counter stood still and *"Reached exit in N
+             * steps."* under-counted the whole walk — the residue S2a named
+             * (§30) when it fixed the visualizer's `getState().turn` and left
+             * this reader unfinished.
+             *
+             * ⛔ Guarded on the TYPE and not on truthiness: turn 0 is a real
+             * turn, and a visualizer that carries no counter (an older stub)
+             * must leave the panel's own number alone rather than blank it.
+             * ⛔ And it is a copy, not an increment: the visualizer is the
+             * authority on how many turns its walk took, exactly as it is on
+             * where the player is.
+             */
+            Object.assign(this.state, {
+                player_pos: newPos,
+                ...(typeof vState.turn === 'number' ? { turn: vState.turn } : {}),
+                // ⛓ ITEM ACTIONS: a visualizer turn / strike changes facing and
+                // the broken set without moving — same one-fact-per-tick copy.
+                ...(vState.facing !== undefined ? { facing: vState.facing } : {}),
+                ...(Array.isArray(vState.broken) ? { broken: vState.broken.slice() } : {}),
+            });
         }
         // Tick detection: the visualizer's turn counter strictly
         // increases on every tick (move OR wait). Comparing against
@@ -1906,7 +2491,7 @@ export class MazeRoomUI {
             // verb done so the icon row drains in lockstep. No
             // executor invocation — the side effects already happened
             // via the visualizer.
-            this._mazeQueue?.markCurrentDone();
+            this._mazeQueue?.advance();
             // Phase 2e: every tile-step is a turn — tick hazards. The
             // autopather doesn't currently plan around hazards (v1
             // limitation), so if a delegated walk ends in a doomed
@@ -1952,7 +2537,7 @@ export class MazeRoomUI {
                 });
                 this._loopsDrivenCost += cost;
             }
-            this._mazeQueue?.markCurrentDone();
+            this._mazeQueue?.advance();
             this._tickAndCheckHazards();
             if (!this._loopsDrivenAction) {
                 this._pendingFreshLocationCheck = null;
@@ -2010,7 +2595,32 @@ export class MazeRoomUI {
         ) {
             this._chainDirectExplore();
         }
+        this._reportBotWalk(vState);
         this.render();
+    }
+
+    /**
+     * The Playback Bot's walkTo (`_handleWalkToCommand`) ended STUCK — the
+     * planner found no path, or the engine refused a step — so tell the bot,
+     * in the walker's own words, through the controller contract's
+     * `playback:walkFailed`: the bot's status becomes a named `error:` at once,
+     * instead of "walking to …" until something notices nothing moves. Once
+     * per walk; a finished leg (no target, not stuck) forgets the walk.
+     */
+    _reportBotWalk(vState) {
+        const target = this._botWalkTarget;
+        if (!target || !vState) return;
+        if (!vState.stuck) {
+            if (!vState.target) this._botWalkTarget = null;
+            return;
+        }
+        this._botWalkTarget = null;
+        const blocked = [...(vState.log ?? [])].reverse().find((e) => e?.type === 'blocked');
+        eventBus.publish(PLAYBACK_WALK_FAILED_EVENT, {
+            substrate: 'maze',
+            target,
+            reason: blocked?.description ?? 'the Maze Room walker is stuck',
+        }, 'mazeRoom');
     }
 
     _chainExploreOrComplete() {
@@ -2033,15 +2643,24 @@ export class MazeRoomUI {
         // the upcoming path. (No locationCheck terminator — explore
         // doesn't end at a specific location.)
         const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
-        const path = findPath(
+        const planned = this._plansItemActions()
+            ? planItemActions(this.world, this.state, { kind: 'tile', x: next.x, y: next.y }, {
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            })
+            : null;
+        const path = planned ? null : findPath(
             this.world,
             { x: startPos.x, y: startPos.y },
             { kind: 'tile', x: next.x, y: next.y },
             { hazards: this.world?.hazards, allowWait: true },
         );
-        if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
+        if (planned) {
+            this._appendEntries(inputsToEntries(planned.inputs));
+        } else if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);
-            if (moves.length > 0) this._mazeQueue?.appendAll(moves);
+            this._appendEntries(moves);
         }
         this._visualizer.walkToTile({ x: next.x, y: next.y, name: null });
         this._ensureVisualizerPlaying();
@@ -2095,7 +2714,9 @@ export class MazeRoomUI {
         wrap.className = 'maze-room-queue';
 
         const snap = this._mazeQueue.snapshot();
-        const pending = snap.actions.length - snap.executionIndex;
+        const entries = snap.entries;
+        const editCursor = this._editCursor;
+        const pending = entries.length - snap.cursor;
         // Read-only mode: loops queue is driving the walk. User edits
         // would race the visualizer's execution. Replay buttons hide
         // for the same reason — can't start a replay mid-loop-walk.
@@ -2106,30 +2727,36 @@ export class MazeRoomUI {
         if (readOnly) {
             const verb = this._loopsDrivenAction?.type ?? 'loops';
             status.textContent
-                = `Loops driving — ${verb} (${pending} pending of ${snap.actions.length})`;
-        } else if (snap.actions.length === 0) {
+                = `Loops driving — ${verb} (${pending} pending of ${entries.length})`;
+        } else if (entries.length === 0) {
             status.textContent = 'Empty — press a movement key or Space to wait.';
         } else {
-            const cursorText = snap.editCursor !== null
-                ? ` · cursor @ ${snap.editCursor}`
-                : '';
+            const cursorText = editCursor !== null ? ` · cursor @ ${editCursor}` : '';
             status.textContent
-                = `${snap.actions.length} action${snap.actions.length === 1 ? '' : 's'}`
+                = `${entries.length} action${entries.length === 1 ? '' : 's'}`
                 + ` · ${pending} pending${cursorText}`;
         }
         wrap.appendChild(status);
 
+        // R2: the reason the last entry was refused (a bumped wall, or the
+        // entry a replay stopped on). Cleared on region entry.
+        if (this._queueRefusal) {
+            const refusal = document.createElement('div');
+            refusal.className = 'maze-room-queue-refusal';
+            refusal.textContent = `Refused: ${this._queueRefusal}`;
+            wrap.appendChild(refusal);
+        }
+
         const row = document.createElement('div');
         row.className = 'maze-room-queue-row'
             + (readOnly ? ' is-read-only' : '');
-        for (let i = 0; i < snap.actions.length; i++) {
-            if (!readOnly && snap.editCursor === i) {
+        for (let i = 0; i < entries.length; i++) {
+            if (!readOnly && editCursor === i) {
                 row.appendChild(this._renderQueueCursor());
             }
-            row.appendChild(this._renderQueueIcon(snap.actions[i], i, readOnly));
+            row.appendChild(this._renderQueueIcon(entries[i], i, snap.cursor, readOnly));
         }
-        if (!readOnly
-            && snap.editCursor !== null && snap.editCursor === snap.actions.length) {
+        if (!readOnly && editCursor !== null && editCursor === entries.length) {
             row.appendChild(this._renderQueueCursor());
         }
         // Trailing click region: clicking here clears the cursor.
@@ -2139,7 +2766,7 @@ export class MazeRoomUI {
         if (!readOnly) {
             tailSlot.title = 'Click to insert at tail (clear cursor)';
             tailSlot.addEventListener('click', () => {
-                this._mazeQueue.setEditCursor(null);
+                this._setEditCursor(null);
                 this.render();
                 this.rootElement?.focus();
             });
@@ -2155,7 +2782,7 @@ export class MazeRoomUI {
         clearBtn.textContent = 'Clear pending';
         clearBtn.disabled = readOnly || pending === 0;
         clearBtn.addEventListener('click', () => {
-            this._mazeQueue.clearPending();
+            this._clearPendingEntries();
             this.render();
             this.rootElement?.focus();
         });
@@ -2174,6 +2801,8 @@ export class MazeRoomUI {
             controls.appendChild(stopBtn);
         }
         wrap.appendChild(controls);
+        const itemRow = this._renderItemActionButtons(readOnly);
+        if (itemRow) wrap.appendChild(itemRow);
 
         // Replay buttons for each saved best-queue matching the current
         // (region, arrivedFromExitId). Hidden when nothing's saved or
@@ -2207,6 +2836,47 @@ export class MazeRoomUI {
         return wrap;
     }
 
+    /**
+     * ⛓ ITEM ACTIONS — the turn buttons and one button per `action_lib` entry
+     * (labelled with its key), only on an item-action world. A click is the
+     * same press as the key (`_pressEntry`). `null` on every other world.
+     */
+    _renderItemActionButtons(readOnly) {
+        const lib = this.world?.actionLib;
+        if (!lib || Object.keys(lib).length === 0) return null;
+        const row = document.createElement('div');
+        row.className = 'maze-room-item-actions';
+        const add = (text, title, spec) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'maze-room-item-action';
+            btn.textContent = text;
+            btn.title = title;
+            btn.disabled = readOnly;
+            btn.addEventListener('click', () => {
+                this._pressEntry(spec);
+                this.rootElement?.focus();
+            });
+            row.appendChild(btn);
+        };
+        for (const [dir, glyph] of [['N', '⇡'], ['W', '⇠'], ['S', '⇣'], ['E', '⇢']]) {
+            add(glyph, `turn ${dir} (Shift+arrow)`, turnEntry(dir));
+        }
+        const keyOf = Object.fromEntries(Object.entries(useKeyBindings(lib)).map(([k, id]) => [id, k]));
+        for (const id of Object.keys(lib).sort()) {
+            const key = keyOf[id];
+            add(key ? `${key.toUpperCase()}: ${id}` : id,
+                `use ${id}${lib[id].item ? ` (needs ${lib[id].item})` : ''}`, useEntry(id));
+        }
+        if (this.state?.facing) {
+            const facing = document.createElement('span');
+            facing.className = 'maze-room-item-facing';
+            facing.textContent = `facing ${this.state.facing}`;
+            row.appendChild(facing);
+        }
+        return row;
+    }
+
     _renderQueueCursor() {
         const el = document.createElement('div');
         el.className = 'maze-room-queue-cursor';
@@ -2214,42 +2884,63 @@ export class MazeRoomUI {
         return el;
     }
 
-    _renderQueueIcon(action, index, readOnly = false) {
+    /**
+     * One icon. The GLYPH table is the panel's (it is pixels, not words); the
+     * TOOLTIP WORDING comes from the registry's `describeAction` so the panel,
+     * `blockAnnotations` and any cross-substrate viewer say the same thing —
+     * the `×n` suffix for a folded entry is appended here, per that function's
+     * contract that the caller owns it.
+     *
+     * @param {object} entry - a frozen `snapshot()` entry (carries `status`)
+     * @param {number} index
+     * @param {number} queueCursor - snapshot cursor (the next entry to run)
+     * @param {boolean} readOnly
+     */
+    _renderQueueIcon(entry, index, queueCursor, readOnly = false) {
         const el = document.createElement('div');
-        const isDone = action.status === 'done';
-        const isNext = !isDone && index === this._mazeQueue.executionIndex;
+        const state = entry.status?.state;
+        const isDone = index < queueCursor;
+        const isFailed = state === ActionState.FAILED;
+        const isNext = !isDone && index === queueCursor;
         el.className = 'maze-room-queue-icon'
             + (isDone ? ' is-done' : ' is-pending')
+            + (isFailed ? ' is-failed' : '')
             + (isNext ? ' is-next' : '');
         el.dataset.index = String(index);
 
         let glyph;
-        let tooltip;
-        if (action.type === ACTION_MOVE) {
-            glyph = { N: '↑', S: '↓', E: '→', W: '←' }[action.dir] ?? '?';
-            tooltip = `move ${action.dir}`;
-        } else if (action.type === ACTION_WAIT) {
+        if (entry.actionType === ACTION_MOVE) {
+            glyph = { N: '↑', S: '↓', E: '→', W: '←' }[entry.actionId] ?? '?';
+        } else if (entry.actionType === ACTION_WAIT) {
             glyph = '◌';
-            tooltip = 'wait';
-        } else if (action.type === ACTION_LOCATION_CHECK) {
+        } else if (entry.actionType === ACTION_LOCATION_CHECK) {
             glyph = '✓';
-            tooltip = `check ${action.locationName ?? ''}`;
+        } else if (entry.actionType === ACTION_TURN) {
+            glyph = { N: '⇡', S: '⇣', E: '⇢', W: '⇠' }[entry.actionId] ?? '?';
+        } else if (entry.actionType === ACTION_USE) {
+            glyph = '⚔';
+        } else if (entry.actionType === ACTION_CROSS) {
+            glyph = '⇥';
         } else {
             glyph = '?';
-            tooltip = action.type;
         }
+        const loops = Number.isInteger(entry.loops) ? entry.loops : 1;
+        const described = substrateRegistryEntry.describeAction?.(entry) ?? entry.actionType;
+        const tooltip = loops > 1 ? `${described} ×${loops}` : described;
         el.textContent = glyph;
-        el.title = `${tooltip} (#${index}${isDone ? ', done' : ''})`;
+        const suffix = isFailed ? ', refused' : (isDone ? ', done' : '');
+        el.title = `${tooltip} (#${index}${suffix})`
+            + (isFailed && entry.status?.error ? ` — ${entry.status.error}` : '');
 
         if (!isDone && !readOnly) {
             // Click sets edit cursor BEFORE this icon. Done actions
             // are non-interactive (the cursor can't enter the done
-            // region anyway — setEditCursor clamps to executionIndex).
+            // region anyway — _setEditCursor clamps to the queue cursor).
             // Loops-driving (read-only) blocks edits to prevent
             // racing the visualizer.
             el.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this._mazeQueue.setEditCursor(index);
+                this._setEditCursor(index);
                 this.render();
                 this.rootElement?.focus();
             });
@@ -2486,7 +3177,7 @@ export class MazeRoomUI {
         if (this.state && currentInv.size > 0) {
             const inv = document.createElement('div');
             inv.className = 'maze-room-inventory';
-            const itemNames = [...currentInv].map((id) => {
+            const itemNames = [...currentInv.keys()].map((id) => {
                 const item = (this.world?.itemLib ?? DEFAULT_ITEMS)[id];
                 return item?.name ?? id;
             });
@@ -2597,12 +3288,54 @@ export class MazeRoomUI {
         return section;
     }
 
+    /**
+     * ⛓⛓⛓ DEDUP M6 — **WHICH TILE A CLICK LANDED ON IS `labView.tileAtPoint`'S
+     * ANSWER**, derived from the ROOM's dimensions and the ELEMENT's on-screen
+     * size — never from `TILE_PX`, which is the canvas's INTRINSIC scale and
+     * says nothing about how the browser is presenting it.
+     *
+     * ⛔ THE OLD LINE WAS A LIVE BUG, MEASURED not reasoned: with the canvas
+     * presented at 2x its intrinsic size (CSS width, browser zoom or a
+     * device-pixel ratio all do it), a click at the visual centre of tile
+     * (3,2) mapped to (6,4) — the editor painted a cell four tiles away from
+     * the one the person clicked. `mazeRoomUI.test.js` drives exactly that.
+     *
+     * ⛓ AND THE 1 px BORDER IS SUBTRACTED. `.maze-room-canvas` has
+     * `border: 1px solid #333` (`mazeRoom.css`) and `getBoundingClientRect`
+     * is the BORDER box, so both the origin and the size are one border too
+     * big. ⛔ It is read off the COMPUTED STYLE rather than restated as a
+     * constant here: a second spelling of a CSS value in JS is the drift this
+     * whole rung is removing, and a border the stylesheet changes would
+     * silently move every click. A run with no stylesheet (jsdom, the tests)
+     * reads `0`, which is the honest answer for a canvas with no border.
+     *
+     * ⛔ AN OUT-OF-RANGE POINT STILL RETURNS SILENTLY — the panel is not a lab
+     * and has no refusal box — but the ANSWER is `tileAtPoint`'s own, so the
+     * two callers cannot disagree about where the room ends.
+     */
     _handleCanvasClick(event, canvas) {
         if (!this.world || !this.editMode) return;
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((event.clientX - rect.left) / TILE_PX);
-        const y = Math.floor((event.clientY - rect.top) / TILE_PX);
-        if (x < 0 || x >= this.world.width || y < 0 || y >= this.world.height) return;
+        const px = (v) => (Number.parseFloat(v) || 0);
+        const cs = canvas.ownerDocument?.defaultView?.getComputedStyle?.(canvas) ?? null;
+        const border = {
+            left: px(cs?.borderLeftWidth), top: px(cs?.borderTopWidth),
+            right: px(cs?.borderRightWidth), bottom: px(cs?.borderBottomWidth),
+        };
+        let x;
+        let y;
+        try {
+            ({ tx: x, ty: y } = tileAtPoint({
+                x: event.clientX - rect.left - border.left,
+                y: event.clientY - rect.top - border.top,
+                width: rect.width - border.left - border.right,
+                height: rect.height - border.top - border.bottom,
+                cols: this.world.width,
+                rows: this.world.height,
+            }));
+        } catch {
+            return;
+        }
 
         const editor = this._ensureEditor();
         const result = editor.applyAt(this.world, x, y);
@@ -2948,228 +3681,45 @@ export class MazeRoomUI {
         this._ensureVisualizerPlaying();
     }
 
+    /**
+     * ⛓⛓⛓ THE ADAPTER — CONSTRUCTIVE-MODE slice 3 (⚖ kickoff §3.5).
+     *
+     * The ~270 lines that used to live here are now `mazeRoomRender.drawWorld`,
+     * because the maze lab page draws the same worlds and two renderers would
+     * be two pictures of one level. ⛔ Everything this method does is BUILD THE
+     * VIEW: each `this.*` the body read is now a named field, and the whole
+     * point of that list is that a page which has no panel can still supply it.
+     *
+     * ⚠ `isConsumableCollected` CLOSES OVER `currentRegionId` here rather than
+     * taking it as a field. The visualizer's probe is keyed by region and a
+     * standalone page has no regions at all, so the region id is a PANEL fact
+     * and belongs on the panel's side of the seam — the renderer only ever
+     * needs the answer for a cell.
+     *
+     * The pixel gate is `mazeRoomRender.test.js`: an ordered draw-op log,
+     * captured from THIS method before the extraction, compared against both
+     * this adapter and a direct `drawWorld` call.
+     */
     _drawWorld(canvas) {
         const ctx = canvas.getContext('2d');
-        const w = this.world;
-        const itemLib = w.itemLib ?? DEFAULT_ITEMS;
-        const obstacleLib = w.obstacleLib ?? DEFAULT_OBSTACLES;
-        const currentInv = this._currentInventory();
-        // Build a clearance options bag once. When stateManager has
-        // a snapshot ready, isObstacleCleared dispatches rule-typed
-        // obstacles through the shared rule engine (full Rule Builder
-        // schema). When it doesn't (dev/standalone), the local subset
-        // evaluator handles Has/And/Or/True_/False_ as before.
-        const ruleEvaluator = this._currentRuleEvaluator();
-        const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-
-        // Tile base layer: floor / wall.
-        for (let y = 0; y < w.height; y++) {
-            for (let x = 0; x < w.width; x++) {
-                const tile = getTile(w, x, y);
-                ctx.fillStyle = tile === TILE_WALL ? COLORS.wall : COLORS.floor;
-                ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-            }
-        }
-
-        // Build a quick lookup from tile coords to the exit at that
-        // position (if any), so the per-tile rendering decisions
-        // below don't have to walk world.exits each time.
-        const exitAt = new Map();
-        for (const e of w.exits.values()) {
-            exitAt.set(`${e.x},${e.y}`, e);
-        }
-
-        // Per-location pickup truth in playback mode — see
-        // _currentCheckedLocations for why inventory-keyed checks
-        // can't stand in for this (multi-instance items, e.g.
-        // Adventure's 12 Freeincarnates).
-        const isPlayback = this.externalInventory !== null;
-        const checkedLocations = this._currentCheckedLocations();
-
-        // §5 rendering pass — exits, entrance border, combo-list
-        // obstacles, items, and gate borders, in an order that gets
-        // each tile's stack of overlays right.
-        for (let y = 0; y < w.height; y++) {
-            for (let x = 0; x < w.width; x++) {
-                const key = `${x},${y}`;
-                // Fog of war: tiles outside the seen-set get blacked
-                // out at the end of this method. Skip overlay work
-                // here so undiscovered items / exits / gate borders
-                // don't even render before the blackout.
-                if (this.fogEnabled && !this._isTileVisibleForRender(x, y)) continue;
-                const obstacleId = w.obstacles.get(key);
-                const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
-                const isLogicGate = obstacle?.clear_set_type === 'rule';
-                const gateClosed = isLogicGate
-                    && !isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
-                const exit = exitAt.get(key);
-                const isExit = !!exit;
-                const isEntrance = (x === w.entrance.x && y === w.entrance.y);
-                const itemId = w.items.get(key);
-                // Playback mode tracks pickups per-location (locationName
-                // baked into the sidecar) so multi-instance items only
-                // disappear at the specific tile that was checked.
-                // Generate dev flow has no locationNames — falls back
-                // to the inventory-keyed check.
-                const locationName = isPlayback ? w.itemLocationNames?.get(key) : null;
-                const itemCollected = isPlayback
-                    ? (locationName ? checkedLocations.has(locationName) : false)
-                    : currentInv.has(itemId);
-                const itemHere = itemId && !itemCollected;
-
-                // Discovery filter — only applies in playback mode.
-                // Exits hide their fill and items hide their sprite
-                // when discovery mode is active and the entry hasn't
-                // been discovered yet. Underlying tile (floor / wall /
-                // entrance) still renders; only the AP-overlays gate.
-                const exitVisible = !isPlayback || !exit
-                    || this._isExitVisibleToUI(exit);
-                const locationVisible = !isPlayback || !locationName
-                    || this._isLocationVisibleToUI(locationName);
-
-                // Exit fill: green by default, red when a logic gate
-                // sits on the tile and isn't cleared. (Both-row of
-                // §5 table is "follows the exit row" — this branch
-                // covers it because we don't paint the entrance
-                // border when isExit is true.)
-                if (isExit && exitVisible) {
-                    ctx.fillStyle = (isLogicGate && gateClosed) ? COLORS.exitBlocked : COLORS.exit;
-                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-                }
-
-                // Combo-list obstacles (colored doors) keep their
-                // existing rendering. Logic gates are NOT painted as
-                // tile-fill obstacles — their visual is handled
-                // through the exit-fill / location-border paths.
-                if (obstacle && !isLogicGate) {
-                    const color = obstacle.color ?? '#b84040';
-                    // combo_list obstacles (colored doors) don't use
-                    // the rule engine — clearOpts is harmless here
-                    // but unnecessary; pass it for symmetry.
-                    const cleared = isObstacleCleared(obstacleId, currentInv, obstacleLib, clearOpts);
-                    if (cleared) {
-                        ctx.save();
-                        ctx.globalAlpha = 0.4;
-                        ctx.strokeStyle = color;
-                        ctx.lineWidth = 1.5;
-                        ctx.setLineDash([3, 3]);
-                        ctx.strokeRect(x * TILE_PX + 3, y * TILE_PX + 3, TILE_PX - 6, TILE_PX - 6);
-                        ctx.restore();
-                    } else {
-                        ctx.fillStyle = color;
-                        ctx.fillRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                        ctx.strokeStyle = '#000';
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(x * TILE_PX + 2, y * TILE_PX + 2, TILE_PX - 4, TILE_PX - 4);
-                    }
-                }
-
-                // Items: a circle in the library's color. Skipped
-                // when the player already collected the item, or when
-                // discovery mode hides this location. Foreign items
-                // (no library entry) get a hash-derived color and a
-                // first-letter label so they're visually distinguishable
-                // from each other and from known items.
-                if (itemHere && locationVisible) {
-                    const hints = getItemRenderHints(itemId, itemLib);
-                    ctx.fillStyle = hints.color;
-                    const cx = x * TILE_PX + TILE_PX / 2;
-                    const cy = y * TILE_PX + TILE_PX / 2;
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, TILE_PX * 0.3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    if (hints.label) {
-                        ctx.save();
-                        ctx.fillStyle = '#000';
-                        ctx.font = `bold ${Math.floor(TILE_PX * 0.45)}px sans-serif`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(hints.label, cx, cy);
-                        ctx.restore();
-                    }
-                }
-
-                // Closed logic gate marker: 2px red border. Drawn
-                // independently of the item sprite so the gate stays
-                // visible even after its underlying location's item
-                // has been "collected" — which can happen for any
-                // tile sharing an item id with an already-checked
-                // location, since `currentInv` is keyed by item name
-                // not location name. (See §5 — the spec's "Location
-                // closed" row anticipated only the item-present case;
-                // this fallback covers the no-item case too.) Skipped
-                // on exit tiles, which already render their closed
-                // state via the full red fill above. Also hidden when
-                // discovery mode filters this location — otherwise
-                // the border would leak "something's here" before the
-                // location was supposed to be visible.
-                if (isLogicGate && gateClosed && !isExit && locationVisible) {
-                    ctx.strokeStyle = COLORS.locationBlocked;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-
-                // Entrance border: 2px solid green, only when the
-                // tile isn't also an exit (per the §5 "both = exit
-                // row" rule).
-                if (isEntrance && !isExit) {
-                    ctx.strokeStyle = COLORS.entrance;
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x * TILE_PX + 1, y * TILE_PX + 1, TILE_PX - 2, TILE_PX - 2);
-                }
-            }
-        }
-
-        ctx.strokeStyle = COLORS.grid;
-        ctx.lineWidth = 1;
-        for (let x = 0; x <= w.width; x++) {
-            ctx.beginPath();
-            ctx.moveTo(x * TILE_PX + 0.5, 0);
-            ctx.lineTo(x * TILE_PX + 0.5, w.height * TILE_PX);
-            ctx.stroke();
-        }
-        for (let y = 0; y <= w.height; y++) {
-            ctx.beginPath();
-            ctx.moveTo(0, y * TILE_PX + 0.5);
-            ctx.lineTo(w.width * TILE_PX, y * TILE_PX + 0.5);
-            ctx.stroke();
-        }
-
-        // Hazard overlays — red paths + facing triangles. Drawn after
-        // grid lines (so the path is visually on top of the grid
-        // texture) and before the fog overlay (so unseen hazards
-        // properly hide behind fog). Hazards live on world.hazards
-        // when a content-module-aware procgen pipeline produced this
-        // region; legacy worlds without the field render normally.
-        drawHazards(ctx, w.hazards, TILE_PX);
-
-        // Fog overlay — paint solid black over every unseen tile. Runs
-        // after grid lines so the grid doesn't leak the unexplored
-        // shape, and before the player render so the player always
-        // shows on top. Player's own tile is always in the seen-set
-        // (any movement onto it expanded visibility), so this never
-        // covers the player.
-        if (this.fogEnabled) {
-            const seen = this.seenTilesByRegion.get(this._seenSetKey());
-            ctx.fillStyle = '#000';
-            for (let y = 0; y < w.height; y++) {
-                for (let x = 0; x < w.width; x++) {
-                    if (seen && seen.has(`${x},${y}`)) continue;
-                    ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
-                }
-            }
-        }
-
-        if (this.state) {
-            const { x, y } = this.state.player_pos;
-            ctx.fillStyle = COLORS.player;
-            ctx.beginPath();
-            ctx.arc(x * TILE_PX + TILE_PX / 2, y * TILE_PX + TILE_PX / 2, TILE_PX * 0.35, 0, Math.PI * 2);
-            ctx.fill();
-        }
+        drawWorld(ctx, this.world, {
+            tilePx: TILE_PX,
+            playerPos: this.state ? this.state.player_pos : null,
+            inventory: this._currentInventory(),
+            isPlayback: this.externalInventory !== null,
+            checkedLocations: this._currentCheckedLocations(),
+            ruleEvaluator: this._currentRuleEvaluator(),
+            fogEnabled: this.fogEnabled,
+            isTileVisible: (x, y) => this._isTileVisibleForRender(x, y),
+            seenTiles: this.seenTilesByRegion.get(this._seenSetKey()) ?? null,
+            isExitVisible: (exit) => this._isExitVisibleToUI(exit),
+            isLocationVisible: (name) => this._isLocationVisibleToUI(name),
+            isConsumableCollected: (x, y) => this._visualizer
+                ?.isConsumableCollected?.(this.currentRegionId, x, y),
+            broken: this.state?.broken ?? null,
+            facing: this.state?.facing ?? null,
+            armedTraps: this.state ? armedTraps(this.world, this.state, this.externalInventory ?? undefined) : null,
+        });
     }
 
     // --- Generation ---
@@ -3194,6 +3744,9 @@ export class MazeRoomUI {
             this.world = world;
             this.state = createState(world);
             this.stats = stats;
+            // A generated world is entered at its entrance, from nowhere.
+            this.arrivedFromExitId = null;
+            this.arrivalDoorId = null;
             // Generate dev flow uses state.inventory directly — drop
             // any external inventory left over from a prior LoadRegion
             // session in this panel.
@@ -3235,7 +3788,7 @@ export class MazeRoomUI {
         // the keystroke so default browser behavior (e.g. spacebar
         // scrolling) doesn't fire either.
         if (this._loopsDrivenAction) {
-            if (e.key === 'Backspace' || KEY_MAP[e.key]) e.preventDefault();
+            if (e.key === 'Backspace' || keyToMazeEntry(e, this.world.actionLib)) e.preventDefault();
             return;
         }
         // Backspace: editing op (not a queue verb). Removes the action
@@ -3244,28 +3797,85 @@ export class MazeRoomUI {
         if (e.key === 'Backspace') {
             e.preventDefault();
             const q = this._mazeQueue;
-            const cursor = q.editCursor ?? q.length;
-            if (cursor > q.executionIndex) {
-                q.deleteAt(cursor - 1);
+            const cursor = this._clampedEditIndex();
+            if (cursor > q.cursor) {
+                q.removeAt(cursor - 1);
+                if (this._editCursor !== null) this._editCursor -= 1;
                 this.render();
             }
             return;
         }
-        const spec = KEY_MAP[e.key];
+        // ⛓ ITEM ACTIONS: Shift+arrow / Z X C V bind only on a world with an
+        // action_lib; elsewhere this is `KEY_MAP[e.key]`, exactly as before.
+        const spec = keyToMazeEntry(e, this.world.actionLib);
         if (!spec) return;
         e.preventDefault();
+        this._pressEntry(spec);
+    }
+
+    /**
+     * Append-and-execute ONE pressed entry — the keyboard's path, shared with
+     * the item-action buttons so a click and a key are the same press.
+     */
+    _pressEntry(spec) {
+        if (!this.world || !this.state || this._loopsDrivenAction) return;
         // Cancel an active replay so direct input takes over. Pressed
         // key still routes through the queue as normal — replay's
         // pending tail is preserved, but the user is now in control.
         if (this._replayDriver) {
             this._stopReplay();
         }
-        // Route through the queue. Append-and-execute fires the
-        // executor synchronously when cursor is at tail; pure insert
-        // when cursor is set mid-queue. Either way the queue's state
-        // is current before render().
-        this._mazeQueue.handleInput(spec);
+        // Append-and-execute (the contract `MazeRoomQueue.handleInput` used to
+        // own): the entry lands at the edit point and, when that point is the
+        // tail and nothing is pending ahead of it, runs synchronously.
+        //
+        // ⚠ `ActionQueue.add` THROWS a RangeError for an index inside the done
+        // region rather than clamping, so the CLAMP lives here — the panel's
+        // edit cursor is never handed to `add` unclamped.
+        const q = this._mazeQueue;
+        const at = this._clampedEditIndex();
+        const insert = at < q.length;
+        q.add(spec, at);
+        if (insert) {
+            if (this._editCursor !== null) this._editCursor += 1;
+        } else if (q.cursor === q.length - 1) {
+            // Appended AND next to run: execute synchronously. When entries
+            // are still pending ahead (a replay tail the user typed into),
+            // the press only appends — the driver will reach it in order.
+            q.stepOne(this._runEntry);
+        }
         this.render();
+    }
+
+    /**
+     * Where the next keypress inserts, guaranteed outside the done region.
+     *
+     * `MazeRoomQueue.setEditCursor` clamped to `>= executionIndex`; the shared
+     * `ActionQueue` refuses instead, by throwing — so the clamp has to happen
+     * before `add`/`removeAt` see the index, and this is the one place it does.
+     */
+    _clampedEditIndex() {
+        const q = this._mazeQueue;
+        if (this._editCursor === null) return q.length;
+        return Math.max(q.cursor, Math.min(this._editCursor, q.length));
+    }
+
+    /**
+     * Place the edit cursor. `null` means "tail" (the default). Indices are
+     * clamped into `[cursor, length]` — the cursor can never point into the
+     * done region.
+     */
+    _setEditCursor(index) {
+        let next;
+        if (index === null) {
+            next = null;
+        } else if (!Number.isInteger(index)) {
+            return;
+        } else {
+            next = Math.max(this._mazeQueue.cursor, Math.min(index, this._mazeQueue.length));
+        }
+        if (this._editCursor === next) return;
+        this._editCursor = next;
     }
 
     /**
@@ -3280,11 +3890,27 @@ export class MazeRoomUI {
     _replayBestPath(recordedAtKey) {
         const queue = this._lookupSavedQueueByRecordedAt(recordedAtKey);
         if (!queue || !Array.isArray(queue.actions) || queue.actions.length === 0) return;
+        // ⛓ R-b: the picker offers a stale recording LABELLED rather than hidden
+        // (see `_getReplayableTargets`), so pressing one has to refuse by name.
+        if (this._refuseReplayPreconditions(queue) !== null) return;
         this._stopReplay();
-        this._mazeQueue.appendAll(queue.actions);
+        // A recording is run-length COMPRESSED (`loops: n`); the live queue is
+        // one entry per turn, so expand before adding.
+        this._appendEntries(expandEntries(queue.actions));
         this._startReplayDriver();
         this.render();
         this.rootElement?.focus();
+    }
+
+    /**
+     * Add already-expanded entries at the tail without executing any of them.
+     * (`ActionQueue` has no `appendAll`; a batch of `add`s is one emit each,
+     * which the panel does not subscribe to — it re-renders explicitly.)
+     */
+    _appendEntries(entries) {
+        if (!Array.isArray(entries) || entries.length === 0) return 0;
+        for (const entry of entries) this._mazeQueue.add(entry);
+        return entries.length;
     }
 
     _lookupSavedQueueByRecordedAt(recordedAt) {
@@ -3300,15 +3926,45 @@ export class MazeRoomUI {
         if (this._replayDriver) return;
         this._replayCompletionCallback = typeof onComplete === 'function' ? onComplete : null;
         const tick = () => {
-            if (this._mazeQueue.isIdle()) {
+            if (this._mazeQueue.isExhausted()) {
                 this._stopReplay({ fireCompletion: true });
                 this.render();
                 return;
             }
-            this._mazeQueue.stepOne();
+            const index = this._mazeQueue.cursor;
+            const out = this._mazeQueue.stepOne(this._runEntry);
+            if (out?.state === ActionState.FAILED) {
+                this._abortReplay(index, out);
+                return;
+            }
             this.render();
         };
         this._replayDriver = setInterval(tick, this._replayTickMs);
+    }
+
+    /**
+     * Census gap R2 — a replayed entry the engine REFUSED means the replay has
+     * left the route it was recorded on. Stop the driver, name the index and
+     * the reason, and do NOT fire the completion callback.
+     *
+     * Not firing the completion is the whole refusal: for a loops Playback /
+     * customQueue block the callback is what crosses the recorded departure
+     * exit, so withholding it leaves the block PARKED in manual mode —
+     * the shape `loopState` already handles (it parks every such block and
+     * wakes on the departing `regionMove`, which now never comes on its own).
+     * There is no `loops:substrateActionCompleted` on this path to publish a
+     * failure into: that event belongs to the `substrateActionBegan`
+     * delegation path, not to a replay.
+     */
+    _abortReplay(index, out) {
+        this._stopReplay();
+        const reason = out?.error ?? this._queueRefusal ?? 'refused';
+        const label = describeMazeAction(out?.entry) || `action ${index}`;
+        this._queueRefusal = reason;
+        this.message = `Replay stopped at action ${index} (${label}): ${reason}`;
+        // eslint-disable-next-line no-console
+        console.warn(`[mazeRoom] ${this.message}`);
+        this.render();
     }
 
     _stopReplay({ fireCompletion = false } = {}) {
@@ -3346,15 +4002,47 @@ export class MazeRoomUI {
         const queues = getSavedQueues(rulesHash, this.currentRegionId, 'maze')
             .filter((q) => q.arrivalExitId === arrivalExitId)
             .filter((q) => q.departureExitId);
+        /**
+         * ⛓⛓ SLICE R-b — **A STALE RECORDING IS LABELLED, NOT HIDDEN.**
+         *
+         * ⛔ THE DECISION AND ITS REASON: hiding it makes the recording VANISH
+         * with no account of itself, and a player cannot tell a recording the
+         * level outgrew from one that was never made — the picker is the only
+         * surface in a position to say *"this one was recorded on a level that
+         * has since been edited"*. Pressing it still refuses by name
+         * (`_replayBestPath` → `_refuseReplayPreconditions`), so the label
+         * costs nothing and buys the explanation. A recording that predates
+         * this slice carries no digest and is never marked.
+         */
+        /**
+         * ⛔ LAZILY, AND THE LAZINESS IS LOAD-BEARING: hashing the world on
+         * every render to answer a question no stored recording is asking
+         * would spend `serializeMazeLevel` on each repaint — and it broke on
+         * the panel's own partial fixtures the moment it was written
+         * unconditionally. Computed on the FIRST recording that carries a
+         * digest, then reused.
+         */
+        let here;
+        const digestHere = () => {
+            if (here === undefined) here = this.world ? mazeWorldDigest(this.world) : null;
+            return here;
+        };
         const out = queues.map((q) => {
             const exit = this.world?.exits?.get?.(q.departureExitId);
             const exitLabel = exit?.exitName ?? exit?.targetRegion ?? q.departureExitId;
             const manaCost = (q.manaAtEntry ?? 0) - (q.manaMin ?? q.manaAtEntry ?? 0);
+            const stale = typeof q.worldDigest === 'string'
+                && digestHere() !== null && q.worldDigest !== digestHere();
             return {
                 key: String(q.recordedAt),
-                label: `exit: ${exitLabel}`,
+                stale,
+                label: `exit: ${exitLabel}${stale ? ' — recorded on an older version of this level' : ''}`,
                 totalCost: manaCost,
-                actionCount: q.actions.length,
+                // The EXPANDED count — how many turns the replay will take.
+                // A recording is run-length folded, so `actions.length` is now
+                // a storage detail (a 40-step corridor is ONE entry); the
+                // button promises the player a walk length, not a row count.
+                actionCount: expandedLength(q.actions),
             };
         });
         out.sort((a, b) => a.totalCost - b.totalCost);
@@ -3362,33 +4050,160 @@ export class MazeRoomUI {
     }
 
     /**
-     * Executor injected into the queue. Dispatches on action type.
-     * Called synchronously by MazeRoomQueue.handleInput (append-and-
-     * execute path) and by stepOne (replay paths, future phases).
+     * The executor handed to `ActionQueue.stepOne`. Runs the entry and, when
+     * the entry was REFUSED, THROWS — that is how `stepOne` records
+     * `ActionState.FAILED` with the reason (census gap R2).
+     *
+     * An entry carrying `params.refused` is a refusal the RECORDING already
+     * knew about (the player bumped a wall while recording; the turn still
+     * passed, so the entry has to stay in the script for hazard phase to line
+     * up). Reproducing that refusal is the recording replaying CORRECTLY, so
+     * it completes rather than failing. A refusal on any OTHER entry means the
+     * replay has left the route it was recorded on and the driver stops.
+     *
+     * Bound once (`_runEntry`) so `stepOne(this._runEntry)` keeps `this`.
      */
-    _executeQueueAction(action) {
-        if (action.type === ACTION_MOVE) {
-            this._executeMoveAction(action.dir);
-        } else if (action.type === ACTION_WAIT) {
-            this._executeWaitAction();
-        } else if (action.type === ACTION_LOCATION_CHECK) {
-            this._executeLocationCheckAction(action.locationName);
+    _runEntry = (entry) => {
+        const reason = this._executeQueueAction(entry);
+        this._queueRefusal = reason ?? null;
+        if (reason && !isRefused(entry)) throw new Error(reason);
+        return { reason: reason ?? null };
+    };
+
+    /**
+     * Dispatch one entry on `actionType` and apply the panel-side side
+     * effects around the pure `executeMazeEntry` call. Returns the refusal
+     * reason, or null when the entry ran.
+     */
+    _executeQueueAction(entry) {
+        if (entry?.actionType === ACTION_MOVE) {
+            // ⛓ SHARED LEVEL WORLD: a move whose arrival cell another AP region
+            // owns IS a crossing. It is PROMOTED in place to the `cross` entry
+            // the queue format already has (⚖ "cross + dir + params"), so the
+            // loop-mode gate runs before the step and the recording keeps the
+            // regions — its replay needs no exit lookup.
+            const crossing = this._sharedWorldCrossingFor(entry);
+            if (crossing) {
+                entry.actionType = ACTION_CROSS;
+                entry.params = {
+                    ...(entry.params ?? {}),
+                    boundary: crossing.boundary,
+                    sourceRegion: crossing.sourceRegion,
+                    targetRegion: crossing.targetRegion,
+                };
+                return this._executeCrossAction(entry);
+            }
+            return this._executeMoveAction(entry);
         }
+        if (entry?.actionType === ACTION_WAIT) {
+            this._executeWaitAction(entry);
+            return null;
+        }
+        if (entry?.actionType === ACTION_LOCATION_CHECK) {
+            this._executeLocationCheckAction(entry.actionId);
+            return null;
+        }
+        if (entry?.actionType === ACTION_TURN || entry?.actionType === ACTION_USE) {
+            return this._executeInPlaceAction(entry);
+        }
+        if (entry?.actionType === ACTION_CROSS) {
+            return this._executeCrossAction(entry);
+        }
+        return `unknown maze action type '${entry?.actionType}'`;
     }
 
     /**
-     * Execute a queued move. Mirrors the pre-queue _handleKeydown
-     * move logic exactly: step() with the panel's rule evaluator,
-     * playback-mode mana deduction + event publishing, fog
-     * expansion, end-of-region message. A blocked move (step returns
-     * null) is a no-op for state/mana/events — the queue still
-     * advances per the plan's "queued move becomes a no-op for that
-     * step" semantics.
+     * The in-world crossing a MOVE entry would make from where the player
+     * stands now, or `null` — off a shared level world, for any other entry,
+     * or when the arrival cell is "no news" / the player's own region.
      */
-    _executeMoveAction(dir) {
-        if (!this.world || !this.state) return;
-        const input = MOVE_DIR_TO_INPUT[dir];
-        if (!input) return;
+    _sharedWorldCrossingFor(entry) {
+        if (!this.world?.sharedWorld || !this.state) return null;
+        const to = intendedTileFor(this.state.player_pos, entry?.actionId);
+        if (!to) return null;
+        return sharedWorldCrossing(this.world, this.currentRegionId, to.x, to.y);
+    }
+
+    /**
+     * ⛓ Run a `cross` entry INSIDE a shared level world: the loop-mode gate is
+     * asked first (a gated crossing must not put the player on the far side's
+     * floor), then the step runs exactly as a move does, then the panel
+     * publishes `user:regionMove` for the AP exit the atlas declares —
+     * procgenPlayer recognises the shared world and answers `sameWorld`, so
+     * the player, the blocks and every broken rock stay where they are.
+     *
+     * Refused by name: off a shared world (the entry has nothing to cross
+     * inside), or when the player is not in the entry's `sourceRegion` (a
+     * replay that has left the route it was recorded on).
+     */
+    _executeCrossAction(entry) {
+        const p = entry?.params ?? {};
+        if (!this.world?.sharedWorld) {
+            return `${describeMazeAction(entry)} refused: this world is not a shared level world`;
+        }
+        if (p.sourceRegion !== this.currentRegionId) {
+            return `${describeMazeAction(entry)} refused: the player is in "${this.currentRegionId}", `
+                + `not "${p.sourceRegion}"`;
+        }
+        const gate = this._crossGate();
+        // Region FIRST, so the step's own events (a check on the boundary
+        // cell) are filed under the region the player arrives in; a refused
+        // step puts it back.
+        this.currentRegionId = p.targetRegion;
+        const reason = this._executeMoveAction(entry, { gate });
+        if (reason !== null) {
+            this.currentRegionId = p.sourceRegion;
+            return reason;
+        }
+        const dispatcher = this.apis?.dispatcher;
+        const exitName = this.world.sharedWorld.links[`${p.sourceRegion}>${p.targetRegion}`] ?? null;
+        const fromLoop = this._loopsDrivenAction != null;
+        this._visualizer?.setRegion?.(p.targetRegion);
+        dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: p.sourceRegion,
+            targetRegion: p.targetRegion,
+            exitName,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+        return null;
+    }
+
+    /**
+     * The loop-mode action gate a `cross` entry asks BEFORE its step — the
+     * same question procgenPlayer asks of every `user:regionMove`
+     * (`loops.gateSubstrateAction`). Absent (no loops module) → no gate.
+     */
+    _crossGate() {
+        const gate = centralRegistry?.getPublicFunction?.('loops', 'gateSubstrateAction');
+        if (typeof gate !== 'function') return undefined;
+        const fromLoop = this._loopsDrivenAction != null;
+        return (crossing) => (gate({
+            kind: 'move',
+            regionName: crossing.sourceRegion,
+            data: {
+                sourceRegion: crossing.sourceRegion,
+                targetRegion: crossing.targetRegion,
+                ...(fromLoop ? { fromLoop: true } : {}),
+            },
+        }) === false ? 'the loop-mode action gate refused it' : true);
+    }
+
+    /**
+     * Execute a queued move: the panel-side side effects wrapped around the
+     * pure `executeMazeEntry` call — playback-mode mana deduction + event
+     * publishing, fog expansion, end-of-region message, hazard tick.
+     *
+     * A refused move is a no-op for state/mana/events and the turn still
+     * passes, exactly as before; what changed in slice Q-b is that the
+     * refusal is REPORTED (returned here, thrown by `_runEntry`) instead of
+     * being marked done and forgotten.
+     *
+     * @param {object} entry - a `move` queue entry; `actionId` is the direction
+     * @returns {string|null} the refusal reason, or null when the move ran
+     */
+    _executeMoveAction(entry, { gate } = {}) {
+        const dir = entry?.actionId;
+        if (!this.world || !this.state) return 'no world or state loaded';
         // In playback mode (externalInventory non-null) the snapshot is
         // truth and step() must not mutate state.inventory; in Generate
         // dev mode the override is undefined and step keeps its
@@ -3401,22 +4216,32 @@ export class MazeRoomUI {
         // the turn still passes (hazards tick below). Mirrors the
         // "queued move becomes a no-op for that step" semantics from
         // wall-bumped moves.
-        const intendedPos = this._intendedTileFor(oldPos, dir);
+        const intendedPos = intendedTileFor(oldPos, dir);
         const hazardAllowed = validateMoveAgainstHazards(
             this.world.hazards, oldPos, intendedPos,
         );
-        let stepped = false;
-        if (hazardAllowed) {
+        let refusal = null;
+        if (!hazardAllowed) {
+            refusal = `move ${dir} blocked at (${intendedPos?.x},${intendedPos?.y}): hazard`;
+        } else {
             // Use the same clearance evaluator path as the renderer so a
             // visibly-open logic gate is also walkable (and a closed
             // one blocks). Falls through to the local subset evaluator
             // when no snapshot is loaded.
             const ruleEvaluator = this._currentRuleEvaluator();
             const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-            const next = step(this.world, this.state, input, this.externalInventory ?? undefined, clearOpts);
-            if (next !== null) {
+            const { next, reason, faced } = executeMazeEntry(this.world, this.state, entry, {
+                inventoryOverride: this.externalInventory ?? undefined,
+                clearanceOpts: clearOpts,
+                gate,
+            });
+            if (next === null) {
+                refusal = reason;
+                // ⚖ "Refusal + facing": a bump on an item-action world turns
+                // the player toward it; the move itself stays refused.
+                if (faced) this.state = faced;
+            } else {
                 this.state = next;
-                stepped = true;
                 if (this.externalInventory !== null) {
                     // Phase 3: deduct mana for the tile-step before
                     // publishing events. Charges location cost if the
@@ -3456,9 +4281,7 @@ export class MazeRoomUI {
         if (!this._loopsDrivenAction) {
             this._tickAndCheckHazards();
         }
-        // Suppress unused-var lint if we ever change the branching;
-        // `stepped` documents intent and is reserved for future use.
-        void stepped;
+        return refusal;
     }
 
     /**
@@ -3467,13 +4290,35 @@ export class MazeRoomUI {
      * rate (same cost as a move-onto-floor, per the plan's "wait
      * has same mana cost as move"). Ticks hazards after the wait so
      * the player can wait out hazard cycles.
+     *
+     * ⛓ S2a: the wait ADVANCES THE ENGINE STATE, through the same
+     * `executeMazeEntry` → `step(world, state, INPUT_WAIT)` the queue
+     * executor and the visualizer use. Before this slice the panel's wait
+     * charged mana and ticked hazards but left `state.turn` alone, so a
+     * hand-played wait and a visualizer wait disagreed about what a turn was.
+     *
+     * ⚠ The engine NEVER refuses a wait, so the state advances whatever the
+     * hazard question below answers — that question gates the MANA CHARGE
+     * only, exactly as it did before. (Contrast `_executeMoveAction`, where a
+     * hazard refusal really does mean the move did not happen.)
+     *
+     * ⚠ Measured consequence: `state.turn` is read in exactly two places —
+     * the visualizer-turn mirror in `_onVisualizerChange` (which compares the
+     * VISUALIZER's counter, not this one) and the end-of-region message
+     * "Reached exit in N steps.". That message now counts hand-played waits,
+     * and it is right to: a wait IS a turn. No decision reads `state.turn`.
+     *
+     * @param {object} [entry] - the `wait` queue entry; a bare call (the
+     *   keyboard path and the older tests) waits all the same.
      */
-    _executeWaitAction() {
+    _executeWaitAction(entry) {
         if (!this.world || !this.state) return;
         const pos = this.state.player_pos;
         const hazardAllowed = validateMoveAgainstHazards(
             this.world.hazards, pos, pos,
         );
+        const { next } = executeMazeEntry(this.world, this.state, entry ?? waitEntry());
+        if (next) this.state = next;
         if (hazardAllowed
                 && this.externalInventory !== null
                 && this._shouldDeductMazeMana()) {
@@ -3497,15 +4342,66 @@ export class MazeRoomUI {
     }
 
     /**
+     * ⛓ ITEM ACTIONS — a queued `turn` or `use`. The player does not move, so
+     * it is a WAIT to everything around the engine (⚖ "Costs a turn": mana at
+     * the per-tile rate in playback, hazards tick); the engine decides the
+     * facing / the strike. A refused use (item not held) still passes the turn
+     * (hazards tick, no mana), as a refused move does.
+     *
+     * @returns {string|null} the refusal reason, or null when it ran
+     */
+    _executeInPlaceAction(entry) {
+        if (!this.world || !this.state) return 'no world or state loaded';
+        const ruleEvaluator = this._currentRuleEvaluator();
+        const { next, reason } = executeMazeEntry(this.world, this.state, entry, {
+            inventoryOverride: this.externalInventory ?? undefined,
+            clearanceOpts: ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined,
+        });
+        if (next === null) {
+            if (!this._loopsDrivenAction) this._tickAndCheckHazards();
+            return reason;
+        }
+        const struck = next.broken?.length !== this.state.broken?.length;
+        const hit = struck ? next.broken.find((k) => !this.state.broken.includes(k)) : null;
+        this.state = next;
+        if (struck) {
+            // ⛓ A ROPE is cut, not struck down: its group's traps fall silent this visit, and its `event` is the
+            // AP event location the cut checks (⚖ "Both: this visit + event item", session tile-primitives-arrow-rope).
+            const entryOf = this.world.obstacleLib?.[this.world.obstacles.get(hit)];
+            if (entryOf?.activates) {
+                this.message = `Cut ${entryOf.name ?? 'the rope'} with ${entry.actionId}.`;
+                if (entryOf.event) this._executeLocationCheckAction(entryOf.event);
+            } else {
+                this.message = `Struck the rock with ${entry.actionId}.`;
+            }
+        }
+        const pos = this.state.player_pos;
+        const hazardAllowed = validateMoveAgainstHazards(this.world.hazards, pos, pos);
+        if (hazardAllowed && this.externalInventory !== null && this._shouldDeductMazeMana()) {
+            const gs = getGameStateSingleton?.();
+            if (gs) {
+                const cost = this._perTileMoveCost();
+                gs.deductMana(cost);
+                if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+                if (!this._loopsDrivenAction) this._directWalkCost += cost;
+                if (gs.getCurrentMana() <= 0) {
+                    this._fireLoopReset();
+                    return null;
+                }
+            }
+        }
+        if (!this._loopsDrivenAction) this._tickAndCheckHazards();
+        return null;
+    }
+
+    /**
      * Compute the tile a player at `from` would intend to step into
      * given direction `dir` (regardless of whether engine.step would
      * actually permit the move). Used for hazard pre-validation
      * before engine.step runs.
      */
     _intendedTileFor(from, dir) {
-        const d = MOVE_DIR_TO_DELTA[dir];
-        if (!d) return from;
-        return { x: from.x + d.dx, y: from.y + d.dy };
+        return intendedTileFor(from, dir);
     }
 
     /**
@@ -3570,7 +4466,7 @@ export class MazeRoomUI {
         }
         this._visualizer?.stop?.();
         this._stopReplay?.();
-        this._mazeQueue?.clearPending();
+        this._clearPendingEntries();
         this.state.player_pos = { x: tile.x, y: tile.y };
         resetHazards(this.world.hazards);
         this.message = 'Hazard-trapped — teleported to entrance.';
@@ -3578,11 +4474,12 @@ export class MazeRoomUI {
 
     _resolveHazardEntranceTile() {
         // Prefer the exit tile the player arrived through (the door
-        // they came in by) — mirrors _adoptLoadedRegion's spawn-
-        // positioning logic. Falls back to world.entrance for the
-        // initial spawn / standalone Generate flow.
-        if (this.arrivedFromExitId && this.world?.exits?.has(this.arrivedFromExitId)) {
-            const exit = this.world.exits.get(this.arrivedFromExitId);
+        // they came in by) — the exit _adoptLoadedRegion's
+        // resolveMazeArrival placed them on (`arrivalDoorId`, T4). Falls
+        // back to world.entrance for the initial spawn / standalone
+        // Generate flow.
+        if (this.arrivalDoorId && this.world?.exits?.has(this.arrivalDoorId)) {
+            const exit = this.world.exits.get(this.arrivalDoorId);
             return { x: exit.x, y: exit.y };
         }
         return this.world?.entrance ?? null;
@@ -3635,6 +4532,11 @@ export class MazeRoomUI {
                 // Track + record direct walk before publishing — the
                 // publish may trigger a region transition synchronously
                 // (rare for locationCheck, but defensive).
+                // R1: the visit recording's itemsPickedUp, filled here rather
+                // than left a literal []. Unconditional (not gated on mana or
+                // on who is driving) — the recording says what the walk
+                // collected either way.
+                this._notePickupForVisit(ev.itemId);
                 if (this.world?.manaEnabled && !this._loopsDrivenAction) {
                     if (ev.itemId && !this._directWalkItems.includes(ev.itemId)) {
                         this._directWalkItems.push(ev.itemId);
@@ -3655,6 +4557,20 @@ export class MazeRoomUI {
                     locationName,
                     regionName: this.currentRegionId,
                 }, { initialTarget: 'bottom' });
+            } else if (ev.type === 'consumable_pickup') {
+                // X1: NOT a location check — a direct cross-substrate
+                // grant. Human keyboard play always collects (S6: the
+                // collect setting is bot-only). The claim guard lives in
+                // the visualizer so keyboard and bot play share one
+                // collected set — otherwise pacing back and forth over a
+                // tile would re-grant on every step.
+                if (this._claimConsumableTile(ev.position)) {
+                    this._grantConsumableTile(ev.grant, ev.position);
+                }
+            } else if (ev.type === 'mana_pickup') {
+                if (this._claimConsumableTile(ev.position)) {
+                    this._grantManaTile(ev.amount, ev.position);
+                }
             } else if (ev.type === 'exit_cross') {
                 const exit = this.world.exits.get(ev.exit_id);
                 if (!exit?.targetRegion) continue;

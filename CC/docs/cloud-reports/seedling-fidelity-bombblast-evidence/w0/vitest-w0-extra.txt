@@ -1,0 +1,44 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/tmp/claude-0/wt-base[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 16380[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared [33m 369[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more [33m 370[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 850[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 1013[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 859[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 3535[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned [33m 561[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 920[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 1546[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 939[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 694[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 1458[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityL30KeyLock.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 18233[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice [33m 3244[2mms[22m[39m
+     [33m[2m✓[22m[39m both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens [33m 578[2mms[22m[39m
+     [33m[2m✓[22m[39m RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait [33m 1586[2mms[22m[39m
+     [33m[2m✓[22m[39m WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick [33m 10355[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing) [33m 830[2mms[22m[39m
+     [33m[2m✓[22m[39m both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing) [33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120) [33m 590[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/turretSolver.test.js [2m([22m[2m4 tests[22m[2m)[22m[33m 821[2mms[22m[39m
+     [33m[2m✓[22m[39m the ladder refuses AVOID and DODGEs U14's spit, by name [33m 773[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityWaypointSlide.test.js [2m([22m[2m9 tests[22m[2m)[22m[32m 239[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBotLethalPit.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/presses.test.js [2m([22m[2m31 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 8554[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned [33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF [33m 608[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585) [33m 6746[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 66466[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 26714[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 38919[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs [33m 653[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[32m187 passed[39m[22m[90m (187)[39m
+[2m   Start at [22m 01:54:18
+[2m   Duration [22m 71.07s[2m (transform 8.29s, setup 0ms, import 15.04s, tests 110.77s, environment 1ms)[22m
+
+rc=0

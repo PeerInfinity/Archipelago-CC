@@ -33,9 +33,11 @@ export const moduleInfo = {
   name: 'settings',
   title: 'Settings',
   componentType: 'settingsPanel',
+  docs: 'docs/json/user/modules/settings.md',
   icon: '⚙️',
   column: 2, // Middle column,
-  description: 'Settings editor panel.',
+  category: 'Data and Configuration Panels',
+  description: 'Edit every app setting as raw JSON and apply it live with Apply or Ctrl+Enter.',
 };
 
 // Store instances or state needed by the module

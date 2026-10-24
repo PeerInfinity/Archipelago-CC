@@ -1,0 +1,22 @@
+t=5000 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 42)
+t=5001 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 45) rot=-45 scale=1.1545084971874737x1.1545084971874737
+t=5002 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 48) rot=-90 scale=1.2938926261462367x1.2938926261462367
+t=5003 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 51) rot=-135 scale=1.4045084971874737x1.4045084971874737
+t=5004 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 54) rot=-180 scale=1.4755282581475768x1.4755282581475768
+t=5005 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 57) rot=-225 scale=1.5x1.5
+t=5006 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 60) rot=-270 scale=1.4755282581475768x1.4755282581475768
+t=5007 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 63) rot=-315 scale=1.4045084971874737x1.4045084971874737
+t=5008 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 66) rot=-360 scale=1.2938926261462367x1.2938926261462367
+t=5009 | seedling:projectile/bomb#0 drawImage(seedling/Bomb, 0, 0, 72, 69) rot=-405 scale=1.1545084971874737x1.1545084971874737
+t=5010 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 96, 144)
+t=5011 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 96, 144)
+t=5012 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 97, 144) rot=-8
+t=5013 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 98, 144) rot=-16
+t=5014 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 99, 144) rot=-24
+t=5015 | seedling:puzzlement/crusher#0 drawImage(seedling/Crusher, 0, 0, 99, 144)
+t=5016 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 176) rot=-55 ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 192) rot=35 scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 126, 172) rot=35 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 132, 172) rot=-55 scale=-1x1
+t=5017 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 184) ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 184) scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 106, 168) ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 152, 168) scale=-1x1 ; seedling:enemy/bosstotem#0 drawImage(seedling/BossTotem, 0, 0, 136, 121)
+t=5018 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 185) rot=2 ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 183) rot=-2 scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 105.5, 168.5) rot=-1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 152.5, 168.5) rot=1 scale=-1x1 ; seedling:enemy/bosstotem#0 drawImage(seedling/BossTotem, 0, 0, 136, 121.5) tint=#ff7474
+t=5019 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 185) rot=2 ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 183) rot=-2 scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 105.5, 168.5) rot=-1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 152.5, 168.5) rot=1 scale=-1x1 ; seedling:enemy/bosstotem#0 drawImage(seedling/BossTotem, 0, 0, 136, 121.5) tint=#ff3f3f
+t=5020 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 185) rot=2 ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 183) rot=-2 scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 105.5, 168.5) rot=-1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 152.5, 168.5) rot=1 scale=-1x1 ; seedling:enemy/bosstotem#0 drawImage(seedling/BossTotem, 0, 0, 136, 121.5) tint=#ff0000
+t=5021 | seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 158, 185) rot=2 ; seedling:enemy/bosstotem#2 drawImage(seedling/BossTotem, 64, 0, 146, 183) rot=-2 scale=-1x1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 105.5, 168.5) rot=-1 ; seedling:enemy/bosstotem#1 drawImage(seedling/BossTotem, 32, 0, 152.5, 168.5) rot=1 scale=-1x1 ; seedling:enemy/bosstotem#0 drawImage(seedling/BossTotem, 0, 0, 136, 121.5) tint=#ffff00

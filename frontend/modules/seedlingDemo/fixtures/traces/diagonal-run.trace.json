@@ -1,0 +1,113 @@
+{
+  "trace_version": 1,
+  "tape": "diagonal-run",
+  "tick_count": 40,
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "rows": [
+    {
+      "tick": 0,
+      "saw": {
+        "level": 0,
+        "x": 80,
+        "y": 128,
+        "vx": 0,
+        "vy": 0,
+        "threats": 0
+      },
+      "goal": {
+        "kind": "reach-cell",
+        "x": 128,
+        "y": 80
+      },
+      "path": [
+        {
+          "x": 80,
+          "y": 128
+        },
+        {
+          "x": 128,
+          "y": 80
+        }
+      ],
+      "strategy": {
+        "verb": "walk",
+        "why": "the corridor is clear on both axes"
+      },
+      "rejected": [
+        {
+          "option": "shove",
+          "why": "no pushable on the path"
+        },
+        {
+          "option": "wait",
+          "why": "nothing is armed; waiting spends ticks for nothing"
+        }
+      ],
+      "keys": [
+        "right",
+        "up"
+      ]
+    },
+    {
+      "tick": 12,
+      "saw": {
+        "level": 0,
+        "x": 98,
+        "y": 110,
+        "vx": 1.2,
+        "vy": -1.2,
+        "threats": 0
+      },
+      "goal": {
+        "kind": "reach-cell",
+        "x": 128,
+        "y": 80
+      },
+      "obstacle": null,
+      "strategy": {
+        "verb": "walk",
+        "why": "still on the plan; no re-plan needed"
+      },
+      "rejected": [],
+      "keys": [
+        "right",
+        "up"
+      ]
+    },
+    {
+      "tick": 30,
+      "saw": {
+        "level": 0,
+        "x": 118,
+        "y": 90,
+        "vx": 1.35,
+        "vy": -1.35,
+        "threats": 0
+      },
+      "goal": {
+        "kind": "reach-cell",
+        "x": 128,
+        "y": 80
+      },
+      "obstacle": {
+        "kind": "none",
+        "id": null
+      },
+      "strategy": {
+        "verb": "wait",
+        "why": "release and let friction carry the last pixels"
+      },
+      "rejected": [
+        {
+          "option": "walk",
+          "why": "holding past the arrival overshoots the target cell"
+        }
+      ],
+      "keys": []
+    }
+  ]
+}

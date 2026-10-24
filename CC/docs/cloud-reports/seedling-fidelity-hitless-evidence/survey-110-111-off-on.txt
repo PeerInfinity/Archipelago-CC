@@ -1,0 +1,2 @@
+base110 [(110, 57, 'SOLVED', 2060, 0, ''), (111, 58, 'REFUSED', None, None, 'the teleporter at (80,16) in level 58 stands ON a PIT tile (5,1). Walking into it fires th')]
+on110 [(110, 57, 'SOLVED', 1389, 0, ''), (111, 58, 'REFUSED', None, None, 'the teleporter at (80,16) in level 58 stands ON a PIT tile (5,1). Walking into it fires th')]

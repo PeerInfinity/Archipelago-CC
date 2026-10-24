@@ -1,0 +1,196 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 0,
+        "x": 200,
+        "y": 272
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        },
+        {
+            "level": 17,
+            "tag": 29,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 4,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0
+        ],
+        "seal_parts": [
+            0
+        ]
+    },
+    "rng": {
+        "seed": 85136665,
+        "split": true,
+        "cosmetic": 1995363572,
+        "fp": 1341168923
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": true,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 12241,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 192,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 40,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 40
+        }
+    ],
+    "name": "u14-moonrock-set",
+    "description": "⛓⛓⛓ U14-swim D1 — THE SET MOONROCK IS A SOLID. L0 booted with route step 23's staging but `beam: false, rock_set: true` — a visit after the landing — at (208,280), holding `right` for 40 ticks. `Moonrock`'s ctor places a set rock AT `fallTo` with `type = \"Solid\"` (`Scenery/Moonrock.as:50-54`): a 48x48 box at [240,288)×[256,304), so the walk stops at x 238 (the player's 4x5 box ends at x + 2). Its first update finds `cameraTimer` 0 and lowers the freeze nobody raised; it also replaces the stairs under it and clears {2,0}. No beam: `beam` is false. Fixed keys. Authored by scripts/procgen/plan-seedling-u14-moonrock.mjs.",
+    "note": ""
+}

@@ -1,0 +1,132 @@
+[
+ {
+  "arm": "vanilla",
+  "set_id": "seedling-vanilla-record-eb8cc643",
+  "game": {
+   "obs": 701,
+   "transitions": [],
+   "final": {
+    "t": 700,
+    "level": 39,
+    "x": 152,
+    "y": 620.6999999999999
+   },
+   "cleared": [
+    {
+     "tag": 8,
+     "level": 39
+    },
+    {
+     "tag": 9,
+     "level": 39
+    },
+    {
+     "tag": 10,
+     "level": 39
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 700,
+    "level": 39,
+    "x": 152,
+    "y": 620.6999999999999
+   }
+  }
+ },
+ {
+  "arm": "remove",
+  "set_id": "seedling-vanilla-record-33af9dc6",
+  "game": {
+   "obs": 701,
+   "transitions": [
+    {
+     "t": 423,
+     "from": 39,
+     "to": 38,
+     "at": {
+      "x": 152,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 700,
+    "level": 38,
+    "x": 152,
+    "y": 109
+   },
+   "cleared": [
+    {
+     "tag": 8,
+     "level": 39
+    },
+    {
+     "tag": 9,
+     "level": 39
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 423,
+     "from": 39,
+     "to": 38,
+     "at": {
+      "x": 152,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 700,
+    "level": 38,
+    "x": 152,
+    "y": 109
+   }
+  }
+ },
+ {
+  "arm": "move-144-608",
+  "set_id": "seedling-vanilla-record-d9ab80fd",
+  "game": {
+   "obs": 701,
+   "transitions": [],
+   "final": {
+    "t": 700,
+    "level": 39,
+    "x": 152,
+    "y": 604.9499999999999
+   },
+   "cleared": [
+    {
+     "tag": 8,
+     "level": 39
+    },
+    {
+     "tag": 9,
+     "level": 39
+    },
+    {
+     "tag": 10,
+     "level": 39
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 700,
+    "level": 39,
+    "x": 152,
+    "y": 604.9499999999999
+   }
+  }
+ }
+]

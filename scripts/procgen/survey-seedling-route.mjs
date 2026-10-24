@@ -1,0 +1,2072 @@
+#!/usr/bin/env node
+/**
+ * survey-seedling-route — THE ROUTE-ONLY SOLVER COVERAGE SURVEY.
+ * Editor arc slice 7; kickoff §12 item 6 (⚖ user's ROUTE-ONLY correction).
+ *
+ * ── WHAT THIS IS, AND WHAT IT DELIBERATELY IS NOT ─────────────────────
+ *
+ * It asks ONE question, room by room: **can the live solver walk from the
+ * true game start to the shield today, and where exactly does it stop?**
+ *
+ * ⛔ **REPORT ONLY.** Nothing here writes `fixtures/tapes/`,
+ * `fixtures/traces/`, or any committed artifact. Every solve runs IN
+ * MEMORY; the outputs are a table and some PNGs under `.cache/seedling-survey/`
+ * (a regenerable cache, see `seedlingSurveyDir.js` — the as-built carries
+ * the table inline as the durable record). Tapes for newly-solved rooms
+ * are R9's business, recorded there under R9's own licence.
+ *
+ * ⛔ **ROUTE ONLY** (⚖ the user's correction to §12 item 6): the levels a
+ * playthrough CROSSES and only the goals that are PART of that route —
+ * the crossings plus exactly three pickups (sword@L10, boss key 0@L19,
+ * shield@L20). Not the numeric range L0–L20, not every placement per
+ * level. The route table is deliverable #1 and it IS the survey's bound.
+ *
+ * ── THE DERIVATION (computed, never typed) ────────────────────────────
+ *
+ * Three independent sources, and the route is the intersection:
+ *
+ *  1. **The AP region graph** — the `_rules.json` under
+ *     `frontend/presets/seedling_playthrough/`, 251 sub-room regions with access
+ *     rules. This is the authority on WHICH DOOR IS OPEN WHEN: it is
+ *     Archipelago's own model of the game's gating, generated from the
+ *     region atlas, and it is what makes "the route" a derivation rather
+ *     than a reading of the committed chains.
+ *  2. **The committed atlas** (`seedling-map.json`) — the LEVEL edge
+ *     graph, each edge carrying its exit entity's own OEL coordinates
+ *     (which become the `reach-exit` goal) and its `playerx`/`playery`
+ *     (which become the next room's boot position). ⛓ Those arrival
+ *     coordinates REPRODUCE every committed boot on the route, which is
+ *     asserted below rather than assumed.
+ *  3. **The sphere order** (`seedling-sphere-order.json`) — AP's own
+ *     collection order for seed 1, which fixes the three route pickups
+ *     and the order they are taken in: sword 0.1 → boss key 0 1.2 →
+ *     shield 2.1.
+ *
+ * The route is then three BFS legs over the region graph, each run with
+ * exactly the items the earlier legs earned:
+ *
+ *     start -> sword@L10        with {}
+ *     L10   -> boss key 0@L19   with {Progressive Sword}
+ *     L19   -> shield@L20       with {Progressive Sword, Red Key}
+ *
+ * A STEP is one level VISIT, and its goals are the route pickup in that
+ * room (if any) followed by the crossing out of it — the same segmentation
+ * the chains use ("a segment ends at each crossing") and the same goal
+ * vocabulary `solveSegment` asserts.
+ *
+ * ── THE BOOT POLICY, AS DATA ──────────────────────────────────────────
+ *
+ * Every row NAMES its boot, and there are exactly three kinds:
+ *
+ *   `committed`  the room's own committed campaign boot, verbatim
+ *                (`r7-act2-N` for the pre-sword rooms, `r8-d2-19/20` for
+ *                D2's last two). The campaign's measured state.
+ *   `staged`     R8 slice 8's own construction for a room with no tape:
+ *                `r7-act2-11`'s committed v8 block — the campaign's own
+ *                post-sword latch — re-pointed at THIS room's arrival
+ *                coordinates from the atlas. ⛓ `r8-solve-18`'s boot is
+ *                exactly this, and the script ASSERTS the equality, so
+ *                the policy is R8's rather than this script's.
+ *   `true-start` `r8-solve-1`'s boot: `new Game(0, 80, 128)`, empty save.
+ *
+ * ⚠ **THE BOUND A STAGED BOOT NAMES.** A staged boot is a DECLARATION,
+ * not a measured latch — `save.time` and the three RNG streams are
+ * `SEAM_BOOT_SPEC`-marked `modelled: false`, so a number this script
+ * invented for them would be a number nobody measured (the `r8-d2-chain`
+ * docblock's own law). So the survey inherits `r7-act2-11`'s declared
+ * clock for every staged room rather than accumulating one. ⇒ a SOLVED
+ * staged row says "this room is solvable from this declared state", NOT
+ * "the campaign reaches it". Chaining the real latches is R9's, through
+ * the `--win` channel this survey never touches.
+ *
+ * ── A SOLVE THAT NEVER RETURNS IS ITS OWN FINDING ─────────────────────
+ *
+ * `solveSegment` is synchronous, so a runaway search cannot be timed out
+ * in-process. Each step therefore runs in a CHILD (`--step=<id>`) under a
+ * wall-clock timeout, and a child that overruns is a **TIMEOUT** verdict —
+ * distinct from a REFUSAL, and reported as such.
+ *
+ * Run:
+ *   node scripts/procgen/survey-seedling-route.mjs                # all
+ *   node scripts/procgen/survey-seedling-route.mjs --derive-only  # route
+ *   node scripts/procgen/survey-seedling-route.mjs --only=12,13
+ *   node scripts/procgen/survey-seedling-route.mjs --timeout=600
+ *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
+ *   node scripts/procgen/survey-seedling-route.mjs --through=end --out=<file.json>
+ *   node scripts/procgen/survey-seedling-route.mjs --through=3.1 --route=route-only --out=<file.json>
+ *
+ * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
+ *
+ * `--through=2.2` appends the two legs the sphere order adds after the
+ * shield — `Level 029 - Boss Key 1` (1.4, +Green Key) and `Level 032 - Bob
+ * Boss` (2.2, +Fire) — AFTER the three above, so every earlier step keeps its
+ * id and boot and only step 21 (the shield room) gains the crossing out. The
+ * Bob Boss is an encounter: L32 has no pickup entity, so its goal is an
+ * `encounter` (swim U5) anchored at the location's own atlas tile
+ * (`seedling-playthrough.json`), and the solver answers for it in its own words.
+ * It REQUIRES `--out=<file>`: the survey rows go there, the route and the views
+ * to `…/through-2.2/` in the gitignored survey directory, and `survey.json`
+ * is never read or written. Without the flag nothing below moves.
+ *
+ * ── `--through=<sphere>|end` (RULES ARC, `rules-route-survey`) ─────────
+ *
+ * The bound is now ANY sphere-order row (`--through=4.7`) or `end`, and the
+ * legs are DERIVED: every row of `seedling-sphere-order.json` up to and
+ * including the bound, in AP's collection order, one BFS leg each
+ * (`surveyRoute.js`). S2 D5's two typed rows are gone, so `--through=2.2` is
+ * now the sixteen rows 0.1 … 2.2, not the shield route plus 1.4 and 2.2. Three
+ * things the derivation names rather than hides:
+ *  · AP's order is NOT A WALK on the directed graph — a row with no path from
+ *    where the route stands is deferred, the earliest reachable remaining row
+ *    is taken (`outOfOrder` on that leg, the blocking exits quoted);
+ *  · a crossing is the AP EXIT the leg's BFS passed, resolved to its atlas
+ *    entity through the sidecar (`hopEdge`), so a double-wide door or two
+ *    stairs between one pair of levels is no longer a refusal;
+ *  · a staged row's grant lists what a boot cannot present (`unpresentable`:
+ *    Health) — such a row is solved WITHOUT them. ⛓ RULES survey-save-arrays: Seals and Totem Shards
+ *    are no longer in it — they are COUNTED and staged into `save` (`surveyGrants.stageGrantSave`).
+ * Each `--through` writes under `…/through-<sphere>/`; the alternative-leg
+ * addendum is the default survey's only.
+ *
+ * ── `--route=full|route-only` (FRONTIER2, ⚖ user 2026-10-05 "Both, report
+ *    separately") ──────────────────────────────────────────────────────
+ *
+ * `full` (the default, and what the rules arc's `--through=end` reads) is the
+ * paragraph above: one leg per sphere-order row. `route-only` is ⚖ §12 item
+ * 6's route: only the PROGRESSION pickups, derived (`surveyRoute.routeOnlyRows`
+ * over `keyItemsOf`: an item some AP rule asks for by a single-copy `Has`),
+ * the Seal chests, Totem Shards and the Light skipped and named in
+ * `route.json`'s `routeMode.skipped`. It needs `--through` and writes under
+ * `…/through-<sphere>-route-only/`, so the two modes never share a cache.
+ * The chosen mode is named in `route.json` (`routeMode`).
+ */
+
+import { dirname, join, resolve as resolvePath } from 'node:path';
+import { execFile } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { familyOf } from './surveyFamily.js';
+import { deriveStagedGrant, stageGrantSave, stagedRng, tapeCoversVisit } from './surveyGrants.js';
+import {
+    RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    ROUTE_MODES, routeOnlyRows,
+} from './surveyRoute.js';
+import { seedlingStartSpawn } from '../../frontend/modules/flashPanel/seedlingRegionBinding.js';
+import { returnToMenu } from '../../frontend/modules/procgenCore/restartWarp.js';
+import { returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
+import { substrateRegistryEntry as seedlingEntry } from '../../frontend/modules/flashPanel/flashSeedlingLibrary.js';
+
+import { parseDashMode, dashModeNote } from './dashMode.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
+ * HERE.** The instruments index publishes "the flags it reads out of `argv`"
+ * by SCANNING each instrument's own text (⚖ ruling 38(6); `walkReport.js`'s
+ * header says the same about `--walk-report`), so a flag parsed one module
+ * away is a flag the reference table would omit. `dashMode.js` owns the
+ * PARSE — a bare `--dash` and an unknown mode are refused by name there, once,
+ * for every participant.
+ *
+ * ⛔ UNSET REACHES `solverBot.DEFAULT_DASH_MODE` AND NOTHING ELSE, so this
+ * script's stdout is byte-identical without the flag and its standing md5 does
+ * not move. The warning goes to STDERR: it is a fact about the RUN, not part
+ * of the artifact, and a machine-readable stdout must stay parseable.
+ */
+
+import { argvHelp } from './argvHelp.js';
+import { seedlingSurveyDir, throughSurveyDir } from './seedlingSurveyDir.js';
+
+argvHelp(import.meta.url);
+const DASH_MODE = parseDashMode(
+    process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
+const DASH_NOTE = dashModeNote(DASH_MODE);
+if (DASH_NOTE) console.error(DASH_NOTE);
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..');
+const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+
+const TAPES = join(MODULE, 'fixtures', 'tapes');
+
+const argOf = (k, dflt) => {
+    const hit = process.argv.find((a) => a.startsWith(`--${k}=`));
+    return hit === undefined ? dflt : hit.slice(k.length + 3);
+};
+const STEP = argOf('step', null);
+const ONLY = argOf('only', null);
+/** ⛔ An ABSENT `--only` is every step; a PRESENT-but-empty one is a caller's lost list, never "everything". */
+if (ONLY !== null && !ONLY.split(',').some((s) => s.trim())) {
+    console.error('ERROR: --only= names no step — omit --only to survey every step; an empty list is refused, never read as all');
+    process.exit(2);
+}
+const THROUGH = argOf('through', null);
+const OUT_FILE = argOf('out', null);
+/** ⛓ FRONTIER2 — which legs: `full` (every sphere row) or `route-only` (the progression pickups). */
+const ROUTE_MODE = argOf('route', 'full');
+if (!ROUTE_MODES.includes(ROUTE_MODE)) {
+    console.error(`ERROR: --route=${ROUTE_MODE} — the route modes are ${ROUTE_MODES.join(' | ')}`);
+    process.exit(2);
+}
+if (ROUTE_MODE !== 'full' && THROUGH === null) {
+    console.error(`ERROR: --route=${ROUTE_MODE} needs --through=<sphere>|end — the default survey is the shield route`);
+    process.exit(2);
+}
+if (THROUGH !== null && STEP === null && !OUT_FILE) {
+    console.error(`ERROR: --through=${THROUGH} needs --out=<file.json> — the extended survey never writes survey.json`);
+    process.exit(2);
+}
+if (OUT_FILE && THROUGH === null) {
+    console.error('ERROR: --out= is the extended survey\'s (--through=<sphere>|end); the default survey writes survey.json');
+    process.exit(2);
+}
+/** `.cache/seedling-survey/`, or `…/through-<sphere>/` under `--through` (gitignored either way). */
+const OUT_DIR = THROUGH !== null ? throughSurveyDir(REPO, THROUGH, ROUTE_MODE) : seedlingSurveyDir(REPO);
+const DERIVE_ONLY = process.argv.includes('--derive-only');
+/**
+ * ⛔ THE TIMEOUT IS A NAMED BOUND, NOT A GENEROUS ONE. Measured on this
+ * route: the slowest SOLVING step is L18 at ~21 s (three two-pass passes)
+ * and every other solve is under a second. 120 s is therefore ~6x the
+ * slowest answer anyone got — long enough that a slow room still answers,
+ * short enough that a runaway search is called one within two minutes
+ * instead of fifteen. ⚠ A TIMEOUT verdict is reported WITH this number,
+ * because "did not finish in 120 s" is a different claim from "cannot be
+ * solved", and only the first one was measured.
+ */
+const TIMEOUT_S = Number(argOf('timeout', '120'));
+
+// ─────────────────────────────────────────────────────────────────────
+// 1. THE SOURCES
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛓ RULES patched-set — the survey walks the PLAYTHROUGH, so it reads the DELIVERED set: the extract with
+ * `SEEDLING_SET_PATCHES` applied (the moonrock removed), the same rooms the playthrough's rules derive from
+ * and the delivery hands the player. Its model worlds and its solves run on these records too.
+ */
+const { patchedMapDocument, SEEDLING_SET_PATCHES } = await import(join(MODULE, 'seedlingSetPatches.js'));
+const { levelSourceFromAtlas } = await import(join(MODULE, 'atlasSource.js'));
+const atlas = patchedMapDocument(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8')));
+const spheres = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json'), 'utf8'));
+/** ⛓ SWIM U2 D3: the AP item → flash name → property tables the staged grant maps through. */
+const GAME = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
+
+/** The AP rules export for the playthrough world — found, never hardcoded. */
+function apRulesPath() {
+    const base = join(REPO, 'frontend', 'presets', 'seedling_playthrough');
+    const seed = readdirSync(base).find((d) => d.startsWith('AP_'));
+    if (!seed) throw new Error(`no AP_* export under ${base} — the region graph is the `
+        + 'route derivation\'s authority on gating and this survey cannot proceed without it');
+    return join(base, seed, `${seed}_rules.json`);
+}
+const apRules = JSON.parse(readFileSync(apRulesPath(), 'utf8'));
+const REGIONS = apRules.regions['1'];
+/** ⛓ R4b — the world's `seals_required` (the export's option; absent = the game's own 16): the seal log's N. */
+const SEALS_REQUIRED = apRules.world?.['1']?.options?.seals_required;
+
+const levelsByNo = new Map(atlas.levels.map((l) => [l.level, l]));
+
+/** Every `to` edge in the atlas, with the goal coordinates on both sides. */
+function atlasEdges(from) {
+    return (levelsByNo.get(from)?.entities ?? [])
+        .filter((e) => e.attrs && e.attrs.to !== undefined)
+        .map((e) => ({
+            from,
+            to: Number(e.attrs.to),
+            via: `${e.type}@${e.x},${e.y}`,
+            exit: { x: e.x, y: e.y },
+            arrival: { x: Number(e.attrs.playerx), y: Number(e.attrs.playery) },
+        }));
+}
+
+/** ⛓ fidelity LIGHTS D4: the switch set this process runs under, and the L69 controller's death exit. */
+const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
+const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
+function lightsDeathEdge(from, to, x, y) {
+    const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'lightbosscontroller' && n.x === x && n.y === y);
+    if (!e) return null;
+    const exit = LIGHTS_WORLD.lightsWorldRows(e, x, y, Number(e.attrs?.tag ?? -1), new Set([Number(e.attrs?.tag ?? -1)])).exit;
+    if (!exit || exit.to !== to) return null;
+    return { from, to, via: `lightbosscontroller@${x},${y}`, exit: { x, y }, arrival: { x: exit.playerx, y: exit.playery },
+        death: true };
+}
+
+/**
+ * ⛓ fidelity BOSSFORK D3 (`CONTACT_FIDELITY.tentacleBeastFight`; OFF never reached): L57's mouth. The Tentacled Beast's
+ * Teleporter is added at the end of its "dying" (`TentacleBeast.as`), so the .oel holds no `to` — as Lights' death exit,
+ * the model's own CLEARED build answers it: a run built on the room with the beast's tag cleared holds the mouth at the
+ * build (`levelRun.tentacleMouthAtBuild`, BOSSFORK D2), and the edge is that Teleporter (its cell, its arrival).
+ */
+const TENTACLE_MOUTH_EDGES = new Map();
+async function tentacleMouthEdgeOf(from, x, y) {
+    const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'tentaclebeast' && n.x === x && n.y === y);
+    const tag = Number(e?.attrs?.tag ?? -1);
+    if (!e || tag < 0) return null;
+    const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+    const run = createRunForStaging({ boot: { level: from, x, y }, noclip: false, noDamage: false, noHazards: [],
+        grants: [], persistence: [{ level: from, tag }], despawn: [], equips: [], pins: [], save: null, rng: null,
+        seam: null }, levelSourceFromAtlas(atlas));
+    const mouth = run.world.teleporters.filter((t) => t.runtime === 'tentacle_beast_mouth');
+    return mouth.length === 1 ? mouth[0] : null;
+}
+for (const l of atlas.levels) {
+    if (!LIGHTS_FIDELITY.CONTACT_FIDELITY.tentacleBeastFight) break;
+    for (const n of l.entities ?? []) {
+        if (n.type === 'tentaclebeast') TENTACLE_MOUTH_EDGES.set(`${l.level}:${n.x},${n.y}`, await tentacleMouthEdgeOf(l.level, n.x, n.y));
+    }
+}
+/** The fight the mouth's crossing needs: `clear-tag` on the beast's own tag (`bossGoal`'s clear-tag shape, no report row). */
+function tentacleMouthFightGoal(level, edge) {
+    const [x, y] = edge.via.slice('tentaclebeast@'.length).split(',').map(Number);
+    const e = (levelsByNo.get(level)?.entities ?? []).find((n) => n.type === 'tentaclebeast' && n.x === x && n.y === y);
+    const tag = Number(e?.attrs?.tag ?? -1);
+    if (!e || tag < 0) return null;
+    return { kind: 'clear-tag', tag: { level, tag }, at: { x, y }, obstacle: edge.via,
+        why: `${edge.via}'s mouth stands only once the beast is dead — the kill {${level},${tag}} before the crossing` };
+}
+function tentacleMouthEdge(from, to, x, y) {
+    const t = TENTACLE_MOUTH_EDGES.get(`${from}:${x},${y}`) ?? null;
+    if (!t || t.to !== to) return null;
+    return { from, to, via: `tentaclebeast@${x},${y}`, exit: { x: t.x, y: t.y }, arrival: { x: t.playerx, y: t.playery },
+        death: true };
+}
+
+/** ONE edge for a route hop; two would make the goal ambiguous, so it says so. */
+function edgeFor(from, to) {
+    const hits = atlasEdges(from).filter((e) => e.to === to);
+    if (hits.length !== 1) {
+        throw new Error(`the atlas has ${hits.length} edges L${from} -> L${to} `
+            + `(${hits.map((h) => h.via).join(', ') || 'none'}). A route hop with more than `
+            + 'one door has an ambiguous `reach-exit` goal and the survey will not pick one '
+            + 'for you.');
+    }
+    return hits[0];
+}
+
+/**
+ * ⛓⛓ SWIM T3 D3 — **THE PIT HOP**, the one crossing the `to` vocabulary
+ * cannot name.
+ *
+ * A pit is not an entity with a `to`: it is floor, and where it goes is the
+ * level's `control` block (`Game.as:2050-2054` → `Game.fallthrough*`). The
+ * MODEL already resolves it — `levelWorld` reads the block into
+ * `world.fallthrough`, and `playerPhysicsV2.fallDestination` is the very
+ * function the run calls when the player drops (`new Game(fallthroughLevel,
+ * …)`, snapped to the tile). So the landing here is THAT function's answer,
+ * not a transcription of it, and it is cross-checked against the AP export's
+ * sidecar exit (`out_pit_*`, whose `target_spawn` is the atlas's own
+ * derivation) — two sources that must agree or the hop refuses.
+ *
+ * ⚠ `--through` ONLY. `MODEL` is imported under the flag and nothing on the
+ * default path calls this, so the default survey is byte-identical by
+ * construction (and by md5, in the T3 report).
+ *
+ * @returns {?object} null when no pit in `from` falls to `to`
+ */
+const MODEL = THROUGH ? {
+    ...(await import(join(MODULE, 'levelWorld.js'))),
+    ...(await import(join(MODULE, 'levelSource.js'))),
+    ...(await import(join(MODULE, 'playerPhysicsV2.js'))),
+} : null;
+/**
+ * ⚡ ONE `levelWorld` per level. The derivation asks a room's control block on
+ * every pit hop and every encounter, and a world rebuilt per ask makes
+ * `buildLevelWorld` hot enough for V8 (node 18) to tier part of the model up —
+ * a TurboFan job measured at 12-26 s, which process EXIT waits for
+ * (`--no-opt`: 0.7 s vs 12.3 s for the same 121 builds). `--through=end` paid
+ * it in the parent and again in each of its 265 step children.
+ */
+const WORLDS = new Map();
+function worldOf(level) {
+    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(atlas)(level)));
+    return WORLDS.get(level);
+}
+/**
+ * ⛓ RULES patched-set — **A CHAINED FALL.** When the descent fires a live door (fidelity DESCENT's rule), the
+ * fall ends at that door's target, and the AP export's pit exit names THAT level, not the landing. The model's
+ * own descent (`censusFallsOntoDoors` over the two rooms) must name the same end, or the hop refuses.
+ * `null` when no pit of `from` lands in a room whose descent fires a door to `to`.
+ */
+async function loadChainCensus() {
+    return (await import(join(MODULE, 'fidelityDescent.js'))).censusFallsOntoDoors;
+}
+const CENSUS = THROUGH ? await loadChainCensus() : null;
+function chainOf(from, landing) {
+    const rows = CENSUS([levelsByNo.get(from), levelsByNo.get(landing)]).rows
+        .filter((r) => r.from === from && r.fires);
+    return rows;
+}
+
+function pitEdgeFor(from, to, onlyExitId = null) {
+    const world = worldOf(from);
+    if (!world.fallthrough) return null;
+    const chained = world.fallthrough.level !== to
+        ? chainOf(from, world.fallthrough.level).filter((r) => r.fires.to === to) : [];
+    if (world.fallthrough.level !== to && chained.length === 0) return null;
+    const exits = [];
+    for (const [region, side] of Object.entries(apRules.preset_sidecars?.['1'] ?? {})) {
+        if (levelOfRegion(region) !== from) continue;
+        for (const e of side?.playable_payload?.exits ?? []) {
+            if (onlyExitId !== null && e.exit_id !== onlyExitId) continue;
+            if (/^out_pit_/.test(e.exit_id ?? '') && e.target_level === to) exits.push({ region, ...e });
+        }
+    }
+    const tiles = exits.flatMap((e) => e.exit_tiles.map(([tx, ty]) => ({ tx, ty, e })));
+    if (tiles.length !== 1) {
+        throw new Error(`L${from} falls to L${to} (its control block), and the AP export names `
+            + `${tiles.length} pit exit tile(s) for that hop `
+            + `(${tiles.map((t) => `${t.e.exit_id}@${t.tx},${t.ty}`).join(', ') || 'none'}). A pit `
+            + 'hop with more than one tile has an ambiguous landing and the survey will not '
+            + 'pick one for you.');
+    }
+    const { tx, ty, e } = tiles[0];
+    const tile = world.pitTiles.find((t) => t.tx === tx && t.ty === ty);
+    if (!tile) {
+        throw new Error(`the AP export's ${e.exit_id} names tile (${tx},${ty}) in L${from}, `
+            + 'which the model does not build as a pit tile — the two sources disagree.');
+    }
+    const { ctor: landing } = MODEL.fallDestination(world, {
+        x: tile.rect.x + tile.rect.w / 2, y: tile.rect.y + tile.rect.h / 2,
+    });
+    const chain = chained.find((r) => r.pit.x === tile.rect.x && r.pit.y === tile.rect.y);
+    if (chained.length && !chain) {
+        throw new Error(`the AP export's ${e.exit_id} chains L${from} -> L${to}, and the model's descent `
+            + `chains no fall from pit tile (${tx},${ty}) there — the two sources disagree.`);
+    }
+    // A chained fall ends on the GROUND at the fired door's target: the arrival is the door's own tile.
+    const ctor = chain
+        ? { x: Math.floor(chain.fires.arrival.x / 16) * 16, y: Math.floor(chain.fires.arrival.y / 16) * 16 }
+        : landing;
+    if (ctor.x !== e.target_spawn?.x || ctor.y !== e.target_spawn?.y) {
+        throw new Error(`the pit (${tx},${ty}) in L${from} lands at (${ctor.x},${ctor.y}) by `
+            + '`fallDestination` and at '
+            + `(${e.target_spawn?.x},${e.target_spawn?.y}) by the AP export's ${e.exit_id} — `
+            + 'the two sources disagree.');
+    }
+    return {
+        kind: 'pit',
+        from,
+        to,
+        via: `pit@${tile.rect.x},${tile.rect.y} (${e.exit_id}, tile ${tx},${ty})`
+            + (chain ? ` chained via L${chain.to} ${chain.fires.door}` : ''),
+        exit: null,
+        pit: { tx, ty, x: tile.rect.x, y: tile.rect.y },
+        // ⚠ a chained fall ends as the fired door's own `new Game(to, playerx, playery)` — ON THE GROUND, no
+        // ceiling descent — so its arrival is that door's arrival, keyed as every door arrival is.
+        arrival: { x: ctor.x, y: ctor.y },
+        ...(chain ? { chained: { via: `L${chain.to} ${chain.fires.door}`, landing: { level: chain.to, ...chain.ctor } } } : {}),
+    };
+}
+
+/**
+ * ⛓ `rules-route-survey`: a pit hop the two sources cannot settle (an
+ * ambiguous landing, a disagreement) is RECORDED on the step under
+ * `--through`, as a door with no `to` entity already is — the steps after it
+ * that are derivable still get surveyed. `{edge: null, refusal: null}` means
+ * no pit falls that way at all.
+ */
+function pitEdgeOrRefusal(from, to, onlyExitId = null) {
+    try { return { edge: pitEdgeFor(from, to, onlyExitId), refusal: null }; } catch (e) {
+        return { edge: null, refusal: e.message };
+    }
+}
+
+/**
+ * ⛓⛓ `rules-route-survey` — **THE DOOR AP's PATH TOOK, NOT A DOOR BETWEEN TWO
+ * LEVELS.** `edgeFor` asks the atlas for THE edge `from → to` and refuses when
+ * there are two (a double-wide doorway, L88's two teleporters to L87, L101's
+ * two stairs to L102): measured, 35 of the full route's 265 steps lost their
+ * crossing that way. The route is a path of AP EXITS, and each exit's sidecar
+ * row names its entity (`exitName` → `exit_id` = `out_<type>_<x>_<y>`, the
+ * atlas derivation's `outExitId`), so the hop resolves to exactly the entity
+ * the BFS passed. A pit exit (`out_pit_*`) resolves to its own tile through
+ * `pitEdgeFor`. Without a sidecar row the old resolution stands: the one `to`
+ * entity, else the one pit tile, else a named refusal.
+ *
+ * @param {?{region: string, name: string}} hop the AP exit out of `from`
+ * @returns {{edge: ?object, refusal: ?string}}
+ */
+function hopEdge(from, to, hop) {
+    const side = hop ? (apRules.preset_sidecars?.['1']?.[hop.region]?.playable_payload?.exits ?? [])
+        .filter((e) => e.exitName === hop.name) : [];
+    if (side.length > 1) {
+        return { edge: null, refusal: `the AP exit '${hop.name}' has ${side.length} sidecar rows `
+            + `(${side.map((e) => e.exit_id).join(', ')}) — the crossing would be a guess.` };
+    }
+    if (side.length === 1) {
+        const id = side[0].exit_id ?? '';
+        if (/^out_pit_/.test(id)) {
+            const pit = pitEdgeOrRefusal(from, to, id);
+            return pit.edge ? pit : { edge: null, refusal: pit.refusal
+                ?? `the AP exit '${hop.name}' is ${id}, and L${from}'s control block does not fall to L${to}.` };
+        }
+        const m = /^out_([a-z]+)_(-?\d+)_(-?\d+)$/.exec(id);
+        const edge = m && atlasEdges(from).find((e) => e.to === to && e.via === `${m[1]}@${m[2]},${m[3]}`);
+        if (edge) return { edge, refusal: null };
+        // ⛓ fidelity LIGHTS D4 (`CONTACT_FIDELITY.lightsBossFight`; OFF never reached): a DEATH exit. `endState()` adds the
+        // Teleporter when the fight is won (`LightBossController.as:102-107`), so the .oel holds no `to` — the model's own
+        // build answers it (`lightBossWorld.lightsWorldRows`, the cleared arm), and the edge is that Teleporter.
+        const death = m && m[1] === 'lightbosscontroller' && LIGHTS_FIDELITY.CONTACT_FIDELITY.lightsBossFight
+            ? lightsDeathEdge(from, to, Number(m[2]), Number(m[3])) : null;
+        if (death) return { edge: death, refusal: null };
+        // ⛓ fidelity BOSSFORK D3 (`tentacleBeastFight`; OFF never reached): the mouth, from the model's cleared build.
+        const mouth = m && m[1] === 'tentaclebeast' && LIGHTS_FIDELITY.CONTACT_FIDELITY.tentacleBeastFight
+            ? tentacleMouthEdge(from, to, Number(m[2]), Number(m[3])) : null;
+        if (mouth) return { edge: mouth, refusal: null };
+        return { edge: null, refusal: `the AP exit '${hop.name}' is ${id || '(no exit_id)'}, and the `
+            + `atlas has no such entity with \`to\` ${to} in L${from} — the two sources disagree.` };
+    }
+    try { return { edge: edgeFor(from, to), refusal: null }; } catch (e) {
+        const pit = pitEdgeOrRefusal(from, to);
+        return pit.edge ? pit : { edge: null, refusal: pit.refusal ?? e.message };
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 2. THE ROUTE — three BFS legs over AP's own region graph
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛓⛓ `rules-route-survey` — **AP's OWN EVALUATOR, not a third copy.** This was
+ * a six-rule switch (`True_`/`Has`/`HasAny`/`HasAll`/`And`/`Or`) that THREW on
+ * the `CanReachRegion` return edges the rules carry since RULES (A), so the
+ * survey could not derive its route at all. The rule is now decided by the
+ * shared engine, `CanReachRegion` from `computeReachableRegions`' fixed point
+ * (`surveyRoute.makeRuleHolds`), and an undecidable rule still THROWS by name.
+ */
+const ruleHolds = makeRuleHolds(apRules);
+
+const levelOfRegion = (name) => Number(name.split('__')[0].split('_')[1]);
+
+/**
+ * Shortest region path under a fixed item set; null when there is none.
+ * `holds` is the rule decider (the leg's own under `--route=route-only`'s walk).
+ */
+const regionPath = (src, dst, items, banned, holds = ruleHolds) =>
+    surveyRegionPath(REGIONS, holds, src, dst, items, banned);
+
+/** A region path projected onto the LEVELS it visits, in order. */
+function levelsOf(path) {
+    const out = [];
+    let restarted = false;
+    for (const r of path) {
+        // ⛓ RETURN TO MENU: `Menu` is not a level. A Restart through it starts a NEW visit, even to the level the
+        //   player stood in (a Restart from level 0 is still a warp).
+        if (r === RESTART_TARGET) { restarted = true; continue; }
+        const n = levelOfRegion(r);
+        if (restarted || out[out.length - 1] !== n) out.push(n);
+        restarted = false;
+    }
+    return out;
+}
+
+/**
+ * ⛓ RETURN TO MENU — where a Restart lands: `seedlingStartSpawn` on the start region `Menu -> GameStart` leads to,
+ * the one the binding teleports to (seedlingRestartWarpRules.test.js pins that the two agree).
+ */
+const RESTART_ARRIVAL = (() => {
+    const start = REGIONS[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region;
+    const payload = apRules.preset_sidecars?.['1']?.[start]?.playable_payload;
+    const spawn = payload ? seedlingStartSpawn({ world: seedlingEntry.deserializeWorld(payload), returnSpawns: returnSpawnTable(atlas) }) : null;
+    return spawn ? { level: spawn.level, x: spawn.x, y: spawn.y } : null;
+})();
+
+/**
+ * ⛓ THE ALTERNATIVES, AND THE BOUND THEY ARE FOUND UNDER.
+ *
+ * A shortest path is not a choice until you can see what it was chosen
+ * OVER. So each region on the chosen path is BANNED in turn and the leg is
+ * re-derived: what comes back is either a genuinely different route (kept,
+ * with its length, so "shortest" is a comparison rather than an adjective)
+ * or nothing at all — which is the more useful answer, because a room no
+ * detour can avoid is **FORCED**, and a forced room that refuses is a wall
+ * across the whole campaign rather than an inconvenience.
+ *
+ * ⚠ **BOUND, NAMED:** this finds every alternative that differs from the
+ * chosen route by at least one ROOM. It does not enumerate every path in
+ * the graph, and it does not find an alternative that uses the same rooms
+ * in a different order.
+ */
+function alternativesFor(src, dst, chosen, items, holds = ruleHolds) {
+    const out = [];
+    const seen = new Set([levelsOf(chosen).join(',')]);
+    for (const banned of chosen.slice(1, -1)) {
+        const path = regionPath(src, dst, items, new Set([banned]), holds);
+        if (!path) {
+            out.push({ banned, forced: true, levels: null });
+            continue;
+        }
+        const levels = levelsOf(path);
+        const key = levels.join(',');
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push({ banned, forced: false, levels, regions: path });
+    }
+    return out;
+}
+
+/**
+ * ⛔ THE D2 ENTRY, ASKED DIRECTLY. `assertD2RouteGraph` proves L13 has no
+ * edge to L18; the atlas DOES give L13 a direct stairs to L20, which reads
+ * like a shortcut straight to the shield. This asks AP's own rules what is
+ * on the other side of that door, so the answer is a quoted rule rather
+ * than an inference from the route's shape.
+ */
+function d2EntryProbe() {
+    const shieldRegion = placementOf('Level 020 - Shield').region;
+    const direct = (REGIONS.level_13?.exits ?? [])
+        .filter((e) => levelOfRegion(e.connected_region) === 20);
+    return direct.map((e) => {
+        const lands = e.connected_region;
+        const onward = (REGIONS[lands]?.exits ?? [])
+            .filter((x) => x.connected_region === shieldRegion)
+            .map((x) => x.access_rule);
+        return {
+            edge: `level_13 -> ${lands}`,
+            enterRule: e.access_rule,
+            onwardTo: shieldRegion,
+            onwardRules: onward,
+            passableWithoutShield: onward.some((r) => ruleHolds(r, { 'Progressive Sword': 1, 'Red Key': 1 })),
+        };
+    });
+}
+
+/**
+ * The route pickups.
+ *
+ * DEFAULT: the three the ⚖ ROUTE-ONLY ruling bounds this survey to, each
+ * matched against AP's own collection order (the item it grants is asserted).
+ *
+ * ⛓⛓ `--through=<sphere>|end` (`rules-route-survey`): **EVERY sphere-order row
+ * up to and including `<sphere>`, in AP's order — one leg per row, nothing
+ * typed** (`surveyRoute.pickupsThrough`). This replaced S2 D5's two typed rows
+ * (1.4 and 2.2 appended AFTER the shield), so `--through=2.2` now walks the
+ * sixteen rows 0.1 … 2.2 in the order AP collects them — the seals and the
+ * Light included, and the Green Key (1.4) before the Shield (2.1).
+ */
+const BOUNDED = THROUGH !== null ? (() => {
+    try { return pickupsThrough(spheres.order, THROUGH); } catch (e) {
+        console.error(`ERROR: ${e.message}`);
+        return process.exit(2);
+    }
+})() : null;
+/**
+ * ⛓ FRONTIER2 — `--route=route-only`: the bounded rows' PROGRESSION pickups
+ * (`routeOnlyRows`), and the same filter over the rows past the bound, which
+ * are the legs' `spare`. `full` keeps every row, as above.
+ */
+const KEY_ITEMS = ROUTE_MODE === 'route-only' ? keyItemsOf(apRules) : null;
+const ROUTE_ONLY = KEY_ITEMS ? routeOnlyRows(BOUNDED, KEY_ITEMS, THROUGH) : null;
+const SPARE = THROUGH === null ? null : (() => {
+    const past = spheres.order.slice(BOUNDED.length);
+    return KEY_ITEMS ? routeOnlyRows(past, KEY_ITEMS).rows : past;
+})();
+const ROUTE_PICKUPS = THROUGH !== null ? (ROUTE_ONLY ? ROUTE_ONLY.rows : BOUNDED) : [
+    { match: /Level 010 - Sword/, item: 'Progressive Sword' },
+    { match: /Level 019 - Boss Key 0/, item: 'Red Key' },
+    { match: /Level 020 - Shield/, item: 'Progressive Shield' },
+].map((want) => {
+    const row = spheres.order.find((o) => want.match.test(o.location));
+    if (!row) throw new Error(`the sphere order has no row matching ${want.match} — the `
+        + 'route\'s goals come from AP\'s own collection order and this survey will not '
+        + 'invent one.');
+    if (row.item !== want.item) throw new Error(`sphere row '${row.location}' grants `
+        + `'${row.item}', not '${want.item}' — the seed's placement moved and the route's `
+        + 'item bookkeeping with it.');
+    return { ...row, item: row.item };
+});
+
+/**
+ * The rows a leg's goal is looked up in: the route pickups, or under
+ * `--through` the whole order (a row past the bound can be pulled forward).
+ */
+const PICKUP_ROWS = THROUGH !== null ? spheres.order : ROUTE_PICKUPS;
+
+/** Where each pickup lives, as an AP region + the placement's own coordinates. */
+function placementOf(locationName) {
+    for (const [name, reg] of Object.entries(REGIONS)) {
+        for (const loc of reg.locations ?? []) {
+            if (loc.name === locationName) return { region: name, level: levelOfRegion(name) };
+        }
+    }
+    throw new Error(`no AP region holds location '${locationName}'`);
+}
+
+/** The pickup ENTITY in the atlas — the DEFAULT route's `collect-placement` coordinates. */
+const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield' };
+
+/**
+ * ⛓⛓ `--through` — **WHICH ENTITY A SPHERE ROW IS, ASKED OF THE DERIVATION.**
+ * The playthrough's locations are named by `seedlingAtlasDerivation.labelFor`
+ * over the R7 goal ledger, and `entityForLedgerRow` says which atlas entity
+ * each ledger row MEANT (five rows share a tile with another entity, so a
+ * by-tile join would guess). A pickup, key, totem part, chest or the ending
+ * is a `collect-placement` of that entity; an `encounter` (the Bob Boss's
+ * drop, the Witch's trade) is an `encounter` goal. The ledger's item must be
+ * the sphere row's, or the row refuses by name.
+ */
+const LEDGER = THROUGH !== null ? {
+    ...(await import(join(MODULE, 'r7Acceptance.js'))),
+    ...(await import(join(MODULE, 'seedlingAtlasDerivation.js'))),
+} : null;
+function ledgerRowFor(pickup) {
+    const hits = LEDGER.R7_GOAL_LEDGER.filter((r) =>
+        `${LEDGER.levelName(r.level)} - ${LEDGER.labelFor(r)}` === pickup.location);
+    if (hits.length !== 1) {
+        throw new Error(`sphere row ${pickup.sphere} '${pickup.location}': ${hits.length} R7 ledger `
+            + 'rows carry that name — the goal would be a guess.');
+    }
+    const row = hits[0];
+    const { entity, item } = LEDGER.entityForLedgerRow(levelsByNo.get(row.level), row);
+    if (!entity) throw new Error(`sphere row ${pickup.sphere}: ledger row ${row.id} has no entity in L${row.level}`);
+    if (item !== pickup.item) {
+        throw new Error(`sphere row ${pickup.sphere} '${pickup.location}' grants '${pickup.item}', `
+            + `the ledger row ${row.id} '${item}' — the seed's placement moved.`);
+    }
+    return { row, entity };
+}
+/**
+ * ⛓ S2 D5 — an ENCOUNTER location has no pickup entity (L32's Bob Boss drops
+ * Fire), so it is anchored at the location's own tile in the playthrough atlas
+ * (the `encounter` goal's `at` since U5).
+ */
+function encounterCoords(level, pickup) {
+    const pt = JSON.parse(readFileSync(
+        join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
+    const locs = (pt.regions.find((r) => r.map_ref === level)?.locations ?? []);
+    const loc = locs.find((l) => l.name === pickup?.location);
+    if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${pickup?.location}'`);
+    return { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size };
+}
+/**
+ * ⛓⛓ `--through`: a sphere row's goal, by what the ledger says the row IS.
+ * `crossing` is the step's onward edge (`undefined` when the route ends here):
+ * an encounter whose room is left by a pit takes the fall as its own `then`,
+ * a door leaves `then` null and the crossing follows as its own goal.
+ * ⛓ rules-l32-rock-move: a TERMINAL encounter (the route ends in its room) is
+ * `then: null` too — the step ends at the drop/report. It used to fall back to
+ * the room's control block (`fallthrough` ⇒ `'reach-pit'`), which asked a
+ * through-3.1 survey's last step to burn L32's tree and fall: a crossing the
+ * route never makes, and under `apReportBosses` (Fire granted by the host, not
+ * the drop) one the run cannot make. The fall now happens only when the next
+ * hop really is the pit.
+ */
+function throughPickupGoal(level, pickup, crossing) {
+    const { row, entity } = ledgerRowFor(pickup);
+    if (row.kind === 'encounter') {
+        return encounterGoal(level, pickup, crossing?.kind === 'pit' ? 'reach-pit' : null);
+    }
+    if (row.kind === 'boss') return bossGoal(level, pickup, row, entity, crossing);
+    return {
+        kind: 'collect-placement',
+        placement: { x: entity.x, y: entity.y },
+        why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+        location: pickup.location,
+    };
+}
+
+/**
+ * ⛓ SWIM U5 D1 — the encounter location's GOAL, not a `collect-placement` of
+ * its tile. U2–U4 handed L32 `collect-placement (64,128)`, and the solver
+ * refused it as an absent thing. The location is a DROP, so the goal says so:
+ * `at` is the atlas tile (`encounterCoords`), `drop.item` is the AP item the
+ * sphere row grants, and `then` is the step's onward hop (`throughPickupGoal`):
+ * `'reach-pit'` when the route leaves the room by its pit (L32: `fallthrough 30`,
+ * pits (4,0) (5,0) under `burnabletree@64,0`), otherwise `null`. The solver
+ * resolves which pit tile. (Until rules-l32-rock-move a route ENDING in the room
+ * read `then` off the control block instead — see `throughPickupGoal`.)
+ */
+function encounterGoal(level, pickup, then) {
+    if (then !== 'reach-pit' && then !== null) throw new Error(`encounterGoal: then must be 'reach-pit' | null, got ${then}`);
+    return {
+        kind: 'encounter',
+        at: encounterCoords(level, pickup),
+        drop: { item: pickup.item },
+        then,
+        why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+        location: pickup.location,
+    };
+}
+/**
+ * ⛓⛓ rules-r4b-followup — **A BOSS ROW'S GOAL IS ITS FIGHT'S REPORT** at the ledger row's `address` (R4b: every
+ * boss kill clears its `(level, tag)`, the one mechanism every check uses). Handed as a `collect-placement` of the
+ * body's tile it resolved to NOTHING (L19 Shieldspire, L32 Times, L57 Tentacled Beast in the 7.3 survey). The
+ * solver serves a kill in exactly two ways, and the goal is whichever the room has, read off the solver's own
+ * tables (never a per-boss list):
+ *   · the room holds an ENCOUNTER row (L32: Bob's fight is the encounter's) → that encounter's goal. Its executor
+ *     fights to the kill's report and finishes on the slots (`execBobBossEncounter` under `apReportBosses`), so a
+ *     kill the fight already reported in this visit is `already` there, not a second fight;
+ *   · the body is a SOLID whose strategy row names a registered verb (`OBSTACLE_STRATEGIES['solid:shieldboss']`
+ *     = `fight`) → `clear-tag` on the address, finished on the run's `earnedClears` like every obstacle's flag.
+ * ⛔ Anything else is a `skip` BY NAME: no executor fights it yet (fidelity owns the model). It is never handed to
+ * the solver as a `clear-tag`, whose `already-clear` arm reads a body missing from `world.solids` as cleared.
+ */
+const SOLVER = THROUGH !== null ? await import(join(MODULE, 'solverBot.js')) : null;
+function bossGoal(level, pickup, row, entity, crossing) {
+    const why = `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`;
+    if (LEDGER.R7_GOAL_LEDGER.some((r) => r.kind === 'encounter' && r.level === level)) {
+        return { ...encounterGoal(level, pickup, crossing?.kind === 'pit' ? 'reach-pit' : null), report: { ...row.address } };
+    }
+    const verb = SOLVER.OBSTACLE_STRATEGIES[`solid:${entity.type}`] ?? null;
+    if (verb && SOLVER.STRATEGY_EXECUTORS[verb]) {
+        return {
+            kind: 'clear-tag',
+            tag: { level: row.address.level, tag: row.address.tag },
+            at: { x: entity.x, y: entity.y },
+            obstacle: `${entity.type}@${entity.x},${entity.y}`,
+            report: { ...row.address },
+            why: `${why} — the kill's report {${row.address.level},${row.address.tag}} (\`${verb}\`)`,
+            location: pickup.location,
+        };
+    }
+    return {
+        kind: 'skip',
+        report: { ...row.address },
+        why: `${why} — no solver executor fights ${entity.type}@${entity.x},${entity.y} (no encounter row in L${level}, `
+            + `${verb ? `\`${verb}\` is not a registered verb` : `no strategy row for solid:${entity.type}`}); its report `
+            + `{${row.address.level},${row.address.tag}} is not walked`,
+        location: pickup.location,
+    };
+}
+/** ⛓ CROSSROOM D3 — the rules event's cross-room presser `{level, class, x, y}`, or null (by `event_id`). */
+function presserOfEvent(eventId) {
+    for (const reg of Object.values(REGIONS)) {
+        const loc = (reg.locations ?? []).find((l) => l.event_kind === 'game_state' && l.event_id === eventId);
+        const p = loc?.action?.presser;
+        if (p) return { level: p.level, class: p.class, x: p.x, y: p.y };
+    }
+    return null;
+}
+/** ⛓ RULES obstacle-events — an event leg's goal: clear the saved obstacle's flag (`clear-tag`). */
+function clearTagGoal(leg) {
+    const o = leg.event.obstacle;
+    // ⛓ CROSSROOM D3: an event pressed from ANOTHER level names its presser (`action.presser`, the rules
+    //   location's own field) — handed to the solver, which walks to it when the run stands in its level.
+    const presser = presserOfEvent(leg.event.id);
+    return {
+        kind: 'clear-tag',
+        tag: { level: o.level, tag: o.tag },
+        at: { x: o.x, y: o.y },
+        obstacle: `${o.class}@${o.x},${o.y}`,
+        ...(presser ? { presser } : {}),
+        why: `${leg.goal} (${leg.event.id}) — broken before row ${leg.event.prerequisiteFor} walks its landing`,
+        location: leg.goal,
+    };
+}
+
+function pickupCoords(level) {
+    const type = PICKUP_ENTITY[level];
+    const hits = (levelsByNo.get(level)?.entities ?? []).filter((e) => e.type === type);
+    if (hits.length !== 1) {
+        throw new Error(`L${level} has ${hits.length} '${type}' entities — the route's `
+            + 'pickup goal must name exactly one placement.');
+    }
+    return { x: hits[0].x, y: hits[0].y };
+}
+
+function deriveRoute() {
+    const startRegion = REGIONS.Menu.exits[0].connected_region;
+    // ⛓ `rules-route-survey`: one BFS leg per pickup (`surveyRoute.deriveLegs`),
+    //   each with exactly the items the earlier legs earned.
+    //   Under `--through` the rows past the bound are `spare`: AP's order is
+    //   not a walk on a directed graph, and a leg it cannot walk takes the
+    //   earliest remaining row it can (named on the leg as `outOfOrder`).
+    const derived = deriveLegs({
+        regions: REGIONS, ruleHolds, start: startRegion, pickups: ROUTE_PICKUPS,
+        spare: SPARE,
+        // ⛓ FRONTIER2: the route-only route is WALKED — `CanReachRegion` by where it has stood
+        walk: ROUTE_MODE === 'route-only',
+        // ⛓ RETURN TO MENU: a leg may Restart only where the slot declares it (procgenCore/restartWarp.js).
+        restart: returnToMenu(apRules),
+        // ⛓ RULES obstacle-events: a landing gated on a saved obstacle's event is walked only after
+        //   the obstacle is broken from its open side (goal-first legs; never eager, never silently)
+        events: gameStateEventsOf(REGIONS),
+    });
+    const legs = derived.legs.map((leg, i) => ({
+        ...leg,
+        levels: levelsOf(leg.regions),
+        alternatives: alternativesFor(leg.from, leg.to, leg.regions, { ...derived.held[i] },
+            derived.legHolds[i]),
+    }));
+
+    // The level visit sequence: the legs concatenated, with each leg's first
+    // level dropped (it is the previous leg's last — the same visit).
+    const visits = [];
+    legs.forEach((leg, i) => {
+        leg.levels.forEach((n, j) => {
+            if (i > 0 && j === 0) return;
+            visits.push({ level: n, leg: i });
+        });
+    });
+    // ⛓ `rules-route-survey`: each visit's way OUT, as the AP exit the leg's
+    //   BFS took (`hopEdge` resolves a crossing by it). One per level change,
+    //   in the same order the visits were made — asserted, not assumed.
+    // ⛓ RETURN TO MENU: a hop INTO `Menu` is the visit's way out (a Restart), and the `GameStart` hop after it is
+    //   the warp's landing, not a second crossing.
+    const outs = legs.flatMap((leg, i) => {
+        const out = [];
+        const R = leg.regions;
+        for (let j = 0; j + 1 < R.length; j += 1) {
+            if (R[j + 1] === RESTART_TARGET) {
+                out.push({ region: R[j], name: derived.hops[i][j], restart: true });
+                j += 1;
+            } else if (levelOfRegion(R[j + 1]) !== levelOfRegion(R[j])) {
+                out.push({ region: R[j], name: derived.hops[i][j] });
+            }
+        }
+        return out;
+    });
+    if (outs.length !== visits.length - 1) {
+        throw new Error(`the route has ${visits.length} visits and ${outs.length} level-changing `
+            + 'AP exits — each crossing must be exactly one exit.');
+    }
+    outs.forEach((o, k) => { visits[k].exitOut = o; });
+
+    // ⛓ RULES survey-staging: the flags each visit BOOTS with — the events the walk cleared in an EARLIER visit
+    //   (a crossing at the event's own cost, or a goal-first leg), never one it did not (flags flow game → AP only).
+    const persistence = stagedPersistence({ legs: derived.legs, credits: derived.credits, levelOfRegion });
+    if (persistence.length !== visits.length) {
+        throw new Error(`stagedPersistence projected ${persistence.length} visits and the route has `
+            + `${visits.length} — the staging would be handed to the wrong rooms.`);
+    }
+    const steps = buildSteps(visits, legs, (i) => i + 1);
+    return { legs, visits, steps, persistence: new Map(steps.map((s, i) => [String(s.step), persistence[i]])) };
+}
+
+/**
+ * ⛓ THE ALTERNATIVE LEG, SURVEYED — and it is here because the MEASUREMENT
+ * demanded it, not because the charter asked for two routes.
+ *
+ * The chosen (shortest) leg 2 goes L10 → **L11** → **L3's east half** → L2,
+ * and BOTH of those two rooms refuse. The 16-room alternative avoids exactly
+ * those two — it walks back the way it came (L10 → L9 → … → L4 → L3's west
+ * half → L2), where every room already has a committed solve in the outbound
+ * direction. So "the shortest route refuses" and "the campaign cannot get
+ * from the sword to D2" are DIFFERENT CLAIMS, and only a survey of the
+ * alternative can tell them apart. R9's budget needs the difference.
+ */
+function deriveAlternative(route) {
+    // ⛓ `rules-route-survey`: the DEFAULT route's. Under `--through` the legs
+    //   are the sphere order's rows, so `legs[1]` is the 0.2 chest, not the
+    //   Boss Key 0 leg this addendum was measured for — and the brief's
+    //   frontier is past 2.2, not the leg-2 detour.
+    if (THROUGH !== null) return null;
+    const alt = route.legs[1].alternatives.find((a) => !a.forced);
+    if (!alt) return null;
+    const visits = [];
+    route.legs[0].levels.forEach((n) => visits.push({ level: n, leg: 0 }));
+    alt.levels.slice(1).forEach((n) => visits.push({ level: n, leg: 1 }));
+    route.legs[2].levels.slice(1).forEach((n) => visits.push({ level: n, leg: 2 }));
+    return {
+        levels: alt.levels,
+        avoids: route.legs[1].regions.filter((r) => !alt.regions.includes(r)),
+        steps: buildSteps(visits, route.legs, (i) => `A${i + 1}`),
+    };
+}
+
+/**
+ * Steps: one per visit. Goals = the route pickup here (if any), then the
+ * crossing out (if any). The last visit has no crossing — the route ends at
+ * the shield.
+ */
+function buildSteps(visits, legs, id) {
+    /**
+     * ⛓ `rules-route-survey`: a leg ENDS at the last visit whose leg is ≤ it.
+     * For a leg with visits of its own that is its own last visit (the old
+     * rule); for a leg that never leaves the room the previous leg ended in
+     * (L40's Chest → L40's Totem Part) it is that SAME visit, which then
+     * carries both pickups in order. A leg with no visit of its own had no
+     * step at all before, and its pickup was silently never asked for.
+     */
+    const endOf = legs.map((_, k) => visits.reduce((at, v, i) => (v.leg <= k ? i : at), -1));
+    return visits.map((v, i) => {
+        const next = visits[i + 1];
+        const goals = [];
+        const pickupsHere = legs.map((leg, k) => (endOf[k] === i
+            ? (leg.event ? { event: leg } : PICKUP_ROWS.find((p) => p.level === v.level && leg.goal === p.location))
+            : null))
+            .filter(Boolean);
+        // ⛓ `rules-route-survey`: under `--through` the crossing is the exit AP's
+        //   own path took (`hopEdge`), resolved ONCE and used by both halves.
+        const restart = Boolean(next && v.exitOut?.restart);
+        const crossing = next && THROUGH && !restart ? hopEdge(v.level, next.level, v.exitOut) : null;
+        let edge = null;
+        if (next && !THROUGH) {
+            try { edge = edgeFor(v.level, next.level); } catch { edge = null; }
+        } else if (crossing) {
+            edge = crossing.edge;
+        }
+        // ⛓ rules-r4b-followup: the onward hop is the visit's LAST errand's. Handed to every pickup, L32's Bob
+        //   encounter took `then: 'reach-pit'` with Times still to report, fell, and asked for Times in L30.
+        const lastPickup = pickupsHere.at(-1);
+        for (const pickupHere of pickupsHere) {
+            if (pickupHere.event) {
+                // ⛓ RULES obstacle-events: BREAK the obstacle the next row's walk needs (its flag is the
+                //   game's; the solver owns HOW — a goal kind it does not have yet refuses by name).
+                goals.push(clearTagGoal(pickupHere.event));
+            } else if (THROUGH) {
+                goals.push(throughPickupGoal(v.level, pickupHere, next && pickupHere === lastPickup ? edge : undefined));
+            } else {
+                goals.push({
+                    kind: 'collect-placement',
+                    placement: pickupCoords(v.level),
+                    why: `${pickupHere.location} (sphere ${pickupHere.sphere}) → ${pickupHere.item}`,
+                });
+            }
+        }
+        edge = null;
+        // ⛓ S2 D5: under `--through`, a hop with no `to` entity (a pit fall, a
+        //   map edge) is RECORDED on the step instead of ending the derivation —
+        //   the steps after it that are derivable still get surveyed.
+        let crossingRefusal = null;
+        if (next && restart) {
+            // ⛓ RETURN TO MENU: the way out is the Menu panel's Restart — no door, no goal; the next visit lands at
+            //   the start spawn.
+        } else if (next) {
+            if (THROUGH) {
+                // ⛓ SWIM T3 D3 + `rules-route-survey`: the AP exit's own entity,
+                //   else the one `to` entity, else a pit — or a named refusal.
+                edge = crossing.edge;
+                if (!edge) crossingRefusal = crossing.refusal;
+            } else {
+                edge = edgeFor(v.level, next.level);
+            }
+            if (edge?.kind === 'pit' && goals.some((g) => g.kind === 'encounter' && g.then === 'reach-pit')) {
+                // ⛓ the encounter's own `then: 'reach-pit'` IS this crossing
+                //   (the solver falls through after the drop); a second
+                //   reach-pit goal would ask for the fall twice.
+            } else if (edge?.kind === 'pit') {
+                goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}` });
+            } else if (edge) {
+                // ⛓ fidelity BOSSFORK D3 (ON only: OFF no edge is `tentaclebeast@`): the mouth stands only once the beast
+                //   is dead, so its crossing is the fight first, unless this visit's goals already clear its report —
+                //   the JS runtime's own shape for the same exit (`FIGHT_EXITS`: clear-tag, then reach-exit).
+                const mouthFight = /^tentaclebeast@/.test(edge.via) ? tentacleMouthFightGoal(v.level, edge) : null;
+                if (mouthFight && !goals.some((g) => g.kind === 'clear-tag' && g.obstacle === mouthFight.obstacle)) {
+                    goals.push(mouthFight);
+                }
+                goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
+            }
+        }
+        const prev = visits[i - 1];
+        let arrival = { x: 80, y: 128 };
+        let arrivalRefusal = null;
+        let arrivalVia = null;
+        let arrivalChain = null;
+        if (prev?.exitOut?.restart) {
+            arrival = RESTART_ARRIVAL ? { x: RESTART_ARRIVAL.x, y: RESTART_ARRIVAL.y } : null;
+            if (!RESTART_ARRIVAL) arrivalRefusal = 'a Restart lands at seedlingStartSpawn, and the start region has no spawn';
+        } else if (prev) {
+            if (THROUGH) {
+                const { edge: hop, refusal } = hopEdge(prev.level, v.level, prev.exitOut);
+                arrival = hop ? hop.arrival : null;
+                // ⛓ a CHAINED fall ends on the ground (the fired door's `new Game`), so it is not a pit landing.
+                if (hop?.kind === 'pit' && !hop.chained) arrivalVia = hop.via;
+                if (hop?.chained) arrivalChain = hop.via;
+                if (!hop) arrivalRefusal = refusal;
+            } else {
+                arrival = edgeFor(prev.level, v.level).arrival;
+            }
+        }
+        return {
+            step: id(i),
+            level: v.level,
+            visit: visits.slice(0, i).filter((w) => w.level === v.level).length + 1,
+            arrival,
+            goals,
+            crossesTo: next ? next.level : null,
+            ...(restart ? { restart: true } : {}),
+            ...(crossingRefusal ? { crossingRefusal } : {}),
+            ...(arrivalRefusal ? { arrivalRefusal } : {}),
+            ...(arrivalVia ? { arrivalVia } : {}),
+            ...(arrivalChain ? { arrivalChain } : {}),
+        };
+    });
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 3. THE BOOT POLICY — data, one row per step
+// ─────────────────────────────────────────────────────────────────────
+
+const committedTape = (name) => JSON.parse(readFileSync(join(TAPES, `${name}.json`), 'utf8'));
+
+/**
+ * ⛔ THE COMMITTED BOOTS ARE MATCHED BY **ROOM AND ARRIVAL POSITION**, never
+ * by level number and never by step index.
+ *
+ * L0, L2, L3 and (on the alternative leg) L4–L9 are each visited TWICE on
+ * this route: the second visit comes through a different door, lands on a
+ * different tile and has a different errand. A lookup keyed on the LEVEL
+ * would have handed the return leg the outbound room's boot and reported the
+ * result as a known-answer agreement. A lookup keyed on the STEP INDEX would
+ * have silently mis-assigned every row the moment the alternative leg added
+ * six steps in the middle. The position is the only key that is a fact about
+ * the game.
+ */
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — RE-POINTED AT THE SOLVER CHAIN (⚖ ruling 14).
+ *
+ * This was `r7-act2-1..11` — the hand chain `act2-the-sword`, which retired
+ * this slice. `r8-solve-1..11` are the solver tapes for the same eleven rooms
+ * from the same boots, and the swap is inert where it matters HERE: the lookup
+ * is keyed on the ARRIVAL POSITION, which lives in `boot`, and `boot` is
+ * identical between every hand tape and its twin (rooms 1-4 and 11 are
+ * byte-equal over all eleven boot-block fields; rooms 5-10 differ only in
+ * `seam`, and rooms 5 and 8 in `persistence`). So every key is unchanged and
+ * the collision guard below still has nothing to choose between.
+ *
+ * ⚠ WHAT DOES CHANGE is which block rooms 5-10 are STAGED from: R9 slice 6
+ * re-recorded those tapes from the true-start chain's MEASURED LATCHES, so the
+ * survey now stages from the clock the chain really reaches rather than from
+ * R7's hand latch. Any tick count that moves because of it is a finding, not a
+ * regression — the run is published in the slice's as-built either way.
+ */
+const CAMPAIGN_TAPES = [
+    'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
+    'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10', 'r8-solve-11',
+    'r8-d2-19', 'r8-d2-20',
+];
+const bootKey = (level, x, y) => `L${level}@${x},${y}`;
+const COMMITTED_BY_ARRIVAL = new Map();
+for (const name of CAMPAIGN_TAPES) {
+    const b = committedTape(name).boot;
+    const key = bootKey(b.level, b.x, b.y);
+    if (COMMITTED_BY_ARRIVAL.has(key)) {
+        throw new Error(`two committed tapes boot at ${key} `
+            + `(${COMMITTED_BY_ARRIVAL.get(key)} and ${name}) — the survey's boot lookup is `
+            + 'keyed on the arrival position and cannot choose between them.');
+    }
+    COMMITTED_BY_ARRIVAL.set(key, name);
+}
+
+/**
+ * The staged construction: the campaign's post-sword latch. R8 slice 8's own.
+ *
+ * ⛓ R9 SLICE 7 — was `r7-act2-11`, retired by ⚖ ruling 14. `r8-solve-11` is the
+ * SAME LATCH: measured at slice 7's baseline, the two tapes' boot blocks are
+ * BYTE-EQUAL over all eleven fields (`boot`, `noclip`, `noDamage`, `noHazards`,
+ * `grants`, `persistence`, `equips`, `pins`, `save`, `rng`, `seam`). ⇒ every
+ * staged row below is constructed from the same numbers as before, out of a
+ * different file, and this re-point is PREDICTED to move nothing.
+ */
+const STAGED_BASE = 'r8-solve-11';
+
+/**
+ * A staged row that ALREADY has a committed tape — the one place the staged
+ * construction can be checked against something nobody wrote for this survey.
+ * Keyed on arrival for the same reason everything else here is.
+ */
+const STAGED_CROSSCHECK = new Map([[bootKey(18, 16, 32), 'r8-solve-18']]);
+
+/**
+ * ⛓ SWIM T3 D4 — **WHAT A STAGED ROOM IS GRANTED BEYOND THE LATCH**.
+ *
+ * `STAGED_BASE` is the campaign's post-sword latch, and it predates every
+ * pickup the extended legs collect, so a staged room after the Red Key, the
+ * Shield or the Green Key refused on a lock the route had already earned (S2's
+ * reading: a bound of the STAGING, not a wall in the room). T3 declared ONE
+ * row by hand (the Green Key at L30) and U1 re-keyed it.
+ *
+ * ⛓⛓ SWIM U2 D3 (⚖ Q26: "derive it") — the hand row is gone. Under
+ * `--through` ONLY, a staged step is granted the union of every
+ * `collect-placement` the route completed at an EARLIER step
+ * (`surveyGrants.deriveStagedGrant`): Boss Keys through the v6 `save.keys`
+ * block, items through the v8 `seam.items` block — the two doors the staging
+ * already has (`buildStagedTape` carries both verbatim). An item the latch
+ * already holds is reported `latched` and not written, and the latch is
+ * post-sword, so the Sword must be one of those (asserted). The default survey
+ * is untouched: no grant, so its rows and md5s cannot move.
+ */
+function stagedGrantFor(step, latchItems) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    const grant = deriveStagedGrant({
+        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
+        pickups: PICKUP_ROWS,
+        game: GAME,
+        latchItems,
+        // ⛓ `rules-route-survey`: Health cannot be presented by a boot; the grant
+        //   names it rather than crashing the row (Seals and Totem Shards are
+        //   counted into `saveCounts` — RULES survey-save-arrays).
+        unpresentable: 'report',
+    });
+    const sword = grant?.from.find((f) => f.item === 'Progressive Sword');
+    if (sword && sword.grants !== 'latched hasSword') {
+        throw new Error(`staged grant for step ${step.step}: the route's Sword (step ${sword.step}) `
+            + `derives '${sword.grants}', but ${STAGED_BASE} is the POST-SWORD latch — the latch `
+            + 'must already hold it, and a second grant would hide a latch that does not.');
+    }
+    return grant;
+}
+
+/**
+ * The KNOWN-ANSWER tape a row's tick count can be compared against — a
+ * SOLVER tape for the same room from the same boot. Re-solving these is
+ * agreement information, which is why they are in the survey at all.
+ */
+/**
+ * ⛓ R9 SLICE 7 — **THE KEY IS THE BOOT, NOT THE GOAL** (trap 503, paid here).
+ *
+ * Every entry is keyed on `bootKey(level, x, y)` — the position the route
+ * ARRIVES at — and NOT on the room or the errand. Two visits to one level are
+ * two different rows with two different boots and two different goals (L3 is
+ * visited twice on this route, L2 twice, L0 twice), so a lookup keyed on the
+ * LEVEL would hand a return leg the outbound room's answer and report the
+ * agreement as real. A lookup keyed on the STEP INDEX would mis-assign every
+ * row the moment an alternative leg added steps in the middle. The arrival
+ * position is the only key that is a fact about the game rather than about
+ * this table's ordering.
+ */
+const KNOWN_ANSWERS = new Map([
+    [bootKey(0, 80, 128), 'r8-solve-1'], [bootKey(2, 48, 32), 'r8-solve-2'],
+    [bootKey(3, 64, 16), 'r8-solve-3'], [bootKey(4, 16, 16), 'r8-solve-4'],
+    [bootKey(5, 80, 32), 'r8-solve-5'], [bootKey(6, 32, 16), 'r8-solve-6'],
+    [bootKey(7, 32, 32), 'r8-solve-7'], [bootKey(8, 144, 48), 'r8-solve-8'],
+    [bootKey(9, 144, 16), 'r8-solve-9'], [bootKey(10, 48, 80), 'r8-solve-10'],
+    [bootKey(11, 32, 64), 'r8-solve-11'],
+    [bootKey(18, 16, 32), 'r8-solve-18'],
+    [bootKey(19, 16, 144), 'r8-d2-19'], [bootKey(20, 192, 64), 'r8-d2-20'],
+]);
+
+function bootFor(step) {
+    if (step.arrival === null) {
+        return { kind: 'no-arrival', source: null, note: `no boot: ${step.arrivalRefusal}` };
+    }
+    const key = bootKey(step.level, step.arrival.x, step.arrival.y);
+    const tape = COMMITTED_BY_ARRIVAL.get(key);
+    const late = tape ? lateVisitTo(step, tape) : null;
+    if (tape && !late) {
+        return {
+            // ⛓ R9 slice 7: was `r7-act2-1`, retired by ⚖ ruling 14.
+            //   `r8-solve-1` is the same boot — `new Game(0, 80, 128)`,
+            //   empty save — measured BYTE-EQUAL over all eleven
+            //   boot-block fields against the tape it replaces.
+            kind: tape === 'r8-solve-1' ? 'true-start' : 'committed',
+            source: tape,
+            note: tape === 'r7-act2-1'
+                ? 'the TRUE GAME START — new Game(0, 80, 128), empty save'
+                : `${tape}'s committed v8 boot block, verbatim (it boots at ${key})`,
+        };
+    }
+    return {
+        kind: 'staged',
+        source: STAGED_BASE,
+        note: `${STAGED_BASE}'s committed v8 block (the campaign's own post-sword latch) `
+            + `re-pointed at ${key} — R8 slice 8's construction for r8-solve-18`
+            // ⛓ SWIM T3 D3: a pit landing is staged as a plain `new Game`
+            // at the fall's ctor args — on the ground, NOT the 83 px ceiling
+            // descent the fall itself plays (`arriveFromFall`). Named, because
+            // it is a bound on what a SOLVED row here claims.
+            + (step.arrivalVia ? `; the arrival is a PIT landing (${step.arrivalVia}), staged `
+                + 'on the ground at the fall\'s ctor args rather than as the ceiling descent' : '')
+            + (late ? `; a LATE visit to ${tape}'s door — the walk holds ${late.join(', ')}, which `
+                + `${tape} does not present, so its early block is not this visit's` : ''),
+        ...(late ? { lateVisitTo: tape, beyond: late } : {}),
+    };
+}
+
+/**
+ * ⛓ RULES survey-staging (`surveyGrants.tapeCoversVisit`): null when the committed `tape` presents everything the
+ * walk holds at `step` (its own visit), else what the walk holds beyond it. Under `--through` only — the default
+ * survey grants nothing, so its boots cannot move. A late visit with no Sword would be handed the post-sword latch
+ * it never earned; that refuses by name rather than boot.
+ */
+function committedGrantFor(step, tape) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    return deriveStagedGrant({
+        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
+        pickups: PICKUP_ROWS, game: GAME, latchItems: committedTape(tape).seam?.items ?? {}, unpresentable: 'report',
+    });
+}
+
+function lateVisitTo(step, tape) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    const raw = committedTape(tape);
+    const grant = committedGrantFor(step, tape);
+    const { covers, beyond } = tapeCoversVisit(grant, raw.save?.keys ?? []);
+    if (covers) return null;
+    if (!grant.from.some((f) => f.item === 'Progressive Sword')) {
+        throw new Error(`step ${step.step} is a late visit to ${tape}'s door (the walk holds ${beyond.join(', ')}) `
+            + `with no Sword — the staged boot is ${STAGED_BASE}'s post-sword latch, which this visit never earned.`);
+    }
+    return beyond;
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 4. THE SOLVE (child mode)
+// ─────────────────────────────────────────────────────────────────────
+
+async function solveOneStep(step) {
+    // ⛓ S2 D5: a step the route reaches through a hop the atlas has no `to`
+    //   entity for has no boot to stage, and a step whose only goal was such a
+    //   hop has nothing to solve — each is its own verdict, quoted, not a solve.
+    // ⛓ rules-r4b-followup: a `skip` (a boss no executor fights) is never a solver goal; it rides on the row.
+    const skipped = step.goals.filter((g) => g.kind === 'skip').map((g) => ({ location: g.location, why: g.why }));
+    const solvable = step.goals.filter((g) => g.kind !== 'skip');
+    if (step.arrival === null || (step.crossingRefusal && solvable.length === 0)) {
+        return {
+            step: step.step, level: step.level, boot: bootFor(step), goals: step.goals, views: {},
+            clock: null, verdict: step.arrival === null ? 'NO-ARRIVAL' : 'NO-EDGE',
+            refusal: step.arrival === null ? step.arrivalRefusal : step.crossingRefusal,
+            ticks: null, ms: 0, knownAnswer: null, ...(skipped.length ? { skipped } : {}),
+        };
+    }
+    if (solvable.length === 0) {
+        return {
+            step: step.step, level: step.level, boot: bootFor(step), goals: step.goals, views: {},
+            clock: null, verdict: 'SKIPPED', refusal: skipped.map((k) => k.why).join('; '),
+            ticks: null, ms: 0, knownAnswer: null, skipped,
+        };
+    }
+    const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+    const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
+    const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
+    const { createRunForStaging, solveStaging, stagingFromTape } =
+        await import(join(MODULE, 'tapeRunner.js'));
+    const { SHIPPED_RNG } = await import(join(MODULE, 'wasmArrival.js'));
+
+    const boot = bootFor(step);
+    const base = parseTape(committedTape(boot.source));
+    const staging = solveStaging(stagingFromTape(base));
+    if (boot.kind === 'staged') {
+        staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
+        // ⛓ RULES survey-tentacle-staging: the room runs the game's `Rng.split`, not the base tape's (`stagedRng`).
+        staging.rng = stagedRng(staging.rng, SHIPPED_RNG);
+    }
+    /**
+     * ⛓ RULES survey-save-arrays — **THE DELIVERED SAVE ARRAYS ARE STAGED** (`surveyGrants.stageGrantSave`, through
+     * `saveArrayRules`), under `--through` only (the default survey grants nothing, so its rows cannot move):
+     *  · `staged`: the grant's keys (union, as before) AND its Seal / Totem Shard counts (log-append / count-fill)
+     *    over `STAGED_BASE`'s own block;
+     *  · `committed` / `true-start` (the tape's OWN visit — `lateVisitTo` found it covers every item and key): the
+     *    counts only, SET_IF_MISSING over the tape's own arrays, which stay the authority (never shortened).
+     * Before this, every boot held only the arrays its base tape recorded: step 211 (L113, FinalDoor) booted 0/16.
+     */
+    const saveGrant = boot.kind === 'staged'
+        ? stagedGrantFor(step, staging.seam?.items ?? null)
+        : (boot.kind === 'committed' || boot.kind === 'true-start') ? committedGrantFor(step, boot.source) : null;
+    /** the save arrays a merge EXTENDED (`{seal_parts: [..]}`), recorded on the row's boot */
+    let stagedSave = null;
+    if (saveGrant) {
+        const held = stageGrantSave(staging.save, null);
+        const staged = stageGrantSave(staging.save, saveGrant, { keys: boot.kind === 'staged', sealsRequired: SEALS_REQUIRED });
+        const moved = Object.keys(staged).filter((n) => JSON.stringify(staged[n]) !== JSON.stringify(held[n]));
+        if (moved.length > 0) {
+            staging.save = staged;
+            stagedSave = Object.fromEntries(moved.map((n) => [n, staged[n]]));
+        }
+    }
+    if (saveGrant?.items.length) {
+        staging.seam = {
+            ...staging.seam,
+            items: { ...staging.seam.items,
+                ...Object.fromEntries(saveGrant.items.map((prop) => [prop, true])) },
+        };
+    }
+    /**
+     * ⛔⛔⛔ THE TIMED CLEARS ARE STRIPPED, AND THIS IS THE DESPAWN DROP ONE
+     * FIELD OVER — measured on L8, not reasoned to.
+     *
+     * `solveStaging` empties `despawn` with a written reason: *"a v10 despawn
+     * is a WITNESSED mid-run body removal … that witness belongs to the HAND
+     * walk. A solver re-solving the same room derives its own walk, in which
+     * the removal never happened."* A v9 `persistence[].at` is the same
+     * sentence about a FLAG instead of a BODY — and the seam carries it.
+     *
+     * MEASURED on route step 8 (L8, the two sandtraps under the arrow
+     * column), from `r7-act2-8`'s committed block:
+     *
+     *   inherited (what `solveStaging` hands over today)
+     *       → SOLVED, 1113 ticks, ONE pass, planning around {8,0}@380 and
+     *         {8,1}@932 — the HAND walk's ticks, on a walk that is not it,
+     *         and nothing raised a word about it.
+     *   stripped (this line)
+     *       → REFUSES BY NAME: "pass 1 needs a GAME-sourced tick for {8,0}
+     *         … §11.4 refuses the death staging" — which is the truth: the
+     *         room needs the `--win` oracle to author, exactly as
+     *         `r8-solve-8` did.
+     *
+     * ⛓ R8's own scripts already strip it — `solve-seedling-r8-tail`'s tape
+     * says "with that tape's own timed clear(s) STRIPPED" — BY HAND, in
+     * prose, outside the seam. ⚠ REPORTED, NOT FIXED in `tapeRunner`: ⚖
+     * §14.5's fourth reason measured that removing these rows is NOT inert
+     * (three of the six declaring boots then refuse by name), so where the
+     * strip belongs is a design question with a real cost, and this slice is
+     * a consumer. Where the model CAN compute the clear (L5's kill-lock),
+     * `twoPassSolve`'s discovery arm re-declares it and the inherited row is
+     * replaced — which is why this went unseen: it is invisible in exactly
+     * the rooms the model can answer for itself.
+     */
+    const inheritedTimed = (staging.persistence ?? []).filter((r) => r.at !== undefined);
+    staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
+    /**
+     * ⛓ RULES survey-staging — **THE WALK'S CLEARED FLAGS ARE STAGED** (`deriveRoute`'s `persistence`), the
+     * runtimes' shape (`{level, tag}`, as `stagingFromWasmArrival` stages `botStatus.persistence_cleared`). Without
+     * it a room the walk had already opened booted SHUT: step 33 (L12 → L0 at (288,176)) landed inside
+     * breakablerock@288,176, which leg 1.2 broke crossing it. A flag the boot block already declares is kept once.
+     * ⚠ The alternative leg's steps (the default survey only) carry none: their visits are not the route's.
+     */
+    for (const flag of route.persistence.get(String(step.step)) ?? []) {
+        if (!staging.persistence.some((r) => r.level === flag.level && r.tag === flag.tag)) {
+            staging.persistence.push({ ...flag });
+        }
+    }
+    /**
+     * ⛓ TWO NON-VACUOUS CHECKS ON THE BOOT DERIVATION, and neither is a
+     * restatement of what the line above just wrote.
+     *
+     *  · a COMMITTED row's own boot must BE the atlas's `playerx/playery`
+     *    for the door it came through. Twelve committed campaign boots on
+     *    this route, none of them authored from the atlas — if they agree,
+     *    the arrival derivation the STAGED rows depend on is the game's.
+     *  · and where a staged room already HAS a committed tape
+     *    (`r8-solve-18`), the block this script builds must be that tape's
+     *    boot block. That is the claim "the staged policy is R8's, not this
+     *    script's", asserted rather than asserted-in-a-docblock.
+     */
+    let bootCheck = null;
+    if (boot.kind === 'committed') {
+        bootCheck = {
+            what: `${boot.source}'s committed boot IS the atlas arrival for this door`,
+            ok: staging.boot.level === step.level
+                && staging.boot.x === step.arrival.x && staging.boot.y === step.arrival.y,
+            got: { ...staging.boot },
+            want: { level: step.level, ...step.arrival },
+        };
+    } else if (STAGED_CROSSCHECK.has(bootKey(step.level, step.arrival.x, step.arrival.y))) {
+        const crossName = STAGED_CROSSCHECK.get(bootKey(step.level, step.arrival.x, step.arrival.y));
+        const other = parseTape(committedTape(crossName));
+        bootCheck = {
+            what: `the staged block equals ${crossName}'s committed boot`,
+            ok: JSON.stringify(staging.boot) === JSON.stringify(other.boot)
+                && JSON.stringify(staging.save) === JSON.stringify(other.save)
+                && JSON.stringify(staging.rng) === JSON.stringify(stagedRng(other.rng, SHIPPED_RNG))
+                && JSON.stringify(staging.seam) === JSON.stringify(other.seam),
+            got: { ...staging.boot },
+            want: { ...other.boot },
+        };
+    }
+
+    const known = KNOWN_ANSWERS.get(bootKey(step.level, step.arrival.x, step.arrival.y)) ?? null;
+    // ⛓ SWIM T3 D3: a `reach-pit` goal is handed to the solver AS IS — it is
+    // not a kind the solver owns, and its refusal saying so is the measurement.
+    const goals = solvable.map((g) => (g.kind === 'reach-pit'
+        ? { kind: 'reach-pit', pit: { ...g.pit } }
+        : g.kind === 'encounter'
+        ? { kind: 'encounter', at: { ...g.at }, drop: { ...g.drop }, then: g.then }
+        : g.kind === 'reach-exit'
+        ? { kind: 'reach-exit', exit: { ...g.exit } }
+        // ⛓ CROSSROOM D3: a clear-tag goal is handed AS IS (it used to fall into the
+        //   collect-placement arm with no placement, and refused on the goal's shape).
+        : g.kind === 'clear-tag'
+        ? { kind: 'clear-tag', tag: { ...g.tag }, at: { ...g.at },
+            ...(g.obstacle ? { obstacle: g.obstacle } : {}), ...(g.presser ? { presser: { ...g.presser } } : {}) }
+        : { kind: 'collect-placement', placement: { ...g.placement } }));
+
+    /**
+     * ⛔⛔ THE SURVEY DRIVES THE **TWO-PASS** LOOP, NOT BARE `solveSegment`.
+     *
+     * Measured the hard way on step 19: a single-pass call against L18 comes
+     * back with `levelRun`'s undeclared-kill-lock throw — the state pass 1 is
+     * in ON PURPOSE (`twoPassSolve`'s docblock) — and a survey that recorded
+     * that as a REFUSAL would have reported the room R8 slice 8 recorded as
+     * a wall. A room whose own walk opens its own gate needs the loop, and
+     * the loop is the authoring machinery R9 would use anyway.
+     *
+     * ⚠ `gameTick` is DELIBERATELY NOT INJECTED. A declaration the model
+     * refuses to compute is answerable only by the `--win` game oracle, which
+     * is a RECORDING channel and this slice is report-only. Such a room comes
+     * back as its own verdict (`NEEDS-GAME-ORACLE`), which is the honest
+     * answer: the solver is not what stands in its way.
+     */
+    const levelSource = levelSourceFromAtlas(atlas);
+    const makeRun = (persistence) =>
+        createRunForStaging({ ...staging, persistence }, levelSource);
+
+    // ⛓ §14's caution, asked at the boot rather than inferred from a picture:
+    // 125 of 153 committed tapes have NO live clock, so "no hammer line" is
+    // the common case and means UNDECLARED CLOCK, never "no spinner".
+    const probe = makeRun(staging.persistence);
+    const clock = {
+        gameTime: Number.isFinite(probe.gameTime) ? probe.gameTime : null,
+        refusal: probe.gameTimeRefusal ?? null,
+    };
+
+    /**
+     * ── THE PICTURES' INPUTS, WRITTEN WHERE NO ROSTER READS THEM ──────
+     *
+     * ⛔ NOT `fixtures/tapes/`. That directory IS the differential's roster
+     * (`fixtures/index.js:46` derives it from disk), so a survey tape left
+     * there would silently join 153 committed artifacts. These go under the
+     * gitignored survey directory, exactly where a page DOWNLOAD would put
+     * one, and only the exporter ever reads them.
+     *
+     *  · EVERY room gets a **0-tick tape at its declared boot**. That is the
+     *    refusal's picture: a plan-time refusal never spends a tick, so the
+     *    interesting instant IS tick 0, and the room at tick 0 is where the
+     *    obstacle the refusal names is standing.
+     *  · a SOLVED room additionally folds its own walk with the ONE fold
+     *    (`buildStagedTape`) so `--tick=last` shows where it ended up.
+     *
+     * ⛔⛔ THE BOOT VIEW IS WRITTEN **BEFORE** THE SOLVE, and that ordering
+     * is a repair rather than a preference: written after, a step that
+     * TIMES OUT is SIGKILLed with nothing on disk — so the one verdict that
+     * most needs a picture of the room was the only one that had none.
+     * Measured on A14 (L6, the alternative leg), which produced no view at
+     * all on the first pass.
+     */
+    mkdirSync(join(OUT_DIR, 'views'), { recursive: true });
+    const viewPath = (kind) => join(OUT_DIR, 'views', `step-${step.step}-${kind}.json`);
+    const rel = (p) => p.slice(REPO.length + 1);
+    const views = {};
+    writeFileSync(viewPath('boot'), `${JSON.stringify(buildStagedTape({
+        staging, perTick: [], name: `survey-step-${step.step}-boot`,
+    }), null, 4)}\n`);
+    views.boot = rel(viewPath('boot'));
+
+    const t0 = Date.now();
+    let solved = null;
+    let refusal = null;
+    let verdict = 'SOLVED';
+    try {
+        solved = await twoPassSolve({
+            makeRun,
+            goals,
+            name: `survey-step-${step.step}`,
+            boot: staging.boot,
+            dashMode: DASH_MODE,
+            persistence: staging.persistence,
+            log: () => {},
+        });
+    } catch (e) {
+        refusal = e.message;
+        verdict = /needs a GAME-sourced tick/i.test(e.message) ? 'NEEDS-GAME-ORACLE' : 'REFUSED';
+    }
+    const ms = Date.now() - t0;
+
+    /**
+     * ⛓ AND WHERE A ROW HAD TIMED CLEARS TO STRIP, **BOTH READINGS ARE
+     * RECORDED** (⚖ the design session, mid-flight on this slice's own data).
+     * Staging IS declared, so a known-answer room may legitimately carry its
+     * own committed v9 rows — and a FRESH derivation of the same room may
+     * still need the game. Those are two honest answers to two questions,
+     * and a table printing one of them would be answering the other by
+     * accident. Only a step whose committed boot declares an `at` pays for
+     * the second solve: measured, that is L5 and L8 and nobody else.
+     */
+    let withCommitted = null;
+    if (inheritedTimed.length) {
+        try {
+            const alt = await twoPassSolve({
+                makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
+                goals,
+                name: `survey-step-${step.step}-committed`,
+                boot: staging.boot,
+                dashMode: DASH_MODE,
+                persistence: [...staging.persistence, ...inheritedTimed],
+                log: () => {},
+            });
+            withCommitted = {
+                verdict: 'SOLVED', ticks: alt.out.perTick.length, passes: alt.passes.length,
+            };
+        } catch (e) {
+            withCommitted = {
+                verdict: /needs a GAME-sourced tick/i.test(e.message)
+                    ? 'NEEDS-GAME-ORACLE' : 'REFUSED',
+                refusal: e.message,
+            };
+        }
+    }
+
+    // ⛔ THE VERDICT IS READ OFF A **REPLAY** OF THE EMITTED INPUTS, not off
+    // the solving pass — the r8-l18 precedent. A solve that "worked" and a
+    // walk that reproduces it are different artifacts.
+    let replay = null;
+    if (solved) {
+        const run = makeRun(solved.persistence);
+        // ⛓ Swim U5: a segment's own slot selections are applied at their
+        // ticks, as `Bot.as` applies a tape's `equips` beside the grants.
+        const equipsAt = new Map((solved.out.equips ?? []).map((e) => [e.t, e.slot]));
+        solved.out.perTick.forEach((held, t) => {
+            if (equipsAt.has(t)) run.equipNow(equipsAt.get(t));
+            run.advance(held);
+        });
+        replay = {
+            hits: run.playerHits.length,
+            deaths: run.playerDeaths.length,
+            endLevel: run.level,
+            transitions: (run.transitions ?? []).map((t) => `${t.from}->${t.to}@${t.t}`),
+            earnedClears: (run.earnedClears ?? []).map((c) => `{${c.level},${c.tag}}`),
+        };
+    }
+
+    if (solved) {
+        const walk = buildStagedTape({
+            staging: { ...staging, persistence: solved.persistence,
+                equips: [...(staging.equips ?? []), ...(solved.out.equips ?? [])] },
+            perTick: solved.out.perTick,
+            name: `survey-step-${step.step}`,
+        });
+        writeFileSync(viewPath('walk'), `${JSON.stringify(walk, null, 4)}\n`);
+        views.walk = rel(viewPath('walk'));
+    }
+
+    return {
+        step: step.step,
+        level: step.level,
+        boot: {
+            ...boot,
+            block: staging.boot,
+            check: bootCheck,
+            strippedTimedClears: inheritedTimed.map((r) => `{${r.level},${r.tag}}@${r.at}`),
+            ...(saveGrant && boot.kind === 'staged' ? { saveGrant } : {}),
+            ...(stagedSave ? { stagedSave } : {}),
+        },
+        withCommittedDeclarations: withCommitted,
+        goals: step.goals,
+        ...(skipped.length ? { skipped } : {}),
+        views,
+        clock,
+        verdict,
+        refusal,
+        ticks: solved ? solved.out.perTick.length : null,
+        traceRows: solved ? solved.out.trace.rows.length : null,
+        replans: solved ? solved.out.replans : null,
+        passes: solved ? solved.passes : null,
+        declarations: solved ? solved.declarations : null,
+        replay,
+        ms,
+        knownAnswer: known,
+        knownTicks: known ? committedTape(known).tick_count : null,
+        /**
+         * ⛓ AGREEMENT IS A MEASUREMENT, NOT A LABEL. A known-answer row is
+         * here to be re-solved; whether the tick counts match is reported
+         * either way and explained afterwards. ⚠ A known tape solved for a
+         * DIFFERENT errand in the same room (r8-solve-11 takes the chest and
+         * leaves east; this route leaves north) will disagree, and that
+         * disagreement is information rather than a defect.
+         */
+        agreesWithKnown: known && solved
+            ? solved.out.perTick.length === committedTape(known).tick_count : null,
+    };
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 5. THE MECHANISM FAMILY — a refusal mapped to R8's conversion queue
+// ─────────────────────────────────────────────────────────────────────
+
+// ⛓ R9 slice 12b″: the table and its classifier live in `surveyFamily.js` so
+//   they can be unit-rowed — this file solves the whole route at module scope,
+//   so importing it to test one pure function would RUN the survey.
+
+/** The obstacle a solver refusal names, verbatim — the family's actual subject. */
+function obstacleOf(refusal) {
+    const m = /Obstacle: (\S+) \(([^)]+)\)/.exec(refusal ?? '')
+        ?? /danger at \([^)]*\) — (\S+?) \(/.exec(refusal ?? '');
+    return m ? (m[2] ? `${m[1]} ${m[2]}` : m[1]) : null;
+}
+
+
+// ─────────────────────────────────────────────────────────────────────
+// 6. MAIN
+// ─────────────────────────────────────────────────────────────────────
+
+const route = deriveRoute();
+const alternative = deriveAlternative(route);
+/** Every step this survey can run — the chosen route, then the alternative leg. */
+const allSteps = [...route.steps, ...(alternative?.steps ?? [])];
+
+/**
+ * ⛔⛔ EVERY BOOT SOURCE IS PROVED TO EXIST BEFORE ANY MODE RUNS — ⚖ R9 slice 7b,
+ * §15.8 findings 1 and 2, both of them measured by slice 7's mutant (e).
+ *
+ * ── WHAT THIS FIXES, EXACTLY ──────────────────────────────────────────
+ *
+ * `bootFor` returns a NAME. Nothing downstream of it opened the file until a
+ * child process did, and the two modes then failed in two different useless
+ * ways:
+ *
+ *   `--table`  printed `boot=staged:r7-act2-11` for eight rows, wrote
+ *              `route.json` and `survey.md`, and EXITED 0. The table view
+ *              reports provenance BY NAME and never reads the tape, so a
+ *              retired fixture produced a complete-looking deliverable naming
+ *              a file that is not on disk (trap 520: a provenance view prints
+ *              a dead reference and exits 0).
+ *   the run    reddened 23/29 -> 13/29 with TEN steps `CRASHED — unclassified
+ *              — see the refusal text`. Each child died on an `ENOENT` the
+ *              parent could not classify, so a ten-step regression arrived
+ *              with NO cause named anywhere in the table.
+ *
+ * ⇒ the check runs ONCE, at load, in EVERY mode (`--table`, `--views`,
+ * `--derive-only`, the full run and each `--step=` child), and refuses BY NAME
+ * with a non-zero exit. A dead fixture can no longer be echoed as provenance
+ * and can no longer arrive as ten unattributed crashes.
+ *
+ * ⚖ RULING 17: the list is DERIVED, never typed. It is exactly the set of
+ * names this survey can hand to `committedTape` — every step's own
+ * `bootFor(...).source` over `allSteps` (which is where `STAGED_BASE` enters,
+ * for every staged row), plus the two cross-check tables. A row added to the
+ * route or a boot re-pointed tomorrow is covered without touching this
+ * function; a name typed here would be the thing that decays.
+ */
+function assertBootSourcesOnDisk() {
+    const wanted = new Map();
+    const want = (name, why) => {
+        if (!wanted.has(name)) wanted.set(name, []);
+        wanted.get(name).push(why);
+    };
+    for (const step of allSteps) {
+        const b = bootFor(step);
+        if (b.source === null) continue;
+        want(b.source, `step ${step.step} (L${step.level} visit ${step.visit}) boot=${b.kind}`);
+    }
+    for (const [key, name] of STAGED_CROSSCHECK) want(name, `the staged cross-check at ${key}`);
+    for (const [key, name] of KNOWN_ANSWERS) want(name, `the known answer at ${key}`);
+    const missing = [...wanted].filter(([name]) => !existsSync(join(TAPES, `${name}.json`)));
+    if (!missing.length) return;
+    console.error('\n⛔ THE SURVEY REFUSES: a boot source it names is NOT ON DISK.\n');
+    for (const [name, whys] of missing) {
+        console.error(`  ${name}.json — ${join(TAPES, `${name}.json`).slice(REPO.length + 1)}`);
+        for (const why of whys) console.error(`      wanted by: ${why}`);
+    }
+    console.error('\nA tape that has been RETIRED must be re-pointed at the solver tape that '
+        + 'covers\nits claim before this survey can run (⚖ ruling 14). Nothing was written; '
+        + 'no mode\nof this script prints provenance for a file it cannot open.\n');
+    process.exit(2);
+}
+assertBootSourcesOnDisk();
+
+if (STEP !== null) {
+    const step = allSteps.find((s) => String(s.step) === String(STEP));
+    if (!step) throw new Error(`no route step ${STEP} (the survey has ${allSteps.length})`);
+    const result = await solveOneStep(step);
+    console.log(`##SURVEY##${JSON.stringify(result)}`);
+    process.exit(0);
+}
+
+// ── the route, printed and published FIRST ───────────────────────────
+console.log('## THE ROUTE — derived from AP\'s own region rules, the atlas, and the '
+    + 'sphere order\n');
+for (const leg of route.legs) {
+    console.log(`LEG ${leg.sphere}  ${leg.goal}  (+${leg.item})`);
+    console.log(`  items held entering: {${leg.itemsHeld.join(', ') || 'none'}}`);
+    console.log(`  levels: ${leg.levels.map((n) => `L${n}`).join(' → ')}`);
+    console.log(`  regions: ${leg.regions.join(' > ')}`);
+    if (leg.outOfOrder) {
+        console.log(`  ⚠ OUT OF AP's ORDER${leg.pulledForward ? ' (pulled forward past the bound)' : ''}: `
+            + `deferred ${leg.outOfOrder.deferred.join(', ')} — ${leg.outOfOrder.because}; blocked by `
+            + leg.outOfOrder.blocked.map((b) => `${b.from} -> ${b.to} ${JSON.stringify(b.rule)}`).join('; '));
+    }
+    const detours = leg.alternatives.filter((a) => !a.forced);
+    const forced = leg.alternatives.filter((a) => a.forced).map((a) => a.banned);
+    console.log(`  FORCED rooms (no route avoids them): ${forced.join(', ') || 'none'}`);
+    if (!detours.length) console.log('  alternatives: NONE — every room on this leg is forced');
+    for (const alt of detours) {
+        console.log(`  alternative (without ${alt.banned}): `
+            + `${alt.levels.map((n) => `L${n}`).join(' → ')} — ${alt.levels.length} rooms `
+            + `vs ${leg.levels.length} chosen`);
+    }
+}
+console.log('\n## THE D2 ENTRY — L13 has a direct stairs to L20; what is behind it');
+for (const probe of d2EntryProbe()) {
+    console.log(`  ${probe.edge}: enter ${JSON.stringify(probe.enterRule)}`);
+    console.log(`    onward to ${probe.onwardTo}: ${JSON.stringify(probe.onwardRules)}`);
+    console.log(`    reaches the shield without already holding it? `
+        + `${probe.passableWithoutShield ? '⛔ YES' : 'NO'}`);
+}
+console.log(`\n## ${route.steps.length} STEPS (one per level visit)\n`);
+for (const s of route.steps) {
+    const boot = bootFor(s);
+    console.log(`${String(s.step).padStart(2)}  L${String(s.level).padEnd(2)} `
+        + `visit ${s.visit}  boot=${boot.kind}:${boot.source}  `
+        + `goals: ${s.goals.map((g) => `${g.kind}(${g.why})`).join(' then ') || 'none'}`);
+}
+
+mkdirSync(OUT_DIR, { recursive: true });
+const routeDoc = {
+    generator: 'scripts/procgen/survey-seedling-route.mjs',
+    sources: {
+        ap_rules: apRulesPath().slice(REPO.length + 1),
+        atlas: 'frontend/modules/flashPanel/atlases/seedling-map.json',
+        set_patches: SEEDLING_SET_PATCHES.map((p) => p.id),
+        spheres: 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json',
+    },
+    /**
+     * ⛓ FRONTIER2 — the route's MODE, named in the artifact (under `--through`
+     * only, so the default survey's `route.json` is byte-identical).
+     */
+    ...(THROUGH !== null ? {
+        routeMode: {
+            mode: ROUTE_MODE,
+            through: THROUGH,
+            definition: ROUTE_MODE === 'full'
+                ? 'every sphere-order row up to and including the bound, one leg each'
+                : 'the sphere-order rows up to the bound whose item an AP access rule asks for by a '
+                  + 'single-copy Has (a key), plus the bound row; counted collectibles and items no '
+                  + 'rule asks for are skipped; WALKED: CanReachRegion(X) holds once an earlier leg '
+                  + 'stood in X',
+            ...(ROUTE_ONLY ? { keyItems: [...KEY_ITEMS].sort(), skipped: ROUTE_ONLY.skipped } : {}),
+        },
+    } : {}),
+    legs: route.legs,
+    // ⛓ RULES survey-staging: step → the flags its boot stages (the walk's earlier clears); a step absent stages none
+    stagedFlags: Object.fromEntries([...route.persistence].filter(([, p]) => p.length > 0)),
+    steps: route.steps.map((s) => ({
+        ...s,
+        boot: bootFor(s),
+        known: KNOWN_ANSWERS.get(bootKey(s.level, s.arrival?.x, s.arrival?.y)) ?? null,
+    })),
+    alternative: alternative && {
+        levels: alternative.levels,
+        avoids: alternative.avoids,
+        steps: alternative.steps.map((s) => ({ ...s, boot: bootFor(s) })),
+    },
+};
+writeFileSync(join(OUT_DIR, 'route.json'), `${JSON.stringify(routeDoc, null, 2)}\n`);
+console.log(`\nwrote ${join(OUT_DIR, 'route.json')}`);
+
+if (DERIVE_ONLY) process.exit(0);
+
+/**
+ * ── `--views`: THE PICTURES ───────────────────────────────────────────
+ *
+ * Reads the survey it already wrote and drives `export-seedling-view.mjs`,
+ * the arc's own CLI, over the view tapes each step left behind. ⛔ ONE
+ * RENDERER: this adds a loop and a filename. It draws nothing.
+ *
+ *  · a REFUSAL (or a TIMEOUT, or a game-oracle wall) gets its room at
+ *    **tick 0**. That IS the measured interesting tick for these rows: all
+ *    seven refuse during PLANNING, before the run advances a single tick,
+ *    so there is no ledger to read a later instant off and inventing one
+ *    would be the hardcoded tick ⚖ §14 warns against.
+ *  · a SOLVED row whose errand no committed tape already answers gets
+ *    `--tick=last` — where the walk ended up.
+ *
+ * ⚠ §14's OTHER caution, carried: 125 of 153 committed boots have no live
+ * `Game.time`, so a spinner room drawn without a hammer line means
+ * UNDECLARED CLOCK. Every row's clock is measured at its boot and printed
+ * beside its picture, so the reader never has to guess which it is.
+ */
+const ALL_LAYERS = 'player,enemies,pushables,action,damage,events,volumes,hitboxes,hammer,attacks';
+/**
+ * Rows whose GOALS are not the known tape's, hand-audited against the
+ * committed descriptions — so "disagrees with the known answer" can be told
+ * apart from "answers a different question in the same room".
+ */
+const DIFFERENT_ERRAND = new Map(THROUGH !== null ? [] : [
+    [11, 'exits NORTH to L3; r8-solve-11 takes the chest and leaves EAST to L10'],
+    [21, 'the shield ALONE; r8-d2-20 also crosses west through the three gates to L13'],
+    ['A10', 'exits to L9 (the alternative leg); r8-solve-10 exits to L11'],
+]); // ⛓ keyed on the DEFAULT route's step ids; `--through` renumbers them
+
+/**
+ * ── `--table`: THE DELIVERABLE, IN MARKDOWN ───────────────────────────
+ *
+ * The same rows as `survey.json`, rendered. ⛔ A refusal is quoted WHOLE
+ * below the table, never summarised into the cell — a survey whose refusal
+ * column reads "planner error" has thrown away the only thing it produced.
+ */
+if (process.argv.includes('--table')) {
+    const survey = JSON.parse(readFileSync(join(OUT_DIR, 'survey.json'), 'utf8'));
+    const L = [];
+    const solvedN = survey.rows.filter((r) => r.verdict === 'SOLVED').length;
+    L.push('# The route-only solver coverage survey', '');
+    L.push(`**${solvedN}/${survey.rows.length} route steps solve today.** Generated by `
+        + '`scripts/procgen/survey-seedling-route.mjs`; ⛔ REPORT ONLY — no committed '
+        + 'artifact moved.', '');
+    L.push('## The route (deliverable #1 — and the survey\'s BOUND)', '');
+    for (const leg of survey.route.legs) {
+        L.push(`- **leg ${leg.sphere} → ${leg.goal}** (+${leg.item}), holding `
+            + `{${leg.itemsHeld.join(', ') || 'nothing'}}: `
+            + `${leg.levels.map((n) => `L${n}`).join(' → ')}`);
+        if (leg.outOfOrder) {
+            L.push(`  - ⚠ out of AP's order: deferred ${leg.outOfOrder.deferred.join(', ')} — `
+                + `${leg.outOfOrder.because}; blocked by `
+                + leg.outOfOrder.blocked.map((b) => `\`${b.from} -> ${b.to}\``).join(', '));
+        }
+        for (const alt of leg.alternatives.filter((a) => !a.forced)) {
+            L.push(`  - alternative without \`${alt.banned}\`: `
+                + `${alt.levels.map((n) => `L${n}`).join(' → ')} `
+                + `(${alt.levels.length} rooms vs ${leg.levels.length})`);
+        }
+    }
+    L.push('', '## The table', '');
+    L.push('| step | level | goal(s) | boot | verdict | missing MECHANISM FAMILY |');
+    L.push('|---|---|---|---|---|---|');
+    for (const r of survey.rows) {
+        const goals = r.goals.map((g) => g.why).join('<br>then ');
+        // ⛓ THE ARRIVAL IS IN THE CELL BECAUSE IT DECIDES THE ANSWER. Steps
+        // 12 and A17 are the SAME room with the SAME exit goal and opposite
+        // verdicts — L3 entered from L11 at (96,128) is behind
+        // `breakablerock@96,112`; entered from L4 at (16,16) it is not. A
+        // table without this column would read as a contradiction.
+        const boot = `\`${r.boot.kind}\`: ${r.boot.source}`
+            + `<br>at (${r.boot.block?.x ?? '?'},${r.boot.block?.y ?? '?'})`
+            + (r.boot.strippedTimedClears?.length
+                ? `<br>⚠ stripped ${r.boot.strippedTimedClears.join(' ')}` : '');
+        let verdict;
+        if (r.verdict === 'SOLVED') {
+            verdict = `**SOLVED** ${r.ticks} ticks, ${r.traceRows} decision(s), `
+                + `${r.replans} re-plan(s), ${r.passes.length} pass(es), `
+                + `${r.replay.hits} hit(s)`
+                + (r.knownAnswer ? `<br>known ${r.knownAnswer}: ${r.knownTicks} `
+                    + `— ${r.agreesWithKnown ? '✔ agrees' : '⚠ differs'}` : '');
+        } else if (r.verdict === 'TIMEOUT') {
+            verdict = `**TIMEOUT** — no answer in ${r.timeoutSeconds} s `
+                + '(a bound, not a proof of unsolvability)';
+        } else {
+            verdict = `**${r.verdict}** — see the quoted refusal below`;
+        }
+        if (r.withCommittedDeclarations) {
+            verdict += `<br>⛓ with the committed declarations carried: `
+                + `${r.withCommittedDeclarations.verdict}`
+                + (r.withCommittedDeclarations.ticks
+                    ? ` ${r.withCommittedDeclarations.ticks} ticks` : '');
+        }
+        L.push(`| ${r.step} | L${r.level} | ${goals} | ${boot} | ${verdict} | `
+            + `${r.family ?? '—'} |`);
+    }
+    L.push('', '## The refusals, verbatim', '');
+    for (const r of survey.rows.filter((x) => x.verdict !== 'SOLVED')) {
+        L.push(`### step ${r.step} — L${r.level} — ${r.verdict}`, '');
+        L.push('```');
+        L.push(r.refusal ?? `(no message — the child was killed at the ${r.timeoutSeconds} s bound)`);
+        L.push('```', '');
+    }
+    writeFileSync(join(OUT_DIR, 'survey.md'), `${L.join('\n')}\n`);
+    console.log(`wrote ${join(OUT_DIR, 'survey.md')}`);
+    process.exit(0);
+}
+
+if (process.argv.includes('--views')) {
+    const survey = JSON.parse(readFileSync(join(OUT_DIR, 'survey.json'), 'utf8'));
+    const pngDir = join(OUT_DIR, 'png');
+    mkdirSync(pngDir, { recursive: true });
+    const exporter = join(HERE, 'export-seedling-view.mjs');
+    const shots = [];
+    for (const row of survey.rows) {
+        const solvedKnown = row.verdict === 'SOLVED' && row.knownAnswer
+            && row.agreesWithKnown && !DIFFERENT_ERRAND.has(row.step);
+        if (solvedKnown) continue;
+        const walk = row.verdict === 'SOLVED';
+        const tape = walk ? row.views?.walk : row.views?.boot;
+        if (!tape) continue;
+        const out = join(pngDir, `step-${row.step}-${walk ? 'last' : 'refusal'}.png`);
+        const args = [exporter, `--out=${out}`, `--tape=${tape}`, `--layers=${ALL_LAYERS}`, '--quiet'];
+        if (walk) args.push('--tick=last');
+        // eslint-disable-next-line no-await-in-loop
+        const code = await new Promise((done) => {
+            execFile(process.execPath, args, { cwd: REPO, timeout: 300000 },
+                (err) => done(err ? (err.code ?? 1) : 0));
+        });
+        shots.push({ step: row.step, level: row.level, verdict: row.verdict, out, exit: code,
+            clock: row.clock, why: walk ? 'tick=last' : 'tick 0 — the refusal is at PLAN time' });
+        console.log(`  ${out} — exit ${code} (${row.verdict}, ${walk ? 'last' : 'tick 0'}, `
+            + `clock ${row.clock?.gameTime ?? 'UNDECLARED'})`);
+    }
+    writeFileSync(join(OUT_DIR, 'png', 'index.json'), `${JSON.stringify(shots, null, 2)}\n`);
+    process.exit(shots.some((s) => s.exit !== 0) ? 1 : 0);
+}
+
+// ── the solves, one child each ───────────────────────────────────────
+const wanted = ONLY !== null ? new Set(ONLY.split(',').map((s) => s.trim()).filter(Boolean)) : null;
+/** Where the rows go: `survey.json`, or `--out=` under `--through` (S2 D5). */
+const SURVEY_FILE = OUT_FILE ? resolvePath(OUT_FILE) : join(OUT_DIR, 'survey.json');
+
+/**
+ * A step's IDENTITY for the addendum: room, arrival and goals. The
+ * alternative shares nine of its rooms with the chosen route in the OUTBOUND
+ * direction — same level number, different door, different errand — so a key
+ * on the level alone would have skipped six genuinely new solves and called
+ * the addendum cheap.
+ */
+const identityOf = (s) => `L${s.level}@${s.arrival?.x},${s.arrival?.y}:`
+    + s.goals.map((g) => `${g.kind}(${JSON.stringify(g.exit ?? g.placement ?? g.pit)})`).join('+');
+const chosenIdentities = new Set(route.steps.map(identityOf));
+const addendum = (alternative?.steps ?? []).filter((s) => !chosenIdentities.has(identityOf(s)));
+console.log(`\n## THE ADDENDUM — ${addendum.length} step(s) of the alternative leg 2 that `
+    + 'the chosen route never walks');
+for (const s of addendum) {
+    console.log(`  ${s.step}  L${s.level} visit ${s.visit}  boot=${bootFor(s).kind}:`
+        + `${bootFor(s).source}  goals: ${s.goals.map((g) => g.why).join(' then ')}`);
+}
+
+const rows = [];
+for (const step of [...route.steps, ...addendum]) {
+    if (wanted && !wanted.has(String(step.step))) continue;
+    process.stdout.write(`\n== step ${step.step} — L${step.level} ... `);
+    const started = Date.now();
+    // eslint-disable-next-line no-await-in-loop
+    const res = await new Promise((resolve) => {
+        execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`,
+            ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : [])], {
+            cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
+        }, (err, stdout, stderr) => {
+            const marked = String(stdout).split('\n').find((l) => l.startsWith('##SURVEY##'));
+            if (marked) return resolve(JSON.parse(marked.slice('##SURVEY##'.length)));
+            if (err && err.killed) {
+                return resolve({
+                    step: step.step, level: step.level, verdict: 'TIMEOUT',
+                    refusal: null, ms: Date.now() - started,
+                    timeoutSeconds: TIMEOUT_S,
+                    stderr: String(stderr).trim().split('\n').slice(-6).join('\n'),
+                });
+            }
+            return resolve({
+                step: step.step, level: step.level, verdict: 'CRASHED',
+                refusal: String(stderr).trim() || String(err),
+                ms: Date.now() - started,
+            });
+        });
+    });
+    // ⛔ A TIMEOUT/CRASH row comes back from the PARENT, not the child, so it
+    // carries none of the step's own description. Filling it in here is what
+    // keeps the table's shape uniform — a row missing its goals reads as a
+    // step with no errand rather than a step with no answer.
+    res.boot = res.boot ?? { ...bootFor(step), block: { level: step.level, ...step.arrival } };
+    res.goals = res.goals ?? step.goals;
+    res.visit = res.visit ?? step.visit;
+    res.clock = res.clock ?? { gameTime: null, refusal: 'not measured — the child was killed' };
+    /**
+     * ⛓ R9 slice 12b″: the RUN is offered as well as the text. `replay` is
+     * built only for a step that SOLVED, so on today's route this is always
+     * null where a refusal exists — the arm's reach is named in
+     * `surveyFamily.js` rather than assumed.
+     */
+    res.family = familyOf(res.refusal, res.replay);
+    rows.push(res);
+    console.log(res.verdict === 'SOLVED'
+        ? `SOLVED ${res.ticks} ticks, ${res.traceRows} decision(s), ${res.replans} re-plan(s), `
+          + `${res.replay.hits} hit(s), ${res.passes.length} pass(es) — ${res.ms} ms`
+        : `${res.verdict} — ${(res.refusal ?? '').split('\n')[0].slice(0, 160)}`);
+}
+
+/**
+ * ⛔ `--only` MERGES, it does not replace. A partial re-run that overwrote
+ * `survey.json` with its own two rows would silently delete the other
+ * twenty-seven — and the file is the table's source.
+ */
+let merged = rows;
+if (wanted) {
+    let prior = [];
+    try { prior = JSON.parse(readFileSync(SURVEY_FILE, 'utf8')).rows ?? []; }
+    catch { prior = []; }
+    const byStep = new Map(prior.map((r) => [String(r.step), r]));
+    for (const r of rows) byStep.set(String(r.step), r);
+    const order = new Map([...route.steps, ...(alternative?.steps ?? [])]
+        .map((s, i) => [String(s.step), i]));
+    merged = [...byStep.values()].sort((a, b) =>
+        (order.get(String(a.step)) ?? 0) - (order.get(String(b.step)) ?? 0));
+}
+const survey = { generator: routeDoc.generator, route: routeDoc, rows: merged };
+mkdirSync(dirname(SURVEY_FILE), { recursive: true });
+writeFileSync(SURVEY_FILE, `${JSON.stringify(survey, null, 2)}\n`);
+console.log(`\nwrote ${SURVEY_FILE}`);
+
+const solvedRows = merged.filter((r) => r.verdict === 'SOLVED');
+console.log(`\n## HEADLINE: ${solvedRows.length}/${merged.length} route steps SOLVE today`);
+for (const r of merged.filter((x) => x.verdict !== 'SOLVED')) {
+    console.log(`  step ${r.step} L${r.level}: ${r.verdict} — ${r.family ?? ''}`);
+}

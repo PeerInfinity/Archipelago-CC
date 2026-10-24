@@ -1,8 +1,7 @@
 /**
  * Bounce Demo `step` — continuous platformer physics, the source of
  * truth for the DJ-Metroidvania substrate
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md, build
- * order step 1).
+ * (docs/json/developer/procgen/bounce.md).
  *
  * Doodle-Jump-style: there is no jump button — landing on a platform
  * from above bounces the player automatically; a spring or jetpack on
@@ -98,9 +97,7 @@ export const DEFAULTS = Object.freeze({
  *   round-trip artifacts are generated under it, and an ABSENT payload stamp
  *   means experimental (the backward-compat baseline — see resolvePhysicsStamp).
  * - 'dj' matches real Doodle Jump per the SWFRecomp-CC measurements
- *   (2026-06-11; summary JSON + per-tick traces in
- *   NewDocs/plans/procedural-generation/dj-measurements/, spec in
- *   dj-physics-measurement-spec.md). Constants are DJ-NATIVE: px and
+ *   (2026-06-11). Constants are DJ-NATIVE: px and
  *   ticks at the SWF's 20Hz tick rate, used verbatim with
  *   TICK_HZ: 20 — discrete-physics effects are large (measured plain
  *   apex 114 vs 100 continuous), so rescaling to 60Hz cannot

@@ -51,7 +51,7 @@ const DEFAULTS = {
 // libraries land.
 const SUBSTRATE_LOADERS = {
     maze: 'frontend/modules/mazeRoom/mazeRoomLibrary.js',
-    text_adventure: 'frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js',
+    text_adventure: 'frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
 };
 
 /**
@@ -228,6 +228,9 @@ async function main() {
         buildRulesJson,
         stringifyRulesJson,
         computeSourceCounts,
+        ruleItemWarnings,
+        sphereLogRefusal,
+        sourceLocationsOf,
     } = await import(enginePath);
 
     let gridDims = autoSizeGrid(source, args.minGridDim);
@@ -254,7 +257,7 @@ async function main() {
     // every source region is placed, the placement count plateaus
     // (the rest are unreachable from the source's start, not a
     // sizing issue), or we hit the retry cap.
-    let grid, stats, startCell, sphereTree, spherePlan, attributionWarnings;
+    let grid, stats, startCell, sphereTree, spherePlan, attributionWarnings, menuRegion, menuWarnings;
     let attempt = 0;
     let prevPlaced = -1;
     while (true) {
@@ -271,6 +274,8 @@ async function main() {
         sphereTree = result.sphereTree;
         spherePlan = result.spherePlan;
         attributionWarnings = result.attributionWarnings ?? [];
+        menuRegion = result.menuRegion ?? null;
+        menuWarnings = result.menuWarnings ?? [];
         const placed = stats.regionsBuilt;
         const total = stats.regionsTotal;
         console.log(
@@ -300,16 +305,22 @@ async function main() {
     }
 
     // When a sphere log produced an attribution, tag the enriched driver
-    // and carry the sphere_tree + sphere_plan; embed the AUTHORITATIVE log
-    // (not the JS re-derivation). Otherwise emit plain 'top-down', unchanged.
+    // and carry the sphere_tree + sphere_plan. Otherwise emit plain
+    // 'top-down'. Either way the embedded sphere_log is buildRulesJson's,
+    // generated over the COMPILED world — the source log names source
+    // regions, not the compiled ones (a compiled world adds `Menu`).
     const enriched = !!(sphereLog && sphereTree && spherePlan);
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: args.seed,
-        assumeBidirectional: source.assume_bidirectional_exits !== false,
+        assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
-        ...(enriched ? { sphereLog } : {}),
+        sourceItemGroups: source.item_groups?.['1'] ?? null,
+        sourceLocations: sourceLocationsOf(source, '1'),
+        // ⛓ F3 — the rules ride in verbatim, so the blocks they read do too.
+        source,
+        menuRegion,
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: source.game_name ?? null,
@@ -334,6 +345,10 @@ async function main() {
         );
         for (const w of attributionWarnings) console.log(`  warn: ${w}`);
     }
+    for (const w of menuWarnings) console.log(`  warn: ${w}`);
+    for (const w of ruleItemWarnings(rulesJson, '1')) console.log(`  warn: ${w}`);
+    const refusal = sphereLogRefusal(rulesJson, '1');
+    if (refusal) console.log(`  warn: no sphere_log embedded — ${refusal}`);
     console.log(`Wrote ${args.out}`);
 }
 

@@ -1,7 +1,6 @@
 /**
- * mazeRoom engine — v1 walls-only maze, first consumer of the shared
- * simulator-core interface (see NewDocs/plans/procedural-generation/
- * shared-simulator-core.md and maze-room-generator.md).
+ * mazeRoom engine — headless maze world model + generation
+ * (docs/json/developer/procgen/maze.md).
  *
  * Headless: no DOM, no rendering, no input wiring. That lives in
  * mazeRoomUI.js once v1 is engine-complete.
@@ -10,6 +9,7 @@
 import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
+import { makeAndRule, makeHasRule, makeOrRule } from '../shared/rulesJsonBuilder.js';
 import {
     REGION_GROW_STEP, REGION_GROW_MAX_ATTEMPTS,
     clockwisePerimeterTiles,
@@ -18,7 +18,12 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
 import { getPostProcessor } from '../shared/procgen/mazeAlgorithms/postProcessors.js';
+import {
+    TILE_FLOOR, TILE_WALL,
+    tileIndex, getTile, setTile,
+} from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
+import { conceptGateFor } from './mazeConcepts.js';
 // Side-effect: ensure all maze backends are registered before
 // generateMaze runs.
 import './mazeAlgorithms/index.js';
@@ -29,9 +34,12 @@ import './mazeAlgorithms/index.js';
 export { clockwisePerimeterTiles };
 
 // --- Tile types ---
+//
+// Defined in shared/procgen/mazeAlgorithms/gridTiles.js (with the grid
+// contract the algorithms depend on) and re-exported here so every caller
+// that imported them from mazeRoomEngine keeps working.
 
-export const TILE_FLOOR = 0;
-export const TILE_WALL = 1;
+export { TILE_FLOOR, TILE_WALL, tileIndex, getTile, setTile };
 
 // --- Inputs ---
 
@@ -39,13 +47,74 @@ export const INPUT_N = 'N';
 export const INPUT_S = 'S';
 export const INPUT_E = 'E';
 export const INPUT_W = 'W';
-// Wait input — recognised by the visualizer's tick loop (skips
-// engine.step, advances state.turn) and emitted by stepsToInputs
-// for duplicate-tile entries in a planned path. NOT included in
-// INPUTS because step() doesn't consume it; only the playback
-// surfaces need to know about it.
+// Wait input — a first-class `step` input (slice S2a): `step(world, state,
+// INPUT_WAIT)` returns a clone with `turn + 1` and NOTHING else moved. Every
+// surface that passes a turn without moving the player — the visualizer's
+// tick loop, the panel's wait action, the queue executor's `wait` verb —
+// goes through that one branch, so "a turn passes" has ONE author.
+// ⛔ NOT in INPUTS, and not in the bfs solver's input list: `mazeVisitedKey`
+// excludes `turn`, so a wait is a self-loop the search would prune anyway,
+// and the oracle's plans (and the identity rows that hash them) stay
+// exactly what they were. A time-aware oracle is the autopather's
+// time-expanded mode, one layer up.
 export const INPUT_WAIT = 'WAIT';
 export const INPUTS = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
+
+// ⛓⛓ ITEM ACTIONS (slice tile-primitives-item-actions, ⚖ 2026-10-21). Two
+// input FAMILIES beside the four moves, spelled as strings so every surface
+// that already carries an input (the visualizer's plan, the autopather's
+// output, a recording) carries these unchanged:
+//   `TURN_<dir>` — face <dir> without moving (⚖ "Shift + arrow"); a turn passes.
+//   `USE:<id>`   — use the `action_lib` entry <id> on the FACING cell.
+// ⛔ Both exist ONLY on a world with an `action_lib` (`hasItemActions`). On any
+// other world `step` refuses them as it refuses `'NE'`, and no state there
+// carries `facing` — so visited keys, recordings and queues of every existing
+// world stay byte-identical (the blocks precedent, ⚖ arc 2 ruling 5).
+export const TURN_PREFIX = 'TURN_';
+export const USE_PREFIX = 'USE:';
+/** The default facing of a fresh state on an item-action world. */
+export const DEFAULT_FACING = INPUT_S;
+/** The one primitive an `action_lib` entry may name in v1. */
+export const PRIMITIVE_STRIKE = 'strike';
+
+// ⛓⛓ ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope, ⚖ 2026-10-22 "New
+// `traps` primitive"). A trap guards a LANE of cells; a lane cell refuses the
+// player while its trap is ARMED. Armed = its group is active XOR the trap's
+// default — `fires: 'unless_active'` (Seedling `shoot="1"`: fires from the first
+// tick, a cut rope or a held button silences it) or `'while_active'` (`shoot="0"`:
+// fires only while its group is pressed). The group is active when its TOKEN is
+// in the effective inventory: a held button derives it (`heldTokens`) and so does
+// a CUT ROPE (`ropeTokens`) — an obstacle whose library entry `activates` the
+// token, cut this visit (`state.broken`) or cut on an earlier one (its `event`
+// item carried). ⛔ Absent `traps` and no `activates` entry = nothing below runs.
+/** The two ways a trap's group arms it (`trapLib.<id>.fires`). */
+export const TRAP_FIRES = Object.freeze(['unless_active', 'while_active']);
+
+/** `TURN_<dir>` for one of N/E/S/W. */
+export function turnInput(dir) { return `${TURN_PREFIX}${dir}`; }
+
+/** `USE:<actionId>` for an `action_lib` id. */
+export function useInput(actionId) { return `${USE_PREFIX}${actionId}`; }
+
+/** True iff this world has item actions — the switch for `facing` / `broken`. */
+export function hasItemActions(world) {
+    return !!world?.actionLib && Object.keys(world.actionLib).length > 0;
+}
+
+/**
+ * Every input `step` can accept on this world: the four moves, plus — on an
+ * item-action world only — the four turns and one use per `action_lib` entry
+ * (sorted by id). A search that branches on these is a search over item
+ * actions; on any other world this IS `INPUTS`.
+ */
+export function worldInputs(world) {
+    if (!hasItemActions(world)) return INPUTS;
+    return [
+        ...INPUTS,
+        ...INPUTS.map(turnInput),
+        ...Object.keys(world.actionLib).sort().map(useInput),
+    ];
+}
 
 const DELTAS = {
     [INPUT_N]: { dx: 0, dy: -1 },
@@ -112,6 +181,49 @@ export function createWorld(width, height, opts = {}) {
         // successful entry. Both sit on top of floor tiles.
         obstacles: new Map(),
         items: new Map(),
+        // Cross-game consumable tiles (X1). Two more sparse overlays on
+        // the same posKey scheme, both deliberately OUTSIDE the item /
+        // location machinery:
+        //   consumableTiles: Map<posKey, {substrate, type, count}> —
+        //     stepping on one grants another game's consumable through
+        //     the resourceChannels bus. NOT an AP location (D10): no
+        //     location table entry, no AP tracking, no pickup cost, and
+        //     winnability logic ignores them entirely (D5).
+        //   manaTiles: Map<posKey, amount> — refills the shared loop-mode
+        //     mana pool via the mana channel's gainMana leg.
+        // Both stay empty unless a generator's content-module pass fills
+        // them, so worlds built without the knobs are byte-identical.
+        consumableTiles: new Map(),
+        manaTiles: new Map(),
+        // PROCGEN ELEMENTS arc 2 slice 1 — mechanism family A.
+        //
+        //   blocks:  Map<posKey, true>   — the INITIAL positions of pushable
+        //     blocks. The world stays the STATIC description: where the blocks
+        //     are RIGHT NOW is `state.blocks` (see createState), because a push
+        //     is a move the player makes and the BFS must be able to branch on
+        //     it. Anything that mutates this Map is redefining the level.
+        //   buttons: Map<posKey, buttonId> — a button is WALKABLE and is never
+        //     picked up, so it is neither an obstacle nor an item.
+        //     ⚖ Q1 answered: a NEW Map rather than an item with a lib `kind`.
+        //     Decisive reason, beyond "a button is not picked up":
+        //     `extractPathsAndObstacles` enumerates `world.items` as the
+        //     region's Archipelago LOCATIONS — a button parked there would
+        //     invent a phantom AP check on every level that has one.
+        //   buttonLib: {[buttonId]: {kind:'button', holds:<tokenId>, …}} — the
+        //     BEHAVIOUR of each button id. Defaults to `{}` and has no shared
+        //     base library on purpose: ⚖ design ruling 21 retires the fixed
+        //     colour list, so every button is a per-instance id (like
+        //     `logic_gate_<N>`) created by whoever places it. `holds` names the
+        //     token the button DERIVES while pressed — see heldTokens.
+        //
+        // All three stay empty on every world nobody put a block in, so the
+        // whole mechanism is reached by a code path that does not run.
+        blocks: new Map(),
+        buttons: new Map(),
+        buttonLib: opts.buttonLib ?? {},
+        // ITEM ACTIONS: `{[actionId]: {item, primitive:'strike', condition, key}}`.
+        // Empty on every world nobody gave one, which keeps item actions off.
+        actionLib: opts.actionLib ?? {},
         itemLib: opts.itemLib ?? DEFAULT_ITEMS,
         obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
     };
@@ -149,13 +261,33 @@ export function getDefaultExit(world) {
     return world.exits.values().next().value ?? null;
 }
 
-function posKey(x, y) { return `${x},${y}`; }
+/**
+ * ⛓ DEDUP M13 — **THE OVERLAY KEY, AND ITS INVERSE, IN ONE PLACE.** Every
+ * `Map<posKey, …>` in this file is keyed here; the READ-BACK was open-coded
+ * five times outside it (twice below in `serializeMazeEntities`, twice in
+ * `mazeAutopather`, once in `mazeElementOverlay`), so the two halves of one
+ * encoding had six authors and only one of them was named. ⛔ EXPORTED because
+ * the readers are in other files — the key's SPELLING is this module's, and a
+ * consumer that splits it by hand is a second spelling waiting to disagree.
+ */
+export function posKey(x, y) { return `${x},${y}`; }
 
 /**
- * Inverse of procgenPipeline's serializeMazeWorld. Reconstructs a
- * playable maze world from a sidecar payload (JSON-safe arrays /
- * plain objects) into the in-memory shape (Int8Array for tiles, Maps
- * for obstacles and items).
+ * ⛓ `"3,4"` → `{x: 3, y: 4}`. ⚠ It takes the FIRST TWO fields and ignores the
+ * rest, which is what the autopather's time-expanded `"x,y,t"` state keys need
+ * — the reconstruction wants the CELL out of a key that also carries the turn.
+ */
+export function unposKey(key) {
+    const [x, y] = String(key).split(',').map(Number);
+    return { x, y };
+}
+
+/**
+ * Inverse of `mazeSerializer.js`'s serializeMazeWorld — its sibling in this
+ * module since APWORLD EDITOR HUB slice H3b brought it home from
+ * `procgenPipeline/`. Reconstructs a playable maze world from a sidecar
+ * payload (JSON-safe arrays / plain objects) into the in-memory shape
+ * (Int8Array for tiles, Maps for obstacles and items).
  *
  * AP-canonical metadata baked into the sidecar by the pipeline at
  * serialization time (per-item locationName, per-exit exitName /
@@ -190,6 +322,10 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     const itemLib = { ...baseItemLib, ...(sidecar.itemLib ?? {}) };
     const baseObstacleLib = opts.baseObstacleLib ?? DEFAULT_OBSTACLES;
     const obstacleLib = { ...baseObstacleLib, ...(sidecar.obstacleLib ?? {}) };
+    // Buttons have no shared base library (every id is per-instance), so the
+    // sidecar's entries ARE the library unless a caller supplies a base.
+    const buttonLib = { ...(opts.baseButtonLib ?? {}), ...(sidecar.buttonLib ?? {}) };
+    const actionLib = checkActionLib(sidecar.action_lib, 'deserializeMazeWorld');
 
     // Multi-exit-aware load with legacy single-exit shorthand.
     let exitsInput;
@@ -221,6 +357,8 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         exits: exitsInput,
         itemLib,
         obstacleLib,
+        buttonLib,
+        actionLib,
     });
 
     world.tiles.set(tiles);
@@ -238,6 +376,32 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     }
     world.itemLocationNames = itemLocationNames;
 
+    // Blocks and buttons (arc 2 slice 1). ADDITIVE: absent on every sidecar
+    // written before this slice, and createWorld already seeded empty Maps, so
+    // an old sidecar loads exactly as it did. Emitted by
+    // serializeMazeEntities, which omits both when empty.
+    for (const b of sidecar.blocks ?? []) {
+        world.blocks.set(posKey(b.x, b.y), true);
+    }
+    for (const b of sidecar.buttons ?? []) {
+        world.buttons.set(posKey(b.x, b.y), b.id);
+    }
+
+    // Cross-game consumable tiles (X1). Absent on every pre-X1 sidecar
+    // and on any world generated with the knobs at their byte-inert
+    // defaults; createWorld already seeded empty Maps, so absence is a
+    // no-op rather than a special case.
+    for (const c of sidecar.consumableTiles ?? []) {
+        world.consumableTiles.set(posKey(c.x, c.y), {
+            substrate: c.substrate,
+            type: c.type,
+            count: c.count,
+        });
+    }
+    for (const m of sidecar.manaTiles ?? []) {
+        world.manaTiles.set(posKey(m.x, m.y), m.amount);
+    }
+
     // Loop-mode plumbing (Phase 3): both fields ride through verbatim
     // when present on the sidecar. The runtime substrate uses them to
     // compute per-tile cost = baseRegionCost / longestShortestPath.
@@ -247,14 +411,33 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.manaEnabled === true) {
         world.manaEnabled = true;
     }
-    // Phase 6h: fogEnabled rides through verbatim. The maze panel's
-    // _adoptLoadedRegion overrides this.fogEnabled from this field;
-    // the TA substrate's _adoptLoadedRegion gates _discoverEverythingInRegion
-    // on it. Without this preservation, the runtime sees `undefined`
-    // and falls back to legacy behavior (auto-discover everything),
-    // bypassing the per-region fog model entirely.
+    // Phase 6h: fogEnabled rides through when the sidecar carries `true`
+    // (the engine stamps it on the envelope). Its one WORLD reader is the
+    // maze panel's _adoptLoadedRegion (mazeRoomUI.js), which lets a boolean
+    // on the world override the persisted fog checkbox, so the region's fog
+    // is a property of the world rather than a UI preference; without the
+    // flag the panel keeps the checkbox's value. (PRESET SIDECARS C1: this
+    // comment used to name a text-adventure `_adoptLoadedRegion` reader —
+    // none exists; that substrate's room does not carry the flag at all.)
     if (sidecar.fogEnabled === true) {
         world.fogEnabled = true;
+    }
+    // tutorial-bugs: how the room is entered ('zone' → the entrance; 'region'
+    // → the exit back). Its reader is `resolveMazeArrival` (mazeArrival.js);
+    // absent keeps that function's own rule.
+    if (sidecar.arrival === 'zone' || sidecar.arrival === 'region') {
+        world.arrival = sidecar.arrival;
+    }
+    // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): which AP region owns
+    // which cell. Absent on every other sidecar, so `world.sharedWorld` stays
+    // undefined and nothing below changes for them.
+    if (sidecar.shared_world !== undefined) {
+        world.sharedWorld = checkSharedWorld(sidecar.shared_world, width, height, 'deserializeMazeWorld');
+    }
+    // ⛓ ARROW TRAPS: absent on every other sidecar, so `world.traps` stays
+    // undefined and `armedTrapAt` answers null without looking.
+    if (sidecar.traps !== undefined) {
+        Object.assign(world, checkTraps(sidecar.traps, sidecar.trapLib, width, height, 'deserializeMazeWorld'));
     }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
@@ -299,23 +482,266 @@ export function clearItem(world, x, y) {
     world.items.delete(posKey(x, y));
 }
 
+// --- Blocks and buttons (arc 2 slice 1) ---
+//
+// Same posKey overlay scheme as items/obstacles, and the same tolerance for a
+// world that predates them (hand-authored, library-instantiated, or built by a
+// caller that never ran createWorld).
+//
+// ⛔ `world.blocks` is the level's INITIAL block layout, not the live one.
+// During play / BFS the live positions are `state.blocks`; setBlock on a world
+// mid-solve would be editing the level under the solver.
+
+export function getBlock(world, x, y) {
+    return world.blocks?.get(posKey(x, y)) ?? false;
+}
+
+export function setBlock(world, x, y) {
+    if (!world.blocks) world.blocks = new Map();
+    world.blocks.set(posKey(x, y), true);
+}
+
+export function clearBlock(world, x, y) {
+    world.blocks?.delete(posKey(x, y));
+}
+
+export function getButton(world, x, y) {
+    return world.buttons?.get(posKey(x, y));
+}
+
+export function setButton(world, x, y, buttonId) {
+    if (!world.buttons) world.buttons = new Map();
+    world.buttons.set(posKey(x, y), buttonId);
+}
+
+export function clearButton(world, x, y) {
+    world.buttons?.delete(posKey(x, y));
+}
+
+/**
+ * ⛓ The `action_lib` sidecar field, CHECKED — the one reader both level
+ * loaders (`deserializeMazeWorld`, procgenMaze's `deserializeMazeLevel`) call.
+ * Absent → `{}` (no item actions). ⛔ An entry naming a primitive other than
+ * `strike` is refused BY NAME rather than loaded as a use that does nothing.
+ */
+export function checkActionLib(lib, who) {
+    if (lib === undefined || lib === null) return {};
+    if (typeof lib !== 'object' || Array.isArray(lib)) {
+        throw new Error(`${who}: "action_lib" must be an object of action entries, got ${JSON.stringify(lib)}`);
+    }
+    for (const [id, entry] of Object.entries(lib)) {
+        if (!entry || typeof entry !== 'object') {
+            throw new Error(`${who}: action_lib.${id} must be an object`);
+        }
+        if (entry.primitive !== PRIMITIVE_STRIKE) {
+            throw new Error(`${who}: action_lib.${id} names primitive ${JSON.stringify(entry.primitive)}; `
+                + `only '${PRIMITIVE_STRIKE}' is modelled`);
+        }
+    }
+    return { ...lib };
+}
+
+/**
+ * ⛓ The `traps` + `trapLib` sidecar fields, CHECKED: `traps` = `[{x, y, id,
+ * label?, lane: [{x, y}…]}]` (the trap's cell and the cells its lane covers),
+ * `trapLib` = `{[id]: {kind, name?, active: <token>, fires}}`. Returns the world
+ * fields `{traps, trapLib, trapLanes}` (`trapLanes`: posKey → trap indices).
+ * ⛔ An unknown `fires`, a missing entry or a lane cell off the grid is refused BY NAME.
+ */
+export function checkTraps(traps, lib, width, height, who) {
+    if (!Array.isArray(traps)) throw new Error(`${who}: "traps" must be an array, got ${JSON.stringify(traps)}`);
+    const trapLib = { ...(lib ?? {}) };
+    for (const [id, entry] of Object.entries(trapLib)) {
+        if (!TRAP_FIRES.includes(entry?.fires)) {
+            throw new Error(`${who}: trapLib.${id}.fires is ${JSON.stringify(entry?.fires)}; one of ${TRAP_FIRES.join(', ')}`);
+        }
+        if (typeof entry.active !== 'string' || entry.active === '') {
+            throw new Error(`${who}: trapLib.${id} names no group token (\`active\`)`);
+        }
+    }
+    const trapLanes = new Map();
+    const out = traps.map((t, i) => {
+        if (!trapLib[t?.id]) throw new Error(`${who}: traps[${i}] names "${t?.id}", which trapLib does not define`);
+        const lane = (t.lane ?? []).map((c) => {
+            assertInBounds(width, height, c, `traps[${i}] lane cell`);
+            return posKey(c.x, c.y);
+        });
+        for (const key of lane) {
+            if (!trapLanes.has(key)) trapLanes.set(key, []);
+            trapLanes.get(key).push(i);
+        }
+        return { x: t.x, y: t.y, id: t.id, label: t.label ?? t.id, lane };
+    });
+    return { traps: out, trapLib, trapLanes };
+}
+
+/** The ownership alphabet (the projection's `SHARED_WORLD_ALPHABET` — kept in sync by test). */
+export const SHARED_WORLD_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+/**
+ * ⛓ The `shared_world` payload field, CHECKED — `{key, regions, rows,
+ * entrances, links}` (written by the atlas projection's `projectLevelWorld`).
+ * `rows[y][x]` is the index (in `SHARED_WORLD_ALPHABET`) of the AP region in
+ * `regions` that owns the cell, or `.` for "no news". A malformed one is
+ * refused BY NAME rather than loaded as a world whose crossings fire nowhere.
+ */
+export function checkSharedWorld(sw, width, height, who) {
+    const bad = (why) => new Error(`${who}: "shared_world" ${why}`);
+    if (!sw || typeof sw !== 'object' || Array.isArray(sw)) throw bad('must be an object');
+    if (typeof sw.key !== 'string' || sw.key === '') throw bad('needs a non-empty string "key"');
+    if (!Array.isArray(sw.regions) || sw.regions.length === 0
+            || sw.regions.some((r) => typeof r !== 'string' || r === '')) {
+        throw bad('needs a non-empty "regions" list of AP region names');
+    }
+    if (sw.regions.length > SHARED_WORLD_ALPHABET.length) throw bad(`names more regions than the alphabet holds`);
+    if (!Array.isArray(sw.rows) || sw.rows.length !== height
+            || sw.rows.some((r) => typeof r !== 'string' || r.length !== width)) {
+        throw bad(`"rows" must be ${height} strings of length ${width}`);
+    }
+    for (const row of sw.rows) {
+        for (const ch of row) {
+            if (ch === '.') continue;
+            const i = SHARED_WORLD_ALPHABET.indexOf(ch);
+            if (i < 0 || i >= sw.regions.length) throw bad(`"rows" holds '${ch}', which names no region`);
+        }
+    }
+    const entrances = {};
+    for (const r of sw.regions) {
+        const at = sw.entrances?.[r];
+        if (!at || !Number.isInteger(at.x) || !Number.isInteger(at.y)) throw bad(`has no entrance for "${r}"`);
+        entrances[r] = { x: at.x, y: at.y };
+    }
+    return {
+        key: sw.key,
+        regions: sw.regions.slice(),
+        rows: sw.rows.slice(),
+        entrances,
+        links: { ...(sw.links ?? {}) },
+    };
+}
+
+/** The AP region owning cell (x, y) of a shared level world, or `null` ("no news" / not shared). */
+export function sharedWorldOwnerAt(world, x, y) {
+    const sw = world?.sharedWorld;
+    if (!sw) return null;
+    const ch = sw.rows[y]?.[x];
+    if (!ch || ch === '.') return null;
+    return sw.regions[SHARED_WORLD_ALPHABET.indexOf(ch)] ?? null;
+}
+
+/**
+ * ⛓ THE IN-WORLD CROSSING: standing in `currentRegion` and arriving on (x, y),
+ * does the player cross into another AP region of this shared world? Returns
+ * `{boundary: "x,y", sourceRegion, targetRegion, exitName}` or `null`.
+ * `exitName` is the AP exit the atlas declares for that direction, or `null`
+ * when it declares none (the walk is still the engine's to allow).
+ */
+export function sharedWorldCrossing(world, currentRegion, x, y) {
+    const owner = sharedWorldOwnerAt(world, x, y);
+    if (owner === null || owner === currentRegion) return null;
+    if (!world.sharedWorld.regions.includes(currentRegion)) return null;
+    return {
+        boundary: posKey(x, y),
+        sourceRegion: currentRegion,
+        targetRegion: owner,
+        exitName: world.sharedWorld.links[`${currentRegion}>${owner}`] ?? null,
+    };
+}
+
+/**
+ * The sidecar fields for blocks / buttons / the button library — the WRITE
+ * side of what deserializeMazeWorld reads back.
+ *
+ * ⛔ EVERY FIELD IS OMITTED WHEN EMPTY. A `"blocks": []` written
+ * unconditionally would move every maze payload in the project for a fact no
+ * level currently has; the same rule `serializeMazeLevel` already applies to
+ * its per-instance `obstacleLib` / `itemLib` (arc 1 slice 2). A world with no
+ * blocks and no buttons therefore serializes to `{}` and spreads into a
+ * sidecar without changing a byte.
+ *
+ * Rows are sorted row-major so the emission is a function of the SET, not of
+ * Map insertion order.
+ *
+ * Nothing calls this yet: serializeMazeWorld (`mazeSerializer.js`, moved here
+ * from procgenPipeline by slice H3b) and procgenMaze's
+ * serializeMazeLevel are both outside this slice's file scope. It exists so
+ * the shape is FIXED here — the round-trip through deserializeMazeWorld is
+ * proved against this emitter rather than against a hand-built literal that
+ * a later slice would be free to contradict.
+ */
+export function serializeMazeEntities(world) {
+    const out = {};
+    const rowMajor = (a, b) => (a.y - b.y) || (a.x - b.x);
+    if (world.blocks?.size) {
+        out.blocks = [...world.blocks.keys()]
+            .map(unposKey)
+            .sort(rowMajor);
+    }
+    if (world.buttons?.size) {
+        out.buttons = [...world.buttons.entries()]
+            .map(([key, id]) => {
+                const { x, y } = unposKey(key);
+                return { x, y, id };
+            })
+            .sort(rowMajor);
+    }
+    if (Object.keys(world.buttonLib ?? {}).length) {
+        out.buttonLib = { ...world.buttonLib };
+    }
+    if (hasItemActions(world)) {
+        out.action_lib = { ...world.actionLib };
+    }
+    if (world.traps?.length) {
+        out.traps = world.traps.map((t) => ({
+            x: t.x, y: t.y, id: t.id, label: t.label, lane: t.lane.map(unposKey),
+        }));
+        out.trapLib = { ...world.trapLib };
+    }
+    return out;
+}
+
+// --- Consumable tiles (X1) ---
+//
+// Accessors mirror the item overlay. `world.consumableTiles` /
+// `world.manaTiles` are optional on worlds built before X1 (and on
+// hand-authored / library-instantiated worlds), so every getter
+// tolerates their absence rather than assuming createWorld ran.
+
+export function getConsumableTile(world, x, y) {
+    return world.consumableTiles?.get(posKey(x, y));
+}
+
+export function setConsumableTile(world, x, y, grant) {
+    if (!world.consumableTiles) world.consumableTiles = new Map();
+    world.consumableTiles.set(posKey(x, y), grant);
+}
+
+export function clearConsumableTile(world, x, y) {
+    world.consumableTiles?.delete(posKey(x, y));
+}
+
+export function getManaTile(world, x, y) {
+    return world.manaTiles?.get(posKey(x, y));
+}
+
+export function setManaTile(world, x, y, amount) {
+    if (!world.manaTiles) world.manaTiles = new Map();
+    world.manaTiles.set(posKey(x, y), amount);
+}
+
+export function clearManaTile(world, x, y) {
+    world.manaTiles?.delete(posKey(x, y));
+}
+
 function assertInBounds(width, height, pt, label) {
     if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height) {
         throw new Error(`${label} (${pt.x},${pt.y}) out of bounds for ${width}x${height}`);
     }
 }
 
-export function tileIndex(world, x, y) {
-    return y * world.width + x;
-}
-
-export function getTile(world, x, y) {
-    return world.tiles[tileIndex(world, x, y)];
-}
-
-export function setTile(world, x, y, tile) {
-    world.tiles[tileIndex(world, x, y)] = tile;
-}
+// tileIndex / getTile / setTile live in
+// shared/procgen/mazeAlgorithms/gridTiles.js and are re-exported at the top
+// of this file.
 
 export function isFloor(world, x, y) {
     if (x < 0 || x >= world.width || y < 0 || y >= world.height) return false;
@@ -334,22 +760,303 @@ export function isExit(world, x, y) {
     return getExitAt(world, x, y) !== null;
 }
 
+/**
+ * ⛓⛓ AN EXIT TILE IS A DEAD END FOR THE GENERATOR (tutorial-bugs, 2026-10-10).
+ * In play, arriving on an exit tile IS the crossing (`detectStepEvents` →
+ * `exit_cross` → `user:regionMove`), so no walk can pass OVER another exit on
+ * its way somewhere. The generator's floods used to: a room could be carved
+ * whose only corridor to one exit ran across another exit's tile — the Maze
+ * demo preset's region_3_2, where that tile was also key_blue's gate and
+ * key_blue lay beyond the first exit, so the world deadlocked (4 of 45 maze
+ * rooms over the shipped presets at seed 1). Every flood that decides what the
+ * generator may build — wall feasibility (`floorReachableSet`), the placer's
+ * reachable set (`reachableTileFixpoint` / `reachableTilesByKey`) and the rule
+ * extraction (`ghostPlansFromEntrance`) — reaches an exit tile but does not
+ * continue from it. The flood's own start (the entrance, which a back-exit may
+ * share) is exempt: the player stands there already.
+ */
+function isDeadEndExit(world, x, y, start) {
+    return !(x === start.x && y === start.y) && getExitAt(world, x, y) !== null;
+}
+
 // --- State ---
 
+/**
+ * ⛓⛓ `state.blocks` IS PRESENT ONLY WHEN THE WORLD HAS BLOCKS (⚖ arc 2 ruling
+ * 5). It is a SORTED array of posKeys — sorted so that two states holding the
+ * same block SET produce the same visited key regardless of the order the
+ * pushes happened in, and an array (rather than a Set) so cloning is a slice
+ * and the key is a join.
+ *
+ * Absence, not emptiness, is the switch: `mazeVisitedKey` appends nothing when
+ * the field is undefined, which is what keeps every existing key string
+ * byte-identical. A world with blocks whose state was hand-built without the
+ * field walks THROUGH its blocks — createState is the one constructor and
+ * every internal caller uses it.
+ */
 export function createState(world) {
-    return {
+    const state = {
         player_pos: { x: world.entrance.x, y: world.entrance.y },
         turn: 0,
         inventory: new Set(),
     };
+    if (world.blocks?.size) {
+        state.blocks = [...world.blocks.keys()].sort();
+    }
+    // ⛓ ITEM ACTIONS — the same "absence is the switch" rule as `blocks`:
+    // `facing` (one of N/E/S/W) and `broken` (a SORTED array of posKeys of the
+    // obstacles struck down THIS VISIT — ⚖ per-visit, like block positions;
+    // persistence is a later per-game knob) exist only on an item-action world.
+    if (hasItemActions(world)) {
+        state.facing = world.startFacing ?? DEFAULT_FACING;
+        state.broken = [];
+    }
+    return state;
+}
+
+/**
+ * ⛓ COUNTED ITEMS (session tile-primitives-counted-rules, ⚖ 2026-10-23 "Count map"): an inventory is a Set (every
+ * item held once) or a `Map<item, count>` (keys only at count ≥ 1) — the shared evaluator reads a Map count-aware
+ * (`inventoryRuleContext`), and `.has` answers "at least one" for both. Every copy goes through here so a Map stays one.
+ */
+export function copyInventory(inventory) {
+    return inventory instanceof Map ? new Map(inventory) : new Set(inventory);
+}
+
+/** Add one held item to a copied inventory: a Set adds it, a Map holds it at least once (a latch, not a counter). */
+export function holdInInventory(inventory, item) {
+    if (inventory instanceof Map) {
+        if (!inventory.has(item)) inventory.set(item, 1);
+    } else {
+        inventory.add(item);
+    }
 }
 
 function cloneState(state) {
-    return {
+    const next = {
         player_pos: { x: state.player_pos.x, y: state.player_pos.y },
         turn: state.turn,
-        inventory: new Set(state.inventory),
+        inventory: copyInventory(state.inventory),
     };
+    if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    if (state.facing !== undefined) next.facing = state.facing;
+    if (state.broken !== undefined) next.broken = state.broken.slice();
+    return next;
+}
+
+/**
+ * The obstacle id standing SHUT at (x, y) for this inventory, or `null` — the
+ * one clearance question `step` and `whyBlocked` both ask. ⛓ An obstacle in
+ * `state.broken` is open whatever its `clear_set` says — read at its canonical
+ * cell (`at`, where `strikeTarget` records a multi-cell obstacle's strike; the
+ * scripted `tileAt` reads the same key), so every cell of a struck rope run opens.
+ */
+function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
+    const obstacleId = getObstacle(world, x, y);
+    if (!obstacleId) return null;
+    const brokenAt = world.obstacleLib?.[obstacleId]?.at ?? posKey(x, y);
+    if (state.broken !== undefined && state.broken.includes(brokenAt)) return null;
+    return isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts) ? null : obstacleId;
+}
+
+/** The cell the player faces, or `null` when the state carries no facing. */
+export function facingCell(state) {
+    const d = DELTAS[state?.facing];
+    if (!d) return null;
+    return { x: state.player_pos.x + d.dx, y: state.player_pos.y + d.dy };
+}
+
+/**
+ * ⛓ STRIKE — the posKey a `strike` with `actionId` would break from this
+ * state, or `null` when it hits nothing it breaks (⚖ "use at air" is LEGAL —
+ * a turn passes). It breaks the facing cell's obstacle iff that obstacle's
+ * library entry lists the action in `struck_by` and it is not broken already.
+ *
+ * ⛓ rules-l39 (⚖ 2026-10-23 "(a) One obstacle"): an obstacle spanning several
+ * cells (a rope's run) names its ONE canonical cell in `at`, and a strike on
+ * any of its cells is recorded THERE — one cut state, whichever cell was hit.
+ * An obstacle without `at` (a rock) records the struck cell, as before.
+ *
+ * ⚠ The entry's `condition` names the HELPER the scripted step asks
+ * (`tileSpike/`, ⚖ Q2 iii); this native path is that helper's built-in
+ * default (⚖ Q6 "native default") and the parity suite holds the two equal.
+ */
+export function strikeTarget(world, state, actionId) {
+    const cell = facingCell(state);
+    if (cell === null) return null;
+    const obstacleId = getObstacle(world, cell.x, cell.y);
+    if (!obstacleId) return null;
+    const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
+    if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) return null;
+    const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
+    if (state.broken?.includes(key)) return null;
+    return key;
+}
+
+/**
+ * ⚖ "Refusal + facing": a MOVE that `step` refused still turns the player to
+ * face it on an item-action world. `step` keeps returning `null` (so
+ * `whyBlocked` ⇔ `step` holds) and this returns the turned state — only
+ * `facing` differs; the turn counter is the refusal's caller's (the panel's
+ * hazard tick), as for every refusal. `null` on a world without item actions
+ * or for an input that is not a move.
+ */
+export function facingAfterBump(state, input) {
+    if (state?.facing === undefined || !DELTAS[input]) return null;
+    const next = cloneState(state);
+    next.facing = input;
+    return next;
+}
+
+/**
+ * ⛓⛓⛓ THE DERIVED-TOKEN RULE — the ONE place a HOLD is computed.
+ *
+ * A button that is pressed DERIVES the token its library entry names
+ * (`holds`). Pressed means: a block sits on it, OR the player stands on it.
+ * ⚖ Q2 answered YES, the player presses too — that is the game's own truth
+ * (`Button.hitables = ["Player","Enemy","Solid"]` in the ActionScript source;
+ * a pushable block is a `Solid`), and modelling only the block would be a
+ * quiet divergence nobody could see from the outside.
+ *
+ * ⛔ THE TOKEN IS NEVER STORED. It is recomputed from the current stance on
+ * every single step, which is exactly what makes it a HOLD and not a LATCH
+ * (⚖ design ruling 22): step off the button, or push the block off it, and the
+ * door it was holding is shut again on the very next move. The LATCH is a
+ * different mechanism entirely — a `flag` ITEM, picked up on arrival into
+ * `state.inventory`, which nothing ever removes.
+ *
+ * Returns `null` — not an empty array — when the world has no buttons at all,
+ * so `effectiveInventory` can hand the caller's own Set straight back and the
+ * no-button case allocates nothing and behaves identically to the code that
+ * shipped before this slice.
+ */
+function heldTokens(world, playerPos, blocks) {
+    const buttons = world.buttons;
+    if (!buttons || buttons.size === 0) return null;
+    let held = null;
+    const press = (key) => {
+        const buttonId = buttons.get(key);
+        if (buttonId === undefined) return;
+        const token = world.buttonLib?.[buttonId]?.holds;
+        if (!token) return;
+        if (held === null) held = [];
+        held.push(token);
+    };
+    press(posKey(playerPos.x, playerPos.y));
+    if (blocks !== undefined) {
+        for (const key of blocks) press(key);
+    }
+    return held;
+}
+
+/**
+ * The inventory a clearance check actually sees: whatever inventory is TRUTH
+ * for this step (state.inventory, or the caller's inventoryOverride) PLUS the
+ * tokens currently held. The override's semantics are unchanged — it is still
+ * the sole source of carried items, and pickups still do not write to
+ * state.inventory when it is supplied; the derived tokens are ADDED on top of
+ * whichever inventory was chosen, because a held button is a fact about the
+ * WORLD's current configuration and not about what the player is carrying.
+ *
+ * The caller's inventory is never mutated; a counted Map comes back a Map (`copyInventory`).
+ *
+ * ⛓ EXPORTED BY SLICE R-b, and ⛔ for ONE reason: `deriveRequires` has to ask
+ * WHICH combination of an obstacle's `clear_set` was satisfied at the turn the
+ * walk crossed it, and a combination naming a HELD token (`sw_A`) is satisfied
+ * by the world's stance and not by anything the player carries. A second copy
+ * of `heldTokens` outside this file would answer that question differently the
+ * next time a gadget lands — the same argument that put `whyBlocked` here.
+ */
+export function effectiveInventory(world, inventory, playerPos, blocks, broken) {
+    const held = heldTokens(world, playerPos, blocks);
+    const cut = ropeTokens(world, inventory, broken);
+    if (held === null && cut === null) return inventory;
+    const out = copyInventory(inventory);
+    for (const token of held ?? []) holdInInventory(out, token);
+    for (const token of cut ?? []) holdInInventory(out, token);
+    return out;
+}
+
+/**
+ * ⛓ ROPES — the tokens the CUT ropes activate: an obstacle whose library entry
+ * `activates` a token is cut when its cell is in `broken` (this visit — the
+ * strike that cut it) or when the `event` item it names is carried (cut on an
+ * earlier visit: ⚖ "Both: this visit + event item"; the game re-hits a cut
+ * rope on every entry). A LATCH, unlike a hold: nothing un-cuts a rope.
+ * `null` when the world has no rope, so the common case allocates nothing.
+ * Pass the caller's `broken` — without it only the carried event counts.
+ */
+export function ropeTokens(world, inventory, broken) {
+    const ropes = ropesOf(world);
+    if (ropes.length === 0) return null;
+    let out = null;
+    for (const { key, entry } of ropes) {
+        if (!(broken?.includes(key) || (entry.event && inventory.has(entry.event)))) continue;
+        if (out === null) out = [];
+        out.push(entry.activates);
+    }
+    return out;
+}
+
+/**
+ * The world's placed ropes `[{key, entry}]` — CACHED per (obstacle map, library) and rebuilt when either
+ * object or the obstacle count changes (an edit), because `step` asks on every move of every search.
+ */
+const ROPE_CACHE = new WeakMap();
+function ropesOf(world) {
+    const lib = world.obstacleLib;
+    if (!lib || !world.obstacles) return [];
+    const hit = ROPE_CACHE.get(world.obstacles);
+    if (hit && hit.lib === lib && hit.size === world.obstacles.size) return hit.ropes;
+    const ropes = [];
+    for (const [key, id] of world.obstacles) if (lib[id]?.activates) ropes.push({ key, entry: lib[id] });
+    ROPE_CACHE.set(world.obstacles, { lib, size: world.obstacles.size, ropes });
+    return ropes;
+}
+
+/**
+ * ⛓ ARROW TRAPS — the trap whose lane holds (x, y) and is ARMED for the
+ * effective inventory `inv` (its group token present = active), or `null`.
+ * `step` asks it of the player's cell AFTER a move (the stance the arrows
+ * see: stepping off the button that silenced a lane re-arms it at once).
+ */
+export function armedTrapAt(world, inv, x, y) {
+    const hits = world.trapLanes?.get(posKey(x, y));
+    if (!hits) return null;
+    for (const i of hits) {
+        const trap = world.traps[i];
+        const entry = world.trapLib[trap.id];
+        const active = inv.has(entry.active);
+        if (entry.fires === 'unless_active' ? !active : active) return trap;
+    }
+    return null;
+}
+
+/**
+ * Per trap of the world (in `world.traps` order), is it ARMED for this state —
+ * its lane live right now (the panel's lane tint). `null` on a world with no traps.
+ */
+export function armedTraps(world, state, inventoryOverride) {
+    if (!world?.traps?.length || !state) return null;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    return world.traps.map((trap) => {
+        const entry = world.trapLib[trap.id];
+        const active = inv.has(entry.active);
+        return entry.fires === 'unless_active' ? !active : active;
+    });
+}
+
+/**
+ * True when the state's player stands in an ARMED lane — the arrival a search
+ * must not count on (⚖ "never expect tanking a hit": a landing in a live lane
+ * is a hit, so nothing is reached from it).
+ */
+export function standsInArmedLane(world, state, inventoryOverride) {
+    if (!world.trapLanes) return false;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    return armedTrapAt(world, inv, state.player_pos.x, state.player_pos.y) !== null;
 }
 
 // --- step ---
@@ -373,26 +1080,280 @@ function cloneState(state) {
 // obstacles. See library.js's isObstacleCleared and top-down-driver.md
 // §8.
 
+// ⛓⛓ PUSHING (arc 2 slice 1). A move into a cell holding a block PUSHES it one
+// cell further along the SAME delta, and both move together. The cell beyond
+// must be
+//   - floor,
+//   - free of another block,
+//   - free of an UN-cleared obstacle.
+// A block does not carry a key: whether the obstacle beyond is cleared is asked
+// with the same effective inventory the player's own move is asked with, so a
+// block can be pushed THROUGH a door that is already open (held or unlocked)
+// and never INTO one that is shut. ⛔ A block CANNOT open a door.
+//
+// A block may be pushed onto a BUTTON (that is the whole gadget) and onto an
+// ITEM cell: the item STAYS on the floor and is not collected — the block is
+// standing on it and the player cannot stand there. Push the block off again
+// and the item is picked up normally.
+//
+// ⛓ THE CLEARANCE CHECK READS THE STANCE BEFORE THE MOVE, not after. That is
+// the game's tick order (`Button.update` re-collides where things are NOW), and
+// it has one consequence worth stating out loud: a player standing on
+// `button_A` CAN step into an adjacent `door_A`, because at the instant the
+// move is attempted the button is still pressed — and step() only ever gates
+// the TARGET tile, so they can then step off the far side (the gate-of-arrival
+// exception documented at placeFromRules). A door held open by the PLAYER is
+// therefore a one-way ticket for exactly one cell; a door held open by a BLOCK
+// stays open for as long as the block sits there. This is why the gadget uses
+// a block, and it is a fact about the model rather than a defect in it.
 export function step(world, state, input, inventoryOverride, clearanceOpts) {
+    // A WAIT is a turn and nothing else: no arrival, so no pickup, no push,
+    // no inventory change. Handled BEFORE the DELTAS lookup — WAIT has no
+    // delta and would otherwise fall out as a refusal (slice S2a).
+    if (input === INPUT_WAIT) {
+        const waited = cloneState(state);
+        waited.turn += 1;
+        return waited;
+    }
+    if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
+        const dir = input.slice(TURN_PREFIX.length);
+        if (state.facing === undefined || !DELTAS[dir]) return null;
+        const turned = cloneState(state);
+        turned.facing = dir;
+        turned.turn += 1;
+        return turned;
+    }
+    if (typeof input === 'string' && input.startsWith(USE_PREFIX)) {
+        const actionId = input.slice(USE_PREFIX.length);
+        const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
+        if (!entry) return null;
+        if (entry.item) {
+            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+            if (!inv.has(entry.item)) return null;
+        }
+        const used = cloneState(state);
+        used.turn += 1;
+        const hit = strikeTarget(world, state, actionId);
+        if (hit !== null) {
+            used.broken.push(hit);
+            used.broken.sort();
+        }
+        return used;
+    }
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
-    const inv = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const obstacleId = getObstacle(world, nx, ny);
-    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
         return null;
+    }
+    let pushedFrom = null;
+    let pushedTo = null;
+    if (state.blocks !== undefined) {
+        const targetKey = posKey(nx, ny);
+        if (state.blocks.includes(targetKey)) {
+            const bx = nx + delta.dx;
+            const by = ny + delta.dy;
+            if (!isFloor(world, bx, by)) return null;
+            const beyondKey = posKey(bx, by);
+            if (state.blocks.includes(beyondKey)) return null;
+            if (shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
+                return null;
+            }
+            pushedFrom = targetKey;
+            pushedTo = beyondKey;
+        }
     }
     const next = cloneState(state);
     next.player_pos.x = nx;
     next.player_pos.y = ny;
     next.turn += 1;
+    if (next.facing !== undefined) next.facing = input;
+    if (pushedFrom !== null) {
+        next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
+        next.blocks.sort();
+    }
+    // ⛓ ARROW TRAPS — LAST, on the stance AFTER the move (see `armedTrapAt`).
+    if (world.trapLanes && armedTrapAt(world,
+        effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken), nx, ny) !== null) {
+        return null;
+    }
     if (inventoryOverride === undefined) {
         const itemId = getItem(world, nx, ny);
-        if (itemId) next.inventory.add(itemId);
+        if (itemId) holdInInventory(next.inventory, itemId);
     }
     return next;
+}
+
+// --- whyBlocked: the engine's own answer to "why not" ---
+//
+// ⛓⛓⛓ SLICE S2b — **ONE DERIVATION OF A REFUSAL, AND IT LIVES BESIDE `step`.**
+//
+// `step` returns `null` for a wall, an off-grid target, an uncleared obstacle,
+// an unpushable block and an unknown input, and says nothing about which. Every
+// surface that wants to TELL somebody had to re-derive it: the visualizer's
+// `_logBlockedStep`, `mazeQueueExecutor.refusalReason`, and (before this
+// function existed) a third copy in the lab's manual arm. A re-derivation that
+// does not read `effectiveInventory` cannot name a HELD button at all — which
+// is why this one is in the engine, where that function is private.
+//
+// ⛔ **IT MUST AGREE WITH `step`, AND THE TEST IS A PROPERTY, NOT A COUNT**:
+// over every reachable `(state, input)` of three fixture worlds,
+// `whyBlocked(...) === null` ⇔ `step(...) !== null`. The guards below are in
+// `step`'s own order for exactly that reason — a reason derived in a different
+// order would name the second cause of a doubly-blocked move.
+//
+// ⛔ It decides NOTHING. A caller that wants to know whether a move is legal
+// asks `step`; this answers a move `step` already refused.
+
+/**
+ * Which button, if any, holds this clearance token — so a shut guard door can
+ * be reported as *"nothing on button_A"* rather than as a missing item nobody
+ * can pick up. `null` when no button in this world holds it.
+ */
+function buttonHolding(world, token) {
+    for (const [id, entry] of Object.entries(world.buttonLib ?? {})) {
+        if (entry?.holds === token) return id;
+    }
+    return null;
+}
+
+/**
+ * The sentence for an obstacle the effective inventory does not clear.
+ *
+ * ⛔ The MISSING half of the cheapest combination, not the whole `clear_set`: a
+ * door with `[[key_red]]` says *"needs key_red"*, and one whose token is held
+ * by a button says *"nothing on button_A"* — the same fact in the vocabulary
+ * of the thing the player must actually do.
+ */
+function shutBecause(world, obstacleId, inv) {
+    const entry = world.obstacleLib?.[obstacleId];
+    const head = `${obstacleId} is shut`;
+    if (!entry) return head;
+    if ((entry.clear_set_type ?? 'combo_list') === 'rule') {
+        return `${head} — its clear_rule is not satisfied`;
+    }
+    const combos = entry.clear_set ?? [];
+    if (combos.length === 0) {
+        return Array.isArray(entry.struck_by) && entry.struck_by.length > 0
+            ? `${head} — strike it (${entry.struck_by.join(' or ')})`
+            : `${head} — nothing clears it`;
+    }
+    let best = null;
+    for (const combo of combos) {
+        const missing = combo.filter((id) => !inv.has(id));
+        if (best === null || missing.length < best.length) best = missing;
+    }
+    if (best.length === 0) return head;
+    const phrases = best.map((token) => {
+        const button = buttonHolding(world, token);
+        return button === null ? `needs ${token}` : `nothing on ${button}`;
+    });
+    return `${head} — ${phrases.join(', ')}`;
+}
+
+/**
+ * Why `step` refused this input, in one sentence — or `null` when it did not.
+ *
+ * @param {object} world
+ * @param {object} state
+ * @param {string} input one of `INPUTS`, or `INPUT_WAIT`
+ * @param {Set<string>} [inventoryOverride] the same override `step` takes
+ * @param {object} [clearanceOpts] the same `{evaluateRule}` `step` takes
+ * @returns {string|null} `null` iff `step` would return a state
+ */
+export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts) {
+    if (!world || !state) return 'no world or state loaded';
+    // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes".
+    if (input === INPUT_WAIT) return null;
+    const isTurn = typeof input === 'string' && input.startsWith(TURN_PREFIX);
+    const isUse = typeof input === 'string' && input.startsWith(USE_PREFIX);
+    if ((isTurn || isUse) && state.facing === undefined) {
+        return `'${input}' is not an input on this world — it has no action_lib`;
+    }
+    if (isTurn) {
+        // ⛓ A turn to any of N/E/S/W is always legal (⚖ "Costs a turn").
+        return DELTAS[input.slice(TURN_PREFIX.length)] ? null : `'${input}' is not an input`;
+    }
+    if (isUse) {
+        const actionId = input.slice(USE_PREFIX.length);
+        const entry = world.actionLib?.[actionId];
+        if (!entry) return `no action '${actionId}' in this world's action_lib`;
+        if (entry.item) {
+            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+            if (!inv.has(entry.item)) return `use ${actionId} needs ${entry.item}`;
+        }
+        // ⚖ "Use at air" is legal — a swing that hits nothing still passes a turn.
+        return null;
+    }
+    const delta = DELTAS[input];
+    if (!delta) return `'${input}' is not an input`;
+    const nx = state.player_pos.x + delta.dx;
+    const ny = state.player_pos.y + delta.dy;
+    if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) return 'off the grid';
+    if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    const obstacleId = shutObstacleAt(world, state, nx, ny, inv, clearanceOpts);
+    if (obstacleId !== null) {
+        return shutBecause(world, obstacleId, inv);
+    }
+    if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
+        const bx = nx + delta.dx;
+        const by = ny + delta.dy;
+        const cannot = `block at (${nx},${ny}) cannot move`;
+        if (bx < 0 || bx >= world.width || by < 0 || by >= world.height) {
+            return `${cannot}: beyond is off the grid`;
+        }
+        if (!isFloor(world, bx, by)) return `${cannot}: beyond is a wall`;
+        if (state.blocks.includes(posKey(bx, by))) return `${cannot}: beyond is a block`;
+        const beyond = shutObstacleAt(world, state, bx, by, inv, clearanceOpts);
+        if (beyond !== null) {
+            return `${cannot}: ${shutBecause(world, beyond, inv)}`;
+        }
+    }
+    if (world.trapLanes) {
+        // `step`'s last guard, on the stance after the move (a push moves the block too).
+        let blocks = state.blocks;
+        if (blocks !== undefined && blocks.includes(posKey(nx, ny))) {
+            blocks = blocks.map((k) => (k === posKey(nx, ny) ? posKey(nx + delta.dx, ny + delta.dy) : k));
+        }
+        const after = effectiveInventory(world, carried, { x: nx, y: ny }, blocks, state.broken);
+        const trap = armedTrapAt(world, after, nx, ny);
+        if (trap !== null) return armedBecause(world, trap);
+    }
+    return null;
+}
+
+/**
+ * The sentence for a lane cell whose trap is armed: the trap, its group, and
+ * what silences it in the vocabulary of the thing the player must do — cut a
+ * rope (by its strikes), hold a button, or get off one.
+ */
+function armedBecause(world, trap) {
+    const entry = world.trapLib[trap.id];
+    const head = `arrow lane of ${trap.label} is armed`;
+    // Only a button that is PLACED can be held (a library may define more).
+    const placed = new Set(world.buttons?.values() ?? []);
+    const held = buttonHolding(world, entry.active);
+    const button = held !== null && placed.has(held) ? held : null;
+    if (entry.fires === 'while_active') {
+        return `${head} — ${button === null ? `its group (${entry.active}) is active` : `nothing may stand on ${button}`}`;
+    }
+    const ways = [];
+    for (const [key, id] of world.obstacles) {
+        const rope = world.obstacleLib?.[id];
+        if (rope?.activates !== entry.active) continue;
+        const { x, y } = unposKey(key);
+        ways.push(`cut ${rope.name ?? id} at (${x},${y})${rope.struck_by?.length ? ` (${rope.struck_by.join(', ')})` : ''}`);
+    }
+    if (button !== null) ways.push(`hold ${button}`);
+    return `${head} — ${ways.length ? ways.join(' or ') : `nothing silences it (${entry.active})`}`;
 }
 
 // --- Goal predicates ---
@@ -420,6 +1381,19 @@ export function reachedExit(state, world) {
  *   - 'exit_cross'  — moved onto the exit tile from elsewhere.
  *                     Fires only on the step that arrives, not while
  *                     the player is standing on the exit.
+ *   - 'consumable_pickup' (X1) — moved onto a cross-game consumable
+ *                     tile. Carries the {substrate, type, count} grant
+ *                     verbatim. Fires on EVERY arrival; respawn /
+ *                     one-shot semantics are the caller's concern (the
+ *                     visualizer's posKey-keyed collected set, cleared
+ *                     on gameState:loopReset per X1-R1) — the same
+ *                     division of labour as 'pickup' above.
+ *   - 'mana_pickup' (X1) — moved onto a mana-refill tile. Carries the
+ *                     refill `amount`. Same respawn division.
+ *
+ * A tile can carry more than one overlay, so a single step may emit a
+ * 'pickup' AND a 'consumable_pickup'. Placement keeps them disjoint in
+ * practice, but nothing in the engine enforces that.
  *
  * No events when the player didn't move (oldPos === newPos), since
  * step() only returns a new state on successful movement and a
@@ -444,6 +1418,26 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
         events.push({
             type: 'pickup',
             itemId,
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    // X1 consumable overlays. Optional chaining because worlds built
+    // before X1 (and library-instantiated ones) carry no such Maps.
+    const grant = world.consumableTiles?.get(newKey);
+    if (grant) {
+        events.push({
+            type: 'consumable_pickup',
+            grant,
+            position: { x: newPos.x, y: newPos.y },
+        });
+    }
+
+    const manaAmount = world.manaTiles?.get(newKey);
+    if (manaAmount) {
+        events.push({
+            type: 'mana_pickup',
+            amount: manaAmount,
             position: { x: newPos.x, y: newPos.y },
         });
     }
@@ -477,12 +1471,29 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
 // tiles exist — two states at the same tile with different inventories
 // can reach different parts of the world, so BFS must treat them as
 // distinct nodes.
-function mazeVisitedKey(state) {
-    if (state.inventory.size === 0) {
-        return `${state.player_pos.x},${state.player_pos.y}|`;
-    }
-    const inv = [...state.inventory].sort().join(',');
-    return `${state.player_pos.x},${state.player_pos.y}|${inv}`;
+//
+// ⛓ AND OF THE BLOCK LAYOUT once blocks exist — the same argument one level up:
+// two states at the same tile with the same inventory but different block
+// positions can reach different parts of the world. The blocks segment is
+// appended as `|k1;k2` ONLY when `state.blocks` is present, so on every world
+// that has no blocks the returned string is byte-identical to the one this
+// function returned before arc 2 (asserted literally in the tests, both ways).
+/** The inventory segment of a visited key: sorted names; a COUNTED Map entry above 1 is spelled `name×n` (a Set's is unchanged). */
+function inventoryKeyPart(inventory) {
+    if (!(inventory instanceof Map)) return [...inventory].sort().join(',');
+    return [...inventory].map(([item, n]) => (n > 1 ? `${item}×${n}` : item)).sort().join(',');
+}
+
+export function mazeVisitedKey(state) {
+    const base = state.inventory.size === 0
+        ? `${state.player_pos.x},${state.player_pos.y}|`
+        : `${state.player_pos.x},${state.player_pos.y}|${inventoryKeyPart(state.inventory)}`;
+    const withBlocks = state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
+    // ⛓ ITEM ACTIONS append `|f<dir>|<broken>` ONLY when the state has a facing,
+    // so a key on any world without an `action_lib` is unchanged, byte for byte.
+    return state.facing === undefined
+        ? withBlocks
+        : `${withBlocks}|f${state.facing}|${state.broken.join(';')}`;
 }
 
 export const bfsSolver = makeBfsSolver({
@@ -495,6 +1506,13 @@ export const bfsSolver = makeBfsSolver({
 // still block, but obstacles are passable (we want to reconstruct the
 // geometric route and then annotate it with the obstacles it crossed,
 // independently of whether the player could clear them at run time).
+//
+// ⛓ IT IGNORES BLOCKS TOO, and deliberately: it is asking a GEOMETRIC question
+// ("which route would the tiles allow") whose answer must not depend on what
+// the player has done or moved. A block is exactly as passable here as a locked
+// door is — it annotates nothing and blocks nothing. The FEASIBILITY question
+// ("can the player actually get there") is `step` + `bfsSolver`, over the full
+// (player, blocks, inventory) state.
 function ghostStep(world, state, input) {
     const delta = DELTAS[input];
     if (!delta) return null;
@@ -508,22 +1526,15 @@ function ghostStep(world, state, input) {
     return next;
 }
 
-const ghostBfsSolver = makeBfsSolver({
-    step: ghostStep,
-    inputs: INPUTS,
-    visitedKey: (s) => `${s.player_pos.x},${s.player_pos.y}`,
-});
-
 // --- Paths-and-obstacles extraction ---
 //
-// Produces the central data representation from the pipeline overview
-// (NewDocs/plans/procedural-generation/pipeline-overview.md §"Authored
-// rules: paths and obstacles"). For each target location (the exit +
-// every item pickup), we walk an obstacle-transparent BFS from the
-// entrance, then annotate the path with the obstacles it crossed. v1
-// emits a single path per location; multi-path via BFS-removal analysis
-// is deferred (pipeline-overview §"What's new" / tile-map-analyzer
-// pattern).
+// Produces the central paths-and-obstacles representation
+// (docs/json/developer/procgen/paths-and-obstacles.md). For each
+// target location (the exit + every item pickup), we emit ONE PATH PER
+// MINIMAL OBSTACLE SET over all routes from the entrance (⚖ T2, below), each
+// annotated with the obstacles it crosses in encounter order. A region with
+// blocks or buttons is priced by a search over the real `step` instead (⚖ T1,
+// `blockWorldAccessRules`), which rides on each target as `access_rule`.
 
 function obstaclesAlongPath(world, startState, plan) {
     const seen = [];
@@ -541,17 +1552,298 @@ function obstaclesAlongPath(world, startState, plan) {
     return seen;
 }
 
-function pathsToTarget(world, position) {
+/**
+ * ⛓ ONE ghost BFS from the entrance serves every target (C0, plan §41). Each
+ * target used to get its own `reach` over a `makeBfsSolver` of `ghostStep`
+ * keyed by position — N exits + M pickups BFS runs over the same tree. That
+ * solver checks the goal at DISCOVERY and extends the plan of the state that
+ * discovered it, so the plan it returned for any target is the path down the
+ * first-discovery tree: the tree this builds once, in the same FIFO order and
+ * `INPUTS` order. `plans(position)` answers what that `reach` answered: `[]`
+ * for the entrance itself, `null` for a tile the tree never reached.
+ */
+function ghostPlansFromEntrance(world) {
     const start = createState(world);
-    const result = reach(world, ghostBfsSolver, start,
-        (s) => s.player_pos.x === position.x && s.player_pos.y === position.y);
-    if (!result.ok) return [];
-    const obstacles = obstaclesAlongPath(world, start, result.plan);
-    return [{ path_id: 'p1', obstacles }];
+    const key = (x, y) => `${x},${y}`;
+    const origin = key(start.player_pos.x, start.player_pos.y);
+    const parent = new Map([[origin, null]]);
+    const queue = [start];
+    for (let head = 0; head < queue.length; head++) {
+        const s = queue[head];
+        if (isDeadEndExit(world, s.player_pos.x, s.player_pos.y, start.player_pos)) continue;
+        const from = key(s.player_pos.x, s.player_pos.y);
+        for (const input of INPUTS) {
+            const next = ghostStep(world, s, input);
+            if (!next) continue;
+            const k = key(next.player_pos.x, next.player_pos.y);
+            if (parent.has(k)) continue;
+            parent.set(k, { from, input });
+            queue.push(next);
+        }
+    }
+    return (position) => {
+        let at = key(position.x, position.y);
+        if (!parent.has(at)) return null;
+        const plan = [];
+        for (let link = parent.get(at); link !== null; link = parent.get(at)) {
+            plan.push(link.input);
+            at = link.from;
+        }
+        return plan.reverse();
+    };
+}
+
+/**
+ * ⛓⛓ ALL ROUTES, AS MINIMAL OBSTACLE SETS (⚖ T2, user 2026-10-21: "All-routes
+ * minimal sets"; slice maze-logic-t1t2-fix). The extraction used to emit the
+ * ONE ghost path the BFS found first, so a door on that path was charged even
+ * when another route avoided it (seed 2 guard room: key_red@7,3 = Has(key_red)
+ * though the engine walks there with no key) — over-strict, never too loose.
+ *
+ * Label setting over positions: each cell keeps the ANTICHAIN of obstacle-id
+ * sets some route from the entrance crosses to stand there; a set that contains
+ * one already kept is dropped, and one it contains evicts it. What survives at
+ * a target is exactly its minimal sets — every route's crossing set contains
+ * one. No subset lattice: a procgen_topdown region carries up to 29 obstacle
+ * ids (measured), so 2^n is out. Exit tiles are dead ends, as in the ghost tree.
+ *
+ * ⛔ THE ANTICHAINS ARE CAPPED at `ROUTE_SETS_PER_CELL` per cell, smallest sets
+ * kept. Measured: every committed preset region, the pipeline sweep and the
+ * generated levels peak at 2, but an Initialise-as-maze room with a logic gate
+ * on each of its 64–186 location tiles reaches ~3,700 per cell and never
+ * finishes (CI's slow `locationCapacity` tier hung). Capping stays SOUND: every
+ * kept set is a real route's, so a target's rule only ever drops routes —
+ * stricter, never looser — and `pathsToTarget` adds the ghost route back, so it
+ * is never stricter than the single-path form either. `capped` says it bit.
+ */
+export const ROUTE_SETS_PER_CELL = 16;
+
+function popcount(mask) {
+    let n = 0;
+    for (let m = mask; m !== 0n; m &= m - 1n) n += 1;
+    return n;
+}
+
+/** Smaller first; among equals, the lower mask. */
+const routeSetOrder = (a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b ? 1 : 0);
+
+function minimalObstacleSets(world) {
+    const start = createState(world).player_pos;
+    const ids = [...new Set(world.obstacles.values())];
+    const bit = new Map(ids.map((id, i) => [id, 1n << BigInt(i)]));
+    const key = (x, y) => `${x},${y}`;
+    const labels = new Map([[key(start.x, start.y), [0n]]]);
+    // "x,y|mask" → the label it was first reached from: a kept set's own route, read back.
+    const parent = new Map();
+    let capped = false;
+    const keep = (k, mask) => {
+        const list = labels.get(k);
+        if (!list) { labels.set(k, [mask]); return true; }
+        if (list.some((m) => (m & mask) === m)) return false;
+        const next = [...list.filter((m) => (m & mask) !== mask), mask];
+        if (next.length > ROUTE_SETS_PER_CELL) {
+            capped = true;
+            next.sort(routeSetOrder);
+            const dropped = next.pop();
+            labels.set(k, next);
+            return dropped !== mask;
+        }
+        labels.set(k, next);
+        return true;
+    };
+    const queue = [{ x: start.x, y: start.y, mask: 0n }];
+    for (let head = 0; head < queue.length; head++) {
+        const { x, y, mask } = queue[head];
+        if (!labels.get(key(x, y)).includes(mask)) continue; // evicted since queued
+        if (isDeadEndExit(world, x, y, start)) continue;
+        for (const input of INPUTS) {
+            const nx = x + DELTAS[input].dx;
+            const ny = y + DELTAS[input].dy;
+            if (!isFloor(world, nx, ny)) continue;
+            const id = getObstacle(world, nx, ny);
+            const next = id ? mask | bit.get(id) : mask;
+            if (!keep(key(nx, ny), next)) continue;
+            const label = `${key(nx, ny)}|${next}`;
+            if (!parent.has(label)) parent.set(label, `${key(x, y)}|${mask}`);
+            queue.push({ x: nx, y: ny, mask: next });
+        }
+    }
+    const maskOf = (obstacles) => obstacles.reduce((m, id) => m | bit.get(id), 0n);
+    const idsOf = (mask) => ids.filter((id) => (mask & bit.get(id)) !== 0n);
+    const setsAt = (position) => [...(labels.get(key(position.x, position.y)) ?? [])].sort(routeSetOrder);
+    /** The obstacles the route that kept `mask` at `position` crosses, in encounter order. */
+    const routeObstacles = (position, mask) => {
+        const cells = [];
+        for (let at = `${key(position.x, position.y)}|${mask}`; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        const seen = [];
+        for (const cell of cells.reverse()) {
+            const id = world.obstacles.get(cell);
+            if (id && !seen.includes(id)) seen.push(id);
+        }
+        return seen;
+    };
+    return { setsAt, maskOf, routeObstacles, capped };
+}
+
+/**
+ * One path per minimal set. ⛓ When the ghost path's own set is minimal it comes
+ * FIRST and verbatim (its encounter order), so a target with one route — every
+ * committed preset's region, measured at W0 — extracts byte-identically to the
+ * single-path form. Every other set is listed in the order its own route (the
+ * label-setting walk that kept it) crosses it.
+ */
+function pathsToTarget(world, position, plans, routes) {
+    const sets = routes.setsAt(position);
+    if (sets.length === 0) return [];
+    const ghostObstacles = obstaclesAlongPath(world, createState(world), plans(position));
+    const ghostMask = routes.maskOf(ghostObstacles);
+    // Exact antichains always hold a subset of the ghost route's set; a capped one may not.
+    if (!sets.some((m) => (m & ghostMask) === m)) sets.push(ghostMask);
+    const ordered = sets.includes(ghostMask) ? [ghostMask, ...sets.filter((m) => m !== ghostMask)] : sets;
+    return ordered.map((mask, i) => ({
+        path_id: `p${i + 1}`,
+        obstacles: mask === ghostMask
+            ? ghostObstacles
+            : routes.routeObstacles(position, mask),
+    }));
+}
+
+/** The obstacle-id items a rule obstacle's `clear_rule` names, for the block-world search. */
+function clearRuleItems(rule, obstacleId, out) {
+    switch (rule?.rule) {
+        case 'True_': case 'False_': return out;
+        case 'Has':
+            if ((rule.args?.count ?? 1) > 1) {
+                throw new Error(`extractPathsAndObstacles: obstacle '${obstacleId}' needs ${rule.args.count}× `
+                    + `'${rule.args.item_name}' — the block-world search holds a SET inventory and cannot price a count`);
+            }
+            out.add(rule.args.item_name);
+            return out;
+        case 'And': case 'Or':
+            for (const child of rule.children ?? []) clearRuleItems(child, obstacleId, out);
+            return out;
+        default:
+            throw new Error(`extractPathsAndObstacles: obstacle '${obstacleId}' clear_rule kind `
+                + `'${rule?.rule}' is not one the block-world search can price (Has/And/Or/True_/False_)`);
+    }
+}
+
+/** ⛔ Refused BY NAME above this — the lattice is 2^n engine searches. */
+export const BLOCK_WORLD_MAX_ITEMS = 12;
+/** ⛔ Refused BY NAME above this many engine states in one search. */
+export const BLOCK_WORLD_MAX_STATES = 200000;
+
+function* subsetsOfSize(items, k, from = 0, acc = []) {
+    if (acc.length === k) { yield acc.slice(); return; }
+    for (let i = from; i <= items.length - (k - acc.length); i++) {
+        acc.push(items[i]);
+        yield* subsetsOfSize(items, k, i + 1, acc);
+        acc.pop();
+    }
+}
+
+/**
+ * ⛓⛓⛓ A REGION WITH BLOCKS OR BUTTONS IS PRICED BY THE ENGINE (⚖ T1, user
+ * 2026-10-21: "Engine search for block worlds"; slice maze-logic-t1t2-fix). The
+ * ghost walk never asks about a block: it charged a button's HELD token (`sw_A0`,
+ * derived per step while something stands on the button) as an ITEM — never
+ * satisfiable in AP — and ignored both a block's own path (a rock it must be
+ * pushed through) and a block that walls a corridor.
+ *
+ * Here, per inventory over the region's item axis (every item an obstacle's
+ * clear set or rule names, minus held tokens), a BFS over the REAL `step` from
+ * the entrance says which tiles the player can stand on; each target's minimal
+ * inventories become its rule. AP mode: the inventory is fixed — a location
+ * tile is a check and grants nothing (the world's items are emptied for the
+ * search). Exit tiles are dead ends. Lattice by size; a set that already covers
+ * every live target is skipped (sound: clearance is monotone in the inventory).
+ * Returns `(position) → rule`.
+ *
+ * ⛓ T3 (the same slice, after item actions landed): an ITEM-ACTION world (an
+ * `action_lib`) is priced here too. A rock with `clear_set: []` and
+ * `struck_by` opens only to a strike, which the path compiler cannot see, so it
+ * priced the rock as never clearable. The search steps `worldInputs` (turns +
+ * uses), and the item of every action a region obstacle is `struck_by` joins
+ * the axis.
+ */
+function blockWorldAccessRules(world) {
+    const lib = world.obstacleLib ?? DEFAULT_OBSTACLES;
+    const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    // ⛓ rules-l39: a rope's `activates` token is derived per step from its cut (`ropeTokens`), never carried —
+    // like a button's held token it is not an item of the axis (a rope run's `clear_set` names it).
+    for (const entry of Object.values(lib)) if (entry?.activates) held.add(entry.activates);
+    const axis = new Set();
+    for (const id of new Set(world.obstacles.values())) {
+        const entry = lib[id];
+        if (!entry) continue;
+        if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
+        else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
+        for (const actionId of entry.struck_by ?? []) {
+            const item = world.actionLib?.[actionId]?.item;
+            if (item) axis.add(item);
+        }
+    }
+    const inputs = worldInputs(world);
+    const items = [...axis].filter((i) => !held.has(i)).sort();
+    if (items.length > BLOCK_WORLD_MAX_ITEMS) {
+        throw new Error(`extractPathsAndObstacles: a block world's item axis has ${items.length} items, `
+            + `over the cap ${BLOCK_WORLD_MAX_ITEMS}: ${items.join(', ')}`);
+    }
+    const apWorld = { ...world, items: new Map() };
+    const reachUnder = (inventory) => {
+        const s0 = createState(apWorld);
+        s0.inventory = new Set(inventory);
+        const origin = s0.player_pos;
+        const seen = new Set([mazeVisitedKey(s0)]);
+        const cells = new Set([`${origin.x},${origin.y}`]);
+        const queue = [s0];
+        for (let head = 0; head < queue.length; head++) {
+            const s = queue[head];
+            if (isDeadEndExit(apWorld, s.player_pos.x, s.player_pos.y, origin)) continue;
+            for (const input of inputs) {
+                const next = step(apWorld, s, input);
+                if (!next) continue;
+                const k = mazeVisitedKey(next);
+                if (seen.has(k)) continue;
+                seen.add(k);
+                cells.add(`${next.player_pos.x},${next.player_pos.y}`);
+                queue.push(next);
+            }
+            if (seen.size > BLOCK_WORLD_MAX_STATES) {
+                throw new Error(`extractPathsAndObstacles: the block-world search under {${inventory}} `
+                    + `exceeded ${BLOCK_WORLD_MAX_STATES} states`);
+            }
+        }
+        return cells;
+    };
+    const targets = new Map();
+    for (const exit of world.exits.values()) targets.set(`${exit.x},${exit.y}`, []);
+    for (const key of world.items.keys()) targets.set(key, []);
+    const full = reachUnder(items);
+    const live = [...targets.keys()].filter((k) => full.has(k));
+    const covered = (k, set) => targets.get(k).some((m) => m.every((i) => set.includes(i)));
+    for (let k = 0; k <= items.length; k++) {
+        for (const set of subsetsOfSize(items, k)) {
+            if (live.every((t) => covered(t, set))) continue;
+            const cells = reachUnder(set);
+            for (const t of live) if (!covered(t, set) && cells.has(t)) targets.get(t).push(set);
+        }
+    }
+    return (position) => {
+        const minimal = targets.get(`${position.x},${position.y}`) ?? [];
+        if (minimal.length === 0) return { rule: 'False_' };
+        return makeOrRule(minimal.map((set) => makeAndRule(set.map((item) => makeHasRule(item)))));
+    };
 }
 
 export function extractPathsAndObstacles(world, opts = {}) {
     const regionId = opts.regionId ?? 'maze_room';
+    const plans = ghostPlansFromEntrance(world);
+    const routes = minimalObstacleSets(world);
+    const paths = (position) => pathsToTarget(world, position, plans, routes);
+    const priced = (world.blocks?.size || world.buttons?.size || hasItemActions(world))
+        ? blockWorldAccessRules(world) : null;
+    const accessRule = (position) => (priced ? { access_rule: priced(position) } : {});
 
     // Exits are region-to-region connections; one entry per exit tile
     // in `world.exits`. Target region resolution (for multi-region
@@ -562,7 +1854,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: exit.exit_id,
             position: { x: exit.x, y: exit.y },
             target_region: exit.targetRegion ?? null,
-            paths: pathsToTarget(world, { x: exit.x, y: exit.y }),
+            paths: paths({ x: exit.x, y: exit.y }),
+            ...accessRule({ x: exit.x, y: exit.y }),
         });
     }
 
@@ -576,7 +1869,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: `${itemId}_pickup`,
             position: { x, y },
             item: itemId,
-            paths: pathsToTarget(world, { x, y }),
+            paths: paths({ x, y }),
+            ...accessRule({ x, y }),
         });
     }
 
@@ -585,6 +1879,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
         entrance: { x: world.entrance.x, y: world.entrance.y },
         exits,
         locations,
+        // Present only when the cap bit: some target's paths may omit a cheaper route.
+        ...(routes.capped ? { route_sets_capped: ROUTE_SETS_PER_CELL } : {}),
     };
 }
 
@@ -641,6 +1937,11 @@ export function floorTilesExcluding(world, exclude) {
     return out;
 }
 
+// Replay a plan through `step` and collect the player positions it visits.
+// ⛓ Because it threads the STATE (not just the position) it replays pushes
+// correctly on a block world — but it reports only where the PLAYER went; the
+// block layout along the way is `step`'s to know. A plan that no longer
+// applies (the world changed under it) returns null rather than a short path.
 function tracePath(world, startState, plan) {
     const positions = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
     let s = startState;
@@ -655,12 +1956,51 @@ function tracePath(world, startState, plan) {
 // Enumerate tiles the player can reach from startState with the
 // current world and inventory. Stand-alone from bfsSolver because we
 // want the full set, not a single goal-directed plan.
+//
+// ⛓ THE LIST IS THE REACHABLE SET, EACH TILE ONCE (C1, plan §42): on a world
+// without blocks or buttons it is `reachableTileFixpoint`'s — every tile the
+// player can stand on, in the discovery order of a BFS from the start under
+// everything collectable — so a pick from it (pickReachableFloorTile,
+// placeGateAndKey's key candidates) is UNIFORM over reachable tiles. Until C1
+// the list was the projection of the full-state BFS below and repeated a tile
+// once per distinct inventory it was first reached under, which weighted the
+// pick; C1 changed that, and re-recorded the generated levels it moved
+// (`procgen_topdown` AP_1–12 and `seedling_atlas_sphere`, with their producers,
+// in the same slice). A world with blocks or buttons still gets the general
+// form's list, repeats and all.
+//
+// ⛔ NO NODE CAP. `bfsSolver` refuses by name at `budget` expansions; this runs
+// to exhaustion. The fixpoint is O(floor tiles × passes), passes ≤ distinct
+// pickups + 1, once per placement — polynomial. The general form is not: it
+// visits up to (floor tiles) × 2^u states for u pickups collectable without a
+// gate (the maze location cliff, plan §40–§41), and its block state space is
+// the same danger (see the node-count table in the arc-2 kickoff §8): nothing
+// that places blocks may call this without bounding the block count first.
 function reachableTiles(world, startState) {
+    const width = world.width;
+    return reachableTileCells(world, startState).map((cell) => ({ x: cell % width, y: Math.floor(cell / width) }));
+}
+
+/** The placer's reachable list as tile indices (`y * width + x`) — see `reachableTiles`. */
+function reachableTileCells(world, startState) {
+    const cells = reachableTileFixpoint(world, startState);
+    if (cells !== null) return cells;
+    const width = world.width;
+    return reachableTilesByKey(world, startState).map((t) => t.y * width + t.x);
+}
+
+// The general form — the BFS over `step`, keyed by `mazeVisitedKey`. It is the
+// only form for a world with blocks or buttons, and the REFERENCE the fixpoint
+// is held to (`_testOnly_reachableTileOrders`). The queue is read by a
+// head index, not `shift()`: the same FIFO order, without the O(n) shift that
+// made a large frontier quadratic.
+function reachableTilesByKey(world, startState) {
     const visited = new Set([mazeVisitedKey(startState)]);
     const queue = [startState];
     const out = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
-    while (queue.length > 0) {
-        const s = queue.shift();
+    for (let head = 0; head < queue.length; head++) {
+        const s = queue[head];
+        if (isDeadEndExit(world, s.player_pos.x, s.player_pos.y, startState.player_pos)) continue;
         for (const input of INPUTS) {
             const next = step(world, s, input);
             if (!next) continue;
@@ -674,17 +2014,131 @@ function reachableTiles(world, startState) {
     return out;
 }
 
+/**
+ * ⛓⛓⛓ THE REACHABLE SET AS A FIXPOINT (C1, plan §42) — every tile the player
+ * can reach, once each, as tile indices (`y * width + x`); `null` when the world
+ * needs the general form (blocks or buttons).
+ *
+ * A pass is a BFS over POSITIONS from the start, every obstacle judged against
+ * one fixed inventory: the carried set plus every pickup an earlier pass stood
+ * on. When a pass stands on a pickup the inventory lacks, the next pass runs
+ * with it; the pass that adds nothing is the answer, and its discovery order is
+ * the list (FIFO, the inputs in `INPUTS` order). The inventory only grows, so
+ * there are at most (distinct pickups + 1) passes, each O(tiles).
+ *
+ * Why it is the SAME SET as the full-state BFS (`reachableTilesByKey`):
+ *   · every tile it lists is reachable — the player collects the pickups in
+ *     pass order, each on a route an earlier inventory already opened, and a
+ *     route walked back is open again (a wall is symmetric; a cleared obstacle
+ *     stays cleared, since the inventory only grows);
+ *   · every reachable tile is listed — any real walk holds, at each step, a
+ *     subset of the final inventory, so each of its steps is open in the last
+ *     pass too.
+ * Both halves need clearance to be MONOTONE in the inventory (more items never
+ * close a passage). `isObstacleCleared` is, over every construct
+ * `evaluateRuleAgainstInventory` knows (no rule negates; an unknown construct
+ * is a constant `false`). A BUTTON is not — a token held only while standing on
+ * it, or while a block rests there — and a BLOCK changes the grid, so both keep
+ * the general form.
+ */
+function reachableTileFixpoint(world, startState) {
+    if (startState.blocks !== undefined) return null;
+    if (world.buttons?.size) return null;
+    const { width, height } = world;
+    const cells = width * height;
+    // A Map key `step` would read (`posKey`) → its cell; -1 when no step ever
+    // reads it (off the grid, or not spelled the way posKey spells it).
+    const cellOf = (key) => {
+        const comma = key.indexOf(',');
+        const x = Number(key.slice(0, comma));
+        const y = Number(key.slice(comma + 1));
+        if (!(x >= 0 && x < width && y >= 0 && y < height) || posKey(x, y) !== key) return -1;
+        return y * width + x;
+    };
+    // `step` adds a TRUTHY id on arrival; anything else changes nothing.
+    const pickupAt = new Array(cells).fill(undefined);
+    for (const [key, itemId] of world.items) {
+        const cell = cellOf(key);
+        if (cell >= 0 && itemId) pickupAt[cell] = itemId;
+    }
+    const obstacleAt = new Array(cells).fill(undefined);
+    for (const [key, obstacleId] of world.obstacles) {
+        const cell = cellOf(key);
+        if (cell >= 0) obstacleAt[cell] = obstacleId;
+    }
+    const inventory = new Set(startState.inventory);
+    const start = startState.player_pos.y * width + startState.player_pos.x;
+    for (;;) {
+        // `isObstacleCleared` is a function of (obstacle, inventory), and the
+        // inventory is fixed for the pass: one answer per obstacle per pass.
+        const clearances = new Map();
+        const cleared = (obstacleId) => {
+            let answer = clearances.get(obstacleId);
+            if (answer === undefined) {
+                answer = isObstacleCleared(obstacleId, inventory, world.obstacleLib);
+                clearances.set(obstacleId, answer);
+            }
+            return answer;
+        };
+        const seen = new Uint8Array(cells);
+        seen[start] = 1;
+        const order = [start];
+        const found = [];
+        for (let head = 0; head < order.length; head++) {
+            const cell = order[head];
+            const x = cell % width;
+            const y = (cell - x) / width;
+            if (cell !== start && getExitAt(world, x, y)) continue; // a dead end (isDeadEndExit)
+            for (const input of INPUTS) {
+                const { dx, dy } = DELTAS[input];
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+                const next = ny * width + nx;
+                if (seen[next] || world.tiles[next] !== TILE_FLOOR) continue;
+                const obstacleId = obstacleAt[next];
+                if (obstacleId && !cleared(obstacleId)) continue;
+                seen[next] = 1;
+                order.push(next);
+                const itemId = pickupAt[next];
+                // A pickup ON a dead-end exit is collected where the walk
+                // ends: nothing it opens is reachable with it (the general
+                // form's state stops there too).
+                if (itemId && !inventory.has(itemId) && !getExitAt(world, nx, ny)) found.push(itemId);
+            }
+        }
+        if (found.length === 0) return order;
+        for (const itemId of found) inventory.add(itemId);
+    }
+}
+
+/**
+ * ⛔ TEST ONLY — the placer's reachable list and its references, as tile
+ * indices: `fixpoint` (null when the world needs the general form), `byKey`
+ * (the general form's list, a tile once per inventory it was reached under) and
+ * `placer` (what `pickReachableFloorTile` draws over).
+ */
+export function _testOnly_reachableTileOrders(world, startState) {
+    const width = world.width;
+    return {
+        fixpoint: reachableTileFixpoint(world, startState),
+        byKey: reachableTilesByKey(world, startState).map((t) => t.y * width + t.x),
+        placer: reachableTileCells(world, startState),
+    };
+}
 // Floor-only flood fill from the entrance: walls block, obstacles are
-// transparent. This matches what extractPathsAndObstacles consumes
+// transparent, exit tiles are reached but not passed (isDeadEndExit). This
+// matches what extractPathsAndObstacles consumes
 // (ghostStep semantics) — a target tile in this set is guaranteed to
 // have a non-empty path in the extracted rules. Used as the wall-
 // generator's feasibility predicate so no wall can isolate a target
 // from the entrance.
-function floorReachableSet(world) {
+export function floorReachableSet(world) {
     const visited = new Set([posKey(world.entrance.x, world.entrance.y)]);
     const queue = [{ x: world.entrance.x, y: world.entrance.y }];
     while (queue.length > 0) {
         const p = queue.shift();
+        if (isDeadEndExit(world, p.x, p.y, world.entrance)) continue;
         for (const input of INPUTS) {
             const d = DELTAS[input];
             const nx = p.x + d.dx;
@@ -750,7 +2204,8 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
         setObstacle(world, doorPos.x, doorPos.y, door_id);
 
         // With empty inventory the door acts as a wall, so `reachableTiles`
-        // returns exactly the pre-door region.
+        // returns exactly the pre-door region — each tile once (since C1), so
+        // the key's draw below is uniform over it.
         const beforeDoor = reachableTiles(world, createState(world));
 
         // Door must be a *cut vertex* — a position that every entrance→
@@ -764,9 +2219,14 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
             continue;
         }
 
+        // ⛔ Not a tile that already holds an item or an exit: `setItem` would
+        // overwrite a placed item (an earlier pair's key — a location silently
+        // lost; PM0's finding, fixed at C1, plan §42) or put a pickup on an exit.
         const keyCandidates = beforeDoor.filter((p) =>
             !(p.x === world.entrance.x && p.y === world.entrance.y)
-            && !(p.x === doorPos.x && p.y === doorPos.y),
+            && !(p.x === doorPos.x && p.y === doorPos.y)
+            && !getItem(world, p.x, p.y)
+            && !isExit(world, p.x, p.y),
         );
         if (keyCandidates.length < params.gateKeyMinBeforeDoor) {
             clearObstacle(world, doorPos.x, doorPos.y);
@@ -905,8 +2365,7 @@ export function generateMaze(config) {
 // Three pipeline-agnostic functions — generateRegionCore,
 // placeFromItems, and extractPathsAndObstacles (already defined
 // above) — compose into the full substrate-adapter contract. See
-// NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-// §"Substrate adapter contract".
+// docs/json/developer/procgen/substrate-registry.md.
 //
 // v1 scope:
 //   - Exactly one entrance (or none for start regions).
@@ -926,18 +2385,39 @@ export function generateMaze(config) {
 // of this file.
 
 function pickReachableFloorTile(world, rng, excluded) {
+    const width = world.width;
+    // ⛓ The reachable list as tile indices, in discovery order (see
+    // `reachableTiles`): each reachable tile once, so the ONE draw below is
+    // uniform over the reachable candidates (since C1; before it the list
+    // repeated a tile once per inventory, and the draw weighted it).
+    const order = reachableTileCells(world, createState(world));
     const excludedKeys = new Set(excluded.map((p) => `${p.x},${p.y}`));
-    const tiles = reachableTiles(world, createState(world));
-    const candidates = tiles.filter((t) => {
-        if (t.x === world.entrance.x && t.y === world.entrance.y) return false;
-        if (isExit(world, t.x, t.y)) return false;
-        if (excludedKeys.has(`${t.x},${t.y}`)) return false;
-        if (getItem(world, t.x, t.y)) return false;
-        if (getObstacle(world, t.x, t.y)) return false;
-        return true;
-    });
-    if (candidates.length === 0) return null;
-    return candidates[Math.floor(rng.next() * candidates.length)];
+    // The candidate test is a property of the TILE, asked once per tile.
+    const verdicts = new Map();
+    const isCandidate = (cell) => {
+        let verdict = verdicts.get(cell);
+        if (verdict === undefined) {
+            const x = cell % width;
+            const y = (cell - x) / width;
+            verdict = !(x === world.entrance.x && y === world.entrance.y)
+                && !isExit(world, x, y)
+                && !excludedKeys.has(`${x},${y}`)
+                && !getItem(world, x, y)
+                && !getObstacle(world, x, y);
+            verdicts.set(cell, verdict);
+        }
+        return verdict;
+    };
+    let count = 0;
+    for (const cell of order) if (isCandidate(cell)) count++;
+    if (count === 0) return null;
+    let pick = Math.floor(rng.next() * count);
+    for (const cell of order) {
+        if (!isCandidate(cell)) continue;
+        if (pick === 0) return { x: cell % width, y: Math.floor(cell / width) };
+        pick--;
+    }
+    return null;
 }
 
 // Single-key gate pairs the placer tries to realise via the cut-vertex
@@ -1239,7 +2719,7 @@ export function placeFromRules(world, input = {}) {
         location_rules = {},
         item_placements = [],
         rng,
-        params: _params = {},
+        params = {},
     } = input;
 
     if (!world) throw new Error('placeFromRules: world required');
@@ -1258,7 +2738,19 @@ export function placeFromRules(world, input = {}) {
 
     let gateCounter = 0;
     const newGateId = () => `logic_gate_${gateCounter++}`;
+    // ⛓ CONCEPT LIBRARY T1 — a rule EXACTLY one of the world's concepts needs
+    // (`params.concepts`, `mazeConcepts.conceptGateFor`) is registered as that
+    // concept's gate (`guardian_gate_<n>`), a skin over the SAME rule gate. An
+    // empty or absent list returns null with no draw: today's `logic_gate_<n>`.
     const registerGate = (rule) => {
+        const skin = conceptGateFor(rule, {
+            offered: params?.concepts, rng, n: gateCounter, logicGateBase,
+        });
+        if (skin) {
+            gateCounter++;
+            world.obstacleLib[skin.id] = skin.def;
+            return skin.id;
+        }
         const gate_id = newGateId();
         world.obstacleLib[gate_id] = {
             ...logicGateBase,

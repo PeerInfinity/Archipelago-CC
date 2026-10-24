@@ -2,10 +2,11 @@
 Helper statement mixin — statement generators, expression dispatcher, and _indent.
 """
 
-import sys
 from typing import Any, Dict, Set, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from ._unknown_kind import unknown_helper, unknown_kind
+
+from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
     get_helper_function_name,
@@ -32,6 +33,13 @@ class HelperStatementMixin:
     _current_entrance: Optional[str]
     _current_helper_params: Set[str]
 
+    # The statement kinds `_generate_statement` writes (the registry's `statement: true` kinds,
+    # frontend/schema/rule-kinds.json).
+    _STATEMENT_TYPES = frozenset({
+        'assign', 'aug_assign', 'tuple_assign', 'return', 'for_range', 'for_iter',
+        'if_statement', 'while_loop', 'break', 'continue',
+    })
+
     def _indent(self, code: str, level: int = 1) -> str:
         """Indent code by the specified number of levels (4 spaces each)."""
         indent = '    ' * level
@@ -52,6 +60,11 @@ class HelperStatementMixin:
         # Handle block (multi-statement body)
         if rule_type == 'block':
             return self._generate_block(rule)
+
+        # A body that IS one statement (kh1 has_x_worlds: `if ...: return True else: ...`) is a
+        # one-statement block, not an expression to return.
+        if rule_type in self._STATEMENT_TYPES:
+            return self._generate_statement(rule)
 
         # For single expressions, wrap in return
         expr = self._generate_expression(rule)
@@ -302,7 +315,6 @@ class HelperStatementMixin:
             'location_check': self._expr_location_check,
             'count_item': self._expr_count_item,
             'group_count': self._expr_group_count,
-            'setting_value': self._expr_setting_value,  # Legacy
             'option_value': self._expr_option_value,
             'world_attribute': self._expr_world_attribute,
             'prog_item_count': self._expr_prog_item_count,
@@ -320,6 +332,7 @@ class HelperStatementMixin:
             'map': self._expr_map,
             'lambda': self._expr_lambda,
             'dict_lambda_lookup': self._expr_dict_lambda_lookup,
+            'weighted_count_true': self._expr_weighted_count_true,
         }
 
         handler = handlers.get(expr_type)
@@ -475,12 +488,6 @@ class HelperStatementMixin:
                 option = args.get('option', '')
                 return f'state.multiworld.worlds[player].options.{option}'
 
-            # Handle SettingValue rules (Rule Builder format - legacy)
-            if rule_type == 'SettingValue':
-                args = expr.get('args', {})
-                setting = args.get('setting', '')
-                return self._expr_setting_value({'setting': setting})
-
             # Handle Tuple rules (Rule Builder format)
             if rule_type == 'Tuple':
                 args = expr.get('args', {})
@@ -547,16 +554,8 @@ class HelperStatementMixin:
                         arg_exprs = [self._generate_expression(a) for a in args]
                         return f'{func_name}(state, player, {", ".join(arg_exprs)})'
                     return f'{func_name}(state, player)'
-                else:
-                    # Unknown helper - return True as placeholder
-                    # This makes locations more accessible, which is appropriate for worldgen
-                    # since unknown helpers are typically progression checks
-                    print(
-                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
-                        f"using True (always accessible) as fallback",
-                        file=sys.stderr
-                    )
-                    return 'True'
+                # Unknown helper name: loud (rule-node F1); lossy mode keeps the placeholder
+                return unknown_helper('helper lambda', helper_name, 'True')
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
@@ -576,17 +575,6 @@ class HelperStatementMixin:
                 # Generate call to item_name_in_location_names for runtime lookup
                 locs_str = f'[{", ".join(loc_pairs)}]'
                 return f'item_name_in_location_names(state, {repr(item_name)}, player, {locs_str})'
-
-            # Handle AST_setting_value (Rule Builder format for setting_value)
-            if rule_type == 'AST_setting_value':
-                args = expr.get('args', {})
-                setting = args.get('setting', '')
-                index = args.get('index')
-                # Build a setting_value dict and use the existing handler
-                setting_expr = {'setting': setting}
-                if index is not None:
-                    setting_expr['index'] = index
-                return self._expr_setting_value(setting_expr)
 
             # Handle OptionValue (Rule Builder format for option_value)
             if rule_type == 'OptionValue':
@@ -768,6 +756,18 @@ class HelperStatementMixin:
                     return f'state.can_reach({entrance_expr}, "Entrance", player)'
                 return f'state.can_reach({repr(entrance)}, "Entrance", player)'
 
+            # Handle HasGroup / HasGroupUnique rules (Rule Builder format)
+            if rule_type in ('HasGroup', 'HasGroupUnique'):
+                args = expr.get('args', {})
+                group = args.get('item_name_group', args.get('group', ''))
+                group_expr = self._generate_expression(group) if isinstance(group, dict) else repr(group)
+                count = args.get('count', 1)
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                method = 'has_group' if rule_type == 'HasGroup' else 'has_group_unique'
+                if count_expr == '1':
+                    return f'state.{method}({group_expr}, player)'
+                return f'state.{method}({group_expr}, player, {count_expr})'
+
             # Handle AST_group_count rules (Rule Builder format for count_group)
             # These come from state.count_group() calls in access rules
             if rule_type == 'AST_group_count':
@@ -787,8 +787,14 @@ class HelperStatementMixin:
                     return f'state.count_group({group_expr}, player)'
                 return f'state.count_group({repr(group)}, player)'
 
-        # Unknown type - return True as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown types are typically progression checks that evaluate to true
-        # under default/normal game settings
-        return 'True'
+            # Any other `AST_<type>` node the AST→RB converter wrapped (kh2's AST_comparison): its
+            # args ARE the AST node, so unwrap it and generate that (the JS engine does the same with
+            # `_original_ast_type`). An AST type with no handler still fails loudly, by its own name.
+            args = expr.get('args')
+            if rule_type.startswith('AST_') and isinstance(args, dict) and args.get('_original_ast_type'):
+                unwrapped = {k: v for k, v in args.items() if k != '_original_ast_type'}
+                unwrapped['type'] = args['_original_ast_type']
+                return self._generate_expression(unwrapped)
+
+        # Unknown type: loud (⚖ D3); lossy mode keeps the always-true placeholder
+        return unknown_kind('helper body', expr.get('type') or expr.get('rule') or repr(expr)[:60], 'True')

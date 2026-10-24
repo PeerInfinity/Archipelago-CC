@@ -1,0 +1,6 @@
+      Tests  2497 passed (2497)
+   Start at  19:42:57
+   Duration  731.66s (transform 10.26s, setup 0ms, import 75.21s, tests 1221.13s, environment 13ms)
+
+JSON report written to /tmp/claude-0/-home-user-Archipelago-CC/c23ac379-8125-5180-a86f-96127ed60ce2/scratchpad/w0-vitest.json
+rc=0

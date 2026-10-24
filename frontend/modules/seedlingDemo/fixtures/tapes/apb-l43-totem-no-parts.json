@@ -1,0 +1,60 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 43,
+        "x": 144,
+        "y": 240
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 43,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 400,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 29
+        },
+        {
+            "key": "down",
+            "from": 35,
+            "to": 400
+        }
+    ],
+    "name": "apb-l43-totem-no-parts",
+    "description": "⛓⛓ fidelity APFLIP D2/D3 — the Totem gate (`BossTotem.as:291` @ccdf189776: `classCount(Wand) <= 0 && !activated && Player.hasAllTotemParts()`). L43 with the Wand gone ({43,0} cleared, as an `apitem` in its place leaves it) and NO totem parts: the boss stays asleep, the three seal rocks (tags 1/2/3, dropped only by `Wand.removed`) never fall, and an authored walk (right, then down the neck) takes the stairs to L40 inside 400 ticks. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "note": ""
+}

@@ -1,0 +1,227 @@
+{
+    "game": "seedling",
+    "name": "robust-l16-sword-late1",
+    "boot": {
+        "level": 16,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasDarkSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasDarkShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasFeather": false,
+            "hasSpear": false,
+            "hasDarkSuit": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 207,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 1,
+            "to": 11
+        },
+        {
+            "key": "down",
+            "from": 1,
+            "to": 12
+        },
+        {
+            "key": "primary",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "right",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "left",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "right",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "left",
+            "from": 16,
+            "to": 17
+        },
+        {
+            "key": "right",
+            "from": 17,
+            "to": 18
+        },
+        {
+            "key": "left",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "down",
+            "from": 13,
+            "to": 39
+        },
+        {
+            "key": "up",
+            "from": 39,
+            "to": 40
+        },
+        {
+            "key": "down",
+            "from": 40,
+            "to": 42
+        },
+        {
+            "key": "up",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "primary",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "up",
+            "from": 46,
+            "to": 48
+        },
+        {
+            "key": "down",
+            "from": 49,
+            "to": 51
+        },
+        {
+            "key": "right",
+            "from": 55,
+            "to": 82
+        },
+        {
+            "key": "left",
+            "from": 82,
+            "to": 83
+        },
+        {
+            "key": "up",
+            "from": 85,
+            "to": 151
+        },
+        {
+            "key": "down",
+            "from": 151,
+            "to": 152
+        },
+        {
+            "key": "up",
+            "from": 152,
+            "to": 154
+        },
+        {
+            "key": "down",
+            "from": 156,
+            "to": 158
+        },
+        {
+            "key": "left",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "primary",
+            "from": 163,
+            "to": 164
+        },
+        {
+            "key": "down",
+            "from": 165,
+            "to": 175
+        },
+        {
+            "key": "up",
+            "from": 175,
+            "to": 176
+        },
+        {
+            "key": "down",
+            "from": 176,
+            "to": 177
+        },
+        {
+            "key": "up",
+            "from": 177,
+            "to": 178
+        },
+        {
+            "key": "down",
+            "from": 178,
+            "to": 179
+        },
+        {
+            "key": "up",
+            "from": 181,
+            "to": 182
+        },
+        {
+            "key": "right",
+            "from": 165,
+            "to": 193
+        },
+        {
+            "key": "left",
+            "from": 195,
+            "to": 197
+        },
+        {
+            "key": "down",
+            "from": 201,
+            "to": 207
+        }
+    ],
+    "tape_version": 8,
+    "description": "ROBUST D2 measurement (not committed): the tick-0 canCross plan for L16 -> L17 + Sword (206 t, 0c36d853aa), started one idle tick late."
+}

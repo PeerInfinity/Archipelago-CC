@@ -1,0 +1,218 @@
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+     w0off:725:0#0 384 False
+     w0off:735:0#0 358 False
+     w0off:392:0#0 261 False
+     w0off:726:0#0 384 False
+     w0off:736:0#0 382 False
+     w0off:384:0#0 261 False
+     w0off:394:0#0 261 False
+     w0off:396:0#0 261 False
+     w0off:385:0#0 261 False
+     w0off:386:0#0 261 False
+     w0off:387:0#0 261 False
+     w0off:478:0#0 381 False
+     w0off:488:0#0 381 False
+     w0off:730:0#0 392 False
+     w0off:388:0#0 261 False
+     w0off:740:0#0 386 False
+     w0off:739:0#0 362 False
+     w0off:729:0#0 392 False
+     w0off:486:0#0 289 False
+     f85off:725:0#0 384 False
+     f85off:735:0#0 358 False
+     f85off:392:0#0 261 False
+     f85off:726:0#0 384 False
+     f85off:736:0#0 382 False
+     f85off:384:0#0 261 False
+     f85off:394:0#0 261 False
+     f85off:396:0#0 261 False
+     f85off:385:0#0 261 False
+     f85off:386:0#0 261 False
+     f85off:387:0#0 261 False
+     f85off:388:0#0 261 False
+     f85off:488:0#0 381 False
+     f85off:478:0#0 381 False
+     f85off:730:0#0 392 False
+     f85off:740:0#0 386 False
+     f85off:739:0#0 362 False
+     f85off:729:0#0 392 False
+     f85off:486:0#0 289 False
+     P:plan-seedling-axe-witness 305 True
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-l12keyline-witness 309 False
+     P:plan-seedling-l40button-witness 311 False
+     P:plan-seedling-l40button-witness 302 False
+     P:solve-seedling-r9-campaign 378 False
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+     w0off:725:0#0 384 False
+     w0off:735:0#0 358 False
+     w0off:726:0#0 384 False
+     w0off:736:0#0 382 False
+     w0off:478:0#0 381 False
+     w0off:488:0#0 381 False
+     w0off:730:0#0 392 False
+     w0off:740:0#0 386 False
+     w0off:739:0#0 362 False
+     w0off:729:0#0 392 False
+     f85off:725:0#0 384 False
+     f85off:735:0#0 358 False
+     f85off:726:0#0 384 False
+     f85off:736:0#0 382 False
+     f85off:488:0#0 381 False
+     f85off:478:0#0 381 False
+     f85off:730:0#0 392 False
+     f85off:740:0#0 386 False
+     f85off:739:0#0 362 False
+     f85off:729:0#0 392 False
+     P:plan-seedling-l12keyline-witness 309 False
+     P:plan-seedling-l40button-witness 311 False
+     P:solve-seedling-r9-campaign 378 False
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+     w0off:725:0#0 384 False
+     w0off:735:0#0 358 False
+     w0off:392:0#0 261 False
+     w0off:726:0#0 384 False
+     w0off:736:0#0 382 False
+     w0off:384:0#0 261 False
+     w0off:394:0#0 261 False
+     w0off:396:0#0 261 False
+     w0off:385:0#0 261 False
+     w0off:386:0#0 261 False
+     w0off:387:0#0 261 False
+     w0off:730:0#0 392 False
+     w0off:388:0#0 261 False
+     w0off:740:0#0 386 False
+     w0off:739:0#0 362 False
+     w0off:729:0#0 392 False
+     f85off:725:0#0 384 False
+     f85off:735:0#0 358 False
+     f85off:392:0#0 261 False
+     f85off:726:0#0 384 False
+     f85off:736:0#0 382 False
+     f85off:384:0#0 261 False
+     f85off:394:0#0 261 False
+     f85off:396:0#0 261 False
+     f85off:385:0#0 261 False
+     f85off:386:0#0 261 False
+     f85off:387:0#0 261 False
+     f85off:388:0#0 261 False
+     f85off:730:0#0 392 False
+     f85off:740:0#0 386 False
+     f85off:739:0#0 362 False
+     f85off:729:0#0 392 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-l12keyline-witness 309 False
+     P:plan-seedling-l40button-witness 311 False
+     P:plan-seedling-l40button-witness 302 False
+     P:solve-seedling-r9-campaign 378 False
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+  (a) span floor, not crossed last: refused   35  of which PLANNED 0  previews saved 35224  []
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+     w0off:725:0#0 384 False
+     w0off:735:0#0 358 False
+     w0off:726:0#0 384 False
+     w0off:736:0#0 382 False
+     w0off:730:0#0 392 False
+     w0off:740:0#0 386 False
+     w0off:739:0#0 362 False
+     w0off:729:0#0 392 False
+     f85off:725:0#0 384 False
+     f85off:735:0#0 358 False
+     f85off:726:0#0 384 False
+     f85off:736:0#0 382 False
+     f85off:730:0#0 392 False
+     f85off:740:0#0 386 False
+     f85off:739:0#0 362 False
+     f85off:729:0#0 392 False
+     P:solve-seedling-r9-campaign 378 False
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+     w0off:725:0#0 384 False
+     w0off:735:0#0 358 False
+     w0off:392:0#0 261 False
+     w0off:726:0#0 384 False
+     w0off:384:0#0 261 False
+     w0off:394:0#0 261 False
+     w0off:396:0#0 261 False
+     w0off:385:0#0 261 False
+     w0off:386:0#0 261 False
+     w0off:387:0#0 261 False
+     w0off:730:0#0 392 False
+     w0off:388:0#0 261 False
+     w0off:739:0#0 362 False
+     w0off:729:0#0 392 False
+     f85off:725:0#0 384 False
+     f85off:735:0#0 358 False
+     f85off:392:0#0 261 False
+     f85off:726:0#0 384 False
+     f85off:384:0#0 261 False
+     f85off:394:0#0 261 False
+     f85off:396:0#0 261 False
+     f85off:385:0#0 261 False
+     f85off:386:0#0 261 False
+     f85off:387:0#0 261 False
+     f85off:388:0#0 261 False
+     f85off:730:0#0 392 False
+     f85off:739:0#0 362 False
+     f85off:729:0#0 392 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-hammer-bw-bombstand 302 False
+     P:plan-seedling-l12keyline-witness 309 False
+     P:plan-seedling-l40button-witness 311 False
+     P:plan-seedling-l40button-witness 302 False
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []
+
+1453 corridors (['w0off', 'f85off'] + producers); planned 1307
+largest L that planned: [206, 227, 234, 234, 305] => smallest safe K = 110
+                              Kmin: refused    0  of which PLANNED 0  previews saved 0  []
+                               K40: refused   46  of which PLANNED 1  previews saved 39116  ['P:plan-seedling-axe-witness']
+                              K110: refused   23  of which PLANNED 0  previews saved 16784  []
+                              K120: refused   21  of which PLANNED 0  previews saved 9548  []
+                    (a) span floor: refused   39  of which PLANNED 0  previews saved 36560  []
+  (a) span floor, not crossed last: refused   35  of which PLANNED 0  previews saved 35224  []
+       (a) cap 1.6 (instantaneous): refused   17  of which PLANNED 0  previews saved 8176  []
+             (c) clean run, G 48.8: refused   34  of which PLANNED 0  previews saved 32380  []
+                        (c) G x1.5: refused   34  of which PLANNED 0  previews saved 32380  []
+                          (c) G x2: refused   18  of which PLANNED 0  previews saved 27364  []

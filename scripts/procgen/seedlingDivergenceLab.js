@@ -1,0 +1,456 @@
+/**
+ * IN-PAGE half of `probe-seedling-divergence-sweep.mjs` (measure-only, the divergence sweep for planner
+ * `seedling-js-planning-2`). A browser ES module the probe imports BY URL into the live Archipelago page
+ * (`/scripts/procgen/seedlingDivergenceLab.js`). Nothing imports it but the probe; nothing here is product.
+ *
+ * The ENGINE is the production one: `loadWasmPlaybackEngine` with the deps `SeedlingPlaybackController._engineFor`
+ * builds (the delivered set, the glue's swap query, the check binding, the delivery gate, the panel's budget knobs).
+ * Three PASS-THROUGH taps record, without changing an answer:
+ *   - the SOLVE SERVICE (a wrapper over `createWorkerSolveService`): each request and its settled result — the
+ *     plan's `expected` rows (the model's trajectory) and its `solution` keys;
+ *   - `botLoadTape`: every tape the engine ships (ticks, equips);
+ *   - `botDrain`: every raw drained row (all its fields), in order.
+ *
+ *   serveLeg({goal, budgetMs, nameCut})   the engine serves ONE goal from where the player stands (the probe jumped first);
+ *                                returns the engine's history rows, the plans, the tapes, the raw rows, and
+ *                                `roomHits`: the GAME's damage taken in the leg's room (`botStatus.hits`, sampled every
+ *                                25 ms while the player is in it — a drained row carries no hits, and `Player.hits`
+ *                                is per instance, so the status after an exit crossing reads the NEXT room's player);
+ *                                `roomHits.hits` (S5-2): one entry per rise of `hits`, `{t, hits, d, hits_timer, x, y,
+ *                                clock, tick, exact, tape}` — `t` the first drained row carrying the hit, on the
+ *                                drained rows' clock (`seedlingHitTicks.js` derives it); `tape` the leg's tape index
+ *                                it fell in, which each diverged play's `divs[].tape` carries too
+ *   divergenceDetail(...)        for each play that left its plan: the model rows and the game rows around the
+ *                                tick, and the FIRST DIFFERING FIELD among the fields both sides carry
+ *   heldCompare({...})           re-arrive, ship the SAME plan's first k keys HELD, and read the whole held game
+ *                                (`botStatus`, `botMobiles`) against the model replayed to tick k — the fields a
+ *                                drained row does not carry (velocity, facing, bodies, persistence, items)
+ */
+import { firstDivergence, shippedTape, exactDeclarationRefusal, liveDeclarations, TAPE_KEY_RELEASES }
+    from '/frontend/modules/seedlingDemo/wasmPlayback.js';
+import { isArrival, stagingFromWasmArrival } from '/frontend/modules/seedlingDemo/wasmArrival.js';
+import { createRunForStaging } from '/frontend/modules/seedlingDemo/tapeRunner.js';
+import { createWorkerSolveService, stampHooks } from '/frontend/modules/seedlingDemo/jsRuntimeSolveService.js';
+import { resolveSeedlingAtlasGoal } from '/frontend/modules/flashPanel/seedlingPlaybackController.js';
+import { parsePendingCheck } from '/frontend/modules/flashPanel/seedlingCheckBinding.js';
+import { mountedRecordsOf } from '/frontend/modules/seedlingDemo/wasmWalkTape.js';
+import { createHitRecorder } from '/scripts/procgen/seedlingHitTicks.js';
+// ⛓ SEAM OFFSET — the row's `seam` (the request's, in the tape's names) and the leg's ship clocks
+import { sweepRowSeam } from '/scripts/procgen/seedlingSweepRowSeam.js';
+// ⛓ REQUEST CAPTURE (`--capture-requests`, off-default only) — the request as the worker got it, as tagged JSON
+import { captureRequest } from '/scripts/procgen/seedlingSolveRequestCodec.js';
+
+const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
+const sleep = (ms) => new Promise((r) => { setTimeout(r, ms); });
+const plain = (o) => JSON.parse(JSON.stringify(o ?? null));
+
+/** The scalar fields of the model's player state (numbers, booleans, short strings) — what a row can compare. */
+function scalars(o) {
+    const out = {};
+    for (const [k, v] of Object.entries(o ?? {})) {
+        if (typeof v === 'number' || typeof v === 'boolean' || (typeof v === 'string' && v.length < 40)) out[k] = v;
+    }
+    return out;
+}
+
+export async function createLab() {
+    const fp = await import('/frontend/modules/flashPanel/index.js');
+    const panel = fp.getActivePanelInstance();
+    const glue = fp.getSeedlingRegionGlue();
+    const surface = () => panel.seedlingPlaybackSurface();
+    const game = () => surface().wasm.getGame();
+    const win = () => surface().wasm.getWin();
+    const status = () => J(game().botStatus());
+    const readState = () => J(game().readState()) ?? {};
+    const seam = () => J(game().botSeam()) ?? {};
+
+    // ── taps ──
+    const tap = { solves: [], tapes: [], rows: [] };
+    const inner = createWorkerSolveService();
+    const service = {
+        kind: 'worker',
+        get stats() { return inner.stats; },
+        warm() { inner.warm(); },
+        start(request, opts) {
+            // ⛓ the request AS POSTED: the hook stamps the service adds (off-default only) are on the capture too, so a
+            // replay of an off-default request runs under the same switches (before, they were dropped)
+            const posted = stampHooks({ ...request });
+            const h = inner.start(request, opts);
+            tap.solves.push({ request: posted, handle: h, at: performance.now() });
+            return h;
+        },
+        dispose() { inner.dispose(); },
+    };
+    function tapGame() {
+        const g = game();
+        if (g.__divTap) return;
+        const load = g.botLoadTape.bind(g);
+        g.botLoadTape = (json) => {
+            const t = J(json);
+            tap.tapes.push({ name: t?.name, ticks: t?.tick_count ?? null, equips: t?.equips ?? null, hold: t?.hold ?? null,
+                at: performance.now() });
+            return load(json);
+        };
+        const drain = g.botDrain.bind(g);
+        g.botDrain = () => {
+            const s = drain();
+            const d = J(s);
+            for (const r of d?.ticks ?? []) tap.rows.push(r);
+            return s;
+        };
+        g.__divTap = true;
+    }
+    tapGame();
+
+    const mod = await import(new URL('modules/flashPanel/seedlingWasmPlayback.js', document.baseURI).href);
+    const st = { failed: null, notes: [] };
+    const s0 = surface();
+    const deps = {
+        getGame: () => surface()?.wasm?.getGame?.() ?? null,
+        getWin: () => surface()?.wasm?.getWin?.() ?? null,
+        teleport: (p) => surface()?.wasm?.teleport?.(p) ?? false,
+        getCheckBinding: () => glue?.checkBinding ?? null,
+        getSwapState: () => glue?.swapState?.() ?? null,
+        getBudgetWork: () => surface()?.wasm?.solverBudgetWork ?? null,
+        getUpgradeWindowWork: () => surface()?.solverUpgradeWindowWork ?? null,
+        // ⛓ AXE_DODGE HOOK — the panel's setting, applied to this engine's model at each solve (the production wiring's)
+        getAxeDodgeAskPerPreview: () => surface()?.wasm?.axeDodgeAskPerPreview ?? null,
+        // ⛓ DASH-ONLY WINDOW — the panel's setting, the same way
+        getDashOnlyWindow: () => surface()?.wasm?.dashOnlyWindow ?? null,
+        // ⛓ DASH-SHAPE STAMP — the panel's three dash settings, the same way
+        getDashShape: () => surface()?.wasm?.dashShape ?? null,
+        getDelivery: () => surface()?.wasm?.delivery ?? null,
+        solveService: service,
+        log: (m, level) => { if (level === 'warn') st.notes.push(String(m).slice(0, 400)); },
+        onNote: () => {},
+        onFailed: (r) => { st.failed = r; },
+    };
+    const engine = await mod.loadWasmPlaybackEngine({ mapPath: s0.wasm.mapPath, baseUrl: document.baseURI,
+        ...(s0.wasm.deliveredSet ? { deliveredSet: s0.wasm.deliveredSet } : {}), ...deps });
+    /**
+     * §3 — the GAME's evidence for a leg the solver refuses: the same production engine built the WG way
+     * (the `producer: 'walker'` INSTRUMENT over the same delivered records — ⛓ §5.36: `generated` is only a label
+     * since generated rooms became solver rooms), whose producer is the J2 WALKER — its held keys are
+     * the plan, shipped and watched as a solver plan is. A walker tape that crosses on the game = the game can.
+     */
+    let walker = null;
+    const walkerEngine = () => (walker ??= mod.createWasmPlayback({ ...deps, records: mountedRecordsOf(s0.wasm.deliveredSet),
+        producer: 'walker' }));
+
+    /** The location / exit goal as the controller resolves it (the panel's own name → cell map). */
+    function resolveGoal(leg) {
+        if (leg.goal.kind === 'exit') return { goal: { kind: 'exit', level: leg.goal.level, tiles: leg.goal.tiles, name: leg.goal.name } };
+        return resolveSeedlingAtlasGoal({ kind: 'location', name: leg.goal.name }, surface().atlas);
+    }
+
+    /** The model's full player-state rows for a settled plan: the request's staging, its prefix, then the solution. */
+    function modelRows(req, plan, from, to) {
+        try {
+            const run = createRunForStaging(req.staging, req.levelSource ?? engineLevelSource(), { scratchPersistence: req.scratchPersistence === true });
+            const prefix = req.perTick ?? [];
+            const keys = [...prefix, ...(plan.solution ?? [])];
+            const eq = new Map([...(req.equips instanceof Map ? req.equips : []), ...((plan.equips ?? []).map((e) => [e.t + prefix.length, e.slot]))]);
+            const rows = [];
+            for (let i = 0; i <= Math.min(to + prefix.length, keys.length); i++) {
+                if (i - prefix.length >= from) {
+                    rows.push({ t: i - prefix.length, level: run.level, ...scalars(run.state),
+                        keys: keys[i] ? [...keys[i]] : null, deaths: run.playerDeaths?.length ?? 0 });
+                }
+                if (i === keys.length) break;
+                if (eq.has(i)) run.equipNow(eq.get(i));
+                run.advance(keys[i]);
+            }
+            return rows;
+        } catch (err) { return [{ error: `${err.name}: ${err.message.slice(0, 200)}` }]; }
+    }
+    let ls = null;
+    function engineLevelSource() { return ls; }
+
+    /** ⛓ ARRIVAL LATCH (§5.124) — the frames a hold-tape hit is compared over are bounded (a latch is ~20). */
+    const ARRIVAL_LATCH_MAX_FRAMES = 120;
+    /**
+     * ⛓ ARRIVAL LATCH (§5.124) — the MODEL stepping an arrival staging with nothing held, `frames` frames (its own
+     * `createRunForStaging` + `advance`; nothing here changes its stepping): `rows[i]` the state after tick i + 1, and
+     * the hits its ledger bills (`playerHits`, `t` = the tick that took it). `seedlingHitTicks.arrivalLatchVerdict`
+     * compares them with the game's read.
+     */
+    function arrivalModel(req, frames) {
+        try {
+            const run = createRunForStaging(req.staging, req.levelSource ?? engineLevelSource(), { scratchPersistence: req.scratchPersistence === true });
+            const rows = [];
+            for (let i = 0; i < frames; i++) {
+                run.advance(new Set());
+                rows.push({ x: run.state.x, y: run.state.y, hitsTimer: run.damage?.hitsTimer ?? null, hits: run.damage?.hits ?? null });
+            }
+            const billed = (run.ledger('playerHits') ?? []).map((h) => ({ t: h.t, source: h.source ?? null, id: h.id ?? null }));
+            return { seamTime: req.staging?.seam?.time ?? null, frames, rows, billed };
+        } catch (err) { return { error: `${err.name}: ${String(err.message).slice(0, 200)}` }; }
+    }
+
+    /** First differing field between a game row and a model row, over the fields both carry. */
+    function firstField(g, m) {
+        const keys = Object.keys(g).filter((k) => k !== 't' && k in m && typeof g[k] !== 'object');
+        const order = ['level', 'x', 'y', ...keys.filter((k) => !['level', 'x', 'y'].includes(k))];
+        const diff = [];
+        for (const k of order) if (k in g && k in m && g[k] !== m[k]) diff.push({ field: k, game: g[k], model: m[k] });
+        return diff;
+    }
+
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false,
+        // ⛓ MEMORY PROBE's split arm (measurement only; off-default rows are stamped `hitSampleMs` by the probe)
+        hitSampleMs = 25 }) {
+        const eng = producer === 'walker' ? walkerEngine() : engine;
+        st.failed = null;
+        st.notes = [];
+        const r0 = tap.rows.length;
+        const s0n = tap.solves.length;
+        const t0n = tap.tapes.length;
+        const h0 = eng.stats.history.length;
+        const done0 = eng.stats.done;
+        const backstops0 = eng.stats.backstops ?? 0;
+        const ship0 = (eng.stats.shipClock ?? []).length;
+        const arrive0 = (eng.stats.arrivalClock ?? []).length;
+        const latch0 = (eng.stats.latchWaits ?? []).at(-1)?.n ?? -1;
+        // ⛓ SERVED LOCATION — the delivery gate's own record for this leg (what a key at contact did)
+        const g0 = { served: (eng.stats.deliveryServed ?? []).length, deliveries: (eng.stats.deliveries ?? []).length,
+            released: eng.stats.releasedForSwap ?? 0 };
+        const resolved = resolveGoal(leg);
+        if (!resolved.goal) return { end: 'unresolved', failed: resolved.refused ?? JSON.stringify(resolved) };
+        const goal = resolved.goal;
+        // ⛓ the game's hits in the leg's room (see the head): the arrival's, the max, the samples behind it
+        const roomHits = { atArrival: status()?.hits ?? null, max: null, samples: 0 };
+        // ⛓ HIT TICKS (S5-2) — each rise of `hits` at its drained-row tick, tagged with the tape it fell in; the same
+        // read notes which tape each new history entry (a diverged play) closed on, so a hit and a divergence pair
+        const hitRec = createHitRecorder({ atArrival: roomHits.atArrival });
+        const tapeOf = () => tap.tapes.length - t0n - 1;
+        const historyTape = [];
+        const hitSampler = setInterval(() => {
+            while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
+            const s = status();
+            if (s?.level !== goal.level || typeof s.hits !== 'number') return;
+            roomHits.samples += 1;
+            roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
+            hitRec.observe(s, { tape: tapeOf() });
+        }, hitSampleMs);
+        const answer = eng.walkTo(goal);
+        const t0 = performance.now();
+        let end = 'timeout';
+        let leftAt = null;
+        while (performance.now() - t0 < budgetMs) {
+            // eslint-disable-next-line no-await-in-loop
+            await sleep(200);
+            if (!answer.ok) { end = 'refused'; break; }
+            if (st.failed) { end = 'failed'; break; }
+            if (eng.stats.done > done0) { end = 'done'; break; }
+            const lv = readState().level;
+            const es = eng.status();
+            if (goal.kind === 'exit' && lv !== goal.level && es.phase === 'playing') {
+                leftAt ??= performance.now();
+                if ((es.drained ?? 0) >= (es.ticks ?? Infinity) || performance.now() - leftAt > 500) { eng.stop(); end = 'crossed'; break; }
+            }
+        }
+        // ⛓ THE LEG BUDGET (S5-1, `nameCut`: an off-default budget) — a timeout names the bound that ended it, read
+        // BEFORE the stop: the engine's phase (`solving` = a solve still in flight) and the solver's own backstop
+        const cut = nameCut && end === 'timeout' ? { bound: 'leg-budget', budgetMs, phase: eng.status().phase,
+            solverBackstopMs: eng.backstopMs ?? null, backstops: (eng.stats.backstops ?? 0) - backstops0 } : null;
+        if (end !== 'crossed') eng.stop();
+        clearInterval(hitSampler);
+        while (h0 + historyTape.length < eng.stats.history.length) historyTape.push(tapeOf());
+        roomHits.hits = hitRec.hits;
+        const after = status();
+        const history = plain(eng.stats.history.slice(h0)).map((h) => ({ ...h, goal: undefined }));
+        // the plans: settled results of the solves this leg made
+        const solves = tap.solves.slice(s0n).map((s) => ({ req: s.request, res: s.handle.result, passes: s.handle.passes }));
+        ls ??= solves.find((s) => s.req.levelSource)?.req.levelSource ?? null;
+        // ⛓ ARRIVAL LATCH (§5.124) — a hit on a 0-tick HOLD tape (an arrival waiting for its latch) against the model
+        // stepping that arrival's staging (the first solve after the hold, staged with no prefix) over the frames the
+        // game ran to the read (`gt` − the staged clock, + 1)
+        const legTapes = tap.tapes.slice(t0n);
+        for (const h of roomHits.hits) {
+            const tp = legTapes[h.tape];
+            if (!tp?.hold || tp.ticks !== 0 || typeof h.gt !== 'number') continue;
+            const req = tap.solves.slice(s0n).find((x) => x.at >= tp.at)?.request ?? null;
+            if (!req || (req.perTick?.length ?? 0) > 0 || !Number.isFinite(req.staging?.seam?.time)) {
+                h.arrival = { error: req ? 'the solve after the hold is not an arrival staging (a prefix, or no seam clock)' : 'no solve after the hold' };
+                continue;
+            }
+            const frames = Math.min(Math.max(h.gt - req.staging.seam.time + 1, 1), ARRIVAL_LATCH_MAX_FRAMES);
+            h.arrival = arrivalModel(req, frames);
+        }
+        const plans = solves.map((s) => ({ ok: s.res?.ok ?? null, kind: s.res?.kind ?? null,
+            message: s.res?.ok === false ? String(s.res?.message ?? '').split('\n')[0].slice(0, 400) : undefined,
+            producer: s.res?.plan?.producer ?? null, verbs: s.res?.plan?.verbs ?? null, ticks: s.res?.plan?.solution?.length ?? null,
+            prefix: s.req.perTick?.length ?? 0, passes: s.passes,
+            // the split the solve was STAGED with (`stagingFromWasmArrival` reads `static.Rng.split` off botStatus)
+            split: s.req.staging?.rng?.split ?? null,
+            // ⛓ CONTACT HOOK — the contact set the WORKER solved under, when off-default (its stamp; absent at the defaults)
+            ...(s.res?.contactFidelity ? { contactFidelity: plain(s.res.contactFidelity) } : {}),
+            // ⛓ AXE_DODGE HOOK — the `AXE_DODGE_ASK_PER_PREVIEW` the WORKER solved under, when off-default (its stamp)
+            ...(typeof s.res?.axeDodgeAskPerPreview === 'boolean' ? { axeDodgeAskPerPreview: s.res.axeDodgeAskPerPreview } : {}),
+            // ⛓ DASH-ONLY WINDOW — the `DASH_ONLY_WINDOW` the WORKER solved under, when off-default (its stamp)
+            ...(typeof s.res?.dashOnlyWindow === 'boolean' ? { dashOnlyWindow: s.res.dashOnlyWindow } : {}),
+            // ⛓ DASH-SHAPE STAMP — the dash shape the WORKER's switches read (all three keys), when it was stamped
+            ...(s.res?.dashShape ? { dashShapeRead: plain(s.res.dashShape) } : {}),
+            // ⛓ FORCED-HIT CONSUMER — the crossings the plan BILLED and the damage it ends on (absent = none billed):
+            // a forced-hit leg's `roomHits.max` is measured against them
+            ...(s.res?.plan?.forcedHits ? { forcedHits: plain(s.res.plan.forcedHits), damage: plain(s.res.plan.damage) } : {}),
+            // ⛓ a refusal's obstacle (UNBILLEDGATE's `unbilled-damage` among them), as the worker carried it
+            ...(s.res?.ok === false && s.res?.obstacle ? { obstacle: plain(s.res.obstacle) } : {}) }));
+        const rows = tap.rows.slice(r0);
+        // Divergence detail per diverged play: match it to its plan by order (one ok plan per play)
+        const okSolves = solves.filter((s) => s.res?.ok && s.res.plan?.expected);
+        const divs = [];
+        const plays = history.map((h, at) => ({ ...h, at })).filter((h) => h.divergence);
+        plays.forEach((h, i) => {
+            const s = okSolves[i] ?? okSolves.at(-1);
+            if (!s) return;
+            const t = h.divergence.t;
+            const exp = s.res.plan.expected;
+            const model = modelRows(s.req, s.res.plan, Math.max(0, t - 4), t + 2);
+            const segs = splitPlays(rows);
+            const seg = segs[i] ?? segs.at(-1) ?? [];
+            const game = seg.filter((r) => r.t >= t - 4 && r.t <= t + 2);
+            const gAt = seg.find((r) => r.t === t) ?? null;
+            const mAt = model.find((r) => r.t === t) ?? null;
+            // the earliest tick where ANY shared field differs (rows carry more than x/y)
+            let first = null;
+            for (const g of seg) {
+                if (g.t > t) break;
+                const m = model.find((r) => r.t === g.t) ?? (g.t < t - 4 ? null : null);
+                if (!m) continue;
+                const d = firstField(g, m);
+                if (d.length) { first = { t: g.t, diff: d }; break; }
+            }
+            divs.push({ play: i, tape: historyTape[h.at] ?? null, t, expected: h.divergence.expected, got: h.divergence.got,
+                dx: h.divergence.got.x - h.divergence.expected.x, dy: h.divergence.got.y - h.divergence.expected.y,
+                expectedRowsAround: exp.slice(Math.max(0, t - 4), t + 3), modelRows: model, gameRows: game,
+                atT: gAt && mAt ? firstField(gAt, mAt) : null, firstFieldDiff: first, gameRowFields: gAt ? Object.keys(gAt) : null });
+        });
+        return { answer, end, failed: st.failed, notes: st.notes.slice(-6), history, plans, tapes: tap.tapes.slice(t0n),
+            divs, rowsDrained: rows.length, level: after?.level, x: after?.x, y: after?.y, armed: after?.armed, held: after?.held,
+            items: after?.items ?? null, slots: after?.inventory_slots ?? null, primary: after?.primary ?? null, cleared: (after?.persistence_cleared ?? []).length,
+            // ⛓ EVENT GOALS — the event's own flag BY NAME: did the GAME set it, and did the runtime's collector collect it?
+            ...(goal.event ? { eventFlag: { ...goal.event.tag,
+                set: (after?.persistence_cleared ?? []).some((c) => c.level === goal.event.tag.level && c.tag === goal.event.tag.tag),
+                collected: glue?.eventCollector ? glue.eventCollector.collected.has(goal.name) : null } } : {}),
+            ms: Math.round(performance.now() - t0), roomHits, ...(cut ? { cut } : {}),
+            // ⛓ SEAM TIME — the game clock the leg's first solve was STAGED at (`staging.seam.time`). The harness's
+            // jump lands at whatever play time the page has reached, and the solver's answer can move with it
+            // (leg 397: 5135/5137 → the 640-unit cut, 5140 → the press refusal, 5141 → a swing refusal).
+            seamTime: solves[0]?.req?.staging?.seam?.time ?? null,
+            // ⛓ SEAM OFFSET — the leg's FIRST request's `staging.seam`, as the worker got it: the tape's own block
+            // (`parseTape` reads it unedited). ⛔ Not `items` below: that is `botStatus().items` AFTER the leg, in the
+            // game's Player names (`hitsMax` among the flags).
+            seam: sweepRowSeam(solves),
+            // ⛓ SEAM OFFSET — every plan this leg shipped: the staged `seam.time`, the shipped prefix, the GAME's
+            // `game_time` at the ship (the room held: the clock the plan's tick 0 sees), and `gap` = game − staged −
+            // prefix (the model's is `BOOT_PRESWAP_FRAMES + LOAD_FADE_FRAMES` = 21 from a held arrival)
+            shipClock: plain((eng.stats.shipClock ?? []).slice(ship0)),
+            // ⛓ SEAM OFFSET (§5.82) — each held arrival put on the live clock before its first solve (`shift` = game − shadow)
+            arrivalClock: plain((eng.stats.arrivalClock ?? []).slice(arrive0)),
+            // ⛓ FREEZE LATCH (§5.89) — each hold's latch wait this leg: what the game's clock did while it waited
+            latchWaits: plain((eng.stats.latchWaits ?? []).filter((w) => w.n > latch0)),
+            // ⛓ REQUEST CAPTURE — every solve request of this leg, in order, as the worker got it (the probe moves them
+            // off the row into their own file, so the row is the same with the switch on or off)
+            ...(captureRequests ? { requests: solves.map((s, i) => ({ i, request: captureRequest(s.req), passes: s.passes ?? null,
+                result: s.res ? { ok: s.res.ok ?? null, kind: s.res.kind ?? null, work: s.res.work ?? s.res.plan?.work ?? null,
+                    passes: s.res.passes ?? s.res.plan?.passes ?? null } : null })) } : {}),
+            gate: { served: plain((eng.stats.deliveryServed ?? []).slice(g0.served)),
+                deliveries: plain((eng.stats.deliveries ?? []).slice(g0.deliveries)).map((d) => ({ phase: d.phase, tick: d.tick, outcome: d.outcome, save: d.save })),
+                releasedForSwap: (eng.stats.releasedForSwap ?? 0) - g0.released } };
+    }
+
+    /** Raw drained rows split into plays: a new play restarts at t = 0. */
+    function splitPlays(rows) {
+        const out = [];
+        let cur = null;
+        for (const r of rows) {
+            if (!cur || r.t === 0 || (cur.length && r.t <= cur.at(-1).t)) { cur = []; out.push(cur); }
+            cur.push(r);
+        }
+        return out;
+    }
+
+    /** What the game holds: its slots (acquisition order) and every true `has*` item property. */
+    function heldItems() {
+        const st = status() ?? {};
+        return { slots: st.inventory_slots ?? [], has: Object.entries(st.items ?? {}).filter(([k, v]) => /^has|^can/.test(k) && v === true).map(([k]) => k).sort() };
+    }
+
+    /**
+     * The Rng split, three ways: `echo` = `botStatus().rng.split` (the LAST TAPE's `Bot.rngSplit`, false after
+     * `botReset` — NOT the live flag), `latch` = `botSeam().seam['static.Rng.split']` (the live `Rng.split` at the
+     * last latch), `begin` = the begin entry's, if it carries one.
+     */
+    function rngSplit() {
+        const sm = seam();
+        return { echo: status()?.rng?.split ?? null, latch: sm?.seam?.['static.Rng.split'] ?? null,
+            begin: sm?.beginEntry?.['static.Rng.split'] ?? null };
+    }
+
+    /**
+     * ⛓ MEMORY PROBE (`--memory-probe-ms`, OFF by default: nothing calls this, nothing is wrapped) — counts every call
+     * the page makes through the game's callback table (and the characters each returned) and every `queueItems`
+     * push, by wrapping them ONCE in place. Idempotent; a pass-through (the answers are the game's).
+     */
+    const calls = { installed: false, total: 0, replyChars: 0, queueItems: 0, queuedItems: 0, by: {}, lastQueue: null,
+        // ⛓ the `quiet` arm (measurement only): item-only pushes are DROPPED while set (a push carrying an invocation
+        // still goes — a teleport is never lost); `dropped` counts them
+        dropItems: false, dropped: 0 };
+    function installCallCounter() {
+        if (calls.installed) return calls.installed;
+        const g = game();
+        const bridge = win()?.__swfBridge;
+        if (!g || !bridge) return false;
+        for (const name of Object.keys(g)) {
+            const f = g[name];
+            if (typeof f !== 'function' || name.startsWith('__')) continue;
+            g[name] = (...a) => {
+                const r = f.apply(g, a);
+                calls.total += 1;
+                const b = (calls.by[name] ??= { n: 0, chars: 0 });
+                b.n += 1;
+                if (typeof r === 'string') { b.chars += r.length; calls.replyChars += r.length; }
+                return r;
+            };
+        }
+        const q = bridge.queueItems.bind(bridge);
+        bridge.queueItems = (items) => {
+            calls.queueItems += 1;
+            calls.queuedItems += items?.length ?? 0;
+            try { calls.lastQueue = JSON.stringify(items).slice(0, 1500); } catch { calls.lastQueue = null; }
+            if (calls.dropItems && !(items ?? []).some((i) => i?.invocation === 'new_instance')) { calls.dropped += 1; return undefined; }
+            return q(items);
+        };
+        calls.installed = true;
+        return true;
+    }
+    /** One MEMORY PROBE read of the parent side: the engine's phase, the game's clock + level (one `botStatus`), the calls. */
+    function memoryRead() {
+        let gameTime = null;
+        let level = null;
+        let frozen = null;
+        try {
+            const s = status();
+            gameTime = s?.game_time ?? null;
+            level = s?.level ?? null;
+            frozen = s?.frozen_timer ?? null;
+        } catch (e) { gameTime = null; level = `throws: ${String(e?.message ?? e).slice(0, 60)}`; }
+        const es = engine.status();
+        return { phase: es.phase, held: !!es.room, gameTime, level, frozenTimer: frozen,
+            calls: { total: calls.total, replyChars: calls.replyChars, queueItems: calls.queueItems, queuedItems: calls.queuedItems, dropped: calls.dropped } };
+    }
+    /** The per-callback counts so far (the leg's row reads its delta). */
+    function callCounts() { return JSON.parse(JSON.stringify({ ...calls, installed: undefined })); }
+    /** ⛓ the `quiet` arm: drop (true) or pass (false) the item-only pushes. */
+    function setDropItems(on) { calls.dropItems = !!on; return calls.dropped; }
+
+    /** One status read of the shapes (for the report's field list). */
+    function peek() {
+        return { status: status(), mobiles: J(game().botMobiles()), seam: seam(), state: readState(),
+            lastRows: tap.rows.slice(-2), surfaceKeys: Object.keys(surface()), delivered: !!surface().wasm.deliveredSet };
+    }
+
+    return { serveLeg, peek, heldItems, installCallCounter, memoryRead, callCounts, setDropItems, rngSplit, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
+        shippedTape, exactDeclarationRefusal, liveDeclarations, TAPE_KEY_RELEASES, firstDivergence, parsePendingCheck, win };
+}

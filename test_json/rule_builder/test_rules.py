@@ -627,3 +627,93 @@ class TestNestedResolvedToDict:
         assert result["rule"] == "AtLeast"
         assert result.get("count") == 2
         assert result.get("children") == [c.to_dict() for c in children]
+
+
+class _ResolveWorld:
+    """Minimal world instance for AtLeast.from_resolved (needs player + flag)."""
+    player = 1
+    rule_caching_enabled = False
+
+
+class TestAtLeastRule:
+    """Tests for the AtLeast (N-of-M) rule class."""
+
+    def test_to_dict_round_trips_count_and_children(self):
+        rule = AtLeast(2, Has(item_name="A"), Has(item_name="B"), Has(item_name="C"))
+        result = rule.to_dict()
+        assert result["rule"] == "AtLeast"
+        assert result["count"] == 2
+        assert len(result["children"]) == 3
+
+    def test_from_dict_restores_count(self):
+        data = {
+            "rule": "AtLeast",
+            "count": 2,
+            "children": [
+                {"rule": "Has", "args": {"item_name": "A"}},
+                {"rule": "Has", "args": {"item_name": "B"}},
+                {"rule": "Has", "args": {"item_name": "C"}},
+            ],
+        }
+        rule = AtLeast.from_dict(data, _StubWorld)
+        assert isinstance(rule, AtLeast)
+        assert rule.count == 2
+        assert len(rule.children) == 3
+
+    @pytest.mark.parametrize("count,expected", [(1, True), (2, True), (3, False)])
+    def test_resolved_evaluate_count_boundary(self, count, expected):
+        # Children that are unconditionally true/false regardless of state.
+        children = (True_.Resolved(player=1), False_.Resolved(player=1), True_.Resolved(player=1))
+        resolved = AtLeast.Resolved(children, count=count, player=1)
+        # 2 of the 3 children are true: satisfied for count<=2, fails at count==3.
+        assert resolved._evaluate(None) is expected
+
+    def test_from_resolved_middle_band_stays_atleast(self):
+        children = [
+            Has.Resolved(item_name="A", count=1, player=1),
+            Has.Resolved(item_name="B", count=1, player=1),
+            Has.Resolved(item_name="C", count=1, player=1),
+        ]
+        resolved = AtLeast.from_resolved(2, _ResolveWorld(), list(children))
+        assert isinstance(resolved, AtLeast.Resolved)
+        assert resolved.count == 2
+
+    def test_from_resolved_count_one_collapses_to_disjunction(self):
+        # count == 1 delegates to Or (which further optimizes Has-only to HasAny);
+        # the key invariant is that it is NOT a genuine AtLeast.Resolved anymore.
+        children = [
+            Has.Resolved(item_name="A", count=1, player=1),
+            Has.Resolved(item_name="B", count=1, player=1),
+        ]
+        resolved = AtLeast.from_resolved(1, _ResolveWorld(), list(children))
+        assert not isinstance(resolved, AtLeast.Resolved)
+
+    def test_from_resolved_count_equals_len_collapses_to_conjunction(self):
+        children = [
+            Has.Resolved(item_name="A", count=1, player=1),
+            Has.Resolved(item_name="B", count=1, player=1),
+        ]
+        resolved = AtLeast.from_resolved(2, _ResolveWorld(), list(children))
+        assert not isinstance(resolved, AtLeast.Resolved)
+
+    def test_from_resolved_count_exceeds_children_is_false(self):
+        children = [Has.Resolved(item_name="A", count=1, player=1)]
+        resolved = AtLeast.from_resolved(3, _ResolveWorld(), list(children))
+        assert resolved.always_false
+
+    def test_count_true_ast_parses_to_atleast(self):
+        # count_true is the AST-format twin; it must parse into AtLeast.
+        from rule_builder.ast_format import parse_ast_rule
+        data = {
+            "type": "count_true",
+            "count": 2,
+            "conditions": [
+                {"type": "constant", "value": True},
+                {"type": "constant", "value": False},
+                {"type": "constant", "value": True},
+            ],
+        }
+        rule = parse_ast_rule(data, _StubWorld)
+        assert isinstance(rule, AtLeast)
+        assert rule.count == 2
+        assert len(rule.children) == 3

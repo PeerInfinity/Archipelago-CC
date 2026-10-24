@@ -139,7 +139,6 @@ KNOWN_AST_RULE_TYPES: FrozenSet[str] = frozenset({
     'attribute',
     'attr',
     'option_value',
-    'setting_value',
     'world_attribute',
     'param_ref',
     'variable',

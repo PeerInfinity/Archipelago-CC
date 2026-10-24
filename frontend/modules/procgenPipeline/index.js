@@ -1,25 +1,54 @@
 /**
- * procgenPipeline — grid-growth procedural-generation pipeline.
- * See NewDocs/plans/procedural-generation/grid-growth-pipeline.md.
+ * procgenPipeline — the procedural-generation pipeline
+ * (docs/json/developer/procgen/architecture.md).
  *
- * This module hosts the stage-3 growth loop, the grid data model,
- * and the UI for running the pipeline end-to-end. It consumes the
- * maze substrate (generateRegionCore + placeFromItems +
- * extractPathsAndObstacles) and produces a compiled rules.json ready
- * for world_generator.
+ * This module hosts the layout drivers (sphere growth, top-down,
+ * shuffled spiral, and grid growth), the grid data
+ * model, the stepped-pipeline runners, and the panel UI for running
+ * a pipeline end-to-end. It consumes substrates through the substrate
+ * registry and produces a compiled rules.json ready for
+ * world_generator.
  */
 
 import { ProcgenPipelineUI } from './procgenPipelineUI.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'procgenPipeline',
     title: 'Procgen Pipeline',
     componentType: 'procgenPipelinePanel',
+    docs: 'docs/json/user/modules/procgenPipeline.md',
     icon: '🧭',
     column: 3,
-    description: 'Grid-growth procgen pipeline (stage 3 and beyond)',
+    category: 'Procgen Infrastructure Panels',
+    description: 'Generates a multi-region world from a mode, seed and substrate mix, draws its map, and loads it to play.',
     requires: [],
+    storage: [
+        { key: 'procgenPipeline_params', kind: STORAGE_KINDS.state, label: 'Pipeline parameters (mode, seed, substrate mix)' },
+        { key: 'procgenPipeline_view', kind: STORAGE_KINDS.state, label: 'Pipeline panel view (folded sections)' },
+        { key: 'procgenPipeline_workingLibrary', kind: STORAGE_KINDS.user, label: 'Working region library (captured regions)' },
+        { key: 'procgenPipeline_presets', kind: STORAGE_KINDS.user, label: 'Your saved pipeline presets' },
+    ],
 };
+
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE PIPELINE'S WORKING-COPY INTAKE.**
+ * Published by the hub's `procgen_metadata` Document row (and by anything else
+ * that holds a rules.json and wants the pipeline to look at it), carrying
+ * `{jsonData, source}`.
+ *
+ * ⛔ **IT IS A SECOND CHANNEL ON PURPOSE.** `stateManager:rawJsonDataLoaded`
+ * means *"the app has loaded this document"*; this one means *"here is a
+ * document nobody has applied"*. Collapsing them would make an unapplied
+ * working copy indistinguishable from applied state — the distinction plan §1's
+ * working-copy ruling is entirely about — and would fire every substrate panel
+ * that listens for an app-wide load.
+ *
+ * ⚠ `source` NAMES THE DOOR (H4c's rule for `apworldEditor:loadRules`): the
+ * panel's own source label reads `hand-off (<door>)`, so a person can tell
+ * which editor handed this over from three rows away.
+ */
+export const PROCGEN_PIPELINE_LOAD_RULES = 'procgenPipeline:loadRules';
 
 let panelInstance = null;
 let eventBus = null;
@@ -36,12 +65,17 @@ export function register(registrationApi) {
     // generated rules.json — same event + payload shape the editor's
     // Apply button uses.
     registrationApi.registerEventBusPublisher('files:jsonLoaded');
-    // Published by "Edit in APWorld Editor" to bring that panel forward after
+    // Published by "Open in APWorld Editor" to bring that panel forward after
     // handing it the generated rules.json.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
     // Dedicated channel that routes a generated world straight to the APWorld
     // Editor (no global files:jsonLoaded → no substrate-panel auto-activation).
     registrationApi.registerEventBusPublisher('apworldEditor:loadRules');
+    // ⛓ H5 — the panel subscribes to the hub's hand-off. The bus auto-registers
+    // a subscriber intent on subscribe(); declaring it here as well is how
+    // `procgenLabPanel` spells the same thing, and it puts the event in the
+    // module's registration record whether or not the panel is mounted.
+    registrationApi.registerEventBusSubscriberIntent(PROCGEN_PIPELINE_LOAD_RULES);
 }
 
 export async function initialize(moduleId, priorityIndex, initializationApi) {

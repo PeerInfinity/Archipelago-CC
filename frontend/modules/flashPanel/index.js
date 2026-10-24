@@ -1,9 +1,61 @@
 import { FlashPanelUI } from './flashPanelUI.js';
+import { killLockSchemaProps } from './seedlingKillLockSettings.js';
+import { contactSchemaProps } from './seedlingContactSettings.js';
+import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
+import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
+import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
+import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
+import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
+import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
+import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+// Import side effect registers `flash_seedling` (region-atlas Phase 4).
+import {
+  substrateRegistryEntry as flashSeedlingEntry,
+  FLASH_SEEDLING_LOAD_REGION_EVENT,
+  setSeedlingAtlasPlaybackController,
+} from './flashSeedlingLibrary.js';
+// Import side effect registers `flash_seedling_gen` — the LIGHT entry; its
+// generator is installed below through a computed specifier (seedling
+// generated levels G1: a static path would put +94 files / +4.96 MB here).
+import {
+  substrateRegistryEntry as flashSeedlingGenEntry,
+  installSeedlingGenRoom,
+  seedlingGenRoomInstalled,
+  SEEDLING_GEN_ROOM_MODULE_PATH,
+  setSeedlingPlaybackController,
+} from './flashSeedlingGenLibrary.js';
+import {
+  resolveSeedlingAtlasGoal,
+  runtimeEventsOf,
+  SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+  SeedlingPlaybackController,
+} from './seedlingPlaybackController.js';
+import { playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
+import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
+import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, LOOP_RESET_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
+import { PLAY_CLOCK_EVENT, PLAY_CLOCK_SAMPLE_EVENTS, SeedlingPlayClock } from './seedlingPlayClock.js';
+import { getLastRawJsonData, stateManagerProxySingleton } from '../stateManager/index.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
 let activePanelInstance = null;
+let seedlingRegionGlue = null;
+
+/**
+ * ⛓ SEEDLING GENERATED G4 — the door gate's evaluator context
+ * (`createSnapshotInterface`), loaded through a computed specifier: statically
+ * it would put +19 files / 634,636 B on this closure (the game-logic registry).
+ */
+const snapshotInterfaceLoader = createSnapshotInterfaceLoader({
+  log: (message) => log('error', `[FlashPanel Module] ${message}`),
+});
+export function loadDoorGateEvaluator() {
+  return snapshotInterfaceLoader.load();
+}
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -16,13 +68,43 @@ function log(level, message, ...data) {
 
 export const moduleInfo = {
   name: 'flashPanel',
-  title: 'Flash Game',
+  title: 'Flash Panel',
   componentType: 'flashPanel',
+  docs: 'docs/json/user/modules/flashPanel.md',
   icon: '🎮',
   column: 2,
-  description: 'Embeds a Flash game with an injected Archipelago bridge.',
+  category: 'Embedding and Windows',
+  description: 'Plays the preset\'s Flash game (Seedling, Robot Wants Kitty), turning pickups into checks and delivering items.',
   requires: ['stateManager'],
+  storage: [
+    { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
+  ],
 };
+
+/**
+ * ⛓⛓ SEEDLING GENERATED LEVELS G1 — **INSTALL THE GENERATOR, LAZILY.** The
+ * `flash_seedling_gen` entry's build hooks need `procgenSeedling.js`
+ * synchronously; the entry itself is light. The room module is loaded through a
+ * COMPUTED specifier against `document.baseURI` (the randomizer wiring's
+ * pattern: esbuild cannot see the string, so the bundle does not move, and the
+ * base is the document in both builds) and installed into THIS instance of the
+ * library. Until it lands, a build hook refuses by name. Headless: no document,
+ * nothing to do — callers import `flashSeedlingGenBuild.js`.
+ */
+let seedlingGeneratorLoad = null;
+export function loadSeedlingGenerator({ baseURI = globalThis.document?.baseURI, importer = (url) => import(/* @vite-ignore */ url) } = {}) {
+  if (seedlingGenRoomInstalled()) return Promise.resolve(true);
+  if (!baseURI) return Promise.resolve(false);
+  seedlingGeneratorLoad ??= importer(new URL(SEEDLING_GEN_ROOM_MODULE_PATH, baseURI).href)
+    .then((room) => { installSeedlingGenRoom(room); return true; })
+    .catch((err) => {
+      seedlingGeneratorLoad = null;
+      log('error', `[FlashPanel Module] the Seedling generator (${SEEDLING_GEN_ROOM_MODULE_PATH}) did not load — `
+        + `generated Seedling rooms cannot be built until the page is reloaded: ${err?.message ?? err}`);
+      return false;
+    });
+  return seedlingGeneratorLoad;
+}
 
 export function register(registrationApi) {
   log('info', '[FlashPanel Module] Registering...');
@@ -30,6 +112,21 @@ export function register(registrationApi) {
   registrationApi.registerPanelComponent('flashPanel', FlashPanelUI);
 
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
+
+  // Region-atlas play-time binding: the glue publishes a boundary crossing as
+  // user:regionMove, the same dialect the substrate bridges use.
+  registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+
+  // The registry is also populated by flashSeedlingLibrary's import side
+  // effect; repeating it here is the standing convention (idempotent, guarded).
+  if (!substrateRegistry.has(flashSeedlingEntry.id)) {
+    substrateRegistry.register(flashSeedlingEntry);
+  }
+  if (!substrateRegistry.has(flashSeedlingGenEntry.id)) {
+    substrateRegistry.register(flashSeedlingGenEntry);
+  }
+  loadSeedlingGenerator();
+  loadDoorGateEvaluator();
 
   // Observe user:locationCheck as it flows through the dispatcher
   // chain, so the panel's "TP on UI click" feature can react to
@@ -46,11 +143,187 @@ export function register(registrationApi) {
     );
   }
 
+  // Transport selection (read by FlashPanelUI at panel init; changing
+  // it takes effect the next time a flash panel initializes). Mirrors
+  // the moduleSettings.bounceDemo.renderer pattern.
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      runtime: {
+        type: 'string',
+        default: 'auto',
+        enum: ['auto', 'flash', 'wasm', 'js'],
+        label: 'Runtime',
+        description: "'auto' uses the SWFRecomp wasm page when the game's "
+          + "flash_panel wiring provides one (runs in any browser), real "
+          + "Flash otherwise | 'flash' forces the real-Flash <object> embed "
+          + "(needs NPAPI Flash or Ruffle) | 'wasm' forces the wasm iframe | "
+          + "'js' (Seedling only) plays the JavaScript model of the game "
+          + "(seedlingDemo) in rectangles, no sound — GENERATED rooms only for now.",
+      },
+      // ⛓ Seedling solver-walk S1 — the Playback Bot's solver mode (no reinit).
+      // ⛓ S2 — default ON since the solve moved into a worker under a budget (⚖ Q3).
+      seedlingSolverWalk: {
+        type: 'boolean',
+        default: true,
+        label: 'Seedling JS: Playback Bot uses the solver',
+        description: "Runtime 'js' only, real (atlas) Seedling rooms. On: the Playback "
+          + "Bot asks the real solver (seedlingDemo/solverBot) for the room's plan — "
+          + "baiting and striking enemies, shoving and holding blocks, opening chests — "
+          + "and plays it one key set per game tick, re-solving if the game leaves the "
+          + "plan; a goal the solver declines is walked by the simple walker, with the "
+          + "solver's reason in the bot's status (on by default). Off: the simple "
+          + "walker only. The solve runs in a background worker: the room is HELD (the "
+          + "game does not advance) while it plans — typically 0.01–3 s, shown as "
+          + "'solving…' in the bot's status. The solve's budget is solver work, not "
+          + "time, so the plan is the same on every machine; a solve that runs out "
+          + "of it declines by name and the walker takes over; a declined goal is "
+          + "offered to the solver again after a death, a crossing or 90 walked "
+          + "ticks (at most 3 times). Generated rooms always use the simple walker.",
+      },
+      // ⛓ Seedling solver-walk O3 → DETERMINISTIC BUDGET (⚖ the user, 2026-10-05: "I want plans to be identical
+      // on every machine") — the wasm engine's solve budget in WORK units (the twin of the JS page's
+      // ?solverBudgetWork=). MIGRATION: it replaces `seedlingWasmSolverBudgetMs` (milliseconds); a value saved
+      // under the old key is no longer read. ⛓ The default is `jsRuntimeSolver.SOLVER_BUDGET_WORK` (pinned by
+      // `flashPanelSolverBudgetSettings.test.js`). ⛓ RECALIBRATE: 640 fine units (was 500 coarse) — the key is
+      // unchanged because its meaning (work units) is.
+      seedlingWasmSolverBudgetWork: {
+        type: 'number',
+        default: 640,
+        minimum: 1,
+        label: 'Seedling wasm: solver budget (work units)',
+        description: "Runtime 'wasm', solver (atlas / vanilla) rooms. How much the Playback Bot's solver may "
+          + "search for one room, counted in solver WORK (one unit per checkpoint the solver passes), never in "
+          + "time — so the plan it plays is the same on every machine; a slow machine only takes longer to find "
+          + "it (the game is HELD meanwhile). The solver searches without sword dashes first and then with them; "
+          + "when the budget runs out and a plan is already in hand, that plan is played. Without one, the room "
+          + "stays held and the solver is asked once more with 4× this budget, and only then does the walk stop, "
+          + "saying why. Read at the start of each solve.",
+      },
+      // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's deadline in WORK units, with a
+      // plan in hand (⛓ WINDOW WHOLE PASS: the whole pass stops there, not only its dash search)
+      // (⚖ the user's "upgrade window", 2026-10-04: "Let's try 1000 ms for now." — carried over as its intent,
+      // "upgrade briefly, then ship"). MIGRATION: it replaces `seedlingSolverUpgradeWindowMs` (milliseconds);
+      // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`
+      // (⛓ RECALIBRATE: 80 fine units, was 40 coarse; ⛓ WINDOW 85, ⚖ the user 2026-10-07: 85 = the whole full
+      // pass of the worst upgrading leg, L40).
+      seedlingSolverUpgradeWindowWork: {
+        type: 'number',
+        default: 85,
+        minimum: 0,
+        label: 'Seedling: solver upgrade window (work units; 0 = the whole budget)',
+        description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "
+          + "searches without sword dashes, then with them. Once a plan is in hand, this is how much solver "
+          + "WORK (from the start of the solve) the second search may spend looking for a shorter plan with "
+          + "sword dashes; past it, that search stops, and the plan in hand is played unless the second search "
+          + "already finished with a shorter one. Counted in work, not time, so the choice is the same on every "
+          + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
+      },
+      // ⛓ SOLVE PROGRESS — the panel's live view of the solver's progress stream (the tree, the tile map and the
+      // work meter, `seedlingSolveProgressView.js`). ⛓ AUTO-SHOW: `off | auto | always`, default `auto` — the view
+      // listens while hidden and is shown for the length of each solve. Only `off` leaves no solve asking its worker
+      // for the stream. A value stored while this was a boolean reads `true` → always, `false` → off
+      // (`solveProgressMode`). The panel's "Solve Progress" button cycles it.
+      seedlingSolveProgressView: {
+        type: 'string',
+        enum: [...SOLVE_PROGRESS_MODES],
+        default: SOLVE_PROGRESS_DEFAULT_MODE,
+        label: 'Seedling: show the solver\'s progress',
+        description: "Both runtimes, solver rooms. Shows what the Playback Bot's solver is doing while it solves: "
+          + "the goals, rungs and searches it tried (with how often each succeeded or was rejected, and why), the "
+          + "tiles its previews reached, and the work it has spent against its budget. Updated at most as often as "
+          + "the solve progress refresh rate allows, and only at the solver's own checkpoints. `auto` shows it while "
+          + "a solve runs and hides it "
+          + "when the solve ends; `always` keeps it open; `off` hides it and stops the solver reporting. Watching "
+          + "never changes the plan the solver finds.",
+      },
+      // ⛓ SOLVE PROGRESS S1 — ⚖ the user 2026-10-17: the refresh rate is a SETTING (1000 / 250 / 100 / 50 ms, default
+      // 100 "for now"). It rides the solve's ENVELOPE as `progressIntervalMs` beside `progress: true`, never the
+      // request (plans stay byte-identical), and the worker's tap clamps it to the list (`progressIntervalMs`). One
+      // setting for both runtimes (the wasm engines use the same worker service). Read at each solve's start.
+      seedlingSolveProgressIntervalMs: {
+        type: 'number',
+        enum: [...SOLVE_PROGRESS_INTERVALS_MS],
+        default: SOLVE_PROGRESS_INTERVAL_MS,
+        label: 'Seedling: solve progress refresh rate (ms between updates, at most)',
+        description: "Both runtimes, solver rooms. How often, at most, the solver's progress view is updated while a "
+          + "solve runs: once per this many milliseconds. It is a ceiling, not a rate: the solver reports only at its "
+          + "own checkpoints, so a long stretch of work between two checkpoints shows no update however fast this "
+          + "is set. Applies from the next solve. Watching never changes the plan the solver finds.",
+      },
+      // ⛓ KILLLOCK HOOK — the model's kill-lock body switches K1–K5, one boolean each, defaulted to
+      // `KILLLOCK_BODIES_DEFAULTS` (`seedlingKillLockSettings.js`).
+      ...killLockSchemaProps(),
+      // ⛓ CONTACT HOOK — the model's contact switches, one boolean each, generated from `CONTACT_FIDELITY_KEYS` and
+      // defaulted to `CONTACT_FIDELITY_DEFAULTS` (`seedlingContactSettings.js`).
+      ...contactSchemaProps(),
+      // ⛓ AXE_DODGE HOOK — fidelity's `solverBot.AXE_DODGE_ASK_PER_PREVIEW`: default | on | off, `default` = the
+      // model's own value (`seedlingAxeDodgeSettings.js` says why it is not a boolean).
+      ...axeDodgeSchemaProps(),
+      // ⛓ DASH-ONLY WINDOW — the JS arc's `dashOnlyWindowHook.DASH_ONLY_WINDOW`: default | on | off, the same way.
+      ...dashOnlyWindowSchemaProps(),
+      // ⛓ DASH-SHAPE STAMP — solverBot's three SEEDLING DB dash switches: default | on | off each, the same way.
+      ...dashShapeSchemaProps(),
+      // ⛓ GRAPHICS G1 — the JS page's cosmetic switches: graphics (rects | a pack stack) and camera (room | follow).
+      // Applied live, never a re-mount (`seedlingGraphicsSettings.js`).
+      ...graphicsSchemaProps(),
+    },
+  });
+
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
+  // ⛓ Seedling JS J1: the panel re-initializes when `runtime` changes.
+  registrationApi.registerEventBusSubscriberIntent('settings:changed');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+  registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
+  // ⛓ LOOP-MODE RESTART — the glue hears the loops' reset (`seedlingRegionGlue.handleLoopReset`).
+  registrationApi.registerEventBusSubscriberIntent(LOOP_RESET_EVENT);
+  // ⛓ PLAY CLOCK — a region change and Loop mode turning on read the game's clock at once (`seedlingPlayClock.js`).
+  for (const event of PLAY_CLOCK_SAMPLE_EVENTS) registrationApi.registerEventBusSubscriberIntent(event);
+  // ⛓ AUTO-SHOW — stage a solve the Solve Progress view can be watched on (`seedlingSolveDemo.js`).
+  registrationApi.registerEventBusSubscriberIntent(SOLVE_DEMO_EVENT);
+
+  /**
+   * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE
+   * PUBLISH IS SKIPPED WITH A `warn` AND NOTHING ELSE.** `eventBus.publish`
+   * (`app/core/eventBus.js:126-129`) checks the publisher registry and
+   * `return`s — it does not throw — so `seedlingRegionGlue._itemFound`'s own
+   * `try/catch` (written for *"a bus that refuses an unknown event"*) never
+   * fires, its `stats.itemsFound` still counts the find, and the panel's
+   * subscriber is simply never called.
+   *
+   * ⛓ MEASURED ON THE REAL PAGE (P1-e run 4, `panel-check`): the glue reported
+   * `locationChecks: 1, itemsFound: 1`, the panel log carried
+   * *"found Light for you at \"Level 030 - Torchpickup\""* — written by the
+   * glue's own `_log`, not by the subscriber — and the readout element was
+   * still `{display:"none", headline:"", rows:""}`. The console said exactly
+   * why:
+   *
+   *     [WARN] [eventBus] Publisher flashPanel not registered for event
+   *     flashSeedling:apItemFound. Call registerEventBusPublisher first.
+   *
+   * ⚠ This is an M1 defect, latent since the event was introduced: nothing in
+   * production wired the check binding until P1, so nothing ever published it.
+   * `flashPanelUI.test`-less code plus a counter incremented BEFORE the publish
+   * is what let a producer's view and a consumer's view disagree in silence.
+   */
+  registrationApi.registerEventBusPublisher(AP_ITEM_FOUND_EVENT);
+  registrationApi.registerEventBusSubscriberIntent(AP_ITEM_FOUND_EVENT);
+  // ⛓ Seedling generated G4 — a door the host refused. The same defect, found
+  // again by the G4 box gate: published unregistered, the page dropped it.
+  registrationApi.registerEventBusPublisher(DOOR_LOCKED_EVENT);
+
+  // Self-activation on a region load (see `activateOnLoadRegion`).
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+  // ⛓ Seedling JS J2 — the playback controller's LATE refusal (same trap a
+  // third time: unregistered, the publish is skipped with a warn).
+  registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
+  // ⛓ solver-walk S2 — the live walk's note ("solving…", a decline, a retry).
+  registrationApi.registerEventBusPublisher(PLAYBACK_WALK_NOTE_EVENT);
+  // ⛓ PLAY CLOCK — the game's own clock, reported to Loops (`seedlingPlayClock.js`).
+  registrationApi.registerEventBusPublisher(PLAY_CLOCK_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -83,11 +356,203 @@ export function setActivePanelInstance(instance) {
   activePanelInstance = instance;
 }
 
+/**
+ * The region-atlas glue, or null when the module hasn't initialized. The panel
+ * hands it every adapter it builds (see FlashPanelUI), and the verify script
+ * reads its stats.
+ */
+export function getSeedlingRegionGlue() {
+  return seedlingRegionGlue;
+}
+
+/** ⛓ PLAY CLOCK — the reporter of the game's own clock (`seedlingPlayClock.js`), or null; the in-app rows read its stats. */
+let seedlingPlayClock = null;
+export function getSeedlingPlayClock() {
+  return seedlingPlayClock;
+}
+
+/**
+ * ⛓ SOLVE PROGRESS — the Playback Bot controllers' wasm engine solve services that exist now (the JS page's own
+ * service is the panel's to read, off its page). The progress view re-reads this every second.
+ */
+let seedlingPlaybackControllers = [];
+export function getSeedlingWasmSolveServices() {
+  return seedlingPlaybackControllers.map((c) => c?.wasmSolveService?.() ?? null).filter(Boolean);
+}
+
+// Test/diagnostic handle (used by scripts/procgen/check-seedling-wasm-
+// bridge.mjs to reach the live adapter).
+export function getActivePanelInstance() {
+  return activePanelInstance;
+}
+
+/**
+ * ⛓ SEEDLING T2b (U1) — **A REGION LOAD BRINGS THE PANEL FORWARD**, the rule
+ * every other substrate panel already follows (bounce `flashSubstrate/index.js`,
+ * maze `mazeRoom/index.js`, jta). Without it a return from a maze region into a
+ * placed Seedling room left the Maze Room tab in front, showing *"Currently
+ * playing Seedling (region atlas)"*, and the person had to find the tab.
+ *
+ * Skipped when loops' "Keep this panel focused" pins another panel
+ * (`isFocusLocked`); the glue still takes the region, only the tab switch is
+ * suppressed.
+ */
+export function activateOnLoadRegion(bus, isFocusLocked, focusGame) {
+  if (isFocusLocked?.()) return false;
+  bus?.publish?.('ui:activatePanel', { panelId: moduleInfo.componentType });
+  // ⛓ T2b U2a — and the KEYBOARD with it. A tab that was already in front
+  // gets no 'show', so the focus is asked for here too.
+  focusGame?.('a region load activated the panel');
+  return true;
+}
+
+/**
+ * ⛓ OBSTACLE EVENTS — the loaded slot's game-state events (`runtimeEventsOf`), re-read only when the rules
+ * payload changes (a preset switch).
+ */
+let _eventsCache = { payload: undefined, events: [] };
+function eventsOfLoadedSlot() {
+  const payload = getLastRawJsonData?.() ?? null;
+  if (payload !== _eventsCache.payload) {
+    const rules = rulesOfRawPayload(payload);
+    _eventsCache = { payload, events: rules ? runtimeEventsOf(rules, playerOfRawPayload(payload) ?? '1').events : [] };
+  }
+  return _eventsCache.events;
+}
+
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
   _moduleEventBus = initializationApi.getEventBus();
+
+  // Region-atlas play-time binding. Started unconditionally: it is inert until
+  // a preset whose sidecars name the flash_seedling substrate is loaded, and
+  // subscribing here (rather than when a flash region first appears) is what
+  // keeps it ahead of procgenPlayer's start-region publish.
+  /** ⛓ LOGICAL LINKS — the two Playback Bot controllers, filled below (the glue asks whether either walks). */
+  const playbackControllers = [];
+  seedlingRegionGlue = new SeedlingRegionGlue({
+    eventBus: getModuleEventBus(),
+    getDispatcher: () => moduleDispatcher,
+    loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    getPanel: () => activePanelInstance,
+    // G4 — the HOST enforces a generated door's AP gate: the same evaluator
+    // the logic uses, over the state manager's latest snapshot.
+    canPass: createDoorGate({
+      getSnapshot: () => stateManagerProxySingleton.getLatestStateSnapshot?.() ?? null,
+      getStaticData: () => stateManagerProxySingleton.getStaticData?.() ?? null,
+      getSnapshotInterface: snapshotInterfaceLoader.get,
+    }),
+    // ⛓ LOGICAL LINKS — no position is read while a Playback Bot walk is in flight (its route credits its links).
+    isBotWalking: () => playbackControllers.some((c) => c?.busy?.() === true),
+    // ⛓ RESTART — the Menu panel's Restart re-takes procgenPlayer's start hop when the start is ours.
+    getProcgen: () => ({
+      getResolvedStartRegion: initializationApi.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion'),
+      getRegionInfo: initializationApi.getModuleFunction?.('procgenPlayer', 'getRegionInfo'),
+      retakeStartHop: initializationApi.getModuleFunction?.('procgenPlayer', 'retakeStartHop'),
+    }),
+    // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start), and so is a wasm
+    // engine that is idle but still DRIVING: its mid-room delivery gate stays installed (and a tape may stay frozen)
+    // until `stop()`, which releases the hold and lets the held delivery through.
+    stopBotWalks: () => playbackControllers.filter((c) => {
+      if (c?.busy?.() === true) return true;
+      const w = c?.status?.()?.wasm ?? null;
+      return !!(w && (w.driving || w.gate || w.frozen));
+    }).map((c) => c.stop()).length,
+    // ⛓ WALK IDENTITY — after that stop, the wasm engines watch for the Restart's start-hop arrival (held at its landing).
+    expectBotArrivals: () => playbackControllers.filter((c) => c?.expectArrival?.() === true).length,
+    // ⛓ OBSTACLE EVENTS — the runtime collector: the loaded slot's game-state events, collected on the GAME's flag
+    // as a local event check (forced: the game is the truth, not the logic's reach), never a server check.
+    getEvents: eventsOfLoadedSlot,
+    collectEvent: (location) => stateManagerProxySingleton.checkLocation(location, true, true),
+    // ⛓ LOOP-MODE RESTART — the loops' reset warps the game only where the declared start is a Seedling room.
+    getLoop: () => ({
+      isLoopModeActive: () => initializationApi.getModuleFunction?.('loops', 'isLoopModeActive')?.() === true,
+      getCurrentRegion: () => initializationApi.getModuleFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+      getStartRegions: () => initializationApi.getModuleFunction?.('gameState', 'getState')?.()?.startRegions ?? [],
+      getActionQueue: () => initializationApi.getModuleFunction?.('loops', 'getLoopState')?.()?.getActionQueue?.() ?? [],
+    }),
+  });
+  seedlingRegionGlue.start();
+
+  // ⛓ PLAY CLOCK (⚖ "Drain play time too") — in Loop mode, the GAME's clock (`botStatus().game_time`) on the JS and
+  // wasm runtimes, reported as `substrate:playClock` for the AP region the game plays. Loops keeps a report only for
+  // a substrate that declares `loopSupport.playClock` (flash_seedling, flash_seedling_gen).
+  seedlingPlayClock = new SeedlingPlayClock({
+    eventBus: getModuleEventBus(),
+    getSurface: () => activePanelInstance?.seedlingPlaybackSurface?.() ?? null,
+    getGame: () => activePanelInstance?.adapter?._getFlash?.() ?? null,
+    getRegion: () => initializationApi.getModuleFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
+    isLoopModeActive: () => initializationApi.getModuleFunction?.('loops', 'isLoopModeActive')?.() === true,
+    isParked: () => seedlingRegionGlue?.binding?.active === false,
+  });
+  seedlingPlayClock.start();
+
+  // ⛓ Seedling JS J2 — the Playback Bot's controller for generated rooms. It
+  // reads the live panel on every call (a preset switch replaces the iframe),
+  // and refuses by name under any runtime but 'js' (⛓ W2: the atlas instance also walks on 'wasm').
+  const playbackDeps = {
+    getSurface: () => {
+      const surface = activePanelInstance?.seedlingPlaybackSurface?.() ?? null;
+      // ⛓ W2 — the check binding: the wasm engine hands it each host botStart's arming window (⚖ W0-Q1).
+      return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null,
+        checkBinding: seedlingRegionGlue?.checkBinding ?? null,
+        // ⛓ W7 — the glue query the wasm engine asks before it holds an arrival.
+        swapState: () => seedlingRegionGlue?.swapState?.() ?? null,
+        // ⛓ ARRIVAL JITTER — push the glue's queued teleport in the turn the engine saw its door land.
+        pushSwap: () => seedlingRegionGlue?.pushQueuedTeleports?.() ?? false,
+        // ⛓ LOGICAL LINKS — the route's link, credited by the region binding (no walk).
+        creditLink: (name) => seedlingRegionGlue?.creditLogicalLink?.(name) ?? { ok: false, reason: 'no region glue' } } : null;
+    },
+    log: (msg, level) => {
+      activePanelInstance?._panelLog?.(msg, level);
+      log(level === 'warn' ? 'warn' : 'info', msg);
+    },
+    // A LATE refusal reaches the bot as a named status, never a silent wait.
+    onWalkFailed: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_FAILED_EVENT, e),
+    // ⛓ S2 — "solving…" (and a decline / a retry) reaches the bot's status line.
+    onWalkNote: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_NOTE_EVENT, e),
+  };
+  // ⛓ WG — generated rooms walk on wasm too: the engine stages the MOUNTED set the generated arm delivered.
+  const genController = new SeedlingPlaybackController({
+    ...playbackDeps,
+    wasm: true,
+    wasmLevelSetOf: (surface) => surface?.wasm?.levelSet ?? null,
+  });
+  setSeedlingPlaybackController(genController);
+  // ⛓ J3 — the same page and walker, the atlas rooms' name → cell map.
+  const atlasController = new SeedlingPlaybackController({
+    ...playbackDeps,
+    substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+    resolve: resolveSeedlingAtlasGoal,
+    mapOf: (surface) => surface?.atlas ?? null,
+    // ⛓ W2 — real rooms also walk under the wasm runtime (solve at arrival, one host tape).
+    wasm: true,
+    // ⛓ VANILLA MAP — staged from the rooms an arm DELIVERED (the vanilla rewrite), else the map document.
+    wasmDeliveredSetOf: (surface) => surface?.wasm?.deliveredSet ?? null,
+  });
+  setSeedlingAtlasPlaybackController(atlasController);
+  playbackControllers.push(genController, atlasController);
+  seedlingPlaybackControllers = playbackControllers;
+
+  // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
+  // tab switch that resumes the game's page.
+  const activationBus = getModuleEventBus();
+  const onLoadRegionActivate = () => activateOnLoadRegion(activationBus,
+    initializationApi.getModuleFunction?.('loops', 'isFocusLocked'),
+    (why) => activePanelInstance?.focusGame?.(why));
+  const offActivate = activationBus.subscribe(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
+
   log('info', '[FlashPanel Module] Initialization complete.');
+
+  return () => {
+    if (typeof offActivate === 'function') offActivate();
+    else activationBus.unsubscribe?.(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
+    if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
+    if (seedlingPlayClock) { seedlingPlayClock.stop(); seedlingPlayClock = null; }
+    setSeedlingPlaybackController(null);
+    setSeedlingAtlasPlaybackController(null);
+  };
 }
 
 export function getDispatcher() {

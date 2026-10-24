@@ -1,0 +1,57 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverShouldStop.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 2932[2mms[22m[39m
+     [33m[2m✓[22m[39m a window of the whole budget: the full plan (219 t) replaces the dashless one, nothing tripped; the units are counted [33m 991[2mms[22m[39m
+     [33m[2m✓[22m[39m the clock decides nothing: the default budgets on a clock that jumps a DAY per read answer exactly as on a counter [33m 648[2mms[22m[39m
+     [33m[2m✓[22m[39m L4: the window that holds the WHOLE full pass (19 dashless + 57 full = 76 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask [33m 448[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 6280[2mms[22m[39m
+     [33m[2m✓[22m[39m L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 2570[2mms[22m[39m
+     [33m[2m✓[22m[39m L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress [33m 2721[2mms[22m[39m
+     [33m[2m✓[22m[39m at most one post a second of the solve (1000 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work [33m 985[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverDeadline.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 12564[2mms[22m[39m
+     [33m[2m✓[22m[39m no hook, a `null` hook and a counter that never trips are byte-identical [33m 336[2mms[22m[39m
+     [33m[2m✓[22m[39m swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves [33m 5301[2mms[22m[39m
+     [33m[2m✓[22m[39m `detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves) [33m 2789[2mms[22m[39m
+     [33m[2m✓[22m[39m `time` in a solve: bare L6 from (208,32) runs the TIME rung's search; a trip there FALLS THROUGH to BAIT, and the climb says why [33m 648[2mms[22m[39m
+     [33m[2m✓[22m[39m untripped, opted out: one ask (the entry), the stance unchanged; opted in: one ask per cell and per candidate, the stance unchanged [33m 2144[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/jsRuntimeSolverAnytime.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 1503[2mms[22m[39m
+     [33m[2m✓[22m[39m L11 chest, KIT: dashless 180 ticks, then FULL 160 ticks (one dash) REPLACES it — each pass heard as it lands, the plan named [33m 684[2mms[22m[39m
+     [33m[2m✓[22m[39m L71 chest, BARE (no sword): the full pass is SKIPPED by name (it would repeat the dashless search) — the dashless plan (552 ticks) is the answer [33m 482[2mms[22m[39m
+     [33m[2m✓[22m[39m the in-place service runs every pass (no budget) and answers with the best, named [33m 328[2mms[22m[39m
+[90mstdout[2m | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:244:25[90m)[39m
+    at new StateManagerProxy [90m(/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxy.js:112:10[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+    at VitestModuleRunner.cachedRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1053:73[90m)[39m
+    at [90m/home/user/Archipelago-CC/[39mfrontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvitest[24m/dist/module-evaluator.js:205:4[90m)[39m
+    at VitestModuleRunner.directRequest [90m(file:///home/user/Archipelago-CC/[39mnode_modules/[4mvite[24m/dist/node/module-runner.js:1146:59[90m)[39m
+
+[90mstdout[2m | frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js
+[22m[39m[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ [32m✓[39m frontend/modules/flashPanel/flashPanelSolverBudgetSettings.test.js [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityDash.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 9693[2mms[22m[39m
+     [33m[2m✓[22m[39m canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it [33m 2478[2mms[22m[39m
+     [33m[2m✓[22m[39m L16 all: the count is the run's own dashes, and the inner PULL walk's windows are in it [33m 3454[2mms[22m[39m
+     [33m[2m✓[22m[39m the committed plan replays with the same dashes (the count is the tape's, not the planner's) [33m 3103[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgress.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 39786[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 24973[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count [33m 8581[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall [33m 4911[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises [33m 678[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m71 passed[39m[22m[90m (71)[39m
+[2m   Start at [22m 03:36:19
+[2m   Duration [22m 44.94s[2m (transform 9.66s, setup 0ms, import 19.93s, tests 72.76s, environment 1ms)[22m
+

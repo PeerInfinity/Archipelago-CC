@@ -1,0 +1,19 @@
+== w0/tapeRunner-before
+files 1 tests 605 {'passed': 605} md5 70c1a2d1baa27a2df4102e381914b303
+== w0/bounded-before
+files 56 tests 1702 {'passed': 1701, 'failed': 1} md5 c19b786bd0c9129033e48dd748d4bb2b
+FAIL ('boxLock.test.js', 'who takes the box takes conditionally exactly where a headless arm would have been queued')
+== d2/tapeRunner-off2
+files 1 tests 605 {'passed': 605} md5 70c1a2d1baa27a2df4102e381914b303
+== d2/bounded-off2
+files 57 tests 1713 {'passed': 1713} md5 970809649d7aec73d6e4478ff93e07a0
+== d2/bounded-on2
+files 57 tests 1713 {'passed': 1707, 'failed': 6} md5 f545a1f72c088a606a79f05256836317
+FAIL ('arrivalCompositesLegs.test.js', 'composites probe X — wave 8: L30 crosses past the live BobSoldier (BOBSOLDIER W4), L45 declines beside the live jellyfish (KILLLOCK K1) residue L45: t')
+FAIL ('contactFidelity.test.js', 'contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON')
+FAIL ('fidelityLeash.test.js', 'LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecast ships OFF, and `withBaitForecast` restores it')
+FAIL ('fidelityLeash.test.js', "LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecast the derivation at 629's stance: OFF offers the straight line's 84-tick bait; ON ")
+FAIL ('fidelityLeash.test.js', 'LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecast leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwell; ON SOLVES — a')
+FAIL ('solverDeadline.test.js', 'fidelity CHECKPOINTS — the FINE sites are opt-in, inert until they trip, and say what a trip does `time` in a solve: bare L6 from (208,32) runs the TI')
+
+(W0 note) boxLock red at the base was my untracked scratch probe in scripts/procgen/ (a box taker); moved out of the tree, boxLock.test.js re-run at the base: 26/26 pass. W0 bounded = 1702/1702.

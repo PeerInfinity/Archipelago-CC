@@ -1,21 +1,82 @@
 // UI Class for this module
 import ApworldEditorUI from './apworldEditorUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import {
+  INITIALISE_TIMEOUT_KEY, INITIALISE_TIMEOUT_SCHEMA,
+  REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SCHEMA,
+} from './regionGenerationRun.js';
+import { SHOW_MENU_ON_MAP_KEY, SHOW_MENU_ON_MAP_SCHEMA } from './menuMarker.js';
+import { LOSSY_BUILD_KEY, LOSSY_BUILD_SCHEMA } from './lossyBuild.js';
 
-// Direct hand-off channel (§2.2): procgen's "Edit in APWorld Editor" publishes
+// Direct hand-off channel (§2.2): procgen's "Open in APWorld Editor" publishes
 // this with { jsonData } instead of the global files:jsonLoaded, so handing a
 // world to the editor doesn't wake the substrate panels (which self-activate on
 // a full app load and would steal focus). The UI adopts it immediately when
 // open; otherwise it's stashed here and drained when the panel mounts.
 export const APWORLD_EDITOR_LOAD_RULES = 'apworldEditor:loadRules';
 
+/**
+ * ⛓⛓⛓ H4c — **THE OTHER REVERSE LINK: "select this region."** The bounce
+ * region editor is a Golden Layout panel in the SAME app as the hub, so it
+ * needs no protocol: it raises this panel and names the region it was editing.
+ *
+ * ⛔ It carries NO document. `loadRules` above hands over a world; this one
+ * says *"you already hold one — look at this region of it"*, and a link that
+ * pushed a document would silently replace whatever the reader was editing.
+ * The hub answers on the document it HAS, and says so when that document does
+ * not hold the region (`selectRegion` returns whether it does).
+ *
+ * ⚠ `player` is OPTIONAL: the bounce editor is opened on ONE region and does
+ * not carry the slot it came from, so `null` means *"whichever slot the hub is
+ * showing"* rather than a guess this module would have made on its behalf.
+ */
+export const APWORLD_EDITOR_SELECT_REGION = 'apworldEditor:selectRegion';
+
+/**
+ * ⛓⛓⛓ S1 — **THE PANEL'S OWN COMPONENT TYPE, AS ONE STRING.** The hub raises
+ * ITSELF now: an op a linked editor hands back is applied here, and the ⚖
+ * (user, 2026-09-08) is that the editor panel comes to the front and scrolls to
+ * the row it wrote. That publish names a panel, so this module now both
+ * REGISTERS the component under this name and PUBLISHES `ui:activatePanel` for
+ * it — two uses that must not be two literals, because a rename that moved one
+ * of them would leave a button raising nothing (the H5 defect, in a new place).
+ */
+export const APWORLD_EDITOR_PANEL_ID = 'apworldEditorPanel';
+
 let _moduleEventBus = null;
 let _pendingEditorRules = null;
+let _pendingSelectRegion = null;
 
-/** Consume (and clear) a stashed hand-off, or null. Called by the UI on mount. */
+/**
+ * Consume (and clear) a stashed hand-off, or null. Called by the UI on mount.
+ *
+ * ⛓ H4c — **THE STASH IS `{jsonData, source}`, NOT THE DOCUMENT ALONE.** Every
+ * intake decides its provenance (H2's rule), and the only place a hand-off's
+ * provenance is known is the publisher: the pipeline, the marking tool, or —
+ * new in H4c — a lab page whose reverse link `procgenLabPanel` forwarded. A
+ * stash that carried the bytes and dropped the story would leave the panel
+ * filing three different doors under one word.
+ *
+ * @returns {{jsonData: object, source: string|null}|null}
+ */
 export function consumePendingEditorRules() {
   const r = _pendingEditorRules;
   _pendingEditorRules = null;
+  return r;
+}
+
+/**
+ * Consume (and clear) a stashed region selection, or null.
+ *
+ * ⛓ The SAME one-shot stash `consumePendingEditorRules` uses, for the same
+ * measured reason: the hub's subscription lives on the PANEL, so a door pressed
+ * while the panel has never been mounted would publish into nothing. The
+ * module's `initialize()` always runs; the panel's `initialize()` runs when
+ * somebody opens it.
+ */
+export function consumePendingSelectRegion() {
+  const r = _pendingSelectRegion;
+  _pendingSelectRegion = null;
   return r;
 }
 
@@ -44,19 +105,63 @@ function log(level, message, ...data) {
 export const moduleInfo = {
   name: 'apworldEditor',
   title: 'APWorld Editor',
-  componentType: 'apworldEditorPanel',
+  componentType: APWORLD_EDITOR_PANEL_ID,
+  docs: 'docs/json/user/modules/apworldEditor.md',
   icon: '🧩',
   column: 3,
-  description: 'GUI editor for apworld rules.json (regions, exits, locations, access rules).',
+  category: 'Procgen Infrastructure Panels',
+  description: 'Edits a rules.json\'s regions, exits, locations, access rules and items, with undo, a map and raw JSON.',
   requires: ['stateManager'],
 };
 
 export function register(registrationApi) {
   log('info', '[APWorld Editor Module] Registering...');
-  registrationApi.registerPanelComponent('apworldEditorPanel', ApworldEditorUI);
+  registrationApi.registerPanelComponent(APWORLD_EDITOR_PANEL_ID, ApworldEditorUI);
 
   registrationApi.registerEventBusPublisher('files:jsonLoaded');
   registrationApi.registerEventBusPublisher('apworldEditor:rulesEdited');
+
+  /**
+   * ⛓⛓⛓ H5 — **AND A DEFECT THIS SLICE FOUND: `ui:activatePanel` WAS NEVER
+   * REGISTERED HERE.** `eventBus.publish` refuses an unregistered publisher —
+   * it logs a warning and RETURNS (`eventBus.js:126-129`) — so H1's Links tab
+   * Open button and H3's "Open region graph" button have both been silently
+   * doing nothing in the real app since they shipped. Neither in-app row
+   * pressed them: they assert the ROWS the tabs draw. Same family as H4b's
+   * trap 1180 (an unregistered publish is DROPPED) and the `procgenLab:
+   * levelChanged` finding.
+   *
+   * ⛔ The list below is checked against the panel's own `publish(` call sites
+   * by `documentLinks.test.js`, so the next door to be added cannot forget it.
+   */
+  registrationApi.registerEventBusPublisher('ui:activatePanel');
+  // H5's block doors, published from this module's bus by
+  // `DOCUMENT_KEY_EDITORS[...].open`.
+  registrationApi.registerEventBusPublisher('procgenPipeline:loadRules');
+  registrationApi.registerEventBusPublisher('loopsCostDebugger:loadRules');
+
+  /**
+   * ⛓ APWORLD SUBSTRATE CHANGE R2 — the Region generation form's time limit
+   * (⚖ user 2026-09-23: a configurable setting, one minute per region). Read by
+   * the panel at each Generate press as
+   * `moduleSettings.apworldEditor.regionGenerationTimeoutSeconds`; the default
+   * is `REGION_GENERATION_TIMEOUT_DEFAULT_S`, the one number both sides use.
+   */
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      [REGION_GENERATION_TIMEOUT_KEY]: { ...REGION_GENERATION_TIMEOUT_SCHEMA },
+      // ⛓ R7 — the WHOLE-slot budget of Initialise procgen data (⚖ 2026-09-26 #3).
+      [INITIALISE_TIMEOUT_KEY]: { ...INITIALISE_TIMEOUT_SCHEMA },
+      // ⛓ M2 — the Map's Menu marker (⚖ user 2026-09-26, plan §25.7: a rendering
+      // choice, never a document key). Read by the panel at each Map draw as
+      // `moduleSettings.apworldEditor.showMenuOnMap`; default ON.
+      [SHOW_MENU_ON_MAP_KEY]: { ...SHOW_MENU_ON_MAP_SCHEMA },
+      // ⛓ rule-node R2c — the .apworld build's lossy toggle (default OFF, ⚖ D3).
+      // Mirrored by the toolbar's `lossy` checkbox, read at each build.
+      [LOSSY_BUILD_KEY]: { ...LOSSY_BUILD_SCHEMA },
+    },
+  });
 }
 
 export function initialize(moduleId, priorityIndex, initializationApi) {
@@ -66,7 +171,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // mount. When the panel is already open, the UI's own subscription adopts the
   // rules and clears this slot, so it never goes stale.
   _moduleEventBus.subscribe(APWORLD_EDITOR_LOAD_RULES, (ev) => {
-    if (ev && ev.jsonData) _pendingEditorRules = ev.jsonData;
+    if (ev && ev.jsonData) {
+      _pendingEditorRules = { jsonData: ev.jsonData, source: ev.source ?? null };
+    }
+  }, 'apworldEditor');
+  _moduleEventBus.subscribe(APWORLD_EDITOR_SELECT_REGION, (ev) => {
+    if (ev && typeof ev.region === 'string' && ev.region !== '') {
+      _pendingSelectRegion = { region: ev.region, player: ev.player ?? null };
+    }
   }, 'apworldEditor');
   log('info', '[APWorld Editor Module] Initialized successfully');
 }

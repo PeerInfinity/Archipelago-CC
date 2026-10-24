@@ -16,6 +16,7 @@ import json
 import logging
 import os
 
+from exporter.foreign_rule_builder import is_foreign_resolved_rule, serialize_foreign_resolved_rule
 from exporter.games.base.rule_expansion import RuleExpansionMixin
 from exporter.games.base.world_data import WorldDataMixin
 from exporter.games.base.helper_discovery import HelperDiscoveryMixin
@@ -227,7 +228,7 @@ class BaseGameExportHandler(
     # Example: {'ow_boss_req': 'ow_boss_requirement'}
     NAME_REMAPPING: Dict[str, str] = {}
 
-    # Set of setting names that should be converted from 'name' type to 'setting_value' type.
+    # Set of setting names that should be converted from 'name' type to 'option_value' type.
     # This ensures they are looked up via getSetting which checks the options.* path.
     # Example: {'open_world', 'ow_boss_requirement'}
     SETTINGS_TO_CONVERT: Set[str] = set()
@@ -235,15 +236,15 @@ class BaseGameExportHandler(
     # Mapping of state_method names to their replacement rule structures.
     # This allows games to declaratively replace game-specific state methods with
     # equivalent rule structures without overriding expand_rule.
-    # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
+    # Example: {'_my_game_setting': {'type': 'option_value', 'option': 'my_setting'}}
     # Replacements are applied recursively during rule expansion.
     # Manual entries here take precedence over auto-detected replacements.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
 
     # Whether to auto-detect LogicMixin state method replacements.
     # When True, analyzes LogicMixin subclasses to detect common patterns like:
-    # - return self.multiworld.worlds[player].<attr> -> setting_value
-    # - return not self.multiworld.worlds[player].<attr> -> not(setting_value)
+    # - return self.multiworld.worlds[player].<attr> -> world_attribute
+    # - return not self.multiworld.worlds[player].<attr> -> not(world_attribute)
     # Manual STATE_METHOD_REPLACEMENTS always take precedence over auto-detected ones.
     AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS: bool = True
 
@@ -259,7 +260,7 @@ class BaseGameExportHandler(
     PROG_ITEMS_INIT: Dict[str, Any] = {}
 
     # Mapping of self.<attr> patterns to setting configurations.
-    # Used by the analyzer to convert self.attr access to setting_value rules.
+    # Used by the analyzer to convert self.attr access to option_value rules.
     # This is useful for games where the world class stores option values in instance attributes.
     # Values can be:
     #   - str: setting name (uses numeric value)
@@ -853,11 +854,14 @@ class BaseGameExportHandler(
             if len(processed_args) >= 2:
                 item_arg = processed_args[0]
                 locations_arg = processed_args[1]
-                # Player is filtered out; use player 1 for single-player exports
+                # The player arg was filtered out above; it is the player whose
+                # rules these are, i.e. this handler's world. Hardcoding 1 made the
+                # search fail for every slot but player 1 of a multiworld.
+                player = getattr(self.world, 'player', None) or 1
                 return {
                     'type': 'placement_search',
                     'item': item_arg,
-                    'player': {'type': 'constant', 'value': 1},
+                    'player': {'type': 'constant', 'value': player},
                     'locations': locations_arg
                 }
             else:
@@ -1428,7 +1432,60 @@ class BaseGameExportHandler(
                 mapping[prog_name] = data
                 logger.debug(f"Added {prog_name} from module data (not found via probing)")
 
+        # Finally, fall back to a baked ``progression_mapping`` ClassVar on the world.
+        # world_generator emits this on every generated ``_worldgen`` world, so this
+        # carries progressive/alias resolution across the worldgen round-trip even
+        # for games whose original world resolves progression in a bespoke way the
+        # probe can't see (e.g. a custom ``collect`` override).
+        classvar_mapping = self._find_world_classvar_progression_data(world)
+        for prog_name, data in classvar_mapping.items():
+            if prog_name not in mapping:
+                mapping[prog_name] = data
+                logger.debug(f"Added {prog_name} from world.progression_mapping ClassVar")
+
         return mapping
+
+    def _find_world_classvar_progression_data(self, world) -> Dict[str, Any]:
+        """Read a ``progression_mapping`` ClassVar baked onto the world.
+
+        ``world_generator`` emits ``progression_mapping: ClassVar[Dict[str, list]]``
+        on generated ``_worldgen`` worlds, shaped ``{progressive_name:
+        [component_in_order, ...]}`` where the Nth component (1-indexed) is the
+        symbol granted by the Nth copy of the progressive item.
+
+        Note this is the *world class* attribute, distinct from the ``Items.py``
+        module-level ``progression_mapping`` (``{concrete: (progressive, level)}``)
+        read by ``_try_progression_mapping_pattern``. We only accept the list-shaped
+        ClassVar and ignore anything else, so an unrelated attribute of the same
+        name can't be misread.
+        """
+        raw = getattr(type(world), "progression_mapping", None)
+        if not isinstance(raw, dict) or not raw:
+            return {}
+
+        mapping_data: Dict[str, Any] = {}
+        for prog_name, components in raw.items():
+            # Guard the shape: a {name: [str, ...]} entry only.
+            if not isinstance(prog_name, str):
+                continue
+            if not isinstance(components, (list, tuple)) or not components:
+                continue
+            if not all(isinstance(c, str) for c in components):
+                continue
+            mapping_data[prog_name] = {
+                "base_item": prog_name,
+                "items": [
+                    {"name": concrete_name, "level": level}
+                    for level, concrete_name in enumerate(components, start=1)
+                ],
+            }
+
+        if mapping_data:
+            logger.debug(
+                f"Found {len(mapping_data)} progressive items via "
+                f"world.progression_mapping ClassVar"
+            )
+        return mapping_data
 
     def _find_module_progression_data(self, world) -> Dict[str, Any]:
         """Find progression mapping from module-level data structures.
@@ -1752,7 +1809,7 @@ class BaseGameExportHandler(
     # Exporter settings and game info methods
     # ==========================================================================
 
-    def get_exporter_settings(self) -> Dict[str, Any]:
+    def get_exporter_settings(self, world=None) -> Dict[str, Any]:
         """Get exporter-specific settings (not part of the Archipelago world).
 
         These settings control how the frontend processes the exported data.
@@ -1760,10 +1817,23 @@ class BaseGameExportHandler(
         """
         exporter_settings = {}
 
-        # assume_bidirectional_exits: Whether region connections are bidirectional by default
-        # Only include when explicitly set (True or False); omitting allows frontend auto-detection
-        if self.ASSUME_BIDIRECTIONAL_EXITS is not None:
-            exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+        # assume_bidirectional_exits: Whether region connections are bidirectional by default.
+        # Written into exporter[player] — the key's one home (rules F1). Only included when
+        # explicitly set (True or False); omitting allows frontend auto-detection. The game's
+        # handler decides; failing that, a world_generator world carries its source slot's
+        # value as the `assume_bidirectional_exits` class attribute.
+        assume_bidirectional = self.ASSUME_BIDIRECTIONAL_EXITS
+        if assume_bidirectional is None:
+            carried = getattr(type(world), 'assume_bidirectional_exits', None) if world is not None else None
+            assume_bidirectional = carried if isinstance(carried, bool) else None
+        if assume_bidirectional is not None:
+            exporter_settings['assume_bidirectional_exits'] = assume_bidirectional
+
+        # return_to_menu: returning to the menu is always possible (the runtime's Restart warps the player to the
+        # start). Written only when True; absent = false. A world_generator world carries its source slot's value
+        # as the `return_to_menu` class attribute (frontend/modules/procgenCore/restartWarp.js).
+        if world is not None and getattr(type(world), 'return_to_menu', None) is True:
+            exporter_settings['return_to_menu'] = True
 
         # use_resolved_items: When true, eventProcessor uses resolved_items
         # Default is False, so only include when True
@@ -1833,6 +1903,16 @@ class BaseGameExportHandler(
                         from exporter.exporter import _make_rule_dict_serializable
                         rb_dict = completion_func.to_dict()
                         rb_dict = _make_rule_dict_serializable(rb_dict)
+                        if hasattr(self, 'expand_rule'):
+                            rb_dict = self.expand_rule(rb_dict)
+                        game_info['completion_condition'] = rb_dict
+                    elif is_foreign_resolved_rule(completion_func):
+                        # Rule Builder rule from a vendored (upstream) rule_builder:
+                        # no fork-only to_dict(), and AST analysis cannot read it.
+                        from exporter.exporter import _make_rule_dict_serializable
+                        rb_dict = _make_rule_dict_serializable(
+                            serialize_foreign_resolved_rule(completion_func)
+                        )
                         if hasattr(self, 'expand_rule'):
                             rb_dict = self.expand_rule(rb_dict)
                         game_info['completion_condition'] = rb_dict
@@ -2000,9 +2080,36 @@ class BaseGameExportHandler(
         # helpers like "has_fire_arrows" to Has("Fire_Arrows") via pattern matching.
         if self.is_worldgen_world(world):
             self._discover_worldgen_helpers_for_preservation(world)
-            self._inject_worldgen_sidecars(world, export_data, player)
-            self._inject_worldgen_procgen_metadata(world, export_data)
-            self._inject_worldgen_loop_costs(world, export_data)
+        # The package files are re-injected by PRESENCE, not by the
+        # `_worldgen` module suffix: a world_generator package may be named
+        # anything (worlds/seedling_playthrough is one), and gating on the
+        # suffix silently dropped its `_worldgen_sidecars.json`. Each reader
+        # is a no-op when the package ships no such file.
+        self._inject_worldgen_sidecars(world, export_data, player)
+        self._inject_worldgen_procgen_metadata(world, export_data, player)
+        self._inject_worldgen_loop_costs(world, export_data, player)
+        self._inject_worldgen_page_blocks(world, export_data, player)
+
+    def _inject_worldgen_page_blocks(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """Load `_worldgen_flash_panel.json` / `_worldgen_region_atlas.json`
+        from the package and set export_data['flash_panel' / 'region_atlas'][str(player)].
+
+        Both are per-player maps (`{"<p>": block}`); world_generator writes the
+        source slot's block, and it lands under the exporting player. They are
+        what the flash panel boots (`flash_panel`) and what the Seedling page
+        and bot anchor the atlas on (`region_atlas`), so without them a
+        Generate.py export of a Seedling world cannot drive the wasm game.
+        `_worldgen_discovery_mode.json` (the world's Discovery-mode choice,
+        `{"enabled": bool}`) re-injects the same way.
+        """
+        for key, filename in (
+            ('flash_panel', '_worldgen_flash_panel.json'),
+            ('region_atlas', '_worldgen_region_atlas.json'),
+            ('discovery_mode', '_worldgen_discovery_mode.json'),
+        ):
+            block = self._read_worldgen_package_json(world, filename, f'worldgen {key}')
+            if block is not None:
+                export_data.setdefault(key, {})[str(player)] = block
 
     def _inject_worldgen_sidecars(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_sidecars.json` from the worldgen world's package
@@ -2015,8 +2122,8 @@ class BaseGameExportHandler(
         through, so multiworld rules.json reaches every player's frontend with
         the data needed to render their procgen regions.
 
-        See NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-        §"Preset sidecars through the multiworld bridge".
+        See docs/json/developer/procgen/architecture.md §"The Python
+        round-trip".
         """
         try:
             world_module = type(world).__module__
@@ -2037,74 +2144,58 @@ class BaseGameExportHandler(
             return
         export_data.setdefault('preset_sidecars', {})[str(player)] = sidecars
 
-    def _inject_worldgen_procgen_metadata(self, world, export_data: Dict[str, Any]) -> None:
+    def _inject_worldgen_procgen_metadata(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_procgen_metadata.json` from the worldgen world's
-        package directory and set it as export_data['procgen_metadata'].
+        package directory and merge it into export_data['procgen_metadata'][str(player)].
 
-        procgen_metadata is a top-level field of procgen-emitted rules.json
-        (driver, sphere_plan, ...). Carrying it through the export keeps a
-        re-derived world's semantics stable — extractors key
-        honor_locked_placements (always-lock non-event locked placements)
-        on its presence. Top-level and informational, so the first worldgen
-        world to inject wins; solo procgen seeds are the primary case.
+        procgen_metadata is a per-player map of procgen-emitted rules.json
+        (APWORLD SUBSTRATE CHANGE P1a: `{"<p>": {driver, sphere_plan, ...}}`,
+        the shape `preset_sidecars` has). A package is ONE slot's world, so
+        its file holds one block, and each worldgen slot's block lands under
+        its own player. Carrying it through the export keeps a re-derived
+        world's procgen metadata stable for the frontend's procgen readers.
+        (It no longer changes placement: always-place intent travels on the
+        location's own `pinned` field — topdown-locked-items R1.)
         """
-        if 'procgen_metadata' in export_data:
-            return
-        try:
-            world_module = type(world).__module__
-            module = importlib.import_module(world_module)
-        except ImportError:
-            return
-        module_file = getattr(module, '__file__', None)
-        if not module_file:
-            return
-        metadata_path = os.path.join(
-            os.path.dirname(module_file), '_worldgen_procgen_metadata.json')
-        if not os.path.exists(metadata_path):
-            return
-        try:
-            with open(metadata_path, encoding='utf-8') as f:
-                metadata = json.load(f)
-        except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read procgen metadata at {metadata_path}: {exc}")
-            return
-        export_data['procgen_metadata'] = metadata
+        metadata = self._read_worldgen_package_json(world, '_worldgen_procgen_metadata.json', 'procgen metadata')
+        if metadata is not None:
+            export_data.setdefault('procgen_metadata', {})[str(player)] = metadata
 
-    def _inject_worldgen_loop_costs(self, world, export_data: Dict[str, Any]) -> None:
+    def _inject_worldgen_loop_costs(self, world, export_data: Dict[str, Any], player: int) -> None:
         """Load `_worldgen_loop_costs.json` from the worldgen world's
-        package directory and set it as export_data['loop_costs'].
+        package directory and merge it into export_data['loop_costs'][str(player)].
 
-        loop_costs is a top-level field of a loop-mode procgen rules.json
-        (per-region moveCost + xpEffect, per-location cost, defaults).
-        Carrying it through the export keeps loop mode alive across the
-        round-trip — the runtime loops module auto-enters loop mode
-        whenever loop_costs is present, so a world re-derived from an
-        exported preset would otherwise silently lose it. Top-level and
-        informational, so the first worldgen world to inject wins; solo
-        procgen seeds are the primary case. Mirrors
-        _inject_worldgen_procgen_metadata.
+        loop_costs is a per-player map of a loop-mode procgen rules.json
+        (P1a: `{"<p>": {regions, locations, defaults, ...}}`). Carrying it
+        through the export keeps loop mode alive across the round-trip — the
+        runtime loops module enters loop mode for a slot whenever that slot's
+        entry is present, so a world re-derived from an exported preset would
+        otherwise silently lose it. Mirrors _inject_worldgen_procgen_metadata.
         """
-        if 'loop_costs' in export_data:
-            return
+        loop_costs = self._read_worldgen_package_json(world, '_worldgen_loop_costs.json', 'worldgen loop costs')
+        if loop_costs is not None:
+            export_data.setdefault('loop_costs', {})[str(player)] = loop_costs
+
+    def _read_worldgen_package_json(self, world, filename: str, label: str):
+        """The parsed `filename` beside the worldgen world's package, or None
+        when the package ships none (or it cannot be read — logged)."""
         try:
             world_module = type(world).__module__
             module = importlib.import_module(world_module)
         except ImportError:
-            return
+            return None
         module_file = getattr(module, '__file__', None)
         if not module_file:
-            return
-        loop_costs_path = os.path.join(
-            os.path.dirname(module_file), '_worldgen_loop_costs.json')
-        if not os.path.exists(loop_costs_path):
-            return
+            return None
+        path = os.path.join(os.path.dirname(module_file), filename)
+        if not os.path.exists(path):
+            return None
         try:
-            with open(loop_costs_path, encoding='utf-8') as f:
-                loop_costs = json.load(f)
+            with open(path, encoding='utf-8') as f:
+                return json.load(f)
         except (json.JSONDecodeError, OSError) as exc:
-            logger.warning(f"Failed to read worldgen loop costs at {loop_costs_path}: {exc}")
-            return
-        export_data['loop_costs'] = loop_costs
+            logger.warning(f"Failed to read {label} at {path}: {exc}")
+            return None
 
     def _discover_worldgen_helpers_for_preservation(self, world) -> None:
         """Discover helper function names from a worldgen Rules.py and auto-preserve them.
@@ -2180,7 +2271,7 @@ class BaseGameExportHandler(
             def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
                 return {
                     'name': name, 'id': None, 'groups': [group],
-                    'advancement': True, 'useful': False, 'trap': False,
+                    'classification': 'progression',
                     'type': item_type,
                     'max_count': max_count if is_target else 1
                 }

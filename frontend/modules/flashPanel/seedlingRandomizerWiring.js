@@ -1,0 +1,1312 @@
+/**
+ * flashPanel/seedlingRandomizerWiring — **THE LAZY HALF**: the heavy modules,
+ * the two fetches, the location join, and the construction the verifier
+ * mirrors (EDITOR INTEGRATION slice P1-b; plan §17.1.4, §17.2.5, §17.5).
+ *
+ * ── ⛔⛔ WHY EVERY IMPORT HERE IS A COMPUTED SPECIFIER ────────────────────
+ *
+ * `frontend/init-bundled.js` reaches 494 files and not one level-set module is
+ * among them. MEASURED at `f5d7b43fc`, four builds of
+ * `node scripts/build/bundle-frontend.js --no-minify`, which prints its own
+ * input count:
+ *
+ *   baseline                                              494 files  8,584,629 B
+ *   static  `import {X} from '…/apPlacementRewriter.js'`   574 (+80)  9,394,789 B
+ *   dynamic `await import('…/apPlacementRewriter.js')`     581 (+87)  9,481,672 B
+ *   dynamic with a NON-LITERAL specifier                   494 (+0)   8,584,894 B
+ *
+ * ⛔ **A DYNAMIC IMPORT WITH A LITERAL SPECIFIER COSTS MORE THAN A STATIC
+ * ONE.** The bundler is esbuild with `bundle: true` and **`splitting: false`**
+ * (`scripts/build/bundle-frontend.js:53-66`), so it resolves a literal
+ * specifier at build time and INLINES the module — and it inlines seven files
+ * MORE than the static form, because a namespace object defeats tree-shaking.
+ * "Lazy" is not a property of the `await`; it is a property of whether the
+ * bundler can see the string.
+ *
+ * ⇒ the only form that keeps the bundle unmoved is a specifier the bundler
+ * cannot evaluate, and **+265 B IS the loader stub**. The base is
+ * `document.baseURI`, never `import.meta.url`: in the bundled build this
+ * module's own URL is `frontend/dist/bundle.js`, so a module-relative resolve
+ * would look for `dist/modules/…`. The document is `frontend/index.html` in
+ * BOTH builds, which is the same convention `flashPanelUI`'s
+ * `GAMES_DIR = './modules/flashPanel/games/'` already fetches against.
+ *
+ * ⛓ AND THIS WHOLE FILE IS BEHIND THAT STUB. `flashPanelUI` reaches it the
+ * same computed way, so its own static imports (`apPlacementRewriter` and
+ * friends) never enter the bundler's graph at all.
+ *
+ * ── ⛓⛓ THE JOIN: A LEDGER ROW → THE LOADED PRESET'S PLACEMENT ───────────
+ *
+ * Two of the three seedling presets are not written in the goal ledger's
+ * vocabulary, and finding that out is what this module is shaped by.
+ *
+ *   `seedling_playthrough`  41 locations, named `"Level 010 - Sword"` — the
+ *                           ledger's own derived spelling. 41/41 DIRECT.
+ *   `seedling` (stage 1)    40 locations from the upstream Seedling APWorld,
+ *                           named `"Penguin's Feather"`, `"Chest (Waterfall)"`.
+ *                           0 direct — and 40/41 through the AP ID.
+ *   `seedling_atlas`        1 location. 0 either way ⇒ ineligible at (iii).
+ *
+ * ⛔ **THE SECOND PATH IS THE AP ID, WHICH IS EXACT — NOT A NAME MATCH.** The
+ * stage-1 preset's location records carry `"id": 20000000…`, which is
+ * literally `games/seedling.json`'s `ap_id_offset + ap_locations[k].id`. So
+ * the chain is ledger row → `flash_name` → AP id → the loaded location with
+ * that id. No tolerance, no nearest-match, no spelling family.
+ *
+ * ⛓ AND `ledger row → flash_name` IS DERIVED FOUR WAYS, EACH FROM DATA THAT
+ * ALREADY EXISTS — see `flashNameForLedgerRow`. **The explicit remainder table
+ * is EMPTY**, and a row asserts it never grows.
+ *
+ * ── ⛓ THE FILTERED LEDGER, AND WHY IT IS NOT A SILENT SKIP ──────────────
+ *
+ * `buildPlacementTable` REFUSES BY NAME when a rewritable row has no
+ * placement — deliberately: *"a location AP will hand an item to and the
+ * player can never find"*. The stage-1 preset has no location for
+ * `seed@L115`, because in the upstream world the goal is an EVENT, not a
+ * check. Refusing 38 good placements over one absent goal row is the wrong
+ * trade, so the LEDGER — which is already an injected parameter of
+ * `buildPlacementTable` — is filtered to the rows that resolve, and the
+ * dropped ones are REPORTED by name. A dropped location keeps the adapter's
+ * property path, because `hostOwnedLocations()` is built from the table and
+ * cannot contain it. ⚠ For `seedling_playthrough` NOTHING is filtered, so the
+ * table is byte-for-byte the one `check-seedling-ap-placement.mjs` builds.
+ */
+
+import { indexLevels } from '../seedlingDemo/atlasSource.js';
+import {
+    AP_ITEM_CAPABILITY,
+    buildNameFromWasmPath,
+    capabilitiesOf,
+    jsRuntimeCapabilities,
+    JS_TRANSPORT,
+    RANDOMIZER_ARMS,
+    seedlingRandomizerEligibility,
+    TAG_CAPABILITY,
+    BOSS_REPORT_CAPABILITY,
+} from './seedlingRandomizerEligibility.js';
+// ⛓ LIGHT: imports nothing, and is already in the panel's static closure.
+import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
+import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
+import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
+import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath, regionAtlasOf } from './mapDocumentPath.js';
+// ⛓ G7 — DEPENDENCY-FREE (it imports nothing), so a static import costs this
+// lazy module one small file and the panel's static closure nothing.
+import {
+    atlasRoomRegions,
+    buildAtlasCheckTable,
+    itemOfEntityFrom,
+    propertyLocationOfFrom,
+} from '../seedlingDemo/seedlingAtlasCheckTable.js';
+
+/**
+ * The four modules the rewrite needs, as DOCUMENT-relative specifiers. ⛔ They
+ * are data, not import statements: `loadApModules` hands each one to an
+ * injected importer, and the default importer's specifier is a parameter —
+ * which is the whole point (see the header's measurement).
+ */
+export const AP_MODULE_PATHS = Object.freeze({
+    rewriter: 'modules/seedlingDemo/apPlacementRewriter.js',
+    exporter: 'modules/seedlingDemo/levelSetExporter.js',
+    validator: 'modules/seedlingDemo/levelSetValidator.js',
+    ledger: 'modules/seedlingDemo/r7Acceptance.js',
+    derivation: 'modules/seedlingDemo/seedlingAtlasDerivation.js',
+});
+
+/**
+ * ⛓ THE GENERATED ARM'S MODULES (seedling generated G2), the same kind of data.
+ * A SIBLING of `AP_MODULE_PATHS` rather than a member: that table is the
+ * VANILLA load's, and its row holds every entry to being imported by it.
+ */
+export const AP_GENERATED_MODULE_PATHS = Object.freeze({
+    generatedSet: 'modules/seedlingDemo/seedlingGeneratedSet.js',
+    validator: AP_MODULE_PATHS.validator,
+});
+
+/**
+ * ⛓ THE ATLAS ARM'S ONE EXTRA MODULE (seedling generated G7): the engine's
+ * `tagOf`. Already inside the rewriter's closure (`procgenSeedling.js` imports
+ * it), so it adds no download to a page that reached the vanilla load.
+ */
+export const AP_ATLAS_MODULE_PATHS = Object.freeze({
+    levelWorld: 'modules/seedlingDemo/levelWorld.js',
+    // ⛓ R9 slice P4E: the ONE tag allocator (`placementTagId`), for a build
+    // declaring `tag`. Also inside the rewriter's closure already.
+    procgenSeedling: 'modules/seedlingDemo/procgenSeedling.js',
+});
+
+/**
+ * The two documents the rewrite is built FROM, likewise document-relative.
+ *
+ * ⛓ THE ATLAS HALF IS DERIVED, NOT SPELLED (maze-lab arms F-b / plan §17.1 F7).
+ * The same relative path is read by the lab (`watchViewer.ATLAS_URL`) and by
+ * node (`levelSource.ATLAS_PATH`), each against its own base; it is stated once
+ * in `mapDocumentPath.js`.
+ */
+export const AP_ASSET_PATHS = Object.freeze({
+    recordSet: 'modules/seedlingDemo/fixtures/seedling-vanilla-set.json',
+    atlasDir: ATLAS_DIR,
+    defaultMap: mapDocumentPath(null).path,
+});
+
+/**
+ * ⛓⛓ **THE REMAINDER TABLE, AND IT IS EMPTY.** Every ledger row's
+ * `flash_name` is derived; nothing is aliased by hand. It exists as a named
+ * empty object rather than not existing, because the row below asserts it
+ * NEVER GROWS — a future ledger row that cannot be derived must be an
+ * explicit, reviewed entry rather than a silent `undefined` that reads as
+ * "this location has no AP placement".
+ */
+export const LEDGER_FLASH_NAME_REMAINDER = Object.freeze({});
+
+/**
+ * A ledger row's `flash_name`, DERIVED. The four arms, and what each is
+ * measured against:
+ *
+ *  - `key`       → `key<N>`, N parsed from the row's OWN id (`bosskey<N>@L…`),
+ *                  the same regex `entityForLedgerRow` uses. Cross-checked
+ *                  against the entity's `@keyType`: 0…4 agree.
+ *  - `chest`     → `chest<level>`. MEASURED: the ledger's 16 chest levels are
+ *                  EXACTLY the 16 `chestNN` suffixes in `ap_locations`, so NN
+ *                  is the level and not an index.
+ *  - `totempart` → `totem<N>`, N the entity's own `@totempart` attribute. ⛔
+ *                  This is the one arm the ledger id cannot answer — it
+ *                  addresses by pixel position — so it needs the room map,
+ *                  which this module has fetched anyway.
+ *  - everything else → the `tag`, unless the tag is not an `ap_locations`
+ *                  name; then the `games/*.json` `locations[]` row whose
+ *                  `ap_name` is `ITEM_FOR_TAG[tag]`. MEASURED: that second
+ *                  hop is needed exactly once and derives `torchpickup` →
+ *                  `Light` → `torch`, which is why no alias is typed here.
+ *
+ * @returns {string|null}
+ */
+export function flashNameForLedgerRow(row, deps) {
+    const { apLocationNames, itemForTag, flashNameForApName, entityForLedgerRow, roomsByLevel } = deps;
+    if (!row) return null;
+    if (LEDGER_FLASH_NAME_REMAINDER[row.id]) return LEDGER_FLASH_NAME_REMAINDER[row.id];
+    if (row.kind === 'key') {
+        const m = /bosskey(\d)@/.exec(row.id);
+        return m ? `key${m[1]}` : null;
+    }
+    if (row.kind === 'chest') return `chest${row.level}`;
+    if (row.kind === 'totempart') {
+        const room = roomsByLevel.get(row.level);
+        const { entity } = room ? entityForLedgerRow(room, row) : { entity: null };
+        const index = entity?.attrs?.totempart;
+        return index === undefined || index === null ? null : `totem${index}`;
+    }
+    // ⛓ R4b — a boss row's id key IS upstream's flash name (`owl`, `shieldspire`, `times`, …, `ap_locations`).
+    const tag = row.kind === 'encounter' || row.kind === 'boss' ? String(row.id).split('@')[0] : row.tag;
+    if (typeof tag !== 'string' || tag === '') return null;
+    if (apLocationNames.has(tag)) return tag;
+    // The one derived hop: the tag names an item, and the game config's own
+    // property table names that item's flash_name.
+    const viaItem = flashNameForApName.get(itemForTag[tag]);
+    return viaItem ?? tag;
+}
+
+/** `stateManager`'s slot, as an integer. ⛔ `Number('') === 0` and
+ *  `Number(null) === 0` (M1-b's trap): a blank slot would make every item read
+ *  as foreign rather than as this player's. */
+export function selfPlayerOf(playerId) {
+    const s = typeof playerId === 'number' ? String(playerId) : playerId;
+    return typeof s === 'string' && /^\d+$/.test(s.trim()) ? Number(s.trim()) : null;
+}
+
+const itemOfRecord = (rec) => (
+    rec && typeof rec.item?.name === 'string' && Number.isInteger(rec.item?.player)
+        ? { name: rec.item.name, player: rec.item.player }
+        : null);
+
+/**
+ * The production `locationItemOf`, plus the census the eligibility predicate's
+ * check (iii) is answered from.
+ *
+ * ⚠ `locations` IS `stateManager.getStaticData()?.locations`, a Map of name →
+ * the full location record. The panel holds the PROXY
+ * (`flashPanelUI.js:1` imports `stateManagerProxySingleton`) and the proxy has
+ * NO `getLocationItem` — that method is on the worker-side class. Reading the
+ * Map is also what makes the AP-id path possible at all, since
+ * `getLocationItem` returns `{name, player}` and never the id.
+ *
+ * @returns {{locationItemOf: Function, ledgerUsed: object[], census: object}}
+ */
+export function buildLocationResolver({ ledger, gameConfig, locations, roomsByLevel, deps }) {
+    const { entityForLedgerRow, itemForTag, labelFor, levelName } = deps;
+    const apLocations = Array.isArray(gameConfig?.ap_locations) ? gameConfig.ap_locations : [];
+    const offset = Number(gameConfig?.ap_id_offset) || 0;
+    const apLocationNames = new Set(apLocations.map((l) => l.flash_name));
+    const apIdOf = new Map(apLocations.map((l) => [l.flash_name, offset + Number(l.id)]));
+    const flashNameForApName = new Map(
+        (gameConfig?.locations ?? []).map((l) => [l.ap_name, l.flash_name]));
+
+    const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
+    const byApId = new Map();
+    for (const rec of byName.values()) {
+        if (Number.isInteger(rec?.id)) byApId.set(rec.id, rec);
+    }
+
+    const resolved = new Map();   // ledger location name -> the loaded record
+    const census = { direct: 0, viaApId: 0, unjoined: [], total: ledger.length };
+    const ledgerUsed = [];
+    for (const row of ledger) {
+        const name = `${levelName(row.level)} - ${labelFor(row)}`;
+        const direct = byName.get(name);
+        if (itemOfRecord(direct)) {
+            resolved.set(name, direct);
+            census.direct += 1;
+            ledgerUsed.push(row);
+            continue;
+        }
+        const flashName = flashNameForLedgerRow(row, {
+            apLocationNames, itemForTag, flashNameForApName, entityForLedgerRow, roomsByLevel,
+        });
+        const rec = flashName === null ? null : byApId.get(apIdOf.get(flashName));
+        if (itemOfRecord(rec)) {
+            resolved.set(name, rec);
+            census.viaApId += 1;
+            ledgerUsed.push(row);
+            continue;
+        }
+        // ⛓ REPORTED, never silently skipped: the row names itself and the
+        // flash_name it looked for, so "why is the Seed still vanilla?" has an
+        // answer in the log rather than in a debugger.
+        census.unjoined.push(`${row.id}${flashName ? ` (${flashName})` : ' (no flash_name)'}`);
+    }
+    return {
+        locationItemOf: (name) => itemOfRecord(resolved.get(name)),
+        ledgerUsed,
+        census,
+    };
+}
+
+/**
+ * The map document this preset declares, and where that answer came from.
+ *
+ * ⛓ THE FACE STAYS, THE DERIVATION MOVED. `{path, source}` is what this
+ * module's callers and its rows read; the path itself is `mapDocumentPath`'s,
+ * shared with the two spellings on the lab's side (F-b / plan §17.1 F7).
+ */
+export function resolveMapPath(rawRules, player) {
+    const { path, source } = mapDocumentPath(rawRules, player);
+    return { path, source };
+}
+
+/**
+ * ⛓⛓ **THE RESET TARGET, CHOSEN BY THE DATA** (⚖ user, 2026-08-29: *"when the
+ * load finishes it RESETS THE PLAYER TO THE START OF THE NEWLY LOADED SET"*).
+ *
+ * The game has exactly two ways to put the player at a set's start, and which
+ * one applies is a fact about the SET, not a preference:
+ *
+ *  - **explicit start** — `teleport({level, x, y})`, i.e. the `new_instance
+ *    Game($level,$x,$y)` recipe in `games/seedling.json`, the same constructor
+ *    `Teleporter.update()` uses and the one the glue's arrival warp already
+ *    rides. Available only when the set's `start` carries a POSITION.
+ *  - **the game's own new-game arm** — `level < 0` (`Game.as:832-840`), which
+ *    is the only path that runs `LevelSet.applyStart` (`LevelSet.as:451-458`).
+ *
+ * ⛔ **AND THE VANILLA-DERIVED SET CARRIES NO POSITION.** MEASURED:
+ * `vanillaRecordSet(...).set.start` is `{"level": 0}` — level only.
+ * `levelSetExporter.js:225` says why in its own words: *"no
+ * summary.startCell on entries[0], so the arrival position falls to the Game
+ * constructor's own (80, 128)"*. So for every set this slice delivers, the
+ * host does NOT know the spawn and the game does. Typing `80, 128` here would
+ * hardcode a constant that belongs to `Main.as:51`, and `region_coords` has no
+ * level-0 row to derive it from (measured: 9 entries, levels 1,2,19,30,56,…).
+ *
+ * ⇒ the mode is DERIVED: a start with a position gets the explicit teleport, a
+ * start without one gets the arm that can answer. Both are implemented; P1-e
+ * measures which reads as *"a new game started"* on the real page and the
+ * answer is reported rather than silently chosen.
+ */
+export const RESET_MODES = Object.freeze({
+    EXPLICIT_START: 'explicit-start',
+    NEW_GAME_ARM: 'new-game-arm',
+});
+
+/**
+ * ⛓⛓ **THE INTRO IS SKIPPED — AND THIS IS THE ONE PLACE THAT SAYS SO.**
+ * ⚖ The user, 2026-10-03: *"For now, let's just always skip the cutscene. We
+ * might want to add an option to enable it later."* A later option is a
+ * one-line wiring into `resetTargetFor`'s `intro` argument; nothing else reads
+ * this.
+ *
+ * WHAT THE NEW-GAME ARM DOES THAT THE EXPLICIT START DOES NOT
+ * (`Game.as:832-840`, `:956-1005`; MEASURED live on `seedling_playthrough`,
+ * plan §5.16): `time = dayLength / 2`, the `"Wind"` sound, `cutscene[0]` —
+ * the wind scene (no input, dust drawing the gameplay rng, `timeRate`
+ * decaying the clock 4800 → 5000.5) — and then `add(new Help(2))`, whose
+ * freeze holds until an arrow is pressed. Everything else the scene touches
+ * it puts back (`freezeObjects`, `receiveInput`, `directionFace` −1,
+ * `ALIGN`, `timeRate` 1, the camera). `applyStart` adds nothing for a set
+ * with no position. So the skip leaves the game in a real new game's
+ * post-intro state, with ONE named difference: the clock. The fresh save the
+ * delivery wrote reads `dayLength / 2` (`Main.time`'s own getter), so the
+ * skipped game starts ~200 frames EARLIER in the same midday (no threshold
+ * between; `daysPassed` is write-only) and on a whole frame instead of the
+ * scene's `.5`. The rng is not advanced by the dust it never drew.
+ */
+export const NEW_GAME_INTRO = false;
+
+export function resetTargetFor(set, bootPosition = null, { intro = NEW_GAME_INTRO } = {}) {
+    const start = set?.start ?? null;
+    if (!start || !Number.isInteger(start.level)) return null;
+    if (Number.isInteger(start.x) && Number.isInteger(start.y)) {
+        return {
+            mode: RESET_MODES.EXPLICIT_START,
+            level: start.level,
+            x: start.x,
+            y: start.y,
+            expectLevel: start.level,
+            intro: false,
+            position: 'set',
+            why: `the set names its own start — level ${start.level} at (${start.x}, ${start.y})`,
+        };
+    }
+    /**
+     * ⛔⛔ **`applyStart` DOES NOT SUPPLY A POSITION THE SET DOES NOT CARRY, SO
+     * THE CONSTRUCTOR'S ARGS STAND — AND ZEROS PARK THE PLAYER IN A SOLID.**
+     * MEASURED, P1-e run 4: this returned `{level:-1, x:0, y:0}` on the
+     * assumption that the game's new-game arm would place the player itself.
+     * It does not. The player landed at pixel (0, 0) — reported as `(8, 8)`
+     * in the roster, which is the entity centring — and **level 0 has
+     * `tree@0,0`**, so the ruled *"reset to the start"* put them inside a tree
+     * in the top-left corner. The reset rows all passed, because they assert
+     * that a reset was ISSUED and OBSERVED, not that the destination is
+     * somewhere a person can stand.
+     *
+     * ⇒ the fallback position is the GAME'S OWN, read live: the world as it
+     * stood at bridge-ready, before anything was delivered. `Main.as:51` boots
+     * `new Game(0, 80, 128)` and the roster then reports the player at
+     * (88, 136) — the constructor's args plus half a tile — so the args are
+     * recovered with the map document's OWN `tile_size`, never a typed 8.
+     * ⛓ `level` stays −1: the new-game arm still runs (and `applyStart` still
+     * wins whenever a set DOES carry a start), it simply is not asked to
+     * invent a coordinate it does not have.
+     */
+    /**
+     * ⛔⛔ **AND THE BORROWED POSITION IS ONLY VALID IN THE LEVEL IT WAS READ
+     * IN.** `(80, 128)` is a standable tile *of level 0*; a set whose start
+     * names some other level — a generated one that lost its `summary.
+     * startCell`, say — would have that coordinate applied to a room whose
+     * geometry nobody consulted. That is the same defect as the zeros, one
+     * step less obvious: not "an invented coordinate" but "a real coordinate
+     * from the wrong room". ⇒ REFUSED BY NAME. The rooms stay mounted, nothing
+     * is bound, and the player is left where they are.
+     *
+     * ⚠ ARMED ONLY WHEN THE GAME REPORTS A LEVEL. MEASURED, run 4:
+     * `botStatus.level` is **−1** before any bot run (its fields are the bot's,
+     * unset until `botStart`), so `bootPosition.level` is null in production
+     * today and this guard does not fire. It is pinned in node rather than
+     * left to be discovered, and the honest statement is that the host needs a
+     * real read of `Main.level` — a DECLARED bridge property it does not
+     * currently parse — before this can protect anyone.
+     */
+    if (bootPosition && bootPosition.level != null && bootPosition.level !== start.level) {
+        return {
+            mode: intro ? RESET_MODES.NEW_GAME_ARM : RESET_MODES.EXPLICIT_START,
+            level: intro ? -1 : start.level,
+            x: null,
+            y: null,
+            expectLevel: start.level,
+            intro,
+            refused: true,
+            why: `the set starts in level ${start.level} and carries no position, but the only `
+                + `position the host has was read in level ${bootPosition.level} — a standable `
+                + 'tile of THAT room says nothing about this one',
+        };
+    }
+    /**
+     * ⛓ THE SKIP (the default): the SAME constructor args the arm would get,
+     * sent with the set's start level instead of −1 — `Game.begin()` then
+     * never enters `if (level < 0)`, so no cutscene and no tutorial. The
+     * position is still the GAME's boot position, never `Main.as:51`'s
+     * constant: `applyStart` would have supplied nothing else.
+     */
+    if (!intro) {
+        return {
+            mode: RESET_MODES.EXPLICIT_START,
+            level: start.level,
+            x: bootPosition?.x ?? null,
+            y: bootPosition?.y ?? null,
+            expectLevel: start.level,
+            intro: false,
+            position: 'boot',
+            why: `the set's start names level ${start.level} and NO position; the new game's `
+                + 'intro is skipped (⚖ 2026-10-03), so the explicit start is sent, with the '
+                + 'constructor args taken from the position the GAME itself booted at',
+        };
+    }
+    return {
+        mode: RESET_MODES.NEW_GAME_ARM,
+        level: -1,
+        x: bootPosition?.x ?? null,
+        y: bootPosition?.y ?? null,
+        expectLevel: start.level,
+        intro: true,
+        position: 'boot',
+        why: `the set's start names level ${start.level} and NO position, so the game's own `
+            + 'new-game arm (level < 0) runs, with the constructor args taken from the '
+            + 'position the GAME itself booted at',
+    };
+}
+
+/**
+ * ⛔⛔ **WHAT THE HOST CAN AND CANNOT SEE OF A WORLD SWAP — trap 972.**
+ * `FP.world = x` writes `FP._goto` only; the swap lands in
+ * `Engine.checkWorld()` at the END of the next `Engine.update()`. `Game`'s
+ * constructor has ALREADY written `Main.level` and `Main.playerPositionX/Y`
+ * by then (they are setters onto statics), so a poll on either of those
+ * declared bridge properties proves CONSTRUCTION, never the swap — which is
+ * exactly the row M1b found could not fail.
+ *
+ * `botMobiles()` is different: it enumerates the roster of whatever `FP.world`
+ * IS at the moment of the call. So the confirmation is *"the level is the one
+ * we asked for AND a roster exists for it"* — read off the world rather than
+ * off a static. ⚠ It is still not object identity, and P1-e measures what the
+ * live page actually reports; a sleep is never the answer either way.
+ */
+export function readWorld(bot) {
+    let status = null;
+    let mobiles = null;
+    try { status = JSON.parse(bot('botStatus')); } catch { status = null; }
+    try { mobiles = JSON.parse(bot('botMobiles')); } catch { mobiles = null; }
+    const roster = mobiles?.mobiles ?? null;
+    const player = Array.isArray(roster)
+        ? roster.find((m) => /(^|:)Player$/.test(String(m.cls ?? ''))) ?? null
+        : null;
+    /**
+     * ⛓ `time` IS CARRIED because the game's own new-game arm
+     * (`Game.as:832-840`, `level < 0`) sets `time = dayLength / 2` — the one
+     * field that arm writes and an ordinary construction does not.
+     * `check-seedling-bot-differential.mjs:2094` establishes that `botStatus`
+     * serves `Game.time` and that it ADVANCES while the page runs, so it can
+     * only ever be read as a lower bound. ⚠ And it may not discriminate at
+     * all: `procgenOracle.js:221` records that a stored `0` is APPLIED as
+     * `dayLength / 2` too, so an ordinary boot off an empty save may already
+     * be at that value. Carried and REPORTED for that reason — the measurement
+     * decides whether it is a witness.
+     */
+    return { level: status?.level ?? null, rosterSize: roster?.length ?? null, player,
+        time: status?.time ?? null, status };
+}
+
+const defaultWaitFrame = () => new Promise((r) => {
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r());
+    else setTimeout(r, 0);
+});
+
+/**
+ * ⛓⛓ **THE LOAD SEQUENCE, AS RULED** — overlay on, deliver, reset, overlay
+ * off — with every dependency injected so the whole thing runs in node.
+ *
+ * ⚠ **PROGRESS IS BY PHASE, NOT BY CHUNK, AND THAT IS MEASURED RATHER THAN
+ * CHOSEN.** `SeedlingLevelSetDelivery.deliver()` is SYNCHRONOUS: it sends all
+ * nine chunks in one loop with no per-chunk hook. A browser cannot paint
+ * inside a synchronous loop, so a *"rooms k/N"* readout would be a number
+ * nobody ever sees — and adding an `onChunk` callback means editing a module
+ * this slice may not touch. So each PHASE sets the overlay text and then
+ * awaits a frame, which is the granularity the display can actually show.
+ *
+ * ⛔ A REFUSAL DOES NOT RESET AND DOES NOT BIND. The game stays vanilla, and a
+ * vanilla room must keep the adapter's property path — so `setCheckBinding` is
+ * never called, and `hostOwnedLocations()` therefore never stands the adapter
+ * down.
+ */
+/**
+ * ⛓⛓ **WIND CUTSCENE — A PUSHED TELEPORT'S WORLD BEGINS BEFORE THE SET IS SENT.**
+ *
+ * `Game.level` is not a field: it is `Main.level`, a getter on the SAVE (`Game.as:526-532`,
+ * `Main.as:218`). `new Game(N, …)` writes N into the save in its constructor, but `begin()` runs only
+ * when the world swaps in (`Engine.checkWorld`, a frame or more later). A delivery that mounts a new set
+ * in that gap throws the save away (`Main.freshSaveForLevelSet`, "LEVEL SET RESET"), so `begin()` reads
+ * **−1** and takes the new-game arm (`Game.as:832-840`): the wind scene, under the world the glue pushed.
+ * `cutscene` is a static, so the reset that follows (and every re-arrival) plays on inside it.
+ * MEASURED (CI, the `tutorial-walk-procgen-seedling` row, 1 of 14 runs): the glue's arrival teleport
+ * pushed at 7129 ms, the delivery at 7458 ms, then a begin record `level −1` at 7662 ms before the
+ * reset's own `level 0`. The 13 green runs did not lose that race.
+ *
+ * ⇒ The question is the adapter's stamp (`swapState().pushedOn`, the begin record live when the last
+ * teleport went): while it still IS the live begin record, that teleport's world has not begun. A teleport
+ * still QUEUED is harmless (its constructor runs after the mount and writes its level into the new save).
+ * Polled, never slept; bounded by the load's own swap timeout, and a timeout delivers anyway, by name.
+ * @returns {string|null} why the delivery must wait, or null
+ */
+export function pushedSwapPending(swap, beginEntry) {
+    if (!swap?.pushedOn || !beginEntry) return null;
+    if (JSON.stringify(swap.pushedOn) !== JSON.stringify(beginEntry)) return null;
+    return `teleport #${swap.pushes ?? '?'} was pushed on the live begin record and its world has not begun`;
+}
+
+/** Wait out `pushedSwapPending`: `{waited, landed, waitedMs, why}` (`why` = the last blocker). */
+export async function settlePushedSwap({ glue, bot, now = () => Date.now(), sleep, timeoutMs = 30000, pollMs = 100 }) {
+    const t0 = now();
+    let waited = false;
+    for (;;) {
+        let begin = null;
+        try { begin = JSON.parse(bot?.('botSeam') ?? 'null')?.beginEntry ?? null; } catch { begin = null; }
+        let swap = null;
+        try { swap = glue?.swapState?.() ?? null; } catch { swap = null; }
+        const why = pushedSwapPending(swap, begin);
+        if (!why) return { waited, landed: true, waitedMs: now() - t0, why: null };
+        if (now() - t0 > timeoutMs) return { waited: true, landed: false, waitedMs: now() - t0, why };
+        waited = true;
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(pollMs);
+    }
+}
+
+export async function runSeedlingRandomizerLoad(args = {}) {
+    /**
+     * ⛓ §5.19 — THE MOUNT + RESET WINDOW HOLDS THE GLUE'S POSITION WATCH: the player's positions in it are
+     * transient (the pre-reset boot, the mount, the explicit start), and a logical move credited off one is
+     * a move nobody made. Released — and the edge re-armed — when the load ends, landed or refused.
+     */
+    const glue = args.glue;
+    glue?.holdPositionWatch?.('the randomized load (mount + reset)');
+    try {
+        return await runSeedlingRandomizerLoadSteps(args);
+    } finally {
+        glue?.releasePositionWatch?.();
+    }
+}
+
+async function runSeedlingRandomizerLoadSteps({
+    loaded,
+    glue,
+    teleport,
+    bot,
+    overlay,
+    log = () => {},
+    waitFrame = defaultWaitFrame,
+    now = () => Date.now(),
+    sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
+    swapTimeoutMs = 30000,
+    swapPollMs = 100,
+} = {}) {
+    const steps = [];
+    const step = (name, detail) => { steps.push({ name, detail }); };
+
+    /**
+     * ⛓ G7 — A LOAD WITH NO DELIVERY (the atlas arm) ONLY BINDS. There are no
+     * rooms to mount and so no reset to make: the player is already in the
+     * rooms the table addresses. ⛔ No overlay either — *"delivering 0 rooms"*
+     * over a game that is not waiting on anything would be a false sentence.
+     */
+    if (loaded.delivery == null) {
+        glue.setCheckBinding(loaded.checkBinding);
+        step('bind', { delivery: null, bound: loaded.table?.size ?? 0 });
+        log(`[ap placement] ${loaded.table?.size ?? 0} location(s) bound on the ${loaded.arm ?? 'loaded'} `
+            + 'arm — nothing delivered, nothing reset');
+        return { ok: true, why: null, reset: null, steps, delivered: null };
+    }
+
+    overlay.show();
+    overlay.setText('preparing randomized rooms…');
+    step('overlay-on');
+    await waitFrame();
+
+    const rooms = loaded.set?.rooms?.length ?? 0;
+    glue.setDelivery(loaded.delivery);
+    loaded.delivery.attachBot(bot);
+    overlay.setText(`delivering ${rooms} randomized room(s)…`);
+    step('deliver-begin', { rooms });
+    await waitFrame();
+
+    // ⛓ WIND CUTSCENE — a teleport already pushed lands its world BEFORE the set is sent (`settlePushedSwap`).
+    const settle = await settlePushedSwap({ glue, bot, now, sleep, timeoutMs: swapTimeoutMs, pollMs: swapPollMs });
+    if (settle.waited) {
+        step('swap-settle', settle);
+        // ⛓ On the console too, so a CI log counts it (the panel log is the panel's).
+        console.info(`[ap placement] swap-settle: waited ${Math.round(settle.waitedMs)} ms for a pushed `
+            + `teleport's world before the delivery (landed: ${settle.landed})`);
+        if (!settle.landed) {
+            log(`[ap placement] a pushed teleport's world did not begin within ${swapTimeoutMs} ms — delivering `
+                + `anyway (${settle.why})`, 'warn');
+        }
+    }
+    // ⛔ NO `await` FROM HERE TO `deliver()`: the settle's answer holds only in the turn it was read.
+    const result = loaded.delivery.deliver();
+    step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
+    if (!result.ok) {
+        overlay.setText(`the randomized rooms did NOT load — ${result.why}. The game is `
+            + 'running the vanilla rooms.', 'error');
+        log(`[ap placement] DELIVERY REFUSED — ${result.why}`, 'error');
+        return { ok: false, why: result.why, reset: null, steps, delivered: result };
+    }
+
+    /**
+     * ⛔⛔ **THE WORLD IS READ BEFORE THE RESET, AND IT DOES TWO JOBS.**
+     *
+     * (1) It is the only thing that makes the reset OBSERVABLE for this set:
+     * the confirmation below waits for `level === expectLevel`, and for every
+     * set this slice delivers `expectLevel` is **0, the level the game already
+     * booted into** — true on its first iteration whether or not the reset
+     * landed, vacuous in exactly the way the ordering fixture was (trap 981)
+     * and the M1 door row was (trap 985). What CAN move is the world itself,
+     * so the BEFORE/AFTER pair is recorded and REPORTED rather than reduced to
+     * a boolean here; the gate owns the comparison.
+     *
+     * (2) It supplies the position the constructor is given when the SET does
+     * not carry one — see `resetTargetFor`. This read must therefore happen
+     * BEFORE the target is chosen, and before anything moves the player.
+     */
+    const before = readWorld(bot);
+    /**
+     * ⛓ THE HALF-TILE IS THE MAP DOCUMENT'S, NOT AN 8. `Entity` centres on its
+     * cell, so a roster position is the constructor's argument plus
+     * `tile_size / 2`; taking the divisor from the document the rooms came
+     * from means a set on a different grid is followed rather than mis-placed.
+     */
+    const tileSize = Number(loaded.tileSize);
+    const halfTile = Number.isFinite(tileSize) ? Math.floor(tileSize / 2) : 0;
+    /**
+     * ⛓⛓ **TWO SOURCES FOR THE BOOT POSITION, AND THE FIRST NEEDS NO
+     * ARITHMETIC.** `SeedlingRegionBinding` already consumes every declared
+     * report the game makes: `playerPositionX/Y` into `lastSpawn` and `level`
+     * into `lastLevel` (`seedlingRegionBinding.js:333-334, :345`). Those are
+     * `Main.playerPositionX/Y` — **the constructor's OWN arguments**, not an
+     * entity position — so preferring them removes the half-tile correction
+     * from the happy path entirely, and `lastLevel` is what ARMS the wrong-room
+     * guard below. ⛔ Read, never written: this module does not touch the
+     * binding's state.
+     *
+     * The roster derivation stays as the fallback for the case the binding has
+     * seen nothing (it drops every report while parked, and a preset with no
+     * sidecars may never have made it active), and both readings are reported
+     * so a row can say WHICH one answered.
+     */
+    /**
+     * ⛓⛓ RESTART (2026-10-05) — **AND BEFORE BOTH, THE ONE START-SPAWN SOURCE.** When the load hopped
+     * into the start region (the binding saw a `startHop` load), the boot position IS the start region's
+     * arrival — `seedlingStartSpawn` with no set, the spawn the binding's arrival already teleported to
+     * (MEASURED (16, 128) on the playthrough, §5.18; the declared report reads the same numbers). Asking
+     * the function rather than reading its echo is what lets a Restart, which asks it WITH the set, land
+     * exactly where this reset puts a new game: `resetTargetFor` sends `set.start` when it carries a
+     * position, else this.
+     */
+    const startArrival = glue?.binding?.startSpawn?.({ set: null }) ?? null;
+    const declaredSpawn = glue?.binding?.lastSpawn ?? null;
+    const declaredLevel = glue?.binding?.lastLevel ?? null;
+    const fromDeclared = Number.isFinite(declaredSpawn?.x) && Number.isFinite(declaredSpawn?.y);
+    const bootPosition = startArrival
+        ? { x: startArrival.x, y: startArrival.y, level: startArrival.level,
+            source: 'seedlingStartSpawn (the start region\'s arrival)' }
+        : fromDeclared
+        ? {
+            x: declaredSpawn.x,
+            y: declaredSpawn.y,
+            level: Number.isInteger(declaredLevel) && declaredLevel >= 0 ? declaredLevel : null,
+            source: 'the binding\'s last declared playerPosition',
+        }
+        : (before.player
+            ? {
+                x: before.player.x - halfTile,
+                y: before.player.y - halfTile,
+                // ⛓ `botStatus.level` is −1 before a bot run — its fields are
+                // the bot's, unset until `botStart` — and a negative level is
+                // the game's own "no game" sentinel, so it is carried as null
+                // rather than compared as a room number.
+                level: Number.isInteger(before.level) && before.level >= 0 ? before.level : null,
+                source: `the roster, less the map's half-tile (${halfTile})`,
+            }
+            : null);
+
+    const target = resetTargetFor(loaded.set, bootPosition);
+    if (!target) {
+        // ⛓ REFUSED RATHER THAN GUESSED. A set with no `start.level` has no
+        // start to reset to, and picking level 0 would invent one.
+        overlay.setText('the randomized rooms are loaded, but the set names no start — '
+            + 'the player was NOT moved.', 'error');
+        log('[ap placement] the delivered set has no `start.level`, so no reset was made', 'error');
+        overlay.hide();
+        return { ok: true, why: null, reset: null, steps, delivered: result };
+    }
+
+    overlay.setText(`starting the randomized game (${target.mode})…`);
+    step('reset-begin', { mode: target.mode, level: target.level, intro: target.intro,
+        expectLevel: target.expectLevel, args: { x: target.x, y: target.y }, halfTile,
+        bootPosition,
+        world: { level: before.level, rosterSize: before.rosterSize, time: before.time,
+            player: before.player ? { x: before.player.x, y: before.player.y } : null } });
+    await waitFrame();
+    if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) {
+        // ⛔ REFUSED RATHER THAN SENT AS ZEROS. Zeros are what put the player
+        // inside `tree@0,0` in run 4; a reset with no position to send is a
+        // reset that should not be made.
+        const why = target.refused ? target.why
+            : 'the game did not report a position to start from';
+        overlay.setText(`the randomized rooms are loaded, but ${why} — the player was `
+            + 'NOT moved.', 'error');
+        log(`[ap placement] no position to reset to — ${why}; the rooms are mounted and the `
+            + 'player was left where they were', 'error');
+        step('reset-end', { landed: false, why: target.refused ? 'wrong room' : 'no position' });
+        overlay.hide();
+        return { ok: true, why: 'no position to reset to', reset: { ...target, landed: false },
+            steps, delivered: result };
+    }
+    teleport({ level: target.level, x: target.x, y: target.y });
+
+    // ⛔ POLLED, NEVER SLEPT (trap 972 / trap 970: a wall-clock settle in a
+    // browser is a FRAME budget in disguise, and this page's frame rate is a
+    // property of the GPU it drew on).
+    const t0 = now();
+    let world = null;
+    let landed = false;
+    for (;;) {
+        world = readWorld(bot);
+        if (world.level === target.expectLevel && world.player) { landed = true; break; }
+        if (now() - t0 > swapTimeoutMs) break;
+        await sleep(swapPollMs);
+    }
+    step('reset-end', { landed, waitedMs: now() - t0, level: world?.level ?? null,
+        rosterSize: world?.rosterSize ?? null, time: world?.time ?? null,
+        player: world?.player ? { x: world.player.x, y: world.player.y } : null,
+        // ⛓ The honest witness: did ANYTHING about the world move? Reported,
+        // never asserted here — the gate owns the comparison.
+        moved: before.rosterSize !== world?.rosterSize
+            || before.player?.x !== world?.player?.x
+            || before.player?.y !== world?.player?.y
+            || before.time !== world?.time });
+
+    if (!landed) {
+        overlay.setText(`the randomized rooms are loaded, but the reset to level `
+            + `${target.expectLevel} was not observed within ${swapTimeoutMs} ms.`, 'error');
+        log(`[ap placement] the reset was not observed — the world still reports level `
+            + `${world?.level ?? 'nothing'}`, 'error');
+        overlay.hide();
+        return { ok: true, why: 'reset not observed', reset: { ...target, landed }, steps,
+            delivered: result };
+    }
+
+    // ⛔ THE BINDING ATTACHES AFTER THE RESET LANDS, and with it the adapter's
+    // stand-down: until the rewritten rooms are the ones being played, the
+    // property path is still the right owner of every location.
+    glue.setCheckBinding(loaded.checkBinding);
+    // ⛓ RESTART — the delivered set's `start` is the rest of `seedlingStartSpawn`'s answer.
+    glue.setStartSet?.(loaded.set);
+    step('bind', { startSpawn: glue?.binding?.startSpawn?.() ?? null });
+    overlay.hide();
+    step('overlay-off');
+    log(`[ap placement] ${rooms} randomized room(s) mounted in ${result.chunks} chunk(s); `
+        + `${loaded.replaced} location(s) replaced; started at level ${target.expectLevel} `
+        + `(${target.mode})`);
+    return { ok: true, why: null, reset: { ...target, landed: true, observed: world }, steps,
+        delivered: result };
+}
+
+const defaultFetchJson = async (url) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return res.json();
+};
+
+/**
+ * ⛔ THE DEFAULT IMPORTER'S SPECIFIER IS A PARAMETER, and that is the whole
+ * bundle measurement in one line. Written as a literal here it would inline
+ * 87 files; written as `url` the bundler cannot evaluate it and emits the
+ * runtime import instead.
+ */
+const defaultImportModule = (url) => import(/* @vite-ignore */ url);
+
+/**
+ * Everything the panel needs to hand the glue, or a refusal that says why.
+ *
+ * The construction MIRRORS `check-seedling-ap-placement.mjs:96-137, 311-323,
+ * 1077-1078` verbatim — `vanillaRecordSet` → `buildPlacementTable` →
+ * `rewriteRecordSet` → `apMappingInvalidation` → `SeedlingLevelSetDelivery` →
+ * `SeedlingCheckBinding` — because that gate is the only other constructor of
+ * these two modules and a second recipe would be a second thing to be right.
+ *
+ * @returns {Promise<{verdict: string, why: string, eligibility: object,
+ *   delivery: object|null, checkBinding: object|null, table: Map|null,
+ *   replaced: number, set: object|null, invalidation: object|null,
+ *   census: object|null, assets: object|null, selfPlayer: number|null}>}
+ */
+export async function loadSeedlingRandomizer({
+    flashPanel,
+    manifest,
+    /** ⛓ J3 — `'js'` asks the JS runtime's questions (its capabilities, its arms); default the wasm page's. */
+    transport = 'wasm',
+    rawRules = null,
+    locations,
+    playerId,
+    gameConfig,
+    bot = null,
+    baseUrl,
+    fetchJson = defaultFetchJson,
+    importModule = defaultImportModule,
+    log = () => {},
+} = {}) {
+    const url = (rel) => new URL(rel, baseUrl).href;
+    const refuse = (eligibility, extra = {}) => ({
+        verdict: eligibility.verdict,
+        why: eligibility.why,
+        eligibility,
+        delivery: null,
+        checkBinding: null,
+        table: null,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census: null,
+        assets: null,
+        selfPlayer: null,
+        ...extra,
+    });
+
+    // ── the cheap two, first: nothing heavy is fetched for a preset that
+    //    cannot use it ────────────────────────────────────────────────────
+    // ⛓ J3 — the JS runtime's question is only open while the rules carry
+    // real rooms, so its cheap call is asked about them (the wasm one is not:
+    // its answer here is byte-for-byte the pre-J3 one).
+    const atlasRooms = transport === JS_TRANSPORT
+        ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms });
+    if (cheap.verdict === 'ineligible') return refuse(cheap);
+
+    // ── (iv) the two documents ──────────────────────────────────────────
+    const mapPath = resolveMapPath(rawRules, playerId);
+    const assets = {
+        recordSet: { url: url(AP_ASSET_PATHS.recordSet), ok: false },
+        map: { url: url(mapPath.path), ok: false, source: mapPath.source },
+    };
+    let embed = null;
+    let mapDoc = null;
+    try {
+        embed = await fetchJson(assets.recordSet.url);
+        assets.recordSet.ok = true;
+    } catch (e) { assets.recordSet.why = e.message; }
+    try {
+        mapDoc = await fetchJson(assets.map.url);
+        assets.map.ok = true;
+    } catch (e) { assets.map.why = e.message; }
+
+    if (!assets.recordSet.ok || !assets.map.ok) {
+        return refuse(seedlingRandomizerEligibility(
+            { flashPanel, transport, manifest, assets, ...atlasRooms }), { assets });
+    }
+
+    // ── the heavy modules ───────────────────────────────────────────────
+    const [rewriter, exporter, validator, ledgerMod, derivation] = await Promise.all(
+        [AP_MODULE_PATHS.rewriter, AP_MODULE_PATHS.exporter, AP_MODULE_PATHS.validator,
+            AP_MODULE_PATHS.ledger, AP_MODULE_PATHS.derivation].map((p) => importModule(url(p))));
+
+    const roomsByLevel = indexLevels(mapDoc);
+    const { locationItemOf, ledgerUsed, census } = buildLocationResolver({
+        ledger: ledgerMod.R7_GOAL_LEDGER,
+        gameConfig,
+        locations,
+        roomsByLevel,
+        deps: {
+            entityForLedgerRow: derivation.entityForLedgerRow,
+            itemForTag: derivation.ITEM_FOR_TAG,
+            labelFor: derivation.labelFor,
+            levelName: derivation.levelName,
+        },
+    });
+
+    // ── (iii) the placement, and the full verdict ───────────────────────
+    // ⛓ The build's declared capabilities, from DATA (the JS runtime declares its own,
+    // read at load: `bossreport` is LIVE only while `apReportBosses` is ON).
+    const buildCapabilities = transport === JS_TRANSPORT ? jsRuntimeCapabilities()
+        : (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []);
+    const eligibility = seedlingRandomizerEligibility({
+        flashPanel,
+        transport,
+        manifest,
+        // ⛓ G7: the real rooms, so a world the ledger cannot name DIVERTS
+        // (check `atlas`) instead of failing (iii).
+        atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) },
+        placement: { resolved: census.direct + census.viaApId, total: census.total,
+            unresolved: census.unjoined },
+        assets,
+    });
+    if (eligibility.arm === RANDOMIZER_ARMS.ATLAS) {
+        return loadSeedlingAtlas({
+            eligibility, rawRules, locations, playerId, gameConfig, mapDoc, assets,
+            modules: { rewriter, derivation, exporter, validator }, baseUrl, fetchJson,
+            importModule, log,
+            // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
+            // a delivery needs if the table allocates a tag.
+            tagCapable: buildCapabilities.includes(TAG_CAPABILITY),
+            embed, bot,
+        });
+    }
+    if (!eligibility.eligible) return refuse(eligibility, { census, assets });
+
+    const selfPlayer = selfPlayerOf(playerId);
+    if (selfPlayer === null) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'placement',
+            why: `placement: the loaded slot ${JSON.stringify(playerId)} is not an integer `
+                + 'player id — every `look` decision is relative to it, and a blank one would '
+                + 'make every item read as foreign',
+        }, { census, assets });
+    }
+
+    if (census.unjoined.length > 0) {
+        log(`[ap placement] ${census.unjoined.length} goal-ledger row(s) have no AP location in `
+            + `these rules and stay VANILLA: ${census.unjoined.join(', ')}`);
+    }
+
+    const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
+    // ⛓⛓ R4b part 2 — THE `bossreport` GUARD. Only a build declaring it reports the nine boss/encounter rows
+    // (the seven kills, Fire (32,4), the dark sword (12,1)) and leaves Fire / the dark sword to the host. A build
+    // without it grants those itself and never clears the addresses, so its checks would never fire: the rows come
+    // back REFUSED BY NAME and the load is refused with them — never played with a check missing, never checked off
+    // the old encounter flags.
+    const bossReport = buildCapabilities.includes(BOSS_REPORT_CAPABILITY);
+    const { table, entries, fixed, refused: reportRefused, encounters, reports } = rewriter.buildPlacementTable({
+        locationItemOf,
+        ledger: ledgerUsed,
+        rooms: mapDoc.levels,
+        selfPlayer,
+        bossReport,
+    });
+    if (reportRefused.length > 0) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'capability',
+            why: `capability: the build ${JSON.stringify(transport === JS_TRANSPORT ? JS_TRANSPORT
+                : buildNameFromWasmPath(flashPanel?.wasm))} does not declare \`${BOSS_REPORT_CAPABILITY}\`, so `
+                + `${reportRefused.length} location(s) of these rules would never be checked: `
+                + reportRefused.map((r) => r.why).join('; '),
+        }, { census, assets, refused: reportRefused });
+    }
+    const { set, replaced } = rewriter.rewriteRecordSet(vanilla, table);
+    const invalidation = exporter.apMappingInvalidation(set);
+
+    const delivery = new SeedlingLevelSetDelivery({
+        planChunks: validator.planLevelSetChunks,
+        bot,
+        log,
+    }).arm(set, invalidation);
+    // ⛓ R4b part 2 — the nine report rows are TABLE rows (checked at their fixed address, `SeedlingCheckBinding`'s
+    // head); the property path's own name for the two host-granted flags (the game config's `locations[]`:
+    // `hasFire` → `Fire`, `hasDarkSword` → `Dark Sword`) is stood down with them.
+    const propertyNameOf = new Map((gameConfig?.locations ?? []).map((l) => [l.property, l.ap_name ?? l.flash_name]));
+    const checkBinding = new SeedlingCheckBinding({
+        table, placementKey: rewriter.placementKey, selfPlayer,
+        propertyLocations: fixed.map((e) => propertyNameOf.get(e.flag)).filter(Boolean),
+    });
+
+    return {
+        verdict: 'eligible',
+        why: eligibility.why,
+        eligibility,
+        delivery,
+        checkBinding,
+        table,
+        entries,
+        encounters,
+        // ⛓ R4b — the boss kills, described for the bot map (their checks are the table's `fixed` rows)
+        reports,
+        fixed,
+        replaced,
+        set,
+        invalidation,
+        census,
+        assets,
+        selfPlayer,
+        /** ⛓ The map document's OWN grid, carried so the reset can recover a
+         *  constructor argument from a roster position without typing an 8. */
+        tileSize: mapDoc.tile_size,
+        capability: AP_ITEM_CAPABILITY,
+    };
+}
+
+/**
+ * ⛓⛓ **THE GENERATED ARM** (seedling generated G2; plan
+ * `seedling-generated-plan.md` §2.2 item 3): a world whose rooms the pipeline
+ * GENERATED. No map and no vanilla record set are fetched — the set is
+ * ASSEMBLED from the rules.json (`seedlingGeneratedSet.js`, reached through the
+ * same computed specifier as the rewriter), delivered through the same
+ * `SeedlingLevelSetDelivery`, and bound through the same `SeedlingCheckBinding`.
+ *
+ * ⛓ IT RETURNS `loadSeedlingRandomizer`'s SHAPE, so `runSeedlingRandomizerLoad`
+ * and the panel's call site run unchanged: `delivery`, `checkBinding`, `set`,
+ * `invalidation`, `table`, `replaced` (the `apitem`s placed), a `census` with
+ * the generated counts, `selfPlayer`, `tileSize`, and `arm: 'generated'`.
+ *
+ * ⛔ The verdict is re-decided HERE from the rules (the census) rather than
+ * taken on the caller's word: a mixed world is refused by the eligibility
+ * check's sentence, and the assembler refuses by its own.
+ */
+export async function loadSeedlingGenerated({
+    flashPanel,
+    manifest,
+    /** ⛓ Seedling JS J1: `'js'` when the panel mounted the JS runtime page. */
+    transport = 'wasm',
+    rawRules = null,
+    locations,
+    playerId,
+    bot = null,
+    baseUrl,
+    importModule = defaultImportModule,
+    log = () => {},
+} = {}) {
+    const url = (rel) => new URL(rel, baseUrl).href;
+    const refuse = (eligibility, extra = {}) => ({
+        verdict: eligibility.verdict,
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.GENERATED,
+        delivery: null,
+        checkBinding: null,
+        table: null,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census: null,
+        assets: null,
+        selfPlayer: null,
+        ...extra,
+    });
+
+    const generated = generatedRoomCensus(rawRules);
+    const eligibility = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated });
+    if (eligibility.verdict === 'ineligible') return refuse(eligibility);
+    if (eligibility.arm !== RANDOMIZER_ARMS.GENERATED) {
+        // ⛔ NOT `undecided`: whatever the vanilla facts would say, THIS arm has
+        // nothing to assemble, and a caller must not wait on it.
+        return refuse({ ...eligibility, eligible: false, verdict: 'ineligible', arm: null,
+            failed: 'generated',
+            why: 'generated: the rules carry no generated Seedling rooms — this is the vanilla arm\'s load' });
+    }
+    const selfPlayer = selfPlayerOf(playerId);
+    if (selfPlayer === null) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'generated',
+            why: `generated: the loaded slot ${JSON.stringify(playerId)} is not an integer player id — `
+                + 'the check readout names whose item was found relative to it',
+        });
+    }
+
+    const [assembler, validator] = await Promise.all(
+        [AP_GENERATED_MODULE_PATHS.generatedSet, AP_GENERATED_MODULE_PATHS.validator]
+            .map((p) => importModule(url(p))));
+    const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
+    const t0 = Date.now();
+    const { set, invalidation, table, levelOf, report } = assembler.assembleGeneratedSeedlingSet(rawRules, {
+        locationItemOf: (name) => itemOfRecord(byName.get(name)),
+        selfPlayer,
+    });
+    const assembleMs = Date.now() - t0;
+    if (report.unjoined.length > 0) {
+        log(`[ap placement] ${report.unjoined.length} generated location(s) have no item in these rules `
+            + `(the apitem stands, AP fills it): ${report.unjoined.join(', ')}`);
+    }
+    log(`[ap placement] generated arm: ${generated.rooms.length} generated room(s) + the parking room `
+        + `assembled in ${assembleMs} ms — ${set.set_id}`);
+
+    const delivery = new SeedlingLevelSetDelivery({
+        planChunks: validator.planLevelSetChunks,
+        bot,
+        log,
+    }).arm(set, invalidation);
+    const checkBinding = new SeedlingCheckBinding({
+        table, placementKey: assembler.placementKey, selfPlayer,
+    });
+
+    return {
+        verdict: 'eligible',
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.GENERATED,
+        delivery,
+        checkBinding,
+        table,
+        replaced: report.apitems.length,
+        set,
+        invalidation,
+        levelOf,
+        report,
+        census: { rooms: generated.rooms.length, apitems: report.apitems.length,
+            unjoined: report.unjoined, parkingLevel: report.parkingLevel, assembleMs },
+        assets: null,
+        selfPlayer,
+        /** ⛓ The generated rooms' own grid (G1's payload `tile_size`). */
+        tileSize: GEN_ROOM_TILE_SIZE,
+        capability: AP_ITEM_CAPABILITY,
+    };
+}
+
+/**
+ * ⛓⛓ **THE ATLAS ARM** (seedling generated G7; plan §12.4, §13): a world of
+ * REAL atlas rooms the pipeline built, whose locations the atlas compiler named
+ * (`Starting House - Chest`) and the goal ledger therefore cannot. Nothing is
+ * rewritten and nothing is delivered — the rooms are the vanilla levels the game
+ * already holds — so this arm only BINDS: the `(level|tag)` → atlas-location
+ * table (`seedlingAtlasCheckTable.js`) behind the same `SeedlingCheckBinding`,
+ * whose `hostOwnedLocations()` stands the adapter down on exactly those names.
+ *
+ * ⛓ REACHED FROM `loadSeedlingRandomizer`, which decides it: the diverting
+ * check `atlas` needs the ledger's resolved COUNT, and that load has already
+ * fetched the map document and imported the rewriter (`placementKey`) and the
+ * derivation (the item tables) to compute it — so they are handed in, not
+ * fetched twice. ⛔ The verdict is taken as handed only if it names THIS arm.
+ *
+ * ⛔ A refused location is LOGGED BY NAME, one line each, and the world still
+ * binds the ones it can — the check that cannot fire is the one thing never
+ * bound.
+ *
+ * It returns the shape the other two arms do, with `delivery: null`, `set:
+ * null`, `replaced: 0` — `runSeedlingRandomizerLoad` binds such a load at once,
+ * with no overlay and no reset.
+ */
+export async function loadSeedlingAtlas({
+    eligibility,
+    rawRules = null,
+    locations,
+    playerId,
+    gameConfig,
+    mapDoc,
+    assets = null,
+    modules,
+    baseUrl,
+    fetchJson = defaultFetchJson,
+    importModule = defaultImportModule,
+    log = () => {},
+    tagCapable = false,
+    embed = null,
+    bot = null,
+} = {}) {
+    const url = (rel) => new URL(rel, baseUrl).href;
+    const refuse = (why, extra = {}) => ({
+        verdict: 'ineligible',
+        why,
+        eligibility: { ...(eligibility ?? {}), eligible: false, verdict: 'ineligible', arm: null,
+            failed: 'atlas', why },
+        arm: RANDOMIZER_ARMS.ATLAS,
+        delivery: null,
+        checkBinding: null,
+        table: null,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census: null,
+        assets,
+        selfPlayer: null,
+        ...extra,
+    });
+    if (eligibility?.arm !== RANDOMIZER_ARMS.ATLAS || !eligibility.eligible) {
+        return refuse('atlas: the verdict handed in does not name the atlas arm — '
+            + 'this is not a world of real rooms the goal ledger cannot name');
+    }
+    const selfPlayer = selfPlayerOf(playerId);
+    if (selfPlayer === null) {
+        return refuse(`atlas: the loaded slot ${JSON.stringify(playerId)} is not an integer player id — `
+            + 'the check readout names whose item was found relative to it');
+    }
+
+    // ── the atlas document the rules name, through the served index ─────
+    const atlasId = regionAtlasOf(rawRules, playerId)?.atlas_id ?? null;
+    let atlasDoc = null;
+    let atlasUrl = null;
+    try {
+        const index = await fetchJson(url(atlasIndexPath()));
+        const rel = atlasPathInIndex(index, atlasId);
+        if (!rel) {
+            return refuse(`atlas: the atlas index lists no atlas ${JSON.stringify(atlasId)} — `
+                + 'the rules name a region atlas this page does not serve');
+        }
+        atlasUrl = url(rel);
+        atlasDoc = await fetchJson(atlasUrl);
+    } catch (e) {
+        return refuse(`atlas: the region atlas ${JSON.stringify(atlasId)} could not be read — ${e.message}`);
+    }
+
+    const levelWorld = await importModule(url(AP_ATLAS_MODULE_PATHS.levelWorld));
+    const { rewriter, derivation, exporter = null, validator = null } = modules;
+    /**
+     * ⛓ R9 slice P4E (C4) — a build declaring `tag` reads an OPTIONAL `@tag` on
+     * `bosskey`/`totempart`/`seed`, so the table ALLOCATES one for such a
+     * location instead of refusing it, and the room is then delivered with the
+     * tag written (below). ⛔ Without the capability nothing moves.
+     */
+    const tagging = tagCapable
+        ? { allocateTag: (await importModule(url(AP_ATLAS_MODULE_PATHS.procgenSeedling)))
+            .placementTagId,
+        optionalTagTypes: Object.keys(levelWorld.PICKUP_CLEARS_OPTIONAL_TAG ?? {}) }
+        : {};
+    const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
+    const { table, entries, refused, census, retags } = buildAtlasCheckTable({
+        rules: rawRules,
+        atlasDoc,
+        mapDoc,
+        locationItemOf: (name) => itemOfRecord(byName.get(name)),
+        selfPlayer,
+        placementKey: rewriter.placementKey,
+        tagOf: levelWorld.tagOf,
+        itemOfEntity: itemOfEntityFrom({ itemForTag: derivation.ITEM_FOR_TAG,
+            itemForKey: derivation.ITEM_FOR_KEY, victoryItem: derivation.VICTORY_ITEM }),
+        propertyLocationOf: propertyLocationOfFrom(gameConfig, derivation.ITEM_FOR_TAG),
+        ...tagging,
+    });
+    for (const r of refused) {
+        log(`[ap placement] atlas arm: "${r.location}" (${r.region}) is NOT bound — ${r.why}`, 'warn');
+    }
+    /**
+     * ⛓ P4E: a RETAG needs the rooms delivered — the vanilla record set with the
+     * allocated `@tag`s written and nothing else moved. No retag, no delivery:
+     * byte-for-byte the G7 arm.
+     */
+    let delivery = null;
+    let set = null;
+    let invalidation = null;
+    if (retags.length > 0) {
+        if (!embed || !exporter || !validator) {
+            return refuse('atlas: the build declares `tag` and a location needs one allocated, '
+                + 'but the vanilla record set or the delivery modules were not handed in');
+        }
+        const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
+        ({ set } = rewriter.retagRecordSet(vanilla, retags));
+        invalidation = exporter.apMappingInvalidation(set);
+        delivery = new SeedlingLevelSetDelivery({
+            planChunks: validator.planLevelSetChunks, bot, log,
+        }).arm(set, invalidation);
+        for (const r of retags) {
+            log(`[ap placement] atlas arm: ${r.type}@(${r.x},${r.y}) in level ${r.level} `
+                + `is TAGGED ${r.tag} (the build reads an optional @tag)`);
+        }
+    }
+    log(`[ap placement] atlas arm: ${census.regions} real room(s), ${census.bound} of `
+        + `${census.locations} location(s) bound where they stand `
+        + `${retags.length > 0 ? `(${retags.length} tag(s) written, delivered)`
+            : '(no rewrite, no delivery)'}`
+        + `${census.refused > 0 ? `; ${census.refused} refused by name` : ''}`);
+
+    const checkBinding = new SeedlingCheckBinding({
+        table, placementKey: rewriter.placementKey, selfPlayer,
+    });
+    return {
+        verdict: 'eligible',
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.ATLAS,
+        delivery,
+        checkBinding,
+        table,
+        entries,
+        refused,
+        retags,
+        replaced: 0,
+        set,
+        invalidation,
+        census,
+        assets: { ...(assets ?? {}), atlas: { url: atlasUrl, ok: true, atlasId } },
+        selfPlayer,
+        tileSize: mapDoc?.tile_size,
+        capability: AP_ITEM_CAPABILITY,
+    };
+}

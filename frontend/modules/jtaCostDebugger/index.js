@@ -22,11 +22,12 @@ function log(level, message, ...data) {
 // --- Module Info ---
 export const moduleInfo = {
     name: 'jtaCostDebugger',
-    title: 'JTA Cost Debugger',
+    title: 'JtA Cost Debugger',
     componentType: 'jtaCostDebuggerPanel',
-    icon: '',
+    icon: '🪙',
     column: 2,
-    description: 'Step-through debugger for JTA cost generation via simulated playthrough.',
+    category: 'Deprecated Panels',
+    description: 'Generate Journey to Ascension task costs by simulated play, inspect each energy reset, then verify and apply.',
     requires: ['jtaGameDataPanel'],
 };
 

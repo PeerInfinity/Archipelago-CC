@@ -3,9 +3,46 @@
  *
  * GoldenLayout panel component that displays step-by-step
  * cost generation reasoning. Each step = one action queue (one loop).
+ *
+ * ── ⚖ WHAT THIS PANEL IS, AFTER 2026-09-06 ────────────────────────────
+ *
+ * ⚖ The user ruled it: **the debugger is the INSPECTOR of the one cost
+ * algorithm, not a model of its own.** There is exactly one engine —
+ * `shared/procgen/loopCostPlanner.js` — with two drivers (this panel, through
+ * `loopsCostDebugger/costPlanner.js`; and the Loops panel's Generate Costs)
+ * and a third caller (the procgen pipeline's `generateLoopCosts`).
+ * `scripts/procgen/check-loop-costs-one-model.mjs` is the standing proof that
+ * the block this panel stamps is byte-for-byte the block the pipeline embeds.
+ *
+ * ⛔ **THE PLAN IS NOT THE BLOCK, AND THIS PANEL HAS TO SAY SO.** ⚖ (i) — the
+ * simulation walks EVERY region as if it were coarse, because that is how the
+ * numbers are derived at all; `writeCostsByClass` then decides what reaches
+ * the block, per the region's substrate:
+ *
+ *   COARSE   a `moveCost` and its locations' costs — the numbers are the price.
+ *   NATIVE   nothing (jta, omsi). The substrate runs its own mana economy.
+ *   SUMMARY  a drain per second only (runner, bounce), plus whatever the input
+ *            block named explicitly.
+ *
+ * A readout that printed the simulation's 50 for a NATIVE region would be
+ * stating a price nothing charges. So every cost this panel renders is
+ * labelled by its region's CLASS — and, separately, by its CAPTURE SHAPE,
+ * which is who charges at RUN TIME and is not the same question: maze is
+ * COARSE (the block carries its `moveCost`) and FINE (the maze panel divides
+ * that cost per tile and charges it natively, so the loop QUEUE charges
+ * nothing).
  */
 
-import { getCostPlanner, getModuleEventBus, getSphereLog } from './index.js';
+import {
+  getCostPlanner, getModuleEventBus, getSphereLog,
+  consumePendingWorkingCopy, LOOPS_COST_DEBUGGER_LOAD_RULES,
+} from './index.js';
+import {
+  classifyRegions, REGION_CLASS,
+} from '../shared/procgen/loopCostGenerator.js';
+import {
+  documentStateManager, documentPlayerId, documentSphereLog,
+} from './documentStateManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 
@@ -19,8 +56,66 @@ function log(level, message, ...data) {
 }
 
 /**
+ * ⛓⛓⛓ **L4 — WHY "Send costs to APWorld Editor" CANNOT BE PRESSED, or `null`
+ * when it can.** Pure, exported and unit-driven, because it is a rule with five
+ * outcomes and a `disabled` flag can only say one of them.
+ *
+ * ⛔ **A REFUSAL IS A SENTENCE, NOT A BOOLEAN.** Every one of these is a state a
+ * person can leave — go back to the hub, press Load, press Plan All — and a
+ * greyed button with no `title` is the one thing that tells them none of that.
+ *
+ * The order is the order the answers become knowable:
+ *
+ *   1. no working copy   — this panel is on APPLIED state, which the app owns;
+ *                          there is no document to write into.
+ *   2. no `onSave`       — a working copy arrived from somewhere that offered no
+ *                          way back (a pre-L4 caller, or a hand-off stashed
+ *                          before the door carried one).
+ *   3. a plan REJECTION  — the planner's own sentence, quoted. It already covers
+ *                          "No sphere log loaded", so there is no separate
+ *                          `isLoaded()` clause here.
+ *   4. INCOMPLETE        — planned, but not to the end. ⛔ A partial plan's
+ *                          `getCostData()` is a block whose defaults phase never
+ *                          ran, so it would name costs for some regions and
+ *                          silently fall back for the rest.
+ *   5. `null`            — send it.
+ *
+ * @param {{workingCopy: object|null, planner: object|null}} state
+ * @returns {string|null}
+ */
+export function sendCostsRefusal({ workingCopy = null, planner = null } = {}) {
+  if (!workingCopy) {
+    return 'Send writes into a document handed over from the APWorld editor. This panel is '
+      + 'planning APPLIED state, which the app owns — open the hub\'s `loop_costs` door to '
+      + 'hand a document over.';
+  }
+  if (typeof workingCopy.onSave !== 'function') {
+    return 'This working copy arrived without a way back, so there is nothing to send it to. '
+      + 'Re-open it from the APWorld editor\'s `loop_costs` row.';
+  }
+  if (!planner) return 'CostPlanner is not available — the loops module has not initialized.';
+  const rejection = typeof planner.getPlanRejectionReason === 'function'
+    ? planner.getPlanRejectionReason() : null;
+  if (rejection) return rejection;
+  if (!planner.isComplete()) {
+    return 'The plan is INCOMPLETE — press Plan All first. A partial plan\'s block prices some '
+      + 'regions and silently falls back for the rest.';
+  }
+  return null;
+}
+
+/**
  * CostDebuggerUI - GoldenLayout panel component
  */
+/**
+ * ⛓ P1b′ — how the adoption log names a hand-off: its number, the document's
+ * game and the slot (`hand-off #3 ("JtA Schedule Test", player 1)`).
+ */
+function handOffName(seq, jsonData, playerId) {
+  const game = jsonData?.game_name ?? jsonData?.world?.[playerId]?.game ?? 'a document';
+  return `hand-off #${seq} (${JSON.stringify(String(game))}, player ${playerId})`;
+}
+
 export class CostDebuggerUI {
   constructor(container, componentState) {
     this.container = container;
@@ -35,11 +130,49 @@ export class CostDebuggerUI {
     this.isVerifying = false;
     this.verificationResults = [];
     this._verifyCancelled = false;
+    // Set when the sphere-log slice or the rules changed under a loaded plan.
+    this._isStale = false;
+    /**
+     * ⛓ H5 — the WORKING COPY this panel is planning, or null for applied
+     * state. `{jsonData, source, player, stats, onSave}`. It is the panel's, not
+     * the planner's: the planner holds only the state manager it was handed, and
+     * the panel is what has to SAY which world the numbers describe.
+     *
+     * ⛓⛓ **L4 — `onSave` LIVES HERE AND NOWHERE ELSE**, so it cannot outlive
+     * the document it belongs to: "Use applied state" nulls this whole field,
+     * and a second hand-off REPLACES it rather than merging into it. A panel
+     * that kept a stale return path would write one document's plan into
+     * another document (H5's rule, and the reason `_adoptWorkingCopy` rebuilds
+     * the object instead of assigning into it).
+     */
+    this._workingCopy = null;
+    /**
+     * ⛓⛓ **P1b′ — THE LATEST HAND-OFF, BY NUMBER** (trap 1478). Every
+     * `_adoptWorkingCopy` call takes the next number, and so does "Use applied
+     * state"; an adoption whose number is no longer the latest when its
+     * translation resolves is DROPPED rather than landed. `_latestHandOff` is
+     * what the drop names.
+     */
+    this._adoptSeq = 0;
+    this._latestHandOff = null;
 
     this.rootElement = this._createRootElement();
+    // ⛓ P1b′ — the in-app rows wait on THEIR OWN hand-off's adoption (the working
+    //   copy's `jsonData` is the document they handed over), not on status text a
+    //   previous row's adoption also prints. The hub's panel exposes itself the
+    //   same way (`__panel`).
+    this.rootElement.__costDebugger = this;
     this.container.element.appendChild(this.rootElement);
 
     this._subscribeToEvents();
+
+    // ⛓ A hand-off may have been stashed before this panel existed; the live
+    //   subscription in _subscribeToEvents clears the slot when it fires first.
+    const pending = consumePendingWorkingCopy();
+    if (pending) {
+      this._adoptWorkingCopy(pending.jsonData, pending.source, pending.player,
+        pending.onSave ?? null);
+    }
 
     this.container.on('destroy', () => this._onDestroy());
 
@@ -66,8 +199,13 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-sphere" disabled title="Plan remaining steps for current sphere entry">Plan Sphere</button>
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
+        <button class="cd-btn-applied" style="display: none;" title="Stop planning the handed-over working copy and go back to the world the app has loaded">Use applied state</button>
+        <button class="cd-btn-send" style="display: none;" title="Write this plan into the handed-over document as one undoable edit">Send costs to APWorld Editor</button>
       </div>
-      <div class="cd-status-bar"><span class="cd-status">No sphere log loaded</span></div>
+      <div class="cd-status-bar">
+        <span class="cd-status">No sphere log loaded</span>
+        <div class="cd-status-warn" style="display: none;"></div>
+      </div>
       <div class="cd-step-list-container">
         <div class="cd-step-list">
           <div class="cd-step-list-empty">Click "Load" to load sphere log data, then "Plan Step" to begin.</div>
@@ -94,6 +232,10 @@ export class CostDebuggerUI {
           <span class="cd-summary-label">Locations:</span>
           <span class="cd-summary-value cd-summary-locations">0</span>
         </span>
+        <span class="cd-summary-item" title="There is ONE cost engine: shared/procgen/loopCostPlanner.js. This panel and the Loops panel's Generate Costs are two drivers of it, and the procgen pipeline's generateLoopCosts is a third caller — scripts/procgen/check-loop-costs-one-model.mjs is the standing proof that they produce the same block. The second half of this line is WHICH WORLD these numbers describe.">
+          <span class="cd-summary-label">Engine:</span>
+          <span class="cd-summary-value cd-summary-engine">loopCostPlanner \u00b7 applied state</span>
+        </span>
       </div>
     `;
 
@@ -110,6 +252,8 @@ export class CostDebuggerUI {
     el.querySelector('.cd-btn-plan-sphere').addEventListener('click', () => this._handlePlanSphere());
     el.querySelector('.cd-btn-plan-all').addEventListener('click', () => this._handlePlanAll());
     el.querySelector('.cd-btn-reset').addEventListener('click', () => this._handleReset());
+    el.querySelector('.cd-btn-applied').addEventListener('click', () => this._useAppliedState());
+    el.querySelector('.cd-btn-send').addEventListener('click', () => this._handleSendCosts());
   }
 
   _attachResizeHandle(el) {
@@ -149,6 +293,227 @@ export class CostDebuggerUI {
     subscribe('loopsCostDebugger:stepPlanned', this._handleStepPlannedEvent);
     subscribe('loopsCostDebugger:allPlanned', this._handleAllPlannedEvent);
     subscribe('loopsCostDebugger:reset', this._handleResetEvent);
+
+    // A player switch re-slices the sphere log and a rules reload replaces the
+    // world; either makes an already-loaded plan describe data that is gone.
+    // Marking stale rather than auto-reloading: a reload here would discard
+    // the user's planned steps without being asked.
+    subscribe('sphereState:dataLoaded', this._handleDataChangedEvent);
+    subscribe('stateManager:rulesLoaded', this._handleDataChangedEvent);
+
+    /**
+     * ⛓⛓⛓ H5 — **THE HUB'S `loop_costs` DOOR.** One door, two entries (live
+     * event / stash drained at mount), so the adoption and everything it says
+     * cannot drift between them — H4c's rule for `apworldEditor:loadRules`.
+     */
+    subscribe(LOOPS_COST_DEBUGGER_LOAD_RULES, (ev) => {
+      if (ev && ev.jsonData) {
+        this._adoptWorkingCopy(ev.jsonData, ev.source ?? null, ev.player ?? null,
+          typeof ev.onSave === 'function' ? ev.onSave : null);
+      }
+      consumePendingWorkingCopy();
+    });
+  }
+
+  /**
+   * ⛓⛓⛓ H5 — **PLAN A DOCUMENT THE APP HAS NEVER APPLIED** (plan §1's ⚖:
+   * *"Linked editors open from the WORKING COPY"*).
+   *
+   * ⛔ It is ASYNC because the translation is `StateManager.loadFromJSON`,
+   * dynamically imported (see `documentStateManager.js` for why, and for the
+   * measured cost — 4 ms to 306 ms across the committed corpus). The status
+   * line says so while it runs: a panel that sat silent for a third of a second
+   * on the biggest document and then changed every number is a panel that
+   * looked broken.
+   *
+   * ⛔ AND IT DOES NOT PLAN. Adoption re-points the planner and drops the old
+   * plan; Load is the person's gesture, and the log it would use is a separate
+   * refusal this panel has to be able to state (`documentSphereLog`).
+   *
+   * ⛓⛓⛓ **P1b′ — THE LATER HAND-OFF WINS** (trap 1478). The translation takes
+   * 4–306 ms, so two hand-offs close together can RESOLVE out of order; until
+   * P1b′ the earlier, slower one landed last and replaced the later one — the
+   * panel planned a document that was not the most recent hand-off, and a Send
+   * from it went to the hub under the wrong document. Each call takes a number
+   * before its `await`; after it, a call whose number is no longer the latest
+   * (another hand-off, or "Use applied state", came in while it was reading)
+   * drops its result — the planner is not re-pointed, the working copy and the
+   * status are left to the later one — and says so in the log, naming both.
+   */
+  async _adoptWorkingCopy(jsonData, source, player, onSave = null) {
+    const planner = getCostPlanner();
+    if (!planner) {
+      this._setStatus('CostPlanner is not available — the loops module has not initialized.');
+      return;
+    }
+    const playerId = player ? String(player) : documentPlayerId(jsonData);
+    const label = source ? `working copy · ${source}` : 'working copy';
+    const seq = ++this._adoptSeq;
+    const handOff = handOffName(seq, jsonData, playerId);
+    this._latestHandOff = handOff;
+    this._setStatus(`Adopting the ${label} for player ${playerId}…`);
+    try {
+      const sm = await documentStateManager(jsonData, playerId);
+      if (seq !== this._adoptSeq) {
+        log('info', `Dropped ${handOff}: ${this._latestHandOff ?? 'a return to applied state'} `
+          + 'arrived while it was being read, and the later one is what this panel plans.');
+        return;
+      }
+      planner.useStateManager(sm, { playerId });
+      // ⛓ L4 — REBUILT, never merged: a hand-off that carries no return path
+      //   must not inherit the previous one (`onSave` defaults to null here for
+      //   exactly that reason).
+      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats, onSave, seq };
+      this._isStale = false;
+      this.verificationResults = [];
+      this.selectedStepIndex = -1;
+      this._refreshStepList();
+      this._refreshDetailView();
+      this._updateSummary();
+      this._updateStatus();
+      this._updateButtons();
+      log('info', `Adopted a working copy: ${sm.stats.regions} regions, `
+        + `${sm.stats.locations} locations, ${sm.stats.ms} ms`);
+    } catch (e) {
+      if (seq !== this._adoptSeq) {
+        log('info', `Dropped ${handOff}'s failure (${e.message}): `
+          + `${this._latestHandOff ?? 'a return to applied state'} arrived while it was being read.`);
+        return;
+      }
+      log('error', 'working-copy adoption failed', e);
+      this._setStatus(`Could not read that working copy: ${e.message}`);
+    }
+  }
+
+  /**
+   * ⛓ Back to the world the app has loaded. ⛔ Named rather than implicit: a
+   * panel that silently reverted on the next `stateManager:rulesLoaded` would
+   * discard a hand-off nobody asked it to discard, and one that never reverted
+   * would show applied-state numbers under a working-copy label forever.
+   */
+  _useAppliedState() {
+    const planner = getCostPlanner();
+    if (!planner) return;
+    // ⛓ P1b′ — a gesture, so it outranks a hand-off still being read.
+    this._adoptSeq += 1;
+    this._latestHandOff = null;
+    planner.useStateManager(stateManagerProxySingleton, { playerId: null });
+    this._workingCopy = null;
+    this._isStale = false;
+    this.verificationResults = [];
+    this.selectedStepIndex = -1;
+    this._refreshStepList();
+    this._refreshDetailView();
+    this._updateSummary();
+    this._updateStatus();
+    this._updateButtons();
+    this._setStatus('Back on APPLIED state — press Load to plan the loaded world.');
+  }
+
+  /**
+   * ⛓⛓⛓ **L4 — SEND THE PLAN BACK AS ONE OP** (⚖ user, 2026-09-06).
+   *
+   * `getCostData()` is the BLOCK — write-by-class applied, byte-identical to
+   * the one the procgen pipeline embeds for the same world
+   * (`check-loop-costs-one-model.mjs`) — so the whole write-back is a single
+   * `set-key loop_costs` the hub applies through `_acceptEditorOp`: its schema
+   * veto, its slot stamp, and ONE undo step that takes the whole plan back out.
+   *
+   * ⛓ **`generatedFrom` NAMES THE DOOR, NEVER A PATH.** The planner stamps
+   * `'loopsCostDebugger'` for the store, which is true of the store; a block
+   * written into a DOCUMENT is provenance somebody will read later, and the
+   * honest answer is the hand-off's own source label ("the APWorld editor").
+   * A file path would be a claim about a file that may not exist — this
+   * document has not been saved anywhere yet.
+   *
+   * ⛓⛓⛓ **CLOSED IN R-a: THE HUB CHECKS THAT IT STILL HOLDS THE DOCUMENT IT
+   * HANDED OVER.** L4 named this as the thing neither side could check —
+   * `onSave` applied into whatever session the hub had open NOW, so handing a
+   * document over, loading a different one in the hub, and only then pressing
+   * Send wrote THIS plan into THAT document. The hub now stamps a monotonic
+   * `_documentToken` at its one session boundary and binds it into the `onSave`
+   * closure, so a Send against a replaced document comes back
+   * `{accepted: false}` with a sentence naming the replacement AND the fix.
+   * ⛔ Nothing on THIS side changed and nothing had to: the panel already
+   * printed the hub's answer rather than assuming one, which is what made the
+   * refusal reportable the moment the hub could state it.
+   *
+   * ⛔ **THE OUTCOME IS THE HUB'S ANSWER, NOT AN ASSUMPTION.** `onSave` returns
+   * `{accepted, applied, errors}` (L4's hub change); before it did, a panel
+   * could only say "sent" and hope. A refusal is printed with the schema's own
+   * error text, and an accepted-but-unapplied op says "no change" rather than
+   * claiming an edit.
+   * @private
+   */
+  _handleSendCosts() {
+    const planner = getCostPlanner();
+    const refusal = sendCostsRefusal({ workingCopy: this._workingCopy, planner });
+    if (refusal) { this._setStatus(refusal); return; }
+
+    const block = this._blockForDocument(planner);
+    const priced = Object.keys(block.regions).length;
+    const locations = Object.keys(block.locations).length;
+
+    let answer;
+    try {
+      answer = this._workingCopy.onSave({
+        // ⛓ P1a — `loop_costs` is per player: the plan is the working copy's
+        //   slot's, so the op names that slot rather than leaning on the hub's.
+        op: 'set-key', key: 'loop_costs', value: block, scope: 'player', player: this._workingCopy.player,
+      });
+    } catch (e) {
+      log('error', 'the hub refused the cost block by throwing', e);
+      this._setStatus(`Send failed: ${e.message}`);
+      return;
+    }
+
+    // ⛔ A caller that answers NOTHING is not a caller that ACCEPTED. Said as
+    //    "could not confirm" rather than as success, because the two are
+    //    different facts and only one of them is good news.
+    if (!answer || typeof answer !== 'object') {
+      this._setStatus(`Sent ${priced} region${priced === 1 ? '' : 's'} and ${locations} `
+        + `location${locations === 1 ? '' : 's'} — but the editor did not say whether it `
+        + 'accepted them.');
+      return;
+    }
+    if (!answer.accepted) {
+      const why = Array.isArray(answer.errors) && answer.errors.length
+        ? answer.errors.slice(0, 3).join(' · ')
+        : (answer.description || 'no reason given');
+      this._setStatus(`The APWorld editor REFUSED these costs: ${why}`);
+      return;
+    }
+    this._setStatus(answer.applied
+      ? `Sent to the document: ${priced} region${priced === 1 ? '' : 's'} priced, `
+        + `${locations} location${locations === 1 ? '' : 's'}, as ONE undoable edit. `
+        + 'A `loop_costs` block also switches loop mode ON for that world.'
+      : `No change — the document already carried exactly these costs (${priced} `
+        + `region${priced === 1 ? '' : 's'}).`);
+  }
+
+  /**
+   * ⛓ The block as it goes into a DOCUMENT: the planner's own block with
+   * `generatedFrom` re-stamped to the hand-off's source. ⛔ Everything else is
+   * the planner's, untouched — a second spelling of the block here is exactly
+   * the second cost model ⚖ ruled out.
+   * @private
+   */
+  _blockForDocument(planner) {
+    return {
+      ...planner.getCostData(),
+      generatedFrom: this._workingCopy?.source || 'the APWorld editor',
+    };
+  }
+
+  _handleDataChangedEvent() {
+    const planner = getCostPlanner();
+    if (!planner?.isLoaded()) return;
+    // ⛓ H5 — an APP-WIDE load does not invalidate a WORKING COPY's plan: the
+    //   plan describes a document the app was never holding, and marking it
+    //   stale would tell a person to re-Load a world that has not changed.
+    if (this._workingCopy) return;
+    this._isStale = true;
+    this._updateStatus();
   }
 
   _handleStepPlannedEvent(data) {
@@ -188,15 +553,35 @@ export class CostDebuggerUI {
       return;
     }
 
-    const sphereLog = getSphereLog();
+    /**
+     * ⛓⛓ H5 — **A WORKING COPY IS PLANNED AGAINST ITS OWN LOG OR NOT AT ALL.**
+     * The app's log describes whatever world is applied; borrowing it for a
+     * handed-over document would manufacture the panel's own "ALL n sphere-log
+     * locations are not in this player's world" condition instead of reporting
+     * it. `documentSphereLog` returns the entries or the refusal to print.
+     */
+    let sphereLog;
+    if (this._workingCopy) {
+      const answer = documentSphereLog(this._workingCopy.jsonData);
+      if (answer.refusal) { this._setStatus(answer.refusal); return; }
+      sphereLog = answer.entries;
+    } else {
+      sphereLog = getSphereLog();
+    }
     if (!sphereLog || sphereLog.length === 0) {
       this._setStatus('No sphere log available. Load a game with sphere data first.');
       return;
     }
 
     const result = planner.loadSphereLog(sphereLog);
-    log('info', `Loaded sphere log: ${result.entryCount} entries, start region: ${result.startRegion}`);
+    log('info',
+      `Loaded sphere log: ${result.entryCount} entries for player ${result.playerId}, ` +
+      `start region: ${result.startRegion}`);
+    if (result.entryCount === 0) {
+      log('error', planner.getPlanRejectionReason() || 'Sphere log produced no entries');
+    }
 
+    this._isStale = false;
     this.verificationResults = [];
     this.selectedStepIndex = -1;
     this._refreshStepList();
@@ -235,6 +620,29 @@ export class CostDebuggerUI {
     this.verificationResults = [];
     this._verifyCancelled = false;
     this._updateButtons();
+
+    /**
+     * ⛓ Built once for the whole run: `classifyRegions` walks the topology and
+     * the shape resolver holds ONE `getPublicFunction` call. The topology
+     * cannot change mid-verify — every button is disabled while it runs.
+     */
+    const ctx = this._pricingContext();
+
+    /**
+     * ⚠ Verify drives the APP'S live loop state and gameState. With a working
+     * copy adopted, the plan describes a document the app is not holding, so
+     * this replays the plan's steps against the APPLIED world — right when the
+     * two are the same document (the ordinary hub hand-off) and meaningless
+     * when they are not. Said out loud rather than refused: refusing would
+     * break the case that works.
+     */
+    if (this._workingCopy) {
+      this._setWarnings([{
+        severity: 'warn',
+        text: 'Verify replays these steps through the APPLIED world, not the working copy — '
+            + 'the comparison is only meaningful while the two are the same document.',
+      }]);
+    }
 
     // Save current settings to restore after verification
     const savedInstantMode = loopState.instantMode;
@@ -297,7 +705,8 @@ export class CostDebuggerUI {
         // Execute queue actions directly, awaiting each checkLocation to avoid
         // flooding the worker. loopState.startProcessing() fires all actions in
         // one frame (instant mode), which overwhelms the worker command queue.
-        await this._executeStepDirect(loopState, step.queue);
+        const split = this._queueChargeSplit(step, ctx);
+        await this._executeStepDirect(loopState, step.queue, ctx);
 
         // Record state after
         const manaAfter = gameState.currentMana;
@@ -330,7 +739,21 @@ export class CostDebuggerUI {
             manaConsumed: step.simulatedResults.manaConsumed,
             manaRemaining: step.simulatedResults.manaRemaining,
             maxMana: step.stateAfter.maxMana,
+            // ⛓ the part of the prediction the QUEUE is answerable for — the
+            //   only part a replay through the queue can confirm or refute.
+            queueCharged: split.charged,
           },
+          /**
+           * ⛔ A step is COMPARABLE only when the queue bills all of it. A jta
+           * or omsi step (own economy) and a runner or bounce step (time-
+           * priced) are replayed and REPORTED, never scored: the runtime is
+           * correct to charge nothing there, and scoring it would turn the
+           * design into a permanent red.
+           */
+          comparable: split.uncharged === 0,
+          // the simulated spend in regions the block leaves unpriced
+          uncharged: split.uncharged,
+          unchargedReasons: split.reasons,
         });
 
         // Update UI after each step
@@ -345,10 +768,24 @@ export class CostDebuggerUI {
 
       // Final status
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      this._setStatus(`Verification complete: ${executableSteps.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      const notScored = this.verificationResults.length - comparable.length;
+      /**
+       * ⛔ `0/0 within tolerance` is not a sentence about anything. On a world
+       * whose regions are ALL priced by their own substrates (jta, omsi) there
+       * is nothing for a queue replay to score, and the panel says that
+       * instead of printing a ratio with an empty denominator.
+       */
+      this._setStatus(`Verification complete: ${executableSteps.length} steps`
+        + (comparable.length
+          ? `, ${matched}/${comparable.length} within tolerance`
+          : ' — the block prices none of them, so there is nothing to score')
+        + (notScored && comparable.length
+          ? `; ${notScored} unpriced by design (own economy / time-priced)`
+          : notScored ? ' (own economy / time-priced)' : ''));
 
     } catch (error) {
       console.error('[CostDebuggerUI] Verification error:', error);
@@ -463,15 +900,38 @@ export class CostDebuggerUI {
    * Processes actions sequentially, awaiting each checkLocation so the worker
    * is never flooded. Updates loopState mana/XP to match what _processFrame does.
    */
-  async _executeStepDirect(loopState, stepQueue) {
+  async _executeStepDirect(loopState, stepQueue, ctx = null) {
     const gameState = window.centralRegistry?.getPublicFunction?.('gameState', 'getState')?.();
     for (const action of stepQueue) {
-      // Calculate mana cost (same as loopState._processFrame in instant mode)
-      const actionCost = loopState._calculateActionCost({
+      const sourceRegionName = action.region || action.from;
+      const pricing = sourceRegionName && ctx
+        ? this._pricingOf(sourceRegionName, ctx) : null;
+      /**
+       * ⛔⛔ **A NATIVE REGION MUST BE CHARGED NOTHING HERE, BECAUSE THE
+       * RUNTIME CHARGES IT NOTHING.** `_calculateActionCost` has no `fine`
+       * branch — the runtime's shape test lives in its CALLERS
+       * (`observeParkedLiveAction`, `_handleManualWake_regionMove` and
+       * `_completeBotExecutedAction` each return early on 'fine'), so calling
+       * the pricing function on its own bills a jta region the STORE'S
+       * FALLBACK for a move nothing charges. Measured on `jta_schedule_test`:
+       * the block writes no entry for any of the three jta regions, so
+       * `getRegionCost` answered `defaultRegionCost` 50 and `getLocationCost`
+       * answered 10, and Verify scored the runtime wrong by up to **375.7
+       * mana** (omsi) — a permanent red that was the design working. Forcing 0
+       * is what makes "actual" the runtime's actual.
+       *
+       * ⚠ Two things are deliberately NOT forced:
+       *   SUMMARY — `_calculateActionCost`'s summary branch already answers
+       *     with the explicit cost or nothing, which is the runtime's own rule.
+       *   COARSE-classed FINE regions (maze) — the block carries the price and
+       *     the substrate charges exactly it, per tile; zeroing them would
+       *     throw away a comparison that measured 10/10 with delta 0.0.
+       */
+      const actionCost = pricing && pricing.cls === REGION_CLASS.NATIVE ? 0 : loopState._calculateActionCost({
         type: action.type === 'locationCheck' ? 'locationCheck'
             : action.type === 'move' ? 'regionMove'
             : 'customAction',
-        sourceRegion: action.region || action.from,
+        sourceRegion: sourceRegionName,
         destinationRegion: action.to,
         locationName: action.location,
         exitUsed: action.exitUsed,
@@ -512,27 +972,321 @@ export class CostDebuggerUI {
     if (statusEl) statusEl.textContent = text;
   }
 
+  // =========================================================================
+  // ⛓⛓⛓ PRICING CLASS — the two questions a cost readout has to answer
+  // =========================================================================
+
+  /**
+   * ⛓⛓ **THE PRICING CONTEXT — built ONCE per render pass, never per row.**
+   *
+   *   `classes`  region → `REGION_CLASS`, from the shared `classifyRegions`
+   *              over the PLANNER'S OWN topology: the same call `getCostData()`
+   *              makes, so the panel cannot disagree with the block it is
+   *              inspecting about which regions the block speaks for.
+   *   `shapeOf`  region → CAPTURE SHAPE, the runtime's answer, asked of the
+   *              runtime (`loopState.getSubstrateCaptureShape`). The substrate
+   *              id comes from the PLAN's topology and not the app's
+   *              `_lookupSubstrateId`: with a working copy adopted, the app is
+   *              holding a different world and its lookup answers 'coarse' for
+   *              every region of the document being planned.
+   *
+   * ⛔ **ONE `getPublicFunction` CALL PER RENDER, and that is not tidiness.**
+   * `centralRegistry.getPublicFunction` LOGS AN ERROR when the module is not up
+   * (measured on a cold page: five `Public function 'getLoopState' not found`
+   * lines before loops registers). A resolver called per region per row would
+   * turn that into a screenful and bury a real error next to it.
+   *
+   * ⛔ Nothing here is CACHED ACROSS renders: an adoption or a rules reload
+   * replaces the topology under the panel, and a cached map would label the new
+   * world with the old world's classes.
+   * @private
+   */
+  _pricingContext() {
+    const topology = getCostPlanner()?.getTopology?.();
+    let classes = new Map();
+    if (topology?.regions) {
+      try {
+        classes = classifyRegions(topology);
+      } catch { /* an unclassifiable topology means every region reads COARSE */ }
+    }
+
+    let ask = null;
+    try {
+      const loopState = centralRegistry.getPublicFunction('loops', 'getLoopState')?.();
+      if (typeof loopState?.getSubstrateCaptureShape === 'function') {
+        ask = (id) => loopState.getSubstrateCaptureShape(id);
+      }
+    } catch { /* loops not up — every region reads 'coarse', the safe direction */ }
+
+    const shapes = new Map();
+    const shapeOf = (regionName) => {
+      if (shapes.has(regionName)) return shapes.get(regionName);
+      const substrateId = topology?.regionSubstrates?.get?.(regionName) ?? null;
+      let shape = 'coarse';
+      if (substrateId && ask) {
+        try { shape = ask(substrateId) || 'coarse'; } catch { shape = 'coarse'; }
+      }
+      shapes.set(regionName, shape);
+      return shape;
+    };
+
+    return { classes, shapeOf, topology };
+  }
+
+  /**
+   * ⛓⛓ **WHAT ONE REGION'S NUMBERS MEAN**, in the one place every readout asks.
+   *
+   *   `cls`             what the BLOCK says about it (COARSE / NATIVE / SUMMARY).
+   *   `shape`           who CHARGES at run time (coarse / fine / summary).
+   *   `priced`          false ⇒ the block deliberately carries no cost for it,
+   *                     so the simulation's number is a step in deriving the
+   *                     OTHER regions' costs and not a price. A readout must
+   *                     NOT print it as one.
+   *   `chargedByQueue`  false ⇒ the loop queue takes nothing for it at run time;
+   *                     a substrate or a clock does the charging.
+   *   `label` / `why`   the phrase that replaces a number, and the sentence a
+   *                     person needs after reading it.
+   *
+   * ⚠ The two axes are NOT the same question and maze is why: it is COARSE (the
+   * block carries its `moveCost`) and FINE (`mazeRoomUI._perTileMoveCost`
+   * divides that cost by the room's longest shortest path and charges it
+   * natively, so the queue charges nothing).
+   * @private
+   */
+  _pricingOf(regionName, ctx) {
+    const cls = ctx.classes.get(regionName) ?? REGION_CLASS.COARSE;
+    const shape = ctx.shapeOf(regionName);
+    const chargedByQueue = shape === 'coarse';
+
+    if (cls === REGION_CLASS.NATIVE) {
+      return {
+        cls, shape, priced: false, chargedByQueue,
+        label: 'own economy',
+        why: 'this substrate runs its own mana economy, so the block writes no cost for '
+           + 'it and the loop queue charges nothing — the number beside it is a step in '
+           + 'deriving the other regions\' costs, not a price.',
+      };
+    }
+    if (cls === REGION_CLASS.SUMMARY) {
+      return {
+        cls, shape, priced: false, chargedByQueue,
+        label: 'time-priced',
+        why: 'a summary substrate is priced by how long a visit takes — the block writes '
+           + 'a drain per second and nothing else, and a per-action cost applies only '
+           + 'where the input block named one explicitly.',
+      };
+    }
+    if (!chargedByQueue) {
+      return {
+        cls, shape, priced: true, chargedByQueue,
+        label: 'per tile',
+        why: 'the block carries this region\'s moveCost and the substrate charges it '
+           + 'natively (maze divides it by the room\'s longest shortest path), so the '
+           + 'loop queue itself charges nothing for the visit.',
+      };
+    }
+    return { cls, shape, priced: true, chargedByQueue, label: null, why: null };
+  }
+
+  /** The region a planned location belongs to, per the plan's own topology. */
+  _regionOfLocation(locationName, ctx) {
+    return ctx.topology?.locations?.get?.(locationName)?.region ?? null;
+  }
+
+  /**
+   * The pricing that governs one cost assignment — a region row is about
+   * itself, a location row about the region that contains it.
+   * @private
+   */
+  _pricingOfAssignment(ca, ctx) {
+    const region = ca.type === 'region' ? ca.name : this._regionOfLocation(ca.name, ctx);
+    return region ? this._pricingOf(region, ctx) : null;
+  }
+
+  /**
+   * ⛓⛓ **HOW MUCH OF A PLANNED STEP THE BLOCK ACTUALLY PRICES.** Verify
+   * compares a prediction against a replay; where the block deliberately
+   * carries no cost, the replay has nothing to confirm and scoring it as a
+   * MISMATCH is the panel accusing the runtime of a bug that is the design.
+   *
+   * ⛔⛔ **THE SPLIT IS `priced`, NOT `chargedByQueue` — and the difference is
+   * MEASURED, not stylistic.** The first shape of this code excluded every
+   * region the QUEUE does not charge, which swallows maze: maze is FINE (its
+   * walker charges per tile) but COARSE-classed (the block carries its
+   * `moveCost`, and per-tile × longest-shortest-path is that same total). On
+   * `maze_loop_worldgen` that cost a real result — **10/10 within tolerance,
+   * max delta 0.0, became "none scored"**. Who charges is a presentational
+   * note (the queue's `Charged by` column); whether the BLOCK states a price
+   * is what decides if there is anything to verify.
+   * @private
+   */
+  _queueChargeSplit(step, ctx) {
+    let scored = 0;
+    let unscored = 0;
+    const reasons = new Map();
+    for (const q of step.queue || []) {
+      const region = q.region || q.from || null;
+      const pricing = region ? this._pricingOf(region, ctx) : null;
+      if (pricing && !pricing.priced) {
+        unscored += q.cost;
+        reasons.set(pricing.label, pricing.why);
+      } else {
+        scored += q.cost;
+      }
+    }
+    return { charged: scored, uncharged: unscored, reasons: [...reasons.entries()] };
+  }
+
+  /** The verification rows the queue actually bills — the only comparable ones. */
+  _comparableResults() {
+    return this.verificationResults.filter(r => r.comparable);
+  }
+
+  /**
+   * Render the warning lines below the status. Empty array hides the block.
+   * @param {Array<{text: string, severity: 'warn'|'error'}>} warnings
+   */
+  _setWarnings(warnings) {
+    const el = this.rootElement.querySelector('.cd-status-warn');
+    if (!el) return;
+    if (!warnings || warnings.length === 0) {
+      el.style.display = 'none';
+      el.innerHTML = '';
+      return;
+    }
+    el.style.display = '';
+    el.innerHTML = warnings.map(w =>
+      `<div class="cd-status-${w.severity === 'error' ? 'error' : 'warning'}">${escapeHtml(w.text)}</div>`
+    ).join('');
+  }
+
+  /**
+   * "Player 2 (Player2 — A Link to the Past)" for the player the plan is for.
+   * `player_names` and `world` are keyed by player id (the unsliced maps), so
+   * they still name the right player after a switch.
+   */
+  _playerLabel(planner) {
+    const playerId = planner?.getPlayerId()
+      || centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId')?.()
+      || null;
+    if (!playerId) return 'Player ?';
+
+    /**
+     * ⛓ H5 — the STATE MANAGER THE PLANNER IS ACTUALLY USING, not the app's.
+     * With a working copy adopted this is the document's own; reading the
+     * proxy here would label a handed-over world with the applied one's player
+     * names and game — a true sentence about the wrong subject, which is
+     * precisely what this label exists to prevent.
+     */
+    const staticData = (planner?.stateManager ?? stateManagerProxySingleton)?.getStaticData?.();
+    const name = staticData?.player_names?.[playerId] || null;
+    // game_name describes the LOADED world only — claiming it for some other
+    // player is exactly the confusion this label exists to prevent.
+    const isLoadedPlayer = String(playerId) === String(staticData?.playerId);
+    const game = staticData?.world?.[playerId]?.game
+      || (isLoadedPlayer ? staticData?.game_name : null)
+      || null;
+
+    const detail = [name, game].filter(Boolean).join(' — ');
+    return detail ? `Player ${playerId} (${detail})` : `Player ${playerId}`;
+  }
+
+  _collectWarnings(planner) {
+    const warnings = [];
+
+    if (this._isStale) {
+      warnings.push({
+        severity: 'warn',
+        text: 'Data changed (player switch or rules reload) — press Load to re-plan.',
+      });
+    }
+
+    const diag = planner.getLogDiagnostics();
+    if (diag?.error) {
+      warnings.push({ severity: 'error', text: diag.error });
+      return warnings;
+    }
+
+    if (planner.getTotalEntries() === 0 && diag && diag.stateUpdateCount > 0) {
+      warnings.push({
+        severity: 'error',
+        text: `Sphere log has no data for player ${diag.playerId} — available players: ` +
+          `[${diag.availablePlayers.join(', ') || 'none'}]. The loaded rules and the ` +
+          `sphere log disagree about which player this is.`,
+      });
+    }
+
+    const foreign = planner.getSkippedForeignEntries();
+    const locationEntries = planner.getLocationEntryCount();
+    if (foreign > 0) {
+      const all = foreign >= locationEntries;
+      warnings.push({
+        severity: all ? 'error' : 'warn',
+        text: all
+          ? `ALL ${foreign} of ${locationEntries} sphere-log locations are not in this ` +
+            `player's world — wrong player or wrong seed. The generated costs are ` +
+            `defaults only; do not use them.`
+          : `${foreign} of ${locationEntries} sphere-log locations are not in this ` +
+            `player's world — wrong player or wrong seed?`,
+      });
+    }
+
+    const truncation = planner.getTruncation();
+    if (truncation) {
+      warnings.push({
+        severity: 'error',
+        text: `Planning hit the ${truncation.limit}-step guard and stopped early — ` +
+          `the plan is INCOMPLETE.`,
+      });
+    }
+
+    return warnings;
+  }
+
+  /**
+   * ⛓ H5 — WHICH WORLD the numbers describe, in front of every status
+   * sentence. ⛔ Not a badge somewhere else on the panel: a person reading
+   * "Complete: 12 loops" has to know whether those loops are the applied
+   * world's or a document that has never been applied.
+   */
+  _sourcePrefix() {
+    if (!this._workingCopy) return '';
+    const { source, stats } = this._workingCopy;
+    return `[working copy${source ? ` · ${source}` : ''} — `
+      + `${stats.regions} regions, ${stats.locations} locations] `;
+  }
+
   _updateStatus() {
     if (this.isVerifying) return; // Status managed by verify loop
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded()) {
-      this._setStatus('No sphere log loaded');
+      this._setStatus(`${this._sourcePrefix()}No sphere log loaded`);
+      this._setWarnings([]);
       return;
     }
     const steps = planner.getPlannedSteps().length;
     const entries = planner.getTotalEntries() - (planner.getSkippedEventEntries() || 0);
+    const who = this._playerLabel(planner);
 
     if (this.verificationResults.length > 0) {
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      this._setStatus(`Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      const notScored = this.verificationResults.length - comparable.length;
+      this._setStatus(`${this._sourcePrefix()}${who} · Verified: ${this.verificationResults.length} steps`
+        + (comparable.length
+          ? `, ${matched}/${comparable.length} within tolerance`
+          : ' — the block prices none of them, nothing to score')
+        + (notScored && comparable.length ? `, ${notScored} unpriced by design` : ''));
     } else if (planner.isComplete()) {
-      this._setStatus(`Complete: ${steps} loops, ${entries} entries`);
+      this._setStatus(`${this._sourcePrefix()}${who} · Complete: ${steps} loops, ${entries} entries`);
     } else {
-      this._setStatus(`${steps} loops planned`);
+      this._setStatus(`${this._sourcePrefix()}${who} · ${steps} loops planned`);
     }
+
+    this._setWarnings(this._collectWarnings(planner));
   }
 
   _updateButtons() {
@@ -547,6 +1301,31 @@ export class CostDebuggerUI {
     const btnPlanSphere = this.rootElement.querySelector('.cd-btn-plan-sphere');
     const btnPlanAll = this.rootElement.querySelector('.cd-btn-plan-all');
     const btnReset = this.rootElement.querySelector('.cd-btn-reset');
+    // ⛓ H5 — the way back exists only while there is something to go back from.
+    const btnApplied = this.rootElement.querySelector('.cd-btn-applied');
+    if (btnApplied) {
+      btnApplied.style.display = this._workingCopy ? '' : 'none';
+      btnApplied.disabled = this.isVerifying;
+    }
+    /**
+     * ⛓⛓ L4 — Send exists only where there is a document to send TO, and it is
+     * HIDDEN rather than disabled in that case for the same reason its
+     * neighbour is: on applied state the gesture does not exist at all, and a
+     * permanently greyed button in the app's ordinary mode would read as
+     * broken. ⛔ With a working copy adopted it is SHOWN and DISABLED with the
+     * reason in its `title` — H4c's claim-12 shape — because "you have not
+     * planned yet" is a thing a person can act on and a missing button is not.
+     */
+    const btnSend = this.rootElement.querySelector('.cd-btn-send');
+    if (btnSend) {
+      btnSend.style.display = this._workingCopy ? '' : 'none';
+      const refusal = this.isVerifying
+        ? 'Verification is running.'
+        : sendCostsRefusal({ workingCopy: this._workingCopy, planner });
+      btnSend.disabled = !!refusal;
+      btnSend.title = refusal
+        || 'Write this plan into the handed-over document as one undoable `set-key loop_costs`.';
+    }
 
     if (this.isVerifying) {
       if (btnLoad) btnLoad.disabled = true;
@@ -594,23 +1373,57 @@ export class CostDebuggerUI {
       if (locationsLabel) locationsLabel.textContent = 'Max \u0394:';
 
       const tolerance = 5;
-      const matched = this.verificationResults.filter(r =>
-        Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
+      const comparable = this._comparableResults();
+      const matched = comparable.filter(r =>
+        Math.abs(r.actual.manaConsumed - r.predicted.queueCharged) <= tolerance
       ).length;
-      if (regionsEl) regionsEl.textContent = `${matched}/${this.verificationResults.length}`;
+      if (regionsEl) {
+        // ⛔ `0/0` claims a ratio there is no denominator for.
+        regionsEl.textContent = comparable.length
+          ? `${matched}/${comparable.length}` : 'none scored';
+        regionsEl.title = 'steps whose replayed spend matched the part of the prediction the '
+          + 'BLOCK states a price for; a step in a region the block leaves unpriced by design '
+          + '(own economy, time-priced) is replayed and reported but never scored';
+      }
 
-      const maxDelta = this.verificationResults.length > 0
-        ? Math.max(...this.verificationResults.map(r =>
-            Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed)
+      const maxDelta = comparable.length > 0
+        ? Math.max(...comparable.map(r =>
+            Math.abs(r.actual.manaConsumed - r.predicted.queueCharged)
           ))
         : 0;
       if (locationsEl) locationsEl.textContent = maxDelta.toFixed(1);
     } else {
       if (regionsLabel) regionsLabel.textContent = 'Regions:';
       if (locationsLabel) locationsLabel.textContent = 'Locations:';
+      /**
+       * ⛔ `getCostData()` is the BLOCK — write-by-class applied — so on a jta
+       * world it holds 1 of 4 regions and 0 of 23 locations. A bare "1" read
+       * as "one region planned" is the opposite of what happened, so the
+       * denominator is the world's own count and the gap is the point.
+       */
       const costData = planner?.getCostData();
-      if (regionsEl) regionsEl.textContent = costData ? Object.keys(costData.regions).length : '0';
-      if (locationsEl) locationsEl.textContent = costData ? Object.keys(costData.locations).length : '0';
+      const topology = planner?.getTopology?.();
+      const worldRegions = topology?.regions?.size ?? 0;
+      const worldLocations = topology?.locations?.size ?? 0;
+      if (regionsEl) {
+        regionsEl.textContent = costData
+          ? `${Object.keys(costData.regions).length} / ${worldRegions}` : '0';
+        regionsEl.title = 'regions the BLOCK prices, of the regions in this world — '
+          + 'a substrate with its own mana economy is left unpriced on purpose';
+      }
+      if (locationsEl) {
+        locationsEl.textContent = costData
+          ? `${Object.keys(costData.locations).length} / ${worldLocations}` : '0';
+        locationsEl.title = 'locations the BLOCK prices, of the locations in this world';
+      }
+    }
+
+    // ⛓ ONE engine, and which world it was pointed at.
+    const engineEl = this.rootElement.querySelector('.cd-summary-engine');
+    if (engineEl) {
+      engineEl.textContent = `loopCostPlanner \u00b7 ${this._workingCopy
+        ? `working copy${this._workingCopy.source ? ` (${this._workingCopy.source})` : ''}`
+        : 'applied state'}`;
     }
   }
 
@@ -631,6 +1444,9 @@ export class CostDebuggerUI {
       listEl.innerHTML = `<div class="cd-step-list-empty">${msg}</div>`;
       return;
     }
+
+    // ⛓ Built ONCE for the whole list — see `_pricingContext`.
+    const ctx = this._pricingContext();
 
     listEl.innerHTML = steps.map(step => {
       const selected = step.stepIndex === this.selectedStepIndex ? ' cd-selected' : '';
@@ -662,7 +1478,17 @@ export class CostDebuggerUI {
             const sign = v.delta > 0 ? '+' : '';
             detail = `<span class="${deltaClass}">${sign}${v.delta}</span>`;
           } else {
-            detail = `<span class="cd-step-new-costs">cost=${locAssignment?.cost || '?'}</span>`;
+            /**
+             * ⛔ A location in a NATIVE or SUMMARY region has NO cost in the
+             * block, so `cost=100` here would be a price nothing charges. The
+             * number is still in the step's detail view, under the label that
+             * says what it is.
+             */
+            const pricing = locAssignment
+              ? this._pricingOfAssignment(locAssignment, ctx) : null;
+            detail = pricing && !pricing.priced
+              ? `<span class="cd-step-unpriced" title="${escapeHtml(pricing.why)}">${pricing.label}</span>`
+              : `<span class="cd-step-new-costs">cost=${locAssignment?.cost || '?'}</span>`;
           }
         }
         truncName = step.phase === 'EXPLORE'
@@ -673,8 +1499,16 @@ export class CostDebuggerUI {
 
       // Override detail with verification result if available
       const vResult = this.verificationResults.find(r => r.stepIndex === step.stepIndex);
-      if (vResult) {
-        const delta = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+      if (vResult && !vResult.comparable) {
+        // ⛔ No delta: the BLOCK states no cost for this step's region, so
+        //    there is no prediction for a replay to confirm or refute. The
+        //    label is the region's own, not a generic one.
+        const label = vResult.unchargedReasons?.[0]?.[0] ?? 'not priced';
+        const why = vResult.unchargedReasons?.[0]?.[1]
+          ?? 'the block states no cost for this region, so the replay is reported and not scored';
+        detail = `<span class="cd-step-unpriced" title="${escapeHtml(why)}">${label}</span>`;
+      } else if (vResult) {
+        const delta = vResult.actual.manaConsumed - vResult.predicted.queueCharged;
         const absD = Math.abs(delta);
         const cls = absD <= 1 ? 'cd-verify-exact' : absD <= 5 ? 'cd-verify-close' : 'cd-verify-far';
         const sign = delta > 0 ? '+' : '';
@@ -808,14 +1642,32 @@ export class CostDebuggerUI {
 
         sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Verification (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
       } else {
-        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Cost', 6)}  Formula`);
-        rows.push('\u2500'.repeat(NW + 50));
+        /**
+         * ⛔ **THE PLAN PRICES EVERY REGION; THE BLOCK DOES NOT.** ⚖ (i) — the
+         * simulation walks every region as coarse to derive the numbers at
+         * all, and `writeCostsByClass` then drops the ones no block should
+         * carry. Printing a bare `50` beside a jta region states a price
+         * nothing charges, so each row carries what its region's class makes
+         * of that number, and the ones the block will not carry say so in the
+         * BLOCK column instead of repeating the figure.
+         */
+        const ctx = this._pricingContext();
+        rows.push(`${pad('Target', NW)} ${rpad('Type', 8)} ${rpad('Planned', 8)}  ${pad('In the block', 14)}Formula`);
+        rows.push('\u2500'.repeat(NW + 64));
 
+        const notes = new Map();
         for (const ca of step.costAssignments) {
           const cls = 'cd-reason-new';
           const name = truncate(ca.name, NW - 2);
           const typeLabel = ca.type === 'region' ? 'region' : 'location';
-          rows.push(`<span class="${cls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 6)}  ${ca.formula}</span>`);
+          const pricing = this._pricingOfAssignment(ca, ctx);
+          const blockCol = pricing && !pricing.priced ? pricing.label : 'the cost';
+          if (pricing?.why) notes.set(pricing.label, pricing.why);
+          const rowCls = pricing && !pricing.priced ? 'cd-reason-unpriced' : cls;
+          rows.push(`<span class="${rowCls}">\u2713 ${pad(name, NW)} ${rpad(typeLabel, 8)} ${rpad(ca.cost, 8)}  ${pad(blockCol, 14)}${ca.formula}</span>`);
+        }
+        for (const [label, why] of notes) {
+          rows.push(`<span class="cd-reason-warning">   ${label}: ${escapeHtml(why)}</span>`);
         }
 
         sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Cost Assignments (${step.costAssignments.length})</div>${pre(rows.join('\n'))}</div>`);
@@ -826,8 +1678,19 @@ export class CostDebuggerUI {
     if (step.queue.length > 0) {
       const NW = 28;
       const rows = [];
-      rows.push(`${pad('Action', 12)} ${pad('Target', NW)} ${rpad('Base', 6)} ${rpad('Lvl', 4)} ${rpad('Cost', 8)}`);
-      rows.push('\u2500'.repeat(NW + 34));
+      /**
+       * ⛓⛓ **THIS IS THE SIMULATION'S QUEUE, NOT THE RUNTIME'S BILL.** Every
+       * action here is priced as if its region were coarse — that is how the
+       * walk derives the numbers. At run time the region's CAPTURE SHAPE
+       * decides who charges: a `fine` region (maze, jta, omsi) is charged by
+       * its own substrate and the loop queue takes nothing, and a `summary`
+       * region is charged by TIME plus whatever the block names explicitly.
+       * The `Charged by` column is that answer, so a reader cannot mistake a
+       * derivation step for a bill.
+       */
+      const ctx = this._pricingContext();
+      rows.push(`${pad('Action', 12)} ${pad('Target', NW)} ${rpad('Base', 6)} ${rpad('Lvl', 4)} ${rpad('Cost', 8)}          ${pad('Charged by', 12)}`);
+      rows.push('\u2500'.repeat(NW + 60));
 
       let runningMana = step.stateBefore.currentMana;
       for (const q of step.queue) {
@@ -852,7 +1715,13 @@ export class CostDebuggerUI {
 
         const costStr = q.cost.toFixed(1);
         const remaining = `\u2192 ${runningMana.toFixed(1)}`;
-        rows.push(`${pad(actionLabel, 12)} ${pad(truncTarget, NW)} ${rpad(q.baseCost.toFixed(0), 6)} ${rpad('L' + q.level, 4)} <span class="${manaClass}">${rpad(costStr, 8)} ${remaining}</span>`);
+        const sourceRegion = q.region || q.from || null;
+        const pricing = sourceRegion ? this._pricingOf(sourceRegion, ctx) : null;
+        const chargedBy = !pricing ? ''
+          : pricing.chargedByQueue ? 'the queue'
+          : pricing.shape === 'summary' ? 'time (drain)'
+          : 'the substrate';
+        rows.push(`${pad(actionLabel, 12)} ${pad(truncTarget, NW)} ${rpad(q.baseCost.toFixed(0), 6)} ${rpad('L' + q.level, 4)} <span class="${manaClass}">${rpad(costStr, 8)} ${pad(remaining, 10)}</span><span class="${pricing && !pricing.chargedByQueue ? 'cd-reason-unpriced' : ''}">${pad(chargedBy, 12)}</span>`);
       }
 
       sections.push(`<div class="cd-reason-section"><div class="cd-reason-label">Action Queue (${step.queue.length} actions)</div>${pre(rows.join('\n'))}</div>`);
@@ -896,9 +1765,24 @@ export class CostDebuggerUI {
       vRows.push(`${pad('Metric', NW)} ${rpad('Predicted', 10)} ${rpad('Actual', 10)} ${rpad('Delta', 8)}`);
       vRows.push('\u2500'.repeat(NW + 32));
 
-      const manaD = vResult.actual.manaConsumed - vResult.predicted.manaConsumed;
+      /**
+       * ⛔ The comparable prediction is `queueCharged`, not the whole
+       * simulated spend: the simulation prices every region as coarse, and a
+       * region a substrate charges natively contributes to `manaConsumed`
+       * without ever reaching the queue. Both are shown — the split IS the
+       * finding — but only the queue's half is scored.
+       */
+      const predictedQueue = vResult.predicted.queueCharged ?? vResult.predicted.manaConsumed;
+      const manaD = vResult.actual.manaConsumed - predictedQueue;
       const manaCls = Math.abs(manaD) <= 1 ? 'cd-verify-exact' : Math.abs(manaD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';
-      vRows.push(`<span class="${manaCls}">${pad('Mana Consumed', NW)} ${rpad(vResult.predicted.manaConsumed.toFixed(1), 10)} ${rpad(vResult.actual.manaConsumed.toFixed(1), 10)} ${rpad((manaD > 0 ? '+' : '') + manaD.toFixed(1), 8)}</span>`);
+      vRows.push(`<span class="${manaCls}">${pad('Mana Consumed', NW)} ${rpad(predictedQueue.toFixed(1), 10)} ${rpad(vResult.actual.manaConsumed.toFixed(1), 10)} ${rpad((manaD > 0 ? '+' : '') + manaD.toFixed(1), 8)}</span>`);
+      if (vResult.uncharged > 0) {
+        vRows.push(`<span class="cd-reason-unpriced">${pad('  \u2514 unpriced by design', NW)} `
+          + `${rpad(vResult.uncharged.toFixed(1), 10)} ${rpad('\u2014', 10)} ${rpad('not scored', 8)}</span>`);
+        for (const [label, why] of (vResult.unchargedReasons || [])) {
+          vRows.push(`<span class="cd-reason-warning">     ${label}: ${escapeHtml(why)}</span>`);
+        }
+      }
 
       const remD = vResult.actual.manaRemaining - vResult.predicted.manaRemaining;
       const remCls = Math.abs(remD) <= 1 ? 'cd-verify-exact' : Math.abs(remD) <= 5 ? 'cd-verify-close' : 'cd-verify-far';

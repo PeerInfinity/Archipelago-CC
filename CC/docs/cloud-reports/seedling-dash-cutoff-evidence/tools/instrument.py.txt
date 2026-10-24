@@ -1,0 +1,42 @@
+import sys
+p=sys.argv[1]; s=open(p,encoding='utf-8').read()
+def rep(a,b):
+    global s
+    assert s.count(a)==1, a
+    s=s.replace(a,b)
+rep("export function planSwordDash(run, wps, { tolerance = 0, certify = null,",
+"""// DK LAB — the chain instrument (scratch only)
+export function planSwordDash(run, wps, opts = {}) {
+    const dk = globalThis.__DK;
+    if (!dk) return planSwordDashInner(run, wps, opts);
+    const rec = { wps: wps.length, startTick: run.ticksCompleted, level: run.level ?? null, wpsXY: wps.map((w) => [w.x, w.y]), start: [run.state.x, run.state.y] };
+    dk.cur = rec;
+    let out;
+    try { out = planSwordDashInner(run, wps, opts); } finally { dk.done(rec, out); dk.cur = null; }
+    return out;
+}
+function planSwordDashInner(run, wps, { tolerance = 0, certify = null,""")
+rep("""    const base = previewFor(null).walk;
+    const baseline = base.samples.length;""","""    const base = previewFor(null).walk;
+    const baseline = base.samples.length;
+    if (globalThis.__DK?.cur) Object.assign(globalThis.__DK.cur, { baseLegs: legsOf(base), baseline,
+        crossed: base.truncated?.kind === 'crossed', truncated: base.truncated?.kind ?? null,
+        terrain: strikeTerrainOf(run.world), dkRuns: dashLegRuns(base.samples, run.state).map((l) => ({ ...l, floor: dashLegFloor(l) })),
+        verdictC: withDashLegPrecheck(true, () => dashLegPrecheck(run, base)) });""")
+rep("""        const legs = legsOf(walk);
+        const longest = Math.max(0, ...legs);
+        if (walk.truncated && walk.truncated.kind !== 'crossed') {""","""        const legs = legsOf(walk);
+        const longest = Math.max(0, ...legs);
+        row.longest = longest; row.legsAll = legs;
+        if (walk.truncated && walk.truncated.kind !== 'crossed') {""")
+# lab rule override: DK_RULE=k:<K>
+rep("""export function dashLegPrecheck(run, walk) {
+    if (!DASH_LEG_PRECHECK.enabled) return null;""","""export function dashLegPrecheck(run, walk) {
+    if (!DASH_LEG_PRECHECK.enabled) return null;
+    const dkRule = globalThis.process?.env?.DK_RULE;
+    if (dkRule?.startsWith('k:')) {
+        const n = []; for (const sm of walk.samples) n[sm.wp] = (n[sm.wp] ?? 0) + 1;
+        const longest = Math.max(0, ...[...n].map((x) => x ?? 0));
+        return longest > PREVIEW_AGREEMENT_BOUND + Number(dkRule.slice(2)) ? `DK_RULE ${dkRule}: ${longest}` : null;
+    }""")
+open(p,'w',encoding='utf-8').write(s)

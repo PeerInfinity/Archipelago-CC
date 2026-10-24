@@ -28,29 +28,121 @@ on:
       - '!.dockerignore'
       - '!.github/workflows/**'
       - '.github/workflows/unittests.yml'
+  # Fork addition (ci-manual-moves, user ruling 2026-10-21): the Windows and
+  # macOS legs run only on a pull request or on this dispatch with
+  # `full_matrix`; pushes run the Linux legs and hosting.
+  workflow_dispatch:
+    inputs:
+      full_matrix:
+        description: 'Also run the Windows 3.11 / Windows 3.13 / macOS 3.13 legs'
+        type: boolean
+        default: true
 
 permissions: {}
 
+# Fork addition (ci-workflow-policy-review F3): a branch push supersedes the
+# run of the previous push to the SAME branch. Only pushes to non-main refs
+# share a group; main, pull requests and dispatches get a group of their own
+# (the run id), so they never cancel or queue behind each other — main's
+# per-SHA rows are what post-merge readers cite.
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
+  # Fork addition (ci-workflow-policy-review F1): a push to a branch other than
+  # main whose changes pytest never reads (frontend JS, scripts/procgen data,
+  # prose) skips the matrix. Main and pull requests always run it. The decision
+  # is scripts/test/python-tests-needed.py (pinned by
+  # test/test_python_tests_needed.py); every failure to get the changed-file
+  # list runs the matrix.
+  # ci-skip-rules RULE 1 (2026-10-17): a main push of a SHA that already has a
+  # successful run of this workflow (its branch's) skips the matrix too.
+  # FAIL-OPEN: an API error runs it.
+  changes:
+    runs-on: ubuntu-latest
+    name: Python tests needed?
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+    - uses: actions/checkout@v6.0.2
+      with:
+        sparse-checkout: scripts/test/python-tests-needed.py
+        sparse-checkout-cone-mode: false
+    - name: Decide
+      id: decide
+      env:
+        GH_TOKEN: ${{ github.token }}
+        EVENT: ${{ github.event_name }}
+        REF: ${{ github.ref }}
+        BEFORE: ${{ github.event.before }}
+        SHA: ${{ github.sha }}
+        REPO: ${{ github.repository }}
+        RUN_ID: ${{ github.run_id }}
+      run: |
+        decide() {
+          if [ "$EVENT" = "push" ] && [ "$REF" = "refs/heads/main" ]; then
+            # Only a run whose MATRIX ran counts: a branch run that F1 skipped
+            # is green without testing anything, and main stays its backstop.
+            if ids=$(gh api "repos/$REPO/actions/workflows/unittests.yml/runs?head_sha=$SHA&status=success&per_page=20" \
+                --jq "[.workflow_runs[] | select(.id != $RUN_ID) | .id] | map(tostring) | join(\" \")"); then
+              for id in $ids; do
+                ran=$(gh api "repos/$REPO/actions/runs/$id/jobs?per_page=50" \
+                  --jq '[.jobs[] | select(.name | startswith("Test Python")) | .conclusion] | (length > 0 and all(. == "success"))' || echo false)
+                if [ "$ran" = true ]; then
+                  echo "skip: $SHA already passed the matrix in run $id — rule 1" >&2; echo false; return
+                fi
+              done
+              echo "run: no earlier run at $SHA passed the matrix" >&2
+            else
+              echo "run: could not list the runs at $SHA" >&2
+            fi
+          fi
+          if [ "$EVENT" != "push" ] || [ "$REF" = "refs/heads/main" ]; then
+            echo "run: $EVENT on $REF always runs"; echo true; return
+          fi
+          # A new branch has no `before`: compare against main's merge-base.
+          base="$BEFORE"
+          case "$base" in ''|0000000000000000000000000000000000000000) base=main ;; esac
+          if ! files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+            echo "run: could not list the changes ($base...$SHA)" >&2; echo true; return
+          fi
+          n=$(printf '%s\n' "$files" | grep -c . || true)
+          # The compare API lists at most 300 files: a longer list is truncated.
+          if [ "$n" -ge 300 ]; then echo "run: $n changed files (list may be truncated)" >&2; echo true; return; fi
+          echo "$n changed file(s) in $base...$SHA:" >&2; printf '%s\n' "$files" | sed 's/^/  /' >&2
+          printf '%s\n' "$files" | python3 scripts/test/python-tests-needed.py
+        }
+        run=$(decide | tail -1)
+        # Anything but an explicit "false" (a crashed classifier prints nothing) runs.
+        [ "$run" = false ] || run=true
+        echo "Python tests needed: $run"
+        echo "run=$run" >> "$GITHUB_OUTPUT"
+
   unit:
-    runs-on: ${{ matrix.os }}
-    name: Test Python ${{ matrix.python.version }} ${{ matrix.os }}
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
+    # A python entry's own `runner` overrides matrix.os for that one leg.
+    runs-on: ${{ matrix.python.runner || matrix.os }}
+    name: Test Python ${{ matrix.python.version }} ${{ matrix.python.runner || matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         python:
-          - {version: '3.11.2'} # Change to '3.11' around 2026-06-10
+          # Pinned, not ubuntu-latest: setup-python has no 3.11.2 for ubuntu-26.04 (2026-10-22). Un-pin once it ships one, or once this leg moves to a version 26.04 has.
+          - {version: '3.11.2', runner: ubuntu-24.04} # Change to '3.11' around 2026-06-10
           - {version: '3.12'}
           - {version: '3.13'}
-        include:
-          - python: {version: '3.11'}  # old compat
-            os: windows-latest
-          - python: {version: '3.13'}  # current
-            os: windows-latest
-          - python: {version: '3.13'}  # current
-            os: macos-latest
+        # Fork change (ci-manual-moves): upstream's three include legs —
+        # Windows 3.11 (old compat), Windows 3.13 and macOS 3.13 (current) —
+        # are added only on a pull request or a `full_matrix` dispatch:
+        #   gh workflow run unittests.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f full_matrix=true
+        include: ${{ fromJSON((github.event_name == 'pull_request' || inputs.full_matrix) && '[{"python":{"version":"3.11"},"os":"windows-latest"},{"python":{"version":"3.13"},"os":"windows-latest"},{"python":{"version":"3.13"},"os":"macos-latest"}]' || '[]') }}
 
     steps:
     - uses: actions/checkout@v6.0.2
@@ -63,9 +155,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ci-requirements.txt
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
-        python Launcher.py --update_settings  # make sure host.yaml exists for tests
+    # Its OWN step so the env below cannot reach the installer above, which
+    # SKIP_REQUIREMENTS_UPDATE would disable. Launcher.py:28 calls
+    # ModuleUpdate.update() with NO arguments, i.e. yes=False, so any
+    # requirement the installer failed to fetch makes it call input() — on a
+    # runner with no stdin that is an EOFError naming the prompt instead of
+    # the install failure. That second check is redundant in CI.
+    # ⚠ Must be `env:`, NOT a `VAR=1 cmd` prefix: the Windows runners default
+    # to PowerShell, where that POSIX form is parsed as a command name and
+    # fails with "The term 'SKIP_REQUIREMENTS_UPDATE=1' is not recognized".
+    - name: Create host.yaml for tests
+      env:
+        SKIP_REQUIREMENTS_UPDATE: "1"
+      run: |
+        python Launcher.py --update_settings
     - name: Unittests
       env:
+        # Same prompt, one step later: a missing requirement makes world
+        # loading call input() under pytest's capture, which raises
+        # "OSError: pytest: reading from stdin while output is captured" on
+        # every affected test (42 of them on 2026-08-13) and buries the real
+        # cause. With this set, a genuinely missing dependency surfaces as an
+        # ImportError that test_no_failed_world_loads names.
+        SKIP_REQUIREMENTS_UPDATE: "1"
         # Force UTF-8 stdio. Without this, Python 3.11 on Windows defaults
         # sys.stdout to a cp1252 TextIOWrapper, and pytest-xdist's parent-
         # worker stdout teardown trips a "ValueError: underlying buffer has
@@ -78,6 +190,8 @@ jobs:
         pytest -n auto
 
   hosting:
+    needs: changes
+    if: needs.changes.outputs.run == 'true'
     runs-on: ${{ matrix.os }}
     name: Test hosting with ${{ matrix.python.version }} on ${{ matrix.os }}
 
@@ -101,6 +215,14 @@ jobs:
         python -m pip install --upgrade pip
         python ModuleUpdate.py --yes --force --append "WebHostLib/requirements.txt"
     - name: Test hosting
+      env:
+        # This test spawns Generate.py / MultiServer.py as SUBPROCESSES, and
+        # each runs ModuleUpdate.update() at __main__ with yes=False. A
+        # dependency that failed to install therefore turns into an input()
+        # call with no stdin — EOFError, red job, and a message that names the
+        # prompt rather than the install failure. Safe here: the install step
+        # above already ran ModuleUpdate --yes --force.
+        SKIP_REQUIREMENTS_UPDATE: "1"
       run: |
         source venv/bin/activate
         export PYTHONPATH=$(pwd)

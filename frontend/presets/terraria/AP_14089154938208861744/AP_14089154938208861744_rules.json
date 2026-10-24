@@ -137,9 +137,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -289,9 +289,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "calamity"
+                    "option": "calamity"
                   }
                 },
                 {
@@ -1671,9 +1671,9 @@
                   "rule": "Not",
                   "args": {
                     "condition": {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     }
                   }
@@ -1819,9 +1819,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "getfixedboi"
+                            "option": "getfixedboi"
                           }
                         }
                       }
@@ -1995,9 +1995,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -2227,9 +2227,9 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -2323,9 +2323,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -2682,9 +2682,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -2784,9 +2784,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "calamity"
+                    "option": "calamity"
                   }
                 },
                 {
@@ -2901,15 +2901,15 @@
                       ]
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -3025,9 +3025,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3101,9 +3101,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3199,9 +3199,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "calamity"
+                            "option": "calamity"
                           }
                         }
                       }
@@ -3281,6 +3281,12 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "calamity"
+                      }
+                    },
+                    {
                       "rule": "HasAny",
                       "args": {
                         "item_names": [
@@ -3288,12 +3294,6 @@
                           "Mechanical Glove",
                           "Statis' Blessing"
                         ]
-                      }
-                    },
-                    {
-                      "rule": "SettingValue",
-                      "args": {
-                        "setting": "calamity"
                       }
                     }
                   ]
@@ -3328,9 +3328,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3436,9 +3436,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3508,9 +3508,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3551,9 +3551,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "calamity"
+                    "option": "calamity"
                   }
                 },
                 {
@@ -3605,9 +3605,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3651,9 +3651,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3697,9 +3697,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -3771,9 +3771,9 @@
                   }
                 },
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "getfixedboi"
+                    "option": "getfixedboi"
                   }
                 }
               ]
@@ -3916,9 +3916,9 @@
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "SettingValue",
+                                  "rule": "OptionValue",
                                   "args": {
-                                    "setting": "calamity"
+                                    "option": "calamity"
                                   }
                                 }
                               }
@@ -3935,9 +3935,9 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "SettingValue",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "calamity"
+                                "option": "calamity"
                               }
                             },
                             {
@@ -4031,9 +4031,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -4089,9 +4089,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "SettingValue",
+                  "rule": "OptionValue",
                   "args": {
-                    "setting": "calamity"
+                    "option": "calamity"
                   }
                 },
                 {
@@ -4146,9 +4146,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -4214,9 +4214,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -4326,11 +4326,23 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "calamity"
+                      }
+                    },
+                    {
                       "rule": "Or",
                       "children": [
                         {
                           "rule": "And",
                           "children": [
+                            {
+                              "rule": "OptionValue",
+                              "args": {
+                                "option": "getfixedboi"
+                              }
+                            },
                             {
                               "rule": "Or",
                               "children": [
@@ -4347,15 +4359,15 @@
                                   "rule": "And",
                                   "children": [
                                     {
-                                      "rule": "SettingValue",
+                                      "rule": "OptionValue",
                                       "args": {
-                                        "setting": "calamity"
+                                        "option": "calamity"
                                       }
                                     },
                                     {
-                                      "rule": "SettingValue",
+                                      "rule": "OptionValue",
                                       "args": {
-                                        "setting": "getfixedboi"
+                                        "option": "getfixedboi"
                                       }
                                     },
                                     {
@@ -4367,12 +4379,6 @@
                                   ]
                                 }
                               ]
-                            },
-                            {
-                              "rule": "SettingValue",
-                              "args": {
-                                "setting": "getfixedboi"
-                              }
                             }
                           ]
                         },
@@ -4383,12 +4389,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "SettingValue",
-                      "args": {
-                        "setting": "calamity"
-                      }
                     }
                   ]
                 },
@@ -4468,9 +4468,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -4538,11 +4538,23 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "calamity"
+                      }
+                    },
+                    {
                       "rule": "Or",
                       "children": [
                         {
                           "rule": "And",
                           "children": [
+                            {
+                              "rule": "OptionValue",
+                              "args": {
+                                "option": "getfixedboi"
+                              }
+                            },
                             {
                               "rule": "Or",
                               "children": [
@@ -4559,15 +4571,15 @@
                                   "rule": "And",
                                   "children": [
                                     {
-                                      "rule": "SettingValue",
+                                      "rule": "OptionValue",
                                       "args": {
-                                        "setting": "calamity"
+                                        "option": "calamity"
                                       }
                                     },
                                     {
-                                      "rule": "SettingValue",
+                                      "rule": "OptionValue",
                                       "args": {
-                                        "setting": "getfixedboi"
+                                        "option": "getfixedboi"
                                       }
                                     },
                                     {
@@ -4579,12 +4591,6 @@
                                   ]
                                 }
                               ]
-                            },
-                            {
-                              "rule": "SettingValue",
-                              "args": {
-                                "setting": "getfixedboi"
-                              }
                             }
                           ]
                         },
@@ -4592,15 +4598,15 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "SettingValue",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "calamity"
+                                "option": "calamity"
                               }
                             },
                             {
-                              "rule": "SettingValue",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "getfixedboi"
+                                "option": "getfixedboi"
                               }
                             },
                             {
@@ -4624,12 +4630,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "SettingValue",
-                      "args": {
-                        "setting": "calamity"
-                      }
                     }
                   ]
                 },
@@ -4822,9 +4822,9 @@
                                   "rule": "And",
                                   "children": [
                                     {
-                                      "rule": "SettingValue",
+                                      "rule": "OptionValue",
                                       "args": {
-                                        "setting": "calamity"
+                                        "option": "calamity"
                                       }
                                     },
                                     {
@@ -4891,18 +4891,24 @@
                   ]
                 },
                 {
+                  "rule": "OptionValue",
+                  "args": {
+                    "option": "grindy_achievements"
+                  }
+                },
+                {
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -4926,9 +4932,9 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "calamity"
+                            "option": "calamity"
                           }
                         },
                         {
@@ -4963,15 +4969,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -4981,12 +4987,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "SettingValue",
-                  "args": {
-                    "setting": "grindy_achievements"
-                  }
                 },
                 {
                   "rule": "HasAny",
@@ -5146,15 +5146,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -5197,15 +5197,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -5302,9 +5302,9 @@
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "SettingValue",
+                                  "rule": "OptionValue",
                                   "args": {
-                                    "setting": "calamity"
+                                    "option": "calamity"
                                   }
                                 }
                               }
@@ -5321,9 +5321,9 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "SettingValue",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "calamity"
+                                "option": "calamity"
                               }
                             },
                             {
@@ -5398,9 +5398,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -5483,9 +5483,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "calamity"
+                            "option": "calamity"
                           }
                         }
                       }
@@ -5494,6 +5494,23 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Chlorophyte Ore"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "calamity"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hallowed Ore"
                       }
                     }
                   ]
@@ -5511,9 +5528,9 @@
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "SettingValue",
+                                  "rule": "OptionValue",
                                   "args": {
-                                    "setting": "calamity"
+                                    "option": "calamity"
                                   }
                                 }
                               }
@@ -5530,9 +5547,9 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "SettingValue",
+                              "rule": "OptionValue",
                               "args": {
-                                "setting": "calamity"
+                                "option": "calamity"
                               }
                             },
                             {
@@ -5571,23 +5588,6 @@
                           "Shroomite Digging Claw",
                           "Spectre Pickaxe"
                         ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "SettingValue",
-                      "args": {
-                        "setting": "calamity"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hallowed Ore"
                       }
                     }
                   ]
@@ -5719,9 +5719,9 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -5759,9 +5759,9 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -5799,9 +5799,9 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "calamity"
+                        "option": "calamity"
                       }
                     },
                     {
@@ -5846,9 +5846,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "getfixedboi"
+                            "option": "getfixedboi"
                           }
                         }
                       }
@@ -5865,9 +5865,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -5901,9 +5901,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "getfixedboi"
+                            "option": "getfixedboi"
                           }
                         }
                       }
@@ -5920,9 +5920,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -5956,9 +5956,9 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "SettingValue",
+                          "rule": "OptionValue",
                           "args": {
-                            "setting": "getfixedboi"
+                            "option": "getfixedboi"
                           }
                         }
                       }
@@ -5975,9 +5975,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "SettingValue",
+                      "rule": "OptionValue",
                       "args": {
-                        "setting": "getfixedboi"
+                        "option": "getfixedboi"
                       }
                     },
                     {
@@ -10889,8 +10889,8 @@
                     "iterator": {
                       "type": "method_call",
                       "object": {
-                        "type": "setting_value",
-                        "setting": "armor_minions"
+                        "type": "world_attribute",
+                        "attribute": "armor_minions"
                       },
                       "method": "keys",
                       "args": []
@@ -10929,8 +10929,8 @@
                       "iterator": {
                         "type": "method_call",
                         "object": {
-                          "type": "setting_value",
-                          "setting": "armor_minions"
+                          "type": "world_attribute",
+                          "attribute": "armor_minions"
                         },
                         "method": "items",
                         "args": []
@@ -10978,8 +10978,8 @@
                   "iterator": {
                     "type": "method_call",
                     "object": {
-                      "type": "setting_value",
-                      "setting": "accessory_minions"
+                      "type": "world_attribute",
+                      "attribute": "accessory_minions"
                     },
                     "method": "items",
                     "args": []

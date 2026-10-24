@@ -1,0 +1,9 @@
+frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js
+frontend/modules/seedlingDemo/iceTurret.test.js
+frontend/modules/seedlingDemo/jsRuntimeGeneratedSolver.test.js
+frontend/modules/seedlingDemo/levelRun.test.js
+frontend/modules/seedlingDemo/procgenPostSword.test.js
+frontend/modules/seedlingDemo/r8Acceptance.test.js
+frontend/modules/seedlingDemo/watchOverlays.test.js
+scripts/procgen/producerSegments.test.js
+scripts/procgen/rerecordCampaign.test.js

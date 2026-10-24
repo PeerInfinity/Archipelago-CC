@@ -1,0 +1,1039 @@
+// Region-atlas → vanilla rules.json compiler — projections 1 AND 3 of the three
+// the atlas feeds (CC/docs/plans/region-atlas-plan.md, Phases 3 and 4).
+//
+// Takes an authored region atlas (the single source of truth: regions, boundary
+// exits, per-region sub-region subgraphs, locations with their vanilla items,
+// and the game's own vanilla layout) and emits the AP rules.json the frontend
+// loads — the real game's map expressed as an ordinary AP region graph.
+//
+// Phase 3 was GRAPH ONLY. Phase 4 adds **projection 3** on top of the same
+// compile: every region that names a real level (`map_ref`) also emits a
+// `preset_sidecars` entry binding it to the `flash_seedling` substrate, so the
+// real recompiled game plays inside the generated world — walking through one
+// of the game's own level transitions crosses the AP region boundary, and
+// arriving in a region teleports the player to the marked entrance spawn.
+// A region with no `map_ref` has no physical binding and stays graph-only.
+//
+// Phase 5b adds a SECOND sidecar flavour of the same graph (`sidecarFlavor:
+// 'maze'`, regionAtlasMazeProjection.js): the region's analyzed tile map
+// projected into the maze substrate, so the geometry and its item gating are
+// walkable with nothing but the committed repo — no wasm artifact.
+//
+// ── ⛓ THE LAW IS *ONE SIDECAR PER REGION*, NOT *ONE SUBSTRATE PER PRESET* ──
+//
+// That sentence used to read "the two flavours are SEPARATE PRESETS and never
+// merged". It was always TWO claims wearing one coat, and only the first is a
+// law: a preset may not give ONE AP region two sidecars, because that asks two
+// substrates to own one region and the player's warehouse has exactly one slot
+// per region (`procgenPlayerEngine.js` dispatches a region's load event by
+// `entry.substrate`). The second claim — that a whole preset is one substrate —
+// was an artefact of the compiler picking a flavour ONCE per compile. Nothing
+// downstream ever needed it: nine committed presets are mixed today, and the
+// player has dispatched per region since it was written.
+//
+// So the flavour is now the DEFAULT and an atlas region may override it with
+// its own `substrate` (EDITOR INTEGRATION plan §2.2 #1–#2). One sidecar per AP
+// region still holds — each region compiles through exactly ONE row of the
+// builder table below, and a region naming a substrate the table has no row for
+// is refused BY NAME rather than quietly compiled as something else.
+//
+// The graph projection, concretely:
+//
+//   region without a subgraph   → one AP region, its bare `region_id`
+//   region with a subgraph      → one AP region per sub-region, named by
+//                                 apRegionName() (`<region_id>__<sub_region>`)
+//   internal exit               → one AP exit, or two when `bidirectional`
+//                                 (rules.json exits are strictly one-way)
+//   vanilla_layout connection   → AP exits in BOTH directions; a boundary
+//                                 crossing is walkable both ways in the
+//                                 original game
+//   unwired boundary exit       → OMITTED, and named in the report (the atlas
+//                                 is grown incrementally; an unwired exit is a
+//                                 map crossing not covered yet, not an error)
+//   location                    → AP location in its (sub-)region, carrying its
+//                                 `vanilla_item` as a placed item
+//   vanilla_layout.start_region → `Menu` region with a single `GameStart` exit
+//
+// `access_rule` trees pass through verbatim — they are already Rule Builder
+// JSON. A connection direction carries its SOURCE exit's rule: the exit you
+// leave through is the frontier you have to get past. (A gate authored on the
+// far side therefore does not apply to arrivals; when Phase 5's analyzer starts
+// computing these mechanically, revisit whether a crossing wants both.)
+//
+// Deterministic: no timestamps, no clock, no Math.random. The same atlas
+// compiles to the same bytes, which is what lets the committed preset carry a
+// `--check` regeneration gate (scripts/procgen/region-atlas-compile.mjs).
+//
+// Headless-safe: no top-level await, no literal node: imports — this module is
+// in the bundled browser graph (the marking tool's "Export rules.json" and
+// "Open in APWorld Editor" buttons compile through it).
+
+import {
+    makeRulesJsonScaffold,
+    makeRegion,
+    makeExit,
+    makeLocation,
+} from '../shared/rulesJsonBuilder.js';
+import { allocateIdsBySortedName, namespaceNamed } from '../procgenCore/apIdNamespaces.js';
+import { validateRegionAtlas, apRegionName } from './regionAtlasValidator.js';
+import {
+    projectRegionToMaze,
+    formatMazeProjectionNotes,
+    MAZE_SUBSTRATE,
+} from './regionAtlasMazeProjection.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
+import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
+import FLASH_PANEL_WIRING_DATA from './flashPanelWiring.json' with { type: 'json' };
+
+// AP id namespaces for compiled atlases. Deliberately clear of the per-game
+// engine-binding namespace — frontend/modules/flashPanel/games/seedling.json
+// carries its own `ap_id_offset` (20000000) for the ids the injected game
+// speaks. Aligning the two is Phase 4's binding concern; until then these must
+// simply not collide with it.
+//
+// ⛓ The VALUES now come from procgenCore/apIdNamespaces.js, the one register of
+// every AP id base in the repo (§15 D11) — with the provenance and the pins.
+// They stay exported from here because that is where every caller and
+// regionAtlasCompiler.test.js reads them.
+const REGION_ATLAS_NAMESPACE = namespaceNamed('region-atlas');
+export const REGION_ATLAS_LOCATION_ID_BASE = REGION_ATLAS_NAMESPACE.locationBase;
+export const REGION_ATLAS_ITEM_ID_BASE = REGION_ATLAS_NAMESPACE.itemBase;
+
+// The AP region the projection hangs the start on. An atlas region named Menu
+// would silently merge with it, so the compiler refuses instead.
+export const MENU_REGION = 'Menu';
+export const GAME_START_EXIT = 'GameStart';
+
+// Projection 3. Per-game substrate ids are the standing ruling (2026-07-25),
+// so an atlas binds to `flash_<game>` rather than the generic `flash` entry.
+export const substrateIdFor = (game) => `flash_${String(game).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+
+/**
+ * The substrate this COMPILE defaults to — what a region that names none plays.
+ *
+ * `options.substrateId` RELABELS the flash builder (the marking tool's "export
+ * as another game" path) rather than selecting a different one, which is why it
+ * sits ahead of the flavour: with no override, the maze flavour defaults to the
+ * maze and everything else to the atlas game's own `flash_<game>`.
+ */
+export const compileDefaultSubstrate = (atlas, options = {}) => (
+    options.substrateId
+    ?? (options.sidecarFlavor === MAZE_SUBSTRATE ? MAZE_SUBSTRATE : substrateIdFor(atlas?.game))
+);
+
+/**
+ * Which substrate PLAYS one atlas region: **its own field, else this compile's
+ * default** (EDITOR INTEGRATION plan §2.2 #2).
+ *
+ * ⛓ The precedence is the whole design in one line. The region's field is the
+ * AUTHORED truth — a set editor derives it, so it is never hand-typed — and the
+ * compile default is what every atlas written before the field said implicitly.
+ * That is why the field is optional and why every committed preset is byte-
+ * unmoved by this change: absent everywhere, this returns exactly what the old
+ * one-substrate-per-compile line returned.
+ *
+ * An EMPTY string is treated as absent here as a belt-and-braces: the validator
+ * already refuses one by name, but `compileRegionAtlas` runs on
+ * `allowInvalid` documents too, and "" resolving to "" would look up a table
+ * row nobody can spell.
+ */
+export const regionSubstrateOf = (region, atlas, options = {}) => (
+    typeof region?.substrate === 'string' && region.substrate.length > 0
+        ? region.substrate
+        : compileDefaultSubstrate(atlas, options)
+);
+
+// Which flashPanel game wiring boots a given atlas's game. This is ENGINE
+// BINDING, not map semantics (decision 6) — the atlas holds neither, and the
+// per-game config it points at (`games/<id>.json`) holds the teleport recipe,
+// the item/location maps, and now the position signals the crossing detector
+// reads. Games with no wiring here compile graph-only.
+//
+// ⛓ THE DATA LIVES IN `flashPanelWiring.json` (rules-produced-blocks,
+// 2026-10-15), not here: the Python exporter's Seedling handler
+// (`exporter/games/unofficial/seedling.py`) reads the same file, so the
+// seed-1 `seedling` preset's block is PRODUCED from it rather than typed.
+// `scripts/procgen/check-worldgen-package-sidecars.mjs` holds every committed
+// copy (preset blocks and `_worldgen_flash_panel.json` files) equal to it.
+// The history below describes moves of that file's `seedling` entry.
+export const FLASH_PANEL_WIRING = Object.freeze(Object.fromEntries(
+    Object.entries(FLASH_PANEL_WIRING_DATA).map(([game, wiring]) => [game, Object.freeze({ ...wiring })]),
+));
+/**
+ * `FLASH_PANEL_WIRING.seedling` — the history of the JSON file's entry.
+ *
+     * ⛓⛓ p4e SINCE R9 SLICE DEF (⚖ user, 2026-09-27 — the p4d → p4e default
+     * move; licence: the CI full tier on p4e, run 36350758799, 154 tapes
+     * 3745/0/46). p4e declares `hold` and `tag` beside p4d's `arm` and
+     * `apitem`; `tag` is what the atlas arm reads to ALLOCATE a check for an
+     * untagged bosskey/totempart/seed (`seedlingRandomizerWiring`), so a
+     * preset compiled here now wires the build the atlas arm's `tag` branch
+     * runs on. Every preset carrying this block was regenerated through its
+     * producer's `--check`, never hand-edited; the hand-typed seed-1 block
+     * moved by hand in the same commit.
+     *
+     * ⛓ p4d FROM EDITOR INTEGRATION SLICE P1, AND IT IS THE COMPILER'S
+     * WIRING DEFAULT MOVING — NOT a SEEDLING_PAGE default. p4d is the only
+     * build declaring the `apitem` capability (`wasm/builds.json`), which is
+     * the build-side half of the panel's data-driven feature detection
+     * (⚖ user, 2026-08-29; `flashPanel/seedlingRandomizerEligibility.js`), so
+     * a preset compiled at p4c gets the vanilla game and the randomizer
+     * refuses BY NAME. ⛓ AND SINCE SLICE P2 (⚖ user, 2026-08-30) THIS IS NO
+     * LONGER THE ONLY DEFAULT ON p4d: `watchWasm.WASM_PAGE`,
+     * `check-seedling-wasm-pages`' `BUILD` literal and every script's
+     * `SEEDLING_PAGE` default moved with it over 46 tracked files. What stayed
+     * on p4c was exactly the CONTROL — `check-seedling-ap-placement.mjs`'s
+     * default, kept there by `check-seedling-wasm-pins.mjs` row (f) — until
+     * SEEDLING HEADLESS WEBGPU slice R2 retired p4c, the control and the row
+     * (⚖ user, 2026-09-12).
+     *
+     * ⛔ THE JSON FILE IS THE ONLY SOURCE OF A PRESET'S SEEDLING `flash_panel`
+     * BLOCK. This compiler and the exporter's Seedling handler both produce
+     * from it; `world_generator` only carries a source slot's block through
+     * its package. The one block still typed by hand is `robotkitty_tilemap`'s
+     * (no Robot Wants Kitty world exists here to regenerate it —
+     * `flashPanel/README.md`).
+     */
+
+const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;
+
+/** Tile coordinate -> game pixel. The atlas is tile-space; the engine is pixels. */
+const toPixels = (tile, tileSize) => ({
+    x: (tile?.[0] ?? 0) * tileSize,
+    y: (tile?.[1] ?? 0) * tileSize,
+});
+
+/**
+ * ⛓ RULES arrival-spawns — WHERE AN ARRIVAL THROUGH THIS EXIT LANDS, in pixels.
+ *
+ * By default the exit's own `entrance_tile`. That is the game's own arrival
+ * for an arrival exit (its `playerx/playery`), but for a DOOR it is the door
+ * tile itself, and a door tile is not always a place to stand: the region
+ * binding's fallback put the player inside a lock, over a pit and on a dead
+ * door (solver-walk S5's census). The compiler cannot know which: what is
+ * solid, what falls and what is live are the GAME's. So a caller that does
+ * know passes `options.arrivalSpawn(region, exit, {tileSize, entranceSpawn,
+ * landing})` → `{x, y}` (and refuses by throwing); the default is unchanged.
+ * `landing` is true for the LANDING end of a one-way connection: its entrance
+ * tile is where the game itself puts the player, not a door.
+ */
+function arrivalSpawnOf(region, exit, info, tileSize, options) {
+    const entranceSpawn = toPixels(exit.entrance_tile, tileSize);
+    if (typeof options.arrivalSpawn !== 'function') return entranceSpawn;
+    const landing = info.arrivalOnly === true;
+    const spawn = options.arrivalSpawn(region, exit, { tileSize, entranceSpawn, landing });
+    if (!Number.isFinite(spawn?.x) || !Number.isFinite(spawn?.y)) {
+        throw new Error(`options.arrivalSpawn returned no {x, y} for ${region.region_id}/${exit.exit_id} — `
+            + 'an arrival spawn is a pixel position; a caller that cannot place one refuses by throwing');
+    }
+    return { x: spawn.x, y: spawn.y };
+}
+
+/**
+ * The (sub-)regions one atlas region binds to, paired with the sub_region name
+ * whose exits and locations belong to each. A region without a subgraph is a
+ * single implicit sub-region and its exits carry no `sub_region` at all
+ * (validator-enforced both ways), so `sub` is undefined there.
+ */
+function apBindingsFor(region) {
+    const subs = region.subgraph?.sub_regions;
+    return Array.isArray(subs) && subs.length > 0
+        ? subs.map((sub) => ({ sub, apName: apRegionName(region.region_id, sub) }))
+        : [{ sub: undefined, apName: apRegionName(region.region_id) }];
+}
+
+/**
+ * Build projection 3 — the play-time `preset_sidecars` block.
+ *
+ * One sidecar per AP region of every atlas region that names a level
+ * (`map_ref`). The payload carries everything the host-side glue needs for BOTH
+ * halves of a crossing, so it never has to re-read the atlas at play time:
+ *
+ *   arrival   — `level` + the arrival exit's own `entrance_tile`, which
+ *               procgenPlayer resolves from the SOURCE exit's `targetExitId`
+ *   crossing  — each exit's `target_level` + `target_spawn` (the destination
+ *               entrance tile in pixels), so a reported level change resolves to
+ *               the exit that goes there, tie-broken on the reported spawn
+ *               coordinates when two exits of one region reach the same level
+ *
+ * `exitName` MUST equal the AP exit's `name`: the flash-family
+ * `deserializeWorld` keys the exits Map on `exitName ?? exit_id`, and
+ * procgenPlayer.handleRegionMove looks the crossing up by the AP exit name.
+ *
+ * Only WIRED exits appear. An unwired boundary exit has no destination in this
+ * atlas at all — it is already omitted from the graph, and a payload entry for
+ * it could only mis-resolve a crossing.
+ */
+function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate, options) {
+    const tileSize = atlas.tile_space?.tile_size ?? 1;
+    const sidecars = {};
+    if (!Number.isInteger(region.map_ref)) return { sidecars, bound: false };
+    for (const { sub, apName } of apBindingsFor(region)) {
+        const exits = [];
+        for (const exit of region.exits ?? []) {
+            if (region.subgraph && exit.sub_region !== sub) continue;
+            const info = wiredInfo.get(endpointKey(region.region_id, exit.exit_id));
+            if (!info) continue; // unwired — omitted from the graph too
+            /**
+             * ⛓⛓ **A CROSS-SUBSTRATE DOOR** (EDITOR INTEGRATION §11.1 A3,
+             * §11.3). The target region is played by ANOTHER substrate, so
+             * there is no Seedling level on the far side at all — and the
+             * `map_ref` that used to be copied into `target_level` was a
+             * different substrate's own index. MEASURED on W2's chain world:
+             * a maze region's `map_ref` is its LIBRARY ENTRY INDEX, so
+             * `seed.level_1` carried TWO exits claiming `target_level: 0` and
+             * `resolveCrossingExit`'s tie-break could send an ordinary
+             * crossing back to Seedling level 0 through the MAZE door.
+             *
+             * ⛔ **PRESENT-OR-ABSENT, NEVER `external: false`.** The committed
+             * flash sidecars are byte-pinned (§7.4); a field written on every
+             * exit would move every one of them. No committed atlas has two
+             * substrates, so written only here it moves nothing.
+             *
+             * ⛓ **AND IT IS DERIVED, NEVER A LITERAL** — `regionSubstrateOf`
+             * on both ends, the same reader the dispatch itself uses, so an
+             * atlas that says nothing behaves exactly as it did.
+             */
+            const targetSubstrate = regionSubstrateOf(info.target.region, atlas, options);
+            const external = targetSubstrate !== substrate;
+            /**
+             * ⛓ ONE predicate for BOTH nulls — the branch that was already
+             * here for a target with no `map_ref`, widened by one term rather
+             * than spelled a second time. `resolveCrossingExit`'s candidate
+             * filter is `e.target_level === level`, so `null !== 0` skips an
+             * external exit with no edit on the host side.
+             */
+            const carriesLevel = !external && Number.isInteger(info.target.region.map_ref);
+            exits.push({
+                exit_id: exit.exit_id,
+                kind: exit.kind,
+                ...(exit.side === undefined ? {} : { side: exit.side }),
+                exit_tiles: exit.exit_tiles,
+                entrance_tile: exit.entrance_tile,
+                entrance_spawn: arrivalSpawnOf(region, exit, info, tileSize, options),
+                exitName: info.apExitName,
+                targetRegion: info.targetApRegion,
+                targetExitId: info.target.exit.exit_id,
+                target_level: carriesLevel ? info.target.region.map_ref : null,
+                target_spawn: carriesLevel ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
+                ...(external ? { external: true, target_substrate: targetSubstrate } : {}),
+            });
+        }
+        sidecars[apName] = {
+            substrate,
+            playable_payload: {
+                gameId: atlas.game,
+                atlas_ref: atlas.atlas_id,
+                atlas_region: region.region_id,
+                ...(sub === undefined ? {} : { atlas_sub_region: sub }),
+                level: region.map_ref,
+                tile_size: tileSize,
+                exits,
+            },
+        };
+    }
+    return { sidecars, bound: true };
+}
+
+/** The AP region names a single atlas region projects into, in declared order. */
+/**
+ * ⛓⛓⛓ **THE `region_atlas` BLOCK, DERIVED FROM AN ATLAS — THE ONE
+ * DERIVATION** (APWORLD EDITOR HUB slice H5). `compileRegionAtlas` writes this
+ * block at the end of projection 1, and H5's Document-tab door writes it again
+ * when the marking tool hands a saved atlas back: the hub cannot open the
+ * region marking tool on a compiled document (see below) but it CAN record
+ * which atlas the person just saved, and that record must be the compiler's
+ * own or the two spellings drift.
+ *
+ * ⛔ **THE BLOCK IS A REFERENCE, NOT AN ATLAS**, and H5 measured what that
+ * costs: all three committed carriers (`seedling_atlas`, `seedling_atlas_maze`,
+ * `seedling_playthrough`) hold exactly `{atlas_id, game, map_document}` — no
+ * `regions`, no `tile_space`. So no consumer can reconstruct the atlas from a
+ * rules.json, and nothing in the tree maps an `atlas_id` back to the file that
+ * carries it. The hub's door says so by name rather than opening the marking
+ * tool on a broken document.
+ *
+ * @param {object} atlas a STAMPED atlas document (`AtlasSession.toDocument()`
+ *   or the validator's `stampAtlasIdentity` output) — `atlas_id` ends in the
+ *   content hash, so a restamped atlas visibly invalidates a stale preset.
+ * @returns {{atlas_id: string, game: string, map_document?: string}}
+ */
+export function regionAtlasReference(atlas) {
+    return {
+        atlas_id: atlas?.atlas_id,
+        game: atlas?.game,
+        ...(atlas?.tile_space?.map_document
+            ? { map_document: atlas.tile_space.map_document } : {}),
+    };
+}
+
+export function apRegionNamesFor(region) {
+    return apBindingsFor(region).map((b) => b.apName);
+}
+
+/**
+ * The AP region an exit or location binds to. A region with a subgraph requires
+ * a `sub_region` (validator-enforced); one without forbids it — so the binding
+ * is unambiguous either way and never hand-concatenated.
+ */
+export function apRegionNameForBinding(region, subRegion) {
+    return region.subgraph ? apRegionName(region.region_id, subRegion) : apRegionName(region.region_id);
+}
+
+function deriveIdentifiers(atlas, options) {
+    const gameName = options.gameName ?? atlas.game;
+    const gameDirectory = options.gameDirectory ?? String(gameName).toLowerCase().replace(/\s+/g, '');
+    const worldClassName = options.worldClassName
+        ?? `${String(gameName).replace(/[^A-Za-z0-9]+/g, ' ').trim().split(' ')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('')}World`;
+    return { gameName, gameDirectory, worldClassName };
+}
+
+/**
+ * Compile a region atlas into a rules.json object.
+ *
+ * @param {object} atlas the authored atlas document
+ * @param {object} [options]
+ * @param {object} [options.mapDoc] the map-source document named by
+ *   tile_space.map_document, so validation resolves map_ref against real levels
+ * @param {boolean} [options.allowInvalid] compile anyway when the atlas fails
+ *   validation (the marking tool's export path offers this after a confirm);
+ *   the errors are carried in the report either way
+ * @param {string} [options.gameName] defaults to `atlas.game`
+ * @param {string} [options.gameDirectory] defaults to gameName, lowercased
+ * @param {string} [options.worldClassName] defaults to PascalCase(gameName)+World
+ * @param {'flash'|'maze'} [options.sidecarFlavor] the DEFAULT projection-3
+ *   sidecar for a region that names no `substrate` of its own (default 'flash'
+ *   — the real game). Any region that resolves to 'maze', by this default or by
+ *   its own field, needs options.mazeProjection
+ * @param {object} [options.mazeProjection] deps for every region that compiles
+ *   to the maze: { gridFor(region), conditionKey, resolveCondition } — all
+ *   game-supplied
+ * @param {Object<string, Function>} [options.sidecarBuilders] EXTRA sidecar
+ *   builders, `{<substrateId>: (region, substrateId) => {sidecars, bound,
+ *   notes?}}`, MERGED OVER the built-in table — see the table's own comment for
+ *   what that means and what it lets a caller do
+ * @param {number} [options.seed] rules.json generation_seed (default 1)
+ * @param {string} [options.seedName] rules.json seed_name (default '')
+ * @param {string} [options.playerName] player 1's name (default 'Player1')
+ * @param {Function} [options.arrivalSpawn] `(region, exit, {tileSize, entranceSpawn, landing})`
+ *   → `{x, y}`: the flash sidecar's `entrance_spawn` for one exit (default: the
+ *   exit's `entrance_tile` in pixels). See `arrivalSpawnOf`.
+ * @param {boolean} [options.assumeBidirectionalExits] when a boolean, declared as
+ *   `exporter["1"].assume_bidirectional_exits`; omitted, the key is not written
+ * @param {boolean} [options.returnToMenu] the rooms' runtime warps the player to the start on a Restart: write
+ *   `exporter["1"].return_to_menu: true` (`procgenCore/restartWarp.js`). Omitted, nothing is written.
+ * @param {Array<object>} [options.events] RULES obstacle-events — derived AP EVENTS, each
+ *   `{region_id, sub_region?, name, item?, access_rule?, fields?}`: an id-less location in that
+ *   region's AP region holding a locked event item (`item` defaults to `name`). See the block below.
+ * @param {Array<object>} [options.exitGates] RULES obstacle-events — `{region_id, exit_id, rule}`:
+ *   the wired boundary exit leaving from that atlas endpoint carries `And(<its rule>, rule)` (just
+ *   `rule` when it has none). Several gates on one endpoint are ANDed; a gate naming no wired exit throws.
+ * @param {Array<object>} [options.internalExitRules] RULES lock-events — `{region_id, from, to, expect, rule}`:
+ *   the ONE-WAY internal exit `from -> to` of that region compiles with `rule` instead of its own, which must
+ *   still equal `expect` (else it throws by name). A row naming no such exit throws. The atlas is not edited:
+ *   this is the rules layer's projection (a latched lock's return priced as its event).
+ * @param {boolean} [options.embedSphereLog] embed the forward simulator's
+ *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
+ *   false — opt-in, so every existing compile stays byte-identical). The same
+ *   call, metadata and name the procgen engine's `embedSphereLog` uses. ⛔ A
+ *   graph an inventory cannot decide THROWS `SphereLogNotEvaluableError` out of
+ *   this compile: the caller asked for a log, and a guessed one is never given.
+ * @returns {{ rules: object, report: object }}
+ */
+/** `options.internalExitRules` → `region|from|to` → `{expect, rule, used}`; a second row for one exit throws. */
+function internalExitRulesOf(list = []) {
+    const out = new Map();
+    for (const r of list) {
+        if (!r?.region_id || !r?.from || !r?.to || !('rule' in r) || !('expect' in r)) {
+            throw new Error(`internal exit rule needs region_id, from, to, expect and rule: ${JSON.stringify(r)}`);
+        }
+        const key = `${r.region_id}|${r.from}|${r.to}`;
+        if (out.has(key)) throw new Error(`two internal exit rules for ${key}`);
+        out.set(key, { expect: r.expect, rule: r.rule, used: false });
+    }
+    return out;
+}
+
+/**
+ * The rule a one-way internal exit compiles with: its replacement when the caller names one (refused by name
+ * when the atlas row no longer carries the rule the replacement was derived from), else its own.
+ */
+function internalRuleFor(rules, regionId, ie) {
+    const key = `${regionId}|${ie.from}|${ie.to}`;
+    const r = rules.get(key);
+    if (!r) return ie.access_rule;
+    if (ie.bidirectional === true) throw new Error(`internal exit rule for ${key}: the atlas row is bidirectional`);
+    if (JSON.stringify(ie.access_rule ?? null) !== JSON.stringify(r.expect ?? null)) {
+        throw new Error(`internal exit rule for ${key}: the atlas row's rule ${JSON.stringify(ie.access_rule ?? null)} `
+            + `is not the one the replacement was derived from (${JSON.stringify(r.expect ?? null)})`);
+    }
+    r.used = true;
+    return r.rule;
+}
+
+/** `options.exitGates` → endpoint key → `{rule, used}`, several gates on one endpoint ANDed in order. */
+function exitGatesOf(list = []) {
+    const out = new Map();
+    for (const g of list) {
+        if (!g?.region_id || !g?.exit_id || !g?.rule) throw new Error(`exit gate needs region_id, exit_id and rule: ${JSON.stringify(g)}`);
+        const key = endpointKey(g.region_id, g.exit_id);
+        const prev = out.get(key);
+        const rule = !prev ? g.rule
+            : { rule: 'And', children: [...(prev.rule.rule === 'And' ? prev.rule.children : [prev.rule]), g.rule] };
+        out.set(key, { rule, used: false });
+    }
+    return out;
+}
+
+/** The boundary exit's own rule with its gate ANDed on, if it has one. */
+function gatedRule(own, gates, regionId, exitId) {
+    const gate = gates.get(endpointKey(regionId, exitId));
+    if (!gate) return own;
+    gate.used = true;
+    if (own === undefined || own === null) return gate.rule;
+    return { rule: 'And', children: [own, ...(gate.rule.rule === 'And' ? gate.rule.children : [gate.rule])] };
+}
+
+export function compileRegionAtlas(atlas, options = {}) {
+    const validation = validateRegionAtlas(
+        atlas, options.mapDoc === undefined ? {} : { mapDoc: options.mapDoc },
+    );
+    if (!validation.ok && !options.allowInvalid) {
+        throw new Error(
+            `region atlas does not validate — refusing to compile:\n  ${validation.errors.join('\n  ')}`,
+        );
+    }
+
+    const { gameName, gameDirectory, worldClassName } = deriveIdentifiers(atlas, options);
+    // ⛓ The document first, so every per-player write below names the scaffold's
+    // ONE slot rather than typing `'1'` (rules F2: a per-player block is keyed
+    // by the slot that owns it, and that slot is the scaffold's to say).
+    const rules = makeRulesJsonScaffold({
+        gameName,
+        gameDirectory,
+        worldClassName,
+        seed: options.seed ?? 1,
+        seedName: options.seedName ?? '',
+        playerName: options.playerName ?? 'Player1',
+        startRegions: [MENU_REGION],
+    });
+    const [player] = Object.keys(rules.player_names);
+    const atlasRegions = Array.isArray(atlas.regions) ? atlas.regions : [];
+
+    // --- AP regions ------------------------------------------------------
+    const regions = {};
+    const regionOrder = [];
+    for (const region of atlasRegions) {
+        for (const name of apRegionNamesFor(region)) {
+            if (name === MENU_REGION) {
+                throw new Error(
+                    `atlas region "${region.region_id}" projects to "${MENU_REGION}", which the projection reserves for the start region`,
+                );
+            }
+            if (regions[name]) throw new Error(`duplicate AP region name "${name}"`);
+            regions[name] = makeRegion(name, [], []);
+            regionOrder.push(name);
+        }
+    }
+
+    // AP exit names are the entrance identity downstream, so they are kept
+    // globally unique. The base reads as the edge it is; a collision (two
+    // crossings between the same pair of AP regions) gets a deterministic
+    // suffix rather than a silent overwrite.
+    const usedExitNames = new Set();
+    let exitCount = 0;
+    const addExit = (fromName, toName, accessRule) => {
+        const base = `${fromName} -> ${toName}`;
+        let name = base;
+        for (let i = 2; usedExitNames.has(name); i += 1) name = `${base} #${i}`;
+        usedExitNames.add(name);
+        regions[fromName].exits.push(makeExit(name, toName, accessRule ?? null));
+        exitCount += 1;
+        return name;
+    };
+
+    // --- internal exits (the sub-region subgraph) ------------------------
+    //
+    // What each DIRECTED internal crossing became, keyed `region|from|to`. The
+    // maze projection reads it rather than re-deriving names: a crossing's maze
+    // exit has to carry the AP exit name the graph actually minted, `#2` suffixes
+    // and all, because that name is how procgenPlayer resolves the crossing.
+    const internalInfo = new Map();
+    const internalRules = internalExitRulesOf(options.internalExitRules);
+    for (const region of atlasRegions) {
+        for (const ie of region.subgraph?.internal_exits ?? []) {
+            const from = apRegionName(region.region_id, ie.from);
+            const to = apRegionName(region.region_id, ie.to);
+            const forward = addExit(from, to, internalRuleFor(internalRules, region.region_id, ie));
+            const fkey = `${region.region_id}|${ie.from}|${ie.to}`;
+            if (!internalInfo.has(fkey)) internalInfo.set(fkey, forward);
+            // rules.json exits are strictly one-way ({name, connected_region,
+            // access_rule}) — a bidirectional internal exit is two of them.
+            if (ie.bidirectional === true) {
+                const back = addExit(to, from, ie.access_rule);
+                const bkey = `${region.region_id}|${ie.to}|${ie.from}`;
+                if (!internalInfo.has(bkey)) internalInfo.set(bkey, back);
+            }
+        }
+    }
+
+    for (const [key, r] of internalRules) {
+        if (!r.used) throw new Error(`internal exit rule for ${key} names no one-way internal exit of this atlas`);
+    }
+
+    // --- boundary exits, wired by the vanilla layout ---------------------
+    const exitIndex = new Map();
+    for (const region of atlasRegions) {
+        for (const exit of region.exits ?? []) {
+            exitIndex.set(endpointKey(region.region_id, exit.exit_id), { region, exit });
+        }
+    }
+    // What each wired boundary exit became, keyed by its atlas endpoint. This is
+    // the graph projection's own record, and projection 3 reads it rather than
+    // re-deriving names — the sidecar's `exitName` has to be the exit name the
+    // graph actually carries, suffix collisions and all.
+    const wiredInfo = new Map();
+    const connections = atlas.vanilla_layout?.connections ?? [];
+    const gates = exitGatesOf(options.exitGates);
+    for (const conn of connections) {
+        const a = exitIndex.get(endpointKey(conn.from?.[0], conn.from?.[1]));
+        const b = exitIndex.get(endpointKey(conn.to?.[0], conn.to?.[1]));
+        if (!a || !b) continue; // unresolvable endpoints are validator errors
+        const aName = apRegionNameForBinding(a.region, a.exit.sub_region);
+        const bName = apRegionNameForBinding(b.region, b.exit.sub_region);
+        // ⛓ R7 slice 4: `one_way`. A vanilla_layout connection is normally a
+        // BOUNDARY CROSSING, walkable both ways in the original game — which is
+        // true of a doorway and false of a transport. Seedling has exactly one
+        // transition primitive and it is a one-way jump to a declared
+        // destination point (`FP.world = new Game(level, x, y)`), so an atlas
+        // that models transports rather than doorways must be able to say so;
+        // pairing them would invent return edges the game does not have, and
+        // AP's fill would route a collectible back through a pit.
+        //
+        // Both endpoints still count as WIRED — the arrival exit is a real,
+        // deliberately-authored target, not a crossing nobody covered.
+        const aExitName = addExit(aName, bName, gatedRule(a.exit.access_rule, gates, a.region.region_id, a.exit.exit_id));
+        wiredInfo.set(endpointKey(a.region.region_id, a.exit.exit_id),
+            { apExitName: aExitName, targetApRegion: bName, target: b });
+        if (conn.one_way === true) {
+            wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
+                { apExitName: null, targetApRegion: null, target: a, arrivalOnly: true });
+            continue;
+        }
+        const bExitName = addExit(bName, aName, gatedRule(b.exit.access_rule, gates, b.region.region_id, b.exit.exit_id));
+        wiredInfo.set(endpointKey(b.region.region_id, b.exit.exit_id),
+            { apExitName: bExitName, targetApRegion: aName, target: a });
+    }
+    const wired = new Set(wiredInfo.keys());
+    for (const [key, gate] of gates) {
+        if (!gate.used) {
+            throw new Error(`exit gate on ${key} names no wired departure exit — a gate whose exit vanished is a `
+                + 'silent hole, not a no-op');
+        }
+    }
+
+    // Unwired boundary exits are map crossings this atlas does not cover yet.
+    // They are omitted from the graph and NAMED here — never silently dropped.
+    const unwiredExits = [];
+    for (const region of atlasRegions) {
+        for (const exit of region.exits ?? []) {
+            if (wired.has(endpointKey(region.region_id, exit.exit_id))) continue;
+            unwiredExits.push({
+                region_id: region.region_id,
+                exit_id: exit.exit_id,
+                kind: exit.kind,
+                ...(exit.side === undefined ? {} : { side: exit.side }),
+            });
+        }
+    }
+
+    // --- locations + the items placed on them ---------------------------
+    const placements = [];
+    for (const region of atlasRegions) {
+        for (const loc of region.locations ?? []) placements.push({ region, loc });
+    }
+    // Ids: a stable base plus the index of the name in sorted order. Location
+    // names are globally unique (validator-enforced), so this is a function of
+    // the name set alone — no dependence on authoring order.
+    const locationIdBase = options.locationIdBase ?? REGION_ATLAS_LOCATION_ID_BASE;
+    const itemIdBase = options.itemIdBase ?? REGION_ATLAS_ITEM_ID_BASE;
+    const locationIds = allocateIdsBySortedName(
+        placements.map((p) => p.loc.name), locationIdBase,
+    );
+    const itemIds = allocateIdsBySortedName(
+        placements.map((p) => p.loc.vanilla_item).filter((n) => typeof n === 'string' && n.length > 0),
+        itemIdBase,
+    );
+    const itemNames = [...itemIds.keys()];
+
+    const itempoolCounts = {};
+    let placedItems = 0;
+    let unplacedLocations = 0;
+    for (const { region, loc } of placements) {
+        const target = apRegionNameForBinding(region, loc.sub_region);
+        const entry = makeLocation(loc.name, locationIds.get(loc.name), loc.access_rule ?? null);
+        if (typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0) {
+            // v1 simplification: every vanilla item classifies as progression.
+            // Real classifications need per-game knowledge the atlas does not
+            // hold (decision 6 keeps engine binding out of it).
+            entry.item = {
+                name: loc.vanilla_item, player: Number(player), advancement: true, type: 'progression',
+            };
+            itempoolCounts[loc.vanilla_item] = (itempoolCounts[loc.vanilla_item] ?? 0) + 1;
+            placedItems += 1;
+        } else {
+            unplacedLocations += 1;
+        }
+        regions[target].locations.push(entry);
+    }
+
+    const items = {};
+    for (const name of itemNames) {
+        items[name] = {
+            name,
+            id: itemIds.get(name),
+            groups: [],
+            classification: 'progression',
+            type: null,
+            max_count: itempoolCounts[name] ?? 0,
+        };
+    }
+
+    // --- derived EVENTS (RULES obstacle-events) ---------------------------
+    //
+    // An AP event in the shape the exporter writes for every game (ALTTP's
+    // `Open Floodgate`, Adventure's `Victory`): an id-less location holding a
+    // locked event item of its own name, the item `id: null`, `event: true`,
+    // group `Event`, counted once in `itempool_counts` as the exporter counts it
+    // (world_generator subtracts the locked placement, and an id-less item is
+    // never pooled). Whatever the caller adds in `fields` rides on the location.
+    const eventNames = new Set();
+    for (const ev of options.events ?? []) {
+        const region = atlasRegions.find((r) => r.region_id === ev.region_id);
+        if (!region) throw new Error(`event "${ev.name}" names atlas region "${ev.region_id}", which this atlas does not have`);
+        const target = apRegionNameForBinding(region, ev.sub_region);
+        if (!regions[target]) throw new Error(`event "${ev.name}" binds to AP region "${target}", which this compile did not make`);
+        if (locationIds.has(ev.name) || eventNames.has(ev.name)) throw new Error(`event "${ev.name}" collides with another location`);
+        const item = ev.item ?? ev.name;
+        if (items[item]) throw new Error(`event item "${item}" collides with another item`);
+        eventNames.add(ev.name);
+        regions[target].locations.push({
+            ...makeLocation(ev.name, null, ev.access_rule ?? null),
+            item: { name: item, player: Number(player), advancement: true, type: 'Event' },
+            locked: true,
+            event: true,
+            ...(ev.fields ?? {}),
+        });
+        items[item] = {
+            name: item, id: null, groups: ['Event'], classification: 'progression', event: true, type: 'Event', max_count: 1,
+        };
+        itempoolCounts[item] = 1;
+    }
+
+    // --- the start wiring ------------------------------------------------
+    //
+    // Shape copied from frontend/presets/procgen_topdown/AP_1/AP_1_rules.json:
+    // start_regions.default = ['Menu'], and Menu carries one True_ exit into the
+    // real start region. procgenPlayerEngine.findStartRegion follows exactly
+    // this (start_regions[player].default[0], then that region's first exit
+    // whose connected_region is warehoused).
+    const startRegionId = atlas.vanilla_layout?.start_region;
+    const startRegion = atlasRegions.find((r) => r.region_id === startRegionId);
+    const menuExits = [];
+    let startApRegion = null;
+    if (startRegion) {
+        startApRegion = apRegionNameForBinding(startRegion, atlas.vanilla_layout?.start_sub_region);
+        menuExits.push(makeExit(GAME_START_EXIT, startApRegion, null));
+    }
+    regions[MENU_REGION] = makeRegion(MENU_REGION, menuExits, []);
+
+    // --- assemble ---------------------------------------------------------
+    rules.regions = { [player]: regions };
+    rules.items = { [player]: items };
+    rules.itempool_counts = { [player]: itempoolCounts };
+    rules.world[player].world_directory = gameDirectory;
+    // ⛓ RULES RA (after F1): the bidirectional flag, declared only when the
+    // caller states it. Its ONE home is `exporter["<p>"]` (⚖ rules F1). This
+    // projection's graph is DIRECTED by construction — every connection is a
+    // one-way pair and a two-way crossing is two rows — but an atlas whose
+    // directed graph strands regions is not ready to say so. The caller that
+    // has MEASURED it (`strand 0`) passes `assumeBidirectionalExits: false`;
+    // omitted, nothing is written and the runtime auto-detects as before.
+    if (typeof options.assumeBidirectionalExits === 'boolean') {
+        rules.exporter[player] = { ...rules.exporter[player], assume_bidirectional_exits: options.assumeBidirectionalExits };
+    }
+    // ⛓ RETURN TO MENU (procgenCore/restartWarp.js): the caller says the rooms' runtime warps to the start on a
+    // Restart, so returning to the menu is always possible. A flag, never an edge (⚖ the user, 2026-10-05).
+    if (options.returnToMenu === true) declareReturnToMenu(rules, '1');
+    // ⛓ R7 slice 4: a real GOAL. The scaffold's default is `constant true`,
+    // which is right for a partial atlas that is not a game yet and wrong for a
+    // whole map: with a trivially-satisfied completion, AP's fill has nothing to
+    // route toward and the sphere log stops being a collection ORDER. An atlas
+    // that names its goal item gets it; everything else keeps the constant.
+    if (options.completionItem) {
+        rules.game_info[player].completion_condition = {
+            type: 'item_check', item: options.completionItem,
+        };
+    }
+    // Whatever the generator wants to say about where this graph came from.
+    // Stamped rather than derived, because only the generator knows its inputs.
+    // ⛓ rules F2: `provenance`, `region_atlas` and `flash_panel` are the SLOT's
+    // (`{"<p>": block}`, the P1a shape): a second Seedling slot names its own.
+    if (options.provenance) rules.provenance = { [player]: options.provenance };
+    // Provenance: which atlas this graph came from. atlas_id ends in the
+    // content hash, so a restamped atlas visibly invalidates a stale preset.
+    rules.region_atlas = { [player]: regionAtlasReference(atlas) };
+
+    // --- projection 3: play-time binding -----------------------------------
+    //
+    // Two flavours of the SAME graph, one preset each (never both in one file):
+    //   'flash' (default) — the real recompiled game, needs its wasm artifact
+    //   'maze'            — the analyzed tile map in the maze substrate, which
+    //                       runs anywhere the repo does (Phase 5b)
+    const mazeFlavor = options.sidecarFlavor === MAZE_SUBSTRATE;
+    const substrate = compileDefaultSubstrate(atlas, options);
+
+    // What the maze builder needs from THIS compile's graph, hoisted out of the
+    // per-region call so the closures are built once rather than per region.
+    const mazeCtx = {
+        wiredExit: (regionId, exitId) => {
+            const info = wiredInfo.get(endpointKey(regionId, exitId));
+            if (info === undefined) return undefined;
+            // The partner exit's own AP name — the edge coming BACK. The maze
+            // keys its exits by AP exit name, so that is what an arrival is
+            // resolved by there (the flash payload uses the atlas exit id,
+            // which is what its own glue resolves against).
+            const back = wiredInfo.get(
+                endpointKey(info.target.region.region_id, info.target.exit.exit_id),
+            );
+            return {
+                apExitName: info.apExitName,
+                targetApRegion: info.targetApRegion,
+                targetExitId: info.target.exit.exit_id,
+                returnApExitName: back?.apExitName ?? null,
+            };
+        },
+        internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
+        // The re-priced rule of a one-way internal exit (`options.internalExitRules`), else undefined.
+        internalExitRule: (regionId, from, to) => internalRules.get(`${regionId}|${from}|${to}`)?.rule,
+        tileSize: atlas.tile_space?.tile_size ?? 1,
+    };
+
+    // ⛓⛓ THE SIDECAR-BUILDER TABLE — AND IT IS THIS COMPILER'S WHOLE ROSTER.
+    //
+    // ⛔ The substrate REGISTRY is not importable here: `procgenPipeline/` is in
+    // the browser page graph and `bindingContract` fences what this directory
+    // may reach. That is not a gap to paper over — a registry entry says a
+    // substrate EXISTS, and what the compiler needs to know is narrower and
+    // sharper: whether it can BUILD a sidecar for one. So the table IS the
+    // roster, its keys are the answer, and the refusal below says so in as many
+    // words rather than pointing at a registry it cannot read.
+    //
+    // The flash row is keyed on the atlas game's own id AND on `substrateId`
+    // when that relabel differs, so either spelling resolves to the one builder
+    // that can serve them.
+    //
+    // ⛓⛓ **AND A CALLER MAY ADD A ROW — `options.sidecarBuilders`, MERGED OVER
+    // THESE** (EDITOR INTEGRATION W2; W1 §7.7 recommended this shape and W2
+    // took it). The precedent is already in this file: the maze row's grid deps
+    // arrive as `options.mazeProjection` for exactly the reason a new
+    // substrate's whole builder would — the cell grid and the payload are the
+    // GAME's, not the compiler's. The refusal's "Buildable here:" list is
+    // derived from the MERGED table, so it stays honest with no second place
+    // to update.
+    //
+    // ⚠ **IT ALSO LETS A CALLER REPLACE THE FLASH OR THE MAZE ROW**, and that
+    // is said out loud rather than guarded: the merge is OVER, so an injected
+    // key that collides WINS. A caller who wants the built-in behaviour simply
+    // does not name that id. Guarding it would refuse the one thing a second
+    // flash-family game (a relabelled export, a wasm tier with a different
+    // payload) would legitimately want.
+    const flashSubstrate = substrateIdFor(atlas.game);
+    const builtInBuilders = {
+        [flashSubstrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id, options),
+        ...(substrate === flashSubstrate || substrate === MAZE_SUBSTRATE ? {} : {
+            [substrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id, options),
+        }),
+        [MAZE_SUBSTRATE]: (region) => {
+            if (!options.mazeProjection?.gridFor) {
+                throw new Error(
+                    `atlas region "${region.region_id}" compiles to substrate "${MAZE_SUBSTRATE}", and `
+                    + 'sidecarFlavor "maze" needs options.mazeProjection.{gridFor,conditionKey,resolveCondition} — '
+                    + 'the cell grid and the condition vocabulary are the GAME\'s, not the compiler\'s',
+                );
+            }
+            const grid = Number.isInteger(region.map_ref) ? options.mazeProjection.gridFor(region) : null;
+            if (!grid) return { sidecars: {}, bound: false };
+            const projected = projectRegionToMaze(region, grid, {
+                ...options.mazeProjection, ...mazeCtx,
+            });
+            return { sidecars: projected.sidecars, bound: true, notes: projected.notes };
+        },
+    };
+    for (const [id, build] of Object.entries(options.sidecarBuilders ?? {})) {
+        if (typeof build !== 'function') {
+            throw new Error(
+                `options.sidecarBuilders["${id}"] is a ${typeof build}; a sidecar builder is `
+                + '`(region, substrateId) => {sidecars, bound, notes?}` — the same shape the '
+                + 'built-in rows have, because the dispatch below calls them all the same way.',
+            );
+        }
+    }
+    const sidecarBuilders = { ...builtInBuilders, ...(options.sidecarBuilders ?? {}) };
+
+    // --- the dispatch, one region at a time --------------------------------
+    const sidecars = {};
+    const unbound = [];
+    const notes = [];
+    const substrateCounts = {};
+    let anyFlash = false;
+    let anyMaze = false;
+    for (const region of atlasRegions) {
+        const id = regionSubstrateOf(region, atlas, options);
+        const build = sidecarBuilders[id];
+        if (!build) {
+            throw new Error(
+                `atlas region "${region.region_id}" names substrate "${id}", which this compile has no `
+                + `sidecar builder for. Buildable here: ${Object.keys(sidecarBuilders).join(', ')}. `
+                + '(The compiler\'s builder table IS its roster — the substrate registry is outside '
+                + 'this module\'s import fence, so a substrate that merely EXISTS is not enough.)',
+            );
+        }
+        const built = build(region, id);
+        if (!built.bound) {
+            unbound.push(region.region_id);
+            continue;
+        }
+        Object.assign(sidecars, built.sidecars);
+        if (built.notes) notes.push(...built.notes);
+        if (id === MAZE_SUBSTRATE) anyMaze = true; else anyFlash = true;
+    }
+    // ⛓ COUNTED OFF THE SIDECARS THAT WERE ACTUALLY EMITTED, never off the
+    // options or the per-region field. A region with no `map_ref` has no
+    // physical binding and therefore no substrate playing it; a region with a
+    // subgraph emits one sidecar PER SUB-REGION. Reading the emitted entries is
+    // the only count that agrees with the file.
+    let externalExits = 0;
+    for (const entry of Object.values(sidecars)) {
+        substrateCounts[entry.substrate] = (substrateCounts[entry.substrate] ?? 0) + 1;
+        // ⛓ …and the cross-substrate doors, counted off the SAME emitted
+        // entries for the same reason `substrates` is: a count read off the
+        // atlas would include exits no sidecar carries.
+        for (const e of entry.playable_payload?.exits ?? []) if (e.external === true) externalExits += 1;
+    }
+    const mazeNotes = anyMaze ? notes : null;
+    const sidecarRegions = Object.keys(sidecars);
+    if (sidecarRegions.length > 0) {
+        // The flashPanel wiring boots the real game for this preset. It is the
+        // same block the seed-1 seedling preset carries (once typed by hand, now
+        // written by the exporter's Seedling handler from the same JSON file) —
+        // COMPILED here, so a regeneration never drops it (the
+        // rulesExporter precedent, and the trap the plan's decision 2 names).
+        // A region compiled to the MAZE deliberately carries none of it:
+        // nothing boots the original engine there, and a stray flash_panel
+        // block would start it. ⛓ The condition is now "did ANY region compile
+        // flash", not "is this compile's flavour flash" — a mixed preset whose
+        // Seedling rooms are real still needs the wiring that boots them, and an
+        // all-maze one still must not have it.
+        if (anyFlash) {
+            const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
+            if (wiring) rules.flash_panel = { [player]: { ...wiring } };
+        }
+        rules.preset_sidecars = { [player]: sidecars };
+    }
+
+    const report = {
+        atlas_id: atlas.atlas_id,
+        game_name: gameName,
+        game_directory: gameDirectory,
+        ap_regions: regionOrder.length,
+        ap_regions_incl_menu: regionOrder.length + 1,
+        exits: exitCount + menuExits.length,
+        connections: connections.length,
+        locations: placements.length,
+        events: eventNames.size,
+        exit_gates: gates.size,
+        placed_items: placedItems,
+        locations_without_item: unplacedLocations,
+        distinct_items: itemNames.length,
+        unwired_exits: unwiredExits,
+        start_region: startApRegion,
+        // The compile's DEFAULT — what a region naming no substrate played.
+        substrate,
+        // ⛓ …and what the regions ACTUALLY compiled to: {substrate id -> how
+        // many sidecar entries carry it}. `substrate` alone stopped being the
+        // answer the moment a region could override it, and a report that named
+        // only the default would read as "all of them" for a mixed preset.
+        substrates: substrateCounts,
+        // ⛓ How many emitted exits CROSS a substrate boundary — the host reads
+        // `external` to know the far side is not its own engine's, and a mixed
+        // world with none is a world nobody can leave (§11.3).
+        external_exits: externalExits,
+        sidecar_flavor: mazeFlavor ? MAZE_SUBSTRATE : 'flash',
+        sidecar_regions: sidecarRegions,
+        flash_panel: rules.flash_panel?.[player] ?? null,
+        // Maze flavour only: every approximation, carve and walled crossing the
+        // projection took, so a fidelity fence is recorded rather than assumed.
+        maze_notes: mazeNotes,
+        // Atlas regions with no `map_ref`: graph-only, no physical binding, so
+        // no sidecar. Named rather than counted for the same reason unwired
+        // exits are — a silent omission reads as a fully-bound map.
+        regions_without_map_ref: unbound,
+        atlas_valid: validation.ok,
+        atlas_errors: validation.errors,
+        atlas_warnings: validation.warnings,
+    };
+
+    // Last, so the walk sees the finished graph (sidecars carry no logic, but
+    // nothing below can change what it reads). The log is the TOOL's: the
+    // same walk the procgen engine embeds, never authored by hand.
+    if (options.embedSphereLog) {
+        rules.sphere_log = generateSphereLog(rules, {
+            playerId: Number(player),
+            metadata: { seed: rules.generation_seed, seed_name: rules.seed_name },
+        });
+        report.sphere_log_entries = rules.sphere_log.length;
+    }
+    return { rules, report };
+}
+
+/** One-line-per-item human summary of a compile report, for CLIs and the panel. */
+export function formatCompileReport(report) {
+    const lines = [
+        `atlas ${report.atlas_id} -> ${report.game_name}: `
+        + `${report.ap_regions_incl_menu} AP regions (incl. Menu), ${report.exits} exits, `
+        + `${report.locations} locations, ${report.placed_items} placed items `
+        + `(${report.distinct_items} distinct)`,
+    ];
+    if (report.locations_without_item > 0) {
+        lines.push(`${report.locations_without_item} location(s) have no vanilla_item — nothing placed there`);
+    }
+    if (report.unwired_exits.length > 0) {
+        lines.push(`${report.unwired_exits.length} boundary exit(s) unwired by vanilla_layout — OMITTED from the graph:`);
+        for (const e of report.unwired_exits) {
+            lines.push(`  ${e.region_id}/${e.exit_id} (${e.kind}${e.side ? ` ${e.side}` : ''})`);
+        }
+    }
+    if (report.sidecar_regions?.length > 0) {
+        lines.push(`projection 3 (${report.sidecar_flavor ?? 'flash'}): ${report.sidecar_regions.length} region(s) bound to substrate `
+            + `${report.substrate}${report.flash_panel ? ` (flash_panel: ${report.flash_panel.config})` : ''}`);
+    } else {
+        lines.push('projection 3: no region names a map_ref — graph-only, no preset_sidecars');
+    }
+    if (report.external_exits > 0) {
+        lines.push(`${report.external_exits} exit(s) CROSS a substrate boundary — `
+            + 'host-driven: no target_level on this engine\'s side');
+    }
+    if (report.maze_notes?.length > 0) {
+        lines.push(...formatMazeProjectionNotes(report.maze_notes));
+    }
+    if (report.regions_without_map_ref?.length > 0 && report.sidecar_regions?.length > 0) {
+        lines.push(`${report.regions_without_map_ref.length} region(s) have no map_ref — no play-time binding: `
+            + report.regions_without_map_ref.join(', '));
+    }
+    if (report.sphere_log_entries !== undefined) {
+        lines.push(`sphere_log: ${report.sphere_log_entries} entries (generateSphereLog over the compiled graph)`);
+    }
+    return lines;
+}

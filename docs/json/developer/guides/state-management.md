@@ -86,7 +86,7 @@ A snapshot is the primary way the UI learns about the game state. It's a read-on
 - `flags` / `events`: Game-specific state flags.
 - ...and other game-specific data.
 
-For a full breakdown, see the [State Snapshots Documentation](./reference/state-snapshots.md).
+For a full breakdown, see the [State Snapshots Documentation](../reference/state-snapshots.md).
 
 ## Main-Thread Rule Evaluation
 

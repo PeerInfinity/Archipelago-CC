@@ -6,6 +6,7 @@
  */
 
 import { APCalcGeneratorUI } from './apcalcGeneratorUI.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'apcalcGenerator',
@@ -13,8 +14,12 @@ export const moduleInfo = {
     componentType: 'apcalcGeneratorPanel',
     icon: '🔧',
     column: 3,
-    description: 'Generate APCalc puzzle data with configurable parameters',
+    category: 'Non-procgen Games',
+    description: 'Set a seed, sphere count and branching, generate an APCalc puzzle, then download its rules.json or load it.',
     requires: ['stateManager'],
+    storage: [
+        { key: 'apcalcGenerator_params', kind: STORAGE_KINDS.state, label: 'APCalc Generator parameters' },
+    ],
 };
 
 let panelInstance = null;

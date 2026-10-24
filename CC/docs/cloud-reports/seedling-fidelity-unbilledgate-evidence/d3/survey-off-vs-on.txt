@@ -1,0 +1,6 @@
+A {"SOLVED":169,"REFUSED":51,"NO-EDGE":1,"NO-ARRIVAL":1} B {"SOLVED":164,"REFUSED":56,"NO-EDGE":1,"NO-ARRIVAL":1} keys A 222 B 222
+step 19->19 L17: SOLVED(122) -> REFUSED(null) solverBot(survey-step-19): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 1 hit(s) no plan billed [t101 (run t102, L17) chaser:bob@96,3
+step 47->47 L22: SOLVED(201) -> REFUSED(null) solverBot(survey-step-47): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 1 hit(s) no plan billed [t83 (run t84, L22) wallflyer:wallfly
+step 53->53 L22: SOLVED(406) -> REFUSED(null) solverBot(survey-step-53): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 6 hit(s) no plan billed [t39 (run t40, L22) wallflyer:wallfly
+step 114->114 L88: SOLVED(476) -> REFUSED(null) solverBot(survey-step-114): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 2 hit(s) no plan billed [t47 (run t48, L88) drill:drill@128,
+step 170->170 L77: SOLVED(480) -> REFUSED(null) solverBot(survey-step-170): UNBILLED DAMAGE — the segment reached its 1 goal(s), but its drive took 1 hit(s) no plan billed [t16 (run t17, L77) chaser:lavarunne

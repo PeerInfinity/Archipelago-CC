@@ -1,0 +1,166 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+stdout | frontend/modules/procgenDocs/docsRender.test.js > ⛓ the biggest document — the one the budget is about > prints what it costs to render, so a page budget is not a guess
+seedling-bot-log.md: 1495411 bytes, 23093 lines → 153ms in node
+
+ ✓ frontend/modules/procgenDocs/docsRender.test.js (46 tests) 287ms
+stdout | frontend/modules/procgenDocs/docLinks.test.js > the corpus census — printed, then pinned > resolves all 364 links into five kinds and no others
+the procgen corpus: 29 documents, 364 links — 280 doc, 22 external, 40 repo, 22 same-doc
+
+ ✓ frontend/modules/procgenDocs/docLinks.test.js (15 tests) 25ms
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:244:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:112:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:109:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:224:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+stdout | frontend/modules/procgenDocs/generated.test.js > the registry matrix is one column per ENTRY and one row per FIELD
+[centralRegistry] CentralRegistry initialized
+
+stderr | frontend/modules/procgenDocs/generated.test.js > the registry matrix is one column per ENTRY and one row per FIELD
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:244:25)
+    at new StateManagerProxy (/home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:112:10)
+    at /home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1053:73)
+    at /home/user/Archipelago-CC/frontend/modules/mazeRoom/mazeRoomUI.js:20:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/vitest/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/vite/dist/node/module-runner.js:1146:59)
+
+stdout | frontend/modules/procgenDocs/generated.test.js > the registry matrix is one column per ENTRY and one row per FIELD
+[discoveryState] [DiscoveryState] Constructed
+
+⚠ trackedFilesIn(d): git ls-files failed (Command failed: git -C /tmp/tracked-files-xjzAVz ls-files -z -- d) — DEGRADED to the directory listing, untracked files included
+ ✓ frontend/modules/procgenDocs/generated.test.js (55 tests) 10897ms
+     ✓ ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files  6893ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 17948ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  335ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  373ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  1305ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  1963ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  1617ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  3165ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  441ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  925ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  1477ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  776ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  589ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  1040ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 33688ms
+     ✓ (iv) the family file list equals the import closure  1390ms
+     ✓ the import door's closure is the simulation's: solverView.js pulls in no family file  929ms
+     ✓ (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED  1874ms
+     ✓ (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`  2018ms
+     ✓ (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door  1472ms
+     ✓ (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"  1211ms
+     ✓ (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments)  1081ms
+     ✓ (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule  1280ms
+     ✓ (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"  1581ms
+     ✓ (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice  1198ms
+     ✓ (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"  1216ms
+     ✓ (d) a COMMENT naming a simulation module in a family file ⇒ GREEN  1222ms
+     ✓ (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once  1289ms
+     ✓ (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family"  1149ms
+     ✓ (c) run.entities(name) with a variable ⇒ RED, a named blind spot  1095ms
+     ✓ (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table  1149ms
+     ✓ (e) a COMMENT naming run.pushables in a family file ⇒ GREEN  1261ms
+     ✓ (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once  1175ms
+     ✓ (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once  1035ms
+     ✓ (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS  1172ms
+     ✓ (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)  1314ms
+     ✓ (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table  1192ms
+     ✓ (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values  1121ms
+     ✓ (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN  1013ms
+     ✓ (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"  1253ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (13 tests) 33634ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  17401ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  378ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  8821ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  5486ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  1044ms
+ ✓ frontend/modules/quickLaunch/generated.test.js (34 tests) 183ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (12 tests) 57835ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  4640ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  24777ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  675ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  5278ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  14741ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  1796ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  5826ms
+ ✓ frontend/modules/seedlingDemo/hammerEscape.test.js (18 tests) 10460ms
+     ✓ ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing  6598ms
+     ✓ ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing  3341ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (4 tests) 61931ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  22597ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  39134ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (17 tests) 2570ms
+     ✓ ON, sweep request 478:0 solved whole ships the same ticks for less work  2048ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 6423ms
+     ✓ blank lines inserted above statements in a temp copy move lines and no key  1238ms
+     ✓ (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key  1145ms
+     ✓ (b) PREDICTED GREEN: a new literal inside a cosmetic table  1114ms
+     ✓ (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED  947ms
+     ✓ (d) PREDICTED RED: a hand edit inside the doc region is a stale doc  993ms
+     ✓ MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key  682ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolveProgress.test.js (5 tests) 3732ms
+     ✓ L6 bare (bait — ENEMIES), 150 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  1504ms
+     ✓ L4 kit (hold + shove), 40 walker ticks in: the REQUEST is byte-identical with and without a subscriber, and so is the plan; with NO subscriber the worker posts no solve-progress  1540ms
+     ✓ at most one post a second of the solve (1000 ms) plus the FINAL, which comes just before the result and meters the attempt's whole work  685ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 162ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 8858ms
+     ✓ ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press)  469ms
+     ✓ ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach  1876ms
+     ✓ ON leaves the SWORD's solve byte-identical (the committed staging, 518 ticks)  5903ms
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 9030ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time  5841ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time  2802ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 17653ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail  2134ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end  9102ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end  6298ms
+ ✓ frontend/modules/seedlingDemo/hammerPressBombs.test.js (8 tests) 4047ms
+     ✓ t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184)  1115ms
+     ✓ t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast  1126ms
+     ✓ OFF asks nothing (the instrument stays at zero)  631ms
+     ✓ staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's  921ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js (9 tests) 8747ms
+     ✓ OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE)  1201ms
+     ✓ ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape  1139ms
+     ✓ ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte  1512ms
+     ✓ (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike  3184ms
+     ✓ (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves  1640ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostWall.test.js (6 tests) 257ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (10 tests) 13ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests) 5917ms
+     ✓ OFF writes nothing to the instrument  1807ms
+     ✓ at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised  3000ms
+     ✓ t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168)  1103ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 6467ms
+     ✓ the SWORD's certificate is the same ON and OFF  4066ms
+     ✓ ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner  2096ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 62ms
+ ✓ frontend/modules/seedlingDemo/tapeIndexManifest.test.js (283 tests) 56ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (16 tests) 105939ms
+     ✓ t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick  1607ms
+     ✓ t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA)  1756ms
+     ✓ K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike  1476ms
+     ✓ the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen  2655ms
+     ✓ ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts  469ms
+     ✓ ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key  97945ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.test.js (6 tests) 263811ms
+     ✓ OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE)  882ms
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key  262915ms
+
+ Test Files  27 passed (27)
+      Tests  776 passed (776)
+   Start at  16:49:15
+   Duration  385.03s (transform 9.39s, setup 0ms, import 30.48s, tests 670.63s, environment 3ms)
+
+rc=0

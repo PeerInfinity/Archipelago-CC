@@ -1,0 +1,8 @@
+FAIL: OFF (MOVING_WAIT ON): the press kill's stand takes bombpusher@112,128#7 on t1157's ledger row — []
+FAIL: ⛓ ON: the solve runs past the press kill's first landing (it stops on #10's blast on bob@272,112, the unstaged "Enemy" arm) — 1339 executed; levelRun: the Explosion of bombpusher@112,128#11 at (250, 160) on tick 1339 in level 40 reaches the spinner spinner@192,160 — `Enemy.hit(4, …, 1)` (`Explosion.a
+PASS: ⛓⛓ ON: the prefix takes no hit — []
+PASS: ⛓⛓ ON: the first press lands on spinner@192,128 — [{"t":1157,"id":"spinner@192,128","hits":1},{"t":1190,"id":"spinner@192,128","hits":2},{"t":1190,"id":"spinner@192,160","hits":1}]
+FAIL: ⛓ the committed hammer-bw-l42-381-bombstand is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-bw-l42-381-bombstand: 1293 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE BW, D2 — THE PRESS KILL'S STAND SEES THE LOBBER'S BOMBS (`PRESS_KILL_BOMBS` ON, `MOVING_WAIT` ON). Leg 381's atlas staging (fidelity's `l40buttonStaging`, the L42 arrival (848,16)); `solveSegment`'s executed prefix cut at t1293, one tick before #10 explodes on bob@272,112 (the unstaged "Enemy" arm). OFF the strike stood on (248,184) and #7 hit it at t1156; ON landings t1157 spinner@192,128 hits 1 · t1190 spinner@192,128 hits 2 · t1190 spinner@192,160 hits 1 · t1273 spinner@192,128 hits 3 · t1290 spinner@192,160 hits 2; blasts t879 1 (355,86) · t925 2 (317,98) · t971 3 (317,152) · t1017 4 (303,199) · t1063 5 (267,236) · t1109 6 (268,235) · t1155 7 (272,204) · t1201 8 (243,176) · t1247 9 (235,135) · t1293 10 (279,185); player hits 0. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs.
+
+3 CHECK(S) FAILED

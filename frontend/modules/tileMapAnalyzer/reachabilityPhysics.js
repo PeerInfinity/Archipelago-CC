@@ -4,8 +4,6 @@
 // L-arc logic in reachabilityAnalyzer.js for robotkitty. Dispatch
 // is gated by config.use_physics_model.
 //
-// See NewDocs/plans/tile-map-analyzer-physics-model.md.
-//
 // Approach:
 //   1. Build a reach table from the ability set (empty-grid, obstacle-
 //      independent). This defines the CANDIDATE set of (dx, dy)

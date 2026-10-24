@@ -1,0 +1,558 @@
+#!/usr/bin/env node
+/**
+ * ci-gates — **THE GATES CI CAN RUN, RUN IN CI, ONE PARSEABLE LINE EACH**
+ * (R9 slice P3b (g), ⚖ ruling 54 (6); standing-values CI arc S3, ⚖ ruling 72).
+ *
+ * ── ⛔⛔ THE MEASUREMENT THAT SHAPED THIS, AND WHAT S3 CHANGED ────────
+ *
+ * ⚖ 54 (6) reads *"more standing rows quoted from CI by SHA (every headless
+ * gate; only Windows/GPU rows stay local)"*. P3b could only reach the HEADLESS
+ * gates — six of the thirty-three the roster reads today (the header line
+ * below is the measurement; this sentence is prose) — and said so rather than
+ * pretending otherwise. ⛓ S3 reaches the rest of what a runner can answer:
+ * a GitHub runner has headless Chromium, and every one of the browser rows is
+ * banked green from exactly that. ⚠ The runner is `ubuntu-24.04`, PINNED, not
+ * `ubuntu-latest`: since 2026-10-22 `ubuntu-latest` is 26.04, where Playwright
+ * refuses to install chromium. The pin is the `browser-gates` job's `runs-on`
+ * in `.github/workflows/unittests_frontend.yml`, with its reason beside it;
+ * the node-only `headless-gates` shards still run on `ubuntu-latest`. What stays behind is the FOUR Windows rows,
+ * which hold `/mnt/c/Windows/py.exe` as a literal and could not resolve their
+ * driver on a runner at all (⚖ 72 (a): they stay box-measured).
+ *
+ * ⛔ THE PREDICATE IS `ciGatePlan.ciRunnable`, IN ONE PLACE. This file, the
+ * workflow's job matrix and `ci-summary.mjs`'s refusal all read it. Three
+ * copies of "can CI answer this?" is how a refusal outlives the thing it
+ * refused.
+ *
+ * ── THE LINE, AND WHY IT IS SHAPED LIKE THIS ─────────────────────────
+ *
+ *   ## CI-GATE | <key> | <value> | exit=<n> | <the gate's own total line>
+ *
+ * Pipe-delimited because a standing KEY contains spaces and a colon, and a
+ * whitespace-delimited format would need quoting rules nobody would get right
+ * on the second reader. `ci-summary.mjs --gate=<key> <sha>` is that reader,
+ * and since S3 it reads the lines across EVERY job of the run.
+ *
+ * ── ⛓⛓⛓ A BROWSER RUN IS A BATTERY, NOT A LIST OF INVOCATIONS ───────
+ *
+ * This file TAKES THE BOX for a browser selection and the gates it spawns
+ * recognise the holder's token (`boxLock` rule 3) — which is what makes it
+ * `gates.mjs`-equivalent machinery rather than twenty-four standalone runs.
+ * ⛔ That is not ceremony: `check-procgen-demos` skips a `cli` row that
+ * invokes a sibling roster gate ONLY under a battery (⚖ 71 (a), SG1), and a
+ * standalone run pays those sibling drives again — measured at ~+187 s.
+ * ⛓ On a runner the lock contends with nothing; it is the TOKEN the dedup
+ * reads, and taking it is also correct on the box, where this file would
+ * otherwise perturb a live measurement.
+ *
+ * ── ⛔ WHAT CI CANNOT ANSWER IS NAMED, NEVER SILENTLY GREEN ───────────
+ *
+ * `check-seedling-producer-boundaries.mjs` reads a MACHINE-GLOBAL latch cache
+ * under `/mnt/c/playwright` that exists on exactly one box. Its VALUE here
+ * would be `0 VERIFIED / 18 REFUSED` — measured, by pointing both cache
+ * directories at paths that do not exist — which is §44.9 item 2's *"a row
+ * that gates nothing"*. So it runs in `--structure` mode under the key
+ * `structure: …`, which is a DIFFERENT KEY from its value row and can never
+ * be quoted as one, and the value row stays the box's.
+ *
+ * ⛔ THIS STEP IS A STANDING-VALUE READER, NOT A MERGE GATE. It is wired with
+ * `continue-on-error: true`, deliberately: `check-seedling-full-tier-owed` is
+ * RED whenever a full tier is owed, which is a SCHEDULING fact and must not
+ * block every push. The red is not hidden — it is in this step's own printed
+ * line, and `ci-summary.mjs` reads the LINE, never the job conclusion (12g′'s
+ * lesson: `continue-on-error` hides a red at the JOB level).
+ *
+ * Run:
+ *   node scripts/procgen/ci-gates.mjs                    the headless gates
+ *   node scripts/procgen/ci-gates.mjs --set=browser      every browser arm
+ *   node scripts/procgen/ci-gates.mjs --set=browser --shard=1 --host=http://localhost:8000
+ *   node scripts/procgen/ci-gates.mjs --plan [--json]    the shard partition
+ *   node scripts/procgen/ci-gates.mjs --plan --json --changed=<file>  …less the path-filtered
+ *        shards no pushed path hits (`<file>`: one path per line, or `ALL`)
+ *   node scripts/procgen/ci-gates.mjs --audit --run=<id>  did the partition HOLD?
+ *   node scripts/procgen/ci-gates.mjs --write-costs [--runs=3]  re-price the arms
+ *   --set=headless|browser|all   --json   --wait-for-box=<sec>   --run=<id>   --changed=<file>
+ */
+
+import { execFile } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
+
+import { releaseBoxLock, takeBoxLock } from './boxLock.js';
+import { CI_ARM_COSTS_FILE, CI_FIXED_SHARD_LIMIT_MS, CI_SHARD_BUDGET_MS, auditRunShards, ciArmlessIdentityRows,
+    ciGateArms, ciGatePlanFor, ciRunnable, readCiArmCosts } from './ciGatePlan.js';
+import { CI_DONE_MARK, CI_PLANNED_MARK, HEADROOM_WARN_FRACTION, recentRuns, runById,
+    runShardCosts } from './ciSummary.js';
+import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
+import { headlineOf, runRow } from './standingValues.js';
+
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+const run = promisify(execFile);
+const ARGV = process.argv.slice(2);
+const flag = (name) => ARGV.includes(`--${name}`);
+const arg = (name, fallback = null) => {
+    const hit = ARGV.find((a) => a.startsWith(`--${name}=`));
+    return hit === undefined ? fallback : hit.slice(name.length + 3);
+};
+
+const JSON_OUT = flag('json');
+const SET = arg('set', 'headless');
+/** ⛓ ci-jsut-split — `--write-costs` re-prices ONE set only when `--set=` is
+ *  named, keeping every other arm's banked price (so a headless re-price cannot
+ *  move the browser partition). */
+const SET_NAMED = arg('set') !== null;
+const SHARD = arg('shard');
+const HOST = arg('host', LOCAL_HOST);
+const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
+const AUDIT_RUN = arg('run');
+const COST_RUNS = Number(arg('runs', '3')) || 3;
+/** ⛓ ci-jsut-split — the step's own kill deadline, so the battery can say how
+ *  close it ran to being cut (the workflow passes its `timeout-minutes` × 60). */
+const DEADLINE_S = Number(arg('deadline-s', '0')) || 0;
+const T_START = Date.now();
+
+/** ⛓ The marker every consumer greps for — ONE spelling, exported. */
+export const CI_GATE_MARK = '## CI-GATE |';
+
+const { arms, shards, budgetMs, measuredAt, pricedFrom } = ciGatePlanFor({
+    repo: REPO, host: HOST, set: SET, budgetMs: CI_SHARD_BUDGET_MS,
+});
+
+/* ── --plan: the matrix the workflow interpolates ────────────────────── */
+
+/**
+ * ⛔⛔ THE MATRIX IS PUBLISHED, NEVER TYPED (⚖ 17). `unittests_frontend.yml`'s
+ * first job prints this and feeds it to `fromJSON`; each shard job recomputes
+ * the same plan from the same tree and takes its slice by INDEX. A shard list
+ * committed to the workflow would be stale the day a gate is added — and
+ * stale in the direction that drops one silently.
+ */
+/**
+ * ⛓⛓ ci-manual-moves — `--changed=<file>`: the pushed paths, one per line, or
+ * the single word `ALL` (a dispatch, a PR, an unreadable or truncated list).
+ * A path-filtered shard (`@ci-paths`) is kept only when a path hits its filter
+ * (`ciPathFilter.js`); without `--changed` every shard is kept. ⛔ FAIL-OPEN: a
+ * filter that cannot be derived keeps the shard and says why.
+ */
+const CHANGED = arg('changed');
+async function keptShards() {
+    if (CHANGED === null || !shards.some((s) => s.pathFiltered)) return shards;
+    let changed = null;
+    try {
+        const text = readFileSync(CHANGED, 'utf8');
+        if (text.trim() !== 'ALL') changed = text.split('\n').filter((l) => l.trim());
+    } catch (e) {
+        console.error(`# path filter: --changed=${CHANGED} unreadable (${e.message}) — every shard kept`);
+    }
+    if (changed === null) {
+        console.error('# path filter: ALL — every path-filtered shard kept (a dispatch, PR or unknown change list)');
+        return shards;
+    }
+    const { ciPathFilterFor, pathFilterHits } = await import('./ciPathFilter.js');
+    const roster = gateRoster({ repo: REPO });
+    return shards.filter((s) => {
+        if (!s.pathFiltered) return true;
+        try {
+            const gate = roster.find((g) => g.file === s.pathFiltered);
+            const hits = pathFilterHits({ filter: ciPathFilterFor({ gate, repo: REPO }), changed });
+            console.error(`# path filter: ${s.pathFiltered} — ${hits.length ? `RUNS: ${hits.length} of `
+                + `${changed.length} changed path(s) hit it (${hits.slice(0, 5).join(', ')}`
+                + `${hits.length > 5 ? ', …' : ''})` : `SKIPPED: none of ${changed.length} changed path(s) `
+                + 'is in its @ci-paths or its derived inputs'}`);
+            return hits.length > 0;
+        } catch (e) {
+            console.error(`# path filter: ${s.pathFiltered} — filter not derivable (${e.message}); kept`);
+            return true;
+        }
+    });
+}
+
+if (flag('plan')) {
+    const kept = await keptShards();
+    if (JSON_OUT) {
+        console.log(JSON.stringify(kept.map((s) => ({
+            id: s.id, name: s.name, arms: s.keys.length, ms: s.ms,
+        }))));
+        process.exit(0);
+    }
+    console.log(`# ci-gates --plan — ${arms.length} ${SET} arm(s) in ${shards.length} shard(s), `
+        + `budget ${(budgetMs / 1000).toFixed(0)}s of the RUNNER'S OWN time per shard; `
+        + `priced from ${pricedFrom.length} run(s) at `
+        + `${measuredAt ? measuredAt.slice(0, 10) : '(NO COSTS FILE — every arm lands alone)'}`);
+    for (const s of shards) {
+        if (s.pathFiltered) {
+            console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, PATH-FILTERED `
+                + `(${s.pathFiltered} declares @ci-paths): in the matrix only when a pushed path hits `
+                + `its filter, and on every dispatch${kept.includes(s) ? '' : ' — NOT in this matrix'}`);
+            for (const k of s.keys) console.log(`     ${k}`);
+            continue;
+        }
+        if (s.fixed) {
+            console.log(`\n## shard ${s.id} of ${shards.length} (fixed count) — `
+                + `${(s.ms / 1000).toFixed(1)}s measured in CI, ${s.keys.length} arm(s)`
+                + `${s.unpriced ? `, ${s.unpriced} UNPRICED (priced at the median priced arm `
+                    + 'until --write-costs has seen it)' : ''}`);
+            for (const k of s.keys) console.log(`     ${k}`);
+            continue;
+        }
+        console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, `
+            + `${s.keys.length} arm(s), margin ${((budgetMs - s.ms) / 1000).toFixed(1)}s `
+            + `(headroom reserved ${(s.headroomMs / 1000).toFixed(1)}s)${s.unpriced ? `, ${s.unpriced} UNPRICED (an arm no runner `
+                + 'has priced is priced at the whole budget, so it lands alone)' : ''}`);
+        for (const k of s.keys) console.log(`     ${k}`);
+    }
+    process.exit(0);
+}
+
+/* ── --write-costs: re-price the arms off finished runs ──────────────── */
+
+/**
+ * ⛓⛓⛓ **THE PRICE IS A MEASUREMENT, TAKEN FROM THE MACHINE THAT WILL PAY IT.**
+ * One `gh` read of the last few successful runs gives every arm's `here=`, and
+ * `ci-arm-costs.json` is that, verbatim. ⛔ NOT typed, NOT the box's `ms`, and
+ * NOT a field on a standing row (trap 1068 — `ciGatePlan.CI_ARM_COSTS_FILE`
+ * says why).
+ *
+ * ⛓ THE MAX ACROSS THE RUNS, NOT THE LATEST. Measured spread on the same arm
+ * across three runs is ~25 % (`seedling-editor-generate` 34.0 / 34.3 / 42.3 s),
+ * and a bin-packer fed the fastest sample packs a bin that then does not fit.
+ * Conservative in the direction that keeps the shard honest — the same
+ * direction `planCiShards` prices an unknown in.
+ */
+if (flag('write-costs')) {
+    /** ⛓ `--run=<id>[,<id>…]` — several named runs, so arms only a NEW layout
+     *  ran (ci-jsut-split's 32 never-reached headless arms) can be priced from
+     *  more than one sample. */
+    const runs = AUDIT_RUN
+        ? AUDIT_RUN.split(',').map((id) => runById(Number(id)))
+        : recentRuns({ limit: COST_RUNS });
+    const inSet = SET_NAMED ? new Set(arms.map((a) => a.key)) : null;
+    /** ⛓ …and in that mode every banked price these runs did NOT re-measure is
+     *  kept — another set's, or an arm of this set the runs never reached (a
+     *  truncated battery): an old price beats the unpriced fallback. */
+    const banked = SET_NAMED ? readCiArmCosts({ repo: REPO })?.arms ?? {} : {};
+    if (!runs.length) {
+        console.log('FAIL: no successful run of the workflow to price from');
+        process.exit(1);
+    }
+    const armsOut = {};
+    const seen = [];
+    for (const r of runs) {
+        const { jobs, unreadable } = runShardCosts(r);
+        const n = jobs.reduce((k, j) => k + j.arms.length, 0);
+        seen.push({ id: r.databaseId, headSha: r.headSha, createdAt: r.createdAt, arms: n });
+        for (const u of unreadable) console.log(`⚠ job log unreadable in ${r.databaseId}: ${u}`);
+        for (const j of jobs) {
+            for (const a of j.arms) {
+                if (inSet && !inSet.has(a.key)) continue;
+                const prev = armsOut[a.key];
+                armsOut[a.key] = {
+                    ms: Math.max(prev?.ms ?? 0, a.ms),
+                    /** ⛓ F2 — the MIN too: `planCiShards` reserves `ms − minMs`. */
+                    minMs: Math.min(prev?.minMs ?? Infinity, a.ms),
+                    samples: (prev?.samples ?? 0) + 1,
+                    maxFrom: (prev && prev.ms >= a.ms) ? prev.maxFrom : r.databaseId,
+                };
+            }
+        }
+    }
+    /** ⛓ ci-manual-moves — …but only for a key some CI arm still publishes: a
+     *  price kept for a deleted or moved arm is a number nothing reads that a
+     *  reader of the table would trust. */
+    const live = new Set(ciGateArms({ repo: REPO, host: HOST, set: 'all' }).map((a) => a.key));
+    const dropped = Object.keys(banked).filter((k) => !live.has(k) && !(k in armsOut));
+    const kept = () => Object.fromEntries(Object.entries(banked)
+        .filter(([k]) => !(k in armsOut) && live.has(k)));
+    const doc = {
+        why: 'What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` '
+            + 'line is printed under. `planCiShards` prices the shard partition off THIS and '
+            + 'never off a standing row\'s `ms`, which is what it cost to ANSWER that row — '
+            + 'for a CI-sourced row, a network call (trap 1068). `ms` is the MAX across the '
+            + 'runs below, because a bin-packer fed the fastest sample packs a bin that does '
+            + 'not fit; `minMs` is the MIN, and a shard is packed to the budget minus the widest '
+            + '`ms − minMs` among its arms (F2). Written by `node scripts/procgen/ci-gates.mjs '
+            + '--write-costs`.',
+        measuredAt: new Date().toISOString(),
+        budgetMs,
+        /** ⛓ ci-jsut-split — `runs` priced THIS set only; the others' prices are older. */
+        ...(SET_NAMED ? { repricedSet: SET } : {}),
+        runs: seen,
+        arms: Object.fromEntries(Object.entries({ ...kept(), ...armsOut })
+            .sort(([a], [b]) => a.localeCompare(b))),
+    };
+    writeFileSync(join(REPO, CI_ARM_COSTS_FILE), `${JSON.stringify(doc, null, 2)}\n`);
+    const total = Object.values(armsOut).reduce((n, a) => n + a.ms, 0);
+    for (const r of seen) {
+        console.log(`## run ${r.id} @${r.headSha.slice(0, 9)} — ${r.arms} arm line(s)`);
+    }
+    for (const [k, v] of Object.entries(doc.arms)) {
+        console.log(`     ${(v.ms / 1000).toFixed(1).padStart(7)}s  spread ${((v.ms - v.minMs) / 1000)
+            .toFixed(1).padStart(6)}s  ${String(v.samples).padStart(2)} sample(s)  ${k}`);
+    }
+    if (SET_NAMED) {
+        console.log(`\n⛓ --set=${SET}: ${Object.keys(armsOut).length} arm(s) re-priced; `
+            + `${Object.keys(kept()).length} other arm(s) kept at their banked price; `
+            + `${dropped.length} price(s) dropped — no CI arm publishes that key any more`);
+    }
+    console.log(`\n${Object.keys(doc.arms).length} arm(s) priced from ${seen.length} run(s), `
+        + `${(total / 1000).toFixed(1)}s total ⇒ ${CI_ARM_COSTS_FILE}`);
+    process.exit(0);
+}
+
+/* ── --audit: did the partition HOLD, measured by the runner? ─────────── */
+
+/**
+ * ⛔⛔⛔ **THE GUARD THAT CAN FAIL.** S4's write mispriced this partition by a
+ * factor of forty and NOTHING went red — the budget row prices off the same
+ * field the partition does, so it agreed with the mistake. This mode reads
+ * ONLY what the runner printed about itself: each job's `##   ms | … | here=`
+ * lines and its own `## shard i of n` note. No bank, no costs file, no plan.
+ *
+ * ⛓ Exit 1 when a job that ran MORE THAN ONE arm exceeded the budget — a lone
+ * arm over budget is `planCiShards`' own rule working (`seedling-wasm-element`
+ * is 901 s and has nowhere smaller to go). See `auditRunShards`.
+ */
+if (flag('audit')) {
+    if (!AUDIT_RUN) {
+        console.log('FAIL: --audit needs --run=<id> — a SHA can carry more than one run '
+            + 'and an audit that cannot address a particular one is taken by eye');
+        process.exit(1);
+    }
+    const audited = runById(Number(AUDIT_RUN));
+    const { jobs, unreadable } = runShardCosts(audited);
+    const audit = auditRunShards({ jobs, budgetMs });
+    console.log(`# ci-gates --audit — run ${audited.databaseId} @${audited.headSha.slice(0, 9)} `
+        + `(${audited.conclusion}), ${audit.rows.length} job(s) that ran arms; budget `
+        + `${(budgetMs / 1000).toFixed(0)}s of the RUNNER'S OWN seconds per sharded job`);
+    for (const r of audit.rows) {
+        console.log(`\n${r.over ? 'FAIL:' : 'PASS:'} ${r.name}`);
+        console.log(`      ${r.sharded ? `shard ${r.shard.id} of ${r.shard.of}${r.shard.fixed === true
+            ? ' (fixed count)' : ''}` : 'NOT sharded — '
+            + 'ran its whole set, so no per-shard budget applies'}`
+            + ` · ${r.arms} arm(s) · ${(r.ms / 1000).toFixed(1)}s measured here`
+            + `${r.heaviest ? ` · heaviest ${r.heaviest.key} ${(r.heaviest.ms / 1000).toFixed(1)}s`
+                : ''}`);
+        if (r.over && r.shard?.fixed === true) {
+            console.log(`      ⛔ ${(r.ms / 1000).toFixed(1)}s > the `
+                + `${(CI_FIXED_SHARD_LIMIT_MS / 1000).toFixed(0)}s limit for a fixed shard — the `
+                + 'headless step deadline is near, and it TRUNCATES the battery '
+                + 'silently. Raise CI_HEADLESS_SHARDS.');
+        } else if (r.over) {
+            console.log(`      ⛔ ${r.arms} arms and ${(r.ms / 1000).toFixed(1)}s > the `
+                + `${(budgetMs / 1000).toFixed(0)}s budget. A job holding ONE arm may exceed `
+                + 'it; a job holding several may not — the partition underpriced these arms.');
+        }
+    }
+    if (audit.loose) {
+        console.log(`\n⚠ LOOSE (reported, NOT a failure): ${audit.loose.jobs.length} multi-arm `
+            + `shard(s) totalling ${(audit.loose.ms / 1000).toFixed(1)}s would have fitted in `
+            + 'ONE job. Over-splitting costs a runner, not wall clock, and varies run to run.');
+    }
+    for (const u of unreadable) console.log(`\n⚠ job log unreadable: ${u}`);
+    if (JSON_OUT) console.log(JSON.stringify(audit, null, 2));
+    console.log(`\n${audit.ok ? 'ALL CHECKS PASSED' : `${audit.over.length} CHECK(S) FAILED`}`);
+    process.exit(audit.ok ? 0 : 1);
+}
+
+/* ── which arms this invocation runs ─────────────────────────────────── */
+
+let selected = arms;
+let shardNote = null;
+if (SHARD !== null) {
+    const shard = shards[Number(SHARD)];
+    if (!shard) {
+        console.log(`FAIL: no shard ${JSON.stringify(SHARD)} — the plan has `
+            + `${shards.length} (0..${shards.length - 1})`);
+        process.exit(1);
+    }
+    const want = new Set(shard.keys);
+    selected = arms.filter((a) => want.has(a.key));
+    /** ⛔ `fixed count` is READ by `ciSummary.shardNoteIn`: the audit judges a
+     *  fixed shard against its kill deadline, never against the bin budget. */
+    shardNote = `shard ${shard.id} of ${shards.length} — ${shard.name}; `
+        + `${(shard.ms / 1000).toFixed(1)}s measured in CI`
+        + `${shard.fixed ? '; fixed count' : ''}`;
+}
+
+const roster = gateRoster({ repo: REPO });
+/** ⛔ The gates CI cannot run AT ALL — named in every job's own log, so no
+ *  log is a partial picture and nothing reads as green that never ran. */
+const unrunnable = roster.filter((g) => !ciRunnable(g));
+/** ⛓⛓ S4c — …AND THE IDENTITY ROWS CI RUNS NO ARM FOR, by the same rule
+ *  and for the same reason: the ⚖ 72 (a) Windows rows, and since
+ *  ci-manual-moves the `@ci-box` rows and the ones another arm or the
+ *  `Producer --checks` job already runs (`ciGatePlan.noArmReason`). */
+const unrunnableRows = ciArmlessIdentityRows({ repo: REPO });
+/** ⛓ …and the arms this RUN answers that this JOB does not — a sibling
+ *  shard's, not a skip. The distinction is the whole point of naming both. */
+const elsewhereInRun = arms.filter((a) => !selected.includes(a));
+
+console.log(`# ci-gates — the ${SET} procgen gates, on this pushed head\n`);
+console.log(`## ${selected.length} arm(s) run here, out of ${arms.length} the `
+    + `\`${SET}\` set holds and ${roster.length} gate(s) on the roster. `
+    + `${unrunnable.length} gate(s) and ${unrunnableRows.length} identity row(s) need the `
+    + 'Windows driver, declare `@ci-box`, or are run by another arm or job, and are SKIPPED '
+    + 'BY NAME below with their own reason — never counted, never implied green.');
+if (shardNote) console.log(`## ${shardNote}`);
+/**
+ * ⛓⛓ ci-jsut-split (fidelity-9's ask (b)) — **A BATTERY SAYS WHAT IT PLANNED, AND
+ * THAT IT FINISHED.** From 2026-10-10 the one headless job hit its 20-minute step
+ * deadline on most runs and printed 54–68 of its 80–95 arms, green under
+ * `continue-on-error`. `ci-summary` and the workflow's "Battery complete?" step
+ * read these two lines: PLANNED without DONE is a TRUNCATED job, by name.
+ */
+console.log(`${CI_PLANNED_MARK} ${selected.length} arm(s)`
+    + `${DEADLINE_S ? ` | step deadline ${DEADLINE_S}s` : ''}`);
+
+/** ⛓ S4c — `arm.browser`, not `arm.gate.browser`: an identity arm has no
+ *  gate and `plan-seedling-r7-ends-meet --check` is one of the arms that
+ *  genuinely drives the machine. */
+const SPENDS_BOX = selected.filter((a) => a.browser);
+if (SPENDS_BOX.length) {
+    /**
+     * ⛓⛓ THE RUNNER TAKES THE BOX ONCE FOR ALL ITS ARMS, and each gate's own
+     * preamble recognises itself as the holder's CHILD (`boxLock` rule 3).
+     * ⛔ On a runner nothing contends for it — what the token buys there is
+     * SG1's demos dedup, which is licensed by `BOX.passthrough` alone.
+     */
+    try {
+        takeBoxLock({
+            name: `ci-gates ${SET}${shardNote ? ` (${shardNote})` : ''} — `
+                + `${SPENDS_BOX.length} of ${selected.length} arm(s) spend the machine`,
+            kind: 'browser', repo: REPO, waitSec: WAIT_FOR_BOX,
+        });
+    } catch (e) {
+        console.log(e.message);
+        process.exit(1);
+    }
+} else {
+    console.log(`# box lock: NOT TAKEN — none of ${selected.length} selected arm(s) is a browser `
+        + 'row, so this run does not contend for the machine');
+}
+
+/* ── the run ─────────────────────────────────────────────────────────── */
+
+const rows = [];
+for (const arm of selected) {
+    const { gate, argv } = arm;
+    let out = '';
+    let exit = 0;
+    let value = null;
+    let total = null;
+    const t0 = Date.now();
+    if (gate) {
+        try {
+            const r = await run('node', [gate.path, ...argv], { cwd: REPO, maxBuffer: 1 << 26 });
+            out = `${r.stdout}${r.stderr}`;
+        } catch (e) {
+            exit = typeof e.code === 'number' ? e.code : 1;
+            out = `${e.stdout ?? ''}${e.stderr ?? ''}` || String(e.message ?? e);
+        }
+        ({ value, total } = headlineOf('gate', out));
+    } else {
+        /**
+         * ⛓⛓⛓ S4c — **AN IDENTITY ARM IS RUN BY `runRow`, NOT RE-IMPLEMENTED
+         * HERE.** Its command is a SHELL PIPELINE with `identity-block.sh`'s
+         * own `m`/`b` helpers prepended and `${PIPESTATUS[0]}` for the exit —
+         * *"a copy of it in JS would be a second spelling of what an identity
+         * value MEANS"* (`runRow`'s docblock). ⛔ The box runs these rows
+         * through exactly this function, so a CI line that disagreed with the
+         * bank would be a fact about the MACHINE and never about two readers.
+         */
+        const r = await runRow(arm.row, { repo: REPO });
+        ({ value, total, exit, out } = r);
+    }
+    const ms = Date.now() - t0;
+    rows.push({ key: arm.key, file: gate?.file ?? arm.row.command, argv, value, exit, total, ms,
+        face: gate?.ciFace?.prefix ?? null });
+    console.log(`${CI_GATE_MARK} ${arm.key} | ${value} | exit=${exit} | ${total ?? '(no total)'}`);
+    /**
+     * ⛓⛓ …AND WHAT IT COST HERE, BESIDE WHAT IT COSTS ON THE BOX. This is the
+     * runner-headroom measurement S3 exists to take: `seedling-wasm-element`
+     * is 934.7 banked seconds of headless SwiftShader and whether a shared
+     * runner can carry that is a genuine open question. ⛔ It is a SEPARATE
+     * line, never a sixth field: `parseGateLines` folds every field after
+     * `exit=` into `total`, so widening the line would move a published value.
+     *
+     * ⛓⛓ S5b — **AND SINCE S5b IT IS NOT ONLY A MEASUREMENT, IT IS THE PRICE.**
+     * `--write-costs` reads these lines back into `ci-arm-costs.json` and
+     * `planCiShards` partitions on them. The line was already correct; what
+     * changed is that something now depends on it, so `parseGateMsLines` pins
+     * its shape in `ciSummary.test.js`.
+     */
+    console.log(`##   ms | ${arm.key} | here=${(ms / 1000).toFixed(1)}s`);
+    if (exit !== 0 || value.includes('/0/')) {
+        /**
+         * ⛔⛔ **A RED LINE WITH NO EVIDENCE IS A RED NOBODY CAN ACT ON.** The
+         * first CI run of this step printed `gate: seedling-full-tier-owed |
+         * 0/1` and nothing else, and the reason — a depth-1 clone with no
+         * baseline commit — was nowhere in the log.
+         */
+        const evidence = out.split('\n')
+            .filter((l) => l.startsWith('FAIL:') || l.startsWith('SKIP:'));
+        for (const line of evidence.slice(0, 8)) console.log(`      ${line}`);
+        /**
+         * ⛔⛔ …AND THE SAME LESSON IN ITS SECOND COSTUME, learned by S3's
+         * FIRST CI run: `gate: seedling-wasm-element | 0/0 | exit=1 | (no
+         * total)` in 0.4 s and **nothing else in the log**. The gate died
+         * before it could print a verdict, so a filter that only knows
+         * `FAIL:`/`SKIP:` had no evidence to echo and turned a diagnosable
+         * crash into a red nobody could act on — which is exactly what the
+         * paragraph above was written to prevent, one shape over. ⛓ The tail
+         * is printed only when there is no verdict evidence at all, so a
+         * normally-failing gate's log does not double in size.
+         */
+        if (!evidence.length) {
+            const tail = out.split('\n').filter((l) => l.trim()).slice(-14);
+            console.log(`      (no FAIL:/SKIP: line at all — the last ${tail.length} line(s) `
+                + 'of what it actually printed:)');
+            for (const line of tail) console.log(`      | ${line}`);
+        }
+    }
+}
+
+console.log('');
+for (const g of unrunnable) {
+    /** ⛓ V3b — the two clauses of `ciRunnable` are two different sentences,
+     *  and a skip that gave both the same one would be a reason nobody could
+     *  act on: the Windows rows CANNOT be answered here, a `@ci-box` row is
+     *  one somebody decided the box answers, and its own reason is the thing
+     *  a later slice deletes. */
+    console.log(`## CI-SKIPPED | ${g.file} | ${g.ciBox
+        ? `declares \`@ci-box\` — ${g.ciBox.reason}`
+        : 'needs a Windows GPU'} — not run here, and NOT green`);
+}
+for (const r of unrunnableRows) {
+    console.log(`## CI-SKIPPED | ${r.row.key} | ${r.why} — not run here, and NOT green`);
+}
+for (const a of elsewhereInRun) {
+    console.log(`## CI-ELSEWHERE | ${a.key} | a sibling shard of THIS run answers it — `
+        + 'not skipped, and not green either until its own line says so');
+}
+
+/**
+ * ⛔ THE STEP'S OWN EXIT IS 0 BY DESIGN. Its job is to PRINT; the reds live in
+ * the lines above and are read by `ci-summary.mjs --gate=` at a SHA. An exit
+ * code here would either block every push on an owed measurement or, wrapped
+ * in `continue-on-error`, be the exact thing 12g′ found hiding a red.
+ */
+if (JSON_OUT) console.log(JSON.stringify({ set: SET, shard: SHARD, rows }, null, 2));
+console.log(`\n${rows.length} ${SET} arm(s) reported; `
+    + `${rows.filter((r) => r.exit !== 0).length} non-zero; `
+    + `${unrunnable.length} skipped by name; ${elsewhereInRun.length} in sibling shard(s). `
+    + `${(rows.reduce((s, r) => s + r.ms, 0) / 1000).toFixed(1)}s of arm time here.`);
+const elapsedS = (Date.now() - T_START) / 1000;
+console.log(`${CI_DONE_MARK} ${rows.length} of ${selected.length} arm(s) | ${elapsedS.toFixed(1)}s`
+    + `${DEADLINE_S ? ` of a ${DEADLINE_S}s step deadline` : ''}`);
+/** ⛓ (c) — the headroom warning, as an Actions annotation where the run page shows it. */
+if (DEADLINE_S && elapsedS > HEADROOM_WARN_FRACTION * DEADLINE_S) {
+    console.log(`::warning title=gate battery headroom::${elapsedS.toFixed(0)}s of the `
+        + `${DEADLINE_S}s step deadline (> ${HEADROOM_WARN_FRACTION * 100}%) — split the set before `
+        + 'the deadline truncates it (CI_HEADLESS_SHARDS / the browser budget)');
+}
+releaseBoxLock();
+process.exit(0);

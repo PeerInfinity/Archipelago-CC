@@ -15,9 +15,11 @@ export const moduleInfo = {
   name: 'helpers',
   title: 'Helpers',
   componentType: 'helpersPanel',
+  docs: 'docs/json/user/modules/helpers.md',
   icon: 'fn',
   column: 3, // Right column
-  description: 'Helper functions display panel.',
+  category: 'Tracker Panels',
+  description: 'The game\'s rule helper functions: see each one\'s logic, set its parameters and read the live result.',
   requires: ['stateManager', 'commonUI'],
 };
 

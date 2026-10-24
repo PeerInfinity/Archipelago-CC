@@ -4,8 +4,28 @@
       "path": "./modules/modules/index.js",
       "enabled": true
     },
+    "quickLaunch": {
+      "path": "./modules/quickLaunch/index.js",
+      "enabled": true
+    },
+    "miniPanels": {
+      "path": "./modules/miniPanels/index.js",
+      "enabled": true
+    },
+    "checksPanel": {
+      "path": "./modules/checksPanel/index.js",
+      "enabled": false
+    },
+    "tutorials": {
+      "path": "./modules/tutorials/index.js",
+      "enabled": true
+    },
     "json": {
       "path": "./modules/json/index.js",
+      "enabled": true
+    },
+    "storagePanel": {
+      "path": "./modules/storagePanel/index.js",
       "enabled": true
     },
     "events": {
@@ -23,10 +43,6 @@
     "timer": {
       "path": "./modules/timer/index.js",
       "enabled": true
-    },
-    "timerPanel": {
-      "path": "./modules/timerPanel/index.js",
-      "enabled": false
     },
     "inventory": {
       "path": "./modules/inventory/index.js",
@@ -100,6 +116,10 @@
       "path": "./modules/gameState/index.js",
       "enabled": true
     },
+    "resourceChannels": {
+      "path": "./modules/resourceChannels/index.js",
+      "enabled": true
+    },
     "gameStatePanel": {
       "path": "./modules/gameStatePanel/index.js",
       "enabled": true
@@ -138,26 +158,34 @@
     },
     "progressBar": {
       "path": "./modules/progressBar/index.js",
-      "enabled": true
+      "enabled": false
     },
     "progressBarPanel": {
       "path": "./modules/progressBarPanel/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGame": {
       "path": "./modules/metaGame/index.js",
-      "enabled": true
+      "enabled": false
     },
     "metaGamePanel": {
       "path": "./modules/metaGamePanel/index.js",
+      "enabled": false
+    },
+    "swfRecompilerPanel": {
+      "path": "./modules/swfRecompilerPanel/index.js",
       "enabled": true
     },
     "flashPanel": {
       "path": "./modules/flashPanel/index.js",
-      "enabled": false
+      "enabled": true
     },
     "tileMapAnalyzer": {
       "path": "./modules/tileMapAnalyzer/index.js",
+      "enabled": false
+    },
+    "regionMarkingTool": {
+      "path": "./modules/regionMarkingTool/index.js",
       "enabled": false
     },
     "iframeAdapter": {
@@ -170,10 +198,6 @@
     },
     "iframeManagerPanel": {
       "path": "./modules/iframeManagerPanel/index.js",
-      "enabled": true
-    },
-    "mazeGameDataPanel": {
-      "path": "./modules/mazeGameDataPanel/index.js",
       "enabled": true
     },
     "jtaGameDataPanel": {
@@ -210,7 +234,7 @@
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": false
+      "enabled": true
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
@@ -228,6 +252,10 @@
       "path": "./modules/apcalc/index.js",
       "enabled": false
     },
+    "apcalcGenerator": {
+      "path": "./modules/apcalcGenerator/index.js",
+      "enabled": false
+    },
     "apworldEditor": {
       "path": "./modules/apworldEditor/index.js",
       "enabled": true
@@ -236,9 +264,13 @@
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
     },
-    "textAdventureSubstrate": {
-      "path": "./modules/textAdventureSubstrate/index.js",
-      "enabled": false
+    "procgenLabPanel": {
+      "path": "./modules/procgenLabPanel/index.js",
+      "enabled": true
+    },
+    "substrateRegistryPanel": {
+      "path": "./modules/substrateRegistryPanel/index.js",
+      "enabled": true
     },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
@@ -248,12 +280,28 @@
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
     },
+    "omsiSubstrateWrapper": {
+      "path": "./modules/omsiSubstrateWrapper/index.js",
+      "enabled": true
+    },
+    "jtaBalance": {
+      "path": "./modules/jtaBalance/index.js",
+      "enabled": true
+    },
     "flashSubstrate": {
       "path": "./modules/flashSubstrate/index.js",
       "enabled": true
     },
     "bounceDemo": {
       "path": "./modules/bounceDemo/index.js",
+      "enabled": true
+    },
+    "runnerDemo": {
+      "path": "./modules/runnerDemo/index.js",
+      "enabled": true
+    },
+    "noiz2saSubstrate": {
+      "path": "./modules/noiz2saSubstrate/index.js",
       "enabled": true
     },
     "procgenPipeline": {
@@ -268,6 +316,10 @@
       "path": "./modules/procgenPlayer/index.js",
       "enabled": true
     },
+    "menuPanel": {
+      "path": "./modules/menuPanel/index.js",
+      "enabled": true
+    },
     "playbackBot": {
       "path": "./modules/playbackBot/index.js",
       "enabled": true
@@ -275,12 +327,16 @@
   },
   "loadPriority": [
     "modules",
+    "quickLaunch",
+    "miniPanels",
+    "checksPanel",
+    "tutorials",
     "json",
+    "storagePanel",
     "events",
     "stateManager",
     "client",
     "timer",
-    "timerPanel",
     "inventory",
     "editorCore",
     "editor",
@@ -299,6 +355,7 @@
     "discovery",
     "discoveryPanel",
     "gameState",
+    "resourceChannels",
     "gameStatePanel",
     "loops",
     "loopStats",
@@ -313,11 +370,12 @@
     "metaGame",
     "metaGamePanel",
     "flashPanel",
+    "swfRecompilerPanel",
     "tileMapAnalyzer",
+    "regionMarkingTool",
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
-    "mazeGameDataPanel",
     "jtaGameDataPanel",
     "jtaCostDebugger",
     "windowAdapter",
@@ -331,16 +389,23 @@
     "jtaArchipelago",
     "vibeCodingSim",
     "apcalc",
+    "apcalcGenerator",
     "apworldEditor",
     "mazeRoom",
-    "textAdventureSubstrate",
+    "procgenLabPanel",
+    "substrateRegistryPanel",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
+    "omsiSubstrateWrapper",
     "flashSubstrate",
     "bounceDemo",
+    "runnerDemo",
+    "noiz2saSubstrate",
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",
+    "menuPanel",
+    "jtaBalance",
     "playbackBot"
   ]
 }

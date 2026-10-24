@@ -1,0 +1,20 @@
+const ROOT = '/home/user/Archipelago-CC';
+const { AXE_WITNESSES, axeStaging } = await import(`${ROOT}/scripts/procgen/plan-seedling-axe-witness.mjs`);
+const { withContactFidelity } = await import(`${ROOT}/frontend/modules/seedlingDemo/contactFidelity.js`);
+const sb = await import(`${ROOT}/frontend/modules/seedlingDemo/solverBot.js`);
+const { DEFAULT_TOLERANCE } = await import(`${ROOT}/frontend/modules/seedlingDemo/botDriverV1.js`);
+const { createRunForStaging } = await import(`${ROOT}/frontend/modules/seedlingDemo/tapeRunner.js`);
+const { atlasLevelSource } = await import(`${ROOT}/frontend/modules/seedlingDemo/levelSource.js`);
+const w = AXE_WITNESSES.find((x) => x.name === 'axe-l48-reach-l49');
+const staging = await axeStaging(w);
+const WPS = [[120, 280], [136, 264], [200, 264], [200, 248], [232, 248], [232, 56], [184, 56]].map(([x, y]) => ({ x, y }));
+await withContactFidelity({ waypointSlide: false }, async () => {
+    const run = createRunForStaging(staging, atlasLevelSource());
+    const strike = sb.strikePolicyFor(run, { dashPlan: null, dashMode: 'all', iframeLapse: true });
+    const walk = sb.previewWalk(run, WPS, DEFAULT_TOLERANCE, { strike });
+    console.log('start', run.state.x, run.state.y, 'trunc', walk.truncated?.kind ?? null);
+    for (const l of sb.dashLegRuns(walk.samples, run.state)) console.log(JSON.stringify({ ...l, path: +l.path.toFixed(1), line: +l.line.toFixed(1), span: +l.span.toFixed(1), floor: sb.dashLegFloor(l) }));
+    console.log('verdict', sb.withDashLegPrecheck(true, () => sb.dashLegPrecheck(run, walk)));
+    const t = Date.now(); const off = sb.withDashLegPrecheck(false, () => sb.planSwordDash(createRunForStaging(staging, atlasLevelSource()), WPS, { tolerance: DEFAULT_TOLERANCE }));
+    console.log('OFF scan', off.scanned, off.ticks, off.windows?.length, Date.now() - t, 'ms');
+});

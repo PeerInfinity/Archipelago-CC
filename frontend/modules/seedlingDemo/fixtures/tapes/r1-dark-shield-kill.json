@@ -1,0 +1,50 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 64,
+        "y": 144
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasShield": true,
+            "hasDarkShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 520,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 520
+        }
+    ],
+    "name": "r1-dark-shield-kill",
+    "description": "⛓⛓⛓ R1-swim D2 — THE DARK SHIELD KILLS A BOB. L22 (64,144), west of `bob@96,144`, the shield and the DARK shield through the seam and `noDamage` FALSE; `down` held for 520 ticks against the south trees. `shieldBump` with `hasDarkShield` calls `Enemy.hit(5, playerPoint, darkShieldDamage 0.5, \"Shield\")` on a body whose own `hitsTimer <= 0`: the bob takes 0.5 on t 120, 191, 260, 332 and 404, and the sixth (t 476) reaches `hitsMax` 3 and calls `startDeath(\"Shield\")` — `Bob.startDeath`, `play(\"die\")` — whose \"die\" anim's `endAnim` sets `destroy`; `Mobile.death` fades it and it leaves the world 36 ticks after the kill. The player is never hit. Fixed keys. Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.",
+    "note": ""
+}

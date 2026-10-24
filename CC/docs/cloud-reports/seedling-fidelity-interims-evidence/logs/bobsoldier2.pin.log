@@ -1,0 +1,12 @@
+PASS: both switches OFF: the staging REFUSES on the kill arm's dwell (the survey's step-50 text) — solverBot(survey-step-50) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has left the world — bobsoldier@48,80 is a `modelled` press target (KILL_A
+PASS: bobsoldier2-l30-dash-stance: the model replays it — no hit, still in L30, bobsoldier@48,80 ALIVE on 2 hits at the end — hits 0, level 30, body (78.77,72.32) h2
+PASS: bobsoldier2-l30-dash-stance: the tape round-trips through the tape format
+PASS: the committed bobsoldier2-l30-dash-stance is what this script produces today — byte-identical
+PASS: both switches ON: the staging SOLVES
+PASS: the plan kills the BobSoldier by the chaser arm, from the stance (88,56), inside the forecast's bound — dwell 22/53 t, 1 strike(s)
+PASS: bobsoldier2-l30-torch: the model replays it — zero hits, the body killed, the crossing into L32 — hits 0, ends {"level":32,"x":80,"y":128}
+PASS: bobsoldier2-l30-torch: the tape round-trips through the tape format
+PASS: the committed bobsoldier2-l30-torch is what this script produces today — byte-identical
+
+all checks green
+exit 0 at 00:43:52

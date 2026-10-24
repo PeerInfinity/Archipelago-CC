@@ -1,0 +1,17 @@
+# box lock: TAKEN by probe-seedling-timed-pass.mjs (browser, pid 5216) — head 2815f9ab1, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      timedpass-l28-fire-l26: the plan is 132 t; its pass 121 t to (152,56) past [drill@80,96, drill@128,96], certified true
+PASS: timedpass-l28-fire-l26: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+FAIL: timedpass-l28-fire-l26: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 136 sampled tick(s) — t 126 drill@128,96: game (152, 56) model (152, 72); t 126 drill@80,96: game anim "sit" model "drill"; t 127 drill@128,96: game (152, 56) model (152, 72); t 127 drill@80,96: game anim "sit" model "undrill"
+FAIL: timedpass-l28-fire-l26: the game's player is never hit — hits at [t134]
+      timedpass-l28-fire-l26: its drills at the end [{"x":152,"y":56,"anim":"undrill","hits":0,"hitsTimer":0,"hitByFire":false},{"x":136,"y":56,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false}]; model drill hops: 15:drill@80,96 30:drill@80,96 45:drill@80,96 60:drill@80,96 75:drill@80,96 90:drill@80,96 105:drill@80,96 108:drill@128,96 120:drill@80,96 123:drill@128,96 135:drill@80,96; model rope pulls [{"id":"rope@160,64","t":125}]
+recorded frontend/modules/seedlingDemo/fixtures/timedpass-witness/timedpass-l28-fire-l26.json — 136 tick(s)
+      timedpass-l28-fire-l25: the plan is 70 t; its pass 59 t to (152,56) past [drill@128,96], certified true
+PASS: timedpass-l28-fire-l25: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+FAIL: timedpass-l28-fire-l25: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 68 sampled tick(s) — t 64 drill@128,96: game (152, 56) model (152, 72); t 65 drill@128,96: game (152, 56) model (152, 72); t 66 drill@128,96: game (152, 56) model (152, 72); t 67 drill@128,96: game (152, 56) model (152, 72)
+FAIL: timedpass-l28-fire-l25: the game's player is never hit — hits at [t72]
+      timedpass-l28-fire-l25: its drills at the end [{"x":152,"y":56,"anim":"undrill","hits":0,"hitsTimer":0,"hitByFire":false},{"x":88,"y":104,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false}]; model drill hops: 48:drill@128,96 63:drill@128,96; model rope pulls [{"id":"rope@160,64","t":63}]
+recorded frontend/modules/seedlingDemo/fixtures/timedpass-witness/timedpass-l28-fire-l25.json — 68 tick(s)
+
+4 CHECK(S) FAILED

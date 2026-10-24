@@ -16,7 +16,7 @@
 -   **Display Connection Status:** Shows whether a separate window is currently connected to the main application's `windowAdapter`.
 -   **Track Heartbeats:** Listens for `HEARTBEAT` messages forwarded by the `windowAdapter` and displays a running count, providing a live indicator of the connection's health.
 -   **Display Window ID:** Shows the unique ID of the connected window for identification and debugging purposes.
--   **Associate with an Opened Window:** While it does not open windows itself, it listens for `window:loadUrl` events to know which external window it should be tracking.
+-   **Associate with an Opened Window:** On a `window:loadUrl` event it opens the window itself (`window.open()` in `windowPanelUI.js`) and then tracks it.
 
 #### Events Published
 

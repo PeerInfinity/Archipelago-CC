@@ -1,0 +1,306 @@
+/**
+ * procgenPipeline/compositeMapDocument — **A COMPOSITE MAP OUT OF A rules.json**
+ * (APWORLD EDITOR HUB slice H3).
+ *
+ * One pure function: turn a document's `preset_sidecars` back into the
+ * `{grid, regionSize, stats}` shape the pipeline's own drivers produce, so the
+ * shared renderer (`procgenCore/compositeMapRenderer.js`) can paint a LOADED
+ * preset with no pipeline run behind it. It was `procgenPipelineUI.js`'s
+ * `reconstructResultFromSidecars`; the hub's Map tab is its second reader, and
+ * a 6,000-line panel module is not something a second panel should import to
+ * reach one pure function.
+ *
+ * ── ⛔ WHY IT IS *NOT* IN `procgenCore/` BESIDE THE RENDERER ──────────
+ *
+ * The brief asked for exactly that. It cannot be: this function CONSTRUCTS a
+ * `Grid`, and `Grid` lives in `procgenPipelineEngine.js`, which imports
+ * `mazeRoom/mazeGeometry.js`. A `procgenCore/` module importing the engine
+ * would pull a BINDING in behind it — `bindingContract.test.js` scans literal
+ * import specifiers, so the row would stay green while the rule it exists for
+ * was broken by one hop. ⇒ the SHARED RENDERER (which needs no Grid, only
+ * `width`/`height`/`getRegion`/`allRegions`) is in `procgenCore/`, and the
+ * DOCUMENT reader stays on the pipeline side that owns the Grid. Recorded in
+ * plan §13 as H3's overturn of its own brief.
+ *
+ * ── ⛓ THE PLAYER SLOT ────────────────────────────────────────────────
+ *
+ * H1 gave the hub `panel.playerId`; this function takes it. With no
+ * `playerId` — the pipeline panel's call — it picks the FIRST slot, which is
+ * exactly what it always did, so the pipeline path is byte-inert.
+ */
+
+import { Grid, DEFAULT_REGION_SIZE } from './procgenPipelineEngine.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
+
+/**
+ * ⛓⛓⛓ **THE CELL SIZE, AND WHERE IT COMES FROM** (PRESET SIDECARS M0).
+ *
+ * Until M0 there was one rule and no fallback: the cell was the max
+ * `playable_payload.width`/`height` in TILES over the slot's entries, and a slot
+ * where that max stayed 0 returned null *before placing a single region*. That
+ * is a rule about TILE-GRID substrates, applied to every substrate — so a
+ * bounce / runner / jta / omsi slot whose every region carried a `grid_cell`
+ * drew nothing, and the hub said "no map for this world" about a document that
+ * plainly has a layout.
+ *
+ * MEASURED at `0fa53f7d06` over the 42 populated slots of the committed corpus
+ * (`git ls-files frontend/presets | grep _rules.json$`, one call per slot):
+ * 26 grids, **16 nulls**, of which only **4** carry no `grid_cell` on any entry.
+ * The renderer was never the limit — `compositeMapRenderer.drawRegionCell`
+ * already paints a substrate that declares no `compositeMap.drawRegion` through
+ * `drawGenericRegion` (a labelled zone box with its exit squares), which is what
+ * the pipeline panel shows for the same regions, sized by the DRIVER's
+ * `config.regionSize`. A LOADED document has no driver, so it needs the
+ * precedence below.
+ *
+ * The three steps, in order, each returned as `regionSizeSource` so a reader can
+ * say which one fired instead of computing it a second time:
+ *
+ * 1. `'payload'` — the max `width`/`height` over the slot's payloads. Today's
+ *    rule, unchanged where it fires: all 26 slots that drew before still draw
+ *    the same cell (22×20 for the big `procgen_topdown` documents, 8×6 / 20×20
+ *    for the rest).
+ * 2. `'declared'` — a `compositeMap.cellSize` on the registry entry of a
+ *    substrate PLACED in this slot, per axis max where more than one declares.
+ *    ⛔ **No substrate declares one** as of M0, deliberately: nothing measured
+ *    needs a size other than the default, and a declaration nobody needs is a
+ *    hand list of substrate names wearing a registry hat. This is the seam for
+ *    the first substrate that does.
+ * 3. `'default'` — `DEFAULT_REGION_SIZE`, the engine's own, read from the module
+ *    that owns it so this file and `rebuildEnvelopeFromRulesJson` cannot drift.
+ *
+ * ⛔ The null rule moved with it: a slot returns null when **no region could be
+ * placed** — no `grid_cell` on any entry, or no registered substrate able to
+ * deserialize one — which is the check that was already there at the end of the
+ * placement loop. The `maxW === 0` gate in front of it is gone.
+ *
+ * ⚠ The GRID's size (how many cells, not how big each is) is `mapBoundsFor`'s
+ * business, below.
+ */
+function cellSizeFor(entries) {
+    let maxW = 0;
+    let maxH = 0;
+    let declW = 0;
+    let declH = 0;
+    for (const [, sc] of entries) {
+        const payload = sc?.playable_payload || {};
+        if (payload.width > maxW) maxW = payload.width;
+        if (payload.height > maxH) maxH = payload.height;
+        if (!sc?.grid_cell) continue;
+        const declared = substrateRegistry.get(sc.substrate)?.compositeMap?.cellSize;
+        if (Number.isFinite(declared?.width) && declared.width > declW) declW = declared.width;
+        if (Number.isFinite(declared?.height) && declared.height > declH) declH = declared.height;
+    }
+    if (maxW > 0 && maxH > 0) {
+        return { regionSize: { width: maxW, height: maxH }, regionSizeSource: 'payload' };
+    }
+    if (declW > 0 && declH > 0) {
+        return { regionSize: { width: declW, height: declH }, regionSizeSource: 'declared' };
+    }
+    return { regionSize: { ...DEFAULT_REGION_SIZE }, regionSizeSource: 'default' };
+}
+
+/**
+ * ⛓⛓⛓ **THE MAP'S SIZE IN CELLS — ONE RULE, FOR THE MAP AND FOR A MOVE.**
+ * The larger, per axis, of the slot's `grid_cell` EXTENTS and the document's
+ * `procgen_metadata.grid_dims`; `boundsSource` says which decided
+ * (`'extents'` when the two agree or there is no `grid_dims`).
+ *
+ * ⛓ M0 wrote the extents rule and left this branch unwritten: over the 42
+ * committed slots, 25 carried `grid_dims` and none exceeded the extents, so no
+ * document could tell the two apart. PRESET SIDECARS M2 (the map moves,
+ * `apworldEditor/regionLayout.js`) is the case that CAN: a move that empties the
+ * last row or column makes the extents smaller than the size the generator
+ * recorded. With `grid_dims` the map keeps its size (the move back is not
+ * refused); without it the map shrinks to its new extents and the move says so.
+ * ⚖ planner, M2: this function is the ONE place that rule lives — the Map draws
+ * from it and the move refuses from it, so the two cannot disagree about where
+ * the edge is.
+ *
+ * ⛓ P1a — `grid_dims` is the SLOT's (`procgen_metadata[playerId].grid_dims`), so
+ * it bounds that slot only; a slot whose block is absent is bounded by its
+ * extents. Measured at M2: every committed `grid_dims` equals its slot's
+ * extents exactly. A malformed `grid_dims` (not
+ * two positive whole numbers) is ignored.
+ *
+ * @param {object} rulesJson the whole document
+ * @param {Array<[string, object]>} entries the slot's sidecar entries
+ * @param {string|number} playerId the slot `entries` belong to
+ * @returns {{width: number, height: number, boundsSource: 'extents'|'grid_dims'}|null}
+ *   null when no entry carries a `grid_cell`.
+ */
+export function mapBoundsFor(rulesJson, entries, playerId) {
+    let maxGx = -1;
+    let maxGy = -1;
+    for (const [, sc] of entries) {
+        const cell = sc?.grid_cell;
+        if (cell) {
+            if (cell.gx > maxGx) maxGx = cell.gx;
+            if (cell.gy > maxGy) maxGy = cell.gy;
+        }
+    }
+    if (maxGx < 0) return null;
+    const dims = rulesJson?.procgen_metadata?.[String(playerId)]?.grid_dims;
+    const usable = (n) => Number.isInteger(n) && n > 0;
+    const dimsW = usable(dims?.width) ? dims.width : 0;
+    const dimsH = usable(dims?.height) ? dims.height : 0;
+    const width = Math.max(maxGx + 1, dimsW);
+    const height = Math.max(maxGy + 1, dimsH);
+    return {
+        width,
+        height,
+        boundsSource: width > maxGx + 1 || height > maxGy + 1 ? 'grid_dims' : 'extents',
+    };
+}
+
+/**
+ * Reconstruct a Grid + composite-view payload from a rules.json that
+ * carries `preset_sidecars`. Returns the same shape `growMaze` /
+ * `topDownFromRulesJson` produce as their `result` (subset of
+ * fields — poolRemaining is unknown post-hoc), so the existing
+ * _renderGrid / _renderStats paths can paint it without further
+ * branching. Returns null if the input has no procgen data, if the named
+ * player slot has none, or if no region could be PLACED — no `grid_cell` on any
+ * entry, or no registered substrate able to deserialize one. It no longer
+ * returns null for a slot whose payloads carry no tile geometry; see
+ * `cellSizeFor` for the size such a slot's cells get.
+ *
+ * Pure function — exported for testing.
+ *
+ * @param {object} rulesJson the whole document
+ * @param {{playerId?: string|number|null, fallback?: boolean}} [opts] which
+ *   player slot's sidecars to read. Absent ⇒ the first slot in the document
+ *   (v1 behaviour). A NAMED slot the document lacks ⇒ the first slot too — the
+ *   fallback, REPORTED on `playerId` — unless `fallback: false`, which answers
+ *   null instead (APWORLD SUBSTRATE CHANGE H1, plan §46): the APWorld hub asks
+ *   for no fallback, because a bare slot beside a populated one must draw its
+ *   own empty state (and the Initialise door in it), not its neighbour's map.
+ *   The pipeline's callers name no slot, so the option never reaches them.
+ */
+export function reconstructResultFromSidecars(rulesJson, { playerId = null, fallback = true } = {}) {
+    const sidecarsByPlayer = rulesJson?.preset_sidecars;
+    if (!sidecarsByPlayer || typeof sidecarsByPlayer !== 'object') return null;
+    const playerKeys = Object.keys(sidecarsByPlayer);
+    if (playerKeys.length === 0) return null;
+    /**
+     * ⛓ The NAMED slot when the document has it, else the first — never a
+     * silent slot-1 default. ⚠ A hub whose selector says slot 3 and whose map
+     * drew slot 1 would be a readout about a world nobody chose.
+     */
+    const wanted = playerId == null ? null : String(playerId);
+    if (wanted != null && !playerKeys.includes(wanted) && !fallback) return null;
+    const playerKey = (wanted != null && playerKeys.includes(wanted)) ? wanted : playerKeys[0];
+    const playerSidecars = sidecarsByPlayer[playerKey];
+    const regionEntries = Object.entries(playerSidecars ?? {});
+    if (regionEntries.length === 0) return null;
+
+    // ⛓ M0 — the cell's size, and which of the three rules gave it. See the
+    //   docblock on `cellSizeFor`; the `maxW === 0 ⇒ null` gate that used to
+    //   stand here is gone, and `placed === 0` below is the only null rule left.
+    const { regionSize, regionSizeSource } = cellSizeFor(regionEntries);
+
+    // ⛓ M2 — the grid's size in cells: `mapBoundsFor`, the rule a move shares.
+    //   (No `grid_cell` at all ⇒ nothing is placed below ⇒ null; the 1×1 grid
+    //   that branch builds is never returned.)
+    const bounds = mapBoundsFor(rulesJson, regionEntries, playerKey) ?? { width: 1, height: 1, boundsSource: 'extents' };
+    const grid = new Grid({ width: bounds.width, height: bounds.height });
+    let placed = 0;
+    let teleporters = 0;
+    // ⛓ C1 — the regions whose payload their own substrate REFUSED, each with
+    //   the entry's sentence: skipped, so the other regions still draw, and
+    //   returned so the surface that draws the map can say which and why.
+    const refused = [];
+    for (const [region_id, sc] of regionEntries) {
+        if (!sc?.grid_cell) continue;
+        // ⛓ H3b: the `?? 'maze'` that used to end this line is GONE.
+        // MEASURED 2026-09-05 over all 205 committed rules.json: 1,360 of 1,360
+        // sidecar entries carry `substrate`, so the fallback never fired — and
+        // where it COULD fire (a hand-written document), guessing 'maze' paints
+        // some other substrate's payload as a maze grid instead of skipping the
+        // region, which is what the next line already does for a substrate with
+        // no registered deserializer. The renderer's twin fallback went in H3
+        // (§13) for the same reason; this was the last one on the map path.
+        const substrateId = sc.substrate;
+        const adapter = substrateRegistry.get(substrateId);
+        if (!adapter || typeof adapter.deserializeWorld !== 'function') continue;
+        const read = deserializeOrRefuse(adapter, sc.playable_payload, { regionId: region_id, substrate: substrateId });
+        if (read.refusal) {
+            refused.push({ region_id, substrate: substrateId, sentence: read.refusal });
+            continue;
+        }
+        const world = read.world;
+        if (world?.exits) {
+            for (const e of world.exits.values()) {
+                if (e.isTeleporter) teleporters += 1;
+            }
+        }
+        grid.placeRegion(sc.grid_cell, {
+            region_id,
+            substrate: substrateId,
+            render_hint: sc.render_hint ?? substrateId,
+            playable_payload: world,
+            // ⛓ H4a: the region's exits at the TOP LEVEL, which is where the
+            // renderer's connection pass and its exit-selection highlight look
+            // (`exitsOf(region)` = `region?.exits`, mirroring the engine's own
+            // `getRegionExits`). The engine's placements have always set this
+            // (`procgenPipelineEngine.js:3970`); this reader did not, so a
+            // LOADED document drew cells and their in-cell exit squares but NO
+            // inter-region connection lines. Found by H3 (plan §13.1 #6) and
+            // left for a slice that was allowed to move the picture.
+            // MEASURED on `procgen_maze` seed 1: 0 → 2 connection lines (3 regions).
+            exits: world.exits,
+            grow_telemetry: sc.grow_telemetry ?? null,
+        });
+        placed += 1;
+    }
+    if (placed === 0) return null;
+
+    const meta = rulesJson.procgen_metadata?.[playerKey] ?? {};
+    return {
+        grid,
+        regionSize,
+        // ⛓ M0 — WHICH of the three rules sized that cell ('payload' |
+        //   'declared' | 'default'). A reader that wants to say "the engine's
+        //   default, because this world stores no tile geometry" must not
+        //   re-derive it: a second spelling of the precedence is a second thing
+        //   to keep in step.
+        regionSizeSource,
+        // ⛓ M2 — WHICH rule sized the grid ('extents' | 'grid_dims').
+        boundsSource: bounds.boundsSource,
+        stats: {
+            regionsBuilt: placed,
+            regionsSkipped: refused.length,
+            stopReason: meta.stop_reason ?? null,
+            teleportersPlaced: teleporters,
+        },
+        poolRemaining: null,
+        // Marker for the renderers that this view came from a loaded
+        // rules.json rather than a fresh pipeline run, so labels can
+        // signal that and we don't claim a fresh-generation pool stat.
+        fromLoadedPreset: true,
+        // ⛓ Which slot the grid above actually came from — the hub prints it,
+        // and a caller that asked for a slot the document does not have can
+        // see that it got a different one.
+        playerId: playerKey,
+        // ⛓ C1 — `[{region_id, substrate, sentence}]`, one per region skipped
+        //   because its substrate refused its payload (`[]` when none was).
+        refused,
+    };
+}
+
+/**
+ * ⛓ C1 — **THE NOTE A MAP PRINTS FOR THE REGIONS IT COULD NOT DRAW**, or `null`
+ * when it drew every region it placed. One spelling for every surface that
+ * draws a reconstructed map (the hub's Map tab, the pipeline panel's message):
+ * each refused region's own sentence, in document order.
+ *
+ * @param {{refused?: {sentence: string}[]}|null} result
+ * @returns {string|null}
+ */
+export function refusedRegionsNote(result) {
+    const refused = result?.refused ?? [];
+    if (refused.length === 0) return null;
+    return `${refused.length} region${refused.length === 1 ? '' : 's'} not drawn — `
+        + refused.map((r) => r.sentence).join('; ');
+}

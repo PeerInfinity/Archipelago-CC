@@ -1,0 +1,83 @@
+id	key	off	on	same(ok,ticks,message)	on-adds
+460	level_48__r7c0 <- in_L53_208_64 -> exit:out_teleporter_0_112	SOLVED 8	SOLVED 8	True	
+461	level_48__r18c7 <- in_L47_216_112 -> exit:out_teleporter_112_304	SOLVED 4	SOLVED 4	True	
+496	level_54__r1c8 <- in_L53_144_240 -> exit:out_teleporter_144_0	SOLVED 8	SOLVED 8	True	
+497	level_54__r27c8 <- in_L52_112_0 -> exit:out_teleporter_128_464	SOLVED 7	SOLVED 7	True	
+523	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_0_160	SOLVED 5	SOLVED 5	True	
+524	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_112_0	SOLVED 448	SOLVED 448	True	
+525	level_61__r0c7 <- in_L60_160_80 -> exit:out_teleporter_224_96	SOLVED 423	SOLVED 423	True	
+526	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_0_160	SOLVED 303	SOLVED 303	True	
+527	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_112_0	SOLVED 5	SOLVED 5	True	
+528	level_61__r0c7 <- in_L62_48_304 -> exit:out_teleporter_224_96	SOLVED 99	SOLVED 99	True	
+529	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_0_160	SOLVED 227	SOLVED 227	True	
+530	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_112_0	SOLVED 91	SOLVED 91	True	
+531	level_61__r0c7 <- in_L63_0_96 -> exit:out_teleporter_224_96	SOLVED 5	SOLVED 5	True	
+532	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_160_0	SOLVED 5	SOLVED 5	True	
+533	level_61__r0c10 <- in_L62_96_304 -> exit:out_teleporter_224_48	SOLVED 49	SOLVED 49	True	
+534	level_61__r0c10 <- in_L62_96_304 -> location:L63 flag 1: lightpole@64,88 cleared	SOLVED 21	SOLVED 21	True	
+535	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_160_0	SOLVED 37	SOLVED 37	True	
+536	level_61__r0c10 <- in_L63_0_48 -> exit:out_teleporter_224_48	SOLVED 5	SOLVED 5	True	
+537	level_61__r0c10 <- in_L63_0_48 -> location:L63 flag 1: lightpole@64,88 cleared	SOLVED 24	SOLVED 24	True	
+538	level_61__r13c12 <- in_L63_0_208 -> exit:out_teleporter_224_208	SOLVED 5	SOLVED 5	True	
+564	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_48	SOLVED 79	SOLVED 79	True	
+565	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_0_96	SOLVED 5	SOLVED 5	True	
+566	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_16_0	SOLVED 98	SOLVED 98	True	
+567	level_63__r0c1 <- in_L61_224_96 -> exit:out_teleporter_64_0	SOLVED 162	SOLVED 162	True	
+568	level_63__r0c1 <- in_L61_224_96 -> location:L62 flag 0: lightpole@120,200 cleared	SOLVED 37	SOLVED 37	True	
+569	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_48	SOLVED 5	SOLVED 5	True	
+570	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_0_96	SOLVED 84	SOLVED 84	True	
+571	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_16_0	SOLVED 59	SOLVED 59	True	
+572	level_63__r0c1 <- in_L61_224_48 -> exit:out_teleporter_64_0	SOLVED 198	SOLVED 198	True	
+573	level_63__r0c1 <- in_L61_224_48 -> location:L62 flag 0: lightpole@120,200 cleared	SOLVED 35	SOLVED 35	True	
+574	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_48	SOLVED 50	SOLVED 50	True	
+575	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_0_96	SOLVED 89	SOLVED 89	True	
+576	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_16_0	SOLVED 5	SOLVED 5	True	
+577	level_63__r0c1 <- in_L62_192_304 -> exit:out_teleporter_64_0	SOLVED 203	SOLVED 203	True	
+578	level_63__r0c1 <- in_L62_192_304 -> location:L62 flag 0: lightpole@120,200 cleared	SOLVED 41	SOLVED 41	True	
+579	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_48	REFUSED	REFUSED	True	
+580	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_0_96	REFUSED	REFUSED	True	
+581	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_16_0	REFUSED	REFUSED	True	
+582	level_63__r0c1 <- in_L62_240_304 -> exit:out_teleporter_64_0	SOLVED 5	SOLVED 5	True	
+583	level_63__r0c1 <- in_L62_240_304 -> location:L62 flag 0: lightpole@120,200 cleared	REFUSED	REFUSED	True	
+584	level_63__r6c9 <- in_L65_128_0 -> exit:out_teleporter_128_304	SOLVED 4	SOLVED 4	True	
+585	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_0_208	SOLVED 5	SOLVED 5	True	
+586	level_63__r10c2 <- in_L61_224_208 -> exit:out_teleporter_32_304	SOLVED 89	SOLVED 89	True	
+587	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_0_208	REFUSED	REFUSED	True	
+588	level_63__r10c2 <- in_L65_32_0 -> exit:out_teleporter_32_304	SOLVED 4	SOLVED 4	True	
+603	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	REFUSED	REFUSED	False	; and by the axe's phase certificate (AXEPRICED, 22 preview(s)): the corridor is hit at every phase (52 member(s) over 1
+604	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	SOLVED 122	SOLVED 122	True	
+605	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96	SOLVED 5	SOLVED 5	True	
+606	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	SOLVED 181	SOLVED 181	True	
+607	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	SOLVED 176	SOLVED 176	True	
+608	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0	SOLVED 5	SOLVED 5	True	
+609	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304	SOLVED 317	SOLVED 317	True	
+610	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96	SOLVED 352	SOLVED 352	True	
+611	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest	SOLVED 401	SOLVED 401	True	
+612	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared	SOLVED 319	SOLVED 319	True	
+613	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0	SOLVED 303	SOLVED 303	True	
+614	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304	SOLVED 72	SOLVED 72	True	
+615	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96	SOLVED 93	SOLVED 93	True	
+616	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest	SOLVED 134	SOLVED 134	True	
+618	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0	SOLVED 344	SOLVED 344	True	
+619	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304	SOLVED 4	SOLVED 4	True	
+620	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96	SOLVED 201	SOLVED 201	True	
+621	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest	SOLVED 63	SOLVED 63	True	
+622	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared	SOLVED 149	SOLVED 149	True	
+623	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304	SOLVED 4	SOLVED 4	True	
+636	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_0	REFUSED	REFUSED	False	; and by the axe's phase certificate (AXEPRICED, 22 preview(s)): the corridor is hit at every phase (60 member(s) over 1
+637	level_75 <- in_L71_96_0 -> exit:out_teleporter_64_224	SOLVED 4	SOLVED 4	True	
+638	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_0	SOLVED 5	SOLVED 5	True	
+639	level_75 <- in_L74_16_144 -> exit:out_teleporter_64_224	REFUSED	REFUSED	True	
+751	level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112	SOLVED 787	SOLVED 787	True	
+752	level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192	SOLVED 4	SOLVED 4	True	
+753	level_98 <- in_L93_112_80 -> location:Level 098 - Chest	SOLVED 194	SOLVED 194	True	
+754	level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112	REFUSED	REFUSED	True	
+755	level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192	SOLVED 40	SOLVED 40	True	
+756	level_98 <- in_L99_112_112 -> location:Level 098 - Chest	SOLVED 194	SOLVED 194	True	
+760	level_101__r4c2 <- in_L100_288_96 -> exit:out_stairsup_48_96	SOLVED 354	SOLVED 354	True	
+761	level_101__r4c2 <- in_L102_64_96 -> exit:out_stairsup_48_96	SOLVED 5	SOLVED 5	True	
+762	level_101__r4c9 <- in_L102_160_96 -> exit:out_stairsup_144_96	SOLVED 4	SOLVED 4	True	
+771	level_103 <- in_L102_0_96 -> exit:out_teleporter_0_64	REFUSED	REFUSED	True	
+772	level_103 <- in_L102_0_96 -> exit:out_teleporter_304_144	SOLVED 5	SOLVED 5	True	
+773	level_103 <- in_L104_144_128 -> exit:out_teleporter_0_64	SOLVED 5	SOLVED 5	True	
+774	level_103 <- in_L104_144_128 -> exit:out_teleporter_304_144	REFUSED	REFUSED	False	; and by the axe's phase certificate (AXEPRICED, 22 preview(s)): the corridor is hit at every phase (72 member(s) over 1

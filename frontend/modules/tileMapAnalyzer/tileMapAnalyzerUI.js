@@ -15,7 +15,10 @@ import {
   buildCategoryGrid,
   DEFAULT_TILEMAP_PATH,
   DEFAULT_CONFIG_PATH,
+  TileMapDataMissingError,
+  isDefaultDataPath,
 } from './tileMapDataManager.js';
+import { DEFAULT_PLAYER_ID, regionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
   computeReachable,
@@ -26,6 +29,11 @@ import {
 } from './reachabilityAnalyzer.js';
 import { probeOneTilePhysics } from './reachabilityPhysics.js';
 import { exportRulesJson } from './rulesExporter.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import {
+    DEFAULT_RULES_JSON_INDENT, RULES_JSON_INDENT_KEY,
+} from '../presets/documentBundle.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { TileMapCanvasRenderer } from './canvasRenderer.js';
 
 function log(level, message, ...data) {
@@ -59,10 +67,39 @@ export class TileMapAnalyzerUI {
     // Kick off the load. We don't gate on app:readyForUiDataLoad —
     // the analyzer's data lives entirely in static files under
     // frontend/presets/, so it's safe to load immediately.
-    this._loadAndRender().catch((e) => {
-      log('error', 'load failed', e);
-      this._setStatus(`error: ${e.message}`);
-    });
+    this._loadAndRender().catch((e) => this._reportLoadFailure(e, 'load'));
+  }
+
+  /**
+   * ── ⛓⛓⛓ AN ABSENT **DEFAULT** IS NOT AN ERROR, AND SAYING SO IS THE FIX ──
+   *
+   * The default preset's two files are gitignored (`.gitignore`:
+   * `*_tilemap.json`, `*_tiles.json`), so GitHub Pages cannot serve them and
+   * this panel printed a red `error: failed to fetch … 404` to every visitor's
+   * console on open. ⛔ The absence is the FACT and the panel should state it:
+   * an INFO line and a status the reader can act on ("point it at a preset").
+   *
+   * ⛔ AND ONLY FOR THE DEFAULT. A 404 on a path somebody TYPED is a real
+   * error and stays one — the whole point of the class carrying its path.
+   *
+   * ⚠ THE OTHER OPTION WAS TO DROP THE MODULE FROM `modules-flash.json`, which
+   * is one line shorter. It is not smaller in what matters: the panel WORKS on
+   * the machine that has the data, so unregistering it would delete a working
+   * local capability in order to silence a message about data that is missing
+   * on purpose.
+   */
+  _reportLoadFailure(e, what) {
+    if (e instanceof TileMapDataMissingError && isDefaultDataPath(e.path)) {
+      log('info',
+        `[tileMapAnalyzer] no default tilemap here — ${e.path} is not served on this host. `
+        + 'The extractor output is gitignored (it is large and re-derivable), so it exists '
+        + 'only where it was produced. Point the panel at a preset that IS served.');
+      this._setStatus('no default tilemap here — the default preset is gitignored, so it is '
+        + 'not served on this host. Point the panel at a preset that is.');
+      return;
+    }
+    log('error', `${what} failed`, e);
+    this._setStatus(`error: ${e.message}`);
   }
 
   getRootElement() {
@@ -88,10 +125,7 @@ export class TileMapAnalyzerUI {
     };
 
     toolbar.appendChild(mkBtn('Reload', () => {
-      this._loadAndRender().catch((e) => {
-        log('error', 'reload failed', e);
-        this._setStatus(`error: ${e.message}`);
-      });
+      this._loadAndRender().catch((e) => this._reportLoadFailure(e, 'reload'));
     }));
 
     toolbar.appendChild(mkBtn('Compute', () => {
@@ -573,11 +607,11 @@ export class TileMapAnalyzerUI {
       },
     );
     const t1 = performance.now();
-    const regionCount = Object.keys(rules.regions['1']).length;
+    // ⛓ The player slot came from a literal '1'; DEFAULT_PLAYER_ID is that
+    // literal's one home (§15 D12), and the walker is the one exit iteration.
+    const regionCount = Object.keys(regionsOf(rules)).length;
     let exitCount = 0;
-    for (const r of Object.values(rules.regions['1'])) {
-      exitCount += r.exits.length;
-    }
+    walkRulesGraph(rules, DEFAULT_PLAYER_ID, { exit: () => { exitCount += 1; } });
     return {
       rules,
       debugLog,
@@ -592,8 +626,17 @@ export class TileMapAnalyzerUI {
   async _exportRulesJson() {
     const { rules, debugLog, stats } = await this._buildRulesJson('export');
 
-    // Download rules.json
-    const json = JSON.stringify(rules, null, 2);
+    /**
+     * ⛓ EDITOR v3 E1c — **THIS PANEL ADOPTS THE SHARED WRITER.** A bare
+     * `JSON.stringify(…, null, 2)` here was a second rules.json writer: no
+     * tile-array splice, and no way to honour `rulesJson.indent`. The bytes are
+     * byte-identical at the default (pinned in `rulesJsonWriters.test.js` — this
+     * exporter builds no `preset_sidecars`, so the splice is a no-op), and a
+     * person who asked for MINIFY now gets it here too.
+     */
+    const indent = await settingsManager.getSetting(
+        RULES_JSON_INDENT_KEY, DEFAULT_RULES_JSON_INDENT);
+    const json = stringifyRulesJson(rules, { indent });
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

@@ -73,13 +73,12 @@ AST_TO_RULE_BUILDER: dict[str, str] = {
     'or': 'Or',
     'not': 'Not',
     'negate': 'Negate',
-    'setting_value': 'SettingValue',
     'option_value': 'OptionValue',
 }
 
 # Internal types to exclude from coverage reports
 INTERNAL_TYPES = {
-    'AST_location_rule_ref', 'AST_setting_value', 'AST_function_call',
+    'AST_location_rule_ref', 'AST_function_call',
     'AST_block', 'AST_prog_item_count', 'AST_count_true',
     'AST_weighted_count_true', 'AST_placement_lookup', 'AST_placement_search',
     'ASTRule', 'OptionFilter', 'EntranceAccessRuleCall',

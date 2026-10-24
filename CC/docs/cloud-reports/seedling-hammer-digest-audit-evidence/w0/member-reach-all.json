@@ -1,0 +1,1085 @@
+{
+ "activatorStates": {
+  "readers": [
+   "applyEarnedClears",
+   "dropWorldIfBuiltStale",
+   "activatorStateFor",
+   "freshActivatorState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "latchedGroups",
+   "liveGeometryOpts",
+   "openActivators",
+   "previewStepper",
+   "pulledRopes",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "arrowTrapStates": {
+  "readers": [
+   "arrowTrapStateFor"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "arrowForecast",
+   "entities"
+  ]
+ },
+ "beamTowerStates": {
+  "readers": [
+   "beamTowerStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "blastStates": {
+  "readers": [
+   "blastsFor",
+   "enterWorld",
+   "stepBlastsNow"
+  ],
+  "members": [
+   "advance",
+   "blastsInFlight"
+  ]
+ },
+ "bombPusherStates": {
+  "readers": [
+   "bombPusherStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "bombPushers",
+   "chaserForecast",
+   "entities",
+   "spitForecast"
+  ]
+ },
+ "bombStates": {
+  "readers": [
+   "bombsFor",
+   "freshVisitState",
+   "enterWorld",
+   "stepBombsNow"
+  ],
+  "members": [
+   "advance",
+   "bombs",
+   "chaserForecast",
+   "entities",
+   "spitForecast"
+  ]
+ },
+ "bossShotStates": {
+  "readers": [
+   "bossShotsFor",
+   "stepBossShotsNow"
+  ],
+  "members": [
+   "advance",
+   "bossShots"
+  ]
+ },
+ "bossStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "bossStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "bosses",
+   "bossesWoken",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "previewStepper",
+   "shakeWritersHere",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "bridgeStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "bridgeStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "openBridges",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "burnStates": {
+  "readers": [
+   "burnStateFor",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "burnedTrees",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "chaserStates": {
+  "readers": [
+   "applyTimedDespawns",
+   "dropWorldIfBuiltStale",
+   "chaserStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "chaserForecast",
+   "chasers",
+   "entities",
+   "strikeBodies"
+  ]
+ },
+ "chestStates": {
+  "readers": [
+   "chestStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "openChests",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "clearedByLevel": {
+  "readers": [
+   "applyClearNow",
+   "applyEarnedClears",
+   "apReportSlotHeldNow",
+   "worldFor",
+   "moonrockStateFor",
+   "watcherStateFor",
+   "poleFlagFor",
+   "applyLockEvents",
+   "talkerStateFor",
+   "finalDoorGateNow",
+   "earnedClearsNow",
+   "stateDigestParts",
+   "run.addTimedClears",
+   "<construction>"
+  ],
+  "members": [
+   "addTimedClears",
+   "advance",
+   "apReportSlotHeld",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "beamTowerTrace",
+   "bobBoss",
+   "bobBossForecast",
+   "bosses",
+   "bossesWoken",
+   "chaserForecast",
+   "chaserRoomVerdict",
+   "chasers",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "crushers",
+   "crushersParked",
+   "darkTraps",
+   "direction",
+   "drills",
+   "earnedClears",
+   "entities",
+   "finalBosses",
+   "finalDoorGate",
+   "finalDoors",
+   "grenadeForecast",
+   "igneousTiles",
+   "latchedGroups",
+   "ledger",
+   "lightsFight",
+   "liveGeometryOpts",
+   "moonrock",
+   "openActivators",
+   "openChests",
+   "owlPods",
+   "previewStepper",
+   "progress",
+   "pulledRopes",
+   "pushables",
+   "pushedBlocks",
+   "pushesSettled",
+   "shakeWritersHere",
+   "shieldBosses",
+   "spinnerBodies",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "state",
+   "stateDigest",
+   "strikeBodies",
+   "takenPickups",
+   "talkCircles",
+   "turretDamage",
+   "turrets",
+   "turretsDead",
+   "turretsSettled",
+   "wallFlyers",
+   "watchers",
+   "world",
+   "worldFor"
+  ]
+ },
+ "crusherStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "crusherStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "crushers",
+   "crushersParked",
+   "entities",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "darkTrapStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "darkTrapStateFor",
+   "freshVisitState",
+   "stepContactsNow"
+  ],
+  "members": [
+   "advance",
+   "darkTraps",
+   "entities"
+  ]
+ },
+ "despawnedByLevel": {
+  "readers": [
+   "recordFor",
+   "applyTimedDespawns",
+   "fireStaticRemovals",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBoss",
+   "bobBossForecast",
+   "bosses",
+   "bossesWoken",
+   "chaserForecast",
+   "chaserRoomVerdict",
+   "chasers",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "crushers",
+   "crushersParked",
+   "darkTraps",
+   "direction",
+   "drills",
+   "entities",
+   "finalBosses",
+   "finalDoors",
+   "grenadeForecast",
+   "igneousTiles",
+   "latchedGroups",
+   "lightsFight",
+   "liveGeometryOpts",
+   "moonrock",
+   "openActivators",
+   "openChests",
+   "owlPods",
+   "previewStepper",
+   "progress",
+   "pulledRopes",
+   "pulls",
+   "pushables",
+   "pushedBlocks",
+   "pushesSettled",
+   "shakeWritersHere",
+   "shieldBosses",
+   "spinnerBodies",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "state",
+   "stateDigest",
+   "strikeBodies",
+   "takenPickups",
+   "talkCircles",
+   "turretDamage",
+   "turrets",
+   "turretsDead",
+   "turretsSettled",
+   "wallFlyers",
+   "watchers",
+   "world",
+   "worldFor"
+  ]
+ },
+ "drillStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "drillStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "corridorBodyForecast",
+   "drills"
+  ]
+ },
+ "fallRockStates": {
+  "readers": [
+   "fallRockStateFor",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "latchedGroups",
+   "liveGeometryOpts",
+   "openActivators",
+   "previewStepper",
+   "pulledRopes",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "finalBossStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "owlStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "finalBosses",
+   "owlPods",
+   "shakeWritersHere"
+  ]
+ },
+ "finalDoorStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "finalDoorStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "finalDoors",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "fireWindows": {
+  "readers": [
+   "runFrozenTick",
+   "stepMoonrocksNow",
+   "slashInfoNow",
+   "stateDigestParts",
+   "run.advance"
+  ],
+  "members": [
+   "advance",
+   "progress",
+   "slashInfo",
+   "spinnerFightForecast",
+   "spinnerForecastWithPress",
+   "stateDigest"
+  ]
+ },
+ "grantsByLevel": {
+  "readers": [
+   "applyGrantsFor",
+   "unfiredGrantLevelsNow",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "progress",
+   "stateDigest",
+   "unfiredGrantLevels"
+  ]
+ },
+ "igneousStates": {
+  "readers": [
+   "freshVisitState",
+   "renderIgneousNow",
+   "igneousTilesNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "igneousTiles"
+  ]
+ },
+ "lavaChainStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepLavaChainsNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "lightsExits": {
+  "readers": [
+   "visitWorld",
+   "freshVisitState",
+   "stepLightsNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "lightsFights": {
+  "readers": [
+   "freshVisitState",
+   "lightsFightFor",
+   "lightTotemsNow",
+   "lightsSlashNow"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "lightsFight",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast"
+  ]
+ },
+ "lightsSpearRepeats": {
+  "readers": [
+   "freshVisitState",
+   "lightsSpearRepeatsNow",
+   "lightsSlashNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "magicalLockStates": {
+  "readers": [
+   "magicalLockStateFor",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "moonrockStates": {
+  "readers": [
+   "moonrockStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "liveGeometryOpts",
+   "moonrock",
+   "previewStepper",
+   "shakeWritersHere",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "owlGrenades": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlPendingGrenades": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlPendingRocks": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "owlRocks": {
+  "readers": [
+   "stepOwlNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "placedGrenadeStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepPlacedGrenadesNow",
+   "run.grenadeForecast",
+   "run.placedGrenades"
+  ],
+  "members": [
+   "advance",
+   "grenadeForecast",
+   "placedGrenades"
+  ]
+ },
+ "podStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "owlStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "finalBosses",
+   "owlPods",
+   "shakeWritersHere"
+  ]
+ },
+ "poleStates": {
+  "readers": [
+   "poleStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "darkTraps",
+   "entities"
+  ]
+ },
+ "pullsByLevel": {
+  "readers": [
+   "pullsFor",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "previewStepper",
+   "pulls",
+   "stateDigest"
+  ]
+ },
+ "pulserStates": {
+  "readers": [
+   "pulserStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "latchedGroups",
+   "liveGeometryOpts",
+   "openActivators",
+   "previewStepper",
+   "pulledRopes",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "pushableStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "pushableStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "latchedGroups",
+   "liveGeometryOpts",
+   "openActivators",
+   "previewStepper",
+   "pulledRopes",
+   "pushables",
+   "pushedBlocks",
+   "pushesSettled",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "rockStates": {
+  "readers": [
+   "rockStateFor",
+   "stateDigestParts",
+   "run.rocksBroken"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "brokenRocks",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "previewStepper",
+   "rocksBroken",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "ropeStates": {
+  "readers": [
+   "ropeStateFor",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "latchedGroups",
+   "liveGeometryOpts",
+   "openActivators",
+   "previewStepper",
+   "pulledRopes",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "sealPiece": {
+  "readers": [
+   "stepChestsNow",
+   "stepSealPieceNow",
+   "run.sealPiece"
+  ],
+  "members": [
+   "advance",
+   "sealPiece"
+  ]
+ },
+ "shieldBossStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "shieldBossStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "liveGeometryOpts",
+   "previewStepper",
+   "shieldBosses",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ },
+ "shooterStates": {
+  "readers": [
+   "shooterStateFor",
+   "fireStaticRemovals",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "shooters",
+   "spitForecast"
+  ]
+ },
+ "spinnerStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "spinnerStateFor",
+   "freshVisitState",
+   "stateDigestParts",
+   "run.spinnerDeaths"
+  ],
+  "members": [
+   "advance",
+   "chaserForecast",
+   "entities",
+   "spinnerBodies",
+   "spinnerDeaths",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "stateDigest"
+  ]
+ },
+ "spinningAxeStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "stepSpinningAxesNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ },
+ "spitStates": {
+  "readers": [
+   "spitsFor",
+   "freshVisitState",
+   "enterWorld",
+   "stepSpitsNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "shooters",
+   "spitForecast"
+  ]
+ },
+ "staticBodyStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "staticBodyStateFor",
+   "freshVisitState",
+   "stepStaticBodiesNow",
+   "spitForecastNow",
+   "stepContactsNow",
+   "stepShootersNow",
+   "staticBodiesNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "spitForecast",
+   "staticBodies"
+  ]
+ },
+ "talkerStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "freshVisitState",
+   "talkerStateFor"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "talkCircles"
+  ]
+ },
+ "tileWritesByLevel": {
+  "readers": [
+   "visitWorld",
+   "freshVisitState",
+   "renderIgneousNow",
+   "stepBulbGraphicNow",
+   "run.tileWrites"
+  ],
+  "members": [
+   "advance",
+   "tileWrites"
+  ]
+ },
+ "turretStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "turretStateFor",
+   "freshVisitState",
+   "stateDigestParts"
+  ],
+  "members": [
+   "advance",
+   "armedArrowTraps",
+   "armedPulsers",
+   "arrowCoverAt",
+   "arrowForecast",
+   "bobBossForecast",
+   "chaserForecast",
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest",
+   "turretDamage",
+   "turrets",
+   "turretsDead",
+   "turretsSettled"
+  ]
+ },
+ "wallFlyerStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "wallFlyerStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "corridorBodyForecast",
+   "wallFlyers"
+  ]
+ },
+ "wandShotStates": {
+  "readers": [
+   "wandShotsFor",
+   "enterWorld",
+   "stepWandShotsNow"
+  ],
+  "members": [
+   "advance",
+   "wandShotsLive"
+  ]
+ },
+ "wandWindows": {
+  "readers": [
+   "stepMoonrocksNow",
+   "slashInfoNow",
+   "stateDigestParts",
+   "run.advance"
+  ],
+  "members": [
+   "advance",
+   "progress",
+   "slashInfo",
+   "spinnerFightForecast",
+   "spinnerForecastWithPress",
+   "stateDigest"
+  ]
+ },
+ "watcherStates": {
+  "readers": [
+   "dropWorldIfBuiltStale",
+   "watcherStateFor",
+   "freshVisitState"
+  ],
+  "members": [
+   "advance",
+   "watchers"
+  ]
+ }
+}

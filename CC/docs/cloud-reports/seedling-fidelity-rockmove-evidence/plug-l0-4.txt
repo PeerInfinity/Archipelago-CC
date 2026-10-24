@@ -1,0 +1,9 @@
+{"name":"base (rock at 80,112)","pocketHeld":{"tiles":110,"doors":["L13@32,192","L1@80,96","L2@256,272","L86@160,272","L94@0,128","L94@0,144"]},"pocketCleared":{"tiles":110,"doors":6},"openSideReachesL1Door":[]}
+{"name":"moved (80,128), no plug","pocketHeld":{"tiles":109,"doors":["L13@32,192","L1@80,96","L2@256,272","L86@160,272","L94@0,128","L94@0,144"]},"pocketCleared":{"tiles":110,"doors":6},"openSideReachesL1Door":["L2","L12","L13","L86","L94","L94"]}
+{"name":"moved (80,128) + plug [[64,112]]","pocketHeld":{"tiles":109,"doors":["L13@32,192","L1@80,96","L2@256,272","L86@160,272","L94@0,128","L94@0,144"]},"pocketCleared":{"tiles":110,"doors":6},"openSideReachesL1Door":["L2","L12","L13","L86","L94","L94"]}
+{"name":"moved (80,128) + plug [[96,112]]","pocketHeld":{"tiles":2,"doors":["L1@80,96"]},"pocketCleared":{"tiles":109,"doors":6},"openSideReachesL1Door":[]}
+{"name":"moved (80,128) + plug [[64,112],[96,112]]","pocketHeld":{"tiles":2,"doors":["L1@80,96"]},"pocketCleared":{"tiles":109,"doors":6},"openSideReachesL1Door":[]}
+{"name":"moved (80,128) + plug [[64,112],[96,112],[64,96]]","pocketHeld":{"tiles":2,"doors":["L1@80,96"]},"pocketCleared":{"tiles":109,"doors":6},"openSideReachesL1Door":[]}
+{"name":"moved (80,128) + plug [[64,112],[96,112],[96,96]]","pocketHeld":{"tiles":2,"doors":["L1@80,96"]},"pocketCleared":{"tiles":109,"doors":6},"openSideReachesL1Door":[]}
+{"name":"moved, no plug","fromPocket":"SOLVES","ticks":20,"verb":"break"}
+{"name":"moved + plug (96,112)","fromPocket":"SOLVES","ticks":20,"verb":"break"}

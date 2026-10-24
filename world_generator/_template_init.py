@@ -5,6 +5,7 @@ Contains the __init__.py generator (the largest single template function).
 
 from typing import Any, Dict, Optional
 
+from ._template_option_effects import apply_option_effects
 from ._template_utils import _format_dict_repr, is_valid_identifier
 from .extractors import ExtractedData
 from ._sanitization import sanitize_for_class_name
@@ -200,6 +201,32 @@ def _find_first_item_check(rule_dict: Dict[str, Any]) -> Optional[Dict[str, Any]
     return None
 
 
+def _always_placed(data: ExtractedData, canonical_seed: Optional[int]) -> Dict[str, str]:
+    """location -> item for LOCKED_PLACEMENTS (place_locked_item on every seed).
+
+    With canonical placements (or a canonical seed), a non-event `locked`
+    placement is only canonical — randomizable on other seeds — so only event
+    locks go in. Without them, every locked placement goes in, as before.
+    Either way every `pinned` placement goes in (authored always-place).
+    The LOCKED_PLACEMENTS emitter and the item-pool subtraction both read this,
+    so they cannot drift apart.
+    """
+    out: Dict[str, str] = {}
+    canonical_mode = bool(data.canonical_placements) or canonical_seed is not None
+    for loc_name, item_name in data.locked_placements.items():
+        if not item_name:
+            continue
+        if canonical_mode:
+            item_data = data.items.get(item_name)
+            loc_data = data.locations.get(loc_name)
+            if not ((item_data and item_data.is_event) or (loc_data and loc_data.is_event)):
+                continue
+        out[loc_name] = item_name
+    for loc_name, item_name in data.pinned_placements.items():
+        out.setdefault(loc_name, item_name)
+    return out
+
+
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
@@ -239,15 +266,6 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
     original_seed_placements_content = '\n'.join(original_seed_placement_entries)
     advancement_loc_content = '\n'.join(advancement_loc_entries)
-
-    # Build canonical advancement dict (maps location -> original advancement value)
-    # This is used by the exporter to preserve original advancement values during cross-validation
-    canonical_advancement_entries = []
-    if canonical_seed is not None and data.canonical_placement_advancements:
-        for loc_name, advancement in data.canonical_placement_advancements.items():
-            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-            canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
-    canonical_advancement_content = '\n'.join(canonical_advancement_entries)
 
     # Find victory location and item (heuristic: event with "victory" in name)
     victory_location = None
@@ -499,30 +517,14 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # We determine this by checking if the item is an event (id=None).
     # When canonical_seed is set, we build canonical_placements from original_placements,
     # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
-    # EXCEPTION: procgen-emitted rules.json (data.honor_locked_placements) marks
-    # locked locations as authored always-lock intent, so non-event locked
-    # placements go into LOCKED_PLACEMENTS too (e.g. the bounce start-stack arrow).
+    # PLUS every `pinned: true` placement (data.pinned_placements): authored
+    # always-place intent, e.g. the procgen bounce start-stack arrow. `locked`
+    # alone never pins a non-event item here (topdown-locked-items R1).
     locked_entries = []
-    if data.canonical_placements or canonical_seed is not None:
-        # Only include truly locked items (events) - not canonical placements
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                # Check if this is an event item (id=None) or placed at an event location
-                item_data = data.items.get(item_name)
-                loc_data = data.locations.get(loc_name)
-                is_event_item = item_data and item_data.is_event
-                is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location or data.honor_locked_placements:
-                    loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                    locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
-    else:
-        # No canonical_placements - use all locked placements as before
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+    for loc_name, item_name in _always_placed(data, canonical_seed).items():
+        loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+        locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
 
     locked_content = '\n'.join(locked_entries)
 
@@ -738,6 +740,10 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
     needs_types_import = False
+    # The template below always interpolates these two; a rules.json with no
+    # world_attributes (a hand-written one) never enters the block that sets them.
+    shop_wrapper_section = ''
+    create_shops_method = ''
     if data.world_attributes:
         init_attrs = []
         for attr_name, attr_value in data.world_attributes.items():
@@ -783,8 +789,6 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 
         # Check if we need the ShopWrapper class (for games with shops)
         has_shops = 'shops' in data.world_attributes and data.world_attributes['shops']
-        shop_wrapper_section = ''
-        create_shops_method = ''
         if has_shops:
             shop_wrapper_section = '''
 
@@ -905,18 +909,11 @@ class _ShopWrapper:
     #   so subtract all of them from the pool.
     itempool_entries = []
     if data.canonical_placements or canonical_seed is not None:
-        # Only subtract items that are in LOCKED_PLACEMENTS
-        # (event items or items at event locations; ALL locked placements
-        # when honor_locked_placements — must mirror the filter above)
+        # Only subtract items that are in LOCKED_PLACEMENTS — the same
+        # _always_placed set the filter above emits (events + pinned)
         locked_event_counts: Dict[str, int] = {}
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                item_data = data.items.get(item_name)
-                loc_data = data.locations.get(loc_name)
-                is_event_item = item_data and item_data.is_event
-                is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location or data.honor_locked_placements:
-                    locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
+        for item_name in _always_placed(data, canonical_seed).values():
+            locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
             adjusted_count = count - locked_event_counts.get(item_name, 0)
@@ -931,11 +928,10 @@ class _ShopWrapper:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items
+        # No canonical_placements - subtract all locked (and pinned) items
         locked_item_counts: Dict[str, int] = {}
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+        for item_name in _always_placed(data, canonical_seed).values():
+            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
             adjusted_count = count - locked_item_counts.get(item_name, 0)
@@ -1037,6 +1033,24 @@ class _ShopWrapper:
     else:
         use_auto_indirect_conditions_section = ''
 
+    # Carry the slot's exporter[p].assume_bidirectional_exits (rules F1): the exporter's
+    # base handler writes it back into exporter[p] when the game's handler sets none.
+    # Absent from the source = absent here (the frontend auto-detects).
+    if isinstance(data.metadata.assume_bidirectional_exits, bool):
+        assume_bidirectional_exits_section = f'''
+    # The source slot's exporter[p].assume_bidirectional_exits, re-exported by the exporter
+    assume_bidirectional_exits: ClassVar[bool] = {data.metadata.assume_bidirectional_exits}'''
+    else:
+        assume_bidirectional_exits_section = ''
+
+    # Carry the slot's exporter[p].return_to_menu the same way: the exporter's base handler writes it back.
+    if data.metadata.return_to_menu is True:
+        return_to_menu_section = '''
+    # The source slot's exporter[p].return_to_menu (returning to the menu is always possible), re-exported by the exporter
+    return_to_menu: ClassVar[bool] = True'''
+    else:
+        return_to_menu_section = ''
+
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1044,6 +1058,8 @@ class _ShopWrapper:
     slot_data_fields = data.metadata.slot_data_fields
     # Only these options are generated by the world generator
     generated_options = {'randomize_items'}
+    # ... and every option a world[p].option_effects row names (the world generates those too)
+    generated_options |= {e['option'] for e in data.metadata.option_effects}
     if slot_data_fields:
         slot_data_entries = []
         for key, value in slot_data_fields.items():
@@ -1127,7 +1143,7 @@ class _ShopWrapper:
         create_item_body = f'''        item = {class_name}Item(name, data.classification, data.id, self.player)
 {hint_text_code}        return item'''
 
-    return f'''"""
+    init_py = f'''"""
 {game_name} world implementation for Archipelago.
 
 Auto-generated by world_generator.
@@ -1136,7 +1152,7 @@ Auto-generated by world_generator.
 from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -1181,7 +1197,7 @@ class {world_class}(RuleWorldMixin, World):
     options: {class_name}Options
 {base_id_section}{origin_region_name_section}
     # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
-    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
+    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}{assume_bidirectional_exits_section}{return_to_menu_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None
@@ -1287,3 +1303,5 @@ class {world_class}(RuleWorldMixin, World):
 {create_item_body}
 
 {collect_item_section}{fill_slot_data_section}'''
+    # world[p].option_effects (opt-in): the world's own options act on its pool and placements
+    return apply_option_effects(init_py, data.metadata.option_effects, class_name)

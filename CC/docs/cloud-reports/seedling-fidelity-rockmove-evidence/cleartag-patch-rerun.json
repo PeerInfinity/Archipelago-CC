@@ -1,0 +1,859 @@
+{
+ "source": "measure-seedling-cleartag-patch.mjs",
+ "rows": [
+  {
+   "events": [
+    "flag:L0:1"
+   ],
+   "level": 0,
+   "backDoor": "304,176->L12",
+   "patches": [
+    {
+     "level": 0,
+     "op": "move",
+     "match": {
+      "type": "breakablerock",
+      "x": 288,
+      "y": 176,
+      "attrs": {
+       "tag": "1"
+      }
+     },
+     "to": {
+      "x": 272,
+      "y": 176
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L12 teleporter@0,80 -> (288,176)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@304,176->L12"
+    ]
+   },
+   "opened": {
+    "tiles": 110,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@304,176->L12"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L0:1",
+     "verdict": "SOLVES",
+     "ticks": 21,
+     "verb": "break"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L1 teleporter@64,112 -> (80,112)",
+     "base": 110,
+     "patched": 109,
+     "newDoors": []
+    },
+    {
+     "landing": "L2 stairsup@48,16 -> (256,256)",
+     "base": 108,
+     "patched": 107,
+     "newDoors": []
+    },
+    {
+     "landing": "L13 stairsup@64,144 -> (48,192)",
+     "base": 108,
+     "patched": 107,
+     "newDoors": []
+    },
+    {
+     "landing": "L86 teleporter@48,64 -> (160,288)",
+     "base": 108,
+     "patched": 107,
+     "newDoors": []
+    },
+    {
+     "landing": "L89 teleporter@160,304 -> (240,16)",
+     "base": 1,
+     "patched": 1,
+     "newDoors": []
+    },
+    {
+     "landing": "L94 teleporter@304,160 -> (16,128)",
+     "base": 108,
+     "patched": 107,
+     "newDoors": []
+    },
+    {
+     "landing": "L94 teleporter@304,176 -> (16,144)",
+     "base": 108,
+     "patched": 107,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L0:4"
+   ],
+   "level": 0,
+   "backDoor": "80,96->L1",
+   "patches": [
+    {
+     "level": 0,
+     "op": "move",
+     "match": {
+      "type": "breakablerock",
+      "x": 80,
+      "y": 112,
+      "attrs": {
+       "tag": "4"
+      }
+     },
+     "to": {
+      "x": 80,
+      "y": 128
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L1 teleporter@64,112 -> (80,112)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 109,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@80,96->L1"
+    ]
+   },
+   "opened": {
+    "tiles": 110,
+    "doors": [
+     "stairs@256,272->L2",
+     "stairs@32,192->L13",
+     "tp@0,128->L94",
+     "tp@0,144->L94",
+     "tp@160,272->L86",
+     "tp@80,96->L1"
+    ]
+   },
+   "gates": false,
+   "fromPocket": [
+    {
+     "event": "flag:L0:4",
+     "verdict": "SOLVES",
+     "ticks": 20,
+     "verb": "break"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L2 stairsup@48,16 -> (256,256)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L12 teleporter@0,80 -> (288,176)",
+     "base": 110,
+     "patched": 111,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L13 stairsup@64,144 -> (48,192)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L86 teleporter@48,64 -> (160,288)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L89 teleporter@160,304 -> (240,16)",
+     "base": 1,
+     "patched": 1,
+     "newDoors": []
+    },
+    {
+     "landing": "L94 teleporter@304,160 -> (16,128)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L94 teleporter@304,176 -> (16,144)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    }
+   ],
+   "gapWithoutItem": [
+    {
+     "landing": "L2 stairsup@48,16 -> (256,256)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L12 teleporter@0,80 -> (288,176)",
+     "base": 110,
+     "patched": 111,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L13 stairsup@64,144 -> (48,192)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L86 teleporter@48,64 -> (160,288)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L94 teleporter@304,160 -> (16,128)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    },
+    {
+     "landing": "L94 teleporter@304,176 -> (16,144)",
+     "base": 108,
+     "patched": 109,
+     "newDoors": [
+      "tp@80,96->L1"
+     ]
+    }
+   ],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L12:4",
+    "flag:L12:5",
+    "flag:L12:11",
+    "flag:L12:3"
+   ],
+   "level": 12,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L12:7",
+    "flag:L12:12"
+   ],
+   "level": 12,
+   "backDoor": "32,848->L83",
+   "patches": [
+    {
+     "level": 12,
+     "op": "move",
+     "match": {
+      "type": "magicallock",
+      "x": 32,
+      "y": 864,
+      "attrs": {
+       "tag": "7"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 880
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    },
+    {
+     "level": 12,
+     "op": "move",
+     "match": {
+      "type": "bosslock",
+      "x": 32,
+      "y": 864,
+      "attrs": {
+       "keyType": "4",
+       "tag": "12"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 880
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L83 teleporter@32,64 -> (32,864)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@32,848->L83"
+    ]
+   },
+   "opened": {
+    "tiles": 48,
+    "doors": [
+     "tp@32,848->L83"
+    ]
+   },
+   "gates": false,
+   "fromPocket": [
+    {
+     "event": "flag:L12:7",
+     "verdict": "THREW",
+     "reason": null,
+     "why": "levelRun: a WandShot in level 12 would collide with 1 Enemy-typed bod(ies) this run cannot place: puncher@416,256. `WandShot`'s ctor pushes \"Enemy\" onto its own solids, so a live enemy STOPS a shot — and a live enemy is "
+    },
+    {
+     "event": "flag:L12:12",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "unresolved",
+     "why": "solverBot(cleartag-patch-12-12) clear-tag {12,12} bosslock@32,880: 'keylock' could not be resolved from (40,872): solverBot: no REACHABLE stance on bosslock@32,880's key line in level 12 — 2 cell(s) put the player box on"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L0 teleporter@304,176 -> (16,80)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L5 stairsup@16,16 -> (96,224)",
+     "base": 6,
+     "patched": 6,
+     "newDoors": []
+    },
+    {
+     "landing": "L24 teleporter@32,144 -> (40,704)",
+     "base": 14,
+     "patched": 14,
+     "newDoors": []
+    },
+    {
+     "landing": "L24 teleporter@48,144 -> (40,704)",
+     "base": 14,
+     "patched": 14,
+     "newDoors": []
+    },
+    {
+     "landing": "L33 teleporter@32,64 -> (432,368)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L34 teleporter@32,144 -> (336,704)",
+     "base": 14,
+     "patched": 14,
+     "newDoors": []
+    },
+    {
+     "landing": "L34 teleporter@128,0 -> (432,560)",
+     "base": 182,
+     "patched": 182,
+     "newDoors": []
+    },
+    {
+     "landing": "L35 teleporter@32,64 -> (112,112)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L36 teleporter@32,128 -> (168,384)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L37 teleporter@32,304 -> (592,16)",
+     "base": 182,
+     "patched": 182,
+     "newDoors": []
+    },
+    {
+     "landing": "L88 teleporter@96,304 -> (304,16)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L95 teleporter@624,64 -> (16,352)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    },
+    {
+     "landing": "L95 teleporter@624,80 -> (16,368)",
+     "base": 548,
+     "patched": 548,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L19:1"
+   ],
+   "level": 19,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L24:0"
+   ],
+   "level": 24,
+   "backDoor": "48,144->L12",
+   "patches": [
+    {
+     "level": 24,
+     "op": "move",
+     "match": {
+      "type": "burnabletree",
+      "x": 32,
+      "y": 128,
+      "attrs": {
+       "tag": "0"
+      }
+     },
+     "to": {
+      "x": 32,
+      "y": 96
+     },
+     "why": "the back door is under the obstacle: away from the nearest level edge",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L12 teleporter@40,688 -> (48,128)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 4,
+    "doors": [
+     "tp@32,144->L12",
+     "tp@48,144->L12"
+    ]
+   },
+   "opened": {
+    "tiles": 35,
+    "doors": [
+     "stairs@96,96->L23",
+     "tp@32,144->L12",
+     "tp@48,144->L12"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L24:0",
+     "verdict": "SOLVES",
+     "ticks": 54,
+     "verb": "burn"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L23 stairsup@32,32 -> (96,80)",
+     "base": 31,
+     "patched": 27,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L30:0",
+    "flag:L30:2"
+   ],
+   "level": 30,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L31:0"
+   ],
+   "level": 31,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L39:8"
+   ],
+   "level": 39,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L40:8"
+   ],
+   "level": 40,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L48:1"
+   ],
+   "level": 48,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L63:1"
+   ],
+   "level": 63,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L62:0"
+   ],
+   "level": 62,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L68:0"
+   ],
+   "level": 68,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  },
+  {
+   "events": [
+    "flag:L71:2"
+   ],
+   "level": 71,
+   "backDoor": "304,256->L76",
+   "patches": [
+    {
+     "level": 71,
+     "op": "move",
+     "match": {
+      "type": "shieldlock",
+      "x": 288,
+      "y": 256,
+      "attrs": {
+       "tag": "2"
+      }
+     },
+     "to": {
+      "x": 272,
+      "y": 256
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L76 teleporter@0,80 -> (288,256)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@304,256->L76"
+    ]
+   },
+   "opened": {
+    "tiles": 107,
+    "doors": [
+     "tp@224,304->L80",
+     "tp@304,256->L76",
+     "tp@304,96->L72",
+     "tp@96,0->L75"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L71:2",
+     "verdict": "REFUSES",
+     "kind": "solid",
+     "reason": null,
+     "why": "solverBot(cleartag-patch-71-2) clear-tag {71,2} shieldlock@272,256 -> touch stance -> touch stance (shieldlock@272,256): STANCE_REENTRY — the walk to shieldlock@272,256's `touch` stance (264,264) is itself blocked by shi"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L72 teleporter@0,256 -> (288,96)",
+     "base": 105,
+     "patched": 104,
+     "newDoors": []
+    },
+    {
+     "landing": "L75 teleporter@64,224 -> (96,16)",
+     "base": 105,
+     "patched": 104,
+     "newDoors": []
+    },
+    {
+     "landing": "L80 teleporter@32,0 -> (224,288)",
+     "base": 105,
+     "patched": 104,
+     "newDoors": []
+    },
+    {
+     "landing": "L85 teleporter@80,0 -> (16,288)",
+     "base": 21,
+     "patched": 21,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L112:1"
+   ],
+   "level": 112,
+   "backDoor": "112,0->L113",
+   "patches": [
+    {
+     "level": 112,
+     "op": "move",
+     "match": {
+      "type": "rocklock",
+      "x": 112,
+      "y": 16,
+      "attrs": {
+       "tset": "0",
+       "tag": "1"
+      }
+     },
+     "to": {
+      "x": 112,
+      "y": 32
+     },
+     "why": "away from the back door",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L113 teleporter@64,144 -> (112,16)",
+     "inside": []
+    },
+    {
+     "landing": "L113 teleporter@80,144 -> (112,16)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 2,
+    "doors": [
+     "tp@112,0->L113"
+    ]
+   },
+   "opened": {
+    "tiles": 135,
+    "doors": [
+     "tp@112,0->L113",
+     "tp@32,224->L111"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L112:1",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "no-verb",
+     "why": "solverBot(cleartag-patch-112-1) clear-tag {112,1} rocklock@112,32: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L111 teleporter@128,48 -> (32,208)",
+     "base": 133,
+     "patched": 132,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L113:0"
+   ],
+   "level": 113,
+   "backDoor": "112,0->L115",
+   "patches": [
+    {
+     "level": 113,
+     "op": "move",
+     "match": {
+      "type": "finaldoor",
+      "x": 112,
+      "y": 0,
+      "attrs": {
+       "tag": "0"
+      }
+     },
+     "to": {
+      "x": 112,
+      "y": 32
+     },
+     "why": "the back door is under the obstacle: away from the nearest level edge",
+     "into": [
+      "open"
+     ]
+    }
+   ],
+   "free": [
+    {
+     "landing": "L115 teleporter@64,144 -> (112,16)",
+     "inside": []
+    },
+    {
+     "landing": "L115 teleporter@80,144 -> (128,16)",
+     "inside": []
+    }
+   ],
+   "pocket": {
+    "tiles": 4,
+    "doors": [
+     "tp@112,0->L115",
+     "tp@128,0->L115"
+    ]
+   },
+   "opened": {
+    "tiles": 54,
+    "doors": [
+     "tp@112,0->L115",
+     "tp@128,0->L115",
+     "tp@16,0->L114",
+     "tp@32,0->L114",
+     "tp@64,144->L112",
+     "tp@80,144->L112"
+    ]
+   },
+   "gates": true,
+   "fromPocket": [
+    {
+     "event": "flag:L113:0",
+     "verdict": "REFUSES",
+     "kind": "clear-tag",
+     "reason": "unresolved",
+     "why": "solverBot(cleartag-patch-113-0) clear-tag {113,0} finaldoor@112,32: 'approach' could not be resolved from (120,24): solverBot: approach finaldoor@112,32 in level 113 — the door cannot open in this state: the save holds 0"
+    }
+   ],
+   "others": [],
+   "openSide": [
+    {
+     "landing": "L112 teleporter@112,0 -> (72,128)",
+     "base": 50,
+     "patched": 46,
+     "newDoors": []
+    },
+    {
+     "landing": "L114 teleporter@64,144 -> (16,16)",
+     "base": 50,
+     "patched": 46,
+     "newDoors": []
+    },
+    {
+     "landing": "L114 teleporter@80,144 -> (32,16)",
+     "base": 50,
+     "patched": 46,
+     "newDoors": []
+    }
+   ],
+   "gapWithoutItem": [],
+   "tapes": null
+  },
+  {
+   "events": [
+    "flag:L114:0"
+   ],
+   "level": 114,
+   "skipped": "no gated landing (not an arrival obstacle)"
+  }
+ ]
+}

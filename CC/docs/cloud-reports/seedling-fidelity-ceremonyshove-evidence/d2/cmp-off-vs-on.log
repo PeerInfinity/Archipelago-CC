@@ -1,0 +1,22 @@
+== touch ceremonyShove=0
+t157 Δplayer 0.000 Δbody 589.086 Δpht 0 | model p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":6.3,"vy":9.56,"ht":0,"h":2} | game p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":462.38,"vy":598.65,"ht":0,"h":2,"a":1}
+t158 Δplayer 0.000 Δbody 589.086 Δpht 0 | model p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":9.37,"vy":13.52,"ht":0,"h":2} | game p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":465.44,"vy":602.6,"ht":0,"h":2,"a":1}
+t159 Δplayer 0.000 Δbody 589.086 Δpht 0 | model p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":12.43,"vy":17.47,"ht":0,"h":2} | game p(72.17,65.30) ht0 b{"x":77.85,"y":72.63,"vx":468.5,"vy":606.56,"ht":0,"h":2,"a":1}
+compared 260 ticks, mismatching 103, worst 598.0395776121167
+== iframe ceremonyShove=0
+compared 153 ticks, mismatching 0, worst 0 MODEL THREW: levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@48,80 is inside 21 ticks of i-frames. `Enemy.hitUpdate` and `Mobile.death` both sit OUTSIDE `Game.freezeObjects`, so the 
+== dying ceremonyShove=0
+compared 157 ticks, mismatching 0, worst 0 MODEL THREW: levelRun: a torchpickup ceremony began in level 30 while the chaser bobsoldier@48,80 is DYING. `Enemy.hitUpdate` and `Mobile.death` both sit OUTSIDE `Game.freezeObjects`, so the game advances them thr
+== player-iframe ceremonyShove=0
+t154 Δplayer 0.000 Δbody 0.000 Δpht 17 | model p(76.56,65.93) ht17 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0} | game p(76.56,65.93) ht0 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0,"a":1}
+t155 Δplayer 0.000 Δbody 0.000 Δpht 16 | model p(76.56,65.93) ht16 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0} | game p(76.56,65.93) ht0 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0,"a":1}
+t156 Δplayer 0.000 Δbody 0.000 Δpht 15 | model p(76.56,65.93) ht15 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0} | game p(76.56,65.93) ht0 b{"x":88.3,"y":70.06,"vx":-0.73,"vy":-0.33,"ht":0,"h":0,"a":1}
+compared 260 ticks, mismatching 17, worst 17
+== touch ceremonyShove=1
+compared 260 ticks, mismatching 0, worst 0
+== iframe ceremonyShove=1
+compared 260 ticks, mismatching 0, worst 0
+== dying ceremonyShove=1
+compared 260 ticks, mismatching 0, worst 0
+== player-iframe ceremonyShove=1
+compared 260 ticks, mismatching 0, worst 0

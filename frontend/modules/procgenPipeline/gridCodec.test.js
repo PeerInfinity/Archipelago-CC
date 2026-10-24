@@ -80,9 +80,11 @@ describe('serializeGrid / deserializeGrid', () => {
 
     it('preserves teleporter mappings', () => {
         const grid = new Grid({ width: 3, height: 3 });
-        grid.setTeleporter({ gx: 0, gy: 0 }, 'N', { gx: 2, gy: 2 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toFar', { gx: 2, gy: 2 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toFar2', { gx: 2, gy: 0 });
         const revived = deserializeGrid(JSON.parse(JSON.stringify(serializeGrid(grid))));
-        expect(revived.getTeleporter({ gx: 0, gy: 0 }, 'N')).toEqual({ gx: 2, gy: 2 });
+        expect(revived.getTeleporter({ gx: 0, gy: 0 }, 'toFar')).toEqual({ gx: 2, gy: 2 });
+        expect(revived.getTeleporter({ gx: 0, gy: 0 }, 'toFar2')).toEqual({ gx: 2, gy: 0 });
     });
 
     it('rejects non-Grid input to serializeGrid', () => {
@@ -95,7 +97,7 @@ describe('Grid.resize (grow-only, for sphere-append)', () => {
         const { grid } = growGrid({ maze: 4 }, 'maze', 3, 2);
         const before = grid.allRegions().map((r) => ({ ...r.cell, id: r.region_id }));
         const tele = new Map(grid.teleporters);
-        grid.setTeleporter({ gx: 0, gy: 0 }, 'N', { gx: 2, gy: 2 });
+        grid.setTeleporter({ gx: 0, gy: 0 }, 'toFar', { gx: 2, gy: 2 });
         const w0 = grid.width;
         const h0 = grid.height;
 
@@ -109,7 +111,7 @@ describe('Grid.resize (grow-only, for sphere-append)', () => {
             expect(grid.getRegion({ gx: r.gx, gy: r.gy }).region_id).toBe(r.id);
         }
         // Prior + new teleporters intact; a cell beyond the OLD bounds is now placeable.
-        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'N')).toEqual({ gx: 2, gy: 2 });
+        expect(grid.getTeleporter({ gx: 0, gy: 0 }, 'toFar')).toEqual({ gx: 2, gy: 2 });
         for (const [k, v] of tele) expect(grid.teleporters.get(k)).toBe(v);
         expect(grid.isInBounds({ gx: w0, gy: 0 })).toBe(true);
     });

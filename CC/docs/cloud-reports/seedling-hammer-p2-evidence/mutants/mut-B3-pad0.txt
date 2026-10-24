@@ -1,0 +1,4 @@
+ ✓ frontend/modules/seedlingDemo/pressKillCost.test.js (18 tests | 9 skipped) 8875ms
+     ✓ the kill-start derivation, then two refused ones on the same run (lines carried): the same answers  2501ms
+     ✓ r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised  6276ms
+      Tests  9 passed | 9 skipped (18)

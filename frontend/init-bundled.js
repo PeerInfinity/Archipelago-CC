@@ -42,6 +42,7 @@ centralRegistry.registerEventBusPublisher('core', 'module:loaded');
 centralRegistry.registerEventBusPublisher('core', 'module:loadFailed');
 centralRegistry.registerEventBusPublisher('core', 'app:modesJsonLoaded');
 centralRegistry.registerEventBusPublisher('core', 'app:readyForUiDataLoad');
+centralRegistry.registerEventBusPublisher('core', 'layout:replaced');
 centralRegistry.registerEventBusPublisher('core', 'app:activeModeDetermined');
 centralRegistry.registerEventBusPublisher('core', 'uiHostRegistry:hostStatusChanged');
 centralRegistry.registerEventBusPublisher('core', 'ui:activatePanel');
@@ -62,7 +63,12 @@ import { incrementFileCounter, addFileError } from './app/initialization/fileLoa
 // STATIC MODULE IMPORTS - These get bundled instead of dynamically loaded
 // ============================================================================
 import * as modulesModule from './modules/modules/index.js';
+import * as quickLaunchModule from './modules/quickLaunch/index.js';
+import * as miniPanelsModule from './modules/miniPanels/index.js';
+import * as checksPanelModule from './modules/checksPanel/index.js';
+import * as tutorialsModule from './modules/tutorials/index.js';
 import * as jsonModule from './modules/json/index.js';
+import * as storagePanelModule from './modules/storagePanel/index.js';
 import * as eventsModule from './modules/events/index.js';
 import * as stateManagerModule from './modules/stateManager/index.js';
 import * as clientModule from './modules/client/index.js';
@@ -99,7 +105,9 @@ import * as progressBarPanelModule from './modules/progressBarPanel/index.js';
 import * as metaGameModule from './modules/metaGame/index.js';
 import * as metaGamePanelModule from './modules/metaGamePanel/index.js';
 import * as flashPanelModule from './modules/flashPanel/index.js';
+import * as swfRecompilerPanelModule from './modules/swfRecompilerPanel/index.js';
 import * as tileMapAnalyzerModule from './modules/tileMapAnalyzer/index.js';
+import * as regionMarkingToolModule from './modules/regionMarkingTool/index.js';
 import * as iframeAdapterModule from './modules/iframeAdapter/index.js';
 import * as iframePanelModule from './modules/iframePanel/index.js';
 import * as iframeManagerPanelModule from './modules/iframeManagerPanel/index.js';
@@ -107,7 +115,6 @@ import * as windowAdapterModule from './modules/windowAdapter/index.js';
 import * as windowPanelModule from './modules/windowPanel/index.js';
 import * as windowManagerPanelModule from './modules/windowManagerPanel/index.js';
 import * as ruleConverterModule from './modules/ruleConverter/index.js';
-import * as mazeGameDataPanelModule from './modules/mazeGameDataPanel/index.js';
 import * as jtaGameDataPanelModule from './modules/jtaGameDataPanel/index.js';
 import * as jtaCostDebuggerModule from './modules/jtaCostDebugger/index.js';
 import * as proofQueueModule from './modules/proofQueue/index.js';
@@ -120,17 +127,27 @@ import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
 import * as apworldEditorModule from './modules/apworldEditor/index.js';
 import * as mazeRoomModule from './modules/mazeRoom/index.js';
+import * as procgenLabPanelModule from './modules/procgenLabPanel/index.js';
+import * as substrateRegistryPanelModule from './modules/substrateRegistryPanel/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
+import * as menuPanelModule from './modules/menuPanel/index.js';
+import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
+import * as omsiSubstrateWrapperModule from './modules/omsiSubstrateWrapper/index.js';
+import * as jtaBalanceModule from './modules/jtaBalance/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
+import * as runnerDemoModule from './modules/runnerDemo/index.js';
+import * as noiz2saSubstrateModule from './modules/noiz2saSubstrate/index.js';
 import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
 // ============================================================================
-// STATIC TEST CASE IMPORTS - These get bundled and self-register on import
+// STATIC TEST CASE IMPORTS - These get bundled and self-register on import.
+// The SAME files, in the same order, as TEST_CASE_FILES in
+// modules/tests/testDiscovery.js (bundledTestCases.test.js fails on drift).
 // ============================================================================
 import './modules/tests/testCases/coreTests.js';
 import './modules/tests/testCases/locationPanelTests.js';
@@ -150,8 +167,33 @@ import './modules/tests/testCases/timerTests.js';
 import './modules/tests/testCases/multiclientTests.js';
 import './modules/tests/testCases/spoilerTestPanelTests.js';
 import './modules/tests/testCases/playbackBotTests.js';
+import './modules/tests/testCases/discoveryModeTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
+import './modules/tests/testCases/runnerDemoTests.js';
+import './modules/tests/testCases/runnerBlockModeTests.js';
+import './modules/tests/testCases/noiz2saSubstrateTests.js';
+import './modules/tests/testCases/jtaSubstrateWrapperTests.js';
+import './modules/tests/testCases/omsiSubstrateWrapperTests.js';
+import './modules/tests/testCases/jtaBalanceTests.js';
+import './modules/tests/testCases/jtaDatasetTests.js';
+import './modules/tests/testCases/jtaScheduleTests.js';
+import './modules/tests/testCases/omsiScheduleTests.js';
+import './modules/tests/testCases/omsiUnlockTests.js';
+import './modules/tests/testCases/omsiRegionSplitTests.js';
+import './modules/tests/testCases/mazeConsumableTileTests.js';
+import './modules/tests/testCases/mazeBlockModeTests.js';
+import './modules/tests/testCases/seedlingAtlasMazeTests.js';
+import './modules/tests/testCases/seedlingJsRuntimeTests.js';
+import './modules/tests/testCases/taswBlockModeTests.js';
+import './modules/tests/testCases/apworldEditorTests.js';
+import './modules/tests/testCases/substrateRegistryPanelTests.js';
+import './modules/tests/testCases/procgenPipelineTests.js';
+import './modules/tests/testCases/quickLaunchTests.js';
+import './modules/tests/testCases/miniPanelsTests.js';
+import './modules/tests/testCases/tutorialTests.js';
+import './modules/tests/testCases/storagePanelTests.js';
+import './modules/tests/testCases/ruleConverterTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
@@ -159,7 +201,12 @@ window.__BUNDLED_TEST_CASES__ = true;
 // Map of pre-imported modules for the bundled loader
 const BUNDLED_MODULES = {
   modules: modulesModule,
+  quickLaunch: quickLaunchModule,
+  miniPanels: miniPanelsModule,
+  checksPanel: checksPanelModule,
+  tutorials: tutorialsModule,
   json: jsonModule,
+  storagePanel: storagePanelModule,
   events: eventsModule,
   stateManager: stateManagerModule,
   client: clientModule,
@@ -196,7 +243,9 @@ const BUNDLED_MODULES = {
   metaGame: metaGameModule,
   metaGamePanel: metaGamePanelModule,
   flashPanel: flashPanelModule,
+  swfRecompilerPanel: swfRecompilerPanelModule,
   tileMapAnalyzer: tileMapAnalyzerModule,
+  regionMarkingTool: regionMarkingToolModule,
   iframeAdapter: iframeAdapterModule,
   iframePanel: iframePanelModule,
   iframeManagerPanel: iframeManagerPanelModule,
@@ -204,7 +253,6 @@ const BUNDLED_MODULES = {
   windowPanel: windowPanelModule,
   windowManagerPanel: windowManagerPanelModule,
   ruleConverter: ruleConverterModule,
-  mazeGameDataPanel: mazeGameDataPanelModule,
   jtaGameDataPanel: jtaGameDataPanelModule,
   jtaCostDebugger: jtaCostDebuggerModule,
   proofQueue: proofQueueModule,
@@ -217,12 +265,20 @@ const BUNDLED_MODULES = {
   apcalcGenerator: apcalcGeneratorModule,
   apworldEditor: apworldEditorModule,
   mazeRoom: mazeRoomModule,
+  procgenLabPanel: procgenLabPanelModule,
+  substrateRegistryPanel: substrateRegistryPanelModule,
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
+  menuPanel: menuPanelModule,
+  resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
+  omsiSubstrateWrapper: omsiSubstrateWrapperModule,
+  jtaBalance: jtaBalanceModule,
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
+  runnerDemo: runnerDemoModule,
+  noiz2saSubstrate: noiz2saSubstrateModule,
   bounceRegionEditor: bounceRegionEditorModule,
   playbackBot: playbackBotModule,
 };

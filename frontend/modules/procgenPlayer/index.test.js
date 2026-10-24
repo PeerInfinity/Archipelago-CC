@@ -6,6 +6,8 @@ import {
     _testOnly_getWarehouse,
 } from './index.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { skipsStart } from '../menuPanel/menuPanelEngine.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 function makeMockEventBus() {
     const subscribers = new Map();
@@ -63,11 +65,15 @@ function makeMockRegistrationApi() {
     };
 }
 
-function makeMockInitApi(eventBus, dispatcher) {
+function makeMockInitApi(eventBus, dispatcher, moduleFunctions = {}) {
     return {
         getEventBus: () => eventBus,
         getDispatcher: () => dispatcher,
         getLogger: () => ({ warn: () => {}, info: () => {}, error: () => {} }),
+        // menuPanel.isSkipMenuEnabled is looked up here; an api WITHOUT this
+        // hook (the default in the block below) is the "menuPanel not loaded"
+        // shape, which must keep the pre-M1 unconditional hop.
+        getModuleFunction: (moduleId, fnName) => moduleFunctions[`${moduleId}.${fnName}`] ?? null,
     };
 }
 
@@ -155,6 +161,10 @@ describe('procgenPlayer index', () => {
             sourceRegion: 'Menu',
             targetRegion: 'region_0_0',
             exitName: 'GameStart',
+            // M3b: marks the synthesized placement as a planning source —
+            // exempt from the strict action gate and from the loop-mode
+            // path-append retirement.
+            source: 'procgenPlayer-start',
         });
     });
 
@@ -188,7 +198,7 @@ describe('procgenPlayer index', () => {
             .filter((p) => p.event === 'maze:loadRegion');
         expect(newLoadEvents).toHaveLength(1);
         expect(newLoadEvents[0].data.region_id).toBe('region_0_1');
-        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'exit' });
+        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'exit', source_region: 'region_0_0' });
         // Always forwards on the dispatcher chain.
         expect(dispatcher.forwarded).toHaveLength(1);
         expect(dispatcher.forwarded[0].eventName).toBe('user:regionMove');
@@ -251,7 +261,7 @@ describe('procgenPlayer index', () => {
         const newLoadEvents = eventBus.published.slice(baseline)
             .filter((p) => p.event === 'maze:loadRegion');
         expect(newLoadEvents).toHaveLength(1);
-        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'A' });
+        expect(newLoadEvents[0].data.arrivedFrom).toEqual({ exit_id: 'A', source_region: 'A' });
     });
 
     it('does not publish loadRegion for region moves to non-warehoused regions, but still forwards', () => {
@@ -354,5 +364,258 @@ describe('procgenPlayer index', () => {
             handler({ targetRegion: 'Menu', exitName: null, sourceRegion: 'region_0_1' });
             expect(getActiveSubstrate()).toBeNull();
         });
+    });
+});
+
+/**
+ * ⛓ "Skip the menu" — ONE SETTING, TWO PUBLISHERS.
+ *
+ * WHAT THESE ROWS PROVE. This module's synthesized start hop is gated on
+ * `menuPanel.isSkipMenuEnabled()`: OFF ⇒ no `user:regionMove` at all, and the
+ * player is left standing at the AP-declared start for the panel to play;
+ * ON (and ABSENT — a module set without menuPanel) ⇒ the pre-M1 hop, unchanged.
+ * `getResolvedStartRegion()` survives either way, because loop resets teleport
+ * to it whether or not the initial hop was taken.
+ *
+ * WHAT THEY REFUSE TO PROVE. Nothing about the OTHER publisher. That the menu
+ * panel does not ALSO hop on a warehoused world is menuPanel's own row
+ * (`procgenOwnsStartHop`), and the end-to-end "exactly one move per load" claim
+ * is the in-app battery's.
+ */
+describe('procgenPlayer — the skip-the-menu setting gates the start hop', () => {
+    function setup(skipMenu) {
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const bus = makeMockEventBus();
+        const dispatcher = makeMockDispatcher();
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        const moduleFunctions = skipMenu === undefined
+            ? {}
+            : { 'menuPanel.isSkipMenuEnabled': () => skipMenu };
+        return { bus, dispatcher, reg, moduleFunctions };
+    }
+
+    async function load({ bus, dispatcher, reg, moduleFunctions }) {
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, dispatcher, moduleFunctions));
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        return reg._calls.publicFunctions;
+    }
+
+    it('skip ON: publishes the hop (today\'s behaviour)', async () => {
+        const ctx = setup(true);
+        await load(ctx);
+        expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+
+    it('skip OFF: publishes NOTHING, and the warehouse is still built', async () => {
+        const ctx = setup(false);
+        await load(ctx);
+        expect(ctx.dispatcher.published).toHaveLength(0);
+        expect(_testOnly_getWarehouse().size()).toBe(2);
+    });
+
+    it('skip OFF: getResolvedStartRegion still answers, so a loop reset can teleport', async () => {
+        const ctx = setup(false);
+        const publicFunctions = await load(ctx);
+        expect(publicFunctions.get('procgenPlayer.getResolvedStartRegion')()).toBe('region_0_0');
+    });
+
+    it('menuPanel absent: the hop fires, exactly as before M1', async () => {
+        const ctx = setup(undefined);
+        await load(ctx);
+        expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+
+    it('skip OFF then a fresh load with skip ON hops — the value is read per load', async () => {
+        let skip = false;
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const bus = makeMockEventBus();
+        const dispatcher = makeMockDispatcher();
+        register(makeMockRegistrationApi());
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, dispatcher, {
+            'menuPanel.isSkipMenuEnabled': () => skip,
+        }));
+
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        expect(dispatcher.published).toHaveLength(0);
+
+        skip = true;
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SAMPLE_RULES, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        expect(dispatcher.published.map((p) => p.data.source)).toEqual(['procgenPlayer-start']);
+    });
+    /**
+     * ⛓⛓ M2 — **ONE RULE, TWO PUBLISHERS** (⚖ user 2026-09-26: skip only a
+     * ONE-exit start). This module hops out of the declared start exactly when
+     * `menuPanelEngine.skipsStart` says so — the rule itself imported, the
+     * setting through `menuPanel.isSkipMenuEnabled` as before. Swept over 0–2
+     * warehoused exits × skip on/off, the hop fires iff the engine rule answers
+     * true: a copy of the rule here would drift from menuPanel's.
+     */
+    const withMenuExits = (n) => ({
+        ...SAMPLE_RULES,
+        regions: {
+            1: {
+                ...SAMPLE_RULES.regions['1'],
+                Menu: { exits: Array.from({ length: n }, (_, i) => ({ name: `To ${i}`, connected_region: `region_0_${i}` })) },
+            },
+        },
+    });
+
+    it.each([[1, true], [2, true], [1, false], [2, false]])(
+        '⛓⛓ %i warehoused Menu exit(s), skip %s: the hop fires iff skipsStart answers true', async (n, skip) => {
+            const ctx = setup(skip);
+            const doc = withMenuExits(n);
+            await initialize('procgenPlayer', 0, makeMockInitApi(ctx.bus, ctx.dispatcher, ctx.moduleFunctions));
+            ctx.bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: '1' } });
+            ctx.bus.publish('stateManager:rulesLoaded', {});
+            const want = skipsStart(doc, '1', 'Menu', skip);
+            expect(want).toBe(skip && n === 1);
+            expect(ctx.dispatcher.published.map((p) => p.data.source)).toEqual(want ? ['procgenPlayer-start'] : []);
+            // ⛓ the resolved start still answers (a loop reset teleports to it either way).
+            expect(ctx.reg._calls.publicFunctions.get('procgenPlayer.getResolvedStartRegion')()).toBe('region_0_0');
+        });
+
+    it('⛓ a WAREHOUSED start (its own sidecar) with several exits still loads its payload — nothing is left, so the setting alone rules', async () => {
+        const ctx = setup(true);
+        const doc = {
+            start_regions: { 1: ['region_0_0'] },
+            regions: { 1: {
+                region_0_0: { exits: [{ name: 'a', connected_region: 'region_0_1' }, { name: 'b', connected_region: 'region_0_1' }] },
+                region_0_1: { exits: [] },
+            } },
+            preset_sidecars: SAMPLE_RULES.preset_sidecars,
+        };
+        await initialize('procgenPlayer', 0, makeMockInitApi(ctx.bus, ctx.dispatcher, ctx.moduleFunctions));
+        ctx.bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: '1' } });
+        ctx.bus.publish('stateManager:rulesLoaded', {});
+        expect(ctx.dispatcher.published.map((p) => [p.data.sourceRegion, p.data.targetRegion]))
+            .toEqual([[null, 'region_0_0']]);
+    });
+});
+
+/**
+ * ⛓⛓ RESTART — `retakeStartHop`: a Restart re-takes the load's start hop (the same publish), only where the
+ * load would have skipped the menu and only once the reset has landed the player on the declared start; and a
+ * move along the hop marks the substrate's loadRegion `startHop` (plus `restart` for a re-take).
+ */
+describe('procgenPlayer — retakeStartHop and the startHop mark', () => {
+    let here;
+    async function boot(skip = true, rules = SAMPLE_RULES) {
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        centralRegistry.publicFunctions.clear();
+        here = 'Menu';
+        centralRegistry.registerPublicFunction('gameState', 'getCurrentRegion', () => here);
+        const bus = makeMockEventBus();
+        const dispatcher = makeMockDispatcher();
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, dispatcher, { 'menuPanel.isSkipMenuEnabled': () => skip }));
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: rules, selectedPlayerInfo: { playerId: '1' } });
+        bus.publish('stateManager:rulesLoaded', {});
+        const move = reg._calls.dispatcherReceivers[0][2];
+        return { bus, dispatcher, move, retake: reg._calls.publicFunctions.get('procgenPlayer.retakeStartHop') };
+    }
+
+    it('re-publishes the LOAD\'s hop, with restart: true and nothing else changed', async () => {
+        const { dispatcher, retake } = await boot(true);
+        const load = dispatcher.published[0];
+        expect(retake()).toEqual({ taken: true, why: null, region: 'region_0_0' });
+        expect(dispatcher.published[1]).toEqual({ ...load, data: { ...load.data, restart: true } });
+        expect(load.data).toEqual({ sourceRegion: 'Menu', targetRegion: 'region_0_0', exitName: 'GameStart', source: 'procgenPlayer-start' });
+    });
+
+    it('refuses BY NAME: the player not on the declared start, or a load that does not skip the menu', async () => {
+        let ctx = await boot(true);
+        here = 'region_0_1';
+        expect(ctx.retake()).toMatchObject({ taken: false, why: expect.stringContaining('not the declared start') });
+        ctx = await boot(false);
+        expect(ctx.retake()).toMatchObject({ taken: false, why: expect.stringContaining('does not skip') });
+        expect(ctx.dispatcher.published).toHaveLength(0);
+    });
+
+    it('a move along the hop marks loadRegion startHop (+ restart on a re-take); any other move does not', async () => {
+        const { bus, move } = await boot(true);
+        const loads = () => bus.published.filter((p) => p.event === 'maze:loadRegion').map((p) => p.data);
+        move({ sourceRegion: 'Menu', targetRegion: 'region_0_0', exitName: 'GameStart', source: 'procgenPlayer-start' });
+        move({ sourceRegion: 'region_0_0', targetRegion: 'region_0_1', exitName: 'x' });
+        move({ sourceRegion: 'Menu', targetRegion: 'region_0_0', exitName: 'GameStart', source: 'procgenPlayer-start', restart: true });
+        expect(loads().map((l) => [l.region_id, l.startHop ?? false, l.restart ?? false]))
+            .toEqual([['region_0_0', true, false], ['region_0_1', false, false], ['region_0_0', true, true]]);
+    });
+
+    /**
+     * ⛓ LOOP-MODE RESTART — a start that is itself warehoused has no hop (`sourceRegion` null), so the RESET's move
+     * into it (`restart` AND `fromReset`: flashPanel's loop-reset fallback) is its start arrival. With a Menu start the
+     * same move from anywhere but the declared start is NOT the hop — the Menu world's rule is unchanged.
+     */
+    it('a WAREHOUSED start: the reset\'s restart move into it is the start arrival; nothing else is', async () => {
+        const { bus, move } = await boot(true, { ...SAMPLE_RULES, start_regions: { 1: ['region_0_0'] } });
+        const loads = () => bus.published.filter((p) => p.event === 'maze:loadRegion').map((p) => p.data);
+        const n = loads().length;
+        move({ sourceRegion: 'region_0_1', targetRegion: 'region_0_0', exitName: null, fromReset: true, updatePath: false, restart: true });
+        move({ sourceRegion: 'region_0_1', targetRegion: 'region_0_0', exitName: null, fromReset: true, updatePath: false });
+        move({ sourceRegion: 'region_0_1', targetRegion: 'region_0_0', exitName: 'x', restart: true });
+        move({ sourceRegion: 'region_0_0', targetRegion: 'region_0_1', exitName: null, fromReset: true, restart: true });
+        expect(loads().slice(n).map((l) => [l.region_id, l.startHop ?? false, l.restart ?? false]))
+            .toEqual([['region_0_0', true, true], ['region_0_0', false, false], ['region_0_0', false, false], ['region_0_1', false, false]]);
+        const menu = await boot(true);
+        const m = menu.bus.published.filter((p) => p.event === 'maze:loadRegion').length;
+        menu.move({ sourceRegion: 'region_0_1', targetRegion: 'region_0_0', exitName: null, fromReset: true, restart: true });
+        expect(menu.bus.published.filter((p) => p.event === 'maze:loadRegion').slice(m).map((p) => p.data.startHop ?? false)).toEqual([false]);
+    });
+});
+
+describe('procgenPlayer — same-world crossing (tile-primitives Stage 2)', () => {
+    const SHARED_RULES = {
+        start_regions: { 1: ['Menu'] },
+        regions: { 1: {
+            Menu: { exits: [{ name: 'GameStart', connected_region: 'L__a' }] },
+            L__a: { exits: [], locations: [] }, L__b: { exits: [], locations: [] }, other: { exits: [], locations: [] },
+        } },
+        preset_sidecars: { 1: {
+            L__a: { substrate: 'maze', shared_world: 'L', playable_payload: { tag: 'level' } },
+            L__b: { substrate: 'maze', shared_world: 'L' },
+            other: { substrate: 'maze', playable_payload: { tag: 'other' } },
+        } },
+    };
+    let bus;
+    let handler;
+    beforeEach(async () => {
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        bus = makeMockEventBus();
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, makeMockDispatcher()));
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SHARED_RULES, selectedPlayerInfo: { playerId: '1' } });
+        handler = reg._calls.dispatcherReceivers[0][2];
+    });
+    const loads = (from) => bus.published.slice(from).filter((p) => p.event === 'maze:loadRegion').map((p) => p.data);
+
+    it('a move between two regions of one level world is marked sameWorld; the world is the same object', () => {
+        const at = bus.published.length;
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: 'L__a -> L__b' });
+        const [load] = loads(at);
+        expect(load.region_id).toBe('L__b');
+        expect(load.sameWorld).toBe(true);
+        expect(load.world).toBe(_testOnly_getWarehouse().get('L__a').world);
+    });
+
+    it('a move into the level from elsewhere, a reset and a restart are NOT same-world', () => {
+        const at = bus.published.length;
+        handler({ sourceRegion: 'other', targetRegion: 'L__b', exitName: 'x' });
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: null, fromReset: true });
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: null, restart: true });
+        expect(loads(at).map((l) => l.sameWorld ?? false)).toEqual([false, false, false]);
     });
 });

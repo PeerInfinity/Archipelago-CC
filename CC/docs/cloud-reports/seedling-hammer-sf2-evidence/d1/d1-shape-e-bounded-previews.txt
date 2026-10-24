@@ -1,0 +1,17 @@
+## killgate-2 180 derivations; variant: scan s · previews · samples previewed · deepenings
+off   0.7 189 3798 0
+a     0.97 495 14391 0
+e     1.09 927 23454 432
+co2   0.72 261 6165 0
+ec2   0.76 450 8541 189
+ec8   1.05 918 23031 432
+e == a, every returned field (digest): 180 / 180
+ec2 == co2 (cell, press, eta): 180 / 180
+## l18 10086 derivations; variant: scan s · previews · samples previewed · deepenings
+off   63.37 40230 2078895 0
+a     152.68 129057 8285304 0
+e     159.28 187515 9734016 58458
+co2   82.88 51126 2874048 0
+ec2   83.58 67803 2905557 16677
+e == a, every returned field (digest): 10086 / 10086
+ec2 == co2 (cell, press, eta): 10086 / 10086

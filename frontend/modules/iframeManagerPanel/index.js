@@ -2,16 +2,23 @@
 import { IframeManagerUI } from './iframeManagerUI.js';
 import eventBus from '../../app/core/eventBus.js';
 import { knownIframePages } from '../../app/config/knownIframePages.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // --- Module Info ---
 export const moduleInfo = {
   name: 'iframeManagerPanel',
   title: 'Iframe Manager',
   componentType: 'iframeManagerPanel',
+  docs: 'docs/json/user/modules/iframeManagerPanel.md',
   icon: '🖼️',
   column: 2, // Middle column
-  description: 'Iframe Manager display panel.',
+  category: 'Embedding and Windows',
+  description: 'Loads a known page or typed URL into the open Iframe panels, unloads them, and lists connected pages.',
   requires: ['iframeAdapter', 'iframePanel'],
+  storage: [
+    { key: 'incrementalGameSave', kind: STORAGE_KINDS.user, label: 'Journey to Ascension game save (the iframe page)' },
+    { key: 'externalModule.customUrlWarning.suppressed', kind: STORAGE_KINDS.state, label: '"Don\'t warn again" for custom page addresses' },
+  ],
 };
 
 // Helper function for logging with fallback

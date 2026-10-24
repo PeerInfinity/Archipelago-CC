@@ -1,0 +1,788 @@
+{
+ "game": "seedling",
+ "name": "hammer-d-l40-378",
+ "boot": {
+  "level": 40,
+  "x": 928,
+  "y": 96
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": true,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 1641,
+ "inputs": [
+  {
+   "key": "left",
+   "from": 0,
+   "to": 66
+  },
+  {
+   "key": "right",
+   "from": 66,
+   "to": 67
+  },
+  {
+   "key": "left",
+   "from": 67,
+   "to": 69
+  },
+  {
+   "key": "down",
+   "from": 69,
+   "to": 70
+  },
+  {
+   "key": "primary",
+   "from": 70,
+   "to": 71
+  },
+  {
+   "key": "right",
+   "from": 71,
+   "to": 73
+  },
+  {
+   "key": "up",
+   "from": 71,
+   "to": 73
+  },
+  {
+   "key": "left",
+   "from": 73,
+   "to": 74
+  },
+  {
+   "key": "right",
+   "from": 74,
+   "to": 75
+  },
+  {
+   "key": "down",
+   "from": 77,
+   "to": 78
+  },
+  {
+   "key": "down",
+   "from": 82,
+   "to": 102
+  },
+  {
+   "key": "up",
+   "from": 102,
+   "to": 103
+  },
+  {
+   "key": "primary",
+   "from": 103,
+   "to": 104
+  },
+  {
+   "key": "down",
+   "from": 104,
+   "to": 125
+  },
+  {
+   "key": "up",
+   "from": 127,
+   "to": 129
+  },
+  {
+   "key": "left",
+   "from": 136,
+   "to": 147
+  },
+  {
+   "key": "right",
+   "from": 147,
+   "to": 148
+  },
+  {
+   "key": "left",
+   "from": 148,
+   "to": 150
+  },
+  {
+   "key": "right",
+   "from": 152,
+   "to": 155
+  },
+  {
+   "key": "left",
+   "from": 156,
+   "to": 158
+  },
+  {
+   "key": "down",
+   "from": 162,
+   "to": 285
+  },
+  {
+   "key": "up",
+   "from": 286,
+   "to": 288
+  },
+  {
+   "key": "left",
+   "from": 292,
+   "to": 591
+  },
+  {
+   "key": "right",
+   "from": 593,
+   "to": 595
+  },
+  {
+   "key": "up",
+   "from": 599,
+   "to": 773
+  },
+  {
+   "key": "down",
+   "from": 773,
+   "to": 774
+  },
+  {
+   "key": "up",
+   "from": 774,
+   "to": 777
+  },
+  {
+   "key": "down",
+   "from": 778,
+   "to": 780
+  },
+  {
+   "key": "left",
+   "from": 784,
+   "to": 926
+  },
+  {
+   "key": "primary",
+   "from": 926,
+   "to": 927
+  },
+  {
+   "key": "left",
+   "from": 927,
+   "to": 933
+  },
+  {
+   "key": "right",
+   "from": 933,
+   "to": 934
+  },
+  {
+   "key": "left",
+   "from": 934,
+   "to": 935
+  },
+  {
+   "key": "down",
+   "from": 939,
+   "to": 950
+  },
+  {
+   "key": "right",
+   "from": 950,
+   "to": 951
+  },
+  {
+   "key": "primary",
+   "from": 951,
+   "to": 952
+  },
+  {
+   "key": "left",
+   "from": 953,
+   "to": 954
+  },
+  {
+   "key": "down",
+   "from": 952,
+   "to": 971
+  },
+  {
+   "key": "primary",
+   "from": 971,
+   "to": 972
+  },
+  {
+   "key": "down",
+   "from": 972,
+   "to": 1005
+  },
+  {
+   "key": "primary",
+   "from": 1005,
+   "to": 1006
+  },
+  {
+   "key": "down",
+   "from": 1006,
+   "to": 1018
+  },
+  {
+   "key": "up",
+   "from": 1018,
+   "to": 1019
+  },
+  {
+   "key": "down",
+   "from": 1019,
+   "to": 1021
+  },
+  {
+   "key": "up",
+   "from": 1022,
+   "to": 1024
+  },
+  {
+   "key": "left",
+   "from": 1028,
+   "to": 1052
+  },
+  {
+   "key": "down",
+   "from": 1028,
+   "to": 1052
+  },
+  {
+   "key": "right",
+   "from": 1052,
+   "to": 1053
+  },
+  {
+   "key": "up",
+   "from": 1052,
+   "to": 1053
+  },
+  {
+   "key": "left",
+   "from": 1053,
+   "to": 1054
+  },
+  {
+   "key": "down",
+   "from": 1053,
+   "to": 1054
+  },
+  {
+   "key": "right",
+   "from": 1054,
+   "to": 1055
+  },
+  {
+   "key": "up",
+   "from": 1054,
+   "to": 1055
+  },
+  {
+   "key": "left",
+   "from": 1055,
+   "to": 1056
+  },
+  {
+   "key": "down",
+   "from": 1055,
+   "to": 1057
+  },
+  {
+   "key": "right",
+   "from": 1059,
+   "to": 1060
+  },
+  {
+   "key": "up",
+   "from": 1059,
+   "to": 1062
+  },
+  {
+   "key": "down",
+   "from": 1063,
+   "to": 1065
+  },
+  {
+   "key": "left",
+   "from": 1151,
+   "to": 1175
+  },
+  {
+   "key": "up",
+   "from": 1151,
+   "to": 1178
+  },
+  {
+   "key": "right",
+   "from": 1178,
+   "to": 1179
+  },
+  {
+   "key": "down",
+   "from": 1179,
+   "to": 1180
+  },
+  {
+   "key": "left",
+   "from": 1185,
+   "to": 1186
+  },
+  {
+   "key": "primary",
+   "from": 1186,
+   "to": 1187
+  },
+  {
+   "key": "right",
+   "from": 1187,
+   "to": 1188
+  },
+  {
+   "key": "left",
+   "from": 1194,
+   "to": 1205
+  },
+  {
+   "key": "up",
+   "from": 1194,
+   "to": 1208
+  },
+  {
+   "key": "down",
+   "from": 1208,
+   "to": 1209
+  },
+  {
+   "key": "left",
+   "from": 1208,
+   "to": 1221
+  },
+  {
+   "key": "right",
+   "from": 1222,
+   "to": 1223
+  },
+  {
+   "key": "up",
+   "from": 1237,
+   "to": 1238
+  },
+  {
+   "key": "primary",
+   "from": 1238,
+   "to": 1239
+  },
+  {
+   "key": "down",
+   "from": 1239,
+   "to": 1240
+  },
+  {
+   "key": "right",
+   "from": 1244,
+   "to": 1252
+  },
+  {
+   "key": "primary",
+   "from": 1252,
+   "to": 1253
+  },
+  {
+   "key": "up",
+   "from": 1244,
+   "to": 1264
+  },
+  {
+   "key": "down",
+   "from": 1266,
+   "to": 1269
+  },
+  {
+   "key": "up",
+   "from": 1270,
+   "to": 1272
+  },
+  {
+   "key": "left",
+   "from": 1252,
+   "to": 1273
+  },
+  {
+   "key": "right",
+   "from": 1273,
+   "to": 1274
+  },
+  {
+   "key": "left",
+   "from": 1274,
+   "to": 1275
+  },
+  {
+   "key": "right",
+   "from": 1275,
+   "to": 1276
+  },
+  {
+   "key": "left",
+   "from": 1276,
+   "to": 1277
+  },
+  {
+   "key": "primary",
+   "from": 1281,
+   "to": 1282
+  },
+  {
+   "key": "primary",
+   "from": 1301,
+   "to": 1302
+  },
+  {
+   "key": "primary",
+   "from": 1303,
+   "to": 1304
+  },
+  {
+   "key": "left",
+   "from": 1301,
+   "to": 1320
+  },
+  {
+   "key": "right",
+   "from": 1320,
+   "to": 1321
+  },
+  {
+   "key": "primary",
+   "from": 1417,
+   "to": 1418
+  },
+  {
+   "key": "primary",
+   "from": 1419,
+   "to": 1420
+  },
+  {
+   "key": "primary",
+   "from": 1427,
+   "to": 1428
+  },
+  {
+   "key": "primary",
+   "from": 1435,
+   "to": 1436
+  },
+  {
+   "key": "primary",
+   "from": 1447,
+   "to": 1448
+  },
+  {
+   "key": "right",
+   "from": 1417,
+   "to": 1449
+  },
+  {
+   "key": "left",
+   "from": 1449,
+   "to": 1450
+  },
+  {
+   "key": "primary",
+   "from": 1455,
+   "to": 1456
+  },
+  {
+   "key": "primary",
+   "from": 1467,
+   "to": 1468
+  },
+  {
+   "key": "up",
+   "from": 1452,
+   "to": 1476
+  },
+  {
+   "key": "primary",
+   "from": 1475,
+   "to": 1476
+  },
+  {
+   "key": "down",
+   "from": 1476,
+   "to": 1477
+  },
+  {
+   "key": "up",
+   "from": 1477,
+   "to": 1482
+  },
+  {
+   "key": "down",
+   "from": 1482,
+   "to": 1483
+  },
+  {
+   "key": "up",
+   "from": 1483,
+   "to": 1484
+  },
+  {
+   "key": "down",
+   "from": 1486,
+   "to": 1487
+  },
+  {
+   "key": "primary",
+   "from": 1487,
+   "to": 1488
+  },
+  {
+   "key": "primary",
+   "from": 1495,
+   "to": 1496
+  },
+  {
+   "key": "primary",
+   "from": 1507,
+   "to": 1508
+  },
+  {
+   "key": "primary",
+   "from": 1515,
+   "to": 1516
+  },
+  {
+   "key": "primary",
+   "from": 1527,
+   "to": 1528
+  },
+  {
+   "key": "primary",
+   "from": 1535,
+   "to": 1536
+  },
+  {
+   "key": "primary",
+   "from": 1547,
+   "to": 1548
+  },
+  {
+   "key": "left",
+   "from": 1489,
+   "to": 1556
+  },
+  {
+   "key": "primary",
+   "from": 1555,
+   "to": 1556
+  },
+  {
+   "key": "right",
+   "from": 1556,
+   "to": 1557
+  },
+  {
+   "key": "left",
+   "from": 1557,
+   "to": 1563
+  },
+  {
+   "key": "primary",
+   "from": 1562,
+   "to": 1563
+  },
+  {
+   "key": "right",
+   "from": 1563,
+   "to": 1565
+  },
+  {
+   "key": "left",
+   "from": 1565,
+   "to": 1569
+  },
+  {
+   "key": "primary",
+   "from": 1570,
+   "to": 1571
+  },
+  {
+   "key": "right",
+   "from": 1570,
+   "to": 1572
+  },
+  {
+   "key": "primary",
+   "from": 1578,
+   "to": 1579
+  },
+  {
+   "key": "primary",
+   "from": 1590,
+   "to": 1591
+  },
+  {
+   "key": "down",
+   "from": 1576,
+   "to": 1599
+  },
+  {
+   "key": "primary",
+   "from": 1598,
+   "to": 1599
+  },
+  {
+   "key": "up",
+   "from": 1599,
+   "to": 1601
+  },
+  {
+   "key": "down",
+   "from": 1601,
+   "to": 1606
+  },
+  {
+   "key": "up",
+   "from": 1606,
+   "to": 1607
+  },
+  {
+   "key": "primary",
+   "from": 1610,
+   "to": 1611
+  },
+  {
+   "key": "primary",
+   "from": 1618,
+   "to": 1619
+  },
+  {
+   "key": "left",
+   "from": 1609,
+   "to": 1626
+  },
+  {
+   "key": "primary",
+   "from": 1625,
+   "to": 1626
+  },
+  {
+   "key": "right",
+   "from": 1626,
+   "to": 1628
+  },
+  {
+   "key": "right",
+   "from": 1631,
+   "to": 1632
+  },
+  {
+   "key": "left",
+   "from": 1635,
+   "to": 1636
+  },
+  {
+   "key": "right",
+   "from": 1636,
+   "to": 1638
+  },
+  {
+   "key": "left",
+   "from": 1638,
+   "to": 1640
+  },
+  {
+   "key": "down",
+   "from": 1635,
+   "to": 1641
+  },
+  {
+   "key": "right",
+   "from": 1640,
+   "to": 1641
+  }
+ ],
+ "tape_version": 8,
+ "description": "scratch (hammer-d D1): {\"boot\":{\"level\":40,\"x\":928,\"y\":96},\"items\":\"hasSword,hasGhostSword,hasShield,hasFire,hasTorch\",\"goal\":\"collect:64,144\",\"repo\":\"/tmp/claude-0/-home-user-Archipelago-CC/d6227460-dd8c-5035-9885-b8dcb8e659c7/scratchpad/wt\",\"verdict\":\"SOLVED\",\"ticks\":1641,\"hits\":0,\"landings\":[{\"t\":1187,\"id\":\"spinner@192,144\",\"weapon\":\"ghostsword\",\"hits\":2,\"killed\":false,\"reach\":20.765},{\"t\":1239,\"id\":\"spinner@192,144\",\"weapon\":\"ghostsword\",\"hits\":4,\"killed\":true,\"reach\":20.95}],\"kills\":null,\"verbs\":[\"brave\",\"kill\",\"hold\",\"break\",\"collect\"]}"
+}

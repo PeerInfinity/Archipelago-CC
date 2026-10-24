@@ -1,0 +1,32 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-bosskey-lock-shut",
+  "description": "THE KEY LEG's shut-before control. Boots 16 px south of `bosslock@224,208`'s key line in L30 and holds UP for 140 ticks — against a `BossLock` that opens on tick 80 of contact, so this is not a walk that ran out of patience. Nothing in the run holds `Player.hasKey(1)`, so `BossLock.update` never sets `activate`, `type` stays \"Solid\", the walk PINS with its box flush against y=224, and `persistence_cleared` stays EMPTY. Without this arm, \"the key leg reached L32\" is not evidence that anything was ever in the way.",
+  "boot": {
+    "level": 30,
+    "x": 224,
+    "y": 234
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 160,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 4,
+      "to": 144
+    }
+  ]
+}

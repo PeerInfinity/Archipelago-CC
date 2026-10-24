@@ -1,0 +1,57 @@
+total s 665.591936
+-- inclusive top (solver functions)
+  604.8 s  90.9%  (anon) solverBot.js:16586
+  604.8 s  90.9%  withSolveDeadline solverBot.js:16596
+  604.8 s  90.9%  solveSegmentDeadlined solverBot.js:16575
+  604.8 s  90.9%  solveSegment solverBot.js:16566
+  604.8 s  90.9%  solveSegmentUnder solverBot.js:16623
+  604.8 s  90.9%  walkTo solverBot.js:19797
+  604.8 s  90.9%  walkToUnder solverBot.js:19271
+  604.0 s  90.7%  climbLadder solverBot.js:19262
+  604.0 s  90.7%  climbLadderUnder solverBot.js:17732
+  603.4 s  90.7%  execute solverBot.js:18880
+  603.4 s  90.7%  execKillByPress solverBot.js:12729
+  603.4 s  90.7%  execKillByPressOnce solverBot.js:12788
+  333.9 s  50.2%  deriveStrike solverBot.js:9226
+  333.7 s  50.1%  nextNow solverBot.js:12967
+  265.1 s  39.8%  moveNow solverBot.js:12990
+  265.1 s  39.8%  noStrikeMove solverBot.js:10175
+  265.1 s  39.8%  refuge solverBot.js:12994
+  265.1 s  39.8%  refugeNow solverBot.js:12984
+  263.9 s  39.6%  deriveRefuge solverBot.js:9060
+  162.1 s  24.4%  walkableCells solverBot.js:8917
+  121.4 s  18.2%  spinnerForecast levelRun.js:15075
+  119.0 s  17.9%  stepSpinners spinner.js:709
+  117.0 s  17.6%  stepSpinner spinner.js:365
+  108.7 s  16.3%  clearOfHammersAt solverBot.js:8993
+  107.6 s  16.2%  hammerHitsPlayer spinner.js:655
+   94.7 s  14.2%  reflectAxis spinner.js:301
+   93.9 s  14.1%  collides levelRun.js:5332
+   80.2 s  12.1%  previewWalk solverBot.js:4725
+   72.6 s  10.9%  opportunityAt solverBot.js:9250
+   71.6 s  10.8%  strikeLineBlocked solverBot.js:9210
+   71.5 s  10.7%  collideLineSolid levelRun.js:16752
+   71.4 s  10.7%  collideLineSolid levelRun.js:10042
+   49.9 s   7.5%  step levelRun.js:7713
+   49.3 s   7.4%  (anon) spinner.js:426
+   45.4 s   6.8%  (anon) spinner.js:433
+   42.3 s   6.4%  walkTo solverBot.js:9325
+   22.7 s   3.4%  hammerLine spinner.js:540
+   18.2 s   2.7%  step levelRun.js:16583
+   16.4 s   2.5%  tileTypeAt levelRun.js:5336
+-- self top
+   87.7 s  13.2%  plannerObstacleAt botDriverV2.js:313
+   72.1 s  10.8%  collideLineSolid crusher.js:155
+   60.6 s   9.1%  (garbage collector) :0
+   44.9 s   6.7%  coerceTerrainState tapeFormat.js:1686
+   44.0 s   6.6%  solidCandidates levelWorld.js:3997
+   32.9 s   4.9%  liveRectOf levelWorld.js:4297
+   31.9 s   4.8%  collideLineSolid levelRun.js:10042
+   31.9 s   4.8%  collidesSolid levelWorld.js:6268
+   29.1 s   4.4%  deriveRefuge solverBot.js:9060
+   28.1 s   4.2%  solidBoxesForMover levelWorld.js:6359
+   22.6 s   3.4%  hammerLine spinner.js:540
+   20.5 s   3.1%  step levelRun.js:7713
+   17.5 s   2.6%  assertNormalizedLiveOpts levelWorld.js:3797
+   17.0 s   2.5%  nearestTileScanIndexed levelWorld.js:3883
+   15.5 s   2.3%  deriveStrike solverBot.js:9226

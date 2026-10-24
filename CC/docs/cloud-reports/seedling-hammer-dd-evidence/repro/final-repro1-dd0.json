@@ -1,0 +1,39 @@
+{
+ "view": "/tmp/claude-0/-home-user-Archipelago-CC/f67fa899-7a7b-532f-82e5-bb4433913e4b/scratchpad/w0/step-50-boot.json",
+ "boot": {
+  "level": 30,
+  "x": 176,
+  "y": 48
+ },
+ "goals": "collect:64,64;exit:224,160",
+ "env": {
+  "SEEDLING_STRIKE_IFRAME_LAPSE": "1",
+  "SEEDLING_PRESS_KILL_DONE_ON_WALK": "0",
+  "SEEDLING_CEREMONY_SHOVE": "1"
+ },
+ "verdict": "REFUSED",
+ "name": "BotDriverV2Error",
+ "message": "solverBot(c1) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208) -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has left the world — bobsoldier@48,80 is a `modelled` press target (KILL_ARM_POLICY.BobSoldier) 5.3 px from the walk; the stance (72,88) puts it 12.5 px away, inside its 80 px leash, so it CHASES. The forecast walks there in 24 tick(s) and stands: bobsoldier@48,80 dies at tick 4, and NO body reaches the player at any tick of either half — the union map's own answer at every sample, with the bodies stepped against this candidate. 5 stance(s) qualified out of 38 reachable of 79 in leash; this one is the soonest kill. The presses are the one opportunistic strike policy every walk uses, not a second schedule.) is ALREADY TRUE before a tick is spent, so waiting for it proves nothing. Either an earlier step did the work or the policy is baiting a body that is not there.",
+ "refusalTicks": null,
+ "keysMd5": null,
+ "at": {
+  "level": 30,
+  "t": 192,
+  "x": 72.65027025319233,
+  "y": 88.43371212673944,
+  "vx": 0,
+  "vy": 0
+ },
+ "rows": [],
+ "hits": [],
+ "bombEvents": 0,
+ "ghost": false,
+ "primary": "sword",
+ "landings": [],
+ "weapons": [
+  "sword"
+ ],
+ "ms": 918,
+ "sites": {},
+ "msgMd5": "e74d9427ce71ca102cea34b51cad2c65"
+}

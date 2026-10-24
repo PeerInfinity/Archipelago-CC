@@ -1,0 +1,27 @@
+import sys
+p, which = sys.argv[1], sys.argv[2]
+s = open(p, encoding='utf-8').read()
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, a[:60]
+    s = s.replace(a, b)
+if which == 'k40':
+    rep("""    const { ice, waterfall } = strikeTerrainOf(run.world);
+    if (ice || waterfall) return null;""", """    const n = []; for (const sm of walk.samples) n[sm.wp] = (n[sm.wp] ?? 0) + 1;
+    const longest = Math.max(0, ...[...n].map((x) => x ?? 0));
+    if (longest > PREVIEW_AGREEMENT_BOUND + 40) return `DASH_LEG_PRECHECK: K40 ${longest}`;
+    if (longest >= 0) return null;
+    const { ice, waterfall } = strikeTerrainOf(run.world);
+    if (ice || waterfall) return null;""")
+elif which == 'offbyone':
+    rep("if (floor === null || floor <= PREVIEW_AGREEMENT_BOUND) continue;", "if (floor === null || floor < PREVIEW_AGREEMENT_BOUND) continue;")
+elif which == 'dashed':
+    rep("    const legCut = dashLegPrecheck(run, base);\n    if (legCut !== null) return { ...refuse(legCut), baseline };", "    const legCut = null;")
+    rep("""        if (walk.truncated && walk.truncated.kind !== 'crossed') {
+            row.kind = 'stalled';""", """        const dashedCut = dashLegPrecheck(run, walk);
+        if (dashedCut !== null) {
+            row.kind = 'leg-bound';
+            row.why = dashedCut;
+        } else if (walk.truncated && walk.truncated.kind !== 'crossed') {
+            row.kind = 'stalled';""")
+open(p, 'w', encoding='utf-8').write(s)

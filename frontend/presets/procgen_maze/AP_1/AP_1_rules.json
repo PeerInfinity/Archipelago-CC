@@ -8,9 +8,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ProcgenMazeWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -173,7 +170,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_1_0__key_red_pickup__5_5": "key_red",
@@ -187,7 +188,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_1_1": {
@@ -200,7 +200,7 @@
         "playable_payload": {
           "width": 8,
           "height": 6,
-          "tiles": [1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 4,
             "y": 3
@@ -222,7 +222,7 @@
           "items": [],
           "obstacleLib": {},
           "itemLib": {},
-          "longestShortestPath": 9,
+          "longestShortestPath": 5,
           "fogEnabled": true
         },
         "biome": {
@@ -380,12 +380,14 @@
     }
   },
   "procgen_metadata": {
-    "driver": "grid-growth",
-    "stop_reason": "pool_empty",
-    "region_count": 3,
-    "grid_dims": {
-      "width": 3,
-      "height": 2
+    "1": {
+      "driver": "grid-growth",
+      "stop_reason": "pool_empty",
+      "region_count": 3,
+      "grid_dims": {
+        "width": 3,
+        "height": 2
+      }
     }
   },
   "sphere_log": [

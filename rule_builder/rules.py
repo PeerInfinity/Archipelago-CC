@@ -344,8 +344,31 @@ class Rule(Generic[TWorld]):
             return result
 
         def _get_args_dict(self) -> dict[str, Any]:
-            """Fork: override in subclasses to provide serializable args for to_dict()."""
-            return {}
+            """Fork: override in subclasses to provide serializable args for to_dict().
+
+            Default behaviour: for *game-specific custom* rules (those not in
+            ``DEFAULT_RULES``) that do not override this, auto-serialize the
+            rule's own dataclass fields so their parameters (e.g.
+            ``HasBlossoms.count``) survive export to rules.json. Without this a
+            resolved custom rule serialized to just ``{"rule": "<Name>"}`` and
+            silently dropped its arguments. Base rules are in ``DEFAULT_RULES``
+            and override this where they need args, so their serialization is
+            unchanged.
+            """
+            if self._rule_class_name in DEFAULT_RULES:
+                return {}
+            try:
+                fields = dataclasses.fields(self)
+            except TypeError:
+                # Not a dataclass (shouldn't happen for a real rule) - stay safe.
+                return {}
+            args: dict[str, Any] = {}
+            for field in fields:
+                if field.name in ("player", "caching_enabled"):
+                    continue
+                value = getattr(self, field.name, None)
+                args[field.name] = value.to_dict() if isinstance(value, FieldResolver) else value
+            return args
 
 
 @dataclasses.dataclass()

@@ -7,6 +7,7 @@ import {
   getAllRegisteredTests,
   getAllRegisteredCategories,
   getAllTestFunctions,
+  getTestFunction,
   getRegistryStats,
 } from './testRegistry.js';
 
@@ -22,7 +23,10 @@ function log(level, message, ...data) {
 }
 
 // List of test case files to import (this is the only manual part)
-const TEST_CASE_FILES = [
+// Exported for the bundled-list check (scripts/build/bundledTestCases.js):
+// init-bundled.js must import every one of these statically, or a bundled
+// run silently lacks their rows.
+export const TEST_CASE_FILES = [
   './testCases/coreTests.js',
   './testCases/locationPanelTests.js',
   './testCases/exitPanelTests.js',
@@ -42,13 +46,59 @@ const TEST_CASE_FILES = [
   './testCases/multiclientTests.js',
   './testCases/spoilerTestPanelTests.js',
   './testCases/playbackBotTests.js',
+  './testCases/discoveryModeTests.js',
   './testCases/textAdventureWrapperTests.js',
   './testCases/flashSubstrateTests.js',
+  './testCases/runnerDemoTests.js',
+  './testCases/runnerBlockModeTests.js',
+  './testCases/noiz2saSubstrateTests.js',
+  './testCases/jtaSubstrateWrapperTests.js',
+  './testCases/omsiSubstrateWrapperTests.js',
+  './testCases/jtaBalanceTests.js',
+  './testCases/jtaDatasetTests.js',
+  './testCases/jtaScheduleTests.js',
+  './testCases/omsiScheduleTests.js',
+  './testCases/omsiUnlockTests.js',
+  './testCases/omsiRegionSplitTests.js',
+  './testCases/mazeConsumableTileTests.js',
+  './testCases/mazeBlockModeTests.js',
+  './testCases/seedlingAtlasMazeTests.js',
+  './testCases/seedlingJsRuntimeTests.js',
+  './testCases/taswBlockModeTests.js',
+  './testCases/apworldEditorTests.js',
+  './testCases/substrateRegistryPanelTests.js',
+  './testCases/procgenPipelineTests.js',
+  './testCases/quickLaunchTests.js',
+  './testCases/miniPanelsTests.js',
+  './testCases/tutorialTests.js',
+  './testCases/storagePanelTests.js',
+  './testCases/ruleConverterTests.js',
   //'./testCases/manualTests.js',
 ];
 
 let discoveryComplete = false;
 let discoveryPromise = null;
+
+// Test files whose import threw ({ file, error }). A file that fails to import
+// registers none of its rows, so the roster simply lacks them and every other
+// signal stays green; testLogic publishes this list in
+// __playwrightTestResults__.importFailures and app.spec.js fails the run on it.
+let importFailures = [];
+
+function recordImportFailure(file, error) {
+  importFailures.push({
+    file,
+    error: `${error?.name || 'Error'}: ${error?.message ?? String(error)}`,
+  });
+}
+
+/**
+ * Test files that failed to import in this discovery (a copy).
+ * @returns {Array<{file: string, error: string}>}
+ */
+export function getImportFailures() {
+  return importFailures.map((failure) => ({ ...failure }));
+}
 
 /**
  * Discover and import all test files
@@ -90,6 +140,7 @@ export async function discoverTests() {
         log('info', `[TestDiscovery] Successfully imported ${file}`);
       } catch (error) {
         log('error', `[TestDiscovery] Failed to import ${file}:`, error);
+        recordImportFailure(file, error);
       }
     }
 
@@ -139,6 +190,10 @@ export function getDiscoveredCategories() {
 /**
  * Get all test functions (after discovery is complete)
  * @returns {Object} Object with functionName as key and function as value
+ *
+ * ⚠ Keyed by JS FUNCTION NAME — two test files defining same-named
+ * functions collide in this map (the later registration wins both
+ * slots). Prefer getDiscoveredTestFunctionById for running a test.
  */
 export function getDiscoveredTestFunctions() {
   if (!discoveryComplete) {
@@ -150,6 +205,22 @@ export function getDiscoveredTestFunctions() {
   }
 
   return getAllTestFunctions();
+}
+
+/**
+ * Get one test's function by its registered id — the collision-proof
+ * resolution path the runner uses. Returns null when the id is unknown
+ * (or discovery hasn't run).
+ */
+export function getDiscoveredTestFunctionById(testId) {
+  if (!discoveryComplete) {
+    log(
+      'warn',
+      '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
+    );
+    return null;
+  }
+  return getTestFunction(testId);
 }
 
 /**
@@ -166,6 +237,7 @@ export function isDiscoveryComplete() {
 export function forceRediscovery() {
   discoveryComplete = false;
   discoveryPromise = null;
+  importFailures = [];
   log(
     'info',
     '[TestDiscovery] Forced rediscovery - next discoverTests() call will reimport files'
@@ -184,6 +256,7 @@ export async function registerTestFile(filePath) {
     log('info', `[TestDiscovery] Successfully imported ${filePath}`);
   } catch (error) {
     log('error', `[TestDiscovery] Failed to import ${filePath}:`, error);
+    recordImportFailure(filePath, error);
     throw error;
   }
 }

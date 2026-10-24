@@ -1,0 +1,707 @@
+{
+ "source": "measure-seedling-cleartag.mjs",
+ "rows": [
+  {
+   "event": "flag:L0:1",
+   "where": "L1 teleporter@64,112 -> (80,112)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside breakablerock@80,112 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L2 stairsup@48,16 -> (256,256)",
+   "verdict": "SOLVES",
+   "ticks": 54,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 43,
+   "confirmedAt": 54,
+   "by": "breakablerock",
+   "ms": 140,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L12 teleporter@0,80 -> (288,176)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside breakablerock@288,176 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L13 stairsup@64,144 -> (48,192)",
+   "verdict": "SOLVES",
+   "ticks": 198,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 185,
+   "confirmedAt": 198,
+   "by": "breakablerock",
+   "ms": 800,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L86 teleporter@48,64 -> (160,288)",
+   "verdict": "SOLVES",
+   "ticks": 175,
+   "arm": "verb",
+   "verb": "break",
+   "stance": {
+    "x": 280,
+    "y": 184
+   },
+   "ledgerAt": 156,
+   "confirmedAt": 175,
+   "by": "breakablerock",
+   "ms": 252,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L89 teleporter@160,304 -> (240,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-0-1) clear-tag {0,1} breakablerock@288,176: 'break' could not be resolved from (248,24): solverBot: no REACHABLE stance for a swing at breakablerock@288,176 in level 0 — 1 cell(s) put the slash rect on the rock and none plans a corridor from (248,24); 10 more were beyond SLASH_REACH (16 px) and 0 were in reach with the rect pointing elsewhere. ⇒ the rock is on the frontier and t",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L94 teleporter@304,160 -> (16,128)",
+   "verdict": "SOLVES",
+   "ticks": 244,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 228,
+   "confirmedAt": 244,
+   "by": "breakablerock",
+   "ms": 854,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:1",
+   "where": "L94 teleporter@304,176 -> (16,144)",
+   "verdict": "SOLVES",
+   "ticks": 233,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 221,
+   "confirmedAt": 233,
+   "by": "breakablerock",
+   "ms": 797,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L1 teleporter@64,112 -> (80,112)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside breakablerock@80,112 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L2 stairsup@48,16 -> (256,256)",
+   "verdict": "SOLVES",
+   "ticks": 121,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 103,
+   "confirmedAt": 121,
+   "by": "breakablerock",
+   "ms": 260,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L12 teleporter@0,80 -> (288,176)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside breakablerock@288,176 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L13 stairsup@64,144 -> (48,192)",
+   "verdict": "SOLVES",
+   "ticks": 75,
+   "arm": "verb",
+   "verb": "break",
+   "stance": {
+    "x": 104,
+    "y": 120
+   },
+   "ledgerAt": 56,
+   "confirmedAt": 75,
+   "by": "breakablerock",
+   "ms": 86,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L86 teleporter@48,64 -> (160,288)",
+   "verdict": "SOLVES",
+   "ticks": 181,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 166,
+   "confirmedAt": 181,
+   "by": "breakablerock",
+   "ms": 299,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L89 teleporter@160,304 -> (240,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-0-4) clear-tag {0,4} breakablerock@80,112: 'break' could not be resolved from (248,24): solverBot: no REACHABLE stance for a swing at breakablerock@80,112 in level 0 — 4 cell(s) put the slash rect on the rock and none plans a corridor from (248,24); 7 more were beyond SLASH_REACH (16 px) and 0 were in reach with the rect pointing elsewhere. ⇒ the rock is on the frontier and the ",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L94 teleporter@304,160 -> (16,128)",
+   "verdict": "SOLVES",
+   "ticks": 54,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 15,
+   "confirmedAt": 54,
+   "by": "breakablerock",
+   "ms": 25,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L0:4",
+   "where": "L94 teleporter@304,176 -> (16,144)",
+   "verdict": "SOLVES",
+   "ticks": 59,
+   "arm": "cleared-in-passing",
+   "verb": "break",
+   "stance": null,
+   "ledgerAt": 15,
+   "confirmedAt": 59,
+   "by": "breakablerock",
+   "ms": 41,
+   "items": [
+    "hasSword"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L0 teleporter@304,176 -> (16,80)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L5 stairsup@16,16 -> (96,224)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L24 teleporter@32,144 -> (40,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L24 teleporter@48,144 -> (40,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L33 teleporter@32,64 -> (432,368)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L34 teleporter@32,144 -> (336,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L34 teleporter@128,0 -> (432,560)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L35 teleporter@32,64 -> (112,112)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L36 teleporter@32,128 -> (168,384)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L37 teleporter@32,304 -> (592,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L83 teleporter@32,64 -> (32,864)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside magicallock@32,864, bosslock@32,864 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L88 teleporter@96,304 -> (304,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 1,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L95 teleporter@624,64 -> (16,352)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:7",
+   "where": "L95 teleporter@624,80 -> (16,368)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-7) clear-tag {12,7} magicallock@32,864: 'kill' is SELECTED and REGISTERED for solid:magicallock, and the resolver could not bind this obstacle against live state",
+   "ticks": 0,
+   "ms": 0,
+   "items": [
+    "hasWand"
+   ]
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L0 teleporter@304,176 -> (16,80)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (24,88): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (24,88).",
+   "ticks": 0,
+   "ms": 337,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L5 stairsup@16,16 -> (96,224)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (104,232): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (104,232).",
+   "ticks": 0,
+   "ms": 161,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L24 teleporter@32,144 -> (40,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (48,712): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (48,712).",
+   "ticks": 0,
+   "ms": 176,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L24 teleporter@48,144 -> (40,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (48,712): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (48,712).",
+   "ticks": 0,
+   "ms": 170,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L33 teleporter@32,64 -> (432,368)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (440,376): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (440,376).",
+   "ticks": 0,
+   "ms": 274,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L34 teleporter@32,144 -> (336,704)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (344,712): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (344,712).",
+   "ticks": 0,
+   "ms": 164,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L34 teleporter@128,0 -> (432,560)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (440,568): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (440,568).",
+   "ticks": 0,
+   "ms": 237,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L35 teleporter@32,64 -> (112,112)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (120,120): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (120,120).",
+   "ticks": 0,
+   "ms": 260,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L36 teleporter@32,128 -> (168,384)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (176,392): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (176,392).",
+   "ticks": 0,
+   "ms": 266,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L37 teleporter@32,304 -> (592,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (600,24): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (600,24).",
+   "ticks": 0,
+   "ms": 184,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L83 teleporter@32,64 -> (32,864)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside magicallock@32,864, bosslock@32,864 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L88 teleporter@96,304 -> (304,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (312,24): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (312,24).",
+   "ticks": 0,
+   "ms": 259,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L95 teleporter@624,64 -> (16,352)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (24,360): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (24,360).",
+   "ticks": 0,
+   "ms": 266,
+   "items": []
+  },
+  {
+   "event": "flag:L12:12",
+   "where": "L95 teleporter@624,80 -> (16,368)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-12-12) clear-tag {12,12} bosslock@32,864: 'keylock' could not be resolved from (24,376): solverBot: no REACHABLE stance on bosslock@32,864's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (24,376).",
+   "ticks": 0,
+   "ms": 272,
+   "items": []
+  },
+  {
+   "event": "flag:L24:0",
+   "where": "L12 teleporter@40,688 -> (48,128)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside burnabletree@32,128 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L24:0",
+   "where": "L23 stairsup@32,32 -> (96,80)",
+   "verdict": "SOLVES",
+   "ticks": 114,
+   "arm": "verb",
+   "verb": "burn",
+   "stance": {
+    "x": 56,
+    "y": 120
+   },
+   "ledgerAt": 64,
+   "confirmedAt": 114,
+   "by": "burnabletree",
+   "ms": 55,
+   "items": [
+    "hasSword",
+    "hasFire"
+   ]
+  },
+  {
+   "event": "flag:L71:2",
+   "where": "L72 teleporter@0,256 -> (288,96)",
+   "verdict": "REFUSES",
+   "kind": "danger",
+   "reason": null,
+   "why": "solverBot(cleartag-71-2) clear-tag {71,2} shieldlock@288,256 -> touch stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (280.2,158.4) — hazard:spinningaxe@256,144 (a SpinningAxe's 32 px blade on its update 47 of this visit (rate 7, 329°) — the exact `collideLine`/`collideRect` at THIS tick, not the disc) — and every rung of ⚖ §11.8a's order refused:\n  avoid: the danger-",
+   "ticks": 0,
+   "ms": 9704,
+   "items": [
+    "hasShield",
+    "hasDarkShield"
+   ]
+  },
+  {
+   "event": "flag:L71:2",
+   "where": "L75 teleporter@64,224 -> (96,16)",
+   "verdict": "SOLVES",
+   "ticks": 457,
+   "arm": "verb",
+   "verb": "touch",
+   "stance": null,
+   "ledgerAt": 456,
+   "confirmedAt": 457,
+   "by": "shieldlock@288,256",
+   "ms": 333,
+   "items": [
+    "hasShield",
+    "hasDarkShield"
+   ]
+  },
+  {
+   "event": "flag:L71:2",
+   "where": "L76 teleporter@0,80 -> (288,256)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside shieldlock@288,256 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L71:2",
+   "where": "L80 teleporter@32,0 -> (224,288)",
+   "verdict": "SOLVES",
+   "ticks": 165,
+   "arm": "verb",
+   "verb": "touch",
+   "stance": null,
+   "ledgerAt": 164,
+   "confirmedAt": 165,
+   "by": "shieldlock@288,256",
+   "ms": 49,
+   "items": [
+    "hasShield",
+    "hasDarkShield"
+   ]
+  },
+  {
+   "event": "flag:L71:2",
+   "where": "L85 teleporter@80,0 -> (16,288)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "unresolved",
+   "why": "solverBot(cleartag-71-2) clear-tag {71,2} shieldlock@288,256: 'touch' could not be resolved from (24,296): solverBot: no REACHABLE stance against shieldlock@288,256's touch rect in level 71 — 2 cell(s) land the pinned box inside [287,303) and none plans a corridor from (24,296).",
+   "ticks": 0,
+   "ms": 5,
+   "items": [
+    "hasShield",
+    "hasDarkShield"
+   ]
+  },
+  {
+   "event": "flag:L112:1",
+   "where": "L111 teleporter@128,48 -> (32,208)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "no-verb",
+   "why": "solverBot(cleartag-112-1) clear-tag {112,1} rocklock@112,16: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it",
+   "ticks": 0,
+   "ms": 0,
+   "items": []
+  },
+  {
+   "event": "flag:L112:1",
+   "where": "L113 teleporter@64,144 -> (112,16)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside rocklock@112,16 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L112:1",
+   "where": "L113 teleporter@80,144 -> (112,16)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside rocklock@112,16 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L113:0",
+   "where": "L112 teleporter@112,0 -> (72,128)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "no-verb",
+   "why": "solverBot(cleartag-113-0) clear-tag {113,0} finaldoor@112,0: no strategy row exists for solid:finaldoor — the catalogue names no verb that clears it",
+   "ticks": 0,
+   "ms": 0,
+   "items": []
+  },
+  {
+   "event": "flag:L113:0",
+   "where": "L114 teleporter@64,144 -> (16,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "no-verb",
+   "why": "solverBot(cleartag-113-0) clear-tag {113,0} finaldoor@112,0: no strategy row exists for solid:finaldoor — the catalogue names no verb that clears it",
+   "ticks": 0,
+   "ms": 0,
+   "items": []
+  },
+  {
+   "event": "flag:L113:0",
+   "where": "L114 teleporter@80,144 -> (32,16)",
+   "verdict": "REFUSES",
+   "kind": "clear-tag",
+   "reason": "no-verb",
+   "why": "solverBot(cleartag-113-0) clear-tag {113,0} finaldoor@112,0: no strategy row exists for solid:finaldoor — the catalogue names no verb that clears it",
+   "ticks": 0,
+   "ms": 0,
+   "items": []
+  },
+  {
+   "event": "flag:L113:0",
+   "where": "L115 teleporter@64,144 -> (112,16)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside finaldoor@112,0 (the arrival the flag gates; never acted from)"
+  },
+  {
+   "event": "flag:L113:0",
+   "where": "L115 teleporter@80,144 -> (128,16)",
+   "verdict": "INSIDE",
+   "why": "the landing is inside finaldoor@112,0 (the arrival the flag gates; never acted from)"
+  }
+ ]
+}

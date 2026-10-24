@@ -1,0 +1,477 @@
+{
+    "game": "seedling",
+    "name": "pushblock-l65-reach-l63",
+    "boot": {
+        "level": 65,
+        "x": 185,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 65,
+            "tag": 1
+        }
+    ],
+    "equips": [
+        {
+            "t": 32,
+            "slot": 3
+        },
+        {
+            "t": 72,
+            "slot": 0
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": true,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 228,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "right",
+            "from": 9,
+            "to": 12
+        },
+        {
+            "key": "left",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "right",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "left",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "right",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "left",
+            "from": 16,
+            "to": 17
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 26
+        },
+        {
+            "key": "up",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "right",
+            "from": 32,
+            "to": 33
+        },
+        {
+            "key": "primary",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "primary",
+            "from": 81,
+            "to": 82
+        },
+        {
+            "key": "right",
+            "from": 72,
+            "to": 83
+        },
+        {
+            "key": "primary",
+            "from": 83,
+            "to": 84
+        },
+        {
+            "key": "left",
+            "from": 83,
+            "to": 88
+        },
+        {
+            "key": "right",
+            "from": 88,
+            "to": 89
+        },
+        {
+            "key": "primary",
+            "from": 89,
+            "to": 90
+        },
+        {
+            "key": "primary",
+            "from": 95,
+            "to": 96
+        },
+        {
+            "key": "primary",
+            "from": 101,
+            "to": 102
+        },
+        {
+            "key": "down",
+            "from": 90,
+            "to": 104
+        },
+        {
+            "key": "primary",
+            "from": 103,
+            "to": 104
+        },
+        {
+            "key": "up",
+            "from": 104,
+            "to": 107
+        },
+        {
+            "key": "down",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "primary",
+            "from": 121,
+            "to": 122
+        },
+        {
+            "key": "left",
+            "from": 112,
+            "to": 124
+        },
+        {
+            "key": "primary",
+            "from": 123,
+            "to": 124
+        },
+        {
+            "key": "right",
+            "from": 124,
+            "to": 125
+        },
+        {
+            "key": "left",
+            "from": 125,
+            "to": 130
+        },
+        {
+            "key": "primary",
+            "from": 129,
+            "to": 130
+        },
+        {
+            "key": "right",
+            "from": 130,
+            "to": 132
+        },
+        {
+            "key": "left",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "right",
+            "from": 133,
+            "to": 134
+        },
+        {
+            "key": "left",
+            "from": 134,
+            "to": 135
+        },
+        {
+            "key": "primary",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "right",
+            "from": 136,
+            "to": 141
+        },
+        {
+            "key": "left",
+            "from": 141,
+            "to": 142
+        },
+        {
+            "key": "primary",
+            "from": 141,
+            "to": 142
+        },
+        {
+            "key": "primary",
+            "from": 143,
+            "to": 144
+        },
+        {
+            "key": "up",
+            "from": 144,
+            "to": 150
+        },
+        {
+            "key": "primary",
+            "from": 149,
+            "to": 150
+        },
+        {
+            "key": "down",
+            "from": 150,
+            "to": 152
+        },
+        {
+            "key": "up",
+            "from": 152,
+            "to": 154
+        },
+        {
+            "key": "down",
+            "from": 154,
+            "to": 155
+        },
+        {
+            "key": "up",
+            "from": 155,
+            "to": 157
+        },
+        {
+            "key": "down",
+            "from": 158,
+            "to": 160
+        },
+        {
+            "key": "primary",
+            "from": 161,
+            "to": 162
+        },
+        {
+            "key": "primary",
+            "from": 163,
+            "to": 164
+        },
+        {
+            "key": "left",
+            "from": 164,
+            "to": 170
+        },
+        {
+            "key": "primary",
+            "from": 169,
+            "to": 170
+        },
+        {
+            "key": "right",
+            "from": 170,
+            "to": 172
+        },
+        {
+            "key": "left",
+            "from": 172,
+            "to": 174
+        },
+        {
+            "key": "right",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "left",
+            "from": 175,
+            "to": 176
+        },
+        {
+            "key": "primary",
+            "from": 181,
+            "to": 182
+        },
+        {
+            "key": "primary",
+            "from": 183,
+            "to": 184
+        },
+        {
+            "key": "primary",
+            "from": 189,
+            "to": 190
+        },
+        {
+            "key": "primary",
+            "from": 195,
+            "to": 196
+        },
+        {
+            "key": "primary",
+            "from": 201,
+            "to": 202
+        },
+        {
+            "key": "primary",
+            "from": 203,
+            "to": 204
+        },
+        {
+            "key": "primary",
+            "from": 209,
+            "to": 210
+        },
+        {
+            "key": "up",
+            "from": 180,
+            "to": 216
+        },
+        {
+            "key": "primary",
+            "from": 215,
+            "to": 216
+        },
+        {
+            "key": "down",
+            "from": 216,
+            "to": 217
+        },
+        {
+            "key": "primary",
+            "from": 221,
+            "to": 222
+        },
+        {
+            "key": "up",
+            "from": 217,
+            "to": 224
+        },
+        {
+            "key": "primary",
+            "from": 223,
+            "to": 224
+        },
+        {
+            "key": "down",
+            "from": 224,
+            "to": 226
+        },
+        {
+            "key": "up",
+            "from": 226,
+            "to": 228
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — route step 148 (L65 → L63): from the L68 arrival, one spear thrust E moves `pushableblockspear@176,128` to (12,8) and the walk goes up the west column to `teleporter@128,0`. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1, 2, 3, 4], items [canSwim, hasDarkSword, hasFeather, hasFire, hasShield, hasSpear, hasTorch, hasWand]), with darktrap@144,144's clear [{\"level\":65,\"tag\":1}] declared so the walk meets no DarkTrap. The solver's own plan: 228 t, 1 thrust(s), equips [{\"t\":32,\"slot\":3},{\"t\":72,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-pushblock-witness.mjs."
+}

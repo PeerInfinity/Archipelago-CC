@@ -1,0 +1,33 @@
+divergence sweep run 38343649914 (head 9790b4f97d, 2026-10-13), 843 legs, 730 completed solves
+solvedMs median 143.0 max 5902  >1s 119  >5s 2
+
+slowest completed solves (solvedMs, leg wall ms, id, key, end):
+  (5902, 50401, 351, 'level_32 <- in_L30_224_160 -> location:Level 032 - Bob Boss', 'done')
+  (5212, 60079, 418, 'level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152', 'done')
+  (4540, 36201, 385, 'level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20', 'done')
+  (4516, 33320, 408, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21', 'done')
+  (4183, 22394, 168, 'level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352', 'done')
+  (4175, 33298, 404, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20', 'done')
+  (4167, 30934, 403, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20', 'done')
+  (4145, 24948, 401, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20', 'done')
+  (4085, 26265, 402, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20', 'done')
+  (4083, 22673, 411, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23', 'done')
+  (4078, 8507, 376, 'level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0', 'done')
+  (4066, 32616, 388, 'level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21', 'done')
+  (4048, 9683, 380, 'level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96', 'done')
+  (4028, 6914, 379, 'level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0', 'done')
+  (3995, 24988, 412, 'level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23', 'done')
+
+longest legs by wall (ms, id, end, key):
+  90086 397 timeout level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+  90052 414 timeout level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+  72141 110 failed level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+  68222 381 failed level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+  62473 378 failed level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+  60079 418 done level_42 <- in_L40_848_0 -> location:Level 042 - Totem Part 184,152
+  50401 351 done level_32 <- in_L30_224_160 -> location:Level 032 - Bob Boss
+  38615 121 done level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+  38269 387 done level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+  36862 111 failed level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+  36456 170 done level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+  36285 386 done level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20

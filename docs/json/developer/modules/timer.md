@@ -1,52 +1,45 @@
 ### Module: `Timer`
 
 -   **ID:** `timer`
--   **Purpose:** Manages the logic and UI for the automated location checking timer. This module encapsulates the "Begin" / "Stop" functionality, the progress bar, and the "Quick Check" feature. It is designed as a "headless" component whose UI can be hosted within other panels.
+-   **Purpose:** The location-check timer: on a (random, configurable) delay it checks the locations that are reachable now, until nothing new is. It is **headless** — it has no UI of its own. The [Playback Bot](../../user/modules/playbackBot.md)'s **Check next: Any reachable location (timer)** mode is its UI: the bot's ▶ / ⏭ call `begin()`, ⏯ calls `determineAndDispatchQuickCheck()`, ⏹ / ↺ call `stop()`.
 
 ---
 
 #### Key Files
 
--   `frontend/modules/timer/index.js`: The module's entry point, which handles registration and creates the logic/UI instances.
--   `frontend/modules/timer/timerLogic.js`: Contains the core `TimerLogic` class, which handles the timer loop, calculating delays, and determining the next location to check.
--   `frontend/modules/timer/timerUI.js`: The `TimerUI` class, which renders the UI components (progress bar and buttons) and connects them to the `TimerLogic`.
+-   `frontend/modules/timer/index.js`: The module's entry point: registration, the settings schema, and the `TimerLogic` instance.
+-   `frontend/modules/timer/timerLogic.js`: The `TimerLogic` class: the timer loop, the delays, and picking the next location to check.
+
+The "Checked: …, Reachable: …" counter that used to sit beside the timer's buttons is `frontend/modules/commonUI/checksLine.js`, a widget the Console mounts.
 
 #### Responsibilities
 
--   **Timer Management:** The `TimerLogic` class is responsible for the core timer loop. When started, it calculates a random delay (within a configurable range) and waits for that duration before acting.
--   **Progress Updates:** While the timer is running, it periodically publishes `timer:progressUpdate` events so the UI can display a smoothly advancing progress bar.
--   **Location Checking:** When the timer completes, `TimerLogic` determines the next accessible, unchecked location by querying the `StateManager`. It then dispatches a `user:locationCheck` event to the `eventDispatcher` to initiate the check.
--   **UI Rendering (`TimerUI`):**
-    -   Creates the DOM for the progress bar, the `Checks Sent` counter, the "Begin"/"Stop" button, and the "Quick Check" button.
-    -   This UI component is "headless"—it does not create its own panel but is designed to be attached to a placeholder DOM element provided by a host panel (like `clientPanel` or `timerPanel`).
--   **Control Logic:** Handles user interaction with the "Begin", "Stop", and "Quick Check" buttons, calling the appropriate methods on the `TimerLogic` instance.
+-   **Timer loop:** `begin()` starts it; each tick waits a random delay in `[minCheckDelay, maxCheckDelay]` seconds (0 by default: as fast as it can), then checks. It stops by itself once every manually-checkable location is checked, or when nothing is reachable (after a short grace period in zero-delay mode, so a just-received item can land).
+-   **Location checking:** With the **Batch location checks** setting on (the default) a tick checks every accessible, unchecked location at once (`stateManager.batchCheckLocations`, and `client.sendBatchLocationChecks` when online). With it off, a tick dispatches one `user:locationCheck`, so loop mode's Loops panel can steer it.
+-   **Quick check:** `determineAndDispatchQuickCheck()` dispatches one `user:locationCheck` for the first accessible, unchecked location, and returns whether it found one.
+-   Every `user:locationCheck` it dispatches carries `fromBot: true`, so the Playback Bot's **Route clicks to bot** intercept passes it through.
 
 #### Events Published
 
 -   **`eventBus`**:
-    -   `timer:started`: When the main timer begins a new countdown.
-    -   `timer:stopped`: When the timer is manually stopped or finishes.
-    -   `timer:progressUpdate`: Fired periodically while the timer is running to update the progress bar UI.
+    -   `timer:started`: When a countdown to the next check begins (the bot reads it as "running").
+    -   `timer:stopped`: When the timer is stopped or finishes.
+    -   `timer:progressUpdate`: Periodically while running (nothing draws it at present).
+    -   `ui:notification`: Quick-check and delay messages.
 -   **`eventDispatcher`**:
-    -   `user:locationCheck`: Published when the timer fires or when the "Quick Check" button is clicked. This is the primary output for initiating a game action.
+    -   `user:locationCheck`: Each check it makes (unbatched ticks and quick checks).
 
 #### Events Subscribed To
 
--   **`eventBus`**:
-    -   `stateManager:rulesLoaded` & `connection:open`: Listens for these to know when to enable the control buttons.
-    -   `stateManager:snapshotUpdated`: Listens for state changes to update the "Checks Sent" counter.
-    -   `loop:modeChanged`: Listens for this to automatically pause itself if the user enters Archipelago Loops mode.
+-   **`eventBus`**: `settings:changed` — keeps `batchChecks` live.
 
 #### Public Functions (`centralRegistry`)
 
-The `timer` module registers public functions to allow other modules to host and control it:
-
--   **`attachTimerToHost(placeholderElement)`:** The primary function for the re-homing mechanism. A host panel calls this to provide a DOM element where the `TimerUI` should render itself.
--   **`detachTimerFromHost()`:** Removes the `TimerUI` from its current host.
--   **`setCheckDelay(min, max)`:** Allows the `/set_delay` console command to configure the timer's delay range.
+-   **`getTimerLogic()`:** The `TimerLogic` instance (the Playback Bot panel drives it through this; the timer tests too).
+-   **`setCheckDelay(min, max)`:** For the Console's `/set_delay` command.
 
 #### Dependencies & Interactions
 
--   **Host Panels (`clientPanel`, `timerPanel`):** The `Timer` module's UI is not visible unless a host panel is active and calls `attachTimerToHost`. This is managed by the "Dynamic Re-homing" system, orchestrated by a `system:rehomeTimerUI` event on the `eventDispatcher`. The highest-priority visible host panel "claims" and displays the timer UI.
--   **StateManager**: The `TimerLogic` depends on the `StateManager` to determine which locations are currently accessible and unchecked, so it knows what to check next.
--   **EventDispatcher**: It is a primary initiator of the `user:locationCheck` event, which is the core action for checking a location in the game.
+-   **StateManager**: Reads the snapshot and static data to find which locations are accessible and unchecked.
+-   **EventDispatcher**: Initiates `user:locationCheck`, the core action for checking a location.
+-   **Playback Bot**: Its panel builds the bot's `timer` dependency from `getTimerLogic()` and `timer:started` / `timer:stopped`.

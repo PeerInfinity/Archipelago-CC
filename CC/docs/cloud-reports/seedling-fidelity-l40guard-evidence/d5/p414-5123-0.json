@@ -1,0 +1,324 @@
+{
+ "what": "414/i0",
+ "seamTime": 5123,
+ "budgetWork": 640,
+ "upgradeWindowWork": 85,
+ "fidelity": "defaults",
+ "ok": false,
+ "kind": "refusal",
+ "work": 130,
+ "ticks": null,
+ "answer": "557d5b62",
+ "message": "levelRun: whether bob bob@736,800 is on screen at tick 1569 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out.",
+ "passes": [
+  {
+   "pass": "dashless",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 53188,
+   "work": 65
+  },
+  {
+   "pass": "full",
+   "ok": false,
+   "kind": "refusal",
+   "ticks": null,
+   "ms": 51749,
+   "work": 65
+  }
+ ],
+ "wallMs": 104937,
+ "points": 27585,
+ "sites": {
+  "segment": 2,
+  "goal": 2,
+  "walk": 132,
+  "heartbeat": 3049,
+  "preview": 24386,
+  "climb": 2,
+  "rung": 10,
+  "done": 2
+ },
+ "wallAfterSiteMs": {
+  "preview": 81781,
+  "heartbeat": 19128,
+  "walk": 3061,
+  "rung": 762,
+  "start": 21,
+  "done": 19,
+  "goal": 13,
+  "climb": 8,
+  "segment": 7
+ },
+ "topPairs": {
+  "preview→preview": {
+   "n": 21336,
+   "ms": 56850,
+   "maxMs": 176
+  },
+  "preview→heartbeat": {
+   "n": 2992,
+   "ms": 24423,
+   "maxMs": 66
+  },
+  "heartbeat→preview": {
+   "n": 3026,
+   "ms": 18870,
+   "maxMs": 97
+  },
+  "walk→walk": {
+   "n": 70,
+   "ms": 1813,
+   "maxMs": 65
+  },
+  "rung→heartbeat": {
+   "n": 2,
+   "ms": 697,
+   "maxMs": 376
+  },
+  "walk→preview": {
+   "n": 24,
+   "ms": 637,
+   "maxMs": 143
+  },
+  "walk→heartbeat": {
+   "n": 34,
+   "ms": 569,
+   "maxMs": 116
+  },
+  "preview→walk": {
+   "n": 58,
+   "ms": 508,
+   "maxMs": 159
+  },
+  "heartbeat→heartbeat": {
+   "n": 21,
+   "ms": 245,
+   "maxMs": 43
+  },
+  "rung→rung": {
+   "n": 8,
+   "ms": 64,
+   "maxMs": 35
+  },
+  "walk→done": {
+   "n": 2,
+   "ms": 34,
+   "maxMs": 22
+  },
+  "start→segment": {
+   "n": 1,
+   "ms": 21,
+   "maxMs": 21
+  },
+  "done→segment": {
+   "n": 1,
+   "ms": 19,
+   "maxMs": 19
+  },
+  "heartbeat→walk": {
+   "n": 2,
+   "ms": 13,
+   "maxMs": 11
+  },
+  "goal→walk": {
+   "n": 2,
+   "ms": 13,
+   "maxMs": 11
+  }
+ },
+ "segments": [
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 65
+   },
+   "work": {
+    "shouldStop": 65,
+    "ticks": 1569,
+    "previews": 12193,
+    "previewStates": 783417,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "error": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "levelRun: whether bob bob@736,800 is on screen at tick 1569 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out.",
+    "kind": "error",
+    "key": "segment/goal#0/walk/climb",
+    "name": "Error"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 1524
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  },
+  {
+   "name": "wasm-location-40",
+   "level": 40,
+   "outcome": "threw",
+   "asks": {
+    "walk": 65
+   },
+   "work": {
+    "shouldStop": 65,
+    "ticks": 1569,
+    "previews": 12193,
+    "previewStates": 783417,
+    "searchStates": 0,
+    "expansions": 0,
+    "waypointsPlanned": 5,
+    "replans": 0,
+    "dashesPressed": 0
+   },
+   "rejectionKinds": {
+    "error": 6,
+    "exhausted": 1,
+    "bound": 1,
+    "does-not-apply": 1
+   },
+   "attemptsByRole": {
+    "segment": 1,
+    "goal": 1,
+    "walk": 1,
+    "climb": 1,
+    "rung": 5,
+    "arm": 1
+   },
+   "lastWhy": {
+    "why": "levelRun: whether bob bob@736,800 is on screen at tick 1569 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out.",
+    "kind": "error",
+    "key": "segment/goal#0/walk/climb",
+    "name": "Error"
+   },
+   "heartbeat": {
+    "at": "preview-sample",
+    "count": 3049
+   },
+   "topNodes": [
+    {
+     "key": "segment",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:avoid",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:pull",
+     "attempts": 1,
+     "rej": 0
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:time",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:bait",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill",
+     "attempts": 1,
+     "rej": 1
+    },
+    {
+     "key": "segment/goal#0/walk/climb/rung:kill/arm:press",
+     "attempts": 1,
+     "rej": 1
+    }
+   ]
+  }
+ ],
+ "cpu": null
+}

@@ -1,0 +1,229 @@
+{
+  "about": "Aggregated by scripts/test/extract-noiz2sa-measured-spans.mjs from measure-noiz2sa-grid.mjs runs; see CC/docs/cloud-reports/noiz2sa-difficulty-optimism.md",
+  "method": {
+    "tool": "scripts/test/measure-noiz2sa-grid.mjs",
+    "bot": "equal tracks at the skill, observed perception",
+    "hitbox": "centered",
+    "gameSeed": 1,
+    "visit": "restart on a hit; attempt a of visit v on attemptBotSeed(v, a)",
+    "gameCommit": "7423ee8"
+  },
+  "spans": {
+    "10:7–10:boss": {
+      "skills": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        85,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100
+      ],
+      "cells": [
+        {
+          "n": 2500,
+          "deathless": 0,
+          "L": null,
+          "F": 5.307,
+          "visits": 25,
+          "censored": 25,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 5.32,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 6.172,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 6.505,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 7.033,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 2500,
+          "deathless": 0,
+          "L": null,
+          "F": 8.003,
+          "visits": 25,
+          "censored": 25,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 8.673,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1300,
+          "deathless": 0,
+          "L": null,
+          "F": 9.223,
+          "visits": 13,
+          "censored": 13,
+          "maxAttempts": 100
+        },
+        {
+          "n": 2960,
+          "deathless": 1,
+          "L": 59.968,
+          "F": 11.907,
+          "visits": 30,
+          "censored": 29,
+          "maxAttempts": 100
+        },
+        {
+          "n": 2601,
+          "deathless": 10,
+          "L": 60.821,
+          "F": 18.37,
+          "visits": 30,
+          "censored": 20,
+          "maxAttempts": 100
+        },
+        {
+          "n": 2320,
+          "deathless": 29,
+          "L": 61.773,
+          "F": 22.322,
+          "visits": 40,
+          "censored": 11,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1236,
+          "deathless": 29,
+          "L": 60.888,
+          "F": 22.496,
+          "visits": 32,
+          "censored": 3,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1279,
+          "deathless": 20,
+          "L": 60.588,
+          "F": 21.121,
+          "visits": 26,
+          "censored": 6,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1121,
+          "deathless": 150,
+          "L": 60.587,
+          "F": 32.147,
+          "visits": 150,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1045,
+          "deathless": 96,
+          "L": 60.729,
+          "F": 31.835,
+          "visits": 96,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 1142,
+          "deathless": 160,
+          "L": 60.633,
+          "F": 30.925,
+          "visits": 160,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 565,
+          "deathless": 200,
+          "L": 60.442,
+          "F": 36.494,
+          "visits": 200,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 546,
+          "deathless": 200,
+          "L": 60.607,
+          "F": 37.874,
+          "visits": 200,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 201,
+          "deathless": 200,
+          "L": 60.492,
+          "F": 12.544,
+          "visits": 200,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 206,
+          "deathless": 200,
+          "L": 59.797,
+          "F": 10.661,
+          "visits": 200,
+          "censored": 0,
+          "maxAttempts": 100
+        },
+        {
+          "n": 200,
+          "deathless": 200,
+          "L": 59.728,
+          "F": null,
+          "visits": 200,
+          "censored": 0,
+          "maxAttempts": 100
+        }
+      ]
+    }
+  }
+}

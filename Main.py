@@ -323,7 +323,11 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                 spheres: list[dict[int, set[int]]] = []
                 for sphere in multiworld.get_sendable_spheres():
                     current_sphere: dict[int, set[int]] = collections.defaultdict(set)
-                    for sphere_location in sphere:
+                    # Fork fix: iterate in a stable order. `sphere` is a set[Location], and Location hashes by id(),
+                    # so its iteration order follows memory addresses; two addresses that collide in the int set's
+                    # hash table would then swap between runs, changing the .archipelago bytes for the same seed.
+                    # See docs/json/upstream-bugs/core/nondeterministic-sphere-sets.md
+                    for sphere_location in sorted(sphere, key=lambda loc: (loc.player, loc.address)):
                         current_sphere[sphere_location.player].add(sphere_location.address)
 
                     if current_sphere:
@@ -381,13 +385,15 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")
-        # JSON-Tools exporter artifacts (rules JSON, sphere log, multiworld pickle) are
-        # copied to frontend/presets/ for local play and must NOT be bundled into the
-        # hostable .zip. A stock Archipelago WebHost (e.g. archipelago.gg) rejects the
-        # whole upload when it sees them: WebHostLib/upload.py parses every archive member
-        # that isn't the multidata/spoiler/container as a per-player slot file via
-        # int(slot_id[1:]), so "AP_<seed>_rules.json" -> int("ules") -> ValueError
-        # ("Could not load multidata. File may be corrupted or incompatible.").
+        # Defensive: JSON-Tools exporter artifacts (rules JSON, sphere log, multiworld
+        # pickle) are written straight to the output directory rather than into temp_dir,
+        # so they should never reach this loop. The filter stays as a second line of
+        # defence, because artifacts that do get bundled into the hostable .zip make a
+        # stock Archipelago WebHost (e.g. archipelago.gg) reject the whole upload:
+        # WebHostLib/upload.py parses every archive member that isn't the
+        # multidata/spoiler/container as a per-player slot file via int(slot_id[1:]), so
+        # "AP_<seed>_rules.json" -> int("ules") -> ValueError ("Could not load multidata.
+        # File may be corrupted or incompatible.").
         non_hostable_suffixes = (
             "_rules.json", "_rules-ast.json", "_sphere_log.jsonl",
             ".pkl.gz", "_pickle_meta.json",

@@ -1,0 +1,45 @@
+{"sites":365,"byKind":{"error":46,"other":86,"precondition":20,"exhausted":40,"deadline":7,"diverged":83,"does-not-apply":19,"unmodelled":8,"bound":26,"already-true":1,"n/a (planSwordDash window row)":7,"danger":17,"pending":5},"otherWrappers":42,"residue":44}
+769	SolverRefusal	`solverBot: bait ${obstacle.id} in level ${run.level} — ${why}`, { obstacle: { kind: 'solid', tag: 'crusher', id: obstacle.id } }); };
+788	refuse	`the ordering search found ${found.ordering.length} charge(s) in ${plan.length} chain(s) ` + `[${plan.map((p) => `${p.chain.id} ${p.chain.ch
+1149	refuse	`${what}: form ${boss.form} at (${boss.x.toFixed(2)},${boss.y.toFixed(2)}) — no ` + `strike lands untouched (${plan.tried} plans forecast) a
+1724	refuse	`${ctx.what}: the lean toward ${resolved.tree} crossed to ` + `level ${transition.to_level}.`); if (run.state.x === before.x && run.state.y 
+2140	refuse	`the dialogue opened with the box at (${run.state.x},${run.state.y}) on the live Seed ` + `the watcher holds out on pages ${WATCHER_SEED_PAG
+2220	SolverRefusal	`solverBot: approach ${door.id} in level ${run.level} — the door cannot open in this ` + `state: ${why.join('; and ')}. The game plays the S
+6019	refuse	'deadline'); /** * ⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — the two things a modelled hit is still
+8660	SolverRefusal	`${what}: the hold stands still for up to ${ticks} tick(s) at (${at.x},${at.y}), ` + `inside ${lobber}'s 256 px reach — ${bomb.why}. A hold 
+8770	SolverRefusal	`${what}: the hold stands still for up to ${hold.ticks} tick(s) at ` + `(${run.state.x},${run.state.y}), inside ${lobber}'s 256 px reach — $
+8957	refuse	`${label}: after the lean the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ` + `${step.des
+8971	refuse	`${label}: after the thrust the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ` + `${step.d
+13055	SolverRefusal	`${ctx.what}: ${body.id} survives the ceiling and no ` + `bait stance pulls it into a lane — ${bait.why}`, { goal: ctx.goal, obstacle: { kin
+13129	SolverRefusal	`${ctx.what}: every counted body is gone and the run's own ` + 'kill-lock ledger (`chaserKillLockOpens`) recorded NOTHING — so nothing ' + '
+13980	SolverRefusal	`${ctx.what}: the count is still waiting on [${[...ids].join(', ')}] and no ` + `stance derives for any of them — ${tried.map((t) => t.why).
+16263	SolverRefusal	refusal({ candidates, outOfReach, noRect, unsafe }), { obstacle: { kind: 'solid', id: target.id } }); }
+16449	SolverRefusal	`${what}: ${t.id}'s lane is priced as danger while its ` + `group t=${t.t} is LATCHED in the live run (${rope.ropeId} has published ` + 'it)
+19596	why=	`${body.id}: the walk to its light stance re-entered the same light arm at tick ` + `${perTick.length} with nothing spent between, so a seco
+19645	refuse	`${what} -> light (${d.pole.id}): the stance settled at (${run.state.x},${run.state.y}) facing ` + `${run.state.direction}, and the spear re
+19713	refused=	 'avoid', why: 'every reason the probe gave is a TurretSpit ' + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
+19736	refused=	 'avoid', why: 'the danger-forbidden corridor STILL probes ' + `dangerous at (${still.x.toFixed(1)},${still.y.toFixed(1)}) — ` + `${reasonsO
+19813	refused=	 'dodge', why: dodgeWhy }; } 
+20266	refused=	 'dodge', why: dodgeWhy }; } 
+20454	refused=	 'dodge', why: dodgeWhy }; } 
+20545	why=	`${ropeId} silences [${silencer.traps.join(', ')}] (group ` + `t=${silencer.group}), but ${e.message}`; }
+20568	refused=	 'pull', why: pullWhy }; } 
+20637	refused=	 'time', why: timeWhy };  /**
+20747	refused=	 'bait', why: baitWhy };  // ── rung 4: KILL — the room's own weapon, held until the count moves ─
+20937	why=	`${target.id} is a live Spinner, and the press arm refused: ` + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · '); admitted = {
+20948	why=	`${target.id} is a live Spinner whose removal the run OBSERVES (the ` + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but
+20954	why=	`${target.id} is a live Spinner, and the press arm refused: ` + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ') // ⛓ hammer-p
+20986	why=	`${admittedOffWhy} ${fightFallbackSentence(admitted)}`; } HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...admitted, ms: performance.now() - started 
+21002	why=	`${target.id} is a live Spinner and the press arm's schedule swung ` + 'through a Solid — the run refused the hit by name: ' + `${String(e.m
+21279	why=	`${kill.why}\n         chaser arm: ${hunt.why}`; } if (!killWhy) killWhy = kill.why;
+21598	refuse	`${what}: ARROWLANE — the corridor crosses an ARMED lane (${laneWalk.why}: ` + `${laneWalk.lanes.join(', ')}; arrows are not dodged, they ar
+21848	refuse	`${what}: STANCE_REENTRY — the walk to ${plan.obstacle.id}'s ` + `\`${plan.strategy}\` stance (${aim.x},${aim.y}) is itself blocked by ` + `
+22052	refuse	`${what}: CORRIDOR — the corridor meets ${reasonsOf(hit)} inside a climb already ` + `${corridorClimbDepth} deep (CORRIDOR_LADDER_NEST ${COR
+22234	refuse	`${what}: the re-planned corridor failed too — ${e.message}`, { goal, considered: [
+22341	refuse	`${whatExit}: the ${chosen.dir} step-off held ${chosen.ticks} tick(s) and the box ` + `is still on ${id} at (${run.state.x},${run.state.y}) 
+22412	refuse	`${whatExit}: hazard-floor — every way off ${id}'s rect crosses ` + `${floors.join(' or ')} the run cannot stand on (${need}); without that,
+22432	refuse	`${whatExit}: inside-solid — the run stands LATCHED on ${id} in level ${run.level} ` + `with its box INSIDE ${inside.join(', ')}: no directi
+22591	refuse	`${name}: arrival-inside-solid — the run's box at (${run.state.x},${run.state.y}) in level ` + `${run.level} is INSIDE ${ids.join(', ')} and
+23140	refuse	`${whatA}: the walk reached the apitem's centre (${centre.x},${centre.y}) ` + `in level ${run.level} and the contact rule never fired. A box
+23219	refuse	`${what}: the placement is INSIDE ${key} (${blocker.id}) — a ` + 'pickup in a solid is an obstacle, not a stance problem. ' + `${strategy ? 
+23286	refuse	`${what}: strategy '${resolved.strategy}' is selected and NOT ` + 'registered this slice.', { goal, considered: resolved.rejected,

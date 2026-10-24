@@ -86,6 +86,10 @@ function wireWithFunctionalBus({ startRegion = 'Menu' } = {}) {
     });
     gs.setStartRegions([startRegion]);
     gs.setCurrentRegion(startRegion);
+    // This suite is about the LEGACY per-region Manual checkbox, so pin the
+    // pre-M4 default: M4 flipped defaultBlockMode to 'record', which would
+    // park every manual-capable block whether the checkbox is set or not.
+    loopState.defaultBlockMode = 'playback';
     return { loopState, gs, bus, dispatcher };
 }
 
@@ -437,19 +441,40 @@ describe('Per-region manual mode (Manual checkbox)', () => {
         expect(fresh.getManualRegion('manualRegion')).toBe(true);
     });
 
-    it('substrate delegation is suppressed for manual-checked regions', () => {
-        // Delegation requires substrate 'maze' + manaEnabled.
+    it('_shouldDelegateCurrentAction is a pure capability predicate (M6)', () => {
+        // Delegation requires a registry-declared delegation capability
+        // (maze's sharing.mana.loopActionDelegation) + manaEnabled. Since M6
+        // the predicate answers CAPABILITY only — whether delegation fires is
+        // decided by block MODE in the frame dispatch, where the Bot branch is
+        // its one initiator. (It used to carry a "not Manual" exclusion and be
+        // called from a pre-dispatch tick, which delegated Record and Playback
+        // blocks out from under their own mode; blockModes.test.js pins that
+        // shadowing dead.)
         try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
         centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', () => (
             { substrate: 'maze', label: 'Maze', manaEnabled: true }
         ));
+        if (!substrateRegistry.has('maze')) {
+            substrateRegistry.register({
+                id: 'maze',
+                sharing: { mana: { loopActionDelegation: true } },
+            });
+        }
         gs.updatePath('mazeRegion', 'go', 'Menu');
         gs.addLocationCheck('Loc M', 'mazeRegion');
         loopState.currentActionIndex = 1;
         loopState.currentAction = loopState.getActionQueue()[1];
         expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+        expect(loopState.regionSolver('mazeRegion')).toBe('delegation');
+        // The legacy Manual checkbox no longer suppresses the predicate...
         loopState.setManualRegion('mazeRegion', true);
-        expect(loopState._shouldDelegateCurrentAction()).toBe(false);
+        expect(loopState._shouldDelegateCurrentAction()).toBe(true);
+        // ...it suppresses the DISPATCH: a Manual block parks, and nothing is
+        // ever handed to the substrate.
+        loopState.isProcessing = true;
+        makeTicker()(loopState);
+        expect(loopState._delegatedAction).toBeNull();
+        expect(loopState._manualRegionName).toBe('mazeRegion');
     });
 });
 
@@ -527,7 +552,7 @@ describe('Custom Queue — processFrame handling', () => {
             substrate: 'test_substrate',
             arrivalExitId: 'entrance',
             departureExitId: 'north',
-            actions: [{ type: 'move', dir: 'N' }, { type: 'move', dir: 'E' }],
+            actions: [{ actionType: 'move', actionId: 'N', substrate: 'maze', loops: 1 }, { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 90, manaMin: 88,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 7777,
@@ -545,8 +570,8 @@ describe('Custom Queue — processFrame handling', () => {
 
         expect(replayCalls).toHaveLength(1);
         expect(replayCalls[0].actions).toEqual([
-            { type: 'move', dir: 'N' },
-            { type: 'move', dir: 'E' },
+            { actionType: 'move', actionId: 'N', substrate: 'maze', loops: 1 },
+            { actionType: 'move', actionId: 'E', substrate: 'maze', loops: 1 },
         ]);
         expect(loopState._manualActionEntered).toBe(true);
         expect(loopState.isProcessing).toBe(false);
@@ -563,7 +588,7 @@ describe('Custom Queue — processFrame handling', () => {
             substrate: 'test_substrate',
             arrivalExitId: 'entrance',
             departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 9000,
@@ -620,7 +645,7 @@ describe('Custom Queue — processFrame handling', () => {
         saveQueue(rulesHash, {
             regionName: 'cqRegion', substrate: 'test_substrate',
             arrivalExitId: 'entrance', departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 5,
@@ -649,7 +674,7 @@ describe('Custom Queue — processFrame handling', () => {
         saveQueue(rulesHash, {
             regionName: 'cqRegion', substrate: 'test_substrate',
             arrivalExitId: 'entrance', departureExitId: 'n',
-            actions: [{ type: 'wait' }],
+            actions: [{ actionType: 'wait', actionId: null, substrate: 'maze', loops: 1 }],
             manaAtEntry: 100, manaAtExit: 99, manaMin: 99,
             locationsChecked: [], itemsPickedUp: [],
             recordedAt: 5,

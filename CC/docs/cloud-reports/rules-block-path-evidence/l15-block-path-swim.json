@@ -1,0 +1,63 @@
+{
+ "tape": "swim",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 521,
+ "transitions": [
+  {
+   "t": 305,
+   "from": 15,
+   "to": 16,
+   "at": {
+    "x": 40,
+    "y": 72
+   }
+  }
+ ],
+ "out": {
+  "t": 305,
+  "from": 15,
+  "to": 16,
+  "at": {
+   "x": 40,
+   "y": 72
+  }
+ },
+ "maxX": 147.6178095774563,
+ "clears": [
+  "10,0",
+  "11,0",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 520,
+  "x": 40,
+  "y": 48.900000000000006,
+  "level": 16
+ },
+ "model": {
+  "refused": null,
+  "transitions": [
+   {
+    "t": 305,
+    "from": 15,
+    "to": 16,
+    "at": {
+     "x": 40,
+     "y": 72
+    }
+   }
+  ],
+  "maxX": 147.6178095774563,
+  "final": {
+   "t": 520,
+   "x": 40,
+   "y": 48.900000000000006,
+   "level": 16
+  },
+  "agrees": true
+ }
+}

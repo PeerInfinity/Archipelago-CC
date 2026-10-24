@@ -1,0 +1,444 @@
+/**
+ * procgenDocs/docLinks — **EVERY LINK IN THE CORPUS, RESOLVED, COUNTED AND
+ * PINNED** (PROCGEN DOCS · P4, D3).
+ *
+ * ⛓ `resolveDocLink` is pure, so it can be run over all 223 links the
+ * tracked documents contain without a browser and without a server.
+ * That is the whole reason it is a separate function from the page: the page
+ * can only ever show one document at a time, and a resolver nobody ran over
+ * the WHOLE corpus is a resolver whose worst case nobody has seen.
+ *
+ * ── WHAT THIS FILE IS FOR ─────────────────────────────────────────────
+ *
+ *  1. The per-kind census, PRINTED and PINNED. A count that moves means the
+ *     documents gained a kind of link nobody classified, and somebody should
+ *     look at it before it renders as a plausible 404.
+ *  2. Every repo-relative link names a path that EXISTS in this tree.
+ *  3. Every fragment — same-doc and cross-doc — names a real heading of its
+ *     target, using the SAME `headingsOf` the page renders anchors from.
+ *  4. The `?doc=` allow list refuses everything that is not in the index.
+ *
+ * ⛔⛔ **A DEAD LINK IS A NAMED FINDING.** P4 ran this over the corpus before
+ * writing the page and found exactly two dead fragments — `omsi.md` linking
+ * `#instant-a-pump-not-a-skip` (the em dash makes it a DOUBLE hyphen) and
+ * `text-adventure.md` naming a loop-recording heading that had since gained
+ * "vs. summary". Both were plain typos, both are dead on GitHub too, and both
+ * were fixed in the `.md`s. Zero dead paths, then and now.
+ */
+
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+
+import { REPO_URL } from './demos.js';
+import { headingsOf } from './ghSlug.js';
+import {
+    DOC_DIR, DOC_FILES, INDEX_FILE,
+    docFileFor, linksIn, normalizePath, repoPathFor, resolveDocLink,
+} from './docLinks.js';
+
+const ROOT = new URL('../../../', import.meta.url).pathname;
+const FILES = readdirSync(join(ROOT, DOC_DIR)).filter((f) => f.endsWith('.md')).sort();
+const read = (f) => readFileSync(join(ROOT, DOC_DIR, f), 'utf8');
+
+/** ⛓ THE CORPUS, read once: every link with the document that wrote it. */
+const CORPUS = FILES.flatMap((doc) => linksIn(read(doc)).map((l) => ({ doc, ...l })));
+const RESOLVED = CORPUS.map((l) => ({ ...l, ...resolveDocLink(l.href, { doc: l.doc, siteRoot: '' }) }));
+
+/** ⛓ Heading slugs per document, from the page's own reader. */
+const SLUGS = new Map(FILES.map((f) => [f, new Set(headingsOf(read(f)).map((h) => h.slug))]));
+
+describe('the corpus census — printed, then pinned', () => {
+    // ⛓ THE COUNT IS INTERPOLATED, NOT TYPED (`lint-gate-labels`): the name
+    //   states the roster this row measured, so it cannot go stale against the
+    //   pin three lines down.
+    it(`resolves all ${CORPUS.length} links into five kinds and no others`, () => {
+        const by = {};
+        for (const r of RESOLVED) by[r.kind] = (by[r.kind] ?? 0) + 1;
+        // eslint-disable-next-line no-console
+        console.log(`the procgen corpus: ${FILES.length} documents, ${CORPUS.length} links — `
+            + Object.entries(by).sort().map(([k, n]) => `${n} ${k}`).join(', '));
+
+        /**
+         * ⚖ `page` is ZERO and that is a MEASUREMENT, not an omission (trap
+         * 403 — an empty answer and a broken one look identical). No tracked
+         * document links to a `frontend/**.html` today; the three frontend
+         * paths they DO name are `.js` files, which are source and go to
+         * GitHub. The branch stays because sending a live page to a blob URL
+         * is the failure it prevents, and this line is where a first such link
+         * would announce itself.
+         */
+        /**
+         * ⛓ THIS PIN HAS MOVED TWICE IN ONE SLICE, BOTH TIMES CORRECTLY, and
+         * both times because P4 WROTE INTO THE CORPUS IT MEASURES:
+         *   210 → 211  `docs.html` became a row in README's GENERATED index
+         *              table, and that row carries the page's Pages URL.
+         *   211 → 212  `seedling-bot.md`'s tracked record gained P4's own
+         *              pointer paragraph — one more Pages URL, one more
+         *              sibling link, and one link written INSIDE BACKTICKS
+         *              that `linksIn` used to count and the render never
+         *              emitted. That third one was a DEFECT in the census
+         *              reader, not a link: see `linksIn`'s docblock.
+         *   212 → 213  the ▶ LOAD-IN-WASM slice: `seedling-bot.md`'s ELEMENTS
+         *              § gained a SAME-DOC pointer into the new section
+         *              (`same-doc` 13 → 14), because the room that design
+         *              generates now reaches the real game.
+         *   213 → 215  editor v3 W1: the FALSE "byte-pinned" sentence was
+         *              corrected in `architecture.md` and the gotchas entry
+         *              closed on measurement — each gained one sibling-doc
+         *              link (`doc` 144 → 146; `same-doc` unmoved at 14).
+         *   215 → 220  EDITOR INTEGRATION W3: the ROOM-EDITOR CONTRACT is one
+         *              declaration read by three documents, so each of them
+         *              points at the other two — `substrate-registry.md`'s new
+         *              § *Editing* → `stepped-pipeline.md` + `architecture.md`,
+         *              `stepped-pipeline.md` § *Region editors* →
+         *              `substrate-registry.md`, and `architecture.md`'s
+         *              lab-hosting paragraph → both. FIVE sibling-doc links
+         *              (`doc` 146 → 151; `same-doc` unmoved at 14).
+         *   220 → 221  MAZE SLICE S2b: `loop-recording.md`'s store § gained one
+         *              sibling-doc pointer at `maze.md` § *The MANUAL arm* — a
+         *              lab walk is the SAME envelope, and a reader meeting one
+         *              in the store needs the arm that writes it (`doc` 151 →
+         *              152; `same-doc` unmoved at 14).
+         *   221 → 223  MAZE SLICE R-b: the recording PRECONDITIONS are one fact
+         *              read from both ends, so each end points at the other —
+         *              `loop-recording.md`'s store § → `maze.md` § *The MANUAL
+         *              arm* for the maze's side, and that § → `loop-recording.md`
+         *              for the panel's. TWO sibling-doc links (`doc` 152 → 154;
+         *              `same-doc` unmoved at 14).
+         *   223 → 225  APWORLD EDITOR HUB H4c: the reverse link is one door
+         *              described from two sides, so `maze.md`'s hosting § and
+         *              `architecture.md`'s lab-hosting paragraph each point at
+         *              `docs/json/modules/apworldEditor.md` § *The Links tab*,
+         *              which holds the table of all six controls. ⛓ Both count
+         *              as **`repo`**, not `doc` (32 → 34): that file is not one
+         *              of the documents this VIEWER lists, so the resolver
+         *              sends it to GitHub — which is the resolver working, and
+         *              the reason the two kinds are counted apart.
+         *   225 → 227  LOOP COSTS L5 (⚖ 2026-09-06, the omsi Start/Pause rule):
+         *              the stopped gate is one rule read from two places, so
+         *              each points at it. `gotchas.md`'s frozen-substrate §
+         *              → `omsi.md` § *Live play also honours the game's own
+         *              Start/Pause* (`doc` 154 → 155), and `omsi.md`'s OWN
+         *              held-boundary § → that same § so the two gates are
+         *              never confused for each other (`same-doc` 14 → 15 —
+         *              the FIRST time this census's same-doc count has moved).
+         *   227 → 228  MENU PANEL M1: `architecture.md`'s runtime § gained the
+         *              shared start-hop paragraph, which points at
+         *              `docs/json/modules/menuPanel.md` — the module that owns
+         *              the `skipMenu` setting procgenPlayer now reads. ⛓ `repo`
+         *              (34 → 35), not `doc`, for the same reason the
+         *              apworldEditor pair are: that file is not one of the
+         *              seventeen this VIEWER lists.
+         *   228 → 230  PRESET SIDECARS G0: `jta.md`'s opening § and `omsi.md`'s
+         *              derived-exits bullet each point at `substrate-registry.md`
+         *              § *Build-time — region geometry*, the slot both entries
+         *              now declare (`doc` 155 → 157).
+         *   230 → 233  PRESET SIDECARS G1: `bounce.md`'s sphere-growth §,
+         *              `runner.md`'s registry-hooks § and `stepped-pipeline.md`'s
+         *              layout-op vocabulary each point at `substrate-registry.md`
+         *              § *Build-time — region geometry*, which bounce and runner
+         *              now declare and the exit-side ops now ask (`doc` 157 → 160).
+         *   233 → 234  PROCGEN PIPELINE PRESETS P1: `pipeline-presets.md` joined
+         *              README_ORDER, so README's GENERATED index gained its row
+         *              and that row's link (`doc` 160 → 161). The document itself
+         *              carries no links.
+         *   234 → 236  SEEDLING IN THE PIPELINE T1: `substrate-registry.md`'s
+         *              content-sources paragraph points at `flash.md` § *As a
+         *              content source in the pipeline*, and that § points back
+         *              at the registry's content-sources § (`doc` 161 → 163).
+         *   236 → 237  SEEDLING IN THE PIPELINE T2b (2026-09-23): `flash.md`
+         *              § *Playing a placed room* points at `maze.md` § *Panel and
+         *              runtime* for the maze side of a return (`doc` 163 → 164).
+         *   237 → 239  SEEDLING IN THE PIPELINE T3 (2026-09-23): the mutual pair
+         *              between `sphere-growth.md` § *Seedling as a leaf* and
+         *              `flash.md` § *As a sphere-growth leaf* (`doc` 164 → 166).
+         *   239 → 241  SEEDLING GENERATED LEVELS G1 (2026-09-23): two pointers
+         *              from `substrate-registry.md` (§ *Build-time — procedural
+         *              substrates* and the hand-kept `flash_seedling_gen` row) at
+         *              `flash.md` § *Generated rooms* (`doc` 166 → 168).
+         *   241 → 243  SEEDLING GENERATED LEVELS G3 (2026-09-24): `flash.md`
+         *              § *The leaf, the panel presets and the knobs* points at
+         *              `pipeline-presets.md`, and `sphere-growth.md` § *Seedling
+         *              as a leaf, generated* at `flash.md` § *Generated rooms*
+         *              (`doc` 168 → 170).
+         *   243 → 244  SEEDLING GENERATED LEVELS G4 (2026-09-26): `sphere-growth.md`
+         *              § *Seedling as a leaf, generated* points at `flash.md`
+         *              § *Host-enforced gates (G4)* (`doc` 170 → 171).
+         *   244 → 245  SEEDLING GENERATED LEVELS G5 (2026-09-26): `sphere-growth.md`
+         *              § *Seedling as a leaf, generated* points at `flash.md`
+         *              § *The re-roll, in every case (G5)* (`doc` 171 → 172).
+         *   245 → 250  SEEDLING GENERATED LEVELS G6 (2026-09-26): `sphere-growth.md`
+         *              § *Seedling as a leaf or a host* points at `flash.md`
+         *              § *Host-enforced gates: real rooms* and § *As a sphere-growth
+         *              leaf* (`doc` 172 → 174); inside `flash.md` the leaf section
+         *              and G4's host bullet point at the new G6 sub-§, and the G6
+         *              sub-§ back at the leaf section (`same-doc` 15 → 18).
+         *   250 → 253  SEEDLING GENERATED LEVELS G7 (2026-09-26): inside `flash.md`
+         *              the (iii) item, the leaf section and G6's committed-world
+         *              bullet point at the new § *The atlas arm (G7)*
+         *              (`same-doc` 18 → 21); `sphere-growth.md`'s leaf-or-host
+         *              link moves from § *As a sphere-growth leaf* to it (`doc`
+         *              unmoved at 174).
+         *   253 → 254  SEEDLING SUBSTRATE S1 (2026-09-26): `flash.md`'s knob
+         *              sentence points at `seedling-bot.md` § Seedling substrate
+         *              S1 (`doc` 174 → 175).
+         *   254 → 237  PROCGEN DOCS CLEANUP pass 2 (2026-09-28): twelve docs
+         *              rewritten to present state; history-only cross-links
+         *              went with the history (`doc` 175 → 167, `same-doc`
+         *              21 → 13, `external` 23 → 22; `repo` unmoved at 35).
+         *   237 → 291  cleanup pass 3: architecture.md split into
+         *              editing-core.md + seedling-editor.md, maze.md into
+         *              maze-lab.md, gotchas.md rewritten — the new documents
+         *              link to each other and back (`doc` 167 → 219,
+         *              `same-doc` 13 → 15).
+         *   291 → 293  the build log split out of seedling-bot.md into
+         *              seedling-bot-log.md: the README row for the new file
+         *              and its pointer back, and one same-doc link that now
+         *              crosses files (`doc` 219 → 222, `same-doc` 15 → 14).
+         *   293 → 300  seedling-bot.md rewritten to present state; it now
+         *              points at the log, architecture, maze, flash and the
+         *              Seedling editor (`doc` 222 → 229).
+         * ⛔ That is the pin working, not the pin being noisy: a census nobody
+         * has to update is a census that stopped being measured.
+         *   300 → 301  substrate chart S2 (2026-09-28): `substrate-registry.md`
+         *              points at the user chart `../../features/procgen-substrates.md`
+         *              (`repo` 35 → 36).
+         *   301 → 302  seedling swim S2 D1 (2026-09-29): `substrate-registry.md`'s
+         *              `pipelineConfigFromParams` row points at flash.md's
+         *              atlas-knob section (`doc` 229 → 230).
+         *   302 → 303  APWORLD SUBSTRATE CHANGE C2 (2026-09-28): `maze.md`'s
+         *              "How big a room is built" points at substrate-registry.md's
+         *              location-capacity section (`doc` 230 → 231).
+         *   303 → 304  SEEDLING GENERATED G9 (2026-09-29): substrate-registry.md's
+         *              location-capacity section points at flash.md's
+         *              § Declarations (G9) (`doc` 231 → 232).
+         *   304 → 305  SEEDLING ENGINE PREP A1 (2026-09-30): the generated README
+         *              index gains a row for the new seedling-constants.md
+         *              (`doc` 232 → 233); the document itself links nothing.
+         *   305 → 312  CONCEPT LIBRARY T0 D6 (2026-09-30): the new `concepts.md`
+         *              — its README index row and five sibling links (`doc`
+         *              233 → 239) and one to its own § The three effects
+         *              (`same-doc` 14 → 15).
+         *   312 → 313  SEEDLING ENGINE PREP B1 (2026-09-29): tape-envelope.md
+         *              joined the corpus; its own body carries NO link, and
+         *              the one new link is README's GENERATED index row for it
+         *              (`doc` 239 → 240).
+         *   313 → 314  SEEDLING ENGINE PREP C1 (2026-09-30): the GENERATED README
+         *              index gains its row for the new seedling-solver-surface.md
+         *              (`doc` 240 → 241). The new document itself links nothing.
+         *   314 → 315  CONCEPT LIBRARY T2 D3 (2026-09-30): substrate-registry.md's
+         *              `conceptRealisations` row → concepts.md (`doc` 241 → 242).
+         *   315 → 318  CONCEPT LIBRARY T2 D5 (2026-09-30): text-adventure.md's
+         *              § Concept realisations ⇄ concepts.md (`doc` 242 → 244) and
+         *              text-adventure.md's same-doc § Prose link (`same-doc` 15 → 16).
+         *   318 → 319  CONCEPT LIBRARY T1 D5 (2026-09-30): maze.md § Concept gates →
+         *              concepts.md (`doc` 244 → 245).
+         *   319 → 320  CONCEPT LIBRARY T0b D5 (2026-09-30): concepts.md § Selection's
+         *              same-doc link to § The two halves (`same-doc` 16 → 17).
+         *   320 → 322  CONCEPT LIBRARY T4 D5 (2026-09-30): pipeline-presets.md's
+         *              `concept-trial-demo` row and its § The committed concept
+         *              preset, each → concepts.md § The trial world (`doc` 245 → 247).
+         *   322 → 324  BEHAVIOUR PARAMETERS P3 D4 (2026-09-30): the pair
+         *              seedling-solver-surface.md § Which blocks the solver models ⇄
+         *              concepts.md § Behaviour (`doc` 247 → 249).
+         *   324 → 325  SEEDLING SWIM U8 D3 (2026-10-01): seedling-bot.md's biome
+         *              defaults paragraph → flash.md § The element defaults by biome
+         *              (`doc` 249 → 250).
+         *   325 → 327  SEEDLING JS J2 (2026-10-01): substrate-registry.md's
+         *              `flash_seedling_gen` annotation and playback-and-debugging.md
+         *              → flash.md § The playback bot on the JS runtime (`doc` 250 → 252).
+         *   327 → 329  SEEDLING SOLVER-WALK S1 (2026-10-02): flash.md § The solver
+         *              mode → seedling-bot.md, and playback-and-debugging.md →
+         *              flash.md § The solver mode (`doc` 252 → 254).
+         *   329 → 330  SEEDLING SOLVER-WALK W2 (2026-10-02): playback-and-debugging.md →
+         *              flash.md § Wasm playback (`doc` 254 → 255).
+         *   330 → 337  BULLETML N3 (2026-10-05): noiz2sa.md (its README index row, five
+         *              sibling links) and substrate-registry.md's `noiz2sa` annotation →
+         *              noiz2sa.md (`doc` 255 → 262).
+         *   337 → 339  BULLETML N3b (2026-10-05): substrate-registry.md's `playClock` row
+         *              and noiz2sa.md → loop-recording.md § The play clock (`doc` 262 → 264).
+         *   339 → 341  BULLETML N3b fix 2 (2026-10-05): flash.md's play-clock row →
+         *              loop-recording.md, and noiz2sa.md's play-again line → flash.md
+         *              (`doc` 264 → 266).
+         *   341 → 344  BULLETML N4 (2026-10-05): loop-recording.md → noiz2sa.md (§ The
+         *              bot's training from the Playback flow, the play clock's game-time
+         *              bullet, § The bot from the Bot flow) (`doc` 266 → 269).
+         *   344 → 347  BULLETML N4b/N4c (2026-10-05; N4b's move+check special case and its
+         *              links removed by N4c): flash.md's host-state row → noiz2sa.md § Loop mode
+         *              (`doc` 269 → 270); noiz2sa.md's configure and requestHost lines → its own
+         *              § Loop mode (`same-doc` 17 → 19).
+         *   347 → 354  BULLETML N5 (2026-10-06): substrate-registry.md's `priceRegions` row and
+         *              loop-recording.md's drain paragraph → noiz2sa.md § Pricing (`doc` 270 → 272);
+         *              noiz2sa.md § Pricing and loop-recording.md → ../modules/loopsCostDebugger.md
+         *              (`repo` 36 → 38); noiz2sa.md's N5 ruling and payload lines → its own § Pricing,
+         *              and its training paragraph → § The bot (`same-doc` 19 → 22).
+         *   354 → 356  PERSISTENCE (2026-10-07): flash.md's wasm-ship `boot` bullet → seedling-bot.md and
+         *              seedling-bot.md's reuse-path bullet → flash.md (`doc` 272 → 274).
+         *   356 → 358  HAMMER-PHASE D1 (2026-10-11): the README index's row for seedling-solve-progress.md and
+         *              seedling-bot.md's progress paragraph → it (`doc` 274 → 276).
+         *   358 → 359  SOLVE PROGRESS, JS half (2026-10-11): flash.md's "Solve progress" bullet → the progress
+         *              stream's §7 (`doc` 276 → 277).
+         *   359 → 360  JtA zone locations (2026-10-11): substrate-registry.md's `pipelineConfigFromParams`
+         *              row → jta.md's AP-locations section (`doc` 277 → 278).
+         *   360 → 362  spiral victory (2026-10-11): architecture.md's goal paragraph and
+         *              substrate-registry.md's content-source paragraph → stepped-pipeline.md
+         *              § The item layer (`doc` 278 → 280).
+         *   362 → 364  Noiz2sa measured final span (2026-10-15): noiz2sa.md's § Pricing → the cloud
+         *              measurement report under CC/docs/cloud-reports/, twice (`repo` 38 → 40).
+         *   364 → 366  generic `flash` entry removed (2026-10-18): architecture.md's substrate table
+         *              gains its `noiz2sa` row → noiz2sa.md and the no-generic-entry note → flash.md
+         *              (`doc` 280 → 282).
+         *   366 → 367  shared level worlds (2026-10-21, tile-primitives Stage 2): maze.md's item-actions
+         *              persistence bullet → its own § Shared level worlds (`same-doc` 22 → 23).
+         */
+        expect(by).toEqual({
+            'same-doc': 23,
+            doc: 282,
+            external: 22,
+            repo: 40,
+        });
+        expect(by.page ?? 0).toBe(0);
+        expect(CORPUS.length).toBe(367);
+    });
+
+    it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
+        const docs = RESOLVED.filter((r) => r.kind === 'doc');
+        expect(docs).toHaveLength(282);
+        for (const r of docs) {
+            expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
+            expect(r.href).not.toContain(REPO_URL);
+        }
+    });
+
+    it('sends every other repo path to GitHub, fragment kept', () => {
+        const repo = RESOLVED.filter((r) => r.kind === 'repo');
+        expect(repo).toHaveLength(40);
+        for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
+        /** ⛓ The four families the corpus actually names. */
+        const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();
+        expect(tops).toEqual(['CC', 'docs', 'frontend', 'scripts']);
+    });
+
+    it('leaves `http(s)://` and same-doc fragments exactly as written', () => {
+        for (const r of RESOLVED.filter((x) => x.kind === 'external')) expect(r.href).toBe(r.href);
+        for (const r of RESOLVED.filter((x) => x.kind === 'external')) {
+            expect(r.href).toMatch(/^https?:\/\//);
+        }
+        for (const r of RESOLVED.filter((x) => x.kind === 'same-doc')) {
+            expect(r.href).toBe(r.href.trim());
+            expect(r.href.startsWith('#')).toBe(true);
+        }
+    });
+});
+
+describe('every link lands on something that exists', () => {
+    it('⛓ every repo-relative path is a real file in this tree', () => {
+        const missing = RESOLVED
+            .filter((r) => r.kind === 'repo' || r.kind === 'page')
+            .filter((r) => !existsSync(join(ROOT, r.repoPath)))
+            .map((r) => `${r.doc} → ${r.href}`);
+        expect(missing, 'a link resolves to a GitHub URL for a file that is not here').toEqual([]);
+    });
+
+    it('⛓ every SAME-DOC fragment names a heading of its own document', () => {
+        const dead = [];
+        for (const r of RESOLVED.filter((x) => x.kind === 'same-doc')) {
+            if (!SLUGS.get(r.doc).has(r.href.slice(1))) dead.push(`${r.doc} → ${r.href}`);
+        }
+        expect(dead).toEqual([]);
+    });
+
+    it('⛓ every CROSS-DOC fragment names a heading of the document it targets', () => {
+        const dead = [];
+        for (const r of RESOLVED.filter((x) => x.kind === 'doc')) {
+            const [, frag] = r.href.split('#');
+            if (!frag) continue;
+            const file = decodeURIComponent(r.href.slice('docs.html?doc='.length).split('#')[0]);
+            if (!SLUGS.get(file)?.has(frag)) dead.push(`${r.doc} → ${r.href}`);
+        }
+        expect(dead).toEqual([]);
+    });
+
+    /** ⛓ Nine of the corpus's GitHub links point at a `.md` OUTSIDE this
+     *  directory with a fragment; GitHub slugs those the same way. */
+    it('⛓ every fragment on an OUTSIDE `.md` names a heading of that file too', () => {
+        const dead = [];
+        for (const r of RESOLVED.filter((x) => x.kind === 'repo' && x.href.includes('#'))) {
+            if (!r.repoPath.endsWith('.md')) continue;
+            const slugs = new Set(headingsOf(readFileSync(join(ROOT, r.repoPath), 'utf8'))
+                .map((h) => h.slug));
+            const frag = r.href.split('#')[1];
+            if (!slugs.has(frag)) dead.push(`${r.doc} → ${r.href}`);
+        }
+        expect(dead).toEqual([]);
+    });
+});
+
+describe('the resolver itself', () => {
+    const at = (href) => resolveDocLink(href, { doc: 'maze.md', siteRoot: '' });
+
+    it('normalizes `..` without node, and does not clamp an escape', () => {
+        expect(normalizePath('a/b/../c')).toBe('a/c');
+        expect(normalizePath('./a//b/')).toBe('a/b');
+        expect(normalizePath('../../x')).toBe('../../x');
+        expect(repoPathFor('../../../../scripts/procgen/README.md'))
+            .toBe('scripts/procgen/README.md');
+    });
+
+    it('answers each of the five kinds', () => {
+        expect(at('#a-heading')).toEqual({ kind: 'same-doc', href: '#a-heading' });
+        expect(at('https://example.com/x').kind).toBe('external');
+        expect(at('mailto:a@b.c').kind).toBe('external');
+        expect(at('./seedling-bot.md#gates'))
+            .toMatchObject({ kind: 'doc', href: 'docs.html?doc=seedling-bot.md#gates' });
+        expect(at('seedling-bot.md')).toMatchObject({ kind: 'doc', href: 'docs.html?doc=seedling-bot.md' });
+        expect(at('../../../../scripts/procgen/README.md'))
+            .toMatchObject({ kind: 'repo', href: `${REPO_URL}/scripts/procgen/README.md` });
+    });
+
+    it('⛓ a `frontend/**.html` goes through the ONE Pages mapping, on both hosts', () => {
+        const href = (siteRoot) => resolveDocLink(
+            '../../../../frontend/modules/procgenDocs/glossary.html#door-law',
+            { doc: 'maze.md', siteRoot },
+        ).href;
+        expect(href('')).toBe('/modules/procgenDocs/glossary.html#door-law');
+        expect(href('/Archipelago-CC'))
+            .toBe('/Archipelago-CC/modules/procgenDocs/glossary.html#door-law');
+    });
+
+    it('⛔ a `.md` in this directory that the INDEX does not list is NOT a viewer link', () => {
+        /** ⛓ The allow list is the gate, not the file extension: a document
+         *  the index has never heard of cannot be opened, so linking to it as
+         *  though it could would hand the reader a refusal. */
+        const r = at('./not-a-tracked-doc.md');
+        expect(r.kind).toBe('repo');
+        expect(r.href).toBe(`${REPO_URL}/${DOC_DIR}/not-a-tracked-doc.md`);
+    });
+});
+
+describe('the `?doc=` allow list', () => {
+    it('is the generated index — README plus every document on disk, in reading order', () => {
+        // ⛓ The length is the directory's, read off disk — not a literal: a new
+        // document joins README_ORDER and this row follows (P1, pipeline-presets.md).
+        expect(DOC_FILES).toHaveLength(FILES.length);
+        expect(DOC_FILES[0]).toBe(INDEX_FILE);
+        expect(INDEX_FILE).toBe('README.md');
+        expect([...DOC_FILES].sort()).toEqual([...FILES].sort());
+    });
+
+    it('defaults to README and accepts every listed file', () => {
+        expect(docFileFor(undefined)).toBe('README.md');
+        expect(docFileFor('')).toBe('README.md');
+        for (const f of DOC_FILES) expect(docFileFor(f)).toBe(f);
+    });
+
+    it('⛔ refuses a traversal, an absolute path and an unlisted name', () => {
+        for (const bad of [
+            '../x.md', '../../../etc/passwd', '/etc/passwd', 'README.md/../../x',
+            'docs/json/developer/procgen/maze.md', 'maze.MD', 'maze', 'no-such.md',
+            'https://example.com/x.md',
+        ]) expect(docFileFor(bad), bad).toBeNull();
+    });
+});

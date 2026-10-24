@@ -41,9 +41,11 @@ export const moduleInfo = {
   name: 'spoilerChecklist',
   title: 'Spoiler Checklist',
   componentType: 'spoilerChecklistPanel',
+  docs: 'docs/json/user/modules/spoilerChecklist.md',
   icon: '📋',
   column: 2, // Middle column
-  description: 'Displays sphere log data as an interactive checklist.',
+  category: 'Tracker Panels',
+  description: 'The sphere log as a checklist: each sphere\'s locations and their items, with a checkbox to check each one.',
   requires: ['stateManager', 'commonUI', 'sphereState', 'locations'],
 };
 

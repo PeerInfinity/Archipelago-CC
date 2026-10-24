@@ -1,0 +1,15 @@
+## ON
+d1-sandtrap-l36.json: 80 samples, 348 body comparisons, 0 disagreement(s); model player hits 0
+## OFF
+d1-sandtrap-l36.json: 80 samples, 348 body comparisons, 106 disagreement(s); model player hits 0
+   t6 sandtrap@64,80 game h1 ht28 diefalse dfalse | model h0 ht0 diefalse dundefined removedundefined
+## ON
+d1-turret-l62-shield.json: 65 samples, 59 body comparisons, 0 disagreement(s); model player hits 0
+## OFF
+d1-turret-l62-shield.json: 65 samples, 59 body comparisons, 57 disagreement(s); model player hits 0
+   t4 turret@232,248 game h1 ht30 diefalse dfalse | model h0 ht0 diefalse dundefined removedundefined
+## ON
+d1-turret-l62-noshield.json: 85 samples, 75 body comparisons, 0 disagreement(s); model player hits 0
+## OFF
+d1-turret-l62-noshield.json: 85 samples, 75 body comparisons, 118 disagreement(s); model player hits 1
+   t4 turret@232,248 game h1 ht30 diefalse dfalse | model h0 ht0 diefalse dundefined removedundefined

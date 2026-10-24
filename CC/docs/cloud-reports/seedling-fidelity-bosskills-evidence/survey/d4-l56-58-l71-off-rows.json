@@ -1,0 +1,207 @@
+[
+ {
+  "step": 93,
+  "level": 56,
+  "verdict": "SOLVED",
+  "ticks": 262,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 6,
+     "ty": 1,
+     "x": 96,
+     "y": 16
+    },
+    "why": "pit@96,16 (out_pit_6_10, tile 6,1) \u2192 L57"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 94,
+  "level": 57,
+  "verdict": "NO-EDGE",
+  "ticks": null,
+  "goals": [],
+  "refusal": "the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 \u2014 the two sources disagree."
+ },
+ {
+  "step": 95,
+  "level": 58,
+  "verdict": "NO-ARRIVAL",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 80,
+     "y": 16
+    },
+    "why": "teleporter@80,16 \u2192 L46"
+   }
+  ],
+  "refusal": "the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 \u2014 the two sources disagree."
+ },
+ {
+  "step": 124,
+  "level": 56,
+  "verdict": "SOLVED",
+  "ticks": 262,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 6,
+     "ty": 1,
+     "x": 96,
+     "y": 16
+    },
+    "why": "pit@96,16 (out_pit_6_10, tile 6,1) \u2192 L57"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 125,
+  "level": 57,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "clear-tag",
+    "tag": {
+     "level": 57,
+     "tag": 0
+    },
+    "at": {
+     "x": 80,
+     "y": 48
+    },
+    "obstacle": "tentaclebeast@80,48",
+    "report": {
+     "level": 57,
+     "tag": 0
+    },
+    "why": "Level 057 - Tentacled Beast (sphere 6.4) \u2192 Seal \u2014 the kill's report {57,0} (`tentaclebeast`)",
+    "location": "Level 057 - Tentacled Beast"
+   }
+  ],
+  "refusal": "solverBot(survey-step-125) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag \u2014 the Tentacled Beast's fight is not stepped with `CONTACT_FIDELITY.tentacleBeastFight` off \u2014 the beast is a body the model does not fight"
+ },
+ {
+  "step": 126,
+  "level": 58,
+  "verdict": "NO-ARRIVAL",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 80,
+     "y": 16
+    },
+    "why": "teleporter@80,16 \u2192 L46"
+   }
+  ],
+  "refusal": "the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 \u2014 the two sources disagree."
+ },
+ {
+  "step": 190,
+  "level": 71,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "collect-placement",
+    "placement": {
+     "x": 160,
+     "y": 256
+    },
+    "why": "Level 071 - Chest (sphere 8.4) \u2192 Seal",
+    "location": "Level 071 - Chest"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 96,
+     "y": 0
+    },
+    "why": "teleporter@96,0 \u2192 L75"
+   }
+  ],
+  "refusal": "solverBot(survey-step-190) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+ },
+ {
+  "step": 194,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 327,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 304,
+     "y": 256
+    },
+    "why": "teleporter@304,256 \u2192 L76"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 202,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 193,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 12,
+     "ty": 13,
+     "x": 192,
+     "y": 208
+    },
+    "why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 221,
+  "level": 71,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 224,
+     "y": 304
+    },
+    "why": "teleporter@224,304 \u2192 L80"
+   }
+  ],
+  "refusal": "solverBot(survey-step-221) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+ },
+ {
+  "step": 223,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 171,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 12,
+     "ty": 13,
+     "x": 192,
+     "y": 208
+    },
+    "why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+   }
+  ],
+  "refusal": null
+ }
+]

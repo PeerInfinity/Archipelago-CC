@@ -1,4 +1,5 @@
 import loopStateSingleton from './loopStateSingleton.js';
+import { gateReasonOutOfScope } from './loopState.js';
 import { getLoopsModuleDispatcher, moduleInfo, getGameStateAPI, getPathFinder } from './index.js'; // Import the dispatcher getter, moduleInfo, and gameState API
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -94,12 +95,13 @@ function getQueueEndRegion(gameStateAPI) {
  * for a dropped click. Best-effort — silently no-ops if the eventBus
  * isn't wired (e.g. headless tests that don't initialize loopEvents).
  */
-function publishClickIgnored({ kind, regionName, expectedRegion, payload }) {
+function publishClickIgnored({ kind, regionName, expectedRegion, payload, reason = null }) {
   if (!_eventBus?.publish) return;
   _eventBus.publish('loops:clickIgnored', {
-    kind,                  // 'location' | 'exit'
+    kind,                  // 'location' | 'exit' | 'move' | 'explore'
     regionName,            // region of the click
-    expectedRegion,        // region the queue currently ends in
+    expectedRegion,        // parked live-play region / queue end region
+    reason,                // gate verdict reason when the strict gate blocked it
     payload,               // original event payload for downstream consumers
   });
 }
@@ -238,15 +240,22 @@ function appendLocationOrFeedback(locationName, regionName, isLocationDiscovered
 
 /**
  * Handles the 'user:locationCheck' / 'system:locationCheck' events
- * for the Loops module. Branches:
- *   - Loop mode off, system event, OR clickToQueue 'off' (the
- *     default) → propagate up unchanged; the click checks immediately.
- *   - Loop mode on + clickToQueue 'rebuildPath' → rebuild queue with path.
- *   - Loop mode on + clickToQueue 'append' → append or feedback.
- *
- * The system:locationCheck path always passes through — substrates use
- * it for tile-internal events (e.g. mid-Explore pickups) where queue
- * mutations would wipe in-flight actions.
+ * for the Loops module. Order of decision (M3b, session 66b rulings —
+ * "gate first, then mode"):
+ *   1. Loop mode off, system event, or fromLoop → propagate up
+ *      unchanged (queue execution / substrate-internal events always
+ *      pass).
+ *   2. The strict action gate:
+ *      - exempt (planning source, delegation/solver) → propagate.
+ *      - parked live play on a matching Manual/Record block → observe
+ *        (charge + capture per the rulings) and propagate; the click
+ *        checks for real.
+ *      - out of scope (AP-native region, substrate not yet mode-
+ *        integrated) → legacy behavior: clickToQueue 'off' passes
+ *        through, 'append'/'rebuildPath' intercept as authoring.
+ *      - blocked → clickToQueue 'append'/'rebuildPath' still author
+ *        (planning is never blocked); 'off' swallows the click and
+ *        publishes loops:clickIgnored feedback.
  *
  * @param {object} eventData - The data associated with the event.
  * @param {string} eventName - 'user:locationCheck' or 'system:locationCheck'.
@@ -254,10 +263,7 @@ function appendLocationOrFeedback(locationName, regionName, isLocationDiscovered
 export function handleUserLocationCheckForLoops(eventData, eventName = 'user:locationCheck') {
   const dispatcher = getLoopsModuleDispatcher();
 
-  // Pass-through: loop mode off, substrate-internal event, or
-  // click-to-queue off (interception not opted into).
-  const isSystemEvent = eventName === 'system:locationCheck';
-  if (!loopModeActive() || isSystemEvent || clickToQueueMode === 'off') {
+  const passThrough = () => {
     // Expected-outcome tracking for per-region manual mode: a check
     // performed while the player drives a manual region marks the
     // matching queued entry completed. No-ops otherwise.
@@ -268,29 +274,81 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
     if (dispatcher) {
       dispatcher.publishToNextModule(moduleInfo.name, eventName, eventData, { direction: 'up' });
     }
+  };
+
+  // Unconditional pass-through: loop mode off, substrate-internal
+  // event, or the queue's own execution re-dispatching.
+  const isSystemEvent = eventName === 'system:locationCheck';
+  if (!loopModeActive() || isSystemEvent || eventData?.fromLoop === true) {
+    passThrough();
     return;
   }
 
-  // Loop mode is active and this is a genuine user click → intercept.
   const locationName = eventData?.locationName;
   const regionName = eventData?.regionName;
+
+  // Strict action gate (M3b).
+  const verdict = loopStateSingleton.evaluateActionGate({
+    kind: 'location',
+    regionName,
+    eventName,
+    data: eventData,
+  });
+  if (verdict.allowed && verdict.reason === 'parkedLivePlay') {
+    // Live play on the parked block: charge + (in Record) capture,
+    // then let the check perform for real.
+    loopStateSingleton.observeParkedLiveAction({
+      type: 'locationCheck',
+      locationName,
+      regionName,
+    });
+    passThrough();
+    return;
+  }
+  if (verdict.allowed && !gateReasonOutOfScope(verdict.reason)) {
+    // Exempt dispatch (planning source, delegation/solver execution).
+    passThrough();
+    return;
+  }
+  const outOfScope = verdict.allowed; // gate doesn't apply to this event
+
+  // Out-of-scope events keep the legacy pass-through default.
+  if (outOfScope && clickToQueueMode === 'off') {
+    passThrough();
+    return;
+  }
+
   if (!locationName || !regionName) {
     log('warn', '[LoopsModule] Missing locationName or regionName in event data');
     return;
   }
 
-  if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
-    log('info', `[LoopsModule] Region ${regionName} not discovered, ignoring click`);
+  // Planning modes author the click instead of performing it — never
+  // blocked by the gate.
+  if (clickToQueueMode === 'rebuildPath' || clickToQueueMode === 'append') {
+    if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
+      log('info', `[LoopsModule] Region ${regionName} not discovered, ignoring click`);
+      return;
+    }
+    const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
+    if (clickToQueueMode === 'rebuildPath') {
+      rebuildQueueToLocation(locationName, regionName, isLocationDiscovered);
+    } else {
+      appendLocationOrFeedback(locationName, regionName, isLocationDiscovered);
+    }
     return;
   }
 
-  const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
-
-  if (clickToQueueMode === 'rebuildPath') {
-    rebuildQueueToLocation(locationName, regionName, isLocationDiscovered);
-  } else {
-    appendLocationOrFeedback(locationName, regionName, isLocationDiscovered);
-  }
+  // Blocked live play (strict gate, clickToQueue 'off'). warn (not
+  // info) so swallowed clicks are visible in captured logs.
+  log('warn', `[LoopsModule] Gate blocked locationCheck for ${locationName} in ${regionName}: ${verdict.reason}`);
+  publishClickIgnored({
+    kind: 'location',
+    regionName,
+    expectedRegion: verdict.expectedRegion ?? null,
+    reason: verdict.reason,
+    payload: { locationName },
+  });
 }
 
 /**
@@ -433,11 +491,12 @@ function appendExitOrFeedback({ exitName, sourceRegion, destinationRegion, isDis
 
 /**
  * Handles the 'user:exitClicked' event from the Exits module via dispatcher.
- * Branches mirroring handleUserLocationCheckForLoops:
- *   - Loop mode off OR clickToQueue 'off' (the default) → propagate
- *     to the next handler; the click moves immediately.
- *   - Loop mode on + clickToQueue 'rebuildPath' → rebuild queue with path.
- *   - Loop mode on + clickToQueue 'append' → append or feedback.
+ * Decision order mirrors handleUserLocationCheckForLoops (M3b "gate
+ * first, then mode"): unconditional pass-through for loop-mode-off /
+ * fromLoop; then the strict gate (parked live play and exempt
+ * dispatches pass; out-of-scope keeps the legacy clickToQueue
+ * behavior; blocked clicks author in planning modes or are swallowed
+ * with feedback in 'off').
  *
  * @param {object} eventData - The exit click data
  * @param {object} propagationOptions - Options related to event propagation
@@ -447,8 +506,7 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
 
   const dispatcher = getLoopsModuleDispatcher();
 
-  if (!loopModeActive() || clickToQueueMode === 'off') {
-    log('info', '[LoopEvents] Loop mode off or clickToQueue off, propagating to next handler');
+  const passThrough = () => {
     if (dispatcher) {
       dispatcher.publishToNextModule(
         moduleInfo.name,
@@ -459,16 +517,112 @@ export function handleUserExitClickedForLoops(eventData, propagationOptions) {
     } else {
       log('error', '[LoopEvents] Dispatcher not available for propagation');
     }
+  };
+
+  if (!loopModeActive() || eventData?.fromLoop === true) {
+    passThrough();
     return;
   }
 
-  log('info', '[LoopEvents] Loop mode active, intercepting exit click');
-
-  if (clickToQueueMode === 'rebuildPath') {
-    rebuildQueueToExit(eventData);
-  } else {
-    appendExitOrFeedback(eventData);
+  const verdict = loopStateSingleton.evaluateActionGate({
+    kind: 'exit',
+    regionName: eventData?.sourceRegion,
+    eventName: 'user:exitClicked',
+    data: eventData,
+  });
+  if (verdict.allowed && !gateReasonOutOfScope(verdict.reason)) {
+    // Parked live play or an exempt dispatch — the click moves for real
+    // (discovery / regions handle it downstream).
+    passThrough();
+    return;
   }
+  const outOfScope = verdict.allowed;
+
+  if (outOfScope && clickToQueueMode === 'off') {
+    passThrough();
+    return;
+  }
+
+  if (clickToQueueMode === 'rebuildPath' || clickToQueueMode === 'append') {
+    log('info', '[LoopEvents] Loop mode active, intercepting exit click (authoring)');
+    if (clickToQueueMode === 'rebuildPath') {
+      rebuildQueueToExit(eventData);
+    } else {
+      appendExitOrFeedback(eventData);
+    }
+    return;
+  }
+
+  // Blocked live play (strict gate, clickToQueue 'off').
+  log('warn', `[LoopEvents] Gate blocked exitClicked for ${eventData?.exitName} in ${eventData?.sourceRegion}: ${verdict.reason}`);
+  publishClickIgnored({
+    kind: 'exit',
+    regionName: eventData?.sourceRegion,
+    expectedRegion: verdict.expectedRegion ?? null,
+    reason: verdict.reason,
+    payload: {
+      exitName: eventData?.exitName,
+      destinationRegion: eventData?.destinationRegion,
+      isDiscovered: eventData?.isDiscovered,
+    },
+  });
+}
+
+/**
+ * Handles the 'loop:exploreCompleted' dispatcher event for the Loops
+ * module (M3b — new receiver). A performed substrate explore dispatches
+ * this event (consumed by discovery, which reveals something); loops
+ * receives it FIRST (higher load priority) so the strict gate can
+ * swallow disallowed explores and the observation layer can charge +
+ * capture allowed parked live-play ones. The queue's own explore
+ * completions carry fromLoop and pass through untouched.
+ *
+ * Unlike clicks, explores have no planning-mode fallback: click-to-
+ * queue authors explores via location/exit clicks on undiscovered
+ * targets, never via this event.
+ */
+export function handleLoopExploreCompletedForLoops(eventData, propagationOptions) {
+  const dispatcher = getLoopsModuleDispatcher();
+
+  const passThrough = () => {
+    if (dispatcher) {
+      dispatcher.publishToNextModule(
+        moduleInfo.name,
+        'loop:exploreCompleted',
+        eventData,
+        { direction: 'up' }
+      );
+    }
+  };
+
+  if (!loopModeActive() || eventData?.fromLoop === true) {
+    passThrough();
+    return;
+  }
+
+  const regionName = eventData?.regionName;
+  const verdict = loopStateSingleton.evaluateActionGate({
+    kind: 'explore',
+    regionName,
+    eventName: 'loop:exploreCompleted',
+    data: eventData,
+  });
+  if (verdict.allowed) {
+    if (verdict.reason === 'parkedLivePlay') {
+      loopStateSingleton.observeParkedLiveAction({ type: 'explore', regionName });
+    }
+    passThrough();
+    return;
+  }
+
+  log('warn', `[LoopEvents] Gate blocked explore in ${regionName}: ${verdict.reason}`);
+  publishClickIgnored({
+    kind: 'explore',
+    regionName,
+    expectedRegion: verdict.expectedRegion ?? null,
+    reason: verdict.reason,
+    payload: {},
+  });
 }
 
 // Test-only — reset module-scope state between cases. (Loop-mode active

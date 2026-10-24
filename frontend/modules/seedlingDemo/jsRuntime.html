@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<!--
+  seedlingDemo/jsRuntime.html — the Seedling JS runtime page (Seedling JS J1).
+
+  Mounted by the flash panel as its game iframe when
+  moduleSettings.flashPanel.runtime is 'js'; it speaks the wasm page's
+  __swfBridge contract (see jsRuntimeCore.js). Rectangles only, no sound.
+  Keys: arrows move, X primary, C secondary, V/I inventory — click the
+  canvas (or let the panel focus it) first.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seedling JS runtime</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #000; color: #ccc; font: 11px monospace; overflow: hidden; }
+  canvas { display: block; outline: none; image-rendering: pixelated; }
+  #status { position: absolute; left: 4px; bottom: 2px; pointer-events: none; text-shadow: 0 0 2px #000; }
+</style>
+</head>
+<body>
+<canvas id="game" width="480" height="480" tabindex="0"></canvas>
+<div id="status">loading…</div>
+<script type="module">
+  import { mountJsRuntimePage } from './jsRuntimePage.js';
+  mountJsRuntimePage(window);
+</script>
+</body>
+</html>

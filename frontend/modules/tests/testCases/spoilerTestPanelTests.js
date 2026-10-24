@@ -113,6 +113,9 @@ export async function spoilerTestPanelFullRun(testController) {
     if (
       !(await testController.pollForCondition(
         () => {
+          // Reset per iteration: a stale hit from an earlier iteration must
+          // not answer this one.
+          targetButton = null;
           // Try multiple strategies to find the button
 
           // Strategy 1: By ID in spoilers panel
@@ -135,7 +138,7 @@ export async function spoilerTestPanelFullRun(testController) {
             const allButtons = currentSpoilersPanelElement.querySelectorAll('button');
             targetButton = Array.from(allButtons).find(btn =>
               btn.textContent.includes(targetButtonText)
-            );
+            ) ?? null;
           }
 
           // Strategy 4: By text content globally
@@ -143,10 +146,14 @@ export async function spoilerTestPanelFullRun(testController) {
             const allButtons = document.querySelectorAll('button');
             targetButton = Array.from(allButtons).find(btn =>
               btn.textContent.includes(targetButtonText)
-            );
+            ) ?? null;
           }
 
-          return targetButton !== null;
+          // ⛔ `find()` misses with UNDEFINED, not null: `!== null` passed
+          // this poll on a miss and the run died later on `.click` with
+          // "Cannot read properties of undefined" — masking the real cause
+          // (e.g. the suggested log's 404). Refuse anything not a button.
+          return targetButton instanceof HTMLElement;
         },
         `"${targetButtonText}" button to appear`,
         10000,
@@ -160,8 +167,15 @@ export async function spoilerTestPanelFullRun(testController) {
       );
       testController.log(`[${testRunId}] FINAL DEBUG: All buttons on page (${allButtons.length}): ${buttonInfo.join(', ')}`);
 
+      // Name the panel's own reason: its last log line is the load failure.
+      const panelLog = document.querySelectorAll(
+        '.spoiler-test-module-root #spoiler-log-output .log-entry'
+      );
+      const lastPanelLine = panelLog.length
+        ? panelLog[panelLog.length - 1].textContent
+        : '(the panel logged nothing)';
       throw new Error(
-        `"${targetButtonText}" button did not appear after loading log.`
+        `"${targetButtonText}" button did not appear after loading log. Panel's last log line: ${lastPanelLine}`
       );
     }
     testController.reportCondition(`"${targetButtonText}" button appeared`, true);

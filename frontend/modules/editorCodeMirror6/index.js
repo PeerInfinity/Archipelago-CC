@@ -41,7 +41,8 @@ export const moduleInfo = {
   componentType: 'editorCodeMirror6Panel',
   icon: '📝',
   column: 2, // Middle column
-  description: 'CodeMirror 6 based editor with JSON support and folding.',
+  category: 'Data and Configuration Panels',
+  description: 'The Editor\'s data sources with JSON highlighting, bracket matching and Fold All / Unfold All.',
   requires: ['editorCore'],
 };
 

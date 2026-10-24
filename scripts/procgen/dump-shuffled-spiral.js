@@ -10,7 +10,6 @@
  *       --quota jta=5 \
  *       --start jta \
  *       -o /tmp/spiral.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --region WxH             region dims (default 8x6)
@@ -21,8 +20,16 @@
  *   --items id=N             item pool entry (procedural substrates
  *                            only); repeat per item
  *   --obstacles id=N         obstacle pool entry; repeat per obstacle
+ *   --jta-locations          emit jta zone tasks as AP locations (off by
+ *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
+ *   -h, --help               print this and exit
  *
  * The grid is auto-sized to fit sum(quotas) regions; --grid is not
  * accepted. Cross-branch asymmetric exits do not arise (every cell
@@ -32,21 +39,42 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-// Substrate libraries register on import.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
-import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
+import { runCli, parseOrUsage } from './cliRun.js';
+
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
-import { substrateRegistry } from
-    '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { setJtaEmitZoneLocations } from
+    '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
-function parseArgs(argv) {
-    const out = {
+argvHelp(import.meta.url);
+
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--no-bidirectional': W.noBidirectional,
+    '--jta-locations': flag('jtaLocations', KIND.on),
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '-o': W.out,
+    '--out': W.out,
+    // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
+function parseArgs(argv, { configDoc = null } = {}) {
+    const out = parseFlags(argv, FLAGS, {
         seed: 1,
         region: { width: 8, height: 6 },
         quotas: {},
@@ -54,74 +82,15 @@ function parseArgs(argv) {
         bidirectional: true,
         items: {},
         obstacles: {},
+        jtaLocations: false,
         out: './shuffled-spiral-dump.json',
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) {
-            throw new Error(`expected WxH, got '${s}'`);
-        }
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--quota': {
-                const [id, n] = parseKv(next());
-                out.quotas[id] = n;
-                break;
-            }
-            case '--start': out.start = next(); break;
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--items': {
-                const [id, n] = parseKv(next());
-                out.items[id] = n;
-                break;
-            }
-            case '--obstacles': {
-                const [id, n] = parseKv(next());
-                out.obstacles[id] = n;
-                break;
-            }
-            case '-o':
-            case '--out': out.out = next(); break;
-            case '-h':
-            case '--help':
-                console.log(extractHelpText());
-                process.exit(0);
-                break;
-            default:
-                throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.quotas).length === 0) {
         throw new Error('at least one --quota is required');
     }
     return out;
 }
 
-function extractHelpText() {
-    return [
-        'Usage: node scripts/procgen/dump-shuffled-spiral.js [flags]',
-        '',
-        '  --seed N                   (default 1)',
-        '  --region WxH               (default 8x6)',
-        '  --quota id=N               required; repeat per substrate',
-        '  --start id                 substrate id or "auto" (default auto)',
-        '  --no-bidirectional',
-        '  --items id=N',
-        '  --obstacles id=N',
-        '  -o, --out PATH             (default ./shuffled-spiral-dump.json)',
-    ].join('\n');
-}
 
 function shapeRegions(grid) {
     const out = [];
@@ -155,9 +124,27 @@ function shapeRegions(grid) {
     return out;
 }
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
-    const { grid, stats, startCell } = arrangeShuffledSpiral({
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config; for `runPipeline`. */
+export const resolveConfig = (doc) => parseArgs([], { configDoc: doc });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'spiral', tool: 'dump-shuffled-spiral', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * Build the dump from a parsed config. Writes nothing; the substrate
+ * libraries must already be loaded (`loadPipelineSubstrates`).
+ * @returns {Promise<{dump: object, rulesJson: object, summary: object}>}
+ */
+export async function build(config) {
+    // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
+    // default so jta dumps stay byte-identical to prior runs. ⛓ Set on every
+    // call: it is module state, and a second build must not inherit the first's.
+    setJtaEmitZoneLocations(config.jtaLocations);
+    const {
+        grid, stats, startCell, goalItem,
+    } = arrangeShuffledSpiral({
         regionSize: config.region,
         itemPool: { ...config.items },
         obstaclePool: { ...config.obstacles },
@@ -169,38 +156,47 @@ async function main() {
                 ? { startSubstrate: config.start } : {}),
         },
     });
-    // Completion-condition item: first quota'd substrate declaring a
-    // victoryItem on its registry entry (e.g. bounce — its zone table
-    // places the item itself). Mirrors the pipeline UI's substrate
-    // fallback in _resolveVictoryItemId; without it the emitted world
-    // has no goal and AP defaults to trivially-true completion.
-    const victoryItem = Object.entries(config.quotas)
-        .map(([id, n]) => (n > 0 ? substrateRegistry.get(id)?.victoryItem : null))
-        .find(Boolean) ?? null;
+    // Completion-condition item: the goal the spiral's item layer placed
+    // (`Victory`), or null for a world without one.
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: config.seed,
-        completionConditionItem: victoryItem,
+        completionConditionItem: goalItem,
     });
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'shuffled-spiral-dump',
+        envelope_version: 1,
         config,
         startCell,
         stats,
         regions: shapeRegions(grid),
         rulesJson,
     };
+    const summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    return { dump, rulesJson, summary };
+}
+
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, SUBSTRATE_CHECK);
+    const { dump, summary } = await build(config);
+    const { stats } = dump;
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = summary;
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-shuffled-spiral', import.meta.url, main);

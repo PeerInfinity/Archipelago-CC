@@ -1,0 +1,62 @@
+/* procgenLabPanel — the host panel's own chrome. The PAGE inside the iframe
+   brings its own styling; nothing here reaches into it (⛔ it is a separate
+   document, and the layout consistency ⚖ ruling 6 bought comes from that). */
+
+.procgen-lab-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.procgen-lab-status {
+    padding: 4px 8px;
+    color: #7fe0ff;
+    border-bottom: 1px solid #24242c;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.procgen-lab-status.bad { color: #ff8080; white-space: normal; }
+
+.procgen-lab-bar {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 4px 8px;
+}
+
+.procgen-lab-bar button {
+    background: #1e1e26;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    padding: 2px 8px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.procgen-lab-open { color: #7fd88f; }
+.procgen-lab-open[aria-disabled='true'] { opacity: .45; pointer-events: none; }
+
+.procgen-lab-box {
+    margin: 0 8px;
+    background: #1e1e26;
+    color: #d8d8e0;
+    border: 1px solid #34343e;
+    font: inherit;
+    resize: vertical;
+}
+
+.procgen-lab-note { padding: 2px 8px; color: #8a8a98; font-size: 11px; }
+.procgen-lab-note.bad { color: #ff8080; }
+
+/* ⛓ THE IFRAME TAKES WHAT IS LEFT. `min-height: 0` on the flex child is what
+   stops a tall page from pushing the controls off the panel. */
+.procgen-lab-iframe {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    border: none;
+    background: #0b0b0e;
+}

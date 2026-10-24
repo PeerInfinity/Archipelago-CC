@@ -116,10 +116,10 @@ These class attributes let you configure behavior without writing custom methods
 | `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | KH2 (auto_form_dict, form_list, etc.) |
 | `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
 | `NAME_REMAPPING` | Map parameter names to setting names | - |
-| `SETTINGS_TO_CONVERT` | Convert name types to setting_value types | - |
+| `SETTINGS_TO_CONVERT` | Convert name types to option_value types | - |
 | `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys (rarely needed - auto-detected) | - |
 | `AUTO_DISCOVER_*` | Auto-discover attributes without manual specification | ALTTP |
-| `SELF_ATTR_TO_SETTING` | Map `self.attr` patterns to setting_value rules | KH2 (fight_logic → FightLogic) |
+| `SELF_ATTR_TO_SETTING` | Map `self.attr` patterns to option_value rules | KH2 (fight_logic → FightLogic) |
 | `CONSTANT_HELPER_EXPANSIONS` | Map helpers to constant return values (True/False) | KH2, Overcooked 2 |
 | `HELPER_TO_RULE_MAPPINGS` | Map helper calls to rule types (location_check, can_reach, etc.) | Dark Souls 3 |
 | `ACCUMULATOR_RULES` | Configure item accumulation patterns (coins, etc.) | LADX, DLC Quest |
@@ -173,9 +173,9 @@ These features work out-of-the-box with `GenericGameExportHandler`:
 - Enum classes used as helpers → converted to identity functions
 
 **LogicMixin State Method Auto-Detection** (`AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS=True`):
-- `return self.multiworld.worlds[player].<attr>` → `setting_value` rule
-- `return not self.multiworld.worlds[player].<attr>` → negated `setting_value` rule
-- `return bool(world.options.<opt>.value)` → `setting_value` rule
+- `return self.multiworld.worlds[player].<attr>` → `world_attribute` rule
+- `return not self.multiworld.worlds[player].<attr>` → negated `world_attribute` rule
+- `return bool(world.options.<opt>.value)` → `option_value` rule
 - "All elements pass check" patterns (for loop with early return False, final return True):
   - `self.can_reach_location(var, player)` check → `all_of` with `location_check`
   - `state.has(var, player)` check → `all_of` with `item_check`
@@ -253,7 +253,7 @@ auto-detected by the base class, so no exporter file is needed for simple games.
 
 2. **Replace custom `expand_rule` overrides with `STATE_METHOD_REPLACEMENTS`**
    - If the exporter has custom state method handling, use the declarative dict instead
-   - Example: `'_game_setting': {{'type': 'setting_value', 'setting': 'logic_setting'}}`
+   - Example: `'_game_setting': {{'type': 'option_value', 'option': 'logic_setting'}}`
 
 3. **Replace custom closure injection with `CLOSURE_VAR_IMPORTS`**
    - If `prepare_closure_vars` is overridden to inject module variables, use the dict instead

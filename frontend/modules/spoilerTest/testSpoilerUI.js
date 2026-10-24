@@ -8,18 +8,19 @@
  * @module spoilerTest
  */
 
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { getModuleEventBus } from './index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createRegionLink } from '../commonUI/index.js';
 import TestSpoilerRuleEvaluator from './testSpoilerRuleEvaluator.js';
-import { FileLoader } from './fileLoader.js';
+import { FileLoader, deriveSphereLogPath } from './fileLoader.js';
 import { ComparisonEngine } from './comparisonEngine.js';
 import { AnalysisReporter } from './analysisReporter.js';
 import { EventProcessor } from './eventProcessor.js';
 import { TestOrchestrator } from './testOrchestrator.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import { inferPlayerIdFromFileName } from '../../utils/playerInference.js';
 
 const logger = createUniversalLogger('testSpoilerUI');
 
@@ -371,6 +372,19 @@ export class TestSpoilerUI {
     );
   }
 
+  /**
+   * The embedded `sphere_log` of the ruleset stateManager last loaded, when
+   * that ruleset is `rulesetPath` — never another ruleset's log.
+   * @param {string} rulesetPath
+   * @returns {Array|null}
+   */
+  embeddedSphereLogFor(rulesetPath) {
+    const last = getLastRawJsonData();
+    if (!last || last.source !== rulesetPath) return null;
+    const entries = last.rawJsonData?.sphere_log;
+    return Array.isArray(entries) ? entries : null;
+  }
+
   async attemptAutoLoadSpoilerLog(rulesetPath) {
     if (!this.spoilerTestContainer) return;
 
@@ -385,13 +399,18 @@ export class TestSpoilerUI {
       return;
     }
 
-    // Delegate to FileLoader module
+    // Delegate to FileLoader module. The loaded ruleset's embedded
+    // `sphere_log` (if any) is the fallback when the `.jsonl` is missing.
     const result = await this.fileLoader.attemptAutoLoad(
       rulesetPath,
       this.currentSpoilerLogPath,
       this.spoilerLogData,
-      this.isLoadingLogPath
+      this.isLoadingLogPath,
+      this.embeddedSphereLogFor(rulesetPath)
     );
+    if (result.embedded) {
+      this.log('info', `No ${deriveSphereLogPath(rulesetPath)}; using the ruleset's embedded sphere_log.`);
+    }
 
     // Handle already loading case
     if (result.error === 'Already loading this log path.') {
@@ -418,6 +437,9 @@ export class TestSpoilerUI {
       // Handle failure case
       if (!result.success) {
         logger.warn(result.error);
+        // Into the panel's own log too: it is what a reader (and the test
+        // harness's failure message) sees.
+        this.log('error', `Could not load the suggested log: ${result.error}`);
         if (this.initialAutoLoadAttempted) {
           this.renderManualFileSelectionView(
             `Auto-load failed: ${result.error}. Please select a file manually.`
@@ -437,9 +459,9 @@ export class TestSpoilerUI {
 
       // Extract playerId from multiworld rules filename (e.g., "AP_xxx_P2_rules.json")
       if (rulesetPath && this.playerId === null) {
-        const playerIdMatch = rulesetPath.match(/_P(\d+)_rules\.json$/);
-        if (playerIdMatch) {
-          this.playerId = parseInt(playerIdMatch[1], 10);
+        const inferredPlayerId = inferPlayerIdFromFileName(rulesetPath);
+        if (inferredPlayerId) {
+          this.playerId = parseInt(inferredPlayerId, 10);
           this.log('info', `Extracted playerId ${this.playerId} from multiworld rules filename: ${rulesetPath}`);
         }
       }

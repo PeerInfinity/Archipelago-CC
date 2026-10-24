@@ -30,7 +30,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
     }
 
     # Mapping of self.<attr> to setting configuration for the analyzer
-    # This enables conversion of patterns like self.fight_logic to setting_value rules
+    # This enables conversion of patterns like self.fight_logic to option_value rules
     # Values can be:
     #   - str: setting name (uses numeric value)
     #   - dict: {'setting': name, 'use_current_key': True} (uses string key from name_lookup)
@@ -168,7 +168,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                         'test': {
                             'type': 'and',
                             'conditions': [
-                                {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                {'type': 'option_value', 'option': 'AutoFormLogic'},
                                 {'type': 'item_check', 'item': 'Second Chance'},
                                 {'type': 'item_check', 'item': 'Drive Converter'}
                             ]
@@ -183,7 +183,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                         'test': {
                             'type': 'and',
                             'conditions': [
-                                {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                {'type': 'option_value', 'option': 'AutoFormLogic'},
                                 {'type': 'item_check', 'item': 'Second Chance'}
                             ]
                         },
@@ -203,7 +203,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                             'test': {
                                 'type': 'and',
                                 'conditions': [
-                                    {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                    {'type': 'option_value', 'option': 'AutoFormLogic'},
                                     {'type': 'item_check', 'item': 'Second Chance'},
                                     {'type': 'not', 'condition': fight_logic_arg},
                                     {'type': 'item_check', 'item': 'Drive Converter'}
@@ -218,7 +218,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                             'test': {
                                 'type': 'and',
                                 'conditions': [
-                                    {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                    {'type': 'option_value', 'option': 'AutoFormLogic'},
                                     {'type': 'item_check', 'item': 'Second Chance'},
                                     {'type': 'not', 'condition': fight_logic_arg}
                                 ]
@@ -340,7 +340,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                 'test': {
                     'type': 'comparison',
                     'op': '!=',  # ruleEngine uses 'op' not 'operator'
-                    'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
+                    'left': {'type': 'option_value', 'option': 'FinalFormLogic'},
                     'right': {'type': 'constant', 'value': 0}  # no_light_and_darkness = 0
                 },
                 'if_true': {
@@ -349,7 +349,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                     'test': {
                         'type': 'comparison',
                         'op': '==',  # ruleEngine uses 'op' not 'operator'
-                        'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
+                        'left': {'type': 'option_value', 'option': 'FinalFormLogic'},
                         'right': {'type': 'constant', 'value': 1}  # light_and_darkness = 1
                     },
                     'if_true': ld_check,

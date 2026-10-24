@@ -1,0 +1,31 @@
+L37-4-from-L38-solve: 12 t, game flag {37,4} SET-CLEARED, model cleared, worst 0 px
+PASS: L37-4-from-L38-solve: the game's stream is the model's (13 observations) — worst 0, first -1
+PASS: L37-4-from-L38-solve: game transitions = model transitions
+PASS: L37-4-from-L38-solve: the game's persistence_cleared holds {37,4}
+PASS: L37-4-from-L38-solve: the model agrees (its write tick completed)
+L37-4-from-L38-cut-1: 1 t, game flag {37,4} SET-CLEARED, model held, worst 0 px
+PASS: L37-4-from-L38-cut-1: the game's stream is the model's (2 observations) — worst 0, first -1
+PASS: L37-4-from-L38-cut-1: game transitions = model transitions
+FAIL: L37-4-from-L38-cut-1: the game's persistence_cleared does NOT yet hold {37,4}
+PASS: L37-4-from-L38-cut-1: the model agrees (its write tick not yet run)
+L37-4-from-L38-cut-2: 2 t, game flag {37,4} SET-CLEARED, model cleared, worst 0 px
+PASS: L37-4-from-L38-cut-2: the game's stream is the model's (3 observations) — worst 0, first -1
+PASS: L37-4-from-L38-cut-2: game transitions = model transitions
+PASS: L37-4-from-L38-cut-2: the game's persistence_cleared holds {37,4}
+PASS: L37-4-from-L38-cut-2: the model agrees (its write tick completed)
+L39-8-from-L38-solve: 422 t, game flag {39,8} SET-CLEARED, model cleared, worst 0 px
+PASS: L39-8-from-L38-solve: the game's stream is the model's (423 observations) — worst 0, first -1
+PASS: L39-8-from-L38-solve: game transitions = model transitions
+PASS: L39-8-from-L38-solve: the game's persistence_cleared holds {39,8}
+PASS: L39-8-from-L38-solve: the model agrees (its write tick completed)
+L39-8-from-L38-cut-411: 411 t, game flag {39,8} held, model held, worst 0 px
+PASS: L39-8-from-L38-cut-411: the game's stream is the model's (412 observations) — worst 0, first -1
+PASS: L39-8-from-L38-cut-411: game transitions = model transitions
+PASS: L39-8-from-L38-cut-411: the game's persistence_cleared does NOT yet hold {39,8}
+PASS: L39-8-from-L38-cut-411: the model agrees (its write tick not yet run)
+L39-8-from-L38-cut-412: 412 t, game flag {39,8} SET-CLEARED, model cleared, worst 0 px
+PASS: L39-8-from-L38-cut-412: the game's stream is the model's (413 observations) — worst 0, first -1
+PASS: L39-8-from-L38-cut-412: game transitions = model transitions
+PASS: L39-8-from-L38-cut-412: the game's persistence_cleared holds {39,8}
+PASS: L39-8-from-L38-cut-412: the model agrees (its write tick completed)
+1 CHECK(S) FAILED

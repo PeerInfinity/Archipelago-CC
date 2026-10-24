@@ -1,0 +1,452 @@
+/**
+ * rerecordCampaign — the PURE HALF of `rerecord-seedling-campaign.mjs`.
+ * ⚖ R9 ruling 21 (user, 2026-08-21), slice 9.
+ *
+ * Everything here is a function of DATA — a chain list, a tape, a `botSeam()`
+ * envelope — so the pipeline's laws can be unit-rowed without a browser and
+ * without a GPU. The `.mjs` beside it owns the process: the run directory, the
+ * Windows driver, the stage flags.
+ *
+ * ⛔⛔⛔ THE LAW THIS MODULE EXISTS TO ENFORCE — **A SUCCESSOR'S BOOT IS BUILT
+ * FROM THE ENVELOPE ALONE, NEVER MERGED OVER A COMMITTED BLOCK.** R9 slice 9's
+ * defect hunt was sent looking for a merge that had kept a stale `rng` and
+ * found that slice 6 had done no such thing — every one of the eleven cached
+ * latches carries exactly its successor's committed seed, and the game
+ * reproduces both today. But the SHAPE is still the one an authoring pass can
+ * fail in silently, because a merge that keeps a committed field produces a
+ * tape that parses, records and replays. So the shape is made impossible
+ * rather than merely observed to be absent: `bootFromEnvelopeOnly` builds the
+ * blocks from the envelope, REFUSES BY NAME on a field the envelope does not
+ * carry, and takes the committed block only to DIFF against.
+ */
+
+import { createHash } from 'node:crypto';
+
+/**
+ * ⛔ A TRUE START IS DERIVED, NEVER NAMED. `botStart` applies a declared
+ * stream only when it is non-zero and writes `Main.time` only for a non-zero
+ * declaration, so a tape that declares neither is a tape that inherits the
+ * page's own fresh boot — which is what "the game's own start" means. The
+ * position is the fork's `new Game(0, 80, 128)`.
+ *
+ * @param {object} tape a PARSED tape
+ */
+export function isTrueStart(tape) {
+    return tape.rng?.seed === 0 && (tape.seam === null || tape.seam === undefined);
+}
+
+/**
+ * The chains this pipeline is the re-record pipeline FOR: a CUSTODY chain
+ * (`kind` defaults to custody — a staged chain declares its boots and has no
+ * custody to re-derive) of two or more segments whose FIRST segment is a true
+ * start. ⛓ Derived from `PLAYTHROUGH_CHAINS`; nothing is typed, so a chain
+ * added tomorrow is picked up or excluded by its own shape.
+ *
+ * @param {Array} chains `PLAYTHROUGH_CHAINS`
+ * @param {function} tapeOf label -> parsed tape
+ */
+export function chainSubjects(chains, tapeOf) {
+    return chains
+        .filter((c) => (c.kind ?? 'custody') === 'custody' && (c.segments ?? []).length >= 2)
+        .filter((c) => isTrueStart(tapeOf(c.segments[0])))
+        .map((c) => ({ id: c.id, segments: c.segments.slice() }));
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ — **THE ACCOUNTING UNIVERSE, WHICH IS A DIFFERENT
+ * QUESTION FROM THE SUBJECT, AND CONFLATING THEM LOST A REAL WALK MOVE.**
+ *
+ * `subjects()` answers *"whose BOOTS does this pipeline re-derive"* — and the
+ * honest answer is "multi-segment chains", because a one-segment chain has no
+ * boundary to author. S0's walk accounting was handed that same list and so
+ * answered a question nobody asked: *"every chain segment is ACCOUNTED FOR"*
+ * was total over the chains it ENUMERATED rather than over the chains that
+ * EXIST. `r8-solve-11` lives in the one-segment chain `r8-battery-11`, its own
+ * producer REPORTED it as a walk move, and `reportRows` dropped it on the
+ * floor — in neither the table nor the named `unmeasured` list. Measured
+ * 2026-08-25 (R9 §33): it re-solves 87 t -> 84 t under ⚖ ruling 46 and the
+ * only thing that surfaced it was a producer's `--check` going red much later.
+ *
+ * ⇒ the universe is every chain's segments, DEDUPLICATED, because ten of the
+ * twelve one-segment chains name a segment `r9-campaign` already carries and
+ * a segment counted twice would break the arithmetic that makes the check
+ * mean anything ("in exactly one report" cannot survive a duplicate subject).
+ * The first chain to claim a segment keeps it, and multi-segment chains are
+ * offered first so no existing row changes its `chain` label.
+ *
+ * ⛔ IT IS NOT A WIDER SUBJECT. Nothing here reaches S1's boundaries or S2's
+ * writes; a one-segment chain still authors no boot. What it widens is who
+ * gets NOMINATED, MEASURED and NAMED — so a walk move in one of them is a row
+ * the licence can cover, and a segment nobody can measure is named with its
+ * reason instead of vanishing.
+ *
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **AND A CHAIN'S `headline` IS A TAPE THE SAME
+ * PRODUCERS AUTHOR, SO IT IS THE SAME QUESTION AND IT WAS BEING DROPPED TOO.**
+ * `solve-seedling-r8-d2-chain.mjs` re-authors `r8-d2` on every run and REPORTS
+ * it — measured 2026-08-25 at this head, *"3 segment(s) reported, 2
+ * nominated"* — but `r8-d2` is not in `chain.segments`, so `reportRows` threw
+ * its row away exactly as it threw `r8-solve-11`'s away (§33.4 item 2). A
+ * 2186 t tape moving to 1672 t with nothing in the table saying so is the same
+ * defect one level up.
+ *
+ * ⛔ A HEADLINE THAT IS ALREADY A SEGMENT IS NOT COUNTED TWICE. Twelve of the
+ * fifteen declared headlines ARE their own chain's only segment
+ * (`r8-battery-*`, `r8-d2-shield`); claiming them again would break the very
+ * arithmetic the universe exists for ("in exactly one report" cannot survive a
+ * duplicate subject). Only `toy-west-pair`'s `r7-ends-meet-full` and `r8-d2`'s
+ * `r8-d2` are new, and they are DERIVED that way rather than named.
+ *
+ * ⛔ THE SECOND PASS IS NOT A TIDINESS. A headline of chain A can be a SEGMENT
+ * of chain B declared later in the list, and a one-pass claim would let the
+ * declaration order decide whether it is counted once or twice.
+ *
+ * @param {Array} chains `PLAYTHROUGH_CHAINS`
+ * @returns {Array<{id: string, segments: string[], headline: ?string}>}
+ */
+export function accountingUniverse(chains) {
+    const claimed = new Set();
+    const out = [];
+    const inOrder = [
+        ...chains.filter((c) => (c.segments ?? []).length >= 2),
+        ...chains.filter((c) => (c.segments ?? []).length === 1),
+    ];
+    for (const c of inOrder) {
+        const mine = (c.segments ?? []).filter((s) => !claimed.has(s));
+        for (const s of mine) claimed.add(s);
+        if (mine.length) out.push({ id: c.id, segments: mine, headline: null });
+    }
+    for (const c of chains) {
+        const h = c.headline;
+        if (!h || claimed.has(h)) continue;
+        claimed.add(h);
+        const row = out.find((x) => x.id === c.id);
+        if (row) row.headline = h;
+        else out.push({ id: c.id, segments: [], headline: h });
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **WHICH TAPES S3 MUST RE-RECORD, DERIVED FROM
+ * WHAT THE GAME WOULD BE HANDED, NEVER FROM WHAT S2 HAPPENED TO WRITE.**
+ *
+ * ⛔ THE DEFECT. `record()` selected `s2.wrote` — the tapes whose BOOT blocks
+ * S2 edited. That set is the CASCADE's successors, so it is precisely every
+ * moved segment EXCEPT THE FIRST ONE IN EACH CHAIN: a segment whose WALK moved
+ * but whose boot did not is not in it, and the first mover's boot never moves
+ * (it is upstream of the move). 12e′ predicted the cost exactly — **eight
+ * recorded where thirteen are owed** — and the four (now five) it drops
+ * (`r8-solve-10`, `r8-solve-18`, `r8-d2`, `r8-solve-20`, `r8-solve-11`) would
+ * then carry STALE EXPECTATIONS into S4, which reds by name after the GPU has
+ * already been spent.
+ *
+ * ⇒ the question is asked of the ARTIFACT rather than of the bookkeeping:
+ * **snapshot every tape's game-visible projection before the run authors
+ * anything, and record every tape whose projection moved.** A tape reaches the
+ * game as `gameVisibleTape(parseTape(raw))` and its expectation is the stream
+ * the game produced from exactly those bytes, so a projection that moved is a
+ * recording that is out of date — however it moved, whoever moved it, and
+ * whether or not anyone predicted it.
+ *
+ * ⛓ IT IS THE PIPELINE'S OWN PROJECTION, IMPORTED AND NOT RE-SPELLED. That
+ * matters twice: `tick0` is a `GAME_VISIBLE_DROPS` field, so S2's tick-0
+ * re-derivations — FIFTEEN of them at this head, more than the record set
+ * itself — are projected away and cost no GPU at all; and if the drop list
+ * grows tomorrow, this selector follows it instead of drifting.
+ *
+ * ⚠ AND IT IS OVER-INCLUSIVE IN EXACTLY ONE DIRECTION, WHICH IS STATED RATHER
+ * THAN HIDDEN. `description` SURVIVES `gameVisibleTape` (measured: the
+ * projection's keys end `…, name, description`), so a prose-only edit — ⚖
+ * ruling 39's `why` sweep — moves the projection and would be recorded. That
+ * is a GPU row spent on nothing, never a missed one, and the defect being
+ * repaired is under-recording. A drop list naming `description` would be two
+ * field names typed against ⚖ ruling 17; if it is ever wanted, the honest
+ * form is `GAME_VISIBLE_DROPS` growing and this function following.
+ *
+ * @param {string[]} names tape labels
+ * @param {function} projectionOf label -> the game-visible bytes, as a string
+ * @returns {Object<string, string>} label -> md5, plain so it flushes to JSON
+ */
+export function projectionIndex(names, projectionOf) {
+    const out = {};
+    for (const name of names) {
+        out[name] = createHash('md5').update(projectionOf(name)).digest('hex');
+    }
+    return out;
+}
+
+/**
+ * ⛓ THE DIFF, WITH ITS THREE OUTCOMES NAMED. A tape that APPEARED is a growth
+ * and must be recorded; a tape that VANISHED cannot be and is reported rather
+ * than silently dropped, because "nothing to record" and "the artifact is
+ * gone" must not print the same thing.
+ *
+ * @returns {{moved: string[], appeared: string[], vanished: string[]}} each in
+ *   sorted order, so the set a run records does not depend on directory order.
+ */
+export function movedProjections(before, after) {
+    const moved = [];
+    const appeared = [];
+    const vanished = [];
+    for (const name of Object.keys(after)) {
+        if (!Object.prototype.hasOwnProperty.call(before, name)) appeared.push(name);
+        else if (before[name] !== after[name]) moved.push(name);
+    }
+    for (const name of Object.keys(before)) {
+        if (!Object.prototype.hasOwnProperty.call(after, name)) vanished.push(name);
+    }
+    return { moved: moved.sort(), appeared: appeared.sort(), vanished: vanished.sort() };
+}
+
+/**
+ * ⛔⛔⛔ **THE PRE-P1 SPELLING — KEPT ONLY SO THE MIGRATION CAN READ THE FILES
+ * IT WROTE.** `provisionalLatch.latchCacheCandidates` is the live key.
+ *
+ * ⛓⛓ THE ARGUMENT THIS DOCBLOCK USED TO MAKE WAS ABOUT THE WRONG CONSUMER,
+ * AND THE CACHE PAID FOR IT. It read: `GAME_VISIBLE_DROPS` removes `tick0`,
+ * "and the tick-0 block is what a CONTINUATION window is driven with", so a
+ * projection-keyed cache would hand a second complete boot the first one's
+ * latch. The continuation window that really is driven with `tick0` is
+ * `watchWasm`'s, through `continuationTape` — a different code path with a
+ * different projection and no cache here. `driveLatch` ships
+ * `JSON.stringify(gameVisibleTape(parsed))`, so `tick0` never reaches the
+ * game at all and a latch cannot depend on it.
+ *
+ * ⛔ THE COST WAS MEASURED, NOT ARGUED (R9 P1 W0). `r8-d2-19`'s 721-tick walk
+ * was driven at §37's third run and its answer is in `rerecord-cache/` under
+ * `558c4596083c`; the tape `r9/re-record-attempt-4` committed for that same
+ * walk keys to `67990818be8a` and MISSES — and
+ * `md5({...branchTape, tick0: <the block it carried at S1>}) === 558c4596083c`
+ * to the digit. S2 re-derives `tick0` after S1 drives, so the "too strict"
+ * key threw away the GPU run it had just paid for, on the one axis
+ * `GAME_VISIBLE_DROPS` exists to remove.
+ *
+ * ⛓ "Too strict costs a GPU run rather than a wrong number" is still true and
+ * is still the tie-break — it is why `provisionalLatch.KEY_KEEPS` keeps
+ * `tick_count`, which `botLoadTape` does not read by name. What changed is
+ * that `tick0` is not a case of it: dropping a field the game never receives
+ * is not permissiveness, it is accuracy.
+ *
+ * @param {object} completeTape the tape as it will be committed/driven, whole
+ */
+export function latchCacheKey(completeTape) {
+    return createHash('md5').update(JSON.stringify(completeTape)).digest('hex').slice(0, 12);
+}
+
+/**
+ * ⛔⛔⛔ THE PER-FIELD AUTHORING. `project` is `segmentBootFromLatch` (injected
+ * so this module stays free of the browser tree and so a unit row can hand it
+ * a stub). The returned blocks are the projection's, verbatim; `committed` is
+ * read ONLY to produce `rows`.
+ *
+ * A field the envelope does not carry is a REFUSAL BY NAME — never a
+ * carry-over from `committed`, which is the defect shape this whole pipeline
+ * is built around.
+ *
+ * @returns {object} `{blocks, rows}` — `rows` is one entry per compared field:
+ *   `{field, committed, measured, moved}`.
+ */
+export function bootFromEnvelopeOnly(envelope, committed, project) {
+    const blocks = project(envelope);
+    const rows = [];
+    const walk = (prefix, measured, was) => {
+        if (measured === null || measured === undefined
+            || typeof measured !== 'object' || Array.isArray(measured)) {
+            rows.push({
+                field: prefix,
+                committed: was === undefined ? null : was,
+                measured: measured === undefined ? null : measured,
+                moved: JSON.stringify(was ?? null) !== JSON.stringify(measured ?? null),
+            });
+            return;
+        }
+        for (const k of Object.keys(measured)) {
+            walk(prefix ? `${prefix}.${k}` : k, measured[k],
+                was === null || was === undefined ? undefined : was[k]);
+        }
+    };
+    for (const block of Object.keys(blocks)) walk(block, blocks[block], committed?.[block]);
+    /**
+     * ⛔ AND THE COMMITTED SIDE IS WALKED TOO, so a field the committed tape
+     * HAS and the measurement does NOT is a REFUSAL rather than a silent
+     * survival. Without this the "no carry-over" law would be enforced only
+     * for fields the envelope happened to produce.
+     */
+    const measuredFields = new Set(rows.map((r) => r.field));
+    const missing = [];
+    const walkCommitted = (prefix, was) => {
+        if (was === null || was === undefined
+            || typeof was !== 'object' || Array.isArray(was)) {
+            if (!measuredFields.has(prefix)) missing.push(prefix);
+            return;
+        }
+        for (const k of Object.keys(was)) walkCommitted(prefix ? `${prefix}.${k}` : k, was[k]);
+    };
+    for (const block of Object.keys(committed ?? {})) {
+        walkCommitted(block, committed[block]);
+    }
+    if (missing.length) {
+        throw new Error('⛔ the measurement does not carry '
+            + `${missing.join(', ')}, which the committed block declares. A boot field `
+            + 'the envelope cannot produce is a REFUSAL BY NAME — carrying the committed '
+            + 'value forward is how a stale field survives a re-record (R9 slice 9).');
+    }
+    return { blocks, rows };
+}
+
+/**
+ * ⛔⛔⛔ R9 SLICE 9's FINDING, AS A DERIVATION — **WHICH BOUNDARIES A
+ * FRESH-PAGE LATCH CANNOT PREDICT.**
+ *
+ * `Bot.as:1587` applies a tape's declared persistence clears BEFORE the world
+ * is built, and says why in its own comment: "applying a clear after the world
+ * exists would leave the blocker standing for this visit". So for a window
+ * that is a CONTINUATION — whose room the GAME built at the previous boundary
+ * — a declared clear for that room lands too late and the body stands, while
+ * the same tape on a FRESH page never spawns it at all.
+ *
+ * ⇒ a segment that (a) is not window 0 and (b) declares a TIMED (`at`) clear
+ * for its OWN boot level walks two different streams on the two paths, and its
+ * fresh-page latch is NOT the number the continuation will reach.
+ *
+ * ⛓ MEASURED, and the measurement is what narrows the rule: `r8-solve-5`
+ * (L5, `{5,0}@427`) moves 514746467 -> 1196897329 between the two paths, while
+ * `r8-solve-8` (L8, `{8,0}@246`, `{8,1}@645`) is INVARIANT. Both satisfy (a)
+ * and (b), so the hazard is NECESSARY and NOT SUFFICIENT: the gated body must
+ * also draw from the gameplay stream. This reports the hazard and says so.
+ *
+ * @param {object} tape a PARSED tape
+ * @param {number} index the segment's 0-based position in its chain
+ */
+export function timedClearHazard(tape, index) {
+    const timed = (tape.persistence ?? []).filter((c) => c.at !== undefined);
+    const own = timed.filter((c) => c.level === tape.boot.level);
+    return {
+        timed: timed.map((c) => `${c.level}:${c.tag}@${c.at}`),
+        ownRoom: own.map((c) => `${c.level}:${c.tag}`),
+        // window 0 boots the page itself, so its declaration IS applied before
+        // its own build on both paths — which is why `r8-d2` has always
+        // admitted despite `r8-solve-18`'s `{18,0}@385`.
+        atRisk: index > 0 && own.length > 0,
+        why: index === 0
+            ? 'window 0 is a FRESH boot on both paths — its own declaration is applied '
+                + 'before its own build, so no clear can land late'
+            : own.length === 0
+                ? 'declares no timed clear for its own room'
+                : `declares ${own.map((c) => `${c.level}:${c.tag}`).join(', ')} for its OWN `
+                    + 'boot room and is a continuation window, so the clear lands AFTER '
+                    + 'the game built that room and the body stands. NECESSARY, NOT '
+                    + 'SUFFICIENT — the standing body must also draw from the gameplay '
+                    + 'stream (measured: L5 does, L8 does not)',
+    };
+}
+
+/**
+ * ⛔⛔⛔ A PERSISTENCE ROW HAS A MEASURED HALF AND A MODEL HALF, AND ONLY ONE
+ * OF THEM IS THE LATCH'S TO AUTHOR.
+ *
+ * `segmentBootFromLatch` reads `save.levelPersistence` and returns
+ * `{level, tag}` — the SET of clears in force when the successor begins. That
+ * is the measured half, and it is the whole boot state.
+ *
+ * The committed row can carry two more keys, and NEITHER is derivable from a
+ * latch:
+ *  · `note` — provenance prose a solver wrote (`r8-solve-8`'s two rows carry
+ *    the binary search that measured them on the real GPU);
+ *  · `at` — ⚖ ruling 14's TIMED clear, which is a statement about the
+ *    successor's OWN walk. It is `GAME_VISIBLE_DROPS`'s first entry precisely
+ *    because it is model-only, and a latch taken BEFORE that walk cannot see
+ *    it: the flag is not set yet, so the measured set correctly omits it.
+ *
+ * ⇒ writing the measured set verbatim would DELETE both, silently — the
+ * timed rows a walk depends on and the provenance of the numbers in them. This
+ * merges: the measured set decides which untimed rows exist, the committed row
+ * supplies `note`, and every committed TIMED row is re-appended because it was
+ * never the latch's to drop.
+ *
+ * ⛔ AND IT REFUSES THE CONTRADICTION: a committed row carrying `at` that the
+ * measurement says is ALREADY IN FORCE at boot is a tape claiming a clear is
+ * both inherited and earned. Sorted the way `parsePersistence` sorts, so a
+ * re-derivation that changed only ORDER is not a diff.
+ *
+ * @param {Array} measured `[{level, tag}]` from the latch
+ * @param {Array} committed the successor's committed `persistence` block
+ */
+export function mergePersistence(measured, committed) {
+    const key = (c) => `${c.level}:${c.tag}`;
+    const was = new Map((committed ?? []).map((c) => [key(c), c]));
+    const inForce = new Set((measured ?? []).map(key));
+    const timed = (committed ?? []).filter((c) => c.at !== undefined);
+    const clash = timed.filter((c) => inForce.has(key(c)));
+    if (clash.length) {
+        throw new Error('⛔ '
+            + clash.map(key).join(', ')
+            + ' is declared as a TIMED clear the walk earns AND is already in force in the '
+            + 'measured boot state. A clear cannot be both inherited and earned; the tape\'s '
+            + '`at` row or the predecessor\'s walk is wrong.');
+    }
+    const rows = (measured ?? []).map((c) => ({
+        level: c.level,
+        tag: c.tag,
+        note: was.get(key(c))?.note ?? '',
+    }));
+    for (const c of timed) rows.push({ ...c });
+    rows.sort((a, b) => a.level - b.level || a.tag - b.tag);
+    return rows;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ R9 P3b, §47.6 — **THE TWO HAND WITNESS LISTS, WHERE A TEST CAN REACH
+ * THEM.**
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛔⛔ WHY THEY MOVED HERE. They lived in `rerecord-seedling-campaign.mjs`,
+ * which RUNS S0..S5 the moment it is imported, so the one claim that matters
+ * about them — that neither list restates something `solverRosterFromData`
+ * already derives (⚖ 17) — could only be made by spending a `--win` roster
+ * inside `prove()`. A law that can only be checked by driving the GPU is a law
+ * nobody checks. Here it is a bounded vitest row and a rehearsal row.
+ *
+ * ⛓ THEY ARE STILL HAND LISTS, AND THAT IS DECLARED. Neither set is reachable
+ * from any producer's `--segments` — a `plan-seedling-*` tape is outside the
+ * solver roster BY CONSTRUCTION — so there is nothing to derive them FROM.
+ * What is derivable is the DISAGREEMENT, and that is what is checked.
+ */
+
+/**
+ * The three ⚖ 40 DASH witnesses — `plan-seedling-*`-authored, outside
+ * `solverRosterFromData` by construction, given their own `prove()` row by
+ * R9 slice P3 (C) after §42.7 (ii) found S4 covering 22 of 25 and saying 25.
+ */
+export const DASH_WITNESSES = Object.freeze(
+    ['r9-l0-sword-dash', 'r9-l0-sword-dash-rest', 'r9-l6-sword-dash-hit']);
+
+/** The four hand witnesses the solver-roster gate has always carried as controls. */
+export const HAND_WITNESSES = Object.freeze(
+    ['r8-hammer-arm', 'r8-hammer-control', 'r8-l18-spinner-press', 'r8-l6-bob-contact']);
+
+/**
+ * ⛔ A WITNESS THE DERIVATION ALREADY COVERS IS A FINDING, NOT A HARMLESS
+ * DUPLICATE. Two spellings of one membership disagree the first time either
+ * moves, and the hand one is the one that goes stale — ⚖ 17's whole subject.
+ *
+ * @param {string[]} derived what `solverRosterFromData` answers
+ * @returns {string[]} the witnesses that are already in `derived`
+ */
+export function duplicatedWitnesses(derived) {
+    const inDerivation = new Set(derived);
+    return [...HAND_WITNESSES, ...DASH_WITNESSES].filter((w) => inDerivation.has(w));
+}
+
+/**
+ * ⛓⛓⛓ `roster ∖ prove()` — the tapes S4 does NOT drive, DERIVED.
+ *
+ * ⛔ §42.7 (ii) was closed once by ENUMERATION (P3 added the three DASH
+ * witnesses it had noticed) and reopened at the next instance: 12h drove 28 of
+ * 37 pinned tapes and reported the roster. A complement computed from the
+ * three inputs cannot reopen, because nothing enumerates the inside.
+ */
+export function rosterComplement({ roster, derived }) {
+    const covered = new Set([...derived, ...HAND_WITNESSES, ...DASH_WITNESSES]);
+    return roster.filter((label) => !covered.has(label));
+}

@@ -1,0 +1,6 @@
+tower@92,76 A true  [{"ok":true,"exp":78,"bound":null}] | B true  [{"ok":true,"exp":75,"bound":null}]
+tower@100,76 A true  [{"ok":true,"exp":78,"bound":null}] | B true  [{"ok":true,"exp":78,"bound":null}]
+tower@92,84 A true  [{"ok":true,"exp":75,"bound":null}] | B true  [{"ok":true,"exp":9685,"bound":null}]
+tower@92,92 A true  [{"ok":true,"exp":9685,"bound":null}] | B true  [{"ok":true,"exp":9088,"bound":null}]
+tower@92,100 A true  [{"ok":true,"exp":9084,"bound":null}] | B true  [{"ok":true,"exp":14158,"bound":null}]
+hits 5

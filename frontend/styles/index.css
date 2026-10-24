@@ -228,32 +228,6 @@ body {
   margin-top: 1em;
 }
 
-/* Progress Container */
-#progress-container {
-  text-align: center;
-}
-
-#progress-container #progress-container-header {
-  margin-bottom: 0;
-}
-
-#progress-container #progress-bar {
-  width: 100%;
-}
-
-.button-container {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-#progress-container #control-button,
-#progress-container #quick-check-button {
-  padding-left: 1em;
-  padding-right: 1em;
-  flex: 1;
-}
-
 /* Console Area */
 #console {
   width: 100%;

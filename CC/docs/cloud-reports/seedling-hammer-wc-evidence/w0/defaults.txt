@@ -1,0 +1,64 @@
+{
+ "solverBot": {
+  "AXE_DODGE_ASK_PER_PREVIEW": true,
+  "BAIT_FORECAST": true,
+  "CHOOSER_HIT_SOURCES": true,
+  "HAMMER_APPROACH": false,
+  "HAMMER_ESCAPE": true,
+  "HAMMER_ESCAPE_FALLBACK": true,
+  "HAMMER_FIGHT": false,
+  "HAMMER_FIGHT_FALLBACK": false,
+  "ICE_TURRET_SPEAR_ARM": true,
+  "KEYLOCK_WAIT_PRICED": true,
+  "KILL_STANCE_AS_FORECAST": true,
+  "KILL_STANCE_TARGET_RESCAN": true,
+  "LAPSE_NARROW_RETRY": true,
+  "MOVING_WAIT": false,
+  "PRESS_KILL_DONE_ON_WALK": true,
+  "STANCE_ROCKS": true,
+  "STRIKE_ETA_FLOOR": false,
+  "SWORD_GATE_TIMED": true,
+  "UNBILLED_DAMAGE": false,
+  "WAND_VERB": true
+ },
+ "pressKillCost": {
+  "PRESS_KILL_BOMBS": false,
+  "PRESS_KILL_COST": true,
+  "REFUGE_ETA_CUT": true,
+  "STRIKE_SCAN_COST": true
+ },
+ "ghostSpinnerPress": {
+  "GHOST_KILL_RUNG": true,
+  "GHOST_SEARCH_BUCKETS": false,
+  "GHOST_SPINNER_PRESS": true
+ },
+ "STRIKE_PREVIEW_CAP": 16
+}
+CONTACT_FIDELITY {
+ "collideLinePointsExact": true,
+ "wallFlyerSwordHits": true,
+ "drillLive": true,
+ "bobSoldierLive": true,
+ "wallFlyerKill": true,
+ "wallFlyerShieldBump": true,
+ "darkTrapLight": true,
+ "spearingWindow": true,
+ "fallBurnsPress": true,
+ "bulbLive": true,
+ "baitForecast": true,
+ "forcedHits": true,
+ "bombPusherLive": true,
+ "movingWait": false,
+ "totemShotBlastInt": true,
+ "rebootShake": true,
+ "strikeIframeLapse": true,
+ "fallRockPostFall": true,
+ "forecastSpeedByTerrain": true,
+ "arrivalButtonArm": false,
+ "unbilledDamageGate": false,
+ "buttonFallReleaseStep": true,
+ "waypointSlide": true,
+ "lavaChainPlayerHit": true,
+ "ceremonyShove": true,
+ "flyerLive": false
+}

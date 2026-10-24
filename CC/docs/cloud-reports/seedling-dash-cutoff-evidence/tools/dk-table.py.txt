@@ -1,0 +1,31 @@
+# DK: the battery table — per tag at its window: ticks shipped, better/worse vs today, units, node wall.
+import json, sys, collections
+S = sys.argv[1]; tags = sys.argv[2].split(',')
+rows = collections.defaultdict(dict)
+for l in open(f'{S}/d1/battery.jsonl'):
+    r = json.loads(l)
+    if 'error' in r: rows[r['tag']][f"{r['id']}:{r['i']}"] = None; continue
+    rows[r['tag']][f"{r['id']}:{r['i']}"] = r
+def ticks(r): return r['shipped']['ticks'] if r and r.get('shipped') else None
+today = rows['today']
+print(f"{'tag':>8} {'n':>4} {'ticks':>8} {'better':>6} {'worse':>5} {'units':>7} {'wall s':>7} errors")
+base_keys = sorted(today)
+for t in tags:
+    R = rows[t]; n = len(R); err = sum(1 for v in R.values() if v is None)
+    tk = sum(ticks(R[k]) or 0 for k in R if R[k]); un = sum((R[k]['work'] or 0) for k in R if R[k]); ms = sum(R[k]['ms'] for k in R if R[k])
+    b = w = 0; worse = []
+    for k in R:
+        if k not in today or not R[k] or not today[k]: continue
+        a, c = ticks(today[k]), ticks(R[k])
+        if a is None or c is None:
+            if a != c: worse.append((k, a, c))
+            continue
+        if c < a: b += 1
+        elif c > a: w += 1; worse.append((k, a, c))
+    print(f"{t:>8} {n:>4} {tk:>8} {b:>6} {w:>5} {un:>7} {ms/1000:>7.0f} {err}  {worse[:5]}")
+if len(sys.argv) > 3:
+    a, c = sys.argv[3].split(':')
+    diff = [(k, ticks(rows[a].get(k)), ticks(rows[c].get(k)), (rows[a][k] or {}).get('work'), (rows[c].get(k) or {}).get('work')) for k in sorted(rows[a]) if k in rows[c] and ticks(rows[a][k]) != ticks(rows[c][k])]
+    print(f'{a} vs {c}: {len(diff)} keys differ in ticks', diff[:20])
+    du = [(k, (rows[a][k] or {}).get('work'), (rows[c][k] or {}).get('work')) for k in sorted(rows[a]) if k in rows[c] and rows[a][k] and rows[c][k] and rows[a][k].get('work') != rows[c][k].get('work')]
+    print(f'{a} vs {c}: units differ on {len(du)} keys, sum {sum((y or 0)-(x or 0) for _,x,y in du)}')

@@ -504,29 +504,6 @@
         }
       ]
     },
-    "setting_value": {
-      "description": "Setting value lookup tests",
-      "tests": [
-        {
-          "name": "get_existing_setting",
-          "rule": {"type": "setting_value", "setting": "difficulty"},
-          "context": {"settings": {"difficulty": "hard"}},
-          "expected": "hard"
-        },
-        {
-          "name": "get_boolean_setting",
-          "rule": {"type": "setting_value", "setting": "enable_glitches"},
-          "context": {"settings": {"enable_glitches": true}},
-          "expected": true
-        },
-        {
-          "name": "get_numeric_setting",
-          "rule": {"type": "setting_value", "setting": "starting_hearts"},
-          "context": {"settings": {"starting_hearts": 3}},
-          "expected": 3
-        }
-      ]
-    },
     "helper": {
       "description": "Helper function call tests",
       "tests": [
@@ -706,23 +683,6 @@
           "rule": {"type": "option_value", "setting": "triforce_pieces"},
           "context": {"settings": {"triforce_pieces": 30}},
           "expected": 30
-        }
-      ]
-    },
-    "setting_check": {
-      "description": "Setting comparison tests",
-      "tests": [
-        {
-          "name": "setting_equals_true",
-          "rule": {"type": "setting_check", "setting": "difficulty", "value": "hard"},
-          "context": {"settings": {"difficulty": "hard"}},
-          "expected": true
-        },
-        {
-          "name": "setting_equals_false",
-          "rule": {"type": "setting_check", "setting": "difficulty", "value": "hard"},
-          "context": {"settings": {"difficulty": "easy"}},
-          "expected": false
         }
       ]
     },
@@ -923,7 +883,7 @@
           "rule": {"type": "world_attribute", "setting": "difficulty"},
           "context": {"settings": {"difficulty": "normal"}},
           "expected": "normal",
-          "note": "world_attribute behaves like setting_value"
+          "note": "world_attribute behaves like option_value"
         }
       ]
     },
@@ -1842,6 +1802,59 @@
           "rule": {"type": "call", "func": "all", "args": [{"type": "list", "value": []}]},
           "expected": true,
           "note": "Empty list is vacuously true for all()"
+        }
+      ]
+    },
+    "AtLeast": {
+      "description": "AtLeast (N-of-M) rule tests",
+      "tests": [
+        {
+          "name": "atleast_2_of_3_satisfied",
+          "rule": {"rule": "AtLeast", "count": 2, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "2 of 3 true, need 2"
+        },
+        {
+          "name": "atleast_boundary_one_short",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": false,
+          "note": "2 of 3 true, need 3 (count-1 boundary)"
+        },
+        {
+          "name": "atleast_all_required_met",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "count == len: behaves like And"
+        },
+        {
+          "name": "atleast_all_required_unmet",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": false}]},
+          "expected": false,
+          "note": "count == len with one false fails"
+        },
+        {
+          "name": "atleast_one_required_or",
+          "rule": {"rule": "AtLeast", "count": 1, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "count == 1 behaves like Or"
+        },
+        {
+          "name": "atleast_one_required_none",
+          "rule": {"rule": "AtLeast", "count": 1, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": false,
+          "note": "count == 1 with no true fails"
+        },
+        {
+          "name": "atleast_zero_required",
+          "rule": {"rule": "AtLeast", "count": 0, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": true,
+          "note": "count <= 0 is trivially satisfied"
+        },
+        {
+          "name": "atleast_count_exceeds_children",
+          "rule": {"rule": "AtLeast", "count": 4, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": false,
+          "note": "count > len can never be satisfied"
         }
       ]
     }

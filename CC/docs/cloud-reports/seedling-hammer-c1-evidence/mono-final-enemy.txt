@@ -1,0 +1,3 @@
+# capture: row enemy (path off) exit 0, stdout md5 30bcc49ca8ae998fe24600ac647ae1a4, 11.1 s
+# 2 spinner record(s); modes off, chooser, chooserorder, c1
+# 2 record(s); solved {"off":2,"chooser":2,"chooserorder":2,"c1":2}; chooser: refused→solved 0; chooserorder: refused→solved 0; c1: refused→solved 0; seconds {"off":3,"chooser":3,"chooserorder":2.6,"c1":2.6}; replay mismatches 0; ⛔ solved→refused 0

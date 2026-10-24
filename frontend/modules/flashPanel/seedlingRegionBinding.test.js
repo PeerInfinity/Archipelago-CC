@@ -1,0 +1,910 @@
+// Unit tests for the region-atlas play-time state machine
+// (CC/docs/plans/region-atlas-plan.md, Phase 4 — projection 3, host side).
+//
+// The anchor is the COMMITTED seedling_atlas preset read off disk and put
+// through the substrate's own deserializeWorld, so these exercise the payload
+// the compiler really emits (exits as a Map keyed by AP exit name) rather than
+// a hand-shaped stand-in. Synthetic worlds appear only where the starter atlas
+// has nothing to say yet — the two-exits-to-one-level tie-break.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { describe, it, expect, beforeEach } from 'vitest';
+
+import { substrateRegistryEntry as seedlingEntry } from './flashSeedlingLibrary.js';
+import {
+    SeedlingRegionBinding,
+    resolveArrivalSpawn,
+    resolveCrossingExit,
+    departureExitOf,
+    exitList,
+    outExitIdOf,
+    parsePendingExit,
+    PENDING_EXIT_FIELDS,
+    ARRIVAL_ECHO_TIMEOUT_MS,
+} from './seedlingRegionBinding.js';
+import { LINK_TAGS, outExitId } from '../seedlingDemo/seedlingAtlasDerivation.js';
+import { returnSpawnTable } from './seedlingReturnSpawns.js';
+
+const PRESET = JSON.parse(readFileSync(
+    fileURLToPath(new URL('../../presets/seedling_atlas/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
+const SIDECARS = PRESET.preset_sidecars['1'];
+
+/** A warehouse-shaped world, built exactly the way procgenPlayer builds it. */
+const worldFor = (regionId) => seedlingEntry.deserializeWorld(SIDECARS[regionId].playable_payload);
+
+// The levels the starter atlas covers: overworld 0, starting house 86, owl's
+// nest entrance 2, first dungeon room 3. Since Phase 5a the overworld is SPLIT,
+// so its play-time sidecar is per sub-region; `r8c0` is the piece the game
+// starts in and the one both its wired doors belong to.
+const OVERWORLD = 'overworld_start__r8c0';
+const HOUSE = 'starting_house';
+
+// A clock the tests drive by hand, so the echo timeout is exercised without
+// waiting on it.
+let clock;
+const binding = () => new SeedlingRegionBinding({ now: () => clock });
+beforeEach(() => { clock = 1_000_000; });
+
+const load = (b, regionId, arrivedFrom = null) =>
+    b.onLoadRegion({ region_id: regionId, world: worldFor(regionId), arrivedFrom });
+
+const types = (effects) => effects.map((e) => e.type);
+
+describe('payload shape the binding depends on', () => {
+    it('the substrate deserializer keys exits by AP exit NAME, and levels are present', () => {
+        const world = worldFor(OVERWORLD);
+        expect(world.exits).toBeInstanceOf(Map);
+        expect([...world.exits.keys()]).toEqual([
+            'overworld_start__r8c0 -> starting_house',
+            'overworld_start__r8c0 -> owls_nest_entrance',
+        ]);
+        expect(world.level).toBe(0);
+        expect(exitList(world)).toHaveLength(2);
+    });
+});
+
+describe('resolveArrivalSpawn', () => {
+    it('lands at the entrance spawn of the exit named by arrivedFrom', () => {
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), { exit_id: 'owls_nest_stairs' }))
+            .toMatchObject({ level: 0, x: 256, y: 272, exitId: 'owls_nest_stairs', matchedArrivedFrom: true });
+    });
+
+    it('falls back to the region\'s first exit on the initial load (no arrivedFrom)', () => {
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null))
+            .toMatchObject({ level: 0, x: 160, y: 272, exitId: 'house_door', matchedArrivedFrom: false });
+    });
+
+    it('falls back — and flags it — when arrivedFrom names an exit this region lacks', () => {
+        const spawn = resolveArrivalSpawn(worldFor(HOUSE), { exit_id: 'no_such_exit' });
+        expect(spawn.matchedArrivedFrom).toBe(false);
+        expect(spawn.exitId).toBe('door');
+    });
+
+    it('returns null for a region with no wired exits', () => {
+        expect(resolveArrivalSpawn({ level: 3, exits: new Map() }, null)).toBeNull();
+    });
+});
+
+describe('trap 2 — the first level report is baseline, not a crossing', () => {
+    it('swallows the boot report even though it names a different level', () => {
+        const b = binding();
+        load(b, HOUSE, { exit_id: 'door' });
+        // The game boots on the overworld while AP thinks we are in the house.
+        // That is baseline, not the player walking anywhere.
+        const effects = b.onStateReport('level', 0);
+        expect(types(effects)).toEqual(['teleport']);
+        expect(effects[0]).toMatchObject({ level: 86, x: 48, y: 64 });
+        expect(b.lastLevel).toBe(0);                       // where the game is
+        expect(b.pendingArrival).toMatchObject({ level: 86 }); // armed for the echo
+    });
+
+    it('holds the arrival until the game reports, then releases it', () => {
+        const b = binding();
+        const onLoad = load(b, OVERWORLD, null);
+        expect(types(onLoad)).toEqual(['info']); // queued, no adapter yet
+        expect(b.pendingSpawn).toMatchObject({ level: 0, x: 160, y: 272 });
+        const onBoot = b.onStateReport('level', 0);
+        expect(types(onBoot)).toEqual(['teleport']);
+        expect(b.pendingSpawn).toBeNull();
+    });
+});
+
+describe('trap 1 — the teleport echo', () => {
+    it('swallows the level report its own arrival teleport caused', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);          // baseline (already on level 0)
+        // Now cross into the house: procgen loads it, we teleport, the game
+        // reports level 86 — that report is OURS.
+        const tp = load(b, HOUSE, { exit_id: 'door' });
+        expect(types(tp)).toEqual(['teleport']);
+        expect(b.pendingArrival).toMatchObject({ level: 86 });
+        expect(b.onStateReport('level', 86)).toEqual([]);
+        expect(b.pendingArrival).toBeNull();
+    });
+
+    it('does NOT arm when the teleport cannot change the level — the next crossing survives', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        // Re-entering the region we are already standing in: same level, so
+        // there is no level change to echo. Arming here would eat the player's
+        // next real door.
+        const again = load(b, OVERWORLD, { exit_id: 'house_door' });
+        expect(types(again)).toEqual(['teleport']);
+        expect(b.pendingArrival).toBeNull();
+        expect(types(b.onStateReport('level', 86))).toEqual(['regionMove']);
+    });
+
+    it('writes an unlanded arrival off after the timeout and resumes detecting', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        load(b, HOUSE, { exit_id: 'door' });   // arms level 86
+        expect(b.pendingArrival).toBeTruthy();
+        // The teleport never lands; the player walks somewhere else instead.
+        clock += ARRIVAL_ECHO_TIMEOUT_MS + 1;
+        const effects = b.onStateReport('level', 2);
+        expect(b.pendingArrival).toBeNull();
+        // Region is `starting_house` now, which has no exit to level 2.
+        expect(types(effects)).toEqual(['warn']);
+    });
+
+    it('⛔ the STALE arrival mark does not swallow the genuine return to that level', () => {
+        // ⛓ trap 961's shape, on the ARRIVAL half (slice P2 residue). The mark
+        // matches ONE level — and the level a teleport TARGETS is exactly the
+        // level the player comes back to through that same door. So with the
+        // equality tested before the age, an arrival that never landed and was
+        // never written off ate that return however much later it came, and
+        // the timeout beside it was decorative on the only report it could
+        // ever have applied to.
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        load(b, HOUSE, { exit_id: 'door' });   // arms level 86
+        expect(b.pendingArrival).toMatchObject({ level: 86 });
+        clock += ARRIVAL_ECHO_TIMEOUT_MS + 1;
+        // ⛔ THE MUTANT THIS ROW IS FOR: put `pendingArrival.level === level`
+        // back above the age check and this is `[]` — a silent swallow that
+        // looks exactly like a correct echo suppression.
+        expect(types(b.onStateReport('level', 86))).toEqual(['warn']);
+        expect(b.pendingArrival).toBeNull();
+    });
+
+    it('swallows unrelated reports while an arrival is still in flight', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        load(b, HOUSE, { exit_id: 'door' });
+        clock += 1000; // still inside the window
+        expect(b.onStateReport('level', 2)).toEqual([]);
+        expect(b.pendingArrival).toBeTruthy();
+    });
+});
+
+describe('crossings', () => {
+    const started = () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);   // baseline
+        b.onStateReport('level', 0);   // the arrival teleport's own no-op
+        return b;
+    };
+
+    it('publishes a region move naming the AP exit, not the atlas exit id', () => {
+        const b = started();
+        const effects = b.onStateReport('level', 2);
+        expect(effects).toEqual([{
+            type: 'regionMove',
+            sourceRegion: 'overworld_start__r8c0',
+            targetRegion: 'owls_nest_entrance',
+            exitName: 'overworld_start__r8c0 -> owls_nest_entrance',
+            exitId: 'owls_nest_stairs',
+            fromLevel: 0,
+            toLevel: 2,
+        }]);
+    });
+
+    it('ignores a repeated report of the level we are already on', () => {
+        const b = started();
+        expect(b.onStateReport('level', 0)).toEqual([]);
+    });
+
+    it('ignores position reports on their own — they only feed the tie-break', () => {
+        const b = started();
+        expect(b.onStateReport('playerPositionX', 48)).toEqual([]);
+        expect(b.onStateReport('playerPositionY', 64)).toEqual([]);
+        expect(b.lastSpawn).toEqual({ x: 48, y: 64 });
+    });
+});
+
+describe('tie-break — two exits of one region reaching the same level', () => {
+    const twoDoors = {
+        level: 5,
+        exits: [
+            {
+                exit_id: 'north_door',
+                exitName: 'room -> hall #north',
+                targetRegion: 'hall_north',
+                target_level: 9,
+                target_spawn: { x: 32, y: 16 },
+                entrance_spawn: { x: 0, y: 0 },
+            },
+            {
+                exit_id: 'south_door',
+                exitName: 'room -> hall #south',
+                targetRegion: 'hall_south',
+                target_level: 9,
+                target_spawn: { x: 32, y: 400 },
+                entrance_spawn: { x: 0, y: 32 },
+            },
+        ],
+    };
+
+    it('picks the exit whose stamped target spawn is nearest the reported coordinates', () => {
+        expect(resolveCrossingExit(twoDoors, 9, { x: 30, y: 20 }).exit_id).toBe('north_door');
+        expect(resolveCrossingExit(twoDoors, 9, { x: 30, y: 390 }).exit_id).toBe('south_door');
+    });
+
+    it('falls back to the first candidate when no coordinates have been reported', () => {
+        expect(resolveCrossingExit(twoDoors, 9, { x: null, y: null }).exit_id).toBe('north_door');
+    });
+
+    it('drives the tie-break end to end, coordinates first then the level change', () => {
+        const b = binding();
+        b.onLoadRegion({ region_id: 'room', world: twoDoors, arrivedFrom: null });
+        b.onStateReport('level', 5);          // baseline
+        b.onStateReport('level', 5);          // the arrival teleport's no-op
+        // games/seedling.json declares playerPositionX/Y BEFORE level exactly
+        // so this ordering holds on a real `new Game(level, x, y)`.
+        b.onStateReport('playerPositionX', 32);
+        b.onStateReport('playerPositionY', 396);
+        const effects = b.onStateReport('level', 9);
+        expect(effects[0]).toMatchObject({ targetRegion: 'hall_south', exitId: 'south_door' });
+    });
+});
+
+/**
+ * ⛓⛓ **AN EXTERNAL EXIT IS NOT A CANDIDATE** (EDITOR INTEGRATION W6, H1; plan
+ * §11.1 A3 / §11.3).
+ *
+ * The compiler marks a door whose far side is played by ANOTHER substrate and
+ * NULLS its `target_level` — because the value it used to copy there was the
+ * far substrate's own index, not a Seedling level. This filter needed no edit
+ * for that to work (`null !== 0`), and that is the claim: the row below is what
+ * turns "no edit was needed" from an assertion into a measurement.
+ *
+ * ⛔ Written with the pre-fix value beside the post-fix one, so the mutant that
+ * leaves `target_level` non-null on an external exit reds HERE rather than only
+ * in the compiler.
+ */
+describe('external exits — the far side is another substrate', () => {
+    /** One real door back to level 0, one host-driven door into a maze. */
+    const mixedRoom = {
+        level: 1,
+        exits: [
+            {
+                exit_id: 'in_L0_128_128',
+                exitName: null,
+                targetRegion: null,
+                target_level: 0,
+                target_spawn: { x: 128, y: 128 },
+                entrance_spawn: { x: 128, y: 128 },
+            },
+            {
+                exit_id: 'out_teleporter_128_128',
+                exitName: 'seed.level_1 -> mz.mz_cross',
+                targetRegion: 'mz.mz_cross',
+                external: true,
+                target_substrate: 'maze',
+                target_level: null,
+                target_spawn: null,
+                entrance_spawn: { x: 128, y: 128 },
+            },
+        ],
+    };
+
+    it('a `level` report never resolves to it, from ANY reported spawn', () => {
+        // Both spawns: beside the real entrance, and on top of where the maze
+        // door's junk `target_spawn` used to be. Pre-fix the second one picked
+        // the maze door.
+        for (const spawn of [{ x: 128, y: 128 }, { x: 0, y: 96 }]) {
+            expect(resolveCrossingExit(mixedRoom, 0, spawn).exit_id).toBe('in_L0_128_128');
+        }
+        // ⛔ NOT VACUOUS: the external exit really is in the list, and it is the
+        // ONE that names a target region.
+        expect(exitList(mixedRoom)).toHaveLength(2);
+        expect(exitList(mixedRoom).filter((e) => e.targetRegion !== null)).toHaveLength(1);
+    });
+
+    /**
+     * ⛔ THE MUTANT'S OWN ROW. Put the pre-fix integer back on the external exit
+     * and the two-candidate tie-break returns, sending a walk to level 0 through
+     * the maze door — the exact defect §11.1 A3 measured.
+     */
+    it('and with the pre-fix `target_level` back, the tie-break mis-resolves', () => {
+        const lying = {
+            ...mixedRoom,
+            exits: [mixedRoom.exits[0], { ...mixedRoom.exits[1], target_level: 0, target_spawn: { x: 0, y: 96 } }],
+        };
+        expect(resolveCrossingExit(lying, 0, { x: 0, y: 96 }).exit_id).toBe('out_teleporter_128_128');
+    });
+
+    it('a report to the level the external exit\'s SUBSTRATE numbers is still unmapped', () => {
+        const b = binding();
+        b.onLoadRegion({ region_id: 'seed.level_1', world: mixedRoom, arrivedFrom: null });
+        b.onStateReport('level', 1);   // baseline
+        // level 7 is nobody's target here — the warn path, not a silent no-op.
+        expect(types(b.onStateReport('level', 7))).toEqual(['warn']);
+    });
+});
+
+describe('unmapped levels — the atlas is partial by design', () => {
+    it('WARNS and does not move the AP region', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.onStateReport('level', 0);
+        const effects = b.onStateReport('level', 42);
+        expect(types(effects)).toEqual(['warn']);
+        expect(effects[0].level).toBe(42);
+        expect(effects[0].repeat).toBe(false);
+        expect(effects[0].message).toMatch(/no marked exit to/);
+        expect(effects[0].message).toMatch(/Region Marking Tool/);
+    });
+
+    it('marks the repeat so the glue can keep the log readable', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.onStateReport('level', 0);
+        b.onStateReport('level', 42);
+        b.onStateReport('level', 0);
+        expect(b.onStateReport('level', 42)[0].repeat).toBe(true);
+    });
+
+    // ⛓ G2: measured on the box — mounting a delivered set reports level −1 between
+    //   the arrival and the reset. The game's "no game" sentinel is not a room.
+    it('a NEGATIVE level (the game\'s "no game" sentinel) is neither a crossing nor a baseline', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        expect(b.onStateReport('level', -1)).toEqual([]);
+        expect(b.baselineSeen).toBe(false);
+        expect(types(b.onStateReport('level', 0))).toEqual(['teleport']); // the real baseline, and its arrival
+        expect(b.onStateReport('level', -1)).toEqual([]);
+        expect(b.lastLevel).toBe(0);
+        expect(b.onStateReport('level', 0)).toEqual([]);
+        expect(b.warnedLevels.size).toBe(0);
+    });
+
+    it('a region with no arrival spawn warns rather than teleporting nowhere', () => {
+        const b = binding();
+        const effects = b.onLoadRegion({ region_id: 'empty', world: { level: 3, exits: new Map() } });
+        expect(types(effects)).toEqual(['warn']);
+        expect(effects[0].message).toMatch(/carries no arrival spawn/);
+    });
+
+    it('notes — but does not warn about — an arrivedFrom the region does not declare', () => {
+        // This is the synthesized Menu -> start-region hop (exit `GameStart`)
+        // and any move from a region outside the warehouse. There is no marked
+        // entrance to honour; the first exit stands in. Not a defect.
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        const effects = load(b, HOUSE, { exit_id: 'ghost_door' });
+        expect(types(effects)).toEqual(['info', 'teleport']);
+        expect(effects[0].message).toMatch(/not one of its marked exits/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE PARK, OVER THE PURE STATE MACHINE** (EDITOR INTEGRATION W6, H2;
+ * plan §11.1 A2). The glue's own suite proves the SUBSCRIPTION; these prove the
+ * RULE, with no event bus in sight.
+ */
+describe('the park — another substrate owns the region', () => {
+    it('starts ACTIVE, so a preset that never says otherwise behaves as it always did', () => {
+        const b = binding();
+        expect(b.active).toBe(true);
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);   // baseline
+        expect(types(b.onStateReport('level', 2))).toEqual(['regionMove']);
+    });
+
+    it('swallows EVERY report while parked — no crossing, no warn, no remembered position', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);   // baseline
+        b.setActive(false);
+        expect(b.onStateReport('level', 2)).toEqual([]);     // a MAPPED target
+        expect(b.onStateReport('level', 42)).toEqual([]);    // an UNMAPPED one
+        expect(b.onStateReport('playerPositionX', 999)).toEqual([]);
+        expect(b.lastSpawn.x).toBeNull();
+        // ⛔ NOT VACUOUS — the identical report moves the region once unparked.
+        b.setActive(true);
+        expect(types(b.onStateReport('level', 2))).toEqual(['regionMove']);
+    });
+
+    it('never ARMS an echo while parked, so the first real crossing after the return survives', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        b.onStateReport('level', 2);
+        expect(b.pendingArrival).toBeNull();
+        expect(b.lastLevel).toBe(0);
+    });
+
+    /**
+     * ⛔ AND AN IN-FLIGHT ONE IS DROPPED WHEN PARKING. An armed echo left
+     * standing through the whole excursion would swallow the first genuine
+     * crossing after the return.
+     */
+    it('drops an in-flight arrival echo at the moment of parking', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);      // baseline
+        load(b, HOUSE, { exit_id: 'door' });   // arms the echo for level 86
+        expect(b.pendingArrival).not.toBeNull();
+        b.setActive(false);
+        expect(b.pendingArrival).toBeNull();
+    });
+
+    it('queues an arrival that lands while parked and releases it ONCE on resume', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        // procgenPlayer publishes loadRegion BEFORE activeSubstrateChanged.
+        expect(types(load(b, HOUSE, { exit_id: 'door' }))).toEqual(['info']);
+        expect(b.pendingSpawn).not.toBeNull();
+        const resumed = b.setActive(true);
+        expect(types(resumed)).toEqual(['info', 'teleport']);
+        expect(resumed.at(-1)).toMatchObject({ type: 'teleport', level: 86 });
+        expect(b.pendingSpawn).toBeNull();
+        // ⛔ ONCE. A repeat broadcast is not a transition, and a further
+        // park/resume round trip has nothing left to fire.
+        expect(b.setActive(true)).toEqual([]);
+        b.setActive(false);
+        expect(types(b.setActive(true))).toEqual(['info']);
+    });
+
+    it('un-parking with nothing queued teleports nobody', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        expect(types(b.setActive(true))).toEqual(['info']);
+    });
+
+    it('a queued arrival on a game that has not BOOTED stays queued for the baseline', () => {
+        const b = binding();
+        b.setActive(false);
+        load(b, HOUSE, { exit_id: 'door' });
+        expect(b.pendingSpawn).not.toBeNull();
+        // resume first: the game is still silent, so nothing may be teleported
+        expect(types(b.setActive(true))).toEqual(['info']);
+        expect(b.pendingSpawn).not.toBeNull();
+        // …and the baseline releases it, exactly as it does with no park at all
+        expect(types(b.onStateReport('level', 0))).toEqual(['teleport']);
+        expect(b.pendingSpawn).toBeNull();
+    });
+});
+
+describe('a fresh adapter (preset switch / reload)', () => {
+    it('re-arms the arrival for the region we are already in', () => {
+        const b = binding();
+        load(b, HOUSE, { exit_id: 'door' });
+        b.onStateReport('level', 0);
+        expect(b.baselineSeen).toBe(true);
+        b.onGameRestart();
+        expect(b.baselineSeen).toBe(false);
+        expect(b.pendingArrival).toBeNull();
+        expect(b.pendingSpawn).toMatchObject({ level: 86, x: 48, y: 64 });
+        expect(types(b.onStateReport('level', 0))).toEqual(['teleport']);
+    });
+});
+
+/**
+ * ⛓⛓ **H3 — THE PRE-SWAP DOOR REPORT** (EDITOR INTEGRATION M1; plan §11.2).
+ *
+ * `Game.pendingExit` is written one frame before the world swaps, and it is
+ * the only thing that says WHICH door fired: `new Game(to,..)` sets
+ * `Main.level` in its own constructor, so the level report is already too
+ * late. It rides on p4d; every row here is pure and needs no artifact.
+ */
+describe('H3 — the pendingExit arm', () => {
+    /** A room with one same-substrate door and one external one. */
+    const doorRoom = () => ({
+        level: 19,
+        exits: [
+            {
+                exit_id: 'out_teleporter_104_72',
+                exitName: 'seed.level_19 -> seed.level_30',
+                targetRegion: 'seed.level_30',
+                target_level: 30,
+                target_spawn: { x: 8, y: 8 },
+                entrance_spawn: { x: 8, y: 8 },
+            },
+            {
+                exit_id: 'out_stairsup_8_8',
+                exitName: 'seed.level_19 -> mz.mz_cross',
+                targetRegion: 'mz.mz_cross',
+                external: true,
+                target_substrate: 'maze',
+                target_level: null,
+                target_spawn: null,
+                entrance_spawn: { x: 8, y: 8 },
+            },
+        ],
+    });
+    const armed = () => {
+        const b = binding();
+        b.onLoadRegion({ region_id: 'seed.level_19', world: doorRoom(), arrivedFrom: null });
+        b.onStateReport('level', 19); // baseline
+        return b;
+    };
+
+    describe('the payload', () => {
+        it('parses the six fields the AS3 writes, and STRIPS the seq', () => {
+            expect(parsePendingExit('7|19|stairsup|8|8|31')).toEqual({
+                seq: 7, fromLevel: 19, type: 'stairsup', x: 8, y: 8, to: 31,
+            });
+            expect(PENDING_EXIT_FIELDS).toBe(6);
+        });
+
+        it('refuses the EMPTY boot report and anything malformed — a value the game never wrote is not a door', () => {
+            // BridgeGeneric reports every declared property once at boot, so ""
+            // arrives on a build that has the seam and has fired no door.
+            // MEASURED on p4c at W5-0: the first burst carried the empty string.
+            // ⛓ `'1|19|stairsup|8|8|'` is in the list on purpose: `Number('')`
+            // is 0, so an unwritten last field would otherwise read as a door
+            // to level 0.
+            for (const bad of ['', null, undefined, 42, '1|19|stairsup|8|8', '1|19|stairsup|8|8|31|x',
+                'a|19|stairsup|8|8|31', '1|19||8|8|31', '1|19|stairsup|x|8|31',
+                '1|19|stairsup|8|8|', '|19|stairsup|8|8|31', '1|19|stairsup|8.5|8|31']) {
+                expect(parsePendingExit(bad)).toBeNull();
+            }
+        });
+
+        /**
+         * ⛔ THE DELIMITER IS ASSERTED FROM `LINK_TAGS`, NOT FROM THREE
+         * LITERALS. The claim is that no link tag can contain the separator; a
+         * row that spelled the three tags here would go on passing after a
+         * fourth was added.
+         */
+        it('`|` appears in no LINK_TAGS value, which is what makes the split safe', () => {
+            expect(LINK_TAGS.length).toBeGreaterThan(0);
+            for (const t of LINK_TAGS) expect(t).not.toContain('|');
+            // and an integer coordinate cannot produce one either
+            for (const n of [0, 8, -1, 104, 4096]) expect(String(n)).not.toContain('|');
+        });
+
+        /**
+         * ⛔⛔ **THIS ROW IS THE LICENCE FOR THE ONE SPELLING IT PINS**
+         * (maze-lab arms F-a / plan §17.1 F6). F6 proposed importing
+         * `seedlingAtlasDerivation.outExitId` instead of restating it. Measured
+         * at `8a1eb6b1a` over the static import closure, that import costs the
+         * panel **+27 files and +1,267,998 B** (`flashPanel/index.js`: 43
+         * files / 650,891 B → 70 / 1,918,889) — `seedlingRegionBinding` is IN
+         * the panel's static closure, so every page that mounts the panel would
+         * pay 1.27 MB for twelve characters. The panel reaches the derivation
+         * the other way, dynamically, through `AP_MODULE_PATHS.derivation`.
+         *
+         * ⇒ the spelling stays and THIS is the drift guard. A test file is not
+         * in the bundle, so the pin costs the page nothing; delete it and the
+         * duplicate has no reason to be allowed.
+         *
+         * ⛓ Every `LINK_TAGS` value, not three literals — a fourth tag is
+         * covered the day it is added.
+         */
+        it('rebuilds the exit id the ATLAS spells, per seedlingAtlasDerivation.outExitId', () => {
+            expect(LINK_TAGS.length).toBeGreaterThan(0);
+            for (const type of LINK_TAGS) {
+                for (const [x, y] of [[104, 72], [0, 0], [8, 8], [4096, 1]]) {
+                    expect(outExitIdOf({ type, x, y })).toBe(outExitId({ type, x, y }));
+                }
+            }
+        });
+    });
+
+    /**
+     * ⛔⛔ **THE MEASUREMENT F6 TURNS ON, DERIVED RATHER THAN TYPED.** The
+     * docblock above `outExitIdOf` says the import was refused because it costs
+     * the panel 1.27 MB. A number in a comment is unfalsifiable; this row walks
+     * the static import graph from `flashPanel/index.js` and asserts the shape
+     * that number describes — the panel's SHIPPED closure does not reach
+     * `seedlingAtlasDerivation`, which it uses through a dynamic
+     * `AP_MODULE_PATHS.derivation` import instead.
+     *
+     * ⛓ It is a claim about STATIC imports only: a dynamic `import(...)` is a
+     * separate chunk and is deliberately not followed, which is the whole
+     * arrangement being asserted.
+     */
+    it('the panel\'s STATIC closure does not reach seedlingAtlasDerivation — F6\'s refusal, derived', async () => {
+        const { readFileSync } = await import('node:fs');
+        const { dirname, resolve } = await import('node:path');
+        const { fileURLToPath } = await import('node:url');
+
+        const SPEC = /^\s*(?:import|export)\s[^'"]*?from\s*['"]([^'"]+)['"]|^\s*import\s*['"]([^'"]+)['"]/gm;
+        const walk = (entry) => {
+            const seen = new Set();
+            const stack = [entry];
+            while (stack.length) {
+                const file = stack.pop();
+                if (seen.has(file)) continue;
+                seen.add(file);
+                let src;
+                try { src = readFileSync(file, 'utf8'); } catch { continue; }
+                for (const m of src.matchAll(SPEC)) {
+                    const spec = m[1] ?? m[2];
+                    if (spec?.startsWith('.')) stack.push(resolve(dirname(file), spec));
+                }
+            }
+            return seen;
+        };
+
+        const closure = walk(fileURLToPath(new URL('./index.js', import.meta.url)));
+        // the subject really is in it — otherwise the assertion below is vacuous
+        expect([...closure].some((f) => f.endsWith('/seedlingRegionBinding.js'))).toBe(true);
+        expect([...closure].some((f) => f.endsWith('/seedlingAtlasDerivation.js'))).toBe(false);
+        // …and the panel does reach it, the other way
+        const wiring = readFileSync(
+            fileURLToPath(new URL('./seedlingRandomizerWiring.js', import.meta.url)), 'utf8');
+        expect(wiring).toContain('derivation: \'modules/seedlingDemo/seedlingAtlasDerivation.js\'');
+    });
+
+    it('an EXTERNAL door publishes a regionMove, naming the exit it matched', () => {
+        const b = armed();
+        const out = b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(types(out)).toEqual(['regionMove']);
+        expect(out[0]).toMatchObject({
+            sourceRegion: 'seed.level_19',
+            targetRegion: 'mz.mz_cross',
+            exitId: 'out_stairsup_8_8',
+            fromLevel: 19,
+            toLevel: 31,
+            external: true,
+        });
+    });
+
+    /**
+     * ⛔⛔ THE MUTANT'S OWN ROW. Drop the `external` test and a perfectly
+     * ordinary door inside this substrate emits a region move — which
+     * procgenPlayer would then act on, loading a region the player is already
+     * walking into by themselves.
+     */
+    it('a SAME-SUBSTRATE door emits nothing — the level arm resolves it, with the spawn tie-break', () => {
+        const b = armed();
+        expect(b.onStateReport('pendingExit', '1|19|teleporter|104|72|30')).toEqual([]);
+        // and the level arm still does its job
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('a door this region does not declare emits nothing — the atlas is partial by design', () => {
+        const b = armed();
+        expect(b.onStateReport('pendingExit', '1|19|teleporter|999|999|4')).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ THE DEPARTURE ECHO. The game swaps anyway (design (c)) into a real
+     * room of its own set, and that swap's `level` report is a move we already
+     * published. Without the mark it resolves against an external exit whose
+     * `target_level` is null, finds nothing, and WARNS about a crossing that
+     * worked.
+     */
+    it('the swap\'s own `level` report is SWALLOWED after an external departure', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(b.lastLevel).toBe(31);
+    });
+
+    it('and WITHOUT the mark that same report warns — the mutant, driven', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingDeparture = null;                       // the mutant, in one line
+        expect(types(b.onStateReport('level', 31))).toEqual(['warn']);
+    });
+
+    it('the mark is spent ONCE — a second report to the same level is a real crossing', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('the mark EXPIRES rather than swallowing a crossing minutes later', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        clock += ARRIVAL_ECHO_TIMEOUT_MS + 1;
+        // level 31 is nobody's target, so the written-off mark surfaces as the
+        // ordinary unmapped warn instead of a silent swallow.
+        expect(types(b.onStateReport('level', 31))).toEqual(['warn']);
+    });
+
+    it('the PARK drops the mark — left armed it would eat the first crossing after the return', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.setActive(false);
+        expect(b.pendingDeparture).toBeNull();
+        b.setActive(true);
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    /**
+     * ⛓ solver-walk §5.36 — the departure lands IN the level its own region move's arrival teleport
+     * targets (a generated door between two generated rooms). The arrival was armed while `lastLevel`
+     * was the old level; its same-level landing reports nothing, so the mark must go with the
+     * departure's report — left armed, it swallowed the next real crossing and blocked every hold.
+     */
+    it('a departure landing in its own arrival\'s level SPENDS that arrival mark too (no same-level echo will come)', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingArrival = { level: 31, x: 8, y: 8, at: clock }; // what the region move's arrival teleport arms
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect([b.pendingDeparture, b.pendingArrival]).toEqual([null, null]);
+        // the next REAL crossing, well inside the echo window, is a crossing — not "pre-arrival noise"
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('…while an arrival into ANOTHER level stays armed for its own landing (the parking-door case)', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingArrival = { level: 30, x: 8, y: 8, at: clock };
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(b.pendingArrival?.level).toBe(30);
+        expect(b.onStateReport('level', 30)).toEqual([]); // its echo, swallowed
+        expect(b.pendingArrival).toBeNull();
+    });
+
+    it('a PARKED binding reads no door at all', () => {
+        const b = armed();
+        b.setActive(false);
+        expect(b.onStateReport('pendingExit', '1|19|stairsup|8|8|31')).toEqual([]);
+    });
+
+    it('a fresh adapter forgets the mark', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.onGameRestart();
+        expect(b.pendingDeparture).toBeNull();
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **A ROOM THE PIPELINE PLACED.** Its sidecar
+ * keeps the atlas door id as `exit_id`, carries the engine's `exit_<side>` as
+ * `exitName`, and every door is `external`. Built here exactly as the pipeline
+ * builds it: `extractZoneRules` then the entry's own `serializeWorld` over a
+ * stitched exit table (the spiral leaves `targetExitId` null), then the
+ * warehouse's `deserializeWorld`.
+ */
+describe('T1 — arrival and departure in a room the pipeline placed', () => {
+    const placedWorld = () => {
+        const k = [...Array(seedlingEntry.zoneCount).keys()].find((i) => (
+            seedlingEntry.extractZoneRules(i, { region_id: 'p', exitSides: [] }).notes?.length ?? 0) >= 2);
+        const z = seedlingEntry.extractZoneRules(k, { region_id: 'r_0_0', exitSides: ['S', 'E'] });
+        const engine = new Map([
+            ['exit_S', { exit_id: 'exit_S', side: 'S', exitName: 'exit_S', targetRegion: 'r_0_1', targetExitId: null }],
+            ['exit_E', { exit_id: 'exit_E', side: 'E', exitName: 'exit_E', targetRegion: 'r_1_0', targetExitId: null }],
+        ]);
+        const payload = seedlingEntry.serializeWorld({ ...z.payload, exits: engine }, null, null, null,
+            { substrateOfRegion: () => 'maze' });
+        return seedlingEntry.deserializeWorld(payload);
+    };
+
+    /** The resolution before T1: `exit_id` alone, else the first exit. */
+    const exitIdOnly = (world, arrivedFrom) => {
+        const exits = exitList(world);
+        return exits.find((e) => e.exit_id === arrivedFrom?.exit_id) ?? exits[0];
+    };
+
+    it('⛓ a compiled seedling_atlas world resolves EXACTLY as before — every exit, with and without source_region', () => {
+        let rows = 0;
+        for (const regionId of Object.keys(SIDECARS)) {
+            const world = worldFor(regionId);
+            const asks = [null, { exit_id: 'GameStart', source_region: 'Menu' },
+                ...exitList(world).flatMap((e) => [{ exit_id: e.exit_id },
+                    { exit_id: e.exit_id, source_region: e.targetRegion }])];
+            for (const ask of asks) {
+                const want = exitIdOnly(world, ask);
+                const got = resolveArrivalSpawn(world, ask);
+                if (!want?.entrance_spawn) { expect(got).toBeNull(); continue; }
+                expect(got.exitId, `${regionId} ${JSON.stringify(ask)}`).toBe(want.exit_id);
+                rows += 1;
+            }
+        }
+        expect(rows).toBeGreaterThan(10);
+    });
+
+    it('the placed room\'s exits keep the atlas id and carry exit_<side> as exitName', () => {
+        const exits = exitList(placedWorld());
+        expect(exits.map((e) => e.exitName)).toEqual(['exit_S', 'exit_E']);
+        expect(exits.every((e) => e.external === true && !e.exit_id.startsWith('exit_'))).toBe(true);
+    });
+
+    it('arm 2 — an arrival that names the engine exit (a world with targetExitId) lands on that door', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_E' }))
+            .toMatchObject({ exitId: east.exit_id, x: east.entrance_spawn.x, matchedArrivedFrom: true });
+    });
+
+    it('arm 3 — a SPIRAL arrival (the source exit\'s own name + source_region) lands on the door leading back', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_1', source_region: 'r_1_0' }))
+            .toMatchObject({ exitId: east.exit_id, matchedArrivedFrom: true });
+        // …and with no source it is the first-door fallback, flagged
+        expect(resolveArrivalSpawn(world, { exit_id: 'exit_1' }).matchedArrivedFrom).toBe(false);
+    });
+
+    it('arm 2 of the departure — a hand-named door is matched by its TILE (payload tile_size), and publishes the move', () => {
+        const world = placedWorld();
+        const east = exitList(world)[1];
+        const [tx, ty] = east.exit_tiles[0];
+        const door = { type: 'teleporter', x: tx * world.tile_size, y: ty * world.tile_size };
+        expect(outExitIdOf(door)).not.toBe(east.exit_id); // the id arm cannot see it
+        expect(departureExitOf(world, door)).toBe(east);
+        const b = binding();
+        b.onLoadRegion({ region_id: 'r_0_0', world, arrivedFrom: null });
+        b.onStateReport('level', world.level); // baseline
+        const out = b.onStateReport('pendingExit', `1|${world.level}|${door.type}|${door.x}|${door.y}|86`);
+        expect(out).toEqual([expect.objectContaining({
+            type: 'regionMove', targetRegion: 'r_1_0', exitName: 'exit_E', exitId: east.exit_id, external: true,
+        })]);
+    });
+
+    it('a door report on no exit tile matches nothing — the partial-atlas silence stands', () => {
+        const world = placedWorld();
+        expect(departureExitOf(world, { type: 'teleporter', x: 0, y: 0 })).toBeNull();
+    });
+});
+
+/**
+ * ⛓ T2b U2b — an arrival lands on the GAME'S OWN return spawn when the map has
+ * one (the reverse link's playerx/playery, one tile off the door), and on the
+ * door tile otherwise. The table is the real one, off the real map.
+ */
+describe('T2b — the game\'s own return spawn', () => {
+    const MAP = JSON.parse(readFileSync(
+        fileURLToPath(new URL('./atlases/seedling-map.json', import.meta.url)), 'utf8'));
+    const TABLE = returnSpawnTable(MAP);
+
+    it('a table entry for the arrival door → its return spawn (the house door: 160,288, one tile below)', () => {
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null, TABLE)).toMatchObject({
+            level: 0, x: 160, y: 288, exitId: 'house_door', landing: 'return-spawn',
+        });
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), { exit_id: 'owls_nest_stairs' }, TABLE)).toMatchObject({
+            level: 0, x: 256, y: 256, exitId: 'owls_nest_stairs', matchedArrivedFrom: true, landing: 'return-spawn',
+        });
+    });
+
+    it('no entry for the door (or no table) → the door tile, as before, and it says so', () => {
+        const empty = new Map();
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null, empty))
+            .toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+        expect(resolveArrivalSpawn(worldFor(OVERWORLD), null))
+            .toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+    });
+
+    it('the binding teleports to the return spawn once it has the table', () => {
+        const b = binding();
+        b.setReturnSpawns(TABLE);
+        load(b, OVERWORLD, { exit_id: 'owls_nest_stairs' });
+        const out = b.onStateReport('level', 0); // baseline releases the queued arrival
+        expect(out).toEqual([expect.objectContaining({ type: 'teleport', level: 0, x: 256, y: 256 })]);
+    });
+
+    it('a table that arrives AFTER an arrival was queued re-resolves the queued one', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);               // queued (not booted), on the door tile
+        expect(b.pendingSpawn).toMatchObject({ x: 160, y: 272, landing: 'entrance-spawn' });
+        b.setReturnSpawns(TABLE);
+        expect(b.pendingSpawn).toMatchObject({ x: 160, y: 288, landing: 'return-spawn' });
+        expect(b.onStateReport('level', 0))
+            .toEqual([expect.objectContaining({ type: 'teleport', x: 160, y: 288 })]);
+    });
+});

@@ -9,7 +9,7 @@ import { makeHasRule } from '../shared/rulesJsonBuilder.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 
 // Phase 1 of the obstacles-along-paths refactor
-// (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md):
+// (the obstacles-along-paths refactor plan):
 // the bounce physics obstacle vocabulary must compile, through the
 // shared (tile-agnostic) compiler, to the same has(item) rules bounce
 // already derives from geometry via minimalSetsToRule.

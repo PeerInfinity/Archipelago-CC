@@ -1,0 +1,16 @@
+== census-seedling-solver-surface
+GREEN: 284 rows match a fresh census
+rc=0
+== census-seedling-constants
+census-seedling-constants --check — 5841 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+rc=0
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 558 number leaves
+rc=0
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+rc=0
+== roster
+277

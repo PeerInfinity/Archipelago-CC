@@ -1,0 +1,231 @@
+{
+    "game": "seedling",
+    "name": "slots-l24-burn-fire-first",
+    "boot": {
+        "level": 24,
+        "x": 96,
+        "y": 80
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [
+        {
+            "level": 24,
+            "items": [
+                "sword"
+            ]
+        }
+    ],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 1,
+            "slot": 1
+        },
+        {
+            "t": 61,
+            "slot": 0
+        },
+        {
+            "t": 115,
+            "slot": 1
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 125,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "primary",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "primary",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "left",
+            "from": 1,
+            "to": 16
+        },
+        {
+            "key": "primary",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "right",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "left",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "left",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "right",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "primary",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "primary",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "primary",
+            "from": 33,
+            "to": 34
+        },
+        {
+            "key": "down",
+            "from": 28,
+            "to": 47
+        },
+        {
+            "key": "up",
+            "from": 47,
+            "to": 48
+        },
+        {
+            "key": "down",
+            "from": 50,
+            "to": 56
+        },
+        {
+            "key": "primary",
+            "from": 61,
+            "to": 62
+        },
+        {
+            "key": "primary",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "left",
+            "from": 115,
+            "to": 118
+        },
+        {
+            "key": "primary",
+            "from": 117,
+            "to": 118
+        },
+        {
+            "key": "right",
+            "from": 118,
+            "to": 120
+        },
+        {
+            "key": "down",
+            "from": 115,
+            "to": 125
+        },
+        {
+            "key": "left",
+            "from": 120,
+            "to": 125
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY SLOTS (D3) — the solver indexes the STAGED slot order. BURN's L24 leg (route step 93) booted with Fire received before the sword (the game's [1, 0]). The solver's own plan: 125 t, equips [{\"t\":1,\"slot\":1},{\"t\":61,\"slot\":0},{\"t\":115,\"slot\":1}] — the sword's slot for its dash presses from tick 0, Fire's for the burn, the sword's again: the vanilla plan's keys with the indices of the arrival order. Authored by scripts/procgen/plan-seedling-slots-witness.mjs."
+}

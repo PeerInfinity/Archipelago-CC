@@ -2,7 +2,9 @@
 
 import { getModuleEventBus } from './index.js';
 import settingsManager from '../../app/core/settingsManager.js';
-import { formatBuildInfo } from '../../app/buildInfo.js';
+import { CORE_SETTINGS_SCHEMAS } from '../../app/core/coreSettingsSchemas.js';
+import { AUTO_LOAD_MODE_DEFAULT, AUTO_SAVE_MODE_DEFAULT } from '../../app/mode/modePersistenceDefaults.js';
+import { formatBuildInfo, fetchSourceStamp } from '../../app/buildInfo.js';
 import { DiscoveryPanelUI } from '../discoveryPanel/discoveryPanelUI.js';
 import {
   humanizeKey,
@@ -76,8 +78,8 @@ export class OptionsPanelUI {
       colorblindPathAnalyzer: false,
       playerName: 'Player1',
       defaultServer: 'ws://localhost:38281',
-      autoSaveMode: false,
-      autoLoadMode: false,
+      autoSaveMode: AUTO_SAVE_MODE_DEFAULT,
+      autoLoadMode: AUTO_LOAD_MODE_DEFAULT,
       logLevel: 'WARN',
       useSubstitutedNames: true,
     };
@@ -154,6 +156,18 @@ export class OptionsPanelUI {
         }
         .options-home-btn.danger:hover {
           background-color: #d63e2f;
+        }
+        .options-build-stamp {
+          margin-left: auto;
+          align-self: center;
+          color: #888;
+          font-size: 10px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0;
+          user-select: text;
         }
         .options-nav-card {
           display: flex;
@@ -443,6 +457,18 @@ export class OptionsPanelUI {
       resetBtn.addEventListener('click', () => this.handleResetToDefaults(resetBtn));
       this.actionBar.appendChild(resetBtn);
 
+      // Build stamp, duplicated from the bottom footer at the TOP of the
+      // panel: the footer sits on the viewport's bottom edge, which on
+      // real phones keeps getting obscured (fixed tab bar, URL-bar 100vh
+      // overflow, media-query bar-height drift). A staleness indicator
+      // must not depend on bottom-edge geometry, so the action bar —
+      // always visible when the panel opens — carries it too.
+      const buildStamp = document.createElement('span');
+      buildStamp.className = 'options-build-stamp';
+      buildStamp.textContent = formatBuildInfo();
+      buildStamp.title = 'Frontend build stamp — confirms whether the page loaded fresh code or is cached';
+      this.actionBar.appendChild(buildStamp);
+
       this.rootElement.appendChild(this.actionBar);
 
       // Create content container
@@ -458,6 +484,17 @@ export class OptionsPanelUI {
       this.buildFooter.textContent = formatBuildInfo();
       this.buildFooter.title = 'Frontend build stamp — confirms whether the page loaded fresh code or is cached';
       this.rootElement.appendChild(this.buildFooter);
+
+      // Unbundled dev: upgrade both stamps with the served tree's
+      // last-modified time once the dev server answers (serve-nocache's
+      // /_source-mtime; plain http.server 404s and the stamps stay
+      // load-time-only). loaded < sources ⇒ this page runs stale code.
+      fetchSourceStamp().then((stamp) => {
+        if (!stamp) return;
+        const text = formatBuildInfo(stamp);
+        buildStamp.textContent = text;
+        this.buildFooter.textContent = text;
+      });
     }
     return this.rootElement;
   }
@@ -495,8 +532,8 @@ export class OptionsPanelUI {
       this.settings.colorblindPathAnalyzer = await settingsManager.getSetting('colorblindMode.pathAnalyzer', false);
       this.settings.playerName = await settingsManager.getSetting('playerName', 'Player1');
       this.settings.defaultServer = await settingsManager.getSetting('moduleSettings.client.defaultServer', 'ws://localhost:38281');
-      this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', false);
-      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', true);
+      this.settings.autoSaveMode = await settingsManager.getSetting('generalSettings.autoSaveMode', AUTO_SAVE_MODE_DEFAULT);
+      this.settings.autoLoadMode = await settingsManager.getSetting('generalSettings.autoLoadMode', AUTO_LOAD_MODE_DEFAULT);
       this.settings.logLevel = await settingsManager.getSetting('logging.defaultLevel', 'WARN');
       this.settings.useSubstitutedNames = await settingsManager.getSetting('generalSettings.useSubstitutedNames', true);
     } catch (error) {
@@ -710,8 +747,12 @@ export class OptionsPanelUI {
     const content = document.createElement('div');
     content.className = 'options-section-content';
 
-    content.appendChild(this.createBooleanSetting('autoSaveMode', 'Auto-save Mode', 'Automatically save mode state on changes'));
-    content.appendChild(this.createBooleanSetting('autoLoadMode', 'Auto-load Mode', 'Automatically load saved mode state on startup'));
+    // The descriptions are the schema's (they state what each switch really
+    // does), so the Options view and the All Settings view say the same thing.
+    const autoSaveSpec = CORE_SETTINGS_SCHEMAS.generalSettings.properties.autoSaveMode;
+    content.appendChild(this.createBooleanSetting('autoSaveMode', autoSaveSpec.label, autoSaveSpec.description));
+    const autoLoadSpec = CORE_SETTINGS_SCHEMAS.generalSettings.properties.autoLoadMode;
+    content.appendChild(this.createBooleanSetting('autoLoadMode', autoLoadSpec.label, autoLoadSpec.description));
 
     section.appendChild(content);
     this.contentContainer.appendChild(section);
@@ -1225,7 +1266,7 @@ export class OptionsPanelUI {
   // ========================================================================
 
   async handleResetToDefaults(btn) {
-    if (!confirm('Reset all settings to defaults? This will discard any in-memory changes.')) return;
+    if (!confirm(`Reset all settings to defaults? This also replaces the saved settings of the current mode ('${settingsManager.getCurrentMode()}') with the defaults.`)) return;
 
     await settingsManager.resetToDefaults();
     const origText = btn.textContent;

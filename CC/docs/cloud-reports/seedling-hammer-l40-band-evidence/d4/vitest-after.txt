@@ -1,0 +1,141 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m scripts/procgen/seedlingSolverSurface.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 53766[2mms[22m[39m
+     [33m[2m✓[22m[39m (iv) the family file list equals the import closure [33m 1492[2mms[22m[39m
+     [33m[2m✓[22m[39m the import door's closure is the simulation's: solverView.js pulls in no family file [33m 991[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED [33m 2382[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` [33m 2240[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door [33m 2550[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" [33m 2051[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) [33m 2328[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule [33m 1912[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" [33m 2123[2mms[22m[39m
+     [33m[2m✓[22m[39m (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice [33m 2765[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" [33m 2316[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT naming a simulation module in a family file ⇒ GREEN [33m 1842[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once [33m 1655[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" [33m 1782[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.entities(name) with a variable ⇒ RED, a named blind spot [33m 2175[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table [33m 1969[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) a COMMENT naming run.pushables in a family file ⇒ GREEN [33m 1884[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once [33m 1803[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once [33m 2167[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS [33m 1898[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) [33m 1541[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table [33m 2112[2mms[22m[39m
+     [33m[2m✓[22m[39m (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values [33m 1694[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN [33m 1871[2mms[22m[39m
+     [33m[2m✓[22m[39m (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both" [33m 1550[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 143353[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 3043[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 3178[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 3495[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 5032[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 892[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key [33m 127688[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgress.test.js [2m([22m[2m43 tests[22m[2m)[22m[33m 107226[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 26049[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 518[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count [33m 12524[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall [33m 6822[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises [33m 1283[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 12223[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 15031[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message [33m 2713[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 13631[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 15091[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFight.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 23482[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail [33m 2682[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end [33m 12345[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end [33m 8299[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillGuards.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 197364[2mms[22m[39m
+     [33m[2m✓[22m[39m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name [33m 6772[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 OFF: the press kill carries on past the death at t1202 [33m 98701[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 ON: the press kill is refused by name on the tick of the first death [33m 91883[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerEscape.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 14993[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing [33m 8922[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing [33m 5335[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingConstantsCensus.test.js [2m([22m[2m24 tests[22m[2m)[22m[33m 7616[2mms[22m[39m
+     [33m[2m✓[22m[39m blank lines inserted above statements in a temp copy move lines and no key [33m 1662[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key [33m 1102[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) PREDICTED GREEN: a new literal inside a cosmetic table [33m 1274[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) PREDICTED RED: a committed physics row's statement deleted must be RETIRED [33m 1257[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) PREDICTED RED: a hand edit inside the doc region is a stale doc [33m 1215[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key [33m 725[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerFightFallback.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 83382[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte [33m 6093[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's [33m 35735[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence [33m 1171[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing [33m 8152[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ inert while the fight itself is on (the retry would be the same path) [33m 23161[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged [33m 1953[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged [33m 6976[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 16782[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more [33m 317[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 806[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 944[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 861[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 3580[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned [33m 514[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 1177[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 1847[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 865[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 497[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 1444[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way [33m 419[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerApproach.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 11518[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands [33m 493[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time [33m 7576[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time [33m 3344[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 61657[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 29086[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 31680[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs [33m 577[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSpinner.test.js [2m([22m[2m11 tests[22m[2m)[22m[33m 10820[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press) [33m 581[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press [33m 309[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach [33m 2280[2mms[22m[39m
+     [33m[2m✓[22m[39m ON leaves the SWORD's solve byte-identical (the committed staging, 518 ticks) [33m 7285[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostSearch.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 7686[2mms[22m[39m
+     [33m[2m✓[22m[39m the SWORD's certificate is the same ON and OFF [33m 4894[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner [33m 2463[2mms[22m[39m
+     [33m[2m✓[22m[39m reads the row only for its probe and row margins: the ghost's approach at t0 is the same ON and OFF [33m 322[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js [2m([22m[2m9 tests[22m[2m)[22m[33m 9311[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE) [33m 1379[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape [33m 1191[2mms[22m[39m
+     [33m[2m✓[22m[39m ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte [33m 1586[2mms[22m[39m
+     [33m[2m✓[22m[39m (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike [33m 3187[2mms[22m[39m
+     [33m[2m✓[22m[39m (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves [33m 1894[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerRefugeCut.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 7677[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF writes nothing to the instrument [33m 2060[2mms[22m[39m
+     [33m[2m✓[22m[39m at the press kill's refuge ticks ON chooses the refuge OFF chooses, and the cut is exercised [33m 4077[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150: the bombs refuse the nearest refuge, and the cut keeps BW's answer (216,168) [33m 1533[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerDashShape.test.js [2m([22m[2m20 tests[22m[2m)[22m[33m 7181[2mms[22m[39m
+     [33m[2m✓[22m[39m ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned [33m 633[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF [33m 597[2mms[22m[39m
+     [33m[2m✓[22m[39m the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585) [33m 5008[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressBombs.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 5385[2mms[22m[39m
+     [33m[2m✓[22m[39m t1099, the kill's first tick: OFF stands on (248,184) to press at t1153; ON names #7's blast on that stance and strikes from (232,184) [33m 1373[2mms[22m[39m
+     [33m[2m✓[22m[39m t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge leaves the blast [33m 1531[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF asks nothing (the instrument stays at zero) [33m 946[2mms[22m[39m
+     [33m[2m✓[22m[39m the model replays the witness tape and meets the game at every sampled tick: the player to the bit, no hit, every Bomb to the bit [33m 417[2mms[22m[39m
+     [33m[2m✓[22m[39m staging A (L40 south door, 380+ px from bombpusher@112,128): the strike and the refuge are OFF's [33m 1106[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostWall.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 309[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/twoPassSolve.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 1307[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ discovers the kill-lock, DERIVES its tick, and CROSSES the room [33m 467[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ F4: L8 itself now SOLVES in one pass — no declaration, no oracle (the run computes the sandtraps' death) [33m 370[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressTap.test.js [2m([22m[2m34 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBotLethalPit.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/tapeIndexManifest.test.js [2m([22m[2m285 tests[22m[2m)[22m[32m 115[2mms[22m[39m
+ [32m✓[39m scripts/procgen/lintGateLabels.test.js [2m([22m[2m14 tests[22m[2m)[22m[32m 217[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 299783[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 893[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key [33m 298878[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m24 passed[39m[22m[90m (24)[39m
+[2m      Tests [22m [1m[32m698 passed[39m[22m[90m (698)[39m
+[2m   Start at [22m 08:05:29
+[2m   Duration [22m 510.05s[2m (transform 7.78s, setup 0ms, import 38.90s, tests 1071.03s, environment 5ms)[22m
+

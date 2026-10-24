@@ -1,0 +1,43 @@
+{
+  "version": "0.6.8",
+  "infrastructure_files": {
+    "settings.py": {
+      "patched_sha256": "9ee3f45f6fccf206ac9de85ed0c955fc57712d3c796d5849e510e41243d6d65f"
+    },
+    "worlds/RomlessUtils.py": {
+      "patched_sha256": "2087afe03e7788f016e0668834bee5dc610cb73423d8a3049fd6254c36872fea"
+    },
+    "worlds/alttp/EnemyShuffle.py": {
+      "patched_sha256": "0bd9eef02fad56e42abc218f0a025dab70cc9d03c20eef7b8027c75d15750358"
+    }
+  },
+  "files": {
+    "worlds/alttp/__init__.py": {
+      "patched_sha256": "da02093b924112dcc25c7ee79af5b25e83f72095e611419a09db965803d507e3"
+    },
+    "worlds/ff1/__init__.py": {
+      "patched_sha256": "945384d0d248e63b62ee1d3dc43a3991a947f18f6c68bd527862d5c20938f56f"
+    },
+    "worlds/lufia2ac/__init__.py": {
+      "patched_sha256": "c8dfa5400d0ddb94508260a8f9e9e2860613071970d9f2f7ab046183936a4e85"
+    },
+    "worlds/mmbn3/__init__.py": {
+      "patched_sha256": "a6ee7274f54832c04c3b4658b891a4069e3b34c6d260dad2883fad54f9cc084e"
+    },
+    "worlds/oot/__init__.py": {
+      "patched_sha256": "49b54469c83b4a8c8648f563d96bb44abdebad9dc755853a00870995c363d76a"
+    },
+    "worlds/smw/__init__.py": {
+      "patched_sha256": "a4556a9729d00ef5975cdfd28ecddf3ff30da40c1a8ca1ea8c40f8742928ea0b"
+    },
+    "worlds/soe/__init__.py": {
+      "patched_sha256": "50d8aecdb20a1f617950f07a9b02d55a762b630d482662adf25450096f34d0aa"
+    },
+    "worlds/tloz/__init__.py": {
+      "patched_sha256": "f22a411b043a4776b7863377274cabf39344c5f93100bf7b77ff0ce8be694319"
+    },
+    "worlds/yoshisisland/__init__.py": {
+      "patched_sha256": "c25cc6a41b9bbec83c0fe687c98f0b02ee2e49cad160d8578e5155679432aac0"
+    }
+  }
+}

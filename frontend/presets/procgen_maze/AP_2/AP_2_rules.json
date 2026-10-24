@@ -8,9 +8,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ProcgenMazeWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -332,7 +329,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_2_1__key_blue_pickup__4_4": "key_blue",
@@ -351,7 +352,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_2_2": {
@@ -721,12 +721,14 @@
     }
   },
   "procgen_metadata": {
-    "driver": "grid-growth",
-    "stop_reason": "pool_empty",
-    "region_count": 5,
-    "grid_dims": {
-      "width": 4,
-      "height": 4
+    "1": {
+      "driver": "grid-growth",
+      "stop_reason": "pool_empty",
+      "region_count": 5,
+      "grid_dims": {
+        "width": 4,
+        "height": 4
+      }
     }
   },
   "sphere_log": [

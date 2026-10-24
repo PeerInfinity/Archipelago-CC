@@ -89,6 +89,20 @@ Has("Coin", count=CountItem("Wallet"))     # fork nested-rule count
 
 Both dynamic forms coexist in one `rules.json`, distinguishable by key. This is what lets the fork serve both the fork's AST-converted worlds and upstream worlds authored against `field_resolvers` (e.g. the Baba Is You apworld).
 
+### Game-specific custom rules
+
+A world may define its own `Rule` subclass whose logic lives in a compiled
+`Resolved._evaluate` (e.g. Baba Is You's `HasBlossoms`). On export these are
+**auto-extracted into frontend-evaluable helper definitions** — the exporter reads
+the `_evaluate` method, rewrites `self.player` / `self.<field>` references, and runs
+it through the same `analyze_rule` pipeline used for helper functions, emitting the
+result into the `helpers` section keyed by the rule's name. The rule's own dataclass
+fields are auto-serialized as the rule node's `args` (no `_get_args_dict()` override
+needed for custom rules). Rules whose `_evaluate` can't be analyzed fall back to an
+opaque leaf. See the fork-vs-upstream rule_builder doc, §9. A worked example — plus
+a frontend spoiler test that exercises the wider rule_builder vocabulary — lives in
+`worlds/rulebuilder_test` (its `HasTreasure` is a custom `Rule` subclass).
+
 ### Enhanced Upstream Classes
 
 - `Has` — dynamic count support (see above)

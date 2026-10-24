@@ -1,0 +1,50 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 4,
+        "x": 64,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasDarkSuit": true
+        },
+        "hits_max": 4
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 135,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 135
+        }
+    ],
+    "name": "r1-dark-suit-kill",
+    "description": "⛓⛓⛓ R1-swim D2 — THE DARK SUIT KILLS A BOB. L4 (64,32), three tiles north of `bob@64,64`, the DARK SUIT through the seam with `hits_max` 4 (so the player outlives three contacts) and `noDamage` FALSE; `down` held for 135 ticks. Each contact is retaliated with `Enemy.hit(1, playerPoint, 1, \"Suit\")`: t 20 (`hits` 1), t 50 (2) and t 87 (3 = `hitsMax`), where `startDeath(\"Suit\")` — `Bob.startDeath`, `play(\"die\")` — starts the death staging: the \"die\" anim's `endAnim` sets `destroy`, `Mobile.death` fades it, and it leaves the world 36 ticks after the kill. The player still takes the third hit (3 of 4) and no fourth contact comes. Fixed keys. Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.",
+    "note": ""
+}

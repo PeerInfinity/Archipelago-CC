@@ -1,0 +1,52 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 560,
+        "y": 720
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 100,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 40
+        }
+    ],
+    "name": "u12-pull-cross",
+    "description": "⛓⛓⛓ U12-swim D1 — WALKING ACROSS A PULL CURRENT: THE DRIFT IS PERPENDICULAR TO THE WALK. L12, booted on `pull@560,720` — tile (35,45), whose push is EAST — with step 24's grants, holding `up` for 40 ticks and then nothing to t 100. The walk is north along column 35, whose four pulls all push east: every tick the box overlaps one, `Pull.update` adds +1 to x BEFORE the player's own step, so the path leans east by a pixel a tick on top of the walk. Once the box enters column 36 the currents there push NORTH (rows 44-45) or SOUTH (rows 40-42), every one of them toward (36,43), and the pit takes the player to L21. No push on L12 points into a solid, so no push is undone. Fixed keys. Authored by scripts/procgen/plan-seedling-u12-pull.mjs.",
+    "note": ""
+}

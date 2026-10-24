@@ -1,23 +1,30 @@
 /**
- * procgenPipeline engine — headless grid-growth pipeline logic plus
- * the top-down driver. See NewDocs/plans/procedural-generation/
- * grid-growth-pipeline.md and top-down-driver.md.
+ * procgenPipeline engine — headless driver logic for all four layout
+ * modes (docs/json/developer/procgen/architecture.md).
  *
- * This file hosts the scenario pool, grid model, growth loop,
- * incremental re-stitcher, full-world Boolean compile, and the
- * top-down driver that consumes an existing rules.json. Contents
- * grow per the v1 punch list in the plan docs.
+ * This file hosts the scenario pool, grid model, the grid-growth loop
+ * (deprecated), the sphere-driven growth driver, the shuffled-spiral
+ * layout, the top-down driver that consumes an existing rules.json,
+ * the incremental re-stitcher, and the full-world Boolean compile.
  */
 
 import { createRng } from '../shared/rng.js';
+import { regionsOf, startRegionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
+import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
+import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold, makeHasRule, makeAndRule } from '../shared/rulesJsonBuilder.js';
+import {
+    makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit, makeTrueRule,
+} from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
-import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
-import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
-import { computeLongestShortestPath } from '../mazeRoom/mazeGeometry.js';
+import { generateSphereLog, SphereLogNotEvaluableError } from '../shared/procgen/forwardSimulator.js';
+import {
+    generateLoopCosts,
+    DEFAULT_REGION_COST,
+    DEFAULT_LOCATION_COST,
+} from '../shared/procgen/loopCostGenerator.js';
 import {
     SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES,
     OPPOSITE_SIDE, SIDE_DELTAS,
@@ -25,7 +32,21 @@ import {
     REGION_GROW_STEP,
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
+import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItemNames.js';
+import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
+import { ROUND_TRIP_RULES, roundTripRulesOf } from '../procgenCore/roundTripRules.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
+import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
+import {
+    GOAL_ITEM, isVictoryItem, goalItemPool, withGoalItemDef,
+} from '../procgenCore/goalItem.js';
+import {
+    exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
+} from '../procgenCore/locationCapacity.js';
+import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -39,6 +60,13 @@ function getAdapter(substrateId) {
 }
 
 // --- Substrate selection ---
+//
+// The engine's hard default substrate: what every selection path below falls
+// back to when nothing (no override, source tag, picker, quota or mix) names
+// one, and the substrate a region without a `substrate` field is read as.
+// Exported so a caller that must mirror the fallback (the panel's parameter
+// subsections with nothing selected) asks the engine instead of naming it.
+export const DEFAULT_SUBSTRATE_ID = 'maze';
 //
 // Per-region substrate id resolution. Used by both top-down and
 // grid-growth drivers. Resolution order, highest priority first:
@@ -84,7 +112,7 @@ export function pickSubstrate(regionName, sourceRegion, opts, rng) {
     if (opts?.substrateMix) {
         return rollSubstrateMix(opts.substrateMix, rng);
     }
-    return 'maze';
+    return DEFAULT_SUBSTRATE_ID;
 }
 
 /**
@@ -99,7 +127,7 @@ export function pickSubstrate(regionName, sourceRegion, opts, rng) {
  */
 export function rollSubstrateMix(mix, rng) {
     const entries = Object.entries(mix).filter(([, w]) => w > 0);
-    if (entries.length === 0) return 'maze';
+    if (entries.length === 0) return DEFAULT_SUBSTRATE_ID;
     const total = entries.reduce((s, [, w]) => s + w, 0);
     let r = rng.next() * total;
     for (const [id, weight] of entries) {
@@ -159,9 +187,61 @@ export { ScenarioPool };
 // shared/procgen/spatialPrimitives.js directly.
 export { SIDE_N, SIDE_S, SIDE_E, SIDE_W, SIDES, OPPOSITE_SIDE };
 
+// ⛓⛓ PRESET SIDECARS G0 — THE REGION-GEOMETRY DECLARATION, read here. A
+// registry entry's `regionGeometry` (`procgenCore/regionGeometry.js`) says
+// whether its regions' exits stand on TILES or are only SIDES; absent = tiles.
+// Every engine branch below that mints an exit tile, or reads a neighbour's,
+// asks these two helpers — never a substrate name.
+export { REGION_GEOMETRY, geometryOf };
+
+// Does a region of this substrate carry exit TILES (`exits[].x/y`,
+// `exits_placed[].tile_position`, `extracted_rules.exits[].position`)? An
+// unregistered id (an atlas source's region, old data) reads as the default.
+function carriesExitTiles(substrateId) {
+    return geometryOf(substrateRegistry.get(substrateId)) === REGION_GEOMETRY.TILES;
+}
+
+// The tile a neighbour mirrors off one of this region's exits. A tile region
+// hands back the tile it stored; a SIDES-only region stores none, so the tile is
+// the perimeter midpoint of that side — exactly what a zone region carried
+// before G0, so a maze child's entrance (and a reciprocal back-exit) is the
+// same tile it always was.
+export function exitTileForMirror(substrateId, storedTile, side, regionSize) {
+    return carriesExitTiles(substrateId) ? storedTile : perimeterMidpoint(side, regionSize);
+}
+
 export function cellKey(cell) {
     return `${cell.gx},${cell.gy}`;
 }
+
+// The ONE spelling of a Grid.teleporters key: the exit's cell + its exit id.
+// Never parsed back (the map is only ever looked up by the same pair), so an
+// exit id carrying ':' cannot confuse it.
+function teleporterKey(cell, exitId) {
+    return `${cellKey(cell)}:${exitId}`;
+}
+
+/**
+ * ⛓⛓ **THE REGION SIZE A REBUILD FALLS BACK TO**, in tiles.
+ *
+ * It was an inline `{ width: 8, height: 6 }` at one site
+ * (`rebuildEnvelopeFromRulesJson`'s config assembly) until M0 needed the SAME
+ * number in a second module: `compositeMapDocument.js` sizes a composite cell
+ * for a document whose payloads carry no tile geometry at all, and a second
+ * literal would have been a number that could drift from the one the envelope
+ * rebuild uses while both claimed to be "the engine's default".
+ *
+ * ⚠ It is NOT `layoutTopDown`'s `regionSizeBase` (`{width: 6, height: 6}`,
+ * `:~1490`). Those are different defaults for different questions — the base a
+ * top-down layout starts from before `uniformSize` widens it per axis, versus
+ * the size a rebuild uses when the document names none — and M0 deliberately
+ * did not fold them together: nothing measured says they should be one number,
+ * and making them one would change what `layoutTopDown` lays out.
+ *
+ * Frozen, so a consumer that means to vary it has to copy it first (every
+ * reader below spreads).
+ */
+export const DEFAULT_REGION_SIZE = Object.freeze({ width: 8, height: 6 });
 
 // --- Grid data model ---
 //
@@ -177,12 +257,15 @@ export class Grid {
         this.width = width;
         this.height = height;
         this.cells = new Map();
-        // Teleporter mappings keyed by `${fromCellKey}:${side}` →
-        // toCellKey. Used when an exit's geographic neighbor is
-        // invalid (out of bounds, or already built by another branch
-        // of growth); the driver places the new region in a cell
-        // disconnected from the geometric layout, and stitchGrid
-        // honors this mapping in place of grid.neighborCell.
+        // Teleporter mappings keyed by EXIT — `${fromCellKey}:${exitId}`
+        // (built by teleporterKey, the one spelling) → toCellKey. Used
+        // when an exit's geographic neighbor is not its target (out of
+        // bounds, or built by another branch of growth); stitchGrid
+        // honors this mapping in place of grid.neighborCell. Keyed by
+        // exit, not by side, so a region may carry any number of
+        // teleporters on one side — the top-down driver does (two or
+        // more on a side on 16 of the 81 regions of the APCalc seed-4
+        // world), and a side key kept only the last one written.
         this.teleporters = new Map();
     }
 
@@ -240,11 +323,57 @@ export class Grid {
         this.cells.set(cellKey(cell), { ...region, cell: { gx: cell.gx, gy: cell.gy } });
     }
 
-    // Remove and return the region at `cell` (layout editing: move/swap).
+    // Remove and return the region at `cell` (sphere truncation; a layout move
+    // keeps the region's place in `cells` — see relocateRegions).
     removeRegion(cell) {
         const region = this.cells.get(cellKey(cell));
         this.cells.delete(cellKey(cell));
         return region ?? null;
+    }
+
+    /**
+     * Move regions to other cells (layout editing: move/swap) KEEPING each
+     * one's place in `cells`. `moves` is `[{from, to}]`; every `from` must hold
+     * a region and every `to` must be in bounds and either empty or another
+     * move's `from` (a swap). The Map is refilled in its own order with each
+     * moved entry re-keyed where it stands.
+     *
+     * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — WHY NOT removeRegion + placeRegion.
+     * `cells`' insertion order is the order `allRegions()` hands the compile,
+     * which is the key order of the compiled `preset_sidecars[p]`. A remove +
+     * place re-inserted the moved region LAST, so a move and its inverse left
+     * every record identical but the document not: measured on the top-down
+     * APCalc world (seed 4, 81 regions), move (4,5)→(2,0) and back put
+     * `Region 1` last; a swap and back put `Region 1`, `C` last. A grid that is
+     * never edited never comes here, so its order — the growth order — is
+     * untouched.
+     */
+    relocateRegions(moves) {
+        const dest = new Map();
+        for (const { from, to } of moves) {
+            if (!this.hasRegion(from)) {
+                throw new Error(`Grid.relocateRegions: no region at (${from.gx},${from.gy})`);
+            }
+            if (!this.isInBounds(to)) {
+                throw new Error(`Grid.relocateRegions: cell (${to.gx},${to.gy}) out of bounds`);
+            }
+            dest.set(cellKey(from), to);
+        }
+        const toKeys = new Set();
+        for (const to of dest.values()) {
+            const key = cellKey(to);
+            if (toKeys.has(key) || (this.hasRegion(to) && !dest.has(key))) {
+                throw new Error(`Grid.relocateRegions: cell (${to.gx},${to.gy}) already occupied`);
+            }
+            toKeys.add(key);
+        }
+        const entries = [...this.cells];
+        this.cells.clear();
+        for (const [key, region] of entries) {
+            const to = dest.get(key);
+            if (!to) this.cells.set(key, region);
+            else this.cells.set(cellKey(to), { ...region, cell: { gx: to.gx, gy: to.gy } });
+        }
     }
 
     // Drop all teleporter mappings (layout editing rebuilds them from the
@@ -260,16 +389,53 @@ export class Grid {
         return this.isInBounds(next) ? next : null;
     }
 
-    setTeleporter(fromCell, fromSide, toCell) {
-        this.teleporters.set(`${cellKey(fromCell)}:${fromSide}`, cellKey(toCell));
+    setTeleporter(fromCell, exitId, toCell) {
+        this.teleporters.set(teleporterKey(fromCell, exitId), cellKey(toCell));
     }
 
-    /** Returns the target cell for a teleporter exit, or null. */
-    getTeleporter(fromCell, fromSide) {
-        const v = this.teleporters.get(`${cellKey(fromCell)}:${fromSide}`);
+    /** Returns the target cell for the teleporter exit `exitId` of `fromCell`, or null. */
+    getTeleporter(fromCell, exitId) {
+        const v = this.teleporters.get(teleporterKey(fromCell, exitId));
         if (!v) return null;
         const [gx, gy] = v.split(',').map(Number);
         return { gx, gy };
+    }
+
+    /** Drop the teleporter mapping of ONE exit (its same-side siblings keep theirs). */
+    deleteTeleporter(fromCell, exitId) {
+        return this.teleporters.delete(teleporterKey(fromCell, exitId));
+    }
+
+    /**
+     * Drop the teleporter mapping of EVERY exit of the region at `cell` — the
+     * entries keyed by that region's own exit ids (`deleteTeleporter`, one key
+     * spelling). Call it BEFORE the region leaves the grid: once it has, its
+     * exits cannot be read and nothing else names those keys.
+     *
+     * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — WHY A DROPPED PARENT'S ENTRIES
+     * WOULD OTHERWISE OUTLIVE IT. `truncateSphereWorld` deletes a dropped
+     * teleporter child's entry by reading its PARENT's exit toward it. When the
+     * parent is dropped in the same truncation it has already left the grid
+     * (nodes are wave-ordered, so a parent is removed first), the read finds
+     * nothing, and the entry `parentCell:exitId` stayed. R1's exit re-key made
+     * that so (the side key it replaced was deleted without reading the
+     * parent). Measured over 16 dense maze sphere worlds × every kept-wave
+     * count: 30 of 45 dropped teleporter children had a dropped parent, leaving
+     * 30 entries; a regrow over them (`appendSphere` with `truncateToWave`)
+     * differed in 1 of 22 — seed 2, 6 spheres, keep 1: the stale `6,5:exit →
+     * 0,0` stole the regrown `region_6_5`'s forward exit E → `region_7_5`.
+     *
+     * @returns {number} how many entries were deleted
+     */
+    deleteTeleportersOf(cell) {
+        const region = this.getRegion(cell);
+        if (!region) return 0;
+        const exits = getRegionExits(region);
+        const ids = exits instanceof Map ? [...exits.keys()]
+            : (exits ?? []).map((e) => e.exit_id);
+        let n = 0;
+        for (const id of ids) if (this.deleteTeleporter(cell, id)) n++;
+        return n;
     }
 
     allRegions() {
@@ -351,7 +517,10 @@ function _decodeGridValue(v) {
 /**
  * Serialize a live Grid to a plain JSON-safe object (see codec note above).
  * Region payloads keep their structure verbatim via tagged Map/typed-array
- * encoding; teleporter values are already plain cellKey strings.
+ * encoding; `teleporters` is the Map's entries verbatim — keys
+ * `"gx,gy:<exit id>"` (one per teleporter EXIT), values plain cellKey strings.
+ * No committed file carries a serialized grid (the envelope is transport
+ * between pipeline steps), so the key form has no migration.
  */
 export function serializeGrid(grid) {
     if (!grid || !(grid instanceof Grid)) {
@@ -475,9 +644,7 @@ function findDisconnectedCellFromOccupied(occupiedKeys, dims, rng, minGap = 2) {
 // buildPresetSidecars re-attaches both onto the payload right before
 // serialize so the substrate serializeWorld signatures stay unchanged.
 // These accessors are the single seam through which all engine code
-// touches them. See
-// NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md
-// (Phase 2a / 4c).
+// touches them.
 export function getRegionExits(region) {
     return region?.exits;
 }
@@ -493,12 +660,23 @@ export function setRegionEntrance(region, entrance) {
 
 export function stitchGrid(grid) {
     for (const region of grid.allRegions()) {
-        const exitsBySide = new Map();
+        // Keyed by exit ID, not by tile. Two exits CAN share a tile — a
+        // region-atlas region's driver back-exit is retargeted onto the
+        // projection's own entrance, which is regularly also a door (every
+        // point-gate crossing where both sides are one cell). Keyed by
+        // position, such a back-exit matched the door's row, lost its
+        // "the driver manages this one" exemption, and was re-stitched to the
+        // door's geographic neighbour: the region then had two exits into its
+        // CHILD and none back to its parent, which reads as a shortcut the
+        // sphere oracle never planned. Same answer as before for every exit
+        // whose id is in exits_placed, which is every exit the tile key ever
+        // resolved correctly.
+        const sideByExitId = new Map();
         for (const placed of region.exits_placed ?? []) {
-            exitsBySide.set(posKey(placed.tile_position), placed.side);
+            sideByExitId.set(placed.exit_id, placed.side);
         }
         for (const exit of region.extracted_rules?.exits ?? []) {
-            const side = exitsBySide.get(posKey(exit.position));
+            const side = sideByExitId.get(exit.id);
             if (!side) {
                 // Not in exits_placed — the driver manages this exit
                 // directly (e.g. a bidirectional back-exit pointing
@@ -507,9 +685,9 @@ export function stitchGrid(grid) {
             }
 
             // Teleporter exits resolve to an explicit target cell
-            // recorded by the growth driver; ordinary exits resolve
-            // via geographic adjacency.
-            const teleTarget = grid.getTeleporter(region.cell, side);
+            // recorded PER EXIT by the growth driver; ordinary exits
+            // resolve via geographic adjacency.
+            const teleTarget = grid.getTeleporter(region.cell, exit.id);
             const targetCell = teleTarget ?? grid.neighborCell(region.cell, side);
             const neighbor = targetCell ? grid.getRegion(targetCell) : null;
             exit.target_region = neighbor ? neighbor.region_id : null;
@@ -563,8 +741,6 @@ function finalizeTopDownExits(grid, cellsByName) {
         }
     }
 }
-
-function posKey(p) { return `${p.x},${p.y}`; }
 
 // Union of placed items across all built regions. Valid as an
 // arrival_inventory approximation under v1's tree shape + local
@@ -670,11 +846,15 @@ export function reconcileBidirectionalExits(grid, regionSize, mode = 'add') {
 function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetRegion, regionSize) {
     const backSide = OPPOSITE_SIDE[sourceExit.side];
     if (!backSide) return;  // null/unknown side — can't mirror
+    // ⛓ G0: a SIDES-only source stores no tile — mirror its side's midpoint.
     const backTile = mirrorTileAcrossSide(
-        { x: sourceExit.x, y: sourceExit.y },
+        exitTileForMirror(sourceRegion.substrate, { x: sourceExit.x, y: sourceExit.y },
+            sourceExit.side, regionSize),
         sourceExit.side,
         regionSize,
     );
+    // ⛓ G0: and a SIDES-only TARGET is given no tile at all.
+    const tiles = carriesExitTiles(targetRegion.substrate);
     const backExitId = sourceRegion.region_id;
     // Don't collide with an existing exit of the same id. Should be
     // rare — region ids are unique — but a defensive guard.
@@ -682,8 +862,7 @@ function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetReg
     if (targetExits.has(backExitId)) return;
     targetExits.set(backExitId, {
         exit_id: backExitId,
-        x: backTile.x,
-        y: backTile.y,
+        ...(tiles ? { x: backTile.x, y: backTile.y } : {}),
         side: backSide,
         exitName: backExitId,
         targetRegion: sourceRegion.region_id,
@@ -694,7 +873,7 @@ function addReciprocalBackExit(sourceRegion, sourceExit, sourceExitId, targetReg
     if (Array.isArray(targetRegion.extracted_rules?.exits)) {
         targetRegion.extracted_rules.exits.push({
             id: backExitId,
-            position: { x: backTile.x, y: backTile.y },
+            ...(tiles ? { position: { x: backTile.x, y: backTile.y } } : {}),
             target_region: sourceRegion.region_id,
             paths: [{ path_id: 'p1', obstacles: [] }],
         });
@@ -793,7 +972,7 @@ function pickSidesWithBranching(candidates, rng, branchProbability) {
 // will add per-region substrate selection to the callers above.
 
 function buildSubstrateRegion({
-    substrate = 'maze',
+    substrate = DEFAULT_SUBSTRATE_ID,
     region_id,
     size,
     entrances,
@@ -807,6 +986,7 @@ function buildSubstrateRegion({
     params,
     biome = null,
     hazardOpts = null,
+    consumableTileOpts = null,
 }) {
     const adapter = getAdapter(substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
@@ -839,7 +1019,7 @@ function buildSubstrateRegion({
     // Content-module pass: stamp substrate-specific content (maze hazards)
     // onto the world after the base layout. No-op for substrates that don't
     // declare the hook — the engine names no substrate here.
-    adapter.applyContentModules?.(core.world, { hazardOpts }, rng);
+    adapter.applyContentModules?.(core.world, { hazardOpts, consumableTileOpts }, rng);
     return {
         substrate,
         region_id,
@@ -877,7 +1057,71 @@ function buildSubstrateRegion({
 // Termination: when the scenario pool is exhausted OR the frontier is
 // empty OR the maxRegions cap (if set) is hit.
 
-export function growMaze(config) {
+/**
+ * Insert a synthetic back-exit on `region` pointing at its BFS/tree parent,
+ * and link the parent's forward exit back to it (targetExitId on both sides,
+ * so a forward traversal carries the right arrivedFrom.exit_id). The
+ * back-exit's access rule is copied from the forward exit at compile time
+ * (buildRulesJson's bidirectional post-pass), so the same gate guards both
+ * directions of traversal. See top-down-driver.md §2.
+ *
+ * Extracted from three previously byte-identical inline copies —
+ * grid-growth (growMaze), sphere-growth (applySphereBackExit) and top-down
+ * (layoutTopDown). The callers differ only in where the field values come
+ * from; top-down additionally opts into `skipIfReverseExists`.
+ *
+ * `skipIfReverseExists` (top-down): skip (and return false) when the region
+ * already has an exit keyed `backExitId`, or any exit already targeting
+ * `targetRegion` — i.e. an explicit reverse route already exists, so a
+ * synthetic one would just duplicate it. Returns true when a back-exit was
+ * inserted.
+ */
+function insertBackExit(grid, {
+    region,
+    parentRegion,
+    backExitId,
+    entranceTile,
+    entranceSide,
+    targetRegion,
+    targetExitId,
+    isTeleporter,
+    skipIfReverseExists = false,
+}) {
+    const regionExits = getRegionExits(region);
+    if (skipIfReverseExists) {
+        const hasExplicitReverse = [...regionExits.values()]
+            .some((e) => e.targetRegion === targetRegion);
+        if (regionExits.has(backExitId) || hasExplicitReverse) return false;
+    }
+    // ⛓ G0: a SIDES-only region is given no tile on its back-exit (it has no
+    // entrance tile either — generateRegionZoneGen stamps none for it).
+    const tiles = carriesExitTiles(region.substrate);
+    regionExits.set(backExitId, {
+        exit_id: backExitId,
+        ...(tiles ? { x: entranceTile.x, y: entranceTile.y } : {}),
+        side: entranceSide,
+        exitName: backExitId,
+        targetRegion,
+        targetExitId,
+        isBackExit: true,
+        isTeleporter,
+    });
+    // Mirror onto extracted_rules so the compiler emits the back-exit too.
+    // Path-and-obstacles for an entrance-to-entrance walk has zero obstacles
+    // → compiles to True_; buildRulesJson's post-pass overwrites this with
+    // the forward exit's rule for bidirectional pairs.
+    region.extracted_rules.exits.push({
+        id: backExitId,
+        ...(tiles ? { position: { x: entranceTile.x, y: entranceTile.y } } : {}),
+        target_region: targetRegion,
+        paths: [{ path_id: 'p1', obstacles: [] }],
+    });
+    const parentWorldExit = getRegionExits(parentRegion)?.get(targetExitId);
+    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+    return true;
+}
+
+export function* growMazeGen(config) {
     const {
         gridDims,
         regionSize,
@@ -891,6 +1135,7 @@ export function growMaze(config) {
         // Content-module options. Passed through to buildSubstrateRegion
         // — null disables. See mazeRoomLibrary's applyMazeContentModules for the option shape.
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
 
     if (!gridDims || !gridDims.width || !gridDims.height) {
@@ -959,6 +1204,15 @@ export function growMaze(config) {
         substrateCounts,
     };
 
+    // Grid-growth's region count is EMERGENT — growth stops on
+    // frontier/pool/quota exhaustion or maxRegions, not a plan — so the total
+    // is genuinely unknown up front. Emit regions:null; the panel then shows
+    // "Building region N" with no denominator. Yields never touch the rng, so
+    // draining growMazeGen synchronously (growMaze) is byte-identical to the
+    // pre-generator implementation; the panel drains asynchronously
+    // (growMazeAsync) so the progress indicator repaints between regions.
+    yield { type: 'plan', regions: null };
+
     // --- Start region ---
     const startCell = {
         gx: Math.floor(gridDims.width / 2),
@@ -987,6 +1241,10 @@ export function growMaze(config) {
         }, rng);
     }
     substrateCounts[startSub] = (substrateCounts[startSub] || 0) + 1;
+    yield {
+        type: 'region', index: stats.regionsBuilt, total: null,
+        region_id: startRegionId, substrate: startSub, sphere: null, placements: 0,
+    };
     const startRegion = buildSubstrateRegion({
         substrate: startSub,
         region_id: startRegionId,
@@ -998,6 +1256,7 @@ export function growMaze(config) {
         obstacles_to_place: [],            // start region — no obstacles
         itemLib, obstacleLib, rng, params: regionParams,
         hazardOpts,
+        consumableTileOpts,
     });
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
@@ -1006,6 +1265,10 @@ export function growMaze(config) {
     });
     stitchGrid(grid);
     stats.regionsBuilt += 1;
+    yield {
+        type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+        region_id: startRegionId,
+    };
 
     // --- Frontier init ---
     // Each frontier entry represents an unbuilt parent-side that
@@ -1070,7 +1333,10 @@ export function growMaze(config) {
         // we still mirror the parent's exit position to keep the
         // entrance tile well-defined on the child's perimeter.
         const entranceSide = OPPOSITE_SIDE[parentSide];
-        const entranceTile = mirrorTileAcrossSide(parentExitPlaced.tile_position, parentSide, regionSize);
+        const entranceTile = mirrorTileAcrossSide(
+            exitTileForMirror(parentRegion.substrate, parentExitPlaced.tile_position,
+                parentSide, regionSize),
+            parentSide, regionSize);
         const exitSides = pickChildExitSides(childCell, grid, entranceSide, rng, branchProbability);
         if (exitSides.length === 0) {
             // Dead-end cell with no outgoing direction — parent's exit
@@ -1090,6 +1356,11 @@ export function growMaze(config) {
             substrateCounts, substratePicker,
         }, rng);
         substrateCounts[childSub] = (substrateCounts[childSub] || 0) + 1;
+        yield {
+            type: 'region', index: stats.regionsBuilt, total: null,
+            region_id: childRegionId, substrate: childSub, sphere: null,
+            placements: plan.items_to_place.length,
+        };
         const region = buildSubstrateRegion({
             substrate: childSub,
             region_id: childRegionId,
@@ -1101,47 +1372,29 @@ export function growMaze(config) {
             obstacles_to_place: plan.obstacles_to_place,
             itemLib, obstacleLib, rng, params: regionParams,
             hazardOpts,
+            consumableTileOpts,
         });
 
         grid.placeRegion(childCell, region);
         if (isTeleporter) {
-            grid.setTeleporter(parentCell, parentSide, childCell);
+            grid.setTeleporter(parentCell, parentExitPlaced.exit_id, childCell);
             stats.teleportersPlaced += 1;
         }
         if (assumeBidirectional) {
-            // Add a back-exit on the child's entrance tile, pointing
-            // to the parent. Pair with parent's forward exit via
-            // targetExitId on both sides so the procgen player can
-            // resolve which entrance tile to spawn the player at on
-            // either direction of traversal.
-            const backExitId = parentRegion.region_id;
-            getRegionExits(region).set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit on the child's entrance tile pointing to the parent,
+            // paired via targetExitId on both sides so the procgen player can
+            // resolve which entrance tile to spawn at on either direction of
+            // traversal. Shared with sphere/top-down — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parentRegion.region_id,
+                entranceTile,
+                entranceSide,
                 targetRegion: parentRegion.region_id,
                 targetExitId: parentExitPlaced.exit_id,
-                isBackExit: true,
                 isTeleporter,
             });
-            // Mirror onto extracted_rules so the compiler emits the
-            // back-exit too. Path-and-obstacles for an entrance-to-
-            // entrance walk has zero obstacles → compiles to True_;
-            // buildRulesJson's post-pass overwrites this with the
-            // forward exit's rule for bidirectional pairs.
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parentRegion.region_id,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            // Link parent's forward exit back to this child's
-            // back-exit, so a forward traversal carries the right
-            // arrivedFrom.exit_id.
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parentExitPlaced.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         pool.markPlaced({
             placed_items: region.placed_items,
@@ -1149,6 +1402,10 @@ export function growMaze(config) {
         });
         stitchGrid(grid);
         stats.regionsBuilt += 1;
+        yield {
+            type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+            region_id: childRegionId,
+        };
 
         for (const placed of region.exits_placed) {
             // For teleporter children, every exit becomes a fresh
@@ -1163,6 +1420,8 @@ export function growMaze(config) {
         stats.stopReason = 'frontier_empty';
     }
 
+    yield { type: 'phase', name: 'finalizing' };
+
     // Cross-branch stitching can leave one-way exits. When the user
     // wants bidirectional traversal, reconcile asymmetric pairs
     // before walling off unused exits — 'remove' mode nulls the
@@ -1174,6 +1433,35 @@ export function growMaze(config) {
     wallOffUnusedExits(grid);
 
     return { grid, pool, stats, startCell };
+}
+
+/**
+ * Grid-growth (growMaze), synchronous: drains growMazeGen with no pauses —
+ * byte-identical to the pre-generator implementation (yields never touch the
+ * rng). All headless callers and tests use this.
+ */
+export function growMaze(config) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Grid-growth, asynchronous: forwards each progress event to `onProgress` and
+ * yields to the event loop between events so the panel's Generate progress
+ * indicator can repaint. Identical output to growMaze.
+ */
+export async function growMazeAsync(config, onProgress = null) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+    return r.value;
 }
 
 // --- Top-down driver ---
@@ -1233,18 +1521,53 @@ function topDownRegionSize(base, exitCount, locationCount) {
 }
 
 /**
- * Resolve which source region is the "actual" start. Most rules.json
- * files (including the procgen-emitted ones) wrap the playable start
- * in a synthetic Menu region whose only exit is unconditional and
- * points at the real start. Top-down strips Menu and starts BFS from
- * the connected_region; buildRulesJson re-wraps the output in a
- * fresh Menu region on emit.
+ * ⛓⛓ M3 (R8, the name-free rule) — **IS THE DECLARED START A PURE HUB?** A
+ * start region is VIRTUAL — the layout strips it and its exits' targets become
+ * the roots (M1) — iff it has at least one exit and NO locations. Otherwise it
+ * is a real room that is also the menu (apcalc's `C`, sm64ex's `Menu` with its 5
+ * locations, factorio's one-region `Nauvis`): it keeps its cell and the BFS
+ * explores every exit from it. ⛔ The start's NAME is never read — the runtime
+ * already asks `isStartRegion`, and this is the layout's half of that rule.
  */
-function resolveTopDownStart(sourceRegions, declaredStart) {
+export function isVirtualStart(region) {
+    return (region?.exits ?? []).length > 0 && (region?.locations ?? []).length === 0;
+}
+
+/**
+ * ⛓ The layout's refusals about the declared start, as sentences (one string,
+ * thrown by `layoutTopDown`). More than one declared start has no top-down
+ * shape yet — the "combined menu" is designed when a document brings one.
+ */
+export const TOPDOWN_START_REFUSALS = Object.freeze({
+    multiStart: (count) => `topDownFromRulesJson: ${count} start regions declared; the top-down layout takes one`,
+});
+
+/**
+ * Resolve which source region is the "actual" start — the one the BFS places
+ * first. The declared start IS the menu, whatever it is called: when it is a
+ * pure hub (`isVirtualStart`: exits, no locations) the layout strips it
+ * (`menuName` = its name), the BFS starts at its FIRST exit's target and every
+ * further exit's target becomes a root; otherwise it is placed as a cell
+ * (`menuName` null). ⛓ The compile keeps a stripped start under its own name
+ * (`sourceMenuRegion`); `buildRulesJson` wraps a placed one in its synthetic
+ * Menu. EXPORTED: the APWorld Editor's initialise
+ * (`apworldEditor/slotInitialise.js`) asks the SAME rule.
+ */
+export function resolveTopDownStart(sourceRegions, declaredStart) {
     if (!declaredStart) return null;
     const region = sourceRegions[declaredStart];
     if (!region) return null;
-    if (/^menu$/i.test(declaredStart) && (region.exits ?? []).length > 0) {
+    /**
+     * ⛓ EDITOR v3 E2a — LEFT AS A HAND READ, and why: this asks for a region's
+     * FIRST exit. `walkRulesGraph` visits every exit of every region in
+     * document order and `reachableRegions` answers about the whole graph;
+     * neither can say "exit 0 of this one region", and adding an accessor to
+     * `procgenCore/rulesGraph.js` is out of this slice's scope. The DOCUMENT
+     * read that WAS a hand walk — `rulesJson.regions[playerId]` — now goes
+     * through `regionsOf` at both call sites, so what is left here is a read of
+     * a REGION object whose shape the format guarantees.
+     */
+    if (isVirtualStart(region)) {
         const firstExit = region.exits[0];
         if (firstExit?.connected_region && sourceRegions[firstExit.connected_region]) {
             return { actualStart: firstExit.connected_region, menuName: declaredStart };
@@ -1255,10 +1578,11 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
 
 /**
  * Count source-side regions, locations, exits, and non-trivial logic
- * gates for a top-down rules.json input. Excludes the synthetic Menu
- * region (the driver strips it; buildRulesJson re-emits it on the
- * output side, so it's not a meaningful "source" entity for
- * preservation accounting).
+ * gates for a top-down rules.json input. Excludes the STRIPPED start
+ * (`resolveTopDownStart`'s `menuName` — a pure hub, whatever its name;
+ * the layout does not place it), so it is not a "source" entity for
+ * preservation accounting. A start the layout PLACES (it has
+ * locations, or no exits) is counted like any other region.
  *
  * "logic_gates" counts exits + locations whose access_rule is
  * something other than absent or `{rule: 'True_'}` — i.e. any
@@ -1266,15 +1590,16 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
  * gate by the driver.
  *
  * Used to populate procgen_metadata.source_counts on the output
- * rules.json. See NewDocs/plans/presets-panel-overhaul.md §"Source
- * preservation".
+ * rules.json.
  */
 export function computeSourceCounts(rulesJson, playerId = '1') {
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ EDITOR v3 E2a — the ONE reader of a rules.json's region map
+    //   (`procgenCore/rulesGraph.js`), which is the module §17 named and whose
+    //   own header says this file had sixteen such hand reads.
+    const sourceRegions = regionsOf(rulesJson, playerId);
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     const menuName = resolved?.menuName ?? null;
 
@@ -1285,18 +1610,27 @@ export function computeSourceCounts(rulesJson, playerId = '1') {
     const isNonTrivial = (rule) =>
         rule != null && !(typeof rule === 'object' && rule.rule === 'True_');
 
-    for (const [name, region] of Object.entries(sourceRegions)) {
-        if (menuName && name === menuName) continue;
-        regionCount += 1;
-        for (const exit of region?.exits ?? []) {
+    /**
+     * ⛓ EDITOR v3 E2a — THE WALK, through `rulesGraph.walkRulesGraph`. It
+     * visits regions, exits and locations in DOCUMENT ORDER, which is the order
+     * the hand loop had, so the counts are byte-identical. ⛔ The Menu skip
+     * rides each visitor rather than the walker: the walker is structural and
+     * knows nothing about which region a driver considers synthetic.
+     */
+    const isMenu = (regionName) => Boolean(menuName) && regionName === menuName;
+    walkRulesGraph(rulesJson, playerId, {
+        region: (_region, { regionName }) => { if (!isMenu(regionName)) regionCount += 1; },
+        exit: (exit, { regionName }) => {
+            if (isMenu(regionName)) return;
             exitCount += 1;
             if (isNonTrivial(exit?.access_rule)) logicGateCount += 1;
-        }
-        for (const loc of region?.locations ?? []) {
+        },
+        location: (loc, { regionName }) => {
+            if (isMenu(regionName)) return;
             locationCount += 1;
             if (isNonTrivial(loc?.access_rule)) logicGateCount += 1;
-        }
-    }
+        },
+    });
     return {
         regions: regionCount,
         locations: locationCount,
@@ -1349,10 +1683,10 @@ export function layoutTopDown(rulesJson, opts, rng) {
         regionSizeBase = { width: 6, height: 6 },
         seed = 1,
         teleporterMinGap = 2,
-        // Honor the source's flag, default true. When set, every
+        // Honor the source slot's `exporter[playerId]` flag, default true. When set, every
         // BFS-tree-edge gets a back-exit on the child for round-
         // tripping back through the entrance.
-        assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
+        assumeBidirectional = rulesJson?.exporter?.[String(playerId)]?.assume_bidirectional_exits !== false,
         // Substrate assignment inputs (resolution order in pickSubstrate:
         // per-region override > source tag > picker > weighted mix > 'maze').
         // ① resolves each region's substrate ONCE and records it; ② reads the
@@ -1373,16 +1707,23 @@ export function layoutTopDown(rulesJson, opts, rng) {
         throw new Error('topDownFromRulesJson: rulesJson required');
     }
 
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    // ⛓ EDITOR v3 E2a — the ONE reader again; every `sourceRegions[...]` below
+    //   is a read of a REGION the format guarantees the shape of, not of the
+    //   document's own layout.
+    const sourceRegions = regionsOf(rulesJson, playerId);
     if (Object.keys(sourceRegions).length === 0) {
         throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
     }
 
     // Locate the declared start.
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    // ⛓ M3 — the WHOLE list: more than one declared start is refused by name.
+    const declaredStarts = startRegionsOf(rulesJson, playerId).default;
+    if (declaredStarts.length > 1) {
+        throw new Error(TOPDOWN_START_REFUSALS.multiStart(declaredStarts.length));
+    }
+    const [declaredStart = null] = declaredStarts;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     if (!resolved) {
         throw new Error(`topDownFromRulesJson: no usable start region for player '${playerId}'`);
@@ -1394,9 +1735,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
         regionsBuilt: 0,
         regionsSkipped: 0,
         teleportersPlaced: 0,
-        // Menu is stripped from the source-region BFS (we don't
-        // realize it; buildRulesJson re-emits it on emit), so the
-        // total to compare against regionsBuilt also excludes it.
+        // A stripped start (a pure hub) is not placed (we don't
+        // realize it; the compile re-emits it under its own name), so
+        // the total to compare against regionsBuilt also excludes it.
         regionsTotal: Object.keys(sourceRegions).length - (menuName ? 1 : 0),
         stopReason: null,
     };
@@ -1421,61 +1762,111 @@ export function layoutTopDown(rulesJson, opts, rng) {
     placementOrder.push({ name: actualStartName, cell: startCell, parent: null });
     grid.placeRegion(startCell, { region_id: actualStartName });
 
+    /**
+     * ⛓⛓ R8 / M1 — **THE MENU IS THE LAYOUT'S HUB.** Every exit of a stripped
+     * Menu feeds a ROOT: the first exit's target is the start (above); each
+     * further one, in Menu-exit order, is placed only if the BFS from the roots
+     * before it did not reach it — at a `findDisconnectedCell` (a teleporter-fed
+     * cell: the Menu has no cell, so nothing is adjacent to it) — and is BFS'd in
+     * turn. A root carries `parent: null`, the start's contract: ③ inserts no
+     * back-exit into it and keeps its default entrance, and every `parent == null`
+     * reader sees a root. No `teleporterEdges` entry: its `from` is the Menu, which
+     * has no cell to map. `menuRoots` records which Menu exit fed each root (the
+     * first included); `[]` when there is no stripped Menu.
+     * ⛔ A one-exit Menu (or one whose further targets the BFS already reached)
+     * draws NO extra rng — the layout is byte-identical to the single-root one.
+     */
+    const menuRoots = [];
+    const menuExits = menuName ? (sourceRegions[menuName]?.exits ?? []) : [];
+    if (menuName) {
+        menuRoots.push({ name: actualStartName, exit_id: menuExits[0].name });
+    }
+
     const bfsQueue = [actualStartName];
-    while (bfsQueue.length > 0) {
-        const fromName = bfsQueue.shift();
-        const fromCell = cellsByName.get(fromName);
-        const fromRegion = sourceRegions[fromName];
-        if (!fromRegion) continue;
-        for (const exit of fromRegion.exits ?? []) {
-            const targetName = exit.connected_region;
-            if (!targetName) continue;
-            // Skip the synthetic Menu region everywhere — it's a
-            // wrapper, not a playable region. buildRulesJson re-emits
-            // it on the output side.
-            if (menuName && targetName === menuName) continue;
-            if (!sourceRegions[targetName]) continue;
+    const runBfs = () => {
+        /**
+         * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
+         * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
+         * grid placement — it consumes rng, assigns cells and records exit sides as
+         * it goes — so the walk and the placement are one loop, and replacing the
+         * walk half would mean running the traversal twice and keeping the two in
+         * step. The byte gates could not see the difference; the placement would.
+         */
+        while (bfsQueue.length > 0) {
+            const fromName = bfsQueue.shift();
+            const fromCell = cellsByName.get(fromName);
+            const fromRegion = sourceRegions[fromName];
+            if (!fromRegion) continue;
+            for (const exit of fromRegion.exits ?? []) {
+                const targetName = exit.connected_region;
+                if (!targetName) continue;
+                // Skip the stripped Menu everywhere — it has no cell; its
+                // exits feed the roots, and buildRulesJson emits the source
+                // Menu itself (finalizeTopDown's menuRegion).
+                if (menuName && targetName === menuName) continue;
+                if (!sourceRegions[targetName]) continue;
 
-            if (cellsByName.has(targetName)) {
-                // Target already placed. If not adjacent, mark this
-                // source-exit as a teleporter; if adjacent, no-op
-                // (the existing geometric edge will be honored).
-                const targetCell = cellsByName.get(targetName);
-                if (!cellsAreAdjacent(fromCell, targetCell)) {
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                if (cellsByName.has(targetName)) {
+                    // Target already placed. If not adjacent, mark this
+                    // source-exit as a teleporter; if adjacent, no-op
+                    // (the existing geometric edge will be honored).
+                    const targetCell = cellsByName.get(targetName);
+                    if (!cellsAreAdjacent(fromCell, targetCell)) {
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            // Target not yet placed. Try a geographic neighbor first.
-            const adj = findAdjacentEmptyCell(grid, fromCell, rng);
-            if (adj) {
-                cellsByName.set(targetName, adj);
-                placementOrder.push({
-                    name: targetName, cell: adj,
-                    parent: { name: fromName, exit_id: exit.name },
-                });
-                grid.placeRegion(adj, { region_id: targetName });
-                bfsQueue.push(targetName);
-            } else {
-                const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
-                if (disc) {
-                    cellsByName.set(targetName, disc);
+                // Target not yet placed. Try a geographic neighbor first.
+                const adj = findAdjacentEmptyCell(grid, fromCell, rng);
+                if (adj) {
+                    cellsByName.set(targetName, adj);
                     placementOrder.push({
-                        name: targetName, cell: disc,
+                        name: targetName, cell: adj,
                         parent: { name: fromName, exit_id: exit.name },
                     });
-                    grid.placeRegion(disc, { region_id: targetName });
+                    grid.placeRegion(adj, { region_id: targetName });
                     bfsQueue.push(targetName);
-                    teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
                 } else {
-                    // Grid is too cramped — drop this edge. The exit
-                    // will dangle (target_region: null) and get walled
-                    // off in the final pass.
-                    stats.regionsSkipped += 1;
+                    const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+                    if (disc) {
+                        cellsByName.set(targetName, disc);
+                        placementOrder.push({
+                            name: targetName, cell: disc,
+                            parent: { name: fromName, exit_id: exit.name },
+                        });
+                        grid.placeRegion(disc, { region_id: targetName });
+                        bfsQueue.push(targetName);
+                        teleporterEdges.push({ from_name: fromName, exit_id: exit.name });
+                    } else {
+                        // Grid is too cramped — drop this edge. The exit
+                        // will dangle (target_region: null) and get walled
+                        // off in the final pass.
+                        stats.regionsSkipped += 1;
+                    }
                 }
             }
         }
+    };
+    runBfs();
+
+    for (const exit of menuExits.slice(1)) {
+        const targetName = exit?.connected_region;
+        if (!targetName || targetName === menuName || !sourceRegions[targetName]) continue;
+        if (cellsByName.has(targetName)) continue;
+        const disc = findDisconnectedCell(grid, rng, teleporterMinGap);
+        if (!disc) {
+            // No free cell ≥ the gap: the root (and whatever only it reaches)
+            // stays unplaced, counted like any dropped edge.
+            stats.regionsSkipped += 1;
+            continue;
+        }
+        cellsByName.set(targetName, disc);
+        placementOrder.push({ name: targetName, cell: disc, parent: null });
+        grid.placeRegion(disc, { region_id: targetName });
+        menuRoots.push({ name: targetName, exit_id: exit.name });
+        bfsQueue.push(targetName);
+        runBfs();
     }
 
     // ----- Phase 2 sizing (rng-free, so it lives in ①): pick one uniform region
@@ -1519,7 +1910,7 @@ export function layoutTopDown(rulesJson, opts, rng) {
         : (Array.isArray(rulesJson.sphere_log) ? rulesJson.sphere_log : null);
     return {
         grid, startCell, placementOrder, cellsByName, teleporterEdges,
-        sourceRegions, stats, uniformSize, menuName, actualStartName,
+        sourceRegions, stats, uniformSize, menuName, menuRoots, actualStartName,
         assumeBidirectional, playerId, seed, logEntries,
         substrateByRegion: resolvedSubstrates, subSeedByRegion,
     };
@@ -1549,8 +1940,11 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     if (parent) {
         const parentExit = exitSidesByExit.get(`${parent.name}:${parent.exit_id}`);
         if (parentExit) {
+            // ⛓ G0: a SIDES-only parent stores no tile — its side's midpoint.
             const entranceTile = mirrorTileAcrossSide(
-                parentExit.tile_position, parentExit.side, size,
+                exitTileForMirror(grid.getRegion(cellsByName.get(parent.name))?.substrate,
+                    parentExit.tile_position, parentExit.side, size),
+                parentExit.side, size,
             );
             entrances = [{ side: OPPOSITE_SIDE[parentExit.side], tile: entranceTile }];
         }
@@ -1562,6 +1956,9 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     // adjacent (teleporter case), omit the side and the substrate clockwise-
     // assigns. The exit pointing back to the BFS parent gets pinned to the
     // entrance tile so the two regions' exit tiles line up across the shared wall.
+    // ⛓ EDITOR v3 E2a — LEFT: ONE region's exits, in a per-region realise.
+    //   `walkRulesGraph` walks the whole document; this is a read of the region
+    //   `regionsOf` already handed back.
     const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
         const targetName = srcExit.connected_region;
         const targetCell = targetName ? cellsByName.get(targetName) : null;
@@ -1603,6 +2000,51 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     return { entrances, exitSpecs, locationSpecs };
 }
 
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE C2 — **THE SIZE EACH PLACED REGION WILL BE BUILT
+ * AT**, from ① alone: per region in BFS order, the demand of the spec ② hands
+ * the realiser (`buildTopDownRegionSpec` — the same locations and exits; the
+ * entrance takes one tile wherever it lands, so it is resolved against an empty
+ * exit map) and the size its substrate's declared `locationCapacity` gives it on
+ * the realiser's grow ladder from `uniformSize` (`sizeForLocations`, which
+ * `generateRegionProcedural` sizes by). `size` is `null` where the substrate
+ * declares nothing it can answer for these params; `steps` is how many grow
+ * steps above the uniform size it lands. The Initialise form prints the rooms
+ * with `steps > 0`. ⛓ G9 — `ceiling`: the declared ceiling the room exceeds
+ * (`exceedsCeiling`), else null; the form refuses such a room BY NAME.
+ *
+ * @returns {Array<{region: string, substrate: string,
+ *   demand: {locations: number, gated: number, exits: number},
+ *   start: {width: number, height: number},
+ *   size: {width: number, height: number}|null, steps: number|null,
+ *   ceiling: {locations: number, why: string}|null}>}
+ */
+export function topDownRoomSizes(layout, { regionParams = { maxIterations: 0 } } = {}) {
+    const { placementOrder, sourceRegions, uniformSize, substrateByRegion = {} } = layout;
+    const out = [];
+    for (const { name } of placementOrder) {
+        const sourceRegion = sourceRegions[name];
+        if (!sourceRegion) continue;
+        const substrate = substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID;
+        const { exitSpecs, locationSpecs } = buildTopDownRegionSpec(layout, name, new Map());
+        const demand = locationDemandOf({ locations: locationSpecs, exits: exitSpecs });
+        const entry = substrateRegistry.get(substrate);
+        const asked = { ...demand, biome: sourceRegion.biome ?? null };
+        const sized = sizeForLocations(entry, uniformSize, regionParams, asked);
+        out.push({
+            region: name,
+            substrate,
+            demand,
+            start: { width: uniformSize.width, height: uniformSize.height },
+            size: sized ? { width: sized.width, height: sized.height } : null,
+            steps: sized ? sized.steps : null,
+            // ⛓ G9 — the declared ceiling this room exceeds (`{locations, why}`), else null.
+            ceiling: exceedsCeiling(entry, uniformSize, regionParams, asked),
+        });
+    }
+    return out;
+}
+
 // ----- ② Realise each region. A generator: it yields a { type:'region', … }
 // progress event per region (the stepped panel drains it with a setTimeout(0)
 // yield so the UI repaints), then realises that region's recorded substrate from
@@ -1619,6 +2061,7 @@ export function* realiseTopDownGen(layout, opts) {
         regionParams = { maxIterations: 0 },
         biomeByRegion,
         hazardOpts = null,
+        consumableTileOpts = null,
         freeItems = null,
     } = opts;
     const {
@@ -1631,6 +2074,15 @@ export function* realiseTopDownGen(layout, opts) {
     // rather than accumulate across runs. No-op (0→0) on the first run.
     stats.regionsBuilt = 0;
 
+    // ⛓ F2: refuse UP FRONT, by name, a region a zone substrate cannot hold —
+    // before any region builds (see zoneExitCeilingRefusal).
+    const refusal = zoneExitCeilingRefusal(placementOrder.map(({ name }) => ({
+        name,
+        substrate: substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID,
+        exits: (sourceRegions[name]?.exits ?? []).length,
+    })).filter(({ name }) => sourceRegions[name]));
+    if (refusal) throw new Error(refusal);
+
     // exitSidesByExit lets a child resolve its entrance tile from its
     // parent's exit position — populated as we go through phase 2 in
     // BFS-placement order, so parents always realise before children.
@@ -1638,6 +2090,9 @@ export function* realiseTopDownGen(layout, opts) {
     const exitSidesByExit = new Map(); // "name:exit_id" -> {side, tile_position}
 
     let index = 0;
+    // Per-substrate running count, in placement order: a zone source whose
+    // regions are content (jta, noiz2sa) takes its Nth zone for its Nth region.
+    const zoneOrdinals = {};
 
     for (const { name, cell, parent } of placementOrder) {
         const sourceRegion = sourceRegions[name];
@@ -1654,7 +2109,7 @@ export function* realiseTopDownGen(layout, opts) {
         // Substrate + sub-seed were resolved per region in ①; ② just reads them
         // (editing layout.substrateByRegion + re-running ② is the substrate-edit
         // path). A fresh rng per region keeps regions geometrically independent.
-        const substrateId = substrateByRegion[name] ?? 'maze';
+        const substrateId = substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID;
         const regionRng = createRng(subSeedByRegion[name] ?? deriveRegionSeed(layoutSeed, name));
         // Biome resolution mirrors substrate dispatch: per-region from
         // input wins, otherwise inherit from rules.json source region
@@ -1693,9 +2148,11 @@ export function* realiseTopDownGen(layout, opts) {
             params: regionParams,
             biome: regionBiome,
             hazardOpts,
+            consumableTileOpts,
             useSourceLocationName: true,
             stampEntrance: true,
             freeItems,
+            zoneOrdinal: (zoneOrdinals[substrateId] = (zoneOrdinals[substrateId] ?? -1) + 1),
         });
 
         for (const placed of region.exits_placed) {
@@ -1749,7 +2206,8 @@ export function finalizeTopDown(layout) {
 
     // ----- Phase 3: teleporters and back-exits -----
     // Setting teleporter mappings was waiting on the substrate-assigned
-    // sides from phase 2; now we can stitch them in. Reset the per-run counter
+    // sides from phase 2 (an edge whose exit got no side is not placed); the
+    // mapping itself is keyed by the exit id. Reset the per-run counter
     // so re-running ③ (after a re-roll / layout edit re-realises ②) re-derives
     // it rather than accumulating; the back-exit add below is already guarded
     // against duplication, and setTeleporter overwrites, so ③ is idempotent.
@@ -1757,12 +2215,15 @@ export function finalizeTopDown(layout) {
     for (const tele of teleporterEdges) {
         const fromCell = cellsByName.get(tele.from_name);
         const exitInfo = exitSidesByExit.get(`${tele.from_name}:${tele.exit_id}`);
+        // ⛓ EDITOR v3 E2a — LEFT: a single exit LOOKUP BY NAME. `rulesGraph`
+        //   exports no `exitOf(doc, region, exitName)` and this slice may not
+        //   add one to it; the document read above it is `regionsOf`'s.
         const targetName = sourceRegions[tele.from_name]?.exits?.find(
             (e) => e.name === tele.exit_id,
         )?.connected_region;
         const targetCell = targetName ? cellsByName.get(targetName) : null;
         if (fromCell && exitInfo && targetCell) {
-            grid.setTeleporter(fromCell, exitInfo.side, targetCell);
+            grid.setTeleporter(fromCell, tele.exit_id, targetCell);
             stats.teleportersPlaced += 1;
         }
     }
@@ -1779,33 +2240,20 @@ export function finalizeTopDown(layout) {
             if (!parentRegion || !parentExit) continue;
             const entranceTile = getRegionEntrance(region);
             const entranceSide = OPPOSITE_SIDE[parentExit.side];
-            const backExitId = parent.name;
-            // Skip the synthetic back-exit when the source already
-            // declared a reverse exit pointing at the parent (under
-            // any name) — we'd just be duplicating an existing route.
-            const regionExits = getRegionExits(region);
-            const hasExplicitReverse = [...regionExits.values()]
-                .some((e) => e.targetRegion === parent.name);
-            if (regionExits.has(backExitId) || hasExplicitReverse) continue;
-            regionExits.set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit pointing at the BFS parent — skipped when the source
+            // already declared a reverse route pointing at the parent (under
+            // any name). Shared with grid-growth/sphere — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parent.name,
+                entranceTile,
+                entranceSide,
                 targetRegion: parent.name,
                 targetExitId: parent.exit_id,
-                isBackExit: true,
                 isTeleporter: false,
+                skipIfReverseExists: true,
             });
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parent.name,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parent.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
     }
 
@@ -1844,6 +2292,8 @@ export function finalizeTopDown(layout) {
         const region = grid.getRegion(cell);
         const exits = getRegionExits(region);
         if (!exits) continue;
+        // ⛓ G0: a SIDES-only region has no entrance tile to align.
+        if (!carriesExitTiles(region.substrate)) continue;
         for (const e of exits.values()) {
             if (e.targetRegion === parent.name) {
                 setRegionEntrance(region, { x: e.x, y: e.y });
@@ -1873,14 +2323,103 @@ export function finalizeTopDown(layout) {
     if (logEntries && logEntries.length > 0) {
         const attributed = buildTopDownSphereMetadata({
             placementOrder, cellsByName, teleporterEdges, grid,
-            entries: logEntries, playerId,
+            entries: logEntries, playerId, menuName: layout.menuName,
         });
         sphereTree = attributed.sphereTree;
         spherePlan = { seed, ...attributed.spherePlan };
         attributionWarnings = attributed.warnings;
     }
 
-    return { grid, startCell, stats, sphereTree, spherePlan, attributionWarnings };
+    const { menuRegion, menuWarnings } = sourceMenuRegion(layout);
+    return {
+        grid, startCell, stats, sphereTree, spherePlan, attributionWarnings,
+        menuRegion, menuWarnings,
+    };
+}
+
+/**
+ * ⛓⛓ B1 — **THE ONE ITEM-DEF BACKFILL** (`buildRulesJson`'s starting items and
+ * its rule items). Define, in `items` (one player's; mutated), every name of
+ * `names` it lacks and `sourceItems` defines: the source's def VERBATIM,
+ * appended in `names` order — its id moved only when another def of `items`
+ * (present, or backfilled here) already holds it, to the lowest id ≥
+ * ITEM_ID_BASE no def holds or keeps (the verbatim ids are reserved first); a
+ * null id (an event) stays null. It writes no pool count and no placement.
+ *
+ * @param {object} items        one player's `items` map
+ * @param {string[]} names      the names to define, in order
+ * @param {object|null} sourceItems  name → def
+ */
+export function backfillItemDefs(items, names, sourceItems) {
+    if (!sourceItems) return;
+    const held = new Set(Object.values(items).map((d) => d?.id).filter((id) => id != null));
+    // once per name — a starting list is a multiset (`set-starting-count` repeats one)
+    const adds = [...new Set(names)].filter((n) => !Object.hasOwn(items, n) && sourceItems[n] != null)
+        .map((n) => [n, sourceItems[n]]);
+    // ids the verbatim backfills keep are reserved before any colliding one moves
+    const reserved = new Set(held);
+    for (const [, def] of adds) if (def.id != null && !held.has(def.id)) reserved.add(def.id);
+    let next = ITEM_ID_BASE;
+    for (const [name, def] of adds) {
+        if (def.id == null || !held.has(def.id)) {
+            items[name] = def;
+            if (def.id != null) held.add(def.id);
+            continue;
+        }
+        while (reserved.has(next)) next += 1;
+        reserved.add(next);
+        held.add(next);
+        items[name] = { ...def, id: next };
+    }
+}
+
+/**
+ * ⛓⛓ B1 — the compile's `ruleItemWarnings`: one sentence per item name a rule
+ * of the compiled document names that `items[p]` still does not define after
+ * `buildRulesJson`'s backfill (the source did not define it either), naming its
+ * FIRST reference. `[]` when every referenced item is defined.
+ *
+ * @param {object} rulesJson  a compiled document
+ * @param {string} [playerId]
+ * @returns {string[]}
+ */
+export function ruleItemWarnings(rulesJson, playerId = '1') {
+    return undefinedRuleItems(rulesJson, String(playerId)).map((ref) => {
+        const where = ref.completion ? 'the completion condition'
+            : ref.exitName !== undefined ? `exit "${ref.exitName}" in "${ref.regionName}"`
+                : `location "${ref.locationName}"${ref.fieldName ? `'s ${ref.fieldName}` : ''} in "${ref.regionName}"`;
+        return `Rule item "${ref.name}" (named by ${where}) is defined nowhere: `
+            + 'no placed location holds it and the source does not define it';
+    });
+}
+
+/**
+ * ⛓⛓ M1 (R8) — **THE SOURCE MENU THE COMPILE KEEPS.** The Menu `layoutTopDown`
+ * stripped (`layout.menuName`), as `buildRulesJson`'s `menuRegion`: its exits
+ * whose target the grid placed (name, `connected_region`, `access_rule`
+ * verbatim, Menu-exit order) and its locations verbatim. A Menu exit whose
+ * target was NOT placed is dropped — the document must not gain a dangling exit —
+ * and named in `menuWarnings`. `{menuRegion: null, menuWarnings: []}` when the
+ * layout stripped no Menu.
+ */
+function sourceMenuRegion(layout) {
+    const { menuName, sourceRegions, cellsByName } = layout;
+    const source = menuName ? sourceRegions?.[menuName] : null;
+    if (!source) return { menuRegion: null, menuWarnings: [] };
+    const exits = [];
+    const menuWarnings = [];
+    for (const e of source.exits ?? []) {
+        const target = e?.connected_region;
+        if (target === menuName || (target && cellsByName.has(target))) {
+            exits.push({ name: e.name, connected_region: target, access_rule: e.access_rule ?? null });
+        } else {
+            menuWarnings.push(`Menu exit "${e?.name}" → "${target}" dropped: its target was not placed`);
+        }
+    }
+    return {
+        menuRegion: { name: menuName, exits, locations: source.locations ?? [] },
+        menuWarnings,
+    };
 }
 
 /**
@@ -1945,6 +2484,7 @@ export function sphereLogToWavesAndPlan(entries, { playerId = '1' } = {}) {
  */
 function buildTopDownSphereMetadata({
     placementOrder, cellsByName, teleporterEdges, grid, entries, playerId = '1',
+    menuName = null,
 }) {
     const warnings = [];
     const { regionWave, spherePlan } = sphereLogToWavesAndPlan(entries, { playerId });
@@ -1980,7 +2520,7 @@ function buildTopDownSphereMetadata({
     for (let i = 0; i < placementOrder.length; i++) {
         const p = placementOrder[i];
         const region = grid.getRegion(p.cell);
-        const substrate = region?.substrate ?? 'maze';
+        const substrate = region?.substrate ?? DEFAULT_SUBSTRATE_ID;
         substrateCounts[substrate] = (substrateCounts[substrate] || 0) + 1;
         const parent = p.parent ? (nameToIndex.get(p.parent.name) ?? null) : null;
         const isTeleporter = !!(p.parent
@@ -2020,11 +2560,12 @@ function buildTopDownSphereMetadata({
     }
     nodes.forEach((n, i) => { n.usedSides = [...used[i]]; });
 
-    // Completeness: log regions top-down never placed (Menu is the virtual
-    // start wrapper — stripped by top-down, re-emitted by buildRulesJson).
+    // Completeness: log regions top-down never placed (the STRIPPED start —
+    // `menuName`, a pure hub whatever its name — is not placed by design; the
+    // compile re-emits it).
     const placedNames = new Set(placementOrder.map((p) => p.name));
     for (const name of regionWave.keys()) {
-        if (name === 'Menu') continue;
+        if (name === menuName) continue;
         if (!placedNames.has(name)) {
             warnings.push(`sphere log region "${name}" was not placed by top-down`);
         }
@@ -2081,37 +2622,51 @@ function linkReverseExits(grid) {
 // globally unique. Numeric location ids start at LOCATION_ID_BASE and
 // increment in deterministic region-iteration order.
 
-const LOCATION_ID_BASE = 1000;
-const ITEM_ID_BASE = 1;
-
-// Construct a location's globally unique name from its region name,
-// extracted location id, and position. Position is appended so that
-// multiple same-id locations in one region (e.g. two key_red_pickup
-// entries) don't collide.
-//
-// Single source of truth for the naming convention — used by both
-// compileRegionGraph (to populate the regions block) and
-// serializeMazeWorld (to bake locationName into the sidecar so the
-// substrate panel can publish user:locationCheck without going through
-// a lookup table at runtime).
-export function makeLocationName(regionName, locId, position) {
-    const suffix = position ? `__${position.x}_${position.y}` : '';
-    return `${regionName}__${locId}${suffix}`;
-}
+// ⛓ From procgenCore/apIdNamespaces.js — the one register (§15 D11). ⛔ The
+// ALLOCATION stays a running counter in region-iteration order: 29 preset
+// byte-identity dumps encode that order, so this row takes the BASE and nothing
+// else from the table.
+const PIPELINE_NAMESPACE = namespaceNamed('procgen-pipeline');
+const LOCATION_ID_BASE = PIPELINE_NAMESPACE.locationBase;
+const ITEM_ID_BASE = PIPELINE_NAMESPACE.itemBase;
 
 export function compileRegionGraph(grid, opts = {}) {
     const {
         obstacleLib = DEFAULT_OBSTACLES,
-        itemLib = DEFAULT_ITEMS,
+        // Merge the region-library slot filler classification so a library
+        // world's item pool balances 1:1 with its locations (a slot with no
+        // engine-assigned item carries LIBRARY_SLOT_FILLER_ITEM; without a
+        // 'filler' classification it would default to 'progression').
+        itemLib: rawItemLib = DEFAULT_ITEMS,
         startCell,
         playerId = 1,
         // Item names whose canonical placement must ALWAYS hold — the
-        // compiled location gets `locked: true`, which world_generator
-        // turns into place_locked_item (so even multiworld fill keeps
-        // the item there). Used for the bounce start-stack arrow.
-        lockedItems = [],
+        // compiled location gets `pinned: true`, which world_generator
+        // turns into place_locked_item on every seed (so even multiworld
+        // fill keeps the item there). Used for the bounce start-stack arrow.
+        // ⚖ `pinned`, not `locked`: `locked` keeps Archipelago's meaning (the
+        // item was locked at generation), so a source's `locked` is carried
+        // verbatim and never pins (topdown-locked-items R1).
+        pinnedItems = [],
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`: `{name, exits, locations}`, its
+        // exits already filtered to placed targets). Compiled AFTER the grid, so
+        // every grid location and item keeps the id it had. null = none (every
+        // other driver; `buildRulesJson` then writes its synthetic Menu).
+        menuRegion = null,
+        // The SOURCE world's item defs (name → def; top-down's `source.items[p]`).
+        // An item the source defines carries the source's `groups` and
+        // `classification` VERBATIM; an item it does not (every synthetic library
+        // item) gets `['Everything']` and the item library's classification.
+        sourceItems = null,
+        // The SOURCE world's locations (name → location; `sourceLocationsOf`).
+        // A source EVENT location (`id: null`, or `event: true`) compiles as one: no
+        // numeric id, its `locked`/`event` flags and its placed item's fields
+        // kept, and no canonical placement (the source writes none).
+        sourceLocations = null,
     } = opts;
-    const lockedItemSet = new Set(lockedItems);
+    const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
+    const pinnedItemSet = new Set(pinnedItems);
     const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
     if (!startCell) throw new Error('compileRegionGraph: startCell required');
@@ -2150,55 +2705,16 @@ export function compileRegionGraph(grid, opts = {}) {
             : obstacleLib;
         const compiled = compileRegion(region.extracted_rules, { obstacleLib: mergedLib });
 
-        const regionExits = compiled.exits.map((e) => ({
-            name: e.id,
-            connected_region: e.target_region,
-            access_rule: e.rule,
-        }));
+        // ⛓ `makeExit` (shared/rulesJsonBuilder) instead of a fourth inline twin.
+        // Byte-identical here: `compileAccessRule` never returns null, so
+        // makeExit's null→True_ rewrite cannot fire.
+        const regionExits = compiled.exits.map((e) => makeExit(e.id, e.target_region, e.rule));
 
-        const regionLocations = compiled.locations.map((loc) => {
-            const globalName = loc.global_name
-                ?? makeLocationName(compiled.region_name, loc.id, loc.position);
-            const numericId = nextLocationId++;
-            let itemPlacement = null;
-            if (loc.item) {
-                // Register the item and tally the canonical placement.
-                // Every non-event item belongs to the "Everything" group by
-                // convention (matches item_groups["1"] = ["Everything"]).
-                // First occurrence mints a numeric id that persists for
-                // the item's lifetime in this compile.
-                const classification = itemLib[loc.item]?.classification ?? 'progression';
-                if (!items[loc.item]) {
-                    items[loc.item] = {
-                        name: loc.item,
-                        id: nextItemId++,
-                        classification,
-                        groups: ['Everything'],
-                    };
-                }
-                itempool_counts[loc.item] = (itempool_counts[loc.item] || 0) + 1;
-                canonical_placements[globalName] = loc.item;
-
-                // Shape per rules.schema.json $defs/itemPlacement — what
-                // stateManager's checkLocation reads to add the item to
-                // inventory at runtime. canonical_placements alone isn't
-                // enough; stateManager looks at location.item directly.
-                itemPlacement = {
-                    name: loc.item,
-                    player: numericPlayerId,
-                    advancement: classification === 'progression',
-                    type: classification,
-                };
-            }
-            return {
-                name: globalName,
-                id: numericId,
-                access_rule: loc.rule,
-                ...(itemPlacement ? { item: itemPlacement } : {}),
-                ...(itemPlacement && lockedItemSet.has(loc.item)
-                    ? { locked: true } : {}),
-            };
-        });
+        const regionLocations = compiled.locations.map((loc) => compileLocation(
+            loc.global_name ?? makeLocationName(compiled.region_name, loc.id, loc.position),
+            loc.item,
+            loc.rule,
+        ));
 
         regions[compiled.region_name] = {
             name: compiled.region_name,
@@ -2207,13 +2723,173 @@ export function compileRegionGraph(grid, opts = {}) {
         };
     }
 
+    // ⛓ M1 — the source Menu: its exits and rules verbatim (makeExit's null→True_,
+    // as for any exit) and its locations through the SAME `compileLocation` a grid
+    // location takes, so its items join `items`, `itempool_counts` and
+    // `canonical_placements` exactly as a grid region's do.
+    const menu = menuRegion ? {
+        name: menuRegion.name,
+        exits: (menuRegion.exits ?? []).map((e) => makeExit(e.name, e.connected_region, e.access_rule)),
+        locations: (menuRegion.locations ?? []).map((loc) => compileLocation(
+            loc.name,
+            (typeof loc.item === 'string' ? loc.item : loc.item?.name) ?? null,
+            loc.access_rule || makeTrueRule(),
+        )),
+    } : null;
+
     return {
         regions,
         items,
         itempool_counts,
         canonical_placements,
         start_region_name: startRegion.region_id,
+        menu_region: menu,
     };
+
+    // One compiled location: a fresh numeric id; its item (when any) registered,
+    // pooled and canonically placed. Shared by the grid's regions and the Menu.
+    // A source location's `locked: true` (Archipelago's: placed locked at the
+    // source's generation, e.g. ALTTP's per-seed dungeon pre-fill) is carried;
+    // world_generator reads it as a canonical placement, never as a pin.
+    // ⛓ A source EVENT location (`id: null` or `event: true`) keeps the source's shape instead:
+    // `compileEventLocation`.
+    function compileLocation(globalName, item, rule) {
+        const sourceLoc = sourceLocations?.[globalName];
+        if (sourceLoc && (sourceLoc.id === null || sourceLoc.event === true)) return compileEventLocation(sourceLoc, globalName, item, rule);
+        const numericId = nextLocationId++;
+        let itemPlacement = null;
+        if (item) {
+            // Register the item and tally the canonical placement.
+            // Its groups are the source def's, verbatim, when the source
+            // defines it; otherwise "Everything" by convention (matches the
+            // synthetic item_groups["1"] = ["Everything"]).
+            // First occurrence mints a numeric id that persists for
+            // the item's lifetime in this compile.
+            const classification = itemClassification(item);
+            if (!items[item] && isIdlessSourceItem(item)) {
+                registerSourceItemDef(item);
+            } else if (!items[item]) {
+                const sourceGroups = sourceItems?.[item]?.groups;
+                items[item] = {
+                    name: item,
+                    id: nextItemId++,
+                    classification,
+                    groups: Array.isArray(sourceGroups) ? [...sourceGroups] : ['Everything'],
+                };
+            }
+            itempool_counts[item] = (itempool_counts[item] || 0) + 1;
+            canonical_placements[globalName] = item;
+
+            // Shape per rules.schema.json $defs/itemPlacement — what
+            // stateManager's checkLocation reads to add the item to
+            // inventory at runtime. canonical_placements alone isn't
+            // enough; stateManager looks at location.item directly.
+            // ⛓ The source's placed item, when the source places this item at
+            // this location: its `advancement` and `type` VERBATIM (the exporter's
+            // `Item.advancement` — true for every progression flavour — and the
+            // game's own item type).
+            const sourcePlaced = sourceLocations?.[globalName]?.item;
+            itemPlacement = {
+                name: item,
+                player: numericPlayerId,
+                ...(sourcePlaced?.name === item
+                    ? { advancement: sourcePlaced.advancement, type: sourcePlaced.type }
+                    : { advancement: isProgressionClassification(classification), type: classification }),
+            };
+        }
+        return {
+            name: globalName,
+            id: numericId,
+            access_rule: rule,
+            ...(itemPlacement ? { item: itemPlacement } : {}),
+            ...(sourceLoc?.locked === true ? { locked: true } : {}),
+            ...(itemPlacement && pinnedItemSet.has(item)
+                ? { pinned: true } : {}),
+        };
+    }
+
+    // An item's classification: the source def's VERBATIM when the source
+    // defines one (ALTTP's `filler` Bombs stay filler); otherwise the item
+    // library's, else `'progression'` (every synthetic library item).
+    function itemClassification(item) {
+        const sourceClassification = sourceItems?.[item]?.classification;
+        if (typeof sourceClassification === 'string') return sourceClassification;
+        return itemLib[item]?.classification ?? 'progression';
+    }
+
+    // AP's `Item.advancement` is `ItemClassification.progression in
+    // classification`: TRUE for every progression flavour
+    // (`progression_skip_balancing` — omsi's Supply Steps —, `…_deprioritized`,
+    // a combined `progression|useful`), not only the bare `'progression'`.
+    function isProgressionClassification(c) {
+        return typeof c === 'string' && c.split('|').some((flag) => flag.trim().startsWith('progression'));
+    }
+
+    // A source item the source gave NO numeric id — an event (`id: null`) or an
+    // item whose id is not a number (ALTTP's crystals and pendants export SRAM
+    // data, a list, which world_generator reads as an event too).
+    function isIdlessSourceItem(item) {
+        const def = sourceItems?.[item];
+        return def != null && (def.id === null || Array.isArray(def.id) || def.event === true);
+    }
+
+    // Such an item's def is the source's, VERBATIM (id, event, type, groups —
+    // the backfill's rule); it takes no number from the compiled pool's run.
+    function registerSourceItemDef(item) {
+        items[item] = { ...sourceItems[item] };
+    }
+
+    // ⛓ A source EVENT location, marked as the source marks it: `id: null`, its
+    // placed item's `advancement` and `type` (`'Event'`, ALTTP's `'Crystal'`),
+    // and its `locked` / `event` flags VERBATIM; the name, the access rule and
+    // the item are the compiled ones. Its item is pooled as the source pools
+    // it (`itempool_counts`), registered (an id-less one verbatim), and given NO
+    // canonical placement — the source writes none for an event.
+    function compileEventLocation(sourceLoc, globalName, item, rule) {
+        if (item && !items[item]) {
+            if (isIdlessSourceItem(item)) {
+                registerSourceItemDef(item);
+            } else {
+                const sourceGroups = sourceItems?.[item]?.groups;
+                items[item] = {
+                    name: item,
+                    id: nextItemId++,
+                    classification: itemClassification(item),
+                    groups: Array.isArray(sourceGroups) ? [...sourceGroups] : ['Everything'],
+                };
+            }
+        }
+        if (item) itempool_counts[item] = (itempool_counts[item] || 0) + 1;
+        return {
+            name: globalName,
+            id: null,
+            access_rule: rule,
+            ...(item ? {
+                item: {
+                    name: item,
+                    player: numericPlayerId,
+                    advancement: sourceLoc.item?.advancement ?? true,
+                    type: sourceLoc.item?.type ?? 'Event',
+                },
+            } : {}),
+            ...(Object.hasOwn(sourceLoc, 'locked') ? { locked: sourceLoc.locked } : {}),
+            ...(Object.hasOwn(sourceLoc, 'event') ? { event: sourceLoc.event } : {}),
+        };
+    }
+}
+
+/**
+ * ⛓ name → location over a source rules.json's regions for one player (through
+ * the ONE region reader) — `compileRegionGraph`'s `sourceLocations`.
+ */
+export function sourceLocationsOf(rulesJson, playerId = '1') {
+    const out = {};
+    for (const region of Object.values(regionsOf(rulesJson, String(playerId)))) {
+        for (const loc of region?.locations ?? []) {
+            if (loc?.name != null && !Object.hasOwn(out, loc.name)) out[loc.name] = loc;
+        }
+    }
+    return out;
 }
 
 // ScenarioPool now lives in shared/procgen/scenarioPool.js — it is
@@ -2227,128 +2903,14 @@ export function compileRegionGraph(grid, opts = {}) {
 //   - compileRegionGraph output (regions, items, canonical_placements,
 //     itempool_counts — plugged into the scaffold's per-player slots)
 //   - preset_sidecars — per-region playable payloads, serialized into
-//     JSON-safe shapes (see
-//     NewDocs/plans/procedural-generation/substrate-pipeline-
-//     architecture.md §"Preset sidecars through the multiworld bridge"
-//     for the target shape).
+//     JSON-safe shapes (docs/json/developer/procgen/architecture.md
+//     §"rules.json extensions").
 //
 // Output: a single JSON-serialisable object the frontend can write to
-// disk as rules.json. World_generator currently ignores unknown
-// top-level keys, so preset_sidecars rides along untouched in v1;
-// step 8 teaches it to preserve the field through the multiworld
-// bridge.
-
-// Serialize a maze world into the sidecar payload shape. Maps and
-// Int8Array aren't JSON-safe, so this flattens them. AP-canonical
-// names from the extracted_rules are baked in so the substrate panel
-// can publish user:locationCheck and user:regionMove with the right
-// names without consulting any other lookup at runtime.
-export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFAULT_OBSTACLES, baseItemLib = DEFAULT_ITEMS) {
-    const obstacles = [];
-    for (const [key, id] of world.obstacles) {
-        const [x, y] = key.split(',').map(Number);
-        obstacles.push({ x, y, id });
-    }
-
-    // Lookup: position key "x,y" -> AP-canonical location name. Built
-    // from the extracted location list, which already names each item
-    // pickup. The lookup is keyed by position because that's how each
-    // item maps back to its location entry.
-    const locationNameByPos = new Map();
-    for (const loc of extractedRules?.locations ?? []) {
-        if (!loc.position) continue;
-        const key = `${loc.position.x},${loc.position.y}`;
-        const name = loc.global_name
-            ?? makeLocationName(extractedRules.region_id, loc.id, loc.position);
-        locationNameByPos.set(key, name);
-    }
-
-    const items = [];
-    for (const [key, id] of world.items) {
-        const [x, y] = key.split(',').map(Number);
-        items.push({ x, y, id, locationName: locationNameByPos.get(key) ?? null });
-    }
-
-    // Bake in each exit's AP-canonical name and target region. The
-    // sidecar carries the multi-exit `exits` array; deserializeMaze-
-    // World builds world.exits back from it. (Old single-exit
-    // sidecars used `exit: {...}`; the deserializer accepts both.)
-    const extractedExitsById = new Map();
-    for (const e of extractedRules?.exits ?? []) {
-        extractedExitsById.set(e.id, e);
-    }
-    const exitsOut = [];
-    for (const e of world.exits.values()) {
-        const ext = extractedExitsById.get(e.exit_id);
-        exitsOut.push({
-            exit_id: e.exit_id,
-            x: e.x,
-            y: e.y,
-            side: e.side,
-            exitName: ext?.id ?? e.exitName ?? null,
-            targetRegion: ext?.target_region ?? e.targetRegion ?? null,
-            // Bidirectional metadata — lets the procgen player resolve
-            // which exit_id to spawn at on the other side, and lets the
-            // panel render back-exits / teleporters distinctly.
-            targetExitId: e.targetExitId ?? null,
-            isBackExit: e.isBackExit ?? false,
-            isTeleporter: e.isTeleporter ?? false,
-        });
-    }
-
-    // Only include obstacleLib / itemLib entries that aren't already
-    // in the base library. Standard colored doors and the maze's own
-    // keys live in the base; per-instance logic_gate_<N> entries
-    // (from placeFromRules) and any foreign-item metadata baked in
-    // by a top-down driver need to travel in the sidecar so the
-    // compiler / renderer / runtime can look them up.
-    const obstacleLibExtras = {};
-    for (const [id, def] of Object.entries(world.obstacleLib || {})) {
-        if (!(id in baseObstacleLib)) {
-            obstacleLibExtras[id] = def;
-        }
-    }
-    const itemLibExtras = {};
-    for (const [id, def] of Object.entries(world.itemLib || {})) {
-        if (!(id in baseItemLib)) {
-            itemLibExtras[id] = def;
-        }
-    }
-    // Geometric property used by loop-mode mana hooks: the longest of
-    // the pairwise shortest paths among (entrance, ...exits). Combined
-    // with baseRegionCost from loop_costs at runtime to derive a
-    // per-tile move cost: moveCost = baseRegionCost / longestShortestPath.
-    // Always computed (cheap BFS over the tile grid); the runtime
-    // ignores it when manaEnabled is off.
-    const longestShortestPath = computeLongestShortestPath(world);
-
-    // Hazards (Phase 2). Each entry is the IMMUTABLE shape — the
-    // runtime initializes phase to 0 in deserializeMazeWorld. Stored
-    // entries strip phase + any other mutable runtime state per the
-    // strip-progress-on-save convention.
-    const hazardsOut = Array.isArray(world.hazards) && world.hazards.length > 0
-        ? world.hazards.map((h) => ({
-            shape: h.shape,
-            length: h.length,
-            tiles: h.tiles.map((t) => ({ x: t.x, y: t.y })),
-            cycleLength: h.cycleLength,
-        }))
-        : null;
-
-    return {
-        width: world.width,
-        height: world.height,
-        tiles: Array.from(world.tiles),
-        entrance: { x: world.entrance.x, y: world.entrance.y },
-        exits: exitsOut,
-        obstacles,
-        items,
-        obstacleLib: obstacleLibExtras,
-        itemLib: itemLibExtras,
-        longestShortestPath,
-        ...(hazardsOut ? { hazards: hazardsOut } : {}),
-    };
-}
+// disk as rules.json. world_generator preserves preset_sidecars into
+// the generated package and the exporter re-injects it, so the field
+// survives the full multiworld round-trip (architecture.md §"The
+// Python round-trip").
 
 // --- Shuffled-spiral layout driver ---
 //
@@ -2435,9 +2997,13 @@ export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
 // Perimeter midpoint for a synthetic exit on the given side. Used
 // only for zone-based substrates where tile geometry is fictional
 // but the procgen pipeline still wants a tile_position. The values
-// satisfy stitchGrid's posKey lookup and procgenPlayer's entrance
-// tracking; the substrate runtime ignores them.
-function perimeterMidpoint(side, size) {
+// feed procgenPlayer's entrance tracking; the substrate runtime ignores
+// them. (stitchGrid matches on exit ID, not position, so it no longer
+// depends on this convention.)
+// ⛓ G0: a zone substrate that DECLARES `regionGeometry: 'sides'` is minted
+// none; this function is then only the tile a neighbour mirrors off its side
+// (exitTileForMirror) — the same tile it would have carried.
+export function perimeterMidpoint(side, size) {
     const w = size.width, h = size.height;
     if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
     if (side === 'S') return { x: Math.floor(w / 2), y: h - 1 };
@@ -2456,8 +3022,8 @@ function perimeterMidpoint(side, size) {
  * Optional adapter hook `extractZoneRules(zoneIdx, ctx)` lets a
  * zone-based substrate contribute AP locations and per-side exit
  * access rules (the "zone-locations channel" —
- * NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"Pipeline
- * integration"). ctx is { region_id, exitSides, regionSize }; the
+ * docs/json/developer/procgen/substrate-registry.md). ctx is
+ * { region_id, exitSides, regionSize }; the
  * return shape is:
  *
  *   { locations: [{ id, item, access_rule, position? }],  // AP locations
@@ -2472,17 +3038,28 @@ function perimeterMidpoint(side, size) {
  * will implement this same hook.
  */
 function synthesizeZoneRegion({
-    substrate, region_id, zoneIdx, regionSize, exitSides, adapter,
+    substrate, region_id, zoneIdx, regionSize, exitSides, adapter, itemsToPlace = [], goalOwned = false,
 }) {
+    // `itemsToPlace`: the pool items the spiral dealt this cell (the goal among
+    // them on the goal cell). `goalOwned`: the engine places the world's goal,
+    // so the zone must not place a victory item of its own.
     const zoneRules = adapter.extractZoneRules
-        ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
+        ? adapter.extractZoneRules(zoneIdx, {
+            region_id, exitSides, regionSize,
+            ...(itemsToPlace.length ? { itemsToPlace } : {}),
+            ...(goalOwned ? { goalOwned: true } : {}),
+        })
         : null;
-    const zonePayload = adapter.synthesizeZonePayload
-        ? adapter.synthesizeZonePayload(zoneIdx)
-        : {};
-    return assembleZoneRegion({
-        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
+    // Zone payload comes entirely from the extractZoneRules channel now
+    // (region-library C1): jta folds its `jtaZone` ordinal into that
+    // channel's payload, so no separate synthesizeZonePayload hook.
+    const region = assembleZoneRegion({
+        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload: {},
     });
+    // The pool items the zone holds, in the procedural regions' shape, so a
+    // later region's arrival inventory counts them.
+    if (itemsToPlace.length) region.placed_items = itemsToPlace.map((item_id) => ({ item_id }));
+    return region;
 }
 
 // Shared tail of zone-region synthesis: synthetic exit scaffolding
@@ -2490,28 +3067,30 @@ function synthesizeZoneRegion({
 // conventions) plus the zone-locations channel result. Consumed by
 // both the spiral path (extractZoneRules) and the sphere-growth path
 // (generateZoneForSpecs).
-function assembleZoneRegion({
+export function assembleZoneRegion({
     substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
 }) {
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
+    // ⛓ G0: a SIDES-only substrate (regionGeometry) gets no fictional tile —
+    // no x/y, no tile_position, no position; its exits are their sides.
+    const tiles = carriesExitTiles(substrate);
     // One synthetic exit per in-bounds neighbor side. id format
     // 'exit_<side>' is unique per region and survives serialization.
     for (const side of exitSides) {
         const exit_id = `exit_${side}`;
-        const tile = perimeterMidpoint(side, regionSize);
+        const tile = tiles ? perimeterMidpoint(side, regionSize) : null;
         exitsMap.set(exit_id, {
             exit_id,
-            x: tile.x,
-            y: tile.y,
+            ...(tile ? { x: tile.x, y: tile.y } : {}),
             side,
             exitName: exit_id,
             targetRegion: null,   // resolved by stitchGrid
             isBackExit: false,
             isTeleporter: false,
         });
-        exitsPlaced.push({ exit_id, side, tile_position: { x: tile.x, y: tile.y } });
+        exitsPlaced.push({ exit_id, side, ...(tile ? { tile_position: { x: tile.x, y: tile.y } } : {}) });
         // Phase 4a: prefer the substrate's obstacle paths (bounce); fall
         // back to a verbatim access_rule for substrates not yet on the
         // obstacle emission (jta), and to the always-open placeholder when
@@ -2520,7 +3099,7 @@ function assembleZoneRegion({
         const sideRule = zoneRules?.exitRules?.[side];
         extractedExits.push({
             id: exit_id,
-            position: { x: tile.x, y: tile.y },
+            ...(tile ? { position: { x: tile.x, y: tile.y } } : {}),
             target_region: null,
             paths: sidePaths ?? [{ path_id: 'p1', obstacles: [] }],
             ...(!sidePaths && sideRule ? { access_rule: sideRule } : {}),
@@ -2532,6 +3111,12 @@ function assembleZoneRegion({
         position: loc.position ?? null,
         paths: loc.paths ?? [{ path_id: 'p1', obstacles: [] }],
         ...(!loc.paths && loc.access_rule ? { access_rule: loc.access_rule } : {}),
+        // A content source whose locations already HAVE names (a real map's
+        // marked locations) passes them as `global_name`, the field top-down
+        // uses for the same reason; compileRegion keeps it and
+        // compileRegionGraph prefers it over `Region__id__x_y`. No zone source
+        // set it before, so no world's bytes move.
+        ...(loc.global_name ? { global_name: loc.global_name } : {}),
     }));
     return {
         substrate,
@@ -2558,6 +3143,11 @@ function assembleZoneRegion({
         wall_stats: null,
         biome: null,
         grow_telemetry: null,
+        // What the content source dropped to fit this slot (a real room's
+        // surplus doors — the `pruned_exit` shape the atlas hook reports).
+        // Present only when there is something to say, so no other zone
+        // region gains a key.
+        ...(zoneRules?.notes?.length ? { notes: zoneRules.notes } : {}),
     };
 }
 
@@ -2574,12 +3164,13 @@ function assembleZoneRegion({
 //
 // spec = {
 //   substrate, region_id, size, rng, params, biome, itemLib, obstacleLib,
-//   hazardOpts,
+//   hazardOpts, consumableTileOpts,
 //   entrances: [{ side, tile }],                                  // 0 or 1
 //   exits:     [{ exit_id?, exitName?, side?, tile?, target_region?,
 //                 access_rule? }],
 //   locations: [{ id, item?, access_rule? }],
 //   useSourceLocationName,   // stamp loc.global_name = id (top-down)
+//   sizeFromCapacity,        // default true; false = start at `size` (C2)
 // }
 //
 // Two branches by substrate kind:
@@ -2648,6 +3239,30 @@ function generateRegionProcedural(spec) {
     // fits on attempt 0) the loop runs exactly once, leaving rng draws and
     // geometry identical to the pre-retry behaviour.
     let size = { width: spec.size.width, height: spec.size.height };
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE C2 — SIZE THE ROOM ONCE. A substrate that
+    // declares its `locationCapacity` (`procgenCore/locationCapacity.js`) says
+    // the size a room of these locations needs, on this loop's own grow ladder;
+    // the room starts there instead of failing four re-rolls at a size that
+    // cannot hold it and growing a step per attempt (a 340-location room was
+    // built nine times to reach 27×27). Never smaller than the size asked for,
+    // so a room that fits is untouched — measured byte-inert over every
+    // committed maze room (C2 §45.0: 0 of 2,360 producer builds, 0 of 1,063
+    // committed entries at their own size). The retry-then-grow below stays:
+    // the declaration is the percolation threshold of a random layout, so a
+    // room can still need one more step. `sizeFromCapacity: false` builds from
+    // the size asked for, which is how the agreement rows get the realiser's
+    // own answer to compare the declaration with.
+    const demand = { ...locationDemandOf(spec), biome: spec.biome ?? null };
+    // ⛓⛓ G9 — A DECLARED CEILING IS REFUSED BY NAME, BEFORE THE CORE RUNS: no
+    // size holds a room past it, so building it would only reach the
+    // substrate's own refusal after the draw (and growth would walk every size
+    // first). The sentence is the declaration's (`locationCeilingRefusal`).
+    const over = exceedsCeiling(adapter, size, spec.params, demand);
+    if (over) throw new Error(locationCeilingRefusal(spec.substrate, over, spec.region_id, demand));
+    if (spec.sizeFromCapacity !== false) {
+        const sized = sizeForLocations(adapter, size, spec.params, demand);
+        if (sized) size = { width: sized.width, height: sized.height };
+    }
     let core = null;
     let placement = null;
     let exit_rules = null;
@@ -2675,8 +3290,10 @@ function generateRegionProcedural(spec) {
             }
             if (exitId != null) exit_rules[exitId] = e.access_rule;
         }
+        // ⛓ CONCEPT LIBRARY T1 — `params` carries the world's concept list
+        // (`params.concepts`) to the placer that realises a gate as one.
         placement = adapter.placeFromRules(core.world, {
-            exit_rules, location_rules, item_placements, rng: spec.rng,
+            exit_rules, location_rules, item_placements, rng: spec.rng, params: spec.params,
         });
         const placedIds = new Set(
             (placement.placed_locations ?? []).map((p) => p.location_id));
@@ -2702,13 +3319,17 @@ function generateRegionProcedural(spec) {
     // ids + access rules (path-walk pollution must not leak into access
     // rules; the spec rule IS the rule). global_name is stamped only when
     // the caller asks (top-down preserves AP-canonical source names).
+    // ⛓ G2a: a placed location that stands on no TILE (a SIDES room's — the
+    // text adventure's) is matched by its id instead; the key spaces cannot
+    // collide ("x,y" vs "id:…"), and a tile location keys exactly as before.
+    const placedKey = (position, id) => (position ? `${position.x},${position.y}` : `id:${id}`);
     const locationIdByPos = new Map();
     for (const placed of placement.placed_locations ?? []) {
-        locationIdByPos.set(`${placed.position.x},${placed.position.y}`, placed.location_id);
+        locationIdByPos.set(placedKey(placed.position, placed.location_id), placed.location_id);
     }
     const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
     for (const loc of extracted_rules.locations) {
-        const specLocId = locationIdByPos.get(`${loc.position.x},${loc.position.y}`);
+        const specLocId = locationIdByPos.get(placedKey(loc.position, loc.id));
         if (!specLocId) continue;
         loc.id = specLocId;
         if (spec.useSourceLocationName) loc.global_name = specLocId;
@@ -2720,7 +3341,10 @@ function generateRegionProcedural(spec) {
         if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
     }
 
-    adapter.applyContentModules?.(core.world, { hazardOpts: spec.hazardOpts ?? null }, spec.rng);
+    adapter.applyContentModules?.(core.world, {
+        hazardOpts: spec.hazardOpts ?? null,
+        consumableTileOpts: spec.consumableTileOpts ?? null,
+    }, spec.rng);
 
     return {
         substrate: spec.substrate,
@@ -2742,10 +3366,59 @@ function generateRegionProcedural(spec) {
     };
 }
 
+/**
+ * ⛓ F2 — whether a substrate realises its regions through the ZONE path
+ * (`generateRegionZoneGen`): it declares a zone generator and no procedural
+ * core — the dispatch `generateRegionGen` makes. bounce and runner do.
+ */
+export function realisesThroughZonePath(substrateId) {
+    const adapter = substrateRegistry.get(substrateId);
+    return !!adapter && typeof adapter.generateRegionCore !== 'function'
+        && (typeof adapter.generateZoneForSpecs === 'function'
+            || typeof adapter.generateZoneForSpecsGen === 'function');
+}
+
+/**
+ * ⛓ F2 — the most exits a ZONE-path region holds: ONE PER SIDE. The zone path
+ * gives every exit a distinct side (a side-less exit, e.g. a top-down
+ * teleporter, gets a free one, clockwise) and the zone keys its portals by side
+ * (bounce's `side_exit_<side>` / `sidePortals`). The 'sides' GEOMETRY alone does
+ * not cap exits: text_adventure is 'sides' but realises through its own
+ * procedural core, which this ceiling does not cover.
+ */
+export const ZONE_PATH_EXIT_CEILING = SIDES.length;
+
+/**
+ * ⛓ F2 — the sentence refusing the regions a zone-path substrate was given more
+ * exits than it holds, or null. `regions`: `[{ name, substrate, exits }]`, exits
+ * a count. Measured (F2 W0, 2026-09-30): before this refusal the top-down zones
+ * demo over APCalc (5-exit regions) died inside bounce with `unknown exit side
+ * 'undefined'` — the engine had run out of free sides to hand the fifth exit.
+ */
+export function zoneExitCeilingRefusal(regions) {
+    const over = regions.filter((r) => r.exits > ZONE_PATH_EXIT_CEILING
+        && realisesThroughZonePath(r.substrate));
+    if (over.length === 0) return null;
+    const named = over.slice(0, 5).map((r) => `'${r.name}' (${r.substrate}, ${r.exits} exits)`).join(', ');
+    const ids = [...new Set(over.map((r) => r.substrate))];
+    const rooms = ids.length === 1 ? `a ${ids[0]} room has` : `${ids.join(' and ')} rooms have`;
+    return `cannot realise ${over.length} region${over.length === 1 ? '' : 's'}: `
+        + `${named}${over.length > 5 ? `, and ${over.length - 5} more` : ''} — ${rooms} one exit `
+        + `per side today, so ${ZONE_PATH_EXIT_CEILING} at most; give ${over.length === 1 ? 'that region' : 'those regions'} `
+        + 'another substrate';
+}
+
 function* generateRegionZoneGen(spec) {
     const adapter = getAdapter(spec.substrate);
     const regionSize = spec.size;
     const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
+
+    // ⛓ F2: one exit per side (ZONE_PATH_EXIT_CEILING) — refused by name here
+    // too, for a driver that did not check up front.
+    const ceilingRefusal = zoneExitCeilingRefusal([{
+        name: spec.region_id, substrate: spec.substrate, exits: (spec.exits ?? []).length,
+    }]);
+    if (ceilingRefusal) throw new Error(ceilingRefusal);
 
     // Bounce-style zone substrates gate on a side; assign one to any exit
     // the layout driver couldn't resolve geographically (clockwise over
@@ -2871,9 +3544,13 @@ function* generateRegionZoneGen(spec) {
     const zoneSpecs = typeof adapter.buildZoneSpecs === 'function'
         ? adapter.buildZoneSpecs(baseZoneSpecs, spec.params ?? {})
         : baseZoneSpecs;
+    // `ordinal`: which of the substrate's zones this region is (sphere growth's
+    // `sphereZoneOrdinal`; 0 for a caller that names none) — read by a zone
+    // source whose regions are content (jta, noiz2sa).
+    const zoneCtx = { ordinal: spec.zoneOrdinal ?? 0 };
     const zoneRules = typeof adapter.generateZoneForSpecsGen === 'function'
-        ? yield* adapter.generateZoneForSpecsGen(zoneSpecs)
-        : adapter.generateZoneForSpecs(zoneSpecs);
+        ? yield* adapter.generateZoneForSpecsGen(zoneSpecs, zoneCtx)
+        : adapter.generateZoneForSpecs(zoneSpecs, zoneCtx);
 
     // Assemble the descriptor, keying exits by the SPEC's exit_id (top-down
     // overrides/teleporters key on the source exit id) rather than
@@ -2881,23 +3558,27 @@ function* generateRegionZoneGen(spec) {
     const exitsMap = new Map();
     const exitsPlaced = [];
     const extractedExits = [];
+    // ⛓ G0: a SIDES-only substrate gets no tile on its exits (nor an entrance
+    // tile, below) — the same law as assembleZoneRegion.
+    const tiles = carriesExitTiles(spec.substrate);
     for (const e of exitsResolved) {
-        const tile = e.tile ?? perimeterMidpoint(e.side, regionSize);
+        const tile = tiles ? (e.tile ?? perimeterMidpoint(e.side, regionSize)) : null;
         const exitId = e.exit_id ?? `exit_${e.side}`;
         // No targetExitId here — it's appended later by linkReverseExits /
         // the back-exit pass (matching assembleZoneRegion's key order so
         // serialized zone payloads stay byte-identical).
         exitsMap.set(exitId, {
             exit_id: exitId,
-            x: tile.x,
-            y: tile.y,
+            ...(tile ? { x: tile.x, y: tile.y } : {}),
             side: e.side,
             exitName: e.exitName ?? exitId,
             targetRegion: e.target_region ?? null,
             isBackExit: false,
             isTeleporter: false,
         });
-        exitsPlaced.push({ exit_id: exitId, side: e.side, tile_position: { x: tile.x, y: tile.y } });
+        exitsPlaced.push({
+            exit_id: exitId, side: e.side, ...(tile ? { tile_position: { x: tile.x, y: tile.y } } : {}),
+        });
         // Phase 3: the substrate emits its derived access as
         // paths-and-obstacles (the canonical form). Top-down OVERRIDES with
         // the source rule verbatim (rules realised, not authored), keying
@@ -2907,7 +3588,7 @@ function* generateRegionZoneGen(spec) {
         const paths = zoneRules?.exitPaths?.[e.side] ?? [{ path_id: 'p1', obstacles: [] }];
         extractedExits.push({
             id: exitId,
-            position: { x: tile.x, y: tile.y },
+            ...(tile ? { position: { x: tile.x, y: tile.y } } : {}),
             target_region: e.target_region ?? null,
             paths,
             ...(e.access_rule ? { access_rule: e.access_rule } : {}),
@@ -2923,6 +3604,11 @@ function* generateRegionZoneGen(spec) {
             // Source rule (top-down) wins; otherwise the compiler compiles
             // the obstacle paths above.
             ...(sl?.access_rule ? { access_rule: sl.access_rule } : {}),
+            // ⛓ A substrate that realises a location under a name of its own (a
+            //   placed real room keeps its atlas location's name — the name its
+            //   check binding reports) says so, as assembleZoneRegion's channel
+            //   already allows; top-down's source name still wins below.
+            ...(loc.global_name ? { global_name: loc.global_name } : {}),
             ...(spec.useSourceLocationName ? { global_name: loc.id } : {}),
         };
     });
@@ -2948,9 +3634,13 @@ function* generateRegionZoneGen(spec) {
     // the compiled global_name so the bridge reports the registered name.
     if (spec.useSourceLocationName && playable_payload.ap_locations) {
         const nameById = new Map(extractedLocations.map((l) => [l.id, l.global_name ?? l.id]));
+        // A substrate whose map is keyed by its OWN ids (jta: task id → name)
+        // is matched by the name it minted instead.
+        const nameByMinted = new Map(extractedLocations.map((l) => [
+            makeLocationName(spec.region_id, l.id, l.position), l.global_name ?? l.id]));
         playable_payload.ap_locations = Object.fromEntries(
             Object.entries(playable_payload.ap_locations)
-                .map(([k, v]) => [k, nameById.get(k) ?? v]));
+                .map(([k, v]) => [k, nameById.get(k) ?? nameByMinted.get(v) ?? v]));
     }
     // Entrance leak fix: zone regions previously omitted .entrance, so the
     // top-down bidirectional back-exit pass threw on entranceTile.x. Only
@@ -2959,7 +3649,7 @@ function* generateRegionZoneGen(spec) {
     // leaves .entrance undefined to keep its serialized payloads
     // byte-identical. As of Phase 4c the entrance rides the descriptor
     // (region.entrance), not the payload; buildPresetSidecars re-attaches it.
-    const regionEntrance = (spec.stampEntrance && ent)
+    const regionEntrance = (spec.stampEntrance && ent && tiles)
         ? (ent.tile ?? perimeterMidpoint(ent.side, regionSize))
         : undefined;
 
@@ -3016,36 +3706,52 @@ export function generateRegion(spec) {
     return r.value;
 }
 
-export function arrangeShuffledSpiral(config) {
+// Phase ① of shuffled-spiral (the "arrange" step): validate the config, build
+// the shuffled substrate sequence — the ONLY pre-loop rng consumption — and
+// auto-size the spiral grid. Returns a plain PLACEMENT PLAN (sequence + cells +
+// startCell + gridDims) plus the rng state AFTER the shuffle, so the region
+// realisation phase can continue the SAME continuous rng stream. Splitting here
+// (rather than inline in arrangeShuffledSpiral) lets spiralSteps.js drive the
+// stepped pipeline over the identical machinery; the monolith below just calls
+// this then realiseSpiralRegions in sequence, byte-for-byte unchanged.
+export function arrangeSpiralPlan(config) {
     const {
-        regionSize,
-        itemPool = {},
-        obstaclePool = {},
-        itemLib = DEFAULT_ITEMS,
-        obstacleLib = DEFAULT_OBSTACLES,
         seed = 1,
-        regionParams = {},
         growthParams = {},
-        hazardOpts = null,
     } = config;
+    const { regionSize } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('arrangeShuffledSpiral: regionSize.{width,height} required');
     }
-    const {
-        substrateQuotas,
-        startSubstrate = null,
-        maxItemsPerRegion = 2,
-        assumeBidirectional = true,
-    } = growthParams;
+    const { substrateQuotas, startSubstrate = null } = growthParams;
     if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
         throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
     }
-    // Upfront validation: every substrate must be registered with
-    // either a build-time generateRegionCore (procedural) or a
-    // zoneCount (zone-based). Zone-based substrates' quotas must
-    // also fit within their zoneCount.
+    // Upfront validation: every quota id must be either a registered substrate
+    // with a build-time generateRegionCore (procedural) or a zoneCount
+    // (zone-based content source), OR a `library:<id>` content source whose
+    // document rides the config. A content source's quota must fit within its
+    // pool size (zoneCount / library entry count).
     for (const [sub, count] of Object.entries(substrateQuotas)) {
         if (count <= 0) continue;
+        if (isLibrarySourceId(sub)) {
+            // A library quota MAY exceed its entry count — entries are a palette,
+            // not consumables, so repetition is allowed (§2c). Only require a
+            // non-empty document; the per-slot fit check is what can fail loudly.
+            const doc = growthParams.substrateConfig?.[sub]?.libraryDoc;
+            if (doc == null) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no libraryDoc `
+                    + 'in growthParams.substrateConfig',
+                );
+            }
+            if (!Array.isArray(doc.entries) || doc.entries.length === 0) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no entries`,
+                );
+            }
+            continue;
+        }
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(
@@ -3094,19 +3800,348 @@ export function arrangeShuffledSpiral(config) {
     const cells = rawCells.map((c) => ({ gx: c.gx - minX, gy: c.gy - minY }));
     const startCell = cells[0];
 
+    // The item layer, planned up front like sphere growth's: which pool items
+    // each cell holds, the goal on the last cell that can hold one. Draws its
+    // shuffle from the same stream, after the substrate shuffle.
+    const items = planSpiralItems({ sequence, config, rng });
+
+    return {
+        sequence, cells, startCell, gridDims, items, rngState: rng.getState(),
+    };
+}
+
+// --- The spiral item layer (⚖ user 2026-10-11) ---
+//
+// The shuffled spiral used to hand pool items out region by region as it built
+// them (`ScenarioPool.planPlacement`), so whatever was left when the regions ran
+// out was never placed — the victory included, which the pool held back until
+// last. Now it works like sphere growth: plan the items first, pin the goal to
+// the LAST region in spiral order that can hold an item, then build each region
+// from the items it was dealt. ⚖ The deal is SPREAD EVENLY: the regular items,
+// in seeded-shuffled order, go to evenly spaced item-holding cells starting at
+// the first (item k of R → holder ⌊k·H/R⌋, or the next with room), at most
+// maxItemsPerRegion each — so a lone item lands in the first holder.
+
+/**
+ * How many pool items a spiral cell of `substrate` can hold, as its `ordinal`th
+ * use. A procedural substrate grows its region around them (maxItemsPerRegion);
+ * a zone substrate answers through `spiralItemCapacity(ordinal)` (capped at
+ * maxItemsPerRegion); a zone substrate without that hook (bounce, runner,
+ * Seedling, omsi — the ruled known gaps) and a region library hold none.
+ */
+export function spiralCellCapacity(substrate, ordinal, maxItemsPerRegion) {
+    if (isLibrarySourceId(substrate)) return 0;
+    const adapter = substrateRegistry.get(substrate);
+    if (!adapter) return 0;
+    if (typeof adapter.generateRegionCore === 'function') return maxItemsPerRegion;
+    if (typeof adapter.spiralItemCapacity !== 'function') return 0;
+    const n = adapter.spiralItemCapacity(ordinal);
+    return Math.max(0, Math.min(maxItemsPerRegion, Number.isFinite(n) ? Math.floor(n) : maxItemsPerRegion));
+}
+
+/**
+ * The registered spiral substrates, split by whether a cell of theirs can hold
+ * pool items (and so the goal): `{holders, gaps}`, ids sorted. A spiral
+ * substrate is a procedural one or a zone one (`zoneCount`).
+ */
+export function spiralItemHolders() {
+    const holders = [];
+    const gaps = [];
+    for (const a of substrateRegistry.getAll()) {
+        const procedural = typeof a.generateRegionCore === 'function';
+        if (!procedural && typeof a.zoneCount !== 'number') continue;
+        (procedural || typeof a.spiralItemCapacity === 'function' ? holders : gaps).push(a.id);
+    }
+    return { holders, gaps };
+}
+
+/**
+ * Does a spiral world have a goal? `config.goalItem` says so explicitly (null:
+ * no goal); otherwise the scenario pool asked for one (a victory item with a
+ * positive count) or an in-quota substrate declares a `victoryItem`, as the
+ * panel's completion item has always been resolved.
+ */
+export function spiralWorldHasGoal(config) {
+    if (config.goalItem !== undefined) return config.goalItem != null;
+    const itemLib = config.itemLib ?? DEFAULT_ITEMS;
+    const pool = config.itemPool ?? {};
+    if (Object.entries(pool).some(([id, n]) => Number(n) > 0 && isVictoryItem(id, itemLib))) return true;
+    const quotas = config.growthParams?.substrateQuotas ?? {};
+    return Object.entries(quotas)
+        .some(([id, n]) => Number(n) > 0 && !!substrateRegistry.get(id)?.victoryItem);
+}
+
+/**
+ * Plan the spiral's items: an array parallel to `sequence`, each entry the
+ * items that cell holds (the goal last in its cell). Throws, naming the
+ * shortfall, when the pool holds more regular items than the item-holding
+ * cells have slots.
+ */
+export function planSpiralItems({ sequence, config, rng }) {
+    const { growthParams = {} } = config;
+    const maxItemsPerRegion = growthParams.maxItemsPerRegion ?? 2;
+    const itemLib = config.itemLib ?? DEFAULT_ITEMS;
+    const pool = goalItemPool(config.itemPool ?? {}, itemLib, false);
+    const remaining = [];
+    for (const [id, count] of Object.entries(pool)) {
+        for (let k = 0; k < Number(count); k++) remaining.push(id);
+    }
+    // The seeded order: pick uniformly from what is left, one draw per item —
+    // ScenarioPool.planPlacement's own draw, so a world whose pool the old
+    // per-region deal emptied into its first holder (one item) keeps its bytes.
+    const regular = [];
+    while (remaining.length) regular.push(remaining.splice(Math.floor(rng.next() * remaining.length), 1)[0]);
+
+    const ordinals = {};
+    const caps = sequence.map((sub) => {
+        const ordinal = ordinals[sub] ?? 0;
+        ordinals[sub] = ordinal + 1;
+        return spiralCellCapacity(sub, ordinal, maxItemsPerRegion);
+    });
+    const items = sequence.map(() => []);
+    const holders = caps.map((c, i) => (c > 0 ? i : -1)).filter((i) => i >= 0);
+    const room = [...caps];
+    let goalCell = -1;
+    if (spiralWorldHasGoal(config) && holders.length > 0) {
+        goalCell = holders[holders.length - 1];
+        room[goalCell] -= 1;
+    }
+    const slots = holders.reduce((n, i) => n + room[i], 0);
+    if (regular.length > slots) {
+        const gaps = [...new Set(sequence.filter((s, i) => caps[i] === 0))];
+        throw new Error(`shuffled spiral: the item pool holds ${regular.length} item(s) but the regions that can `
+            + `hold items have ${slots} slot(s)${goalCell >= 0 ? ' besides the goal' : ''} `
+            + `(${holders.length} region(s), at most ${maxItemsPerRegion} each)`
+            + (gaps.length ? `; ${gaps.join(', ')} region(s) hold no pool items` : '')
+            + ' — raise maxItemsPerRegion, add regions, or take items out of the pool');
+    }
+    regular.forEach((item, k) => {
+        const target = Math.floor((k * holders.length) / regular.length);
+        let pick = -1;
+        for (let step = 0; step < holders.length; step++) {
+            const i = holders[(target + step) % holders.length];
+            if (room[i] > 0) { pick = i; break; }
+        }
+        room[pick] -= 1;
+        items[pick].push(item);
+    });
+    if (goalCell >= 0) items[goalCell].push(GOAL_ITEM);
+    return items;
+}
+
+// The obstacles a procedural cell places beside its items: one per item, an
+// obstacle whose single-item clear set is that item, while the pool still has
+// one (ScenarioPool.planPlacement's pairing, without its item draw).
+function pairedObstacles(items, obstacleBudget, obstacleLib) {
+    const budget = { ...obstacleBudget };
+    const out = [];
+    for (const item of items) {
+        for (const [obsId, obs] of Object.entries(obstacleLib)) {
+            const clears = (obs.clear_set ?? []).some((combo) => combo.length === 1 && combo[0] === item);
+            if (clears && (budget[obsId] ?? 0) > 0) {
+                out.push(obsId);
+                budget[obsId] -= 1;
+                break;
+            }
+        }
+    }
+    return out;
+}
+
+// --- Spiral content sources (region-library C2) ---
+//
+// A "content source" supplies pre-existing region descriptors to the spiral
+// driver BY ORDINAL — its Nth planned cell becomes its Nth entry — as opposed
+// to a procedural substrate, which GROWS a region's geometry from the rng
+// stream. The spiral loop resolves one per planned cell through this single
+// seam: a content source `instantiate`s (drawing NO rng — the byte-identity
+// discipline is that content slots consume none, procedural slots draw in the
+// exact monolithic order), and everything else falls through to the
+// rng-consuming procedural build path.
+//
+// Today the only content sources are zone-based substrates (jta), whose
+// registry adapter exposes `zoneCount` (pool size) + `extractZoneRules`
+// (the per-ordinal instantiate channel). The reframing is deliberately routed
+// through an id → source resolver rather than an inline
+// `typeof adapter.zoneCount === 'number'` test so that region-library F4 can
+// register further content sources under synthetic ids (`library:<id>`) whose
+// instantiated regions carry an ENTRY's own substrate at runtime. C3 names this
+// "content source" contract in the substrate registry.
+//
+// region-library F4 adds a SECOND kind of content source: a loaded region
+// library, keyed `library:<library_id>` in the quota, whose pool is the
+// library's entries and whose instantiated regions carry an ENTRY's own
+// substrate (a library maze region IS a maze region at runtime — nothing new to
+// render, and the compiled world is fully self-contained: the library is a
+// build-time source, absent from the sidecars). The library document rides
+// `substrateConfig['library:<id>'].libraryDoc` (the same "presets carry config"
+// convention as jta's datasetDoc), so a content source is built per generation
+// from config without any global registration to unwind.
+//
+// Returns { poolSize, instantiate({ region_id, ordinal, regionSize, exitSides }) }
+// or null for a procedural substrate (no zone pool).
+function resolveSpiralContentSource(id, config = {}) {
+    const adapter = substrateRegistry.get(id);
+    if (adapter && typeof adapter.zoneCount === 'number') {
+        return {
+            poolSize: adapter.zoneCount,
+            instantiate: ({ region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned }) =>
+                synthesizeZoneRegion({
+                    substrate: id,
+                    region_id,
+                    zoneIdx: ordinal,
+                    regionSize,
+                    exitSides,
+                    adapter,
+                    itemsToPlace,
+                    goalOwned,
+                }),
+        };
+    }
+    if (isLibrarySourceId(id)) {
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `spiral content source '${id}': no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        return buildLibraryContentSource(id, doc);
+    }
+    return null;
+}
+
+// Synthetic content-source ids for loaded region libraries.
+const LIBRARY_SOURCE_PREFIX = 'library:';
+
+// Filler item stamped on a library slot the engine leaves un-itemed (v1 spiral:
+// entries are "pure geometry + slots", so the engine owns items — it assigns a
+// filler so the compiled world's item pool balances 1:1 with its locations, the
+// same shape a procedural maze region has). Classified 'filler' by
+// compileRegionGraph so it never inflates progression. Substrates whose entries
+// carry their own canonical items (bounce) keep those.
+export const LIBRARY_SLOT_FILLER_ITEM = 'Region Library Filler';
+export function isLibrarySourceId(id) {
+    return typeof id === 'string' && id.startsWith(LIBRARY_SOURCE_PREFIX);
+}
+export function librarySourceId(libraryId) {
+    return `${LIBRARY_SOURCE_PREFIX}${libraryId}`;
+}
+
+// Build a content source backed by a loaded region-library document. Fit-based
+// selection (§2c): an entry fits a slot iff the slot's required exitSides ⊆ the
+// entry's exit_sides (surplus sides are walled off by wallOffUnusedExits).
+// Prefer-least-used, tie-break by declaration order, repeat when the pool is
+// exhausted (entries are a palette, not consumables — region_id namespacing
+// makes repetition safe). Loud failure when no entry fits. The usage counter
+// lives in this closure, so build a source ONCE per generation (realiseSpiralRegions
+// memoizes). Instantiation draws no rng.
+function buildLibraryContentSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: ({ region_id, regionSize, exitSides }) => {
+            const need = new Set(exitSides);
+            const fitting = entries.filter((e) => {
+                const has = new Set(e.exit_sides ?? []);
+                for (const s of need) if (!has.has(s)) return false;
+                return true;
+            });
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits slot sides [${[...need].join(',')}] `
+                    + `for region '${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            const sub = getAdapter(pick.substrate);
+            if (typeof sub.instantiateLibraryEntry !== 'function') {
+                throw new Error(
+                    `${sourceId}: substrate '${pick.substrate}' (entry '${pick.entry_id}') `
+                    + 'has no instantiateLibraryEntry hook');
+            }
+            const region = sub.instantiateLibraryEntry(pick, { region_id, exitSides, regionSize });
+            // The engine owns items on "pure geometry" slots: stamp a filler on
+            // any slot the substrate left un-itemed so the compiled pool balances
+            // 1:1 with locations (a slot with no item is an unfillable location).
+            for (const loc of region.extracted_rules?.locations ?? []) {
+                if (loc.item == null) loc.item = LIBRARY_SLOT_FILLER_ITEM;
+            }
+            return region;
+        },
+    };
+}
+
+// Phase ③ of shuffled-spiral (the "regions" step): realise each planned cell
+// into a region on a fresh grid, then run the whole-grid post-passes. Restores
+// the post-shuffle rng from the plan so procedural substrates draw in the exact
+// monolithic order (zone substrates draw none). Deterministic given the plan +
+// config; the empty grid + ScenarioPool are re-created from config here (no rng),
+// so the plan crosses a serialised boundary as plain data. Returns
+// { grid, pool, stats, startCell } — the same shape arrangeShuffledSpiral did.
+export function realiseSpiralRegions(plan, config) {
+    const {
+        itemPool = {},
+        obstaclePool = {},
+        itemLib: baseItemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+        consumableTileOpts = null,
+    } = config;
+    const { regionSize } = config;
+    const { assumeBidirectional = true } = growthParams;
+    const {
+        sequence, cells, startCell, gridDims,
+    } = plan;
+
+    const rng = createRng(0);
+    rng.setState(plan.rngState); // post-shuffle position (continuous stream)
+
+    // The item layer planned in ① (`planSpiralItems`). An envelope written
+    // before the layer existed has none, so it is planned here, from the
+    // restored stream, the same way.
+    const cellItems = plan.items ?? planSpiralItems({ sequence, config, rng });
+    if (cellItems.length !== cells.length) {
+        throw new Error(`shuffled spiral: the item plan has ${cellItems.length} cell(s) but the layout has `
+            + `${cells.length} — re-run ① arrange`);
+    }
+    const goalCell = cellItems.findIndex((list) => list.includes(GOAL_ITEM));
+    // The goal's library row rides only the region that holds it.
+    const itemLib = goalCell >= 0 ? withGoalItemDef(baseItemLib) : baseItemLib;
+
     const grid = new Grid(gridDims);
+    // The pool only tracks the obstacles now: the items were dealt in ①.
     const pool = new ScenarioPool({
         items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
     });
-    const zoneCounter = {};  // per-substrate "Nth zone" counter
+    // Per-content-source "Nth entry" counter, keyed by sequence id (a
+    // substrate id, or a `library:<id>` content-source id under F4). Advanced
+    // for every cell so a content source's ordinal is its running use count.
+    const ordinalCounter = {};
+    // Content sources are built ONCE per generation and reused across cells so a
+    // library source's usage counter (prefer-least-used) persists (jta sources
+    // are stateless; memoizing them is harmless).
+    const sourceCache = {};
     const occupied = new Set(cells.map((c) => cellKey(c)));
+    // Every note a content source attached to a region it built (a real room's
+    // dropped surplus doors), surfaced on stats — never in the rules.json.
+    const contentNotes = [];
 
     for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
         const substrate = sequence[i];
-        const adapter = getAdapter(substrate);
-        const zoneIdx = zoneCounter[substrate] ?? 0;
-        zoneCounter[substrate] = zoneIdx + 1;
+        const ordinal = ordinalCounter[substrate] ?? 0;
+        ordinalCounter[substrate] = ordinal + 1;
+        const itemsToPlace = cellItems[i] ?? [];
 
         // Sides whose geographic neighbor is in-bounds AND will hold
         // a spiral region (occupied set is the universe of cells).
@@ -3117,45 +4152,48 @@ export function arrangeShuffledSpiral(config) {
             if (occupied.has(cellKey(neighbor))) exitSides.push(side);
         }
 
+        const region_id = regionIdForCell(cell);
+        const source = (sourceCache[substrate] ??= resolveSpiralContentSource(substrate, config) ?? null);
         let region;
-        if (typeof adapter.zoneCount === 'number') {
-            region = synthesizeZoneRegion({
-                substrate,
-                region_id: regionIdForCell(cell),
-                zoneIdx,
-                regionSize,
-                exitSides,
-                adapter,
+        if (source) {
+            // Content source: instantiate its Nth entry from the items it was
+            // dealt. It draws no rng.
+            region = source.instantiate({
+                region_id, ordinal, regionSize, exitSides, itemsToPlace, goalOwned: goalCell >= 0,
             });
+            if (region.notes?.length) contentNotes.push(...region.notes);
         } else {
+            // Procedural substrate: grow geometry from the rng stream around
+            // the cell's items and the obstacles they open.
+            getAdapter(substrate); // preserve the "unregistered id" throw
             const arrival = accumulatedInventory(grid);
-            const plan = pool.planPlacement({
-                arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
-            });
             region = buildSubstrateRegion({
                 substrate,
-                region_id: regionIdForCell(cell),
+                region_id,
                 size: regionSize,
                 entrances: [],
                 exit_sides: exitSides,
                 arrival_inventory: arrival,
-                items_to_place: plan.items_to_place,
-                obstacles_to_place: plan.obstacles_to_place,
-                itemLib, obstacleLib, rng, params: regionParams,
+                items_to_place: itemsToPlace,
+                obstacles_to_place: pairedObstacles(itemsToPlace, pool.obstacles, obstacleLib),
+                itemLib: i === goalCell ? itemLib : baseItemLib, obstacleLib, rng, params: regionParams,
                 hazardOpts,
+                consumableTileOpts,
             });
-            pool.markPlaced({
-                placed_items: region.placed_items,
-                placed_obstacles: region.placed_obstacles,
-            });
+            pool.markPlaced({ placed_obstacles: region.placed_obstacles });
         }
+        assertSpiralCellItemsPlaced(region, itemsToPlace, substrate);
         grid.placeRegion(cell, region);
     }
 
+    // The engine placed the goal: a victory item some other region placed on
+    // its own (a known-gap substrate's table — omsi's Start Journey, a bounce
+    // or runner zone, a library entry) becomes filler, so the world has ONE.
+    if (goalCell >= 0) neutraliseForeignVictories(grid, regionIdForCell(cells[goalCell]), itemLib);
+
     // Resolve exit targets to neighbor region ids. Same pass the
-    // grid-growth driver uses; for zone-based regions our synthetic
-    // tile positions match the perimeter-midpoint convention so the
-    // posKey lookup inside stitchGrid hits.
+    // grid-growth driver uses; it matches exits_placed to extracted exits
+    // by ID, so zone regions' synthetic tile positions are irrelevant to it.
     stitchGrid(grid);
     if (assumeBidirectional) {
         reconcileBidirectionalExits(grid, regionSize, 'add');
@@ -3167,15 +4205,60 @@ export function arrangeShuffledSpiral(config) {
         regionsSkipped: 0,
         teleportersPlaced: 0,
         stopReason: 'spiral_complete',
-        substrateCounts: { ...zoneCounter },
+        substrateCounts: { ...ordinalCounter },
+        ...(contentNotes.length ? { contentNotes } : {}),
     };
-    return { grid, pool, stats, startCell };
+    // `goalItem`: what the completion condition names — the goal, when this
+    // world has one (placed by the engine, or by a known-gap substrate's own
+    // table when no region could hold it); null for a world without a goal.
+    const goalItem = spiralWorldHasGoal(config) ? GOAL_ITEM : null;
+    return {
+        grid, pool, stats, startCell, goalItem,
+    };
+}
+
+// A cell must hold every item it was dealt: a lost item would be a hole in the
+// plan (and a lost goal an unbeatable world), so it is refused by name.
+function assertSpiralCellItemsPlaced(region, itemsToPlace, substrate) {
+    if (itemsToPlace.length === 0) return;
+    const held = (region.extracted_rules?.locations ?? []).map((l) => l.item);
+    const missing = [];
+    const left = [...held];
+    for (const item of itemsToPlace) {
+        const k = left.indexOf(item);
+        if (k < 0) missing.push(item);
+        else left.splice(k, 1);
+    }
+    if (missing.length) {
+        throw new Error(`shuffled spiral: ${substrate} region '${region.region_id}' was dealt `
+            + `[${itemsToPlace.join(', ')}] but did not place [${missing.join(', ')}]`);
+    }
+}
+
+// Every victory item outside the goal's region becomes filler: the registry
+// entry's `fillerItem` when it declares one, else the engine's slot filler.
+function neutraliseForeignVictories(grid, goalRegionId, itemLib) {
+    for (const region of grid.allRegions()) {
+        if (region.region_id === goalRegionId) continue;
+        const adapter = substrateRegistry.get(region.substrate);
+        const libs = [itemLib, adapter?.libraryItems].filter(Boolean);
+        for (const loc of region.extracted_rules?.locations ?? []) {
+            if (loc.item != null && libs.some((lib) => isVictoryItem(loc.item, lib))) {
+                loc.item = adapter?.fillerItem ?? LIBRARY_SLOT_FILLER_ITEM;
+            }
+        }
+    }
+}
+
+export function arrangeShuffledSpiral(config) {
+    const plan = arrangeSpiralPlan(config);
+    return realiseSpiralRegions(plan, config);
 }
 
 // --- Sphere-driven growth driver ---
 //
 // The sphere-plan-first wave grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md).
+// (docs/json/developer/procgen/sphere-growth.md).
 // Two phases:
 //
 //   buildSphereTree — pure bookkeeping: given the sphere plan, decide
@@ -3309,10 +4392,21 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // so the grower's gate accounting matches what the substrate
         // realises, without the engine naming any substrate.
         regionParams = {},
+        // Region-atlas Phase 6 (slice 2): pre-decided placements from the
+        // sorter, `[{ entry_id, wave, gate, sourceId }]`. Absent (the default,
+        // and every world with no atlas pool) ⇒ nothing below changes.
+        atlasAssignments = null,
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
     const { regionsPerWave, fillerWaves } = allocation;
+    // With a sorter in play the atlas quota is the sorter's budget, not a draw:
+    // leaving the id in the pick pool would place the same regions twice, once
+    // at their honest wave and once wherever the shuffle put them.
+    const pickQuotas = atlasAssignments
+        ? Object.fromEntries(Object.entries(substrateQuotas ?? {})
+            .filter(([id]) => !isAtlasSourceId(id)))
+        : substrateQuotas;
 
     // Cumulative instance counts per sphere: cumCounts[k] maps item →
     // number of instances in spheres 1..k+1. A wave-w gate on item X
@@ -3345,22 +4439,25 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     const pickSub = (preferred = null) => {
         let sub = null;
         if (preferred && preferred !== 'auto') {
-            const remaining = substrateQuotas
-                ? (substrateQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
+            const remaining = pickQuotas
+                ? (pickQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
                 : 1;
             if (remaining > 0) sub = preferred;
         }
-        if (!sub && substrateQuotas) {
-            sub = pickSubstrateWithQuota(substrateQuotas, substrateCounts, rng);
+        if (!sub && pickQuotas) {
+            sub = pickSubstrateWithQuota(pickQuotas, substrateCounts, rng);
             if (!sub) quotaFallbacks += 1;
         }
-        if (!sub) sub = 'maze';
+        if (!sub) sub = DEFAULT_SUBSTRATE_ID;
         substrateCounts[sub] = (substrateCounts[sub] || 0) + 1;
         return sub;
     };
 
     const nodes = resume?.nodes ?? [];
-    const addNode = ({ wave, gate, gateCounts = {}, parent, substrate, isFiller = false }) => {
+    const addNode = ({
+        wave, gate, gateCounts = {}, parent, substrate, isFiller = false, atlasEntry = null,
+        gateRule = null, exitEnvelope = null,
+    }) => {
         const node = {
             index: nodes.length,
             wave,
@@ -3368,6 +4465,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             gateCounts,       // item → required count (> 1 only for
                               // multi-instance items; emitted as
                               // Has(item, count) — the count gate)
+            // An AUTHORED entry gate (region-atlas): the real game's own rule
+            // for getting in, which the compiled world carries VERBATIM rather
+            // than re-synthesised from `gate`. Set only for atlas nodes, so
+            // every other world takes the sphereGateRule path unchanged — and
+            // it matters because a re-synthesis would narrow an OR to the one
+            // branch the sorter scheduled and kill the other.
+            ...(gateRule ? { gateRule } : {}),
             parent,           // parent node index (null for the root)
             side: null,       // side ON THE PARENT hosting this child
             substrate,
@@ -3375,6 +4479,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             isFiller,
             childGates: [],
             usedSides: new Set(),
+            // Which atlas region the sorter pinned to this node; the realiser
+            // claims exactly that entry rather than fit-selecting one.
+            ...(atlasEntry ? { atlasEntry } : {}),
+            // The pinned entry's outbound exits, in the order the substrate hook
+            // hands them to child sides — so the planner knows which of the real
+            // map's doors each child will land behind, and what that door costs.
+            ...(exitEnvelope ? { exitEnvelope } : {}),
         };
         if (parent != null) {
             const host = nodes[parent];
@@ -3415,8 +4526,34 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         return node;
     };
 
+    // How many children this host already has. Every non-root node pre-seeds the
+    // side it came IN through, so its child count is one less than its used
+    // sides — and that number is the index of the next envelope slot.
+    const childSlotIndex = (host) => host.usedSides.size - (host.parent == null ? 0 : 1);
+
     const canHost = (host, gateTerms) => {
         if (host.usedSides.size >= 4) return false;
+        // A library content source (region-library F6a) hosts ANY gate — the gate
+        // rides as an access_rule OVERLAY on the exit (logic-looser-than-physics),
+        // which no fixed geometry can veto. Bounded only by the 4-side budget
+        // above. (Physical enforcement / capability negotiation is F6b.)
+        if (isLibrarySourceId(host.substrate)) return true;
+        // An ATLAS region hosts children ON THE REAL MAP'S OWN DOORS. v1 declined
+        // outright, because the planner could not know which exit the
+        // fit-selector would hand a child. A SORTED node has no such gap: the
+        // sorter pins the entry, and the substrate hook assigns exits to child
+        // sides in payload order, so this host knows exactly which door the next
+        // child gets — that is what `exitEnvelope` is. The bound below is HARD
+        // rather than advisory: `reserve()` THROWS past `entry.exits.length`, so
+        // a tree built beyond the envelope would die at realisation.
+        //
+        // Which gate that door implies is decided in gateChoicesFor; the envelope
+        // is absent for an atlas node the QUOTA route placed (no pinned entry),
+        // so that route keeps the v1 leaf behaviour.
+        if (isAtlasSourceId(host.substrate)) {
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            return !!slot && slot.hostable !== false;
+        }
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
@@ -3452,15 +4589,60 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     // bounce). The CHILD's substrate doesn't constrain the gate:
     // bounce realises any entry gate's back portal via authored
     // locks (anyone inside satisfies the entry gate by construction).
-    const pickHostAndGate = (wave, { gateWave = wave } = {}) => {
+    const pickHostAndGate = (wave, {
+        gateWave = wave, fixedGate = null, fixedCounts = null, fixedRule = null,
+    } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
-        // single-instance items — the common case).
+        // single-instance items — the common case). An atlas gate may ALSO
+        // demand a count of its own (`Has(x, 2)` in the map's own row); the
+        // stricter of the two is the one the accounting must see.
         const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
-        const gateCount = (item) => cum?.get(item) ?? 1;
-        const gateChoices = gateWave === 0
-            ? [[]]
-            : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
+        const gateCount = (item) => Math.max(cum?.get(item) ?? 1, fixedCounts?.[item] ?? 1);
+        // `fixedGate` (region-atlas Phase 6): the sorter already decided this
+        // node's gate — it IS the real game's requirement for getting in — so
+        // there is nothing to choose, only a host that can carry it. `fixedRule`
+        // is that requirement's AUTHORED form, which is what the compiled world
+        // ends up gating on; `gate` is the item-level view the accounting and
+        // the substrate vetoes see.
+        const gateChoices = fixedGate
+            ? [{ gate: fixedGate, rule: fixedRule }]
+            : (gateWave === 0
+                ? [{ gate: [], rule: null }]
+                : rng.shuffle([...new Set(spheres[gateWave - 1].items)])
+                    .map((item) => ({ gate: [item], rule: null })));
+        // Which gates a given HOST can offer. Every host but a sorted atlas
+        // region offers the drawn choices unchanged — so nothing about a
+        // non-atlas world moves, rng included (the shuffle above is still
+        // consumed exactly once per call, before any host is considered).
+        //
+        // A sorted atlas region offers what the real map's next door offers. The
+        // realised exit rule is that door's rule AND the child's gate, so the
+        // whole question is when the COMPOSITION opens — it must be exactly the
+        // child's own gate sphere, or the plan and the world disagree:
+        //   - a door another exit already shares a CELL with (`hostable: false`)
+        //     → refused. One cell leading two places is one dead connection.
+        //   - a door that opens LATER than this gate → refused. Composing would
+        //     drag the child past the wave the plan gave it.
+        //   - a door whose rule is out of VOCABULARY → refused. Its sphere is
+        //     unknowable, so nothing can be reasoned about a child behind it.
+        //   - a door that opens EXACTLY at this gate's sphere, for a child with
+        //     no gate of its own → the map's own charge for the crossing IS the
+        //     child's gate. Nothing synthetic is added to a real door.
+        //   - anything else (a FREE door, or one that opens earlier) → the usual
+        //     drawn gate, or an atlas child's own entry requirement, ANDed onto
+        //     whatever the door already charges. That is the composition path
+        //     Phase 6 could only drive directly; growth reaches it now.
+        const gateChoicesFor = (host) => {
+            if (!isAtlasSourceId(host.substrate)) return gateChoices;
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            if (!slot || slot.hostable === false) return [];
+            if (slot.wave == null || slot.wave > gateWave) return [];
+            if (!fixedGate && slot.access_rule != null && slot.wave === gateWave) {
+                return [{ gate: slot.gate, rule: slot.access_rule, counts: slot.gateCounts }];
+            }
+            return gateChoices;
+        };
         const eligible = nodes.filter((h) => h.usedSides.size < 4
             && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
@@ -3469,16 +4651,19 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const pools = useOlder ? [older, frontier] : [frontier, older];
         for (const pool of pools) {
             for (const host of rng.shuffle([...pool])) {
-                for (const gate of gateChoices) {
-                    const gateTerms = gate.map((item) => ({
-                        item, count: gateCount(item),
+                for (const choice of gateChoicesFor(host)) {
+                    const countOf = (item) => Math.max(
+                        gateCount(item), choice.counts?.[item] ?? 1);
+                    const gateTerms = choice.gate.map((item) => ({
+                        item, count: countOf(item),
                     }));
                     if (canHost(host, gateTerms)) {
                         return {
                             host,
-                            gate,
+                            gate: choice.gate,
                             gateCounts: Object.fromEntries(
-                                gate.map((item) => [item, gateCount(item)])),
+                                choice.gate.map((item) => [item, countOf(item)])),
+                            gateRule: choice.rule ?? null,
                         };
                     }
                 }
@@ -3495,6 +4680,15 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const hints = [...new Set([...hintIds]
             .map((id) => substrateRegistry.get(id)?.gateHostingHint?.(regionParams))
             .filter(Boolean))];
+        // Atlas sources have no registry entry, so their (deliberate) refusal to
+        // host would otherwise be an unexplained wall.
+        if ([...hintIds].some(isAtlasSourceId)) {
+            hints.push('A region-atlas region hosts children only on the real map\'s own exits: '
+                + 'as many as the pinned entry has, and a GATED one only for a child whose gate '
+                + 'sphere is when that crossing opens (a region the QUOTA route placed pins no '
+                + 'entry at all and hosts nothing). Raise the non-atlas quota or fillerCount to '
+                + 'give the tree more to hang on.');
+        }
         throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate.`
             + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
@@ -3513,8 +4707,8 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
                 continue;
             }
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w);
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate });
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w);
+            addNode({ wave: w, gate, gateCounts, gateRule, parent: host.index, substrate });
         }
         // Fillers assigned to this wave attach like regular wave
         // regions but carry no items — so their gates are free to use
@@ -3522,10 +4716,34 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         for (const fw of fillerWaves) {
             if (fw !== w) continue;
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w, {
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w, {
                 gateWave: w === 0 && waves > 1 ? 1 : w,
             });
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
+            addNode({
+                wave: w, gate, gateCounts, gateRule, parent: host.index, substrate,
+                isFiller: true,
+            });
+        }
+        // Pre-built ATLAS regions the sorter assigned to this wave (region-atlas
+        // Phase 6). They come LAST so the draw order of everything above is
+        // untouched, they carry no items (a real map offers exactly the
+        // locations it was marked with, which the round-robin knows nothing
+        // about), and their gate is the map's own entry requirement rather than
+        // one drawn from the sphere.
+        for (const a of atlasAssignments ?? []) {
+            if (a.wave !== w) continue;
+            const { host, gate, gateCounts } = pickHostAndGate(w, {
+                gateWave: w,
+                fixedGate: a.gate,
+                fixedCounts: a.gateCounts ?? null,
+                fixedRule: a.gateRule ?? null,
+            });
+            substrateCounts[a.sourceId] = (substrateCounts[a.sourceId] || 0) + 1;
+            addNode({
+                wave: w, gate, gateCounts, parent: host.index, substrate: a.sourceId,
+                isFiller: true, atlasEntry: a.entry_id, gateRule: a.gateRule ?? null,
+                exitEnvelope: a.exitEnvelope ?? null,
+            });
         }
     };
 
@@ -3570,21 +4788,166 @@ export function placeSphereTreeItems(plan, nodes) {
  * envelope. `opts` overrides recovered/defaulted config (regionSize,
  * regionParams, substrateQuotas, maxItemsPerRegion, …).
  */
+/**
+ * ⛓⛓⛓ APWORLD EDITOR HUB slice H5 — **THE REBUILD'S REFUSALS, SPELLED ONCE.**
+ * `rebuildEnvelopeFromRulesJson` throws these, and `sphereRebuildRefusal` asks
+ * the same four questions WITHOUT building anything, so a caller that only
+ * wants to know *"can this document be appended to"* — the pipeline panel
+ * answering a hand-off from the APWorld editor — gets the engine's own sentence
+ * rather than a second copy of the predicate that would drift from it.
+ *
+ * ⛔ The two must never diverge, which is why they are the SAME strings and not
+ * two tables that happen to agree today.
+ */
+const SPHERE_REBUILD_REFUSALS = Object.freeze({
+    notSphere: () => 'rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json',
+    noTree: () => 'rebuildEnvelopeFromRulesJson: rules.json lacks procgen_metadata.'
+        + 'sphere_tree / sphere_plan — regenerate it with a current build, or append '
+        + 'from a saved envelope',
+    missingSidecar: (regionId) => `rebuildEnvelopeFromRulesJson: region ${regionId} `
+        + 'missing from preset_sidecars',
+    zoneSubstrate: (substrate) => `rebuildEnvelopeFromRulesJson: substrate '${substrate}' `
+        + "can't be reconstructed from compiled rules.json (zone substrate — no path "
+        + 'extractor). Append from the saved envelope instead.',
+    /**
+     * ⛓ C1 — the region's own substrate REFUSED its payload (its
+     * `deserializeWorld` threw; the sentence is the entry's, through
+     * `deserializeRefusalSentence`). A rebuild cannot skip a node of the
+     * sphere tree, so the document is refused by name. ⚠ `sphereRebuildRefusal`
+     * does NOT ask this one: it deserializes nothing by design, so a document
+     * it offers may still be refused here — at the press, by this sentence.
+     */
+    unreadablePayload: (sentence) => `rebuildEnvelopeFromRulesJson: ${sentence}`,
+    /**
+     * A teleporter node whose parent's payload carries no forward exit on the
+     * node's side pointing at it. The teleporter table is keyed by EXIT, so the
+     * rebuild has to name the exit; guessing one would re-point a sibling.
+     */
+    noParentExit: (parentId, side, childId) => `rebuildEnvelopeFromRulesJson: region `
+        + `${parentId} has no exit on side ${side} leading to ${childId}, so its `
+        + 'teleporter cannot be rebuilt',
+    /**
+     * ⛓ M1 (R8) — a top-down world whose Menu fed SEVERAL roots (one per Menu
+     * exit the BFS did not reach). The rebuild keeps one start and the sphere
+     * compile re-emits a synthetic one-exit Menu, which would orphan every other
+     * root; refused by name rather than rebuilt wrong. Re-realise it top-down.
+     */
+    multiRoot: (count) => `rebuildEnvelopeFromRulesJson: the sphere tree has ${count} roots `
+        + '(a top-down Menu hub) — the sphere rebuild keeps ONE start and would orphan the '
+        + 'others; realise it top-down instead',
+});
+
+/** ⛓ M1 — how many parent-less nodes (roots) a compact sphere tree holds. */
+function sphereTreeRootCount(treeMeta) {
+    return (treeMeta?.nodes ?? []).filter((n) => n.parent == null).length;
+}
+
+/**
+ * The forward exit of a placed parent region that leaves on `node.side` for
+ * `node`'s region — the exit id that node's teleporter is keyed by (the sphere
+ * rebuild sets it, `truncateSphereWorld` deletes it). Matched on side AND
+ * target, so two teleporters on one side stay two. null when none.
+ */
+export function parentExitIdTowardChild(parentRegion, node) {
+    const exits = getRegionExits(parentRegion);
+    const entries = exits instanceof Map ? [...exits.entries()]
+        : (exits ?? []).map((e) => [e.exit_id, e]);
+    const childId = nodeRegionId(node);
+    const hit = entries.find(([, e]) => !e.isBackExit && e.side === node.side
+        && e.targetRegion === childId);
+    return hit ? hit[0] : null;
+}
+
+/**
+ * ⛓⛓ **WHY THIS DOCUMENT CANNOT BE APPENDED TO, OR `null` WHEN IT CAN.** Pure,
+ * cheap (it deserializes nothing — it only asks each placed node's adapter
+ * whether it declares the two functions the rebuild calls), and it is the
+ * predicate a UI should show BEFORE offering "append a sphere".
+ *
+ * ⚠ It answers about the SPHERE path only. A document it refuses may still be
+ * realisable top-down: `layoutTopDown` re-realises every region from scratch
+ * off the `regions` block and never reads a sidecar.
+ *
+ * @param {object} rulesJson
+ * @param {{playerId?: string}} [opts]
+ * @returns {string|null} the refusal, verbatim as the rebuild would throw it
+ */
+export function sphereRebuildRefusal(rulesJson, opts = {}) {
+    const playerId = opts.playerId ?? '1';
+    const meta = rulesJson?.procgen_metadata?.[playerId];
+    if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
+        return SPHERE_REBUILD_REFUSALS.notSphere();
+    }
+    if (!meta.sphere_tree || !meta.sphere_plan) return SPHERE_REBUILD_REFUSALS.noTree();
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) return SPHERE_REBUILD_REFUSALS.multiRoot(roots);
+    const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
+    for (const node of meta.sphere_tree.nodes ?? []) {
+        if (!node.cell) continue;
+        const region_id = nodeRegionId(node);
+        if (!sidecars[region_id]) return SPHERE_REBUILD_REFUSALS.missingSidecar(region_id);
+        let adapter = null;
+        try {
+            adapter = getAdapter(node.substrate);
+        } catch (e) {
+            // ⛔ VERBATIM, not translated. An UNREGISTERED substrate is not a
+            //   ZONE substrate — the first is "nobody imported that library",
+            //   the second is "this world's geometry cannot be recovered" —
+            //   and the rebuild would surface `getAdapter`'s own sentence here.
+            return e.message;
+        }
+        if (typeof adapter.deserializeWorld !== 'function'
+                || typeof adapter.extractPathsAndObstacles !== 'function') {
+            return SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate);
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ CONCEPT LIBRARY T0b — **THE WORLD'S CONCEPTS, RECORDED AND READ BACK.**
+ * A world that names concepts (`regionParams.concepts`, written by
+ * `sphereConfigHooks.assembleRegionParams` only when non-empty) records them in
+ * its slot's `procgen_metadata` block as `concepts`, so a rebuild from the
+ * compiled `rules.json` hands them back to the placers: an appended sphere's
+ * gates are realised as the world's concepts, not as plain logic gates.
+ * ⛔ An empty or absent list writes NOTHING and reads back nothing, so every
+ * world that names no concept records and rebuilds byte-identically.
+ */
+export const RECORDED_CONCEPTS_KEY = 'concepts';
+
+/** `{concepts: [...]}` for the metadata block when the params name any concept, else `{}`. */
+export function recordedConceptsOf(regionParams) {
+    const list = regionParams?.concepts;
+    return Array.isArray(list) && list.length ? { [RECORDED_CONCEPTS_KEY]: [...list] } : {};
+}
+
+/**
+ * The rebuild's `regionParams`: the caller's (or `{}`), with a recorded
+ * concept list laid UNDER it — a caller that passes its own `concepts` wins.
+ * Nothing recorded ⇒ exactly `opts.regionParams ?? {}`, as before T0b.
+ */
+export function rebuildRegionParams(meta, optsRegionParams) {
+    const recorded = recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] });
+    if (!Object.keys(recorded).length) return optsRegionParams ?? {};
+    return { ...recorded, ...(optsRegionParams ?? {}) };
+}
+
 export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
-    const meta = rulesJson?.procgen_metadata;
+    const meta = rulesJson?.procgen_metadata?.[playerId];
     // 'top-down-sphere' is a top-down realisation enriched with sphere
     // metadata from an authoritative sphere log (§3) — it carries the same
     // sphere_tree + sphere_plan + procedural (maze) substrates this path
     // needs, so accept it alongside born sphere-growth.
     if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
-        throw new Error('rebuildEnvelopeFromRulesJson: not a sphere-growth rules.json');
+        throw new Error(SPHERE_REBUILD_REFUSALS.notSphere());
     }
     if (!meta.sphere_tree || !meta.sphere_plan) {
-        throw new Error('rebuildEnvelopeFromRulesJson: rules.json lacks procgen_metadata.'
-            + 'sphere_tree / sphere_plan — regenerate it with a current build, or append '
-            + 'from a saved envelope');
+        throw new Error(SPHERE_REBUILD_REFUSALS.noTree());
     }
+    const roots = sphereTreeRootCount(meta.sphere_tree);
+    if (roots > 1) throw new Error(SPHERE_REBUILD_REFUSALS.multiRoot(roots));
     const plan = meta.sphere_plan;
     const treeMeta = meta.sphere_tree;
     const sidecars = rulesJson.preset_sidecars?.[playerId] ?? {};
@@ -3608,19 +4971,25 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         // region names; born sphere-growth falls back to the cell id).
         const region_id = nodeRegionId(node);
         const sc = sidecars[region_id];
-        if (!sc) throw new Error(`rebuildEnvelopeFromRulesJson: region ${region_id} missing from preset_sidecars`);
+        if (!sc) throw new Error(SPHERE_REBUILD_REFUSALS.missingSidecar(region_id));
         const adapter = getAdapter(node.substrate);
         if (typeof adapter.deserializeWorld !== 'function'
                 || typeof adapter.extractPathsAndObstacles !== 'function') {
-            throw new Error(`rebuildEnvelopeFromRulesJson: substrate '${node.substrate}' can't be `
-                + 'reconstructed from compiled rules.json (zone substrate — no path extractor). '
-                + 'Append from the saved envelope instead.');
+            throw new Error(SPHERE_REBUILD_REFUSALS.zoneSubstrate(node.substrate));
         }
-        const world = adapter.deserializeWorld(sc.playable_payload, {
-            baseItemLib: itemLib, baseObstacleLib: obstacleLib,
+        const read = deserializeOrRefuse(adapter, sc.playable_payload, {
+            regionId: region_id, substrate: node.substrate,
+            opts: { baseItemLib: itemLib, baseObstacleLib: obstacleLib },
         });
+        if (read.refusal) throw new Error(SPHERE_REBUILD_REFUSALS.unreadablePayload(read.refusal));
+        const world = read.world;
         const extracted_rules = adapter.extractPathsAndObstacles(world, { regionId: region_id });
-        if (!regionSize) regionSize = { width: world.width, height: world.height };
+        // ⛓ G2a: the size comes off the first world that HAS one — a SIDES room
+        // (the text adventure's) has no width/height, and a rebuild rooted at
+        // one would otherwise carry `{width: undefined, height: undefined}`.
+        if (!regionSize && Number.isInteger(world.width) && Number.isInteger(world.height)) {
+            regionSize = { width: world.width, height: world.height };
+        }
         grid.placeRegion(node.cell, {
             region_id, substrate: node.substrate, cell: { gx: node.cell.gx, gy: node.cell.gy },
             playable_payload: world, extracted_rules,
@@ -3632,7 +5001,13 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     for (const node of nodes) {
         if (node.isTeleporter && node.parent != null && node.cell) {
             const parent = nodes[node.parent];
-            if (parent?.cell) grid.setTeleporter(parent.cell, node.side, node.cell);
+            if (!parent?.cell) continue;
+            const exitId = parentExitIdTowardChild(grid.getRegion(parent.cell), node);
+            if (exitId == null) {
+                throw new Error(SPHERE_REBUILD_REFUSALS.noParentExit(
+                    nodeRegionId(parent), node.side, nodeRegionId(node)));
+            }
+            grid.setTeleporter(parent.cell, exitId, node.cell);
         }
     }
     const root = nodes.find((n) => n.parent == null);
@@ -3651,10 +5026,12 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const maxItemsPerRegion = opts.maxItemsPerRegion ?? 2;
     const config = {
         seed,
-        regionSize: regionSize ?? { width: 8, height: 6 },
+        regionSize: regionSize ?? { ...DEFAULT_REGION_SIZE },
         itemLib,
-        regionParams: opts.regionParams ?? {},
+        // ⛓ T0b — the world's recorded concepts come back (`rebuildRegionParams`).
+        regionParams: rebuildRegionParams(meta, opts.regionParams),
         hazardOpts: opts.hazardOpts ?? undefined,
+        consumableTileOpts: opts.consumableTileOpts ?? undefined,
         maxItemsPerRegion,
         fillerCount: opts.fillerCount ?? 0,
         revisitRatio: opts.revisitRatio ?? 0.25,
@@ -3664,9 +5041,10 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         victoryItem,
         exclusiveSpheres: {},
         startingItems,
-        lockedCanonicalItems: [],
-        enableLoopMode: !!rulesJson.loop_costs,
+        pinnedCanonicalItems: [],
+        enableLoopMode: !!rulesJson.loop_costs?.[playerId],
         regionXpEffect: opts.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(discoveryModeOf(rulesJson, playerId)),
         itemPool,
     };
 
@@ -3767,6 +5145,11 @@ export function compactSphereTree(tree) {
             substrate: n.substrate,
             gate: n.gate,
             gateCounts: n.gateCounts,
+            // The AUTHORED entry gate (region-atlas), when there is one — a
+            // rebuilt envelope that lost it would re-emit the scheduled
+            // disjunct and narrow an OR. Omitted otherwise, so every other
+            // world's compacted tree is byte-identical.
+            ...(n.gateRule ? { gateRule: n.gateRule } : {}),
             usedSides: [...(n.usedSides ?? [])],
             childGates: n.childGates,
             isFiller: n.isFiller,
@@ -3844,13 +5227,28 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
         // The entry gate should contain an item INTRODUCED at the gate's
         // sphere (the stratification rule that makes the plan a sphere-log
         // oracle). Flag a gate item that isn't a sphere-gateWave item.
+        //
+        // An AUTHORED gate (region-atlas) may be DISJUNCTIVE, and then the rule
+        // is satisfied the moment ANY way through it is — so the check is per
+        // disjunct, and one disjunct meeting the sphere is enough. Flagging each
+        // item of an OR separately would report the branch the sorter did not
+        // schedule as a defect on every atlas world.
         const gw = gateWaveOf(nd);
         if (gw > 0 && (nd.gate ?? []).length) {
             const sphereSet = new Set(plan.spheres[gw - 1]?.items ?? []);
-            for (const it of nd.gate) {
-                if (!sphereSet.has(it)) {
-                    warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
-                        + 'item — the oracle will mismatch.');
+            const dnf = nd.gateRule ? requirementDnf(nd.gateRule) : null;
+            if (dnf) {
+                if (!dnf.some((conj) => conj.some((t) => sphereSet.has(t.item)))) {
+                    warnings.push(`#${nd.index}: no way through gate rule `
+                        + `[${nd.gate.join(',')}] holds a sphere-${gw} item — `
+                        + 'the oracle will mismatch.');
+                }
+            } else {
+                for (const it of nd.gate) {
+                    if (!sphereSet.has(it)) {
+                        warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
+                            + 'item — the oracle will mismatch.');
+                    }
                 }
             }
         }
@@ -3878,7 +5276,7 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
 // is left to makeLocationName (sphere ids aren't AP-canonical names).
 function buildSphereProceduralRegion({
     substrate, region_id, size, entrances, exitPlans, locations,
-    itemLib, obstacleLib, rng, params, hazardOpts,
+    itemLib, obstacleLib, rng, params, hazardOpts, consumableTileOpts,
 }) {
     return generateRegion({
         substrate,
@@ -3890,6 +5288,7 @@ function buildSphereProceduralRegion({
         itemLib,
         obstacleLib,
         hazardOpts,
+        consumableTileOpts,
         entrances,
         exits: exitPlans.map((e) => ({
             side: e.side, ...(e.rule ? { access_rule: e.rule } : {}),
@@ -3916,10 +5315,28 @@ function buildSphereProceduralRegion({
 // forward gate's copy, matching the portal's derived rule exactly.
 // Routing never relies on falling; fall behavior is a per-world
 // bounce parameter (regionParams.fallBehavior).
+// How a ZONE substrate is told about one child's entry gate.
+//
+// Normally the driver's gate IS an item-name conjunction, so requirement/counts
+// say everything and the substrate's derived rules reproduce it exactly. An
+// AUTHORED gate (region-atlas) can say more than that — an OR, a count — and a
+// zone region has no way to derive such a rule back out of its geometry. So the
+// two halves are passed separately, which is what generateRegionZoneGen already
+// supports: `requirement` is the NECESSARY SUBSET (the items every way through
+// the rule needs — possibly none, i.e. open-enough geometry), and `access_rule`
+// is the true gate, stamped onto the extracted exit and preferred by
+// compileRegion. Building the geometry on the scheduled disjunct instead would
+// physically wall off the OR's other branch while the logic still promised it.
+function zoneExitGate(e) {
+    if (!e.authoredRule) return { requirement: e.gate, counts: e.gateCounts ?? {} };
+    const { requirement, counts } = extractItemRequirementFromRule(e.authoredRule);
+    return { requirement, counts, access_rule: e.authoredRule };
+}
+
 function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
-    regionParams = {}, seed,
+    regionParams = {}, seed, zoneOrdinal = 0,
 }) {
     if (!entranceSide && exitPlans.length === 0) {
         throw new Error(`growSpheres: zone region '${region_id}' has neither `
@@ -3938,14 +5355,29 @@ function* buildSphereZoneRegion({
         size: regionSize,
         params: regionParams,
         seed,
-        exits: exitPlans.map((e) => ({
-            side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
-        })),
+        exits: exitPlans.map((e) => ({ side: e.side, ...zoneExitGate(e) })),
         locations: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
         entrances: entranceSide
             ? [{ side: entranceSide, requirement: entryGate, counts: entryGateCounts }]
             : [],
+        zoneOrdinal,
     });
+}
+
+/**
+ * Which of its substrate's zones a sphere node takes: how many nodes of the same
+ * substrate come before it in the tree. A zone source whose regions are content
+ * (jta's zones, noiz2sa's spans) reads it as `ctx.ordinal`, so the first jta
+ * node is zone 0, the next zone 1, in wave order. Deterministic from the tree,
+ * so a re-roll gets the same zone.
+ */
+export function sphereZoneOrdinal(node, tree) {
+    let n = 0;
+    for (const other of tree.nodes) {
+        if (other.index === node.index) break;
+        if (other.substrate === node.substrate) n += 1;
+    }
+    return n;
 }
 
 // Count gates: a multi-instance gate item demands its cumulative count
@@ -3955,6 +5387,448 @@ function sphereGateRule(gate, gateCounts = {}) {
     return gate.length === 0
         ? null
         : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1)));
+}
+
+// --- Sphere-growth library content source (region-library F6a) ---
+//
+// The sphere analogue of buildLibraryContentSource (the spiral F4 source). A
+// sphere slot is HARDER than a spiral slot: it needs SPECIFIC sides (entrance
+// mirrored from the parent's placed exit + child sides) and carries per-exit
+// GATES. F6a is BOUNCE-ONLY: a bounce entry's sidePortals are re-keyable, so the
+// substrate hook (instantiateLibraryEntryForSpecs) relabels its portals onto the
+// requested sides; the GATE is realised here as an access_rule OVERLAY
+// (logic-looser-than-physics — the captured level is reused as pure geometry, the
+// AP LOGIC enforces the gate; physical enforcement where hostable is F6b).
+//
+// Selection is RNG-FREE (Q4 ruling): least-used-then-declaration-order among
+// fitting entries, mirroring the spiral source. A library node draws ZERO rng
+// (realiseOneSphereNode skips the per-node zone seed too), so library-absent
+// worlds are byte-identical.
+function buildSphereLibrarySource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: (specs) => {
+            const {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate = [], entryGateCounts = {}, regionParams = {},
+            } = specs;
+            // Sides this region needs, ORDERED (entrance first so its portal
+            // assignment is stable, then children in exit-plan order). The
+            // substrate hook maps captured portals onto these by index.
+            const neededSides = [
+                ...(entranceSide ? [entranceSide] : []),
+                ...exitPlans.map((e) => e.side),
+            ];
+            const nLocs = locations.length;
+            // Fit (v1, bounce): enough re-keyable portals for every needed side
+            // AND enough location slots for the node's items. (No ⊆-by-side match
+            // — bounce relabels; count is the constraint.)
+            const fitting = entries.filter((e) =>
+                (e.exit_sides?.length ?? 0) >= neededSides.length
+                && (e.location_slots ?? 0) >= nLocs);
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits sphere slot (needs ${neededSides.length} `
+                    + `side(s) [${neededSides.join(',')}] + ${nLocs} location(s)) for region `
+                    + `'${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order — rng-free.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            return buildSphereLibraryRegion(sourceId, pick, {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate, entryGateCounts, regionParams, neededSides,
+            });
+        },
+    };
+}
+
+// Realise ONE sphere library node: call the entry's requirement-aware substrate
+// hook for geometry, OVERLAY each gate as an access_rule (the driver's gate,
+// composed engine-side), then assemble the descriptor via the shared
+// assembleZoneRegion tail. Draws no rng.
+function buildSphereLibraryRegion(sourceId, entry, {
+    region_id, regionSize, exitPlans, locations, entranceSide,
+    entryGate = [], entryGateCounts = {}, regionParams = {}, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateLibraryEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (entry '${entry.entry_id}') has `
+            + 'no instantiateLibraryEntryForSpecs hook — sphere-growth library reuse needs '
+            + 'a zone substrate (bounce/runner) or a tile substrate wired for it (maze)');
+    }
+
+    // Region-shape branch (region-library F6c). A PROCEDURAL/tile substrate (maze —
+    // adapter.generateRegionCore) returns a FULL region descriptor (real exits on the
+    // needed sides at captured tiles); a ZONE substrate (bounce/runner) returns
+    // GEOMETRY-only zoneRules that assembleZoneRegion turns into synthetic-exit
+    // descriptors. Both overlay the DRIVER's per-child gate as an access_rule
+    // (logic-looser-than-physics) — the tile branch onto the extracted exits
+    // directly, the zone branch via the zoneRules → assembleZoneRegion attach.
+    if (typeof adapter.generateRegionCore === 'function') {
+        const region = adapter.instantiateLibraryEntryForSpecs(entry, {
+            region_id,
+            regionSize,
+            exitSides: neededSides,
+            locationSpecs: locations.map((l) => ({ item: l.item })),
+            fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+            regionParams,
+        });
+        // Overlay each child exit's gate onto its extracted exit (matched by side via
+        // exits_placed). The ENTRANCE side has no forward exit in the tile branch —
+        // the driver's back-portal (applySphereBackExit) carries the return route,
+        // and buildRulesJson's post-pass copies the forward gate's rule onto it.
+        const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+        const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+        for (const e of exitPlans) {
+            // The plan's own rule when it has one (an atlas child's AUTHORED
+            // gate); otherwise the item-name gate synthesised here as before.
+            const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+            if (!r) continue;
+            const ex = exitById.get(sideToExitId.get(e.side));
+            if (ex) ex.access_rule = r;
+        }
+        region.placed_logic_gates = region.placed_logic_gates ?? [];
+        return region;
+    }
+
+    // The substrate returns GEOMETRY-only zoneRules (relabelled portals + the
+    // node items mapped onto captured slots; engine filler on the surplus).
+    const zoneRules = adapter.instantiateLibraryEntryForSpecs(entry, {
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+        regionParams,
+    });
+
+    // Gate OVERLAY: each child exit carries its gate rule; the entrance side
+    // rides the back portal gated on the entry gate (unless the substrate ungates
+    // it — braid). No exitPaths are emitted, so assembleZoneRegion attaches the
+    // access_rule (which compileRegion prefers over the always-open path).
+    const exitRules = {};
+    for (const e of exitPlans) {
+        const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (r) exitRules[e.side] = r;
+    }
+    if (entranceSide) {
+        const backGated = adapter.backPortalGated?.(regionParams) ?? true;
+        const r = backGated ? sphereGateRule(entryGate, entryGateCounts) : null;
+        if (r) exitRules[entranceSide] = r;
+    }
+    if (Object.keys(exitRules).length) zoneRules.exitRules = exitRules;
+
+    const region = assembleZoneRegion({
+        substrate: entry.substrate,
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        zoneRules,
+        zonePayload: {},
+    });
+    // Parity with generateRegionZoneGen: landing on the entrance side resolves to
+    // the driver's back-exit; fallBehavior is per-world.
+    if (region.playable_payload?.params && entranceSide) {
+        region.playable_payload.params.backExitSide = entranceSide;
+        if (regionParams.fallBehavior) {
+            region.playable_payload.params.fallBehavior = regionParams.fallBehavior;
+        }
+    }
+    // assembleZoneRegion omits this write-only field; sphere descriptors carry it.
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return region;
+}
+
+// Resolve the sphere library content sources named in substrateQuotas as
+// `library:<id>` ids (region-library F6a). Each rides its doc on
+// growthParams.substrateConfig[id].libraryDoc (mirroring the spiral source,
+// resolveSpiralContentSource). Built ONCE per grow so each source's usage counter
+// (prefer-least-used) persists across nodes. Also the arrange-time validation for
+// library ids (the upfront quota loop skips them — a library id has no registry
+// entry). Returns { id: source } (empty when no library quota is set).
+export function resolveSphereLibrarySources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isLibrarySourceId(id)) continue;
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: library content source '${id}' has no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        // A sphere slot is realised via the entry substrate's requirement-aware
+        // instantiateLibraryEntryForSpecs hook (bounce F6a, runner F6c). Accept any
+        // library with at least one entry whose registered substrate provides it —
+        // registry-driven so a newly-wired substrate (maze) is picked up without
+        // touching this guard. Per-entry substrates lacking the hook still fail
+        // loudly at buildSphereLibraryRegion.
+        const hasRealisable = entries.some((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateLibraryEntryForSpecs === 'function');
+        if (!hasRealisable) {
+            throw new Error(
+                `growSpheres: library '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateLibraryEntryForSpecs hook) — '
+                + 'sphere-growth library reuse needs a zone substrate (e.g. bounce or runner)');
+        }
+        sources[id] = buildSphereLibrarySource(id, doc);
+    }
+    return sources;
+}
+
+// --- Sphere-growth region-ATLAS content source (region-atlas Phase 6) --------
+//
+// The atlas analogue of buildSphereLibrarySource. Same seam, three differences,
+// all of them because an atlas entry is a piece of a REAL GAME MAP rather than
+// interchangeable synthetic content (see procgenPipeline/regionAtlasPool.js):
+//
+//   - **An entry is placed AT MOST ONCE.** Two copies of Seedling's starting
+//     house in one world would duplicate its location identity. Selection is
+//     therefore declaration order among the entries that still fit — rng-free,
+//     like the library source, but consuming rather than repeating.
+//   - **The region takes the atlas's NAME.** A placed region is
+//     `overworld_start__r8c0`, not `region_4_3`, so the compiled world, its
+//     spoiler and the sphere tree all say which piece of the map this is. That
+//     is why the entry is reserved BEFORE the realiser specs are built.
+//   - **Rules are AUTHORED and AND-COMPOSED.** The library path OVERWRITES an
+//     exit's rule with the driver's gate; here the exit already carries the
+//     atlas's own rule for that crossing, and the driver's gate is ANDed ONTO
+//     it. Overwriting would hand the player a route the real game charges for.
+//
+// v1 fence: an atlas node hosts NO children (see canHost). The reason is the
+// same tree-build-vs-realise-time split F6b names — the planner assigns a node's
+// child gates before the entry is fit-selected, so it cannot know whether the
+// eventual entry has an UNGATED exit to hand that child. A child behind an
+// intrinsically gated exit would need the intrinsic items scheduled before its
+// own wave, which is exactly the guarantee the sphere oracle checks; declining
+// to host is the conservative reading of plan decision 9 ("pre-built regions are
+// added BESIDE the skeleton, synthetic gates in front"). Widening it means
+// advertising a conservative per-pool ungated-exit envelope, F6b ruling (a).
+function buildSphereAtlasSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const used = new Set(); // entry_id -> placed in this world
+    const byId = new Map(entries.map((e) => [e.entry_id, e]));
+
+    const fits = (entry, nLocs, nChildSides) =>
+        (entry.location_slots ?? 0) >= nLocs && (entry.exits?.length ?? 0) >= nChildSides;
+
+    return {
+        poolSize: entries.length,
+        doc,
+        /**
+         * Claim an entry for a node and return its id, which becomes the placed
+         * region's name. Idempotent per node (a re-realised host keeps its
+         * entry). Loud when nothing fits: a real map has the locations it has.
+         */
+        reserve: (node, { nLocs, nChildSides }) => {
+            // Already claimed by THIS source (a re-realised host) → keep it.
+            if (node.atlasEntry && used.has(node.atlasEntry)) return node.atlasEntry;
+            // A node the SORTER pinned (Phase-6 slice 2) names its own entry;
+            // an unpinned node takes the first unplaced entry that fits.
+            const pinned = node.atlasEntry ?? null;
+            // TIGHTEST fit, then declaration order: a node needing no location
+            // must not consume the one region the map marked a chest in, or the
+            // next node that does need one has nowhere to go. Deterministic and
+            // rng-free either way.
+            const pool = pinned
+                ? [byId.get(pinned)].filter(Boolean)
+                : entries.map((e, i) => ({ e, i }))
+                    .sort((a, b) => ((a.e.location_slots ?? 0) - (b.e.location_slots ?? 0))
+                        || (a.i - b.i))
+                    .map(({ e }) => e);
+            const pick = pool.find((e) => !used.has(e.entry_id) && fits(e, nLocs, nChildSides));
+            if (!pick) {
+                const free = entries.filter((e) => !used.has(e.entry_id)).length;
+                throw new Error(
+                    `${sourceId}: no unplaced atlas region fits this slot (needs ${nLocs} `
+                    + `location(s) + ${nChildSides} child side(s)`
+                    + (pinned ? `; the tree pinned '${pinned}'` : `; ${free} of ${entries.length} `
+                        + 'entries unplaced')
+                    + '). An atlas entry is a SPECIFIC place and is placed at most once — lower '
+                    + 'the quota, lower maxItemsPerRegion, raise fillerCount, or mark more of '
+                    + 'the map');
+            }
+            used.add(pick.entry_id);
+            node.atlasEntry = pick.entry_id;
+            return pick.entry_id;
+        },
+        instantiate: (specs) => {
+            const entry = byId.get(specs.atlasEntryId);
+            if (!entry) {
+                throw new Error(`${sourceId}: atlas entry '${specs.atlasEntryId}' is not in the `
+                    + `pool (${entries.length} entries) — the pool changed under the tree`);
+            }
+            // Sides this region needs, ORDERED: entrance first (served by the
+            // driver's back-portal, so it takes no atlas exit), then children in
+            // exit-plan order.
+            const neededSides = [
+                ...(specs.entranceSide ? [specs.entranceSide] : []),
+                ...specs.exitPlans.map((e) => e.side),
+            ];
+            return buildSphereAtlasRegion(sourceId, entry, { ...specs, neededSides });
+        },
+    };
+}
+
+// Structural equality for two Rule Builder trees — key order included, because
+// both sides of the one comparison below come from the same authored row.
+function rulesEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return false;
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
+// AND-compose two rules, keeping both. null means "no constraint", so composing
+// with null is the identity — which is what makes the driver's gate safe to lay
+// on top of an atlas rule that may or may not exist.
+//
+// Composing a rule with ITSELF is the identity too, and that case is load-bearing
+// rather than cosmetic: under gated-exit child hosting (Phase-6 fence 2) a child
+// behind an atlas exit is gated on that exit's OWN authored rule, so the naive
+// compose would emit `And(R, R)`. For a disjunctive R the redundant copy is
+// harmless but noisy; for the general case it is exactly the narrowing this
+// function must not do.
+function andComposeRules(a, b) {
+    if (!a) return b ?? null;
+    if (!b) return a;
+    if (rulesEqual(a, b)) return a;
+    return makeAndRule([a, b]);
+}
+
+/**
+ * Realise ONE atlas node: hand the entry to the substrate's atlas hook for
+ * geometry + authored rules, then AND the driver's per-child gate onto each
+ * retained exit. Draws no rng. Returns { region, notes }.
+ */
+function buildSphereAtlasRegion(sourceId, entry, {
+    region_id, exitPlans, locations, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateAtlasEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (atlas region '${entry.entry_id}') has `
+            + 'no instantiateAtlasEntryForSpecs hook — a projected atlas region needs a tile '
+            + 'substrate wired for it (maze)');
+    }
+    const exitRules = {};
+    for (const ex of entry.exits ?? []) {
+        if (ex.access_rule) exitRules[ex.exit_id] = ex.access_rule;
+    }
+    const { region, notes } = adapter.instantiateAtlasEntryForSpecs(entry, {
+        region_id,
+        exitSides: neededSides,
+        exitRules,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+    });
+
+    // The driver's gate rides ON TOP of the atlas's own rule for that exit —
+    // never instead of it (the library path's overwrite would drop the real
+    // game's charge for the crossing).
+    const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+    const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+
+    // The child→exit mapping the PLANNER assumed (region-atlas Phase 6, fence 2):
+    // the k-th child lands behind the k-th exit in payload order, which is how
+    // the substrate hook assigns them. The tree gated each child on THAT door's
+    // rule, so a divergence here would hang a child behind a door the sorter
+    // priced differently — logic saying one thing and the map another, with
+    // every compile and every oracle still green. Assert it instead.
+    exitPlans.forEach((e, i) => {
+        const expected = (entry.exits ?? [])[i]?.exit_id;
+        const actual = sideToExitId.get(e.side);
+        if (expected !== actual) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' put child ${i} (side ${e.side}) `
+                + `on exit '${actual}', but the tree planned it behind '${expected}' — the `
+                + 'exit envelope and the substrate hook disagree about payload order');
+        }
+    });
+
+    // No two exits may end up on ONE CELL. The driver's back-exit is retargeted
+    // onto this region's entrance tile, and a real map regularly puts a door
+    // there too — one cell leading two places is one connection the engine will
+    // never resolve, and it looks like nothing at all in the compiled world. The
+    // envelope refuses to host on such a door; this is the backstop that says so
+    // out loud if any other path ever reaches it.
+    const byTile = new Map();
+    for (const ex of [...getRegionExits(region).values(),
+        ...(entry.entrance_tile ? [{ exit_id: '<driver back-exit>', ...entry.entrance_tile }] : [])]) {
+        const key = `${ex.x},${ex.y}`;
+        if (byTile.has(key)) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' has two exits on tile ${key} `
+                + `('${byTile.get(key)}' and '${ex.exit_id}') — one cell cannot lead two places`);
+        }
+        byTile.set(key, ex.exit_id);
+    }
+
+    for (const e of exitPlans) {
+        const gate = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (!gate) continue;
+        const ex = exitById.get(sideToExitId.get(e.side));
+        if (ex) ex.access_rule = andComposeRules(ex.access_rule ?? null, gate);
+    }
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return { region, notes: notes ?? [] };
+}
+
+/**
+ * Resolve the sphere ATLAS content sources named in substrateQuotas as
+ * `atlas:<game>` ids (region-atlas Phase 6). Mirrors resolveSphereLibrarySources,
+ * with ONE deliberate difference: an atlas pool rides on
+ * `growthParams.substrateConfig['<game>'].atlasDoc` — keyed by the GAME, not by
+ * the source id — because that is the install seam plan decision 5 fixed (the
+ * same one jta datasets use). Returns { id: source }, empty when no atlas quota
+ * is set, so an atlas-absent world takes no new code path at all.
+ *
+ * The sphere path has no applySubstrateConfig; this direct read is byte-inert by
+ * construction and deliberately mirrors the library route rather than inventing
+ * a second config mechanism.
+ */
+export function resolveSphereAtlasSources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isAtlasSourceId(id)) continue;
+        const game = atlasSourceGame(id);
+        const doc = config?.growthParams?.substrateConfig?.[game]?.atlasDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: atlas content source '${id}' has no atlasDoc in `
+                + `growthParams.substrateConfig['${game}'] — a selected atlas pool must ride `
+                + 'the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        if (entries.length === 0) {
+            throw new Error(`growSpheres: atlas pool '${id}' has no entries`);
+        }
+        if (count > entries.length) {
+            throw new Error(
+                `growSpheres: atlas quota for '${id}' is ${count} but the pool has only `
+                + `${entries.length} region(s), and an atlas region is a SPECIFIC place that is `
+                + 'placed at most once per world — lower the quota or mark more of the map');
+        }
+        const unrealisable = entries.filter((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateAtlasEntryForSpecs !== 'function');
+        if (unrealisable.length === entries.length) {
+            throw new Error(
+                `growSpheres: atlas pool '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateAtlasEntryForSpecs hook) — import the '
+                + "substrate's library module before growing");
+        }
+        sources[id] = buildSphereAtlasSource(id, doc);
+    }
+    return sources;
 }
 
 /**
@@ -3994,7 +5868,13 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
         side: child.side,
         gate: child.gate,
         gateCounts: child.gateCounts,
-        rule: gateRule(child.gate, child.gateCounts),
+        // A child with an AUTHORED entry gate (region-atlas) contributes the
+        // real game's own rule for coming this way, verbatim. `gate` is still
+        // the item-level view the substrates gate their GEOMETRY on; the rule is
+        // what the compiled world says, so an OR keeps both ways in instead of
+        // collapsing to the one branch the sorter scheduled.
+        rule: child.gateRule ?? gateRule(child.gate, child.gateCounts),
+        ...(child.gateRule ? { authoredRule: child.gateRule } : {}),
     }));
 
     let entrances = [];
@@ -4009,8 +5889,12 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
                 + `exit on side ${node.side} for '${region_id}'`);
         }
         entranceSide = OPPOSITE_SIDE[node.side];
+        // ⛓ G0: a SIDES-only parent keeps its `exits_placed` (so the throw
+        // above does not fire) but stores no tile — its side's midpoint.
         entranceTile = mirrorTileAcrossSide(
-            parentExitPlaced.tile_position, node.side, regionSize);
+            exitTileForMirror(parentRegion.substrate, parentExitPlaced.tile_position,
+                node.side, regionSize),
+            node.side, regionSize);
         entrances = [{ side: entranceSide, tile: entranceTile }];
     }
 
@@ -4033,26 +5917,16 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
 function applySphereBackExit(grid, node, specs, region, { assumeBidirectional = true } = {}) {
     if (!assumeBidirectional || !specs.parentNode) return;
     const parentRegion = grid.getRegion(specs.parentNode.cell);
-    const backExitId = parentRegion.region_id;
-    getRegionExits(region).set(backExitId, {
-        exit_id: backExitId,
-        x: specs.entranceTile.x,
-        y: specs.entranceTile.y,
-        side: specs.entranceSide,
-        exitName: backExitId,
+    insertBackExit(grid, {
+        region,
+        parentRegion,
+        backExitId: parentRegion.region_id,
+        entranceTile: specs.entranceTile,
+        entranceSide: specs.entranceSide,
         targetRegion: parentRegion.region_id,
         targetExitId: specs.parentExitPlaced.exit_id,
-        isBackExit: true,
         isTeleporter: node.isTeleporter,
     });
-    region.extracted_rules.exits.push({
-        id: backExitId,
-        position: { x: specs.entranceTile.x, y: specs.entranceTile.y },
-        target_region: parentRegion.region_id,
-        paths: [{ path_id: 'p1', obstacles: [] }],
-    });
-    const parentWorldExit = getRegionExits(parentRegion)?.get(specs.parentExitPlaced.exit_id);
-    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
 }
 
 /**
@@ -4092,13 +5966,32 @@ export function reRollSphereRegion(grid, node, tree, {
         entryGateCounts: node.gateCounts,
         regionParams,
         seed,
+        zoneOrdinal: sphereZoneOrdinal(node, tree),
         adapter,
     });
     let r = gen.next();
     while (!r.done) r = gen.next();
     const region = r.value;
     applySphereBackExit(grid, node, specs, region, { assumeBidirectional });
+    const replaced = getRegionExits(grid.getRegion(specs.cell));
+    for (const e of (replaced instanceof Map ? [...replaced.values()] : (replaced ?? []))) {
+        if (!e.isBackExit) grid.deleteTeleporter(specs.cell, e.exit_id);
+    }
     grid.replaceRegion(specs.cell, region);
+    // ⛓ PIPELINE RELAYOUT R2 — the re-realised region's forward exits are NEW
+    //   exits (their ids encode the side they are born on), and `Grid.teleporters`
+    //   is keyed by exit (R1): an entry kept under the replaced exit's id would
+    //   point nowhere, so a child linked by teleporter — after an exit-side move,
+    //   then a layout move — lost its link and the oracle broke. Each child's
+    //   teleporter is re-derived by the side law on the exit that now serves its
+    //   side (the planner keeps one child per side, so that exit is exact).
+    for (const child of tree.nodes) {
+        if (child.parent !== node.index || !child.cell) continue;
+        const placed = (region.exits_placed ?? []).find((p) => p.side === child.side);
+        if (placed && !linkIsAdjacentOnSide(grid, specs.cell, child.side, child.cell)) {
+            grid.setTeleporter(specs.cell, placed.exit_id, child.cell);
+        }
+    }
     // The re-realised region has FRESH exits with no grid-level wiring yet
     // (target_region is resolved by stitchGrid, not the realiser). Re-run the
     // same stitch + walls tail growSpheresGen runs so the new forward exits
@@ -4112,47 +6005,119 @@ export function reRollSphereRegion(grid, node, tree, {
     return grid.getRegion(specs.cell);
 }
 
-// Capture the grid's STITCHED forward links as position-independent triples
-// {fromId, side, toId} (region_id + side + target region_id). Back-exits are
-// skipped — they store their target directly and aren't re-stitched. Used to
-// rebuild teleporters after a layout move/swap.
+// Capture the grid's STITCHED forward links as position-independent records
+// {fromId, exitId, side, toId} (region_id + the exit's id + its side + target
+// region_id). Back-exits are skipped — they store their target directly and
+// aren't re-stitched. Used to rebuild teleporters after a layout move/swap; the
+// exit id is what keys the rebuilt teleporter, so two links leaving one side
+// stay two.
 function captureForwardLinks(grid) {
     const links = [];
     for (const region of grid.allRegions()) {
         const exits = getRegionExits(region);
-        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-        for (const e of list) {
+        const entries = exits instanceof Map ? [...exits.entries()]
+            : (exits ?? []).map((e) => [e.exit_id, e]);
+        for (const [exitId, e] of entries) {
             if (e.isBackExit || !e.targetRegion || !e.side) continue;
-            links.push({ fromId: region.region_id, side: e.side, toId: e.targetRegion });
+            links.push({ fromId: region.region_id, exitId, side: e.side, toId: e.targetRegion });
         }
     }
     return links;
 }
 
 /**
+ * ⛓⛓ **THE SIDE LAW — ONE SPELLING.** A link leaving `fromCell` on `side` for a
+ * region at `toCell` is ADJACENT iff `toCell` is `fromCell`'s neighbour on that
+ * side; otherwise it is a TELEPORTER. `relayoutSphereGrid` below decides where
+ * to set a teleporter with it, and the APWorld editor's map moves (PRESET
+ * SIDECARS M2, `apworldEditor/regionLayout.js`) decide which payload exits flip
+ * with it — one function, so the two cannot drift.
+ *
+ * ⛓ MEASURED 2026-09-11 (M2, over the 38 committed slots with `grid_cell`s): it
+ * reproduces EVERY stored `isTeleporter` flag — maze forward 1,633/1,633 and
+ * back 756/756, bounce 50, jta 20, text_adventure 25, runner 18 — except
+ * `omsi_region_split_test`'s two hand-authored DIAGONAL exits, which are stored
+ * `false` (not adjacent on any side, so this law and the any-side
+ * `cellsAreAdjacent` both call them teleporters).
+ *
+ * It is a law about ONE exit, and `Grid.teleporters` is keyed by exit
+ * (`cell:exit_id`) to match: a region may hold any number of teleporters on one
+ * side — see the PIPELINE RELAYOUT R1 note on `relayoutSphereGrid`.
+ */
+export function linkIsAdjacentOnSide(grid, fromCell, side, toCell) {
+    const nb = grid.neighborCell(fromCell, side);
+    return !!nb && nb.gx === toCell.gx && nb.gy === toCell.gy;
+}
+
+/**
  * Re-derive the grid's connections after a layout edit (move/swap). The logical
- * links (which region connects to which, on which side) are position-independent
- * (region_id + side), so we: capture them, drop all teleporters, then for each
- * link set a teleporter when the endpoints AREN'T geographically adjacent on
- * that side (adjacency resolves itself), and finally stitchGrid re-derives every
- * forward exit's target_region (teleporters take precedence over adjacency, so a
- * moved region's exit resolves to its intended target even if some other region
- * now sits next to it). Back-exits keep their stored targets untouched.
+ * links (which exit of which region connects to which region, on which side) are
+ * position-independent (region_id + exit id + side), so we: capture them, drop
+ * all teleporters, then for each link set a teleporter ON THAT EXIT when the
+ * endpoints AREN'T geographically adjacent on its side (adjacency resolves
+ * itself), and finally stitchGrid re-derives every forward exit's target_region
+ * (a teleporter takes precedence over adjacency, so a moved region's exit
+ * resolves to its intended target even if some other region now sits next to
+ * it). Back-exits keep their stored targets untouched; then every exit's
+ * `isTeleporter`, back exits included, is judged by the side law
+ * (`judgeExitFlagsBySideLaw`). Returns `grid`.
+ *
+ * ⛓ PIPELINE RELAYOUT R1 (2026-09-13) — THE RECORD OF THE FIX. The teleporter
+ * map used to be keyed `cell:side`, so a region with two links leaving one side
+ * kept only the last-written target, and stitchGrid pointed every exit on that
+ * side (a teleporter's adjacent sibling included) at it. Measured on the
+ * product's own gesture — the Procgen Pipeline's Move Region on the top-down
+ * APCalc world (seed 4, 10×10, 81 regions, 51 forward teleporter exits held in
+ * 26 map entries), moved (4,5)→(2,0) and back — it left 28 forward exits on 16
+ * regions pointing at the wrong region, 21 of them on regions the move never
+ * touched. Keyed by exit, the same round trip changes nothing
+ * (`topDownRelayoutIdentity.test.js`).
  */
 export function relayoutSphereGrid(grid) {
     const links = captureForwardLinks(grid);
     grid.clearTeleporters();
     const cellOf = new Map(grid.allRegions().map((r) => [r.region_id, r.cell]));
-    for (const { fromId, side, toId } of links) {
+    for (const { fromId, exitId, side, toId } of links) {
         const from = cellOf.get(fromId);
         const to = cellOf.get(toId);
         if (!from || !to) continue;
-        const nb = grid.neighborCell(from, side);
-        if (nb && nb.gx === to.gx && nb.gy === to.gy) continue; // adjacency resolves it
-        grid.setTeleporter(from, side, to);
+        if (linkIsAdjacentOnSide(grid, from, side, to)) continue; // adjacency resolves it
+        grid.setTeleporter(from, exitId, to);
     }
     stitchGrid(grid);
+    judgeExitFlagsBySideLaw(grid, cellOf);
     return grid;
+}
+
+/**
+ * After a relayout's re-stitch, set EVERY exit's `isTeleporter` (back exits
+ * included) by the side law — the same `linkIsAdjacentOnSide` arithmetic the
+ * teleporter rebuild above used for the forward exits, so a forward exit's flag
+ * is the one stitchGrid just wrote, and a BACK exit (which stitchGrid skips)
+ * stops carrying the flag of its region's old cell. An exit with no side, or no
+ * target, has no link to judge. An exit whose target region is not placed on
+ * the grid is left as it is, not thrown.
+ *
+ * ⛓ PIPELINE RELAYOUT C1 (2026-09-14) — NO LIST OF THOSE EXITS IS RETURNED.
+ * R1 returned one (`{grid, unplacedTargets}`) and no caller read it. Measured
+ * before dropping it: 0 such exits over the 38 committed slots with grid cells
+ * (2,512 sided exits with a target), over 72 generated top-down worlds (12
+ * games × 3 grid sizes × 2 seeds) and over 36 sphere worlds truncated by
+ * `truncateSphereWorld` and then moved through the recorded op — nothing the
+ * product builds reaches this branch, so a summary of it was dead API.
+ */
+function judgeExitFlagsBySideLaw(grid, cellOf) {
+    for (const region of grid.allRegions()) {
+        const exits = getRegionExits(region);
+        const entries = exits instanceof Map ? [...exits.entries()]
+            : (exits ?? []).map((e) => [e.exit_id, e]);
+        for (const [exitId, e] of entries) {
+            if (!e?.side || !e.targetRegion) continue;
+            const to = cellOf.get(e.targetRegion);
+            if (!to) continue;
+            e.isTeleporter = !linkIsAdjacentOnSide(grid, region.cell, e.side, to);
+        }
+    }
 }
 
 /**
@@ -4171,8 +6136,7 @@ export function moveSphereRegion(grid, fromCell, toCell) {
     if (!grid.isInBounds(toCell)) {
         throw new Error(`moveSphereRegion: target (${toCell.gx},${toCell.gy}) out of bounds`);
     }
-    const region = grid.removeRegion(fromCell);
-    grid.placeRegion(toCell, region);
+    grid.relocateRegions([{ from: fromCell, to: toCell }]);
     return relayoutSphereGrid(grid);
 }
 
@@ -4185,10 +6149,7 @@ export function swapSphereRegions(grid, cellA, cellB) {
     if (!grid.hasRegion(cellA) || !grid.hasRegion(cellB)) {
         throw new Error('swapSphereRegions: both cells must hold a region');
     }
-    const a = grid.removeRegion(cellA);
-    const b = grid.removeRegion(cellB);
-    grid.placeRegion(cellA, b);
-    grid.placeRegion(cellB, a);
+    grid.relocateRegions([{ from: cellA, to: cellB }, { from: cellB, to: cellA }]);
     return relayoutSphereGrid(grid);
 }
 
@@ -4207,92 +6168,136 @@ function sideMidpointTile(side, regionSize) {
 // Relabel ONE exit to a new side: update its world-exit side + tile coords, its
 // exits_placed entry (forward exits only), and its extracted_rules position so
 // stitchGrid still matches it. Returns the exit's previous side. Does NOT touch
-// sidePortals (the caller re-keys those) or re-stitch.
+// the payload (the caller runs the substrate's declared `exitSides.relabel`) or
+// re-stitch.
+//
+// ⛓ PRESET SIDECARS G1 — the same law as every other minting site: a
+// SIDES-only region (`carriesExitTiles` false) gets its SIDE and no tile. A tile
+// it still carries (a document written before its substrate declared sides) is
+// on the OLD side, so it is removed rather than left for the Map to draw there;
+// the renderer then places the exit by side. A tiles region is unchanged.
 function relabelExitSide(region, exitId, newSide, regionSize) {
-    const tile = sideMidpointTile(newSide, regionSize);
+    const tile = carriesExitTiles(region.substrate) ? sideMidpointTile(newSide, regionSize) : null;
     const exits = getRegionExits(region);
     const we = exits instanceof Map ? exits.get(exitId)
         : (exits ?? []).find((e) => e.exit_id === exitId);
     const oldSide = we?.side ?? null;
-    if (we) { we.side = newSide; we.x = tile.x; we.y = tile.y; }
+    if (we) {
+        we.side = newSide;
+        if (tile) { we.x = tile.x; we.y = tile.y; } else { delete we.x; delete we.y; }
+    }
     const placed = (region.exits_placed ?? []).find((p) => p.exit_id === exitId);
-    if (placed) { placed.side = newSide; placed.tile_position = { x: tile.x, y: tile.y }; }
+    if (placed) {
+        placed.side = newSide;
+        if (tile) placed.tile_position = { x: tile.x, y: tile.y };
+        else delete placed.tile_position;
+    }
     const ex = (region.extracted_rules?.exits ?? []).find((e) => e.id === exitId);
-    if (ex) ex.position = { x: tile.x, y: tile.y };
+    if (ex) {
+        if (tile) ex.position = { x: tile.x, y: tile.y };
+        else delete ex.position;
+    }
     return oldSide;
 }
 
-function regionSidePortals(region) {
-    const sp = region?.playable_payload?.params?.sidePortals;
-    if (!sp) {
-        throw new Error('exit-side editing is only supported for zone substrates '
-            + '(the region has no playable_payload.params.sidePortals)');
-    }
-    return sp;
-}
-
-// Grid side → on-screen portal arrow direction (mirrors bounceDemo's
-// SIDE_DIRECTIONS). The arrow is cosmetic, but it should follow the side a
-// portal now serves after an exit-side move/swap.
-const SIDE_TO_DIRECTION = { N: 'up', S: 'down', E: 'right', W: 'left' };
-
-// Point the bounce level portal now serving `side` in the matching direction.
-// No-op for zone substrates without a bounceLevel/portals (e.g. JtA).
-function applyPortalDirection(region, side) {
-    const params = region?.playable_payload?.params;
-    const portalId = params?.sidePortals?.[side];
-    const portals = params?.bounceLevel?.portals;
-    if (!portalId || !Array.isArray(portals)) return;
-    const portal = portals.find((p) => p.id === portalId);
-    if (portal) portal.direction = SIDE_TO_DIRECTION[side];
+/**
+ * ⛓⛓ PIPELINE RELAYOUT R2 — **THE REGION'S `exitSides` DECLARATION, OR WHY THE
+ * PIPELINE CANNOT MOVE ITS EXITS.** The same reader the APWorld editor's ops ask
+ * (`procgenCore/exitSides.js`), resolved through the substrate registry the way
+ * every other per-substrate hook here is — no substrate name. A substrate that
+ * declares nothing (the maze: its exit is a TILE, so a side move is a geometry
+ * edit) or declares it malformed is refused by that absence, in words.
+ *
+ * @returns {{decl: {keys: string[], relabel: Function}, sharing: object} | {refusal: string}}
+ */
+export function regionExitSides(region) {
+    const got = exitSidesOf(substrateRegistry.get(region?.substrate));
+    if (got.decl) return { decl: got.decl, sharing: sideMayHoldAnotherExit(substrateRegistry.get(region.substrate)) };
+    const why = got.malformed ?? 'its registry entry declares no `exitSides`, so the pipeline cannot say what '
+        + 'else in the payload is keyed by side';
+    return {
+        refusal: `region "${region?.region_id}"'s substrate "${region?.substrate}" cannot have an exit moved `
+            + `to another side — ${why}`,
+    };
 }
 
 /**
- * Move one of a region's exits/entrances to an EMPTY side. For zone (bounce)
- * regions the exit's side is just the linking key (sidePortals[side] → the level
- * portal; the portal's geometry is independent), so this is a relabel: move the
- * exit + re-key sidePortals, then relayout (rebuild teleporters + re-stitch).
- * Geometry is untouched. Throws if the target side already has an exit.
+ * ⛓⛓ The declared relabel of a region's payload, as the grid holds it. A grid
+ * region keeps its exits on the WORLD (`region.exits`), not in
+ * `playable_payload.exits`, while a relabel reads the payload's exit records
+ * (the flash-zone family's `backExitSide` follows an exit whose record says
+ * `isBackExit`). So the world's exits are lent to the payload for the call and
+ * taken back after — a payload that carries its own `exits` keeps them. Throws
+ * whatever the relabel throws, BEFORE anything is written.
+ */
+function relabelRegionPayload(region, decl, moves) {
+    const payload = region.playable_payload ?? {};
+    const lent = !Object.hasOwn(payload, 'exits');
+    const exits = getRegionExits(region);
+    const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+    const input = lent ? { ...payload, exits: list.map((e) => ({ ...e })) } : payload;
+    const next = decl.relabel(input, moves);
+    if (!next || typeof next !== 'object' || Array.isArray(next)) {
+        throw new Error(`region "${region.region_id}"'s substrate "${region.substrate}" answered the side `
+            + `relabel with ${JSON.stringify(next)}, not a payload`);
+    }
+    if (lent) delete next.exits;
+    return next;
+}
+
+/**
+ * Move one of a region's exits/entrances to another side — a RELABEL: the exit
+ * (world exit, `exits_placed`, `extracted_rules`) plus whatever the substrate's
+ * `exitSides` declaration says its payload keys by side (⛓ PIPELINE RELAYOUT R2:
+ * the flash-zone family renames `params.sidePortals` IN PLACE, moves
+ * `backExitSide` with a back exit, and bounce re-points the portal arrow; the
+ * text adventure keys nothing), then relayout. Geometry is untouched.
+ *
+ * Throws, before writing: a region whose substrate declares no `exitSides`
+ * (`regionExitSides`' refusal); a target side that already carries an exit
+ * when the declaration keys a payload fact by side (`sideMayHoldAnotherExit`
+ * — "side … already has an exit"); a relabel that throws.
  */
 export function moveSphereExitSide(grid, regionCell, exitId, newSide, regionSize) {
     const region = grid.getRegion(regionCell);
     if (!region) throw new Error('moveSphereExitSide: no region at cell');
-    const sidePortals = regionSidePortals(region);
+    const sides = regionExitSides(region);
+    if (sides.refusal) throw new Error(`moveSphereExitSide: ${sides.refusal}`);
     const exits = getRegionExits(region);
     const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
-    if (list.some((e) => e.exit_id !== exitId && e.side === newSide)) {
+    const moving = list.find((e) => e.exit_id === exitId);
+    if (!moving) throw new Error('moveSphereExitSide: exit not found');
+    if (!sides.sharing.may && list.some((e) => e.exit_id !== exitId && e.side === newSide)) {
         throw new Error(`moveSphereExitSide: side ${newSide} already has an exit`);
     }
-    const oldSide = relabelExitSide(region, exitId, newSide, regionSize);
-    if (oldSide && sidePortals[oldSide] !== undefined) {
-        sidePortals[newSide] = sidePortals[oldSide];
-        delete sidePortals[oldSide];
-    }
-    applyPortalDirection(region, newSide);
+    const from = moving.side ?? null;
+    const payload = relabelRegionPayload(region, sides.decl, [{ exitId, from, to: newSide }]);
+    relabelExitSide(region, exitId, newSide, regionSize);
+    if (region.playable_payload !== undefined) region.playable_payload = payload;
     return relayoutSphereGrid(grid);
 }
 
 /**
- * Swap the sides of two exits/entrances within one region (relabel both +
- * swap their sidePortals), then relayout. Geometry untouched.
+ * Swap the sides of two exits/entrances within one region — ONE simultaneous
+ * declared relabel (never two moves in a row), then relayout. Geometry
+ * untouched. Refused, before writing, as `moveSphereExitSide` is.
  */
 export function swapSphereExitSides(grid, regionCell, exitIdA, exitIdB, regionSize) {
     const region = grid.getRegion(regionCell);
     if (!region) throw new Error('swapSphereExitSides: no region at cell');
-    const sidePortals = regionSidePortals(region);
+    const sides = regionExitSides(region);
+    if (sides.refusal) throw new Error(`swapSphereExitSides: ${sides.refusal}`);
     const exits = getRegionExits(region);
     const get = (id) => (exits instanceof Map ? exits.get(id)
         : (exits ?? []).find((e) => e.exit_id === id));
     const sideA = get(exitIdA)?.side;
     const sideB = get(exitIdB)?.side;
     if (!sideA || !sideB) throw new Error('swapSphereExitSides: exit not found');
+    const payload = relabelRegionPayload(region, sides.decl,
+        [{ exitId: exitIdA, from: sideA, to: sideB }, { exitId: exitIdB, from: sideB, to: sideA }]);
     relabelExitSide(region, exitIdA, sideB, regionSize);
     relabelExitSide(region, exitIdB, sideA, regionSize);
-    const t = sidePortals[sideA];
-    sidePortals[sideA] = sidePortals[sideB];
-    sidePortals[sideB] = t;
-    applyPortalDirection(region, sideA);
-    applyPortalDirection(region, sideB);
+    if (region.playable_payload !== undefined) region.playable_payload = payload;
     return relayoutSphereGrid(grid);
 }
 
@@ -4475,13 +6480,13 @@ function placeSphereTreeCells(grid, nodes, rng, {
  */
 function* realiseSphereNodes(grid, nodes, tree, rng, {
     fromIndex = 0, total = nodes.length,
-    regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, childrenByParent, stats,
+    regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+    assumeBidirectional, childrenByParent, stats, librarySources = null,
 }) {
     for (let i = fromIndex; i < nodes.length; i++) {
         yield* realiseOneSphereNode(grid, nodes[i], tree, rng, {
-            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-            assumeBidirectional, childrenByParent, stats,
+            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+            assumeBidirectional, childrenByParent, stats, librarySources,
         });
     }
 }
@@ -4498,12 +6503,29 @@ function* realiseSphereNodes(grid, nodes, tree, rng, {
  * replace=false this is byte-identical to the prior inline loop body.
  */
 function* realiseOneSphereNode(grid, node, tree, rng, {
-    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
     assumeBidirectional, childrenByParent, stats, replace = false,
+    librarySources = null,
 }) {
     // Cell + side were resolved by the placement pre-pass
     // (occupancy-aware adjacency, remote only when fully surrounded).
     const isTeleporter = node.isTeleporter;
+    // An ATLAS node takes the atlas's own region NAME, so the entry is claimed
+    // BEFORE the specs are built (region_id is the first thing they compute).
+    let atlasSource = null;
+    if (isAtlasSourceId(node.substrate)) {
+        atlasSource = librarySources?.[node.substrate] ?? null;
+        if (!atlasSource) {
+            throw new Error(`growSpheres: atlas node '${node.index}' has no resolved content `
+                + `source for '${node.substrate}' — a selected atlas pool must ride `
+                + "growthParams.substrateConfig['<game>'].atlasDoc");
+        }
+        const kids = childrenByParent?.get(node.index)?.length
+            ?? tree.nodes.filter((n) => n.parent === node.index).length;
+        node.region_id = atlasSource.reserve(node, {
+            nLocs: node.items.length, nChildSides: kids,
+        });
+    }
     const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
     const {
         region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
@@ -4520,42 +6542,80 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
         placements: locations.length,
     };
 
-    const adapter = getAdapter(node.substrate);
     let region;
-    if (typeof adapter.generateRegionCore === 'function') {
-        region = buildSphereProceduralRegion({
-            substrate: node.substrate,
-            region_id,
-            size: regionSize,
-            entrances,
-            exitPlans,
-            locations,
-            itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+    if (atlasSource) {
+        // Region-atlas content source (region-atlas Phase 6): place a projected
+        // piece of a real game map. Draws NO rng (selection is declaration
+        // order among unplaced entries), so atlas-absent worlds are byte-inert.
+        const placed = atlasSource.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
+            atlasEntryId: node.atlasEntry,
         });
-    } else if (typeof adapter.generateZoneForSpecs === 'function'
-            || typeof adapter.generateZoneForSpecsGen === 'function') {
-        region = yield* buildSphereZoneRegion({
-            substrate: node.substrate,
-            region_id,
-            regionSize,
-            exitPlans,
-            locations,
-            entranceSide,
-            entryGate: node.gate,
-            entryGateCounts: node.gateCounts,
-            regionParams,
-            seed: (rng.next() * 0x7fffffff) | 0,
-            adapter,
+        region = placed.region;
+        if (stats && placed.notes.length > 0) {
+            stats.atlasNotes = [...(stats.atlasNotes ?? []), ...placed.notes];
+        }
+        // The driver's back-exit normally lands on the grid-MIRROR of the
+        // parent's exit tile, which for a real map is very likely a wall (and,
+        // since atlas regions are sized to their own bounds, may not even be in
+        // this region). Arrive where the projection spawns instead — the tile
+        // Phase 5b's in-app legs already prove is a valid, reachable spawn.
+        specs.entranceTile = { x: region.entrance.x, y: region.entrance.y };
+    } else if (isLibrarySourceId(node.substrate)) {
+        // Library content source (region-library F6a): place a pre-built entry
+        // against the node's specs. Draws NO rng (Q4 ruling — rng-free
+        // selection, no per-node seed) so library-absent worlds are byte-inert.
+        const source = librarySources?.[node.substrate];
+        if (!source) {
+            throw new Error(`growSpheres: library node '${region_id}' has no resolved `
+                + `content source for '${node.substrate}' — a selected library must ride `
+                + 'growthParams.substrateConfig');
+        }
+        region = source.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
         });
     } else {
-        throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
-            + 'generateRegionCore nor generateZoneForSpecs');
+        const adapter = getAdapter(node.substrate);
+        if (typeof adapter.generateRegionCore === 'function') {
+            region = buildSphereProceduralRegion({
+                substrate: node.substrate,
+                region_id,
+                size: regionSize,
+                entrances,
+                exitPlans,
+                locations,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts, consumableTileOpts,
+            });
+        } else if (typeof adapter.generateZoneForSpecs === 'function'
+                || typeof adapter.generateZoneForSpecsGen === 'function') {
+            region = yield* buildSphereZoneRegion({
+                substrate: node.substrate,
+                region_id,
+                regionSize,
+                exitPlans,
+                locations,
+                entranceSide,
+                entryGate: node.gate,
+                entryGateCounts: node.gateCounts,
+                regionParams,
+                seed: (rng.next() * 0x7fffffff) | 0,
+                zoneOrdinal: sphereZoneOrdinal(node, tree),
+                adapter,
+            });
+        } else {
+            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs');
+        }
     }
 
     if (replace) grid.replaceRegion(cell, region);
     else grid.placeRegion(cell, region);
     if (isTeleporter) {
-        grid.setTeleporter(parentNode.cell, node.side, cell);
+        // buildNodeRealiserSpecs already refused (by name) a parent with no
+        // exit on node.side, so the placed exit is here whenever a parent is.
+        grid.setTeleporter(parentNode.cell, specs.parentExitPlaced.exit_id, cell);
         if (!replace) stats.teleportersPlaced += 1;
     }
 
@@ -4597,6 +6657,7 @@ export function* growSpheresGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -4611,6 +6672,7 @@ export function* growSpheresGen(config) {
         gridDims = null,
         teleporterMinGap = 2,
         assumeBidirectional = true,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error('growSpheres: growthParams.spherePlan required');
@@ -4622,9 +6684,11 @@ export function* growSpheresGen(config) {
     // Upfront quota validation (same contract as the spiral): every
     // substrate must be registered and realisable by this driver —
     // procedurally (generateRegionCore) or via the sphere hook
-    // (generateZoneForSpecs, landing with bounce in step 5).
+    // (generateZoneForSpecs, landing with bounce in step 5). Library content
+    // sources (`library:<id>`) have no registry entry; they are validated by
+    // resolveSphereLibrarySources below (F6a) and skipped here.
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -4636,6 +6700,14 @@ export function* growSpheresGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Pre-built content sources, keyed by source id: region-library packs
+    // (`library:<id>`, F6a) and region-atlas pools (`atlas:<game>`, region-atlas
+    // Phase 6). Both empty unless such a quota is set — so a world with neither
+    // takes no new code path and stays byte-identical.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     // The tree-build and region-build can run as SEPARATE pipeline steps:
     // when a pre-built tree (and its live rng — see buildSphereGrowthTree)
@@ -4646,7 +6718,7 @@ export function* growSpheresGen(config) {
     const rng = prebuilt ? (growthParams.rng ?? createRng(seed)) : createRng(seed);
     const tree = prebuilt ?? buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     }, rng);
     yield {
         type: 'plan',
@@ -4687,8 +6759,8 @@ export function* growSpheresGen(config) {
     // the prior inline loops.
     placeSphereTreeCells(grid, tree.nodes, rng, { startCell, teleporterMinGap, dims });
     yield* realiseSphereNodes(grid, tree.nodes, tree, rng, {
-        regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     });
 
     // Every exit was allocated to a specific child (or teleporter), so
@@ -4732,8 +6804,8 @@ function resolveBatchSize(spheresPerBatch, waves) {
  */
 export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     prevCount, placed, startCell, teleporterMinGap, dims,
-    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, stats,
+    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+    assumeBidirectional, stats, librarySources = null,
 }) {
     // childrenByParent over ALL nodes, in index order (== stable exit-plan
     // order); touchedPriorHosts = earlier-batch hosts that gained a child now.
@@ -4752,8 +6824,8 @@ export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     let realiseStart = prevCount;
     for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
     const realiseOpts = {
-        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     };
     for (let i = realiseStart; i < nodes.length; i++) {
         const node = nodes[i];
@@ -4794,6 +6866,7 @@ export function* growSpheresBatchedGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -4826,7 +6899,7 @@ export function* growSpheresBatchedGen(config) {
         throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
     }
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -4838,6 +6911,12 @@ export function* growSpheresBatchedGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Pre-built content sources (library packs + atlas pools) — same as
+    // growSpheresGen.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio,
@@ -4894,7 +6973,7 @@ export function* growSpheresBatchedGen(config) {
         yield* realiseSphereBatchGen(grid, nodes, tree, rng, {
             prevCount, placed, startCell, teleporterMinGap, dims,
             total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
-            hazardOpts, assumeBidirectional, stats,
+            hazardOpts, consumableTileOpts, assumeBidirectional, stats, librarySources,
         });
     }
 
@@ -4968,6 +7047,7 @@ function sphereTreeSetup(config, label) {
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error(`${label}: growthParams.spherePlan required`);
@@ -4978,7 +7058,7 @@ function sphereTreeSetup(config, label) {
     }
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     };
     return { plan: spherePlan, opts };
 }
@@ -5032,65 +7112,131 @@ export function buildPresetSidecars(grid, {
     // explore action. Defaults to true (decoupled from manaEnabled
     // since the flip — pass `false` explicitly to opt out).
     fogEnabled = true,
+    // How rooms are entered ('zone'), for the substrates that declare an
+    // `arrival` payload field; null = none stamped. See serializeRegionEntry.
+    arrival = null,
 } = {}) {
     const regionMap = {};
+    // ⛓ The 5th `serializeWorld` argument — what a payload can only know
+    // AFTER stitching: which substrate plays the region an exit leads to. A
+    // substrate whose sidecar records a crossing's far side (flash_seedling's
+    // `target_substrate` on an `external` door) reads it; every other
+    // serializer takes four arguments and never sees it.
+    //
+    // ⛓ seedling generated G1 — and `ordinalOfRegion`: the region's index among
+    // the regions of ITS OWN substrate, in sidecar order (the order written
+    // below). A substrate whose play-time runtime numbers its regions (a
+    // generated Seedling room is a LEVEL of the set assembled at play) writes it;
+    // no other serializer reads it.
+    const substrateById = new Map();
+    const ordinalById = new Map();
+    const countBySubstrate = new Map();
     for (const region of grid.allRegions()) {
-        const substrateId = region.substrate ?? 'maze';
-        const adapter = getAdapter(substrateId);
-        // Re-attach the engine-owned structural fields (exits + entrance)
-        // onto the payload just before serialize (Phase 4c). The descriptor
-        // (region.exits / region.entrance) is canonical for ALL substrates;
-        // serializeWorld still reads world.exits / world.entrance, so
-        // merging here keeps the substrate signatures unchanged and the
-        // emitted sidecar byte-identical (maze aliases its world; zone
-        // payloads append exits then entrance in the same positions the
-        // faked Map / stamped entrance used to occupy). Entrance is omitted
-        // when undefined (sphere-growth zone regions) to match the prior
-        // "never stamped" payload.
-        const entrance = getRegionEntrance(region);
-        const payloadForSerialize = {
-            ...region.playable_payload,
-            exits: getRegionExits(region),
-            ...(entrance ? { entrance } : {}),
-        };
-        const playablePayload = adapter.serializeWorld(
-            payloadForSerialize,
-            region.extracted_rules,
-            baseObstacleLib,
-            baseItemLib,
-        );
-        if (manaEnabled) {
-            playablePayload.manaEnabled = true;
-        }
-        // Emit fogEnabled explicitly so consumers can disambiguate
-        // "absent → default true" from "explicit false → opt-out".
-        playablePayload.fogEnabled = fogEnabled !== false;
-        regionMap[region.region_id] = {
-            substrate: substrateId,
-            render_hint: region.render_hint ?? substrateId,
-            // Driver-level layout coordinate. Lets the Region Graph
-            // panel reproduce the maze's spatial layout (one Cytoscape
-            // node per region, positioned by grid cell) instead of
-            // running its own force-directed pass — and lets any
-            // other consumer that wants to reason about adjacency
-            // (e.g. distinguishing teleporter from grid-adjacent
-            // edges) read the same coordinate space the maze uses.
-            grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
-            playable_payload: playablePayload,
-            // Resolved biome (substrate-supplied — null when the
-            // substrate doesn't have a biome concept). Round-trips so
-            // a regenerate-this-region action can reuse the same
-            // biome configuration. Omitted when null to keep the
-            // sidecar output minimal for substrates that ignore it.
-            ...(region.biome ? { biome: region.biome } : {}),
-            // Substrate-side auto-grow telemetry from generateRegionCore.
-            // Read by computeProcgenStats to surface formula
-            // under-provisioning in the procgen stats panel. Omitted
-            // (rather than null) when the adapter didn't report it.
-            ...(region.grow_telemetry ? { grow_telemetry: region.grow_telemetry } : {}),
-        };
+        const substrate = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+        substrateById.set(region.region_id, substrate);
+        const n = countBySubstrate.get(substrate) ?? 0;
+        ordinalById.set(region.region_id, n);
+        countBySubstrate.set(substrate, n + 1);
+    }
+    const serializeContext = Object.freeze({
+        substrateOfRegion: (regionId) => substrateById.get(regionId) ?? null,
+        ordinalOfRegion: (regionId) => ordinalById.get(regionId) ?? null,
+    });
+    for (const region of grid.allRegions()) {
+        regionMap[region.region_id] = serializeRegionEntry(region, {
+            manaEnabled, fogEnabled, baseObstacleLib, baseItemLib, serializeContext, arrival,
+        });
     }
     return { [playerId]: regionMap };
+}
+
+/**
+ * ⛓⛓ **ONE REGION'S SIDECAR ENTRY** — the per-region body of
+ * `buildPresetSidecars`, factored out (APWORLD SUBSTRATE CHANGE R0) so the hub's
+ * `regenerate-region-sidecar` op (`apworldEditor/regionRegenerate.js`) serialises a
+ * regenerated region through the SAME code the pipeline writes a sidecar with, and
+ * the two cannot drift. `region` is a realised descriptor (`generateRegion`'s answer,
+ * after ③'s exit linking) carrying `cell`. Byte-inert by construction: the three
+ * `dump-*-byteidentity.mjs` oracles are its gate.
+ */
+export function serializeRegionEntry(region, {
+    manaEnabled = false,
+    fogEnabled = true,
+    baseObstacleLib = DEFAULT_OBSTACLES,
+    baseItemLib = DEFAULT_ITEMS,
+    // ⛓ seedling-pipeline T1's 5th `serializeWorld` argument — which substrate
+    //   plays the region an exit leads to (`{substrateOfRegion(regionId)}`).
+    //   `buildPresetSidecars` builds it over the whole grid; a caller that has
+    //   no grid (the hub's op) passes what it knows, or nothing — a
+    //   four-argument serializer never sees it.
+    serializeContext = undefined,
+    // ⛓ tutorial-bugs (⚖ the user, 2026-10-10: maze regions can work like
+    //   zones) — 'zone': every arrival lands on the room's entrance. Stamped
+    //   only where it means something: a substrate whose `sidecarFields`
+    //   declares `arrival`, in a region with no LINKED reverse exit (the
+    //   spiral's), where the runtime would otherwise land on the exit back.
+    arrival = null,
+} = {}) {
+    const substrateId = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+    const adapter = getAdapter(substrateId);
+    // Re-attach the engine-owned structural fields (exits + entrance)
+    // onto the payload just before serialize (Phase 4c). The descriptor
+    // (region.exits / region.entrance) is canonical for ALL substrates;
+    // serializeWorld still reads world.exits / world.entrance, so
+    // merging here keeps the substrate signatures unchanged and the
+    // emitted sidecar byte-identical (maze aliases its world; zone
+    // payloads append exits then entrance in the same positions the
+    // faked Map / stamped entrance used to occupy). Entrance is omitted
+    // when undefined (sphere-growth zone regions) to match the prior
+    // "never stamped" payload.
+    const entrance = getRegionEntrance(region);
+    const payloadForSerialize = {
+        ...region.playable_payload,
+        exits: getRegionExits(region),
+        ...(entrance ? { entrance } : {}),
+    };
+    const playablePayload = adapter.serializeWorld(
+        payloadForSerialize,
+        region.extracted_rules,
+        baseObstacleLib,
+        baseItemLib,
+        serializeContext,
+    );
+    if (manaEnabled) {
+        playablePayload.manaEnabled = true;
+    }
+    // Emit fogEnabled explicitly so consumers can disambiguate
+    // "absent → default true" from "explicit false → opt-out".
+    playablePayload.fogEnabled = fogEnabled !== false;
+    if (arrival
+        && substrateRegistry.get(substrateId)?.sidecarFields?.arrival
+        && !(playablePayload.exits ?? []).some((e) => e?.targetExitId)) {
+        playablePayload.arrival = arrival;
+    }
+    return {
+        substrate: substrateId,
+        render_hint: region.render_hint ?? substrateId,
+        // Driver-level layout coordinate. Lets the Region Graph
+        // panel reproduce the maze's spatial layout (one Cytoscape
+        // node per region, positioned by grid cell) instead of
+        // running its own force-directed pass — and lets any
+        // other consumer that wants to reason about adjacency
+        // (e.g. distinguishing teleporter from grid-adjacent
+        // edges) read the same coordinate space the maze uses.
+        grid_cell: { gx: region.cell.gx, gy: region.cell.gy },
+        playable_payload: playablePayload,
+        // Resolved biome (substrate-supplied — null when the
+        // substrate doesn't have a biome concept). Round-trips so
+        // a regenerate-this-region action can reuse the same
+        // biome configuration. Omitted when null to keep the
+        // sidecar output minimal for substrates that ignore it.
+        ...(region.biome ? { biome: region.biome } : {}),
+        // Substrate-side auto-grow telemetry from generateRegionCore.
+        // Read by computeProcgenStats to surface formula
+        // under-provisioning in the procgen stats panel. Omitted
+        // (rather than null) when the adapter didn't report it.
+        ...(region.grow_telemetry ? { grow_telemetry: region.grow_telemetry } : {}),
+    };
 }
 
 // stringifyRulesJson lives in shared/rulesJsonBuilder.js so the
@@ -5098,6 +7244,112 @@ export function buildPresetSidecars(grid, {
 // use it without depending on the procgen pipeline. Re-exported here
 // to keep existing import paths working.
 export { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+
+/**
+ * Why `rulesJson` carries no embedded sphere log, when that is because
+ * generateSphereLog REFUSED it (rules an inventory cannot decide): the
+ * refusal's message (naming the rule kinds), else null. Re-runs the walk,
+ * so call it only on a document without a `sphere_log`.
+ */
+export function sphereLogRefusal(rulesJson, playerId = '1') {
+    if (Array.isArray(rulesJson?.sphere_log)) return null;
+    try {
+        generateSphereLog(rulesJson, { playerId });
+        return null;
+    } catch (e) {
+        return e instanceof SphereLogNotEvaluableError ? e.message : null;
+    }
+}
+
+/**
+ * A world's Discovery-mode choice for `playerId`, read back off its
+ * `discovery_mode` block: 'on' / 'off', or 'follow' when the slot has none.
+ */
+export function discoveryModeOf(rulesJson, playerId) {
+    const enabled = rulesJson?.discovery_mode?.[String(playerId)]?.enabled;
+    return enabled === true ? 'on' : enabled === false ? 'off' : 'follow';
+}
+
+/**
+ * The `discoveryMode` key a config / envelope carries: absent at 'follow', so
+ * every config written before the knob — and every default one since — keeps
+ * its bytes.
+ */
+export function discoveryModeConfig(discoveryMode) {
+    return discoveryMode && discoveryMode !== 'follow' ? { discoveryMode } : {};
+}
+
+/**
+ * ⛓ bulletml N5 — call every `priceRegions` registry hook of a substrate the slot
+ * uses (sorted by id): `hook({rulesJson, sphereLog, playerId, params})` writes its
+ * regions' payloads against the planned walk of the embedded sphere log. A hook
+ * that throws leaves its payloads as they were (the world still builds; the
+ * warning names the substrate). No substrate without the hook is touched.
+ */
+export function priceSubstrateRegions(scaffold, { playerId = '1', params = null } = {}) {
+    const pid = String(playerId);
+    const ids = new Set(Object.values(scaffold?.preset_sidecars?.[pid] ?? {})
+        .map((sc) => sc?.substrate).filter(Boolean));
+    for (const id of [...ids].sort()) {
+        const hook = substrateRegistry.get(id)?.priceRegions;
+        if (typeof hook !== 'function') continue;
+        try {
+            hook({ rulesJson: scaffold, sphereLog: scaffold.sphere_log, playerId: pid, params });
+        } catch (e) {
+            console.warn(`[procgenPipeline] ${id}.priceRegions failed: ${e?.message ?? e}`);
+        }
+    }
+}
+
+/**
+ * ⛓ rule-node F3 — what a top-down compile carries from its SOURCE rules.json.
+ * The compile copies the source's exit/location rules verbatim, and those rules
+ * name the source's helpers, which read its options and world attributes, its
+ * progression mapping and its dungeons (`parent_region.dungeon`). Measured over
+ * an alttp source (I1): all items reach 111 of 268 locations from the bare
+ * scaffold, and 268 with every block below — the source's own count.
+ *  - `slotBlocks`: per-player blocks written verbatim as `{[playerId]: block}`
+ *    (an empty one is not written, so a source without one keeps its bytes).
+ *  - `worldIdentityKeys`: `world[playerId]` keys the compiled world keeps ITS
+ *    own of; every other key of the source's world block is carried.
+ *  - `regionGraphKeys`: region keys that are the compiled graph itself; every
+ *    OTHER key a source region of the same name has and the compiled one lacks
+ *    is carried (alttp: `dungeon`, `is_light_world`, `type`, `hint_text`, …).
+ * NOT carried, by reason — the compile writes its own: `regions`,
+ * `start_regions`, `items`, `itempool_counts`, `canonical_placements`,
+ * `preset_sidecars`, the identity keys (`game_name`, `seed_name`, …); carried by
+ * their own opts: `item_groups`, `starting_items`, `exporter`'s
+ * `assume_bidirectional_exits`. `game_info`: its completion condition names the
+ * source's goal, which the compiled world inherits as the scaffold default (see
+ * `completionConditionItem`). The rest of `exporter` (alttp's
+ * `use_auto_indirect_conditions`): a hint to the Python exporter about the
+ * SOURCE world's entrances, which the compile re-cut.
+ */
+export const TOPDOWN_SOURCE_CARRY = Object.freeze({
+    slotBlocks: Object.freeze(['helpers', 'progression_mapping', 'dungeons']),
+    worldIdentityKeys: Object.freeze(['game', 'world_class_name', 'world_directory']),
+    regionGraphKeys: Object.freeze(['name', 'exits', 'locations', 'entrances']),
+});
+
+/** Write the `TOPDOWN_SOURCE_CARRY` blocks of `source` onto `scaffold` (slot `playerId`). */
+function carrySourceBlocks(scaffold, source, playerId) {
+    const { slotBlocks, worldIdentityKeys, regionGraphKeys } = TOPDOWN_SOURCE_CARRY;
+    for (const key of slotBlocks) {
+        const block = source[key]?.[playerId];
+        if (block && Object.keys(block).length) {
+            scaffold[key] = { ...scaffold[key], [playerId]: structuredClone(block) };
+        }
+    }
+    for (const [key, value] of Object.entries(source.world?.[playerId] ?? {})) {
+        if (!worldIdentityKeys.includes(key)) scaffold.world[playerId][key] = structuredClone(value);
+    }
+    const sourceRegions = regionsOf(source, playerId);
+    for (const [name, region] of Object.entries(scaffold.regions[playerId])) {
+        for (const [key, value] of Object.entries(sourceRegions[name] ?? {})) {
+            if (!regionGraphKeys.includes(key) && !Object.hasOwn(region, key)) region[key] = structuredClone(value);
+        }
+    }
+}
 
 export function buildRulesJson(grid, opts = {}) {
     const {
@@ -5111,8 +7363,8 @@ export function buildRulesJson(grid, opts = {}) {
         playerId = '1',
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
-        // Whether back-exits inherit their forward exit's rule. Mirrors
-        // the source rules.json's top-level flag. For grid-growth
+        // Whether back-exits inherit their forward exit's rule. Written
+        // as the slot's `exporter[playerId]` flag. For grid-growth
         // output (this driver) the default is true — every gate is
         // bidirectional.
         assumeBidirectional = true,
@@ -5124,51 +7376,61 @@ export function buildRulesJson(grid, opts = {}) {
         //     source_counts?: { regions, locations, exits, logic_gates },
         //     stop_reason?: string }
         // region_count and grid_dims are auto-derived from the grid.
-        // See NewDocs/plans/presets-panel-overhaul.md §"Driver
-        // metadata, added in this plan".
         procgenMetadata = null,
         // Embed a procgen-side sphere log at the top level of the
         // output rules.json. The forward simulator (Phase 1.4) walks
         // the freshly-built scaffold and produces JSONL-compatible
         // entries. Default true; callers (tests, debug harnesses) can
-        // disable. See debugging-tools.md Phase 4.
+        // disable.
         embedSphereLog = true,
-        // An authoritative sphere log (array of JSONL entries) to embed
-        // VERBATIM as `sphere_log` instead of the JS forward simulator's
-        // re-derivation. Top-down-sphere passes the real
-        // `_sphere_log.jsonl` here so the embedded log (and loop_costs
-        // derived from it) reflect the source world's true AP logic rather
-        // than the unverified JS sweep. null → embed generateSphereLog's
-        // output as before. Only used when embedSphereLog is true.
-        sphereLog = null,
         // Embed loop-mode cost data (per-region moveCost, per-location
         // cost) at the top level of the output rules.json. Requires
         // embedSphereLog. The runtime loops module auto-loads this when
         // present. Default false (loop mode is opt-in).
-        // See NewDocs/plans/procedural-generation/
-        // loop-mode-substrate-integration.md (Phase 2).
         enableLoopMode = false,
+        // ⛓ tutorial-bugs — how this world's rooms are entered, stamped as
+        // each payload's `arrival` (see serializeRegionEntry). null = stamp
+        // nothing (every world before the knob).
+        arrival = null,
         // Per-region XP effect mode stamped on every loop_costs region
         // entry: 'cost' (default — XP discounts mana cost), 'speed'
         // (reserved for v2 — XP discounts action time only), 'both'
         // (reserved for v2), or 'none' (XP has no effect on cost).
         // Threaded through to generateLoopCosts when enableLoopMode is
-        // true. See loop-mode-substrate-integration.md (Phase 7).
+        // true.
         regionXpEffect = 'cost',
+        // The world's Discovery-mode choice for its slot: 'follow' (default —
+        // write nothing; discovery follows loop mode, as before the knob),
+        // 'on' or 'off' → `discovery_mode[playerId] = { enabled }`, which the
+        // discovery module applies on load (discovery/worldDiscoveryMode.js).
+        discoveryMode = 'follow',
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
         // present in the compiled items pool, with `sourceItems`
         // backfilling definitions for starting-only items (items that
         // exist in the source's items pool but were never placed in
         // any region — APCalc has these). Default empty.
+        // ⛓ B1 — `sourceItems` also backfills every item a compiled RULE names
+        // that no placed location holds (below, after the back-exits inherit).
         startingItems = [],
         sourceItems = null,
-        // Item names whose canonical placement is ALWAYS locked
-        // (compiled location gets locked:true → world_generator uses
-        // place_locked_item). The sphere-growth bounce start passes
+        // The SOURCE world's `item_groups[playerId]` list, written VERBATIM as
+        // this document's; null (every driver with no source world) keeps the
+        // synthetic `['Everything']`.
+        sourceItemGroups = null,
+        // The SOURCE world's locations, name → location (`sourceLocationsOf`):
+        // a source event location compiles as one (`compileRegionGraph`).
+        sourceLocations = null,
+        // ⛓ rule-node F3 — the SOURCE rules.json a top-down compile copied its
+        // rules from: its `TOPDOWN_SOURCE_CARRY` blocks ride along. null (every
+        // driver with no source world) carries nothing.
+        source = null,
+        // Item names whose canonical placement is ALWAYS held
+        // (compiled location gets pinned:true → world_generator uses
+        // place_locked_item on every seed). The sphere-growth bounce start passes
         // its start-stack arrow here so even multiworld fill keeps
         // the intro pickup an arrow.
-        lockedCanonicalItems = [],
+        pinnedCanonicalItems = [],
         // When set to an item name, overwrite the scaffold's default
         // constant-true completion_condition with an item_check on
         // this item (state.has(itemName) at runtime). Grid-growth
@@ -5176,13 +7438,37 @@ export function buildRulesJson(grid, opts = {}) {
         // worldgen package satisfies AP's test_completion_condition.
         // Top-down leaves this null and inherits the scaffold default.
         completionConditionItem = null,
+        // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
+        // (`finalizeTopDown`'s `menuRegion`), emitted IN PLACE OF the synthetic
+        // `{GameStart → start}` Menu: its exits (to placed targets) with their
+        // rules, its locations with their items (pooled and placed like a grid
+        // region's). null — grid-growth, sphere growth, a source with no Menu —
+        // keeps the synthetic one, byte for byte.
+        menuRegion = null,
+        // The panel's procgen params bag (or the part a driver kept of it), handed to a
+        // substrate's `priceRegions` hook when loop mode prices the world (bulletml N5:
+        // Noiz2sa's `noiz2saFinalSpan`). null — the hooks' defaults.
+        procgenParams = null,
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
+    // ⛔ No caller-supplied log. The embedded `sphere_log` is ALWAYS
+    // generateSphereLog over THIS compiled world. A `sphereLog` opt once
+    // embedded a source world's log verbatim on the claim that "top-down
+    // keeps source region names" — false (a compiled world adds `Menu` and
+    // renames regions), so the spoiler test failed at sphere 0 on those
+    // presets. Refused by name so a stale caller cannot reintroduce it.
+    if (opts.sphereLog !== undefined) {
+        throw new Error('buildRulesJson: the `sphereLog` option is gone — the embedded sphere_log is '
+            + 'always generated over the compiled world (pass the source log to the top-down LAYOUT instead)');
+    }
 
     const compiled = compileRegionGraph(grid, {
         startCell, itemLib, obstacleLib, playerId,
-        lockedItems: lockedCanonicalItems,
+        pinnedItems: pinnedCanonicalItems,
+        menuRegion,
+        sourceItems,
+        sourceLocations,
     });
 
     const scaffold = makeRulesJsonScaffold({
@@ -5194,8 +7480,9 @@ export function buildRulesJson(grid, opts = {}) {
         playerName,
         // Menu is the virtual start region — AP convention. Real
         // starting geometry lives in compiled.start_region_name, which
-        // Menu connects to with an unconditional exit.
-        startRegions: ['Menu'],
+        // Menu connects to with an unconditional exit (or, for a top-down
+        // source, the source's own Menu under its own name — M1).
+        startRegions: [compiled.menu_region?.name ?? 'Menu'],
     });
 
     if (completionConditionItem) {
@@ -5208,27 +7495,34 @@ export function buildRulesJson(grid, opts = {}) {
     // Synthetic Menu region prefixed in front of compiled regions.
     // Object-literal insertion order is preserved in JSON output, so
     // Menu appears first.
-    const menuRegion = {
+    // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
+    // spell inline — the third copy of that literal.
+    // ⛓ M3 — a PLACED start that already carries this name (a `Menu` that is
+    // a real room: sm64ex's with its 5 locations, ff1's with no exit) replaces
+    // the wrapper in the spread below: its region keeps the lead, the wrapper's
+    // `GameStart` is gone, and `start_regions` names it — the start IS the menu.
+    const menu = compiled.menu_region ?? {
         name: 'Menu',
-        exits: [
-            {
-                name: 'GameStart',
-                connected_region: compiled.start_region_name,
-                access_rule: { rule: 'True_' },
-            },
-        ],
+        exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
     };
-    scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
+    // ⛓ EDITOR v3 E2a — LEFT: this is a WRITE. `rulesGraph` is a reader with no
+    //   mutating door, by design (its header: "structural and knows no rule
+    //   logic"), and a writer added for one caller would be the second spelling
+    //   of the document shape it exists to make single.
+    scaffold.regions[playerId] = { [menu.name]: menu, ...compiled.regions };
     scaffold.items[playerId] = compiled.items;
     scaffold.itempool_counts[playerId] = compiled.itempool_counts;
     scaffold.canonical_placements[playerId] = compiled.canonical_placements;
 
     // AP convention: `item_groups["1"]` is a list of group *names*.
-    // "Everything" is the standard group covering all non-event items.
-    // The inventoryUI warns when the list is empty; a single-entry
-    // list suffices.
-    scaffold.item_groups[playerId] = ['Everything'];
+    // A source world's list is carried verbatim (its items carry their
+    // groups verbatim, above). Without one, "Everything" — the standard
+    // group covering all non-event items; the inventoryUI warns when the
+    // list is empty, and a single-entry list suffices.
+    scaffold.item_groups[playerId] = Array.isArray(sourceItemGroups)
+        ? [...sourceItemGroups] : ['Everything'];
+    if (source) carrySourceBlocks(scaffold, source, String(playerId));
 
     // Starting items: keep names that exist in the compiled items
     // pool. For names that don't, backfill the definition from
@@ -5236,54 +7530,99 @@ export function buildRulesJson(grid, opts = {}) {
     // never placed it — e.g. APCalc's starting-only buttons). Drop
     // anything that's neither — orphan references would fail
     // rulesDoc validation as "starting item is not a defined item".
+    // ⛓ B1 — through the ONE backfill (`backfillItemDefs`, below), so a starting
+    // def whose verbatim id the pool already holds moves as a rule item's does.
+    // ⛓ Each kept starting item is ALSO pooled: the exporter's `itempool_counts`
+    // is precollected + placed (`get_itempool_counts`), and world_generator
+    // inverts exactly that — its pool is `itempool_counts − starting_items −
+    // locked events`. Pooling only the placed copies (as this did) left an apcalc
+    // top-down world one item short per starting button: `No more spots to place`.
     if (Array.isArray(startingItems) && startingItems.length > 0) {
-        const kept = [];
-        for (const name of startingItems) {
-            if (scaffold.items[playerId][name] != null) {
-                kept.push(name);
-                continue;
-            }
-            const def = sourceItems?.[name];
-            if (def != null) {
-                scaffold.items[playerId][name] = def;
-                kept.push(name);
-            }
-        }
-        scaffold.starting_items[playerId] = kept;
+        backfillItemDefs(scaffold.items[playerId], startingItems, sourceItems);
+        scaffold.starting_items[playerId] = startingItems
+            .filter((name) => Object.hasOwn(scaffold.items[playerId], name));
+        const pool = scaffold.itempool_counts[playerId];
+        for (const name of scaffold.starting_items[playerId]) pool[name] = (pool[name] || 0) + 1;
     }
 
-    // Top-level flag: every back-exit inherits the forward exit's
-    // rule. The source-rules.json schema's `assume_bidirectional_exits`
-    // is what the player module / future top-down driver consult to
-    // decide whether to construct back-exits in the first place.
-    scaffold.assume_bidirectional_exits = assumeBidirectional;
+    // The slot's flag: every back-exit inherits the forward exit's rule.
+    // `exporter[playerId].assume_bidirectional_exits` is the key's ONE home
+    // (⚖ user 2026-10-03, rules F1 — per player, never top level); the
+    // runtime (`StateManagerProxy.getEffectiveBidirectionalSetting`) and a
+    // top-down layout over this document read it there.
+    scaffold.exporter[playerId] = { ...scaffold.exporter[playerId], assume_bidirectional_exits: assumeBidirectional };
 
     // Bidirectional rule inheritance: for every back-exit in the
     // compiled regions, copy the paired forward exit's compiled rule.
     // Without this the back-exit's rule is True_ (its path through
     // the entrance has no obstacles), which would let the player
     // re-enter A from B without re-satisfying the gate.
+    //
+    // ⛓⛓ CONCEPT LIBRARY T2c — **AN AUTHORED PAYLOAD CARRIES THE COPIED RULE
+    // TOO.** A substrate whose `regionRoundTrip.rules` is AUTHORED
+    // (`procgenCore/roundTripRules.js`; the text adventure's `exitGates`)
+    // re-emits its rules FROM its payload, and its serializer reads each gate
+    // off the region's exit record. `insertBackExit` gives a back-exit's record
+    // no rule, so until T2c the payload said nothing where the document said
+    // the forward gate: the census's rule agreement FAILed on every such room,
+    // and the round trip answered `True_` for the back-exit. So the copied rule
+    // is ALSO written on that record (a clone; a `True_` is recorded ABSENT,
+    // the room's own convention), and `buildPresetSidecars` below picks it up
+    // unchanged. ⛔ A DERIVED substrate's record is never touched: its round
+    // trip re-derives from geometry, and this pass re-applies on its rebuild.
     if (assumeBidirectional) {
         const regionsByName = {};
         for (const region of grid.allRegions()) {
             regionsByName[region.region_id] = region;
         }
+        // ⛓ EDITOR v3 E2a — the SCAFFOLD is a rules.json document by now
+        //   (`scaffold.regions[playerId]` was written above), so its region map
+        //   is read through the ONE reader like any other.
+        const compiledRegions = regionsOf(scaffold, playerId);
         for (const region of grid.allRegions()) {
-            const compiledRegion = scaffold.regions[playerId][region.region_id];
+            const compiledRegion = compiledRegions[region.region_id];
             if (!compiledRegion) continue;
             for (const exit of compiledRegion.exits) {
                 const worldExit = getRegionExits(region)?.get(exit.name);
                 if (!worldExit?.isBackExit) continue;
                 const targetRegion = regionsByName[exit.connected_region];
-                const compiledTarget = scaffold.regions[playerId][exit.connected_region];
+                const compiledTarget = compiledRegions[exit.connected_region];
                 if (!targetRegion || !compiledTarget) continue;
                 const fwdExit = compiledTarget.exits.find(
                     (e) => e.name === worldExit.targetExitId,
                 );
-                if (fwdExit) exit.access_rule = fwdExit.access_rule;
+                if (!fwdExit) continue;
+                exit.access_rule = fwdExit.access_rule;
+                if (roundTripRulesOf(substrateRegistry.get(region.substrate ?? DEFAULT_SUBSTRATE_ID))
+                    !== ROUND_TRIP_RULES.AUTHORED) continue;
+                if (fwdExit.access_rule && fwdExit.access_rule.rule !== 'True_') {
+                    worldExit.access_rule = structuredClone(fwdExit.access_rule);
+                } else {
+                    delete worldExit.access_rule;
+                }
             }
         }
     }
+
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE B1 — **EVERY ITEM A RULE NAMES IS DEFINED.**
+    // The pool above defines only the items some placed location holds, and the
+    // rules ride in verbatim — so a rule naming an item nothing placed (an event,
+    // a starting-only item, one whose location's region the layout left out, one
+    // a return exit inherited just above) pointed at nothing (`unknown item`).
+    // Each such name the source defines gets the source's def VERBATIM — id and
+    // all, as the starting backfill above — and NO pool count and NO placement:
+    // the item is REFERENCED, not placed (a pool count would make AP's fill place
+    // a copy). Order: the compiled keys first (unchanged bytes for a world with
+    // nothing to backfill), then the backfilled in first-reference (document)
+    // order. A name the source lacks too stays undefined and is named by
+    // `ruleItemWarnings` — the source's own gap, not the compile's to invent.
+    // ⚠ The ONE departure from verbatim is the id, and only on a collision: the
+    // compiled pool numbers itself from ITEM_ID_BASE upward, so a source id can
+    // land on a compiled item's (measured — plan §30.0: alttp's `Silver Bow` 59).
+    // Such a def moves to the lowest id ≥ ITEM_ID_BASE that no def of the
+    // document holds or will hold (S1's `avoidIds` precedent); a null id (an
+    // event) stays null.
+    backfillItemDefs(scaffold.items[playerId], itemNamesInDocument(scaffold, playerId), sourceItems);
 
     // Menu is virtual — no playable payload, no sidecar entry.
     // Loop mode flips `manaEnabled: true` (substrate mana hooks).
@@ -5291,11 +7630,44 @@ export function buildRulesJson(grid, opts = {}) {
     // discovery applies); callers wanting the legacy reveal-on-entry
     // behavior pass `fogEnabled: false` explicitly. Per-region
     // overrides are a later v2 concern.
+    //
+    // ⛓ A substrate's TOP-LEVEL blocks (`rulesJsonBlocks()` on its registry
+    // entry): what its runtime reads off the rules.json itself rather than off
+    // a sidecar — flash_seedling's `flash_panel` (the panel engages on it) and
+    // `region_atlas` (the map document it resolves). Asked ONLY of the
+    // substrates that realised ≥1 region here, in grid order, so a world
+    // without one carries none of its blocks and every other world's bytes are
+    // what they were. ⛓ rules F2: each block is the SLOT's — written as
+    // `{[playerId]: block}` (the P1a shape), never at the document level. A key
+    // the document already holds is refused — two writers of one block would
+    // overwrite each other silently.
+    const realisedSubstrates = [];
+    for (const region of grid.allRegions()) {
+        const id = region.substrate ?? DEFAULT_SUBSTRATE_ID;
+        if (!realisedSubstrates.includes(id)) realisedSubstrates.push(id);
+    }
+    for (const id of realisedSubstrates) {
+        const blocks = substrateRegistry.get(id)?.rulesJsonBlocks?.() ?? {};
+        for (const [key, value] of Object.entries(blocks)) {
+            if (Object.hasOwn(scaffold, key)) {
+                throw new Error(`buildRulesJson: substrate '${id}' asks for a top-level '${key}' block, `
+                    + 'which this rules.json already carries — two writers of one block would overwrite '
+                    + 'each other silently, so the compile refuses rather than pick one.');
+            }
+            scaffold[key] = { [String(playerId)]: value };
+        }
+    }
+    // ⛓ RETURN TO MENU (procgenCore/restartWarp.js) — a realised substrate whose runtime's Restart warps the player
+    // to the start declares `restartWarp`, and the slot then says `exporter[p].return_to_menu: true`: returning to
+    // the menu is always possible. A flag, never an edge (⚖ the user, 2026-10-05); a world with no such substrate is
+    // untouched, byte for byte.
+    if (realisedSubstrates.some((id) => substrateRegistry.get(id)?.restartWarp)) declareReturnToMenu(scaffold, playerId);
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId,
         baseObstacleLib: obstacleLib,
         baseItemLib: itemLib,
         manaEnabled: enableLoopMode,
+        arrival,
     });
 
     // Procgen metadata: caller-supplied fields plus auto-derived
@@ -5311,7 +7683,9 @@ export function buildRulesJson(grid, opts = {}) {
             if (cell.gx > maxGx) maxGx = cell.gx;
             if (cell.gy > maxGy) maxGy = cell.gy;
         }
-        scaffold.procgen_metadata = {
+        // ⛓ P1a (⚖ user 2026-09-27) — the block is the SLOT's: `{[playerId]: block}`,
+        //   the shape `preset_sidecars` has.
+        const slotMetadata = {
             ...procgenMetadata,
             region_count: allRegions.length,
             grid_dims: {
@@ -5319,6 +7693,21 @@ export function buildRulesJson(grid, opts = {}) {
                 height: maxGy >= 0 ? maxGy + 1 : 0,
             },
         };
+        scaffold.procgen_metadata = { [String(playerId)]: slotMetadata };
+        // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
+        // installed with, for every source that declares
+        // `recordablePipelineConfig` AND realised ≥1 region here (the same
+        // grid-derived population as the blocks above). No declarer realised ⇒
+        // no key at all, so every other world's metadata is what it was.
+        const configs = recordableConfigsFor(realisedSubstrates, (id) => substrateRegistry.get(id));
+        if (configs) {
+            if (Object.hasOwn(procgenMetadata, SUBSTRATE_CONFIGS_KEY)) {
+                throw new Error(`buildRulesJson: the caller's procgenMetadata carries '${SUBSTRATE_CONFIGS_KEY}', `
+                    + 'which the compile writes from the installed sources — two writers of one block would '
+                    + 'overwrite each other silently, so the compile refuses rather than pick one.');
+            }
+            slotMetadata[SUBSTRATE_CONFIGS_KEY] = configs;
+        }
     }
 
     // Procgen-side sphere log — Phase 4. Walks the freshly-built
@@ -5326,28 +7715,7 @@ export function buildRulesJson(grid, opts = {}) {
     // and embeds the result as a top-level array. The loader
     // (sphereState/index.js) falls back to this field when no
     // separate _sphere_log.jsonl is present.
-    if (embedSphereLog && Array.isArray(sphereLog) && sphereLog.length > 0) {
-        // Authoritative log supplied (top-down-sphere): embed it verbatim.
-        // Top-down keeps source region names as region_id, so the log's
-        // region references resolve directly against the emitted regions.
-        // Ensure the metadata header that every _sphere_log.jsonl (and
-        // generateSphereLog) leads with is present — some sources (e.g. a
-        // log pulled from sphereState, which strips metadata on parse) hand
-        // a bare state_update array. Synthesize one when absent so the
-        // embedded log matches the canonical format.
-        scaffold.sphere_log = sphereLog[0]?.type === 'metadata'
-            ? sphereLog
-            : [
-                {
-                    type: 'metadata',
-                    seed,
-                    seed_name: seedName,
-                    event_locations: {},
-                    event_items: {},
-                },
-                ...sphereLog,
-            ];
-    } else if (embedSphereLog) {
+    if (embedSphereLog) {
         try {
             scaffold.sphere_log = generateSphereLog(scaffold, {
                 playerId,
@@ -5357,41 +7725,74 @@ export function buildRulesJson(grid, opts = {}) {
                 },
             });
         } catch (e) {
-            // Don't fail the entire build if sphere log generation
-            // throws — emit a marker entry the loader will see and
-            // log a warning, but keep the rules.json otherwise valid.
-            scaffold.sphere_log = [{
-                type: 'metadata',
-                error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
-            }];
+            // ⚖ (the user, 2026-10-01) A world whose rules an inventory
+            // cannot decide (a game helper, CanReachLocation, …) carries NO
+            // log rather than a guessed one: its absence reads as "no sphere
+            // log" to the app and fails the spoiler test by name. The reason
+            // is `sphereLogRefusal(rulesJson)`, which callers report.
+            if (e instanceof SphereLogNotEvaluableError) {
+                delete scaffold.sphere_log;
+            } else {
+                // Don't fail the entire build if sphere log generation
+                // throws — emit a marker entry the loader will see and
+                // log a warning, but keep the rules.json otherwise valid.
+                scaffold.sphere_log = [{
+                    type: 'metadata',
+                    error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
+                }];
+            }
         }
     }
 
     // Loop-mode cost generation — Phase 2 of loop-mode-substrate-integration.
     // Pure simulation against the freshly-generated sphere log; runtime
     // costDataManager picks up `loop_costs` directly from rules.json on load.
+    //
+    // ⛔ NO `generatedAt` — PROCGEN PIPELINE PRESETS P0 (⚖ user, 2026-09-16).
+    // `generateLoopCosts` stamps `new Date().toISOString()`, which made a
+    // loop-mode world differ between two compiles in that one field and nothing
+    // else, so no generated world could be held byte-identical across runs. It
+    // is deleted after the call — the precedent is scripts/test/presetLoopCosts.mjs,
+    // which drops it from every committed loop-mode preset for the same reason
+    // (its header). The SOURCE writer stays: loopCostGenerator.js lives in the
+    // `shared/` submodule, and other writers (the Loops panel's defaults, the
+    // JtA cost planner) still stamp one, which is why the schema keeps the field
+    // optional. `version` and `generatedFrom` are deterministic and kept.
+    // ⛓ P1a — the block is the SLOT's: `loop_costs[playerId]`.
     if (enableLoopMode && embedSphereLog && Array.isArray(scaffold.sphere_log)) {
+        // ⛓ bulletml N5 — a substrate that prices its regions against the walk
+        // (its registry `priceRegions` hook: Noiz2sa picks each region's spans and
+        // drain rate) writes its payloads FIRST, so the block below reads the
+        // rates they carry (`writeCostsByClass`, a SUMMARY region's payload rate).
+        priceSubstrateRegions(scaffold, { playerId, params: procgenParams });
+        let block;
         try {
-            scaffold.loop_costs = generateLoopCosts({
+            block = generateLoopCosts({
                 rulesJson: scaffold,
                 sphereLog: scaffold.sphere_log,
                 playerId,
                 regionXpEffect,
                 sourceFileName: seedName || `seed_${seed}`,
             });
+            delete block.generatedAt;
         } catch (e) {
             // Match the sphere-log error pattern: don't fail the build,
-            // emit a marker the loader will warn about.
-            scaffold.loop_costs = {
+            // emit a marker the loader will warn about. No generatedAt (above).
+            block = {
                 version: '1.0',
-                generatedAt: new Date().toISOString(),
                 error: `loopCostGenerator failed: ${e?.message ?? String(e)}`,
                 regions: {},
                 locations: {},
-                defaultRegionCost: 50,
-                defaultLocationCost: 10,
+                defaultRegionCost: DEFAULT_REGION_COST,
+                defaultLocationCost: DEFAULT_LOCATION_COST,
             };
         }
+        scaffold.loop_costs = { [String(playerId)]: block };
+    }
+    if (discoveryMode === 'on' || discoveryMode === 'off') {
+        scaffold.discovery_mode = { [String(playerId)]: { enabled: discoveryMode === 'on' } };
+    } else if (discoveryMode !== 'follow' && discoveryMode != null) {
+        throw new Error(`buildRulesJson: discoveryMode must be 'follow', 'on' or 'off', got ${JSON.stringify(discoveryMode)}`);
     }
 
     return scaffold;

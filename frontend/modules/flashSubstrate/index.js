@@ -4,9 +4,10 @@
  *    iframe pointing at a recompiled Flash game page (SWF -> C -> WASM
  *    via SWFRecomp-CC). v1 ships a placeholder page so the module is
  *    testable before the real recompiled-game page lands.
- *  - Registers a substrate registry entry (id: 'flash'), so
- *    procgenPlayer publishes flash:loadRegion when the player enters
- *    a region tagged with this substrate.
+ *  - Registers NO substrate registry entry of its own (⚖ user,
+ *    2026-10-18: the generic 'flash' entry "isn't really a substrate").
+ *    Per-game entries built on createFlashSubstrateEntry register where
+ *    their games are defined.
  *  - Acts as the host-side broker for the in-iframe bridge: relays the
  *    flash:loadRegion activation and brings the panel forward.
  *
@@ -15,34 +16,24 @@
  * received items (pollItems), and dispatches user:locationCheck when the
  * game's ActionScript cooperatively calls __swfBridge.sendLocation.
  *
- * See NewDocs/plans/procedural-generation/flash-substrate-converged.md
- * for the broader design (one substrate, two modes) and how this fits
- * with the maze / text-adventure / JtA substrates (the iframe-substrate
- * precedents this module clones).
+ * See docs/json/developer/procgen/flash.md.
  */
 
 import { FlashSubstratePanel } from './flashSubstratePanel.js';
-import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 // createFlashSubstrateEntry is exported for per-game entries (Shape 1):
 // each real Flash game registers its own substrate id + supportedFeatures
 // via the factory, all sharing this module's one panel + 'flash:loadRegion'
-// event. The module itself registers only the generic 'flash' entry;
-// per-game entries are added where real games are defined.
+// event. The module itself registers no entry; per-game entries are
+// added where real games are defined.
 
 export const moduleInfo = {
     name: 'flashSubstrate',
-    title: 'Flash',
+    title: 'Flash Substrate',
     componentType: 'flashSubstratePanel',
     icon: '🎞️',
     column: 3,
-    description:
-        'A Flash game hosted in an iframe as a procgen substrate, runtime-'
-        + 'neutral across SWFRecomp (SWF -> WASM), Ruffle, and native Flash '
-        + '(the runtime is chosen by the game page, not this module). Mode 1: '
-        + 'one AP region = one game instance; the region\'s AP locations = the '
-        + 'game\'s in-game objectives, reported cooperatively via the '
-        + '__swfBridge contract.',
+    category: 'Procgen Substrate Panels',
+    description: 'A region\'s Flash game; for now a placeholder page with one button per objective, each sending its check.',
     requires: ['stateManager', 'iframeAdapter'],
 };
 
@@ -79,13 +70,6 @@ export function register(registrationApi) {
 
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent('flash:loadRegion');
-
-    // Guarded register so re-registration of the same id is harmless
-    // (mirrors the jtaSubstrateWrapper / textAdventureSubstrateWrapper
-    // pattern; the library's import side-effect may already have run).
-    if (!substrateRegistry.has(substrateRegistryEntry.id)) {
-        substrateRegistry.register(substrateRegistryEntry);
-    }
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {

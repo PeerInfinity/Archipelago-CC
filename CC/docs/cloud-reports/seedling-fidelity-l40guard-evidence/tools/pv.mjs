@@ -1,0 +1,16 @@
+import { readFileSync } from 'node:fs';
+const R='/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { createRunForStaging, solveStaging, stagingFromTape } = await import(R+'tapeRunner.js');
+const { atlasLevelSource } = await import(R+'levelSource.js');
+const { parseTape } = await import(R+'tapeFormat.js');
+const SB = await import(R+'solverBot.js');
+const BD = await import(R+'botDriverV2.js');
+const v = JSON.parse(readFileSync(R+'fixtures/hammer-lb-hx/boot-414.json','utf8'));
+v.boot={level:40,x:760,y:848}; v.seam.items.hasGhostSword=false;
+const run = createRunForStaging(solveStaging(stagingFromTape(parseTape(JSON.stringify(v)))), atlasLevelSource());
+const [tx,ty]=process.argv[2].split(',').map(Number);
+const wps = BD.planWaypoints(run.world, run.state, {x:tx,y:ty}, null, {});
+console.log('wps', JSON.stringify(wps));
+const walk = SB.previewWalk(run, wps, 0, { strike: process.argv[3]==="nostrike"?null:SB.strikePolicyFor(run, {}), standFor: 60 });
+console.log('trunc', JSON.stringify(walk.truncated)?.slice(0,300));
+walk.samples.filter((s,i)=>i%15===0).forEach(s=>console.log(s.tick, s.phase, s.x?.toFixed(1), s.y?.toFixed(1)));

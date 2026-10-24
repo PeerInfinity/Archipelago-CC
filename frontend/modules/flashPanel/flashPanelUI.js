@@ -1,6 +1,36 @@
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { getDispatcher, getModuleEventBus, setActivePanelInstance } from './index.js';
+import {
+  stateManagerProxySingleton as stateManager, getLastRawJsonData,
+} from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import {
+  getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue, getSeedlingWasmSolveServices,
+} from './index.js';
+// ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
+import { SolveProgressView } from './seedlingSolveProgressView.js';
+import { nextSolveProgressMode, SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode } from './seedlingSolveProgress.js';
+import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
+import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
+// ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
+import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+// ⛓ VANILLA MAP — import-free (the controller imports no model): the real-room name → cell map.
+import { realRoomPlaybackMap } from './seedlingPlaybackController.js';
+import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
+import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
+import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
+import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
+import { returnSpawnTable } from './seedlingReturnSpawns.js';
+import { SOLVE_DEMO_EVENT, SOLVE_DEMOS, pushDemoWindow, solveDemoMissing, solveDemoMoved, solveDemoStage } from './seedlingSolveDemo.js';
+import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
+import { KILLLOCK_SETTING_KEYS, killLockPageQuery } from './seedlingKillLockSettings.js';
+import { KILLLOCK_BODIES_DEFAULTS, applyKillLockBodies, formatKillLockBodies } from '../seedlingDemo/killLockBodies.js';
+import { CONTACT_SETTING_KEYS, contactPageParam } from './seedlingContactSettings.js';
+import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
+import { DASH_ONLY_WINDOW_SETTING_KEY, dashOnlyWindowOverride, dashOnlyWindowPageParam } from './seedlingDashOnlyWindowSettings.js';
+import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashShapePageParam } from './seedlingDashShapeSettings.js';
+import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack } from './seedlingGraphicsSettings.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -13,7 +43,44 @@ function log(level, message, ...data) {
 
 const GAMES_DIR = './modules/flashPanel/games/';
 const SWF_DIR = './modules/flashPanel/swf/';
+// SWFRecomp-recompiled game pages (__swfBridge contract). The built
+// artifacts are NOT committed (23.8 MB wasm) — see this module's
+// README.md for the copy command that stages them locally.
+const WASM_DIR = './modules/flashPanel/wasm/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
+// Transport selection, mirroring moduleSettings.bounceDemo.renderer:
+// 'auto' (default) uses the wasm page when the game wiring provides
+// one, real Flash otherwise; 'flash'/'wasm' force a transport; 'js'
+// (Seedling only) mounts the JavaScript model's page instead of the
+// wasm build — the same iframe contract, so the same init flow.
+const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
+/**
+ * ⛓ Seedling solver-walk S1 — the Playback Bot's SOLVER mode on the JS
+ * runtime (default OFF: the solve is synchronous on the page's main thread
+ * until S2's Worker lands). Read at init and on change WITHOUT a reinit — it
+ * changes how the bot picks keys, not which game page runs.
+ */
+const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
+/** ⛓ Seedling solver-walk O3 → DETERMINISTIC BUDGET — the wasm engine's solve budget in WORK units (read at each solve). */
+const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
+/** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
+const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
+/** ⛓ SOLVE PROGRESS — the progress view's on/off (both runtimes); the panel's "Solve Progress" button flips it. */
+const SOLVE_PROGRESS_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
+/** ⛓ SOLVE PROGRESS S1 — the progress refresh rate (ms; on the solve's envelope, never the request). */
+const SOLVE_PROGRESS_INTERVAL_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
+/** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
+const KILLLOCK_SETTING_KEY_SET = new Set(Object.values(KILLLOCK_SETTING_KEYS));
+/** ⛓ CONTACT HOOK — the model's contact switches, one setting each (`seedlingContactSettings.js`). */
+const CONTACT_SETTING_KEY_SET = new Set(Object.values(CONTACT_SETTING_KEYS));
+/**
+ * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
+ * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
+ * static import here would put it in the shipped panel bundle.
+ */
+const JS_RUNTIME_PAGE = './modules/seedlingDemo/jsRuntime.html';
+/** The one game the JS runtime plays. */
+const JS_RUNTIME_CONFIG = 'seedling.json';
 
 let instanceCounter = 0;
 let rufflePromise = null;
@@ -73,6 +140,9 @@ export class FlashPanelUI {
     // be populated yet when the component is constructed.
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
+    /** 'wasm' | 'js' — which page the iframe transport mounted (Seedling JS J1). */
+    this.transport = 'wasm';
 
     this.rootElement = null;
     this.swfContainer = null;
@@ -83,8 +153,22 @@ export class FlashPanelUI {
     this.adapter = null;
     this.unsubscribeHandles = [];
     this.isInitialized = false;
+    /** ⛓ The init EPOCH — bumped by every teardown; see `_initStale`. */
+    this._initEpoch = 0;
+
+    /**
+     * ⛓ T2b F3 — the keys the GAME is holding, released into it when its
+     * focus goes (a door fired and the maze tab came forward) or the substrate
+     * parks. See `gameInput.js`; installed once the wasm page is up.
+     */
+    this._heldKeys = createHeldKeyRelease({
+      getFrame: () => document.getElementById(this.flashObjectId),
+      onRelease: (codes, why) => this._panelLog(`[game input] released ${codes.join(', ')} into the game — ${why}`),
+    });
 
     this._createBaseUI();
+    this._refreshSolveProgressView();
+    this._refreshSolveProgressInterval();
 
     // Make this instance available to the dispatcher receivers
     // registered at module scope (index.js). Only one flash panel
@@ -93,16 +177,161 @@ export class FlashPanelUI {
     setActivePanelInstance(this);
 
     this.container.on('destroy', () => this.destroy());
+    // ⛓ T2b U2a — the tab coming forward gives the game the keyboard, through
+    // `onShow`. ⛓ T4: the layout's factory wires it (`wirePanelLifecycle`);
+    // this panel wired its own until the factory did, and keeping both would
+    // run onShow twice per tab switch.
 
     // Wait for rules to actually finish loading before picking the
     // config. `stateManager:rulesLoaded` fires after the worker
     // confirms rules + snapshot are ready, which is when
-    // `staticData.flash_panel` becomes authoritative.
-    const readyHandler = async () => {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      await this._initializeAdapter();
+    // `staticData.flash_panel` becomes authoritative. The
+    // subscription is PERMANENT: rulesLoaded fires again on every
+    // preset switch (and staticDataCache is replaced before it
+    // publishes), so the panel can re-initialize when the newly
+    // loaded rules wire a different flash game — e.g. the app boots
+    // on the fallback preset and the user then loads a flash-game
+    // preset through the UI.
+    this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
+    this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+
+    /**
+     * ⛓ Seedling JS J1 — a RUNTIME change re-initializes the embed (the
+     * `bounceDemo.renderer` precedent: one panel, the page swapped). Without
+     * it the choice waited for the next preset with DIFFERENT wiring, so
+     * switching wasm ↔ js on the loaded preset did nothing at all.
+     */
+    this._settingsChangedHandler = async (data) => {
+      if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
+        this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === WASM_SOLVER_BUDGET_SETTING_KEY || data?.key === '*') {
+        this._refreshWasmSolverBudget(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === SOLVE_PROGRESS_SETTING_KEY || data?.key === '*') {
+        this._refreshSolveProgressView(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === SOLVE_PROGRESS_INTERVAL_SETTING_KEY || data?.key === '*') {
+        this._refreshSolveProgressInterval(data.key === '*' ? undefined : data.value);
+      }
+      if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
+        this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
+      }
+      if (KILLLOCK_SETTING_KEY_SET.has(data?.key) || data?.key === '*') {
+        // ⛓ KILLLOCK HOOK — the panel's own instance follows at once; a JS page mounted under another set is
+        // re-mounted (its session cannot be replayed under a different set). ⛔ Only a real CHANGE re-mounts.
+        const set = await this._refreshKillLockBodies();
+        if (set && this.isInitialized && this.transport === 'js' && this._jsPageKillLock !== undefined
+          && formatKillLockBodies(set) !== this._jsPageKillLock) {
+          this._panelLog(`kill-lock switches changed (${this._jsPageKillLock} → ${formatKillLockBodies(set)}) — `
+            + 're-mounting the JS runtime page');
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      if (CONTACT_SETTING_KEY_SET.has(data?.key) || data?.key === '*') {
+        // ⛓ CONTACT HOOK — the KILLLOCK arm above, for the model's contact switches.
+        const set = await this._refreshContactFidelity();
+        if (set && this.isInitialized && this.transport === 'js' && this._jsPageContact !== undefined
+          && formatContactFidelity(set) !== this._jsPageContact) {
+          this._panelLog(`contact switches changed (${this._jsPageContact} → ${formatContactFidelity(set)}) — `
+            + 're-mounting the JS runtime page');
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      if (data?.key === AXE_DODGE_SETTING_KEY || data?.key === '*') {
+        // ⛓ AXE_DODGE HOOK — the CONTACT arm above, for `AXE_DODGE_ASK_PER_PREVIEW`. The wasm engine reads the
+        // cached value at each solve (the surface); a JS page mounted under another value is re-mounted.
+        const value = await this._refreshAxeDodgeAsk(data.key === '*' ? undefined : data.value);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageAxeDodge !== undefined
+          && value !== this._jsPageAxeDodge) {
+          this._panelLog(`axe-dodge switch changed (${this._jsPageAxeDodge} → ${value}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      if (data?.key === DASH_ONLY_WINDOW_SETTING_KEY || data?.key === '*') {
+        // ⛓ DASH-ONLY WINDOW — the AXE_DODGE arm above, for the solver's `DASH_ONLY_WINDOW`.
+        const value = await this._refreshDashOnlyWindow(data.key === '*' ? undefined : data.value);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageDashOnly !== undefined
+          && value !== this._jsPageDashOnly) {
+          this._panelLog(`dash-only-window switch changed (${this._jsPageDashOnly} → ${value}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      const dashShapeKey = Object.entries(DASH_SHAPE_SETTING_KEYS).find(([, key]) => key === data?.key)?.[0];
+      if (dashShapeKey || data?.key === '*') {
+        // ⛓ DASH-SHAPE STAMP — the DASH-ONLY WINDOW arm above, for solverBot's three dash switches (one re-mount check:
+        // the page carries them as one `dashShape` spec).
+        const value = await this._refreshDashShape(dashShapeKey ? { [dashShapeKey]: data.value } : undefined);
+        if (value !== undefined && this.isInitialized && this.transport === 'js' && this._jsPageDashShape !== undefined
+          && dashShapeSpec(value) !== dashShapeSpec(this._jsPageDashShape)) {
+          this._panelLog(`dash-shape switches changed (${dashShapeSpec(this._jsPageDashShape) || 'default'} → `
+            + `${dashShapeSpec(value) || 'default'}) — re-mounting the JS runtime page`);
+          this._teardownForReinit();
+          this._initializeAdapter();
+          return;
+        }
+      }
+      if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === '*') {
+        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount.
+        await this._refreshJsGraphics(data.key === GRAPHICS_SETTING_KEY ? data.value : undefined,
+          data.key === CAMERA_SETTING_KEY ? data.value : undefined);
+        this._applyJsGraphics();
+      }
+      if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
+      if (!this.isInitialized) return;
+      if (this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath) return;
+      // ⛔ Only a real CHANGE of the value tears the game down — a '*'
+      // broadcast (any settings load) must not restart a running game.
+      let next = data.value;
+      if (data.key === '*') {
+        try { next = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto'); } catch { return; }
+      }
+      // `undefined`: an init is still reading the setting — it will see this value.
+      if (this._initRuntime === undefined || next === this._initRuntime) return;
+      this._panelLog(`runtime setting changed (${this._initRuntime} → ${next}) — reinitializing`);
+      this._teardownForReinit();
+      this._initializeAdapter();
     };
-    this.eventBus.subscribe('stateManager:rulesLoaded', readyHandler);
+    this.eventBus.subscribe('settings:changed', this._settingsChangedHandler);
+
+    /**
+     * ⛓ **"found X for Player Y"** (EDITOR INTEGRATION M1). When a room holds
+     * Archipelago's placement instead of Seedling's own item, the game reports
+     * only an address — the host's placement table is what knows the item and
+     * the receiving player, and it answers the instant the check fires rather
+     * than after the server's `PrintJSON` round trip. The glue publishes; the
+     * panel is the surface the person playing is actually looking at.
+     *
+     * ⛔ ITS OWN LIFETIME, PER MOUNT. A remounted panel that left this
+     * subscribed would keep the dead mount's handler alive and write into a
+     * detached log element.
+     */
+    /**
+     * ⛓ P1-d — the transcript AND the state. `_panelLog` keeps the line; the
+     * readout is the count and the last few, which is the question a person
+     * playing actually asks. ⛔ IT SHARES THIS HANDLER'S LIFETIME EXACTLY —
+     * built here, dropped in `destroy()` with the subscription — because a
+     * remounted panel that kept either would write into a detached element.
+     */
+    this._apFoundReadout = createApFoundReadout();
+    this._apItemFoundHandler = (payload) => {
+      if (typeof payload?.message === 'string') this._panelLog(payload.message, 'location');
+      if (this._apFoundReadout.record(payload)) this._renderApFound();
+    };
+    this.eventBus.subscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
+
+    // ⛓ AUTO-SHOW — stage a solve the progress view can be watched on (`seedlingSolveDemo.js`).
+    this._solveDemoHandler = (payload) => { this.stageSolveDemo(payload?.demo); };
+    this.eventBus.subscribe(SOLVE_DEMO_EVENT, this._solveDemoHandler);
 
     // Fast path: if rules were already loaded before this panel
     // was constructed (e.g. created by a layout change after
@@ -110,13 +339,401 @@ export class FlashPanelUI {
     // game_name is populated in staticDataCache alongside
     // flash_panel, so it's a reliable "rules ready" signal.
     if (stateManager.getStaticData?.()?.game_name) {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      this._initializeAdapter();
+      this._onRulesLoaded();
     }
   }
 
   getRootElement() {
     return this.rootElement;
+  }
+
+  /**
+   * Runs on every stateManager:rulesLoaded (and once at construction
+   * when rules were already loaded). The first call initializes;
+   * later calls handle preset switches: when the loaded rules'
+   * flash_panel wiring differs from the one this panel initialized
+   * against, tear the embed down and re-initialize. Panels pinned via
+   * componentState paths ignore preset switches.
+   */
+  _onRulesLoaded() {
+    const fp = stateManager.getStaticData?.()?.flash_panel ?? null;
+    const key = JSON.stringify(fp);
+    if (!this.isInitialized) {
+      this._lastFlashPanelKey = key;
+      this._initializeAdapter();
+      return;
+    }
+    if (this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath) {
+      return;
+    }
+    if (key === this._lastFlashPanelKey) return;
+    this._lastFlashPanelKey = key;
+    this._panelLog('rules changed — reinitializing');
+    this._teardownForReinit();
+    this._initializeAdapter();
+  }
+
+  /**
+   * ⛓ Seedling JS J2 — what `seedlingPlaybackController` asks of the panel,
+   * re-read on every call: the transport this panel RUNS (not the setting
+   * alone — a non-Seedling game keeps 'auto'), the setting it was built under,
+   * the generated arm's assembly report (the name → cell map; null until the
+   * AP placement load finishes) and, on the JS runtime, the page's core
+   * (`window.__seedlingJsRuntime` — same-origin, as `WasmBridgeAdapter` reads
+   * `__swfBridge`).
+   * ⛓ J3 — and `atlas`: the atlas arm's name → cell map
+   * (`{entries, refused, regions}`; null until that load binds).
+   */
+  seedlingPlaybackSurface() {
+    if (!this.adapter) return null;
+    let jsRuntime = null;
+    if (this.transport === 'js') {
+      try { jsRuntime = this.adapter._getWin?.()?.__seedlingJsRuntime ?? null; } catch { jsRuntime = null; }
+    }
+    return {
+      transport: this._initRuntime === undefined ? null : this.transport,
+      setting: this._initRuntime ?? null,
+      // ⛓ S1 — the controller hands it to the page with every walkTo.
+      solverWalk: this._solverWalk !== false, // ⛓ S2 — the default (on) until the setting is read
+      report: this._seedlingGenReport ?? null,
+      atlas: this._seedlingAtlas ?? null,
+      // ⛓ VANILLA MAP — why the AP placement load bound NO map (e.g. a load refused by its eligibility),
+      // or null while it runs / once it bound one.
+      apRefusal: this._apLoadRefusal ?? null,
+      jsRuntime,
+      // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
+      // and window (re-read per call — a preset switch replaces the iframe),
+      // the panel's own teleport recipe, and the map document the preset names.
+      // ⛓ WG — and the generated arm's assembled set (null on any other arm, or until the AP load).
+      wasm: this.transport === 'wasm' ? {
+        levelSet: this._seedlingGenSet ?? null,
+        // ⛓ VANILLA MAP — the delivered REAL-room set (null = the map document is what the game plays).
+        deliveredSet: this._seedlingRealSet ?? null,
+        getGame: () => this.adapter?._getFlash?.() ?? null,
+        getWin: () => this.adapter?._getWin?.() ?? null,
+        teleport: (p) => this.adapter?.teleport?.(p) ?? false,
+        mapPath: this._atlasMapPath ?? null,
+        // ⛓ O3 — the solve budget knob, work units (null until the setting is read: the engine's own default then).
+        solverBudgetWork: this._wasmSolverBudgetWork ?? null,
+        // ⛓ AXE_DODGE HOOK — `on` / `off` / `default` (null until the setting is read: the model's own value then).
+        axeDodgeAskPerPreview: this._axeDodgeAsk ?? null,
+        // ⛓ DASH-ONLY WINDOW — `on` / `off` / `default` (null until the setting is read: the switch's own value then).
+        dashOnlyWindow: this._dashOnlyWindow ?? null,
+        // ⛓ DASH-SHAPE STAMP — `{legPrecheck, noSwingPrefix, keepPartial}`, each `on` / `off` / `default` (null until read).
+        dashShape: this._dashShape ?? null,
+        // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
+        // arrives while it drives, and lets it through where it can replan around it.
+        delivery: {
+          setItemGate: (gate) => this.adapter?.setItemGate?.(gate),
+          writesOf: (counts) => this.adapter?._itemWritesFor?.(counts, { quiet: true }) ?? [],
+          inventory: () => this.adapter?.liveInventory?.() ?? null,
+          push: () => this.adapter?._pushTick?.(),
+          // ⛓ DELIVERY TICK — the bot's own location check settled? (the state manager's checked set; null = unknown)
+          checked: (name) => this.adapter?.isLocationChecked?.(name) ?? null,
+        },
+      } : null,
+      // ⛓ SHOULD-STOP — the upgrade window (work units), both runtimes: undefined until the setting is read,
+      // then a number (0 = the whole budget) or null (unset = the runtime's own default). The JS page gets it
+      // with every goal.
+      solverUpgradeWindowWork: this._solverUpgradeWindowWork,
+    };
+  }
+
+  /**
+   * ⛓ S1 — cache `flashPanel.seedlingSolverWalk` (the surface is read
+   * synchronously) and hand it to a live JS page at once. `value` undefined =
+   * read it from the settings.
+   */
+  async _refreshSolverWalk(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVER_WALK_SETTING_KEY, true); } catch { return; }
+    }
+    this._solverWalk = next === true;
+    try {
+      this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.setSolverWalk?.(this._solverWalk);
+    } catch { /* the page is not up yet — the next walkTo carries it */ }
+  }
+
+  /**
+   * ⛓ SOLVE PROGRESS — apply `flashPanel.seedlingSolveProgressView` (`off | auto | always`, ⛓ AUTO-SHOW) to the view.
+   * `off` UNSUBSCRIBES from every solve service, so no later solve installs the solver's hook; `auto` listens while
+   * hidden and shows the view for the length of each solve; `always` keeps it open.
+   */
+  async _refreshSolveProgressView(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_SETTING_KEY, SOLVE_PROGRESS_DEFAULT_MODE); } catch { return; }
+    }
+    const view = this._solveProgressView;
+    if (!view) return;
+    const mode = solveProgressMode(next);
+    view.setMode(mode);
+    if (this._solveProgressButton) {
+      this._solveProgressButton.textContent = `Solve Progress: ${mode}`;
+      this._solveProgressButton.style.opacity = mode === 'off' ? '0.6' : '1';
+    }
+  }
+
+  /**
+   * ⛓ SOLVE PROGRESS S1 — apply `flashPanel.seedlingSolveProgressIntervalMs` to the view, which asks its services
+   * for that rate at each solve's start (a solve already running keeps its rate). The schema is the default source.
+   */
+  async _refreshSolveProgressInterval(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_INTERVAL_SETTING_KEY); } catch { return; }
+    }
+    // an absent value (no schema yet) is the default; an option list's string is its number
+    this._solveProgressView?.setIntervalMs(next === null || next === undefined ? undefined : Number(next));
+  }
+
+  /**
+   * ⛓ AUTO-SHOW — stage a solve demo (`SOLVE_DEMOS`, `seedlingSolveDemo.js`) on the JS runtime page: teleport into
+   * its room at the game's own return spawn and walk its goal (the solver mode decides who plans it). The result is
+   * on the root element (`data-solve-demo` = staging | staged | refused, `data-solve-demo-why`) and in the log.
+   * Needs a Seedling preset on runtime `js` whose page runs the vanilla map (seedling_atlas, or seedling_playthrough
+   * for a demo that `needs` an item). ⛓ SLOWSOLVE: the walk gets the upgrade window setting first.
+   */
+  async stageSolveDemo(id) {
+    const d = this.rootElement.dataset;
+    const refuse = (why) => {
+      d.solveDemo = 'refused';
+      d.solveDemoWhy = why;
+      this._panelLog(`[solve demo] ${id}: refused — ${why}`, 'error');
+      return { ok: false, why };
+    };
+    d.solveDemo = 'staging';
+    d.solveDemoWhy = '';
+    if (!SOLVE_DEMOS[id]) return refuse(`no solve demo '${id}'`);
+    // A preset load re-mounts the page: wait (bounded) for the atlas arm to bind and the page to run the vanilla map.
+    const pageUp = () => {
+      const surface = this.seedlingPlaybackSurface?.();
+      const page = surface?.jsRuntime ?? null;
+      return surface?.atlas && page?.run && page.vanilla ? page : null;
+    };
+    let rt = pageUp();
+    for (const t0 = Date.now(); !rt && Date.now() - t0 < 30000; rt = pageUp()) {
+      await new Promise((r) => { setTimeout(r, 250); });
+    }
+    if (!rt) return refuse('the JS runtime page is not running the vanilla map (runtime js, seedling_atlas)');
+    let mapDoc;
+    const path = this._atlasMapPath ?? 'modules/flashPanel/atlases/seedling-map.json';
+    try {
+      const res = await fetch(new URL(path, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      mapDoc = await res.json();
+    } catch (err) {
+      return refuse(`the map ${path} did not load: ${err.message}`);
+    }
+    const stage = solveDemoStage(mapDoc, id);
+    if (!stage.ok) return refuse(stage.why);
+    // The view's feed re-resolves the page's solve service each second: resolve it NOW, so the solve below asks.
+    this._solveProgressView?.feed.refresh();
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [stage.level, stage.spawn.x, stage.spawn.y] }]);
+    const t0 = Date.now();
+    while (rt.run?.level !== stage.level) {
+      if (Date.now() - t0 > 10000) return refuse(`the page did not reach level ${stage.level}`);
+      await new Promise((r) => { setTimeout(r, 100); });
+    }
+    // ⛓ SLOWSOLVE — a region glue may move the arrival (seedling_playthrough): let it settle, refuse if it moved.
+    for (const t1 = Date.now(); Date.now() - t1 < 1000;) {
+      const moved = rt.run?.level === stage.level ? solveDemoMoved(stage, rt.run) : null;
+      if (moved || rt.run?.level !== stage.level) {
+        return refuse(`the arrival was moved from (${stage.spawn.x}, ${stage.spawn.y}) to `
+          + `${moved ? `(${moved.x}, ${moved.y})` : `level ${rt.run?.level}`} — the world's region glue places an arrival `
+          + `by the region the player came from; reload the world and stage again`);
+      }
+      await new Promise((r) => { setTimeout(r, 100); });
+    }
+    // ⛓ SLOWSOLVE — an item the demo needs must be held AND slotted (the AP item path); the panel writes none.
+    const missing = solveDemoMissing(id, rt);
+    if (missing.length) return refuse(`the page does not hold ${missing.join(', ')} in a slot — grant it first (the Inventory panel)`);
+    // ⛓ SLOWSOLVE — a demo walk honours the upgrade window setting, as the playback controller's walks do.
+    pushDemoWindow(rt.playback, this._solverUpgradeWindowWork);
+    const answer = rt.playback.walkTo(stage.goal);
+    if (!answer?.ok) return refuse(`the page refused the goal: ${answer?.reason ?? JSON.stringify(answer)}`);
+    rt.playback.play();
+    d.solveDemo = 'staged';
+    this._panelLog(`[solve demo] ${id}: ${SOLVE_DEMOS[id].title} — staged`);
+    return { ok: true };
+  }
+
+  /** ⛓ SOLVE PROGRESS — the solve services the view listens to: the JS page's worker service, the wasm engines'. */
+  _solveServices() {
+    const out = [];
+    try {
+      const svc = this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.solveService ?? null;
+      if (svc) out.push(svc);
+    } catch { /* the page is not up */ }
+    try { out.push(...getSeedlingWasmSolveServices()); } catch { /* the module is not initialized */ }
+    return out;
+  }
+
+  /** ⛓ O3 — cache `flashPanel.seedlingWasmSolverBudgetWork` (the engine reads it through the surface per solve). */
+  async _refreshWasmSolverBudget(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(WASM_SOLVER_BUDGET_SETTING_KEY, null); } catch { return; }
+    }
+    const n = Number(next);
+    this._wasmSolverBudgetWork = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
+  }
+
+  /** ⛓ SHOULD-STOP — cache `flashPanel.seedlingSolverUpgradeWindowWork` (0 = the whole budget; null = unset). */
+  async _refreshSolverUpgradeWindow(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVER_UPGRADE_WINDOW_SETTING_KEY, null); } catch { return; }
+    }
+    const n = Number(next);
+    this._solverUpgradeWindowWork = next !== null && next !== '' && Number.isFinite(n) && n >= 0 ? n : null;
+  }
+
+  /**
+   * ⛓ KILLLOCK HOOK — read `flashPanel.seedlingKillLock<Key>` (schema default = `KILLLOCK_BODIES_DEFAULTS`),
+   * apply the set to THIS module instance (the wasm engine's host-side solves; its worker gets the request's
+   * stamp) and cache it for the JS page's URL. null = the settings could not be read (nothing changed).
+   */
+  async _refreshKillLockBodies() {
+    const set = {};
+    try {
+      for (const [k, key] of Object.entries(KILLLOCK_SETTING_KEYS)) {
+        set[k] = (await settingsManager.getSetting(key, KILLLOCK_BODIES_DEFAULTS[k])) === true;
+      }
+    } catch { return null; }
+    this._killLockBodies = applyKillLockBodies(set);
+    return this._killLockBodies;
+  }
+
+  /**
+   * ⛓ CONTACT HOOK — read `flashPanel.seedlingContact<Key>` (schema default = `CONTACT_FIDELITY_DEFAULTS`), apply
+   * the set to THIS module instance (the wasm engine's host-side solves; its worker gets the request's stamp) and
+   * cache it for the JS page's URL. null = the settings could not be read (nothing changed).
+   */
+  async _refreshContactFidelity() {
+    const set = {};
+    try {
+      for (const [k, key] of Object.entries(CONTACT_SETTING_KEYS)) {
+        set[k] = (await settingsManager.getSetting(key, CONTACT_FIDELITY_DEFAULTS[k])) === true;
+      }
+    } catch { return null; }
+    this._contactFidelity = applyContactFidelity(set);
+    return this._contactFidelity;
+  }
+
+  /**
+   * ⛓ AXE_DODGE HOOK — cache `flashPanel.seedlingAxeDodgeAskPerPreview` as `on` / `off` / `default`
+   * (`seedlingAxeDodgeSettings.js`). The panel's closure holds no model, so nothing is applied here: the wasm engine
+   * applies it to its own instance at each solve (`wasm.axeDodgeAskPerPreview` on the surface), the JS page reads it
+   * on its URL. undefined = the setting could not be read (nothing changed).
+   */
+  async _refreshAxeDodgeAsk(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(AXE_DODGE_SETTING_KEY, 'default'); } catch { return undefined; }
+    }
+    this._axeDodgeAsk = axeDodgeOverride(next) ?? 'default';
+    return this._axeDodgeAsk;
+  }
+
+  /**
+   * ⛓ DASH-ONLY WINDOW — cache `flashPanel.seedlingDashOnlyWindow` as `on` / `off` / `default`
+   * (`seedlingDashOnlyWindowSettings.js`), as `_refreshAxeDodgeAsk` does: the wasm engine applies it to its own
+   * instance at each solve (`wasm.dashOnlyWindow`), the JS page reads it on its URL. undefined = not read.
+   */
+  /**
+   * ⛓ DASH-SHAPE STAMP — cache the three `flashPanel.seedlingDash*` settings as `{key: 'on'|'off'|'default'}`
+   * (`seedlingDashShapeSettings.js`), as `_refreshDashOnlyWindow` does. `changed` = the one key a settings event moved
+   * (the others are kept); undefined = read all three. Returns undefined when they cannot be read.
+   */
+  async _refreshDashShape(changed) {
+    const next = { ...(this._dashShape ?? {}) };
+    if (changed === undefined || this._dashShape === undefined) {
+      try {
+        for (const [k, key] of Object.entries(DASH_SHAPE_SETTING_KEYS)) next[k] = await settingsManager.getSetting(key, 'default');
+      } catch { return undefined; }
+    }
+    Object.assign(next, changed ?? {});
+    this._dashShape = dashShapeSettingValues(next);
+    return this._dashShape;
+  }
+
+  async _refreshDashOnlyWindow(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(DASH_ONLY_WINDOW_SETTING_KEY, 'default'); } catch { return undefined; }
+    }
+    this._dashOnlyWindow = dashOnlyWindowOverride(next) ?? 'default';
+    return this._dashOnlyWindow;
+  }
+
+  /**
+   * ⛓ GRAPHICS G1 — cache `flashPanel.seedlingJsGraphics` / `seedlingJsCamera` (`seedlingGraphicsSettings.js`).
+   * An argument is a value just heard on `settings:changed`; undefined = read it.
+   */
+  async _refreshJsGraphics(graphics, camera) {
+    let g = graphics;
+    let c = camera;
+    try {
+      if (g === undefined) g = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects');
+      if (c === undefined) c = await settingsManager.getSetting(CAMERA_SETTING_KEY, 'room');
+    } catch { /* keep the cached values */ }
+    if (g !== undefined) this._jsGraphics = graphicsStack(g);
+    if (c !== undefined) this._jsCamera = cameraMode(c);
+  }
+
+  /** ⛓ GRAPHICS G1 — hand the cached switches to a mounted JS page (a no-op on any other transport). */
+  _applyJsGraphics() {
+    if (this.transport !== 'js') return;
+    let handle = null;
+    try { handle = this.adapter?._getWin?.()?.__seedlingJsGraphics ?? null; } catch { handle = null; }
+    if (!handle?.set) return;
+    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room' }))
+      .then((status) => this._panelLog(`JS page graphics: ${this._jsGraphics ?? 'rects'} (${status}), camera ${this._jsCamera ?? 'room'}`))
+      .catch((err) => this._panelLog(`JS page graphics could not be applied: ${err.message}`));
+  }
+
+  /**
+   * ⛔⛔ A TORN-DOWN INIT FLOW GOES QUIET (§5.91 finding (a)). A flow captures
+   * the epoch it started under; once a teardown has bumped it — or, after the
+   * flow built its adapter, once that adapter is no longer the panel's (the
+   * §5.91 guard) — it touches nothing: no DOM, no glue, no status, no log.
+   * Measured: a js → auto → wasm switch ran TWO flows into `_initializeWasm`,
+   * and the first, still in its settings reads, had no adapter for the
+   * identity guard to compare — it embedded an iframe and attached the region
+   * glue to an adapter nobody detaches. Asked after EVERY await of an init.
+   */
+  _initStale(epoch, adapter) {
+    return epoch !== this._initEpoch || (adapter !== undefined && this.adapter !== adapter);
+  }
+
+  _teardownForReinit() {
+    this._initEpoch = (this._initEpoch ?? 0) + 1;
+    this._initRuntime = undefined;
+    this._seedlingGenReport = null;
+    this._seedlingGenSet = null;
+    this._seedlingAtlas = null;
+    this._seedlingRealSet = null;
+    this._apLoadRefusal = null;
+    this._heldKeys?.uninstall();
+    if (this.adapter) {
+      this._detachRegionGlue();
+      this.adapter.detach();
+      this.adapter = null;
+    }
+    if (this._teleportUnsub) {
+      this._teleportUnsub();
+      this._teleportUnsub = null;
+    }
+    this.swfContainer.innerHTML = '';
+    this.teleportRow.style.display = 'none';
+    this.gameConfig = null;
+    this.configPath = this.componentState.configPath || null;
+    this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
+    this.isInitialized = false;
   }
 
   _createBaseUI() {
@@ -136,14 +753,15 @@ export class FlashPanelUI {
 
     this.rootElement.innerHTML = `
       <div class="flash-panel-header" style="flex-shrink: 0; margin-bottom: 6px;">
-        <span style="color: #e94560;">Flash Game</span>
+        <span style="color: #e94560;">Flash Panel</span>
         <span class="flash-panel-status" style="margin-left: 12px; color: #aaa; font-size: 12px;">initializing…</span>
       </div>
-      <div class="flash-panel-swf" style="flex-shrink: 0;"></div>
+      <div class="flash-panel-swf" style="flex-shrink: 0; position: relative;"></div>
       <div class="flash-panel-controls" style="flex-shrink: 0; margin-top: 6px; font-size: 12px;">
         <button class="flash-panel-wirecheck" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Wire Check</button>
         <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
-        <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;">Configure Bridge</button>
+        <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Configure Bridge</button>
+        <button class="flash-panel-solve-progress-toggle" title="The solver's progress view: off, auto (shown while a solve runs) or always (setting flashPanel.seedlingSolveProgressView); click to cycle" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;opacity:0.6;">Solve Progress</button>
       </div>
       <div class="flash-panel-teleport" style="flex-shrink: 0; margin-top: 6px; font-size: 12px; display: none;">
         <span style="color:#aaa;margin-right:4px;">Teleport:</span>
@@ -161,9 +779,23 @@ export class FlashPanelUI {
         <button class="flash-panel-tp-location-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
         <label style="margin-left:10px;color:#aaa;"><input class="flash-panel-tp-on-click" type="checkbox" /> TP on UI click</label>
       </div>
+      <div class="flash-panel-ap-found" style="flex-shrink: 0; margin-top: 6px; font-size: 11px; background:#111; border:1px solid #333; border-radius:4px; padding:6px; display:none;"><div class="flash-panel-ap-found-headline" style="color:#e94560;"></div><div class="flash-panel-ap-found-rows" style="color:#aaa; white-space:pre-wrap;"></div></div>
       <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
     `;
 
+    // ⛓ SOLVE PROGRESS — the view sits above the log; the button cycles the SETTING (the one source of truth).
+    this._solveProgressView = new SolveProgressView({ getServices: () => this._solveServices() });
+    this.rootElement.insertBefore(this._solveProgressView.element, this.rootElement.querySelector('.flash-panel-log'));
+    this._solveProgressButton = this.rootElement.querySelector('.flash-panel-solve-progress-toggle');
+    this._solveProgressButton.addEventListener('click', () => {
+      const next = nextSolveProgressMode(this._solveProgressView.mode);
+      settingsManager.updateSetting(SOLVE_PROGRESS_SETTING_KEY, next)
+        .catch(() => this._refreshSolveProgressView(next));
+    });
+
+    this.apFoundElement = this.rootElement.querySelector('.flash-panel-ap-found');
+    this.apFoundHeadline = this.rootElement.querySelector('.flash-panel-ap-found-headline');
+    this.apFoundRows = this.rootElement.querySelector('.flash-panel-ap-found-rows');
     this.swfContainer = this.rootElement.querySelector('.flash-panel-swf');
     this.statusElement = this.rootElement.querySelector('.flash-panel-status');
     this.logElement = this.rootElement.querySelector('.flash-panel-log');
@@ -306,26 +938,420 @@ export class FlashPanelUI {
     `;
   }
 
+  _embedWasmIframe(width, height) {
+    this.swfContainer.innerHTML = `
+      <iframe id="${this.flashObjectId}" src="${this.wasmPath}"
+          width="${width}" height="${height}"
+          style="border:0;background:#000;display:block;"
+          allow="autoplay"></iframe>
+    `;
+  }
+
+  /**
+   * Init flow for the wasm-iframe transport (SWFRecomp-recompiled
+   * game page exposing __swfBridge). Differs from the real-Flash flow
+   * in lifecycle, not semantics: the page loads immediately, but the
+   * game — and with it the bridge callbacks — only starts on the
+   * page's own ▶ Start button (a user gesture inside the iframe;
+   * WebGPU/audio init consume the activation). So we wait for the
+   * shim, tell the user to press Start, then wait as long as it takes
+   * for the callbacks before configuring. None of the real-Flash
+   * workarounds (Ruffle load, Clean Flash configure delay, host-shim
+   * poll counters) apply here.
+   */
+  async _initializeWasm(epoch = this._initEpoch) {
+    this._setStatus('loading config…');
+    const gameConfig = await this._loadConfig(this.configPath);
+    if (this._initStale(epoch)) return;
+    this.gameConfig = gameConfig;
+    this._panelLog(`config loaded: ${this.gameConfig.game} (${this.transport} transport)`);
+    this._setupTeleportUI();
+
+    const [w, h] = this.gameConfig.stage_size || [480, 480];
+    this._embedWasmIframe(w, h);
+
+    // Local handle so the awaits below can detect a teardown/reinit
+    // (preset switch) racing this flow — a stale flow must not touch
+    // the panel or the replacement adapter.
+    const adapter = new WasmBridgeAdapter({
+      config: this.gameConfig,
+      flashObjectId: this.flashObjectId,
+      stateManager,
+      dispatcher: getDispatcher(),
+      eventBus: this.eventBus,
+      log: (msg, cls) => this._panelLog(msg, cls),
+    });
+    this.adapter = adapter;
+    this._attachRegionGlue(adapter);
+
+    try {
+      this._setStatus('loading wasm page…');
+      await adapter.waitForRuntime(30000);
+      if (this._initStale(epoch, adapter)) return;
+      this._heldKeys.install();
+      if (this.transport === 'js') {
+        // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
+        this._setStatus('JS runtime loaded');
+        this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
+        // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
+        await this._refreshSolverWalk(this._solverWalk);
+        if (this._initStale(epoch, adapter)) return;
+      } else {
+        this._setStatus('click ▶ Start in the game');
+        this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
+      }
+      // Callbacks appear only after the user starts the game; wait
+      // generously rather than timing out under them.
+      await adapter.waitForBridge(10 * 60 * 1000);
+      if (this._initStale(epoch, adapter)) return;
+      this._heldKeys.install();
+      this._panelLog('bridge callbacks ready');
+      // ⛓ U2a: ▶ Start leaves the frame's focus on its BODY (measured); the
+      // game hears nothing until its canvas has it.
+      this.focusGame('the game started');
+    } catch (err) {
+      if (this._initStale(epoch, adapter)) return;
+      this._panelLog(`bridge not ready: ${err.message}`, 'error');
+      this._setStatus('bridge timeout');
+      return;
+    }
+
+    // Hook state reports before configure so the baseline reads that
+    // follow it are seen (and suppressed) by the adapter.
+    adapter.installStateHook();
+    const result = adapter.configureBridge();
+    this._panelLog(`configure: ${result}`);
+    this._setStatus('configured');
+    adapter.attach();
+    setTimeout(() => {
+      if (this.adapter === adapter) this._verifyWasmBridgeConfigured();
+    }, 1000);
+
+    // ⛓ BRIDGE-READY IS THE HOST'S FIRST MOMENT OF CONTROL, and it is where
+    // the Seedling randomizer decides — from DATA — whether it applies.
+    this._startSeedlingRandomizer(adapter);
+  }
+
+  /**
+   * ⛓⛓ **THE SEEDLING RANDOMIZER, DETECTED RATHER THAN SWITCHED ON**
+   * (EDITOR INTEGRATION slice P1; plan §17.1, §17.5). ⚖ USER, 2026-08-29:
+   * *every frontend feature detects from the loaded preset's DATA whether it
+   * applies — no opt-in flag*.
+   *
+   * ⛔ THE TWO CHEAP CHECKS RUN HERE, AND NOTHING ELSE DOES. The predicate is
+   * a 0-dependency module that is already in the bundle; the manifest is a
+   * small JSON beside the build. Only if those pass is the HEAVY half reached,
+   * and it is reached through a specifier the bundler cannot evaluate —
+   * measured, a literal one inlines 87 files and 897 KB into `dist/bundle.js`
+   * (see `seedlingRandomizerWiring.js`'s header for the four-build table).
+   *
+   * ⛔ `document.baseURI`, NOT `import.meta.url`: in the bundled build this
+   * module IS `frontend/dist/bundle.js`, and a module-relative resolve would
+   * look in `dist/`. The document is `frontend/index.html` either way — the
+   * same base `GAMES_DIR` and friends already fetch against.
+   */
+  async _startSeedlingRandomizer(adapter) {
+    this._apLoadRefusal = null;
+    const staticData = stateManager.getStaticData?.() ?? null;
+    const flashPanel = staticData?.flash_panel ?? null;
+    const transport = this.transport === 'js' ? 'js' : 'wasm';
+    let manifest = null;
+    // ⛓ Seedling JS J1: the JS runtime answers its capabilities itself
+    // (`JS_RUNTIME_CAPABILITIES`), so the wasm manifest is not its question.
+    if (transport === 'wasm') {
+      try {
+        manifest = await this._loadConfig(`${WASM_DIR}builds.json`);
+      } catch (err) {
+        this._panelLog(`ap placement: the wasm manifest could not be read — ${err.message}`, 'error');
+      }
+    }
+    if (this.adapter !== adapter) return;
+
+    /**
+     * ⛓ THE FIFTH FACT, READ HERE (seedling generated G2): does the world
+     * carry GENERATED Seedling rooms? The census is a pass over the rules the
+     * panel already holds, so the cheap call can DECIDE the generated arm — its
+     * `divert` — before anything heavy is fetched. ⛔ The raw rules, never the
+     * event wrapper (T4, trap 1405).
+     */
+    const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
+    const generated = generatedRoomCensus(rawRules);
+    // ⛓ J3 — on the JS runtime the cheap call is also asked about real rooms:
+    // their (atlas) arm is the runtime's too, and stays an open question here.
+    const atlas = transport === 'js' ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated, ...atlas });
+    if (cheap.verdict === 'ineligible') {
+      // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
+      // is the shape a data-driven feature fails in.
+      this._panelLog(`ap placement: not applicable — ${cheap.why}`);
+      this._apLoadRefusal = cheap.why;
+      return;
+    }
+
+    const overlay = this._seedlingOverlay();
+    try {
+      const wiringUrl = new URL(
+        'modules/flashPanel/seedlingRandomizerWiring.js', document.baseURI).href;
+      const wiring = await import(/* @vite-ignore */ wiringUrl);
+      if (this.adapter !== adapter) { overlay.remove(); return; }
+
+      /**
+       * ⛔ `region_atlas` IS NOT IN THE STATIC-DATA SURFACE.
+       * `statePersistence.js:974-1000` enumerates the keys the worker posts and
+       * it is not among them, so the map document a preset NAMES is read from
+       * the raw payload — the documented catch-up path for raw-rules-only
+       * fields (`stateManager/index.js:131-137`, which names `preset_sidecars`
+       * for the same reason). ⛓ IMPORTED STATICALLY, beside the proxy it comes
+       * from: reached through a computed URL it would be a SECOND instance of
+       * that module in the bundled build, whose `lastRawJsonPayload` is null.
+       * ⛔ And that payload is the EVENT WRAPPER: the rules are its
+       * `rawJsonData` (T4, trap 1405 — handed whole, every preset got the
+       * default map).
+       */
+      // ⛓ THE ARM IS THE DIVERTING CHECK'S: a generated world never reaches
+      // the vanilla load (its (iii) would refuse it by count), and a vanilla
+      // world never reaches the assembler. Both return the same shape.
+      const generatedArm = cheap.arm === RANDOMIZER_ARMS.GENERATED;
+      if (generatedArm) {
+        this._panelLog('ap placement: the GENERATED arm — '
+          + `${cheap.checks.find((c) => c.id === 'generated')?.why ?? ''}`);
+      }
+      const loaded = await (generatedArm ? wiring.loadSeedlingGenerated : wiring.loadSeedlingRandomizer)({
+        flashPanel,
+        manifest,
+        transport,
+        rawRules,
+        locations: staticData?.locations,
+        playerId: staticData?.playerId,
+        gameConfig: this.gameConfig,
+        baseUrl: document.baseURI,
+        log: (msg, cls) => this._panelLog(msg, cls),
+      });
+      if (this.adapter !== adapter) { overlay.remove(); return; }
+      if (!loaded.eligibility?.eligible) {
+        this._panelLog(`ap placement: not applicable — ${loaded.why}`);
+        // ⛓ VANILLA MAP — the Playback Bot's controllers refuse by THIS reason rather than wait for a map.
+        this._apLoadRefusal = loaded.why;
+        overlay.remove();
+        return;
+      }
+      // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
+      this._seedlingGenReport = generatedArm ? (loaded.report ?? null) : null;
+      // ⛓ WG — and the assembled SET is the wasm playback engine's level source (the rooms as mounted).
+      this._seedlingGenSet = generatedArm ? (loaded.set ?? null) : null;
+      // ⛓ J3 — the atlas arm's bound table and the rules' own real-room payloads; ⛓ VANILLA MAP — or the
+      // vanilla arm's own table, each entity read off the set it DELIVERED (`realRoomPlaybackMap`) — on
+      // either runtime (⛓ §5.18: the JS page takes the vanilla delivery too; the map is arm-keyed).
+      this._seedlingAtlas = realRoomPlaybackMap(loaded, rawRules);
+      // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
+      // atlas arm's retag): the wasm playback engine stages these, not the map document.
+      this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
+
+      const glue = getSeedlingRegionGlue();
+      if (!glue) {
+        this._panelLog('ap placement: no region glue to hand the delivery to', 'error');
+        overlay.remove();
+        return;
+      }
+      // ⛓ Stashed so a gate can read the whole step log — the reset's
+      // before/after world, its wait in ms, the delivery's chunk count. A
+      // browser row that could only see the END state cannot tell a reset that
+      // landed from a world that was already there.
+      this._apLoadResult = await wiring.runSeedlingRandomizerLoad({
+        loaded,
+        glue,
+        teleport: (t) => adapter.teleport(t),
+        // ⛔ THE ADAPTER'S, NOT A CAPTURED `game` (maze-lab arms F-b / §17.1
+        // F2). This was `const g = adapter._getFlash()` above and `g[name](arg)`
+        // here — one capture, held across every step of a load that can outlive
+        // an iframe reload, and a raw TypeError for a verb the build does not
+        // have. `adapter.bot` re-reads the callback table per call and answers
+        // null for a missing verb, which is what the delivery names.
+        bot: (name, arg) => adapter.bot(name, arg),
+        overlay,
+        log: (msg, cls) => this._panelLog(msg, cls),
+      });
+    } catch (err) {
+      this._panelLog(`ap placement: ${err.message}`, 'error');
+      this._apLoadRefusal = `the load threw: ${err.message}`;
+      overlay.setText(`the randomized rooms could not be prepared — ${err.message}`, 'error');
+      log('error', '[flashPanelUI] seedling randomizer load failed', err);
+    } finally {
+      // ⛓ THE SAFETY NET, NOT THE MECHANISM. `runSeedlingRandomizerLoad` hides
+      // the overlay on every path it owns; this catches the paths it does not
+      // reach at all (a throw, a teardown mid-flight), because an overlay left
+      // up covers the game forever.
+      overlay.detachSafetyNet();
+    }
+  }
+
+  /** Paint the readout. Hidden until the first find, so a preset with no
+   *  Archipelago placement shows no empty box. */
+  _renderApFound() {
+    if (!this.apFoundElement) return;
+    this.apFoundElement.style.display = this._apFoundReadout.found > 0 ? 'block' : 'none';
+    this.apFoundHeadline.textContent = this._apFoundReadout.headline();
+    this.apFoundRows.textContent = this._apFoundReadout.lines().join('\n');
+  }
+
+  /**
+   * The loading overlay, over the game and inside the embed — so
+   * `_teardown`'s `swfContainer.innerHTML = ''` takes it with the iframe and a
+   * REMOUNTED panel cannot inherit the old mount's element.
+   *
+   * ⚠ `pointer-events: none` ON THE IFRAME is what keeps the mouse out of the
+   * game while it is up; the KEYBOARD is a different question and is measured
+   * on the real page in P1-e rather than assumed here (a focused iframe keeps
+   * receiving key events whatever the parent document does with pointers).
+   */
+  _seedlingOverlay() {
+    const el = document.createElement('div');
+    el.className = 'flash-panel-ap-overlay';
+    el.style.cssText = `
+      position: absolute; inset: 0; display: none; z-index: 5;
+      align-items: center; justify-content: center; text-align: center;
+      background: rgba(10,10,10,0.88); color: #e0e0e0;
+      font-family: monospace; font-size: 12px; padding: 12px; box-sizing: border-box;
+    `;
+    this.swfContainer.appendChild(el);
+    const iframe = () => document.getElementById(this.flashObjectId);
+    const release = () => {
+      const f = iframe();
+      if (!f) return;
+      f.style.pointerEvents = '';
+      // ⛓ T2b U2a: the CANVAS, not the frame element — focusing the frame alone
+      // leaves the game deaf (measured).
+      this.focusGame('the loading overlay closed');
+    };
+    /**
+     * ⛓ STICKY IS A STATE, NOT A TIMER. A refusal leaves the message up
+     * because the player is now playing a DIFFERENT game than the one AP
+     * generated and needs to be told; hiding it after N seconds would be a
+     * sleep pretending to be a decision. `hide()` clears it, so a later
+     * success takes the overlay down normally.
+     */
+    let sticky = false;
+    return {
+      element: el,
+      get sticky() { return sticky; },
+      show: () => {
+        el.style.display = 'flex';
+        const f = iframe();
+        if (f) f.style.pointerEvents = 'none';
+        el.setAttribute('tabindex', '-1');
+        try { el.focus({ preventScroll: true }); } catch { /* focus is best-effort */ }
+      },
+      setText: (text, cls) => {
+        el.textContent = text;
+        el.style.color = cls === 'error' ? '#e94560' : '#e0e0e0';
+        if (cls === 'error') sticky = true;
+      },
+      hide: () => { sticky = false; el.style.display = 'none'; release(); },
+      remove: () => { sticky = false; el.remove(); release(); },
+      /**
+       * ⛔ THE SAFETY NET, NOT THE MECHANISM. The sequence hides the overlay on
+       * every path it owns; this catches the ones it never reaches — a throw,
+       * a teardown mid-flight — because an overlay left up covers the game
+       * forever. It never removes a refusal the sequence deliberately left.
+       */
+      detachSafetyNet: () => { if (!sticky) { el.remove(); release(); } },
+    };
+  }
+
+  _verifyWasmBridgeConfigured() {
+    if (!this.adapter) return;
+    const raw = this.adapter.readState();
+    if (typeof raw === 'string' && raw.indexOf('not configured') !== -1) {
+      this._panelLog('bridge not configured — retrying');
+      this.adapter.configureBridge();
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    if (typeof raw === 'string' && raw.indexOf('classes not resolved') !== -1) {
+      this._panelLog('bridge waiting for classes to resolve…');
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    this._panelLog(`bridge verified: ${raw?.substring ? raw.substring(0, 80) : raw}`);
+    this._setStatus('ready');
+  }
+
   async _initializeAdapter() {
     if (this.isInitialized) return;
     this.isInitialized = true;
+    const epoch = this._initEpoch;
 
     try {
       // Resolve config/SWF paths from the active preset's
       // rules.json `flash_panel` section, which is threaded through
       // stateManager.getStaticData(). componentState overrides win;
       // if neither source specifies a game, the panel stays idle.
-      if (!this.configPath || !this.swfPath) {
+      if (!this.configPath || !this.swfPath || !this.wasmPath) {
         const fp = stateManager.getStaticData?.()?.flash_panel;
-        if (fp && (fp.config || fp.swf)) {
+        if (fp && (fp.config || fp.swf || fp.wasm)) {
           if (!this.configPath && fp.config) {
             this.configPath = GAMES_DIR + fp.config;
           }
           if (!this.swfPath && fp.swf) {
             this.swfPath = SWF_DIR + fp.swf;
           }
-          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf}`);
+          if (!this.wasmPath && fp.wasm) {
+            this.wasmPath = WASM_DIR + fp.wasm;
+          }
+          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf} wasm=${fp.wasm}`);
         }
+      }
+
+      // Transport selection: 'auto' takes the wasm page whenever the
+      // wiring provides one (it runs in any browser; real Flash needs
+      // a plugin-capable one), 'flash'/'wasm' force their transport.
+      // A forced transport with no matching path falls through to the
+      // "not configured" messages below.
+      let runtime = 'auto';
+      try {
+        runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
+      } catch { /* keep 'auto' */ }
+      if (this._initStale(epoch)) return;
+      this._initRuntime = runtime;
+      for (const refresh of [this._refreshSolverWalk, this._refreshWasmSolverBudget,
+        this._refreshSolverUpgradeWindow, this._refreshKillLockBodies, this._refreshContactFidelity,
+        this._refreshAxeDodgeAsk, this._refreshDashOnlyWindow, this._refreshDashShape, this._refreshJsGraphics]) {
+        await refresh.call(this);
+        if (this._initStale(epoch)) return;
+      }
+      this.transport = 'wasm';
+      if (runtime === 'js') {
+        // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
+        // iframe flow. Any other game keeps 'auto'.
+        if (this.configPath && this.configPath.endsWith(`/${JS_RUNTIME_CONFIG}`)) {
+          this.transport = 'js';
+          // ⛓ KILLLOCK HOOK — an off-default switch set rides on the page's URL (none at the defaults).
+          const killLock = this._killLockBodies ?? KILLLOCK_BODIES_DEFAULTS;
+          this._jsPageKillLock = formatKillLockBodies(killLock);
+          // ⛓ CONTACT HOOK — and an off-default contact set, the same way.
+          const contact = this._contactFidelity ?? CONTACT_FIDELITY_DEFAULTS;
+          this._jsPageContact = formatContactFidelity(contact);
+          // ⛓ AXE_DODGE HOOK — and an off-`default` axe-dodge setting.
+          this._jsPageAxeDodge = this._axeDodgeAsk ?? 'default';
+          // ⛓ DASH-ONLY WINDOW — and an off-`default` dash-only-window setting.
+          this._jsPageDashOnly = this._dashOnlyWindow ?? 'default';
+          // ⛓ DASH-SHAPE STAMP — and the off-`default` dash switches, as one `dashShape` spec.
+          this._jsPageDashShape = dashShapeSettingValues(this._dashShape);
+          // ⛓ GRAPHICS G1 — and the off-default cosmetic switches (graphics stack, camera).
+          const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
+            axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
+            dashShapePageParam(this._jsPageDashShape),
+            graphicsPageParams(this._jsGraphics, this._jsCamera)].filter(Boolean);
+          this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
+          this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
+          await this._initializeWasm(epoch);
+          return;
+        }
+        this._panelLog(`runtime 'js' plays ${JS_RUNTIME_CONFIG} only — this game uses 'auto'`);
+      }
+      if (this.configPath && this.wasmPath && runtime !== 'flash') {
+        await this._initializeWasm(epoch);
+        return;
       }
 
       if (!this.configPath || !this.swfPath) {
@@ -334,58 +1360,182 @@ export class FlashPanelUI {
         return;
       }
 
-      this._setStatus('loading config…');
-      this.gameConfig = await this._loadConfig(this.configPath);
-      this._panelLog(`config loaded: ${this.gameConfig.game}`);
-      this._setupTeleportUI();
-
-      const [w, h] = this.gameConfig.stage_size || [480, 480];
-
-      try {
-        await ensureRuffleLoaded();
-      } catch (err) {
-        this._panelLog(`ruffle load failed: ${err.message} (native Flash may still work)`);
-      }
-
-      this._embedSwf(w, h);
-      this._setStatus('waiting for bridge…');
-
-      this.adapter = new FlashBridgeAdapter({
-        config: this.gameConfig,
-        flashObjectId: this.flashObjectId,
-        stateManager,
-        dispatcher: getDispatcher(),
-        eventBus: this.eventBus,
-        log: (msg, cls) => this._panelLog(msg, cls),
-      });
-
-      try {
-        await this.adapter.waitForBridge(15000);
-        this._panelLog('bridge ready');
-        this._setStatus('bridge ready');
-
-        // Give Clean Flash / native-messaging extensions time to
-        // finish wiring the round-trip for ExternalInterface.addCallback
-        // stubs. Without this delay, the first flash.configure(json)
-        // call is silently dropped — the JS-side stub exists (which
-        // is why waitForBridge already resolved) but the Flash side
-        // of the channel for inbound calls with arguments isn't
-        // reliably ready yet. Empirically 1500ms is enough to skip
-        // the retry path on Chrome + Clean Flash, while the retry
-        // below handles the rare case where it isn't.
-        await new Promise((r) => setTimeout(r, 1500));
-
-        this._configureRetries = 0;
-        this._configureBridge();
-      } catch (err) {
-        this._panelLog(`bridge not ready: ${err.message}`, 'error');
-        this._setStatus('bridge timeout');
-      }
+      await this._initializeFlash(epoch);
     } catch (err) {
+      if (this._initStale(epoch)) return;
       log('error', '[FlashPanelUI] Init failed', err);
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
     }
+  }
+
+  /**
+   * Init flow for the real-Flash transport (Ruffle or a native plugin).
+   *
+   * ⛔⛔ A TORN-DOWN FLOW GOES QUIET. `_teardownForReinit` drops the adapter but
+   * cannot abort this flow's 15 s bridge wait (the Flash adapter has no
+   * cancellation), so the flow holds its epoch and ITS adapter and, once
+   * either is stale (`_initStale`), touches nothing. Measured (§5.91, CI 4/8 at 429ba55d1e): the
+   * Flash-runtime row's wait outlived its own cleanup by ~14 s and its timeout
+   * wrote `bridge timeout` over the NEXT row's wasm *click ▶ Start in the game*,
+   * so that row waited 120 s for a status that had come and gone.
+   */
+  async _initializeFlash(epoch = this._initEpoch) {
+    this._setStatus('loading config…');
+    const gameConfig = await this._loadConfig(this.configPath);
+    if (this._initStale(epoch)) return;
+    this.gameConfig = gameConfig;
+    this._panelLog(`config loaded: ${this.gameConfig.game}`);
+    this._setupTeleportUI();
+
+    const [w, h] = this.gameConfig.stage_size || [480, 480];
+
+    try {
+      await ensureRuffleLoaded();
+    } catch (err) {
+      if (this._initStale(epoch)) return;
+      this._panelLog(`ruffle load failed: ${err.message} (native Flash may still work)`);
+    }
+    if (this._initStale(epoch)) return;
+
+    this._embedSwf(w, h);
+    this._setStatus('waiting for bridge…');
+
+    // ⛓ SEEDLING LOOP MODE — the Flash (Ruffle / native) path says so. Left at the 'wasm' default, the
+    // playback surface told the atlas controller (built with `wasm: true`) that this was the wasm game, and a
+    // Bot block's walkTo went to the wasm engine against a Ruffle player instead of being refused by name.
+    this.transport = 'flash';
+    const adapter = new FlashBridgeAdapter({
+      config: this.gameConfig,
+      flashObjectId: this.flashObjectId,
+      stateManager,
+      dispatcher: getDispatcher(),
+      eventBus: this.eventBus,
+      log: (msg, cls) => this._panelLog(msg, cls),
+    });
+    this.adapter = adapter;
+    this._attachRegionGlue(adapter);
+
+    try {
+      await adapter.waitForBridge(15000);
+      if (this._initStale(epoch, adapter)) return;
+      this._panelLog('bridge ready');
+      this._setStatus('bridge ready');
+
+      // Give Clean Flash / native-messaging extensions time to
+      // finish wiring the round-trip for ExternalInterface.addCallback
+      // stubs. Without this delay, the first flash.configure(json)
+      // call is silently dropped — the JS-side stub exists (which
+      // is why waitForBridge already resolved) but the Flash side
+      // of the channel for inbound calls with arguments isn't
+      // reliably ready yet. Empirically 1500ms is enough to skip
+      // the retry path on Chrome + Clean Flash, while the retry
+      // below handles the rare case where it isn't.
+      await new Promise((r) => setTimeout(r, 1500));
+      if (this._initStale(epoch, adapter)) return;
+
+      this._configureRetries = 0;
+      this._configureBridge();
+    } catch (err) {
+      if (this._initStale(epoch, adapter)) return;
+      this._panelLog(`bridge not ready: ${err.message}`, 'error');
+      this._setStatus('bridge timeout');
+    }
+  }
+
+  /**
+   * Hand a freshly-built adapter to the region-atlas glue, which installs its
+   * raw-report hook and restarts its view of the game (region-atlas Phase 4).
+   * Both transports go through here; the glue is inert unless a preset's
+   * sidecars actually name the flash_seedling substrate.
+   */
+  _attachRegionGlue(adapter) {
+    try {
+      getSeedlingRegionGlue()?.attachAdapter(adapter);
+    } catch (err) {
+      this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
+    }
+    this._loadReturnSpawns(adapter);
+    this._loadSubRegions(adapter);
+    this._applySlotData(adapter);
+  }
+
+  /**
+   * ⛓ R4b part 2 — the loaded slot's `slot_data` (the rules' `world[<player>].slot_data`) for the adapter's
+   * threshold fills: Seedling Playthrough's `seals_required` decides when the seal log's door slot is written
+   * (`fillThreshold.js`). Rules without it leave the adapter's fills as they were.
+   */
+  _applySlotData(adapter) {
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const player = playerOfRawPayload(getLastRawJsonData?.());
+    adapter?.setSlotData?.(raw?.world?.[player]?.slot_data ?? null);
+  }
+
+  /**
+   * ⛓ LOGICAL LINKS (§5.17) — the sub-region map for a preset whose real-room regions are split into
+   * sub-regions: the generated partition (which tile is in which sub-region, by the rules' `atlas_id`) and
+   * the rules' logical links. Without it the binding cannot tell a seam was crossed (it still learns the
+   * bot's credited links and a door's sibling), and the log says so.
+   */
+  async _loadSubRegions(adapter) {
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const player = playerOfRawPayload(getLastRawJsonData?.());
+    const glue = getSeedlingRegionGlue();
+    glue?.setSubRegions?.(null);
+    if (!raw?.region_atlas?.[player]) return;
+    try {
+      const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json(), player });
+      if (this.adapter !== adapter) return;
+      if (!map) {
+        if (why) this._panelLog(`[region atlas] ${why}`, 'error');
+        return;
+      }
+      glue?.setSubRegions?.(map);
+      const links = [...map.links.values()].reduce((n, l) => n + l.length, 0);
+      this._panelLog(`[region atlas] sub-regions: ${[...map.levels.values()].flat().length} level(s) partitioned, `
+        + `${links} logical link(s) (${map.atlasId})`);
+    } catch (err) {
+      this._panelLog(`[region atlas] the sub-region partition did NOT load from ${SUB_REGION_PARTITION_PATH} — `
+        + `a seam crossed on foot is not recognised: ${err.message}`, 'error');
+    }
+  }
+
+  /**
+   * ⛓ T2b U2b — the game's own return spawns, for a preset that carries a
+   * `region_atlas` (a world whose regions are real Seedling rooms). The map is
+   * the one the preset NAMES (`mapDocumentPath`); a preset without an atlas
+   * fetches nothing. Until it is in, and if it fails, an arrival lands on the
+   * door tile as before, and the log says so.
+   */
+  async _loadReturnSpawns(adapter) {
+    // ⛔ The catch-up payload is the EVENT's (`{source, rawJsonData, …}`);
+    // the rules are its `rawJsonData` (measured: `region_atlas` is not on the
+    // wrapper).
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const player = playerOfRawPayload(getLastRawJsonData?.());
+    if (!raw?.region_atlas?.[player]) return;
+    const { path, source } = mapDocumentPath(raw, player);
+    // ⛓ W2 — the wasm playback engine solves against the SAME document.
+    this._atlasMapPath = path;
+    try {
+      const res = await fetch(new URL(path, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const table = returnSpawnTable(await res.json());
+      if (this.adapter !== adapter) return;
+      getSeedlingRegionGlue()?.binding?.setReturnSpawns(table);
+      this._panelLog(`[region atlas] return spawns: ${table.size} door(s) from ${path} (${source})`);
+    } catch (err) {
+      this._panelLog(`[region atlas] return spawns NOT loaded from ${path} — arrivals land on the door tile: `
+        + err.message, 'error');
+    }
+  }
+
+  _detachRegionGlue() {
+    try {
+      getSeedlingRegionGlue()?.detachAdapter();
+    } catch { /* module torn down */ }
   }
 
   async _loadConfig(path) {
@@ -465,6 +1615,38 @@ export class FlashPanelUI {
     this._panelLog(`readState: ${this.adapter.readState()}`);
   }
 
+  /**
+   * ⛓ T2b U2a — GIVE THE GAME THE KEYBOARD, the way a click on its canvas
+   * does. Called on ▶ Start (the bridge comes up), when the tab is SHOWN (the
+   * overlay's button, the automatic activation on a region load, a person's
+   * tab click) and when the loading overlay lets go. A hidden frame refuses by
+   * name, so the attempt is retried briefly: Golden Layout shows the tab after
+   * the event that asked for it.
+   */
+  focusGame(reason = '') {
+    if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
+    const delays = [0, 50, 150, 400, 1000];
+    const attempt = (i) => {
+      this._focusTimer = null;
+      const r = focusGameCanvas(document.getElementById(this.flashObjectId));
+      this._lastFocus = { ...r, reason, attempt: i };
+      if (!r.focused && i + 1 < delays.length) {
+        this._focusTimer = setTimeout(() => attempt(i + 1), delays[i + 1] - delays[i]);
+      }
+    };
+    attempt(0);
+  }
+
+  /** Golden Layout's container 'show' (wired by the layout's factory, `wirePanelLifecycle`). */
+  onShow() {
+    this.focusGame('the panel was shown');
+  }
+
+  /** The glue's park hook (and any other "the game no longer owns the keys"). */
+  releaseHeldKeys(reason) {
+    return this._heldKeys?.release(reason) ?? [];
+  }
+
   _setStatus(text) {
     if (this.statusElement) this.statusElement.textContent = text;
   }
@@ -475,6 +1657,7 @@ export class FlashPanelUI {
     if (cls === 'error') span.style.color = '#e94560';
     else if (cls === 'location') span.style.color = '#5ae9e0';
     else if (cls === 'item') span.style.color = '#6ae95a';
+    else if (cls === 'warn') span.style.color = '#e9c95a';
     span.textContent = msg + '\n';
     this.logElement.appendChild(span);
     this.logElement.scrollTop = this.logElement.scrollHeight;
@@ -482,7 +1665,31 @@ export class FlashPanelUI {
 
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
+    this._initEpoch = (this._initEpoch ?? 0) + 1;
+    this._heldKeys?.uninstall();
+    this._solveProgressView?.close();
+    if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
+    if (this._rulesLoadedHandler) {
+      this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+      this._rulesLoadedHandler = null;
+    }
+    if (this._settingsChangedHandler) {
+      this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
+      this._settingsChangedHandler = null;
+    }
+    if (this._solveDemoHandler) {
+      this.eventBus.unsubscribe(SOLVE_DEMO_EVENT, this._solveDemoHandler);
+      this._solveDemoHandler = null;
+    }
+    if (this._apItemFoundHandler) {
+      this.eventBus.unsubscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
+      this._apItemFoundHandler = null;
+      // ⛓ The readout goes with the handler that feeds it — same lifetime,
+      // same reason (a detached element counted into is worse than none).
+      this._apFoundReadout = null;
+    }
     if (this.adapter) {
+      this._detachRegionGlue();
       this.adapter.detach();
       this.adapter = null;
     }

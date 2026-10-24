@@ -1,0 +1,28 @@
+const R = process.argv[2];
+const sv = await import(`${R}/frontend/modules/seedlingDemo/solverView.js`);
+const { applyFriction, applyInput, DEFAULT_FRICTION, MOVE_SPEEDS, SLASH_DASH_FORCE: F, DASH_CHAIN, GHOST_DASH_CHAIN } = sv;
+const T = 600;
+function walk(held, ms, dashAt) {
+    let v = { x: 0, y: 0 }; let x = 0; const xs = [];
+    for (let t = 0; t < T; t += 1) {
+        v = applyFriction(v, DEFAULT_FRICTION); v = applyInput(v, held, ms);
+        if (dashAt.has(t)) { const l = Math.hypot(v.x, v.y); if (l > 0) v = { x: v.x + F * v.x / l, y: v.y + F * v.y / l }; }
+        x += v.x; xs.push(x);
+    }
+    return xs;
+}
+let V = 0, G = 0, lead = 0; const rows = [];
+for (const ms of [...new Set(MOVE_SPEEDS)]) for (const held of [new Set(['right']), new Set(['right', 'down'])]) {
+    const base = walk(held, ms, new Set());
+    const v = (base[T - 1] - base[T - 301]) / 300;
+    // the lead of the steady cycle over its own average, from any steady start tick
+    let ld = 0; for (let s = 200; s < 230; s += 1) for (let t = s; t < T; t += 1) ld = Math.max(ld, base[t] - base[s] - v * (t - s));
+    let g = 0;
+    for (const chain of [DASH_CHAIN.at, GHOST_DASH_CHAIN.at]) for (let k = 1; k <= chain.length; k += 1) for (let s = 200; s < 240; s += 1) {
+        const d = walk(held, ms, new Set(chain.slice(0, k).map((c) => s + c)));
+        for (let t = s; t < T; t += 1) g = Math.max(g, d[t] - base[t]);
+    }
+    rows.push(`ms ${ms} ${held.size === 1 ? 'axis' : 'diag'}: per-axis steady ${v.toFixed(4)}, lead ${ld.toFixed(3)}, window gain ${g.toFixed(3)}`);
+    V = Math.max(V, v); G = Math.max(G, g); lead = Math.max(lead, ld);
+}
+console.log(rows.join('\n')); console.log({ V, G, lead, cutPx: 195 * V + G + lead + 2 });

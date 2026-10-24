@@ -1,0 +1,555 @@
+/**
+ * procgenCore/substrateCapabilities — **THE CAPABILITY VOCABULARY, ASKED OF THE
+ * REAL REGISTRY** (substrate chart S1).
+ *
+ * ⛓ The population is every entry the capability-matrix generator loads
+ * (`REGISTRY_LIBRARIES`, imported the way the generator imports them), never a
+ * fixture: a statement whose predicate silently stopped firing must go red
+ * here, and only the real entries can say it did. ⛔ No expectation below is
+ * built from this module's own output where the ENTRY can answer instead — a
+ * probe that shares its subject's assumption agrees with the bug.
+ */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { fieldNamesOf } from '../procgenDocs/registryShape.js';
+import { REGISTRY } from '../procgenDocs/generated/registry.js';
+import {
+    describeRegistry, snapshotExpandable, THREW_PREFIX,
+} from '../substrateRegistryPanel/substrateRegistryPanelLibrary.js';
+import {
+    buildCapabilities, capabilitiesMarkdown,
+} from '../../../scripts/procgen/reference/capabilities.mjs';
+import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
+import { declaredStartingNeeds } from './startingInventory.js';
+import {
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
+    ITEM_NAME_LIMIT, LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
+    applyLiveAnswer, capabilityRows, cardOf, cardText, featureWords, itemTagFeatures, progressionItemsOf, substrateCards,
+    uncoveredFields,
+} from './substrateCapabilities.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(HERE, '..', '..', '..');
+for (const rel of REGISTRY_LIBRARIES) {
+    // eslint-disable-next-line no-await-in-loop
+    await import(join(ROOT, rel));
+}
+const ENTRIES = substrateRegistry.getAll();
+const ROWS = capabilityRows(ENTRIES);
+const NAMES = fieldNamesOf(ENTRIES, snapshotExpandable(REGISTRY));
+const rowOf = (id) => ROWS.find((r) => r.id === id);
+const cellOf = (rowId, entryId) => rowOf(rowId).cells.find((c) => c.id === entryId);
+
+/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3; P6 added by concept library T0b), in group order — the vocabulary's shape. */
+const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
+    'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'E1', 'E2', 'E3', 'E4'];
+
+describe('the vocabulary', () => {
+    it('the population is every registered entry', () => {
+        expect(ENTRIES.length).toBeGreaterThan(6);
+    });
+
+    it('one statement per plan §1 row, in group order, each in a declared group', () => {
+        expect(ROWS.map((r) => r.id)).toEqual(PLAN_IDS);
+        const groups = CAPABILITY_GROUPS.map((g) => g.id);
+        for (const s of CAPABILITY_STATEMENTS) expect(groups, s.id).toContain(s.group);
+        const seen = ROWS.map((r) => groups.indexOf(r.group));
+        expect(seen).toEqual([...seen].sort((a, b) => a - b));
+    });
+
+    it('(i) every field a statement reads is a row of the matrix universe', () => {
+        const universe = new Set(NAMES);
+        const missing = CAPABILITY_STATEMENTS.flatMap((s) => s.fields
+            .filter((f) => !universe.has(f)).map((f) => `${s.id}: ${f}`));
+        expect(missing).toEqual([]);
+    });
+
+    it('(ii) NON-VACUITY: every statement answers yes for ≥1 real entry, and no/partial for ≥1 unless universal', () => {
+        const vacuous = [];
+        for (const r of ROWS) {
+            const s = CAPABILITY_STATEMENTS.find((x) => x.id === r.id);
+            const kinds = new Set(r.cells.map((c) => c.kind));
+            if (!kinds.has(CELL_KINDS.YES)) vacuous.push(`${r.id}: no yes`);
+            if (!s.universal && !kinds.has(CELL_KINDS.NO) && !kinds.has(CELL_KINDS.PARTIAL)) {
+                vacuous.push(`${r.id}: no no/partial, and not declared universal`);
+            }
+        }
+        expect(vacuous).toEqual([]);
+    });
+
+    it('(iii) every `requires` names a statement declared BEFORE it', () => {
+        const ids = ROWS.map((r) => r.id);
+        for (const s of CAPABILITY_STATEMENTS.filter((x) => x.requires)) {
+            expect(ids, s.id).toContain(s.requires);
+            expect(ids.indexOf(s.requires), s.id).toBeLessThan(ids.indexOf(s.id));
+        }
+    });
+
+    it('(iii′) a `requires` cell reads n/a where its prerequisite is no or n/a — else what its own answer says', () => {
+        for (const s of CAPABILITY_STATEMENTS.filter((x) => x.requires)) {
+            for (const e of ENTRIES) {
+                const pre = cellOf(s.requires, e.id).kind;
+                const na = pre === CELL_KINDS.NO || pre === CELL_KINDS.NA || s.answer(e).kind === CELL_KINDS.NA;
+                expect(cellOf(s.id, e.id).kind === CELL_KINDS.NA, `${s.id} × ${e.id}`).toBe(na);
+            }
+        }
+    });
+
+    it('(iv) ⚖ a checkmark is a FEATURE: no statement starts with a negation word', () => {
+        const NEGATION = /^(needs|requires|cannot|can't|slow|only)\b/i;
+        expect(CAPABILITY_STATEMENTS.filter((s) => NEGATION.test(s.statement)).map((s) => s.id)).toEqual([]);
+    });
+
+    it.each([
+        ['frontend/modules/procgenCore/substrateCapabilities.js'],
+        ['scripts/procgen/reference/capabilities.mjs'],
+    ])('(v) ⛔ %s names no registered substrate id (its SOURCE, read)', (rel) => {
+        /* ⛓ The WHOLE source — no exemption (S1 blanked the FEATURE_WORDING
+         * values for 'runner abilities'; S3 dropped both ability tags from the
+         * wording, ⚖ plan §6′.2). */
+        const src = readFileSync(join(ROOT, rel), 'utf8');
+        const named = ENTRIES.map((e) => e.id)
+            .filter((id) => new RegExp(`(?<![A-Za-z0-9_])${id}(?![A-Za-z0-9_])`).test(src));
+        expect(named).toEqual([]);
+    });
+
+    it('(vi) cardOf lists exactly an entry\'s yes/partial cells, in row order', () => {
+        for (const e of ENTRIES) {
+            const card = cardOf(e, ROWS);
+            expect(card.id).toBe(e.id);
+            expect(card.label).toBe(e.label);
+            const want = ROWS.filter((r) => {
+                const k = r.cells.find((c) => c.id === e.id).kind;
+                return k === CELL_KINDS.YES || k === CELL_KINDS.PARTIAL;
+            }).map((r) => r.statement);
+            expect(card.lines.map((l) => l.statement), e.id).toEqual(want);
+        }
+    });
+
+    it('(vi′) cardText: the label, then one line per card line — "Group — statement[: degree]"', () => {
+        const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+        for (const e of ENTRIES) {
+            const card = cardOf(e, ROWS);
+            const lines = cardText(card).split('\n');
+            expect(lines[0], e.id).toBe(e.label);
+            expect(lines.length, e.id).toBe(card.lines.length + 1);
+            card.lines.forEach((l, i) => {
+                const head = `${groupLabel.get(l.group)} — ${l.statement}`;
+                expect(lines[i + 1], `${e.id} ${l.statement}`).toBe(l.text ? `${head}: ${l.text}` : head);
+            });
+        }
+        /* a fixture card: the degree rides only where the cell has one; a card with no lines is its label */
+        expect(cardText({ label: 'Zed', lines: [
+            { group: 'play', statement: 'S one', text: null },
+            { group: 'edit', statement: 'S two', text: 'a degree' },
+        ] })).toBe(`Zed\n${CAPABILITY_GROUPS[0].label} — S one\n${CAPABILITY_GROUPS[3].label} — S two: a degree`);
+        expect(cardText({ label: 'Zed', lines: [] })).toBe('Zed');
+    });
+
+    it('substrateCards: one {label, text} per entry, in the entries\' order, the text cardText of cardOf', () => {
+        const cards = substrateCards(ENTRIES);
+        expect([...cards.keys()]).toEqual(ENTRIES.map((e) => e.id));
+        for (const e of ENTRIES) {
+            expect(cards.get(e.id), e.id).toEqual({ label: e.label, text: cardText(cardOf(e, ROWS)) });
+        }
+        /* a card does not depend on which OTHER entries were asked */
+        const one = substrateCards([ENTRIES[0]]);
+        expect(one.get(ENTRIES[0].id)).toEqual(cards.get(ENTRIES[0].id));
+        expect(substrateCards([{ id: 'nolabel' }]).get('nolabel').label).toBe('nolabel');
+    });
+
+    it('every cell carries `why`: each field it read, with the value the matrix shows', () => {
+        for (const r of ROWS) {
+            for (const c of r.cells) expect(c.why.map((w) => w.field), `${r.id} × ${c.id}`).toEqual(r.fields);
+        }
+    });
+});
+
+describe('(vii) ⚖ the INVERTED rows hold on the real entries — the reason read off the declaration', () => {
+    it('L8: an entry declaring requiresLoopMode answers no, and says which declaration', () => {
+        const declaring = ENTRIES.filter((e) => e.loopSupport?.requiresLoopMode === true);
+        expect(declaring.length).toBeGreaterThan(0);
+        for (const e of ENTRIES) {
+            const c = cellOf('L8', e.id);
+            if (declaring.includes(e)) {
+                expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+                expect(c.text, e.id).toContain(REQUIRES_LOOP_MODE_FIELD);
+            } else {
+                expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+            }
+        }
+    });
+
+    it("G3: an entry declaring generationCost 'heavy' answers no, naming its declared value", () => {
+        const heavy = ENTRIES.filter((e) => e.generationCost === 'heavy');
+        expect(heavy.length).toBeGreaterThan(0);
+        for (const e of heavy) {
+            const c = cellOf('G3', e.id);
+            expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+            expect(c.text, e.id).toContain(e.generationCost);
+        }
+    });
+
+    it('G7: an entry with starting needs answers no, carrying every need\'s reason and names', () => {
+        const needing = ENTRIES.filter((e) => e.startingInventory?.needs?.length > 0);
+        expect(needing.length).toBeGreaterThan(0);
+        for (const e of ENTRIES) {
+            const c = cellOf('G7', e.id);
+            if (!needing.includes(e)) { expect(c.kind, e.id).toBe(CELL_KINDS.YES); continue; }
+            expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+            for (const n of declaredStartingNeeds(e)) {
+                expect(c.text).toContain(n.reason);
+                for (const name of n.anyOf) expect(c.text).toContain(name);
+            }
+        }
+    });
+});
+
+describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, ⚖ plan §6′.2)', () => {
+    /* ⛓ W0 (a), measured at 5247ea19e1 by listing, for every supportedFeatures
+     * id, the entry's own libraryItems values and the shared DEFAULT_ITEMS that
+     * carry it as `feature` — typed here as the independent oracle, so the
+     * derivation cannot agree with itself. */
+    const W0_TAGS = {
+        maze: ['colored_doors_and_keys'],
+        bounce: ['bounce_abilities'],
+        runner: ['runner_abilities'],
+        // ⛓ Re-pinned by name at the swim T1 merge (2026-09-29): the generated
+        // Seedling entry declares its gate items (`itemLabels.SEEDLING_LIBRARY_ITEMS`,
+        // tagged `seedling_items`) so `seedling_generated_swim` may name
+        // `Progressive Swim` — CI read the slow tier red at `17c1c999f5` without it.
+        flash_seedling_gen: ['seedling_items'],
+    };
+
+    it('itemTagFeatures on the real entries equals the W0 (a) tag map', () => {
+        const got = Object.fromEntries(ENTRIES.map((e) => [e.id, itemTagFeatures(e)]).filter(([, t]) => t.length));
+        expect(got).toEqual(W0_TAGS);
+    });
+
+    it('P4 for an entry supporting the coloured keys names exactly the shared keys', () => {
+        const keys = Object.values(DEFAULT_ITEMS).filter((i) => i.feature === 'colored_doors_and_keys')
+            .map((i) => i.name);
+        expect(keys.length).toBeGreaterThan(0);
+        const withKeys = ENTRIES.filter((e) => e.supportedFeatures?.includes('colored_doors_and_keys')
+            && !Object.keys(e.libraryItems ?? {}).length);
+        expect(withKeys.length).toBeGreaterThan(0);
+        for (const e of withKeys) {
+            expect(cellOf('P4', e.id), e.id).toMatchObject({ kind: CELL_KINDS.YES, text: keys.join(', ') });
+        }
+    });
+
+    it('P4 names the items up to ITEM_NAME_LIMIT, else the count; ✗ exactly where an entry has none', () => {
+        for (const e of ENTRIES) {
+            const own = Object.keys(e.libraryItems ?? {}).length;
+            const shared = Object.values(DEFAULT_ITEMS).filter((i) => e.supportedFeatures?.includes(i.feature)).length;
+            const n = own + shared;
+            const c = cellOf('P4', e.id);
+            if (!n) { expect(c.kind, e.id).toBe(CELL_KINDS.NO); continue; }
+            expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+            if (n > ITEM_NAME_LIMIT) expect(c.text, e.id).toBe(CELL_WORDING.itemCount(n));
+            else expect(c.text.split(', ').length, e.id).toBe(n);
+        }
+        expect(progressionItemsOf({})).toEqual([]);
+    });
+
+    it('no item-tag id, nor its words, appears in any P5 cell', () => {
+        const tags = [...new Set(ENTRIES.flatMap((e) => itemTagFeatures(e)))];
+        expect(tags.length).toBeGreaterThan(0);
+        for (const c of rowOf('P5').cells) {
+            for (const t of tags) {
+                expect(c.text ?? '', `${c.id}: ${t}`).not.toContain(t);
+                expect(c.text ?? '', `${c.id}: ${t}`).not.toContain(featureWords(t));
+            }
+        }
+    });
+
+    it('P5 words every supportedFeatures id that is not a tag, in declared order', () => {
+        for (const e of ENTRIES) {
+            const tags = W0_TAGS[e.id] ?? [];
+            const rest = (e.supportedFeatures ?? []).filter((f) => !tags.includes(f));
+            const c = cellOf('P5', e.id);
+            if (!rest.length) { expect(c.kind, e.id).toBe(CELL_KINDS.NO); continue; }
+            expect(c, e.id).toMatchObject({ kind: CELL_KINDS.YES, text: rest.map((f) => FEATURE_WORDING[f] ?? f).join(', ') });
+        }
+    });
+
+    it('both rows are non-vacuous: P4 has a ✓ and a ✗; P5 has a ✓', () => {
+        const kinds = (id) => new Set(rowOf(id).cells.map((c) => c.kind));
+        expect([...kinds('P4')].sort()).toEqual([CELL_KINDS.NO, CELL_KINDS.YES]);
+        expect(kinds('P5').has(CELL_KINDS.YES)).toBe(true);
+    });
+});
+
+describe('P6 — "It can show the library\'s concepts in its own way" (concept library T0b, ⚖ the user 2026-09-29)', () => {
+    /* ⛓ The oracle is TYPED from the two entries' declarations (T1's
+     * `MAZE_CONCEPT_REALISATIONS`, T2's `TEXT_ADVENTURE_CONCEPT_REALISATIONS`),
+     * in their declared order — never derived from `conceptsRealisedBy`. */
+    const WANT = {
+        maze: ['sword (mechanic)', 'swim (mechanic)', 'guardian (skin)', 'water (skin)'],
+        text_adventure: ['sword (mechanic)', 'swim (mechanic)', 'guardian (mechanic)', 'water (mechanic)'],
+    };
+
+    it('the statement is the user\'s sentence, in the play group, reading conceptRealisations', () => {
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'P6');
+        expect(s).toMatchObject({
+            group: 'play', statement: "It can show the library's concepts in its own way", fields: ['conceptRealisations'],
+        });
+        expect(s.universal).toBeUndefined();
+    });
+
+    it('the maze and the text adventure answer ✓ with the count, the first LIST_PREVIEW `name (tier)`, and the whole list', () => {
+        for (const [id, names] of Object.entries(WANT)) {
+            const c = cellOf('P6', id);
+            expect(c, id).toMatchObject({ kind: CELL_KINDS.YES, list: names });
+            expect(c.text, id).toBe(`${names.length} concepts: ${names.slice(0, LIST_PREVIEW).join(', ')}, …`);
+        }
+        expect(cellOf('P6', 'maze').text).toBe('4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …');
+    });
+
+    it('every other entry answers ✗ (it declares no conceptRealisations)', () => {
+        const others = ENTRIES.filter((e) => !(e.id in WANT));
+        expect(others.length).toBeGreaterThan(0);
+        for (const e of others) {
+            expect(e.conceptRealisations, e.id).toBeUndefined();
+            expect(cellOf('P6', e.id).kind, e.id).toBe(CELL_KINDS.NO);
+        }
+    });
+
+    it('a short list shows every name and no ellipsis', () => {
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'P6');
+        expect(s.answer({ conceptRealisations: { water: { tier: 'skin', placements: {
+            gate: { effect: 'requires', needs: ['swim'] } } } } }))
+            .toEqual({ kind: CELL_KINDS.YES, text: '1 concept: water (skin)', list: ['water (skin)'] });
+    });
+});
+
+describe('L10 on the real entries: a static `types` list is the count, a preview and the whole list', () => {
+    it('every entry declaring `sharing.items.types` shows ≤ LIST_PREVIEW names and carries the whole list', () => {
+        const typed = ENTRIES.filter((e) => Array.isArray(e.sharing?.items?.types));
+        expect(typed.length).toBeGreaterThan(0);
+        for (const e of typed) {
+            const { types } = e.sharing.items;
+            const c = cellOf('L10', e.id);
+            expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+            expect(c.list, e.id).toEqual(types.map(String));
+            expect(c.text, e.id).toBe(CELL_WORDING.itemTypesPreview(types.map(String)));
+            expect(c.text.startsWith(CELL_WORDING.itemTypes(types.length)), e.id).toBe(true);
+            for (const t of types.slice(LIST_PREVIEW)) expect(c.text.split(': ')[1].split(', '), e.id).not.toContain(t);
+        }
+        /* non-vacuity: at least one real list is longer than the preview */
+        expect(typed.some((e) => e.sharing.items.types.length > LIST_PREVIEW)).toBe(true);
+    });
+});
+
+describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ plan §6′.1 item 4)', () => {
+    /**
+     * ⛓ G8 (APWORLD SUBSTRATE CHANGE H1) — read off each entry's
+     * `locationCapacity` declaration: ✓ unbounded, ✗ tiles (the text names
+     * `capacityAt` and the growth), n/a where none is declared. All three kinds
+     * occur over the real registry.
+     */
+    it('G8: ✓ where the capacity is unbounded, ✗ naming `capacityAt` where it is tiles, n/a where none is declared', () => {
+        const kinds = new Set();
+        let ceilings = 0;
+        for (const e of ENTRIES) {
+            const c = cellOf('G8', e.id);
+            kinds.add(c.kind);
+            const declared = e.locationCapacity?.kind;
+            if (declared === 'unbounded') { expect(c.kind, e.id).toBe(CELL_KINDS.YES); continue; }
+            if (declared === 'tiles') {
+                expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+                expect(typeof e.locationCapacity.capacityAt, e.id).toBe('function');
+                expect(c.text, e.id).toContain('capacityAt');
+                // ⛓ G9 — a declared ceiling is NAMED (its N and why), and only then
+                const ceiling = e.locationCapacity.capacityAt({ width: 8, height: 6 }, {},
+                    { locations: 0, gated: 0, exits: 0, listed: 0 })?.ceiling;
+                if (ceiling) {
+                    ceilings += 1;
+                    expect(c.text, e.id).toContain(`up to ${ceiling.locations} (${ceiling.why}), which no size lifts`);
+                } else {
+                    expect(c.text, e.id).not.toContain('no size lifts');
+                }
+                continue;
+            }
+            expect(c.kind, e.id).toBe(CELL_KINDS.NA);
+            expect(declared, e.id).toBeUndefined();
+        }
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
+        expect(ceilings, 'a registered entry declares a ceiling (G9: flash_seedling_gen)').toBeGreaterThan(0);
+    });
+
+    it('G2: n/a exactly where the realiser is procedural; ✗ only where nothing is declared; else ✓ its count', () => {
+        const kinds = new Set();
+        for (const e of ENTRIES) {
+            const c = cellOf('G2', e.id);
+            kinds.add(c.kind);
+            const grown = typeof e.generateRegionCore === 'function';
+            if (grown) { expect(c.kind, e.id).toBe(CELL_KINDS.NA); continue; }
+            if (typeof e.zoneCount === 'number' && e.zoneCount > 0) {
+                expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+                expect(c.text.startsWith(String(e.zoneCount)), e.id).toBe(true);
+            } else {
+                expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+                expect(e.zoneCount, e.id).toBeUndefined();
+            }
+        }
+        // ⛓ No real entry is ✗ since the generic `flash` entry went (2026-10-18), so the
+        //   ✗ arm is held on the flash factory's bare shape, which declares no zoneCount.
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.YES].sort());
+        const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
+        expect(bare.zoneCount).toBeUndefined();
+        expect(CAPABILITY_STATEMENTS.find((s) => s.id === 'G2').answer(bare).kind).toBe(CELL_KINDS.NO);
+    });
+
+    it('L7: n/a where a Bot declares botActsAtOnce (nothing for Instant to skip) — the text adventure', () => {
+        const atOnce = ENTRIES.filter((e) => e.loopSupport?.botActsAtOnce === true);
+        expect(atOnce.map((e) => e.id)).toContain('text_adventure');
+        for (const e of atOnce) {
+            expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+    });
+
+    it('L7: n/a where a replay is a summary (Instant is always); still n/a where L6 is ✗; ✓ somewhere', () => {
+        const summary = ENTRIES.filter((e) => e.loopSupport?.summaryRecording === true);
+        expect(summary.length).toBeGreaterThan(0);
+        for (const e of summary) {
+            expect(cellOf('L5', e.id).text, e.id).toBe(CELL_WORDING.instantAlways);
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+        for (const e of ENTRIES.filter((x) => cellOf('L6', x.id).kind === CELL_KINDS.NO)) {
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+        expect(rowOf('L7').cells.some((c) => c.kind === CELL_KINDS.YES)).toBe(true);
+    });
+
+    it('L6: every real entry answers ✓ (declared universal); the ✗ arm holds on the flash factory\'s bare shape', () => {
+        for (const e of ENTRIES) expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+        const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'L6');
+        expect(s.universal).toBe(true);
+        expect(s.answer(bare).kind).toBe(CELL_KINDS.NO);
+    });
+});
+
+describe('the feature wording and the uncovered fields', () => {
+    it('every feature id a real entry declares has words — a missing one is a WARNING, not a failure', () => {
+        const ids = [...new Set(ENTRIES.flatMap((e) => e.supportedFeatures ?? []))].sort();
+        const unworded = ids.filter((id) => !(id in FEATURE_WORDING));
+        // eslint-disable-next-line no-console
+        if (unworded.length) console.warn(`WARNING substrateCapabilities: feature ids with no FEATURE_WORDING (rendered as the id): ${unworded.join(', ')}`);
+        expect(ids.length).toBeGreaterThan(0);
+    });
+
+    it('uncoveredFields: a universe name no statement reads, and only those', () => {
+        const un = uncoveredFields(NAMES, ROWS);
+        expect(un).toEqual([...un].sort());
+        const read = new Set(CAPABILITY_STATEMENTS.flatMap((s) => s.fields));
+        for (const n of un) expect(read.has(n), n).toBe(false);
+        for (const f of read) expect(un, f).not.toContain(f);
+        /* non-vacuity: the universe is wider than the vocabulary today */
+        expect(un.length).toBeGreaterThan(0);
+        expect(un).toContain('loopSupport.customQueues');
+    });
+});
+
+describe('the live declarations and the marks (substrate chart S2)', () => {
+    it('every `live` key is a member of LIVE_ANSWERS, and every LIVE_ANSWERS value is declared by ≥1 statement', () => {
+        const members = new Set(Object.values(LIVE_ANSWERS));
+        const declared = CAPABILITY_STATEMENTS.filter((s) => 'live' in s);
+        for (const s of declared) expect(members.has(s.live), s.id).toBe(true);
+        expect(new Set(declared.map((s) => s.live))).toEqual(members);
+    });
+
+    it('LIVE_ANSWERS are keys of the panel\'s `vm.answers[id]` — the overlay key is the view-model\'s own', () => {
+        const vm = describeRegistry(ENTRIES, REGISTRY, { call: () => null });
+        for (const e of ENTRIES) {
+            for (const key of Object.values(LIVE_ANSWERS)) expect(vm.answers[e.id], `${e.id}.${key}`).toHaveProperty(key);
+        }
+    });
+
+    it('CELL_MARKS has one mark per CELL_KINDS value, and no other', () => {
+        expect(Object.keys(CELL_MARKS).sort()).toEqual(Object.values(CELL_KINDS).sort());
+    });
+
+    it('◐ appears in the generated markdown exactly where a cell is partial', async () => {
+        const v = await buildCapabilities({ rows: NAMES.map((name) => ({ name })) });
+        const md = capabilitiesMarkdown(v);
+        const partials = v.rows.flatMap((r) => r.cells.filter((c) => c.kind === CELL_KINDS.PARTIAL)
+            .map(() => `${CELL_MARKS[CELL_KINDS.PARTIAL]} `));
+        expect(partials.length).toBeGreaterThan(0);
+        const tableLines = md.split('\n').filter((l) => /^\| [A-Z]\d+ \|/.test(l));
+        const inTables = tableLines.join('\n').split(CELL_MARKS[CELL_KINDS.PARTIAL]).length - 1;
+        expect(inTables).toBe(partials.length);
+        for (const r of v.rows) {
+            const line = tableLines.find((l) => l.startsWith(`| ${r.id} |`));
+            const n = r.cells.filter((c) => c.kind === CELL_KINDS.PARTIAL).length;
+            expect(line.split(CELL_MARKS[CELL_KINDS.PARTIAL]).length - 1, r.id).toBe(n);
+        }
+    });
+});
+
+describe('applyLiveAnswer — fixtures', () => {
+    const items = { live: LIVE_ANSWERS.itemTypes };
+    const yes = { kind: CELL_KINDS.YES, text: CELL_WORDING.itemTypesLive, why: [] };
+
+    it('itemTypes: a list refines a ✓ cell\'s text with the same count wording the static case uses', () => {
+        const out = applyLiveAnswer(yes, items, ['Food', 'Arrow']);
+        expect(out).not.toBe(yes);
+        expect(out.kind).toBe(CELL_KINDS.YES);
+        expect(out.text).toBe(`${CELL_WORDING.itemTypes(2)}: Food, Arrow`);
+        expect(out.live).toEqual({ key: LIVE_ANSWERS.itemTypes, value: 'Food, Arrow' });
+        expect(yes.text).toBe(CELL_WORDING.itemTypesLive); // the input is untouched
+        expect(applyLiveAnswer(yes, items, []).text).toBe(CELL_WORDING.itemTypes(0));
+    });
+
+    it('itemTypes: `absent`, a threw, or a ✗ cell → the SAME cell', () => {
+        const no = { kind: CELL_KINDS.NO, text: null };
+        expect(applyLiveAnswer(yes, items, 'absent')).toBe(yes);
+        expect(applyLiveAnswer(yes, items, `${THREW_PREFIX}boom`)).toBe(yes);
+        expect(applyLiveAnswer(no, items, ['x'])).toBe(no);
+    });
+
+    it('itemTypes: a long list shows the count and the first LIST_PREVIEW names, the whole list as `list`', () => {
+        const names = ['a', 'b', 'c', 'd', 'e'];
+        const out = applyLiveAnswer(yes, items, names);
+        expect(out.text).toBe(`${CELL_WORDING.itemTypes(5)}: ${names.slice(0, LIST_PREVIEW).join(', ')}, …`);
+        expect(out.list).toEqual(names);
+        expect(applyLiveAnswer(yes, items, names.slice(0, LIST_PREVIEW)).text)
+            .toBe(`${CELL_WORDING.itemTypes(LIST_PREVIEW)}: ${names.slice(0, LIST_PREVIEW).join(', ')}`);
+    });
+
+    it('P2 declares no live answer (⚖ plan §6′.1 item 7) — a controller answer changes nothing', () => {
+        const p2 = CAPABILITY_STATEMENTS.find((s) => s.id === 'P2');
+        expect('live' in p2).toBe(false);
+        const c = { kind: CELL_KINDS.YES, text: null };
+        expect(applyLiveAnswer(c, p2, 'controller')).toBe(c);
+        expect(applyLiveAnswer(c, { live: 'playbackController' }, 'controller')).toBe(c);
+    });
+
+    it('an n/a cell, an undeclared statement, a missing answer → the SAME cell', () => {
+        const na = { kind: CELL_KINDS.NA, text: null };
+        expect(applyLiveAnswer(na, items, ['x'])).toBe(na);
+        expect(applyLiveAnswer(yes, {}, ['x'])).toBe(yes);
+        expect(applyLiveAnswer(yes, items, undefined)).toBe(yes);
+    });
+
+    it('over the REAL registry with fake live answers: only declared statements change, and only their text', () => {
+        const vm = describeRegistry(ENTRIES, REGISTRY, { call: () => ['a', 'b'] });
+        for (const s of CAPABILITY_STATEMENTS) {
+            const row = rowOf(s.id);
+            for (const c of row.cells) {
+                const out = applyLiveAnswer(c, s, s.live ? vm.answers[c.id][s.live] : undefined);
+                expect(out.kind, `${s.id} × ${c.id}`).toBe(c.kind);
+                if (!s.live) expect(out, `${s.id} × ${c.id}`).toBe(c);
+            }
+        }
+    });
+});

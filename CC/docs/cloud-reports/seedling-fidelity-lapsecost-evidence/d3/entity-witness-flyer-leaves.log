@@ -1,0 +1,14 @@
+8 number leaves × 2 magnitudes = 16 perturbed runs, jobs 2
+CONTROL: 211 tapes (tier fast); stable: yes; threw 0; diverge from expectation 1 (r5-l60-kill)
+  16/16 perturbed runs (244 s)
+chasers.flyer.targetOffset.x                     corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.targetOffset.y                     corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.dieAnim.frames                     corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.dieAnim.rate                       corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.drop.anim.frames                   corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.drop.anim.rate                     corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.drop.hitIndex                      corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+chasers.flyer.drop.force                         corpus-blind  ulp 0m/0t/211s         pct10 0m/0t/211s
+
+{"verdicts":{"moves":0,"corpus-blind":8},"byClass":{"chasers":{"moves":0,"corpus-blind":8}},"threw":[]}
+wall 244 s, jobs 2, 211 tapes

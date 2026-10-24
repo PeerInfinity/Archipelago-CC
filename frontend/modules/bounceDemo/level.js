@@ -1,11 +1,8 @@
 /**
- * Bounce Demo level data model — build-order step 3
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Bounce Demo level data model.
  *
  * A level is authored/generated GEOMETRY; access rules are derived
- * from it by the solver, never stored in it. Model notes from the
- * step-3 review pass (the plan doc's "Level data model" section is the
- * authoritative description):
+ * from it by the solver, never stored in it. Model notes:
  *
  * - All positions (platforms, springs, jetpacks, pickups, portals) are
  *   CENTERS in level-local space; y increases downward; the entrance

@@ -597,21 +597,23 @@ describe('growSpheres (bounce) — zone realisation + oracle', () => {
             const rulesJson = buildRulesJson(grid, {
                 startCell, seed, embedSphereLog: false,
                 completionConditionItem: 'Victory',
-                // the panel locks the start-stack arrow's canonical
+                // the panel pins the start-stack arrow's canonical
                 // placement (multiworld fill must keep it an arrow)
-                lockedCanonicalItems: ['Right arrow'],
+                pinnedCanonicalItems: ['Right arrow'],
             });
             const computed = computeItemSpheres(rulesJson);
             expect(compareSpheresToPlan(computed, plan)).toEqual([]);
 
-            // locked:true landed on exactly the start-stack arrow location
-            const lockedLocs = Object.values(rulesJson.regions['1'])
-                .flatMap((r) => r.locations.filter((l) => l.locked));
-            expect(lockedLocs).toHaveLength(1);
-            expect(lockedLocs[0].item.name).toBe('Right arrow');
+            // pinned:true landed on exactly the start-stack arrow location
+            // (and `locked` — Archipelago's observation — on none)
+            const allLocs = Object.values(rulesJson.regions['1']).flatMap((r) => r.locations);
+            const pinnedLocs = allLocs.filter((l) => l.pinned);
+            expect(pinnedLocs).toHaveLength(1);
+            expect(pinnedLocs[0].item.name).toBe('Right arrow');
+            expect(allLocs.filter((l) => l.locked && l.id != null)).toEqual([]);
             const startRegionName = grid.getRegion(startCell).region_id;
             expect(rulesJson.regions['1'][startRegionName].locations
-                .some((l) => l.locked)).toBe(true);
+                .some((l) => l.pinned)).toBe(true);
         }, 120000);
 
     it('a starting-item arrow rides rules.json and the oracle still holds (mixed start)', () => {

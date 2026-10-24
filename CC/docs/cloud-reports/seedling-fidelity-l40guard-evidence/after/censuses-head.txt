@@ -1,0 +1,14 @@
+== census-seedling-solver-surface
+RED drift: import:presses.js#distanceRectPoint table {"sites":20,"files":{"botDriverV2.js":1,"solverBot.js":17,"strikePolicy.js":2}} fresh {"sites":21,"files":{"botDriverV2.js":1,"solverBot.js":18,"strikePolicy.js":2}}
+RED drift: import:presses.js#SLASH_REACH table {"sites":12,"files":{"botDriverV2.js":2,"solverBot.js":10}} fresh {"sites":13,"files":{"botDriverV2.js":2,"solverBot.js":11}}
+RED: 13 finding(s) — run --write, then classify
+== census-seedling-constants
+census-seedling-constants --check — 6046 literals; green drift: 5 new + 0 vanished cosmetic/structural, 735 moved
+PASS
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+== roster
+282

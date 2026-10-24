@@ -1,0 +1,6 @@
+GREEN: 284 rows match a fresh census
+PASS
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 558 number leaves
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+roster 277

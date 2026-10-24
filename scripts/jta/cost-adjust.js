@@ -43,7 +43,7 @@ function parseArgs(argv) {
 
 function printUsage() {
     console.log(`
-JTA Cost Adjustment Tool
+JtA Cost Adjustment Tool
 
 Usage:
   node scripts/jta/cost-adjust.js [options]

@@ -1,0 +1,150 @@
+L0: 0 target(s) 
+L1: 0 target(s) 
+L2: 0 target(s) 
+L3: 0 target(s) 
+L4: 0 target(s) 
+L5: 0 target(s) 
+L6: 0 target(s) 
+L7: 0 target(s) 
+L8: 0 target(s) 
+L9: 0 target(s) 
+L10: 0 target(s) 
+L11: 0 target(s) 
+L12: 0 target(s) 
+L13: 0 target(s) 
+L14: 0 target(s) 
+L15: 0 target(s) 
+L16: 0 target(s) 
+L17: 0 target(s) 
+L18: 0 target(s) 
+L19: 0 target(s) 
+L20: 0 target(s) 
+L21: 0 target(s) 
+L22: 0 target(s) 
+L23: 0 target(s) 
+L24: 0 target(s) 
+L25: 0 target(s) 
+L26: 0 target(s) 
+L27: 0 target(s) 
+L28: 0 target(s) 
+L29: 0 target(s) 
+L30: 0 target(s) 
+L31: 0 target(s) 
+L32: 0 target(s) 
+L33: 0 target(s) 
+L34: 0 target(s) 
+L35: 0 target(s) 
+L36: 0 target(s) 
+L37: 0 target(s) 
+L38: 0 target(s) 
+L39: 0 target(s) 
+L40: 1 target(s) IceTurret@472,400
+  IceTurret@472,400 boot(431,432) tap right → stance (440.70000000000005,440) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+  IceTurret@472,400 boot(432,432) tap right → stance (441.70000000000005,440) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+  IceTurret@472,400 boot(433,432) tap right → stance (442.70000000000005,440) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+  IceTurret@472,400 boot(434,432) tap right → stance (443.70000000000005,440) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+L41: 0 target(s) 
+L42: 0 target(s) 
+L43: 0 target(s) 
+L44: 0 target(s) 
+L45: 0 target(s) 
+L46: 0 target(s) 
+L47: 0 target(s) 
+L48: 0 target(s) 
+L49: 0 target(s) 
+L50: 0 target(s) 
+L51: 0 target(s) 
+L52: 0 target(s) 
+L53: 0 target(s) 
+L54: 0 target(s) 
+L55: 0 target(s) 
+L56: 0 target(s) 
+L57: 0 target(s) 
+L58: 0 target(s) 
+L59: 0 target(s) 
+L60: 0 target(s) 
+L61: 0 target(s) 
+L62: 0 target(s) 
+L63: 1 target(s) PushableBlockSpear@112,96
+  PushableBlockSpear@112,96 boot(102,88) tap left → stance (109.2,96) dir 2: OFF[] ON[LightPole:lightpole@64,88]
+  PushableBlockSpear@112,96 boot(103,102) tap down → stance (111,110) dir 3: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+  PushableBlockSpear@112,96 boot(104,88) tap left → stance (112,96) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+  PushableBlockSpear@112,96 boot(104,89) tap left → stance (112,97) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+L64: 0 target(s) 
+L65: 1 target(s) PushableBlockSpear@176,128
+  PushableBlockSpear@176,128 boot(135,142) tap right → stance (130.6786329166888,150) dir 3: OFF[LightPole:lightpole@128,168] ON[]
+  PushableBlockSpear@176,128 boot(135,142) tap up → stance (130.6786329166888,150) dir 3: OFF[LightPole:lightpole@128,168] ON[]
+  PushableBlockSpear@176,128 boot(135,142) tap left → stance (130.6786329166888,150) dir 3: OFF[LightPole:lightpole@128,168] ON[]
+  PushableBlockSpear@176,128 boot(135,142) tap down → stance (130.6786329166888,150) dir 3: OFF[LightPole:lightpole@128,168] ON[]
+L66: 0 target(s) 
+L67: 1 target(s) PushableBlockSpear@144,112
+  PushableBlockSpear@144,112 boot(135,102) tap up → stance (143,110) dir 1: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+  PushableBlockSpear@144,112 boot(136,102) tap up → stance (144,110) dir 1: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+  PushableBlockSpear@144,112 boot(136,102) tap left → stance (144,110) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+  PushableBlockSpear@144,112 boot(136,103) tap left → stance (144,111) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+L68: 0 target(s) 
+L69: 0 target(s) 
+L70: 0 target(s) 
+L71: 0 target(s) 
+L72: 0 target(s) 
+L73: 0 target(s) 
+L74: 0 target(s) 
+L75: 0 target(s) 
+L76: 0 target(s) 
+L77: 0 target(s) 
+L78: 0 target(s) 
+L79: 0 target(s) 
+L80: 0 target(s) 
+L81: 0 target(s) 
+L82: 0 target(s) 
+L83: 0 target(s) 
+L84: 0 target(s) 
+L85: 0 target(s) 
+L86: 0 target(s) 
+L87: 0 target(s) 
+L88: 0 target(s) 
+L89: 0 target(s) 
+L90: 0 target(s) 
+L91: 0 target(s) 
+L92: 0 target(s) 
+L93: 0 target(s) 
+L94: 0 target(s) 
+L95: 0 target(s) 
+L96: 0 target(s) 
+L97: 0 target(s) 
+L98: 1 target(s) IceTurret@104,24
+  IceTurret@104,24 boot(56,78) tap up → stance (64,85.1) dir 0: OFF[Enemy:jellyfish@56,48(no)] ON[Enemy:jellyfish@56,48]
+  IceTurret@104,24 boot(56,79) tap up → stance (64,86.1) dir 0: OFF[Enemy:jellyfish@56,48(no)] ON[Enemy:jellyfish@56,48]
+  IceTurret@104,24 boot(56,80) tap up → stance (64,87.1) dir 0: OFF[Enemy:jellyfish@56,48(no)] ON[Enemy:jellyfish@56,48]
+  IceTurret@104,24 boot(56,81) tap up → stance (64,88.1) dir 0: OFF[Enemy:jellyfish@56,48(no)] ON[Enemy:jellyfish@56,48]
+L99: 0 target(s) 
+L100: 0 target(s) 
+L101: 0 target(s) 
+L102: 0 target(s) 
+L103: 0 target(s) 
+L104: 0 target(s) 
+L105: 0 target(s) 
+L106: 0 target(s) 
+L107: 0 target(s) 
+L108: 0 target(s) 
+L109: 0 target(s) 
+L110: 0 target(s) 
+L111: 0 target(s) 
+L112: 0 target(s) 
+L113: 0 target(s) 
+L114: 0 target(s) 
+L115: 0 target(s) 
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/atlasSource.js:79
+            throw new Error(`seedling atlas has no level ${level} (it has `
+                  ^
+
+Error: seedling atlas has no level 116 (it has 116 levels)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/atlasSource.js:79:19
+    at recordFor (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:1192:21)
+    at worldFor (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:1237:43)
+    at createLevelRun (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:4856:17)
+    at createRunForStaging (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/tapeRunner.js:371:12)
+    at file:///home/user/Archipelago-CC/CC/docs/cloud-reports/seedling-fidelity-spearrect-evidence/d1-edge-search.mjs:40:38
+    at file:///home/user/Archipelago-CC/CC/docs/cloud-reports/seedling-fidelity-spearrect-evidence/d1-edge-search.mjs:40:133
+
+Node.js v22.22.0

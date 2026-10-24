@@ -1,0 +1,11 @@
+solve-seedling-r8-battery rc=0 c8c60520
+solve-seedling-r8-d2-chain rc=0 c8c60520
+solve-seedling-r8-l18 rc=0 c8c60520
+solve-seedling-r8-tail rc=0 c8c60520
+solve-seedling-r9-l3 rc=0 c8c60520
+solve-seedling-r9-campaign rc=0 c8c60520
+l18-off rc=0
+l18-on rc=0
+de6f6e4e0dffa7bb8ee524e8e79688b7 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/d2/verify-l18-off.out
+bae5c6de0f9d512c76f75155c3256dc4 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/d2/verify-l18-on.out
+VERIFY-DONE

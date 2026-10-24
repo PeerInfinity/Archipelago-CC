@@ -1,0 +1,19 @@
+2c8a45b801e34d8caab914784e421dcf16299bf5
+== census-seedling-solver-surface
+RED drift: import:playerPhysicsV2.js#playerBoxAt table {"sites":80,"files":{"arrivalSolid.js":1,"botDriverV2.js":12,"crusherBait.js":4,"encounters.js":1,"solverBot.js":62}} fresh {"sites":82,"files":{"arrivalSolid.js":1,"botDriverV2.js":12,"crusherBait.js":4,"encounters.js":1,"solverBot.js":64}}
+RED family: closure arrivalSolid.js arrowLaneCrossing.js axePricedCrossing.js botDriverV1.js botDriverV2.js bulbPlacement.js campaignChain.js crusherBait.js dangerMap.js decisionTrace.js director.js encounters.js forcedHit.js hazards.js mover.js solveProgress.js solverBot.js spaceTimeReach.js strikePolicy.js ≠ table arrivalSolid.js arrowLaneCrossing.js botDriverV1.js botDriverV2.js bulbPlacement.js campaignChain.js crusherBait.js dangerMap.js decisionTrace.js director.js encounters.js forcedHit.js hazards.js mover.js solveProgress.js solverBot.js spaceTimeReach.js strikePolicy.js
+RED: 15 finding(s) — run --write, then classify
+rc=1
+== census-seedling-constants
+census-seedling-constants --check — 6028 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+rc=0
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+rc=0
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+rc=0
+== roster
+280

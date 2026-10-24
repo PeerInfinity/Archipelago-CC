@@ -1,0 +1,127 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 5,
+        "x": 80,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1129091,
+        "split": true,
+        "cosmetic": 544565574,
+        "fp": 750204808
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5609,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Push Rock",
+            "index": 0
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 906110800,
+            "split": true,
+            "cosmetic": 245529354,
+            "fp": 341033166
+        },
+        "seam": {
+            "time": 5630
+        }
+    },
+    "hold": false,
+    "tick_count": 437,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 58,
+            "to": 69
+        },
+        {
+            "key": "up",
+            "from": 69,
+            "to": 70
+        },
+        {
+            "key": "down",
+            "from": 70,
+            "to": 72
+        },
+        {
+            "key": "up",
+            "from": 74,
+            "to": 77
+        },
+        {
+            "key": "down",
+            "from": 78,
+            "to": 80
+        },
+        {
+            "key": "left",
+            "from": 84,
+            "to": 111
+        },
+        {
+            "key": "right",
+            "from": 113,
+            "to": 115
+        }
+    ],
+    "name": "f1-l5-open-lock-bait",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY F1 D2 — L5's OPEN-LOCK ARRIVAL, THE SOLVER'S OWN WALK UP TO ITS REFUSAL. `r8-solve-5`'s staging with `{5,0}` already set (every L5 visit after the first). The ladder baits `bob@48,80` and `bob@16,80`, then holds `button@48,48` to kill `bob@16,80` from the ceiling. The hold kills `bob@48,80`, but `bob@16,80` takes two arrows and ends at (58.87, 84.14), in column 3 between the lanes, where no armed lane reaches it. The solve refuses at the bound (`BODY_OUT_OF_LANE`) on tick 437. Authored by scripts/procgen/plan-seedling-f1-l5-open-lock.mjs.",
+    "note": ""
+}

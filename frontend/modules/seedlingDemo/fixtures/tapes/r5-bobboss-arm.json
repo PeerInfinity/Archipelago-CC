@@ -1,0 +1,392 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-bobboss-arm",
+  "description": "THE ARM SCHEDULE, MEASURED. Boots at L32's arena mouth (80,128), steps north over `FallRockLarge`'s arm line at y < 120, and then taps `primary` every 12 ticks for the rest of the run. It holds NO SWORD, so `useItem` on an empty inventory does nothing and no tap can be a swing — the taps exist only to page the three `BobBossNPC` dialogues whether or not `Bot.autoAdvance` is already doing it. What the stream measures is how many TAPE TICKS the rock's ~174 frozen frames, each dialogue and each 120-tick form transition actually cost, which is the unit an encounter script has to be written in and which the source does not answer in one reading (`Game.freezeObjects` is sticky, and R3 measured a pickup's phase B consuming a tick per frame while the player still could not move).",
+  "boot": {
+    "level": 32,
+    "x": 72,
+    "y": 120
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 900,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 4,
+      "to": 18
+    },
+    {
+      "key": "primary",
+      "from": 26,
+      "to": 28
+    },
+    {
+      "key": "primary",
+      "from": 38,
+      "to": 40
+    },
+    {
+      "key": "primary",
+      "from": 50,
+      "to": 52
+    },
+    {
+      "key": "primary",
+      "from": 62,
+      "to": 64
+    },
+    {
+      "key": "primary",
+      "from": 74,
+      "to": 76
+    },
+    {
+      "key": "primary",
+      "from": 86,
+      "to": 88
+    },
+    {
+      "key": "primary",
+      "from": 98,
+      "to": 100
+    },
+    {
+      "key": "primary",
+      "from": 110,
+      "to": 112
+    },
+    {
+      "key": "primary",
+      "from": 122,
+      "to": 124
+    },
+    {
+      "key": "primary",
+      "from": 134,
+      "to": 136
+    },
+    {
+      "key": "primary",
+      "from": 146,
+      "to": 148
+    },
+    {
+      "key": "primary",
+      "from": 158,
+      "to": 160
+    },
+    {
+      "key": "primary",
+      "from": 170,
+      "to": 172
+    },
+    {
+      "key": "primary",
+      "from": 182,
+      "to": 184
+    },
+    {
+      "key": "primary",
+      "from": 194,
+      "to": 196
+    },
+    {
+      "key": "primary",
+      "from": 206,
+      "to": 208
+    },
+    {
+      "key": "primary",
+      "from": 218,
+      "to": 220
+    },
+    {
+      "key": "primary",
+      "from": 230,
+      "to": 232
+    },
+    {
+      "key": "primary",
+      "from": 242,
+      "to": 244
+    },
+    {
+      "key": "primary",
+      "from": 254,
+      "to": 256
+    },
+    {
+      "key": "primary",
+      "from": 266,
+      "to": 268
+    },
+    {
+      "key": "primary",
+      "from": 278,
+      "to": 280
+    },
+    {
+      "key": "primary",
+      "from": 290,
+      "to": 292
+    },
+    {
+      "key": "primary",
+      "from": 302,
+      "to": 304
+    },
+    {
+      "key": "primary",
+      "from": 314,
+      "to": 316
+    },
+    {
+      "key": "primary",
+      "from": 326,
+      "to": 328
+    },
+    {
+      "key": "primary",
+      "from": 338,
+      "to": 340
+    },
+    {
+      "key": "primary",
+      "from": 350,
+      "to": 352
+    },
+    {
+      "key": "primary",
+      "from": 362,
+      "to": 364
+    },
+    {
+      "key": "primary",
+      "from": 374,
+      "to": 376
+    },
+    {
+      "key": "primary",
+      "from": 386,
+      "to": 388
+    },
+    {
+      "key": "primary",
+      "from": 398,
+      "to": 400
+    },
+    {
+      "key": "primary",
+      "from": 410,
+      "to": 412
+    },
+    {
+      "key": "primary",
+      "from": 422,
+      "to": 424
+    },
+    {
+      "key": "primary",
+      "from": 434,
+      "to": 436
+    },
+    {
+      "key": "primary",
+      "from": 446,
+      "to": 448
+    },
+    {
+      "key": "primary",
+      "from": 458,
+      "to": 460
+    },
+    {
+      "key": "primary",
+      "from": 470,
+      "to": 472
+    },
+    {
+      "key": "primary",
+      "from": 482,
+      "to": 484
+    },
+    {
+      "key": "primary",
+      "from": 494,
+      "to": 496
+    },
+    {
+      "key": "primary",
+      "from": 506,
+      "to": 508
+    },
+    {
+      "key": "primary",
+      "from": 518,
+      "to": 520
+    },
+    {
+      "key": "primary",
+      "from": 530,
+      "to": 532
+    },
+    {
+      "key": "primary",
+      "from": 542,
+      "to": 544
+    },
+    {
+      "key": "primary",
+      "from": 554,
+      "to": 556
+    },
+    {
+      "key": "primary",
+      "from": 566,
+      "to": 568
+    },
+    {
+      "key": "primary",
+      "from": 578,
+      "to": 580
+    },
+    {
+      "key": "primary",
+      "from": 590,
+      "to": 592
+    },
+    {
+      "key": "primary",
+      "from": 602,
+      "to": 604
+    },
+    {
+      "key": "primary",
+      "from": 614,
+      "to": 616
+    },
+    {
+      "key": "primary",
+      "from": 626,
+      "to": 628
+    },
+    {
+      "key": "primary",
+      "from": 638,
+      "to": 640
+    },
+    {
+      "key": "primary",
+      "from": 650,
+      "to": 652
+    },
+    {
+      "key": "primary",
+      "from": 662,
+      "to": 664
+    },
+    {
+      "key": "primary",
+      "from": 674,
+      "to": 676
+    },
+    {
+      "key": "primary",
+      "from": 686,
+      "to": 688
+    },
+    {
+      "key": "primary",
+      "from": 698,
+      "to": 700
+    },
+    {
+      "key": "primary",
+      "from": 710,
+      "to": 712
+    },
+    {
+      "key": "primary",
+      "from": 722,
+      "to": 724
+    },
+    {
+      "key": "primary",
+      "from": 734,
+      "to": 736
+    },
+    {
+      "key": "primary",
+      "from": 746,
+      "to": 748
+    },
+    {
+      "key": "primary",
+      "from": 758,
+      "to": 760
+    },
+    {
+      "key": "primary",
+      "from": 770,
+      "to": 772
+    },
+    {
+      "key": "primary",
+      "from": 782,
+      "to": 784
+    },
+    {
+      "key": "primary",
+      "from": 794,
+      "to": 796
+    },
+    {
+      "key": "primary",
+      "from": 806,
+      "to": 808
+    },
+    {
+      "key": "primary",
+      "from": 818,
+      "to": 820
+    },
+    {
+      "key": "primary",
+      "from": 830,
+      "to": 832
+    },
+    {
+      "key": "primary",
+      "from": 842,
+      "to": 844
+    },
+    {
+      "key": "primary",
+      "from": 854,
+      "to": 856
+    },
+    {
+      "key": "primary",
+      "from": 866,
+      "to": 868
+    },
+    {
+      "key": "primary",
+      "from": 878,
+      "to": 880
+    }
+  ]
+}

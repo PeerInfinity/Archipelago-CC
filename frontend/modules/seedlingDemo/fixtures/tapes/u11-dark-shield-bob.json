@@ -1,0 +1,56 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 4,
+        "x": 64,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasShield": true,
+            "hasDarkShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 58,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 40
+        },
+        {
+            "key": "primary",
+            "from": 18,
+            "to": 19
+        }
+    ],
+    "name": "u11-dark-shield-bob",
+    "description": "⛓⛓⛓ U11-swim D3 — THE DARK SHIELD HITS A BOB, AND ITS LATCH LETS A SWORD THROUGH THE I-FRAME. L4, U9's shove boot (64,32), three tiles north of `bob@64,64`, with the shield, the DARK shield and a sword through the seam and `noDamage` FALSE. The player walks DOWN for 40 ticks and presses once on t 19, then stands to t 58. `shieldBump` with `hasDarkShield` calls `Enemy.hit(shieldForce 5, playerPoint, darkShieldDamage 0.5, \"Shield\")` on a body whose `hitsTimer <= 0`: the bob takes 0.5 on t 16, a 30-tick i-frame and a knockback, and `hitByDarkStuff` latches; every later touch inside that i-frame is the plain knockback. The press's first test (t 19) lands THROUGH the i-frame because of the latch (hits 1.5), and the bob — which a refused swing would leave to fall into L4's pit by t 50 — comes back and contacts the player on t 57. The tape ends at t 58, before t 61, where that contact's throw starts the player's fall into the same lethal pit. Fixed keys. Authored by scripts/procgen/plan-seedling-u11-dark-shield.mjs.",
+    "note": ""
+}

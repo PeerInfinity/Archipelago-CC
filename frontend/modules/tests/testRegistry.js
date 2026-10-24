@@ -77,6 +77,24 @@ export function registerTest(testDefinition) {
     return;
   }
 
+  // Function-NAME collisions across test files are survivable now that
+  // the runner resolves tests by id, but they made three tests silently
+  // vacuous for weeks when resolution went through the name-keyed
+  // getAllTestFunctions() map (the later-registered file's function ran
+  // under BOTH ids). Warn loudly so copy-pasted test files rename their
+  // functions.
+  const fnName = testFunction.name || id;
+  for (const existing of registeredTests.values()) {
+    if (existing.functionName === fnName) {
+      log(
+        'warn',
+        `Test '${id}' registers a function named '${fnName}', which test `
+        + `'${existing.id}' also uses. Rename one — name-keyed consumers `
+        + `(getAllTestFunctions) cannot distinguish them.`
+      );
+    }
+  }
+
   // Determine final order value
   let finalOrder;
   

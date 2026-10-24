@@ -1,0 +1,779 @@
+/**
+ * flashPanel/seedlingObstacleEvents — **A SAVED OBSTACLE STATE AS AN AP EVENT**
+ * (RULES `rules-obstacle-events`).
+ *
+ * ⚖ The user (2026-10-05): *"The broken state of some obstacles is saved in the
+ * save data. We might need to set up Archipelago logic to track which things
+ * were broken."* The guarantee is **break before first use**: a door whose game
+ * landing is INSIDE such an obstacle is usable only once the obstacle's flag is
+ * cleared, so the edge needs the flag, and the planner treats an unmet flag as a
+ * goal visited first (like fetching a key). Not eager breaking. The backstop is
+ * the Menu's Restart (`exporter[p].return_to_menu`) plus the solver's named
+ * refusal (`obstacle.kind 'arrival-inside-solid'`).
+ *
+ * ⛓ THE INPUT IS THE FIDELITY ARRIVAL CENSUS (`seedlingDemo/fidelityArrival.js`
+ * `arrivalSolidCensus`): one row per (game landing, persistence-decided solid),
+ * each MEASURED on the model with the flag held and with it cleared. Which rows
+ * become events is read off those measurements, never off a class list:
+ *   - held: inside AND stuck, cleared: outside (or free once every flag of a
+ *     stacked landing is cleared) → the flag gates the landing edge;
+ *   - held: inside but NOT stuck → nothing to gate (`skipped`, named);
+ *   - a clear that ADDS the solid (`flagHolds.inside` false, a FallRock) or one
+ *     that leaves the box inside → REFUSED by name: AP has no `Not(event)`, and
+ *     a rule this module cannot state is never guessed.
+ *
+ * THE SCHEMA (reviewed with the JS arc; the readers key on `event_id`):
+ *   one EVENT LOCATION per flag `{level, tag}`, in the AP region on the
+ *   obstacle's OPEN side, holding a locked event item of the same name:
+ *     name        `L<level> flag <tag>: <class>@<x>,<y> cleared`
+ *     event_id    `flag:L<level>:<tag>`
+ *     event_kind  `'game_state'` — the state manager NEVER auto-collects it
+ *                 (`stateManager/core/eventKinds.js`): the game's own flag does
+ *     obstacle    `{level, tag, class, x, y}` (the solid entity)
+ *     action      `{verb, item}` — the census's `FLAG_ACTIONS` row: what clears
+ *                 the flag, and the game inventory flag it needs (or null)
+ *     side        the AP region the event sits in
+ *     across      the AP regions on the obstacle's FAR side (the other sub-regions its footprint
+ *                 touches; empty when it touches only `side`). A walk that crosses between `side`
+ *                 and one of them at the event's cost passes THROUGH the obstacle — which, in the
+ *                 game, breaks it (the survey credits the event there; added for the leg walk)
+ *     access_rule the obstacle's own crossing cost, as the transcription prices
+ *                 it (True_ when it prices none)
+ *   EDGES: every departure whose landing is inside the obstacle gets
+ *   `And(<its rule>, Has(<event item>))`; a landing inside STACKED solids needs
+ *   every one of their events.
+ *
+ * Pure: the caller (the playthrough generator) supplies the atlas-side answers
+ * through `ctx`, so the rows can be driven from a fixture in the unit tests.
+ */
+
+/** The kind every obstacle event carries: state the GAME keeps, which logic must never assume. */
+export const OBSTACLE_EVENT_KIND = 'game_state';
+
+/** `flag:L<level>:<tag>` — the stable id the runtime collector keys on. */
+export const obstacleEventId = ({ level, tag }) => `flag:L${level}:${tag}`;
+
+/** `{level, tag}` back out of an event id, or null when it is not one. */
+export function parseObstacleEventId(id) {
+    const m = /^flag:L(\d+):(\d+)$/.exec(String(id ?? ''));
+    return m ? { level: Number(m[1]), tag: Number(m[2]) } : null;
+}
+
+/** The event's display name (also its event item's name). */
+export const obstacleEventName = ({ level, tag, cls, x, y }) => `L${level} flag ${tag}: ${cls}@${x},${y} cleared`;
+
+/** `breakablerock@80,112` → `{cls, x, y}`. */
+export function parseSolidId(id) {
+    const m = /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(String(id ?? ''));
+    if (!m) throw new Error(`obstacle events: solid id "${id}" is not <class>@<x>,<y>`);
+    return { cls: m[1], x: Number(m[2]), y: Number(m[3]) };
+}
+
+const landingKey = (L) => `L${L.from} ${L.door} -> L${L.level} (${L.x},${L.y})`;
+
+/**
+ * One census row's verdict: `'gate'`, `'skip'` (the box can walk out), or a
+ * refusal reason.
+ */
+export function rowVerdict(row) {
+    if (!row.flag) return { refuse: `${row.solid}: no persistence flag decides it — the map would have to be wrong` };
+    if (!row.flagHolds?.inside) {
+        return { refuse: `${row.solid} flag {${row.flag.level},${row.flag.tag}}: a clear ADDS this solid (${row.response}) — `
+            + 'the edge would need NOT(event), which an AP rule cannot say' };
+    }
+    if (!row.flagHolds.stuck) return { skip: `${row.solid}: the landing is inside it but the box walks out` };
+    if (!row.flagCleared) return { refuse: `${row.solid}: the census did not measure the cleared state` };
+    if (row.flagCleared.inside) {
+        return { refuse: `${row.solid} flag {${row.flag.level},${row.flag.tag}}: clearing the flag leaves the box inside — `
+            + 'the flag is not what decides this arrival' };
+    }
+    if (row.flagCleared.stuck && !(row.allCleared && !row.allCleared.stuck && !row.allCleared.inside)) {
+        return { refuse: `${row.solid}: the box is still stuck with every measured flag cleared — another solid decides it` };
+    }
+    return { gate: true };
+}
+
+/**
+ * Census rows → the compiler's `events` + `exitGates`.
+ *
+ * @param {object[]} rows `arrivalSolidCensus` rows
+ * @param {object} ctx
+ * @param {(landing:object) => {region_id:string, exit_id:string}} ctx.departure the atlas endpoint the
+ *   landing's door departs from
+ * @param {(row:object, solid:{cls,x,y}) => {region_id:string, sub_region?:string, side:string, across?:string[]}} ctx.place
+ *   where the event sits (the obstacle's open side); throws by name when it cannot say
+ * @param {(row:object, solid:{cls,x,y}) => object|null} ctx.rule the obstacle's own crossing cost as a
+ *   rules.json rule, null when the transcription prices none
+ * @returns {{events:object[], exitGates:object[], skipped:string[], refused:string[]}}
+ */
+export function deriveObstacleEvents(rows, ctx) {
+    const byFlag = new Map();
+    const byLanding = new Map();
+    const skipped = [];
+    const refused = [];
+    for (const row of rows) {
+        const v = rowVerdict(row);
+        if (v.skip) { skipped.push(`${landingKey(row.landing)}: ${v.skip}`); continue; }
+        if (v.refuse) { refused.push(`${landingKey(row.landing)}: ${v.refuse}`); continue; }
+        const id = obstacleEventId(row.flag);
+        const solid = parseSolidId(row.solid);
+        if (!byFlag.has(id)) {
+            byFlag.set(id, { row, solid });
+        } else if (byFlag.get(id).row.solid !== row.solid) {
+            refused.push(`${landingKey(row.landing)}: flag ${id} decides two solids (${byFlag.get(id).row.solid}, ${row.solid})`);
+            continue;
+        }
+        const lk = landingKey(row.landing);
+        if (!byLanding.has(lk)) byLanding.set(lk, { landing: row.landing, ids: [] });
+        if (!byLanding.get(lk).ids.includes(id)) byLanding.get(lk).ids.push(id);
+    }
+    if (refused.length > 0) {
+        throw new Error(`obstacle events: ${refused.length} census row(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+
+    const events = [];
+    const nameOf = new Map();
+    for (const [id, { row, solid }] of [...byFlag].sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))) {
+        const name = obstacleEventName({ ...row.flag, ...solid });
+        const place = ctx.place(row, solid);
+        nameOf.set(id, name);
+        events.push({
+            region_id: place.region_id,
+            ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+            name,
+            access_rule: ctx.rule(row, solid) ?? null,
+            fields: {
+                event_id: id,
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: row.flag.level, tag: row.flag.tag, class: solid.cls, x: solid.x, y: solid.y },
+                action: { verb: row.action ?? null, item: row.item ?? null },
+                side: place.side,
+                across: place.across ?? [],
+            },
+        });
+    }
+
+    const exitGates = [];
+    for (const { landing, ids } of [...byLanding.values()]) {
+        const dep = ctx.departure(landing);
+        const has = ids.map((id) => ({ rule: 'Has', args: { item_name: nameOf.get(id) } }));
+        exitGates.push({ ...dep, rule: has.length === 1 ? has[0] : { rule: 'And', children: has } });
+    }
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events, exitGates, skipped, refused };
+}
+
+/** Every item name a rules.json rule mentions (`Has`, `HasAny`/`HasAll`, nested). */
+export function ruleItemNames(rule) {
+    if (!rule || typeof rule !== 'object') return [];
+    return [
+        ...(typeof rule.args?.item_name === 'string' ? [rule.args.item_name] : []),
+        ...(Array.isArray(rule.args?.item_names) ? rule.args.item_names : []),
+        ...(rule.children ?? []).flatMap(ruleItemNames),
+    ];
+}
+
+/**
+ * ⛓⛓ RULES lock-events — **A LATCHING ONE-SIDED LOCK AS AN AP EVENT.** A BossLock opens only from the row
+ * under it (`BossLock.as:58-63`) and, once open, its tag keeps it open (`setPersistence(tag, false)`; `check()`
+ * removes it on every later build). From the north the game BUILDS it closed unless that flag was cleared
+ * (fidelity STANCE; witnessed on the wasm by `probe-seedling-bosslock-latch.mjs`). RULES (A) priced the far
+ * side's return as `And(CanReachRegion(<south>), <key>)`, which never asks whether the lock was OPENED; this
+ * prices it as the lock's event, which the game's own flag sets.
+ *
+ * The input is the analyzer's `latch_projection` (`regionAtlasAnalyzer.analyzeRegion` with `latchEvent`): the
+ * internal exit rows whose rule changed when each latched cell is priced as `Has(<its event>)`. So the set is
+ * derived, never typed: a lock no return row crosses (it separates nothing, or both sides open) mints no event.
+ *
+ * Same schema as the obstacle events (`event_id: flag:L<level>:<tag>`, `event_kind: 'game_state'`, `obstacle`,
+ * `action`, `side`, `across`); `access_rule` = what OPENING it costs from its open side, as the analyzer priced
+ * the step into the cell (its key, and whatever material lies between); `side` = the one component that opens it.
+ * An event the obstacle census already minted (same `event_id`) is REUSED, never duplicated; one whose name or
+ * side disagrees is refused by name.
+ *
+ * @param {object[]} projection `{region_id, from, to, base_rule, access_rule}` per changed internal exit
+ * @param {object} ctx
+ * @param {(itemName:string, regionId:string) => object|undefined} ctx.lockOf the lock behind an event item name
+ *   minted for that region's latches: `{level, tag, cls, x, y}`
+ * @param {(lock:object, regionId:string) => {region_id, sub_region?, side, across}} ctx.place its open side
+ * @param {(lock:object, regionId:string) => object} ctx.rule what opening it costs (a rules.json rule)
+ * @param {(cls:string) => {verb:string|null, item:string|null}} ctx.action
+ * @param {object[]} [ctx.existing] events already minted (the obstacle events)
+ * @returns {{events:object[], internalExitRules:object[], reused:string[]}}
+ */
+export function deriveLockEvents(projection, ctx) {
+    const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
+    const events = new Map();
+    const reused = new Set();
+    const internalExitRules = [];
+    for (const row of projection) {
+        const names = [...new Set(ruleItemNames(row.access_rule).filter((n) => ctx.lockOf(n, row.region_id)))];
+        if (names.length === 0) {
+            throw new Error(`lock events: ${row.region_id} ${row.from} -> ${row.to} changed with no lock event in its rule`);
+        }
+        for (const name of names) {
+            const lock = ctx.lockOf(name, row.region_id);
+            const id = obstacleEventId(lock);
+            if (events.has(id) || reused.has(id)) continue;
+            const place = ctx.place(lock, row.region_id);
+            const prior = existing.get(id);
+            if (prior) {
+                if (prior.name !== name || prior.fields.side !== place.side) {
+                    throw new Error(`lock events: ${id} is already the obstacle event "${prior.name}" @ ${prior.fields.side}; `
+                        + `the lock would be "${name}" @ ${place.side}`);
+                }
+                reused.add(id);
+                continue;
+            }
+            const { verb = null, item = null } = ctx.action(lock.cls) ?? {};
+            events.set(id, {
+                region_id: place.region_id,
+                ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+                name,
+                access_rule: ctx.rule(lock, row.region_id) ?? null,
+                fields: {
+                    event_id: id,
+                    event_kind: OBSTACLE_EVENT_KIND,
+                    obstacle: { level: lock.level, tag: lock.tag, class: lock.cls, x: lock.x, y: lock.y },
+                    action: { verb, item },
+                    side: place.side,
+                    across: place.across ?? [],
+                },
+            });
+        }
+        internalExitRules.push({ region_id: row.region_id, from: row.from, to: row.to, expect: row.base_rule, rule: row.access_rule });
+    }
+    const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
+    return { events: [...events.values()].sort(byId), internalExitRules, reused: [...reused].sort() };
+}
+
+/**
+ * ⛓⛓ RULES l38-button-event — **A CROSS-ROOM BUTTON PRESS AS AN AP EVENT.** A `ButtonRoom` whose `room >= 0`
+ * writes `Game.setPersistence(t, persist, room)` (`ButtonRoom.as:93`): its TSET, as a tag, in ANOTHER level, with
+ * `persist = !flip` — `flip` = a CLEAR. L38's `buttonroom@32,48 {t 8, flip 1, room 39}` clears `{39,8}`, and
+ * L39's plug `wandlock@144,592 {tset -1, tag 8}` is then left out of the build (`Lock.check()`). The overlay priced
+ * that plug FREE ("the button half is choreography", `seedlingPlaythroughOverlay.lockRuling`), which never asked
+ * whether the button was PRESSED — RULES (A)'s `CanReachRegion` shape one level over. Witnessed on the wasm by
+ * `probe-seedling-cross-room-button.mjs` (the press writes `{39,8}` to `persistence_cleared`; the plug is built
+ * gone with it and standing without it).
+ *
+ * The rows are every cross-room button of the map (`crossRoomButtonsOf`), never a list. Per (button, target):
+ *   - a CLEAR of a target the caller says it prices FREE on the button's account → ONE event: `obstacle` = the
+ *     TARGET `{level, tag, class, x, y}` (the flag the game writes, so the collector keys off it), `side` = the
+ *     presser's AP region (in the PRESSER's level — the one schema delta: `obstacle.level` may differ from
+ *     `side`'s), `across` = [] (pressing is not crossing: no hop credits it; a route meets it goal-first),
+ *     `action {verb: 'press', item: null, presser: {level, class, x, y}}`, `access_rule` = standing on the
+ *     button within `side` (`ctx.reach`); and the caller's `gates(target)` departures get `Has(<event>)`;
+ *   - ⛓⛓ RULES darktrap-events: a target solid in neither state whose clear REMOVES other bodies (`ctx.kills`: a
+ *     `LightPole` whose light then kills the `DarkTrap`s it reaches, `poleLightReaches`) opens the same way — the
+ *     barrier is those bodies, and the event is still the TARGET's flag (the flag the press writes; the solver's
+ *     `execCrossRoomPress` checks `presser.room === flag.level && presser.t === flag.tag`). When the target's own
+ *     level has a second way to clear it (`ctx.inRoom`: a pole is also lit by a Spear thrust), every gate is
+ *     `Or(Has(<event>), <that way>)`;
+ *   - a clear that ADDS the target's solid (a FallRock's `arm`), a target that is solid in neither state and kills
+ *     nothing, or one the rules already price without the button → `skipped`, by name;
+ *   - a SET (`flip` 0) of a target the clear would open → REFUSED by name (it would need `Not(event)`).
+ * An event already minted with the same `event_id` is reused (refused by name if its name or side differs).
+ *
+ * @param {object[]} rows `crossRoomButtonsOf(map)`
+ * @param {object} ctx
+ * @param {(target:object) => {effect:'opens'|'closes'|null, why:string}} ctx.effect what a clear does to its solid
+ * @param {(target:object) => {free:boolean, why:string}} ctx.pricedByButton does the transcription price it free
+ *   only because of the button
+ * @param {(presser:object) => {region_id, sub_region?, side}} ctx.place the presser's AP region
+ * @param {(presser:object) => object|null} ctx.reach standing on the presser within `side` (null = True_)
+ * @param {(target:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
+ *   through the target, as departures (throws by name when it cannot say)
+ * @param {(target:object) => {bodies:string[], why:string}|null} [ctx.kills] the bodies a clear of a target that is
+ *   solid in neither state removes (none = the target is cosmetic)
+ * @param {(target:object) => object|null} [ctx.inRoom] another way, in the target's own level, to clear it (a
+ *   rules.json rule), or null
+ * @param {object[]} [ctx.existing] events already minted
+ * @returns {{events:object[], exitGates:object[], skipped:string[], reused:string[]}}
+ */
+export function deriveButtonEvents(rows, ctx) {
+    const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
+    const events = new Map();
+    const exitGates = [];
+    const skipped = [];
+    const refused = [];
+    const reused = new Set();
+    for (const { presser: p, write, targets } of rows) {
+        const who = `L${p.level} buttonroom@${p.x},${p.y} -> {${write.level},${write.tag}}`;
+        if (targets.length === 0) { skipped.push(`${who}: no entity of L${write.level} carries tag ${write.tag}`); continue; }
+        for (const t of targets) {
+            const what = `${who} ${t.type}@${t.x},${t.y}`;
+            let { effect, why } = ctx.effect(t);
+            const kills = effect === null && ctx.kills ? ctx.kills(t) : null;
+            if (kills?.bodies?.length) ({ effect, why } = { effect: 'opens', why: kills.why });
+            if (write.value) {
+                if (effect === 'opens') refused.push(`${what}: the press SETS the flag that opens it (${why}) — the gate would need NOT(event)`);
+                else skipped.push(`${what}: the press sets the flag (flip 0)`);
+                continue;
+            }
+            if (effect === 'closes') { skipped.push(`${what}: a clear ADDS this solid (${why}) — no event can say NOT(event)`); continue; }
+            if (effect !== 'opens') { skipped.push(`${what}: solid in neither state (${why})`); continue; }
+            const priced = ctx.pricedByButton(t);
+            if (!priced.free) { skipped.push(`${what}: the rules do not price it free on the button's account (${priced.why})`); continue; }
+            const id = obstacleEventId({ level: t.level, tag: t.tag });
+            const name = obstacleEventName({ level: t.level, tag: t.tag, cls: t.type, x: t.x, y: t.y });
+            if (events.has(id)) { refused.push(`${what}: ${id} is already this slice's event for another button`); continue; }
+            const place = ctx.place(p);
+            const prior = existing.get(id);
+            if (prior) {
+                if (prior.name !== name || prior.fields.side !== place.side) {
+                    refused.push(`${what}: ${id} is already the event "${prior.name}" @ ${prior.fields.side}; `
+                        + `the button would make "${name}" @ ${place.side}`);
+                    continue;
+                }
+                reused.add(id);
+            } else {
+                events.set(id, {
+                    region_id: place.region_id,
+                    ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+                    name,
+                    access_rule: ctx.reach(p) ?? null,
+                    fields: {
+                        event_id: id,
+                        event_kind: OBSTACLE_EVENT_KIND,
+                        obstacle: { level: t.level, tag: t.tag, class: t.type, x: t.x, y: t.y },
+                        action: { verb: 'press', item: null, presser: { level: p.level, class: 'buttonroom', x: p.x, y: p.y } },
+                        side: place.side,
+                        across: [],
+                    },
+                });
+            }
+            const has = { rule: 'Has', args: { item_name: name } };
+            const other = ctx.inRoom?.(t) ?? null;
+            const rule = other ? { rule: 'Or', children: [has, other] } : has;
+            for (const dep of ctx.gates(t, name)) exitGates.push({ ...dep, rule });
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`button events: ${refused.length} cross-room write(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+    const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events: [...events.values()].sort(byId), exitGates, skipped, reused: [...reused].sort() };
+}
+
+/**
+ * ⛓⛓ RULES darktrap-events — **THE BODIES A LIT POLE KILLS.** A `LightPole` is solid in neither state, so a
+ * cross-room clear of its tag looked cosmetic to `persistenceEffect` (the model's `PERSISTENCE_RESPONSE` said
+ * `'cosmetic'` before fidelity wave 19, `'light'` from it: nothing the model's GEOMETRY consults reads `activate`).
+ * It is not: `activate =
+ * !checkPersistence(tag)` drives a `Light` with `radiusMin` 28, and `DarkTrap.update` starts dying the first tick a
+ * non-player light comes within `radiusMin` of it (`enemyDamage.DARKTRAP_LIGHT_DEATH`; fidelity STATICLADDER D2).
+ * A darktrap's contact is a barrier (fidelity DARKTRAPQ W1/W1c: frozen, then killed, at any walk or dash timing),
+ * so the bodies a lit pole reaches are what a clear of its tag REMOVES.
+ *
+ * The band is `levelRun.darkTrapsNow`'s `poles[]` (the light at `(x + originY, y ± bob)`, the body at its
+ * census centre), and a body is reached when the band's MIN is within `radiusMin` — `solverBot.deriveLightPole`'s
+ * test: the bob sweeps the whole band every `period` ticks and the first tick inside starts the death.
+ *
+ * @param {{x:number, y:number}} pole the pole's placement (`.oel` x, y)
+ * @param {{id:string, cx:number, cy:number}[]} bodies the level's `DarkTrap` census rows
+ * @param {object} D `enemyDamage.DARKTRAP_LIGHT_DEATH`
+ * @returns {{id:string, min:number, max:number}[]} the bodies reached, nearest first
+ */
+export function poleLightReaches(pole, bodies, D) {
+    const P = D.pole;
+    const lx = pole.x + P.originY;
+    const ys = [pole.y - P.bob, pole.y + P.bob];
+    return bodies.map((b) => {
+        const dx2 = (lx - b.cx) ** 2;
+        const ends = ys.map((ly) => Math.sqrt(dx2 + (ly - b.cy) ** 2));
+        const min = (b.cy >= ys[0] && b.cy <= ys[1]) ? Math.sqrt(dx2) : Math.min(...ends);
+        return { id: b.id, min, max: Math.max(...ends) };
+    }).filter((r) => r.min <= P.radiusMin).sort((a, b) => a.min - b.min);
+}
+
+/**
+ * The bodies a cleared `target` removes besides itself, read off the MODEL (injected, so this module stays pure):
+ * the target must be one of the level's `LightPole` press responders and not `invert`ed (a clear then LIGHTS it:
+ * `activate = !checkPersistence(tag)`, lit = `activate` XOR `invert` — an inverted pole would go OUT), and the
+ * bodies are the level's census `DarkTrap`s its light reaches (`poleLightReaches`). null = it removes nothing.
+ *
+ * @param {object} level the level record (`seedling-map.json` shape)
+ * @param {{x:number, y:number}} target
+ * @param {{buildLevelWorld:Function, combatCensusOf:Function, contactRect:Function, DARKTRAP_LIGHT_DEATH:object}} model
+ * @returns {{id, type, x, y, cx, cy, rect, min, max}[]|null}
+ */
+export function poleKillsOf(level, target, model) {
+    const pole = model.buildLevelWorld(level).pressResponders
+        .find((r) => r.as3 === 'LightPole' && r.x === target.x && r.y === target.y);
+    if (!pole) return null;
+    const placed = (level.entities ?? []).find((e) => e.type === 'lightpole' && e.x === target.x && e.y === target.y);
+    if (Number.parseInt(placed?.attrs?.invert ?? '0', 10) !== 0) return null;
+    const bodies = model.combatCensusOf(level).enemies.filter((e) => e.as3 === 'DarkTrap')
+        .map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, type: e.tag, x: e.x, y: e.y, cx: e.cx, cy: e.cy, rect: model.contactRect(e) }));
+    const reached = poleLightReaches(pole, bodies, model.DARKTRAP_LIGHT_DEATH);
+    return reached.length === 0 ? null : reached.map((r) => ({ ...bodies.find((b) => b.id === r.id), min: r.min, max: r.max }));
+}
+
+/**
+ * ⛓⛓ RULES darktrap-events — the IN-ROOM way to light a pole: `Player.genericHit` calls `(e as LightPole).hit()`
+ * only under `t == "Spear"` (`Player.as:1083-1088`, the model's `pressResponders` arm for `LightPole`), and
+ * `LightPole.hit()` toggles `activate`, whose setter writes the tag. So the Spear's thrust clears the same flag the
+ * cross-room press does, from the pole's own room. Nothing derives the inventory flag: the model states the arm in
+ * prose (`levelWorld`'s press-responder `arm`) and `solverBot.deriveLightPole` tests `hasSpear` by name. Witnessed
+ * on the game (rules-darktrap-events W0): the Spear alone crosses L62's and L63's darktraps both ways.
+ * ⚠ The ghost sword's swing also passes `"Spear"`; it is NOT an arm here (no stance is authored for it, nothing
+ * witnessed it), which only makes the rule stricter than the game.
+ */
+export const POLE_LIGHT_ARM = Object.freeze({ item: 'hasSpear', cite: 'Player.as:1083-1088 + Scenery/LightPole.as:45' });
+
+/**
+ * Every cross-room `ButtonRoom` of a map extract (`room >= 0`) and what its write reaches: `{presser: {level, x, y,
+ * t, tag, flip, room}, write: {level, tag, value}, targets: [{level, type, x, y, tset, tag}]}`. `value` is the
+ * persistence the press writes (`!flip`, `ButtonRoom.as:80-93`): false = CLEARED, the only value
+ * `persistence_cleared` shows. The targets are the entities of the written level carrying that tag.
+ */
+export function crossRoomButtonsOf(map) {
+    const levelOf = (n) => map.levels.find((l) => l.level === n);
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'buttonroom'
+        && Number.isInteger(Number(e.attrs?.room)) && Number(e.attrs.room) >= 0).map((e) => {
+        const room = Number(e.attrs.room);
+        const t = Number(e.attrs.tset);
+        const flip = Number(e.attrs.flip) === 1;
+        return {
+            presser: { level: l.level, x: e.x, y: e.y, t, tag: Number(e.attrs.tag), flip, room },
+            write: { level: room, tag: t, value: !flip },
+            targets: (levelOf(room)?.entities ?? []).filter((x) => Number(x.attrs?.tag) === t).map((x) => ({
+                level: room, type: x.type, x: x.x, y: x.y, tset: Number(x.attrs?.tset), tag: t,
+            })),
+        };
+    }));
+}
+
+/**
+ * What a CLEARED tag does to a target's solidity, read off the model's per-class answer
+ * (`seedlingDemo/levelWorld.PERSISTENCE_RESPONSE`, passed in as `response`): `'opens'` for `despawn` (and
+ * `lock-despawn` with `tSet < 0`, `Lock.as:42`), `'closes'` for `arm` (a FallRock built FALLEN), else null.
+ */
+export function persistenceEffect(target, response) {
+    if (response === 'despawn') return { effect: 'opens', why: 'despawn' };
+    if (response === 'lock-despawn') {
+        return target.tset < 0 ? { effect: 'opens', why: 'lock-despawn, tSet < 0' }
+            : { effect: null, why: `lock-despawn, but tSet ${target.tset} >= 0: check() ignores the tag` };
+    }
+    if (response === 'arm') return { effect: 'closes', why: 'arm: built FALLEN, Solid' };
+    return { effect: null, why: response ? `response '${response}'` : 'no declared persistence response' };
+}
+
+/**
+ * ⛓⛓ RULES watcher-event — **A FLAG ONE ROOM READS FROM ANOTHER AS AN AP EVENT.** The FinalDoor (L113) opens on
+ * all sixteen seals AND `!checkPersistence(0, namedLevel("watcher_text"))` (`FinalDoor.as:50`); the speaking
+ * Watcher in that room clears its tag when its dialogue ends (`Watcher.as:126-135`). The rules priced the seals and
+ * named the talk "implied", which never asked whether it HAPPENED — the game shows "Face the Watcher and return" and
+ * keeps the door shut (`r6-final-door-control`).
+ *
+ * The rows are `crossRoomPrerequisitesOf` (the overlay's `CROSS_ROOM_PREREQUISITES` read against the map and the
+ * level set's named rooms), never a list. Per row:
+ *   - ONE event: `obstacle` = the WRITER `{level, tag, class, x, y}` (the flag the game writes, so the collector
+ *     keys off it; here the obstacle's level IS the side's), `side` = the writer's AP region, `across` = [] (talking
+ *     is not crossing), `action {verb, item: null, gates: [{level, class, x, y}]}` (the solids the flag opens),
+ *     `access_rule` = reaching the writer within `side` (`ctx.reach`; null = True_);
+ *   - every departure `ctx.gates(gated, name)` returns gets `Has(<event>)`, and so does every event already
+ *     minted for a gated solid (`ctx.existing` whose `obstacle` is it: its own flag cannot clear before it opens);
+ *   - refused by name: no writer or several (the flag is never written, or the event cannot say which), no gated
+ *     solid, a gated solid with no departure on it, a gated entity the write CLOSES (`closes`), or an `event_id`
+ *     already minted under another name or side.
+ * ⛓ RULES yeti-event: the gated entity may be a TELEPORTER in the writer's own room (the L58 Yeti opens the portal
+ * to L46); `ctx.gates` is the same footprint rule, the teleporter's footprint being its own tile.
+ *
+ * @param {object[]} rows `crossRoomPrerequisitesOf(...)`
+ * @param {object} ctx
+ * @param {(writer:object) => {region_id, sub_region?, side}} ctx.place the writer's AP region
+ * @param {(writer:object) => object|null} ctx.reach standing in the writer's reach within `side` (null = True_)
+ * @param {(gated:object, eventName:string) => {region_id:string, exit_id:string}[]} ctx.gates the crossings
+ *   standing on the gated solid, as departures
+ * @param {object[]} [ctx.existing] events already minted
+ * @returns {{events:object[], exitGates:object[], eventGates:{event_id:string, item_name:string}[]}}
+ */
+export function deriveTalkEvents(rows, ctx) {
+    const existing = new Map((ctx.existing ?? []).map((e) => [e.fields?.event_id, e]));
+    const events = [];
+    const exitGates = [];
+    const eventGates = [];
+    const refused = [];
+    for (const { flag, writers, gated, closes = [], verb } of rows) {
+        const who = `{${flag.level},${flag.tag}}`;
+        if (closes.length > 0) {
+            refused.push(`${who}: the ${verb} CLOSES ${closes.map((g) => `L${g.level} ${g.type}@${g.x},${g.y}`).join(', ')} `
+                + '(invert set) — the gate would need NOT(event)');
+            continue;
+        }
+        if (writers.length !== 1) {
+            refused.push(`${who}: ${writers.length} writer(s) [${writers.map((w) => `${w.type}@${w.x},${w.y}`).join(', ')}] — `
+                + 'exactly one entity must clear it');
+            continue;
+        }
+        if (gated.length === 0) { refused.push(`${who}: no solid reads it`); continue; }
+        const w = writers[0];
+        const id = obstacleEventId(flag);
+        const name = obstacleEventName({ ...flag, cls: w.type, x: w.x, y: w.y });
+        const place = ctx.place(w);
+        const prior = existing.get(id);
+        if (prior) {
+            refused.push(`${who}: ${id} is already the event "${prior.name}" @ ${prior.fields.side}; `
+                + `the ${verb} would make "${name}" @ ${place.side}`);
+            continue;
+        }
+        events.push({
+            region_id: place.region_id,
+            ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+            name,
+            access_rule: ctx.reach(w) ?? null,
+            fields: {
+                event_id: id,
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: flag.level, tag: flag.tag, class: w.type, x: w.x, y: w.y },
+                action: { verb, item: null, gates: gated.map((g) => ({ level: g.level, class: g.type, x: g.x, y: g.y })) },
+                side: place.side,
+                across: [],
+            },
+        });
+        for (const g of gated) {
+            const deps = ctx.gates(g, name);
+            if (deps.length === 0) { refused.push(`${who}: L${g.level} ${g.type}@${g.x},${g.y} has no crossing on it`); continue; }
+            for (const dep of deps) exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: name } } });
+            for (const e of ctx.existing ?? []) {
+                const o = e.fields?.obstacle;
+                if (o && o.level === g.level && o.class === g.type && o.x === g.x && o.y === g.y) {
+                    eventGates.push({ event_id: e.fields.event_id, item_name: name });
+                }
+            }
+        }
+    }
+    if (refused.length > 0) {
+        throw new Error(`talk events: ${refused.length} prerequisite(s) refused —\n  ${refused.join('\n  ')}`);
+    }
+    exitGates.sort((a, b) => a.region_id.localeCompare(b.region_id, 'en', { numeric: true })
+        || a.exit_id.localeCompare(b.exit_id, 'en', { numeric: true }));
+    return { events, exitGates, eventGates };
+}
+
+/**
+ * Every `CROSS_ROOM_PREREQUISITES` row against a map extract. Returns `{flag: {level, tag}, writers, gated, closes,
+ * verb, cite}` per row; a declaration may yield several rows (one per writer) or a refusal row.
+ *
+ * The FLAG's room is one of two kinds:
+ *   - `flag.namedRoom`: the level set's named room (`namedRooms[flag.namedRoom].level`); the writers are the
+ *     `writer`-class entities of that level carrying the flag's tag (the writer clears its OWN tag);
+ *   - `flag.room === 'writer'` (⛓ RULES yeti-event): the writer's OWN room, the tag a constant of its class (a
+ *     `setPersistence(<tag>, false)` with no level argument writes `Main.level`, `Game.as:1902-1904`); every
+ *     `writer`-class entity of the map is a writer, ONE ROW EACH, so a second writer mints its own event. No
+ *     writer anywhere is one refusal row (the flag is never written).
+ * In both, a writer must carry a non-empty `text` (`NPC.as:188`: a silent NPC never talks, so never writes).
+ *
+ * The GATED entities read the flag one of two ways:
+ *   - by default, the class reads the flag as a constant (the FinalDoor): every `gated`-class entity of the map;
+ *   - `gatedReads === 'ownTag'` (⛓ RULES yeti-event): an entity reads its OWN tag (`Teleporter.as:86`,
+ *     `deactivated = tag >= 0 && (!checkPersistence(tag) == invert)`), so the gated ones are the `gated`-class
+ *     entities of the flag's room whose tag is the flag's; one with `invert` set is CLOSED by the write
+ *     (`closes`, refused by `deriveTalkEvents`: its gate would need `Not(event)`).
+ */
+export function crossRoomPrerequisitesOf(map, declarations, namedRooms) {
+    const levelEntities = (level) => map.levels.find((l) => l.level === level)?.entities ?? [];
+    const speaks = (e) => String(e.attrs?.text ?? '').length > 0;
+    return declarations.flatMap((d) => {
+        const rowFor = (level, writers) => {
+            const all = d.gatedReads === 'ownTag'
+                ? levelEntities(level).filter((e) => e.type === d.gated && Number(e.attrs?.tag) === d.flag.tag)
+                    .map((e) => ({ level, type: e.type, x: e.x, y: e.y, invert: Number(e.attrs?.invert ?? 0) !== 0 }))
+                : map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.gated)
+                    .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y, invert: false })));
+            const strip = ({ invert, ...g }) => g;
+            return {
+                flag: { level, tag: d.flag.tag }, writers,
+                gated: all.filter((g) => !g.invert).map(strip), closes: all.filter((g) => g.invert).map(strip),
+                verb: d.verb, cite: d.cite,
+            };
+        };
+        if (d.flag.room === 'writer') {
+            const writers = map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.writer && speaks(e))
+                .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y })));
+            if (writers.length === 0) return [{ flag: { level: `<no ${d.writer}>`, tag: d.flag.tag }, writers, gated: [], closes: [], verb: d.verb, cite: d.cite }];
+            return writers.map((w) => rowFor(w.level, [w]));
+        }
+        const room = namedRooms?.[d.flag.namedRoom];
+        if (!Number.isInteger(room?.level)) throw new Error(`talk events: the level set names no room "${d.flag.namedRoom}"`);
+        const level = room.level;
+        const writers = levelEntities(level)
+            .filter((e) => e.type === d.writer && Number(e.attrs?.tag) === d.flag.tag && speaks(e))
+            .map((e) => ({ level, type: e.type, x: e.x, y: e.y }));
+        return [rowFor(level, writers)];
+    });
+}
+
+/**
+ * ⛓⛓ RULES rope-events — **A CUT ROPE AS AN AP EVENT.** A `RopeStart` hit (the Sword's or ghost sword's slash,
+ * `Player.as:917` — the "Rope" type skips the line-of-sight test; the Spear's thrust, `:989`; Fire, `:1032`: all
+ * through `genericHit` → `(e as RopeStart).hit()`, `:1095-1097`, which checks no weapon) clears the rope's OWN tag
+ * (`RopeStart.as:46`) and sets `activate` on every `Activators` of the room with the same `t` (`:79-91`). On every
+ * later entry `check()` (`Game.as:868-877`, once per world) sees the cleared tag and hits it again (`:31-38`), so the
+ * group is re-published on every visit: the cut is a CROSS-VISIT state, and logic must not assume it — it is an
+ * event in the region the rope is cut from (game-witnessed, `probe-seedling-rope-events.mjs` + fidelity F7's
+ * `probe-seedling-f7-reentry.mjs`).
+ *
+ * The event is keyed on the ROPE's own tag (`flag:L<level>:<tag>`, named `L<level> flag <tag>: rope@<x>,<y> cleared`).
+ * What the cut OPENS is read off its group, per peer (`ropePeerEffect`); a rope is minted only when every peer opens
+ * something and nothing closes:
+ *   - `silences` an `ArrowTrap` with `shoot = 1` fires while `activate XOR shootDefault` (`ArrowTrap.as:30-40`), so
+ *                the cut stops it: its LANE is crossable only with the event (the caller charges the lane cells);
+ *   - `holds`    a `FallRock` whose landing tile is a `Button`'s: the rock falls on the cut (`FallRock.as:103-109`),
+ *                is rebuilt fallen from its own tag (`:42-47`), and as a Solid presses the button on every visit — a
+ *                holder for the button's re-closing lock (`seedlingBlockPaths` reads it through the event);
+ *   - REFUSED by name (the rope is NOT minted): a trap the cut ARMS (`shoot = 0`), a rock that lands on anything but
+ *                a button (it CLOSES that tile — the gate would need `Not(event)`), a `Pulser` (the cut arms it:
+ *                `pulser-arm`, a push the model does not place), or any other peer.
+ * The cut condition is the transcription's (`seedlingSemantics`' rope row: Sword|Spear|Fire, ⚖ the user 2026-10-21
+ * "Yes, fire should count too"), priced from the cells beside the rope's own tile (the melee reach; Fire's reach is
+ * not widened here).
+ */
+export const ROPE_EVENT_CITE = 'Puzzlements/RopeStart.as:31-49,79-91 + Player.as:917,989,1032,1095-1097 + Game.as:868-877';
+
+/** The rope's event name (also its event item's name). */
+export const ropeEventName = ({ level, tag, x, y }) => obstacleEventName({ level, tag, cls: 'rope', x, y });
+
+/** The analyzer condition "this rope was cut" — resolved to `Has(<event>)` by the playthrough's resolver. */
+export const ropeEventCondition = (rope) => ({ event: ropeEventName(rope) });
+
+/**
+ * Every rope of a map extract and its tset group: `{level, x, y, tag, tset, peers: [{type, x, y, tset, tag, attrs}]}`,
+ * the peers being the level's other entities with the same `tset` (what `set activate` reaches).
+ */
+export function ropesOf(map) {
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'rope').map((r) => {
+        const tset = Number(r.attrs?.tset);
+        return {
+            level: l.level, x: r.x, y: r.y, tag: Number(r.attrs?.tag), tset,
+            peers: (l.entities ?? []).filter((e) => e !== r && e.attrs?.tset !== undefined && Number(e.attrs.tset) === tset)
+                .map((e) => ({ type: e.type, x: e.x, y: e.y, tset, tag: e.attrs?.tag === undefined ? null : Number(e.attrs.tag), attrs: e.attrs })),
+        };
+    }));
+}
+
+/**
+ * What a cut does to one peer of the rope's group (`ropesOf` row), in its level (`level.entities`).
+ * @returns {{effect:'silences'|'holds'|'arms'|'closes'|'unknown', why:string}}
+ */
+export function ropePeerEffect(peer, level) {
+    if (peer.type === 'arrowtrap') {
+        return Number(peer.attrs?.shoot) === 1
+            ? { effect: 'silences', why: 'arrowtrap shoot=1: fires while activate XOR shootDefault (ArrowTrap.as:30-40), the cut stops it' }
+            : { effect: 'arms', why: 'arrowtrap shoot=0: the cut STARTS it firing (ArrowTrap.as:30-40)' };
+    }
+    if (peer.type === 'fallrock') {
+        const under = (level.entities ?? []).filter((e) => e.x === peer.x && e.y === peer.y && e.type !== 'fallrock');
+        if (under.some((e) => e.type === 'button')) {
+            return { effect: 'holds', why: 'fallrock lands on a button and presses it on every visit (FallRock.as:42-47,103-109)' };
+        }
+        return { effect: 'closes', why: `fallrock lands as a Solid on ${under.map((e) => `${e.type}@${e.x},${e.y}`).join(', ') || 'its tile'} — `
+            + 'the gate would need NOT(event)' };
+    }
+    if (peer.type === 'pulser') return { effect: 'arms', why: 'pulser: the cut arms it (pulser-arm; its pushes are not placed by the model)' };
+    return { effect: 'unknown', why: `${peer.type}: no ruled response to its group's activate` };
+}
+
+/**
+ * One rope's verdict: its peers' effects, and `refuse` (a named reason) unless every peer opens something.
+ * @returns {{effects:{peer:object, effect:string, why:string}[], refuse:string|null}}
+ */
+export function ropeVerdict(row, level) {
+    const who = `L${row.level} rope@${row.x},${row.y} {${row.level},${row.tag}}`;
+    if (!Number.isInteger(row.tag) || row.tag < 0) return { effects: [], refuse: `${who}: no persistence tag — the cut is not saved` };
+    const effects = row.peers.map((p) => ({ peer: p, ...ropePeerEffect(p, level) }));
+    if (effects.length === 0) return { effects, refuse: `${who}: its group holds no other entity` };
+    const bad = effects.filter((e) => e.effect !== 'silences' && e.effect !== 'holds');
+    if (bad.length > 0) return { effects, refuse: `${who}: ${bad.map((e) => `${e.peer.type}@${e.peer.x},${e.peer.y} ${e.effect} (${e.why})`).join('; ')}` };
+    return { effects, refuse: null };
+}
+
+/**
+ * The rope rows → the events (ONE per minted rope) and, by name, the ropes refused.
+ *
+ * @param {object[]} rows `ropesOf(map)`
+ * @param {object} ctx
+ * @param {(n:number) => object} ctx.level the level record
+ * @param {(row:object) => {region_id:string, sub_region?:string, side:string}} ctx.place the sub-region the rope is
+ *   cut from (throws by name when it cannot say)
+ * @param {(row:object) => object|null} ctx.rule the cut's own condition as a rules.json rule
+ * @returns {{events:object[], minted:object[], refused:string[]}}
+ */
+export function deriveRopeEvents(rows, ctx) {
+    const events = [];
+    const minted = [];
+    const refused = [];
+    for (const row of rows) {
+        const { effects, refuse } = ropeVerdict(row, ctx.level(row.level));
+        if (refuse) { refused.push(refuse); continue; }
+        const place = ctx.place(row);
+        minted.push({ ...row, effects });
+        events.push({
+            region_id: place.region_id,
+            ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+            name: ropeEventName(row),
+            access_rule: ctx.rule(row) ?? null,
+            fields: {
+                event_id: obstacleEventId(row),
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: row.level, tag: row.tag, class: 'rope', x: row.x, y: row.y },
+                action: { verb: 'cut', item: null, opens: effects.map((e) => ({ class: e.peer.type, x: e.peer.x, y: e.peer.y, effect: e.effect })) },
+                side: place.side,
+                across: [],
+            },
+        });
+    }
+    const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
+    return { events: events.sort(byId), minted, refused };
+}
+
+/**
+ * The LANE cells a silenced trap guards, as analyzer charges: every cell of the tile columns its lane covers, from the
+ * trap's row DOWN to the first `wall` (an arrow stops only on a Solid, `Arrow.as:18,55-60`, and a breakable rock it
+ * stops on is gone once broken — so the lane runs through every non-wall cell, the state where every rock is broken).
+ * A lane cell becomes crossing material charged `condition` — except a DOOR tile (a landing or a link), which stays
+ * open: the analyzer binds a door to a component, so the doors in a lane form their own pocket, and every way out of
+ * it crosses the charged cells. Refused by name: a kept-open door with a neighbour that is neither a lane cell, a wall,
+ * nor another such door (the pocket would leak round the lane).
+ *
+ * @param {{width:number, height:number, cells:object[]}} grid the uncharged grid
+ * @param {{x0:number, x1:number, fromY:number}[]} lanes pixel lanes (`arrowTrap.arrowLane`)
+ * @param {object} condition the charge (`ropeEventCondition`)
+ * @param {Set<string>} doorTiles `"tx,ty"` of the level's landings and links
+ * @param {number} tile the tile size
+ * @returns {{tile:[number,number], condition:object, open:boolean}[]}
+ */
+export function ropeLaneCharges(grid, lanes, condition, doorTiles, tile = 16) {
+    const { width, height, cells } = grid;
+    const lane = new Set();
+    for (const l of lanes) {
+        for (let tx = Math.floor(l.x0 / tile); tx * tile < l.x1; tx += 1) {
+            if (tx < 0 || tx >= width) continue;
+            for (let ty = Math.max(0, Math.floor(l.fromY / tile)); ty < height; ty += 1) {
+                if (cells[ty * width + tx]?.kind === 'wall') break;
+                lane.add(`${tx},${ty}`);
+            }
+        }
+    }
+    const open = new Set([...lane].filter((k) => doorTiles.has(k)));
+    for (const k of open) {
+        const [x, y] = k.split(',').map(Number);
+        for (const [nx, ny] of [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]) {
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const nk = `${nx},${ny}`;
+            if (lane.has(nk) || cells[ny * width + nx]?.kind === 'wall') continue;
+            throw new Error(`rope lanes: the door [${k}] stands in a lane, but its neighbour [${nk}] is outside it — `
+                + 'the pocket would be entered without crossing the lane');
+        }
+    }
+    return [...lane].sort((a, b) => {
+        const [ax, ay] = a.split(',').map(Number);
+        const [bx, by] = b.split(',').map(Number);
+        return ay - by || ax - bx;
+    }).map((k) => ({ tile: k.split(',').map(Number), condition, open: open.has(k) }));
+}

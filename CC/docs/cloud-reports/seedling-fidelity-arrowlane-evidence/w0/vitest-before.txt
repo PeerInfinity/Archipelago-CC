@@ -1,0 +1,3 @@
+files 208 passed 6409 failed 2 skipped 10 total 6421
+RED frontend/modules/loops/loopBlockBuilder.test.js > LoopBlockBuilder — loopSupport capability gating real substrate entries declare the agreed capability matrix
+RED frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files

@@ -1,0 +1,256 @@
+{
+  "source": "probe-seedling-slot-order.mjs --record (seedling fidelity SLOTS)",
+  "build": "seedling_bot_ap_p4f",
+  "base": "burn-l24-reach-exit",
+  "idleTicks": 4,
+  "arms": [
+    {
+      "name": "FIRE-FIRST",
+      "windows": [
+        {
+          "items": {
+            "hasSword": false,
+            "hasFire": true
+          },
+          "grants": [
+            {
+              "level": 24,
+              "items": [
+                "sword"
+              ]
+            }
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "window": 0,
+          "game": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "CANONICAL",
+      "windows": [
+        {
+          "items": {
+            "hasSword": true,
+            "hasFire": true
+          },
+          "grants": []
+        }
+      ],
+      "rows": [
+        {
+          "window": 0,
+          "game": {
+            "slots": [
+              0,
+              1
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              0,
+              1
+            ],
+            "primary": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "NO-REBUILD",
+      "windows": [
+        {
+          "items": {
+            "hasSword": false,
+            "hasFire": true
+          },
+          "grants": [
+            {
+              "level": 24,
+              "items": [
+                "sword"
+              ]
+            }
+          ]
+        },
+        {
+          "items": {
+            "hasSword": true,
+            "hasFire": true
+          },
+          "grants": []
+        }
+      ],
+      "rows": [
+        {
+          "window": 0,
+          "game": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0
+          }
+        },
+        {
+          "window": 1,
+          "game": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "FUSION",
+      "windows": [
+        {
+          "items": {
+            "hasSword": false,
+            "hasFire": true
+          },
+          "grants": [
+            {
+              "level": 24,
+              "items": [
+                "sword"
+              ]
+            }
+          ]
+        },
+        {
+          "items": {
+            "hasSword": true,
+            "hasFire": true,
+            "hasWand": true
+          },
+          "grants": [],
+          "primary": 2
+        },
+        {
+          "items": {
+            "hasSword": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": true
+          },
+          "grants": [],
+          "primary": 2
+        }
+      ],
+      "rows": [
+        {
+          "window": 0,
+          "game": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              1,
+              0
+            ],
+            "primary": 0
+          }
+        },
+        {
+          "window": 1,
+          "game": {
+            "slots": [
+              1,
+              0,
+              2
+            ],
+            "primary": 2,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              1,
+              0,
+              2
+            ],
+            "primary": 2
+          }
+        },
+        {
+          "window": 2,
+          "game": {
+            "slots": [
+              0,
+              5
+            ],
+            "primary": 0,
+            "error": ""
+          },
+          "model": {
+            "slots": [
+              0,
+              5
+            ],
+            "primary": 0
+          }
+        }
+      ]
+    }
+  ],
+  "press": {
+    "tape": "slots-l24-fire-first",
+    "game": {
+      "slots": [
+        1,
+        0
+      ],
+      "primary": 0,
+      "level": 12,
+      "burned": true,
+      "error": ""
+    },
+    "model": {
+      "level": 12,
+      "burns": 1
+    }
+  }
+}

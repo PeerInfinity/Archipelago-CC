@@ -5,11 +5,12 @@ import eventBus from '../../app/core/eventBus.js';
 // --- Module Info ---
 export const moduleInfo = {
   name: 'jtaGameDataPanel',
-  title: 'JTA Game Data',
+  title: 'JtA Game Data',
   componentType: 'jtaGameDataPanel',
-  icon: '',
+  icon: '🗃️',
   column: 2,
-  description: 'View and control Journey to Ascension game data.',
+  category: 'Deprecated Panels',
+  description: 'Shows live Journey to Ascension state, checks it against the simulator, and edits task costs and save data.',
   requires: ['iframeAdapter', 'iframePanel'],
 };
 

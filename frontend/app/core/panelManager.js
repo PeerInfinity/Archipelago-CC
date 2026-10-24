@@ -1,9 +1,20 @@
 // frontend/app/core/panelManager.js
+import { recordPanelUi } from './panelUiRegistry.js';
 import eventBus from './eventBus.js';
 import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
 import { centralRegistry } from './centralRegistry.js'; // Corrected import
 
 // Helper function for logging with fallback
+/** Published when a panel's tab is closed (not when a layout swap destroys it). */
+export const PANEL_MANUALLY_CLOSED_EVENT = 'ui:panelManuallyClosed';
+
+/**
+ * Published by `applyLayoutConfig` (utils/dataApplicator.js) once a live layout
+ * import has rebuilt the layout; payload `{ previousComponentTypes }`. The
+ * initializer reconciles module states on it (syncModuleStatesToLayout).
+ */
+export const LAYOUT_REPLACED_EVENT = 'layout:replaced';
+
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
     window.logger[level]('panelManager', message, ...data);
@@ -14,6 +25,46 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * Wire a panel provider's lifecycle methods onto its Golden Layout container:
+ * `onShow` on 'show', `onHide` on 'hide', `onResize` on 'resize' — each only
+ * when the provider has it.
+ *
+ * ⛔ EVERY FACTORY GOLDEN LAYOUT BUILDS PANELS WITH MUST CALL THIS
+ * (slice T4, trap 1404). The panels are built by
+ * `desktopLayout.js`'s factory and the dynamic-enable one in
+ * `initialization/index.js`, not by `registerPanelComponent`'s wrapper below.
+ * Until T4 only that unused wrapper wired these, so a provider's `onShow`
+ * never ran on a tab switch (measured: the container emitted 'show' 3 times,
+ * the provider heard 0). Being on every path, it also records the panel in
+ * panelUiRegistry.js (container → UI instance), for the mini row.
+ *
+ * @param {object} container  the Golden Layout ComponentContainer
+ * @param {object} uiProvider the panel's UI instance
+ * @returns {string[]} the events wired, in order
+ */
+export function wirePanelLifecycle(container, uiProvider) {
+  const wired = [];
+  recordPanelUi(container, uiProvider);
+  if (!container || typeof container.on !== 'function' || !uiProvider) return wired;
+  for (const [event, method] of [['show', 'onShow'], ['hide', 'onHide'], ['resize', 'onResize']]) {
+    if (typeof uiProvider[method] === 'function') {
+      // ⛔ A THROW HERE WOULD ABORT GOLDEN LAYOUT'S OWN EMIT, mid layout
+      // update (T4 measured one: a panel's never-before-called onShow threw on
+      // every show once this wiring reached it). Logged by name instead.
+      container.on(event, () => {
+        try {
+          uiProvider[method]();
+        } catch (err) {
+          log('error', `${uiProvider.constructor?.name ?? 'panel'}.${method} threw on '${event}':`, err);
+        }
+      });
+      wired.push(event);
+    }
+  }
+  return wired;
+}
+
 class PanelManager {
   constructor() {
     log('info', '[PanelManager CONSTRUCTOR CALLED]', new Date().toISOString());
@@ -22,7 +73,33 @@ class PanelManager {
     this.panelMap = new Map(); // Map<GoldenLayoutContainer, { uiInstance: object, container: GoldenLayoutContainer, componentType: string }>
     this.panelMapById = new Map(); // Map<string, { componentType: string, panelInstance: object }>
     this.isInitialized = false; // Add initialization flag
+    this.layoutSwapDepth = 0; // > 0 while withLayoutSwap() runs
     log('info', 'PanelManager instance created');
+  }
+
+  /**
+   * Run `fn` (a synchronous `goldenLayout.loadLayout(...)`) as a LAYOUT SWAP:
+   * the items Golden Layout destroys meanwhile are still unmapped, but they do
+   * NOT publish PANEL_MANUALLY_CLOSED_EVENT — nobody closed them, and publishing
+   * disabled every module whose tab the new layout rebuilds (trap 1424). The
+   * caller reconciles module states afterwards (LAYOUT_REPLACED_EVENT).
+   * Synchronous is enough: measured, every itemDestroyed of a loadLayout has
+   * fired by the time it returns, and none after the next tick.
+   * @param {() => *} fn
+   * @returns {*} fn's result
+   */
+  withLayoutSwap(fn) {
+    this.layoutSwapDepth++;
+    try {
+      return fn();
+    } finally {
+      this.layoutSwapDepth--;
+    }
+  }
+
+  /** @returns {boolean} whether a withLayoutSwap() is running. */
+  isLayoutSwapInProgress() {
+    return this.layoutSwapDepth > 0;
   }
 
   /**
@@ -152,9 +229,13 @@ class PanelManager {
 
               // Publish ui:panelManuallyClosed centrally so the modules panel
               // checkbox stays in sync without each module needing to do it.
+              // Not during a layout swap: the layout is being replaced, not
+              // closed by anyone (see withLayoutSwap).
               const componentEntry = centralRegistry.panelComponents.get(componentType);
-              if (componentEntry && componentEntry.moduleId) {
-                eventBus.publish('ui:panelManuallyClosed', {
+              if (this.isLayoutSwapInProgress()) {
+                log('debug', `[PanelManager itemDestroyed Event] ${componentType} destroyed by a layout swap; not publishing ${PANEL_MANUALLY_CLOSED_EVENT}.`);
+              } else if (componentEntry && componentEntry.moduleId) {
+                eventBus.publish(PANEL_MANUALLY_CLOSED_EVENT, {
                   moduleId: componentEntry.moduleId,
                 }, 'panelManager');
               }
@@ -232,30 +313,13 @@ class PanelManager {
         'info',
         `--- WrapperComponent constructor executing for: ${componentTypeName} ---`
       );
-      if (componentTypeName === 'timerPanel') {
-        log('info', '[timerPanel Wrapper DEBUG] GL Container:', container);
-        log(
-          'info',
-          '[timerPanel Wrapper DEBUG] GL container.element BEFORE append:',
-          container.element.cloneNode(true)
-        ); // Clone to see its state
-      }
-
       try {
         this.unsubscribeHandles = []; // For eventBus subscriptions specific to this panel instance
 
-        const uiProvider = uiInstanceGetter(container, componentState); // Calls new TimerPanelUI(...)
+        const uiProvider = uiInstanceGetter(container, componentState);
         if (!uiProvider) throw new Error('Could not get UI instance/provider');
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] uiProvider (TimerPanelUI instance):'
-            //, uiProvider // This might be too verbose or circular for console
-          );
-        }
-
-        const rootElement = uiProvider.getRootElement(); // This calls TimerPanelUI's getRootElement
+        const rootElement = uiProvider.getRootElement();
         if (!rootElement || !(rootElement instanceof HTMLElement)) {
           log(
             'error',
@@ -265,43 +329,11 @@ class PanelManager {
           throw new Error('UI did not return a valid root DOM element.');
         }
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] rootElement from uiProvider.getRootElement():',
-            rootElement.cloneNode(true)
-          );
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] Is rootElement already in DOM?',
-            document.body.contains(rootElement)
-          );
-          if (rootElement.parentNode) {
-            log(
-              'warn',
-              '[timerPanel Wrapper DEBUG] rootElement ALREADY HAS A PARENT before append:',
-              rootElement.parentNode
-            );
-          }
-        }
-
         // THE CRITICAL LINE:
         container.element.append(rootElement);
         // GoldenLayout expects `container.element` to be the direct child it manages for its layout.
         // The UI's content should go *inside* `container.element`.
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] GL container.element AFTER append:',
-            container.element.cloneNode(true)
-          );
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] Is rootElement now child of container.element?',
-            rootElement.parentNode === container.element
-          );
-        }
         log(
           'info',
           `   [${componentTypeName}] Root element appended to container.element.`
@@ -368,15 +400,7 @@ class PanelManager {
       };
 
       // Optional: handle show/hide/resize if your UI components need them
-      if (this.uiProvider && typeof this.uiProvider.onShow === 'function') {
-        container.on('show', () => this.uiProvider.onShow());
-      }
-      if (this.uiProvider && typeof this.uiProvider.onHide === 'function') {
-        container.on('hide', () => this.uiProvider.onHide());
-      }
-      if (this.uiProvider && typeof this.uiProvider.onResize === 'function') {
-        container.on('resize', () => this.uiProvider.onResize());
-      }
+      wirePanelLifecycle(container, this.uiProvider);
     };
 
     // Register the component type with Golden Layout

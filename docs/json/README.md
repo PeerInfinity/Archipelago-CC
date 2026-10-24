@@ -1,19 +1,29 @@
 # Archipelago JSON Export Tools - Documentation
 
-This is the official documentation for the Archipelago JSON Export Tools and its associated web client. This documentation provides comprehensive guides for both users of the application and developers looking to contribute or understand its architecture.
+This is the documentation for the Archipelago JSON Export Tools and its web client, for both users of the application and developers who want to contribute or understand its architecture.
 
-This project is a fork of the main Archipelago project that focuses on two key areas:
+This project is a fork of the main Archipelago project that focuses on three areas:
 
-1.  A Python-based system to export a game's logic (location access rules, region connections, item data) into a standardized JSON format.
-2.  A modular, feature-rich web client that consumes this JSON to provide advanced tracking, accessibility analysis, and other tools.
+1.  **Procedural generation**: a pipeline that generates complete, playable randomizer worlds in the browser, with each region drawn by a pluggable *substrate*: a maze, a text adventure, a platformer, a run of shoot-'em-up scenes, or a room of a recompiled Flash game.
+2.  **Export**: a Python-based system that writes a game's logic (location access rules, region connections, item data) to a standardized JSON format, the same `rules.json` that generated worlds compile to.
+3.  **The web client**: a modular, feature-rich client that loads this JSON to play, track and visualize a world, with logic-aware tracking, accessibility analysis, and other tools.
 
-**Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
+**Try the Live Demo:** the **[Development Version](https://peerinfinity.github.io/Archipelago-CC/)** (includes procedural generation) or the **[Stable Version](https://peerinfinity.github.io/Archipelago/)** (an older snapshot: tracking only)
 
 For the main project overview and credits, please see the [README.md at the project root](../../README.md).
+
+## Start Here
+
+One introduction per reader, each saying what the project offers you and what to read next: **[Introduction to Archipelago](./intro/introduction-to-archipelago.md)** (new to Archipelago and randomizers) · **[For Players](./intro/for-players.md)** · **[For World Builders](./intro/for-world-builders.md)** · **[For Developers](./intro/for-developers.md)**.
 
 ## Features
 
 For an overview of all major features in this project, see the **[Features Index](./features/README.md)**. Highlights include:
+
+**Procedural Generation:**
+- [Procgen Pipeline](./features/procgen.md) — Generate complete playable worlds in the browser, compiled to standard `rules.json`
+- [What each substrate can do](./features/procgen-substrates.md) — The substrate capability chart, generated from the code
+- [Procgen developer documentation](./developer/procgen/README.md) — Architecture, substrates, and playback tooling
 
 **Core Tools:**
 - [JSON Exporter](../../exporter/README.md) — Export multiworld game logic to JSON
@@ -30,9 +40,7 @@ For an overview of all major features in this project, see the **[Features Index
 **New Games & Modes:**
 - [MetaMath](../../worlds/metamath/docs/README.md) — Mathematical proofs as playable Archipelago worlds
 - [DepGraph](./features/depgraph.md) — Any dependency graph as an Archipelago world
-- [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing ([Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta))
 - [Loops](./features/loops.md) — Incremental/idle game mode on top of the tracker
-- [Maze Metagame](./features/maze-metagame.md) — A-Mazing-Idle as a meta-progression layer
 
 ## Documentation Sections
 
@@ -42,7 +50,8 @@ This documentation is organized into the following main sections:
 
 This section is for anyone who wants to use the JSON Web Client to play or track their Archipelago games. These guides cover the application's features from a user's perspective.
 
-- **[Overview: What Is This?](./user/overview.md)**: Start here if you're new. Learn what this project does, see game compatibility, and understand how to use the tracker.
+- **[Guided Tour](./user/guided-tour.md)**: See the highlights in ten minutes, directly in the live demo — nothing to install. Or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
+- **[Overview: What Is This?](./user/overview.md)**: Learn what this project does, see game compatibility, and understand how to use the tracker.
 - **[Quick Start Guide](./user/quick-start.md)**: A fast-paced introduction to getting the client running.
 - **[Standard Client Guide](./user/standard-client.md)**: A detailed guide on using the client for tracking, checking accessibility, and connecting to a multiworld server.
 - **[Tips & Tricks](./user/tips-and-tricks.md)**: A collection of useful notes, console commands, and frequently asked questions.
@@ -57,7 +66,6 @@ This section is for developers who want to understand, modify, or contribute to 
 - **[Reference](./developer/reference/README.md)**: Detailed reference material, such as the Logging System guide.
 - **[Diffs from Upstream](./developer/diffs/README.md)**: Line-by-line changes from the upstream Archipelago repository.
 - **[Upstream Bugs](./upstream-bugs/README.md)**: Bugs discovered in the upstream Archipelago codebase during testing.
-- **[Project Roadmap](./project-roadmap.md)**: Development priorities and future plans for the project.
 - **[Test Results](./developer/test-results/)**: Automated test results for all game templates:
   - [Test Results Summary](./developer/test-results/test-results-summary.md): Combined overview of all test types
   - [Minimal Spoiler Test Results](./developer/test-results/test-results-spoilers-minimal.md): Tests with advancement items only
@@ -75,6 +83,10 @@ Documentation for the playable games and game modes included in this project. Ea
 This section provides detailed, auto-generated, or manually written documentation for each individual frontend module. It is an essential technical reference for understanding the specific responsibilities and interactions of each component in the application.
 
 - **[Module Index](./modules/README.md)**: An overview and index of all documented frontend modules.
+
+### The Quick Launch Help group
+
+The web client's [Quick Launch panel](./user/modules/quickLaunch.md) lists documentation in its Help group, one sub-group per section. A directory here joins that group when its `README.md` carries one marker line, `<!-- quick-launch-help: order=<int> audience=<user|developer|panel> -->`: the section is titled by the README's `# ` heading and ordered by `order`; `audience=user` sections are always shown, `developer` ones only with the panel's *Show developer docs* setting, and `panel` ones never (the per-panel guides, which each panel's row already links). Its `.md` files are listed, and each unmarked sub-directory becomes a sub-group (a single row when it holds one page). A directory without sub-directories can instead be sub-grouped by its README: when the README lists its own pages as bullets under `## ` headings (the bullet's first link pointing at a `.md` in the same directory), each such heading becomes a sub-group, in README order, holding its pages in bullet order; pages the README does not list come last, under *Unlisted*; a heading that lists none of the directory's pages (a *See Also* of `../` links) is not a sub-group, and a README without such headings leaves the section flat. A README that does this in a directory that also has sub-directories makes the generator fail, naming it. No page has to move. After adding or changing a marker, or a page in a marked directory, run `node scripts/quicklaunch/generate-docs-index.mjs`; a malformed marker makes it fail, naming the file.
 
 ### 5. Source-Level Documentation
 

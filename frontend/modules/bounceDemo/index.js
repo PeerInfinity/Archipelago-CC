@@ -1,8 +1,6 @@
 /**
  * bounceDemo — host module for the Bounce Demo (DJ-Metroidvania)
- * substrate's embed phase
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"App
- * integration").
+ * substrate (docs/json/developer/procgen/bounce.md).
  *
  * Bounce rides flashSubstrate's machinery as shared CODE, not shared
  * instances: the panel class comes from flashSubstratePanel.js's
@@ -37,6 +35,7 @@ import {
     BOUNCE_IFRAME_ID,
     BOUNCE_RENDERER_CHANGED_EVENT,
 } from './bounceDemoLibrary.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // Which renderer bounce region loads route to: 'js' (canvas renderer,
 // default), or the real-DJ page below with an explicit player tier —
@@ -116,16 +115,15 @@ export const moduleInfo = {
     name: 'bounceDemo',
     title: 'Bounce Demo',
     componentType: BOUNCE_PANEL_COMPONENT_TYPE,
+    docs: 'docs/json/user/modules/bounceDemo.md',
     icon: '🏀',
     column: 3,
-    description:
-        'Procedurally generated bounce-platformer (DJ-Metroidvania) as a '
-        + 'procgen substrate: every region is a vertical level whose access '
-        + 'rules are DERIVED from the game\'s own physics (the canJump solver '
-        + 'samples the real step function), so AP re-randomizes within '
-        + 'provably playable logic. Rides the flashSubstrate panel class + '
-        + 'bridge via the __swfBridge contract.',
+    category: 'Procgen Substrate Panels',
+    description: 'Plays each region as a Doodle-Jump-style climb to pickups and exit portals; its rules come from the physics.',
     requires: ['stateManager', 'iframeAdapter'],
+    storage: [
+        { key: 'bounceDjReal.player', kind: STORAGE_KINDS.state, label: 'Bounce DJ Real player choice' },
+    ],
 };
 
 let _initApi = null;

@@ -258,7 +258,7 @@ Supported operators: `+`, `-`, `*`, `/`, `//`, `%`, `**`
 ```json
 {
   "type": "conditional",
-  "test": {"type": "setting_value", "setting": "hard_mode"},
+  "test": {"type": "option_value", "option": "hard_mode"},
   "if_true": {"type": "item_check", "item": "Master Sword"},
   "if_false": {"type": "item_check", "item": "Sword"}
 }
@@ -300,13 +300,15 @@ Supported operators: `+`, `-`, `*`, `/`, `//`, `%`, `**`
 }
 ```
 
-**`setting_value`** - Game option/setting reference
+**`option_value`** - Game option reference (a computed world attribute is `world_attribute` with `attribute`)
 ```json
 {
-  "type": "setting_value",
-  "setting": "shuffle_keys"
+  "type": "option_value",
+  "option": "shuffle_keys"
 }
 ```
+
+The older `setting_value` node (`setting`) is retired, as are its Rule Builder forms `SettingValue` / `AST_setting_value` and the never-written `setting_check`: the schema refuses all four and no exporter writes them.
 
 #### Rarely Used Types
 
@@ -463,6 +465,21 @@ The Rule Builder format was created by drtchops in [Archipelago PR #5048](https:
   "children": [
     {"rule": "Has", "args": {"item_name": "Hookshot"}},
     {"rule": "Has", "args": {"item_name": "Boots"}}
+  ]
+}
+```
+
+**`AtLeast`** - At least `count` children must be true (the Rule Builder twin of
+the AST-format `count_true`). `count` lives at the rule root, alongside `children`.
+```json
+{
+  "rule": "AtLeast",
+  "options": [],
+  "count": 2,
+  "children": [
+    {"rule": "Has", "args": {"item_name": "Sword"}},
+    {"rule": "Has", "args": {"item_name": "Shield"}},
+    {"rule": "CanReachRegion", "args": {"region_name": "Castle"}}
   ]
 }
 ```
@@ -750,16 +767,16 @@ These rules are proposed additions to address gaps in the current extended Rule 
 
 ### Data Access
 
-**`SettingValue`** - Access game options/settings
+**`OptionValue`** - Access a game option (`WorldAttribute` for a top-level world attribute)
 ```json
 {
-  "rule": "SettingValue",
+  "rule": "OptionValue",
   "options": [],
-  "args": {"setting": "shuffle_keys"}
+  "args": {"option": "shuffle_keys"}
 }
 ```
 
-**Status**: Proposed - matches AST format `setting_value` type
+**Status**: Implemented - matches AST format `option_value` type. (This proposal was first drafted as `SettingValue` / `setting_value`; that shape is retired, rules S7.)
 
 **`Subscript`** - Array/dict indexing
 ```json
@@ -767,7 +784,7 @@ These rules are proposed additions to address gaps in the current extended Rule 
   "rule": "Subscript",
   "options": [],
   "args": {
-    "value": {"rule": "SettingValue", "args": {"setting": "medallion_table"}},
+    "value": {"rule": "WorldAttribute", "args": {"attribute": "medallion_table"}},
     "index": "turtle_rock"
   }
 }
@@ -795,7 +812,7 @@ With numeric index:
   "rule": "Contains",
   "options": [],
   "args": {
-    "value": {"rule": "SettingValue", "args": {"setting": "current_mode"}},
+    "value": {"rule": "OptionValue", "args": {"option": "current_mode"}},
     "container": ["normal", "hard", "expert"]
   }
 }
@@ -837,7 +854,8 @@ With numeric index:
 | `min` | `MinValue` | Extension |
 | `sum` | `Sum` | Proposed |
 | `negate` | `Negate` | Proposed |
-| `setting_value` | `SettingValue` | Proposed |
+| `option_value` | `OptionValue` | Direct |
+| `world_attribute` | `WorldAttribute` | Direct |
 | `subscript` | `Subscript` | Proposed |
 | `compare` (with `in` op) | `Contains` | Proposed |
 | `attribute` | `ASTRule` | Preserved |
@@ -871,7 +889,7 @@ For each extension, decide: **Official** (keep as standard) or **Deprecated** (r
 | `CountGroupUnique` | Get unique group count as number | `state.count_group_unique(...)` | [x] Add |
 | `Sum` | Sum multiple values | `sum(...)` expressions | [x] Add |
 | `Negate` | Unary minus for numbers | `-x` expressions | [x] Add |
-| `SettingValue` | Access game options | `world.options.x` / `setting_value` | [x] Add |
+| `OptionValue` | Access game options | `world.options.x` / `option_value` (first drafted as `SettingValue`, retired rules S7) | [x] Add |
 | `Subscript` | Array/dict indexing | `x[y]` / `subscript` | [x] Add |
 | `Contains` | Check value in list | `x in [...]` comparisons | [x] Add |
 

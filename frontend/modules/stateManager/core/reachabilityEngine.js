@@ -1,5 +1,6 @@
 import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
 import { profiler } from '../../shared/profiler.js';
+import { autoCollectsEvent } from './eventKinds.js';
 
 /**
  * StateManager Reachability Engine Module
@@ -265,6 +266,9 @@ export function computeReachableRegions(sm) {
       let newEventCollected = false;
       if (sm.autoCollectEventsEnabled) {
         for (const loc of sm.eventLocations.values()) {
+          // RULES obstacle-events: a `game_state` event (or an unknown kind) is the GAME's to set,
+          // never collected on reach — fail-closed (eventKinds.js).
+          if (!autoCollectsEvent(loc)) continue;
           if (sm.knownReachableRegions.has(loc.region)) {
             const canAccessLoc = isLocationAccessible(sm, loc);
             // Check if location hasn't been checked yet

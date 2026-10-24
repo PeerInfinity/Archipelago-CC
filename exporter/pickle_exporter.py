@@ -260,8 +260,11 @@ def _save_to_presets(
 
     # Build preset directory path
     # Pattern: frontend/presets/{game_directory}/AP_{seed_name}/
+    # Resolve via local_path, not the cwd: on compiled installs the frontend
+    # is extracted to the install root regardless of the working directory.
+    from Utils import local_path
     preset_dir = os.path.join(
-        'frontend', 'presets', game_directory, filename_base
+        local_path('frontend', 'presets'), game_directory, filename_base
     )
     os.makedirs(preset_dir, exist_ok=True)
 

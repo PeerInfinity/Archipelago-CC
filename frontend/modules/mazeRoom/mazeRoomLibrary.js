@@ -14,9 +14,8 @@
  * registry entry stays substrate-neutral in shape so any substrate
  * sharing tile-grid semantics can compose the same way.
  *
- * See NewDocs/plans/procedural-generation/procgen-player.md §"Substrate
- * registry" for the runtime fields, and text-adventure-substrate.md
- * §"Substrate registry entry, expanded" for the build-time slots.
+ * See docs/json/developer/procgen/substrate-registry.md for the full
+ * entry contract (runtime fields and build-time slots).
  */
 
 import {
@@ -27,29 +26,73 @@ import {
     tileGridSerializer,
     tileGridDeserializer,
 } from '../shared/procgen/adapterPrimitives.js';
+import {
+    captureTileGridLibraryEntry,
+    instantiateTileGridLibraryEntry,
+    instantiateTileGridLibraryEntryForSpecs,
+    instantiateAtlasEntryForSpecs,
+    validateTileGridLibraryEntry,
+    tileGridLibraryEntryRefusal,
+} from './mazeLibraryEntry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { generateHazards } from '../shared/procgen/contentModules/hazardPathGen.js';
+import {
+    generateConsumableTiles,
+    consumableTilesActive,
+} from '../shared/procgen/contentModules/consumableTileGen.js';
 import { getPanelInstance } from './index.js';
+import { describeMazeAction } from './mazeKeys.js';
+import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
+import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
+import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
+import { mazeCapacityAt } from './mazeLocationCapacity.js';
+import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
+import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
+import {
+    DEFAULT_MAZE_PROCGEN_PARAMS,
+    renderMazeProcgenParams,
+    buildMazeLibraryRegionParams,
+    renderMazeLibraryProcgenParams,
+} from './mazeProcgenParams.js';
 
 /**
  * Content-module pass (registry `applyContentModules` hook): stamp tile-grid
  * content onto a freshly-built maze world after the base maze + obstacle layout
- * is done. Currently just hazards (a maze content module). Mutates `world`;
- * no-op when no hazards are requested. The generic engine calls this
- * unconditionally at both region-build sites — substrates without the hook
+ * is done. Two modules today: hazards, and X1's cross-game consumable tiles.
+ * Mutates `world`; no-op when neither is requested. The generic engine calls
+ * this unconditionally at both region-build sites — substrates without the hook
  * (bounce etc.) simply don't declare it, so the engine names no substrate.
  *
- * Gated on hazardOpts.enabled to keep existing presets cost-free unless the
- * caller opts in. Draws from `rng` at the same point the engine used to call
- * applyHazardModule, so hazard RNG ordering is preserved (byte-identical).
+ * Gated per module to keep existing presets cost-free unless the caller opts
+ * in. Hazards draw from `rng` at the same point the engine used to call
+ * applyHazardModule, so hazard RNG ordering is preserved (byte-identical);
+ * the consumable pass runs strictly AFTER hazards and draws nothing when
+ * inactive, so enabling it can never perturb hazard placement.
  *
  * @param {object} world - target world (must have width/height/tiles)
  * @param {object} opts
  * @param {object|null} opts.hazardOpts - { enabled, count?,
  *   maxConsecutiveFails?, wallOverlapAllowed? }; null/disabled = no-op
+ * @param {object|null} opts.consumableTileOpts - { consumableCount?,
+ *   manaCount?, manaAmount?, pool?, countPerTile? } (X1); null/inactive = no-op
  * @param {{next:()=>number}} rng
  */
-export function applyMazeContentModules(world, { hazardOpts = null } = {}, rng) {
+export function applyMazeContentModules(
+    world,
+    { hazardOpts = null, consumableTileOpts = null } = {},
+    rng,
+) {
+    applyHazards(world, hazardOpts, rng);
+    // X1 consumable tiles. Deliberately last and deliberately guarded by
+    // consumableTilesActive: at the byte-inert defaults this returns
+    // before touching `rng`, so the shared stream is identical to a
+    // pre-X1 build and every existing preset regenerates byte-for-byte.
+    if (consumableTilesActive(consumableTileOpts)) {
+        generateConsumableTiles(world, consumableTileOpts, rng);
+    }
+}
+
+function applyHazards(world, hazardOpts, rng) {
     if (!hazardOpts || !hazardOpts.enabled) return;
     const count = Math.max(0, Math.floor(hazardOpts.count ?? 0));
     if (count === 0) return;
@@ -105,16 +148,121 @@ export const substrateRegistryEntry = Object.freeze({
     ]),
     deserializeWorld: tileGridDeserializer,
 
+    /**
+     * ⛓⛓ CONCEPT LIBRARY T1 — **WHAT THE MAZE REALISES** (`mazeConcepts.js`;
+     * the contract is `procgenCore/concepts.js`). `sword`/`swim` are pickups
+     * (`mechanic`); `guardian`/`water` are `skin` gates — a planned rule that
+     * is exactly `Has(sword)` / `Has(swim)`, in a world that names the concept
+     * (`params.concepts`), is placed as a `guardian_gate_<n>` / `water_gate_<n>`
+     * over the same rule gate, and painted as the concept.
+     */
+    //
+    // ⛔ NO `libraryItems` for the concept items (T1, measured): top-down GRANTS
+    // every in-mix substrate's `libraryItems` as free starting items
+    // (`topDownSteps.grantedLibraryItems`), so declaring them here moved the two
+    // shipped top-down presets' bytes with no concept named. A world that NAMES
+    // an item concept gets its rows in its item library instead
+    // (`presetRun.mergedItemLib`), which is inert for a concept-less world.
+    conceptRealisations: MAZE_CONCEPT_REALISATIONS,
+
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+     * (the editor-integration plan §3.2). The maze's room editor is
+     * not a panel: it is `lab.html`'s SET arm, hosted in `procgenLabPanel`.
+     * `regionEditors.getRegionEditor('maze')` binds
+     * `procgenLabPanel/labRoomEditor` to this page and arm, and the whole
+     * hand-off is the EXISTING `procgenLab:` vocabulary — a document in over
+     * `load`, ONE room over `navigate ?source=set&room=n`, the folded document
+     * out over `levelChanged`.
+     *
+     * ⛔ **THIS FILE MUST NOT IMPORT A PANEL**, which is exactly why the field
+     * is DATA rather than a function: `mazeRoomLibrary.js` is `loadable: true`
+     * in the generated capability matrix and is imported headless by the
+     * reference generator and the `check-*.mjs` gates.
+     *
+     * ⚠ `page` IS NOT `id`. The registry id is `maze` and the lab page key
+     * happens to match — but Seedling's are `flash_seedling` and `seedling`,
+     * so the two are separate fields on purpose.
+     */
+    roomEditor: Object.freeze({ kind: 'lab', page: 'maze', arm: 'set' }),
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB H4b — **THE DOCUMENT ⇄ ROOM ROUND TRIP.**
+     * `roomEditor` says WHICH editor opens a room; this says what that editor
+     * wants handed IN when the room comes out of a `rules.json` document, and
+     * how to read its save back into one. The hub
+     * (`apworldEditor/regionRoundTrip.js`) resolves it through the registry and
+     * imports no substrate module — the `compositeMap` precedent, and the same
+     * ⚖ behind it.
+     *
+     * ⛔ **DATA, like the other two.** The implementation lives in
+     * `mazeRegionRoundTrip.js` beside its imports (the engine, the serializer,
+     * the library capture path, the compiler), so this file stays
+     * `loadable: true` in the generated matrix.
+     */
+    regionRoundTrip: mazeRegionRoundTrip,
+
+    /**
+     * ⛓⛓⛓ APWORLD EDITOR HUB H3 — **THE COMPOSITE-MAP DECLARATION**
+     * (⚖ user 2026-09-04: *"each substrate declares whether it supports map
+     * rendering, and has a way to call the renderer. I don't want to hardcode
+     * support for map rendering for specific substrates."*).
+     *
+     * `drawRegion(ctx, region, {offX, offY, regionSize, tilePx, colors})` paints
+     * ONE cell of the composite grid. The shared renderer
+     * (`procgenCore/compositeMapRenderer.js`) draws the grid, the connection
+     * lines, the stub cells and the selection, and resolves each region's
+     * painter THROUGH THIS SLOT — it names no substrate. Absent ⇒ the region
+     * gets the generic box labelled with its own substrate id.
+     *
+     * ⛔ **DATA, like `roomEditor`**, and for the same reason: this file is
+     * `loadable: true` in the generated capability matrix, so the painter lives
+     * in `mazeCompositeMap.js` and takes `ctx` as a parameter. Nothing here
+     * touches a DOM at module load.
+     */
+    compositeMap: Object.freeze({ drawRegion: drawMazeCompositeRegion }),
+
+    // Action labelling (Q-a A8). How the maze says one shared actionQueue
+    // entry out loud — `move E`, `wait`, `check Sword Room`. The ONE owner of
+    // this wording: the panel's icon-row tooltips, loops' blockAnnotations and
+    // a cross-substrate queue viewer all read it rather than each carrying a
+    // copy. The `×n` suffix for a run-length folded entry is the CALLER's.
+    // Lives in mazeKeys.js so this file stays DOM-free and panel-free.
+    describeAction: (entry) => describeMazeAction(entry),
+
     // Runtime — playback. Returns the live panel's controller so the
     // bot can drive the visualizer directly. null when no panel mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,
 
+    // Runtime — recording (M2 loops sole-persister protocol). Pull-and-
+    // clear the last finalized visit recording; loops persists it only on
+    // a successful Record-mode completion. null when no panel / no stash.
+    takeLastRecording: () => getPanelInstance()?._takeLastRecording?.() ?? null,
+
     // Loop-mode capabilities: maze supports everything — all queue
     // action types, manual play, and saved-queue recording/replay.
+    // `record`/`playback` are DECLARED (M2): the Record radio is offered
+    // only where both are true. `instant` (M3) declares the substrate can
+    // run a Playback/Bot block headlessly in one frame (maze drains its
+    // replay queue synchronously); the per-block Instant toggle is offered
+    // only where it's true.
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck', 'explore']),
         manual: true,
         customQueues: true,
+        record: true,
+        playback: true,
+        instant: true,
+    }),
+
+    // Cross-substrate sharing: participates in the shared-mana channel
+    // (per-tile charging via the resourceChannels helpers), and asks
+    // the loops queue to DELEGATE actions on manaEnabled maze regions
+    // to the substrate's own tile-by-tile walker (the capability the
+    // loops _shouldDelegateCurrentAction check reads — formerly a
+    // hard-coded substrate === 'maze' branch).
+    sharing: Object.freeze({
+        mana: Object.freeze({ loopActionDelegation: true }),
     }),
 
     // Build-time adapters
@@ -123,11 +271,86 @@ export const substrateRegistryEntry = Object.freeze({
     placeFromRules: ruleGatePlacer,
     extractPathsAndObstacles: tileGridPathExtractor,
     serializeWorld: tileGridSerializer,
+    // ⛓ PRESET SIDECARS D0 — what `serializeWorld` writes, declared beside the
+    // serializer itself (`mazeSerializer.js`); `text_adventure` carries the
+    // same object, and `check-sidecar-fields.mjs` holds the corpus to it.
+    sidecarFields: TILE_GRID_SIDECAR_FIELDS,
+    // ⛓ PRESET SIDECARS V0 — where the payload carries its AP names, so the
+    // hub's validity report (`apworldEditor/sidecarIssues.js`) can hold them to
+    // the document's region without naming this substrate. The exit list is
+    // the engine's re-attached one; the atlas projection may DROP a colliding
+    // crossing by name (`exit_tile_collision`), which the report then shows.
+    apLocationNamesOf: tileGridApLocationNames,
+    apExitNamesOf: tileGridApExitNames,
+    // ⛓ APWORLD SUBSTRATE CHANGE C2 — how many locations a room holds at a
+    // size (`mazeLocationCapacity.js`): an OPEN room's floor, of which the
+    // gated ones may take the percolation share; `null` for a walled room.
+    // The realiser sizes a room once from it and the Initialise form prints
+    // the grown size (`procgenCore/locationCapacity.js`).
+    locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.TILES, capacityAt: mazeCapacityAt }),
 
     // Content-module pass (hazards). The generic engine calls this after the
     // base region build at both build sites; substrates that don't declare it
     // skip the pass, so the engine no longer names 'maze' there.
     applyContentModules: applyMazeContentModules,
+
+    // --- Region-library content-source hooks (region-library F2) ---
+    // maze is the tile/procedural library substrate: an entry stores the
+    // serialized world geometry (payload only, carried_rules null) and
+    // instantiation deserializes + re-extracts real exits/locations, so rules
+    // can never go stale against the geometry. Instantiate draws NO rng (it
+    // reuses the captured slot POSITIONS, keeping ③ deterministic — the plan's
+    // rng-free-instantiate constraint, which is why v1 uses captured positions
+    // rather than fresh placeFromRules even though open-q 5 confirmed the latter
+    // works). See mazeLibraryEntry.js and substrate-registry.md.
+    captureLibraryEntry: (region, meta) => captureTileGridLibraryEntry(region, meta, {
+        serialize: tileGridSerializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    instantiateLibraryEntry: (entry, ctx) => instantiateTileGridLibraryEntry(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    // Requirement-aware sphere placement (region-library F6c): relabels captured
+    // openings onto the slot's child sides (mazeRequireSameWall OFF) at their
+    // captured tiles (mazeRequireTileAlign OFF) + maps the node's items onto slots;
+    // the engine overlays each child gate as an access_rule. Returns a full tile
+    // region descriptor (buildSphereLibraryRegion branches on region shape). See
+    // mazeLibraryEntry.js.
+    instantiateLibraryEntryForSpecs: (entry, ctx) => instantiateTileGridLibraryEntryForSpecs(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
+    // ⛓ APWORLD SUBSTRATE CHANGE R6 — the hook's openings refusal, asked before
+    //   it runs (the hub's library picker disables the entry in these words).
+    libraryEntryRefusal: (entry, ctx) => tileGridLibraryEntryRefusal(entry, ctx, { substrate: 'maze' }),
+    validateLibraryEntry: (entry) => validateTileGridLibraryEntry(entry, {
+        deserialize: tileGridDeserializer,
+    }),
+
+    // --- Procgen Pipeline integration (mazeProcgenParams.js) ---
+    // The panel defaults, the hazard controls, and the regionParams + controls
+    // a SELECTED maze library entry reads (the two connection-strictness flags
+    // above).
+    defaultProcgenParams: DEFAULT_MAZE_PROCGEN_PARAMS,
+    renderProcgenParams: renderMazeProcgenParams,
+    buildLibraryRegionParams: buildMazeLibraryRegionParams,
+    renderLibraryProcgenParams: renderMazeLibraryProcgenParams,
+
+    // --- Region-atlas content-source hook (region-atlas Phase 6) ---
+    // The THIRD capture contract: an atlas entry is a piece of a real game map,
+    // so its payload is re-derivable geometry but its rules are AUTHORED and
+    // ride in with the entry. Surplus exits are pruned (a real region has more
+    // ways out than a sphere cell has sides) and locations keep their game
+    // names. See mazeLibraryEntry.js + procgenPipeline/regionAtlasPool.js.
+    instantiateAtlasEntryForSpecs: (entry, ctx) => instantiateAtlasEntryForSpecs(entry, ctx, {
+        deserialize: tileGridDeserializer,
+        extract: tileGridPathExtractor,
+        substrate: 'maze',
+    }),
 });
 
 // Side-effect on import: register the maze substrate so any caller

@@ -1,0 +1,23 @@
+{
+ "tape": "span-blocked",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 161,
+ "boot": {
+  "level": 39,
+  "x": 148,
+  "y": 440
+ },
+ "persistence": [],
+ "maxY43": null,
+ "transitions": [],
+ "clears": [],
+ "hits": 0,
+ "minY39": 402.04999999999995,
+ "final": {
+  "t": 160,
+  "x": 156,
+  "y": 402.04999999999995,
+  "level": 39
+ }
+}

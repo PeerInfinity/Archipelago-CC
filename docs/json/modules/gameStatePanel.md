@@ -1,4 +1,4 @@
 # Game State Panel
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/gameStatePanel.md)
 - [Technical Reference](../developer/modules/gameStatePanel.md)

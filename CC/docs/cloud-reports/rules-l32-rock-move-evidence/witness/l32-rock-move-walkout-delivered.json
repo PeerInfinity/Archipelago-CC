@@ -1,0 +1,53 @@
+{
+ "tape": "walkout",
+ "arm": "delivered",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 981,
+ "transitions": [
+  {
+   "t": 886,
+   "from": 32,
+   "to": 30,
+   "at": {
+    "x": 232,
+    "y": 184
+   }
+  }
+ ],
+ "out": {
+  "t": 886,
+  "from": 32,
+  "to": 30,
+  "at": {
+   "x": 232,
+   "y": 184
+  }
+ },
+ "byStairs": true,
+ "clears": [
+  "10,0",
+  "32,1",
+  "32,3",
+  "32,4",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 980,
+  "x": 232,
+  "y": 204.95000000000002,
+  "level": 30
+ },
+ "model": {
+  "refused": null,
+  "transitions": [],
+  "final": {
+   "t": 980,
+   "x": 80,
+   "y": 124.99999999999999,
+   "level": 32
+  }
+ }
+}

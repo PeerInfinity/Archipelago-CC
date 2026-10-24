@@ -1,0 +1,19 @@
+PASS: axe-l61-reach-l62: the model replays it into L62 — 285 observations, ends {"level":62,"x":56,"y":296}
+PASS: axe-l61-reach-l62: the plan is the DODGE rung's AXE arm (stall 26 t at walk-offset 13 on a corridor bent through (120,152))
+PASS: axe-l61-reach-l62: the walk enters spinningaxe@64,144's old 32 px disc and the blade never reaches it — closest box centre 16.41 px, 47 observation(s) inside, 0 blade/hub contact(s)
+PASS: the committed axe-l61-reach-l62 is what this script produces today — byte-identical
+PASS: axe-l61-reach-l63: the model replays it into L63 — 297 observations, ends {"level":63,"x":24,"y":104}
+PASS: axe-l61-reach-l63: the plan is the DODGE rung's AXE arm (stall 34 t at walk-offset 23 on a corridor bent through (40,168) (120,168))
+PASS: axe-l61-reach-l63: the walk enters spinningaxe@64,144's old 32 px disc and the blade never reaches it — closest box centre 14.96 px, 56 observation(s) inside, 0 blade/hub contact(s)
+PASS: axe-l61-reach-l63: the walk enters spinningaxe@160,80's old 32 px disc and the blade never reaches it — closest box centre 16.97 px, 13 observation(s) inside, 0 blade/hub contact(s)
+PASS: the committed axe-l61-reach-l63 is what this script produces today — byte-identical
+PASS: axe-l48-reach-l49: the model replays it into L49 — 369 observations, ends {"level":49,"x":40,"y":40.00000000000003}
+PASS: axe-l48-reach-l49: the plan is the DODGE rung's AXE arm (no stall on a corridor bent through (120,280) (136,264))
+PASS: axe-l48-reach-l49: the walk enters spinningaxe@208,224's old 32 px disc and the blade never reaches it — closest box centre 15.40 px, 61 observation(s) inside, 0 blade/hub contact(s)
+PASS: the committed axe-l48-reach-l49 is what this script produces today — byte-identical
+PASS: axe-l71-reach-l76: the model replays it into L76 — 328 observations, ends {"level":76,"x":24,"y":88}
+PASS: axe-l71-reach-l76: the plan needs NO rung — the exact pricing alone certifies its corridor
+PASS: axe-l71-reach-l76: the walk enters spinningaxe@256,144's old 32 px disc and the blade never reaches it — closest box centre 31.81 px, 2 observation(s) inside, 0 blade/hub contact(s)
+PASS: the committed axe-l71-reach-l76 is what this script produces today — byte-identical
+
+all checks green

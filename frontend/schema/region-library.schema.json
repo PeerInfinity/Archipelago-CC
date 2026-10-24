@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "region-library.schema.json",
+  "title": "Procgen region library",
+  "description": "A user-selectable library of pre-built region descriptors loadable from JSON (CC/docs/plans/region-library-plan.md §2a). One file = one library; each entry is a captured region addressable as (library_id, entry_id) and instantiable by the shuffled-spiral driver as a content source ('library:<library_id>'). The cross-reference rules this schema cannot express (unique entry_id, the per-substrate capture contract, content-hash identity, capability-vs-payload) are enforced authoritatively by frontend/modules/procgenPipeline/regionLibraryValidator.js.",
+  "type": "object",
+  "required": ["schema_version", "library_id", "name", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "library_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stamped content-hash id; ends with '-<content_hash>'. Selection/caches key on it, so an edited document must be restamped."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "generator": { "type": "string" },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}$",
+          "description": "FNV-1a over the canonical (sorted-key) document minus provenance and library_id; library_id must end with '-<content_hash>'. Restamp with region-library-validate.mjs --restamp after a hand edit."
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["entry_id", "substrate", "exit_sides", "payload", "location_slots"],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique within the file, author-chosen, stable across restamps (selections/provenance survive edits)."
+          },
+          "name": { "type": "string" },
+          "substrate": {
+            "type": "string",
+            "description": "The runtime substrate an instantiated region carries (v1: 'maze' or 'bounce'). Routes panelComponentType/loadRegionEvent."
+          },
+          "region_size": {
+            "type": "object",
+            "required": ["width", "height"],
+            "properties": {
+              "width": { "type": "integer", "minimum": 1 },
+              "height": { "type": "integer", "minimum": 1 }
+            },
+            "description": "Required for tile (procedural) substrates like maze; the nominal region grid the payload realises into."
+          },
+          "exit_sides": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "enum": ["N", "E", "S", "W"] },
+            "uniqueItems": true,
+            "description": "Sides this entry can offer as exits. A slot fits iff its required sides are a subset (surplus sides are walled off)."
+          },
+          "payload": {
+            "type": "object",
+            "description": "adapter.serializeWorld output (sidecar form). For procedural substrates this is the sole stored artifact — rules re-derive on instantiate."
+          },
+          "carried_rules": {
+            "type": ["object", "null"],
+            "description": "Null for procedural substrates (rules re-derived); the emitted exits/locations/paths + obstacle_defs verbatim for content substrates whose geometry cannot be re-derived."
+          },
+          "location_slots": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many AP location slots this entry offers for the engine to place items on."
+          }
+        }
+      }
+    }
+  }
+}

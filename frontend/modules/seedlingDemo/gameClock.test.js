@@ -1,0 +1,569 @@
+/**
+ * gameClock — `Game.time`, and the free oracle that checks it.
+ *
+ * ⛓ THE ORACLE IS FREE AND IT IS NOT A DERIVATION. Every committed chain
+ * declares its successor's `save.time` from a latch the GAME took at
+ * `Game.begin()` ENTRY, and those numbers were on disk long before this
+ * module existed. So "the accumulator agrees" is a measurement against ten
+ * independent recordings, not a re-run of the same arithmetic.
+ */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import {
+    BLACK_COVER, createGameClock, DAY_LENGTH_FRAMES, declaredSeamTimeAfter, GAME_FPS,
+    GameClockError, LOAD_FADE_FRAMES, PAGE_BOOT_TIME, PICKUP_HELP_DEAD_FRAMES, TIME_RATE,
+    beginEntryTimeFromDeclared, trueStartWindowDeadFrames,
+} from './gameClock.js';
+import { GENERATED_BOOT_TIME } from './procgenOracle.js';
+import { LOAD_DEAD_FRAMES } from './swimSoundClock.js';
+import { BOOT_PRESWAP_FRAMES, SEAM_BOOT_SPEC } from './r7Acceptance.js';
+import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
+import { loadTape } from './fixtures/index.js';
+import { createTapeStepper, runTape } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
+import { HELP_DISMISS_KEYS } from './dialogue.js';
+import { BOOT_COST_FRAMES } from './watchWasm.js';
+
+const levelSource = atlasLevelSource();
+const HERE = dirname(fileURLToPath(import.meta.url));
+/**
+ * ⛓ THE GAME'S OWN DEAD-FRAME CURVE for `r8-solve-10`, both walks — two
+ * READ-ONLY drives of the real Flash build (R9 slice 12e‴, kickoff §36).
+ * `helpFrame.test.js` owns the finding; this file reads one field of it so
+ * the Help row below is derived from the game rather than typed.
+ */
+const HELP_FRAME_ORACLE = JSON.parse(readFileSync(
+    join(HERE, 'fixtures', 'r8-solve-10-help-frame-oracle.json'), 'utf8'));
+
+describe('the fade is SIMULATED, not divided', () => {
+    it('one room load is twenty dead frames under the pin', () => {
+        expect(LOAD_FADE_FRAMES).toBe(20);
+    });
+
+    it('⛔ the gate is read BEFORE the decay, so the frame that reaches 0 is dead', () => {
+        // The same loop, unrolled at its fencepost: after 19 steps the cover is
+        // still positive, after 20 it is exactly 0 — and 0 is the FIRST value
+        // the gate lets through, so 20 frames were skipped and the 21st runs.
+        let cover = BLACK_COVER.start;
+        for (let i = 0; i < LOAD_FADE_FRAMES - 1; i += 1) {
+            cover = Math.max(cover + BLACK_COVER.rate, 0);
+        }
+        expect(cover).toBeGreaterThan(0);
+        cover = Math.max(cover + BLACK_COVER.rate, 0);
+        expect(cover).toBe(0);
+    });
+
+    it('⛓ agrees with `swimSoundClock.LOAD_DEAD_FRAMES`, which cannot import it', () => {
+        // The module graph refuses the single definition (gameClock ->
+        // sealCeremony -> swimSoundClock, and gameClock -> r7Acceptance ->
+        // tapeFormat -> swimSoundClock), so the two names are held together by
+        // THIS ROW rather than by a comment claiming they agree.
+        expect(LOAD_FADE_FRAMES).toBe(LOAD_DEAD_FRAMES);
+    });
+
+    it('the boot transform is `BOOT_PRESWAP_FRAMES`, not a second constant', () => {
+        expect(beginEntryTimeFromDeclared(8586)).toBe(8586 + BOOT_PRESWAP_FRAMES);
+        expect(() => beginEntryTimeFromDeclared(null)).toThrow(GameClockError);
+    });
+
+    it('`timeRate` is 1, and its ONE exception is named', () => {
+        expect(TIME_RATE.value).toBe(1);
+        expect(TIME_RATE.exception).toContain('cutscene[0]');
+    });
+
+    it('the Help table is indexed by PICKUP TAG and the prose is beside it', () => {
+        // A table that mixed tags with `why`/`src` would answer a string for a
+        // pickup called "src". `frames` is the only thing a consumer indexes.
+        expect(PICKUP_HELP_DEAD_FRAMES.frames.sword).toBe(1);
+        expect(PICKUP_HELP_DEAD_FRAMES.frames.bosskey).toBeUndefined();
+        expect(Object.keys(PICKUP_HELP_DEAD_FRAMES.frames)).toEqual(['sword']);
+    });
+});
+
+describe('the clock itself', () => {
+    it('`now()` is the value at the TOP of the frame, and a build costs the fade', () => {
+        const c = createGameClock({ bootTime: 8587 });
+        c.build(19);
+        expect(c.now()).toBe(8587 + LOAD_FADE_FRAMES);
+        c.tick();
+        expect(c.now()).toBe(8587 + LOAD_FADE_FRAMES + 1);
+    });
+
+    it('⛔ an undeclared clock answers `null` for ever rather than a guessed phase', () => {
+        const c = createGameClock({ bootTime: null });
+        c.build(19);
+        c.tick();
+        c.spend(150, 'ceremony', 'phase A');
+        expect(c.now()).toBeNull();
+        // ...and the ledger still runs, because the dead-frame budget wants it
+        // whether or not the phase is knowable.
+        expect(c.deadFrames).toBe(LOAD_FADE_FRAMES + 150);
+    });
+
+    it('`frozenFrames` is a SUBSET of `deadFrames`, by span kind', () => {
+        const c = createGameClock({ bootTime: 100 });
+        c.build(4);
+        c.spend(150, 'ceremony', 'phase A');
+        c.spend(197, 'freeze', 'fallrock');
+        expect(c.frozenFrames).toBe(197);
+        expect(c.deadFrames).toBe(LOAD_FADE_FRAMES + 150 + 197);
+        expect(c.spans.map((s) => s.kind)).toEqual(['load', 'ceremony', 'freeze']);
+    });
+
+    it('⛔ MUTATION: a fractional or negative span is a named throw', () => {
+        const c = createGameClock({ bootTime: 100 });
+        expect(() => c.spend(1.5, 'freeze', 'x')).toThrow(GameClockError);
+        expect(() => c.spend(-1, 'freeze', 'x')).toThrow(GameClockError);
+        expect(() => createGameClock({ bootTime: -5 })).toThrow(GameClockError);
+    });
+});
+
+describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', () => {
+    /** Every committed chain seam, as `{from, to}` tape names. */
+    const seams = PLAYTHROUGH_CHAINS.flatMap((c) => (c.segments ?? [])
+        .slice(0, -1).map((name, i) => ({ from: name, to: c.segments[i + 1], chain: c.headline })))
+        .filter(({ from, to }) => loadTape(from).seam && loadTape(to).seam);
+
+    it('there are seams to check, in more than one chain', () => {
+        // A bounded sweep must name what it bounded: a seam whose either side
+        // predates the v8 block cannot be checked and is not counted.
+        expect(seams.length).toBeGreaterThanOrEqual(10);
+        expect(new Set(seams.map((s) => s.chain)).size).toBeGreaterThan(1);
+    });
+
+    it.each(seams)('$from -> $to: the model reaches the latched `save.time`',
+        ({ from, to }) => {
+            const tape = loadTape(from);
+            const next = loadTape(to);
+            const run = runTape(tape, { levelSource });
+            expect(run.gameTimeRefusal).toBeNull();
+            // ⛓ swim U14: counted to the ARRIVAL — the last transition's tick, which
+            // is `tick_count` on a door seam and 2284 of 2364 on `r9-solve-12`'s pit.
+            expect(declaredSeamTimeAfter({
+                declaredTime: tape.seam.time,
+                deadFramesOwed: run.deadFramesOwed,
+                tickCount: run.transitions.at(-1)?.t ?? tape.tick_count,
+            })).toBe(next.seam.time);
+        });
+
+    it('⛔ MUTATION: dropping the ceremony spans breaks exactly the two segments '
+        + 'that have one', () => {
+        // The two ceremony segments are the whole reason the phase-A and Help
+        // spans exist. Everything else on the roster is fade + ticks, so a
+        // model that counted only those would still pass eight of ten — which
+        // is what makes this row rather than the sweep the real gate.
+        const withCeremony = seams.filter(({ from }) => runTape(loadTape(from), { levelSource })
+            .deadFrameSpans.some((s) => s.kind === 'ceremony' || s.kind === 'help'));
+        /**
+         * ⛓ R9 SLICE 6 — FOUR, and every one is a room where the walk PICKS
+         * SOMETHING UP: the sword twice (`r7-act2-10` and its solver
+         * counterpart `r8-solve-10`, on two different chains) and a boss key /
+         * a chest. The list is DERIVED from `deadFrameSpans`, so a room added
+         * tomorrow joins it; it is pinned here because the count is the claim.
+         *
+         * ⛓⛓⛓ R9 SLICE 7 — **THREE NOW, AND THE SWORD ONLY ONCE.** ⚖ Ruling 14
+         * retired `r7-act2-10` with the rest of the hand chain, so the sword's
+         * ceremony is witnessed by its solver counterpart `r8-solve-10` alone.
+         * The count moving is the retirement showing up in a DERIVED list —
+         * exactly what a pin over a derived list is for (trap 410: a pin that
+         * moves because somebody wrote into what it measures is the pin
+         * WORKING). Nothing about the ceremony itself changed.
+         *
+         * ⛓ R9 SLICE L18b — FOUR AGAIN: `r9-solve-19` takes boss key 0 (a pickup
+         * ceremony) and became a seam's `from` when the terminal `r9-solve-20`
+         * grew behind it. Derived, and pinned because the count is the claim.
+         *
+         * ⛓ swim U13 — FIVE: `r9-solve-20` takes the shield (a pickup ceremony)
+         * and became a seam's `from` when it gained the 2.2 route's exit and
+         * `r9-solve-13-v2` grew behind it.
+         *
+         * ⛓ swim U15 — SIX: `r9-solve-29` takes the Green Key (a pickup ceremony,
+         * in a room whose turrets step through its frozen phase A) and is a
+         * seam's `from` now that `r9-solve-31` grew behind it.
+         */
+        expect(withCeremony.map((s) => s.from))
+            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19', 'r9-solve-20',
+                'r9-solve-29']);
+        for (const { from, to } of withCeremony) {
+            const tape = loadTape(from);
+            const run = runTape(tape, { levelSource });
+            const withoutCeremony = run.deadFrameSpans
+                .filter((s) => s.kind !== 'ceremony' && s.kind !== 'help')
+                .reduce((n, s) => n + s.frames, 0);
+            expect(declaredSeamTimeAfter({
+                declaredTime: tape.seam.time,
+                deadFramesOwed: withoutCeremony,
+                tickCount: tape.tick_count,
+            })).not.toBe(loadTape(to).seam.time);
+        }
+    });
+
+    /**
+     * ⛓ R9 slice 7: was `r7-act2-10`, retired by ⚖ ruling 14. `r8-solve-10` is
+     * the solver's walk of the same room taking the same sword, and it is on
+     * the ceremony list above by MEASUREMENT, not by assumption.
+     *
+     * ⛔⛔ AND THE MODEL'S SHARE OF THE SWORD'S HELP IS A PROPERTY OF THE WALK,
+     * NOT OF THE PICKUP — which is what the re-record made visible. `Help(3)`
+     * is "press X or C" (`NPCs/Help.as:23`) and `Help.update:107-110` lowers
+     * `Game.freezeObjects` IN THE SAME UPDATE when one of them is pressed, so
+     * a walk that holds a dismiss key while the Help is UP costs the GAME one
+     * dead frame and a walk that does not costs two — and the model owes one
+     * less than the game either way (`BOOT_PRESWAP_FRAMES`). The retired
+     * 90-tick walk held `right`+`up` at its Help tick and paid the model a
+     * frame; the re-recorded 78-tick walk holds `primary` and pays it none.
+     * ⛓ Both halves are the GAME's own word, driven read-only through
+     * `probe-seedling-help-frame.mjs --dead-curve` and banked in
+     * `r8-solve-10-help-frame-oracle.json`, which `helpFrame.test.js` owns.
+     * ⇒ the expectation is DERIVED from that oracle's own dismiss-key rule
+     * rather than typed, so the row cannot go stale behind a later licence.
+     */
+    it('⛓ and the SWORD is the one that opens a Help at all — the key never does', () => {
+        const swordTape = loadTape('r8-solve-10');
+        const sword = runTape(swordTape, { levelSource });
+        const key = runTape(loadTape('r8-d2-19'), { levelSource });
+        const helpFrames = (r) => r.deadFrameSpans
+            .filter((s) => s.kind === 'help').reduce((n, s) => n + s.frames, 0);
+        // The tick the Help is UP is the one AFTER `removed()` fires — the
+        // distinction two sessions in a row got wrong (kickoff §36's oracle).
+        // ⛔ THE ORACLE ROW IS SELECTED BY THE TAPE'S OWN LENGTH, and a tape
+        //   the oracle has never seen is a REFUSAL BY NAME rather than a
+        //   silent pass — the shape a later licence needs it to have.
+        const walk = Object.values(HELP_FRAME_ORACLE.walks)
+            .find((w) => w.tick_count === swordTape.tick_count);
+        expect(walk, `r8-solve-10 is ${swordTape.tick_count} ticks and the game oracle `
+            + `${JSON.stringify(Object.values(HELP_FRAME_ORACLE.walks)
+                .map((w) => w.tick_count))} has never been driven at that length`)
+            .toBeTruthy();
+        const dismissedAtHelpTick = walk.helpDeadTicks
+            .some((t) => swordTape.inputs
+                .some((r) => r.from <= t && t < r.to && HELP_DISMISS_KEYS.includes(r.key)));
+        expect(helpFrames(sword))
+            .toBe(walk.helpDeadTicks.length - (dismissedAtHelpTick ? 1 : 0));
+        // ⛔ THE KEY PICKUP OPENS NO HELP AT ALL — a different 0 from the
+        //   sword's, and the reason each is 0 is the whole row.
+        expect(key.deadFrameSpans.filter((s) => s.kind === 'help')).toEqual([]);
+        // Both spend the same phase A; only the sword's `removed()` adds a Help.
+        expect(sword.deadFrameSpans.find((s) => s.kind === 'ceremony').frames)
+            .toBe(key.deadFrameSpans.find((s) => s.kind === 'ceremony').frames);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15) — **THE MODEL'S RESUMED CLOCK IS ALREADY
+ * `declared + BOOT_COST_FRAMES`, AND THIS IS WHY (d′) HAS NO JS HALF.**
+ *
+ * Ruling 15 asks for one: *"the JS resume face applies the same `+bootCost` to
+ * the resumed run's `gameClock` at the boundary — or the model and the game
+ * disagree on the hammer phase in a spinner room."* Measured at the slice's
+ * pristine baseline, before a line was written: it is already there.
+ *
+ * The arithmetic, from this module's own two spenders. A staged run of tape k
+ * starts at `beginEntryTimeFromDeclared(D_k) = D_k + BOOT_PRESWAP_FRAMES` and
+ * then `levelRun.js:3109` spends `LOAD_FADE_FRAMES` before tick 0 ⇒ its first
+ * live tick reads `D_k + BOOT_COST_FRAMES`. A SEQUENCE is ONE `levelRun`, and
+ * the door crossing that ENDS window k − 1 goes through `enterWorld`, which
+ * spends `LOAD_FADE_FRAMES` for the new world (`levelRun.js:3400`) — so by
+ * `declaredSeamTimeAfter`'s own identity the resumed clock lands on exactly
+ * the same number.
+ *
+ * ⇒ the GAME is the side that is behind, because `Bot.as:1703` REWRITES
+ * `Main.time` to the declaration and then `botStart` does not rebuild, so it
+ * never pays the cost. `watchWasm.continuationTape` adds it there. A second
+ * bump here would put the model 21 AHEAD of the corrected game.
+ *
+ * ⛔ THE ROSTER IS DERIVED FROM `PLAYTHROUGH_CHAINS`, not listed (trap 495 and
+ * §11.9(3)): every multi-segment chain whose every segment declares a `seam`.
+ * A chain added tomorrow is measured tomorrow.
+ */
+describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the measurement', () => {
+    const continuable = PLAYTHROUGH_CHAINS
+        .filter((c) => (c.segments ?? []).length > 1)
+        .filter((c) => c.segments.every((n) => loadTape(n).seam
+            && Number.isFinite(loadTape(n).seam.time)));
+
+    /** The director's own window loop, reduced to the one number it is about. */
+    const boundariesOf = (chain) => {
+        const out = [];
+        let run = null;
+        let offset = 0;
+        let carried = 0;
+        for (let k = 0; k < chain.segments.length; k += 1) {
+            const tape = loadTape(chain.segments[k]);
+            if (k > 0) {
+                // ⛓ swim U14: the ticks the predecessor walked PAST its arrival —
+                // 0 at a door, the landing after a pit (`r9-solve-12`: 80).
+                const prev = loadTape(chain.segments[k - 1]);
+                const arrival = runTape(prev, { levelSource }).transitions.at(-1)?.t
+                    ?? prev.tick_count;
+                out.push({
+                    chain: chain.id,
+                    boundary: `${chain.segments[k - 1]} -> ${chain.segments[k]}`,
+                    declared: tape.seam.time,
+                    live: run.gameTime,
+                    walkOn: prev.tick_count - arrival,
+                    carried: (carried += prev.tick_count - arrival),
+                });
+                // ⛔ THE SAME FOLD `watchViewer` DOES, and for the same reason:
+                //    a v9 timed row is the window's OWN clear, rebased into the
+                //    sequence's tick numbering (⚖ ruling 14's timed-row rule).
+                const forward = (tape.persistence ?? [])
+                    .filter((c) => c.at !== undefined)
+                    .map((c) => ({ ...c, at: c.at + offset }));
+                if (forward.length) run.addTimedClears(forward);
+            }
+            const stepper = createTapeStepper(tape, {
+                levelSource,
+                onTick: (t, state, held, r) => { run = r; },
+                ...(k > 0 ? { run } : {}),
+            });
+            let x = stepper.next();
+            while (!x.done) x = stepper.next();
+            offset += tape.tick_count;
+        }
+        return out;
+    };
+
+    /**
+     * ⛔⛔ AND THE BOUND IS THE INTERESTING HALF (a bounded sweep must NAME what
+     * it bounded). The multi-segment chains this sweep CANNOT measure are
+     * exactly the CUSTODY ones — `act2-the-sword`, and the campaign chain that
+     * joins it — because a custody chain's segment 1 is the TRUE INITIAL BOOT,
+     * which declares no `seam` at all: `new Game(0,80,128)` with an empty save.
+     * `createLevelRun` then refuses the clock BY NAME for the whole run
+     * (`clockRefusal` = "the boot block declares no `save.time`"), so every
+     * boundary on those chains reads `null` rather than a number.
+     *
+     * ⇒ the model cannot answer the clock for the true-start chain AT ALL, which
+     * is a fact about (d′)'s JS half twice over: there is nothing to bump, and
+     * nothing that reads it (`clock.now()` reaches only the spinner hammer, and
+     * the campaign's rooms have none).
+     * ⛓ R9 SLICE L16: the campaign reaches L18's spinners now, and a resumed
+     * window ADOPTS its own boot's clock — see the row below this one.
+     */
+    it('the sweep names what it measures AND what it cannot', () => {
+        expect(continuable.map((c) => c.id)).toEqual(['r8-d2']);
+        expect(continuable.reduce((n, c) => n + c.segments.length - 1, 0))
+            .toBeGreaterThanOrEqual(2);
+        const custody = PLAYTHROUGH_CHAINS
+            .filter((c) => (c.segments ?? []).length > 1 && !continuable.includes(c));
+        // ⛓ R9 slice 7: was `act2-the-sword`; ⚖ ruling 14 retired it and
+//   `r9-campaign` is the custody chain that boots the true start now.
+        expect(custody.map((c) => c.id)).toContain('r9-campaign');
+        for (const c of custody) {
+            // ⛔ the reason, ASSERTED rather than asserted-about: segment 1
+            //    declares no clock, so the run has none.
+            expect(loadTape(c.segments[0]).seam?.time).toBeUndefined();
+        }
+    });
+
+    /**
+     * ⛓⛓ R9 SLICE L16 OVERTURNED THIS ROW, AND THE NEW ONE IS STRONGER. It read
+     * *"a chain booting the TRUE START reads `null` at every boundary"*, which
+     * was true while nothing on the chain read the clock — and L18's spinners
+     * (the campaign's nineteenth room) do. A resumed window now ADOPTS the
+     * clock its own fresh boot counts when the run's is unknown
+     * (`levelRun.adoptWindowClock`), so only the FIRST boundary is still
+     * `null` (sampled before `r8-solve-2` resumes), and from the second on the
+     * adopted clock lands on `declared + BOOT_COST_FRAMES` at EVERY boundary —
+     * the same law the fully-declared chain above obeys, over sixteen
+     * game-measured declarations it was never handed.
+     */
+    /**
+     * ⛓⛓ SWIM U14 — AND A PIT SEAM CARRIES ITS WALK-ON. The game boots a
+     * segment from the clock its predecessor latched at the arrival's
+     * `Game.begin()`; a door ends the walk there, a pit does not (`r9-solve-12`
+     * crosses at t2284 and lands calm at t2364). The continuous run keeps those
+     * 80 ticks, so its live clock from that boundary ON is the declaration's
+     * `+ 21 + 80`. It is a PHASE the chain's continuous play and the per-segment
+     * game disagree on — inert while no room downstream reads `Game.time`
+     * (L21, L22 hold no spinner) — and it is asserted rather than absorbed.
+     */
+    it('⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+        const rows = boundariesOf(chain);
+        expect(rows.length).toBe(chain.segments.length - 1);
+        expect(rows[0].live).toBe(null);
+        expect(rows.length).toBeGreaterThan(2);
+        for (const r of rows.slice(1)) {
+            expect(`${r.boundary}: ${r.live}`)
+                .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES + r.carried}`);
+        }
+        expect(rows.filter((r) => r.walkOn !== 0).map((r) => `${r.boundary}: ${r.walkOn}`))
+            .toEqual(['r9-solve-12 -> r9-solve-21: 80']);
+    });
+
+    it.each(continuable.map((c) => ({ id: c.id, chain: c })))(
+        '$id: every boundary\'s resumed clock is `declared + BOOT_COST_FRAMES`',
+        ({ chain }) => {
+            const rows = boundariesOf(chain);
+            expect(rows.length).toBe(chain.segments.length - 1);
+            for (const r of rows) {
+                expect(`${r.boundary}: ${r.live}`)
+                    .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES}`);
+            }
+        });
+
+    it('⛓ and the number is the ONE the game was measured to be short by — 21', () => {
+        // §13.6: three independent chains, `declared − live = 21` at every
+        // boundary after the first. Same constant, both sides, derived.
+        expect(BOOT_COST_FRAMES).toBe(LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES);
+        expect(BOOT_COST_FRAMES).toBe(21);
+    });
+
+    it('⛔ MUTATION: a resumed clock that HAD been bumped would miss by exactly 21',
+        () => {
+            // The mutant ruling 15 asks for, priced without building it: adding
+            // `BOOT_COST_FRAMES` on the JS side puts every boundary 21 past the
+            // declaration the game (under (d′)) now lands on.
+            const chain = continuable.find((c) => c.id === 'r8-d2');
+            const rows = boundariesOf(chain);
+            for (const r of rows) {
+                expect(r.live + BOOT_COST_FRAMES).not.toBe(r.declared + BOOT_COST_FRAMES);
+                expect(r.live + BOOT_COST_FRAMES - r.declared).toBe(2 * BOOT_COST_FRAMES);
+            }
+        });
+});
+
+describe('the seam spec row the machinery earned', () => {
+    it('`time` is MODELLED now, and the row says under what', () => {
+        const row = SEAM_BOOT_SPEC.find((r) => r.key === 'time');
+        expect(row.modelled).toBe(true);
+        expect(row.why).toContain('pinDeadFrames');
+    });
+
+    it('⛔ a tape without the dead-frame pin gets NO clock, by name', () => {
+        // `collide-up-rock` is a v1-era fixture: no seam block at all, so the
+        // refusal is the FIRST one and the hammer keeps refusing exactly as it
+        // did before this slice.
+        const run = runTape(loadTape('collide-up-rock'), { levelSource });
+        expect(run.gameTime).toBeNull();
+        expect(run.gameTimeRefusal).toContain('save.time');
+    });
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING HEADLESS S1 — A TRUE START'S WINDOW-1 SHARE, PER RUN.
+ *
+ * The fixtures are the four `--boot-trace` readings of CAMPAIGN window 1
+ * (`r8-solve-1`, model share 40): the box ×2 armed at 4801 and read 39, the
+ * runner ×2 (run 34746119822) armed at 4802 and read 38.
+ */
+describe('trueStartWindowDeadFrames — k is read off the game clock, never typed', () => {
+    const SHARE = 40;
+
+    it('PAGE_BOOT_TIME is dayLength / 2, anchored on data the roster already carries', () => {
+        expect(DAY_LENGTH_FRAMES).toBe(160 * GAME_FPS);
+        expect(PAGE_BOOT_TIME).toBe(DAY_LENGTH_FRAMES / 2);
+        // a committed tape booting under the fresh page's clock, and the
+        // generator's declaration of the same number — one constant
+        expect(loadTape('r8-hammer-arm').seam.time).toBe(PAGE_BOOT_TIME);
+        expect(GENERATED_BOOT_TIME).toBe(PAGE_BOOT_TIME);
+    });
+
+    it('the box reading (armed_at 4801, 39) is k = 1', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + 1, deadFrames: 39 });
+        expect(r).toMatchObject({ ok: true, k: 1, want: 39 });
+    });
+
+    it('the runner reading (armed_at 4802, 38) is k = 2 — a k folded to 1 reds here', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + 2, deadFrames: 38 });
+        expect(r).toMatchObject({ ok: true, k: 2, want: 38 });
+    });
+
+    it('a fade regression (share read as 41) still reds on the box reading', () => {
+        const r = trueStartWindowDeadFrames({ share: SHARE + 1, armedAt: PAGE_BOOT_TIME + 1, deadFrames: 39 });
+        expect(r.ok).toBe(false);
+        expect(r.want).toBe(40);
+    });
+
+    it('an arm AFTER the boot fade ended is refused by name, whatever the count', () => {
+        const late = PAGE_BOOT_TIME + 22;
+        const r = trueStartWindowDeadFrames({ share: SHARE, armedAt: late, deadFrames: SHARE - 22 });
+        expect(r.ok).toBe(false);
+        expect(r.why).toContain('AFTER the boot fade ended');
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + LOAD_FADE_FRAMES,
+            deadFrames: SHARE - LOAD_FADE_FRAMES }).ok).toBe(false);
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME + LOAD_FADE_FRAMES - 1,
+            deadFrames: SHARE - LOAD_FADE_FRAMES + 1 }).ok).toBe(true);
+    });
+
+    it('an arm before the boot world ran a frame, or no armed_at at all, is refused', () => {
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME, deadFrames: SHARE }))
+            .toMatchObject({ ok: false, k: 0 });
+        expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: null, deadFrames: 39 }).ok).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓ R9 SLICE L16 — A RESUMED WINDOW ADOPTS THE CLOCK ITS OWN FRESH BOOT COUNTS.
+ *
+ * The campaign chain starts at the true start, whose boot declares no
+ * `save.time`, so a continuation's `Game.time` stayed `null` into L18 — the
+ * first campaign room whose hazard reads it — and every continuation consumer
+ * refused a spinner contact the window prices exactly on its own. The pair here
+ * is the chain's own first boundary: `r8-solve-1` (no clock) → `r8-solve-2`
+ * (`save.time` 5002).
+ */
+describe('R9 L16: a resumed window adopts an UNKNOWN clock, and only an unknown one', () => {
+    const levelSource = atlasLevelSource();
+
+    it('⛓ the continuation reads, at the window\'s tick 0, what the window\'s fresh boot reads', () => {
+        let live = null;
+        const first = createTapeStepper(loadTape('r8-solve-1'),
+            { levelSource, onTick: (a, b, c, r) => { live = r; } });
+        for (let r = first.next(); !r.done; r = first.next()) { /* step */ }
+        expect(live.gameTime).toBe(null);
+        let resumedAt0 = null;
+        const second = createTapeStepper(loadTape('r8-solve-2'), {
+            run: live,
+            onTick: (tick, s, h, r) => { if (tick === 0) resumedAt0 = r.gameTime; },
+        });
+        second.next();
+        let freshAt0 = null;
+        const fresh = createTapeStepper(loadTape('r8-solve-2'), {
+            levelSource, onTick: (tick, s, h, r) => { if (tick === 0) freshAt0 = r.gameTime; },
+        });
+        fresh.next();
+        expect(freshAt0).not.toBe(null);
+        expect(resumedAt0).toBe(freshAt0);
+        expect(live.gameTimeRefusal).toBe(null);
+    });
+
+    it('⛔ a clock that already counts is NOT overwritten — the admission compares it, not this', () => {
+        const fresh = createTapeStepper(loadTape('r8-solve-2'), { levelSource });
+        let run = null;
+        const st = createTapeStepper(loadTape('r8-solve-2'),
+            { levelSource, onTick: (a, b, c, r) => { run = r; } });
+        st.next();
+        const before = run.gameTime;
+        expect(before).not.toBe(null);
+        expect(run.adoptWindowClock(loadTape('r8-solve-3')))
+            .toEqual({ adopted: false, why: 'the run already counts `Game.time`' });
+        expect(run.gameTime).toBe(before);
+        expect(fresh).toBeTruthy();
+    });
+
+    it('⛔ a window whose boot the clock cannot count leaves it unknown, with the boot\'s own reason', () => {
+        let live = null;
+        const first = createTapeStepper(loadTape('r8-solve-1'),
+            { levelSource, onTick: (a, b, c, r) => { live = r; } });
+        first.next();
+        expect(live.adoptWindowClock(loadTape('r8-solve-1')))
+            .toEqual({ adopted: false, why: 'the boot block declares no `save.time`' });
+        expect(live.gameTime).toBe(null);
+    });
+
+    it('⛔ gameClock.adopt refuses a second writer', () => {
+        const c = createGameClock({ bootTime: 100 });
+        expect(() => c.adopt(200)).toThrow(/already counts \(100\)/);
+        const u = createGameClock({ bootTime: null });
+        u.adopt(200);
+        expect(u.now()).toBe(200);
+        expect(u.adopted).toBe(200);
+    });
+});

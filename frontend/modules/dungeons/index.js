@@ -15,9 +15,11 @@ export const moduleInfo = {
   name: 'dungeons',
   title: 'Dungeons',
   componentType: 'dungeonsPanel',
+  docs: 'docs/json/user/modules/dungeons.md',
   icon: '🏰',
   column: 3, // Right column
-  description: 'Dungeons display panel.',
+  category: 'Tracker Panels',
+  description: 'Each dungeon\'s regions and boss defeat rules, colored by the items you have; click a region to jump to it.',
   requires: ['stateManager', 'commonUI'],
 };
 

@@ -1,0 +1,20 @@
+# bad: [e9677587486e0789039c95c5d2496fa2832ac7b7] test(seedling-fidelity): delete contact witness 576 — its leg's plan no longer walks the parted capture (the user's ruling)
+# good: [ff759a4ab35d6fca9d4a8fa161e45ff9427b165c] seedling hammer-phase G1 D1: the kill rung's ghost-sword gate behind GHOST_KILL_RUNG (OFF)
+git bisect start 'e967758' 'ff759a4a'
+# bad: [ba8d5a94a0287d25cef8926eb0acac2451aefbcc] Merge remote-tracking branch 'origin/main' into bot-stop-button
+git bisect bad ba8d5a94a0287d25cef8926eb0acac2451aefbcc
+# bad: [84a982ba931241bd1a041cadab68d1dcd55db66d] chore(seedling): wave-15 harvest — ceremonyBesideLiveBody labelled INTERIM (⚖ model the freeze shove, not avoid it); surface/constants/reference regenerated
+git bisect bad 84a982ba931241bd1a041cadab68d1dcd55db66d
+# bad: [c523d55977a2831cf39e8b93125ceb4901b74c6c] test(seedling wasm): the delivery waits out a pushed world; the scene leak is counted by name
+git bisect bad c523d55977a2831cf39e8b93125ceb4901b74c6c
+# good: [2d07b1fa2cb1c96b83dfe6ec876fbc4a2f278d9f] chore: bump journey-to-ascension to 6241b77 — newly unlocked tasks join the automation priorities; Skip-on-Block setter (jta-loop-mode B, D)
+git bisect good 2d07b1fa2cb1c96b83dfe6ec876fbc4a2f278d9f
+# good: [638ac3967011d64b0189b07979e80a5122fbcfc4] feat(divergence-sweep): leg_budget_ms — the per-leg wall clock is a stamped switch (S5-1)
+git bisect good 638ac3967011d64b0189b07979e80a5122fbcfc4
+# bad: [e3903f6bc45c21aa99acdcdf2d94eec3c3d4e1a3] docs(seedling): hammer C4b D1 evidence — the chooser's other-hitter census (measure only)
+git bisect bad e3903f6bc45c21aa99acdcdf2d94eec3c3d4e1a3
+# bad: [aa1ae4d6a35a7c176dc6de94270f836b077c2c96] feat(seedling-js): STAGEDHITS CONSUMER — check the game's damage on a held room, stage it where the game keeps it, retire the §5.66 guard
+git bisect bad aa1ae4d6a35a7c176dc6de94270f836b077c2c96
+# bad: [926cc2a86f190435fdf27f167767a1a57db648b5] feat(seedling): wave-14 flip — four CONTACT_FIDELITY defaults ON; strikeIframeLapse stays OFF
+git bisect bad 926cc2a86f190435fdf27f167767a1a57db648b5
+# first bad commit: [926cc2a86f190435fdf27f167767a1a57db648b5] feat(seedling): wave-14 flip — four CONTACT_FIDELITY defaults ON; strikeIframeLapse stays OFF

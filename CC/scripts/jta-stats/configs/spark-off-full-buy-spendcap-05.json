@@ -1,0 +1,12 @@
+{
+  "name": "spark-off-full-buy-spendcap-05",
+  "options": {
+    "modOverrides": {},
+    "zoneLimit": 30,
+    "maxRuns": 5000,
+    "purchasePolicy": {
+      "kind": "spendCap",
+      "g": 0.5
+    }
+  }
+}

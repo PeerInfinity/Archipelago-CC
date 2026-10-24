@@ -1,0 +1,18 @@
+11,12c11,12
+< | `bob` | Bob | yes | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **SOLVED** | 141 | collect | - |
+< | `bobsoldier` | BobSoldier | yes | no | enemy (dangerMap.staticEnemyDanger) | **REFUSED** | - | **REFUSED** | - | - | solverBot(enemy-census-bobsoldier@corridor) collect (128,128) stance: the combat ladder is |
+---
+> | `bob` | Bob | yes | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **SOLVED** | 268 | kill, collect | - |
+> | `bobsoldier` | BobSoldier | yes | no | enemy (dangerMap.staticEnemyDanger) | **REFUSED** | - | **SOLVED** | 172 | collect | - |
+23c23
+< | `jellyfish` | Jellyfish | no | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **SOLVED** | 172 | collect | - |
+---
+> | `jellyfish` | Jellyfish | no | no | chaser (dangerMap.chaserDanger) | **SOLVED** | 155 | **SOLVED** | 252 | kill, collect | - |
+25c25
+< | `lavarunner` | LavaRunner | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 228 | **REFUSED** | - | - | solverBot(enemy-census-lavarunner@corridor) collect (128,128) stance: the combat ladder is |
+---
+> | `lavarunner` | LavaRunner | no | no | enemy (dangerMap.staticEnemyDanger) | **SOLVED** | 225 | **REFUSED** | - | - | solverBot(enemy-census-lavarunner@corridor) collect (128,128) stance: the combat ladder is |
+38c38
+< CORRIDOR arm: {"REFUSED":14,"SOLVED":8,"THREW:Error":1}
+---
+> CORRIDOR arm: {"REFUSED":13,"SOLVED":9,"THREW:Error":1}

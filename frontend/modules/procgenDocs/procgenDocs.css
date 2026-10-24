@@ -1,0 +1,204 @@
+/*
+ * procgenDocs/procgenDocs.css — **THE FOUR DOC PAGES' SHARED LOOK, SPELLED
+ * ONCE.**
+ *
+ * ⚖ The user, 2026-08-31, after the demos.html rework: *"Can you make the same
+ * changes to the other pages, as appropriate?"* — and "the same changes" is a
+ * claim that only stays true if there is one copy of them. The four pages
+ * (`demos.html`, `docs.html`, `glossary.html`, `reference.html`) each carried
+ * their own near-identical block of body/header/`pre`/`.lbl`/`.note` rules,
+ * already drifted (13px/1.5 against 13px/1.6, `max-width` 96ch against 110ch,
+ * two spellings of the same filter box). This is `watch.html`'s own
+ * `.armPanel` lesson one directory over: *"The three panels each carried their
+ * own identical copy of this, so an arm added later looked subtly unlike the
+ * others until somebody noticed and pasted the block a fourth time."*
+ *
+ * ⛔ LOAD ORDER IS THE CONTRACT. Every page links this FIRST and keeps its own
+ * `<style>` AFTER, so a page-specific rule always wins. Nothing here is
+ * page-specific; anything that would be belongs in the page.
+ *
+ * ⛓ A MISSING FILE IS NOT SILENT. All four pages are loaded by a browser gate
+ * that asserts ZERO console errors (`check-procgen-demos.mjs` for demos and
+ * the glossary, `check-procgen-reference.mjs`, `check-procgen-docs.mjs`), and
+ * Chromium logs a failed stylesheet fetch as a console error — so the one new
+ * failure mode this file introduces is already gated. The path is `./` from
+ * four siblings in this directory, which resolves identically on the dev
+ * server and on Pages.
+ */
+
+/* ══ TYPOGRAPHY ══════════════════════════════════════════════════════
+   ⛓⛓ **TWO FAMILIES, AND WHICH ONE A THING GETS IS A DECISION.** All four
+   pages were wholly monospace — including the narrative documents (250,166
+   words), the glossary's two-level definitions and every catalogue entry's
+   `whatIsHappening`. A code face was doing a reading job. Monospace is kept
+   for everything that is a STRING A READER MAY HAVE TO TYPE OR COMPARE
+   CHARACTER BY CHARACTER: code spans, commands, URLs, claims, table cells,
+   the entry numbers. */
+:root {
+  color-scheme: dark;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --rail: 250px;
+  --ink: #d8d8e0;
+  --dim: #8a8a98;
+  --dimmer: #6a6a78;
+  --bg: #0b0b0e;
+  --box: #0e0e12;
+  --line: #1e1e26;
+  --rule: #24242c;
+  --link: #7fe0ff;
+  --key: #ffd75f;
+  --good: #7fd88f;
+}
+
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.6 var(--sans); }
+code, pre, kbd, table { font-family: var(--mono); }
+a { color: var(--link); }
+code { color: var(--key); }
+p { margin: 6px 0; }
+
+/* ⛓ COMMANDS AND URLS WRAP RATHER THAN CLIPPING. Measured before this rule:
+   17 of 46 `<pre>` blocks on demos.html and 5 of 9 on reference.html
+   overflowed their box, so a CLI line ended mid-flag with the rest reachable
+   only by horizontal scrolling. */
+pre {
+  background: #101014; border: 1px solid var(--line); padding: 6px 8px;
+  overflow-x: auto; margin: 6px 0; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+pre code { color: var(--ink); }
+
+.note { color: var(--dim); font-size: 12px; }
+.lbl {
+  color: var(--dim); text-transform: uppercase; letter-spacing: .06em;
+  font-size: 10px; display: block; margin: 8px 0 1px;
+}
+.body { padding: 4px 0 6px 14px; }
+
+/* ══ THE HEADER ══════════════════════════════════════════════════════
+   ⛔ The header notes ran the FULL viewport width (measured: 1,372px of a
+   1,400px window) while the content column was capped at 96–110ch — the two
+   halves of a page disagreed about line length, and the widest text on it was
+   also the lowest-contrast. One measure for both. */
+header { padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+header > * { max-width: 104ch; }
+header h1 { font-size: 15px; margin: 0 0 3px; font-weight: 600; }
+header h1 span { color: var(--link); font-weight: 400; }
+footer { padding: 10px 14px; border-top: 1px solid var(--rule); color: var(--dimmer); font-size: 12px; }
+
+/* ══ THE SHELL — a sticky RAIL beside the column ═════════════════════
+   ⛓ A content column is ~90ch on any screen; on a 1400px window that left
+   roughly 600px of nothing. The rail costs the column no width and is on
+   screen at every scroll position, which a table of contents printed at the
+   top is not — on pages that ran to 22, 55 and 140 screens, a top-of-page
+   index is itself one more screen to scroll past. */
+.pageShell { display: flex; align-items: flex-start; }
+.pageRail {
+  flex: 0 0 var(--rail); position: sticky; top: 0; max-height: 100vh;
+  overflow-y: auto; padding: 10px 8px 30px 14px; border-right: 1px solid var(--line);
+  font-size: 12px;
+}
+.pageRail h2, .pageRail .railHead {
+  font-size: 10px; margin: 10px 0 6px; color: var(--dim); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em; display: block;
+}
+.pageRail h2:first-child, .pageRail .railHead:first-child { margin-top: 0; }
+.ixctl { display: flex; gap: 4px; margin: 0 0 8px; flex-wrap: wrap; }
+.ixctl button, .pageRail button {
+  background: #1e1e26; color: var(--ink); border: 1px solid #34343e;
+  padding: 2px 7px; font: inherit; cursor: pointer;
+}
+.ixctl button:hover, .pageRail button:hover { background: #262630; }
+
+a.ix {
+  display: flex; gap: 6px; align-items: baseline; padding: 3px 6px;
+  color: #c8c8d4; text-decoration: none; border-left: 2px solid transparent;
+}
+a.ix:hover { background: #16161c; color: #fff; }
+a.ix b {
+  font-family: var(--mono); font-size: 11px; color: var(--dimmer);
+  font-weight: 400; flex: 0 0 2.2em; text-align: right;
+}
+a.ix .t { flex: 1 1 auto; }
+a.ix .n { color: var(--dimmer); font-family: var(--mono); font-size: 11px; }
+a.ix .tag {
+  font-size: 10px; color: #6d5a2a; text-transform: uppercase; letter-spacing: .06em;
+}
+/* ⛓ WHERE YOU ARE — set by each page's scroll handler, its only writer. */
+a.ix.here { border-left-color: var(--link); color: var(--link); background: #14141a; }
+
+main { flex: 1 1 auto; min-width: 0; padding: 10px 18px 40px; max-width: 92ch; }
+
+@media (max-width: 900px) {
+  /* ⛔ The rail is the FIRST thing on a narrow screen, not a 250px column
+     squeezing the prose to nothing. */
+  .pageShell { display: block; }
+  .pageRail {
+    position: static; max-height: none; border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+/* ══ AN ENTRY ════════════════════════════════════════════════════════
+   ⛓⛓ **CLOSED, WITH A TEASER — and the teaser is what keeps a closed list a
+   CATALOGUE rather than an index.** Measured with everything open:
+   demos.html 22,883px, glossary.html 55,741px, reference.html 140,615px, none
+   of them with any navigation on it. Each page's teaser is a field the DATA
+   already holds (the catalogue's `demonstrates`, the glossary's `plain`), so
+   there is no second summary to keep in step; `reference.html` has no teaser
+   because a row's own name and `sub` ARE the entry — it is a lookup table, not
+   prose.
+   ⛔ The DOM is identical open or closed, which is why the gates are
+   indifferent to it: they read `details.entry` / `details.row` / `.terms a`
+   with `querySelectorAll`, which does not care whether a `<details>` is
+   expanded. */
+details.entry, details.row {
+  margin: 8px 0; border: 1px solid var(--line); background: var(--box); padding: 6px 10px;
+}
+details.row { margin: 6px 0; padding: 5px 10px; }
+details.entry > summary, details.row > summary {
+  cursor: pointer; color: var(--key); font-weight: 600;
+}
+details.entry[open], details.row[open] { border-color: #2a2a36; }
+details.entry > summary .teaser {
+  display: block; margin: 2px 0 0 1.6em; color: var(--dim);
+  font-weight: 400; font-size: 13px;
+}
+details.entry[open] > summary .teaser { display: none; }
+
+/* ══ THE LINKS ═══════════════════════════════════════════════════════
+   ⛓⛓ **A URL IS NOT A LINK'S TEXT.** demos.html printed both of every entry's
+   URLs in full — 48 of them, median 177 characters, longest 261, under
+   `word-break: break-all` so they chopped mid-token: 3,582px, 15.7% of that
+   whole page. ⛔ They are not GONE, they are one disclosure away in
+   `.rawurl` — the pages claim a URL of theirs is a FIXED POINT, which is a
+   claim about characters, so the characters must stay readable and copyable. */
+.open { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; margin: 3px 0; }
+a.go {
+  color: var(--link); text-decoration: none; border: 1px solid #2a3a44;
+  background: #121a1e; padding: 2px 9px; border-radius: 2px;
+}
+a.go:hover { background: #17242a; border-color: #3f5f6d; }
+a.go.alt { color: #9aa8b0; border-color: var(--rule); background: #101014; }
+button.copy {
+  background: #1e1e26; color: var(--dim); border: 1px solid #2a2a35;
+  padding: 2px 9px; font: inherit; cursor: pointer; border-radius: 2px;
+}
+button.copy:hover { color: var(--ink); }
+button.copy.done { color: var(--good); border-color: #2f5a3a; }
+details.rawurl { margin: 2px 0 0; }
+details.rawurl > summary { color: var(--dimmer); font-size: 12px; cursor: pointer; }
+details.rawurl code {
+  display: block; font-size: 12px; color: var(--dim);
+  overflow-wrap: anywhere; margin: 3px 0;
+}
+details.rawurl code b { color: #c8c8d4; font-weight: 400; }
+
+/* ══ THE FILTER ══════════════════════════════════════════════════════
+   ⛓ Two pages carry one and they had drifted to two widths. It lives in the
+   RAIL now on both, so it stays on screen while the list it narrows scrolls. */
+.filterBox { margin: 0 0 8px; display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.filterBox input {
+  background: #101014; color: var(--ink); border: 1px solid #2a2a36;
+  padding: 3px 6px; font: inherit; width: 100%; box-sizing: border-box;
+}
+.filterNote { color: var(--good); font-size: 11px; }

@@ -1,0 +1,16 @@
+{
+ "_comment": "WRITTEN BEFORE THE RUN. Every digested binding, perturbed alone around one stateDigest() call, must flip the digest and exactly the component named; restored, the digest must equal the base. Every EXCLUDED binding (and the not-in-the-reach controls) must leave the digest equal.",
+ "flip": {
+  "staging": ["boot", "noclip", "noHazards", "noDamage", "grants", "equips", "roles", "pins", "save", "seam"],
+  "place": ["level", "ticksCompleted", "firstTickInWorld", "world", "worlds"],
+  "clock": ["clock", "clockRefusal"],
+  "player": ["state", "damage", "frozenTimer", "swordWindow", "slashState", "slashEndsAt", "spearEndsAt", "ceremony", "bobArena", "bobNoInput", "primary", "slotOrder", "inventory", "grantsByLevel", "equipsByTick"],
+  "persist": ["clearedByLevel", "pendingEarnedClears", "despawnedByLevel", "staticRemovedTags", "unreadRoomWrites", "totemParts", "keys", "collectedPickups", "lockSnap", "moonrockSet", "chestOpens", "rockFalls"],
+  "visit": ["activatorStates", "bridgeStates", "pushableStates", "rockStates", "burnStates", "ropeStates", "fallRockStates", "moonrockStates", "crusherStates", "bossStates", "shieldBossStates", "finalDoorStates", "turretStates", "beamTowerStates", "magicalLockStates", "chestStates", "pulserStates", "spinnerStates", "pullsByLevel", "wandWindows", "fireWindows"],
+  "globals": ["CONTACT_FIDELITY", "KILLLOCK_BODIES", "PRESS_KILL_COST", "GHOST_SPINNER_PRESS", "GHOSTSWORD_PRESS", "GHOSTSWORD_MOTION", "STATIC_SWORD_ARM", "PUSH_SPEAR_DIRECTION", "WAND_VERB", "PICKUP_REMOVED_NEXT_FRAME", "NEAREST_TILE_INDEX", "SOLID_GRID"]
+ },
+ "equal": {
+  "excluded (in the reach, named)": ["levelSource", "crossRoomWriterIndex", "seamBoot", "clockDeclared", "bootCutscene", "bootSave", "cutscene", "spawn"],
+  "not in the reach (the persistence channel and ledgers)": ["persistence", "declaredClears", "timedClears", "despawn", "scratchPersistence", "scratchClears", "pendingKillLockThrows", "spinnerKillLockOpens", "playerHits", "staticBodyDeaths", "PRESS_KILL_COST_COUNTS"]
+ }
+}

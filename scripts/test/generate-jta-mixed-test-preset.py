@@ -18,6 +18,7 @@ path.
 Re-running is idempotent.
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -28,6 +29,7 @@ TARGET_FILENAME = "AP_1_rules.json"
 PLAYER_ID = "1"
 SEED_ID = "1"
 GENERATION_SEED = 1
+GAME_NAME = "JtA (mixed substrate test)"
 
 # Defaults consulted only by the loops auto-enter-loop-mode trigger;
 # jta ignores them, and the TA region uses its own moveCost defaults
@@ -81,16 +83,17 @@ def build_rules() -> dict:
     # ── Substrate sidecars ───────────────────────────────────────
     # Menu has no sidecar (synthetic). AdventureZone runs under the
     # text_adventure substrate; JtaZone1 runs under jta with zone 1.
+    #
+    # A text-adventure region is a ROOM, not a tile grid (G2a): its
+    # payload is what `serializeTextAdventureRoom` writes — the exits on
+    # their compass sides (no x/y), the gated exits' rules in `exitGates`
+    # (none here: ToJtaZone1 is True_), and the region's locations (none).
+    # `fogEnabled` / `manaEnabled` are the engine's envelope flags; the
+    # mana leg needs `manaEnabled` on this region.
     ta_payload = {
-        "width": 8,
-        "height": 6,
-        "tiles": [0] * 48,
-        "entrance": {"x": 4, "y": 3},
         "exits": [
             {
                 "exit_id": "ToJtaZone1",
-                "x": 7,
-                "y": 3,
                 "side": "E",
                 "exitName": "ToJtaZone1",
                 "targetRegion": "JtaZone1",
@@ -99,11 +102,8 @@ def build_rules() -> dict:
                 "isTeleporter": False,
             },
         ],
-        "obstacles": [],
-        "items": [],
-        "obstacleLib": {},
-        "itemLib": {},
-        "longestShortestPath": 1,
+        "exitGates": {},
+        "locations": [],
         "fogEnabled": False,
         "manaEnabled": True,
     }
@@ -135,9 +135,15 @@ def build_rules() -> dict:
     # items / item_groups / itempool_counts: a victory item is
     # included so AP has a goal to track; the "Everything" group
     # mirrors what working presets use.
+    # canonical_placements / world / exporter follow the rules schema
+    # (31d515e2c6 fixed them in the preset only): placements are a
+    # location->item OBJECT, a world names its game, and exporter is
+    # keyed by slot, so a hand-authored preset carries none.
+    # game_info names the slot's goal, the victory item, as every exporter
+    # does (rules S12: the schema refuses a game_info with no slot row).
     rules = {
         "schema_version": 3,
-        "game_name": "JtA (mixed substrate test)",
+        "game_name": GAME_NAME,
         "game_directory": "jta_mixed_test",
         "archipelago_version": "0.0.0",
         "generation_seed": GENERATION_SEED,
@@ -159,24 +165,33 @@ def build_rules() -> dict:
         },
         "item_groups": {PLAYER_ID: ["Everything"]},
         "itempool_counts": {PLAYER_ID: {"victory": 1}},
-        "canonical_placements": {PLAYER_ID: []},
+        "canonical_placements": {PLAYER_ID: {}},
         "progression_mapping": {PLAYER_ID: {}},
         "starting_items": {PLAYER_ID: []},
         "preset_sidecars": {PLAYER_ID: sidecars},
-        "loop_costs": DEFAULT_LOOP_COSTS,
-        "world": {PLAYER_ID: {}},
-        "exporter": {"name": "hand-authored", "version": "1.0.0"},
-        "game_info": {},
+        "loop_costs": {PLAYER_ID: DEFAULT_LOOP_COSTS},
+        "world": {PLAYER_ID: {"game": GAME_NAME}},
+        "exporter": {},
+        "game_info": {PLAYER_ID: {"completion_condition": {"type": "item_check", "item": "victory"}}},
         "helpers": {},
     }
 
     return rules
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Generate the jta_mixed_test preset.")
+    parser.add_argument(
+        "--out",
+        default=None,
+        help=f"write here instead of {TARGET_DIR}/{TARGET_FILENAME} "
+        "(test/test_jta_mixed_test_preset.py compares that file to the tracked one)",
+    )
+    args = parser.parse_args(argv)
+
     root = project_root()
-    tgt_dir = root / TARGET_DIR
-    tgt = tgt_dir / TARGET_FILENAME
+    tgt = Path(args.out).resolve() if args.out else root / TARGET_DIR / TARGET_FILENAME
+    tgt_dir = tgt.parent
 
     rules = build_rules()
     tgt_dir.mkdir(parents=True, exist_ok=True)
@@ -187,8 +202,8 @@ def main():
     print(f"wrote {tgt}")
     print(
         "Register with the preset index via:\n"
-        f"  python3 scripts/utils/register-preset.py {tgt.relative_to(root)} "
-        f"--game-id jta_mixed_test --game-name 'JtA (mixed substrate test)'"
+        f"  python3 scripts/utils/register-preset.py {TARGET_DIR}/{TARGET_FILENAME} "
+        f"--game-id jta_mixed_test --game-name '{GAME_NAME}'"
     )
     return 0
 

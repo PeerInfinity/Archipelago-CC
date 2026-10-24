@@ -1,0 +1,21 @@
+PASS: drill-l28-pair: the model (key ON) replays the tape to its end
+PASS: drill-l28-pair: the game reproduces the model at 0 px (player, drills, chasers) on all 60 sampled tick(s)
+      drill-l28-pair: the game's hits land at [t17, t37]; model drill events: 1:drill@128,96:hop 1:drill@80,96:hop 16:drill@128,96:hop 16:drill@80,96:hop 58:drill@128,96:hop 58:drill@80,96:hop
+recorded frontend/modules/seedlingDemo/fixtures/drill-witness/drill-l28-pair.json — 60 tick(s)
+PASS: drill-l28-cliffside: the model (key ON) replays the tape to its end
+PASS: drill-l28-cliffside: the game reproduces the model at 0 px (player, drills, chasers) on all 264 sampled tick(s)
+      drill-l28-cliffside: the game's hits land at [t244]; model drill events: 
+recorded frontend/modules/seedlingDemo/fixtures/drill-witness/drill-l28-cliffside.json — 264 tick(s)
+PASS: drill-l91-bob: the model (key ON) replays the tape to its end
+PASS: drill-l91-bob: the game reproduces the model at 0 px (player, drills, chasers) on all 78 sampled tick(s)
+      drill-l91-bob: the game's hits land at [t13, t79]; model drill events: 19:drill@64,80:hop 34:drill@64,80:hop
+recorded frontend/modules/seedlingDemo/fixtures/drill-witness/drill-l91-bob.json — 78 tick(s)
+PASS: drill-l28-spear-l25: the model (key ON) replays the tape to its end
+PASS: drill-l28-spear-l25: the game reproduces the model at 0 px (player, drills, chasers) on all 73 sampled tick(s)
+      drill-l28-spear-l25: the game's hits land at [t59]; model drill events: 41:drill@80,96:hop 43:drill@128,96:hop 56:drill@80,96:hop 58:drill@128,96:hop 69:drill@128,96:struck 71:drill@80,96:hop 71:drill@80,96:struck
+recorded frontend/modules/seedlingDemo/fixtures/drill-witness/drill-l28-spear-l25.json — 73 tick(s)
+ALL CHECKS PASSED
+PASS: drill-l91-bob-wall: the model (key ON) replays the tape to its end
+PASS: drill-l91-bob-wall: the game reproduces the model at 0 px (player, drills, chasers) on all 70 sampled tick(s)
+recorded frontend/modules/seedlingDemo/fixtures/drill-witness/drill-l91-bob-wall.json — 70 tick(s)
+ALL CHECKS PASSED

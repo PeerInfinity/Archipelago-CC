@@ -4,10 +4,12 @@ This document provides a high-level overview of the technical architecture for t
 
 ## Core Components
 
-The project consists of two primary, distinct components:
+The project consists of two primary, distinct components, joined by one JSON format (`rules.json`):
 
 1.  **Backend Exporter (Python):** A command-line tool that analyzes the game logic within the main Archipelago Python codebase and exports it to a structured JSON format.
 2.  **Frontend Web Client (JavaScript):** A single-page web application that consumes the exported JSON to provide a powerful, modular interface for game tracking and other utilities.
+
+The frontend also contains the **procedural-generation system**, which generates new worlds in the browser and compiles them to the same `rules.json` format, so everything below applies to generated worlds too. It has its own architecture document: [Procedural Generation Architecture](./procgen/architecture.md).
 
 ```
 ┌────────────────────────┐      ┌─────────────┐      ┌─────────────────────────┐

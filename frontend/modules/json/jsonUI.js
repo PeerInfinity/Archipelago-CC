@@ -1,6 +1,7 @@
 import { getModuleEventBus } from './index.js';
 // Corrected import for settingsManager (default import)
 import settingsManager from '../../app/core/settingsManager.js';
+import { LAST_WORLD_KEY } from '../stateManager/worldPersistence.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyLoadedData, transformLayoutConfigSizes, extractDirectLayoutConfig } from '../../utils/dataApplicator.js';
@@ -750,7 +751,7 @@ export class JsonUI {
 
       // Show success alert
       alert(
-        `Data for mode '${modeName}' loaded from Editor text and applied where possible. Reload if prompted or if layout/module changes were included. This data has NOT been saved to LocalStorage yet.`
+        `Data for mode '${modeName}' loaded from Editor text and applied where possible. Reload if prompted or if layout/module changes were included. ${this._appliedDataPersistenceNote(loadedData)}`
       );
     } catch (error) {
       log('error', '[JsonUI] Error parsing JSON from Editor text:', error);
@@ -868,7 +869,7 @@ export class JsonUI {
 
         // Show alert (might need adjustment based on requiresReload checks)
         alert(
-          `Data for mode '${modeName}' loaded from file and applied where possible. Reload if prompted or if layout/module changes were included. This data has NOT been saved to LocalStorage yet.`
+          `Data for mode '${modeName}' loaded from file and applied where possible. Reload if prompted or if layout/module changes were included. ${this._appliedDataPersistenceNote(loadedData)}`
         );
         // this._populateKnownModesList(); // Refresh after loading and saving from file - No longer saving, so no need to refresh this way.
         // } catch (storageError) {
@@ -895,6 +896,20 @@ export class JsonUI {
 
     // Reset file input to allow loading the same file again
     event.target.value = null;
+  }
+
+  /**
+   * What an Import / Load-from-file did to the browser's saved data: a
+   * `userSettings` section REPLACES the current mode's saved settings
+   * (dataApplicator → settingsManager.updateSettings with replaceAll);
+   * every other section is applied to this session only.
+   */
+  _appliedDataPersistenceNote(loadedData) {
+    const others = 'The other sections have NOT been saved to LocalStorage — use Save to LocalStorage to keep them.';
+    if (loadedData && loadedData.userSettings) {
+      return `Its settings replaced the saved settings of the current mode ('${settingsManager.getCurrentMode()}'). ${others}`;
+    }
+    return `This data has NOT been saved to LocalStorage — use Save to LocalStorage to keep it.`;
   }
 
   async _handleSaveToLocalStorage() {
@@ -938,7 +953,7 @@ export class JsonUI {
       localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
 
       alert(
-        `Configuration for mode '${modeName}' saved to LocalStorage, and will be loaded from LocalStorage next time the page is loaded.`
+        `Configuration for mode '${modeName}' saved to LocalStorage and set as the last active mode. With Auto-load Mode on (the default), opening the app with a plain address (no ?mode=) loads it; ?mode=${modeName} loads it at any time.`
       );
       this._populateKnownModesList(); // Refresh after saving
     } catch (error) {
@@ -958,7 +973,16 @@ export class JsonUI {
       try {
         localStorage.removeItem('archipelagoToolSuite_lastActiveMode');
         localStorage.removeItem('archipelagoToolSuite_modeData_default');
-        log('info', 
+        // Also drop the persisted last-loaded world (sessionStorage) — this
+        // navigates in the same tab, so it would otherwise survive the reset.
+        try {
+          if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.removeItem(LAST_WORLD_KEY);
+          }
+        } catch {
+          /* ignore */
+        }
+        log('info',
           '[JsonUI] Defaults reset: Cleared last active mode and "default" mode data from LocalStorage.'
         );
         // Reload the page to the base URL, removing any query parameters like ?mode=
@@ -1086,7 +1110,7 @@ export class JsonUI {
     try {
       localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
       alert(
-        `Mode "${modeName}" has been set as the active mode. Please RELOAD the page to apply this mode.`
+        `Mode "${modeName}" is now the last active mode. With Auto-load Mode on (the default), open the app with a plain address (no ?mode=) to switch to it, or open ?mode=${modeName}.`
       );
     } catch (error) {
       log('error', 

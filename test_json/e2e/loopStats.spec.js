@@ -1,9 +1,21 @@
 import { test, expect } from '@playwright/test';
+import { TEST_FRONTEND_URL } from '../../scripts/test/testServer.js';
+// ⚖ 2026-09-06 — the base-cost table is the exported default, never a typed
+// number. This spec is NOT selected by `npm test` (run-tests.js hardcodes
+// app.spec.js) but a bare `npx playwright test` collects it, because
+// playwright.config.js sets testDir: './test_json/e2e'. It was STALE on both
+// counts until L2: it asserted key names the analyzer has never had
+// (`explore`/`checkLocation`/`moveToRegion` vs
+// `customAction`/`locationCheck`/`regionMove`) against values 50/100/10.
+import {
+  DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
+} from '../../frontend/modules/shared/procgen/loopCostGenerator.js';
 
 test.describe('LoopStats Module Tests', () => {
   test('loopStats module loads correctly and exposes public API', async ({ page }) => {
     // Navigate to the app and wait for network idle
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     // Wait for centralRegistry to be available (app initialized)
     await page.waitForFunction(() => {
@@ -42,7 +54,7 @@ test.describe('LoopStats Module Tests', () => {
   });
 
   test('queueAnalyzer has correct base costs', async ({ page }) => {
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     await page.waitForFunction(() => {
       return window.centralRegistry && typeof window.centralRegistry.getPublicFunction === 'function';
@@ -64,13 +76,13 @@ test.describe('LoopStats Module Tests', () => {
 
     expect(analyzerState).not.toBeNull();
     expect(analyzerState.hasAnalyze).toBe(true);
-    expect(analyzerState.baseCosts.explore).toBe(50);
-    expect(analyzerState.baseCosts.checkLocation).toBe(100);
-    expect(analyzerState.baseCosts.moveToRegion).toBe(10);
+    expect(analyzerState.baseCosts.customAction).toBe(DEFAULT_REGION_COST);
+    expect(analyzerState.baseCosts.locationCheck).toBe(DEFAULT_LOCATION_COST);
+    expect(analyzerState.baseCosts.regionMove).toBe(DEFAULT_REGION_COST);
   });
 
   test('analyzeQueue returns valid analysis for mock queue', async ({ page }) => {
-    await page.goto('http://localhost:8000/frontend/', { waitUntil: 'networkidle', timeout: 60000 });
+    await page.goto(TEST_FRONTEND_URL, { waitUntil: 'networkidle', timeout: 60000 });
 
     await page.waitForFunction(() => {
       return window.centralRegistry && typeof window.centralRegistry.getPublicFunction === 'function';

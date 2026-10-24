@@ -1,0 +1,318 @@
+/**
+ * ⛓⛓⛓ R9 SLICE 12e⁗ item (iii) — **THE AUTO-ADVANCE COUNT IS THE HELP
+ * MODEL'S, NOT THE PICKUP COUNT'S.**
+ *
+ * `check-seedling-bot-differential.mjs` derived its expectation as
+ * `wantAutoAdvance = swordPickups`. The third re-record run made that premise
+ * come due (kickoff §37.7): the re-recorded 78-tick `r8-solve-10` collects its
+ * sword — the inventory mirror matches, the ceremony is priced, the dead-frame
+ * budget balances — and the GAME's `saw_auto_advance` is **0** against the
+ * check's 1.
+ *
+ * **THE MECHANISM, ESTABLISHED FROM THE SOURCE RATHER THAN READ OFF A
+ * NUMBER** (§37.7 left exactly one step open and this is it):
+ *
+ *   - `Main.as:67` calls `Bot.update()` **above** `super.update()`, and
+ *     `super.update()` is `net/flashpunk/Engine.as:69-77` —
+ *     `FP._world.update()` (every entity, `Help.update()` among them) and only
+ *     then `updateLists()`. So `Bot.update()` runs BEFORE every entity update
+ *     on the frame, unconditionally. `Bot` is not an Entity
+ *     (`public static function update()`), so entity-list position — the thing
+ *     §37.7 said it could not establish — cannot enter the argument at all.
+ *   - `Game.freezeObjects = true` is set INSIDE `Help.update()`
+ *     (`NPCs/Help.as:100`), never at construction.
+ *   - `Help.as:92-103` sets `remove` on an `Input.pressed` EDGE of X or C and
+ *     `:107-110` lowers the freeze IN THE SAME UPDATE for `frame != 1`.
+ *   - `autoAdvance()` is reached ONLY from `Bot.as:2877-2882`'s dead-frame
+ *     branch, and `Bot.as:3151` counts the arrival there.
+ *
+ * ⇒ **a Help the TAPE dismisses on its own first update never produces a frame
+ * on which `autoAdvance()` runs.** The counter was right; the derivation was
+ * stale. `dialogue.js`'s `autoAdvanceArrivals` reads the model's own ledger,
+ * whose `drainPickupHelp` already carries the `Input.pressed` predicate.
+ *
+ * ⚠ THE DIFFERENTIAL IS A `--win` GPU GATE AND CANNOT BE RUN HERE. So the
+ * inertness claim this file makes is the one that matters and the one that is
+ * checkable offline: **over every committed tape the new derivation equals the
+ * old one**, so no committed row's verdict can move. What separates them is
+ * exactly the walk that is not committed — built here from a committed tape.
+ * [[feedback_fixture_must_discriminate_two_builds]]
+ */
+
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
+import { HELP_DISMISS_KEYS, autoAdvanceArrivals } from './dialogue.js';
+import { fixtureNames, loadTape } from './fixtures/index.js';
+import { atlasLevelSource } from './levelSource.js';
+import { runTape } from './tapeRunner.js';
+
+const levelSource = atlasLevelSource();
+const HERE = dirname(fileURLToPath(import.meta.url));
+/** The GAME's dead-frame curve for both `r8-solve-10` walks — see §36. */
+const HELP_FRAME_ORACLE = JSON.parse(readFileSync(
+    join(HERE, 'fixtures', 'r8-solve-10-help-frame-oracle.json'), 'utf8'));
+const swordPickupsOf = (run) =>
+    (run.collected ?? []).filter((c) => c.item === 'sword').length;
+
+/**
+ * ⚠ ONE SWEEP, SHARED. Replaying the roster is ~2 minutes; the first draft of
+ * this file ran it once per row and both rows died on vitest's 60 s default.
+ * The sweep is memoised and the rows read it, so the file pays for the roster
+ * exactly once. [[feedback_bounded_sweep_must_name_what_it_bounded]]
+ */
+let ROSTER = null;
+const rosterSweep = () => {
+    if (ROSTER === null) {
+        ROSTER = fixtureNames().map((name) => {
+            const run = runTape(loadTape(name), { levelSource });
+            return {
+                name,
+                swordPickups: swordPickupsOf(run),
+                arrivals: autoAdvanceArrivals(run.deadFrameSpans),
+            };
+        });
+    }
+    return ROSTER;
+};
+/** The roster is 149 tapes of real replay; give the sweep room. */
+const SWEEP_TIMEOUT_MS = 600000;
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′'s FOURTH RUN LANDED THE SERIES AND MADE THIS BLOCK'S
+ * INERTNESS CLAIM FALSE — IN THE DIRECTION THE CHECK WAS CORRECTED FOR.
+ *
+ * The block used to read *"the corrected derivation cannot move the `--win`
+ * differential"*, on the ground that the two derivations agreed over all 149
+ * committed tapes. That ground was the OLD roster. The whole content of Class
+ * B (kickoff §37.7) is that the re-recorded 78-tick `r8-solve-10` collects its
+ * sword and earns NO auto-advance arrival, and the series committed that walk
+ * — so the two derivations now part on it, by design, and the corrected one is
+ * the one that matches the GAME's `saw_auto_advance = 0`.
+ *
+ * ⇒ the claim is restated as what it always should have been: the derivations
+ * agree EXCEPT where a walk dismisses its own Help, the exception set is
+ * NAMED, and 148 of 149 are still inert.
+ */
+describe('the corrected derivation moves the differential on exactly one tape, toward the GAME', () => {
+    it('⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it', () => {
+        const rows = rosterSweep();
+        const parted = rows.filter((r) => r.swordPickups !== r.arrivals);
+        // ⛔ NAMED, NOT COUNTED, and the name carries its provenance: the third
+        // re-record run drove this walk and the GAME reported
+        // `saw_auto_advance = 0` against the old derivation's 1 (§37.7). A
+        // SECOND tape appearing here is a finding, in seconds, instead of a
+        // surprise in a GPU sweep — which is exactly what this row did when the
+        // series landed.
+        expect(parted.map((r) => `${r.name}: ${r.swordPickups} → ${r.arrivals}`))
+            .toEqual(['r8-solve-10: 1 → 0']);
+        // …and the REASON is read off the ledger rather than asserted: a walk
+        // that dismisses the Help on its own first update collects its sword
+        // and carries no `help` span at all.
+        for (const r of parted) {
+            const run = runTape(loadTape(r.name), { levelSource });
+            expect(run.deadFrameSpans.filter((x) => x.kind === 'help'), r.name).toEqual([]);
+            expect(r.swordPickups, r.name).toBeGreaterThan(0);
+        }
+        // ⛓ EVERY OTHER TAPE IS STILL INERT — no other committed row's verdict
+        //   can move under the corrected derivation.
+        // ⛓ R9 slice L15: 149 → 150 with `r9-solve-15`, and it is inert too.
+        // ⛓ R9 slice L16: 150 → 151 with `r9-solve-16` — inert too.
+        // ⛓ R9 slice L18b: 151 → 154 with `r9-solve-18`/`-19`/`-20` — inert too.
+        // ⛓ swim U5/U7: 154 → 157 with `swim-u5-bobboss-encounter`, `u7-puncher-punch`, `u7-puncher-kill` — inert too.
+        // ⛓ swim U9 + U10: 157 → 162 with the three `u9-shield-*` witnesses and the two `u10-puncher-dwell*` — inert too.
+        // ⛓ swim U11: 166 with the two `u11-facing-*` and the two `u11-dark-shield-*`
+        // witnesses — inert too.
+        // ⛓ swim U12: 168 with `u12-pull-carry` and `u12-pull-cross` — inert too.
+        // ⛓ swim R1: 169 with `r1-dark-suit-bob`, 171 with `r1-dark-suit-kill` and
+        // `r1-dark-shield-kill`, 174 with `r1-dark-shield-spinner`,
+        // `r1-dark-suit-spinner` and `r1-dark-shield-bobboss` — inert too.
+        // ⛓ swim U13: 169 with `r9-solve-13-v2` — inert too.
+        // ⛓ swim R1 + U13 (merged): 175 — the six R1 witnesses and `r9-solve-13-v2`, all inert.
+        // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
+        // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
+        // ⛓ swim R3: 179 (+ `r3-bobboss-death`, inert).
+        // ⛓ swim U14: 177 with `u14-moonrock-beam` and `u14-moonrock-set` — inert too;
+        // 181 with the four campaign segments `r9-solve-0-v3`, `-12`, `-21`, `-22`.
+        // ⛓ swim R3 + U14 (merged): 185 — R3's four death witnesses + U14's two moonrock witnesses and four segments.
+        // ⛓ swim U15: 187 with `u15-turret-spit` and `u15-turret-shield` — inert too.
+        // ⛓ swim U15: 191 with route steps 27–30 (`r9-solve-29`, `-31`, `-30`, `-32`).
+        // ⛓ swim R2: 189 — D1's two wallflyer witnesses, D3's two-teleporter and terrain-kill-lock witnesses.
+        // ⛓ swim U15 + R2 (merged): 195 — U15's 2 witnesses + 4 segments, R2's 4 witnesses.
+        // ⛓ swim R4: 196 — D2's `r4-iceturret-bobs`.
+        // ⛓ fidelity F1: 198 — D1c's `f1-l5-lock-removal` and D2's `f1-l5-open-lock-bait`, inert.
+        // ⛓ fidelity F1c: 200 — D1's `f1c-l18-phase42` and D2's `f1c-l18-lock-removal`, inert.
+        // ⛓ Seedling fidelity F4: 201 — D1's `f4-l8-sandtraps`, inert.
+        // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`, inert.
+        // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`, inert.
+        // ⛓ fidelity BURN: 208 — `burn-l24-reach-exit`, `burn-l44-reach-exit`, inert.
+        // ⛓ fidelity L14: 209 — `l14-swordless-detour`, inert.
+        // ⛓ fidelity CANCROSS: 210 — `cancross-l16-sword-none`, inert.
+        // ⛓ fidelity DASH: 211 — `dash-l16-sword-all`, inert.
+        // ⛓ fidelity RETURN: 215 — `return-l15-reentry`, `return-l15-walkin`, `return-l15-reentry-unclear`, `return-l15-conch`, inert.
+        // ⛓ fidelity ROBUST: 217 — `robust-l16-sword-idle1`, `robust-l16-l18-sword-conch`, inert.
+        // ⛓ fidelity WATCHER: 221 — `watcher-l37-reach-l38`, `watcher-l37-reach-l44`, `watcher-l37-silent-lean`, `watcher-l114-silent`, inert.
+        // ⛓ fidelity WATCHER: 222 — `watcher-l114-talk`, inert.
+        // ⛓ fidelity SLOTS: 227 — `slots-l24-fire-first`, `slots-l24-burn-fire-first`, `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost`, inert.
+        // ⛓ fidelity AXE: 231 — `axe-l48-reach-l49`, `axe-l61-reach-l62`, `axe-l61-reach-l63`, `axe-l71-reach-l76`, inert.
+        // ⛓ fidelity PROXIMITY: +5 (236 with AXE's four) — `prox-l38-chest`, `prox-l38-reach-l39`, `prox-l29-key-return`, `prox-l40-turret-volley`, `prox-l40-turret-contact`, inert.
+        // ⛓ fidelity FRONTIER3: +2 (238 with AXE + PROXIMITY) — `frontier3-l62-door-niche`, `frontier3-l87-pocket`, inert.
+        // ⛓ fidelity STANCE: +5 (243) — `stance-l46-chest`, `stance-l48-chest`, `stance-l48-keylock-open`, `stance-l48-keylock-south`, `stance-l48-keylock-north`, inert.
+        // ⛓ fidelity LADDER2: +2 (245) — `ladder2-l59-grenade`, `ladder2-l104-beam`, inert.
+        // ⛓ fidelity BOBSOLDIER: +3 (248) — `bobsoldier-sword`, `bobsoldier-kill`, `bobsoldier-corpse`, inert.
+        // ⛓ hammer-phase A: +2 (250) — `hammer-a-l18-escape21`, `hammer-a-l18-escape15`, inert.
+        // ⛓ fidelity GHOSTSWORD: +3 (253) — the three ghost-sword witnesses (no dialogue on any), inert.
+        // ⛓ fidelity WALLFLYER: +3 (256) — `wallflyer-kill`, `wallflyer-kill-flight`, `wallflyer-shield-bump`, inert.
+        // ⛓ fidelity CRUSHER: +1 (257) — `crusher-l42-round-trip`, inert.
+        // ⛓ hammer-phase B1: +1 (258) — `hammer-b1-l18-approach40`, inert.
+        // ⛓ hammer-phase B2: +1 (259) — `hammer-b2-l18-fight40`, inert.
+        // ⛓ fidelity GHOSTMOTION: +2 (261) — `ghostmotion-l102-axis`, `ghostmotion-l102-diag` (no dialogue), inert.
+        // ⛓ fidelity BOBSOLDIER2: +2 (263) — `bobsoldier2-l30-dash-stance`, `bobsoldier2-l30-torch`, inert.
+        // ⛓ fidelity ENCOUNTERS D2: +2 (265) — `enc-l32-fallen-door`, `enc-l32-fire-return`, inert; D3: +1 (266) — `enc-l12-witch`.
+        // ⛓ fidelity PUSHBLOCK: +3 (269) — `pushblock-l65-reach-l63`, `pushblock-l65-reach-l68`, `pushblock-l65-sword-press`.
+        // ⛓ fidelity ENCOUNTERS2 D2: +1 (270) — `enc-l32-live-arrival`, inert.
+        // ⛓ fidelity L12KEYLINE: +1 (271) — `l12keyline-134-round`, inert.
+        // ⛓ fidelity L30KEYLOCK: +3 (274) — `l30keylock-pit224-before`, `l30keylock-pit224`, `l30keylock-pit240`, inert.
+        // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner` (no dialogue), inert.
+        // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0` (no dialogue), inert.
+        // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control` (no dialogue), inert.
+        // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32` (the Watcher's dialogue is paged, not auto-advanced), inert.
+        // ⛓ fidelity APFLIP D3/D6: −1 +8 (289) — `enc-l32-fire-return` retired (replaced by `apb-l32-both-reported`);
+        // `apb-l32-both-reported`, `apb-l32-fresh-fire-held`, `apb-l32-fresh-no-fire`, `apb-l32-killed-drop-held`,
+        // `apb-l12-witch-slot-held`, `apb-l12-witch-server-sword`, `apb-l12-witch-reported`, `apb-l43-totem-no-parts`,
+        // inert (the three Witch tapes' sword is no auto-advance arrival, as `enc-l12-witch`'s).
+        expect(rows).toHaveLength(289);
+        expect(rows.length - parted.length).toBe(288);
+    }, SWEEP_TIMEOUT_MS);
+
+    it('⛓ and it is not vacuous — the roster really does collect swords', () => {
+        const withSword = rosterSweep().filter((r) => r.swordPickups > 0);
+        expect(withSword.length).toBeGreaterThan(0);
+        expect(withSword.map((r) => r.name)).toContain('r8-solve-10');
+    }, SWEEP_TIMEOUT_MS);
+});
+
+describe('what SEPARATES them is a Help the tape dismisses itself', () => {
+    /**
+     * ⛔ THE ROLES TRADED PLACES WHEN THE SERIES LANDED. This block used to
+     * open *"the 78-tick walk lives only on the parked series, so the
+     * discriminating partner is DERIVED"*. The committed `r8-solve-10` IS that
+     * walk now, so the COMMITTED tape is the discriminating half and the
+     * not-dismissed half is the one that has to be built — by REMOVING the
+     * dismiss press the walk holds on the Help's tick, which is the exact
+     * inverse of what this block used to do. The tick is still taken from the
+     * model's own span rather than typed. [[feedback_minimize_hardcoding]]
+     */
+    const committed = () => loadTape('r8-solve-10');
+    const helpTickOf = (run) => run.deadFrameSpans.find((s) => s.kind === 'help').t;
+    /**
+     * The synthetic NOT-dismissed partner, with its own non-vacuity check.
+     *
+     * ⛔ WHICH press to remove is taken from the GAME'S OWN CURVE, not
+     * searched for: `r8-solve-10-help-frame-oracle.json` is two read-only
+     * drives of the real Flash build (kickoff §36) and names `helpDeadTicks`
+     * per walk. A search was tried first and is NOT unique — FOUR of the
+     * walk's seven `primary` presses put a `help` span back, because removing
+     * an earlier one re-times the ceremony's pages and moves the Help. The
+     * oracle row is selected by the tape's own length and REFUSES BY NAME if
+     * the game has never been driven at that length, so a later licence that
+     * moves this tape stops the row rather than quietly re-aiming it.
+     */
+    const notDismissed = () => {
+        const tape = committed();
+        const walk = Object.values(HELP_FRAME_ORACLE.walks)
+            .find((w) => w.tick_count === tape.tick_count);
+        expect(walk, `r8-solve-10 is ${tape.tick_count} ticks and the game oracle `
+            + `${JSON.stringify(Object.values(HELP_FRAME_ORACLE.walks)
+                .map((w) => w.tick_count))} has never been driven at that length`)
+            .toBeTruthy();
+        const base = { ...tape,
+            inputs: tape.inputs.filter((r) => !(HELP_DISMISS_KEYS.includes(r.key)
+                && walk.helpDeadTicks.some((t) => r.from <= t && t < r.to))) };
+        expect(base.inputs.length, 'a dismiss press must have been removed')
+            .toBeLessThan(tape.inputs.length);
+        const control = runTape(base, { levelSource });
+        const span = control.deadFrameSpans.find((s) => s.kind === 'help');
+        expect(span, 'removing the press must put the Help frame back').toBeTruthy();
+        expect(span.t).toBe(walk.helpDeadTicks[0]);
+        return { base, control };
+    };
+
+    it('⛓⛓ the COMMITTED walk earns NONE — and that is the GAME\'s number', () => {
+        const run = runTape(committed(), { levelSource });
+        // The sword IS collected — this is not a route that skipped the
+        // pickup, which is the reading the old failure message offered and the
+        // one that would have sent 12e⁗ hunting the wrong thing.
+        expect(swordPickupsOf(run)).toBe(1);
+        expect(autoAdvanceArrivals(run.deadFrameSpans)).toBe(0);
+        // ⛔ AND THE OLD DERIVATION WOULD HAVE SAID 1 — the whole defect, in
+        //   one line, now standing on the committed roster instead of on a
+        //   tape built to show it.
+        expect(swordPickupsOf(run)).not.toBe(autoAdvanceArrivals(run.deadFrameSpans));
+    });
+
+    it('⛓⛓ …and NOT dismissing the Help earns ONE — the positive control', () => {
+        const { control } = notDismissed();
+        expect(swordPickupsOf(control)).toBe(1);
+        expect(autoAdvanceArrivals(control.deadFrameSpans)).toBe(1);
+    });
+
+    it('⛓⛓ dismissing it again, on its own tick, earns NONE — either key', () => {
+        const { base, control } = notDismissed();
+        const helpTick = helpTickOf(control);
+        for (const key of HELP_DISMISS_KEYS) {
+            const dismissed = runTape({ ...base,
+                inputs: [...base.inputs, { key, from: helpTick, to: helpTick + 1 }],
+            }, { levelSource });
+            expect(swordPickupsOf(dismissed), key).toBe(1);
+            expect(autoAdvanceArrivals(dismissed.deadFrameSpans), key).toBe(0);
+        }
+    });
+
+    it('⛔ the NEGATIVE control: the same press ONE TICK EARLIER changes nothing', () => {
+        // The tick `Sword.removed()` fires, which two sessions in a row read
+        // instead of the tick the Help is up (`FP.world.add` queues).
+        // [[feedback_classification_read_off_the_wrong_tick]]
+        const { base, control } = notDismissed();
+        const helpTick = helpTickOf(control);
+        const early = runTape({ ...base,
+            inputs: [...base.inputs,
+                { key: 'secondary', from: helpTick - 1, to: helpTick }],
+        }, { levelSource });
+        expect(autoAdvanceArrivals(early.deadFrameSpans)).toBe(1);
+    });
+
+    it('⛓ a key already HELD is not a PRESS, so the arrival still counts', () => {
+        // `Help.as:92` reads `Input.pressed` and FlashPunk's `onKeyDown`
+        // records a press only `if (!_key[code])`. The probe key is
+        // `secondary`: X is also the dialogue key and holding it across the
+        // ceremony would move the Help's tick, so the fixture would be
+        // measuring a different walk.
+        const { base, control } = notDismissed();
+        const helpTick = helpTickOf(control);
+        const held = runTape({ ...base,
+            inputs: [...base.inputs,
+                { key: 'secondary', from: helpTick - 4, to: helpTick + 2 }],
+        }, { levelSource });
+        expect(autoAdvanceArrivals(held.deadFrameSpans)).toBe(1);
+    });
+});
+
+describe('the derivation is a READ of the ledger, not a second spelling', () => {
+    it('⛓ it counts `help` spans and NOTHING else the game freezes for', () => {
+        // `Bot`'s predicate is `Game.talking || helpUp`, so the seal ceremony
+        // and `FallRock` make dead frames and are correctly NOT counted; the
+        // dead-frame budget is the instrument that sees those.
+        expect(autoAdvanceArrivals([
+            { kind: 'ceremony', frames: 181 },
+            { kind: 'freeze', frames: 197 },
+            { kind: 'load', frames: 20 },
+        ])).toBe(0);
+        expect(autoAdvanceArrivals([{ kind: 'help', frames: 1 }])).toBe(1);
+        expect(autoAdvanceArrivals([])).toBe(0);
+        expect(autoAdvanceArrivals(undefined)).toBe(0);
+    });
+});

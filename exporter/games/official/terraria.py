@@ -202,7 +202,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             elif fn_name in ("calamity", "grindy", "getfixedboi"):
                 # Map function names to their corresponding setting names
                 setting_map = {"grindy": "grindy_achievements"}
-                rule = {'type': 'setting_value', 'setting': setting_map.get(fn_name, fn_name)}
+                rule = {'type': 'option_value', 'option': setting_map.get(fn_name, fn_name)}
             else:
                 logger.error(f"Unknown function: {fn_name}")
                 rule = {'type': 'constant', 'value': False}
@@ -332,7 +332,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                                     'target': {'type': 'name', 'name': 'armor'},
                                     'iterator': {
                                         'type': 'method_call',
-                                        'object': {'type': 'setting_value', 'setting': 'armor_minions'},
+                                        'object': {'type': 'world_attribute', 'attribute': 'armor_minions'},
                                         'method': 'keys',
                                         'args': []
                                     }
@@ -358,7 +358,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                                         },
                                         'iterator': {
                                             'type': 'method_call',
-                                            'object': {'type': 'setting_value', 'setting': 'armor_minions'},
+                                            'object': {'type': 'world_attribute', 'attribute': 'armor_minions'},
                                             'method': 'items',
                                             'args': []
                                         },
@@ -388,7 +388,7 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                                 },
                                 'iterator': {
                                     'type': 'method_call',
-                                    'object': {'type': 'setting_value', 'setting': 'accessory_minions'},
+                                    'object': {'type': 'world_attribute', 'attribute': 'accessory_minions'},
                                     'method': 'items',
                                     'args': []
                                 },

@@ -7,6 +7,8 @@
 import eventBus from '../app/core/eventBus.js';
 import settingsManager from '../app/core/settingsManager.js';
 import { centralRegistry } from '../app/core/centralRegistry.js';
+import panelManager, { LAYOUT_REPLACED_EVENT } from '../app/core/panelManager.js';
+import { openComponentTypes } from '../app/layout/moduleLayoutSync.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -47,7 +49,9 @@ export async function applyLoadedData(loadedData, sourceName) {
     } else if (dataKey === 'userSettings' && loadedData.userSettings) {
       log('info', 'Found userSettings, applying settings...');
       try {
-        await settingsManager.updateSettings(loadedData.userSettings);
+        // A chosen file is a whole settings document: it REPLACES the stored
+        // userSettings rather than being saved key by key.
+        await settingsManager.updateSettings(loadedData.userSettings, { replaceAll: true });
         log('info', 'Settings applied successfully');
       } catch (e) {
         log('error', 'Error applying settings:', e);
@@ -161,8 +165,11 @@ export async function applyLayoutConfig(layoutConfig) {
   log('info', 'Transformed layout config sizes from numbers to strings');
 
   if (typeof goldenLayoutInstance.loadLayout === 'function') {
+    // A layout SWAP, not a close: the items loadLayout destroys must not
+    // disable their modules (trap 1424). States are reconciled below.
+    const previousComponentTypes = openComponentTypes(goldenLayoutInstance);
     try {
-      await goldenLayoutInstance.loadLayout(transformedConfig);
+      panelManager.withLayoutSwap(() => goldenLayoutInstance.loadLayout(transformedConfig));
       log('info', 'Layout loaded successfully using loadLayout()');
 
       // Re-publish the initialization event so newly created panels populate
@@ -171,12 +178,19 @@ export async function applyLayoutConfig(layoutConfig) {
       // Deferred by a frame so Golden Layout finishes its layout pass and
       // panel containers have proper dimensions before panels try to render.
       await new Promise(resolve => requestAnimationFrame(resolve));
+      // Module states first, so panels populating on the event below read
+      // states that agree with the layout.
+      eventBus.publish(LAYOUT_REPLACED_EVENT, { previousComponentTypes }, 'core');
       log('info', 'Re-publishing app:readyForUiDataLoad for new panels');
       eventBus.publish('app:readyForUiDataLoad', {
         getModuleManager: () => window.moduleManagerApi,
       }, 'core');
     } catch (e) {
       log('error', 'Error calling loadLayout():', e);
+      // A load that throws part-way has already destroyed the old layout
+      // (measured: a component type with no factory leaves 0 tabs), so the
+      // states still have to follow what is left.
+      eventBus.publish(LAYOUT_REPLACED_EVENT, { previousComponentTypes }, 'core');
       throw new Error(`Failed to load layout: ${e.message}`);
     }
   } else {

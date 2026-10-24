@@ -4,9 +4,8 @@
  * Both the build-time solver (`canJump` sampling `step`) and the
  * runtime renderer MUST decide "does this platform/spring/jetpack
  * exist under this ability set" through these functions and nothing
- * else — divergence here is exactly the consistency bug the plan
- * warns about (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md,
- * "Design principles").
+ * else — divergence here is exactly the consistency bug this design
+ * guards against (docs/json/developer/procgen/bounce.md).
  *
  * Ability set shape: { left, right, springs, jetpacks, blue, brown }
  * booleans; a missing key means locked. Pickups and portals are never

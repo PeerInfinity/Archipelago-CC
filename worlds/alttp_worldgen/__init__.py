@@ -10,7 +10,7 @@ import types
 from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from rule_builder import RuleWorldMixin
+from ._ext import RuleWorldMixin
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
@@ -117,9 +117,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Small Key (Thieves Town)": 3,
     "Small Key (Tower of Hera)": 1,
     "Small Key (Turtle Rock)": 6,
-    "__max_boss_heart_container": 10,
-    "__max_heart_piece": 24,
-    "__max_progressive_bottle": 4,
 }
 
 # Locked placements - items that must be placed via place_locked_item

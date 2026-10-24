@@ -3,16 +3,21 @@
 import { JTAQueuePanelUI } from './jtaQueuePanelUI.js';
 import { JTAActionsPanelUI } from './jtaActionsPanelUI.js';
 import { getEngine, createQueueEntry } from '../jtaQueueEngine/index.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // --- Module Info ---
 export const moduleInfo = {
     name: 'jtaActionQueue',
-    title: 'JTA Action Queue',
+    title: 'JtA Action Queue',
     componentType: 'jtaActionQueue',
-    icon: '',
+    icon: '🗒️',
     column: 2,
-    description: 'Queue and execute actions for Journey to Ascension.',
+    category: 'Deprecated Panels',
+    description: 'Queue Journey to Ascension tasks zone by zone, run them with Start and Stop, and save queues as loadouts.',
     requires: ['jtaQueueEngine'],
+    storage: [
+        { key: 'jta-aq-collapsed', kind: STORAGE_KINDS.state, label: 'JtA Action Queue folded sections' },
+    ],
 };
 
 function log(level, message, ...data) {

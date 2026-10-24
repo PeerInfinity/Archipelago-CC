@@ -1,0 +1,40 @@
+{
+ "view": "/tmp/claude-0/-home-user-Archipelago-CC/d94320e1-5e4c-5e66-a3db-ceea11531b7e/scratchpad/base/frontend/modules/seedlingDemo/fixtures/hammer-p1-l40-south-boot.json",
+ "boot": {
+  "level": 40,
+  "x": 480,
+  "y": 896
+ },
+ "goals": "collect:880,816",
+ "env": {},
+ "verdict": "REFUSED",
+ "name": "SolverRefusal",
+ "message": "solverBot(c1) chest (880,816) stance: the combat ladder is EXHAUSTED. The corridor passes through danger at (744.3,723.2) — spinner:spinner@880,848 (a live Spinner BODY at (740.9,728.7) at horizon 460 — `Enemy.hitPlayer`'s 7x7 `collide(\"Player\", x, y)` at force 3) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 17 volume(s) forbidden — A* goal tile (55,52) in level 40 — for (888,834) — is not walkable: danger:bobsoldier@880,832 (a stepped bobsoldier at its LIVE position) at (868,822). The planner works in whole tiles, so both ends o\n  time: the aim is 406 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: spinner@880,848 is a Spinner: a billiard whose `v` reflects off walls and never turns toward the player, so there is no line to bend. That is a KILL question, and the kill is the player's own press.\n  kill: spinner@880,848 is a live Spinner whose removal the run OBSERVES (the `spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the run's `primary` slot fires `ghostsword` — the kill this rung derives is a SWORD press (`KILL_ARM_POLICY.Spinner`). The sword is a SUB-ORDER the macro layer owes.",
+ "refusalTicks": 0,
+ "keysMd5": "d751713988987e9331980363e24189ce",
+ "at": {
+  "level": 40,
+  "t": 0,
+  "x": 488,
+  "y": 904,
+  "vx": 0,
+  "vy": 0
+ },
+ "rows": [
+  {
+   "tick": 0,
+   "strategy": {
+    "verb": "kill",
+    "rung": "kill",
+    "climb": 1
+   }
+  }
+ ],
+ "ghost": true,
+ "primary": "ghostsword",
+ "landings": [],
+ "weapons": [],
+ "ms": 953,
+ "sites": {},
+ "msgMd5": "5d852d21857ba2cee052497114edb935"
+}

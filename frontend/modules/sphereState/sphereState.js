@@ -1,6 +1,7 @@
 // sphereState.js - Core sphere state management
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { resolvePlayerId } from '../../utils/playerInference.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -384,46 +385,85 @@ export class SphereState {
       log('info', `Setting current player ID to: ${newId}`);
       this.currentPlayerId = newId;
 
-      // If we have sphere data, re-filter it for the new player
-      if (this.sphereLogPath) {
-        // Trigger reload to re-filter for new player
-        this.loadSphereLog(this.sphereLogPath);
+      // Re-filter the log we already hold for the new player. This used to
+      // re-fetch this.sphereLogPath, which only works for logs loaded from
+      // the server: a manually uploaded log's "path" is just the file name,
+      // so the fetch 404'd and the sphere data was silently left stale.
+      if (this.rawData && this.rawData.length > 0) {
+        this._reparseForCurrentPlayer();
       }
     }
   }
 
   /**
-   * Get current player ID from static data
+   * Re-derive sphereData from the retained raw entries for the current
+   * player. Used when the player changes after the log was loaded — no
+   * re-fetch, and the header/metadata entries are preserved.
+   * @private
+   */
+  _reparseForCurrentPlayer() {
+    this.sphereData = [];
+
+    if (this.logFormat === 'incremental') {
+      this._parseIncrementalFormat(this.rawData);
+    } else {
+      this._parseVerboseFormat(this.rawData);
+    }
+
+    this.sphereData.sort(compareSphereIndices);
+    log('info',
+      `Re-filtered ${this.sphereData.length} sphere entries for player ${this.currentPlayerId}`
+    );
+
+    if (this.eventBus) {
+      this.eventBus.publish('sphereState:dataLoaded', {
+        sphereCount: this.sphereData.length,
+        filePath: this.sphereLogPath
+      });
+    }
+
+    this.updateCurrentSphere();
+  }
+
+  /**
+   * Get current player ID from static data.
+   *
+   * `playerId` is the id the state manager actually loaded (stamped in
+   * statePersistence's static-data payload), so it is authoritative and comes
+   * first. Everything after it is inference over the same maps the rules
+   * loader uses, and a guess is announced as one — this path used to test a
+   * `staticData.player` field that does not exist, then read `game_info` as
+   * if it were always a per-player slice (it is the unsliced multi-player map
+   * for a combined rules file), then take the first `player_names` key.
+   *
+   * @returns {string|null} The player ID, or null when nothing identifies one.
    */
   updatePlayerIdFromStaticData() {
     const staticData = stateManager.getStaticData();
 
-    // Try player field first
-    if (staticData?.player) {
-      this.setCurrentPlayerId(staticData.player);
-      return staticData.player;
+    if (staticData?.playerId) {
+      const playerId = String(staticData.playerId);
+      this.setCurrentPlayerId(playerId);
+      return playerId;
     }
 
-    // For multiworld: Try game_info field to identify this player's rules file
-    // In multiworld, game_info has a single key matching the player ID
-    if (staticData?.game_info) {
-      const gameInfoKeys = Object.keys(staticData.game_info);
-      if (gameInfoKeys.length === 1) {
-        const playerId = gameInfoKeys[0];
-        log('info', `Detected multiworld player ID from game_info: ${playerId}`);
-        this.setCurrentPlayerId(playerId);
-        return playerId;
-      }
+    const { playerId, players, reason } = resolvePlayerId(null, staticData || {});
+    if (playerId && reason !== 'noPlayers') {
+      log('info', `Detected player ID from static data (${reason}): ${playerId}`);
+      this.setCurrentPlayerId(playerId);
+      return playerId;
     }
 
-    // Try player_names field - get first player
-    if (staticData?.player_names) {
-      const playerIds = Object.keys(staticData.player_names);
-      if (playerIds.length > 0) {
-        const playerId = playerIds[0];
-        this.setCurrentPlayerId(playerId);
-        return playerId;
-      }
+    // Several players and nothing says which: keep the historical first-player
+    // guess so existing flows still load, but say that it is a guess.
+    if (players.length > 0) {
+      const guessed = players[0].id;
+      log('warn',
+        `Static data names ${players.length} players and none is identified as the ` +
+        `loaded one; guessing player ${guessed}. Load a per-player rules slice ` +
+        `(AP_<seed>_P<N>_rules.json) to make this unambiguous.`);
+      this.setCurrentPlayerId(guessed);
+      return guessed;
     }
 
     return null;

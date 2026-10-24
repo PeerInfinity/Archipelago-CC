@@ -1,0 +1,409 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 8,
+        "x": 144,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": "GAME-sourced (fidelity F4 D1): `sandtrap@96,80` takes its third arrow on t230, plays \"die\" for 19 updates and leaves the world on t248, and `removed()` writes the tag on the same tick (botMobiles + persistence_cleared, every tick)",
+            "at": 248
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": "GAME-sourced (fidelity F4 D1): `sandtrap@96,128` takes its third arrow on t630 and leaves the world on t648, with its tag",
+            "at": 648
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 618137757,
+        "split": true,
+        "cosmetic": 1678937722,
+        "fp": 1458777947
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 6667,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 2
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 758514215,
+            "split": true,
+            "cosmetic": 735784368,
+            "fp": 1404334271
+        },
+        "seam": {
+            "time": 6688
+        }
+    },
+    "hold": false,
+    "tick_count": 827,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "left",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "left",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 64
+        },
+        {
+            "key": "down",
+            "from": 96,
+            "to": 107
+        },
+        {
+            "key": "left",
+            "from": 96,
+            "to": 129
+        },
+        {
+            "key": "up",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "down",
+            "from": 108,
+            "to": 109
+        },
+        {
+            "key": "up",
+            "from": 109,
+            "to": 110
+        },
+        {
+            "key": "down",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "up",
+            "from": 114,
+            "to": 116
+        },
+        {
+            "key": "down",
+            "from": 118,
+            "to": 120
+        },
+        {
+            "key": "up",
+            "from": 123,
+            "to": 124
+        },
+        {
+            "key": "right",
+            "from": 129,
+            "to": 130
+        },
+        {
+            "key": "left",
+            "from": 130,
+            "to": 131
+        },
+        {
+            "key": "right",
+            "from": 134,
+            "to": 135
+        },
+        {
+            "key": "up",
+            "from": 139,
+            "to": 150
+        },
+        {
+            "key": "down",
+            "from": 150,
+            "to": 151
+        },
+        {
+            "key": "up",
+            "from": 151,
+            "to": 153
+        },
+        {
+            "key": "down",
+            "from": 154,
+            "to": 156
+        },
+        {
+            "key": "down",
+            "from": 249,
+            "to": 260
+        },
+        {
+            "key": "up",
+            "from": 260,
+            "to": 261
+        },
+        {
+            "key": "down",
+            "from": 261,
+            "to": 263
+        },
+        {
+            "key": "up",
+            "from": 264,
+            "to": 266
+        },
+        {
+            "key": "right",
+            "from": 279,
+            "to": 306
+        },
+        {
+            "key": "left",
+            "from": 307,
+            "to": 309
+        },
+        {
+            "key": "down",
+            "from": 313,
+            "to": 340
+        },
+        {
+            "key": "up",
+            "from": 342,
+            "to": 344
+        },
+        {
+            "key": "right",
+            "from": 348,
+            "to": 359
+        },
+        {
+            "key": "left",
+            "from": 359,
+            "to": 360
+        },
+        {
+            "key": "right",
+            "from": 360,
+            "to": 362
+        },
+        {
+            "key": "left",
+            "from": 364,
+            "to": 367
+        },
+        {
+            "key": "right",
+            "from": 368,
+            "to": 370
+        },
+        {
+            "key": "down",
+            "from": 374,
+            "to": 385
+        },
+        {
+            "key": "up",
+            "from": 385,
+            "to": 386
+        },
+        {
+            "key": "down",
+            "from": 386,
+            "to": 388
+        },
+        {
+            "key": "up",
+            "from": 390,
+            "to": 393
+        },
+        {
+            "key": "down",
+            "from": 394,
+            "to": 396
+        },
+        {
+            "key": "left",
+            "from": 400,
+            "to": 406
+        },
+        {
+            "key": "left",
+            "from": 449,
+            "to": 455
+        },
+        {
+            "key": "up",
+            "from": 449,
+            "to": 488
+        },
+        {
+            "key": "right",
+            "from": 455,
+            "to": 456
+        },
+        {
+            "key": "down",
+            "from": 488,
+            "to": 489
+        },
+        {
+            "key": "up",
+            "from": 489,
+            "to": 490
+        },
+        {
+            "key": "left",
+            "from": 494,
+            "to": 518
+        },
+        {
+            "key": "right",
+            "from": 518,
+            "to": 519
+        },
+        {
+            "key": "left",
+            "from": 519,
+            "to": 521
+        },
+        {
+            "key": "right",
+            "from": 523,
+            "to": 525
+        },
+        {
+            "key": "up",
+            "from": 529,
+            "to": 540
+        },
+        {
+            "key": "down",
+            "from": 540,
+            "to": 541
+        },
+        {
+            "key": "up",
+            "from": 541,
+            "to": 543
+        },
+        {
+            "key": "down",
+            "from": 544,
+            "to": 546
+        },
+        {
+            "key": "down",
+            "from": 649,
+            "to": 660
+        },
+        {
+            "key": "up",
+            "from": 660,
+            "to": 661
+        },
+        {
+            "key": "down",
+            "from": 661,
+            "to": 663
+        },
+        {
+            "key": "up",
+            "from": 664,
+            "to": 666
+        },
+        {
+            "key": "right",
+            "from": 690,
+            "to": 717
+        },
+        {
+            "key": "left",
+            "from": 719,
+            "to": 721
+        },
+        {
+            "key": "down",
+            "from": 725,
+            "to": 827
+        }
+    ],
+    "name": "f4-l8-sandtraps",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY F4 — L8's SANDTRAPS DIE TO THE ARROWS, ON THE GAME. The solver's own L8 solve (`r8-solve-8`'s staging, the `out_teleporter_96_192` goal): shove `pushableblock@112,48`, hold `button@64,48` while `arrowtrap@96,16` fires down x = 96, shove `pushableblock@96,112`, hold again, leave to L9. The game lands three arrows on `sandtrap@96,80` (t164, t197, t230: `Enemy.hit` with 30 i-frames that only the body's own update runs down), plays \"die\" (six frames at rate 10, 19 updates, the first on the killing tick) and removes it on t248, when `removed()` writes {8,0}. `sandtrap@96,128` the same: t564, t597, t630, gone with {8,1} on t648. Both clears are GAME-sourced; `r8-solve-8` declares 246 and 645 for the same bodies. Authored by scripts/procgen/plan-seedling-f4-l8-sandtraps.mjs.",
+    "note": ""
+}

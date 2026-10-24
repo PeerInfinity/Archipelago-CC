@@ -6,30 +6,21 @@
   "enabledCategories": ["loops"],
   "tests": [
     {
-      "id": "loops-initial-menu-not-processed",
-      "name": "Initial Menu Not Processed as Action",
-      "description": "Verifies that the initial Menu position is displayed correctly and not executed as an action when Resume is clicked",
-      "functionName": "testInitialMenuNotProcessed",
+      "id": "loops-real-actions-processed",
+      "name": "Real Actions Are Processed",
+      "description": "Drives the menu panel's Restart and one exit button into the path, queues a location check behind the move, and asserts the queue PROCESSES both",
+      "functionName": "testRealActionsProcessed",
       "enabled": true,
       "order": 0,
       "category": "loops"
     },
     {
-      "id": "loops-real-actions-processed",
-      "name": "Real Actions Are Processed",
-      "description": "Verifies that real actions in the queue are processed when Resume is clicked",
-      "functionName": "testRealActionsProcessed",
-      "enabled": true,
-      "order": 1,
-      "category": "loops"
-    },
-    {
       "id": "loops-mana-consumption",
       "name": "Mana Consumption",
-      "description": "Verifies that mana is consumed correctly during action processing",
+      "description": "Drives the real Start/Pause labels over one seeded action and asserts mana MOVES (gameState:manaChanged.current below the start) and stops on Pause",
       "functionName": "testManaConsumption",
       "enabled": true,
-      "order": 2,
+      "order": 1,
       "category": "loops"
     },
     {
@@ -38,7 +29,7 @@
       "description": "Verifies that XP is awarded correctly per action",
       "functionName": "testXPAwarding",
       "enabled": true,
-      "order": 3,
+      "order": 2,
       "category": "loops"
     },
     {
@@ -47,7 +38,7 @@
       "description": "Verifies that level thresholds work correctly and provide cost reduction",
       "functionName": "testLevelUpMechanics",
       "enabled": true,
-      "order": 4,
+      "order": 3,
       "category": "loops"
     },
     {
@@ -56,16 +47,16 @@
       "description": "Verifies that speed slider affects action processing rate",
       "functionName": "testSpeedAdjustment",
       "enabled": true,
-      "order": 5,
+      "order": 4,
       "category": "loops"
     },
     {
       "id": "loops-pause-resume",
       "name": "Pause/Resume Functionality",
-      "description": "Verifies that pause/resume controls work correctly",
+      "description": "Drives the queue-control button round trip Start -> Pause -> Resume -> Pause and checks the published processingState with each label",
       "functionName": "testPauseResume",
       "enabled": true,
-      "order": 6,
+      "order": 5,
       "category": "loops"
     },
     {
@@ -74,7 +65,7 @@
       "description": "Verifies that auto-restart works when mana is depleted",
       "functionName": "testAutoRestart",
       "enabled": true,
-      "order": 7,
+      "order": 6,
       "category": "loops"
     },
     {
@@ -82,6 +73,15 @@
       "name": "Enter/Exit Loop Mode",
       "description": "Verifies that entering and exiting loop mode works correctly",
       "functionName": "testEnterExitLoopMode",
+      "enabled": true,
+      "order": 7,
+      "category": "loops"
+    },
+    {
+      "id": "loops-reset-lands-on-the-declared-start-of-a-multi-exit-world",
+      "name": "Loop Reset Lands On The Declared Start",
+      "description": "S3 (§27.6 #1): mm3 initialised in the APWorld hub WITH loop mode and applied (its loop_costs turns loop mode on); many exits, so the player starts at the declared start; a menu press moves away; Clear Queue returns to the DECLARED start, not procgenPlayer's resolved start",
+      "functionName": "loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld",
       "enabled": true,
       "order": 8,
       "category": "loops"

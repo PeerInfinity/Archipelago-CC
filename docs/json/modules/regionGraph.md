@@ -1,4 +1,4 @@
 # Region Graph Module
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- [User Guide](../user/modules/regionGraph.md)
 - [Technical Reference](../developer/modules/regionGraph.md)

@@ -1,0 +1,1263 @@
+{
+ "source": "census-seedling-arrival-solid.mjs --json (seedling fidelity ARRIVAL)",
+ "rows": [
+  {
+   "landing": {
+    "from": 1,
+    "door": "teleporter@64,112",
+    "level": 0,
+    "x": 80,
+    "y": 112
+   },
+   "solid": "breakablerock@80,112",
+   "cls": "breakablerock",
+   "flag": {
+    "level": 0,
+    "tag": 4
+   },
+   "response": "despawn",
+   "action": "broken by a sword strike",
+   "item": "hasSword",
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 0,
+      "arrivals": [
+       {
+        "from": 2,
+        "door": "stairs@48,16",
+        "at": {
+         "x": 264,
+         "y": 264
+        }
+       },
+       {
+        "from": 13,
+        "door": "stairs@64,144",
+        "at": {
+         "x": 56,
+         "y": 200
+        }
+       },
+       {
+        "from": 86,
+        "door": "teleporter@48,64",
+        "at": {
+         "x": 168,
+         "y": 296
+        }
+       },
+       {
+        "from": 89,
+        "door": "teleporter@160,304",
+        "at": {
+         "x": 248,
+         "y": 24
+        }
+       },
+       {
+        "from": 94,
+        "door": "teleporter@304,160",
+        "at": {
+         "x": 24,
+         "y": 136
+        }
+       },
+       {
+        "from": 94,
+        "door": "teleporter@304,176",
+        "at": {
+         "x": 24,
+         "y": 152
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@80,96"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 12,
+    "door": "teleporter@0,80",
+    "level": 0,
+    "x": 288,
+    "y": 176
+   },
+   "solid": "breakablerock@288,176",
+   "cls": "breakablerock",
+   "flag": {
+    "level": 0,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "broken by a sword strike",
+   "item": "hasSword",
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 0,
+      "arrivals": [
+       {
+        "from": 2,
+        "door": "stairs@48,16",
+        "at": {
+         "x": 264,
+         "y": 264
+        }
+       },
+       {
+        "from": 13,
+        "door": "stairs@64,144",
+        "at": {
+         "x": 56,
+         "y": 200
+        }
+       },
+       {
+        "from": 86,
+        "door": "teleporter@48,64",
+        "at": {
+         "x": 168,
+         "y": 296
+        }
+       },
+       {
+        "from": 89,
+        "door": "teleporter@160,304",
+        "at": {
+         "x": 248,
+         "y": 24
+        }
+       },
+       {
+        "from": 94,
+        "door": "teleporter@304,160",
+        "at": {
+         "x": 24,
+         "y": 136
+        }
+       },
+       {
+        "from": 94,
+        "door": "teleporter@304,176",
+        "at": {
+         "x": 24,
+         "y": 152
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@304,176"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 12,
+    "door": "teleporter@40,688",
+    "level": 24,
+    "x": 48,
+    "y": 128
+   },
+   "solid": "burnabletree@32,128",
+   "cls": "burnabletree",
+   "flag": {
+    "level": 24,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "burned by fire",
+   "item": "hasFire",
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 24,
+      "arrivals": [
+       {
+        "from": 23,
+        "door": "stairs@32,32",
+        "at": {
+         "x": 104,
+         "y": 88
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@48,144"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 76,
+    "door": "teleporter@0,80",
+    "level": 71,
+    "x": 288,
+    "y": 256
+   },
+   "solid": "shieldlock@288,256",
+   "cls": "shieldlock",
+   "flag": {
+    "level": 71,
+    "tag": 2
+   },
+   "response": "lock-despawn",
+   "action": "opened by its activation group (turnOff; ShieldLock forces tSet = -2)",
+   "item": null,
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 71,
+      "arrivals": [
+       {
+        "from": 72,
+        "door": "teleporter@0,256",
+        "at": {
+         "x": 296,
+         "y": 104
+        }
+       },
+       {
+        "from": 75,
+        "door": "teleporter@64,224",
+        "at": {
+         "x": 104,
+         "y": 24
+        }
+       },
+       {
+        "from": 80,
+        "door": "teleporter@32,0",
+        "at": {
+         "x": 232,
+         "y": 296
+        }
+       },
+       {
+        "from": 85,
+        "door": "teleporter@80,0",
+        "at": {
+         "x": 24,
+         "y": 296
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@304,256"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 83,
+    "door": "teleporter@32,64",
+    "level": 12,
+    "x": 32,
+    "y": 864
+   },
+   "solid": "magicallock@32,864",
+   "cls": "magicallock",
+   "flag": {
+    "level": 12,
+    "tag": 7
+   },
+   "response": "despawn",
+   "action": "broken by a wand shot",
+   "item": "hasWand",
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 12,
+      "arrivals": [
+       {
+        "from": 0,
+        "door": "teleporter@304,176",
+        "at": {
+         "x": 24,
+         "y": 88
+        }
+       },
+       {
+        "from": 5,
+        "door": "stairs@16,16",
+        "at": {
+         "x": 104,
+         "y": 232
+        }
+       },
+       {
+        "from": 24,
+        "door": "teleporter@32,144",
+        "at": {
+         "x": 48,
+         "y": 712
+        }
+       },
+       {
+        "from": 24,
+        "door": "teleporter@48,144",
+        "at": {
+         "x": 48,
+         "y": 712
+        }
+       },
+       {
+        "from": 33,
+        "door": "teleporter@32,64",
+        "at": {
+         "x": 440,
+         "y": 376
+        }
+       },
+       {
+        "from": 34,
+        "door": "teleporter@32,144",
+        "at": {
+         "x": 344,
+         "y": 712
+        }
+       },
+       {
+        "from": 34,
+        "door": "teleporter@128,0",
+        "at": {
+         "x": 440,
+         "y": 568
+        }
+       },
+       {
+        "from": 35,
+        "door": "teleporter@32,64",
+        "at": {
+         "x": 120,
+         "y": 120
+        }
+       },
+       {
+        "from": 36,
+        "door": "teleporter@32,128",
+        "at": {
+         "x": 176,
+         "y": 392
+        }
+       },
+       {
+        "from": 37,
+        "door": "teleporter@32,304",
+        "at": {
+         "x": 600,
+         "y": 24
+        }
+       },
+       {
+        "from": 88,
+        "door": "teleporter@96,304",
+        "at": {
+         "x": 312,
+         "y": 24
+        }
+       },
+       {
+        "from": 95,
+        "door": "teleporter@624,64",
+        "at": {
+         "x": 24,
+         "y": 360
+        }
+       },
+       {
+        "from": 95,
+        "door": "teleporter@624,80",
+        "at": {
+         "x": 24,
+         "y": 376
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@32,848"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": true
+   },
+   "allCleared": {
+    "tags": [
+     7,
+     12
+    ],
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 83,
+    "door": "teleporter@32,64",
+    "level": 12,
+    "x": 32,
+    "y": 864
+   },
+   "solid": "bosslock@32,864",
+   "cls": "bosslock",
+   "flag": {
+    "level": 12,
+    "tag": 12
+   },
+   "response": "despawn",
+   "action": "opened by walking its key line with the matching boss key",
+   "item": "hasKey",
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 12,
+      "arrivals": [
+       {
+        "from": 0,
+        "door": "teleporter@304,176",
+        "at": {
+         "x": 24,
+         "y": 88
+        }
+       },
+       {
+        "from": 5,
+        "door": "stairs@16,16",
+        "at": {
+         "x": 104,
+         "y": 232
+        }
+       },
+       {
+        "from": 24,
+        "door": "teleporter@32,144",
+        "at": {
+         "x": 48,
+         "y": 712
+        }
+       },
+       {
+        "from": 24,
+        "door": "teleporter@48,144",
+        "at": {
+         "x": 48,
+         "y": 712
+        }
+       },
+       {
+        "from": 33,
+        "door": "teleporter@32,64",
+        "at": {
+         "x": 440,
+         "y": 376
+        }
+       },
+       {
+        "from": 34,
+        "door": "teleporter@32,144",
+        "at": {
+         "x": 344,
+         "y": 712
+        }
+       },
+       {
+        "from": 34,
+        "door": "teleporter@128,0",
+        "at": {
+         "x": 440,
+         "y": 568
+        }
+       },
+       {
+        "from": 35,
+        "door": "teleporter@32,64",
+        "at": {
+         "x": 120,
+         "y": 120
+        }
+       },
+       {
+        "from": 36,
+        "door": "teleporter@32,128",
+        "at": {
+         "x": 176,
+         "y": 392
+        }
+       },
+       {
+        "from": 37,
+        "door": "teleporter@32,304",
+        "at": {
+         "x": 600,
+         "y": 24
+        }
+       },
+       {
+        "from": 88,
+        "door": "teleporter@96,304",
+        "at": {
+         "x": 312,
+         "y": 24
+        }
+       },
+       {
+        "from": 95,
+        "door": "teleporter@624,64",
+        "at": {
+         "x": 24,
+         "y": 360
+        }
+       },
+       {
+        "from": 95,
+        "door": "teleporter@624,80",
+        "at": {
+         "x": 24,
+         "y": 376
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@32,848"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": true
+   },
+   "allCleared": {
+    "tags": [
+     7,
+     12
+    ],
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 113,
+    "door": "teleporter@64,144",
+    "level": 112,
+    "x": 112,
+    "y": 16
+   },
+   "solid": "rocklock@112,16",
+   "cls": "rocklock",
+   "flag": {
+    "level": 112,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "opened by its activation group",
+   "item": null,
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 112,
+      "arrivals": [
+       {
+        "from": 111,
+        "door": "teleporter@128,48",
+        "at": {
+         "x": 40,
+         "y": 216
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@112,0"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 113,
+    "door": "teleporter@80,144",
+    "level": 112,
+    "x": 112,
+    "y": 16
+   },
+   "solid": "rocklock@112,16",
+   "cls": "rocklock",
+   "flag": {
+    "level": 112,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "opened by its activation group",
+   "item": null,
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 112,
+      "arrivals": [
+       {
+        "from": 111,
+        "door": "teleporter@128,48",
+        "at": {
+         "x": 40,
+         "y": 216
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@112,0"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 115,
+    "door": "teleporter@64,144",
+    "level": 113,
+    "x": 112,
+    "y": 16
+   },
+   "solid": "finaldoor@112,0",
+   "cls": "finaldoor",
+   "flag": {
+    "level": 113,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "opened once the Watcher has spoken (its removal)",
+   "item": null,
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 113,
+      "arrivals": [
+       {
+        "from": 112,
+        "door": "teleporter@112,0",
+        "at": {
+         "x": 80,
+         "y": 136
+        }
+       },
+       {
+        "from": 114,
+        "door": "teleporter@64,144",
+        "at": {
+         "x": 24,
+         "y": 24
+        }
+       },
+       {
+        "from": 114,
+        "door": "teleporter@80,144",
+        "at": {
+         "x": 40,
+         "y": 24
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@112,0"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  },
+  {
+   "landing": {
+    "from": 115,
+    "door": "teleporter@80,144",
+    "level": 113,
+    "x": 128,
+    "y": 16
+   },
+   "solid": "finaldoor@112,0",
+   "cls": "finaldoor",
+   "flag": {
+    "level": 113,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "opened once the Watcher has spoken (its removal)",
+   "item": null,
+   "solver": {
+    "kind": "arrival-inside-solid",
+    "wayOut": [
+     {
+      "kind": "restart",
+      "via": "seedlingStartSpawn",
+      "why": "the Menu's Restart puts the player at a new game's start; the save keeps its flags"
+     },
+     {
+      "kind": "another-route",
+      "level": 113,
+      "arrivals": [
+       {
+        "from": 112,
+        "door": "teleporter@112,0",
+        "at": {
+         "x": 80,
+         "y": 136
+        }
+       },
+       {
+        "from": 114,
+        "door": "teleporter@64,144",
+        "at": {
+         "x": 24,
+         "y": 24
+        }
+       },
+       {
+        "from": 114,
+        "door": "teleporter@80,144",
+        "at": {
+         "x": 40,
+         "y": 24
+        }
+       }
+      ]
+     }
+    ],
+    "goal": "reach-exit teleporter@128,0"
+   },
+   "flagHolds": {
+    "inside": true,
+    "stuck": true,
+    "moved": {
+     "left": 0,
+     "right": 0,
+     "up": 0,
+     "down": 0
+    }
+   },
+   "flagCleared": {
+    "inside": false,
+    "stuck": false
+   }
+  }
+ ],
+ "edges": [
+  {
+   "edge": {
+    "from": 1,
+    "door": "teleporter@64,112",
+    "to": 0,
+    "landing": {
+     "x": 80,
+     "y": 112
+    }
+   },
+   "solid": "breakablerock@80,112",
+   "cls": "breakablerock",
+   "flag": {
+    "level": 0,
+    "tag": 4
+   },
+   "response": "despawn",
+   "action": "broken by a sword strike",
+   "item": "hasSword",
+   "cite": "Puzzlements/BreakableRock.as hit(_t) -> endAnim(): setPersistence(tag, false)",
+   "side": "outside breakablerock@80,112, in level 0's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": true,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@80,96"
+   ],
+   "otherWaysIntoSource": []
+  },
+  {
+   "edge": {
+    "from": 12,
+    "door": "teleporter@0,80",
+    "to": 0,
+    "landing": {
+     "x": 288,
+     "y": 176
+    }
+   },
+   "solid": "breakablerock@288,176",
+   "cls": "breakablerock",
+   "flag": {
+    "level": 0,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "broken by a sword strike",
+   "item": "hasSword",
+   "cite": "Puzzlements/BreakableRock.as hit(_t) -> endAnim(): setPersistence(tag, false)",
+   "side": "outside breakablerock@288,176, in level 0's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": true,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@304,176"
+   ],
+   "otherWaysIntoSource": [
+    "L5 stairsup@16,16 -> (96,224)",
+    "L24 teleporter@32,144 -> (40,704)",
+    "L24 teleporter@48,144 -> (40,704)",
+    "L33 teleporter@32,64 -> (432,368)",
+    "L34 teleporter@32,144 -> (336,704)",
+    "L34 teleporter@128,0 -> (432,560)",
+    "L35 teleporter@32,64 -> (112,112)",
+    "L36 teleporter@32,128 -> (168,384)",
+    "L37 teleporter@32,304 -> (592,16)",
+    "L83 teleporter@32,64 -> (32,864)",
+    "L88 teleporter@96,304 -> (304,16)",
+    "L95 teleporter@624,64 -> (16,352)",
+    "L95 teleporter@624,80 -> (16,368)"
+   ]
+  },
+  {
+   "edge": {
+    "from": 12,
+    "door": "teleporter@40,688",
+    "to": 24,
+    "landing": {
+     "x": 48,
+     "y": 128
+    }
+   },
+   "solid": "burnabletree@32,128",
+   "cls": "burnabletree",
+   "flag": {
+    "level": 24,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "burned by fire",
+   "item": "hasFire",
+   "cite": "Scenery/BurnableTree.as removed(): setPersistence(tag, false)",
+   "side": "outside burnabletree@32,128, in level 24's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": true,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@32,144",
+    "teleporter@48,144"
+   ],
+   "otherWaysIntoSource": [
+    "L0 teleporter@304,176 -> (16,80)",
+    "L5 stairsup@16,16 -> (96,224)",
+    "L33 teleporter@32,64 -> (432,368)",
+    "L34 teleporter@32,144 -> (336,704)",
+    "L34 teleporter@128,0 -> (432,560)",
+    "L35 teleporter@32,64 -> (112,112)",
+    "L36 teleporter@32,128 -> (168,384)",
+    "L37 teleporter@32,304 -> (592,16)",
+    "L83 teleporter@32,64 -> (32,864)",
+    "L88 teleporter@96,304 -> (304,16)",
+    "L95 teleporter@624,64 -> (16,352)",
+    "L95 teleporter@624,80 -> (16,368)"
+   ]
+  },
+  {
+   "edge": {
+    "from": 76,
+    "door": "teleporter@0,80",
+    "to": 71,
+    "landing": {
+     "x": 288,
+     "y": 256
+    }
+   },
+   "solid": "shieldlock@288,256",
+   "cls": "shieldlock",
+   "flag": {
+    "level": 71,
+    "tag": 2
+   },
+   "response": "lock-despawn",
+   "action": "opened by its activation group (turnOff; ShieldLock forces tSet = -2)",
+   "item": null,
+   "cite": "Puzzlements/ShieldLock.as -> Lock.as turnOff()",
+   "side": "outside shieldlock@288,256, in level 71's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@304,256"
+   ],
+   "otherWaysIntoSource": [
+    "L77 teleporter@0,32 -> (288,112)"
+   ]
+  },
+  {
+   "edge": {
+    "from": 83,
+    "door": "teleporter@32,64",
+    "to": 12,
+    "landing": {
+     "x": 32,
+     "y": 864
+    }
+   },
+   "solid": "magicallock@32,864",
+   "cls": "magicallock",
+   "flag": {
+    "level": 12,
+    "tag": 7
+   },
+   "response": "despawn",
+   "action": "broken by a wand shot",
+   "item": "hasWand",
+   "cite": "Puzzlements/MagicalLock.as hit(_t): lockType 0 <= _t -> setPersistence(tag, false)",
+   "side": "outside magicallock@32,864, in level 12's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside this solid, still stuck (free once {7,12} are all cleared)",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@32,848"
+   ],
+   "otherWaysIntoSource": []
+  },
+  {
+   "edge": {
+    "from": 83,
+    "door": "teleporter@32,64",
+    "to": 12,
+    "landing": {
+     "x": 32,
+     "y": 864
+    }
+   },
+   "solid": "bosslock@32,864",
+   "cls": "bosslock",
+   "flag": {
+    "level": 12,
+    "tag": 12
+   },
+   "response": "despawn",
+   "action": "opened by walking its key line with the matching boss key",
+   "item": "hasKey",
+   "cite": "Puzzlements/BossLock.as update(): Player.hasKey(keyType) -> setPersistence(tag, false)",
+   "side": "outside bosslock@32,864, in level 12's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside this solid, still stuck (free once {7,12} are all cleared)",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@32,848"
+   ],
+   "otherWaysIntoSource": []
+  },
+  {
+   "edge": {
+    "from": 113,
+    "door": "teleporter@64,144",
+    "to": 112,
+    "landing": {
+     "x": 112,
+     "y": 16
+    }
+   },
+   "solid": "rocklock@112,16",
+   "cls": "rocklock",
+   "flag": {
+    "level": 112,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "opened by its activation group",
+   "item": null,
+   "cite": "Puzzlements/RockLock.as update(): setPersistence(tag, false)",
+   "side": "outside rocklock@112,16, in level 112's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@112,0"
+   ],
+   "otherWaysIntoSource": [
+    "L114 teleporter@64,144 -> (16,16)",
+    "L114 teleporter@80,144 -> (32,16)",
+    "L115 teleporter@64,144 -> (112,16)",
+    "L115 teleporter@80,144 -> (128,16)"
+   ]
+  },
+  {
+   "edge": {
+    "from": 113,
+    "door": "teleporter@80,144",
+    "to": 112,
+    "landing": {
+     "x": 112,
+     "y": 16
+    }
+   },
+   "solid": "rocklock@112,16",
+   "cls": "rocklock",
+   "flag": {
+    "level": 112,
+    "tag": 1
+   },
+   "response": "despawn",
+   "action": "opened by its activation group",
+   "item": null,
+   "cite": "Puzzlements/RockLock.as update(): setPersistence(tag, false)",
+   "side": "outside rocklock@112,16, in level 112's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@112,0"
+   ],
+   "otherWaysIntoSource": [
+    "L114 teleporter@64,144 -> (16,16)",
+    "L114 teleporter@80,144 -> (32,16)",
+    "L115 teleporter@64,144 -> (112,16)",
+    "L115 teleporter@80,144 -> (128,16)"
+   ]
+  },
+  {
+   "edge": {
+    "from": 115,
+    "door": "teleporter@64,144",
+    "to": 113,
+    "landing": {
+     "x": 112,
+     "y": 16
+    }
+   },
+   "solid": "finaldoor@112,0",
+   "cls": "finaldoor",
+   "flag": {
+    "level": 113,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "opened once the Watcher has spoken (its removal)",
+   "item": null,
+   "cite": "Scenery/FinalDoor.as removed(): setPersistence(tag, false)",
+   "side": "outside finaldoor@112,0, in level 113's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": true,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@112,0",
+    "teleporter@128,0"
+   ],
+   "otherWaysIntoSource": []
+  },
+  {
+   "edge": {
+    "from": 115,
+    "door": "teleporter@80,144",
+    "to": 113,
+    "landing": {
+     "x": 128,
+     "y": 16
+    }
+   },
+   "solid": "finaldoor@112,0",
+   "cls": "finaldoor",
+   "flag": {
+    "level": 113,
+    "tag": 0
+   },
+   "response": "despawn",
+   "action": "opened once the Watcher has spoken (its removal)",
+   "item": null,
+   "cite": "Scenery/FinalDoor.as removed(): setPersistence(tag, false)",
+   "side": "outside finaldoor@112,0, in level 113's room: the landing is ON its cell",
+   "flagHeld": "inside, stuck (no cardinal hold moves the box)",
+   "flagCleared": "outside, walks free",
+   "gameWitnessed": false,
+   "solver": "arrival-inside-solid",
+   "backDoors": [
+    "teleporter@112,0",
+    "teleporter@128,0"
+   ],
+   "otherWaysIntoSource": []
+  }
+ ]
+}

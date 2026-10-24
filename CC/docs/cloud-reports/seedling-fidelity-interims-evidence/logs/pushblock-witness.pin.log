@@ -1,0 +1,11 @@
+PASS: pushblock-l65-reach-l68: the plan thrusts at pushableblockspear@176,128 3 time(s) — [["pushableblockspear@176,128","press",[{"tx":10,"ty":8},{"tx":10,"ty":7},{"tx":9,"ty":7}]]]
+PASS: pushblock-l65-reach-l68: the model replays it into L68 — 348 observations, ends {"level":68,"x":24,"y":72}
+PASS: the committed pushblock-l65-reach-l68 is what this script produces today — byte-identical
+PASS: pushblock-l65-reach-l63: the plan thrusts at pushableblockspear@176,128 1 time(s) — [["pushableblockspear@176,128","press",[{"tx":12,"ty":8}]]]
+PASS: pushblock-l65-reach-l63: the model replays it into L63 — 229 observations, ends {"level":63,"x":136,"y":296}
+PASS: the committed pushblock-l65-reach-l63 is what this script produces today — byte-identical
+PASS: pushblock-l65-sword-press: the model's sword slash leaves the block where it is — stop x 194.05 before, 194.05 after
+PASS: the committed pushblock-l65-sword-press is what this script produces today — byte-identical
+
+all checks green
+exit 0 at 00:44:07

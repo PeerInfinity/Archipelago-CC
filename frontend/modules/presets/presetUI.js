@@ -1,15 +1,18 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { getModuleEventBus } from './index.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { resolvePlayerId } from '../../utils/playerInference.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
+import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
+import { INITIALISE_DRIVER } from '../apworldEditor/initialiseDriver.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
 
 // Toolbar state — persisted to localStorage so the user's filters
-// survive a panel close/reopen. See NewDocs/plans/presets-panel-
-// overhaul.md §"Search / sort / filter".
+// survive a panel close/reopen.
 const TOOLBAR_LS_KEY = 'presetUI_toolbar';
 // View preferences for the detail view (chart toggle, etc.).
 // Separate from the toolbar so a chart-toggle render doesn't churn
@@ -20,6 +23,23 @@ const VIEW_LS_KEY = 'presetUI_view';
 // goal is to bail when the network is genuinely stuck, not to
 // interrupt large but legitimate loads.
 const LOAD_FETCH_TIMEOUT_MS = 30_000;
+
+/**
+ * ⛓⛓ **WHAT COUNTS AS A rules.json IN THE PRESET INDEX** (EDITOR v3 E1c).
+ * `preset_files.json` lists BARE NAMES with no types, so every consumer keys off
+ * this suffix. It was five separate `endsWith('_rules.json')` literals; a
+ * `.json.gz` had to be recognised in all five or in none, and five copies of one
+ * fact is exactly how "in some of them" happens.
+ *
+ * ⚠ **NO COMMITTED PRESET IS GZIPPED, AND ONE SHOULD NOT BE**: GitHub Pages
+ * already gzips on the wire (measured — `presets/seedling_playthrough/AP_1/
+ * AP_1_rules.json` is 806,703 B on disk and 43,140 B with `Accept-Encoding:
+ * gzip`), so a committed `.gz` buys ~nothing and costs a decode. This exists so
+ * a preset directory somebody else assembled is not silently unlistable.
+ */
+const RULES_SUFFIX = '_rules.json';
+const isRulesFileName = (name) => typeof name === 'string'
+    && (name.endsWith(RULES_SUFFIX) || name.endsWith(`${RULES_SUFFIX}.gz`));
 const LOAD_WATCHDOG_MS = 3_000;
 const DEFAULT_VIEW_STATE = Object.freeze({
     showSphereLog: false,
@@ -252,6 +272,18 @@ const PRESET_STYLES = `
 }
 .back-button:hover {
     background-color: #555;
+}
+.preset-open-apworld {
+    background-color: #2e7d32;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 0 8px;
+}
+.preset-open-apworld:hover {
+    background-color: #3a9440;
 }
 .preset-detail-header {
     display: flex;
@@ -641,6 +673,26 @@ function testPassCount(data) {
 }
 
 /**
+ * The preset card's driver label for `computeProcgenStats`' answer. `escape`
+ * is the card's HTML escaper (the source game is document text).
+ */
+export function procgenDriverLabel(stats, escape = (s) => s) {
+  if (stats.driver === 'top-down') {
+    return stats.sourceGame ? `Top-down (${escape(stats.sourceGame)})` : 'Top-down';
+  }
+  if (stats.driver === 'grid-growth') return 'Grid-growth';
+  // ⛓ APWORLD SUBSTRATE CHANGE S1 — a slot the APWorld Editor initialised in place.
+  if (stats.driver === INITIALISE_DRIVER) {
+    return stats.sourceGame
+      ? `Initialised in the APWorld Editor (${escape(stats.sourceGame)})`
+      : 'Initialised in the APWorld Editor';
+  }
+  // procgen_metadata absent (older procgen output) — preset_sidecars
+  // is present but we don't know the driver. Label honestly.
+  return 'Procgen (driver unknown)';
+}
+
+/**
  * Compute procgen-specific stats for a loaded rules.json. Pure for
  * testability. Returns null when the rules.json carries no procgen
  * data (i.e. no preset_sidecars), signalling the renderer to skip
@@ -664,16 +716,13 @@ function testPassCount(data) {
  * represent additional connections from the source's perspective —
  * they're inverse-direction pairs / cross-grid jumps). Locations are
  * counted as items that carry an AP-canonical locationName.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Procgen-specific
- * stats".
  */
 export function computeProcgenStats(rulesData, playerId = '1') {
     if (!rulesData?.preset_sidecars) return null;
     const sidecars = rulesData.preset_sidecars[playerId];
     if (!sidecars || Object.keys(sidecars).length === 0) return null;
 
-    const meta = rulesData.procgen_metadata ?? {};
+    const meta = rulesData.procgen_metadata?.[String(playerId)] ?? {};
     const substrateCounts = {};
     const regions = [];
     let totalLogicGates = 0;
@@ -752,9 +801,6 @@ export function computeProcgenStats(rulesData, playerId = '1') {
  * fell into this integer bucket, in JSONL order. Used to address
  * individual fractional cells in the chart for tooltip / click
  * targeting.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Sphere log shape
- * chart" for the rendering contract this feeds.
  */
 export function parseSphereLogShape(jsonlText) {
     if (!jsonlText) return [];
@@ -876,9 +922,6 @@ export function buildSphereEnrichment(sphereData, opts = {}) {
  * Game-level nav (prevGame/nextGame) jumps to the FIRST tuple of the
  * adjacent display-name group. Seed-level nav (prevSeed/nextSeed)
  * stays within the same gameDirectory.
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Next / previous
- * buttons".
  */
 export function computeDetailNav(tuples, presets, selected) {
     const result = { prevGame: null, prevSeed: null, nextSeed: null, nextGame: null };
@@ -975,9 +1018,6 @@ function comparePresetEntries(a, b, sortKey) {
  * Returns { path, isLive } where `path` is the URL to fetch and
  * `isLive` reflects what the caller is *trying* to load (so a 404
  * fallback can decide whether to retry with the dev index).
- *
- * See NewDocs/plans/presets-panel-overhaul.md §"Dev vs live preset
- * indexes".
  */
 export function selectIndexFile({ hostname = '', search = '' } = {}) {
     const params = new URLSearchParams(search);
@@ -989,6 +1029,56 @@ export function selectIndexFile({ hostname = '', search = '' } = {}) {
         path: isLive ? LIVE_INDEX_PATH : DEV_INDEX_PATH,
         isLive,
     };
+}
+
+/**
+ * ⛓⛓⛓ **"OPEN IN APWORLD EDITOR" — ONE DESCRIPTOR, TWO SCREENS** (APWORLD
+ * EDITOR HUB slice H2; ⚖ user: *"in the screen in the Presets panel that
+ * displays after a preset has been opened, I want a button to open the data in
+ * the APWorld Editor"*).
+ *
+ * ⛔ **THE EVENT IS `ui:activatePanel`, NOT `apworldEditor:loadRules`**, and
+ * that is a measured choice rather than a shortcut. The hub already HOLDS this
+ * document: a preset load publishes `files:jsonLoaded`, the state manager
+ * re-emits it as `stateManager:rawJsonDataLoaded`, and the hub opens a session
+ * on that. The focus-safe `apworldEditor:loadRules` channel exists for loads
+ * that must NOT go global (the pipeline's and the marking tool's hand-offs) —
+ * a preset load already went global, so handing the document over a second
+ * time would open a SECOND session boundary and throw away whatever the person
+ * had already edited.
+ *
+ * ⛓ The markup and the wiring read the SAME `id` off this object, so a rename
+ * cannot leave a handler querying a selector nothing renders — two gates, one
+ * opener.
+ */
+export const APWORLD_EDITOR_BUTTON = Object.freeze({
+    id: 'open-in-apworld-editor',
+    label: 'Open in APWorld Editor',
+    title: 'Raise the APWorld Editor panel, which already holds this document — '
+        + 'the preset load published it app-wide.',
+    event: 'ui:activatePanel',
+    payload: Object.freeze({ panelId: 'apworldEditorPanel' }),
+});
+
+/**
+ * ⛓ A flat-layout folder button's face: its label and V badge. rules F3 (⚖ user
+ * 2026-10-10, ruling A): both are the SLOT's — `preset_files.json` holds
+ * `is_vanilla` / `label` on the folder's `games[i]`, never at folder level — so a
+ * one-slot folder shows its slot's, and a multi-slot folder shows neither (no
+ * all/any rule picks a slot).
+ */
+export function presetButtonFace(folderData) {
+    const slot = folderData?.games?.length === 1 ? folderData.games[0] : {};
+    return { label: slot.label, isVanilla: !!slot.is_vanilla };
+}
+
+/** ⛓ The control's markup, from the descriptor above and nothing else. */
+export function apworldEditorButtonHtml(button = APWORLD_EDITOR_BUTTON) {
+    const esc = (unsafe) => String(unsafe)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    return `<button class="preset-open-apworld" id="${esc(button.id)}" `
+        + `title="${esc(button.title)}">${esc(button.label)}</button>`;
 }
 
 // Helper function for logging with fallback
@@ -1084,6 +1174,11 @@ export class PresetUI {
     if (!this.rootElement) {
       this.rootElement = document.createElement('div');
       this.rootElement.id = 'presets-panel';
+      // ⛓ The handle every browser verifier and in-app row reaches this panel
+      //   through — the marking tool's `.rmt-panel.__panel` precedent, and the
+      //   APWorld hub's. Without it a test can only drive the DOM, which for a
+      //   preset means clicking through a 205-entry list.
+      this.rootElement.__panel = this;
       this.rootElement.classList.add('panel-container');
       this.rootElement.style.height = '100%';
       this.rootElement.style.overflowY = 'auto';
@@ -1206,7 +1301,7 @@ export class PresetUI {
     let html = `
       <div class="preset-header">
         <h3>Select a Game Preset</h3>
-        <input type="file" id="json-file-input" accept=".json,.archipelago" style="display: none;" />
+        <input type="file" id="json-file-input" accept=".json,.json.gz,.zip,.archipelago" style="display: none;" />
         <button id="load-json-button" class="button" style="margin-left: 10px;">Load File</button>
       </div>
       ${this._renderToolbarHtml()}
@@ -1325,7 +1420,7 @@ export class PresetUI {
         // test badges last with margin-left:auto (bottom-right)
         html += `<h4 class="game-name">${this.escapeHtml(name)}</h4>`;
         seeds.forEach(({ gameDirectory, seedName, folderData }) => {
-          const isVanilla = !!folderData.is_vanilla;
+          const { label, isVanilla } = presetButtonFace(folderData);
           const vanillaBadge = isVanilla
             ? `<span class="placement-badge placement-vanilla" title="Vanilla placement">V</span>`
             : '';
@@ -1334,9 +1429,9 @@ export class PresetUI {
                     data-game-directory="${this.escapeHtml(gameDirectory)}"
                     data-seed-name="${this.escapeHtml(seedName)}"
                     title="${this.escapeHtml(
-                      folderData.label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
+                      label || `Seed ${folderData.seed}${isVanilla ? ' (vanilla)' : ''}`
                     )}">
-              ${this.escapeHtml(folderData.label || folderData.seed)}${vanillaBadge}
+              ${this.escapeHtml(label || folderData.seed)}${vanillaBadge}
             </button>
           `;
         });
@@ -1370,37 +1465,28 @@ export class PresetUI {
         jsonFileInput.click(); // Trigger file input when button is clicked
       });
 
+      // EDITOR v3 E1c — three shapes arrive here now: a plain `.json`, a
+      // gzipped `.json.gz`, and a `.zip` BUNDLE whose members are the four
+      // documents this repo already writes. ⛔ An `.archipelago` keeps its own
+      // branch: that archive is a MULTIWORLD's output — many files, possibly
+      // several `*_rules.json` — and `readBundle` would refuse it by name for
+      // carrying two `rules` members, which is exactly right for a bundle and
+      // wrong for an archive whose first match has always been the answer.
       jsonFileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
-        if (file) {
-          // Check if file is an .archipelago file (zip format)
-          if (file.name.endsWith('.archipelago')) {
-            this.loadArchipelagoFile(file);
-          } else {
-            // Regular JSON file handling
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              try {
-                const jsonData = JSON.parse(e.target.result);
-                this.displayLoadedJsonFileDetails(jsonData, file.name);
-              } catch (err) {
-                log('error', 'Error parsing JSON file:', err);
-                this.eventBus.publish('ui:notification', {
-                  type: 'error',
-                  message: `Error parsing ${file.name}: ${err.message}`,
-                });
-              }
-            };
-            reader.onerror = (err) => {
-              log('error', 'Error reading file:', err);
-              this.eventBus.publish('ui:notification', {
-                type: 'error',
-                message: `Error reading ${file.name}.`,
-              });
-            };
-            reader.readAsText(file);
-          }
+        event.target.value = '';
+        if (!file) return;
+        if (file.name.endsWith('.archipelago')) {
+          this.loadArchipelagoFile(file);
+          return;
         }
+        this.loadDocumentFile(file).catch((err) => {
+          log('error', 'Error reading file:', err);
+          this.eventBus.publish('ui:notification', {
+            type: 'error',
+            message: `Error reading ${file.name}: ${err.message}`,
+          });
+        });
       });
     }
 
@@ -1446,7 +1532,15 @@ export class PresetUI {
     }
   }
 
-  displayLoadedJsonFileDetails(jsonData, fileName) {
+  /**
+   * @param {object} jsonData the parsed document
+   * @param {string} fileName what to call it in the log and the status line
+   * @param {{isRules?: boolean}} [options] `isRules` when the CALLER already
+   *   knows — a bundle member `classifyDocument` called `rules` is one, and
+   *   asking the reader to confirm a fact the classifier has already
+   *   established is a prompt with only one honest answer.
+   */
+  displayLoadedJsonFileDetails(jsonData, fileName, { isRules = false } = {}) {
     log('info',
       `Displaying details for manually loaded JSON file: ${fileName}`,
       jsonData
@@ -1462,6 +1556,7 @@ export class PresetUI {
       <div class="preset-info">
         <h3>Loaded: ${this.escapeHtml(fileName)}</h3>
         <p>This file was loaded manually from your computer.</p>
+        ${apworldEditorButtonHtml()}
         <div id="preset-status"></div>
         <pre style="max-height: 300px; overflow: auto; background: #111; padding: 10px; border-radius: 4px;">${this.escapeHtml(
           JSON.stringify(jsonData, null, 2)
@@ -1476,25 +1571,53 @@ export class PresetUI {
         this.renderGamesList();
       });
     }
+    this._wireApworldEditorButton(container);
 
-    // TODO: Determine playerId and call loadRulesFile (or similar logic)
-    // For now, let's assume player 1 for simplicity if it's a rules file.
+    // Work out which player this file is for before handing it off. A
+    // combined multiworld rules.json describes every player, so we infer the
+    // ID where the file says who it belongs to and ask the user where it
+    // doesn't — the old behaviour hardcoded player 1 and silently loaded the
+    // wrong game.
     if (
-      fileName.endsWith('_rules.json') ||
-      confirm(
-        'Is this a rules.json file for a game? Defaulting to Player 1 if so.'
-      )
+      isRules ||
+      isRulesFileName(fileName) ||
+      confirm('Is this a rules.json file for a game?')
     ) {
-      // This is a rough way to check, ideally jsonData structure would be validated.
-      const playerId = DEFAULT_PLAYER_ID; // Default or determine from JSON if possible (e.g., if not multiworld)
-      // We need a way to call the core logic of loadRulesFile without assuming a preset structure.
-      // This might involve refactoring parts of loadRulesFile or creating a new shared method.
-      log('info', 
-        `Attempting to process ${fileName} as rules file for Player ${playerId}`
-      );
-      // Directly call the processing logic, adapting from loadRulesFile
-      this.processManuallyLoadedRules(jsonData, fileName, playerId);
+      this.resolvePlayerIdInteractive(fileName, jsonData).then((playerId) => {
+        if (!playerId) {
+          log('info', `Player selection cancelled for ${fileName}; not loading.`);
+          const statusElement = document.getElementById('preset-status');
+          if (statusElement) {
+            statusElement.innerHTML = `
+              <div class="preset-loading">Load cancelled — no player selected.</div>
+            `;
+          }
+          return;
+        }
+        log('info',
+          `Attempting to process ${fileName} as rules file for Player ${playerId}`
+        );
+        // Directly call the processing logic, adapting from loadRulesFile
+        this.processManuallyLoadedRules(jsonData, fileName, playerId);
+      });
     }
+  }
+
+  /**
+   * ⛓ Wire the "Open in APWorld Editor" control on whichever screen just
+   * rendered it. ⛔ The selector is DERIVED from the same descriptor the markup
+   * is, so the two cannot drift apart; a screen that did not render the button
+   * simply finds nothing and wires nothing.
+   */
+  _wireApworldEditorButton(container) {
+    const btn = container && container.querySelector(`#${APWORLD_EDITOR_BUTTON.id}`);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      log('info',
+        `Opening the APWorld Editor: publishing ${APWORLD_EDITOR_BUTTON.event}.`);
+      this.eventBus.publish(
+        APWORLD_EDITOR_BUTTON.event, { ...APWORLD_EDITOR_BUTTON.payload });
+    });
   }
 
   async processManuallyLoadedRules(rulesData, fileName, playerId = DEFAULT_PLAYER_ID) {
@@ -1561,26 +1684,69 @@ export class PresetUI {
    * @returns {Promise<JSZip>} The JSZip constructor
    */
   async loadJSZip() {
-    if (window.JSZip) {
-      return window.JSZip;
-    }
+    // EDITOR v3 E1c — the injection moved to `loadJSZipBrowser` so the set
+    // editor on watch.html injects the same vendored file the same way. The
+    // `src` stays HERE because it is the half that differs between the two
+    // pages: this one runs from the app root, that one from three directories
+    // down.
+    return loadJSZipBrowser({ src: `./${JSZIP_SCRIPT}` });
+  }
 
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = './libs/jszip/jszip.min.js';
-      script.onload = () => {
-        if (window.JSZip) {
-          log('info', 'JSZip library loaded successfully');
-          resolve(window.JSZip);
-        } else {
-          reject(new Error('JSZip failed to initialize'));
-        }
-      };
-      script.onerror = () => {
-        reject(new Error('Failed to load JSZip library'));
-      };
-      document.head.appendChild(script);
-    });
+  /**
+   * ⛓⛓⛓ **A DOCUMENT FILE — PLAIN, GZIPPED, OR A BUNDLE** (EDITOR v3 E1c, §25).
+   *
+   * ⛔ **SNIFFED ON THE FIRST TWO BYTES, NOT THE EXTENSION.** `50 4b` is a zip
+   * local-file header and `1f 8b` is gzip; both are unambiguous on their own
+   * bytes, and a file somebody renamed still loads. The `accept` list on the
+   * input is a picker HINT.
+   *
+   * ⛔ **AND THE IGNORED MEMBERS ARE NAMED.** A bundle carries the level set,
+   * the overlay and the region atlas beside the `rules.json`; this panel loads
+   * exactly the `rules` member — the single `rules.json` is CANONICAL and that
+   * has not changed — and says which siblings it walked past. A member that
+   * vanished without a word is indistinguishable from one that was never there.
+   *
+   * @param {File} file
+   */
+  async loadDocumentFile(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes[0] === 0x50 && bytes[1] === 0x4b) {
+      const JSZip = await this.loadJSZip();
+      const { members, notes } = await readBundle(bytes, { jszip: JSZip });
+      const rules = members.find((m) => m.kind === 'rules');
+      const others = members.filter((m) => m.kind !== 'rules');
+      const summary = describeBundle({ members, notes });
+      if (!rules) {
+        throw new Error(`${file.name} carries no rules.json — ${summary}`);
+      }
+      log('info', `Bundle ${file.name}: ${summary}`);
+      if (others.length || notes.length) {
+        this.eventBus.publish('ui:notification', {
+          type: 'info',
+          message: `${file.name}: loaded the rules member; NOT loaded — `
+            + `${[...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes].join(', ')}`,
+        });
+      }
+      this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`,
+        { isRules: true });
+      return;
+    }
+    /**
+     * ⛔ `gunzipIfNeeded` sniffs the MAGIC, so bytes that are already plain
+     * JSON pass straight through. That matters for the FETCH path more than
+     * here: GitHub Pages serves this repo's presets `content-encoding: gzip`
+     * (measured — 806,703 B on disk, 43,140 B on the wire), and the browser has
+     * ALREADY decoded those before anything here sees them. A gunzip keyed on
+     * the header or the name would double-decode a file that was never a `.gz`.
+     */
+    const text = new TextDecoder().decode(await gunzipIfNeeded(bytes));
+    let jsonData;
+    try {
+      jsonData = JSON.parse(text);
+    } catch (err) {
+      throw new Error(`Error parsing ${file.name}: ${err.message}`);
+    }
+    this.displayLoadedJsonFileDetails(jsonData, file.name);
   }
 
   /**
@@ -1697,6 +1863,7 @@ export class PresetUI {
         <div class="preset-info">
           <h3>${headerTitle}</h3>
           <p>${this.escapeHtml(folderData.description || 'Multiworld Seed')}</p>
+          ${apworldEditorButtonHtml()}
           <div class="preset-files">
             <div class="preset-files-header">
               <h4>Files:</h4>
@@ -1742,6 +1909,8 @@ export class PresetUI {
           this.renderGamesList();
         });
       }
+
+      this._wireApworldEditorButton(container);
 
       // Wire next/previous nav buttons
       const wireNav = (id, target) => {
@@ -1792,69 +1961,25 @@ export class PresetUI {
           const file = link.getAttribute('data-file');
 
           // If this is a rules.json file, load it into the game
-          if (file.endsWith('_rules.json')) {
+          if (isRulesFileName(file)) {
             e.preventDefault(); // Prevent opening in a new tab
             this.loadRulesFile(gameDirectory, seedName, file, playerId);
           }
         });
       });
 
-      // Automatically load the rules.json file for this preset/player
-      let rulesFile = null;
-      if (playerId && gameDirectory === 'multiworld') {
-        rulesFile = folderData.files.find((file) =>
-          file.endsWith(`_P${playerId}_rules.json`)
-        );
-        if (!rulesFile) {
-          // Fallback to default rules.json if player-specific not found
-          rulesFile = folderData.files.find((file) =>
-            file.endsWith('_rules.json')
-          );
-          if (rulesFile) {
-            log('warn', 
-              `Player-specific rules file not found for P${playerId}, falling back to default rules.json`
-            );
-          }
-        }
-      } else {
-        // Find standard rules file for single player presets
-        rulesFile = folderData.files.find((file) =>
-          file.endsWith('_rules.json')
-        );
-      }
-
-      if (rulesFile) {
-        // Determine the correct player ID
-        let effectivePlayerId = '1'; // Default safety fallback
-
-        if (playerId) {
-          // If playerId was passed (multiworld), use it directly
-          effectivePlayerId = playerId;
-        } else if (folderData.games && folderData.games.length > 0) {
-          // If it's a standard preset, get the player ID from the first entry in the games array
-          // Ensure it's converted to a string if stateManager expects strings
-          effectivePlayerId = folderData.games[0].player.toString();
-        } else {
-          // Log a warning if we can't find the player ID even for a standard preset
-          log('warn', 
-            `Could not determine player ID for preset ${folderId}, defaulting to '1'.`
-          );
-        }
-
-        this.loadRulesFile(gameDirectory, seedName, rulesFile, effectivePlayerId);
-      } else {
-        log('warn', 
-          'No suitable rules.json file found for automatic loading.'
-        );
-        const statusElement = document.getElementById('preset-status');
-        if (statusElement) {
-          statusElement.innerHTML = `
-            <div class="error-message">
-              <p>Could not find a rules file to automatically load.</p>
-            </div>
-          `;
-        }
-      }
+      // Automatically load the rules.json file for this preset/player.
+      // Fire-and-forget: choosing the player can require a dialog, and
+      // loadPreset itself is synchronous (it renders the detail view first).
+      this._autoLoadPresetRules(
+        gameDirectory,
+        seedName,
+        folderData,
+        playerId,
+        seedName
+      ).catch((error) => {
+        log('error', 'Error auto-loading preset rules:', error);
+      });
     } catch (error) {
       log('error', 'Error displaying preset:', error);
       const container = this.presetsListContainer;
@@ -1878,7 +2003,100 @@ export class PresetUI {
     }
   }
 
-  async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = DEFAULT_PLAYER_ID) {
+  /**
+   * Pick the rules file to auto-load for a preset the user just opened, and
+   * load it.
+   *
+   * Per-player preset buttons carry `data-player`, so the id arrives with the
+   * click. The combined button for a multiworld seed carries none — it used
+   * to fall through to `games[0]`, quietly loading player 1's game. Now the
+   * user is asked which player they meant, and the chosen player's own
+   * `_P<N>_rules.json` slice is preferred over the combined file.
+   *
+   * @param {string} gameDirectory
+   * @param {string} seedName
+   * @param {Object} folderData - Entry from preset_files.json (files + games)
+   * @param {string|null} playerId - Explicit player from the clicked button
+   * @param {string} folderId - Used for logging only
+   * @private
+   */
+  async _autoLoadPresetRules(gameDirectory, seedName, folderData, playerId, folderId) {
+    const files = folderData?.files || [];
+    const games = folderData?.games || [];
+
+    const setStatus = (html) => {
+      const statusElement = document.getElementById('preset-status');
+      if (statusElement) statusElement.innerHTML = html;
+    };
+
+    let effectivePlayerId = playerId ? String(playerId) : null;
+
+    if (!effectivePlayerId && games.length > 1) {
+      // Multiworld seed, no player named by the caller — ask.
+      const players = games.map((entry) => ({
+        id: String(entry.player),
+        name: entry.name || `Player ${entry.player}`,
+        game: entry.game || null,
+      }));
+      const urlPlayer = this._playerIdFromUrl();
+      if (urlPlayer && players.some((p) => p.id === urlPlayer)) {
+        effectivePlayerId = urlPlayer;
+        log('info',
+          `Player ${urlPlayer} taken from the ?player= URL parameter for ${seedName}.`
+        );
+      } else {
+        effectivePlayerId = await this.promptForPlayerSelection(
+          players,
+          `${seedName} (${games.length}-player multiworld)`
+        );
+      }
+      if (!effectivePlayerId) {
+        log('info', `Player selection cancelled for ${seedName}; not loading.`);
+        setStatus('<div class="preset-loading">Load cancelled — no player selected.</div>');
+        return;
+      }
+    } else if (!effectivePlayerId && games.length === 1) {
+      effectivePlayerId = String(games[0].player);
+    }
+
+    // Prefer the player's own slice; fall back to the combined/plain file.
+    let rulesFile = effectivePlayerId
+      ? files.find((file) => file.endsWith(`_P${effectivePlayerId}_rules.json`))
+      : null;
+    if (!rulesFile) {
+      if (effectivePlayerId && gameDirectory === 'multiworld') {
+        log('warn',
+          `Player-specific rules file not found for P${effectivePlayerId}, falling back to the combined rules.json`
+        );
+      }
+      rulesFile = files.find((file) => isRulesFileName(file));
+    }
+
+    if (!rulesFile) {
+      log('warn', 'No suitable rules.json file found for automatic loading.');
+      setStatus(`
+            <div class="error-message">
+              <p>Could not find a rules file to automatically load.</p>
+            </div>
+          `);
+      return;
+    }
+
+    if (!effectivePlayerId) {
+      // No games array in the index — let loadRulesFile infer (or ask) from
+      // the file itself rather than assuming player 1.
+      log('warn',
+        `Could not determine player ID for preset ${folderId} from the preset index; inferring from ${rulesFile}.`
+      );
+    }
+
+    await this.loadRulesFile(gameDirectory, seedName, rulesFile, effectivePlayerId);
+  }
+
+  // playerId defaults to null (not DEFAULT_PLAYER_ID) so we can tell "the
+  // caller knows which player" from "nobody said" — the latter goes through
+  // resolvePlayerIdInteractive once the rules are parsed.
+  async loadRulesFile(gameDirectory, seedName, rulesFile, playerId = null) {
     const fullPath = `./presets/${gameDirectory}/${seedName}/${rulesFile}`;
     log('info', `Loading rules file: ${fullPath}`);
 
@@ -1921,8 +2139,38 @@ export class PresetUI {
           `Failed to load rules file ${fullPath}: ${response.status} ${response.statusText}`
         );
       }
-      const rulesData = await response.json();
+      /**
+       * ⛓⛓ **THE GZIP SEAM ON THE FETCH PATH** (EDITOR v3 E1c).
+       *
+       * ⛔ **A `content-encoding: gzip` RESPONSE IS ALREADY DECODED** by the
+       * browser — measured on the live site, where every preset arrives that
+       * way — so `response.json()` stays the path for every ordinary file and
+       * nothing is double-decoded. Only a name the INDEX says is a `.gz` takes
+       * the buffer path, and even then `gunzipIfNeeded` sniffs the `1f 8b`
+       * MAGIC rather than trusting that name: a server that transparently
+       * decoded it hands over plain JSON, and that must still load.
+       */
+      const rulesData = rulesFile.endsWith('.gz')
+        ? JSON.parse(new TextDecoder().decode(
+          await gunzipIfNeeded(await response.arrayBuffer())))
+        : await response.json();
       if (isStale()) return;
+
+      // Resolve the player before anything downstream sees the rules. For a
+      // per-player file this is inferred from the name; for a combined
+      // multiworld file with no explicit caller ID the user is asked.
+      const resolvedPlayerId = await this.resolvePlayerIdInteractive(
+        rulesFile,
+        rulesData,
+        playerId
+      );
+      if (isStale()) return;
+      if (!resolvedPlayerId) {
+        log('info', `Player selection cancelled for ${rulesFile}; not loading.`);
+        setStatus('<div class="preset-loading">Load cancelled — no player selected.</div>');
+        return;
+      }
+      playerId = resolvedPlayerId;
 
       // Ensure componentState exists before trying to set properties on it
       if (this.componentState) {
@@ -2207,17 +2455,7 @@ export class PresetUI {
       host.innerHTML = '';
       return;
     }
-    const driverLabel = (() => {
-      if (stats.driver === 'top-down') {
-        return stats.sourceGame
-          ? `Top-down (${this.escapeHtml(stats.sourceGame)})`
-          : 'Top-down';
-      }
-      if (stats.driver === 'grid-growth') return 'Grid-growth';
-      // procgen_metadata absent (older procgen output) — preset_sidecars
-      // is present but we don't know the driver. Label honestly.
-      return 'Procgen (driver unknown)';
-    })();
+    const driverLabel = procgenDriverLabel(stats, (s) => this.escapeHtml(s));
 
     const stopReasonClass = stats.stopReason === 'all_placed'
       ? 'preset-procgen-stop-ok'
@@ -2498,7 +2736,7 @@ export class PresetUI {
     const gameData = this.presets?.[gameDirectory];
     const folderData = gameData?.folders?.[seedName];
     const sphereFile = (folderData?.files ?? []).find((f) => f.endsWith('_sphere_log.jsonl'));
-    const rulesFile = (folderData?.files ?? []).find((f) => f.endsWith('_rules.json'));
+    const rulesFile = (folderData?.files ?? []).find((f) => isRulesFileName(f));
 
     // Embedded-first: a procgen rules.json may carry the sphere log
     // as a top-level `sphere_log` array (Phase 4 of the
@@ -2702,6 +2940,177 @@ export class PresetUI {
     } catch (e) {
       // ignore — quota exceeded or storage disabled
     }
+  }
+
+  /**
+   * Decide which player's slice of a rules file to load.
+   *
+   * A multiworld rules.json describes every player; the app only ever loads
+   * one of them. Guessing silently (the old behaviour: always player 1) means
+   * the user sees somebody else's game with no indication anything went
+   * wrong, so we infer when the data identifies a player and ask when it
+   * doesn't.
+   *
+   * Precedence:
+   *   1. An explicit ID from the caller (per-player preset buttons).
+   *   2. Inference from the file name / rules content (see
+   *      utils/playerInference.js).
+   *   3. A `?player=N` URL parameter naming a player the file contains —
+   *      this is how the automated harness picks a slot without a dialog.
+   *   4. Ask the user.
+   *
+   * @param {string} fileName - File name or path the rules came from
+   * @param {Object} rulesData - Parsed rules JSON
+   * @param {string|number|null} explicitPlayerId - ID supplied by the caller
+   * @returns {Promise<string|null>} The chosen player ID, or null if the user
+   *   cancelled (in which case the caller must abort the load).
+   */
+  async resolvePlayerIdInteractive(fileName, rulesData, explicitPlayerId = null) {
+    if (explicitPlayerId !== null && explicitPlayerId !== undefined && explicitPlayerId !== '') {
+      return String(explicitPlayerId);
+    }
+
+    const { playerId, players, reason } = resolvePlayerId(fileName, rulesData);
+    if (playerId !== null) {
+      log('info',
+        `[PresetUI] Player ${playerId} inferred for ${fileName} (${reason}).`
+      );
+      return playerId;
+    }
+
+    // Ambiguous: several players, nothing in the file says which one.
+    const urlPlayer = this._playerIdFromUrl();
+    if (urlPlayer && players.some((p) => p.id === urlPlayer)) {
+      log('info',
+        `[PresetUI] Player ${urlPlayer} taken from the ?player= URL parameter for ${fileName}.`
+      );
+      return urlPlayer;
+    }
+
+    log('info',
+      `[PresetUI] ${fileName} contains ${players.length} players and none is identified — asking the user.`
+    );
+    return this.promptForPlayerSelection(players, fileName);
+  }
+
+  /**
+   * Read a player ID from the `?player=` URL parameter.
+   * @returns {string|null}
+   * @private
+   */
+  _playerIdFromUrl() {
+    try {
+      const value = new URLSearchParams(window.location.search).get('player');
+      return value ? String(value) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Ask the user which player to load from a multiworld rules file.
+   *
+   * Modelled on the shared custom-URL warning modal: a promise-returning
+   * overlay with inline styles, so it works regardless of which panel (or
+   * none) is currently rendered.
+   *
+   * @param {Array<{id: string, name: string, game: string|null}>} players
+   * @param {string} fileName - Shown so the user knows what they're choosing for
+   * @returns {Promise<string|null>} Chosen player ID, or null if cancelled.
+   */
+  promptForPlayerSelection(players, fileName) {
+    if (!players || players.length === 0) return Promise.resolve(null);
+    if (players.length === 1) return Promise.resolve(players[0].id);
+
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'preset-player-select-overlay';
+      Object.assign(overlay.style, {
+        position: 'fixed',
+        inset: '0',
+        background: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: '100000',
+      });
+
+      const dialog = document.createElement('div');
+      Object.assign(dialog.style, {
+        background: '#2d2d30',
+        color: '#cccccc',
+        border: '1px solid #3c9dd0',
+        borderRadius: '6px',
+        padding: '20px',
+        maxWidth: '520px',
+        width: 'calc(100% - 40px)',
+        maxHeight: 'calc(100% - 40px)',
+        overflowY: 'auto',
+        fontSize: '13px',
+      });
+
+      const rows = players
+        .map((player) => {
+          const game = player.game
+            ? `<span style="color:#9aa0a6;"> — ${this.escapeHtml(player.game)}</span>`
+            : '';
+          return `
+            <button class="preset-player-choice" data-player="${this.escapeHtml(player.id)}"
+                    style="display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;
+                           background:#3c3c3c;color:#e6e6e6;border:1px solid #555;border-radius:4px;
+                           cursor:pointer;font-size:13px;">
+              <strong>Player ${this.escapeHtml(player.id)}</strong>: ${this.escapeHtml(player.name)}${game}
+            </button>`;
+        })
+        .join('');
+
+      dialog.innerHTML = `
+        <h3 style="margin:0 0 8px 0;color:#ffffff;font-size:15px;">Which player?</h3>
+        <p style="margin:0 0 12px 0;line-height:1.4;">
+          ${this.escapeHtml(fileName)} is a multiworld file describing
+          ${players.length} players. Choose the player whose game you want to load.
+        </p>
+        <div class="preset-player-choices">${rows}</div>
+        <div style="margin-top:14px;text-align:right;">
+          <button class="preset-player-cancel"
+                  style="padding:6px 14px;background:#3c3c3c;color:#cccccc;border:1px solid #555;
+                         border-radius:4px;cursor:pointer;">Cancel</button>
+        </div>
+      `;
+
+      let settled = false;
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        document.removeEventListener('keydown', onKeyDown, true);
+        overlay.remove();
+        resolve(value);
+      };
+      const onKeyDown = (event) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
+          finish(null);
+        }
+      };
+
+      dialog.querySelectorAll('.preset-player-choice').forEach((button) => {
+        button.addEventListener('click', () =>
+          finish(button.getAttribute('data-player'))
+        );
+      });
+      dialog
+        .querySelector('.preset-player-cancel')
+        .addEventListener('click', () => finish(null));
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) finish(null);
+      });
+      document.addEventListener('keydown', onKeyDown, true);
+
+      overlay.appendChild(dialog);
+      document.body.appendChild(overlay);
+      const firstChoice = dialog.querySelector('.preset-player-choice');
+      if (firstChoice) firstChoice.focus();
+    });
   }
 
   escapeHtml(unsafe) {

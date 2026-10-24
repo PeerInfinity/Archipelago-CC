@@ -1,0 +1,71 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 73,
+  "x": 64,
+  "y": 16
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 1,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 0
+ },
+ "seam": {
+  "items": {
+   "canSwim": true,
+   "hasFeather": true,
+   "hasFire": true,
+   "hasShield": true,
+   "hasSpear": true,
+   "hasSword": true,
+   "hasTorch": true,
+   "hasWand": true
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 14,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 1
+  },
+  {
+   "key": "primary",
+   "from": 1,
+   "to": 2
+  },
+  {
+   "key": "left",
+   "from": 2,
+   "to": 3
+  },
+  {
+   "key": "up",
+   "from": 2,
+   "to": 14
+  }
+ ],
+ "name": "leash-l73-622-strike",
+ "description": "leash D1: the solver strike-policy prefix on L73 arrival",
+ "note": ""
+}

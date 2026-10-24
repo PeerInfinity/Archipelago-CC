@@ -5,35 +5,239 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⛓ R9 slice 12g — THE SAME HOLE A FOURTH TIME, by the same criterion
+      # (what the suite READS, not only what `include` collects).
+      # `seedlingSwapGate.test.js` loads `seedling-bot-replay-win.py` and
+      # asserts the world-swap gate's verdicts, so a `.py`-only change to that
+      # driver could leave the gate broken and report green on a row it never
+      # ran.
+      - 'scripts/**/*.py'
+      # ⛓ SWIM S1 (2026-10-02) — THE SAME HOLE A FIFTH TIME: `reachClosure.identityRows()`
+      # PARSES `identity-block.sh` (the producers' command template, every `r` row), and
+      # `ciGatePlan`/`rowInputKey`/`standingValues` read what it derives — so a `.sh`-only
+      # change reached tests this trigger never ran (b8582d17c3 drew no vitest run).
+      - 'scripts/**/*.sh'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
+      # ⛓⛓ S3 (⚖ 72) — THE SAME HOLE A FIFTH TIME, and this slice is the one
+      # that opens it: the BROWSER GATES run here now, and their SUBJECT is the
+      # frontend tree itself — `demos.html`, the preset bundles, the lab pages,
+      # the `flashPanel/wasm` submodule pointer. `frontend/**/*.js` above is
+      # narrower than what those gates READ, so a head that moved a gate's
+      # subject without touching a `.js` would get no CI answer for it at all,
+      # which is the KEEP branch freezing a row for a reason nobody can see.
+      # ⛔ The criterion is unchanged from the four comments above — what the
+      # job READS, not what a glob happens to collect.
+      - 'frontend/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
       - 'package-lock.json'
+      # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
+      # commit must run this workflow (H1 had to dispatch one by hand).
+      - 'scripts/procgen/ci-arm-costs.json'
+      # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
+      # and the bank-reading gate rows READ standing-values.json, so a
+      # bank-only commit owes this suite a run — a bank push at d4f7a31e43
+      # ran no unit tests until this line existed.
+      - 'scripts/procgen/standing-values.json'
       - '.github/workflows/unittests_frontend.yml'
   pull_request:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⛓ R9 slice 12g — THE SAME HOLE A FOURTH TIME, by the same criterion
+      # (what the suite READS, not only what `include` collects).
+      # `seedlingSwapGate.test.js` loads `seedling-bot-replay-win.py` and
+      # asserts the world-swap gate's verdicts, so a `.py`-only change to that
+      # driver could leave the gate broken and report green on a row it never
+      # ran.
+      - 'scripts/**/*.py'
+      # ⛓ SWIM S1 (2026-10-02) — THE SAME HOLE A FIFTH TIME: `reachClosure.identityRows()`
+      # PARSES `identity-block.sh` (the producers' command template, every `r` row), and
+      # `ciGatePlan`/`rowInputKey`/`standingValues` read what it derives — so a `.sh`-only
+      # change reached tests this trigger never ran (b8582d17c3 drew no vitest run).
+      - 'scripts/**/*.sh'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
+      # ⛓⛓ S3 (⚖ 72) — THE SAME HOLE A FIFTH TIME, and this slice is the one
+      # that opens it: the BROWSER GATES run here now, and their SUBJECT is the
+      # frontend tree itself — `demos.html`, the preset bundles, the lab pages,
+      # the `flashPanel/wasm` submodule pointer. `frontend/**/*.js` above is
+      # narrower than what those gates READ, so a head that moved a gate's
+      # subject without touching a `.js` would get no CI answer for it at all,
+      # which is the KEEP branch freezing a row for a reason nobody can see.
+      # ⛔ The criterion is unchanged from the four comments above — what the
+      # job READS, not what a glob happens to collect.
+      - 'frontend/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
       - 'package-lock.json'
+      # ⛓ H2: the CI arm costs re-shard the browser plan, so a costs-only
+      # commit must run this workflow (H1 had to dispatch one by hand).
+      - 'scripts/procgen/ci-arm-costs.json'
+      # ⛓ 2026-09-13 (the sixth time, for the BANK): `standingValues.test.js`
+      # and the bank-reading gate rows READ standing-values.json, so a
+      # bank-only commit owes this suite a run — a bank push at d4f7a31e43
+      # ran no unit tests until this line existed.
+      - 'scripts/procgen/standing-values.json'
       - '.github/workflows/unittests_frontend.yml'
   workflow_dispatch:
 
+# ⛓ ci-workflow-policy-review F3 (2026-10-10): a push to a branch other than
+# main supersedes the in-progress run of the previous push to that SAME branch
+# (79 such runs in four days, ~2,300 runner-minutes). Only those pushes share a
+# group: main, pull requests and every workflow_dispatch get the run id as their
+# group, so a dispatched re-run of a head (⚖ 72 (b)'s consecutive runs) never
+# cancels, or queues behind, anything — and main's per-SHA rows, which the bank
+# and ci-vitest-summary.mjs cite, are never cancelled. ⚠ An intermediate head of
+# a branch can therefore end `cancelled`: read CI at the branch's LAST head.
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
-  javascript-tests:
-    name: JavaScript Unit Tests (Vitest)
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓ ci-skip-rules RULE 1 (⚖ user, 2026-10-17) — A MAIN PUSH OF A SHA THAT
+  # ALREADY HAS A GREEN RUN RUNS NO SUITE AND NO GATES.
+  #
+  # The harvests push a branch, read JSUT at that SHA, then `git push
+  # <sha>:main`. That re-ran the same SHA (`ci-skip-review` §3 R1: ≈ 7,700
+  # job-min in 7 days). In 100 such pairs the main copy caught 0 real defects;
+  # both of its reds were known flakes.
+  #
+  # ⛔ The skipped main run is the NEWEST run for its SHA. `ciSummary.findRun`
+  # passes over a run whose suite job skipped, so `ci-vitest-summary.mjs
+  # <main sha>` still answers with the branch run.
+  # ⛔ A job-level `if:`, never a `paths:` filter: a skipped job counts as passed
+  # for a required check, and a path-filtered workflow never reports at all.
+  # ⛓ FAIL-OPEN: an API error, a dispatch, a branch push and a run with no
+  # earlier green run all run the suite.
+  # ══════════════════════════════════════════════════════════════════════
+  already-green:
+    name: Same SHA already green?
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 5
+    permissions:
+      actions: read
+    outputs:
+      green: ${{ steps.q.outputs.green }}
+    steps:
+      - name: Look for an earlier successful run at this SHA
+        id: q
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          if ! R=$(gh api "repos/$REPO/actions/workflows/unittests_frontend.yml/runs?head_sha=$SHA&status=success&per_page=20" \
+              --jq "[.workflow_runs[] | select(.id != $RUN_ID)] | map(\"\\(.id) \\(.event) \\(.head_branch)\") | .[]"); then
+            echo "MEASURED: could not list the runs at $SHA — the suite runs (fail-open)"
+            echo "green=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ -n "$R" ]; then
+            echo "MEASURED: $SHA already has a successful run — the suite and gates are SKIPPED here:"
+            printf '%s\n' "$R" | sed 's/^/  run /'
+            echo "green=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "MEASURED: no earlier successful run at $SHA — the suite runs"
+            echo "green=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓ ci-jsut-split (⚖ user, 2026-10-17: "Vitest + headless") — THE SUITE IS
+  # A MATRIX OF `vitest --shard=k/N` JOBS, AND THE SLOW TIER IS ITS OWN JOB.
+  #
+  # Before: ONE job ran `test:unit` (726–1236 s) then `test:unit:slow`
+  # (351–591 s) back to back — a 1808 s median, the run's critical path.
+  # ⛔ N is typed ONCE, in the matrix list: the job name and `--shard=` read it
+  # back as `strategy.job-total`. `ciSummary.suiteJobs` reads `k/N` off the job
+  # NAMES, so a shard missing from a run is named, never summed away.
+  # ⛔ THE NAMES ARE READ — `JavaScript Unit Tests (Vitest shard k/N)` and
+  # `JavaScript Unit Tests (slow Vitest)` (`SUITE_SHARD_JOB` / `SUITE_SLOW_JOB`).
+  # ⛔ `fail-fast: false`: a red shard must not cancel its siblings, or the
+  # reader could only say "incomplete" where it can say "red, in shard 2".
+  # ══════════════════════════════════════════════════════════════════════
+  javascript-tests:
+    name: JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1. `!cancelled()`, not `always()`: the guard is SKIPPED off main,
+    # and a cancelled run (F3's supersede) must not start the suite.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
+      # ⛓ G1 (seedling-headless) — THE SEEDLING SOURCE WITH ITS HISTORY. The
+      # checkout above is depth 1, submodules included, so `vendor/seedling`
+      # arrives as ONE commit: `check-seedling-source-pin`'s row (iii) (the
+      # demo build's source commit is an ANCESTOR of the pin) read
+      # UNVERIFIABLE (`2/0/1`), and the ogmo `--check` vitest row (its
+      # provenance is the last commit touching `Shrum.oep`) SKIPPED. One fetch
+      # of the fork's history, BEFORE vitest (the gates job repeats it); guarded, so a
+      # checkout that is already full fetches nothing, and timed like the
+      # other measured steps.
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.4.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -41,10 +245,540 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Vitest tests
-        run: npm run test:unit
+      - name: Run Vitest tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})
+        run: npm run test:unit -- --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+
+  # ⛓ ci-jsut-split — the slow tier, alone and UNSHARDED: it runs serially
+  # (`fileParallelism: false`, vitest.slow.config.js) because its synchronous
+  # CPU-bound suites flake under contention, and at 351–591 s it is already
+  # shorter than a headless shard — splitting it would buy a runner, not wall.
+  javascript-tests-slow:
+    name: JavaScript Unit Tests (slow Vitest)
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # ⛓ G1 — the same step as the Vitest shards' (see the comment there).
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       # Heavy generate-and-test suites (*.slow.test.js), run serially so they
       # don't flake under parallel CPU contention. See vitest.slow.config.js.
       - name: Run slow Vitest tests
         run: npm run test:unit:slow
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓ ci-split C2 (⚖ user, 2026-09-27) — THE HEADLESS GATES ARE THEIR OWN JOB.
+  #
+  # They were the last step of the Vitest job, so the job ran test:unit +
+  # test:unit:slow + the gates back to back: 625–913 s on the last main runs,
+  # which made it the run's critical path over the longest browser shard
+  # (~600 s). In parallel, the critical path is the slower of the three.
+  #
+  # ⛔ THIS JOB'S NAME MUST NOT MATCH `/JavaScript Unit Tests/`
+  # (`VITEST_JOB`, scripts/procgen/ciSummary.js): `pickVitestJob` takes the
+  # FIRST job that matches as the SUITE's job, and `ci-vitest-summary.mjs`
+  # reads the vitest row out of that job's log. The gate lines need no name:
+  # `gateLogs` reads every job of the run.
+  #
+  # The same setup as the Vitest job: the recursive checkout (the headless
+  # set reads the flashPanel/wasm builds — `seedling-wasm-pins`) and the
+  # Seedling unshallow (`seedling-source-pin` (iii) reads the fork's
+  # ancestry; it printed `3 VERIFIED, 0 UNVERIFIABLE` on run 36286595941).
+  # ══════════════════════════════════════════════════════════════════════
+  #
+  # ⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — AND THE HEADLESS SET IS TWO JOBS.
+  # ⛔ MEASURED at 06b6b754a6 (run 39081866066): the one job hit the step's
+  # 20-minute deadline after 63 of its 95 arms, and `continue-on-error` kept it
+  # green — 32 producer arms printed no line at all. The partition is
+  # `ciGatePlan.planFixedShards`: longest-first into the lighter of
+  # `CI_HEADLESS_SHARDS` bins, priced off `ci-arm-costs.json` like the browser
+  # plan, so a new arm lands without anyone typing it. ⛔ The matrix list below
+  # is pinned to `CI_HEADLESS_SHARDS` by `ciGatePlan.test.js`. And no plan job:
+  # the count is fixed, so each shard recomputes its own slice from the tree.
+  # ══════════════════════════════════════════════════════════════════════
+  headless-gates:
+    name: Headless procgen gates (shard ${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    # The step's own 30-minute deadline below, plus the ~30 s of setup.
+    timeout-minutes: 35
+    strategy:
+      # ⛔ One shard's red must not cancel the other: these are readers.
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # ⛓ G1 — the same step as the Vitest job's (see the comment there),
+      # BEFORE the gates read vendor/seedling's history.
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ⛓⛓⛓ R9 slice P3b (g), ⚖ ruling 54 (6) — THE HEADLESS PROCGEN GATES.
+      #
+      # ⛔ Before P3b NO `check-*.mjs` gate ran in CI at all: one that went red
+      # stayed red until somebody spent the box. This step runs the HEADLESS
+      # set; `ci-gates.mjs` derives it from `gateRoster` and prints one
+      # parseable `## CI-GATE | …` line each.
+      #
+      # ⚠ THE SENTENCE THAT USED TO SIT HERE SAID "Four of the thirty-one are
+      # headless … the other twenty-seven SKIPPED BY NAME", and it was
+      # WRONG-AND-GREEN: `full-tier-owed` and `slice-records` had joined the
+      # roster (six of thirty-three), and since S3 (⚖ 72) the twenty-seven are
+      # not skipped either — the browser arms run in the `browser-gates` matrix
+      # below and only the four WINDOWS rows are skipped by name. ⛔ No count
+      # is typed here any more: the step's own header line is the measurement.
+      #
+      # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED.
+      # This step is a STANDING-VALUE READER, not a merge gate:
+      # `check-seedling-full-tier-owed` is red whenever a full-tier
+      # measurement is OWED, which is a scheduling fact and must not block
+      # every push. R9 slice 12g′ learned that `continue-on-error` hides a red
+      # at the JOB level — so nothing reads the job conclusion:
+      # `ci-summary.mjs --gate=<key> <sha>` reads the printed LINE and exits on
+      # the gate's own code.
+      #
+      # ⛓⛓ S5 (⚖ 72) — THIS STEP NOW CARRIES THE FULL `procgen-help` CLAIM.
+      # `check-procgen-help.mjs` retired its `@ci-face` and declares
+      # `@ci-argv --in-place`, so the arm run here is `--doors=all` published
+      # under `gate: procgen-help` — 402.8 s of BOX time that a `--write` used
+      # to pay on every full-freight run, against a job that is not this
+      # workflow's critical path (the browser matrix beside it is measured in
+      # tens of minutes). ⛔ Nothing here names the gate or its flags: the arm
+      # and its argv are DERIVED from the gate's own declaration.
+      #
+      # ⛓⛓⛓ S4c (⚖ 72) — AND THIS STEP NOW CARRIES THE HEADLESS IDENTITY AND
+      # PRODUCER ROWS TOO. `ci-gates.mjs` derives them from `standingRows()`
+      # the same way it derives the gates from `gateRoster()`; the four whose
+      # instrument holds `/mnt/c/Windows/py.exe` get no arm (⚖ 72 (a)) and are
+      # named `## CI-SKIPPED`. ⛔ Nothing here lists them: a set typed into a
+      # workflow is stale the day a row is added, and stale in the direction
+      # that DROPS one silently.
+      #
+      # ⛔ AND A STEP TIMEOUT, NOT ONLY THE JOB'S. Without one the default is
+      # the job's, and a job timeout reports `cancelled` naming neither step
+      # nor cause (S3's measurement, on the browser jobs). 20 minutes is a
+      # KILL DEADLINE far above where the set lands. ⚠ THE MEASUREMENT BEHIND
+      # THAT SENTENCE MOVED AT S4c and is restated rather than left to rot:
+      # the headless GATES were 25.4 s of runner time plus `procgen-help`'s
+      # 255.3 s, and S4c's identity arms add 136.9 runner-seconds measured for
+      # the five expensive ones (1,094.3 banked BOX seconds — the runner is
+      # 0.11x-0.23x this box on pure-node work, measured in S4c's step-1
+      # scratch run 33581070573) plus the twenty cheap ones, which are 2.1 min
+      # of box between them.
+      - name: Run headless procgen gates (shard ${{ matrix.shard }})
+        continue-on-error: true
+        # ⛓ ci-jsut-split — 30, not 20: the scratch run 39085485474 measured the
+        # SAME arms at up to 1.9x on a slow runner (bombstand 515 s vs 265 s), and
+        # shard 1 hit 20 minutes at 32/48. Priced at their max, each shard is
+        # ~972 s; a typical runner lands ~700-850 s.
+        timeout-minutes: 30
+        run: |
+          set -o pipefail
+          node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }} \
+            --deadline-s=1800 2>&1 | tee /tmp/gates.log
+
+      # ⛔⛔ ci-jsut-split (fidelity-9's ask (b)) — A CUT BATTERY IS RED, BY NAME.
+      # From 2026-10-10 to this split the step above hit its 20-minute deadline on
+      # most runs and printed 54–68 of 80–95 arms — green, because
+      # `continue-on-error` also swallows a TIMEOUT. `continue-on-error` stays (a
+      # red GATE is a standing-row fact, not a merge gate); a battery that never
+      # printed `## CI-DONE |` fails the job here, and `ci-summary --gates` names it.
+      - name: Battery complete? (shard ${{ matrix.shard }})
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
+
+      # ⛔⛔ GATESUBJ D4 — A RED ARM IS RED, BY NAME, UNLESS IT IS DECLARED.
+      # The gate step keeps `continue-on-error` (a standing-value reader); at
+      # f1b4f85446 that let five arms print `exit=1` on every push for 2–3 weeks
+      # under green jobs. This step reads the battery's own `## CI-GATE |` lines
+      # and fails when an arm is red and NOT in `CI_GATE_EXPECTED_RED`
+      # (`scripts/procgen/ciExpectedRed.js`, each row with an owner), when a
+      # listed arm is now green, or when a listed key names no arm.
+      - name: Expected reds only? (shard ${{ matrix.shard }})
+        if: ${{ !cancelled() }}
+        run: node scripts/procgen/ci-expected-red.mjs /tmp/gates.log
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓ SEEDLING HAMMER-PHASE RR (⚖ user, 2026-10-19) — EVERY PRODUCER'S OWN
+  # `--check`, AND THIS ONE IS A MERGE GATE.
+  #
+  # ⛔ NOT `continue-on-error`, unlike the reader above: a producer `--check` is
+  # not a scheduling fact, it is "the committed artifact is what its producer
+  # makes". At `d8fa8e0b19` seven of them were red on main — two since
+  # 2026-08-06, one since its own introducing commit — and nothing ran them.
+  #
+  # ⛔ The roster is a GLOB inside `ci-producer-checks.mjs` (`plan-seedling-*`
+  # and the `regenerate-*-tapes` regenerators), never typed here; a producer
+  # that cannot run on a runner is named in its `EXCLUDED` table WITH its
+  # reason and printed as `## PRODUCER-SKIPPED`. A stale exclusion, a file that
+  # names neither `--check` nor `--write`, or a `--check` that moves the tree
+  # is red. No submodules: every enrolled producer is pure node over the
+  # atlas and the committed fixtures (measured in a worktree with none
+  # initialised).
+  # ══════════════════════════════════════════════════════════════════════
+  producer-checks:
+    name: Producer --checks
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    timeout-minutes: 40
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run every producer --check
+        timeout-minutes: 35
+        run: node scripts/procgen/ci-producer-checks.mjs --timeout-s=1500
+
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓⛓ S3 (⚖ RULING 72, 2026-09-01) — **THE BROWSER GATES, IN CI.**
+  #
+  # ⚖ 72 ruled: THE BANK QUOTES CI, CI never writes it. This is the
+  # PRODUCTION half — CI learns to print the answers. Nothing reads them yet:
+  # widening `ciSourced` is S4, ordered after these lines exist and after
+  # ⚖ 72 (b)'s three-consecutive-runs bar (trap 1047 — the cheap consumption
+  # rung would otherwise consume lines that do not exist and freeze ~24 rows
+  # at their last local values with a polite reason).
+  #
+  # ⛔ THE SHARDS ARE PUBLISHED, NEVER TYPED (⚖ 17). The plan job asks
+  # `ci-gates.mjs --plan --json` for a partition computed from what each arm
+  # COST THE RUNNER on recent runs (`ci-arm-costs.json`); the matrix
+  # interpolates it, and each shard job recomputes the same plan from the same
+  # tree and takes its slice by index. A shard list committed here would be
+  # stale the day a gate is added — and stale in the direction that drops one
+  # silently.
+  #
+  # ⛔⛔ IT USED TO PRICE OFF THE STANDING ROW'S BANKED `ms`, AND ⚖ 72 CHANGED
+  # THAT FIELD'S MEANING UNDER IT (S5b, trap 1068): a CI-sourced row's `ms` is
+  # what a `ci-summary` NETWORK CALL cost, so `seedling-wasm-element` priced at
+  # 5.5 s instead of 934.7 s, this matrix collapsed to ONE job and the browser
+  # wall went 15 m 27 s → 23 m 01 s with nothing red anywhere. `ci-gates.mjs
+  # --audit --run=<id>` is the guard, and it reads only the runner's own
+  # `##   ms | … | here=` lines.
+  #
+  # ⛓⛓ S4c — AND THE MATRIX IS NOT ONLY GATES EITHER. `plan-seedling-r7-ends-meet
+  # --check` is a standing IDENTITY row that drives a browser, so it is a browser
+  # ARM and lands in this partition like any other. ⛔ It arrived UNPRICED, which
+  # `planCiShards` prices at the whole budget on purpose, so it takes a job of its
+  # own until a `--write-costs` has seen it: 2 shards -> 3, with the wall clock
+  # unchanged because `seedling-wasm-element`'s 901 s still sets it.
+  # ══════════════════════════════════════════════════════════════════════
+
+  browser-gate-plan:
+    name: Browser gates (shard plan)
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard; the shard matrix `needs` this job, so it skips too.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    timeout-minutes: 10
+    outputs:
+      shards: ${{ steps.plan.outputs.shards }}
+      needed: ${{ steps.needed.outputs.needed }}
+    steps:
+      # ⛓ NO submodules: the plan reads `gateRoster()` (a directory of
+      # `check-*.mjs`) and `ci-arm-costs.json`. Paying 127 MB of wasm for a
+      # partition would be a minute per push for nothing. ⛓ ci-manual-moves:
+      # `npm ci` IS paid now — the path filter (`ciPathFilter.js`) derives a
+      # gate's input populations through `rowInputKey.js`, which imports
+      # esbuild. A submodule is in those populations as its GITLINK path, which
+      # is what a compare lists for a pointer move, so no checkout is needed.
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ════════════════════════════════════════════════════════════════
+      # ⛓ ci-skip-rules RULE 2 (⚖ user, 2026-10-17) — A DOCS-ONLY PUSH RUNS
+      # NO BROWSER SHARD. A non-main push whose changes all lie under
+      # `ciDocsOnly.SKIPPABLE_PREFIXES` (docs/, CC/) skips the
+      # matrix below. Vitest and the headless gates still run: docs are pinned
+      # (10 of 65 docs pushes went red in Vitest), and the CI-sourced
+      # `procgen-help` row reads docs/. `ciDocsOnly.test.js` holds the premise:
+      # no CI-sourced browser arm has a derived input under those prefixes.
+      # ⛓ FAIL-OPEN, F1's shape: main, a PR, a dispatch, an unreadable
+      # compare or ≥ 300 files all run the shards.
+      # ════════════════════════════════════════════════════════════════
+      - name: Browser gates needed? (rule 2 — a docs-only push skips them)
+        id: needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          # ⛓ ci-manual-moves — the change list is ALSO the path filter's input
+          # (`--changed=` below): /tmp/changed.txt holds the paths, or `ALL`
+          # when there is no list to trust (a PR, a dispatch, an unreadable or
+          # truncated compare) — which keeps every path-filtered shard.
+          echo ALL > /tmp/changed.txt
+          decide() {
+            if [ "$EVENT" != "push" ]; then
+              echo "run: $EVENT on $REF always runs" >&2; echo true; return
+            fi
+            base="$BEFORE"
+            case "$base" in ''|0000000000000000000000000000000000000000) base=main ;; esac
+            if ! files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+              echo "run: could not list the changes ($base...$SHA)" >&2; echo true; return
+            fi
+            n=$(printf '%s\n' "$files" | grep -c . || true)
+            if [ "$n" -ge 300 ]; then echo "run: $n changed files (list may be truncated)" >&2; echo true; return; fi
+            printf '%s\n' "$files" > /tmp/changed.txt
+            echo "$n changed file(s) in $base...$SHA:" >&2; printf '%s\n' "$files" | sed 's/^/  /' >&2
+            if [ "$REF" = "refs/heads/main" ]; then
+              echo "run: main always runs the browser shards" >&2; echo true; return
+            fi
+            printf '%s\n' "$files" | node --input-type=module -e "import { docsOnly } from './scripts/procgen/ciDocsOnly.js'; let d = ''; process.stdin.on('data', (c) => { d += c; }).on('end', () => console.log(docsOnly(d.split('\\n')) ? 'false' : 'true'));"
+          }
+          needed=$(decide | tail -1)
+          [ "$needed" = false ] || needed=true
+          echo "MEASURED: browser gates needed: $needed"
+          echo "needed=$needed" >> "$GITHUB_OUTPUT"
+
+      - name: Derive the shard partition from the runner's own measured cost
+        id: plan
+        run: |
+          set -o pipefail
+          # ⛓ the human table goes in the log; the JSON goes to the matrix.
+          node scripts/procgen/ci-gates.mjs --plan --set=browser --changed=/tmp/changed.txt
+          # ⛓ ci-manual-moves — a `@ci-paths` gate's shard (seedling-wasm-ship)
+          # is in the matrix only when a pushed path hits its filter, and on
+          # every non-push run; the stderr lines say which, and why.
+          SHARDS=$(node scripts/procgen/ci-gates.mjs --plan --set=browser --json --changed=/tmp/changed.txt)
+          echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: $SHARDS"
+
+  browser-gates:
+    name: Browser gate shard — ${{ matrix.shard.name }}
+    needs: browser-gate-plan
+    # ⛓ RULE 1 — an explicit status check: without one, GitHub skips this job
+    # whenever ANY ancestor skipped, and `already-green` skips on every branch
+    # push (measured on the probe run 39056958592: the shards never ran).
+    # ⛓ RULE 2 — and a docs-only branch push skips the shards (see the plan job).
+    if: ${{ !cancelled() && needs.browser-gate-plan.result == 'success' && needs.browser-gate-plan.outputs.needed == 'true' }}
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
+    # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES, and this job
+    # holds the one row whose runner cost is genuinely unknown:
+    # `seedling-wasm-element` is 934.7 s of headless SwiftShader on the box.
+    # 45 covers ~2.5× that plus checkout, `npm ci` and the browser install —
+    # and 2.5× banked IS S3's abort criterion, so a job that hits this cap has
+    # answered the question it was sent to answer.
+    timeout-minutes: 45
+    strategy:
+      # ⛔ ONE SHARD'S RED MUST NOT CANCEL THE OTHERS. These jobs are readers,
+      # not merge gates: a cancelled sibling is a standing row with no answer
+      # for this SHA, which is exactly the silence ⚖ 72 (b)'s bar cannot see.
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.browser-gate-plan.outputs.shards) }}
+    steps:
+      # ⛓ RECURSIVE — `frontend/modules/flashPanel/wasm` is the seedling-wasm
+      # submodule and the wasm gates read the builds out of it (~127 MB;
+      # measured in seedling-wasm.yml, which pays the same price).
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ⛓ The browser cache, keyed on the PINNED playwright version rather
+      # than on the lockfile hash: the browser build a version wants is a
+      # function of that version alone (seedling-wasm.yml carries the same
+      # key and the measurement behind it).
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: playwright pin $V"
+
+      - name: Cache the Playwright browser
+        id: pwcache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      # ⛔ `node_modules/playwright/cli.js`, NOT `npx` — `npx` runs
+      # @playwright/test's CLI, which downloads the browser build THAT
+      # package wants, while this repo's browser scripts
+      # `import { chromium } from 'playwright'`. seedling-wasm.yml carries the
+      # measurement of that split. ⛔ And no `--with-deps`: measured there at
+      # 178–311 s with, 7–8 s without, boot green on both — the ubuntu image
+      # already carries Chromium's shared libraries, and the apt round trip it
+      # buys is the call that once hung a job for 38 minutes.
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: |
+          node node_modules/playwright/cli.js install chromium
+          echo "MEASURED-CACHE: cache-hit=${{ steps.pwcache.outputs.cache-hit }}"
+
+      # ⛓ H2 (2026-09-12) — THE PYTHON HALF OF THE HEADLESS CHANNEL. Four
+      # `dual` gates (generated-set, save-stamp, vanilla-manifest, wasm-ship)
+      # observe the game through a `seedling-*-win.py` driver, which on a
+      # runner runs `--headless` under `.venv/bin/python`
+      # (`scripts/procgen/seedlingDriver.js`). Playwright is pinned to node's
+      # version so the two packages share the Chromium installed above —
+      # measured on run 34724984639: no second download, pip 5 s.
+      - name: Python Playwright for the headless driver channel
+        timeout-minutes: 5
+        run: |
+          S=$(date +%s)
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet -r scripts/procgen/requirements-headless.txt
+          echo "MEASURED: venv + requirements-headless $(( $(date +%s) - S ))s"
+
+      # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED —
+      # the same reason the headless step above carries it. These jobs are
+      # STANDING-VALUE READERS, not merge gates: a gate that goes red here is
+      # a fact about a standing row, and R9 slice 12g′ learned that
+      # `continue-on-error` hides a red at the JOB level, which is precisely
+      # why nothing reads the job conclusion — `ci-summary.mjs --gate=<key>
+      # <sha>` reads the printed LINE and exits on the gate's own code.
+      #
+      # ⛓ THE SERVER IS THE REPO ROOT ON :8000, and `python3 -m http.server`
+      # specifically: `check-seedling-wasm-pages.mjs` asserts a true byte
+      # size, which a compressing server would move. The gates take
+      # `--host=<repo root>` and `--root=<host>/frontend` (the Pages-SHAPED
+      # origin) — `ci-gates.mjs` derives both from the one `--host=` here.
+      - name: 'Run the browser gates (shard ${{ matrix.shard.id }})'
+        id: gates
+        continue-on-error: true
+        timeout-minutes: 40
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the kill
+          # below would be unreachable on exactly the path that needs them.
+          set +e
+          node scripts/procgen/ci-gates.mjs \
+            --set=browser --shard=${{ matrix.shard.id }} \
+            --host=http://localhost:8000 --deadline-s=2400 2>&1 | tee /tmp/gates.log
+          RC=$?
+          set -e
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          exit $RC
+
+      # ⛔ ci-jsut-split — the same check as the headless shards' (see there).
+      - name: 'Battery complete? (shard ${{ matrix.shard.id }})'
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard.id }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
+
+      # ⛔⛔ GATESUBJ D4 — A RED ARM IS RED, BY NAME, UNLESS IT IS DECLARED.
+      # The gate step keeps `continue-on-error` (a standing-value reader); at
+      # f1b4f85446 that let five arms print `exit=1` on every push for 2–3 weeks
+      # under green jobs. This step reads the battery's own `## CI-GATE |` lines
+      # and fails when an arm is red and NOT in `CI_GATE_EXPECTED_RED`
+      # (`scripts/procgen/ciExpectedRed.js`, each row with an owner), when a
+      # listed arm is now green, or when a listed key names no arm.
+      - name: Expected reds only? (shard ${{ matrix.shard.id }})
+        if: ${{ !cancelled() }}
+        run: node scripts/procgen/ci-expected-red.mjs /tmp/gates.log
+
+      - name: 'Shard ${{ matrix.shard.id }} — summary'
+        if: always()
+        run: |
+          {
+            echo "## Browser gate shard ${{ matrix.shard.id }} — \`${{ steps.gates.outcome }}\`"
+            echo ""
+            echo "${{ matrix.shard.arms }} arm(s), ${{ matrix.shard.ms }} ms measured in CI."
+            echo ""
+            echo '```'
+            grep -E '^## CI-GATE \||^##   ms \|' /tmp/gates.log 2>/dev/null \
+              || echo '(the step produced no gate lines)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

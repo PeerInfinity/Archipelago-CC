@@ -1,0 +1,5 @@
+files 211 tests 6680 passed 6677 failed 3 skipped 0
+RED entityBlocks.test.js > D2 — FAMILY_BLOCKS: the run's families and the hazard volumes an entity family's solverReads is the surface table's `families` column
+RED entityBlocks.test.js > D2 — FAMILY_BLOCKS: the run's families and the hazard volumes …and a grep of `entities('<family>')` over the family files finds the same files
+RED solveProgress.test.js > hammer-phase TC2 — the active frame (`frame`, additive within v: 2) ⛓⛓ the danger's kind is read off the source's own fields
+tapeRunner pairs 635 88fc7df4dd05d11dfd84ebbea675cc8e

@@ -3,9 +3,12 @@
  * Headless: no DOM, no eventBus, no module wiring. The thin
  * subscribe-and-route layer lives in index.js.
  *
- * See NewDocs/plans/procedural-generation/procgen-player.md for the
- * architecture this implements.
+ * See docs/json/developer/procgen/architecture.md §"Runtime: playing
+ * a generated world" for the architecture this implements.
  */
+
+import { startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 
 /**
  * In-memory store of deserialized regions for the currently-loaded
@@ -19,6 +22,10 @@
 export class WorldWarehouse {
     constructor() {
         this.regions = new Map();
+        /** ⛓ C1 — region id → the refusal sentence, for each region whose
+         *  payload its substrate refused (`deserializeOrRefuse`). Not in
+         *  `regions`, so a move into one is a move into no substrate. */
+        this.refused = new Map();
         this.playerId = null;
     }
 
@@ -27,7 +34,7 @@ export class WorldWarehouse {
     keys() { return [...this.regions.keys()]; }
     size() { return this.regions.size; }
     isEmpty() { return this.regions.size === 0; }
-    clear() { this.regions.clear(); this.playerId = null; }
+    clear() { this.regions.clear(); this.refused.clear(); this.playerId = null; }
 }
 
 /**
@@ -39,16 +46,42 @@ export class WorldWarehouse {
  * Skips (with a warning) sidecar entries whose substrate isn't in the
  * registry or whose registry entry is missing `deserializeWorld`.
  * That's a defensive log rather than an error so a partial warehouse
- * can still drive the regions whose substrates are wired up.
+ * can still drive the regions whose substrates are wired up. A payload
+ * whose substrate REFUSES it (its `deserializeWorld` throws) is skipped
+ * the same way, with the entry's own sentence, and recorded on
+ * `warehouse.refused` (C1).
  */
 export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
     const logger = opts.logger ?? console;
     const sidecars = rulesJson?.preset_sidecars?.[playerId];
     if (!sidecars || typeof sidecars !== 'object') return null;
 
+    // Dataset carriage resolution (jta-synthetic-data-plan §4.1, ruling 4:
+    // single-carrier + refs). One region's payload carries the full
+    // `jta_dataset` document; every dataset region carries a
+    // `jta_dataset_ref {dataset_id, schema_version}`. Regions load in
+    // arbitrary order, but the warehouse holds every payload at rules
+    // load — so resolve refs here and hand the bridge the full document
+    // with ANY region's world.
+    const datasetsById = new Map();
+    for (const entry of Object.values(sidecars)) {
+        const doc = entry?.playable_payload?.jta_dataset;
+        if (doc?.dataset_id) datasetsById.set(doc.dataset_id, doc);
+    }
+
     const warehouse = new WorldWarehouse();
     warehouse.playerId = playerId;
+    // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2): an entry naming
+    // `shared_world` and carrying NO payload is an ALIAS of the entry whose
+    // payload carries that world. Aliases resolve AFTER every carrier has
+    // deserialized, so they hold the very same world object — the identity a
+    // same-world crossing is recognised by.
+    const aliases = [];
     for (const [regionId, entry] of Object.entries(sidecars)) {
+        if (typeof entry?.shared_world === 'string' && entry.playable_payload === undefined) {
+            aliases.push([regionId, entry]);
+            continue;
+        }
         const adapter = registry.get(entry.substrate);
         if (!adapter) {
             logger.warn?.(`procgenPlayer: unknown substrate '${entry.substrate}' for region ${regionId}; skipping`);
@@ -58,13 +91,57 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
             logger.warn?.(`procgenPlayer: substrate '${entry.substrate}' has no deserializeWorld; skipping ${regionId}`);
             continue;
         }
+        let payload = entry.playable_payload;
+        const ref = payload?.jta_dataset_ref;
+        if (ref && !payload.jta_dataset) {
+            const doc = datasetsById.get(ref.dataset_id);
+            if (doc) {
+                payload = { ...payload, jta_dataset: doc };
+            } else {
+                logger.warn?.(`procgenPlayer: region ${regionId} references dataset `
+                    + `'${ref.dataset_id}' but no sidecar carries it`);
+            }
+        }
+        // ⛓ C1 — a payload the entry refuses SKIPS that region with the
+        //   entry's own sentence (logged, and kept on `warehouse.refused`)
+        //   instead of throwing out of the rules-load handler and taking every
+        //   other region's play down with it.
+        const read = deserializeOrRefuse(adapter, payload, { regionId, substrate: entry.substrate });
+        if (read.refusal) {
+            logger.warn?.(`procgenPlayer: ${read.refusal}`);
+            warehouse.refused.set(regionId, read.refusal);
+            continue;
+        }
         warehouse.regions.set(regionId, {
             substrate: entry.substrate,
-            world: adapter.deserializeWorld(entry.playable_payload),
+            world: read.world,
             loadRegionEvent: adapter.loadRegionEvent,
+            ...(typeof entry.shared_world === 'string' ? { sharedWorld: entry.shared_world } : {}),
         });
     }
+    for (const [regionId, entry] of aliases) {
+        const carrier = [...warehouse.regions.values()].find((e) => e.sharedWorld === entry.shared_world
+            && e.substrate === entry.substrate);
+        if (!carrier) {
+            const refusal = `region ${regionId} is an alias of shared world '${entry.shared_world}', `
+                + 'but no warehoused region carries that world';
+            logger.warn?.(`procgenPlayer: ${refusal}`);
+            warehouse.refused.set(regionId, refusal);
+            continue;
+        }
+        warehouse.regions.set(regionId, { ...carrier });
+    }
     return warehouse;
+}
+
+/**
+ * ⛓ SAME-WORLD CROSSING: do two warehoused regions share one level world?
+ * (Both name the same `sharedWorld` key, so they hold the same world object.)
+ */
+export function sharesWorld(warehouse, regionA, regionB) {
+    const a = regionA ? warehouse?.get(regionA) : null;
+    const b = regionB ? warehouse?.get(regionB) : null;
+    return !!(a && b && a.sharedWorld && a.sharedWorld === b.sharedWorld && a.world === b.world);
 }
 
 /**
@@ -91,13 +168,8 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
  * declared start.
  */
 export function findStartRegion(rulesJson, playerId, warehouse) {
-    const startRegions = rulesJson?.start_regions?.[playerId];
-    let startName = null;
-    if (Array.isArray(startRegions?.default)) {
-        startName = startRegions.default[0];
-    } else if (Array.isArray(startRegions)) {
-        startName = startRegions[0];
-    }
+    // ⛓ Both start_regions shapes, through the ONE reader (procgenCore/rulesGraph).
+    const [startName] = startRegionsOf(rulesJson, playerId).default;
     if (!startName) return null;
     if (warehouse.has(startName)) {
         return { region: startName, sourceRegion: null, exitName: null };

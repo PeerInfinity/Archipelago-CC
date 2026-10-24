@@ -1,8 +1,6 @@
 # Journey to Ascension
 
-**[Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)**
-
-Archipelago integration for [Journey to Ascension](https://imgreghenry.github.io/JourneyToAscension/), an incremental/idle game. Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into the multiworld item pool.
+Archipelago integration for [Journey to Ascension](https://meneth.github.io/journey-to-ascension/) by Meneth, an incremental/idle game (used with permission; see [NOTICE.md](../../../../NOTICE.md)). Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into the multiworld item pool.
 
 ## How to Play
 
@@ -32,10 +30,12 @@ Archipelago integration for [Journey to Ascension](https://imgreghenry.github.io
 The randomized perk order breaks the original game's difficulty curve. Three methods to fix this:
 
 1. **Automatic** — During seed generation (requires Node.js)
-2. **In-browser** — Via the JTA Game Data panel (no Node.js needed)
+2. **In-browser** — Via the JtA Game Data panel (no Node.js needed)
 3. **Command-line** — Via bundled script
 
 ## Further Reading
 
 - [Full game documentation](../../../../worlds/jta/docs/en_Journey%20to%20Ascension.md)
 - [Setup guide](../../../../worlds/jta/docs/setup_en.md)
+- [Cost adjustment & auto-queue algorithms](./cost-adjustment-algorithm.md) — developer reference for the seed-time cost adjuster and the host-side auto queue
+- [JtA as a procgen substrate](../../developer/procgen/jta.md) — the separate loop-mode substrate integration

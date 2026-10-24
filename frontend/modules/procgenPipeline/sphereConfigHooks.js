@@ -8,11 +8,12 @@
 // diverging from the panel — they previously hard-coded a bounce arrow-entry
 // block and a MINIMAL regionParams ({fallBehavior, physicsProfile}) that
 // omitted the braid layout keys the panel produces (bounceMode, braidWidth,
-// bounceJitter, platformRows, decoration). The panel delegates its
-// _defaultParams / _activeSubstrateIds / _collectSphereGrowthPrep /
-// _assembleRegionParams to these functions, so there is ONE assembly path.
+// bounceJitter, platformRows, decoration). The panel's run assembly
+// (presetRun.js — shared with the headless preset row) calls these functions,
+// so there is ONE assembly path.
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { GOAL_ITEM, goalItemPool, withGoalItemDef } from '../procgenCore/goalItem.js';
 
 /**
  * Merge `base` with every registered substrate's declared
@@ -43,6 +44,24 @@ export function activeSubstrateIds(quotas, startSub) {
 }
 
 /**
+ * ⛓ bulletml N5 — the params the active substrates' `priceRegions` hooks read
+ * (each such entry's `defaultProcgenParams` keys, taken from the bag, the
+ * default where the bag has none), or null when no active substrate prices its
+ * regions: a driver adds `procgenParams` to its compile input only then, so a
+ * world without such a substrate keeps its bytes.
+ */
+export function pricingParamsOf(activeIds, params) {
+    let out = null;
+    for (const id of [...(activeIds ?? [])].sort()) {
+        const entry = substrateRegistry.get(id);
+        if (typeof entry?.priceRegions !== 'function') continue;
+        out ??= {};
+        for (const [k, v] of Object.entries(entry.defaultProcgenParams ?? {})) out[k] = params?.[k] ?? v;
+    }
+    return out;
+}
+
+/**
  * Gather each active substrate's pre-plan contributions via its optional
  * `prepareSphereGrowth` hook: starting items, sphere-1 reservations
  * (exclusiveSpheres), canonical-placement locks, item pool removals
@@ -53,7 +72,7 @@ export function collectSphereGrowthPrep({
     activeIds, itemPool, quotas, startSubstrate, seed, params,
 }) {
     const startingItems = [];
-    const lockedCanonicalItems = [];
+    const pinnedCanonicalItems = [];
     const exclusiveSpheres = {};
     const regionParams = {};
     const notes = [];
@@ -64,7 +83,7 @@ export function collectSphereGrowthPrep({
             itemPool, quotas, startSubstrate, seed, params, substrateId: id,
         }) || {};
         if (c.startingItems) startingItems.push(...c.startingItems);
-        if (c.lockedCanonicalItems) lockedCanonicalItems.push(...c.lockedCanonicalItems);
+        if (c.pinnedCanonicalItems) pinnedCanonicalItems.push(...c.pinnedCanonicalItems);
         for (const [k, v] of Object.entries(c.exclusiveSpheres ?? {})) {
             exclusiveSpheres[k] = [...(exclusiveSpheres[k] ?? []), ...v];
         }
@@ -76,7 +95,7 @@ export function collectSphereGrowthPrep({
         if (c.note) notes.push(c.note);
     }
     return {
-        startingItems, lockedCanonicalItems, exclusiveSpheres,
+        startingItems, pinnedCanonicalItems, exclusiveSpheres,
         regionParams, note: notes.join(' — '),
     };
 }
@@ -93,6 +112,26 @@ export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra
         if (typeof fn === 'function') Object.assign(out, fn({ params, mode }));
     }
     Object.assign(out, extra);
+    // ⛓ CONCEPT LIBRARY T1 — the world's concept list rides into every region's
+    // params (the engine hands `spec.params` to `placeFromRules`). Written ONLY
+    // when non-empty, so a world that names no concept takes no new key.
+    if (Array.isArray(params?.concepts) && params.concepts.length > 0) out.concepts = [...params.concepts];
+    return out;
+}
+
+/**
+ * Merge the `buildLibraryRegionParams` hook output of each substrate a SELECTED
+ * region library realises (`substrateIds` — the entries' substrates, not the
+ * quotas: a library entry realises its substrate with no quota of its own) into
+ * one regionParams object. `mode` is 'sphere' | 'topDown'. {} when no such
+ * substrate declares the hook.
+ */
+export function assembleLibraryRegionParams({ substrateIds, mode = 'sphere', params }) {
+    const out = {};
+    for (const id of substrateIds) {
+        const fn = substrateRegistry.get(id)?.buildLibraryRegionParams;
+        if (typeof fn === 'function') Object.assign(out, fn({ params, mode }));
+    }
     return out;
 }
 
@@ -123,4 +162,17 @@ export function resolveVictoryItem({ explicit, itemPool, itemLib, selectedIds })
         if (vi) return vi;
     }
     return null;
+}
+
+/**
+ * The sphere-growth goal (⚖ user 2026-10-11: one goal item, `Victory`):
+ * `resolveVictoryItem` says whether the world has a goal; the pool's victory
+ * items become one `Victory` (added when only a substrate declares the goal), and
+ * the library gains its row. Returns `{goalItem, itemPool, itemLib}`; with no
+ * goal the pool and library come back as they were.
+ */
+export function resolveSphereGoal({ explicit, itemPool, itemLib, selectedIds }) {
+    const goalItem = resolveVictoryItem({ explicit, itemPool, itemLib, selectedIds }) ? GOAL_ITEM : null;
+    if (!goalItem) return { goalItem, itemPool: { ...itemPool }, itemLib };
+    return { goalItem, itemPool: goalItemPool(itemPool, itemLib, true), itemLib: withGoalItemDef(itemLib) };
 }

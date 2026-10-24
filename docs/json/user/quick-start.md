@@ -4,7 +4,9 @@ This guide will help you get started using the JSON Web Client as an advanced tr
 
 **New here?** See the [Overview](./overview.md) for an introduction to what this project does and how to use it.
 
-**Try the JSON Web Client Live:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
+**Try the JSON Web Client Live:** the **[Development Version](https://peerinfinity.github.io/Archipelago-CC/)** (includes procedural generation) or the **[Stable Version](https://peerinfinity.github.io/Archipelago/)** (an older snapshot: tracking only)
+
+This guide covers tracking an ordinary Archipelago game. To play or generate new worlds instead, see [For Players](../intro/for-players.md) and [For World Builders](../intro/for-world-builders.md).
 
 ## Getting Started (Standard Tracking Mode)
 

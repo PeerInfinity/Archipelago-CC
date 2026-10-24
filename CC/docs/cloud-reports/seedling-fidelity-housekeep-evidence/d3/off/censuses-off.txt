@@ -1,0 +1,18 @@
+== census-seedling-solver-surface
+RED drift: run:liveGeometryOpts table {"sites":14,"files":{"dangerMap.js":1,"solverBot.js":13}} fresh {"sites":16,"files":{"botDriverV2.js":2,"dangerMap.js":1,"solverBot.js":13}}
+RED drift: import:contactFidelity.js#CONTACT_FIDELITY table {"sites":39,"files":{"arrowLaneCrossing.js":4,"botDriverV2.js":1,"forcedHit.js":4,"solverBot.js":28,"strikePolicy.js":2}} fresh {"sites":41,"files":{"arrowLaneCrossing.js":4,"botDriverV2.js":3,"forcedHit.js":4,"solverBot.js":28,"strikePolicy.js":2}}
+RED: 4 finding(s) — run --write, then classify
+rc=1
+== census-seedling-constants
+census-seedling-constants --check — 6028 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+rc=0
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+rc=0
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+rc=0
+== roster
+280

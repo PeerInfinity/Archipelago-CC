@@ -1,0 +1,41 @@
+{"x":16,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":80,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":96,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":144,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":160,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":176,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":192,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":208,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":224,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":16,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":64,"y":32,"verdict":"REFUSED 0","already":false,"msg":"grid: arrival-inside-solid — the run's box at (72,40) in level 30 is INSIDE boss"}
+{"x":80,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot: no REACHABLE stance on bosslock@64,32's key line in level 30 — 1 cell"}
+{"x":96,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":112,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":128,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":144,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":160,"y":32,"verdict":"SOLVED 487","already":false,"msg":""}
+{"x":176,"y":32,"verdict":"SOLVED 446","already":false,"msg":""}
+{"x":192,"y":32,"verdict":"SOLVED 506","already":false,"msg":""}
+{"x":208,"y":32,"verdict":"SOLVED 466","already":false,"msg":""}
+{"x":224,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":240,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":256,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":272,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":288,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":304,"y":32,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":16,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":32,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}
+{"x":48,"y":48,"verdict":"REFUSED 0","already":false,"msg":"solverBot(grid): no corridor for goal collect-placement toward (72,56) in level "}

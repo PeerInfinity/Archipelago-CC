@@ -1,0 +1,50 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 80,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 24,
+    "inputs": [
+        {
+            "key": "left",
+            "from": 0,
+            "to": 14
+        }
+    ],
+    "name": "wallflyer-shield-bump",
+    "description": "⛓⛓⛓ seedling-fidelity-wallflyer W7 — THE SHIELD TURNS A WALLFLYER. L22, boot (80,112), the sword and the shield, `left` for 14 ticks into `wallflyer@48,112`'s y-120 ray, then still. The flyer launches at the player (+4 px/t) and on every tick the MOVING player's shield box touches it, `Player.shieldBump` calls `WallFlyer.knockback` — `v = -v`, no gate — so it turns back: the model bills the turn at t 5, 7, 9, 13. Player hits: t 9 wallflyer@48,112. Authored by scripts/procgen/plan-seedling-wallflyer.mjs.",
+    "note": ""
+}

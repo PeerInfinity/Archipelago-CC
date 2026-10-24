@@ -8,9 +8,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "ProcgenMazeWorld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -48,10 +45,11 @@
               "name": "Chalice",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "Credits Far Side"
       },
       "WhiteCastlePreVaultPeek": {
         "name": "WhiteCastlePreVaultPeek",
@@ -74,11 +72,12 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "White Castle Secret Peek"
       },
       "CreditsRoom": {
         "name": "CreditsRoom",
@@ -111,11 +110,12 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "Credits Room"
       },
       "WhiteCastle": {
         "name": "WhiteCastle",
@@ -161,8 +161,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -174,11 +174,12 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "White Castle"
       },
       "Overworld": {
         "name": "Overworld",
@@ -237,8 +238,8 @@
             "item": {
               "name": "Left Difficulty Switch",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -250,8 +251,8 @@
             "item": {
               "name": "Slow Yorgle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -264,7 +265,7 @@
               "name": "Sword",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -276,8 +277,8 @@
             "item": {
               "name": "Slow Grundle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -289,8 +290,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -302,8 +303,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -316,7 +317,7 @@
               "name": "Black Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -328,8 +329,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -341,8 +342,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -354,8 +355,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -373,8 +374,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -401,12 +402,12 @@
               "name": "Magnet",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
             "name": "Chalice Home",
-            "id": 1017,
+            "id": null,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -420,10 +421,13 @@
               "name": "Victory",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
-        ]
+        ],
+        "hint_text": "Yellow Castle"
       },
       "WhiteCastleVault": {
         "name": "WhiteCastleVault",
@@ -439,20 +443,20 @@
         "locations": [
           {
             "name": "Red Maze Vault",
-            "id": 1018,
+            "id": 1017,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
             "name": "Slay Grundle",
-            "id": 1019,
+            "id": 1018,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -466,10 +470,11 @@
               "name": "Yellow Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "White Castle Vault"
       },
       "BlackCastle": {
         "name": "BlackCastle",
@@ -498,20 +503,20 @@
         "locations": [
           {
             "name": "Dungeon0",
-            "id": 1020,
+            "id": 1019,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
             "name": "Dungeon1",
-            "id": 1021,
+            "id": 1020,
             "access_rule": {
               "rule": "True_"
             },
@@ -519,12 +524,12 @@
               "name": "Right Difficulty Switch",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
             "name": "Black Castle Foyer",
-            "id": 1022,
+            "id": 1021,
             "access_rule": {
               "rule": "True_"
             },
@@ -532,12 +537,12 @@
               "name": "Bridge",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
             "name": "Slay Rhindle",
-            "id": 1023,
+            "id": 1022,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -550,11 +555,12 @@
             "item": {
               "name": "Slow Rhindle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "Black Castle"
       },
       "BlackCastleVault": {
         "name": "BlackCastleVault",
@@ -570,7 +576,7 @@
         "locations": [
           {
             "name": "Dungeon Vault",
-            "id": 1024,
+            "id": 1023,
             "access_rule": {
               "rule": "True_"
             },
@@ -578,10 +584,11 @@
               "name": "White Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           }
-        ]
+        ],
+        "hint_text": "Black Castle Vault"
       }
     }
   },
@@ -598,7 +605,7 @@
       "Chalice": {
         "name": "Chalice",
         "id": 1,
-        "classification": "progression",
+        "classification": "progression_skip_balancing",
         "groups": [
           "Everything"
         ]
@@ -606,7 +613,7 @@
       "Freeincarnate": {
         "name": "Freeincarnate",
         "id": 2,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -614,7 +621,7 @@
       "Left Difficulty Switch": {
         "name": "Left Difficulty Switch",
         "id": 3,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -622,7 +629,7 @@
       "Slow Yorgle": {
         "name": "Slow Yorgle",
         "id": 4,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -638,7 +645,7 @@
       "Slow Grundle": {
         "name": "Slow Grundle",
         "id": 6,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -661,23 +668,26 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": 9,
-        "classification": "progression",
+        "id": null,
         "groups": [
-          "Everything"
-        ]
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 10,
-        "classification": "progression",
+        "id": 9,
+        "classification": "progression_skip_balancing",
         "groups": [
           "Everything"
         ]
       },
       "Right Difficulty Switch": {
         "name": "Right Difficulty Switch",
-        "id": 11,
+        "id": 10,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -685,7 +695,7 @@
       },
       "Bridge": {
         "name": "Bridge",
-        "id": 12,
+        "id": 11,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -693,15 +703,15 @@
       },
       "Slow Rhindle": {
         "name": "Slow Rhindle",
-        "id": 13,
-        "classification": "progression",
+        "id": 12,
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
       },
       "White Key": {
         "name": "White Key",
-        "id": 14,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -736,7 +746,222 @@
     "1": {
       "game": "Procgen Maze",
       "world_class_name": "ProcgenMazeWorld",
-      "options": {}
+      "options": {
+        "accessibility": 0,
+        "bat_logic": 1,
+        "connector_multi_slot": false,
+        "death_link": false,
+        "difficulty_switch_a": 2,
+        "difficulty_switch_b": 2,
+        "dragon_rando_type": 1,
+        "dragon_slay_check": true,
+        "exclude_locations": [],
+        "freeincarnate_max": 17,
+        "grundle_min_speed": 1,
+        "grundle_speed": 2,
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "rhindle_min_speed": 2,
+        "rhindle_speed": 3,
+        "start_castle": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "yorgle_min_speed": 1,
+        "yorgle_speed": 2
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "bat_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "cannot_break",
+            "1": "can_break",
+            "2": "use_logic"
+          },
+          "default": 1,
+          "display_name": "Bat Logic"
+        },
+        "connector_multi_slot": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Connector Multi-Slot"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Death Link"
+        },
+        "difficulty_switch_a": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Left Difficulty Switch"
+        },
+        "difficulty_switch_b": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "locked_hard",
+            "2": "hard_with_unlock_item"
+          },
+          "default": 2,
+          "display_name": "Right Difficulty Switch"
+        },
+        "dragon_rando_type": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "normal",
+            "1": "shuffle",
+            "2": "overworldplus",
+            "3": "randomized"
+          },
+          "default": 1,
+          "display_name": "Dragon Randomization"
+        },
+        "dragon_slay_check": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Slay Dragon Checks"
+        },
+        "freeincarnate_max": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 17,
+          "default": 17,
+          "display_name": "Freeincarnate Maximum"
+        },
+        "grundle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Grundle Min Speed"
+        },
+        "grundle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Grundle MaxSpeed"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "rhindle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Rhindle Min Speed"
+        },
+        "rhindle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 3,
+          "display_name": "Rhindle MaxSpeed"
+        },
+        "start_castle": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "yellow",
+            "1": "black",
+            "2": "white"
+          },
+          "default": 0,
+          "display_name": "Start Castle"
+        },
+        "yorgle_min_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 1,
+          "display_name": "Yorgle Min Speed"
+        },
+        "yorgle_speed": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 2,
+          "display_name": "Yorgle MaxSpeed"
+        }
+      },
+      "dragon_rooms": [
+        4,
+        25,
+        20
+      ],
+      "dragon_slay_check": 1,
+      "connector_multi_slot": 0,
+      "dragon_rando_type": 1,
+      "yorgle_speed": 2,
+      "yorgle_min_speed": 1,
+      "grundle_speed": 2,
+      "grundle_min_speed": 1,
+      "rhindle_speed": 3,
+      "rhindle_min_speed": 2,
+      "difficulty_switch_a": 2,
+      "difficulty_switch_b": 2,
+      "start_castle": 0,
+      "dragon_speed_reducer_info": {
+        "118000259": [
+          1
+        ],
+        "118000260": [
+          1
+        ],
+        "118000261": [
+          2
+        ]
+      },
+      "created_items": 24,
+      "world_description": "Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!",
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Adventure for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "JusticePS"
+            ]
+          },
+          {
+            "name": "Guide de configuration Multimonde",
+            "description": "Un guide pour configurer Adventure MultiWorld",
+            "language": "Français",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "TheLynk"
+            ]
+          }
+        ]
+      }
     }
   },
   "game_info": {
@@ -748,7 +973,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "Credits Right Side": "Chalice",
@@ -768,7 +997,6 @@
       "Southeast of Catacombs": "Freeincarnate",
       "Slay Yorgle": "Freeincarnate",
       "Inside Yellow Castle": "Magnet",
-      "Chalice Home": "Victory",
       "Red Maze Vault": "Freeincarnate",
       "Slay Grundle": "Yellow Key",
       "Dungeon0": "Freeincarnate",
@@ -784,7 +1012,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "Overworld": {
@@ -871,74 +1098,74 @@
             },
             {
               "x": 0,
-              "y": 3,
+              "y": 2,
               "id": "logic_gate_4"
             }
           ],
           "items": [
             {
-              "x": 6,
-              "y": 5,
+              "x": 1,
+              "y": 2,
               "id": "Left Difficulty Switch",
               "locationName": "Blue Labyrinth 0"
             },
             {
-              "x": 3,
-              "y": 4,
+              "x": 4,
+              "y": 1,
               "id": "Slow Yorgle",
               "locationName": "Blue Labyrinth 1"
             },
             {
-              "x": 4,
-              "y": 0,
+              "x": 2,
+              "y": 4,
               "id": "Sword",
               "locationName": "Catacombs"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 6,
+              "y": 3,
               "id": "Slow Grundle",
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 2,
-              "y": 2,
+              "x": 5,
+              "y": 4,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
             {
-              "x": 7,
-              "y": 0,
+              "x": 3,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "White Castle Gate"
             },
             {
-              "x": 6,
+              "x": 3,
               "y": 4,
               "id": "Black Key",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 5,
-              "y": 2,
+              "x": 6,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Yellow Castle Gate"
             },
             {
-              "x": 3,
-              "y": 2,
+              "x": 7,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 4,
-              "y": 5,
+              "x": 2,
+              "y": 3,
               "id": "Freeincarnate",
               "locationName": "Southeast of Catacombs"
             },
             {
               "x": 0,
-              "y": 3,
+              "y": 2,
               "id": "Freeincarnate",
               "locationName": "Slay Yorgle"
             }
@@ -1058,18 +1285,9 @@
           "gy": 2
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 0,
-            "y": 2
-          },
           "exits": [
             {
               "exit_id": "YellowCastleExit",
-              "x": 0,
-              "y": 2,
               "side": "W",
               "exitName": "YellowCastleExit",
               "targetRegion": "Overworld",
@@ -1078,33 +1296,16 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [
+          "exitGates": {},
+          "locations": [
             {
-              "x": 6,
-              "y": 5,
-              "id": "logic_gate_0"
-            }
-          ],
-          "items": [
-            {
-              "x": 2,
-              "y": 4,
-              "id": "Magnet",
-              "locationName": "Inside Yellow Castle"
+              "name": "Inside Yellow Castle",
+              "item": "Magnet"
             },
             {
-              "x": 6,
-              "y": 5,
-              "id": "Victory",
-              "locationName": "Chalice Home"
-            }
-          ],
-          "obstacleLib": {
-            "logic_gate_0": {
-              "name": "Logic Gate",
-              "id": "logic_gate_0",
-              "clear_set_type": "rule",
-              "clear_rule": {
+              "name": "Chalice Home",
+              "item": "Victory",
+              "access_rule": {
                 "rule": "HasAll",
                 "args": {
                   "item_names": [
@@ -1112,31 +1313,10 @@
                     "Yellow Key"
                   ]
                 }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
+              }
             }
-          },
-          "itemLib": {},
-          "longestShortestPath": 1,
+          ],
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "WhiteCastle": {
@@ -1147,18 +1327,9 @@
           "gy": 2
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 7,
-            "y": 1
-          },
           "exits": [
             {
               "exit_id": "WhiteCastleExit",
-              "x": 7,
-              "y": 1,
               "side": "E",
               "exitName": "WhiteCastleExit",
               "targetRegion": "Overworld",
@@ -1168,8 +1339,6 @@
             },
             {
               "exit_id": "WhiteCastleSecretPassage",
-              "x": 1,
-              "y": 5,
               "side": "S",
               "exitName": "WhiteCastleSecretPassage",
               "targetRegion": "WhiteCastleVault",
@@ -1179,8 +1348,6 @@
             },
             {
               "exit_id": "WhiteCastlePeekPassage",
-              "x": 1,
-              "y": 0,
               "side": "N",
               "exitName": "WhiteCastlePeekPassage",
               "targetRegion": "WhiteCastlePreVaultPeek",
@@ -1189,86 +1356,34 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [
-            {
-              "x": 1,
-              "y": 5,
-              "id": "logic_gate_0"
+          "exitGates": {
+            "WhiteCastleSecretPassage": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Bridge"
+              }
             },
-            {
-              "x": 1,
-              "y": 0,
-              "id": "logic_gate_1"
-            }
-          ],
-          "items": [
-            {
-              "x": 3,
-              "y": 1,
-              "id": "Freeincarnate",
-              "locationName": "RedMaze0"
-            },
-            {
-              "x": 5,
-              "y": 3,
-              "id": "Freeincarnate",
-              "locationName": "RedMaze1"
-            }
-          ],
-          "obstacleLib": {
-            "logic_gate_0": {
-              "name": "Logic Gate",
-              "id": "logic_gate_0",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "Bridge"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
-            },
-            "logic_gate_1": {
-              "name": "Logic Gate",
-              "id": "logic_gate_1",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "HasAny",
-                "args": {
-                  "item_names": [
-                    "Bridge",
-                    "Magnet"
-                  ]
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              },
-              "feature": "logic_gate"
+            "WhiteCastlePeekPassage": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           },
-          "itemLib": {},
-          "longestShortestPath": 10,
+          "locations": [
+            {
+              "name": "RedMaze0",
+              "item": "Freeincarnate"
+            },
+            {
+              "name": "RedMaze1",
+              "item": "Freeincarnate"
+            }
+          ],
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "BlackCastle": {
@@ -1317,8 +1432,8 @@
               "id": "logic_gate_0"
             },
             {
-              "x": 2,
-              "y": 3,
+              "x": 4,
+              "y": 4,
               "id": "logic_gate_1"
             }
           ],
@@ -1330,20 +1445,20 @@
               "locationName": "Dungeon0"
             },
             {
-              "x": 5,
-              "y": 3,
+              "x": 7,
+              "y": 0,
               "id": "Right Difficulty Switch",
               "locationName": "Dungeon1"
             },
             {
-              "x": 1,
+              "x": 6,
               "y": 5,
               "id": "Bridge",
               "locationName": "Black Castle Foyer"
             },
             {
-              "x": 2,
-              "y": 3,
+              "x": 4,
+              "y": 4,
               "id": "Slow Rhindle",
               "locationName": "Slay Rhindle"
             }
@@ -1510,13 +1625,13 @@
           "height": 6,
           "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           "entrance": {
-            "x": 1,
+            "x": 4,
             "y": 0
           },
           "exits": [
             {
               "exit_id": "WhiteCastleReturnPassage",
-              "x": 1,
+              "x": 4,
               "y": 0,
               "side": "N",
               "exitName": "WhiteCastleReturnPassage",
@@ -1528,21 +1643,21 @@
           ],
           "obstacles": [
             {
-              "x": 5,
-              "y": 1,
+              "x": 0,
+              "y": 3,
               "id": "logic_gate_0"
             }
           ],
           "items": [
             {
-              "x": 0,
-              "y": 4,
+              "x": 7,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Red Maze Vault"
             },
             {
-              "x": 5,
-              "y": 1,
+              "x": 0,
+              "y": 3,
               "id": "Yellow Key",
               "locationName": "Slay Grundle"
             }
@@ -1599,13 +1714,13 @@
           "height": 6,
           "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
           "entrance": {
-            "x": 1,
+            "x": 4,
             "y": 5
           },
           "exits": [
             {
               "exit_id": "WhiteCastleFromPeek",
-              "x": 1,
+              "x": 4,
               "y": 5,
               "side": "S",
               "exitName": "WhiteCastleFromPeek",
@@ -1618,8 +1733,8 @@
           "obstacles": [],
           "items": [
             {
-              "x": 7,
-              "y": 5,
+              "x": 5,
+              "y": 0,
               "id": "Freeincarnate",
               "locationName": "Red Maze Vault Entrance"
             }
@@ -1652,18 +1767,9 @@
           "gy": 3
         },
         "playable_payload": {
-          "width": 8,
-          "height": 6,
-          "tiles": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-          "entrance": {
-            "x": 0,
-            "y": 4
-          },
           "exits": [
             {
               "exit_id": "BlackCastleReturnPassage",
-              "x": 0,
-              "y": 4,
               "side": "W",
               "exitName": "BlackCastleReturnPassage",
               "targetRegion": "BlackCastle",
@@ -1672,33 +1778,14 @@
               "isTeleporter": false
             }
           ],
-          "obstacles": [],
-          "items": [
+          "exitGates": {},
+          "locations": [
             {
-              "x": 3,
-              "y": 2,
-              "id": "White Key",
-              "locationName": "Dungeon Vault"
+              "name": "Dungeon Vault",
+              "item": "White Key"
             }
           ],
-          "obstacleLib": {},
-          "itemLib": {},
-          "longestShortestPath": 1,
           "fogEnabled": true
-        },
-        "biome": {
-          "id": "classic"
-        },
-        "grow_telemetry": {
-          "requested_size": {
-            "width": 8,
-            "height": 6
-          },
-          "final_size": {
-            "width": 8,
-            "height": 6
-          },
-          "grow_attempts": 0
         }
       },
       "CreditsRoomFarSide": {
@@ -1761,281 +1848,275 @@
     }
   },
   "procgen_metadata": {
-    "driver": "top-down-sphere",
-    "source_game": "Adventure",
-    "source_counts": {
-      "regions": 9,
-      "locations": 25,
-      "exits": 16,
-      "logic_gates": 12
-    },
-    "stop_reason": "all_placed",
-    "sphere_tree": {
-      "nodes": [
-        {
-          "index": 0,
-          "wave": 0,
-          "parent": null,
-          "side": null,
-          "cell": {
-            "gx": 2,
-            "gy": 2
-          },
-          "region_id": "Overworld",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "W",
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 1,
-          "wave": 4,
-          "parent": 0,
-          "side": "E",
-          "cell": {
-            "gx": 3,
-            "gy": 2
-          },
-          "region_id": "YellowCastle",
-          "isTeleporter": false,
-          "substrate": "text_adventure",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 2,
-          "wave": 3,
-          "parent": 0,
-          "side": "W",
-          "cell": {
-            "gx": 1,
-            "gy": 2
-          },
-          "region_id": "WhiteCastle",
-          "isTeleporter": false,
-          "substrate": "text_adventure",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "E",
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 3,
-          "wave": 1,
-          "parent": 0,
-          "side": "S",
-          "cell": {
-            "gx": 2,
-            "gy": 3
-          },
-          "region_id": "BlackCastle",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N",
-            "E"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 4,
-          "wave": 2,
-          "parent": 0,
-          "side": "N",
-          "cell": {
-            "gx": 2,
-            "gy": 1
-          },
-          "region_id": "CreditsRoom",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S",
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 5,
-          "wave": 3,
-          "parent": 2,
-          "side": "S",
-          "cell": {
-            "gx": 1,
-            "gy": 3
-          },
-          "region_id": "WhiteCastleVault",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "N"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 6,
-          "wave": 3,
-          "parent": 2,
-          "side": "N",
-          "cell": {
-            "gx": 1,
-            "gy": 1
-          },
-          "region_id": "WhiteCastlePreVaultPeek",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 7,
-          "wave": 2,
-          "parent": 3,
-          "side": "E",
-          "cell": {
-            "gx": 3,
-            "gy": 3
-          },
-          "region_id": "BlackCastleVault",
-          "isTeleporter": false,
-          "substrate": "text_adventure",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "W"
-          ],
-          "childGates": [],
-          "isFiller": false
-        },
-        {
-          "index": 8,
-          "wave": 5,
-          "parent": 4,
-          "side": "N",
-          "cell": {
-            "gx": 2,
-            "gy": 0
-          },
-          "region_id": "CreditsRoomFarSide",
-          "isTeleporter": false,
-          "substrate": "maze",
-          "gate": [],
-          "gateCounts": {},
-          "usedSides": [
-            "S"
-          ],
-          "childGates": [],
-          "isFiller": false
-        }
-      ],
-      "substrateCounts": {
-        "maze": 6,
-        "text_adventure": 3
+    "1": {
+      "driver": "top-down-sphere",
+      "source_game": "Adventure",
+      "source_counts": {
+        "regions": 9,
+        "locations": 25,
+        "exits": 16,
+        "logic_gates": 12
       },
-      "quotaFallbacks": 0
-    },
-    "sphere_plan": {
-      "seed": 10,
-      "spheres": [
-        {
-          "sphere": 1,
-          "items": [
-            "Black Key",
-            "Sword"
-          ]
+      "stop_reason": "all_placed",
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 2,
+              "gy": 2
+            },
+            "region_id": "Overworld",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "W",
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 4,
+            "parent": 0,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 2
+            },
+            "region_id": "YellowCastle",
+            "isTeleporter": false,
+            "substrate": "text_adventure",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 3,
+            "parent": 0,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 2
+            },
+            "region_id": "WhiteCastle",
+            "isTeleporter": false,
+            "substrate": "text_adventure",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E",
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 3,
+            "wave": 1,
+            "parent": 0,
+            "side": "S",
+            "cell": {
+              "gx": 2,
+              "gy": 3
+            },
+            "region_id": "BlackCastle",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N",
+              "E"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 4,
+            "wave": 2,
+            "parent": 0,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 1
+            },
+            "region_id": "CreditsRoom",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S",
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 5,
+            "wave": 3,
+            "parent": 2,
+            "side": "S",
+            "cell": {
+              "gx": 1,
+              "gy": 3
+            },
+            "region_id": "WhiteCastleVault",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 6,
+            "wave": 3,
+            "parent": 2,
+            "side": "N",
+            "cell": {
+              "gx": 1,
+              "gy": 1
+            },
+            "region_id": "WhiteCastlePreVaultPeek",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 7,
+            "wave": 2,
+            "parent": 3,
+            "side": "E",
+            "cell": {
+              "gx": 3,
+              "gy": 3
+            },
+            "region_id": "BlackCastleVault",
+            "isTeleporter": false,
+            "substrate": "text_adventure",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "W"
+            ],
+            "childGates": [],
+            "isFiller": false
+          },
+          {
+            "index": 8,
+            "wave": 5,
+            "parent": 4,
+            "side": "N",
+            "cell": {
+              "gx": 2,
+              "gy": 0
+            },
+            "region_id": "CreditsRoomFarSide",
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "S"
+            ],
+            "childGates": [],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "maze": 6,
+          "text_adventure": 3
         },
-        {
-          "sphere": 2,
-          "items": [
-            "Bridge",
-            "Right Difficulty Switch"
-          ]
-        },
-        {
-          "sphere": 3,
-          "items": [
-            "White Key"
-          ]
-        },
-        {
-          "sphere": 4,
-          "items": [
-            "Yellow Key"
-          ]
-        },
-        {
-          "sphere": 5,
-          "items": [
-            "Magnet"
-          ]
-        },
-        {
-          "sphere": 6,
-          "items": [
-            "Chalice"
-          ]
-        },
-        {
-          "sphere": 7,
-          "items": [
-            "Victory"
-          ]
-        }
-      ]
-    },
-    "region_count": 9,
-    "grid_dims": {
-      "width": 4,
-      "height": 4
+        "quotaFallbacks": 0
+      },
+      "sphere_plan": {
+        "seed": 10,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Black Key",
+              "Sword"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Bridge",
+              "Right Difficulty Switch"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "White Key"
+            ]
+          },
+          {
+            "sphere": 4,
+            "items": [
+              "Yellow Key"
+            ]
+          },
+          {
+            "sphere": 5,
+            "items": [
+              "Magnet"
+            ]
+          },
+          {
+            "sphere": 6,
+            "items": [
+              "Chalice"
+            ]
+          },
+          {
+            "sphere": 7,
+            "items": [
+              "Victory"
+            ]
+          }
+        ]
+      },
+      "region_count": 9,
+      "grid_dims": {
+        "width": 4,
+        "height": 4
+      }
     }
   },
   "sphere_log": [
     {
       "type": "metadata",
-      "seed": 1,
-      "seed_name": "14089154938208861744",
-      "event_locations": {
-        "1": [
-          "Chalice Home"
-        ]
-      },
-      "event_items": {
-        "1": [
-          "Victory"
-        ]
-      }
+      "seed": 10,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
     },
     {
       "type": "state_update",

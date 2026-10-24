@@ -24,6 +24,12 @@
  *     after configure and on every state change — the same cadence as
  *     pollItems. The game stays Archipelago-naive: it only ever sees
  *     booleans, and renders locked goals visibly locked.
+ *   - Play clock (optional): when the game calls
+ *     __swfBridge.setPlayClock(running[, stats]), relay `substrate:playClock`
+ *     {region, running[, stats]} to the host eventBus — loops' time drain
+ *     skips a region whose clock is reported stopped (opt-in per substrate
+ *     via loopSupport.playClock); a `stats.gameSeconds` makes it charge per
+ *     game second played instead of per wall second.
  *   - Playback bot (optional): when the iframe URL carries a
  *     `playbackControlEvent` query param, subscribe to that event and
  *     execute PlaybackController commands published by the host-side
@@ -32,11 +38,26 @@
  *     and are translated to game-local goal ids (ap_locations inverted
  *     for pickups; exits → side → params.sidePortals for portals)
  *     before being handed to the game via the optional
- *     __swfBridge.botWalkTo contract method. A target that doesn't
+ *     __swfBridge.botWalkTo(goal, options) contract method (`options` is
+ *     the walkTo's optional second argument, passed through untouched: a
+ *     substrate's own host proxy may send its bot settings there). A
+ *     region whose `params.walkToExits` is 'byName' resolves an exit to
+ *     {kind: 'portal', id: exitName} (exits with no side). A target that doesn't
  *     resolve yet (the bot's walkTo can outrun the region's loadRegion
  *     after a transition) is held pending and re-applied after
  *     configure. The game plays itself through its real physics — the
  *     bridge never simulates anything.
+ *   - Host state (optional, N4b): a `hostState` command on the same
+ *     playback-control event is handed to the game as
+ *     __swfBridge.setHostState(state), untouched — whatever the substrate's
+ *     own host module tells its page (Noiz2sa: loop mode and the visit's
+ *     bot options). The last one is re-applied after every configure, so
+ *     the order of the two does not matter. A game without setHostState
+ *     ignores it; a substrate whose host sends none never sees it.
+ *     The other way, a game may call __swfBridge.requestHost(request): the
+ *     bridge relays the eventBus event `substrate:hostRequest`
+ *     {region, request} for the active region, and the substrate's own host
+ *     module answers it (Noiz2sa: the player chose the exit to leave by).
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -57,6 +78,7 @@
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
+import { createLocationReportLedger } from './locationReportLedger.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -86,9 +108,22 @@ let _currentRegionId = null;
 let _world = null;                          // From deserializeWorld in the substrate registry
 let _isActive = false;                      // True when this substrate is the current region's
 
-// AP location names we've already reported this region, so a repeated
-// sendLocation (or a re-poll) doesn't double-dispatch.
-const _reportedLocationNames = new Set();
+// Which of this region's AP location names may be dispatched: one the
+// host ACCEPTED (its checked snapshot has it) never again, one in flight
+// not twice, and one the host REFUSED (the loop-mode action gate swallowed
+// it) again on the same visit. See locationReportLedger.js.
+const _locationReports = createLocationReportLedger();
+
+/** The host's checked location names, from the relayed snapshot (any of its shapes). */
+function _hostCheckedNames() {
+    const checked = _client?.getStateSnapshot?.()?.checkedLocations;
+    if (checked instanceof Set) return checked;
+    if (Array.isArray(checked)) return new Set(checked);
+    if (checked && typeof checked === 'object') {
+        return new Set(Object.keys(checked).filter((k) => checked[k]));
+    }
+    return new Set();
+}
 
 // ────────────────────────────────────────────────────────────────
 // Capabilities (integration axis — Option B, payload-carried)
@@ -178,10 +213,8 @@ function _onSendLocation(flashName) {
         log('warn', `sendLocation('${flashName}') has no ap_locations mapping — ignored`);
         return;
     }
-    if (_reportedLocationNames.has(locationName)) return;
-    _reportedLocationNames.add(locationName);
-
     if (!_client) return;
+    if (!_locationReports.shouldDispatch(locationName, _hostCheckedNames())) return;
     // stateManager's user:locationCheck handler reads `locationName`.
     _client.publishEventDispatcher('user:locationCheck', {
         locationName,
@@ -224,6 +257,36 @@ function _onSendExit(portalId, side) {
     }, { initialTarget: 'bottom' });
     log('debug', `exit '${portalId}' (side=${side}) -> user:regionMove `
         + `(${_currentRegionId} -> ${exit.targetRegion ?? '?'})`);
+}
+
+/**
+ * The game's play-clock report (optional contract method): whether the
+ * game's own clock is advancing for the active region. Relayed as the
+ * host eventBus event `substrate:playClock` {region, running}; loops'
+ * time drain charges a region whose substrate declares
+ * `loopSupport.playClock` only while its last report says running. A
+ * game that never calls this is drained exactly as before. The report
+ * says nothing about WHO drives the input (player, injected tape, bot).
+ */
+function _onSetPlayClock(running, stats) {
+    if (!_isActive || !_currentRegionId || typeof running !== 'boolean') return;
+    if (!_client) return;
+    const report = { region: _currentRegionId, running };
+    // Optional (N4): what the game played on this visit so far, e.g.
+    // {gameSeconds, score}. `gameSeconds` turns the drain into game time.
+    if (stats && typeof stats === 'object') report.stats = { ...stats };
+    _client.publishEventBus('substrate:playClock', report);
+}
+
+/**
+ * The game's request to its host module (optional, N4b): relayed as the
+ * eventBus event `substrate:hostRequest` {region, request}. Only the
+ * substrate's own host module listens (it checks the region is its own).
+ */
+function _onRequestHost(request) {
+    if (!_isActive || !_currentRegionId || !request || typeof request !== 'object') return;
+    if (!_client) return;
+    _client.publishEventBus('substrate:hostRequest', { region: _currentRegionId, request: { ...request } });
 }
 
 /**
@@ -299,8 +362,21 @@ function _pushGateStates() {
 // The bot's walkTo for a region can arrive BEFORE that region's
 // loadRegion (both ride the same eventBus relay, published by
 // different host modules during the same region transition). Held
-// here and re-applied after configure; last write wins.
+// here ({target, options}) and re-applied after configure; last write wins.
 let _pendingWalkTo = null;
+
+// The last `hostState` command (see the header), re-applied after configure.
+let _hostState = null;
+
+function _applyHostState() {
+    const b = _bridge();
+    if (!_hostState || !b || typeof b.setHostState !== 'function') return;
+    try {
+        b.setHostState(_hostState);
+    } catch (err) {
+        log('error', 'setHostState threw:', err);
+    }
+}
 
 /**
  * Translate an AP-vocabulary walkTo target into a game-local goal.
@@ -330,6 +406,10 @@ function _translateWalkTo(target) {
             || (prefix && (target.name === `${prefix}${e?.exitName}`
                 || target.name === `${prefix}${e?.exit_id}`)));
         if (!exit) return null;
+        if (_world.params?.walkToExits === 'byName') {
+            const id = exit.exitName ?? exit.exit_id ?? null;
+            return id ? { kind: 'portal', id } : null;
+        }
         const portalId = _world.params?.sidePortals?.[exit.side];
         return portalId ? { kind: 'portal', id: portalId } : null;
     }
@@ -337,13 +417,15 @@ function _translateWalkTo(target) {
 }
 
 /** Resolve + hand the target to the game. False = keep it pending. */
-function _applyWalkTo(target) {
-    if (!_isActive) return false;
+function _applyWalkTo(pending) {
+    if (!_isActive || !pending) return false;
+    const { target, options } = pending;
     const b = _bridge();
     if (!b || typeof b.botWalkTo !== 'function') return false;
     const goal = _translateWalkTo(target);
     if (!goal) return false;
-    b.botWalkTo(goal);
+    if (options === null || options === undefined) b.botWalkTo(goal);
+    else b.botWalkTo(goal, options);
     log('debug', `walkTo ${target.kind} '${target.name}' -> bot goal`, goal);
     return true;
 }
@@ -354,7 +436,7 @@ function _handlePlaybackControl(payload) {
     const b = _bridge();
     switch (method) {
         case 'walkTo': {
-            _pendingWalkTo = args[0] ?? null;
+            _pendingWalkTo = args[0] ? { target: args[0], options: args[1] ?? null } : null;
             if (_applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
             return;
         }
@@ -376,6 +458,10 @@ function _handlePlaybackControl(payload) {
             return;
         case 'setRate':
             return; // no scriptable clock to retune
+        case 'hostState':
+            _hostState = args[0] && typeof args[0] === 'object' ? args[0] : null;
+            _applyHostState();
+            return;
         default:
             log('warn', 'playback control: unknown method', method);
     }
@@ -398,20 +484,20 @@ function _handleLoadRegion(payload) {
     _isActive = true;
 
     // Locations of THIS region the host already has checked (region
-    // revisits): re-seed the dedupe set with their AP names so a
+    // revisits): seed the ledger with their AP names as accepted so a
     // re-fired objective never double-dispatches, and hand the game
     // their in-game ids so it can mark them collected up front instead
     // of re-offering them.
-    _reportedLocationNames.clear();
-    const checkedNames = new Set(
-        _client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    const checkedNames = _hostCheckedNames();
     const checkedFlashNames = [];
+    const acceptedNames = [];
     for (const [flashName, apName] of Object.entries(world.ap_locations ?? {})) {
         if (checkedNames.has(apName)) {
-            _reportedLocationNames.add(apName);
+            acceptedNames.push(apName);
             checkedFlashNames.push(flashName);
         }
     }
+    _locationReports.reset(acceptedNames);
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -450,6 +536,8 @@ function _handleLoadRegion(payload) {
     // response fires snapshotUpdated, which re-polls items + gate states
     // with the real inventory — the same proven path location checks use.
     _client?.requestStateSnapshot?.();
+    // The host's state for its page (hostState), whichever came first.
+    _applyHostState();
     // A bot walkTo that outran this loadRegion resolves now.
     if (_pendingWalkTo && _applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
     log('debug', `loaded region ${regionId} (gameId=${world.gameId ?? '?'})`);
@@ -476,6 +564,8 @@ async function main() {
     if (!_w.__swfBridge) _w.__swfBridge = {};
     _w.__swfBridge.sendLocation = _onSendLocation;
     _w.__swfBridge.sendExit = _onSendExit;
+    _w.__swfBridge.setPlayClock = _onSetPlayClock;
+    _w.__swfBridge.requestHost = _onRequestHost;
 
     // Step 3: subscribe to host events.
     _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);
@@ -491,9 +581,20 @@ async function main() {
     // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         if (_isActive) {
+            // An in-flight check the host now has is accepted (never resent).
+            _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
             _pushGateStates();
         }
+    });
+
+    // The loop-mode action gate swallowed a check (e.g. a clear while the
+    // queue is not parked on this region): the host refused it, so the
+    // game's next report of it may be sent again on this visit.
+    _client.subscribeEventBus('loops:clickIgnored', (data) => {
+        if (data?.kind !== 'location') return;
+        const name = data?.payload?.locationName;
+        if (typeof name === 'string') _locationReports.noteRefused(name);
     });
 
     // If we move away from this region, go inactive.

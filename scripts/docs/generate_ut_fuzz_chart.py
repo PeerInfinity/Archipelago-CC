@@ -923,27 +923,37 @@ def get_output_filename(results_path: str) -> str:
     """
     Generate output markdown filename based on results file.
 
+    The seed-type (fixed/random) is preserved as a '-random' suffix on the
+    output name so a random-seed result file gets its own chart instead of
+    clobbering the fixed-seed one (both previously mapped to the same .md, and
+    since files are processed in sorted order 'random' overwrote 'fixed').
+    This matches the convention in generate_multiworld_ut_fuzz_chart.py.
+
     Examples:
     - test-results-apworlds-worldgen-fixed-seed.json -> test-results-ut-fuzz-apworlds-worldgen.md
     - test-results-worldgen-fixed-seed.json -> test-results-ut-fuzz-worldgen.md
     - test-results-original-fixed-seed.json -> test-results-ut-fuzz-original.md
+    - test-results-original-random-seed.json -> test-results-ut-fuzz-original-random.md
     - test-results-fixed-seed.json -> test-results-ut-fuzz.md (old format)
     """
     basename = os.path.basename(results_path)
     parts = basename.replace('.json', '').split('-')
 
+    # Non-default (random) seed runs get their own chart file via a suffix.
+    seed_suffix = '-random' if 'random' in parts else ''
+
     # Format with world_source: test-results-{world_source}-{ut_version}-{seed_type}-seed
     if len(parts) == 6:  # ['test', 'results', 'apworlds', 'worldgen', 'fixed', 'seed']
         world_source = parts[2]
         ut_version = parts[3]
-        return f'test-results-ut-fuzz-{world_source}-{ut_version}.md'
+        return f'test-results-ut-fuzz-{world_source}-{ut_version}{seed_suffix}.md'
     # Bundled format: test-results-{ut_version}-{seed_type}-seed
     elif len(parts) == 5:  # ['test', 'results', 'worldgen', 'fixed', 'seed']
         ut_version = parts[2]
-        return f'test-results-ut-fuzz-{ut_version}.md'
+        return f'test-results-ut-fuzz-{ut_version}{seed_suffix}.md'
     else:
         # Old format or unexpected format
-        return 'test-results-ut-fuzz.md'
+        return f'test-results-ut-fuzz{seed_suffix}.md'
 
 
 def main():

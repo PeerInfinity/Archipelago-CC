@@ -1,0 +1,7 @@
+ ✓ frontend/modules/quickLaunch/generated.test.js (34 tests) 264ms
+ ✓ frontend/modules/procgenDocs/docLinks.test.js (15 tests) 33ms
+ ✓ frontend/modules/procgenDocs/docsRender.test.js (46 tests) 415ms
+ ✓ frontend/modules/procgenDocs/generated.test.js (55 tests) 8139ms
+     ✓ ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files  5332ms
+ Test Files  4 passed (4)
+      Tests  150 passed (150)
