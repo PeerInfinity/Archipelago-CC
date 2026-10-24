@@ -1,0 +1,38 @@
+SEAM-SWEEP: leg 371: 16 distinct answer(s) over 37 seam time(s) — VARIES WITH seam.time
+  t=5226 refusal work=165 [dashless:82,full:83] chaserForecast: whether bob bob@272,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that
+  t=5227 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5228 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5229 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5230 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5231 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5232 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5233 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5234 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5235 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5236 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5237 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5238 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5239 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5240 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5241 error work=315 [dashless:98,full:217] PLAN
+  t=5242 refusal work=547 [dashless:93,full:454] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80): the combat ladder is EXHAUSTED. The corridor passes th
+  t=5243 refusal work=642 [dashless:641/crusher-fork,full:1/walk] solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) 
+  t=5244 refusal work=217 [dashless:92,full:125] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.60103051030626,135.84753956
+  t=5245 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5246 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5247 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5248 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5249 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5250 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5251 refusal work=204 [dashless:91,full:113] solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (167.7190556999942,135.865766927
+  t=5252 refusal work=173 [dashless:86,full:87] chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that 
+  t=5253 refusal work=173 [dashless:86,full:87] chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that 
+  t=5254 refusal work=249 [dashless:124,full:125] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128): the combat lad
+  t=5255 refusal work=187 [dashless:93,full:94] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5256 error work=349 [dashless:141,full:208] PLAN
+  t=5257 error work=314 [dashless:116,full:198/sword-dash] PLAN
+  t=5258 error work=314 [dashless:116,full:198/sword-dash] PLAN
+  t=5259 error work=641 [dashless:119,full:522/crusher-fork] PLAN
+  t=5260 error work=641 [dashless:119,full:522/crusher-fork] PLAN
+  t=5261 error work=641 [dashless:119,full:522/crusher-fork] PLAN
+  t=5262 error work=317 [dashless:91,full:226] PLAN

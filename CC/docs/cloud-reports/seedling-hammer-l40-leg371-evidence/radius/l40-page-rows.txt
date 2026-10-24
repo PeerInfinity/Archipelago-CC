@@ -1,0 +1,42 @@
+372 done 5143 level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+373 done 5137 level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+374 done 5118 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+375 done 5142 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+376 done 5112 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+377 done 5165 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+378 done 5137 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+379 failed 5121 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+380 failed 5131 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+381 failed 5144 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+382 done 5149 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+383 failed 5136 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+384 done 5150 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+385 failed 5187 level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+389 done 5171 level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+390 done 5149 level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+391 done 5166 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+392 done 5157 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+393 done 5153 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+394 done 5150 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+395 done 5162 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+396 done 5157 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+397 done 5135 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+398 done 5363 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+399 done 5122 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+400 done 5134 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+401 done 5121 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+402 done 5146 level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+366 done 5231 level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+367 done 5234 level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+369 done 5195 level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+370 done 5213 level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+386 done 5125 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+387 timeout 5146 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+869 failed 5114 level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+368 timeout 5203 level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+388 failed 5211 level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+403 done 5146 level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+404 timeout 5136 level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+870 failed 5151 level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+371 failed 5219 level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+405 failed 5235 level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
