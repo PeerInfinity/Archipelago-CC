@@ -25218,3 +25218,12 @@ i-frame runs out, the third landing comes after that shot fires, and the shield 
 - A glide's speed equals the corpse's two-cycle step (0.5 px). "Moved at most 0.5 px" is therefore not a rest test; compare
   against two and four ticks back.
 - One press can carry a corpse two tiles. A plan's tile list is the audit, and the presses follow the corpse.
+
+**Movers (ON, measured locally; the CI dispatches are in the report).**
+- The full survey, A (FIREPUSH's three ON) vs B (+ both keys): one row differs, L69 step 148, a timeout in A that solves
+  alone in A.
+- The keyed sweep ×2 over 104 legs (L4, L16, L22, L25, L40, L65, L98): 0 key-driven verdicts; the two B2-only legs replay
+  A = B byte-identically.
+- Probes standard ON: 11/11.
+- The bounded vitest ON moves `botDriverV2.test.js`'s five L4-shove rows. They shove past a living `bob@64,64` after an
+  8-tick hold, and the game stops that block, so a flip owes them a re-pin.

@@ -1,0 +1,17 @@
+# box lock: TAKEN by probe-seedling-corpse-bump.mjs (browser, pid 8710) — head 4841c0570, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      corpsebump-l4-bob-wedge: 140 t; switches {"blockSweepBodies":true}
+PASS: corpsebump-l4-bob-wedge: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: corpsebump-l4-bob-wedge: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 140 sampled tick(s)
+      corpsebump-l4-bob-wedge: OFF the model parts from the game on 182 tick(s), first t 79: blocks game [PushableBlock@48.5,64] model [PushableBlock@49,64]
+recorded frontend/modules/seedlingDemo/fixtures/corpsebump-witness/corpsebump-l4-bob-wedge.json — 140 tick(s)
+      corpsebump-l40-t2-holder: 462 t; switches {"blockSweepBodies":true,"corpseBumpWeigh":true,"fireLiveTurretReach":true,"fireBlockPulseShove":true,"pulserPublishLag":true}
+PASS: corpsebump-l40-t2-holder: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: corpsebump-l40-t2-holder: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 462 sampled tick(s)
+      corpsebump-l40-t2-holder: OFF the model parts from the game on 56 tick(s), first t 174: bodies game [Bob@200,488 Bob@216,456 Bob@232,504 Bob@280,120 Bob@296,120 Bob@296,88 Bob@312,152 Bob@328,120 Bob@360,424 Bob@360,456 Bob@744,760 Bob@744,808 BobSoldier@888,840 IceTurret@487.5,408/dead Puncher@136,632 Puncher@824,136] model [Bob@200,488 Bob@216,456 Bob@232,504 Bob@280,120 Bob@296,120 Bob@296,88 Bob@312,152 Bob@328,120 Bob@360,424 Bob@360,456 Bob@744,760 Bob@744,808 BobSoldier@888,840 IceTurret@487.5,407/dead Puncher@136,632 Puncher@824,136]
+PASS: corpsebump-l40-t2-holder: the game's ice-turret corpse comes to rest on button@480,384 {t 2} and stays there while L40 lasts — on it from t215
+PASS: corpsebump-l40-t2-holder: the game's player leaves L40 by the pit west of wandlock@448,432 (the t2 lock opened) — ends in L43 at (232, 326.1)
+recorded frontend/modules/seedlingDemo/fixtures/corpsebump-witness/corpsebump-l40-t2-holder.json — 462 tick(s)
+
+ALL CHECKS PASSED

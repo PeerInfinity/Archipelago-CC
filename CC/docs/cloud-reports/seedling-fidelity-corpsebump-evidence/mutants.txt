@@ -1,0 +1,21 @@
+m1: 1 red of 19
+   - ON, the model reproduces the game at 0 px on every sampled tick: the player, the block, the Bob
+m2: 4 red of 19
+   - ON: the block sweep consults every body in L40 (the chasers, the turret, the static BombPusher)
+   - ON: the corpse's sweep consults the chasers and the BombPusher (the turret is the corpse itself)
+   - ON: the solver kills the turret, bumps its corpse north twice onto button@480,384, waits the fade, reaches the pit
+   - the recorded tape is the solver's plan, input for input
+m3: 3 red of 19
+   - ON: the solver kills the turret, bumps its corpse north twice onto button@480,384, waits the fade, reaches the pit
+   - the recorded tape is the solver's plan, input for input
+   - with the Sword alone (no Ghost Sword) the kill is never hitless, and the weigh refuses by name
+m4: 3 red of 19
+   - ON: the solver kills the turret, bumps its corpse north twice onto button@480,384, waits the fade, reaches the pit
+   - the recorded tape is the solver's plan, input for input
+   - the danger map: a DEAD turret is not priced at its placement with the key ON (OFF: it is)
+m5: 2 red of 19
+   - ON: the solver kills the turret, bumps its corpse north twice onto button@480,384, waits the fade, reaches the pit
+   - the recorded tape is the solver's plan, input for input
+m6: 1 red of 19
+   - the recorded tape is the solver's plan, input for input
+m7: 0 red of 19
