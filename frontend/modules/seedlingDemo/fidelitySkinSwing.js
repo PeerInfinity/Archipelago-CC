@@ -28,11 +28,11 @@ export const FIGHT = Object.freeze(['primary', '', '', '', '', '', '', '', '', '
  * game — js picks the re-site; these are measured offers, not the choice).
  */
 export const SKINSWING_WITNESSES = Object.freeze([
-    Object.freeze({ name: 'skinswing-l71-lavarunner', stand: 'lavarunner-L71', boot: { level: 71, x: 96, y: 200 }, n: 300 }),
+    // ⛓ former site [96,200]; js re-sited the stand to (80,208)
+    Object.freeze({ name: 'skinswing-l71-lavarunner', stand: 'lavarunner-L71', boot: { level: 71, x: 96, y: 200 }, n: 300, resite: true }),
     // ⛓ js skin-stands moved the `bulb-L74` stand from [80,100] to [64,100]: this witness is its FORMER site (planning-11)
     Object.freeze({ name: 'skinswing-l74-bulb', stand: 'bulb-L74', boot: { level: 74, x: 80, y: 100 }, n: 300, resite: true }),
-    Object.freeze({ name: 'skinswing-l71-resite', stand: 'lavarunner-L71', boot: { level: 71, x: 80, y: 208 }, n: 300,
-        resite: true }),
+    Object.freeze({ name: 'skinswing-l71-resite', stand: 'lavarunner-L71', boot: { level: 71, x: 80, y: 208 }, n: 300 }),
     Object.freeze({ name: 'skinswing-l74-resite', stand: 'bulb-L74', boot: { level: 74, x: 64, y: 100 }, n: 300 }),
 ]);
 
