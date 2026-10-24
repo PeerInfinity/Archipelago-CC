@@ -1772,7 +1772,7 @@ function burnWindowTiles(tree) {
  *   refused arm throws in `applyFire`.
  */
 function fireReachFrom(run, at) {
-    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables'), turrets: run.entities('turrets') });
     const trees = [];
     const others = [];
     for (const r of audit.modelled) {
@@ -18021,7 +18021,7 @@ function ropeOel(ropeId) {
 
 /** What a fire press from `at` does to the rope: `hit` (it is cut), and every OTHER responder it acts on or refuses. */
 function ropeFireReach(run, at, ropeId) {
-    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables'), turrets: run.entities('turrets') });
     const isRope = (r) => r.as3 === 'RopeStart' && r.id === ropeId;
     return {
         hit: audit.modelled.some(isRope),

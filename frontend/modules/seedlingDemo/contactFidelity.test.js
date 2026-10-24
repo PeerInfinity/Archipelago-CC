@@ -241,8 +241,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
             drillTimedPass: true,
-            // ⛓ fidelity FIREPUSH (wave 28): a fire block shoved by the room's pulser — shipped OFF.
-            fireBlockPulseShove: false });
+            // ⛓ fidelity FIREPUSH (wave 28): a fire block shoved by the room's pulser, a Fire press reaching a turret
+            // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
+            fireBlockPulseShove: false,
+            fireLiveTurretReach: false,
+            pulserPublishLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
