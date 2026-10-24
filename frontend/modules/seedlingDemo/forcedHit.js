@@ -111,6 +111,62 @@ const deathsOf = (r) => (r.ledger('playerDeaths') ?? []).length;
 const label = (keys) => keys.map((k) => k.join('+') || '·').join(' ');
 
 /**
+ * ⛓ SEARCHGAPS D-B (wave 28) — THE HITLESS WITNESS, asked before the breadth-first proof while
+ * `CONTACT_FIDELITY.forcedHitWitnessFirst` is ON.
+ *
+ * The proof HOLDS only when no hitless prefix of length `depthMax` survives, and a prefix that is hit stays hit — so ONE
+ * hitless input sequence of `depthMax` ticks decides `proven: false` exactly as the whole tree would, at the cost of one
+ * fork. Measured (sweep leg 908, L67, the key's corridor through `arrowtrap@48,48`'s lane, asked from (182.4,119.9) 135 px
+ * away): the tree spent its whole depth-2 level, 1,332 forks of a 134-tick replay = 5,328 of the request's 640 work units,
+ * and then gave up at depth 3 (46,656 forks over the advance budget) — so the 640-unit pass ended on the deadline at the
+ * `crusher-fork` site instead of on the room's own refusal. The witness answers it in one fork.
+ *
+ * The candidates are the alphabet's pure-movement sets (no press), each held for `depthMax` ticks, in alphabet order. A
+ * candidate that is hit, dies, or is refused by the model says nothing (the tree still runs); a hitless one ends the
+ * proof with the tree's own `proven: false` verdict (a hitless input that leaves the room is the tree's crossing
+ * verdict). Returns `{verdict | null, nodes}`; a tripped deadline is the tree's verdict too.
+ */
+function hitlessWitness(fork, { depthMax, alphabet }) {
+    const candidates = alphabet.filter((a) => !a.includes('primary') && !a.includes('secondary'));
+    let nodes = 0;
+    for (const a of candidates) {
+        const f = fork();
+        if (f === null) {
+            return { nodes, verdict: { proven: false, depth: 0, leaves: 0,
+                why: 'the caller\'s deadline tripped inside the proof\'s fork' } };
+        }
+        nodes += 1;
+        const h0 = hitsOf(f);
+        const d0 = deathsOf(f);
+        const keys = [];
+        let crossed = null;
+        let refused = false;
+        for (let i = 0; i < depthMax; i += 1) {
+            keys.push(a);
+            let o;
+            try {
+                o = f.advance(new Set(a));
+            } catch {
+                refused = true;
+                break;
+            }
+            if (hitsOf(f) > h0 || deathsOf(f) > d0) break;
+            if (o.transition) { crossed = o.transition; break; }
+        }
+        if (refused || hitsOf(f) > h0 || deathsOf(f) > d0) continue;
+        if (crossed) {
+            return { nodes, verdict: { proven: false, depth: keys.length, leaves: 0, witness: true, hitless: label(keys),
+                why: `the hitless input [${label(keys)}] leaves level ${crossed.from_level} for ${crossed.to_level} — `
+                    + 'no hit is forced (the witness, before the tree)' } };
+        }
+        return { nodes, verdict: { proven: false, depth: depthMax, leaves: 0, witness: true, hitless: label(keys),
+            why: `the hitless input [${label(keys)}] survives ${depthMax} tick(s) — no hit is forced inside the bound `
+                + `(the witness, ${nodes} fork(s), before the tree)` } };
+    }
+    return { nodes, verdict: null };
+}
+
+/**
  * THE PROOF. `fork()` returns a fresh run standing exactly where the live run stands (or `null` when the caller's
  * deadline tripped). Returns `{proven: true, depth, nodes, leaves, minHits, best}` — `best` the leaves billing
  * `minHits` with no death, fewest-ticks first — or `{proven: false, why, nodes, …}`.
@@ -121,6 +177,13 @@ export function proveForcedHit(fork, { depthMax = FORCED_HITS.depthMax, nodeBudg
     let nodes = 0;
     let advances = 0;
     const leaves = [];
+    // ⛓ SEARCHGAPS D-B — the hitless WITNESS first (`forcedHitWitnessFirst`; OFF: not asked, byte-identical).
+    if (CONTACT_FIDELITY.forcedHitWitnessFirst) {
+        const w = hitlessWitness(fork, { depthMax, alphabet });
+        nodes += w.nodes;
+        advances += w.nodes * (replayTicks + depthMax);
+        if (w.verdict) return { ...w.verdict, nodes, advances };
+    }
     for (let depth = 1; depth <= depthMax; depth += 1) {
         const next = [];
         // the whole depth or nothing: a depth the budget cannot finish is refused before a node of it is spent

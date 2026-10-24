@@ -218,8 +218,9 @@ const RUN_ENTITIES = 'entities';
 const VOLUME = 'volume';
 export const FAMILY_BLOCKS = deepFreeze([
     { family: 'openActivators', kind: RUN_ENTITIES, blocks: ['channel'],
-        solverReads: ['botDriverV2', 'solverBot'], strategies: ['hold', 'keylock', 'touch', 'wand'],
-        why: 'the lock/cover ids an Activators group has opened (`levelRun.js:10577`): a channel a button publishes.' },
+        solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: ['hold', 'keylock', 'touch', 'wand'],
+        why: 'the lock/cover ids an Activators group has opened (`levelRun.js:10577`): a channel a button publishes '
+            + '(fidelity SEARCHGAPS: `crusherBait`\'s press goal asks which groups are shut).' },
     { family: 'pushables', kind: RUN_ENTITIES, blocks: ['pushable'],
         solverReads: ['botDriverV2', 'solverBot'], strategies: ['shove'],
         why: 'the pushed blocks\' live rects (`levelRun.js:10579`).' },
@@ -252,8 +253,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the bridged chasers\' live positions (`levelRun.js:10634`; `chasers.bridgedChaserTags()`, Bob today); `dangerMap.chaserDanger` grows each by its step bound.' },
     { family: 'brokenRocks', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2', 'solverBot'], strategies: ['break'],
-        why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block.' },
+        solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: ['break'],
+        why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block (fidelity SEARCHGAPS: '
+            + '`crusherBait.crusherShieldOf` reads which shield rocks still stand).' },
     { family: 'crushersParked', kind: RUN_ENTITIES, blocks: ['lane-charge'],
         solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: [],
         why: 'whether every crusher has stopped charging (`levelRun.js:10587`).' },

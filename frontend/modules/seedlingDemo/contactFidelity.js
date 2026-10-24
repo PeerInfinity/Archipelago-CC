@@ -1111,6 +1111,26 @@ export const CONTACT_FIDELITY = {
      * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
     coverWeighRefine: true,
+    /**
+     * fidelity SEARCHGAPS D-A (wave 28) — THE CRUSHER BAIT'S PRESS GOAL (`crusherBait.searchBaitOrdering`). The ordering
+     * search's only goal was the AIM reached by crusher moves alone, with the round trip kept. L41's part is behind
+     * `wandlock@240,96`, whose button only a block can hold, and the block is behind `cover@112,128`, whose button only the
+     * CRUSHER can hold (`r5Totem.L41_PART3`): the search found R5's W,S,E ordering (the crusher parked on
+     * `button@248,232`, the round trip kept) and threw it away, because the aim was still shut (sweep leg 871, 102 states).
+     * ON: when no ordering reaches the aim, the shortest one whose parks newly HOLD DOWN a presser of a group that is shut
+     * now (the round trip kept) is the answer — a PRESS goal, and the frontier re-plans from the room it leaves; and the
+     * choreography lookup also reads R5's three L41 chains (`BAIT_CHOREOGRAPHIES_L41`, recorded on the game as
+     * `r5-l41-part3`). OFF: byte-identical. `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` for a node measurement.
+     */
+    crusherBaitPressGoal: false,
+    /**
+     * fidelity SEARCHGAPS D-B (wave 28) — THE FORCED-HIT PROOF ASKS ONE HITLESS WITNESS FIRST (`forcedHit.hitlessWitness`).
+     * The breadth-first proof spent its whole depth-2 level (1,332 forks, each replaying the segment) before it could say
+     * "not proven"; one hitless `depthMax`-tick input says the same thing exactly. Measured at sweep leg 908 (L67): 5,328
+     * of the request's 640 work units went to that tree, so the location solve ended on the deadline instead of on the
+     * room's refusal. ON: the witness is asked first; OFF: byte-identical. `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`.
+     */
+    forcedHitWitnessFirst: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1323,6 +1343,11 @@ if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '0') CONTACT_F
 // ⛓ fidelity WANDHOLD: `SEEDLING_COVER_WEIGH_REFINE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '1') CONTACT_FIDELITY.coverWeighRefine = true;
 if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '0') CONTACT_FIDELITY.coverWeighRefine = false;
+// ⛓ fidelity SEARCHGAPS: `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` and `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '1') CONTACT_FIDELITY.crusherBaitPressGoal = true;
+if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '0') CONTACT_FIDELITY.crusherBaitPressGoal = false;
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '1') CONTACT_FIDELITY.forcedHitWitnessFirst = true;
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '0') CONTACT_FIDELITY.forcedHitWitnessFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

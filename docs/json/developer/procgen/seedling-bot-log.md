@@ -25070,3 +25070,45 @@ r2c11 → r0c9 on Fire — a fire-push weigh nobody models yet (handed to the pl
   refinement asks. Any responder outside `KILL_LOCK_TAGS` with an occupancy guard (Cover) needs the same question.
 - A game sample that repeats the previous tick at the end of a collect is the pickup freeze, not a divergence: cut a
   witness one tick before it.
+
+### Seedling fidelity SEARCHGAPS — L41's crusher bait (`crusherBaitPressGoal`, OFF) and L67's forced-hit proof cost (`forcedHitWitnessFirst`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 28. The report is `CC/docs/cloud-reports/seedling-fidelity-searchgaps.md`.
+Both legs were reproduced locally (p4g, the sweep's own driver, `--capture-requests`) and their solves replayed in node.
+
+**D-A — the round trip was never the wall.** Sweep leg 871 refused *"the ordering search found nothing … (the round trip)
+… 102 state(s)"*. Laid out by configuration, those 102 states include R5's own W,S,E (`crusher@240,64` parked on
+`button@248,232`) with the start cell still in the player's component — the search discarded it because the aim was still
+shut: `totempart@240,144` is behind `wandlock@240,96`, whose button only the fire block can hold, and the block is behind
+`cover@112,128`, whose button only the crusher can hold. The goal was one mechanism short. And the search had been asked on a
+run in which the player had already DIED: the frontier's bare `break` of `breakablerock@224,80` swung from the west lane the
+rocks shield (every swing stance is in it — row 6 is wall but col 11), and the crusher's 1000 killed the player at t147;
+the run respawned them at the arrival and the solve went on. ON (`crusherBaitPressGoal`): the search also answers a PRESS
+goal (the shortest ordering whose parks newly hold a presser of a shut group, the round trip kept; the aim goal still wins);
+a rock standing in a resting crusher's lane is its SHIELD (`crusherShieldOf`) and is resolved as that crusher's `bait` —
+the walk to chain 1's stance UNDASHED (a dash's swing broke the shield mid-walk, the crusher charging before the bait), the
+swing recorded on a fork and driven as the head of chain 1's approach (the crusher rests when the approach begins and
+charges when it ends: `runBait`'s two checks); and R5's three L41 chains are library rows (`BAIT_CHOREOGRAPHIES_L41`, held
+to `r5Totem.L41_PART3`). The crusher parks on the button and the cover opens; the room then refuses at the wandlock —
+`weigh` refuses a `pushableblockfire` ("moves on a PRESS, not on a lean"), the frontier falls back to `hold`, and the walk
+off the button meets a closing Lock. That is FIREPUSH's region (and the hold, WANDHOLD's). Game witness
+`crusherpress-l41-bait` (p4g, `probe-seedling-crusher-press.mjs --record`): the bait plus a walk into the crusher's vacated
+constructor cell, 1,575 ticks at 0 px, never hit.
+
+**D-B — the work went to a proof that could not hold.** Sweep leg 908 ran out of 640, then 2560 units. Unbudgeted, both
+passes REFUSE anyway (the key's corridor crosses `arrowtrap@48,48`'s armed lane), and 5,328 of the dashless pass's 5,348
+units were one `proveForcedHit` tree, asked 135 px from the danger: the whole depth-2 level (1,332 forks, each replaying
+the segment's 134 ticks, a `crusher-fork` ask every 32), then "depth 3 … a search that gave up is not a proof". A prefix
+that is hit stays hit, so ONE hitless `depthMax`-tick input decides `proven: false` exactly as the tree does. ON
+(`forcedHitWitnessFirst`): the nine pure-movement inputs held for `depthMax` ticks are asked first; the leg's request spends
+58 units (642 / 2,562 before) and answers the room's own refusal. The budget was not the fix: the leg's honest answer is a
+refusal, and it is now reached.
+
+**Trap candidates.**
+- A search's refusal names its LAST conjunct ("… AND keeps the cell … (the round trip)"), not the one that failed — lay
+  the state space out by configuration before believing the clause.
+- A refusal can be asked on a run that already died: a 1000-damage contact respawns the player and the solve carries on.
+  Read `playerDeaths` before reading the refusal.
+- A shield is the trigger: breaking what blocks a mechanism's sight is the first move of operating it, not a separate
+  order — and a dash's swing breaks it too.
+- A work-unit deadline can hide a room's refusal: profile the sites unbudgeted before calling it a budget question.
