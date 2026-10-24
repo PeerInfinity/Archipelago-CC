@@ -25207,8 +25207,9 @@ units a pass. The beam towers' cycle is 52 t, inside the stall window: the bound
 only; the talk is the modelled intro freeze; `run.talkingNow` does not name it (handed to the skin). IGFADE's leg 650
 (L76 from L77, id 637 here): the verdict is the ARRIVAL CLOCK's — 18 of 61 solve; elsewhere every doorstep stall of the
 phase arm stands in range of the type-31 tile (8,6) by `lavachain@128,64`, and standing there turns it (with `igneousLava`
-OFF the same request solves). `phaseDodgeArrivalStall` asks a stall at the walk's start first in a room with type-31
-tiles: the captured request solves in 94 units (727 t), 61 / 61 clocks inside 640.
+OFF the same request solves). `phaseDodgeArrivalStall` asks a stall at the walk's start right after the doorstep's
+own in a room with type-31 tiles: the captured request solves in 183 units (727 t), 61 / 61 clocks inside 640, and the 18
+clocks OFF already solves keep OFF's plans (asked FIRST, it pre-empted short doorstep stalls: 553 -> 722 t at 5587..5590).
 
 **Trap candidates.**
 - A forecast compared against a live tape is only a witness of what the forecast is TOLD: mirror the tape's presses
