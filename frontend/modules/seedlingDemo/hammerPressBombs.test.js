@@ -14,9 +14,12 @@
  * staging A, a room the lobber never reaches: ON derives exactly what OFF derives.
  *
  * ⛓ THE GAME WITNESS (D2): `fixtures/hammer-bw-bombstand-witness/` holds the ON plan for leg 381 (MOVING_WAIT ON;
- * `scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs`, cut one tick before #10's blast on `bob@272,112`) and the
- * GAME's rows of it (p4f, headless, damage on, `probe-seedling-bombpusher.mjs --out`, compacted by the plan script's
- * `--samples`). The model replays the tape and meets the game's player, hits and bombs at every sampled tick.
+ * `scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs`) and the GAME's rows of it (p4g, headless, damage on,
+ * `probe-seedling-bombpusher.mjs --out`, compacted by the plan script's `--samples`). The model replays the tape and
+ * meets the game's player, hits and bombs at every sampled tick.
+ * ⛓ RE-WITNESSED at hammer-phase PDS (2026-10-24), when the producer's INTERIM `strikeIframeLapse` pin retired: the
+ * tape is the whole 1667-tick walk at the contact defaults (it was the pre-lapse walk cut at t1293), sampled to t1666
+ * (t1667 is the game's Totem Part pickup freeze).
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
@@ -25,7 +28,7 @@ import {
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS, PRESS_KILL_BOMBS_DEFAULT, resetPressKillBombsCounts,
     withPressKillBombs,
 } from './pressKillCost.js';
-import { deriveRefuge, deriveStrike } from './solverBot.js';
+import { deriveRefuge, deriveStrike, withStrikeEtaFloor } from './solverBot.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -66,8 +69,13 @@ describe('PRESS_KILL_BOMBS — the switch', () => {
 });
 
 describe('PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk)', () => {
+    /**
+     * ⚖ (248,184) is the stance the witness walk took: MOVINGWAIT's solve chose it with `STRIKE_ETA_FLOOR` OFF, and the
+     * game played it into #7's blast. hammer-phase SFF flipped the floor ON (ON, OFF's derivation here picks (248,168)),
+     * so this row pins the floor OFF to keep asking the witness's own question.
+     */
     it('t1099, the kill\'s first tick: OFF stands on (248,184) to press at t1153; ON names #7\'s blast on that '
-        + 'stance and strikes from (232,184)', () => {
+        + 'stance and strikes from (232,184) (the strike floor OFF: the witness walk\'s)', () => withStrikeEtaFloor(false, () => {
         const run = runAt(1099);
         expect(run.ticksCompleted).toBe(1099);
         const off = withPressKillBombs(false, () => deriveStrike(run, BODY, NO_CONTACTS, 0));
@@ -82,7 +90,7 @@ describe('PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk)', () => {
         expect(PRESS_KILL_BOMBS_COUNTS.strikeRefused).toBe(8);
         const why = bombWhys(on).find((r) => r.option === 'strike (248,184) at +54');
         expect(why?.why).toMatch(/at \+57 bombpusher@112,128#7's Explosion at \(256,187\) lands on the stance/);
-    }, 120_000);
+    }), 120_000);
 
     it('t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge '
         + 'leaves the blast', () => {
@@ -130,7 +138,7 @@ describe('PRESS_KILL_BOMBS — the ON plan for leg 381, on the game', () => {
             model.set(o.t, { p: [o.x, o.y], hits: run.ledger('playerHits').filter((h) => h.t <= o.t).length,
                 bombs: run.entities('bombs').filter((b) => !b.removed).map((b) => [b.x, b.y, b.v.x, b.v.y]) });
         }
-        expect(game.samples.length).toBe(1289);
+        expect(game.samples.length).toBe(1665);
         const parted = [];
         for (const g of game.samples) {
             const m = model.get(g.t);
@@ -140,14 +148,16 @@ describe('PRESS_KILL_BOMBS — the ON plan for leg 381, on the game', () => {
         }
         expect(parted).toEqual([]);
         expect(game.samples.every((g) => g.hits === 0)).toBe(true);
-        // t1156: #7 explodes at (255,187); the player stands on the new stance, outside its 15 px disc
-        const at = game.samples.find((g) => g.t === 1156);
-        expect(Math.hypot(at.p[0] - 255, at.p[1] - 187)).toBeGreaterThan(15);
+        // t1155: #7 explodes at (272,204) (the model's blast row); the player stands on (248,184), outside its 15 px disc
+        const at = game.samples.find((g) => g.t === 1155);
+        expect(at.bombs).toEqual([]);
+        expect(Math.hypot(at.p[0] - 272, at.p[1] - 204)).toBeGreaterThan(15);
     }, 120_000);
 
     it('the tape is the plan script\'s (its description names the blasts and the one landing)', () => {
-        expect(tape.tick_count).toBe(1293);
-        expect(tape.description).toMatch(/landings t1154 spinner@192,128 hits 1/);
+        expect(tape.tick_count).toBe(1667);
+        expect(tape.description).toMatch(/landings t1157 spinner@192,128 hits 1/);
+        expect(tape.description).toMatch(/t1155 7 \(272,204\)/);
         expect(tape.description).toMatch(/player hits 0/);
     });
 });

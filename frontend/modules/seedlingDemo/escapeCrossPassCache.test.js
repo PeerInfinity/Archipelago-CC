@@ -18,11 +18,12 @@
  * Each mutant in the report's list turns one of these red.
  */
 
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
-import { heldKeysAt } from './tapeFormat.js';
+import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
@@ -38,6 +39,14 @@ import {
 
 const SOURCE = atlasLevelSource();
 const L18 = { tape: 'r9-solve-18', goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }] };
+/**
+ * ⛓ The walk the key rows drive (t76 and its press at t77, t0..44 and its press at 44): `r9-solve-18` as committed
+ * before hammer-phase SFF re-recorded it under `STRIKE_ETA_FLOOR` ON (440 t), kept byte for byte outside the roster.
+ * The staging is the same either way (`stagingOf` drops the timed rows); only the keys moved, and these rows are
+ * about the cache's key at those presses, not about the committed walk.
+ */
+const L18_WALK = parseTape(readFileSync(new URL('./fixtures/witness-bases/r9-solve-18.flip14.json', import.meta.url),
+    'utf8'));
 
 /** A fixture's staging, honest, the persistence rows without an `at`, no equips (solveProgress.test.js's shape). */
 function stagingOf(name, residue = null, shift = 0) {
@@ -126,7 +135,7 @@ const same = (a) => ({ bytes: a.bytes, stream: a.stream, shouldStop: a.shouldSto
 
 /** An L18 run at `shift` ticks of `seam.time`, driven along the committed tape to tick `T`. */
 function l18At(T, shift = 0) {
-    const tape = loadTape(L18.tape);
+    const tape = L18_WALK;
     const run = createRunForStaging(stagingOf(L18.tape, null, shift), SOURCE);
     for (let t = 0; t < T; t += 1) run.advance(heldKeysAt(tape, t));
     return run;
@@ -155,7 +164,7 @@ const TOWER_STILL = 40;
 
 /** L18 (with the tower, unless `source` says otherwise) at `shift` ticks of `seam.time`, driven along the tape to `T`. */
 function towerRunAt(T, { shift = 0, stillUntil = 0, source = TOWER_SOURCE } = {}) {
-    const tape = loadTape(L18.tape);
+    const tape = L18_WALK;
     const run = createRunForStaging(stagingOf(L18.tape, null, shift), source);
     const was = { drift: CONTACT_FIDELITY.beamTowerDrift, hit: CONTACT_FIDELITY.beamTowerBeamHit };
     for (let t = 0; t < T; t += 1) {
@@ -171,7 +180,7 @@ function towerRunAt(T, { shift = 0, stillUntil = 0, source = TOWER_SOURCE } = {}
 
 /** XC's spinner-row call: from `T` holding the tape's keys, the press at `T + 1` on the first spinner. */
 function towerCall(run, T) {
-    return { state: run.state, at: T, keys: [heldKeysAt(loadTape(L18.tape), T)], pressAt: T + 1,
+    return { state: run.state, at: T, keys: [heldKeysAt(L18_WALK, T)], pressAt: T + 1,
         id: run.entities('spinnerBodies')[0].id };
 }
 
@@ -361,7 +370,7 @@ describe('hammer-phase XC — the key', () => {
     it('⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer\'s phase is two entries, and the two answers differ', () => {
         // ⛓ P = 77, the tape's second press, asked from t76: shift 0 escapes, shift 1 is exhausted (measured)
         const T = 76;
-        const tape = loadTape(L18.tape);
+        const tape = L18_WALK;
         const opts = (run) => ({ state: run.state, at: T, keys: [heldKeysAt(tape, T)], pressAt: 77,
             id: run.entities('spinnerBodies')[0].id });
         const off0 = pressEscape(l18At(T, 0), opts(l18At(T, 0)));
@@ -611,7 +620,7 @@ describe('hammer-phase XC — the key', () => {
     }, 300_000);
 
     it('⛓⛓⛓ the digest is per CALL: a call that builds a lazy visit state is never stored, so the next run builds it too (the per-tick mutant\'s trap)', () => {
-        const tape = loadTape(L18.tape);
+        const tape = L18_WALK;
         const keys = [];
         for (let t = 0; t < 44; t += 1) keys.push(heldKeysAt(tape, t));
         const opts = (run) => ({ state: run.state, at: 0, keys, pressAt: 44, id: run.entities('spinnerBodies')[0].id });

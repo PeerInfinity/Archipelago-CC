@@ -1,0 +1,10 @@
+     ✓ the control: no pool, staging A's first derivation strikes at (728,680) +510, the strike floor ON and OFF  1188ms
+     × ⛓⛓ the strike floor ON: the bounded pass previews (728,680), the walk drowns, and the candidate is skipped — not thrown 1233ms
+     × ⛓ the strike floor OFF: the walk loop's preview drowns at the same cell, and OFF skips it the same way 759ms
+     ✓ an error that is NOT a previewed death still throws (only `PhysicsV2Error` is a step not taken)  891ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+PhysicsV2Error: the player DROWNED in level 40 at (723.012669638572, 680.8480663552585) — terrain state 1. An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): `drownTimer` is never reset off-hazard, so eleven cumulative ticks on water without canSwim (the conch, R5) or lava without the dark suit ends the run. Re-route, or coerce the hazard in `noHazards`.
+    787|         `the player DROWNED in level ${level.level} at (${state.x}, ${…
+PhysicsV2Error: the player DROWNED in level 40 at (723.012669638572, 680.8480663552585) — terrain state 1. An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): `drownTimer` is never reset off-hazard, so eleven cumulative ticks on water without canSwim (the conch, R5) or lava without the dark suit ends the run. Re-route, or coerce the hazard in `noHazards`.
+    787|         `the player DROWNED in level ${level.level} at (${state.x}, ${…
+      Tests  2 failed | 2 passed (4)
