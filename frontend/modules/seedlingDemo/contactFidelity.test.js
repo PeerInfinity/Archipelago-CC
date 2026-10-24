@@ -266,7 +266,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-12's flip (⚖ user "Flip all 3 ON if A/B clean", 2026-10-24) turns them ON.
             fireBlockPulseShove: true,
             fireLiveTurretReach: true,
-            pulserPublishLag: true });
+            pulserPublishLag: true,
+            // ⛓ fidelity MISCRES D1 (wave 29): REMBODY's rule for drills / wallflyers / ice turrets, and the forecast
+            // fading a corpse — shipped OFF.
+            nonChaserRemovalBlocks: false,
+            forecastCorpseFade: false,
+            // ⛓ fidelity MISCRES D3 (wave 29): the phase arm stalls at the walk's start first in an igneous room — OFF.
+            phaseDodgeArrivalStall: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

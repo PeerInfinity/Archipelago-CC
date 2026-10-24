@@ -1214,6 +1214,47 @@ export const CONTACT_FIDELITY = {
      * `button@816,400`); OFF = main row-for-row.
      */
     pulserPublishLag: true,
+    /**
+     * fidelity MISCRES D1 (wave 29) — REMBODY'S RULE FOR THE NON-CHASER FAMILIES. `World.remove` only queues
+     * (`World.as:118-124`) and `updateLists` drains after the frame (`:895-911`), so a DRILL whose `Mobile.death` fade
+     * ends in its update (`Drill.as` via `Mobile.as:68`), a WALLFLYER's (`WallFlyer.as`, the same fade) and an ICE TURRET
+     * corpse's removal (`IceTurret.as`, `FP.world.remove`) are still in the "Enemy" type list for every body that updates
+     * after it in that frame. The model steps those families above the chasers (`advance`: wallflyers, drills, turrets,
+     * then chasers — the game's prepend order: `Game.as:2415`, `:2296`, `:2290` added after `:2276-2301`), so ON:
+     * `drillWallsNow` (the chasers' wall) and `drillEnemyBodiesTest` (a later drill's hop) keep a drill or wallflyer
+     * removed on THIS tick, and `chaserStaticEnemyBoxesNow` an ice turret removed on this tick, for the rest of the
+     * tick (`removedTick`, stamped ON only, outside a ceremony). OFF: the body stops blocking at once (byte-identical).
+     * ⚠ NO GAME WITNESS: no AP_1 recording has a drill, wallflyer or turret removed beside a later "Enemy" mover
+     * sweeping into its box (named in the MISCRES report). `SEEDLING_NON_CHASER_REMOVAL_BLOCKS=0|1`.
+     */
+    nonChaserRemovalBlocks: false,
+    /**
+     * fidelity MISCRES D1 (wave 29) — THE CHASER FORECAST FADES A CORPSE. `chaserForecastNow` cloned a live corpse
+     * (`destroy`) or a body in its "die" (`dying`) and never stepped either on: only a BobSoldier's corpse faded, so
+     * every other corpse stayed an "Enemy" sibling wall to the end of the forecast. The game removes it as live does:
+     * the "die" Spritemap's end sets `destroy` (`Bob.endAnim`, the graphic half), then `Mobile.death` fades 0.1 a
+     * tick on screen and `FP.world.remove`s at alpha <= 0 (`stepChaserEntity`'s destroy branch). ON: the forecast
+     * steps both on its clones (the die anim on its own copy), and `removedBodyBlocks` keeps the removal a wall to the
+     * end of that forecast tick, as live. OFF: byte-identical. WITNESSED on p4g (SKINSWING's `skinswing-l71-resite`,
+     * the forecast taken at t58: OFF it leaves the live run, which is the game at 0 px, by 1.164 px at t64 and
+     * 2.742 px at t68; ON it equals it). `SEEDLING_FORECAST_CORPSE_FADE=0|1`.
+     */
+    forecastCorpseFade: false,
+    /**
+     * fidelity MISCRES D3 (wave 29) — THE PHASE ARM'S FIRST STALL IS THE WALK'S START, IN A ROOM WITH IGNEOUS TILES
+     * (`solverBot`'s dodge rung, LADDER2's phase arm). The arm stalls at the doorstep of a lava chain or beam tower and
+     * up to 7 offsets earlier (step 4) — 28 samples at most. In L76 that doorstep stands within range of the type-31
+     * tile (8,6) by `lavachain@128,64`, and a player in range is what drives the tile's clock (`Tile.as`, IGNEOUS):
+     * every stall long enough to shift the chain's phase turns the tile to lava under the stance, so the arm refuses
+     * at every arrival clock outside an 18-tick window. MEASURED (leg `level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80`,
+     * IGFADE's 650, captured at seam 5603): OFF the room REFUSES on the chain after 11,726 units (the page's 640 /
+     * 2,560 budgets run out at `phase-dodge`); with `igneousLava` OFF it solves (184 units); ON this key, a stall at
+     * the walk's start (out of the tile's range) is asked right after the doorstep's own and solves in 183 units (727 t).
+     * ON: in a room holding a type-31 tile (`run.entities('igneousTiles')`, `igneousLava` ON), `at = 0` is the second
+     * stall candidate (the doorstep stays first, so a short doorstep stall that clears is still the answer); every other
+     * room is unchanged. OFF: byte-identical. `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`.
+     */
+    phaseDodgeArrivalStall: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1444,6 +1485,14 @@ if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '0') CONTACT_FIDELITY.fireLiveTurretReach = false;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '1') CONTACT_FIDELITY.pulserPublishLag = true;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELITY.pulserPublishLag = false;
+// ⛓ fidelity MISCRES D1: `SEEDLING_NON_CHASER_REMOVAL_BLOCKS=0|1` and `SEEDLING_FORECAST_CORPSE_FADE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_NON_CHASER_REMOVAL_BLOCKS === '1') CONTACT_FIDELITY.nonChaserRemovalBlocks = true;
+if (globalThis.process?.env?.SEEDLING_NON_CHASER_REMOVAL_BLOCKS === '0') CONTACT_FIDELITY.nonChaserRemovalBlocks = false;
+if (globalThis.process?.env?.SEEDLING_FORECAST_CORPSE_FADE === '1') CONTACT_FIDELITY.forecastCorpseFade = true;
+if (globalThis.process?.env?.SEEDLING_FORECAST_CORPSE_FADE === '0') CONTACT_FIDELITY.forecastCorpseFade = false;
+// ⛓ fidelity MISCRES D3: `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PHASE_DODGE_ARRIVAL_STALL === '1') CONTACT_FIDELITY.phaseDodgeArrivalStall = true;
+if (globalThis.process?.env?.SEEDLING_PHASE_DODGE_ARRIVAL_STALL === '0') CONTACT_FIDELITY.phaseDodgeArrivalStall = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
