@@ -27,6 +27,11 @@
  * `#11`'s Explosion reaching `spinner@192,160`: a bomb blast on a BODY, the interaction fidelity's held row (wave-18
  * BOMB BLAST ON BODIES, leg 381) will model. ⛔ RETIRE THIS PIN with that row: `--check`'s lapse-ON row records the
  * t1339 stop as the witness that row flips (⚖ model the game interaction, don't plan around it).
+ * ⛓ FLIPPED (fidelity planning-12, wave-28 stack, 2026-10-23): `bombBlastBody` is ON by default (⚖ user, WANDHOLD
+ * "Flip both ON"), and the lapse-ON row now RETURNS at t1667 with no refusal and 0 hits (#11 kills `spinner@192,160`
+ * at t1339; fidelity BOMBBLAST D4 measured the same). The pin's retirement is hammer's call; until then the two
+ * pre-flip rows are ⛓ controls that name `bombBlastBody` OFF: the tape witnesses the stop on #10's blast on
+ * `bob@272,112`, which the ON arm walks through.
  *
  * ⛔ NOT the roster: a witness kept beside its samples (`fixtures/hammer-bw-bombstand-witness/`, hammer-phase G1's
  * shape).
@@ -63,9 +68,10 @@ export async function bombStandStaging() {
 
 /**
  * One `solveSegment` with `MOVING_WAIT` ON and `PRESS_KILL_BOMBS` = `enabled`: the executed keys and the outcome.
- * `strikeIframeLapse` is pinned to `lapse` (OFF by default: the INTERIM pin above).
+ * `strikeIframeLapse` is pinned to `lapse` (OFF by default: the INTERIM pin above); `blastBody` pins `bombBlastBody`
+ * when given (the default's otherwise).
  */
-export async function bombStandSolve(staging, enabled, { lapse = false } = {}) {
+export async function bombStandSolve(staging, enabled, { lapse = false, blastBody } = {}) {
     const { solveSegment, withMovingWait } = await import(join(MODULE, 'solverBot.js'));
     const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const { withPressKillBombs } = await import(join(MODULE, 'pressKillCost.js'));
@@ -78,7 +84,8 @@ export async function bombStandSolve(staging, enabled, { lapse = false } = {}) {
     const advance = run.advance;
     run.advance = (held) => { keys.push(new Set(held)); return advance.call(run, held); };
     let message = null;
-    withContactFidelity({ strikeIframeLapse: lapse }, () => withMovingWait(true, () => withPressKillBombs(enabled, () => {
+    const pins = { strikeIframeLapse: lapse, ...(blastBody === undefined ? {} : { bombBlastBody: blastBody }) };
+    withContactFidelity(pins, () => withMovingWait(true, () => withPressKillBombs(enabled, () => {
         try {
             solveSegment({ run, goals: [JSON.parse(JSON.stringify(L40BUTTON_GOAL))], name: NAME, boot: staging.boot,
                 dashMode: 'all' });
@@ -144,17 +151,19 @@ async function main() {
         check('OFF (MOVING_WAIT ON): the press kill\'s stand takes bombpusher@112,128#7 on t1157\'s ledger row',
             h?.id === 'bombpusher@112,128#7' && h?.t === 1157, JSON.stringify(off.hits));
     }
-    const on = await bombStandSolve(staging, true);
-    check('⛓ ON: the solve runs past the press kill\'s first landing (it stops on #10\'s blast on bob@272,112, the '
-        + 'unstaged "Enemy" arm)', on.keys.length > CUT && /bombpusher@112,128#10 .* reaches the chaser bob@272,112/
+    // ⛓ bombBlastBody OFF: the tape is the pre-flip walk's prefix (the ON arm walks through #10's blast on the Bob)
+    const on = await bombStandSolve(staging, true, { blastBody: false });
+    check('⛓ ON, bombBlastBody OFF: the solve runs past the press kill\'s first landing (it stops on #10\'s blast on '
+        + 'bob@272,112, the unstaged "Enemy" arm)', on.keys.length > CUT && /bombpusher@112,128#10 .* reaches the chaser bob@272,112/
         .test(on.message ?? ''), `${on.keys.length} executed; ${(on.message ?? 'no refusal').slice(0, 160)}`);
     if (CHECK) {
-        // ⛔ the INTERIM pin's retirement witness: with the lapse ON the ON solve stops on #11's blast on a BODY
+        // ⛔ the INTERIM pin's retirement witness, FLIPPED: with the lapse ON and bombBlastBody ON (the default) the
+        // ON solve passes #11's blast on spinner@192,160 and returns
         const lapsed = await bombStandSolve(staging, true, { lapse: true });
-        check('⛓ the INTERIM pin\'s witness — lapse ON: the ON solve stops at t1339 on #11\'s Explosion reaching '
-            + 'spinner@192,160 (wave-18 BOMB BLAST ON BODIES retires the pin)', lapsed.keys.length === 1339
-            && /bombpusher@112,128#11\b[^]*spinner@192,160/.test(lapsed.message ?? ''),
-        `${lapsed.keys.length} executed; ${(lapsed.message ?? 'no refusal').slice(0, 200)}`);
+        check('⛓ the INTERIM pin\'s witness — lapse ON, bombBlastBody ON: the ON solve passes #11\'s blast on '
+            + 'spinner@192,160 and returns at t1667 with no hit (BOMB BLAST ON BODIES; the pin may retire)',
+        lapsed.keys.length === 1667 && lapsed.message === null && lapsed.hits.length === 0,
+        `${lapsed.keys.length} executed; ${(lapsed.message ?? 'no refusal').slice(0, 200)}; hits ${JSON.stringify(lapsed.hits)}`);
     }
     const keys = on.keys.slice(0, CUT);
     const a = await bombStandAccount(staging, keys);
