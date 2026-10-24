@@ -266,7 +266,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-12's flip (⚖ user "Flip all 3 ON if A/B clean", 2026-10-24) turns them ON.
             fireBlockPulseShove: true,
             fireLiveTurretReach: true,
-            pulserPublishLag: true });
+            pulserPublishLag: true,
+            // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
+            // spinner sees a responder's turn-off one tick later — shipped OFF.
+            stanceReentryNextDoor: false,
+            spinnerLockLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

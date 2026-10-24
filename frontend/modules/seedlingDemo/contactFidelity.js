@@ -1214,6 +1214,29 @@ export const CONTACT_FIDELITY = {
      * `button@816,400`); OFF = main row-for-row.
      */
     pulserPublishLag: true,
+    /**
+     * fidelity L40RES (wave 29) — A STANCE WALK THAT RE-ENTERS ITS OWN ORDER PASSES TO THE NEXT DOOR ON ITS FRONTIER
+     * (`solverBot` walkTo's `STANCE_REENTRY`). MEASURED on L40 from the south (survey step 93, `Totem Part 64,144`):
+     * `wandlock@448,432` (group 2) is the frontier door nearest the aim; its opener `button@480,384` is INSIDE the
+     * room it shuts. The hold stance (488,392) was derived reachable under the stance hypothesis THROUGH the south door
+     * `wandlock@480,560` (group 3, its `buttonroom@880,768` latches), but the walk to it re-identified its own frontier
+     * nearest-to-aim and named `wandlock@448,432` again: a refusal with the room's real door untried. ON: before the
+     * refusal stands, the walk's frontier is walked on (the L12KEYLINE `nextPastSealedLock` shape) — an order whose
+     * stance walk is already in flight, or whose stance IS this walk's aim, is passed over by name. OFF:
+     * byte-identical. `SEEDLING_STANCE_REENTRY_NEXT_DOOR=0|1` for a node measurement.
+     */
+    stanceReentryNextDoor: false,
+    /**
+     * fidelity L40RES (wave 29) — A SPINNER SEES A RESPONDER'S TURN-OFF ONE TICK LATER (`levelRun.spinnerCtx`).
+     * `Game.loadlevel` adds the lock family and `cover` (`Game.as:2355-2364`) before `spinner` (`:2416`), and
+     * `World.addUpdate` prepends, so a Spinner moves BEFORE them each frame and sweeps a responder Solid on the frame it
+     * turns off. The model stepped spinners against the state the previous tick's `stepActivators` left, one tick early.
+     * MEASURED on the game (p4g, `l40res-368-s5290`): `spinner@192,160` reflects off `wandlock@208,160` at t1172 and
+     * the model's passed it (18.4 px apart by t1196). ON: `activators.openActivatorIdsBeforeLatestStep` (no new run
+     * state: a fade responder's `held` names its turn-off step). OFF: byte-identical.
+     * `SEEDLING_SPINNER_LOCK_LAG=0|1` for a node measurement.
+     */
+    spinnerLockLag: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1444,6 +1467,11 @@ if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '0') CONTACT_FIDELITY.fireLiveTurretReach = false;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '1') CONTACT_FIDELITY.pulserPublishLag = true;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELITY.pulserPublishLag = false;
+// ⛓ fidelity L40RES: `SEEDLING_STANCE_REENTRY_NEXT_DOOR=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '1') CONTACT_FIDELITY.stanceReentryNextDoor = true;
+if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '0') CONTACT_FIDELITY.stanceReentryNextDoor = false;
+if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '1') CONTACT_FIDELITY.spinnerLockLag = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '0') CONTACT_FIDELITY.spinnerLockLag = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
