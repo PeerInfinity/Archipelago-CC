@@ -265,7 +265,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
             fireBlockPulseShove: false,
             fireLiveTurretReach: false,
-            pulserPublishLag: false });
+            pulserPublishLag: false,
+            // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
+            // spinner sees a responder's turn-off one tick later — shipped OFF.
+            stanceReentryNextDoor: false,
+            spinnerLockLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
