@@ -1219,6 +1219,17 @@ export const CONTACT_FIDELITY = {
      * see (`run.blockSweepBodyIds`). OFF: byte-identical. `SEEDLING_BLOCK_SWEEP_BODIES=0|1`.
      */
     blockSweepBodies: false,
+    /**
+     * fidelity CORPSEBUMP D2 (wave 29) — AN ICE TURRET'S CORPSE IS A WEIGH'S HOLDER (`solverBot.deriveCorpseWeigh`).
+     * `IceTurret.bump` moves a corpse one tile away from a Fire press (`IceTurret.as:172-203`), and a corpse on a
+     * plain Button presses it for ever (`Button.hitables` holds "Solid" and "Enemy"). `deriveWeigh` asked the pushable
+     * roster only, so L40's t2 group (`button@480,384`, the room's holder is `iceturret@472,400`'s corpse) was a wall
+     * (guard iii). ON: where no block reaches and none is parked, a turret whose corpse tile shares an axis with the
+     * presser is killed (`killIceTurretInPlace`, corpse only) and bumped there press by press (`runFire`'s bump arm),
+     * each press audited against the corpse where it will be; then the fade is waited out. Needs `blockSweepBodies` and
+     * `fireLiveTurretReach` ON (refused by name otherwise). OFF: byte-identical. `SEEDLING_CORPSE_BUMP_WEIGH=0|1`.
+     */
+    corpseBumpWeigh: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1452,6 +1463,8 @@ if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELI
 // ⛓ fidelity CORPSEBUMP: `SEEDLING_BLOCK_SWEEP_BODIES=0|1` and `SEEDLING_CORPSE_BUMP_WEIGH=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '1') CONTACT_FIDELITY.blockSweepBodies = true;
 if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '0') CONTACT_FIDELITY.blockSweepBodies = false;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '1') CONTACT_FIDELITY.corpseBumpWeigh = true;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '0') CONTACT_FIDELITY.corpseBumpWeigh = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

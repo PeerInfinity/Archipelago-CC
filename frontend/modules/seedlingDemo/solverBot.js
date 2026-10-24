@@ -4526,7 +4526,7 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
     const onto = {
         tx: Math.floor(presser.x / TILE_SIZE), ty: Math.floor(presser.y / TILE_SIZE),
     };
-    const derived = deriveWeigh(run, onto, contacts, blocked);
+    const derived = deriveWeighSource(run, onto, contacts, blocked);
     /**
      * ⛓⛓⛓ **THE DWELL ARM — PROCGEN ELEMENTS arc 3, slice S1, gap 3.**
      *
@@ -4613,6 +4613,32 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
                     + `${presser.tag}@${presser.x},${presser.y}'s own cell, which the BLOCK `
                     + 'occupies — the pre-solved gadget is exactly the room where the hold '
                     + 'has nowhere to stand (arc-3 §10.3 gap 3)',
+            }, ...derived.rejected, ...opener.rejected],
+        };
+    }
+    if (!derived.plan && derived.corpse) {
+        // ⛓ fidelity CORPSEBUMP D2: the corpse is the holder (`deriveCorpseWeigh`); `execWeigh`'s corpse arm walks.
+        const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
+            `solverBot weigh/corpse (${obstacle.id})`);
+        const hold = deriveHold(run, resolvedPresser, opener);
+        const c = derived.corpse;
+        return {
+            strategy: 'weigh',
+            postCondition: 'press',
+            target: { x: presser.x, y: presser.y },
+            corpse: c,
+            dwell: {
+                ticks: hold.ticks,
+                until: hold.until,
+                why: `${c.turret}'s corpse is parked on ${presser.tag}@${presser.x},${presser.y} and is not going to `
+                    + 'walk off it — `Button.update` re-collides `["Player","Enemy","Solid"]` EVERY tick '
+                    + '(`Button.as:27-39`), and a corpse is an "Enemy" that turns "Solid" once the player is off it '
+                    + '(`IceTurret.as:92-95`).',
+            },
+            rejected: [{
+                option: 'hold',
+                why: `${obstacle.id} answers to group t=${presser.t}, whose pressers all republish — the player who `
+                    + 'leaves to walk through has already shut the lock',
             }, ...derived.rejected, ...opener.rejected],
         };
     }
@@ -4920,6 +4946,115 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
             ...rejected,
         ],
     };
+}
+
+/**
+ * ⛓⛓⛓ fidelity CORPSEBUMP D2 (`CONTACT_FIDELITY.corpseBumpWeigh`, OFF) — **AN ICE TURRET'S CORPSE IS A WEIGH'S HOLDER.**
+ *
+ *     IceTurret.as:135-151   the first `destroy` is a corpse: `setHitbox(16, 16, 8, 8)`, "dead", `solids.push("Enemy",
+ *                            "Player")`; `update()`'s else-arm makes it `type = "Solid"` once the player is off it
+ *     IceTurret.as:172-203   `bump(p, t)` on a corpse, for "Fire" or "Pulse": one tile AWAY from `p` on each axis the
+ *                            `atan2` band admits (`Player.genericHit` calls it before `Enemy.hit`)
+ *     Button.as:27-39        `hitables` holds "Solid" (and "Enemy"): a corpse on the button presses it for ever
+ *
+ * L40's t2 group is the measured case: `button@480,384` {t 2} is plain, so its locks open only while a Solid sits on
+ * it, and the room's holder is `iceturret@472,400`'s corpse (`r5Totem.L40_CORPSE`; FIREPUSH's p4g witness put it on
+ * the button by two Fire presses from (488,440) then (488,424)). `deriveWeigh` asks the pushable roster only, so the
+ * group read as a wall nothing can redeem (guard iii) and the room's prerequisites refused.
+ *
+ * ON, asked only where `deriveWeigh` found no block and none parked: a turret whose corpse tile (its ENTITY tile —
+ * `runFire`'s bump arm compares that) shares an axis with the presser is a holder. The route is `k` presses, each from
+ * the tile centre one tile BEHIND the corpse on the push axis (the push is away from the player); every press is
+ * audited against a corpse at that cell (`auditFire` with the live-rect join, `fireLiveTurretReach`) and must reach
+ * that turret and nothing else; every cell the corpse enters must be free of a Solid and not a destroying tile
+ * (`IceTurret.input`'s water/lava/pit). A live turret is killed first (`killIceTurretInPlace`, `corpseOnly`).
+ *
+ * ⚠ IT NEEDS TWO OTHER KEYS, AND SAYS SO: the bump arm's enemy-room refusal narrows only with `blockSweepBodies` (D1:
+ * the corpse's slide consults the stepped bodies), and the reach audit is the corpse's real rect only with
+ * `fireLiveTurretReach`. Either OFF ⇒ `null` with a named reject. Named bounds: one straight line (no corner), and a
+ * corpse parked on the presser is not modelled as a wall in the stance hypothesis (`stancePrerequisite`'s bag).
+ */
+function deriveCorpseWeigh(run, onto, blocked = []) {
+    const rejected = [];
+    const turrets = run.entities('turrets');
+    if (!turrets || turrets.size === 0) return { plan: null, rejected };
+    const option = 'an ice-turret corpse bumped onto the presser (`corpseBumpWeigh`)';
+    if (!CONTACT_FIDELITY.blockSweepBodies || !CONTACT_FIDELITY.fireLiveTurretReach) {
+        rejected.push({ option, why: 'needs `blockSweepBodies` (the corpse slide sees the bodies, so `runFire`\'s bump '
+            + 'arm can certify it) and `fireLiveTurretReach` (the flame is audited against the corpse where it is) ON' });
+        return { plan: null, rejected };
+    }
+    if (!(run.progress('inventorySlots') ?? []).includes(INVENTORY_ITEM_IDS.fire)) {
+        rejected.push({ option, why: 'the inventory has no Fire slot — only `Fire`/`Pulse` bump a corpse' });
+        return { plan: null, rejected };
+    }
+    const opts = run.liveGeometryOpts();
+    const fatal = (tx, ty) => [1, 6, 17].includes(run.world.nearestWalkableTile(tx * TILE_SIZE + 8,
+        ty * TILE_SIZE + 8)?.t);
+    for (const [id, t] of [...turrets].sort(([a], [b]) => (a < b ? -1 : 1))) {
+        if (t.removed || blocked.includes(id)) continue;
+        const from = { tx: Math.floor(t.x / TILE_SIZE), ty: Math.floor(t.y / TILE_SIZE) };
+        if (from.tx !== onto.tx && from.ty !== onto.ty) {
+            rejected.push({ option: `${option}: ${id}`, why: `its corpse tile (${from.tx},${from.ty}) shares neither `
+                + `axis with (${onto.tx},${onto.ty}) — a press moves it one tile on one axis (a corner is unbuilt)` });
+            continue;
+        }
+        const d = { dx: Math.sign(onto.tx - from.tx), dy: Math.sign(onto.ty - from.ty) };
+        const k = Math.abs(onto.tx - from.tx) + Math.abs(onto.ty - from.ty);
+        if (k === 0) {
+            rejected.push({ option: `${option}: ${id}`, why: `it is already on (${onto.tx},${onto.ty})` });
+            continue;
+        }
+        // the turret's own range is braved, as `killIceTurretInPlace`'s walk braves it; and the corpse is not a wall to
+        // its own stances (a later stance is a cell it leaves on the press before)
+        const bag = opts.turrets?.has?.(id) ? { ...opts, turrets: new Map([...opts.turrets].map(([k, v]) => [k,
+            k === id ? { ...v, solid: false } : v])) } : opts;
+        const planOpts = solverPlanOpts(run, new Set([`proximity-hazard:${id}`]), { liveBag: bag });
+        const presses = [];
+        let why = null;
+        for (let i = 0; i < k && why === null; i += 1) {
+            const at = { tx: from.tx + d.dx * i, ty: from.ty + d.dy * i };
+            const to = { tx: at.tx + d.dx, ty: at.ty + d.dy };
+            const stance = { x: (at.tx - d.dx) * TILE_SIZE + 8, y: (at.ty - d.dy) * TILE_SIZE + 8 };
+            const box = { x: to.tx * TILE_SIZE, y: to.ty * TILE_SIZE, right: to.tx * TILE_SIZE + 16,
+                bottom: to.ty * TILE_SIZE + 16 };
+            if (run.world.collidesSolid(box, bag)) { why = `(${to.tx},${to.ty}) is Solid to the corpse`; break; }
+            if (fatal(to.tx, to.ty)) { why = `(${to.tx},${to.ty}) is a destroying tile (water, lava or pit)`; break; }
+            if (plannerObstacleAt(run.world, stance.x, stance.y, null, planOpts) !== null) {
+                why = `the stance (${stance.x},${stance.y}) is not plannable floor`;
+                break;
+            }
+            const cx = at.tx * TILE_SIZE + 8;
+            const cy = at.ty * TILE_SIZE + 8;
+            const hypo = new Map(turrets);
+            hypo.set(id, { ...t, x: cx, y: cy, dead: true, removed: false,
+                rect: { x: cx - 8, y: cy - 8, right: cx + 8, bottom: cy + 8 } });
+            const audit = auditFire(run.world, stance, { pushables: run.entities('pushables'), turrets: hypo });
+            const reached = [...audit.modelled, ...audit.refused].map((r) => r.id);
+            if (!reached.includes(id) || reached.length !== 1) {
+                why = `a press from (${stance.x},${stance.y}) reaches [${reached.join(', ')}], not ${id} alone`;
+                break;
+            }
+            presses.push({ stance, at, to });
+        }
+        if (why !== null) {
+            rejected.push({ option: `${option}: ${id}`, why });
+            continue;
+        }
+        return { plan: { turret: id, alive: !t.dead, from, dir: d, k, presses }, rejected };
+    }
+    return { plan: null, rejected };
+}
+
+/**
+ * ⛓ fidelity CORPSEBUMP D2 — `deriveWeigh`, then (key ON, no block and none parked) `deriveCorpseWeigh` as a second
+ * SOURCE: the answer carries `corpse` beside `plan`/`parked`. OFF: `deriveWeigh`'s own answer, the same object.
+ */
+function deriveWeighSource(run, onto, contacts, blocked = []) {
+    const derived = deriveWeigh(run, onto, contacts, blocked);
+    if (!CONTACT_FIDELITY.corpseBumpWeigh || derived.plan || derived.parked) return derived;
+    const c = deriveCorpseWeigh(run, onto, blocked);
+    return { ...derived, ...(c.plan ? { corpse: c.plan } : {}), rejected: [...derived.rejected, ...c.rejected] };
 }
 
 /**
@@ -8990,9 +9125,10 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
             tx: Math.floor(opener.presser.x / TILE_SIZE),
             ty: Math.floor(opener.presser.y / TILE_SIZE),
         };
-        const derived = deriveWeigh(run, onto, contacts, blocked);
-        if (!derived.plan) continue;
-        const bag = bagWithBlockAt(bagH, derived.plan.blockId, onto, false);
+        const derived = deriveWeighSource(run, onto, contacts, blocked);
+        if (!derived.plan && !derived.corpse) continue;
+        // ⛓ CORPSEBUMP D2: a corpse holder discharges the activator; the corpse's own cell is not in the bag (a bound).
+        const bag = derived.plan ? bagWithBlockAt(bagH, derived.plan.blockId, onto, false) : bagH;
         for (const c of candidates) {
             if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
                 solverPlanOpts(run, exempt, { liveBag: bag }))) continue;
@@ -9004,8 +9140,9 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
                     tag: h.tag,
                     via: 'mechanism',
                     why: `the stance is reachable once ${h.id} is REALLY open, and its own `
-                        + `verb is \`weigh\`: ${derived.plan.blockId} is shoved `
-                        + `${derived.plan.dir} k=${derived.plan.k} onto `
+                        + `verb is \`weigh\`: ${derived.plan ? `${derived.plan.blockId} is shoved `
+                            + `${derived.plan.dir} k=${derived.plan.k}`
+                            : `${derived.corpse.turret}'s corpse is bumped k=${derived.corpse.k}`} onto `
                         + `${opener.presser.tag}@${opener.presser.x},${opener.presser.y} `
                         + `(${onto.tx},${onto.ty}) and the group stays published while the `
                         + 'walker leaves. ⛔ Asked BEFORE the geometry arm, because that '
@@ -9174,8 +9311,8 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
                 tx: Math.floor(opener.presser.x / TILE_SIZE),
                 ty: Math.floor(opener.presser.y / TILE_SIZE),
             } : null;
-            const derived = onto ? deriveWeigh(run, onto, contacts, blocked) : null;
-            if (!derived || (!derived.plan && !derived.parked)) {
+            const derived = onto ? deriveWeighSource(run, onto, contacts, blocked) : null;
+            if (!derived || (!derived.plan && !derived.parked && !derived.corpse)) {
                 walls.push({
                     id: a.id,
                     tag: a.tag,
@@ -9918,6 +10055,7 @@ function execWeigh(run, perTick, resolved, ctx) {
      */
     const strike = strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
     const armed = (d) => (strike ? { ...d, strike } : d);
+    if (resolved.corpse) return execCorpseWeigh(run, perTick, resolved, ctx, armed);
     if (resolved.dwellOnly) {
         const only = runDwell(run, perTick, armed(resolved.dwell),
             `${ctx.what} (fade, block already home)`);
@@ -9942,6 +10080,221 @@ function execWeigh(run, perTick, resolved, ctx) {
         ...(shove.steps ? { steps: shove.steps } : {}),
         ticks: (shove.ticks ?? 0) + (dwell.ticks ?? 0),
     };
+}
+
+/**
+ * ⛓ fidelity CORPSEBUMP D2 — `execWeigh`'s corpse arm (`deriveCorpseWeigh`'s plan): kill the turret where it stands if
+ * it lives (`killIceTurretInPlace`, `corpseOnly`), select the Fire, and for each press walk to its stance, come to rest
+ * and bump (`runFire`'s bump arm, whose effect check is the corpse's ENTITY tile); restore the slot; wait out the fade
+ * (`runDwell`, armed as the block arm's). A press that moves the corpse anywhere else refuses inside `runFire` by name.
+ */
+const CORPSE_SETTLE_MAX = 60;
+const CORPSE_SNAP_WAIT = 2;
+/** The longest wait for a bumped corpse to come to rest, ticks (a tile is 32 ticks at 0.5 px/tick; two, plus slack). */
+const CORPSE_GLIDE_MAX = 120;
+/** The fewest ticks after a press before its corpse is read at rest: two tiles of glide (64) plus the press (8). */
+const CORPSE_GLIDE_MIN = 72;
+/** The longest wait for the camera to be exact after the fade, ticks (`Game.shake` decays from at most 15). */
+const CORPSE_SHAKE_WAIT = 120;
+const NONE_KEYS = Object.freeze(new Set());
+function execCorpseWeigh(run, perTick, resolved, ctx, armed) {
+    const from = perTick.length;
+    const c = resolved.corpse;
+    const exempt = new Set([...(resolved.exempt ?? []), `proximity-hazard:${c.turret}`]);
+    const turret = () => run.entities('turrets')?.get?.(c.turret) ?? null;
+    /**
+     * ⛔ THE BOX THE KILL DERIVES ITS STANCE FROM MUST BE ON ITS SNAP. A live turret's first on-screen `input()` snaps
+     * its y by 8 px (`iceTurret.js`, `IceTurret.as:229-233`); a kill side derived from the unsnapped box stands INSIDE
+     * the snapped body (measured: the L40 pocket boot, a contact hit on the kill's tick 34). Stepped until it is, by
+     * at most `CORPSE_SNAP_WAIT` ticks, still.
+     */
+    const snapped = (v) => v === Math.floor(v / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2;
+    for (let w = 0; turret() && !turret().dead && !snapped(turret().y) && w < CORPSE_SNAP_WAIT; w += 1) {
+        perTick.push(NONE_KEYS);
+        const { transition } = run.advance(NONE_KEYS);
+        if (transition) {
+            throw new SolverRefusal(`${ctx.what}: the run crossed to level ${transition.to_level} waiting on `
+                + `${c.turret}'s snap`, { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret }, perTick: [...perTick] });
+        }
+    }
+    const prior = run.progress('primary');
+    const kill = turret()?.dead ? null : killForCorpse(run, perTick, c, exempt, ctx);
+    const NONE = new Set();
+    const presses = [];
+    /**
+     * ⚠ THE PRESSES FOLLOW THE CORPSE, NOT THE PLAN'S TILE LIST: one press's five dispatches can carry it more than a
+     * tile (measured: L40, the first press from (488,440.45) left it gliding past (30,25) on to (30,24)), so after
+     * each press the corpse is waited to rest and the next stance is read off where it actually is. The plan's
+     * presses are the derivation's audit; at most `k` presses are made, and a corpse past the presser refuses.
+     */
+    const tileOf = (b) => ({ tx: Math.floor(b.x / TILE_SIZE), ty: Math.floor(b.y / TILE_SIZE) });
+    const along = (q) => (c.dir.dx !== 0 ? (q.tx - c.from.tx) * c.dir.dx : (q.ty - c.from.ty) * c.dir.dy);
+    const onto = { tx: c.from.tx + c.dir.dx * c.k, ty: c.from.ty + c.dir.dy * c.k };
+    const refuseHere = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret },
+            perTick: [...perTick] });
+    };
+    for (let i = 0; along(tileOf(turret())) < c.k; i += 1) {
+        if (i >= c.k) refuseHere(`${c.k} press(es) and ${c.turret}'s corpse is at ${JSON.stringify(tileOf(turret()))}`);
+        const at = tileOf(turret());
+        const stance = { x: (at.tx - c.dir.dx) * TILE_SIZE + 8, y: (at.ty - c.dir.dy) * TILE_SIZE + 8 };
+        const to = { tx: at.tx + c.dir.dx, ty: at.ty + c.dir.dy };
+        if (!hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
+            ctx.walkTo(ctx.goal, stance, { what: `${ctx.what} -> corpse bump ${i + 1} stance (${stance.x},${stance.y})`,
+                contactsOverride: exempt });
+        }
+        for (let w = 0; run.state.vx !== 0 || run.state.vy !== 0; w += 1) {
+            if (w > CORPSE_SETTLE_MAX) refuseHere(`the walk to corpse bump ${i + 1}'s stance never came to rest`);
+            perTick.push(NONE);
+            if (run.advance(NONE).transition) refuseHere('the run crossed a door while settling at a corpse bump stance');
+        }
+        if (run.progress('primaryWeapon') !== 'fire') {
+            const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.fire);
+            if (slot < 0) refuseHere('the inventory has no Fire slot');
+            ctx.equip(slot);
+        }
+        const rec = runFire(run, perTick, { bumps: [{ id: c.turret, to }] },
+            `${ctx.what} (corpse bump ${i + 1}, ${c.turret})`);
+        // at rest: the corpse's two-cycle moves it 0.5 px a tick for ever and a glide moves 0.5 px a tick too, so
+        // "at rest" is the position two and four ticks ago, exactly (the cycle's period), and not before
+        // `CORPSE_GLIDE_MIN` ticks (a glide can pause on the cycle: measured, L40 at y 408 mid-way to (30,24))
+        const seen = [{ ...turret() }];
+        for (let w = 0; ; w += 1) {
+            if (w > CORPSE_GLIDE_MAX) refuseHere(`${c.turret}'s corpse never came to rest after bump ${i + 1}`);
+            perTick.push(NONE);
+            if (run.advance(NONE).transition) refuseHere('the run crossed a door while the corpse glided');
+            const now = turret();
+            if (now.removed) refuseHere(`${c.turret}'s corpse was destroyed gliding after bump ${i + 1}`);
+            seen.push({ ...now });
+            const b2 = seen.at(-3);
+            const b4 = seen.at(-5);
+            if (w >= CORPSE_GLIDE_MIN && b2 && b4 && b2.x === now.x && b2.y === now.y && b4.x === now.x
+                && b4.y === now.y) break;
+        }
+        presses.push({ stance, to, pressTick: rec?.pressTick ?? null, rest: tileOf(turret()) });
+    }
+    if (along(tileOf(turret())) !== c.k) refuseHere(`${c.turret}'s corpse rests past the presser at `
+        + `${JSON.stringify(tileOf(turret()))}, not on (${onto.tx},${onto.ty})`);
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    const dwell = runDwell(run, perTick, armed(resolved.dwell), `${ctx.what} (fade, corpse home)`);
+    /**
+     * ⛔ AND THE SHAKE IS WAITED OUT before the next plan: the weigh leaves the camera a `Game.shake` band (measured:
+     * L40, the next walk's forecast refused *"whether bob@352,416 is on screen depends on … the jiggle"*), and the
+     * cosmetic draws are never modelled (⚖ 2026-10-10) — so the player stands until the camera is exact again.
+     */
+    let shakeWait = 0;
+    while ((run.shake > 0 || run.cameraNow.band !== null) && shakeWait < CORPSE_SHAKE_WAIT) {
+        perTick.push(NONE_KEYS);
+        shakeWait += 1;
+        const { transition } = run.advance(NONE_KEYS);
+        if (transition) {
+            throw new SolverRefusal(`${ctx.what}: the run crossed to level ${transition.to_level} waiting out the shake`,
+                { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret }, perTick: [...perTick] });
+        }
+    }
+    return {
+        kind: 'weigh',
+        postCondition: 'press',
+        presser: { ...resolved.target },
+        corpse: { turret: c.turret, kill, presses, restoredSlot: prior, shakeWait },
+        dwell,
+        ticks: perTick.length - from,
+    };
+}
+
+/** The longest start delay `killForCorpse` tries, ticks — past one volley cycle (`shootTimerMax` 25 + both anims). */
+const CORPSE_KILL_DELAY_MAX = 100;
+/** The longest stand for the blasts in flight at the death to leave the room, ticks (6 px/tick across a screen). */
+const CORPSE_BLAST_WAIT = 60;
+/** The stand after the death before the room's blasts are counted: a "startshot" anim (10 ticks) can still end. */
+const CORPSE_POST_KILL_STAND = 12;
+/** The kill side facing the push: the player stands where the first bump's stance is (`killIceTurretInPlace`'s sides). */
+const corpseKillSide = (r, d) => {
+    const m = ICE_TURRET_STANCE_MARGIN;
+    if (d.dy < 0) return { key: 'up', x: (r.x + r.right) / 2, y: r.bottom + 2 + m };
+    if (d.dy > 0) return { key: 'down', x: (r.x + r.right) / 2, y: r.y - 3 - m };
+    if (d.dx < 0) return { key: 'left', x: r.right + 2 + m, y: (r.y + r.bottom) / 2 };
+    return { key: 'right', x: r.x - 2 - m, y: (r.y + r.bottom) / 2 };
+};
+
+/**
+ * ⛓ fidelity CORPSEBUMP D2 — THE KILL THAT MAKES THE CORPSE, HITLESS. `killIceTurretInPlace` stands still for three
+ * press cadences, and the game's shield protects only while MOVING (`Pickups/Shield.as`: *"It protects you when
+ * moving."*), so in the turret's range its volley lands on a standing kill (measured, the L40 pocket boot: hit by a
+ * blast on run tick 52). The kill's own loop is reused unchanged: the player walks to the side facing the push (the
+ * live run), then each start delay `d` = 0 … `CORPSE_KILL_DELAY_MAX` is tried on a FORK (`ctx.fork`, the crusher's
+ * try-before-commit) — `d` still ticks, then `killIceTurretInPlace` (`corpseOnly`) from where the player stands — and
+ * the first that ends with the turret dead and no new hit is played on the live run, key for key. No fork ⇒ refused.
+ */
+function killForCorpse(run, perTick, c, exempt, ctx) {
+    const refuse = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`, { goal: ctx.goal, obstacle: { kind: 'solid', id: c.turret },
+            perTick: [...perTick] });
+    };
+    if (typeof ctx.fork !== 'function') refuse(`the hitless kill of ${c.turret} is chosen on a fork, and this solve has none`);
+    /**
+     * ⚠ THE BLADE: the Ghost Sword first. `ghostSwordDamage` is 2 against `hitsMax` 3, so it kills in TWO landings 31
+     * ticks apart; the turret's next shot starts on the tick its i-frame (30) runs out and fires 10 ticks later, after
+     * the second landing — hitless. The Sword (damage 1) needs a third landing after that shot (measured: no kill
+     * timing over 72 is hitless in the L40 pocket), so with the Sword alone this refuses below.
+     */
+    const slots = run.progress('inventorySlots') ?? [];
+    const blade = slots.includes(INVENTORY_ITEM_IDS.ghostsword) ? INVENTORY_ITEM_IDS.ghostsword
+        : (slots.includes(INVENTORY_ITEM_IDS.sword) ? INVENTORY_ITEM_IDS.sword : null);
+    if (blade === null) refuse(`the inventory has no Sword or Ghost Sword slot to kill ${c.turret} with`);
+    if (run.progress('primary') !== slots.indexOf(blade)) ctx.equip(slots.indexOf(blade));
+    const side = corpseKillSide(run.entities('turrets').get(c.turret).rect, c.dir);
+    if (!hasArrived(run.state, side, DEFAULT_TOLERANCE)) {
+        ctx.walkTo(ctx.goal, { x: side.x, y: side.y }, { what: `${ctx.what} -> ${c.turret} kill stance (${side.key})`,
+            contactsOverride: exempt });
+    }
+    const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
+    const whys = [];
+    for (let d = 0; d <= CORPSE_KILL_DELAY_MAX; d += 1) {
+        const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+        if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${d} kill delay(s) tried`);
+        const hits = f.ledger('playerHits').length;
+        const keys = [];
+        let ok = true;
+        for (let i = 0; i < d && ok; i += 1) {
+            keys.push(NONE_KEYS);
+            if (f.advance(NONE_KEYS).transition || f.ledger('playerHits').length !== hits) ok = false;
+        }
+        if (!ok) continue;
+        let rec = null;
+        try {
+            rec = killIceTurretInPlace(f, keys, c.turret, { contacts: exempt, corpseOnly: true },
+                { ...ctx, walkTo: noWalk, what: `${ctx.what} (fork, delay ${d})` });
+        } catch (e) {
+            // a fork is disposable: the model's own refusals there (`levelRun: …`, a press on a frozen tick) end the try
+            if (!(e instanceof SolverRefusal) && !/^levelRun: /.test(e?.message ?? '')) throw e;
+            if (whys.length < 3) whys.push(`delay ${d}: ${e.message.split('\n')[0].slice(0, 160)}`);
+            continue;
+        }
+        // ⛔ AND THE VOLLEY THE DEATH DID NOT CANCEL: a blast in flight keeps flying, and one whose "startshot" began
+        // before the death can still spawn (measured: L40, a blast landed five ticks after the kill). The fork stands
+        // `CORPSE_POST_KILL_STAND` ticks and then until the room has none in flight, still hitless.
+        for (let w = 0; (f.blastsInFlight.length > 0 || w < CORPSE_POST_KILL_STAND) && w < CORPSE_BLAST_WAIT && ok;
+            w += 1) {
+            keys.push(NONE_KEYS);
+            if (f.advance(NONE_KEYS).transition) ok = false;
+        }
+        if (!ok || f.blastsInFlight.length > 0 || f.ledger('playerHits').length !== hits) continue;
+        const before = run.ledger('playerHits').length;
+        for (const k of keys) {
+            perTick.push(k);
+            const { transition } = run.advance(k);
+            if (transition) refuse(`the kill crossed to level ${transition.to_level} on the live run`);
+        }
+        const now = run.entities('turrets').get(c.turret);
+        if (!now?.dead || run.ledger('playerHits').length !== before) {
+            refuse(`the fork's hitless kill (delay ${d}) did not replay on the live run — dead ${Boolean(now?.dead)}, `
+                + `hits ${run.ledger('playerHits').length - before}`);
+        }
+        return { ...rec, delay: d, side: side.key };
+    }
+    return refuse(`no start delay 0 … ${CORPSE_KILL_DELAY_MAX} kills ${c.turret} from the ${side.key} side `
+        + `(${side.x},${side.y}) without a hit — ${whys.join(' | ')}`);
 }
 
 /**
@@ -14523,7 +14876,9 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
      * units from (96,112)) before it gives way, which is why the divergence sweep read the room as budget-bound. A
      * spear arm that answers `why` spent no tick, and the sword sides follow exactly as OFF.
      */
-    const spear = ICE_TURRET_SPEAR_ARM.enabled ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
+    // ⛓ fidelity CORPSEBUMP D2: a corpse weigh kills by the sword sides only (the spear arm waits out a drown).
+    const spear = ICE_TURRET_SPEAR_ARM.enabled && !resolved.corpseOnly
+        ? killIceTurretBySpear(run, perTick, id, resolved, ctx) : null;
     if (spear?.record) return spear.record;
     const spearWhy = spear ? ` · the spear: ${spear.why}` : '';
     if (sides.length === 0) {
@@ -14589,6 +14944,11 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
     if (!turret()?.dead) {
         throw new SolverRefusal(`${ctx.what}: ${presses} press(es) from the ${side.key} side and ${id} is not dead`,
             { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
+    }
+    // ⛓ fidelity CORPSEBUMP D2: a corpse WEIGH wants the body where it died (no drown wait — it is the holder).
+    if (resolved.corpseOnly) {
+        return { phase: 'turret-kill', target: id, side: side.key, stance: { x: side.x, y: side.y }, presses,
+            ticks: perTick.length - from, corpseOnly: true };
     }
     for (let w = 0; w < ICE_TURRET_DROWN_BOUND && !(turret()?.removed); w += 1) step(NO_KEYS);
     if (!turret()?.removed) {
