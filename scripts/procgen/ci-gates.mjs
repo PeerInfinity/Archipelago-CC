@@ -10,8 +10,12 @@
  * gates — six of the thirty-three the roster reads today (the header line
  * below is the measurement; this sentence is prose) — and said so rather than
  * pretending otherwise. ⛓ S3 reaches the rest of what a runner can answer:
- * `ubuntu-latest` has headless Chromium, and every one of the browser rows is
- * banked green from exactly that. What stays behind is the FOUR Windows rows,
+ * a GitHub runner has headless Chromium, and every one of the browser rows is
+ * banked green from exactly that. ⚠ The runner is `ubuntu-24.04`, PINNED, not
+ * `ubuntu-latest`: since 2026-10-22 `ubuntu-latest` is 26.04, where Playwright
+ * refuses to install chromium. The pin is the `browser-gates` job's `runs-on`
+ * in `.github/workflows/unittests_frontend.yml`, with its reason beside it;
+ * the node-only `headless-gates` shards still run on `ubuntu-latest`. What stays behind is the FOUR Windows rows,
  * which hold `/mnt/c/Windows/py.exe` as a literal and could not resolve their
  * driver on a runner at all (⚖ 72 (a): they stay box-measured).
  *
