@@ -1,0 +1,20 @@
+368 level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+    A1 timeout|hits=0|
+    B1 done|hits=0|
+387 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+    A1 timeout|hits=0|
+    B1 failed|hits=0|the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player
+404 level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+    A1 timeout|hits=0|
+    B1 failed|hits=0|the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player
+A1 53 Counter({'done': 39, 'failed': 11, 'timeout': 3})
+B1 53 Counter({'done': 40, 'failed': 13})
+equal in all: 50 of 53
+
+node replays of B1's captured requests (replay-seedling-solve-request.mjs --n=1), OFF vs SEEDLING_STANCE_REENTRY_NEXT_DOOR=1 SEEDLING_SPINNER_LOCK_LAG=1:
+368 off True None 32f29414cd8e work 562
+368 on True None 32f29414cd8e work 562
+387 off False refusal 1ed3f853fbf3 work 114
+387 on False refusal 1ed3f853fbf3 work 114
+404 off False refusal 55926686012e work 104
+404 on False refusal 55926686012e work 104
