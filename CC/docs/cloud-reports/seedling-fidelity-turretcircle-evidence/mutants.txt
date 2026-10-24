@@ -1,0 +1,26 @@
+== m1 — predicted: 2 red: shield-stand ON 0px, shield-near ON 0px
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D1 — circling beats the aim; a blast stops on the shield (L40, the game witnesses) > turretcircle-l40-shield-stand: ON, the model reproduces the game at 0 px — player, hits, freeze, turret, blasts
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D1 — circling beats the aim; a blast stops on the shield (L40, the game witnesses) > turretcircle-l40-shield-near: ON, the model reproduces the game at 0 px — player, hits, freeze, turret, blasts
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 16 passed (18)
+== m2 — predicted: 3 red: D2 ON SOLVED (cw 3 d0), D3 recorded plan, D3 ON 0px
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D2 — the solver kills on the move with the Sword alone > ON: SOLVED — the corpse weigh's kill is a circling one (cw from corner 3, delay 0, three swings)
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D3 — the solver's own Sword-only t2 holder on L40 (the game witness) > the recorded tape is the solver's plan, input for input
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D3 — the solver's own Sword-only t2 holder on L40 (the game witness) > ON, the model reproduces the game at 0 px on all 518 ticks
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 15 passed (18)
+== m3 — predicted: 2 red: D2 ON SOLVED, D3 recorded plan (refuses)
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D2 — the solver kills on the move with the Sword alone > ON: SOLVED — the corpse weigh's kill is a circling one (cw from corner 3, delay 0, three swings)
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D3 — the solver's own Sword-only t2 holder on L40 (the game witness) > the recorded tape is the solver's plan, input for input
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 16 passed (18)
+== m4 — predicted: 1 red: the Ghost Sword row
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D2 — the solver kills on the move with the Sword alone > the Ghost Sword keeps CORPSEBUMP's standing kill: its recorded plan is unchanged with the key ON
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 17 passed (18)
+== m5 — predicted: 1 red: the L98 ring refusal
+ FAIL  frontend/modules/seedlingDemo/fidelityTurretCircle.test.js > TURRETCIRCLE D2 — the solver kills on the move with the Sword alone > no ring ⇒ refused by name: L98's turret sits against its walls
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 17 passed (18)
+== m6 — predicted: 0 red: no blast is in flight 12 ticks after the measured death
+      Tests  18 passed (18)
