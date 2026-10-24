@@ -1209,8 +1209,11 @@ const bobArena = (run) => run.entities('bobBoss');
  * sword window's due tests fire against the boss, the press (if this is its
  * tick) is resolved by `slashSet`, then the player steps.
  *
+ * ⛓ hammer-phase PDS: `stepper` is `previewOrDeath`'s, so a step whose preview DIES returns `null`, and the plan is
+ * touched at that tick (`end: null`): a previewed death is a plan not taken.
+ *
  * @returns {{touchedAt: ?number, landedAt: ?number, killed: boolean,
- *   pressOutcome: ?string, end: object}}
+ *   pressOutcome: ?string, end: ?object}}
  */
 function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, press }) {
     const b = fc.clone(fc.body);
@@ -1247,6 +1250,7 @@ function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, p
             for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
         }
         p = stepper(p, new Set(keys));
+        if (p === null) return { touchedAt: k, landedAt, killed, pressOutcome, end: null };
         if (endsAt !== null && k + 1 >= endsAt) {
             endsAt = null;
             slash = slashSet(slash, { pressed: false, hasSword: true }).state;
@@ -1255,11 +1259,12 @@ function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, p
     return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
 }
 
-/** The earliest-landing admissible strike plan, or null. */
-function searchEncounterStrike(run) {
+/** The earliest-landing admissible strike plan, or null. (Exported for hammer-phase PDS's rows.) */
+export function searchEncounterStrike(run) {
     const fc = run.bobBossForecast();
     if (!fc) return null;
-    const stepper = run.previewStepper();
+    // ⛓ hammer-phase PDS: a plan whose preview dies is touched there (`forecastEncounterPlan`), not a throw
+    const stepper = previewOrDeath(run.previewStepper());
     let best = null;
     let tried = 0;
     for (const approach of ENCOUNTER_KEYSETS) {
@@ -1284,10 +1289,11 @@ function searchEncounterStrike(run) {
     return best ? { ...best, tried } : { tried, none: true };
 }
 
-/** The key set whose forecast stays untouched longest, held for a short reposition. */
-function searchEncounterReposition(run) {
+/** The key set whose forecast stays untouched longest, held for a short reposition. (Exported for PDS's rows.) */
+export function searchEncounterReposition(run) {
     const fc = run.bobBossForecast();
-    const stepper = run.previewStepper();
+    // ⛓ hammer-phase PDS: a key set whose preview dies is safe only until it does (`forecastEncounterPlan`)
+    const stepper = previewOrDeath(run.previewStepper());
     const scored = ENCOUNTER_KEYSETS.map((keys) => {
         if (!fc) return { keys, safeFor: Infinity };
         const f = forecastEncounterPlan(run, fc, stepper, {
@@ -1889,19 +1895,26 @@ function burnLeanKey(c, tree) {
     return null;
 }
 
-/** Hold `key` until the box stops, then nothing until at rest — on a preview. */
-function previewLean(run, from, key) {
-    const step = run.previewStepper();
+/**
+ * Hold `key` until the box stops, then nothing until at rest — on a preview. ⛓ hammer-phase PDS: a lean whose preview
+ * DIES (`previewOrDeath`) is `null`, the miss every caller already reads.
+ */
+export function previewLean(run, from, key) {
+    const step = previewOrDeath(run.previewStepper());
     let p = { ...run.state, x: from.x, y: from.y, vx: 0, vy: 0 };
     const held = new Set([key]);
     const NONE = new Set();
     for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
         const q = step(p, held);
+        if (q === null) return null;
         const stopped = q.x === p.x && q.y === p.y;
         p = q;
         if (stopped) break;
     }
-    for (let i = 0; i < BURN_SETTLE_MAX && (p.vx !== 0 || p.vy !== 0); i += 1) p = step(p, NONE);
+    for (let i = 0; i < BURN_SETTLE_MAX && (p.vx !== 0 || p.vy !== 0); i += 1) {
+        p = step(p, NONE);
+        if (p === null) return null;
+    }
     return (p.vx === 0 && p.vy === 0) ? { x: p.x, y: p.y } : null;
 }
 
@@ -6510,8 +6523,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     };
     const previewFor = (dashPlan) => {
         const strike = strikePolicyFor(run, { dashPlan, dashMode, iframeLapse });
-        if (!stand) return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
-        const whole = previewWalk(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
+        if (!stand) return { walk: previewWalkOrDeath(run, wps, tolerance, { strike }), strike };
+        const whole = previewWalkOrDeath(run, wps, tolerance, { strike, standFor: stand.ticks, standKeys: stand.keys });
         const walk = { ...whole, samples: whole.samples.filter((sm) => sm.phase !== 'dwell'),
             tail: whole.samples.filter((sm) => sm.phase === 'dwell') };
         return { walk, strike };
@@ -9380,7 +9393,7 @@ export function planPacedWait(run, { ticks, keep = null }) {
     if (start.vx !== 0 || start.vy !== 0 || start.fall) {
         return { plan: null, tried: [`the wait begins at (${start.x},${start.y}) still moving`] };
     }
-    const step = run.previewStepper();
+    const step = previewOrDeath(run.previewStepper());
     const NONE = new Set();
     const others = (run.world.pressers ?? []).filter((p) => p !== keep);
     const t0 = run.ticksCompleted;
@@ -9448,7 +9461,10 @@ export function planPacedWait(run, { ticks, keep = null }) {
                     const touched = others.find((p) => rectsOverlap(box, p.rect));
                     if (touched) return `touches ${touched.tag}@${touched.x},${touched.y} at paced tick ${keys.length + 1}`;
                     if (held === null) return null;
-                    st = step(st, held);
+                    // ⛓ hammer-phase PDS: a pacing whose preview DIES is rejected at that tick, not thrown
+                    const next = step(st, held);
+                    if (next === null) return `dies at paced tick ${keys.length + 1} (a previewed death)`;
+                    st = next;
                     keys.push(held);
                     path.push({ x: st.x, y: st.y });
                     reach = Math.max(reach, Math.hypot(st.x - start.x, st.y - start.y));
@@ -10488,8 +10504,8 @@ export function deriveRefuge(run, contacts, untilIndex) {
     const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
         const walk = cut && best !== null
-            ? previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
-            : previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+            ? previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
+            : previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
         if (cut) {
             REFUGE_ETA_CUT_COUNTS.previews += 1;
             if (walk.truncated?.kind === 'stopped') REFUGE_ETA_CUT_COUNTS.cut += 1;
@@ -11577,6 +11593,27 @@ export function previewOrDeath(step) {
         Error.stackTraceLimit = limit;
         return out;
     };
+}
+
+/**
+ * ⛓ HAMMER-PHASE PDS — **A2's RULE FOR A WALK PREVIEW: a previewed death is a candidate not taken.** `previewWalk`
+ * ends a walk at a death that STARTS inside it (`lethalFloorOf`: `'drowned'`, `'lethal-pit'`), but a drown already
+ * latched when the preview starts is the live run's, and its step throws `deathRefusal` out of the preview (SFF2,
+ * measured: `empty post-sword seed 30` ON aborted through `deriveRefuge`). For a CANDIDATE SEARCH that throw is the
+ * candidate's verdict, so it reads as a truncated walk with no samples, `truncated.kind === 'death'`, and every reader
+ * that refuses a non-crossed truncation skips it (`deriveStrike`'s `walkTo` is SFF2's instance of the same rule). The
+ * test is `previewOrDeath`'s own (`instanceof PhysicsV2Error`); anything else still throws. ⛔ NOT for an executor's
+ * gate (`probeCorridor`): there the death is the walk the run is about to take, and it stays a death.
+ */
+export function previewWalkOrDeath(run, wps, tolerance, opts) {
+    try {
+        return previewWalk(run, wps, tolerance, opts);
+    } catch (e) {
+        if (!(e instanceof PhysicsV2Error)) throw e;
+        return { samples: [], startTick: run.ticksCompleted, stood: 0, plannedStruck: [],
+            truncated: { kind: 'death', at: { x: run.state.x, y: run.state.y },
+                why: `the preview DIED: ${e.message.split(' — ')[0]} — a previewed death is a step not taken` } };
+    }
 }
 
 
@@ -18017,12 +18054,14 @@ function ropeSpearReach(run, at, dir, ropeId) {
  * nudge, previewed — or null when the tap does not turn them (pinned against something that way) or leaves them on
  * something `faceTowards` refuses (its own `plannerObstacleAt` test: a fraction of a pixel into water is lethal).
  */
-function previewFaceTap(run, from, dir) {
-    const step = run.previewStepper();
+export function previewFaceTap(run, from, dir) {
+    // ⛓ hammer-phase PDS: a tap whose preview DIES (`previewOrDeath`) is `null`, as lethal floor already is
+    const step = previewOrDeath(run.previewStepper());
     let p = { ...run.state, x: from.x, y: from.y, vx: 0, vy: 0, direction: (dir + 2) % 4 };
     p = step(p, new Set([FACING_KEYS[dir]]));
     const NONE = new Set();
-    for (let i = 0; i < BURN_SETTLE_MAX && (p.vx !== 0 || p.vy !== 0); i += 1) p = step(p, NONE);
+    for (let i = 0; i < BURN_SETTLE_MAX && p !== null && (p.vx !== 0 || p.vy !== 0); i += 1) p = step(p, NONE);
+    if (p === null) return null;
     if (p.direction !== dir || p.vx !== 0 || p.vy !== 0) return null;
     const o = plannerObstacleAt(run.world, p.x, p.y, null, { ...livePerVisitOpts(run), avoidVolumes: false,
         noclip: false, noHazards: run.noHazards, inventory: run.progress('inventory') });
@@ -22370,7 +22409,7 @@ function solveSegmentUnder({
                 ? { ...sm, corridorBodies: null } : sm)), except);
             const c = planSwordDash(run, wps, { ...opts, certify: sansBodies });
             if (c.plan) {
-                const walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }) });
+                const walk = previewWalkOrDeath(run, wps, tolerance, { strike: strikePolicyFor(run, { dashPlan: c.plan, dashMode }) });
                 const arrived = !walk.truncated || walk.truncated.kind === 'crossed';
                 if (arrived && !probeSamples(walk.samples, except)) d = { ...c, why: 'certified whole (fidelity CORRIDOR)' };
             }
@@ -22749,7 +22788,7 @@ function solveSegmentUnder({
                 const stopEarly = spitOnly ? {} : { stopWhen: (sm) => probeSamples([sm], dangerExcept) !== null };
                 search: for (let at = lastAt; at >= firstAt; at -= DODGE_RUNG.step) {
                     for (let ticks = 1; ticks <= DODGE_RUNG.maxTicks; ticks += 1) {
-                        const walk = previewWalk(run, corridor, tolerance, axisAligned
+                        const walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
                             ? { strike: null, axisAligned, stall: { at, ticks }, ...stopEarly }
                             : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks }, ...stopEarly });
                         if (walk.truncated && walk.truncated.kind !== 'crossed') continue;
@@ -22802,7 +22841,7 @@ function solveSegmentUnder({
             } else if (left <= 0) {
                 whirlWhy = `the named whirlpool(s) [${[...named].join(', ')}] are not in this room's fight any more`;
             } else {
-                walk = previewWalk(run, corridor, tolerance, axisAligned
+                walk = previewWalkOrDeath(run, corridor, tolerance, axisAligned
                     ? { strike: null, axisAligned, stall: { at: 0, ticks: left } }
                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at: 0, ticks: left } });
                 const bad = walk.truncated && walk.truncated.kind !== 'crossed' ? `the preview truncates (${walk.truncated.kind})`
@@ -22859,7 +22898,9 @@ function solveSegmentUnder({
                 const optsFor = (stall) => (axisAligned
                     ? { strike: null, axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
-                const base = previewWalk(run, wps, tolerance, optsFor(null));
+                const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
+                // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
+                if (base.truncated?.kind === 'death') return null;
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && h.sources.some((s) => axeCanReach(s.axe,
                     playerBoxAt(base.samples[door].x, base.samples[door].y)))) door -= 1;
@@ -22874,7 +22915,7 @@ function solveSegmentUnder({
                 const certified = (at, ticks) => {
                     if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                     previews += 1;
-                    const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
+                    const walk = previewWalkOrDeath(run, wps, tolerance, optsFor({ at, ticks }));
                     if (walk.truncated && walk.truncated.kind !== 'crossed') return null;
                     if (walk.samples.length < at + ticks) return null;
                     if (probeSamples(walk.samples, dangerExcept)) return null;
@@ -22913,7 +22954,7 @@ function solveSegmentUnder({
                             if (ticks === rest && clock.v !== null) {
                                 if (AXE_DODGE_ASK_PER_PREVIEW.enabled && askAxe()) return null;
                                 previews += 1;
-                                const full = previewWalk(run, wps, tolerance, axisAligned
+                                const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
                                     ? { strike: null, axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
@@ -22982,7 +23023,7 @@ function solveSegmentUnder({
              */
             let timingBaseWalk = null;
             /** The corridor walked as it stands, undashed and unstalled (one preview, kept). */
-            const timingBase = () => (timingBaseWalk ??= previewWalk(run, corridor, tolerance, axisAligned
+            const timingBase = () => (timingBaseWalk ??= previewWalkOrDeath(run, corridor, tolerance, axisAligned
                 ? { strike: null, axisAligned } : { strike: strikePolicyFor(run, { dashMode }) }));
             /**
              * ⛓ AXETIMING — **WHEN THE STALLS CANNOT HELP, THE RUNG IS ASKED FIRST.** The walk's angle round each
@@ -23038,6 +23079,8 @@ function solveSegmentUnder({
                 const inReach = (sm) => hitAxes.some((a) => axeCanReach(a, playerBoxAt(sm.x, sm.y)));
                 const hitAt = Math.max(0, hit.tick - t0 - 1);
                 const base = timingBase();
+                // ⛓ PDS: the corridor's own walk DIED in its preview, so there is no doorstep to cross from
+                if (base.truncated?.kind === 'death') return out(base.truncated.why);
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && inReach(base.samples[door])) door -= 1;
                 // a player already in reach cannot stall where it stands: the crossing starts now
@@ -23088,7 +23131,7 @@ function solveSegmentUnder({
                 const certified = (s, o) => {
                     if (!ask()) return null;
                     const stall = s > 0 ? { at: door, ticks: s } : null;
-                    const walk = previewWalk(run, corridor, tolerance, optsFor(stall, o, true));
+                    const walk = previewWalkOrDeath(run, corridor, tolerance, optsFor(stall, o, true));
                     if (walk.samples.length < door + s + 1) return null;
                     const last = walk.samples.at(-1);
                     const crossed = walk.truncated?.kind === 'stopped' ? leftFor(last) && walk.samples.some(inReach)
@@ -23116,7 +23159,7 @@ function solveSegmentUnder({
                 for (const o of offsets) {
                     if (stalls <= rest + 1) break;
                     if (!ask()) break;
-                    const sm = previewWalk(run, corridor, tolerance, optsFor({ at: door, ticks: rest }, o, false)).samples;
+                    const sm = previewWalkOrDeath(run, corridor, tolerance, optsFor({ at: door, ticks: rest }, o, false)).samples;
                     const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
                         && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
                     screens.set(o, still ? sm : false);
@@ -23182,7 +23225,7 @@ function solveSegmentUnder({
                         maxPreviews: AXE_DODGE_RUNG.detourPreviews,
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
-                            const walk = previewWalk(run, wps, tolerance, axisAligned
+                            const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                                 ? { strike: null, axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
@@ -23317,7 +23360,9 @@ function solveSegmentUnder({
                 const optsFor = (stall) => (axisAligned
                     ? { strike: null, axisAligned, stall, stopWhen: dangerous }
                     : { strike: strikePolicyFor(run, { dashMode }), stall, stopWhen: dangerous });
-                const base = previewWalk(run, wps, tolerance, optsFor(null));
+                const base = previewWalkOrDeath(run, wps, tolerance, optsFor(null));
+                // ⛓ PDS: a base walk that DIED has no doorstep, so no stall of it is a candidate
+                if (base.truncated?.kind === 'death') return null;
                 let door = Math.min(hitAt, base.samples.length - 1);
                 while (door > 0 && roomPhase.some((ph) => phaseHazardCanReach(ph,
                     playerBoxAt(base.samples[door].x, base.samples[door].y), run.world.world))) door -= 1;
@@ -23343,7 +23388,7 @@ function solveSegmentUnder({
                 })();
                 const certified = (at, ticks) => {
                     previews += 1;
-                    const walk = previewWalk(run, wps, tolerance, optsFor({ at, ticks }));
+                    const walk = previewWalkOrDeath(run, wps, tolerance, optsFor({ at, ticks }));
                     if (walk.truncated && walk.truncated.kind === 'stopped' && partial === null
                         && walk.samples.length > at + ticks) {
                         const i = walk.samples.length - 1;
@@ -23369,7 +23414,7 @@ function solveSegmentUnder({
                             if (got) return got;
                             if (ticks === rest && clock.v !== null) {
                                 previews += 1;
-                                const full = previewWalk(run, wps, tolerance, axisAligned
+                                const full = previewWalkOrDeath(run, wps, tolerance, axisAligned
                                     ? { strike: null, axisAligned, stall: { at, ticks: rest } }
                                     : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks: rest } });
                                 const sm = full.samples;
@@ -23414,7 +23459,7 @@ function solveSegmentUnder({
                         maxPreviews: PHASE_DODGE_RUNG.detourPreviews,
                         certify: (wps) => {
                             const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
-                            const walk = previewWalk(run, wps, tolerance, axisAligned
+                            const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                                 ? { strike: null, axisAligned, stopWhen: dangerous }
                                 : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
                             const h = probeSamples(walk.samples, dangerExcept);
@@ -24430,7 +24475,7 @@ function solveSegmentUnder({
                     const end = wps[wps.length - 1];
                     const tail = stand && end && end.x === aim.x && end.y === aim.y
                         ? { standFor: stand.ticks, standKeys: stand.keys } : {};
-                    const walk = previewWalk(run, wps, tolerance, axisAligned
+                    const walk = previewWalkOrDeath(run, wps, tolerance, axisAligned
                         ? { strike: null, axisAligned, stopWhen: dangerous, ...tail }
                         : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous, ...tail });
                     const hit = probeSamples(walk.samples, dangerExcept);
@@ -24617,56 +24662,60 @@ function solveSegmentUnder({
             else if (!ask()) why = tripped ? 'the deadline (`axe-dodge`)' : 'the preview bound';
             else {
                 period = Math.max(...hitAxes.map((a) => a.period));
-                const base = previewWalk(run, corridor, tolerance, optsFor(families[0], 0));
-                door = Math.min(Math.max(0, hit.tick - t0 - 1), base.samples.length - 1);
-                while (door > 0 && inReach(base.samples[door])) door -= 1;
-                span = Math.max(1, base.samples.length - door);
-                // a player already in reach cannot wait where it stands: the crossing starts now, at its one phase
-                const stalls = inReach(base.samples[door]) ? 1 : period;
-                fams: for (const fam of families) {
-                    for (let s = 0; s <= Math.min(rest, stalls - 1); s += 1) {
-                        let w = base;
-                        if (fam.offset !== null || s > 0) {
-                            if (!ask()) break fams;
-                            w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
-                        }
-                        members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
-                    }
-                    if (stalls <= rest + 1) continue;
-                    // ⛓ the rest screen (the AXE arm's): a longer stall is the rest-length walk shifted
-                    if (!ask()) break;
-                    const scr = previewWalk(run, corridor, tolerance, optsFor(fam, rest));
-                    const sm = scr.samples;
-                    const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
-                        && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
-                    for (let s = rest + 1; s < stalls; s += 1) {
-                        if (still) {
-                            const shift = s - rest;
-                            const stand = sm[door + rest - 1];
-                            let n = 0;
-                            for (let i = 0; i < sm.length + shift; i += 1) {
-                                const p = i < door + rest ? sm[i] : (i < door + s ? stand : sm[i - shift]);
-                                if (contactAt(p, i)) n += 1;
+                const base = previewWalkOrDeath(run, corridor, tolerance, optsFor(families[0], 0));
+                // ⛓ PDS: the corridor's own walk DIED in its preview, so no member has a doorstep
+                if (base.truncated?.kind === 'death') why = base.truncated.why;
+                else {
+                    door = Math.min(Math.max(0, hit.tick - t0 - 1), base.samples.length - 1);
+                    while (door > 0 && inReach(base.samples[door])) door -= 1;
+                    span = Math.max(1, base.samples.length - door);
+                    // a player already in reach cannot wait where it stands: the crossing starts now, at its one phase
+                    const stalls = inReach(base.samples[door]) ? 1 : period;
+                    fams: for (const fam of families) {
+                        for (let s = 0; s <= Math.min(rest, stalls - 1); s += 1) {
+                            let w = base;
+                            if (fam.offset !== null || s > 0) {
+                                if (!ask()) break fams;
+                                w = previewWalkOrDeath(run, corridor, tolerance, optsFor(fam, s));
                             }
-                            members.push({ fam, s, done: completed(scr), contacts: n, ticks: sm.length + shift });
-                        } else {
-                            if (!ask()) break fams;
-                            const w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
                             members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
                         }
+                        if (stalls <= rest + 1) continue;
+                        // ⛓ the rest screen (the AXE arm's): a longer stall is the rest-length walk shifted
+                        if (!ask()) break;
+                        const scr = previewWalkOrDeath(run, corridor, tolerance, optsFor(fam, rest));
+                        const sm = scr.samples;
+                        const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
+                            && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
+                        for (let s = rest + 1; s < stalls; s += 1) {
+                            if (still) {
+                                const shift = s - rest;
+                                const stand = sm[door + rest - 1];
+                                let n = 0;
+                                for (let i = 0; i < sm.length + shift; i += 1) {
+                                    const p = i < door + rest ? sm[i] : (i < door + s ? stand : sm[i - shift]);
+                                    if (contactAt(p, i)) n += 1;
+                                }
+                                members.push({ fam, s, done: completed(scr), contacts: n, ticks: sm.length + shift });
+                            } else {
+                                if (!ask()) break fams;
+                                const w = previewWalkOrDeath(run, corridor, tolerance, optsFor(fam, s));
+                                members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
+                            }
+                        }
                     }
-                }
-                const expected = families.length * stalls;
-                const clean = members.find((m) => m.done && m.contacts === 0);
-                if (members.length < expected) {
-                    why = `${members.length} of the ${expected} member(s) were priced before `
-                        + `${tripped ? 'the deadline (`axe-dodge`)' : `the preview bound (${AXE_PRICED_CROSSING.maxPreviews})`} — `
-                        + 'a certificate that gave up is not one';
-                } else if (clean) {
-                    why = `the corridor entered ${clean.s} tick(s) after the doorstep (${clean.fam.label}) crosses free of `
-                        + 'blade contact in its preview — a gap exists, so no hit is forced';
-                } else if (!members.some((m) => m.done)) {
-                    why = `no member of the ${expected} completes the corridor in its preview`;
+                    const expected = families.length * stalls;
+                    const clean = members.find((m) => m.done && m.contacts === 0);
+                    if (members.length < expected) {
+                        why = `${members.length} of the ${expected} member(s) were priced before `
+                            + `${tripped ? 'the deadline (`axe-dodge`)' : `the preview bound (${AXE_PRICED_CROSSING.maxPreviews})`} — `
+                            + 'a certificate that gave up is not one';
+                    } else if (clean) {
+                        why = `the corridor entered ${clean.s} tick(s) after the doorstep (${clean.fam.label}) crosses free of `
+                            + 'blade contact in its preview — a gap exists, so no hit is forced';
+                    } else if (!members.some((m) => m.done)) {
+                        why = `no member of the ${expected} completes the corridor in its preview`;
+                    }
                 }
             }
             const certRow = { kind: 'axe-phase', axes: axeIds, door, period, families: families.length,
@@ -24686,7 +24735,7 @@ function solveSegmentUnder({
                     const label = `stall ${m.s} at sample ${door} (${m.fam.label})`;
                     if (!ask()) { rejected.push({ candidate: label, why: tripped ? 'the deadline' : 'the preview bound' }); break; }
                     // the member's own prefix (walk to the doorstep + the stall), then the corridor driven on
-                    const pre = previewWalk(run, corridor, tolerance, optsFor(m.fam, m.s)).samples.slice(0, door + m.s);
+                    const pre = previewWalkOrDeath(run, corridor, tolerance, optsFor(m.fam, m.s)).samples.slice(0, door + m.s);
                     const f = fork();
                     if (f === null) { rejected.push({ candidate: label, why: 'the caller\'s deadline tripped' }); break; }
                     const h0 = (f.ledger('playerHits') ?? []).length;
@@ -25662,8 +25711,13 @@ function solveSegmentUnder({
         let chosen = null;
         for (const c of candidates) {
             if (c.rejected) { rejected.push({ option: `step-off ${c.dir}`, why: c.rejected }); continue; }
-            const walk = previewWalk(run, [c.aim], tolerance,
+            const walk = previewWalkOrDeath(run, [c.aim], tolerance,
                 { strike: null, stopWhen: (sm) => offRect(sm.x, sm.y) });
+            // ⛓ PDS: a step-off whose preview DIED is not a step-off (no samples would probe as clean)
+            if (walk.truncated?.kind === 'death') {
+                rejected.push({ option: `step-off ${c.dir}`, why: walk.truncated.why });
+                continue;
+            }
             const hit = probeSamples(walk.samples);
             if (hit) {
                 rejected.push({ option: `step-off ${c.dir}`, why: `danger at (${hit.x},${hit.y}): `
@@ -25871,7 +25925,7 @@ function solveSegmentUnder({
      * back to the ordinary `walkTo`.
      */
     const returnOntoDoor = (goal, index, teleporter, centre, whatExit) => {
-        const walk = previewWalk(run, [centre], tolerance, { strike: null });
+        const walk = previewWalkOrDeath(run, [centre], tolerance, { strike: null });
         if (walk.truncated?.kind !== 'crossed' || walk.samples.length > STEP_OFF_MAX_TICKS) return null;
         if (probeSamples(walk.samples)) return null;
         seeRow({

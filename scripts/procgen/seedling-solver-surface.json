@@ -1265,9 +1265,9 @@
         "botDriverV2.js": 117,
         "crusherBait.js": 6,
         "lightsVerb.js": 7,
-        "solverBot.js": 552
+        "solverBot.js": 554
       },
-      "sites": 689,
+      "sites": 691,
       "seen": "both",
       "via": [
         "direct",
@@ -1330,9 +1330,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 11,
         "lightsVerb.js": 7,
-        "solverBot.js": 110
+        "solverBot.js": 111
       },
-      "sites": 131,
+      "sites": 132,
       "seen": "both",
       "via": [
         "direct",
@@ -2751,9 +2751,9 @@
         "botDriverV2.js": 60,
         "crusherBait.js": 2,
         "lightsVerb.js": 2,
-        "solverBot.js": 209
+        "solverBot.js": 210
       },
-      "sites": 278,
+      "sites": 279,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2786,9 +2786,9 @@
         "botDriverV2.js": 63,
         "crusherBait.js": 2,
         "lightsVerb.js": 2,
-        "solverBot.js": 213
+        "solverBot.js": 214
       },
-      "sites": 285,
+      "sites": 286,
       "seen": "both",
       "via": [
         "const-alias",
@@ -5766,9 +5766,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 11
+        "solverBot.js": 12
       },
-      "sites": 11,
+      "sites": 12,
       "seen": "static",
       "via": [
         "import"
