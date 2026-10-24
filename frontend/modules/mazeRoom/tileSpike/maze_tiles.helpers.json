@@ -35,17 +35,42 @@
           "element_rule": {
             "type": "all_of",
             "element_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "name",
-                "name": "t"
+              "type": "compare",
+              "left": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "subscript",
+                    "value": {
+                      "type": "name",
+                      "name": "p"
+                    },
+                    "index": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "p"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": 1
+                }
               }
             },
             "iterator_info": {
               "type": "comprehension_details",
               "target": {
                 "type": "name",
-                "name": "t"
+                "name": "p"
               },
               "iterator": {
                 "type": "name",

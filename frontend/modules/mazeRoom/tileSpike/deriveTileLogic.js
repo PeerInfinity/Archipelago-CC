@@ -31,6 +31,100 @@ import {
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import { isObstacleCleared } from '../../shared/procgen/library.js';
 
+/* ── COUNTED ITEMS (session tile-primitives-counted-rules, ⚖ 2026-10-23) ─────────────────────────────────────────
+ * ⚖ "Count map": a lattice POINT is a sorted list of item names in which an item held n times appears n times
+ * (`['Progressive Shield', 'Progressive Shield', 'Wand']`); `inventoryOf` turns it into the engine's inventory — a Set
+ * when nothing repeats (byte-for-byte the old search), else a `Map<item, count>`.
+ * ⚖ "Threshold levels": an item's axis is {0, 1} ∪ the counts the region's rules NAME (Shield 0,1,2; Seal 0,1,16), not
+ * 0..max — the answers only change at a named count. Points are enumerated by increasing RANK (the sum of the level
+ * indices; for an all-binary axis, exactly the old subsets by size, in the old order), and a point covering a known
+ * minimal one on every item is skipped: clearance is monotone in every count, so the reachable set is.
+ */
+
+/** A point's inventory: a Set when every item is held once, else a count Map. */
+export function inventoryOf(point) {
+    const counts = new Map();
+    for (const item of point) counts.set(item, (counts.get(item) ?? 0) + 1);
+    return counts.size === point.length ? new Set(point) : counts;
+}
+
+/** How many of each item a point holds. */
+export function pointCounts(point) {
+    const counts = new Map();
+    for (const item of point) counts.set(item, (counts.get(item) ?? 0) + 1);
+    return counts;
+}
+
+/** Does `point` hold at least what `minimal` does, item by item (multiset inclusion)? */
+export function pointCovers(point, minimal) {
+    const have = pointCounts(point);
+    for (const [item, n] of pointCounts(minimal)) if ((have.get(item) ?? 0) < n) return false;
+    return true;
+}
+
+/** A point for display: `Seal×16` rather than sixteen names. */
+export function formatPoint(point) {
+    return [...pointCounts(point)].map(([item, n]) => (n > 1 ? `${item}×${n}` : item)).join(',');
+}
+
+/** The counts a rule's `Has` nodes name, merged into `out` (item → Set of counts). */
+export function ruleLevels(rule, out = new Map()) {
+    if (rule?.rule === 'Has') {
+        const item = rule.args.item_name;
+        if (!out.has(item)) out.set(item, new Set());
+        out.get(item).add(rule.args.count ?? 1);
+    }
+    for (const c of rule?.children ?? []) ruleLevels(c, out);
+    return out;
+}
+
+/**
+ * The lattice axis for `items`: `[{item, levels: [n…] ascending}]` — ALWAYS level 1, plus every count `levels` names.
+ * ⛔ Level 1 is never dropped (designer-2 review of 970fb3c827): an implicit "at least one" — a strike's item, a
+ * combo_list item, a scripted `state.has`, an event — names no count, so an item whose only NAMED count is n ≥ 2
+ * would otherwise be tested at 0 and n only: the search over-charged a struck rock (Sword×2), and the certifier never
+ * saw a world that crosses with ONE where the AP rule says two (a LOOSER row).
+ */
+export function latticeAxis(items, levels = new Map()) {
+    return [...items].sort().map((item) => ({ item, levels: [...new Set([1, ...(levels.get(item) ?? [])])].sort((a, b) => a - b) }));
+}
+
+/** The axis's top point: every item at its highest level. */
+export function fullPoint(axis) {
+    return axis.flatMap(({ item, levels }) => Array(levels[levels.length - 1]).fill(item));
+}
+
+function* pointsOfRank(axis, k, from = 0, acc = []) {
+    if (k === 0) { yield acc.slice(); return; }
+    for (let i = from; i < axis.length; i++) {
+        const { item, levels } = axis[i];
+        for (let j = 1; j <= Math.min(k, levels.length); j++) {
+            const n = levels[j - 1];
+            for (let c = 0; c < n; c++) acc.push(item);
+            yield* pointsOfRank(axis, k - j, i + 1, acc);
+            acc.length -= n;
+        }
+    }
+}
+
+/** Every point of the axis by increasing rank (see above). */
+export function* latticePoints(axis) {
+    const top = axis.reduce((sum, a) => sum + a.levels.length, 0);
+    for (let k = 0; k <= top; k++) yield* pointsOfRank(axis, k);
+}
+
+/** Every point of the axis in MASK order (item 0 the fastest digit) — for an all-binary axis, the old `subsets` order. */
+export function* allPoints(axis) {
+    const digit = axis.map(() => 0);
+    for (;;) {
+        yield axis.flatMap(({ item, levels }, i) => (digit[i] === 0 ? [] : Array(levels[digit[i] - 1]).fill(item)));
+        let i = 0;
+        while (i < axis.length && digit[i] === axis[i].levels.length) digit[i++] = 0;
+        if (i === axis.length) return;
+        digit[i] += 1;
+    }
+}
+
 /**
  * The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it) —
  * ONE per rope obstacle id, keyed at its canonical cell (`at`, where a strike on any run cell is recorded;
@@ -91,7 +185,7 @@ export function gateEvents(world) {
 
 /** The reached cell beside gate event `t` from which its obstacle opens for `set` (`gateEvents`), or `null`. */
 export function eventAdjacentCell(world, reach, t, set) {
-    const inv = new Set(set);
+    const inv = inventoryOf(set);
     if (inv.has(t.event)) return null;
     const own = new Set(t.cells);
     for (const cell of t.cells) {
@@ -128,7 +222,10 @@ export function regionItems(world) {
         if (!entry) continue;
         const sets = (entry.clear_set_type ?? 'combo_list') === 'rule'
             ? ruleToClearSet(entry.clear_rule, id) : (entry.clear_set ?? []);
-        for (const combo of sets) for (const item of combo) if (!held.has(item)) out.add(item);
+        for (const combo of sets) for (const pair of combo) {
+            const item = Array.isArray(pair) ? pair[0] : pair;
+            if (!held.has(item)) out.add(item);
+        }
         for (const actionId of entry.struck_by ?? []) {
             const item = world.actionLib?.[actionId]?.item;
             if (item && !held.has(item)) out.add(item);
@@ -137,6 +234,20 @@ export function regionItems(world) {
         for (const ev of entry.events ?? []) out.add(ev.name);
     }
     return [...out].sort();
+}
+
+/**
+ * ⛓ COUNTED ITEMS — the counts the region's obstacle rules name, per item of `regionItems` (item → Set of counts);
+ * an item no rule counts above 1 is absent (binary).
+ */
+export function regionLevels(world) {
+    const out = new Map();
+    for (const id of new Set(world.obstacles.values())) {
+        const entry = world.obstacleLib?.[id];
+        if ((entry?.clear_set_type ?? 'combo_list') === 'rule') ruleLevels(entry.clear_rule, out);
+    }
+    for (const [item, ns] of [...out]) if (ns.size === 1 && ns.has(1)) out.delete(item);
+    return out;
 }
 
 /**
@@ -216,7 +327,7 @@ export function regionTargets(world) {
  */
 export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib = MAZE_TILE_LIB, cap = 200000 } = {}) {
     const start = createState(world);
-    start.inventory = new Set(inventory);
+    start.inventory = inventoryOf(inventory);
     if (scriptedStandsInArmedLane(world, start, helpers, tileLib)) return NOTHING_REACHED;
     const ropes = cutEvents(world);
     const cuts = new Map();
@@ -247,7 +358,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
         }
-        if (seen.size > cap) throw new Error(`tile logic: search over ${[...inventory]} exceeded ${cap} states`);
+        if (seen.size > cap) throw new Error(`tile logic: search over ${formatPoint(inventory)} exceeded ${cap} states`);
     }
     const planFrom = (k) => {
         if (k === undefined) return null;
@@ -282,19 +393,10 @@ export function planToTarget(reach, t, set = null, world = null) {
     return t.event ? reach.planToCut(`${t.x},${t.y}`) : reach.planTo(`${t.x},${t.y}`);
 }
 
-function* subsetsOfSize(items, k, from = 0, acc = []) {
-    if (acc.length === k) { yield acc.slice(); return; }
-    for (let i = from; i <= items.length - (k - acc.length); i++) {
-        acc.push(items[i]);
-        yield* subsetsOfSize(items, k, i + 1, acc);
-        acc.pop();
-    }
-}
-
 /**
- * Per-target minimal inventories, by lattice. `{ items, targets: [{...target, minimal: [[item…]…],
- * witness: {inventory, plan}[]}], searched, skipped, states }`. `maxItems` refuses BY NAME rather
- * than enumerating a huge lattice.
+ * Per-target minimal inventories, by lattice. `{ items, levels, targets: [{...target, minimal: [[item…]…],
+ * witness: {inventory, plan}[]}], searched, skipped, states }` (a minimal set is a POINT: a counted item repeats).
+ * `maxItems` refuses BY NAME rather than enumerating a huge lattice.
  */
 export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MAZE_TILE_LIB, maxItems = 12 } = {}) {
     const items = regionItems(world);
@@ -303,38 +405,44 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
     }
     // ⛓ Monotone ⇒ a target the FULL inventory does not reach is False_ at every set; it drops out
     // of the covering test, or it would keep every set of the lattice alive.
-    const full = reachUnder(world, items, helpers, { pickups, tileLib });
+    const levels = regionLevels(world);
+    const axis = latticeAxis(items, levels);
+    const top = fullPoint(axis);
+    const full = reachUnder(world, top, helpers, { pickups, tileLib });
     const targets = regionTargets(world).map((t) => ({
-        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t, items.filter((i) => i !== t.event), world),
+        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t, top.filter((i) => i !== t.event), world),
     }));
     const live = targets.filter((t) => !t.unreachable);
-    const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
+    const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
     let searched = 1;
     let skipped = 0;
     let states = full.states;
-    for (let k = 0; k <= items.length; k++) {
-        for (const set of subsetsOfSize(items, k)) {
-            if (live.every((t) => covered(t, set))) { skipped += 1; continue; }
-            const reach = reachUnder(world, set, helpers, { pickups, tileLib });
-            searched += 1;
-            states += reach.states;
-            for (const t of live) {
-                if (covered(t, set) || !reachedTarget(reach, t, set, world)) continue;
-                t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, world) });
-            }
+    for (const set of latticePoints(axis)) {
+        if (live.every((t) => covered(t, set))) { skipped += 1; continue; }
+        const reach = reachUnder(world, set, helpers, { pickups, tileLib });
+        searched += 1;
+        states += reach.states;
+        for (const t of live) {
+            if (covered(t, set) || !reachedTarget(reach, t, set, world)) continue;
+            t.minimal.push(set);
+            t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, world) });
         }
     }
-    return { items, targets, searched, skipped, states };
+    return { items, levels, targets, searched, skipped, states };
 }
 
-/** Minimal sets → a Rule Builder rule in `compileRegion`'s spelling. */
+/**
+ * Minimal sets → a Rule Builder rule in `compileRegion`'s spelling. ⚖ "Has count ≥2 only" (session
+ * tile-primitives-counted-rules): an item a minimal point holds n ≥ 2 times is `Has(item, count n)`; `count` is
+ * written only then, so an uncounted rule is the old spelling byte for byte.
+ */
 export function ruleFromMinimalSets(minimal) {
-    const has = (item) => ({ rule: 'Has', args: { item_name: item } });
+    const has = ([item, n]) => ({ rule: 'Has', args: n > 1 ? { item_name: item, count: n } : { item_name: item } });
     if (minimal.length === 0) return { rule: 'False_' };
     const terms = minimal.map((set) => {
-        if (set.length === 0) return { rule: 'True_' };
-        return set.length === 1 ? has(set[0]) : { rule: 'And', children: set.map(has) };
+        const need = [...pointCounts(set)];
+        if (need.length === 0) return { rule: 'True_' };
+        return need.length === 1 ? has(need[0]) : { rule: 'And', children: need.map(has) };
     });
     if (terms.some((t) => t.rule === 'True_')) return { rule: 'True_' };
     return terms.length === 1 ? terms[0] : { rule: 'Or', children: terms };
