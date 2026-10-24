@@ -4,6 +4,7 @@ import {
     iceTurretMovableDirections, iceTurretPhase, iceTurretRect, iceTurretSettled,
     hitIceTurret, killIceTurret, stepIceTurret,
 } from './iceTurret.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { MOBILE_DEATH_FADE, PIT_FADE } from './enemyDamage.js';
 import { FIRE_WINDOW } from './fireVerb.js';
 import { L40_CORPSE } from './r5Totem.js';
@@ -650,7 +651,41 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
      * corpse shoved two tiles north sits on it, and `Button.update`'s
      * `hitables` is `["Player", "Enemy", "Solid"]`.
      */
-    it('⛔⛔⛔ …and the corpse HOLDS button@480,384, which opens the t2 group', async () => {
+    // ⛓ CONTROL on the PRE-FIREPUSH model, `fireLiveTurretReach` named OFF: the audit tests the turret's CENSUS rect, so
+    // the second bump from (488,440) still "reaches" the corpse. FIREPUSH measured the game (p4g): from (488,440) that
+    // bump lands on NOTHING (the corpse's box [399.5,415.5) is above the flame's [423.3,455.3)) and t2 never opens.
+    it('⛓ fireLiveTurretReach OFF (the census-rect model): …and the corpse HOLDS button@480,384, which opens the t2 group',
+        () => withContactFidelity({ fireLiveTurretReach: false }, async () => {
+        const { runTape } = await import('./tapeRunner.js');
+            const { atlasLevelSource } = await import('./levelSource.js');
+            const out = await legs([
+                SWORD,
+                KILL,
+                { x: 488, y: 440, equip: { slot: 1 } },
+                { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 25 } }], enemyRoom: ROOM } },
+                { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 24 } }], enemyRoom: ROOM } },
+                { x: 488, y: 440, wait: { opens: 'wandlock@448,432', ticks: 140,
+                    why: 'the ice turret CORPSE is standing on button@480,384 {t 2}' } },
+            ]);
+            expect(out.kills).toHaveLength(1);
+            expect(out.fires).toHaveLength(2);
+            const run = runTape(out.tape, { levelSource: atlasLevelSource() });
+            // BOTH t2 locks — `Button.set activate` calls `activateAll`, which
+            // reaches every `Activators` sharing its `t`, so the group is the
+            // unit and naming one of the two would understate the effect.
+            expect([...run.openActivators].sort()).toEqual(
+                ['wandlock@448,432', 'wandlock@512,480'],
+            );
+            // ⛓ AND IT OPENS ON THE LOCK'S OWN FADE, not on the press: 101 ticks
+            // from `activate` latching to `turnOff()`, which `activators` owns.
+            const [w] = out.waits;
+            expect(w.openedAt).toBeGreaterThan(0);
+            expect(w.openedAt).toBeLessThan(140);
+        }));
+
+    // ⛓ THE GAME'S ANSWER (FIREPUSH, p4g 0 px; `fireLiveTurretReach` ON by default): the second bump is pressed ONE TILE
+    // NEARER, from (488,424), and the corpse rests on button@480,384 {t 2}, opening the t2 group.
+    it('…the corpse bumped from (488,424) HOLDS button@480,384, which opens the t2 group (the live rect, as the game)', async () => {
         const { runTape } = await import('./tapeRunner.js');
         const { atlasLevelSource } = await import('./levelSource.js');
         const out = await legs([
@@ -658,7 +693,7 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
             KILL,
             { x: 488, y: 440, equip: { slot: 1 } },
             { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 25 } }], enemyRoom: ROOM } },
-            { x: 488, y: 440, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 24 } }], enemyRoom: ROOM } },
+            { x: 488, y: 424, fire: { bumps: [{ id: TURRET, to: { tx: 30, ty: 24 } }], enemyRoom: ROOM } },
             { x: 488, y: 440, wait: { opens: 'wandlock@448,432', ticks: 140,
                 why: 'the ice turret CORPSE is standing on button@480,384 {t 2}' } },
         ]);

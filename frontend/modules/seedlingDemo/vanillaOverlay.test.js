@@ -289,9 +289,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   in, the mouth out; L58's two doors in sit in a split level and cannot).
         // ⛓ R4b (rules-boss-locations): 12,077 -> 15,730 B — the seven boss locations (each with its kill guard)
         //   and the L69 arena's two door rules (L70's pit in, the Lights' exit out) lift.
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(15730);
+        // ⛓ rules-location-crossing: 15,730 -> 15,835 B — L19's Boss Key 0 (inside the ShieldBoss body) lifts its
+        //   Sword rule beside the Shieldspire's.
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(15835);
         // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-ce861fd8');
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-f9c6d0ec');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -302,7 +304,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(24); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(25); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills; location-crossing: +1 (L19 Boss Key 0)
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -381,8 +383,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l39 (1c38afee… -> 32dd7cf1): a rope's whole run is solid until cut (L39 splits at its corridor),
         //   a Pulser is a static Solid (L38/L40/L107 lose their pulser pockets), and L39's chain is a lock RUN priced
         //   Fire. No location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-location-crossing (32dd7cf1… -> 4825058f): a location inside an item-gated solid is charged it
+        //   (L19 Boss Key 0: the Sword), and the FinalDoor's two hand rows retire into the general sealed-door rule
+        //   (L113's annotation). No name or exit moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('32dd7cf16b15ae1848f39ff47b77604d');
+            .toBe('4825058f917d20b78e059f6db1f29680');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -428,14 +433,15 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     // ⛓ RULES game-truth-gaps: 324 -> 322 — the L57 arena's two expressible doors (L56's pit, the mouth).
     // ⛓ R4b: 322 -> 320 — the L69 arena's two doors (L70's pit in, the Lights' exit out); the locations 38 -> 38:
     //   seven more (the bosses), each guarded by its kill, so none of them is free.
-    it('moves 334 free exits + 0 locations to 320 + 38, and the export stays ALLOWED', () => {
+    // ⛓ rules-location-crossing: the locations 38 -> 37 — L19's Boss Key 0 lifts its Sword rule.
+    it('moves 334 free exits + 0 locations to 320 + 37, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
         expect(after.filter((e) => e.kind === 'exit')).toHaveLength(320);
-        expect(after.filter((e) => e.kind === 'location')).toHaveLength(38);
+        expect(after.filter((e) => e.kind === 'location')).toHaveLength(37);
 
         /**
          * ⛓ THE DOORS THAT STOPPED BEING FREE ARE THE LIFTED EXIT
@@ -467,10 +473,10 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
                 'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
                 'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_8',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
-        // …and the ten locations that are NOT free are the ten the
-        //   playthrough guards (⛓ R4b: the three, + the seven boss kills).
+        // …and the eleven locations that are NOT free are the eleven the
+        //   playthrough guards (⛓ R4b: the three, + the seven boss kills; ⛓ location-crossing: + L19's Boss Key 0).
         const guarded = LIFT.rows.filter((r) => r.atlasLoc.access_rule);
-        expect(guarded).toHaveLength(10);
+        expect(guarded).toHaveLength(11);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(48 - guarded.length);
     });
 

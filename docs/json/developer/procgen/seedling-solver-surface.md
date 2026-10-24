@@ -238,7 +238,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `openChests` | — | `botDriverV2`, `solverBot` |
 | `strikeBodies` | `hp` | `botDriverV2`, `solverBot` |
 | `spinnerBodies` | `rebound`, `contact`, `sweep`, `hp` | `dangerMap`, `solverBot` |
-| `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `solverBot` |
+| `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `dangerMap`, `solverBot` |
 | `turrets` | `stationary`, `pushable` | `botDriverV2`, `solverBot` |
 | `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
 | `brokenRocks` | — | `botDriverV2`, `crusherBait`, `solverBot` |
@@ -247,7 +247,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `openBridges` | — | `botDriverV2` |
 | `arrowsInFlight` | `emitter` | `dangerMap`, `solverBot` |
 | `burnedTrees` | — | `botDriverV2`, `solverBot` |
-| `latchedGroups` | `channel` | `solverBot` |
+| `latchedGroups` | `channel` | `dangerMap`, `solverBot` |
 | `pulledRopes` | — | `botDriverV2`, `solverBot` |
 | `turretDamage` | `hp`, `emitter` | `botDriverV2` |
 | `turretsSettled` | `pushable` | `botDriverV2` |

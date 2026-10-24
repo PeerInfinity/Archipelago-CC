@@ -75,7 +75,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // corridor (r25c9, +1 sub-region, +1 internal exit); a Pulser is a static Solid, so the empty pocket each
         // pulser tile made behind its fire block is gone (L38 and L107 2 -> 0 sub-regions, -1 exit each; L40 6 -> 5
         // sub-regions, 9 -> 6 exits): 54 -> 52 with a subgraph, 198 -> 194, 292 -> 288; no swim count moves.
-        expect(c.atlasId).toBe('seedling-9570dca8');
+        // ⛓ rules-location-crossing — restamped (9570dca8 -> 80dfce70): L19's Boss Key 0 is charged the Sword (it lies
+        // inside the ShieldBoss body) and L113's annotation reads `manual`; no door, sub-region or exit count moves.
+        expect(c.atlasId).toBe('seedling-80dfce70');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

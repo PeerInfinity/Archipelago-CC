@@ -6,7 +6,7 @@ import copy
 import logging
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from ._unknown_kind import unknown_helper
+from ._unknown_kind import unknown_helper, unknown_kind
 from .constants import BOOLEAN_RULE_TYPES
 
 from ._codegen_utils import (
@@ -227,6 +227,15 @@ class RuleConverterMixin:
         counts conditions. If all conditions are simple item_checks, we use a
         more efficient list comprehension.
         """
+        if isinstance(count, float) and count.is_integer():
+            count = int(count)
+        if not isinstance(count, int):
+            # A count that is not a number (e.g. an expression dict): loud, never a crash or a silent
+            # True_(); lossy mode keeps the True_() placeholder and records it
+            placeholder = unknown_kind('count_true', f'count_true with non-integer count {count!r:.80}', 'True_()')
+            self.required_imports.add('True_')
+            return placeholder
+
         n = len(conditions)
 
         # Edge cases

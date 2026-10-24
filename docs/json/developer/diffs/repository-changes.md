@@ -126,6 +126,8 @@ settings.py
 ```
 .gitattributes
 .github/workflows/codeql-analysis.yml
+.github/workflows/scan-build.yml
+.github/workflows/unittests.yml
 .gitignore
 pytest.ini
 README.md

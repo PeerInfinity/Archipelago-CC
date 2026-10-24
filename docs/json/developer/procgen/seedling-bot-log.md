@@ -25256,3 +25256,36 @@ there: BW's refusal belongs to the pre-lapse walk, which stays as a `--check` co
   WANDHOLD did; it is not a model defect.
 - A slow row's 900 s budget is a box property. `seedlingGenCapacity.slow` › post-sword takes 919 s solo here, the same
   per seed at SFF2's own head; SFF2 measured 482 s on its box.
+### Seedling fidelity FIREPUSH — L40's fire block is moved by the room's pulser (`fireBlockPulseShove`); a Fire press reaches a turret where it is (`fireLiveTurretReach`); a Pulser reads last tick's publish (`pulserPublishLag`) — all OFF
+
+Planner `seedling-fidelity-planning-11`, wave 28. The report is `CC/docs/cloud-reports/seedling-fidelity-firepush.md`.
+
+**W0 — the block is not Fire's.** Legs 869/870 (L40 Boss Key 2) refused *"Obstacle: solid:pushableblockfire … Strategy
+'shove' failed to apply"*: `resolveShoveStrategy` returns nothing for the fire family (no lean). `PushableBlockFire.moveTypes`
+is `["Fire", "Pulse"]`, both taking `hit()`'s absolute arm (one tile away from the source, per axis band). At (36,36) the
+block sits under the walk block `pushableblock@576,560` in a one-tile corridor: the only Fire stance is south, which drives
+it NORTH into the walk block (a Solid to it) — nothing moves. Its mover is `pulser@592,576` (37,36), due east of its centre,
+which pushes it WEST into the pocket (35,36); the pulser's publisher is the MOMENTARY `button@816,400` {t 4}, enclosed behind
+`wandlock@800,400` {t 5}, whose momentary button needs a holder. R7 slice 3's route holds: the ice turret's corpse on t2
+(`r5-l40-part5`), then `pushableblockfire@480,480` pushed by Fire onto t5 (35 presses: E4 N6 E11 W1 S5 E4 N4).
+
+**D2 (`fireBlockPulseShove`).** `resolveFireBlockShove`: per pulser whose 22 px reach holds the block, the push
+(`pulsePushes`) whose destination is free and leaves a corridor to the aim; no other fire block in reach; a publisher of its
+group held (an ordinary `hold`) until the block is AT REST there (`execFirePulseShove`). The Fire press is considered and
+named, not executed. `dangerMap.pulserQuiet`: the ring is skipped unless something other than the player's current press
+arms the pulser, a ring is finishing, or the sample presses its own group — OFF, the census disc walled the key's corridor.
+
+**D1 — the game witness (p4g, 0 px; `probe-seedling-fire-push.mjs`, `fixtures/firepush-witness/`).** The whole chain from
+the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) — and two model gaps it found:
+- `fireLiveTurretReach`: the Fire audit tested an ice turret against its census rect (the live body's 32x32 at spawn), so a
+  bumped corpse stayed "reached". On the game `r5-l40-part5`'s second bump from (488,440) moves nothing (corpse box above the
+  flame) and the t2 group never opens; the model pushed it on. The witness bumps the second time from (488,424).
+- `pulserPublishLag`: `Game.loadlevel` adds `button`/`buttonroom` (`:2341-2342`) before `pulser` (`:2357`), so a Pulser
+  updates before its publisher and reads last tick's flag — the model's momentary arm was one tick early (glide at t5099
+  vs the game's t5100). Lagged on the pulser's own state (`pressedLast`, digested through `pulserStates`).
+
+**Trap candidates.**
+- A census rect is the entity's SPAWN geometry: any responder that moves (a corpse, a block) must be asked where it is now.
+- "Updates before the player" is not the whole order: a reader that updates before its PUBLISHER reads the publish a tick
+  late, whatever the player did.
+- A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).

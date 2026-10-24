@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1174,
+        "headings": 1176,
         "indexHeadings": 2,
-        "lines": 32246,
+        "lines": 32289,
         "pages": 4,
-        "words": 445394
+        "words": 446334
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -86,8 +86,8 @@ export const DOCS_INDEX = frz({
             "description": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 40,
-            "lines": 217,
+            "headings": 41,
+            "lines": 225,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -98,7 +98,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 3376
+            "words": 3601
         },
         {
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
@@ -334,7 +334,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 37,
-            "lines": 733,
+            "lines": 735,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -344,7 +344,7 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 35517
+            "words": 35729
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -356,7 +356,7 @@ export const DOCS_INDEX = frz({
                 "concepts.md"
             ],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 4596
+            "words": 4598
         },
         {
             "description": "What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts.",
@@ -372,8 +372,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 685,
-            "lines": 25215,
+            "headings": 686,
+            "lines": 25248,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -381,7 +381,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 273325
+            "words": 273826
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",

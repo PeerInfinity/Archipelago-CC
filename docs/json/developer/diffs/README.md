@@ -13,10 +13,12 @@ Changes to the main Archipelago core files:
 
 All other core files (`BaseClasses.py`, `Utils.py`, `CommonClient.py`, `Launcher.py`) match upstream exactly. JSON export and sphere logging are handled entirely by monkey patches at runtime.
 
-### 2. `diff-files/config-files.diff` (635 lines)
+### 2. `diff-files/config-files.diff` (727 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
-- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks)
+- **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (explicit permissions for forks; since 2026-10-21 no `push`/`pull_request` trigger, only the weekly cron and `workflow_dispatch`)
+- **.github/workflows/scan-build.yml** - Added a `workflow_dispatch` trigger
+- **.github/workflows/unittests.yml** - Windows/macOS legs only on a pull request or a `full_matrix` dispatch; a main push of an already-green SHA skips the matrix; the `Test Python 3.11.2` leg pinned to `ubuntu-24.04` (setup-python has no 3.11.2 for ubuntu-26.04); UTF-8 env for pytest-xdist on Windows
 - **.gitignore** - Ignore patterns for project-specific files (extensive additions)
 - **pytest.ini** - Added `test_json` to testpaths for fork-specific test modules
 - **README.md** - Project documentation
@@ -102,7 +104,7 @@ git apply docs/json/developer/diffs/diff-files/world-init-files.diff
 ## Notes
 
 - These diffs are generated against upstream commit `e6e0bc30` (Archipelago 0.6.8)
-- Total lines changed across diff files: 1,675 lines (43 + 465 + 27 + 44 + 62 + 642 + 392)
+- Total lines across the diff files: 1,966 lines (core 85 + config 727 + bunny 27 + minor 44 + test 49 + rule-builder 642 + init 392)
 - Additionally, 2 files are modified but documented separately (rule_builder/__init__.py, rule_builder/rules.py)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
@@ -204,6 +206,16 @@ The `.diff` files in `diff-files/` were created using:
 diff -u --label a/[file] --label b/[file] <vanilla-clone>/[file] [file] > [output.diff]
 ```
 Where `<vanilla-clone>` is the directory of a clean clone of upstream at commit `e6e0bc30`. The `--label` flags produce clean `a/`/`b/` relative paths (standard git diff format) instead of absolute paths.
+
+To regenerate one file from the repository root, with no separate clone (`git archive` extracts the upstream copies; `config-files.diff` shown — swap in another diff's file list):
+```bash
+V=$(mktemp -d)
+F=".gitattributes .github/workflows/codeql-analysis.yml .github/workflows/scan-build.yml .github/workflows/unittests.yml .gitignore README.md pytest.ini"
+git archive e6e0bc30 $F | tar -x -C "$V"
+D=docs/json/developer/diffs/diff-files/config-files.diff; : > "$D"
+for f in $F; do echo "diff --git a/$f b/$f" >> "$D"; diff -u --label "a/$f" --label "b/$f" "$V/$f" "$f" >> "$D"; done
+```
+The `diff --git` header line lets `git apply` read the file; check the result with `git apply --check` in a tree extracted the same way. To find which upstream files a diff should cover, `git diff --stat --diff-filter=M e6e0bc30 HEAD -- <paths>`.
 
 ### File Lists
 

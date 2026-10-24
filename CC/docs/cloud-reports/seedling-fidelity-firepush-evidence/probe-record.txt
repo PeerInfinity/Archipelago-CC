@@ -1,0 +1,12 @@
+# box lock: TAKEN by probe-seedling-fire-push.mjs (browser, pid 9873) — head d3346cf78, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      firepush-l40-bosskey2: the prefix is 5063 t, the plan 5971 t; its pulse shove held 24 t on button@816,400 -> pushableblockfire@576,576 at (35,36)
+PASS: firepush-l40-bosskey2: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: firepush-l40-bosskey2: the game reproduces the model at 0 px (the player, every pushable block) on all 6000 sampled tick(s)
+PASS: firepush-l40-bosskey2: the game ends with the fire block in the west pocket (560,576), the other on the t5 button (768,400) and the walk block at (576,512) — [{"cls":"PushableBlockFire","x":560,"y":576},{"cls":"PushableBlockFire","x":768,"y":400},{"cls":"PushableBlock","x":576,"y":512}]
+PASS: firepush-l40-bosskey2: the game's ice-turret corpse comes to rest on button@480,384 {t 2} and stays there — on it from t1838 at [{"x":488,"y":399.5,"anim":"dead","type":"Solid"}]
+PASS: firepush-l40-bosskey2: the game's player ends on Boss Key 2's cell (41,33) — (661.4324947449945, 534.9794909403882)
+      firepush-l40-bosskey2: the model's pulse pushes [{"t":5099,"level":40,"pulser":"pulser@592,576","block":"pushableblockfire@576,576"}]; the game ends at L40 t6001
+recorded frontend/modules/seedlingDemo/fixtures/firepush-witness/firepush-l40-bosskey2.json — 6000 tick(s)
+
+ALL CHECKS PASSED

@@ -543,6 +543,12 @@
             "_comment": "GRAPHICS G4. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (Dungeon 6 rain; G3c's stance out of the axes' reach): the page holds the boot build's 20 dead frames (the fade is drawn, the run waits), the rain is drawn as seedling:fx/droplet and three full hearts as seedling:hud/heart from the seedling pack, the cover is gone after the hold, every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-lights",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G5. jsRuntime.html?graphics=seedling (room mode, lights ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 40 (Dungeon 4/2, lightalpha 0.1): the night layer is drawn (its lights) and composited at 0.72 — the canvas darker than the same ops painted without it (checkNight); set({lights:'off'}) applies live and the canvas is then byte-identical to the pre-G5 paint (0 differing channels); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -679,6 +685,12 @@
             "enabled": true,
             "category": "apworldEditor",
             "_comment": "The hub's .apworld button: real world_generator under Pyodide (CDN, booted on first build). Reads the saved Blob back as a zip: named after its root dir, manifest stamped + renamed, a session edit in Locations.py."
+        },
+        {
+            "id": "apworld-build-lossy-toggle",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "rule-node R2c. The .apworld build's lossy toggle on yachtdice (strict-fails: its helper bodies are JS-only). OFF (default): fails naming the helper + game. ON (the real checkbox, saved as a setting): builds, says LOSSY, and the record block lists every placeholder with its count."
         },
         {
             "id": "apworld-apply-keeps-the-sphere-log",

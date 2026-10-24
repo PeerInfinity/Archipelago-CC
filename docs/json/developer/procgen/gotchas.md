@@ -171,6 +171,14 @@ No entity in the vanilla rooms targets region `level_58` (`Dungeon5_DeadBoss`); 
 
 Leaving `level_58` the other way is gated too. Its `teleporter@80,16` to L46 carries tag 1, so it is shut until the Yeti's dialogue ends (`Teleporter.as:86`, `NPCs/Yeti.as:41-49`). The rules carry that as the game_state event `flag:L58:1` at the Yeti's island (`level_58__r3c3`), through the same `CROSS_ROOM_PREREQUISITES` rule as the Watcher's talk. Unlike the Watcher, the Yeti talks only on the talk key.
 
+### A location is charged its own sealed cell, never the way to it
+
+`make-seedling-playthrough-rules.mjs` charges a door or a location only the conditions of the cell its body must occupy. That applies when the physics model has no place for the player's box on the tile, so the solid has to be gone first. The analyzer marks that case `sealedIn`, and the generator ANDs the cell's conditions onto the row. L19's Boss Key 0 lies inside the ShieldBoss's 48x48 body, so it costs the Sword. L113's two exits into the Seed room lie inside the FinalDoor, so they cost all sixteen seals.
+
+The solids that count are the transcription's own item-gated rows, the kill-locks the census decided, and the overlay rows marked `solidBody`. A `solidBody` row is a body the game makes solid (its type is in `Mobile.solids`) that only an item removes: the ShieldBoss, the FinalDoor and Karlore. A row that only prices a puzzle is never marked.
+
+The cost of the WAY to a location is not charged. L89's Feather lies on water between two waterfalls. Its binding carries Swim + Feather (climbing the south fall), but the arrivals from L90 and L91 come down the north fall on Swim alone. Charging one approach's conjunction is the `--charge-crossings` defect that sealed the map, so such a location is counted in `permissiveBindings` instead.
+
 ### A maze room session opened from a set lives inside the set arm's lifetime
 
 On the maze lab page, a room opened from a region library draws on the same `#canvas` the `edit` arm uses, but switching `#source` to `edit` would retire the set arm and discard the library session. The room session is mounted under the set arm's lifetime instead. `canvasWorld()` in `mazeLabView.js` is the one answer to which world is on the canvas; the ladder's overlays (area graph, element gadget, solve plan) do not draw over a library room; and the room gets its own palette from the entry's `itemLib` / `obstacleLib`. See [Maze substrate](./maze.md).

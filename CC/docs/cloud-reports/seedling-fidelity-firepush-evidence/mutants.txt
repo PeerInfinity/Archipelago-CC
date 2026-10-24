@@ -1,0 +1,5 @@
+m1 (solverBot.js) predicted: ON solve, recorded plan | measured red 2: ON: hold button@816,400 until pulser@592,576 parks the block in (35,36 || the solver still makes the recorded plan (the tape's inputs are the wi
+m2 (dangerMap.js) predicted: ON solve, quiet ring, recorded plan | measured red 3: ON: hold button@816,400 until pulser@592,576 parks the block in (35,36 || ON: a quiet pulser's ring is not a disc — the corridor cell beside it  || the solver still makes the recorded plan (the tape's inputs are the wi
+m3 (solverBot.js) predicted: recorded plan (+ ON solve stoppedOn) | measured red 2: ON: hold button@816,400 until pulser@592,576 parks the block in (35,36 || the solver still makes the recorded plan (the tape's inputs are the wi
+m4 (presses.js) predicted: live reach row only | measured red 1: `fireLiveTurretReach`: from (488,440) a Fire press does NOT reach the 
+m5 (levelRun.js) predicted: 0px replay, lag-OFF row, recorded plan | measured red 2: ON (all three): the model replays the recorded tape at 0 px — the play || the solver still makes the recorded plan (the tape's inputs are the wi
