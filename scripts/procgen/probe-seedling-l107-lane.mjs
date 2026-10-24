@@ -36,6 +36,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -190,7 +191,6 @@ async function main() {
         process.exit(0);
     }
     const PAGE_URL = `${host.replace(/\/$/, '')}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
-    const { chromium } = await import('playwright');
     const { takeBoxLockOrExit } = await import('./boxLock.js');
     takeBoxLockOrExit({ name: 'probe-seedling-l107-lane.mjs', kind: 'browser' });
     const { HEADLESS_LOGIC_ONLY_ARGS } = await import('./headlessChromium.js');
