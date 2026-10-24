@@ -19609,7 +19609,7 @@ export function createLevelRun({
              * per-crusher rebuild was pure cost — and it is cost a live
              * sensing policy pays on every tick it polls this getter.
              */
-            const scanOpts = normalizeLiveOpts(reading(liveSolidOpts));
+            const scanOpts = normalizeLiveOpts(reading(() => liveSolidOpts()));
             for (const [id, c] of reading(() => crusherStateFor(level))) {
                 const ctx = crusherCtx(c, scanOpts);
                 out.set(id, {
@@ -19980,7 +19980,7 @@ export function createLevelRun({
          */
         get arrowCoverAt() {
             if (noclip) return null;
-            const solidOpts = normalizeLiveOpts(reading(liveSolidOpts));
+            const solidOpts = normalizeLiveOpts(reading(() => liveSolidOpts()));
             const w = world;
             return (box) => w.collidesArrowCover(box, solidOpts);
         },
