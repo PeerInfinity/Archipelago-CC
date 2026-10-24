@@ -48,7 +48,7 @@ async function main() {
     const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
-    const { withHammerEscape } = await import(join(MODULE, 'solverBot.js'));
+    const { withHammerEscape, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
 
     const NAME = 'f1c-l18-phase42';
     const BASE = 'r9-solve-18';
@@ -84,14 +84,19 @@ async function main() {
      * is the RUNG's evidence on the game, so it is planned as it was recorded — the escape off — and the tape stays
      * byte-identical. `fidelityF1c.test.js` pins the ON solve at this residue beside it.
      */
-    const r = await withHammerEscape(false, () => twoPassSolve({
+    /**
+     * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+     * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the
+     * tape stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+     */
+    const r = await withStrikeEtaFloor(false, () => withHammerEscape(false, () => twoPassSolve({
         makeRun,
         goals: [{ kind: 'reach-exit', exit: TELEPORTER }],
         name: NAME,
         boot: staging.boot,
         persistence: staging.persistence.filter((c) => c.at === undefined),
         gameTick: async () => { throw new Error('no game oracle: L18\'s clear is model-sourced'); },
-    }));
+    })));
     const stalls = (r.out.records ?? []).filter((x) => x.arm === 'press')
         .flatMap((x) => x.phaseStalls ?? []);
     const run = makeRun(r.persistence);

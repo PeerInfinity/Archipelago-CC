@@ -1,0 +1,202 @@
+## PRODUCER-SKIPPED | plan-seedling-r7-ends-meet | drives the SWFRecomp wasm game in Chromium inside its own --check (`latchOf` -> page.goto on SEEDLING_PORT): it needs the `frontend/modules/flashPanel/wasm` submodule, a browser and a dev server. It already runs in CI as a browser ARM of the `browser-gates` matrix (a standing identity row). Measured green locally with a server on :8000 at this slice's head.
+## PRODUCER-PLANNED | 93 to run | 1 skipped | jobs 4
+## PRODUCER | plan-seedling-bobsoldier | 0 | 0.4 | 
+## PRODUCER | plan-seedling-bulb | 0 | 0.5 | 
+## PRODUCER | plan-seedling-burn-witness | 0 | 1.1 | 
+## PRODUCER | plan-seedling-bobsoldier2 | 0 | 3.4 | 
+## PRODUCER | plan-seedling-axe-witness | 0 | 10.8 | 
+## PRODUCER | plan-seedling-f1-l5-lock | 0 | 0.4 | 
+## PRODUCER | plan-seedling-crusher-witness | 0 | 10.2 | 
+## PRODUCER | plan-seedling-f1-l5-open-lock | 0 | 0.8 | 
+## PRODUCER | plan-seedling-f1c-l18-lock | 0 | 0.6 | 
+## PRODUCER | plan-seedling-f4-l8-sandtraps | 0 | 1.4 | 
+## PRODUCER | plan-seedling-f6-reentry | 0 | 0.4 | 
+## PRODUCER | plan-seedling-f7-reentry | 0 | 0.4 | 
+## PRODUCER | plan-seedling-f1c-l18-phase | 1 | 2.7 | FAIL: ⛓⛓ the solve STALLED for the hammer's phase at least once — []
+## PRODUCER | plan-seedling-ghostmotion | 0 | 0.3 | 
+## PRODUCER | plan-seedling-ghostsword | 0 | 0.3 | 
+## PRODUCER | plan-seedling-frontier3-witness | 0 | 1.2 | 
+## PRODUCER | plan-seedling-c1-static-sword | 0 | 19.6 | 
+## PRODUCER | plan-seedling-hammer-b1-approach | 1 | 8.3 | FAIL: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 476 ticks
+## PRODUCER | plan-seedling-hammer-a-escape | 1 | 11.1 | FAIL: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — it solved
+## PRODUCER | plan-seedling-hammer-c2-ghost | 0 | 0.4 | 
+## PRODUCER | plan-seedling-hammer-d-ghostwall | 0 | 0.7 | 
+## PRODUCER | plan-seedling-hammer-dd-walkkill | 0 | 3.3 | 
+## PRODUCER | plan-seedling-hammer-b2-fight | 1 | 11.3 | FAIL: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 476 ticks
+## PRODUCER | plan-seedling-encounters | 0 | 33.4 | 
+## PRODUCER | plan-seedling-l12keyline-witness | 0 | 4.4 | 
+## PRODUCER | plan-seedling-l14-swordless | 0 | 1.6 | 
+## PRODUCER | plan-seedling-hammer-bw-bombstand | 1 | 27.4 | FAIL: OFF (MOVING_WAIT ON): the press kill's stand takes bombpusher@112,128#7 on t1157's ledger row — []
+## PRODUCER | plan-seedling-l30keylock | 0 | 10.4 | 
+## PRODUCER | plan-seedling-ladder2-witness | 0 | 2.3 | 
+## PRODUCER | plan-seedling-proximity-witness | 0 | 3.2 | 
+## PRODUCER | plan-seedling-pushblock-witness | 0 | 2.8 | 
+## PRODUCER | plan-seedling-r1-dark-suit | 0 | 0.7 | 
+## PRODUCER | plan-seedling-r1-route | 0 | 1.2 | 
+## PRODUCER | plan-seedling-hammer-g1-ghostkill | 1 | 38.1 | FAIL: ⛓⛓⛓ the ghost press kills spinner@816,848, and the body leaves `spinnerBodies` — killed at tundefined (hits undefined, undefined px), removed at tundefined
+## PRODUCER | plan-seedling-r2-singles | 0 | 0.4 | 
+## PRODUCER | plan-seedling-r2-wallflyer | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r3-death | 0 | 0.6 | 
+## PRODUCER | plan-seedling-r2-route | 0 | 10.9 | 
+## PRODUCER | plan-seedling-r3-route | 0 | 4.2 | 
+## PRODUCER | plan-seedling-r4 | 0 | 0.4 | 
+## PRODUCER | plan-seedling-r5-bobboss | 0 | 0.1 | 
+## PRODUCER | plan-seedling-r5-bosskey | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r5-conch | 0 | 2.1 | 
+## PRODUCER | plan-seedling-r4-route | 0 | 4.5 | 
+## PRODUCER | plan-seedling-r5-karlore | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r5-feather | 0 | 2.3 | 
+## PRODUCER | plan-seedling-r5-l37-burn | 0 | 0.8 | 
+## PRODUCER | plan-seedling-r5-l40-join | 0 | 1.9 | 
+## PRODUCER | plan-seedling-r5-l40-part0 | 0 | 1.9 | 
+## PRODUCER | plan-seedling-r5-l40-part1 | 0 | 1.0 | 
+## PRODUCER | plan-seedling-r5-l41-part3 | 0 | 2.5 | 
+## PRODUCER | plan-seedling-r5-l40-part5 | 0 | 4.6 | 
+## PRODUCER | plan-seedling-r5-l43-wand | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r5-l60-kill | 0 | 0.1 | 
+## PRODUCER | plan-seedling-r5-l42-part4 | 0 | 3.2 | 
+## PRODUCER | plan-seedling-r5-swim | 0 | 0.4 | 
+## PRODUCER | plan-seedling-r5-shaft | 0 | 2.4 | 
+## PRODUCER | plan-seedling-r5-waterfall | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r5-totem-entrance | 0 | 1.1 | 
+## PRODUCER | plan-seedling-r6-shieldboss | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r6-wdoor | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r6-wblood | 0 | 0.8 | 
+## PRODUCER | plan-seedling-r6-wseed | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r6-wowl | 0 | 0.9 | 
+## PRODUCER | plan-seedling-r6-wtalk | 0 | 0.3 | 
+## PRODUCER | plan-seedling-r8-hammer-pair | 0 | 1.4 | 
+## PRODUCER | plan-seedling-r8-l18-spinner | 0 | 0.9 | 
+## PRODUCER | plan-seedling-r9-l0-sword-dash | 0 | 0.5 | 
+## PRODUCER | plan-seedling-r9-l6-bob-press | 0 | 0.4 | 
+## PRODUCER | plan-seedling-r9-l6-harmless-window | 0 | 1.0 | 
+## PRODUCER | plan-seedling-r9-l6-sword-dash-hit | 0 | 0.8 | 
+## PRODUCER | plan-seedling-return-l15 | 0 | 0.4 | 
+## PRODUCER | plan-seedling-sealdoor-witness | 0 | 0.9 | 
+## PRODUCER | plan-seedling-slots-witness | 0 | 1.6 | 
+## PRODUCER | plan-seedling-l40button-witness | 1 | 50.1 | FAIL: l40button-l42-part0: the model replays it to the part — 1915 observations, ends {"level":40,"x":226.02043680262457,"y":132.78975001398152}
+## PRODUCER | plan-seedling-u10-puncher-dwell | 0 | 0.6 | 
+## PRODUCER | plan-seedling-u11-dark-shield | 0 | 0.3 | 
+## PRODUCER | plan-seedling-u11-facing | 0 | 0.3 | 
+## PRODUCER | plan-seedling-u12-pull | 0 | 0.4 | 
+## PRODUCER | plan-seedling-u14-moonrock | 0 | 0.4 | 
+## PRODUCER | plan-seedling-u15-turret | 0 | 0.5 | 
+## PRODUCER | plan-seedling-u7-puncher | 0 | 0.5 | 
+## PRODUCER | plan-seedling-stance-witness | 0 | 5.1 | 
+## PRODUCER | plan-seedling-u9-shield-bump | 0 | 0.5 | 
+## PRODUCER | plan-seedling-wallflyer | 0 | 0.5 | 
+## PRODUCER | plan-seedling-wand-witness | 0 | 0.9 | 
+## PRODUCER | plan-seedling-watchertalk-witness | 0 | 0.6 | 
+## PRODUCER | plan-seedling-watcher-witness | 0 | 2.6 | 
+## PRODUCER | regenerate-r2-tapes | 0 | 6.0 | 
+## PRODUCER | plan-seedling-r7-attribution | 0 | 21.8 | 
+## PRODUCER | regenerate-r3-tapes | 0 | 7.3 | 
+## PRODUCER | regenerate-r4-tapes | 0 | 4.5 | 
+## PRODUCER | plan-seedling-hammer-sf-strikefloor | 1 | 125.6 | FAIL: the switch ships OFF (`STRIKE_ETA_FLOOR`; this script turns it on for its ON solve only) — enabled true
+
+── scripts/procgen/plan-seedling-f1c-l18-phase.mjs (rc 1) — last 30 lines ──
+PASS: ⛓ the clock is at residue 42, moved by -20 from the committed 17 — seam.time 10052 → 10032
+FAIL: ⛓⛓ the solve STALLED for the hammer's phase at least once — []
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":569,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed f1c-l18-phase42 is what this script produces today — ⛔ DRIFT — re-run without --check
+## f1c-l18-phase42: 569 ticks, residue 42, 0 stall(s), {18,0}@535
+
+2 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-b1-approach.mjs (rc 1) — last 30 lines ──
+PASS: ⛓ the clock is at residue 40, moved by -45 from the committed 40 — seam.time 9940 → 9895
+FAIL: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 476 ticks
+PASS: ⛓⛓ with it ON the walk is shorter, and every strike it pressed was planned in space-time — 362 ticks; 6 planned strike(s), 5 search(es) found one
+PASS: ⛓ and every press still has an escape out of its own landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":362,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed hammer-b1-l18-approach40 is what this script produces today — byte-identical
+## hammer-b1-l18-approach40: 362 ticks (OFF 476), residue 40, 6 planned strike(s) at index 29/28/31/15/31/31, 6 escape(s), {18,0}@305
+
+1 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-a-escape.mjs (rc 1) — last 30 lines ──
+PASS: ⛓ the clock is at residue 21, moved by -19 from the committed 40 — seam.time 9940 → 9921
+FAIL: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — it solved
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":367,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed hammer-a-l18-escape21 is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-a-l18-escape21: 367 ticks, residue 21, 6 escape(s) (moving 0/0/0/0/0/2), {18,0}@321
+PASS: ⛓ the clock is at residue 15, moved by -25 from the committed 40 — seam.time 9940 → 9915
+FAIL: ⛓⛓ with the switch OFF this staging REFUSES HAMMER_SAFETY — it solved
+PASS: ⛓⛓ with it ON the press kill took an escape at every landing — 6 escape(s)
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":367,"from_level":18,"to_level":19}]
+FAIL: ⛓ the committed hammer-a-l18-escape15 is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-a-l18-escape15: 367 ticks, residue 15, 6 escape(s) (moving 1/0/0/0/0/0), {18,0}@321
+
+4 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-b2-fight.mjs (rc 1) — last 30 lines ──
+PASS: ⛓ the clock is at residue 40, moved by -45 from the committed 40 — seam.time 9940 → 9895
+FAIL: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 476 ticks
+PASS: ⛓⛓ with it ON the walk is shorter, and the whole fight is ONE certificate, followed to its end — 342 ticks; 1 search(es), 1 found, 0 left; goal +207, 21243 expansion(s)
+PASS: ⛓ every landing the walk makes is one of the six the fight needs (two bodies × hitsMax) — spinner@48,96@55 spinner@112,48@114 spinner@112,48@166 spinner@48,96@168 spinner@112,48@203 spinner@48,96@205
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":342,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed hammer-b2-l18-fight40 is what this script produces today — byte-identical
+## hammer-b2-l18-fight40: 342 ticks (OFF 476), residue 40, one fight certificate (goal +207), landings 55/114/166/168/203/205, {18,0}@317
+
+1 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs (rc 1) — last 30 lines ──
+FAIL: OFF (MOVING_WAIT ON): the press kill's stand takes bombpusher@112,128#7 on t1157's ledger row — []
+FAIL: ⛓ ON: the solve runs past the press kill's first landing (it stops on #10's blast on bob@272,112, the unstaged "Enemy" arm) — 1248 executed; levelRun: the Explosion of bombpusher@112,128#9 at (267, 118) on tick 1248 in level 40 reaches the chaser bob@272,112 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-6
+FAIL: ⛓ the INTERIM pin's witness — lapse ON: the ON solve stops at t1339 on #11's Explosion reaching spinner@192,160 (wave-18 BOMB BLAST ON BODIES retires the pin) — 1663 executed; no refusal
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:13639
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                          ^
+
+Error: levelRun: the Explosion of bombpusher@112,128#9 at (267, 118) on tick 1248 in level 40 reaches the chaser bob@272,112 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-65`) is not staged on a bomb's blast (seedling-fidelity-bombpusher). Refused by name.
+    at drainBombBlastsNow (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:13639:27)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:22473:21)
+    at file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:98:89
+    at withContactFidelity (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/contactFidelity.js:1195:15)
+    at bombStandAccount (file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:98:5)
+    at async main (file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:160:15)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/plan-seedling-hammer-bw-bombstand.mjs:120:36
+
+Node.js v22.22.0
+
+
+── scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs (rc 1) — last 30 lines ──
+PASS: the per-weapon press is ON (`GHOST_SPINNER_PRESS`, its default) — enabled true
+PASS: OFF: the kill rung refuses the ghost primary at t0, by name — REFUSED at 0
+PASS: ⛓ ON: the solve gets past the gate (its prefix is the walk; the rung's refusal is not in its message) — REFUSED at 1629
+PASS: ⛓⛓ every landing is a ghost press, and every press the walk made is the ghost sword's — 3 landing(s), weapons ["ghostsword"]
+PASS: ⛓⛓⛓ the ghost press kills spinner@880,848, and the body leaves `spinnerBodies` — killed at t1616 (hits 4, 17.794 px), removed at t1629
+FAIL: ⛓⛓⛓ the ghost press kills spinner@816,848, and the body leaves `spinnerBodies` — killed at tundefined (hits undefined, undefined px), removed at tundefined
+FAIL: ⛓ the committed hammer-g1-l40-ghostkill is what this script produces today — ⛔ DRIFT — re-run without --check
+## hammer-g1-l40-ghostkill: 1629 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE G1, D2 — THE KILL RUNG'S GHOST PRESS KILL (`GHOST_KILL_RUNG` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill), all ghost presses; spinner@880,848 killed at t1616 and removed at t1629, spinner@816,848 at tundefined / tundefined. Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1629 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs.
+
+2 CHECK(S) FAILED
+
+
+── scripts/procgen/plan-seedling-l40button-witness.mjs (rc 1) — last 30 lines ──
+PASS: l40button-l41-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","kill","hold","break","hold","collect"], 1543 t, 11 s
+PASS: l40button-l41-part0: the model replays it to the part — 1544 observations, ends {"level":40,"x":72.34285322518913,"y":142.9015638457861}
+PASS: the committed l40button-l41-part0 is what this script produces today — byte-identical
+PASS: l40button-l42-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","hold","kill","break","hold","collect"], 1914 t, 37 s
+FAIL: l40button-l42-part0: the model replays it to the part — 1915 observations, ends {"level":40,"x":226.02043680262457,"y":132.78975001398152}
+FAIL: the committed l40button-l42-part0 is what this script produces today — ⛔ DRIFT — re-run without --check
+2 FAILED
+
+
+── scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs (rc 1) — last 30 lines ──
+FAIL: the switch ships OFF (`STRIKE_ETA_FLOOR`; this script turns it on for its ON solve only) — enabled true
+PASS: OFF: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t2195 on bob@736,752
+PASS: ON: the solve refuses on the chaser bob@736,752, past the press kill — REFUSED at t1629 on bob@736,752
+PASS: ⛓⛓ ON's press kill moved: its landings on spinner@880,848 are not OFF's (the first, at the kill's start, is shared) — ON t501, t1583, t1616 · OFF t501, t2078, t2114
+PASS: ⛓⛓⛓ ON kills spinner@880,848 sooner than OFF, and the body leaves `spinnerBodies` — ON killed t1616 (removed t1629), OFF t2114
+PASS: ⛓ the committed hammer-sf-l40-strikefloor is what this script produces today — byte-identical
+## hammer-sf-l40-strikefloor: 1629 ticks; ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`STRIKE_ETA_FLOOR` ON). C1's staging A (P1's boot view: L40's south door (480,896), goal the chest (880,816)) with the ghost sword granted, the sword kept; `solveSegment`'s executed prefix with the switch ON (the solve then refuses on the chaser bob@736,752, as OFF does). Landings t501 spinner@880,848 hits 2 · t1583 spinner@880,848 hits 2 · t1616 spinner@880,848 hits 4 (kill); spinner@880,848 killed at t1616 and removed at t1629 (OFF: killed at t2114). Player hits t658 bob@736,752 · t747 bob@736,752 · t778 bob@736,752 (death). 1629 t. Not a roster tape (kept beside its samples). Authored by scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs.
+
+1 CHECK(S) FAILED
+
+## PRODUCER-DONE | 93 run | 8 red | 1 skipped | 0 known-red

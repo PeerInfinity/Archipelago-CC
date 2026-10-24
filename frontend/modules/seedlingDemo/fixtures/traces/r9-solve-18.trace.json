@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r9-solve-18",
-    "tick_count": 440,
+    "tick_count": 390,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,11 +49,11 @@
             ]
         },
         {
-            "tick": 407,
+            "tick": 356,
             "saw": {
                 "level": 18,
-                "x": 97.11870539713665,
-                "y": 93.61700159467252,
+                "x": 87.85137586755698,
+                "y": 105.9595790980977,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -70,9 +70,9 @@
                 "waypoints": 1,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 33,
-                    "baseline": 67,
-                    "saved": 34,
+                    "ticks": 34,
+                    "baseline": 74,
+                    "saved": 40,
                     "windows": [
                         {
                             "at": 0,
@@ -93,7 +93,7 @@
                         }
                     ],
                     "legs": [
-                        33
+                        34
                     ],
                     "scanned": 8,
                     "why": null
@@ -112,7 +112,7 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "2 of 8 scanned preview(s) — first at walk-offset 0: 67 tick(s) against 67 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "2 of 8 scanned preview(s) — first at walk-offset 0: 74 tick(s) against 74 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
