@@ -85,7 +85,7 @@
     },
     {
       "name": "Jak and Daxter The Precursor Legacy.yaml",
-      "reason": "Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test."
+      "reason": "Spoiler test passes (134.7 s with generation, seed 1); multiclient reaches 224/239 because Reachable Orbs is not computed live, and no game-specific module will be added (user ruling 2026-10-23)."
     },
     {
       "name": "Pokemon Emerald.yaml",
