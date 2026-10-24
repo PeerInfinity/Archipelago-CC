@@ -29,7 +29,8 @@ walk goes *along* the beams for ~130 px, and the 12 px lane BETWEEN the bands is
   the model, 372..387 t (the solver's own plan is 387..390 t).
 - On the GAME (p4g, headless logic-only, at `152af53509`): run `40130819530`, 11 sample clocks in and out of the band
   — the game reaches L102 at every one, its stream identical to the model's (first differing row −1); run
-  `40130832484`, all 61 clocks 5564..5624 (see the as-built for its verdict).
+  `40130832484`, ALL 61 clocks 5564..5624 (MISCRES's sweep) — **61/61 reach L102, 61/61 streams identical** (wall
+  1,037 s).
 - CONTROL: the same walk at a FIXED y 120.8 (the planner's row) passes only 5601..5605, 5610..5612 on the model (the
   solver's band); on the game (run `40130826099`) it is knocked by `beamtower@208,120` at 5594, 5622 and 5640 and
   passes at 5605, row-identical to the model each time.
