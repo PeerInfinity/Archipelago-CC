@@ -25215,3 +25215,44 @@ settle) threw the drown at every seam time −3..+3 and now SOLVES 372 t (`dodge
   never spins of its own, and a whirlpool that dies first leaves it `dying` for good.
 - A death inside a walk is not a stall to re-plan from: the drive walks on from the respawn, and a re-plan would
   certify a corridor through a death.
+
+### Seedling hammer-phase PDS — a previewed death is a skipped candidate, everywhere
+
+⚖ User, 2026-10-24: *"Yes, I approve launching all of these"*. The task: sweep every unguarded preview death, so that
+the `STRIKE_ETA_FLOOR` flip (SFF + SFF2) can land, and retire `plan-seedling-hammer-bw-bombstand`'s `strikeIframeLapse`
+INTERIM pin. The report is `CC/docs/cloud-reports/seedling-hammer-preview-death-sweep.md`.
+
+**When a preview throws (D1, the census).** `levelRun.previewStepper()` throws `deathRefusal` on any previewed death.
+But `previewWalk` already ends a walk at a death that starts INSIDE it (`lethalFloorOf`: a drown it latches, a lethal
+pit). So **`previewWalk` throws only when the live run's drown was latched before the preview began**. That is a
+property of the decision tick, so the first preview asked at that tick is the one that throws. A raw `previewStepper`
+loop has no such check, and throws on any death. The census, in `solverBot.js`:
+- 31 `previewWalk` calls: 4 guarded, 1 executor gate (`probeCorridor`), and 26 candidate sites;
+- 5 unguarded raw-stepper searches;
+- in other files, 2 more (`crusherBait.alignmentCandidates`, `lightsVerb`'s sortie step), handed over.
+
+**The fix (D2).** A2's rule (`instanceof PhysicsV2Error`) at every candidate site:
+- `previewWalkOrDeath` turns the throw into a truncated walk (`kind: 'death'`, no samples) that every reader already
+  refuses. Five sites also get a death arm ahead of reading samples or of `probeSamples`, which reads an empty walk as
+  clean;
+- the five raw-stepper searches go through `previewOrDeath`: a dying plan is touched, a lean or a tap is `null`, and a
+  pacing is rejected at its tick.
+
+`probeCorridor` stays bare: there the death is the walk the run is about to take. 11 unit rows, each one killed by its
+mutant. Seed 30 is now green ON. OFF is byte-identical, because every change engages only on a throw.
+
+**The pin (D3).** At the contact defaults the stand's solve returns at t1667 with no hit. That walk is fidelity
+WANDHOLD's game witness `wandhold-l42-371-paced`, key for key, and the game agrees at every tick through t1666 (t1667 is
+the Totem Part pickup freeze). With the lapse ON, `#7` lands 31 px off the stand, so `PRESS_KILL_BOMBS` refuses nothing
+there: BW's refusal belongs to the pre-lapse walk, which stays as a `--check` control.
+
+**Trap candidates.**
+- "Wrap every `previewWalk`" is the wrong unit. The throw is a property of the TICK (a drown latched before the
+  preview), so a site shadowed by an earlier preview of the same state cannot be where it lands. And the one site that
+  must NOT be wrapped is the executor's gate: there an empty walk reads as a clean corridor.
+- An empty preview is not a safe one. `probeSamples([])` is `null`, so a reader that asks only "did it probe
+  dangerous?" accepts a walk that died before its first sample.
+- A witness game run disagrees on its LAST tick when that tick is a pickup ceremony. Cut the sampling there, as
+  WANDHOLD did; it is not a model defect.
+- A slow row's 900 s budget is a box property. `seedlingGenCapacity.slow` › post-sword takes 919 s solo here, the same
+  per seed at SFF2's own head; SFF2 measured 482 s on its box.
