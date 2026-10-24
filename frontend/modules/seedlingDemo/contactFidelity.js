@@ -1137,6 +1137,35 @@ export const CONTACT_FIDELITY = {
      * probes standard ON green.
      */
     forcedHitWitnessFirst: true,
+    /**
+     * seedling-fidelity-residue D-A (wave 28) — TIMEDPASS's PASS TO THE EXIT (`solverBot.execDrillTimedPassExit`). With
+     * `drillTimedPass` ON, Fire alone cuts L28's rope hit-free, but the rope's `FallRock` ceremony releases the drill
+     * parked under the stance ONTO it (TIMEDPASS D1), so the walk that follows refuses at its first gate ("the danger map
+     * forbids (151.87,55.81) — enemy:drill@128,96"), and from that state every continuation is hit (measured: 81 of 81
+     * two-tick key sequences). ON: (1) a `reach-exit` whose planned walk wakes a live stepped drill, in a run that holds no
+     * weapon that kills one, is SEARCHED as the pass is — the same beam, on the same forecast, with the goal the CROSSING
+     * (the stepper's transition through that teleporter) — certified on a fork, then played; and (2) a pass to a cut's
+     * stance whose segment's NEXT goal is a `reach-exit` is certified only when the cut leaves that crossing's pass open
+     * (the search tries further stands until one does). OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`.
+     */
+    drillTimedPassExit: false,
+    /**
+     * seedling-fidelity-residue D-B (wave 28) — A WHIRLPOOL'S DROWN IS A DEATH THE SOLVER SEES, AND ITS PULL IS PRICED
+     * (`Puzzlements/Whirlpool.as:61-83`, `Player.as:1431-1444`). A live whirlpool (timer in [dies, live + dies)) writes
+     * the player's position on every update the player's box overlaps it within the radius (16): r = int(d), then
+     * int(r * 0.999) — one pixel in a tick, plus a 20° turn — and once r <= 1 it calls `Player.drown()` on EVERY update:
+     * `drownTimer` −0.5 (mod 10), the spiral `v`, `dying = true` (which skips the player's `super.update()`, so no input
+     * and no move), and `die()` on the twentieth call. OFF the model threw a plain `Error` at the first call (bosskills D3)
+     * and no planner priced the pull. ON: (1) the call is transcribed — `dying` latched (`state.drown.dying`), the timer,
+     * the spiral `v`, and the death (a `playerDeaths` row, source `whirlpool`) on the twentieth; a whirlpool that ends
+     * first leaves the player `dying` where it stands, as the game does; (2) a walk that drowns refuses by name
+     * (`obstacle: {kind: 'whirlpool', id}`) instead of re-planning from the respawn, and the Tentacled Beast verb's plays
+     * count a drown as a death; (3) the danger map prices a live (or growing) whirlpool's pull — `dangerAt`'s
+     * `whirlpoolDanger` (the disc inside the box, at the tick's own timer in transit) and a `dangerVolumes` row (its
+     * 32x32 box), so the walk's probe and its AVOID / WAIT rungs see it. OFF: byte-identical.
+     * `SEEDLING_WHIRLPOOL_DROWN=0|1`.
+     */
+    whirlpoolDrown: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1354,6 +1383,12 @@ if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '1') CONTACT_F
 if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '0') CONTACT_FIDELITY.crusherBaitPressGoal = false;
 if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '1') CONTACT_FIDELITY.forcedHitWitnessFirst = true;
 if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '0') CONTACT_FIDELITY.forcedHitWitnessFirst = false;
+// ⛓ seedling-fidelity-residue D-A: `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '1') CONTACT_FIDELITY.drillTimedPassExit = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '0') CONTACT_FIDELITY.drillTimedPassExit = false;
+// ⛓ seedling-fidelity-residue D-B: `SEEDLING_WHIRLPOOL_DROWN=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '1') CONTACT_FIDELITY.whirlpoolDrown = true;
+if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '0') CONTACT_FIDELITY.whirlpoolDrown = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

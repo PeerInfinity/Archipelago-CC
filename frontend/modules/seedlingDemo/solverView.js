@@ -204,6 +204,8 @@ export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 export { tentacleRect, tentacleSwipeRect } from './tentacleBeast.js';
 // ⛓ fidelity BOSSFORK D1b: the beast's anims and their length, for the wait on the mouth (`awaitTentacleMouth`).
 export { TENTACLE_BEAST_ANIMS } from './tentacleBeast.js';
+// ⛓ seedling-fidelity-residue D-B: a whirlpool's clock, box and pull radius, for `dangerMap.whirlpoolDanger`.
+export { WHIRLPOOL, whirlpoolRect } from './tentacleBeast.js';
 export { animTicks } from './chasers.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {

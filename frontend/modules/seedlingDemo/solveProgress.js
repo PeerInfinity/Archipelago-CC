@@ -745,7 +745,8 @@ function tileOf(at) {
  * spit, a bomb's blast); `volume` — a static volume (a hazard's census volume, a static enemy, a crusher, a lethal
  * tile or pit, an armed lane). ⛔ Pure: no probe is asked.
  */
-const FORECAST_SOURCES = new Set(['arrow', 'chaser', 'spinner', 'spit', 'bomb']);
+// ⛓ seedling-fidelity-residue D-B: `whirlpool` (`dangerMap.whirlpoolDanger`, ON only) — a pull on its own clock.
+const FORECAST_SOURCES = new Set(['arrow', 'chaser', 'spinner', 'spit', 'bomb', 'whirlpool']);
 export function dangerKindOf(source) {
     if (source === null || source === undefined) return null;
     if (source.phase !== undefined || source.axe !== undefined) return 'phase';

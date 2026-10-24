@@ -240,7 +240,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,p
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
-frontend/modules/seedlingDemo/levelRun.js|advance|h79fd2fd6|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
+frontend/modules/seedlingDemo/levelRun.js|advance|he3f57faf|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
 frontend/modules/seedlingDemo/levelRun.js|advance|hee37f6e1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h5e6f118d|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitude,,cutscene walk vy clamped to 0
@@ -1017,7 +1017,7 @@ frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h46b9a606|2|0,physics
 frontend/modules/seedlingDemo/playerPhysicsV2.js|getStatePos|getStatePos,rule,sentinel,,-1 = no tile
 frontend/modules/seedlingDemo/playerPhysicsV2.js|fallDestination|snap,physics,bound,,clamp position >= 0 before tile snap
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h92086e66|0|0,physics,magnitude,,landing zeroes vy
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hc2aa136d|0|0,physics,sign,,feather exempts upward motion only (v.y >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h22869096|0|2,physics,sign,,feather exempts upward motion only (v.y >= 0)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h08da7fb0|0|0,rule,bound,,alpha <= 0 swaps level
 frontend/modules/seedlingDemo/pushables.js|*|*,structural,,,zero tests / centre halves / loop bounds / inits
 frontend/modules/seedlingDemo/pushables.js|DESTROYING_TILE_TYPES|(module),rule,sentinel,,Tile.t water/lava/pit
