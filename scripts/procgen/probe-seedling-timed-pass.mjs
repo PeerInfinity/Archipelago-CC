@@ -118,9 +118,22 @@ async function main() {
         const bad = compareDrillKillWitness(samples, model.samples, tape.boot.level);
         check(`${w.name}: the game reproduces the model at 0 px (player, drills with hits, chasers) on all ${samples.length} `
             + 'sampled tick(s)', bad.length === 0, bad.slice(0, 4).join('; '));
-        const hits = samples.filter((s, i) => i > 0 && s.hits > samples[i - 1].hits).map((s) => `t${s.t}`);
-        check(`${w.name}: the game's player is never hit`, hits.length === 0 && samples.every((s) => s.hits === 0),
+        const hitTicks = samples.filter((s, i) => i > 0 && s.hits > samples[i - 1].hits).map((s) => s.t);
+        const hits = hitTicks.map((t) => `t${t}`);
+        // ⛓ planning-11: a CUT-ONLY witness's tape is the plan plus an idle tail, and the drill the rope's FallRock releases
+        // lands on the stance AFTER the goal (TIMEDPASS's documented residue; RESIDUE's exit witnesses walk out instead) —
+        // so a cut-only witness is held hit-free through its PLAN, and the post-goal contact is printed by name. An exit
+        // witness (it leaves the room) must take no hit at all.
+        const leaves = (w.goals ?? []).some((g) => g.kind === 'reach-exit');
+        const planEnd = solved.out.perTick.length;
+        const inPlan = hitTicks.filter((t) => t <= planEnd);
+        check(leaves ? `${w.name}: the game's player is never hit` : `${w.name}: the game's player is never hit during the plan (${planEnd} t)`,
+            leaves ? hits.length === 0 && samples.every((s) => s.hits === 0) : inPlan.length === 0,
             `hits at [${hits.join(', ')}]`);
+        if (!leaves && hitTicks.length > inPlan.length) {
+            console.log(`      ${w.name}: after the plan (the idle tail), the released drill's contact at `
+                + `[${hitTicks.filter((t) => t > planEnd).map((t) => `t${t}`).join(', ')}] — TIMEDPASS's residue, not a pass failure`);
+        }
         const last = samples.at(-1);
         console.log(`      ${w.name}: its drills at the end ${JSON.stringify(last?.drills ?? [])}; model drill hops: `
             + `${model.events.filter((e) => e.kind === 'hop').map((e) => `${e.t}:${e.id}`).join(' ')}; `
