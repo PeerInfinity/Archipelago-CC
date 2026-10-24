@@ -25218,3 +25218,41 @@ clocks OFF already solves keep OFF's plans (asked FIRST, it pre-empted short doo
   question when something in the room is driven by the player's presence (an Igneous tile).
 - A verdict that flips between CI repeats is often a function of the arrival clock: census the captured request across
   `seam.time` before calling it noise.
+
+### Seedling fidelity L40RES — a stance walk that re-enters its own order walks on along its frontier (`stanceReentryNextDoor`); a spinner sees a lock's turn-off one tick later (`spinnerLockLag`) — both OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-l40res.md`.
+
+**D2 — the STANCE_REENTRY (survey step 93, L40 `Totem Part 64,144` from the L39 teleporter).** The lock room (tiles
+29-31 × 23-34) has four doors: W `wandlock@448,432` and E `wandlock@512,480` (group 2, opened only by `button@480,384`
+INSIDE the room), S `wandlock@480,560` (group 3, `buttonroom@880,768`, latched, behind `chest@880,816` and
+`burnabletree@872,784`), N the bosslock. The stance hypothesis holds the S door (its opener latches) and not group 2
+(guard (iii)'s weigh-wall: a plain Button, no block). So the W door's hold stance (488,392) was derived reachable THROUGH the
+S door. That stance is right, but the walk to it asked its own frontier nearest-to-aim and named the W door again.
+`stanceReentryNextDoor` (OFF): before the refusal stands, the walk passes to the next frontier entry that resolves
+(`nextPastReentry`, the L12KEYLINE shape), passing over by name an entry whose stance walk is this walk again. Step 93 then
+walks to the chest (the S door's chain: chest, tree, buttonroom) and ends 1,266 ticks in, in the chest walk's
+`kill (spinner@880,848) by press` (`PRESS_KILL_REBOOT_GUARD`): the hammer arc's region.
+
+**D1 — leg 368's seam-variant hit (`in_L41_0_160`, seam time 5290).** Re-staged from a captured request, the solver plans
+1600 t (seams 5290-5292; 5280-5287 give 1558, 5288 gives 1584, 5289 refuses on the shake band). On p4g the game hits the
+player once at t1222 (209.20,147.77), the sweep's tick and point. **The model replay takes the same hit to the bit**
+(`spinner@192,144`'s hammer line; the walk's own press struck that spinner on tick 1204), and the solver's expected
+trajectory carries the knockback. The plan was not hit-free in the model. It passed because the dashed walk's
+certificate (`probeSamples` → `dangerDuringTransit`) carries the walk's chasers, arrows, spits and grenades per sample
+but no spinners, so the hammer is priced from the press-blind `run.spinnerForecast`, 28.31 px from the struck body.
+That is the hit-aware spinner forecast: handed to the hammer arc. The same witness found a model divergence elsewhere:
+`spinner@192,160` reflects off `wandlock@208,160` at t1172 on the game and passes it in the model. `Game.loadlevel` adds
+the lock family and `cover` (`Game.as:2355-2364`) before `spinner` (`:2416`) and `World.addUpdate` prepends, so a Spinner
+sweeps a responder Solid on its turn-off frame. `spinnerLockLag` (OFF): `spinnerCtx` leaves out a fade responder that
+turned off on the latest step (`activators.openActivatorIdsBeforeLatestStep`: `held === opensOnTick(fade)`, no new run
+state). ON, every spinner of the room matches the game t1160-1230 (`fixtures/l40res-witness/`).
+
+**Trap candidates.**
+- A hit the sweep calls a "game hit" can be the model's own: replay the plan before reading it as a contact divergence.
+- A certificate that previews the walk's presses must price every body family those presses move. A sample that carries
+  the chasers but not the spinners prices a struck spinner where it was never going to be.
+- "Updates before the responders" is a third order: a body added after the lock family sweeps a lock Solid on its
+  turn-off frame, even though the player (added first) walks through it on that same frame.
+- A STANCE_REENTRY whose stance was derived under the hypothesis names a door the walk never asked: read the hypothesis
+  before calling the stance wrong.

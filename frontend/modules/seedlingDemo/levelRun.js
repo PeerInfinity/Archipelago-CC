@@ -56,7 +56,7 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    latchAtBuild, pressedGroups, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -5920,7 +5920,13 @@ export function createLevelRun({
      */
     const spinnerCtx = (over = {}) => {
         const openBridges = openBridgeIdsNow();
-        const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
+        // ⛓ fidelity L40RES (`spinnerLockLag`, OFF): a responder that turned off on the latest step is still Solid to
+        // a spinner, which updates before it (`activators.openActivatorIdsBeforeLatestStep`). ⚠ `spinnerForecast`
+        // reuses one ctx for its whole horizon, so ON it carries that responder Solid past its first row: the frozen-
+        // world bound it already has (a responder that opens inside the horizon is not foreseen), one tick longer.
+        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag
+            ? openActivatorIdsBeforeLatestStep(activatorStateFor(level), world)
+            : openActivatorIds(activatorStateFor(level)));
         // The blocks where the PREVIOUS tick left them: the spinner updates
         // first, so this is what its sweep reads. (The block then reads the
         // spinner at the position this tick gives it — the two are one tick

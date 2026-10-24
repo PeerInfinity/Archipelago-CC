@@ -272,7 +272,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             nonChaserRemovalBlocks: false,
             forecastCorpseFade: false,
             // ⛓ fidelity MISCRES D3 (wave 29): the phase arm stalls at the walk's start first in an igneous room — OFF.
-            phaseDodgeArrivalStall: false });
+            phaseDodgeArrivalStall: false,
+            // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
+            // spinner sees a responder's turn-off one tick later — shipped OFF.
+            stanceReentryNextDoor: false,
+            spinnerLockLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
