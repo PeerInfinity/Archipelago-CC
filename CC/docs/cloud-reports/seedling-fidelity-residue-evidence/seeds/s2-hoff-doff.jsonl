@@ -1,0 +1,40 @@
+{"seed":1,"hitless":"off","drown":"off","ms":1911,"v":"SOLVED","ticks":2765,"level":58,"hits":[],"deaths":0,"tried":["ok:2564"],"dodge":0}
+{"seed":2,"hitless":"off","drown":"off","ms":1234,"v":"SOLVED","ticks":1047,"level":58,"hits":[393],"deaths":0,"tried":["ok:847"],"dodge":0}
+{"seed":3,"hitless":"off","drown":"off","ms":1124,"v":"SOLVED","ticks":1512,"level":58,"hits":[],"deaths":0,"tried":["ok:1311"],"dodge":0}
+{"seed":4,"hitless":"off","drown":"off","ms":1322,"v":"SOLVED","ticks":2450,"level":58,"hits":[760],"deaths":0,"tried":["ok:2250"],"dodge":0}
+{"seed":5,"hitless":"off","drown":"off","ms":1077,"v":"SOLVED","ticks":2260,"level":58,"hits":[835],"deaths":0,"tried":["ok:2073"],"dodge":0}
+{"seed":6,"hitless":"off","drown":"off","ms":992,"v":"SOLVED","ticks":1364,"level":58,"hits":[],"deaths":0,"tried":["ok:1163"],"dodge":0}
+{"seed":7,"hitless":"off","drown":"off","ms":624,"v":"SOLVED","ticks":955,"level":58,"hits":[],"deaths":0,"tried":["ok:807"],"dodge":0}
+{"seed":8,"hitless":"off","drown":"off","ms":185,"v":"SOLVED","ticks":1069,"level":58,"hits":[549],"deaths":0,"tried":["ok:1008"],"dodge":0}
+{"seed":9,"hitless":"off","drown":"off","ms":1201,"v":"SOLVED","ticks":2412,"level":58,"hits":[],"deaths":0,"tried":["ok:2212"],"dodge":0}
+{"seed":10,"hitless":"off","drown":"off","ms":1156,"v":"SOLVED","ticks":2132,"level":58,"hits":[],"deaths":0,"tried":["ok:1943"],"dodge":0}
+{"seed":11,"hitless":"off","drown":"off","ms":1097,"v":"SOLVED","ticks":1426,"level":58,"hits":[568],"deaths":0,"tried":["ok:1225"],"dodge":0}
+{"seed":12,"hitless":"off","drown":"off","ms":1106,"v":"SOLVED","ticks":1234,"level":58,"hits":[],"deaths":0,"tried":["ok:1033"],"dodge":0}
+{"seed":13,"hitless":"off","drown":"off","ms":1115,"v":"ERROR","why":"levelRun: whirlpool#57 pulls the player to its centre at tick 1741 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":14,"hitless":"off","drown":"off","ms":962,"v":"SOLVED","ticks":1382,"level":58,"hits":[],"deaths":0,"tried":["ok:1201"],"dodge":0}
+{"seed":15,"hitless":"off","drown":"off","ms":1151,"v":"ERROR","why":"levelRun: whirlpool#73 pulls the player to its centre at tick 2304 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":16,"hitless":"off","drown":"off","ms":1083,"v":"SOLVED","ticks":1840,"level":58,"hits":[],"deaths":0,"tried":["ok:1639"],"dodge":0}
+{"seed":17,"hitless":"off","drown":"off","ms":1451,"v":"ERROR","why":"levelRun: whirlpool#31 pulls the player to its centre at tick 795 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by n","obstacle":null}
+{"seed":18,"hitless":"off","drown":"off","ms":1261,"v":"SOLVED","ticks":2967,"level":58,"hits":[],"deaths":0,"tried":["ok:2766"],"dodge":0}
+{"seed":19,"hitless":"off","drown":"off","ms":1165,"v":"SOLVED","ticks":2016,"level":58,"hits":[392],"deaths":0,"tried":["ok:1815"],"dodge":0}
+{"seed":20,"hitless":"off","drown":"off","ms":1069,"v":"SOLVED","ticks":1146,"level":58,"hits":[],"deaths":0,"tried":["ok:945"],"dodge":0}
+{"seed":21,"hitless":"off","drown":"off","ms":1184,"v":"ERROR","why":"levelRun: whirlpool#81 pulls the player to its centre at tick 1948 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":22,"hitless":"off","drown":"off","ms":1114,"v":"ERROR","why":"levelRun: whirlpool#70 pulls the player to its centre at tick 1785 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":23,"hitless":"off","drown":"off","ms":93,"v":"ERROR","why":"levelRun: whirlpool#53 pulls the player to its centre at tick 1367 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":24,"hitless":"off","drown":"off","ms":1094,"v":"SOLVED","ticks":1342,"level":58,"hits":[],"deaths":0,"tried":["ok:1141"],"dodge":0}
+{"seed":25,"hitless":"off","drown":"off","ms":1040,"v":"ERROR","why":"levelRun: whirlpool#44 pulls the player to its centre at tick 1147 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":26,"hitless":"off","drown":"off","ms":1226,"v":"SOLVED","ticks":2488,"level":58,"hits":[],"deaths":0,"tried":["ok:2287"],"dodge":0}
+{"seed":27,"hitless":"off","drown":"off","ms":78,"v":"ERROR","why":"levelRun: whirlpool#71 pulls the player to its centre at tick 1780 in level 57 and calls `Player.drown()` from outside the player — not transcribed; refused by ","obstacle":null}
+{"seed":28,"hitless":"off","drown":"off","ms":1078,"v":"SOLVED","ticks":1024,"level":58,"hits":[],"deaths":0,"tried":["ok:823"],"dodge":0}
+{"seed":29,"hitless":"off","drown":"off","ms":1072,"v":"SOLVED","ticks":1503,"level":58,"hits":[],"deaths":0,"tried":["ok:1302"],"dodge":0}
+{"seed":30,"hitless":"off","drown":"off","ms":1213,"v":"SOLVED","ticks":2852,"level":58,"hits":[1049,2092],"deaths":0,"tried":["ok:2651"],"dodge":0}
+{"seed":31,"hitless":"off","drown":"off","ms":1242,"v":"SOLVED","ticks":2884,"level":58,"hits":[207],"deaths":0,"tried":["ok:2683"],"dodge":0}
+{"seed":32,"hitless":"off","drown":"off","ms":1099,"v":"SOLVED","ticks":1549,"level":58,"hits":[],"deaths":0,"tried":["ok:1349"],"dodge":0}
+{"seed":33,"hitless":"off","drown":"off","ms":1048,"v":"SOLVED","ticks":1477,"level":58,"hits":[],"deaths":0,"tried":["ok:1308"],"dodge":0}
+{"seed":34,"hitless":"off","drown":"off","ms":1088,"v":"SOLVED","ticks":1490,"level":58,"hits":[],"deaths":0,"tried":["ok:1289"],"dodge":0}
+{"seed":35,"hitless":"off","drown":"off","ms":1187,"v":"SOLVED","ticks":3832,"level":58,"hits":[2691,3411],"deaths":0,"tried":["ok:3631"],"dodge":0}
+{"seed":36,"hitless":"off","drown":"off","ms":990,"v":"SOLVED","ticks":1454,"level":58,"hits":[],"deaths":0,"tried":["ok:1254"],"dodge":0}
+{"seed":37,"hitless":"off","drown":"off","ms":1025,"v":"SOLVED","ticks":1306,"level":58,"hits":[],"deaths":0,"tried":["ok:1105"],"dodge":0}
+{"seed":38,"hitless":"off","drown":"off","ms":1069,"v":"SOLVED","ticks":1972,"level":58,"hits":[],"deaths":0,"tried":["ok:1771"],"dodge":0}
+{"seed":39,"hitless":"off","drown":"off","ms":1003,"v":"SOLVED","ticks":1782,"level":58,"hits":[],"deaths":0,"tried":["ok:1581"],"dodge":0}
+{"seed":40,"hitless":"off","drown":"off","ms":1038,"v":"SOLVED","ticks":1278,"level":58,"hits":[],"deaths":0,"tried":["ok:1077"],"dodge":0}

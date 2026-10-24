@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 99,
-            "count": 146,
+            "browser": 101,
+            "count": 148,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 453,
-        "browser": 164,
-        "cited": 243,
-        "files": 467,
+        "blockStyle": 455,
+        "browser": 166,
+        "cited": 245,
+        "files": 469,
         "lineStyle": 14,
-        "withDocblock": 467,
-        "withFlags": 384
+        "withDocblock": 469,
+        "withFlags": 386
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11315,6 +11315,45 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-cross-room-button.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-crusher-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-crusher-press — ⛓⛓⛓ seedling-fidelity-searchgaps D-A: THE SOLVER BAITS L41's CRUSHER ONTO THE COVER'S BUTTON (`CONTACT_FIDELITY.crusherBaitPressGoal`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-crusher-press.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
@@ -13264,6 +13303,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling: DOES A STAGED PERSISTENCE FLAG REACH THE ENTITIES, PER BOOT PATH? (slice `seedling-js-persistence`, after the rules arc's W0 finding: several tapes on ONE page leaked bosslock state across `botStart`).",
             "path": "scripts/procgen/probe-seedling-persistence-rebuild.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-pit-doors.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-watcher-witness.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's PIT DOORS, ON THE GAME (fidelity PITPORT D1; `CONTACT_FIDELITY.pitTeleporterCrossing`).",
+            "path": "scripts/procgen/probe-seedling-pit-doors.mjs"
         },
         {
             "argvHelpers": [],

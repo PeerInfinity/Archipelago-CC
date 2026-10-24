@@ -1,0 +1,32 @@
+// scratch: L39 cover witness — stand on button@160,144 (group 2), cover@112,144 fades; step west, it re-closes.
+import { join } from 'node:path';
+import { writeFileSync } from 'node:fs';
+const REPO = '/home/user/Archipelago-CC';
+const MODULE = join(REPO, 'frontend/modules/seedlingDemo');
+const { l40buttonStaging } = await import(join(REPO, 'scripts/procgen/plan-seedling-l40button-witness.mjs'));
+const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+const { createRunForStaging, runTape } = await import(join(MODULE, 'tapeRunner.js'));
+const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
+const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+const staging = await l40buttonStaging({ level: 39, x: 160, y: 184 });
+staging.persistence = [...(staging.persistence ?? []), { level: 39, tag: 8 }];
+const levelSource = atlasLevelSource();
+const run = createRunForStaging(staging, levelSource);
+const perTick = [];
+const cover = 'cover@112,144';
+const log = [];
+const step = (keys) => { const k = new Set(keys); perTick.push(k); run.advance(k);
+  const open = run.entities('openActivators').has(cover);
+  log.push({ t: perTick.length, x: run.state.x, y: run.state.y, open }); };
+console.log('boot', run.state.x, run.state.y, 'activators', JSON.stringify((run.world.activators ?? []).filter((a) => a.id.startsWith('cover')).map((a) => a.id)));
+// walk up until inside button@160,144's rect (164..172 x 149..155) — player box overlaps
+for (let i = 0; i < 80 && run.state.y > 152; i++) step(['up']);
+for (let i = 0; i < 20; i++) step([]);
+const onAt = perTick.length;
+for (let i = 0; i < 70; i++) step(['left']);
+for (let i = 0; i < 10; i++) step([]);
+for (const r of log) if (r.t % 4 === 0 || r.t === onAt) console.log(r.t, r.x.toFixed(3), r.y.toFixed(3), r.open ? 'OPEN' : 'shut');
+const tape = { ...buildStagedTape({ staging, perTick, name: 'wandhold-l39-cover-shuts' }), description: 'scratch' };
+writeFileSync('/tmp/claude-0/wh/t39.json', JSON.stringify(tape));
+const out = runTape(parseTape(tape), { levelSource });
+console.log('replay end', out.ticks.at(-1).x, out.ticks.at(-1).y);

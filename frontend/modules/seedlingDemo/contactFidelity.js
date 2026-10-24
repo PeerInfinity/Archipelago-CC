@@ -281,8 +281,11 @@ export const CONTACT_FIDELITY = {
      * still wait prices a bomb and the hold is LATCHED (`deriveHold`'s `latched`, or `runLatchedWait`'s group), the
      * wait paces an out-and-back cycle from the stance, chosen only when every previewed sample is clean
      * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — MOVINGWAIT's paced hold — with bombBlastBody, WANDHOLD's L40 pair: leg 368 SOLVED, p4g 0 hits 0 px. Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
-    movingWait: false,
+    movingWait: true,
     /**
      * fidelity MOVINGWAIT D4 — THE TOTEM SHOT'S EXPLOSION IS AN `int` (`bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadiusInt`).
      *
@@ -700,8 +703,11 @@ export const CONTACT_FIDELITY = {
      * `what: 'body-hit'` per body) and the walk's chaser forecast steps the same blasts onto its own bodies (D3). A
      * static census body in the square (no stepped state) still refuses by name. OFF: byte-identical.
      * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — the L40 pair with movingWait (WANDHOLD). Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
-    bombBlastBody: false,
+    bombBlastBody: true,
     /**
      * fidelity APBOSSES D2 — THE R4 BOSS-REPORT AS3 (`apReportBosses.js`; PeerInfinity/Seedling `r4-boss-report`
      * @ `0eda15f785`, ⚖ user 2026-10-19 Q1–Q3: all seven bosses report, Bob is always fought, every map).
@@ -1064,6 +1070,108 @@ export const CONTACT_FIDELITY = {
      * Fire from L25 89 → 70 t.
      */
     drillTimedPass: true,
+    /**
+     * fidelity PITPORT (wave 26) — A LIVE TELEPORTER STANDING ON A PIT TILE IS AN EXIT THE WALK ENDS ON
+     * (`botDriverV2.findExit`, `botDriverV2.plannerObstacleAt`'s pit arm, `solverBot.findExitNamed`).
+     *
+     *     Teleporter.as:89-118  update(): no fall guard — a live door fires on the first frame the player box overlaps
+     *                           it (`!playerTouching`), and the teleporters update BEFORE the player (`addUpdate`
+     *                           prepends), so the swap is recorded before `Player.update` reads the tile
+     *     Player.as:745-771     checkFallingInPit(): the fall needs 20 frames of fade before its own `FP.world =`
+     *                           (or `die()`), and only a fall already in flight could lose the race
+     *
+     * The pit edge reads the tile under `(x, y + checkOffsetY)`, a point inside the 4x5 box, and a door's 16x16 rect is
+     * its own tile (L43, L58, L100: every pit door in the atlas), so on any approach the door's overlap comes no later
+     * than the edge, and the door wins. ON: `findExit` admits a LIVE, unlatched door on a pit, and the planner exempts
+     * that one pit tile only while it plans to that door (`allowTeleporter`). A SHUT door stays refused (DEACTIVATED)
+     * and its pit stays forbidden floor; a run LATCHED on a pit door keeps `unmodelled-pit-teleporter` (the door cannot
+     * fire, the pit takes the player). OFF: byte-identical. `SEEDLING_PIT_TELEPORTER_CROSSING=0|1` for a node
+     * measurement. Witnessed on p4g: YETI's `talk`/`shut`, and PITPORT's `fixtures/pitdoor-witness/`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, PITPORT "Harvest + flip, re-pin"; PITLATCH's one latch predicate, js-9's
+     * review condition) turns it ON. Measured movers (CI, main 45e27e95e8 + PITPORT): survey verdicts equal (4 refusal
+     * wordings advance to the next obstacle); 28 pit-room sweep legs ×2 per arm, 0 movers; probes standard ON: the two
+     * arrival-composites pit-door legs cross on p4g (re-pinned `named` → `cross`). PITLATCH: 0 survey / 43-leg sweep movers vs
+     * PITPORT ON; the doorless key L58 r1c4 failed → done.
+     */
+    pitTeleporterCrossing: true,
+    /**
+     * fidelity WANDHOLD D2 (wave 28) — A COVER'S HOLD MUST OUTLIVE THE WALKER (`solverBot.coverWeighArm`).
+     *
+     *     Cover.as:37-66    the fade runs while the group is active; the moment it drops, `reset()` makes the Cover
+     *                       "Solid" again unless a Solid or the Player is inside it
+     *     Button.as:27-46   a plain Button republishes every update: stepping off drops its group
+     *
+     * OFF a frontier `cover` keeps `hold` whatever its pressers are (the outlive refinement asks only `KILL_LOCK_TAGS`),
+     * so guard (iii) hypothesises a cover open behind a plain Button the walker leaves — L39 from L38 (js links-b,
+     * `Totem Part 72,40`) then grinds 400 ticks against `cover@112,144` (*"grazing 395 solid(s)"*). ON: a cover with a
+     * group whose pressers all republish refines to `weigh`, as a lock does, so guard (iii) derives the weigh and a
+     * cover no block reaches is a wall. OFF: byte-identical. `SEEDLING_COVER_WEIGH_REFINE=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — L39's 400-tick grind → a named refusal (WANDHOLD). Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
+     */
+    coverWeighRefine: true,
+    /**
+     * fidelity SEARCHGAPS D-A (wave 28) — THE CRUSHER BAIT'S PRESS GOAL (`crusherBait.searchBaitOrdering`). The ordering
+     * search's only goal was the AIM reached by crusher moves alone, with the round trip kept. L41's part is behind
+     * `wandlock@240,96`, whose button only a block can hold, and the block is behind `cover@112,128`, whose button only the
+     * CRUSHER can hold (`r5Totem.L41_PART3`): the search found R5's W,S,E ordering (the crusher parked on
+     * `button@248,232`, the round trip kept) and threw it away, because the aim was still shut (sweep leg 871, 102 states).
+     * ON: when no ordering reaches the aim, the shortest one whose parks newly HOLD DOWN a presser of a group that is shut
+     * now (the round trip kept) is the answer — a PRESS goal, and the frontier re-plans from the room it leaves; and the
+     * choreography lookup also reads R5's three L41 chains (`BAIT_CHOREOGRAPHIES_L41`, recorded on the game as
+     * `r5-l41-part3`). OFF: byte-identical. `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SEARCHGAPS "Harvest + flip both ON") turns it ON — L41's bait keeps R5's ordering and refuses honestly at the fire-block's wandlock. Measured (CI,
+     * main d3346cf784 + SEARCHGAPS): survey 0 verdict movers, 6 refusal-text movers; the 23-key sweep ×2: 0 end movers;
+     * probes standard ON green.
+     */
+    crusherBaitPressGoal: true,
+    /**
+     * fidelity SEARCHGAPS D-B (wave 28) — THE FORCED-HIT PROOF ASKS ONE HITLESS WITNESS FIRST (`forcedHit.hitlessWitness`).
+     * The breadth-first proof spent its whole depth-2 level (1,332 forks, each replaying the segment) before it could say
+     * "not proven"; one hitless `depthMax`-tick input says the same thing exactly. Measured at sweep leg 908 (L67): 5,328
+     * of the request's 640 work units went to that tree, so the location solve ended on the deadline instead of on the
+     * room's refusal. ON: the witness is asked first; OFF: byte-identical. `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SEARCHGAPS "Harvest + flip both ON") turns it ON — the forced-hit proof asks one hitless witness first (1 fork vs 1,332). Measured (CI,
+     * main d3346cf784 + SEARCHGAPS): survey 0 verdict movers, 6 refusal-text movers; the 23-key sweep ×2: 0 end movers;
+     * probes standard ON green.
+     */
+    forcedHitWitnessFirst: true,
+    /**
+     * seedling-fidelity-residue D-A (wave 28) — TIMEDPASS's PASS TO THE EXIT (`solverBot.execDrillTimedPassExit`). With
+     * `drillTimedPass` ON, Fire alone cuts L28's rope hit-free, but the rope's `FallRock` ceremony releases the drill
+     * parked under the stance ONTO it (TIMEDPASS D1), so the walk that follows refuses at its first gate ("the danger map
+     * forbids (151.87,55.81) — enemy:drill@128,96"), and from that state every continuation is hit (measured: 81 of 81
+     * two-tick key sequences). ON: (1) a `reach-exit` whose planned walk wakes a live stepped drill, in a run that holds no
+     * weapon that kills one, is SEARCHED as the pass is — the same beam, on the same forecast, with the goal the CROSSING
+     * (the stepper's transition through that teleporter) — certified on a fork, then played; and (2) a pass to a cut's
+     * stance whose segment's NEXT goal is a `reach-exit` is certified only when the cut leaves that crossing's pass open
+     * (the search tries further stands until one does). OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, RESIDUE "Harvest + flip both ON") turns it ON — Fire-only L28 leaves by both doors from L25 (182/134 t, p4g 0 px); from L26 a named refusal. Measured (CI,
+     * main d3346cf784 + RESIDUE): survey ON = OFF; the 16 L28/L57/L58 sweep legs ×2: one mover (leg 494's continuation,
+     * done both arms); probes standard ON green.
+     */
+    drillTimedPassExit: true,
+    /**
+     * seedling-fidelity-residue D-B (wave 28) — A WHIRLPOOL'S DROWN IS A DEATH THE SOLVER SEES, AND ITS PULL IS PRICED
+     * (`Puzzlements/Whirlpool.as:61-83`, `Player.as:1431-1444`). A live whirlpool (timer in [dies, live + dies)) writes
+     * the player's position on every update the player's box overlaps it within the radius (16): r = int(d), then
+     * int(r * 0.999) — one pixel in a tick, plus a 20° turn — and once r <= 1 it calls `Player.drown()` on EVERY update:
+     * `drownTimer` −0.5 (mod 10), the spiral `v`, `dying = true` (which skips the player's `super.update()`, so no input
+     * and no move), and `die()` on the twentieth call. OFF the model threw a plain `Error` at the first call (bosskills D3)
+     * and no planner priced the pull. ON: (1) the call is transcribed — `dying` latched (`state.drown.dying`), the timer,
+     * the spiral `v`, and the death (a `playerDeaths` row, source `whirlpool`) on the twentieth; a whirlpool that ends
+     * first leaves the player `dying` where it stands, as the game does; (2) a walk that drowns refuses by name
+     * (`obstacle: {kind: 'whirlpool', id}`) instead of re-planning from the respawn, and the Tentacled Beast verb's plays
+     * count a drown as a death; (3) the danger map prices a live (or growing) whirlpool's pull — `dangerAt`'s
+     * `whirlpoolDanger` (the disc inside the box, at the tick's own timer in transit) and a `dangerVolumes` row (its
+     * 32x32 box), so the walk's probe and its AVOID / WAIT rungs see it. OFF: byte-identical.
+     * `SEEDLING_WHIRLPOOL_DROWN=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, RESIDUE "Harvest + flip both ON") turns it ON — a whirlpool drown is a death the solver sees, its pull priced; L57's exit continuation plans a dodge. Measured (CI,
+     * main d3346cf784 + RESIDUE): survey ON = OFF; the 16 L28/L57/L58 sweep legs ×2: one mover (leg 494's continuation,
+     * done both arms); probes standard ON green.
+     */
+    whirlpoolDrown: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1270,6 +1378,23 @@ if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FI
 // ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
+// ⛓ fidelity PITPORT: `SEEDLING_PIT_TELEPORTER_CROSSING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '1') CONTACT_FIDELITY.pitTeleporterCrossing = true;
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '0') CONTACT_FIDELITY.pitTeleporterCrossing = false;
+// ⛓ fidelity WANDHOLD: `SEEDLING_COVER_WEIGH_REFINE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '1') CONTACT_FIDELITY.coverWeighRefine = true;
+if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '0') CONTACT_FIDELITY.coverWeighRefine = false;
+// ⛓ fidelity SEARCHGAPS: `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` and `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '1') CONTACT_FIDELITY.crusherBaitPressGoal = true;
+if (globalThis.process?.env?.SEEDLING_CRUSHER_BAIT_PRESS_GOAL === '0') CONTACT_FIDELITY.crusherBaitPressGoal = false;
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '1') CONTACT_FIDELITY.forcedHitWitnessFirst = true;
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '0') CONTACT_FIDELITY.forcedHitWitnessFirst = false;
+// ⛓ seedling-fidelity-residue D-A: `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '1') CONTACT_FIDELITY.drillTimedPassExit = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '0') CONTACT_FIDELITY.drillTimedPassExit = false;
+// ⛓ seedling-fidelity-residue D-B: `SEEDLING_WHIRLPOOL_DROWN=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '1') CONTACT_FIDELITY.whirlpoolDrown = true;
+if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '0') CONTACT_FIDELITY.whirlpoolDrown = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

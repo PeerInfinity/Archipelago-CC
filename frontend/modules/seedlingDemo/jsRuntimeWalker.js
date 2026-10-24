@@ -64,7 +64,8 @@
  * door exit never on a fall.
  */
 
-import { planWaypoints, livePerVisitOpts, driveStepHeld, waypointReached, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
+import { planWaypoints, livePerVisitOpts, driveStepHeld, waypointReached, BotDriverV2Error, isWalkableTile, plannerObstacleAt } from './botDriverV2.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { hasArrived } from './botDriverV1.js';
 import { TILE_SIZE } from './levelWorld.js';
 import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
@@ -133,6 +134,15 @@ export function stepOffPoint(run, index) {
     const world = run.world;
     const teleporter = world.teleporters[index];
     const opts = { ...livePerVisitOpts(run), snapStart: true };
+    // ⛓ fidelity PITPORT (`pitTeleporterCrossing`, js-9's ruling (b)): standing LATCHED on a door that stands on a Pit
+    // tile, there is no step off — PITLATCH's p4g witnesses (`fixtures/pitdoor-witness/pitdoor-l{43,100}-latched.json`):
+    // the Pit takes the player at t0 of any step and respawns it on the door every 20 ticks, and the door never fires.
+    // `snapStart` would skip the start's own pit tile, so ask it here (the solver twin `stepOffCellFor` agrees: null).
+    // OFF: unchanged — the known OFF hole (this plans (152,56) / (296,88) across L43's / L100's latched pit).
+    if (CONTACT_FIDELITY.pitTeleporterCrossing
+        && plannerObstacleAt(world, run.state.x, run.state.y, index, { ...opts, latched: run.state.latched ?? null })?.kind === 'pit') {
+        return null;
+    }
     const r = teleporter.rect;
     const tx0 = Math.floor(r.x / TILE_SIZE) - 1;
     const ty0 = Math.floor(r.y / TILE_SIZE) - 1;

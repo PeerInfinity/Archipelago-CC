@@ -694,15 +694,19 @@ function eventSolverGoal(goal, run) {
 }
 
 /** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */
-export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null }) {
+export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null, holds = null }) {
     const shadow = createRunForStaging(staging, levelSource, { scratchPersistence });
     perTick.forEach((h, i) => {
+        // ⛓ HOLD SEAM — the engine frames a hold ran BEFORE tick i (the game held, its swim channel stepping).
+        if (holds?.get(i)) shadow.stepHeldFrames(holds.get(i));
         // ⛓ An equip the PLAY made on the live run is not in the session's
         // keys (a tape carries an equip as a field) — re-made at its tick.
         const slot = equips?.get(i);
         if (slot !== undefined) shadow.equipNow(slot);
         shadow.advance(h);
     });
+    // ⛓ HOLD SEAM — a hold at the tape's END (the continuation's own seam: the solve starts after it).
+    if (holds?.get(perTick.length)) shadow.stepHeldFrames(holds.get(perTick.length));
     return shadow;
 }
 
@@ -714,17 +718,20 @@ export function replayTape({ staging, perTick, levelSource, scratchPersistence =
  * here, at their index, on the first `prefixLength` advances — the same fold `replayTape` makes. Each call is
  * a new run: nothing mutable is shared with the shadow or with another fork.
  */
-export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0 }) {
+export function forkRunFor({ staging, levelSource, scratchPersistence = false, equips = null, prefixLength = 0, holds = null }) {
     return () => {
         const run = createRunForStaging(staging, levelSource, { scratchPersistence });
-        if (!(equips?.size > 0)) return run;
+        if (!(equips?.size > 0) && !(holds?.size > 0)) return run;
         let advanced = 0;
         return new Proxy(run, {
             get(target, prop) {
                 const v = Reflect.get(target, prop);
                 if (prop === 'advance') {
                     return (...args) => {
-                        const slot = advanced < prefixLength ? equips.get(advanced) : undefined;
+                        // ⛓ HOLD SEAM — the play's held frames, at their index (`replayTape`'s fold; the prefix's end included).
+                        const held = advanced <= prefixLength ? holds?.get(advanced) : undefined;
+                        if (held) target.stepHeldFrames(held);
+                        const slot = advanced < prefixLength ? equips?.get(advanced) : undefined;
                         if (slot !== undefined) target.equipNow(slot);
                         advanced += 1;
                         return v.apply(target, args);
@@ -765,9 +772,9 @@ export function replayShadow(session, levelSource, {
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
     scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
-    shouldStop = null, fineCheckpoints = false }) {
+    shouldStop = null, fineCheckpoints = false, holds = null }) {
     const t0 = clock();
-    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips }), live, perTick.length);
+    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips, holds }), live, perTick.length);
     const replayMs = clock() - t0;
     // ⛓ ANYTIME — a pass whose added strategy the run cannot use would replay the pass before it exactly.
     const available = adds ? PASS_STRATEGIES[adds] : null;
@@ -804,7 +811,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
     // ⛓⛓ CRUSHER — and a fork of the run (`forkRunFor`): `bait` tries a choreography there before committing it.
     const out = solveSegment({ run, goals: solverGoalsOf(solverGoal), name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
-        forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length }),
+        forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length, holds }),
         ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
     const solveMs = clock() - t1;
     const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));

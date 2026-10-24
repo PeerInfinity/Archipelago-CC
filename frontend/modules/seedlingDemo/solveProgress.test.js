@@ -1001,7 +1001,8 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
     it('⛓⛓ the danger\'s kind is read off the source\'s own fields', () => {
         expect(dangerKindOf({ kind: 'hazard', id: 'lavachain@1,2', phase: { tag: 'lavachain' } })).toBe('phase');
         expect(dangerKindOf({ kind: 'hazard', id: 'spinningaxe@1,2', axe: { cx: 1 } })).toBe('phase');
-        for (const k of ['arrow', 'chaser', 'spinner', 'spit', 'bomb']) expect(dangerKindOf({ kind: k })).toBe('forecast');
+        // ⛓ seedling-fidelity-residue D-B: `whirlpool` (a whirlpool's pull, on its clock) is a forecast, as a spit is.
+        for (const k of ['arrow', 'chaser', 'spinner', 'spit', 'bomb', 'whirlpool']) expect(dangerKindOf({ kind: k })).toBe('forecast');
         // ⛓ fidelity IGNEOUS D3: `igneous` (a type-31 tile's clock) is a tile rect — a volume.
         for (const k of ['hazard', 'enemy', 'crusher', 'terrain', 'pit', 'danger', 'igneous']) expect(dangerKindOf({ kind: k })).toBe('volume');
         expect(dangerKindOf(null)).toBe(null);
@@ -1009,7 +1010,7 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
         const dm = readFileSync(join(HERE, 'dangerMap.js'), 'utf8');
         const kinds = new Set([...dm.matchAll(/\bkind: '([a-z-]+)'/g)].map((m) => m[1]));
         expect([...kinds].sort()).toEqual(['arrow', 'bomb', 'chaser', 'crusher', 'danger', 'enemy', 'hazard', 'igneous',
-            'pit', 'spinner', 'spit', 'terrain']);
+            'pit', 'spinner', 'spit', 'terrain', 'whirlpool']);
     });
 
     it('⛓⛓ only an install reaches a frame: every solverBot site is one guarded line, and the setter reads no deadline', () => {

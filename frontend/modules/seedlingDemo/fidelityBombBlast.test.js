@@ -91,8 +91,9 @@ const bodyHits = (run) => run.ledger('bombEvents').filter((e) => e.what === 'bod
     .map((e) => [e.t, e.id.split('#')[1], e.body, e.arm, e.hitsAfter, e.killed ? 'killed' : (e.shoved ? 'shoved' : '-')]);
 
 describe('BOMBBLAST — the switch', () => {
-    it('bombBlastBody ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.bombBlastBody).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Flip both ON", 2026-10-23: WANDHOLD's L40 pair).
+    it('bombBlastBody is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.bombBlastBody).toBe(true);
     });
 });
 

@@ -25045,3 +25045,173 @@ the gate is green.
   death out of the solve. Fixing one caller moves the throw to the next one the executor reaches.
 - Re-recording a segment's seam clock leaves its `tick0` latch stale. No model gate reads `tick0` (the model drops it),
   so only the browser gate or `derive-seedling-tick0 --check` catches it.
+
+### Seedling fidelity PITPORT — a live teleporter on a Pit tile is an exit the walk ends on (`pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 26 (⚖ the user picked "PIT-TELEPORTER slice", 2026-10-22). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitport.md`.
+
+**W0 — the game's order.** `Teleporter.update()` (`Teleporter.as:89-118`) has no fall guard: a live door fires on the
+first frame the player box overlaps its 16x16 rect (`!playerTouching`). The doors update BEFORE the player
+(`addUpdate` prepends; the player is added at `Game.as:2040`, the doors at `:2169`), and `checkFallingInPit`
+(`Player.as:745-771`) fades for 20 frames before its own `FP.world =` / `die()`. The pit edge reads the tile under
+`(x, y + checkOffsetY)`, a point INSIDE the 4x5 box, so on a door that is its own pit tile the box overlaps the door
+no later than the edge fires: the door wins on every approach. Only a door that cannot fire loses: a SHUT one, or one
+the run stands LATCHED on (its arrival overlapped it). The atlas holds exactly three pit doors, each on its own tile
+in a room with no fallthrough: L43 `teleporter@144,64` → L37 (9,4), L58 `teleporter@80,16` → L46 (5,1; the Yeti's
+tag 1), L100 `teleporter@288,96` → L101 (18,6). No room's arrival lands on one. The physics already crossed them
+(YETI's `talk` at 0 px); only the walker's door lookup refused.
+
+**The model (switch ON).** `botDriverV2.liveDoorPitTile`; `findExit` admits a LIVE door on its pit tile that the run
+is not latched on; `plannerObstacleAt`'s pit arm exempts that one tile only while `allowTeleporter` is that door (the
+ring of pits around L100's door stays forbidden). A shut door stays DEACTIVATED; a latched one keeps
+`unmodelled-pit-teleporter`. OFF: byte-identical.
+
+**Witnesses (p4g, `probe-seedling-pit-doors.mjs`, `fixtures/pitdoor-witness/`, all 0 px every tick):** `l43-south`
+(the solver's plan; crosses t360), `l43-north` (down onto the door), `l100-west` (the solver's plan), `l100-east`
+(left onto it), `l58-east` (both flags cleared; diagonally, corner first): each crosses the tick after the box first
+overlaps the door. `l58-shut-east`: the shut door does not cross, the Pit takes the player (respawn t150).
+
+**The next gap (handed over).** L58 after the Yeti's talk: the door is admitted, but the planner's A* edge
+(56,56) → (72,56) passes 0.07 px into `yeti@56,56`'s 10x12 Solid (y 58..70) and the walk holds `right` alone at
+y 55.93 and stalls. An A* edge between two clear tile centres is not checked against a sub-tile Solid (`stringPull`
+keeps consecutive nodes unchecked) — `planWaypoints`' region, not edited here.
+
+**Trap candidates.**
+- A refusal that guards a race the model already resolves (the physics crossed; the lookup refused) hides the next
+  obstacle: lifting it moved three survey refusals' WORDS, not their verdicts.
+- A door a run arrives LATCHED on is not the door it walks onto: the same tile answers "door" or "pit" by the latch.
+
+### Seedling fidelity PITLATCH — one latch predicate for a door on a Pit tile (behind `pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (PITPORT's review condition, js-8). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitlatch.md`.
+
+**The split.** PITPORT's `findExit` admitted a live pit door only when the run was not latched on it, but the
+planner's pit arm (`liveDoorPitTile(level, index)`) ignored the latch. Measured at the base with the switch ON:
+`stepOffCellFor` on a run latched on L43's door planned a walk to (152,56), on L100's to (296,88) — across the very
+tile the game lets the Pit take.
+
+**The game (`probe-seedling-pit-doors.mjs` `l43-latched` / `l100-latched`, p4g headless, 0 px).** Booted ON the door
+(the boot latches it, `Teleporter.check()`), the step off held from the first tick: after 0.72 px the Pit takes the
+player at t0, it respawns ON the door at t20, t40, t60, and the door never fires — a death loop, as PITPORT read off
+the AS3. `stepOffMinimalFor` already said "falls" in every direction, at the game's own t1 position.
+
+**The model.** `liveDoorPitTile(level, index, latched)` → null when `latched.has(index)`; `findExit` asks it (meaning
+unchanged); `plannerObstacleAt` reads `latched` from its opts; `pitLatchOpts(run)` (`{latched}` ON, `{}` OFF) is
+spread into `solverPlanOpts` (now exported), the walker's `planNow`, and the crusher bait search's per-config opts.
+The planner's own memo (SP) is per call and keys on nothing but the point, so no memo key moves. OFF: byte-identical.
+ON vs PITPORT's ON: 0 survey movers (239 steps) — no real arrival lands on a pit door, so only the step-off planner
+ever saw the hole.
+
+**Trap candidates.**
+- Two readers of one rule with two predicates drift: the lookup carried the latch, the planner did not, and the
+  only caller that could tell them apart (the step-off) is one the lookup's refusal hides in every staged room.
+- A guard whose only witness is a staged boot (no atlas arrival lands on a pit door) is still a game witness: stage
+  it on the game, do not argue it from the AS3.
+
+### Seedling fidelity WANDHOLD — L40's hold is the solver's stillness, not the game's; L39's cover is a wall a plain Button cannot redeem (`coverWeighRefine`, OFF)
+
+Wave 28, `seedling-fidelity-wandhold` (base `d3346cf784`). Report: `CC/docs/cloud-reports/seedling-fidelity-wandhold.md`.
+
+**L40 (sweep legs 368 / 371, `Totem Part 64,144`).** The refusal *"the hold stands still for up to 131 tick(s) … inside
+bombpusher@112,128's 256 px reach"* is the solver's choice of stance, not a game requirement: `buttonroom@272,208` is a
+`room = -1` ButtonRoom, so group 0 LATCHES (*"Can't be reset to false!!"*) and the fade completes whoever stands where.
+The wait the game allows was already built: MOVINGWAIT's paced hold (`movingWait`, OFF). At this base, `movingWait` ON
+solves leg 368 (1601 t); leg 371's walk then throws on a blast that lands on `spinner@192,160` (`bombBlastBody`, OFF).
+With both ON both legs SOLVE (two paced holds each), and the game (p4g, damage on) plays both plans to the part with 0
+hits, the model at 0 px on every sampled tick, every bomb to the bit (`fixtures/bomb-witness/wandhold-l4{1,2}-*-paced`).
+No new key: the licence asked is the pair's flip.
+
+**L39 (js links-b, `Totem Part 72,40` from L38).** Not a planner geometry defect. `wandlock@144,64`'s presser
+`button@112,144` lies under `cover@112,144` {t 2}, whose only presser is the plain `button@160,144`. The outlive
+refinement (`refineStrategy`, slice 3b) asks `KILL_LOCK_TAGS` only, so a cover kept `hold` and guard (iii) hypothesised it
+open; the walk then ground 400 ticks against it. Game witness `wandhold-l39-cover-shuts`: the cover opens while the button
+is held and shuts the moment the player steps off (stop at x 130.25). `coverWeighRefine` (OFF) asks a cover the lock's
+question; ON, L39's four survey steps (66/92/133/153) refuse by name, naming the cover as the wall. The room's real
+answer is Fire: its blocks are `PushableBlockFire` (moved by "Fire" / "Pulse" shots only) and the rules gate
+r2c11 → r0c9 on Fire — a fire-push weigh nobody models yet (handed to the planner; FIREPUSH's family).
+
+**Trap candidates.**
+- A refusal that says a hold "stands still" is quoting the executor's contract, not the game. Ask whether the group
+  latches before asking where to stand.
+- Guard (iii)'s comment says a surviving `hold` must have a latching presser; that was true only for the tags the
+  refinement asks. Any responder outside `KILL_LOCK_TAGS` with an occupancy guard (Cover) needs the same question.
+- A game sample that repeats the previous tick at the end of a collect is the pickup freeze, not a divergence: cut a
+  witness one tick before it.
+
+### Seedling fidelity SEARCHGAPS — L41's crusher bait (`crusherBaitPressGoal`, OFF) and L67's forced-hit proof cost (`forcedHitWitnessFirst`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 28. The report is `CC/docs/cloud-reports/seedling-fidelity-searchgaps.md`.
+Both legs were reproduced locally (p4g, the sweep's own driver, `--capture-requests`) and their solves replayed in node.
+
+**D-A — the round trip was never the wall.** Sweep leg 871 refused *"the ordering search found nothing … (the round trip)
+… 102 state(s)"*. Laid out by configuration, those 102 states include R5's own W,S,E (`crusher@240,64` parked on
+`button@248,232`) with the start cell still in the player's component — the search discarded it because the aim was still
+shut: `totempart@240,144` is behind `wandlock@240,96`, whose button only the fire block can hold, and the block is behind
+`cover@112,128`, whose button only the crusher can hold. The goal was one mechanism short. And the search had been asked on a
+run in which the player had already DIED: the frontier's bare `break` of `breakablerock@224,80` swung from the west lane the
+rocks shield (every swing stance is in it — row 6 is wall but col 11), and the crusher's 1000 killed the player at t147;
+the run respawned them at the arrival and the solve went on. ON (`crusherBaitPressGoal`): the search also answers a PRESS
+goal (the shortest ordering whose parks newly hold a presser of a shut group, the round trip kept; the aim goal still wins);
+a rock standing in a resting crusher's lane is its SHIELD (`crusherShieldOf`) and is resolved as that crusher's `bait` —
+the walk to chain 1's stance UNDASHED (a dash's swing broke the shield mid-walk, the crusher charging before the bait), the
+swing recorded on a fork and driven as the head of chain 1's approach (the crusher rests when the approach begins and
+charges when it ends: `runBait`'s two checks); and R5's three L41 chains are library rows (`BAIT_CHOREOGRAPHIES_L41`, held
+to `r5Totem.L41_PART3`). The crusher parks on the button and the cover opens; the room then refuses at the wandlock —
+`weigh` refuses a `pushableblockfire` ("moves on a PRESS, not on a lean"), the frontier falls back to `hold`, and the walk
+off the button meets a closing Lock. That is FIREPUSH's region (and the hold, WANDHOLD's). Game witness
+`crusherpress-l41-bait` (p4g, `probe-seedling-crusher-press.mjs --record`): the bait plus a walk into the crusher's vacated
+constructor cell, 1,575 ticks at 0 px, never hit.
+
+**D-B — the work went to a proof that could not hold.** Sweep leg 908 ran out of 640, then 2560 units. Unbudgeted, both
+passes REFUSE anyway (the key's corridor crosses `arrowtrap@48,48`'s armed lane), and 5,328 of the dashless pass's 5,348
+units were one `proveForcedHit` tree, asked 135 px from the danger: the whole depth-2 level (1,332 forks, each replaying
+the segment's 134 ticks, a `crusher-fork` ask every 32), then "depth 3 … a search that gave up is not a proof". A prefix
+that is hit stays hit, so ONE hitless `depthMax`-tick input decides `proven: false` exactly as the tree does. ON
+(`forcedHitWitnessFirst`): the nine pure-movement inputs held for `depthMax` ticks are asked first; the leg's request spends
+58 units (642 / 2,562 before) and answers the room's own refusal. The budget was not the fix: the leg's honest answer is a
+refusal, and it is now reached.
+
+**Trap candidates.**
+- A search's refusal names its LAST conjunct ("… AND keeps the cell … (the round trip)"), not the one that failed — lay
+  the state space out by configuration before believing the clause.
+- A refusal can be asked on a run that already died: a 1000-damage contact respawns the player and the solve carries on.
+  Read `playerDeaths` before reading the refusal.
+- A shield is the trigger: breaking what blocks a mechanism's sight is the first move of operating it, not a separate
+  order — and a dash's swing breaks it too.
+- A work-unit deadline can hide a room's refusal: profile the sites unbudgeted before calling it a budget question.
+
+### Seedling fidelity RESIDUE — TIMEDPASS's pass to the exit (`drillTimedPassExit`, OFF); whirlpools in the walk (`whirlpoolDrown`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 28. The report is `CC/docs/cloud-reports/seedling-fidelity-residue.md`.
+
+**D-A — the cut, then the way out.** With `drillTimedPass` ON, Fire alone cuts L28's rope hit-free, and the rope's
+`FallRock` release hops the drill parked under the stance onto it: the `reach-exit` after the cut refused at its first
+gate, and from that state EVERY continuation is hit (81 of 81 two-tick key sequences). So "the same search, goal = the
+crossing" is half of it: `searchDrillTimedPass` gained `cross` (the goal is the stepper's transition through one door)
+and `accept` (a found stand may be passed over), and a pass to the cut's stance whose segment's next goal is a
+`reach-exit` is certified only with that crossing's pass behind the cut. From L25 both doors SOLVE hit-free (182 t,
+134 t; two stands passed over, 59 → 60 t to the stance); from L26 the only stand in the window has no way out — refused
+by name. Its forced-hit reading (measured, not built): the hit's knockback lands the player in the other drill's box
+when the 20-tick i-frame (steering blocked throughout) ends — two hits. Witnesses `residue-l28-fire-l25-exit-l2{5,6}`
+(p4g, 0 px, hit-free, `fixtures/timedpass-witness/`).
+
+**D-B — a whirlpool's drown is a death.** `Whirlpool.as`: live, it writes the player's position (r = int(d), then
+int(r × 0.999), a 20° turn); at r ≤ 1 it calls `Player.drown()` on every update — `dying` latched (the player's own
+update then skips its move), the timer −0.5, `die()` on the twentieth. The model threw a plain `Error` there and nothing
+priced the pull. ON: the call is transcribed (`state.drown.dying`, a `playerDeaths` row source `whirlpool`); a walk that
+drowned refuses by name (`obstacle.kind: 'whirlpool'`) instead of re-planning from the respawn; the danger map prices the
+pull (`whirlpoolDanger`, a `dangerVolumes` row) and the DODGE rung's WHIRLPOOL arm stalls the walk out. Witness
+`whirlpool-drown-s15` (p4g, 0 px on 2144 sampled ticks: still for 20 ticks, death t2202, respawn (104,72)). Seed sweep
+(80 seeds): at the defaults (HITLESS's settle) nothing moves; HITLESS OFF, all 15 drown throws now SOLVE, no death.
+At the defaults it moves one sweep row: leg 494's CONTINUATION (a page re-plan from mid-fight, outside the verb's
+settle) threw the drown at every seam time −3..+3 and now SOLVES 372 t (`dodge`, walk), room hits 0, ×2.
+
+**Trap candidates.**
+- A pass whose goal is a stand is worth only the way out it leaves: a ceremony after the goal can make the stand a trap,
+  so certify the goal WITH what follows it.
+- An external `drown()` is not the hazard drown: it latches `dying` without `drowning`, so the player stands still but
+  never spins of its own, and a whirlpool that dies first leaves it `dying` for good.
+- A death inside a walk is not a stall to re-plan from: the drive walks on from the respawn, and a re-plan would
+  certify a corridor through a death.

@@ -66,8 +66,9 @@ const groupZero = (run) => run.world.activators.filter((a) => a.t === 0);
 const presserOf = (run) => run.world.pressers.find((p) => p.x === 272 && p.y === 208);
 
 describe('MOVINGWAIT — the switch and the vocabulary', () => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('movingWait ships OFF, and MOVING_WAIT reads it', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.movingWait).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Flip both ON", 2026-10-23: WANDHOLD's L40 pair).
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('movingWait is ON by default (flipped), and MOVING_WAIT reads it', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.movingWait).toBe(true);
         expect(MOVING_WAIT.enabled).toBe(CONTACT_FIDELITY.movingWait);
         withMovingWait(true, () => expect(CONTACT_FIDELITY.movingWait).toBe(true));
         expect(MOVING_WAIT.enabled).toBe(CONTACT_FIDELITY_DEFAULTS.movingWait);

@@ -1,0 +1,2 @@
+/tmp/claude-0/after2-fast.json files 88 tests 2355 passed 2355 failed 0 skipped 0 file-errors []
+/tmp/claude-0/after-slow.json files 2 tests 6 passed 6 failed 0 skipped 0 file-errors []

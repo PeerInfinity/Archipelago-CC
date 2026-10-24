@@ -77,9 +77,11 @@ describe('L40BUTTON D2 — the switch and the hypothesis', () => {
     // ⚖ wave-13 harvest (user, 2026-10-11: bombPusherLive "ON at harvest"): with the lobber live, the cluster's hold on
     // buttonroom@272,208 stands inside bombpusher@112,128's reach and is refused BY NAME (the game bombs it — L40BUTTON's
     // damage-on walks). The route itself (the rocks in the hypothesis) is pinned below with the lobber OFF.
-    it('from the cluster\'s own boot, bombPusherLive ON (the default): the hold inside the lobber\'s reach is refused by name', async () => {
+    // ⛓ WANDHOLD's flip (⚖ user "Flip both ON", 2026-10-23): movingWait + bombBlastBody ON by default pace the hold — this
+    // row pins the STILL hold's refusal, so it names the pair OFF.
+    it('from the cluster\'s own boot, bombPusherLive ON (the default), movingWait + bombBlastBody OFF: the still hold inside the lobber\'s reach is refused by name', async () => {
         let refusal = null;
-        try { await solveFrom(CLUSTER_BOOT, true); } catch (e) { refusal = e; }
+        try { await withContactFidelity({ movingWait: false, bombBlastBody: false }, () => solveFrom(CLUSTER_BOOT, true)); } catch (e) { refusal = e; }
         expect(refusal).toBeInstanceOf(SolverRefusal);
         expect(refusal.message).toMatch(/inside bombpusher@112,128's 256 px reach/);
     }, 360_000);

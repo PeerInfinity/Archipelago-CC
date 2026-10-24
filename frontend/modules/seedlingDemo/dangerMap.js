@@ -82,6 +82,8 @@ import {
     stepLightBossShot, stepLightsController,
     // ⛓ fidelity DRILL D2: a stepped drill is priced at its live box.
     CONTACT_FIDELITY,
+    // ⛓ seedling-fidelity-residue D-B: the Tentacled Beast's whirlpools.
+    WHIRLPOOL, whirlpoolRect,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -1535,6 +1537,39 @@ export function crusherDanger(run, box) {
  * timeline. An AVOID that pretended to price a moving body over a whole walk
  * would be the timing rung, done badly.
  */
+/**
+ * ⛓ seedling-fidelity-residue D-B (`CONTACT_FIDELITY.whirlpoolDrown`; OFF: nothing) — A WHIRLPOOL'S PULL, AS DANGER.
+ * `Whirlpool.update` (`Whirlpool.as:44-97`) decrements its timer, and while it is LIVE (`dies <= timer < live + dies`,
+ * after the decrement) writes the player's position whenever `collide("Player")` and the player's point lies within
+ * the radius (16): the pull spirals in a pixel a tick and drowns the player at the centre (`Player.drown()` every
+ * update, `die()` on the twentieth). A box is priced when it overlaps the whirlpool's 32x32 box with its entity point
+ * (`HITBOX`'s origin) inside the radius — on the update(s) the question covers: TRANSIT the one at `tick` (its own
+ * timer), WAIT every one from the next to `tick` (a growing whirlpool comes alive inside a long dwell).
+ */
+export function whirlpoolDanger(run, box, tick, mode = 'wait') {
+    if (!CONTACT_FIDELITY.whirlpoolDrown) return [];
+    const view = run.entities?.('tentacleBeastFight') ?? null;
+    if (!view || !(view.whirlpools?.length > 0)) return [];
+    const now = run.ticksCompleted;
+    const last = Math.max(1, tick - now);
+    const first = mode === 'transit' ? last : 1;
+    const px = box.x + HITBOX.originX;
+    const py = box.y + HITBOX.originY;
+    const out = [];
+    for (const w of view.whirlpools) {
+        const r = whirlpoolRect(w);
+        if (!(box.x < r.right && box.right > r.x && box.y < r.bottom && box.bottom > r.y)) continue;
+        if (Math.hypot(w.x - px, w.y - py) >= WHIRLPOOL.radius) continue;
+        // the update u ticks on reads `timer - u` (it decrements first); live in [dies, live + dies)
+        const liveFrom = Math.max(first, w.timer - (WHIRLPOOL.live + WHIRLPOOL.dies) + 1);
+        const liveTo = Math.min(last, w.timer - WHIRLPOOL.dies);
+        if (liveFrom > liveTo) continue;
+        out.push({ kind: 'whirlpool', id: w.id, why: `a whirlpool's pull at (${w.x},${w.y}) r ${WHIRLPOOL.radius}, live `
+            + `on update(s) +${liveFrom}…+${liveTo} of this question (timer ${w.timer}) — it drowns at its centre` });
+    }
+    return out;
+}
+
 export function dangerVolumes(run, horizon = 0) {
     const out = [];
     const level = run.level;
@@ -1615,6 +1650,15 @@ export function dangerVolumes(run, horizon = 0) {
     for (const [id, c] of (run.entities('crushers') ?? [])) {
         for (const v of crusherVolumesAt(c.x, c.y)) {
             out.push({ level, kind: 'danger', id, rect: v.r, why: v.why });
+        }
+    }
+    // ⛓ seedling-fidelity-residue D-B: a whirlpool not yet dying, at its 32x32 box (the pull's disc lies inside it).
+    if (CONTACT_FIDELITY.whirlpoolDrown) {
+        for (const w of (run.entities('tentacleBeastFight')?.whirlpools ?? [])) {
+            if (w.timer - 1 < WHIRLPOOL.dies) continue;
+            const r = whirlpoolRect(w);
+            out.push({ level, kind: 'danger', id: w.id, rect: rect(r.x, r.y, r.w, r.h),
+                why: 'a whirlpool (its pull drowns at the centre)' });
         }
     }
     return out;
@@ -1945,6 +1989,8 @@ export function dangerAt(run, tick, box, {
         ...igneousDanger(run, box, tick, mode),
         // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped on a copy (OFF / any other room: nothing).
         ...lightsDanger(run, box, horizon, mode),
+        // ⛓ seedling-fidelity-residue D-B: a whirlpool's pull (OFF: nothing).
+        ...whirlpoolDanger(run, box, tick, mode),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }

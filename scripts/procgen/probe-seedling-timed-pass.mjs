@@ -10,6 +10,8 @@
  *
  *   timedpass-l28-fire-l26   Fire alone from the L26 arrival: the pass to (152,56), then the cut
  *   timedpass-l28-fire-l25   Fire alone from the L25 arrival: the pass past `drill@128,96`, then the cut
+ *   residue-l28-fire-l25-exit-l26 / -exit-l25   ⛓ seedling-fidelity-residue D-A (`TIMEDPASS_EXIT_WITNESSES`, both keys
+ *                            ON): the cut from the L25 arrival, then the timed pass to the L26 / L25 door
  *
  * `--record` keeps the tape, so the replay test checks the recording against the model and, separately, that the
  * solver still makes the same plan.
@@ -31,7 +33,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { compareDrillKillWitness, drillKillModelSamples, drillKillSampleOf }
     from '../../frontend/modules/seedlingDemo/fidelityDrillKill.js';
-import { TIMEDPASS_SWITCHES, TIMEDPASS_WITNESS_DIR, TIMEDPASS_WITNESSES, timedPassTape }
+import { TIMEDPASS_EXIT_WITNESSES, TIMEDPASS_SWITCHES, TIMEDPASS_WITNESS_DIR, TIMEDPASS_WITNESSES, timedPassTape }
     from '../../frontend/modules/seedlingDemo/fidelityTimedPass.js';
 
 argvHelp(import.meta.url);
@@ -81,14 +83,16 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    for (const w of TIMEDPASS_WITNESSES) {
+    for (const w of [...TIMEDPASS_WITNESSES, ...TIMEDPASS_EXIT_WITNESSES]) {
         if (only && !only.includes(w.name)) continue;
         const { tape, solved } = await timedPassTape(w);
         const pass = (solved.out.records ?? []).find((r) => r.drillPass)?.drillPass ?? null;
+        const exitPass = (solved.out.records ?? []).find((r) => r.goal === 'reach-exit')?.drillPass ?? null;
         console.log(`      ${w.name}: the plan is ${solved.out.perTick.length} t; its pass `
             + `${pass ? `${pass.ticks} t to (${pass.stance.x},${pass.stance.y}) past [${pass.drills.join(', ')}], `
-                + `certified ${pass.certified}` : 'NONE'}`);
-        const model = await drillKillModelSamples(tape, TIMEDPASS_SWITCHES);
+                + `certified ${pass.certified}` : 'NONE'}${exitPass ? `; its exit pass ${exitPass.ticks} t to L${exitPass.to}, `
+                + `certified ${exitPass.certified}` : ''}`);
+        const model = await drillKillModelSamples(tape, w.switches ?? TIMEDPASS_SWITCHES);
         check(`${w.name}: the model (key ON) replays the tape to its end`, model.error === null, model.error ?? '');
         const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
         let played;
@@ -118,9 +122,22 @@ async function main() {
         const bad = compareDrillKillWitness(samples, model.samples, tape.boot.level);
         check(`${w.name}: the game reproduces the model at 0 px (player, drills with hits, chasers) on all ${samples.length} `
             + 'sampled tick(s)', bad.length === 0, bad.slice(0, 4).join('; '));
-        const hits = samples.filter((s, i) => i > 0 && s.hits > samples[i - 1].hits).map((s) => `t${s.t}`);
-        check(`${w.name}: the game's player is never hit`, hits.length === 0 && samples.every((s) => s.hits === 0),
+        const hitTicks = samples.filter((s, i) => i > 0 && s.hits > samples[i - 1].hits).map((s) => s.t);
+        const hits = hitTicks.map((t) => `t${t}`);
+        // ⛓ planning-11: a CUT-ONLY witness's tape is the plan plus an idle tail, and the drill the rope's FallRock releases
+        // lands on the stance AFTER the goal (TIMEDPASS's documented residue; RESIDUE's exit witnesses walk out instead) —
+        // so a cut-only witness is held hit-free through its PLAN, and the post-goal contact is printed by name. An exit
+        // witness (it leaves the room) must take no hit at all.
+        const leaves = (w.goals ?? []).some((g) => g.kind === 'reach-exit');
+        const planEnd = solved.out.perTick.length;
+        const inPlan = hitTicks.filter((t) => t <= planEnd);
+        check(leaves ? `${w.name}: the game's player is never hit` : `${w.name}: the game's player is never hit during the plan (${planEnd} t)`,
+            leaves ? hits.length === 0 && samples.every((s) => s.hits === 0) : inPlan.length === 0,
             `hits at [${hits.join(', ')}]`);
+        if (!leaves && hitTicks.length > inPlan.length) {
+            console.log(`      ${w.name}: after the plan (the idle tail), the released drill's contact at `
+                + `[${hitTicks.filter((t) => t > planEnd).map((t) => `t${t}`).join(', ')}] — TIMEDPASS's residue, not a pass failure`);
+        }
         const last = samples.at(-1);
         console.log(`      ${w.name}: its drills at the end ${JSON.stringify(last?.drills ?? [])}; model drill hops: `
             + `${model.events.filter((e) => e.kind === 'hop').map((e) => `${e.t}:${e.id}`).join(' ')}; `

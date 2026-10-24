@@ -3,13 +3,14 @@
 # Regenerate the JSON:  python frontend/modules/mazeRoom/tileSpike/convert.py
 #
 # Signature (⚖ Q4 v1): f(state, player, cell, tile). `state`/`player` are ambient — `state` is the maze's
-# EFFECTIVE inventory (carried + held tokens). `tile` facts: floor, block, player, button, obstacle, clear_set,
+# EFFECTIVE inventory (carried + held tokens). `tile` facts: floor, block, player, button, obstacle, clear_set (combos
+# of [item, n] pairs — COUNTED ITEMS: `state.count` reads how many are held),
 # broken (struck down this visit), struck (ITEM ACTIONS: the obstacle lists the acting action in `struck_by`),
 # lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event).
 
 
 def cleared(state, player, tile):
-    return tile.obstacle is None or tile.broken or any(all(state.has(t, player) for t in combo) for combo in tile.clear_set)
+    return tile.obstacle is None or tile.broken or any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.clear_set)
 
 
 def player_may_enter(state, player, cell, tile):

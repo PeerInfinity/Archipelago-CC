@@ -231,7 +231,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 
 | Family | Blocks | Read by |
 |---|---|---|
-| `openActivators` | `channel` | `botDriverV2`, `solverBot` |
+| `openActivators` | `channel` | `botDriverV2`, `crusherBait`, `solverBot` |
 | `pushables` | `pushable` | `botDriverV2`, `solverBot` |
 | `armedArrowTraps` | `stationary`, `emitter`, `channel` | `arrowLaneCrossing`, `botDriverV2`, `dangerMap`, `solverBot` |
 | `crushers` | `lane-charge`, `contact` | `botDriverV2`, `crusherBait`, `dangerMap`, `solverBot` |
@@ -241,7 +241,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `solverBot` |
 | `turrets` | `stationary`, `pushable` | `botDriverV2`, `solverBot` |
 | `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
-| `brokenRocks` | — | `botDriverV2`, `solverBot` |
+| `brokenRocks` | — | `botDriverV2`, `crusherBait`, `solverBot` |
 | `crushersParked` | `lane-charge` | `botDriverV2`, `crusherBait`, `solverBot` |
 | `pushesSettled` | `pushable` | `botDriverV2`, `solverBot` |
 | `openBridges` | — | `botDriverV2` |
@@ -264,7 +264,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `igneousTiles` | `stationary`, `proximity` | `dangerMap` |
 | `lightsFight` | `hp`, `emitter`, `contact` | `dangerMap`, `lightsVerb` |
 | `lavaBossFight` | — | `solverBot` |
-| `tentacleBeastFight` | — | `solverBot` |
+| `tentacleBeastFight` | — | `dangerMap`, `solverBot` |
 | `drillBodies` | `contact`, `proximity` | `dangerMap`, `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |

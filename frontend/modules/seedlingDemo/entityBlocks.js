@@ -218,8 +218,9 @@ const RUN_ENTITIES = 'entities';
 const VOLUME = 'volume';
 export const FAMILY_BLOCKS = deepFreeze([
     { family: 'openActivators', kind: RUN_ENTITIES, blocks: ['channel'],
-        solverReads: ['botDriverV2', 'solverBot'], strategies: ['hold', 'keylock', 'touch', 'wand'],
-        why: 'the lock/cover ids an Activators group has opened (`levelRun.js:10577`): a channel a button publishes.' },
+        solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: ['hold', 'keylock', 'touch', 'wand'],
+        why: 'the lock/cover ids an Activators group has opened (`levelRun.js:10577`): a channel a button publishes '
+            + '(fidelity SEARCHGAPS: `crusherBait`\'s press goal asks which groups are shut).' },
     { family: 'pushables', kind: RUN_ENTITIES, blocks: ['pushable'],
         solverReads: ['botDriverV2', 'solverBot'], strategies: ['shove'],
         why: 'the pushed blocks\' live rects (`levelRun.js:10579`).' },
@@ -252,8 +253,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the bridged chasers\' live positions (`levelRun.js:10634`; `chasers.bridgedChaserTags()`, Bob today); `dangerMap.chaserDanger` grows each by its step bound.' },
     { family: 'brokenRocks', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2', 'solverBot'], strategies: ['break'],
-        why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block.' },
+        solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: ['break'],
+        why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block (fidelity SEARCHGAPS: '
+            + '`crusherBait.crusherShieldOf` reads which shield rocks still stand).' },
     { family: 'crushersParked', kind: RUN_ENTITIES, blocks: ['lane-charge'],
         solverReads: ['botDriverV2', 'crusherBait', 'solverBot'], strategies: [],
         why: 'whether every crusher has stopped charging (`levelRun.js:10587`).' },
@@ -324,8 +326,8 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['solverBot'], strategies: [],
         why: 'L82\'s King of Fire, stepped (seedling-fidelity-bosskills D2: `levelRun.lavaBossFightNow`, `lavaBoss.js`): the body\'s cycle, hits, window and fade, its balls and its runners; `null` while `CONTACT_FIDELITY.kingOfFireFight` is off. A bespoke fight, so no generic block.' },
     { family: 'tentacleBeastFight', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['solverBot'], strategies: [],
-        why: 'L57\'s Tentacled Beast, stepped (seedling-fidelity-bosskills D3: `levelRun.tentacleBeastFightNow`, `tentacleBeast.js`): the beast, its tentacles and whirlpools, the draw stream\'s state and `streamRefusal`, the mouth; `null` while `CONTACT_FIDELITY.tentacleBeastFight` is off. A bespoke fight, so no generic block.' },
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'L57\'s Tentacled Beast, stepped (seedling-fidelity-bosskills D3: `levelRun.tentacleBeastFightNow`, `tentacleBeast.js`): the beast, its tentacles and whirlpools, the draw stream\'s state and `streamRefusal`, the mouth; `null` while `CONTACT_FIDELITY.tentacleBeastFight` is off. A bespoke fight, so no generic block. ⛓ seedling-fidelity-residue D-B: `dangerMap` reads its whirlpools (`whirlpoolDanger`, `dangerVolumes`; `whirlpoolDrown` ON only).' },
     { family: 'drillBodies', kind: RUN_ENTITIES, blocks: ['contact', 'proximity'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the drills the run steps in this level (TERRAIN W3\'s lone drill; fidelity DRILL: every drill of a mixed room with `CONTACT_FIDELITY.drillMixedRooms` ON): id, live position and box, `removed`, and the fight\'s `anim`, `hits`, `hitsTimer`, `destroy` (fidelity DRILLKILL) (`levelRun.drillBodiesNow`, `drill.js`); a drill hops 16 px toward a player inside its 48 px run range with a clear "Solid" line. `dangerMap.staticEnemyDanger` prices a stepped one at its live box with the key ON.' },

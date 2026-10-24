@@ -66,7 +66,7 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
-    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
+    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, pitLatchOpts, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
@@ -79,7 +79,8 @@ import { runBait } from './botDriverV2.js';
 // ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
 import { pacedSummary, runPace } from './botDriverV2.js';
 import {
-    BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
+    BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
+    searchBaitOrdering,
 } from './crusherBait.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
@@ -169,6 +170,8 @@ import {
     canonicalDigestText,
     // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
     TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
+    // ⛓ seedling-fidelity-residue D-B: the whirlpool's clock (the DODGE rung's whirlpool arm).
+    WHIRLPOOL,
     // ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
     YETI_PORTAL_TAG,
 } from './solverView.js';
@@ -925,18 +928,29 @@ function clearTagExecutor(strategy) {
  */
 function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
     if (!run.entities('crushers')) return null;
+    /**
+     * ⛓ SEARCHGAPS D-A (only while `crusherBaitPressGoal` is ON; `refineStrategy` sends a rock here only then) — the
+     * obstacle is a rock that SHIELDS a crusher: the ordering is searched with the shield gone (the swing that removes
+     * it is chain 1's trigger, `execBait`'s `shield`), and the bait is that crusher's.
+     */
+    const shield = CONTACT_FIDELITY.crusherBaitPressGoal && obstacle.id?.startsWith('breakablerock@')
+        ? crusherShieldOf(run, obstacle.id) : null;
+    if (CONTACT_FIDELITY.crusherBaitPressGoal && obstacle.id?.startsWith('breakablerock@') && !shield) return null;
+    const target = shield ? shield.crusher : obstacle.id;
     const refuse = (why) => {
-        throw new SolverRefusal(`solverBot: bait ${obstacle.id} in level ${run.level} — ${why}`,
-            { obstacle: { kind: 'solid', tag: 'crusher', id: obstacle.id } });
+        throw new SolverRefusal(`solverBot: bait ${target} in level ${run.level} — ${why}`,
+            { obstacle: { kind: 'solid', tag: 'crusher', id: target } });
     };
     if (!run.entities('crushersParked')) {
         refuse('a crusher in this room is CHARGING; the ordering search plans from parks, and a '
             + 'body in motion is not one.');
     }
     const aimRect = { x: aim.x - 4, y: aim.y - 4, right: aim.x + 4, bottom: aim.y + 4 };
+    const liveOpts = run.liveGeometryOpts();
     const found = searchBaitOrdering({
-        run, liveOpts: run.liveGeometryOpts(), inventory: run.progress('inventory'),
-        aimRect, allowTeleporter,
+        run, liveOpts: shield
+            ? { ...liveOpts, brokenRocks: new Set([...(liveOpts.brokenRocks ?? []), ...shield.rocks]) } : liveOpts,
+        inventory: run.progress('inventory'), aimRect, allowTeleporter, latchOpts: pitLatchOpts(run),
     });
     if (!found.ordering) {
         refuse(`the ordering search found nothing: ${found.why} (${found.stats.expanded} state(s) `
@@ -952,17 +966,24 @@ function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
             + 'order is that chain\'s beam search (R5 slices 17-19: 8-tick blocks, per-stage walls), '
             + 'which is too slow to be an in-solver search.');
     }
+    if (shield && plan[0].chain.id !== shield.crusher) {
+        refuse(`the ordering's first chain is ${plan[0].chain.id}'s, and the shield [${shield.rocks.join(', ')}] is `
+            + `${shield.crusher}'s — the swing that removes it would wake a crusher the ordering does not start with.`);
+    }
     return {
         strategy: 'bait',
-        target: obstacle.id,
+        target,
         stance: { ...plan[0].row.stance },
         chains: plan,
         charges: found.ordering.length,
         parks: found.parks,
         searched: found.stats,
+        // ⛓ SEARCHGAPS D-A — present only while `crusherBaitPressGoal` is ON (optional fields).
+        ...(found.goal ? { goal: found.goal, holds: found.holds } : {}),
+        ...(shield ? { shield: { rocks: [...shield.rocks] } } : {}),
         rejected: [{
             option: 'avoid (hard-avoid the four lanes)',
-            why: `${obstacle.id} is a \`Crusher\`: a 32x32 Solid that charges at 1 px/tick when it SEES `
+            why: `${target} is a \`Crusher\`: a 32x32 Solid that charges at 1 px/tick when it SEES `
                 + 'the player in a lane and PARKS where a Solid stops it (`crusher.js`). The corridor '
                 + 'runs through its body, so the route OPERATES it: '
                 + `${found.ordering.length} charge(s) in ${plan.length} chain(s), searched with the round `
@@ -992,9 +1013,9 @@ function execBait(run, perTick, resolved, ctx) {
         const label = `${what} chain ${i + 1}/${resolved.chains.length} ${chain.id} ${row.charges.join('')}`;
         if (i > 0) ctx.walkTo(ctx.goal, { ...row.stance }, { what: `${label} stance` });
         const [ox, oy] = chain.id.slice(chain.id.indexOf('@') + 1).split(',').map(Number);
-        const spec = () => ({
+        const spec = (prefix = []) => ({
             crusher: { x: ox, y: oy },
-            approach: row.approach.map((sp) => ({ ...sp })),
+            approach: [...prefix, ...row.approach.map((sp) => ({ ...sp }))],
             spans: row.spans.map((sp) => ({ ...sp })),
             park: { ...row.park },
         });
@@ -1007,6 +1028,41 @@ function execBait(run, perTick, resolved, ctx) {
         let chosen = null;
         let tried = 0;
         const failures = [];
+        /**
+         * ⛓ SEARCHGAPS D-A — THE SHIELD SWING (chain 1 only, only when the resolver found the obstacle to be a rock that
+         * shields this crusher: `resolved.shield`, which exists only while `crusherBaitPressGoal` is ON). From the aligned
+         * rest state, face the nearest shield rock, press, and idle until every shield rock is gone — that tick the
+         * crusher still rests (measured on the model: rocks gone t8 after a face + press from (216,88); R5's chain 1
+         * survives from there with any 0-14 idle ticks), so the chain's own `runBait` starts from a parked crusher with
+         * the line clear, the state R5's `r5-l41-part3` booted in. Returns null, or why the shield stood.
+         */
+        const shieldRocks = i === 0 && resolved.shield ? resolved.shield.rocks : null;
+        const swingShield = (r, out) => {
+            const solids = (r.world.solids ?? []).filter((s) => shieldRocks.includes(s.rockId));
+            const goneAll = () => {
+                const broken = r.entities('brokenRocks') ?? new Set();
+                return shieldRocks.every((id) => broken.has(id));
+            };
+            const rectOf = (s) => ({ x: s.rect.x, y: s.rect.y, right: s.rect.right ?? s.rect.x + s.rect.w,
+                bottom: s.rect.bottom ?? s.rect.y + s.rect.h });
+            const nearest = solids.map(rectOf).sort((a, b) => distanceRectPoint(r.state.x, r.state.y, a)
+                - distanceRectPoint(r.state.x, r.state.y, b))[0];
+            if (!nearest) return 'no shield rock stands in the room';
+            let pressed = false;
+            for (let t = 0; t < 40; t += 1) {
+                if (pressed && goneAll()) return null;
+                let held = new Set();
+                if (!pressed) {
+                    const want = facingToward(r.state, nearest);
+                    if (r.direction === want) { held = new Set(['primary']); pressed = true; } else held = new Set([FACING_KEYS[want]]);
+                }
+                out.push(held);
+                const { transition } = r.advance(held);
+                if (transition) return `the swing crossed to level ${transition.to_level}`;
+            }
+            return `[${shieldRocks.join(', ')}] still stood 40 ticks after the swing began at `
+                + `(${r.state.x.toFixed(2)},${r.state.y.toFixed(2)})`;
+        };
         if (ctx.fork) {
             for (const c of candidates) {
                 /**
@@ -1022,9 +1078,27 @@ function execBait(run, perTick, resolved, ctx) {
                 }
                 tried += 1;
                 for (const held of c.ticks) f.advance(held);
+                let prefix = [];
+                if (shieldRocks) {
+                    // the swing is recorded on its own fork, then driven as the head of the chain's APPROACH: the
+                    // crusher rests when the approach begins and charges when it ends (`runBait`'s two checks)
+                    const g = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                    if (g === null) {
+                        refuse(`${label}: deadline — the caller's anytime deadline (\`shouldStop\`) was reached at the `
+                            + `\`crusher-fork\` site recording the shield swing after ${tried} fork tr(y|ies)`);
+                    }
+                    for (const held of c.ticks) g.advance(held);
+                    const swung = [];
+                    const stood = swingShield(g, swung);
+                    if (stood !== null) {
+                        if (failures.length < 3) failures.push(`(${c.at.x.toFixed(2)},${c.at.y.toFixed(2)}): the shield swing — ${stood}`);
+                        continue;
+                    }
+                    prefix = swung.map((h) => ({ key: h.size ? [...h].join('+') : null, ticks: 1 }));
+                }
                 try {
-                    runBait(f, [], spec(), `${label} (fork)`);
-                    chosen = c;
+                    runBait(f, [], spec(prefix), `${label} (fork)`);
+                    chosen = { ...c, prefix };
                     break;
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
@@ -1050,9 +1124,13 @@ function execBait(run, perTick, resolved, ctx) {
             refuse(`${label}: the align was previewed to rest at (${chosen.at.x},${chosen.at.y}) and the RUN `
                 + `rests at (${run.state.x},${run.state.y}) — the preview and the run disagree.`);
         }
+        if (shieldRocks && !chosen.prefix) {
+            // no fork to record it on: the swing's ticks are previewed on the live run's own pace by driving it
+            refuse(`${label}: the shield swing is certified on a FORK, and this segment has none.`);
+        }
         let rec;
         try {
-            rec = runBait(run, perTick, spec(), label);
+            rec = runBait(run, perTick, spec(chosen.prefix ?? []), label);
         } catch (e) {
             if (e instanceof BotDriverV2Error) refuse(e.message);
             throw e;
@@ -2771,6 +2849,12 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    // ⛓ fidelity SEARCHGAPS D-A (behind `CONTACT_FIDELITY.crusherBaitPressGoal`): a rock that SHIELDS a resting crusher
+    // (`crusherBait.crusherShieldOf`) is broken by the BAIT whose first chain it triggers, not by a bare `break` — every
+    // swing stance is in the lane it opens. OFF: the table's `break`, byte for byte.
+    if (CONTACT_FIDELITY.crusherBaitPressGoal && CRUSHER_BAIT.enabled && strategy === 'break'
+        && obstacle?.kind === 'solid' && typeof obstacle.id === 'string' && obstacle.id.startsWith('breakablerock@')
+        && crusherShieldOf(run, obstacle.id)) return 'bait';
     // ⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor is opened by APPROACH. The
     // shared table keeps no row for it, so OFF the answer is the table's (none) byte for byte.
     if (CONTACT_FIDELITY.sealDoorApproach && obstacle?.kind === 'solid' && obstacle?.tag === 'finaldoor') return 'approach';
@@ -2810,8 +2894,10 @@ function refineStrategy(run, strategy, obstacle) {
      * sentinel is the transcription's and not a `-1` typed here.
      */
     const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
-    if (!row || !KILL_LOCK_TAGS.includes(row.tag ?? obstacle.tag)) return strategy;
-    if (row.t === KILL_LOCK_TSET) return 'kill';
+    // ⛓ fidelity WANDHOLD (behind `coverWeighRefine`, OFF): a Cover joins the outlive question below — see `coverWeighArm`.
+    const coverArm = coverWeighArm(row, obstacle);
+    if (!row || (!KILL_LOCK_TAGS.includes(row.tag ?? obstacle.tag) && !coverArm)) return strategy;
+    if (!coverArm && row.t === KILL_LOCK_TSET) return 'kill';
     /**
      * ⛓⛓⛓ PROCGEN PoC SLICE 3b (⚖ kickoff §1.9) — THE SECOND REFINEMENT, AND
      * IT ASKS WHETHER THE HOLD CAN **OUTLIVE THE WALKER**.
@@ -2853,6 +2939,33 @@ function refineStrategy(run, strategy, obstacle) {
     const group = (run.world.pressers ?? []).filter((p) => p.t === row.t);
     if (group.length === 0) return strategy;
     return group.every((p) => localPublish(p) === null) ? 'weigh' : strategy;
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-wandhold D2 — **A COVER'S HOLD MUST OUTLIVE THE WALKER TOO** (behind
+ * `CONTACT_FIDELITY.coverWeighRefine`, OFF).
+ *
+ *     Cover.as:37-66    while `activate` the alpha falls 0.1 a tick and the type goes "" at 0; the moment the group
+ *                       drops, `reset()` makes it "Solid" again unless a Solid or the Player is inside it (a Chest
+ *                       aside) — the same occupancy guard as `Lock.activationStep` (`Lock.as:76-83`)
+ *     Button.as:27-46   `activate = tempCheck` every update: a plain Button republishes, so stepping off drops it
+ *
+ * The outlive refinement above asks its question of `KILL_LOCK_TAGS` only, and `cover` is not one, so a Cover kept
+ * `hold` whatever its pressers are. Guard (iii) (`stanceHypothesis`) trusts that: *"a `hold` survives here precisely
+ * because its group has a LATCHING presser"*. For a Cover it does not. Measured on L39 from the L38 arrival (js
+ * links-b-onward, Sphere 6.4, `Totem Part 72,40`): `button@112,144` (group 3, `wandlock@144,64`'s opener) lies under
+ * `cover@112,144` {t 2}, whose only presser is the plain `button@160,144`; the stance (120,152) read as reachable with
+ * the cover hypothesised open, and the walk then ground 400 ticks against the shut cover (*"grazing 395 solid(s):
+ * cover at (112,144)"*) — a hypothesis nothing redeems, since standing on `button@160,144` cannot also be standing in
+ * the cover 36 px west.
+ *
+ * ON: a Cover with a group (`t >= 0`) is asked the lock's question — every presser republishing ⇒ `weigh` (a Solid on
+ * the button presses it for ever: `Button.hitables` holds "Solid"), else `hold`. Guard (iii) then DERIVES the weigh,
+ * and a cover no block can weigh is a wall. OFF: byte-identical (`false`, so the arm above is the old one).
+ */
+function coverWeighArm(row, obstacle) {
+    return CONTACT_FIDELITY.coverWeighRefine === true && Boolean(row)
+        && (row.tag ?? obstacle.tag) === 'cover' && row.t >= 0;
 }
 
 /**
@@ -4785,7 +4898,7 @@ export function stepOffMinimalFor(run, index, tolerance = DEFAULT_TOLERANCE) {
     return [...STEP_OFF_DIAGONALS.map(tryDir).sort(byCost), ...cardinal];
 }
 
-function solverPlanOpts(run, contacts, extra = {}) {
+export function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
         avoidVolumes: true,
@@ -4794,6 +4907,7 @@ function solverPlanOpts(run, contacts, extra = {}) {
         lattice: DEFAULT_LATTICE,
         inventory: run.progress('inventory'),
         noHazards: run.noHazards,
+        ...pitLatchOpts(run),
         ...extra,
     };
 }
@@ -9124,10 +9238,12 @@ function execHold(run, perTick, resolved, ctx) {
  * ⛓ housekeep D1 — a `reach-exit` goal's door, with `findExit`'s PIT-tile throw named: the teleporter's tile is a pit
  * (`level.pitTiles`, `findExit`'s own test), whose trigger and fall edge fire on one tick — FlashPunk bookkeeping the
  * physics does not transcribe (survey steps 113 / 191: L43's door to L37, L100's to L101).
+ * ⛓ fidelity PITPORT (`CONTACT_FIDELITY.pitTeleporterCrossing`): ON, `findExit` admits a LIVE door on a pit that the
+ * run is not latched on (the door wins the race), so this names only a latched one (the pit takes the player).
  */
-function findExitNamed(level, exit) {
+function findExitNamed(level, exit, latched = null) {
     try {
-        return findExit(level, exit);
+        return findExit(level, exit, { latched });
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
         const tp = level.teleporters.find((t) => t.x === exit.x && t.y === exit.y);
@@ -16258,9 +16374,22 @@ function resolveTentacleBeastStrategy(run, obstacle) {
 const TENTACLE_BEAST_FIGHT_BOUND = 6000;
 /** ⛓ HITLESS: the settle's bound — a whirlpool lives 150 + 60 + 30 updates (`Whirlpool.as`), and none spawns after. */
 const TENTACLE_BEAST_SETTLE_BOUND = 300;
+/**
+ * The deaths a play counts: a hit's (`playerHits` `died`), and ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`) a
+ * whirlpool's drown, which ON is a `playerDeaths` row (source `whirlpool`) instead of a thrown `Error`.
+ */
+function tentacleDeaths(r) {
+    return (r.ledger('playerHits') ?? []).filter((h) => h.died).length + (CONTACT_FIDELITY.whirlpoolDrown
+        ? (r.ledger('playerDeaths') ?? []).filter((d) => d.source === 'whirlpool').length : 0);
+}
+/** Why a play's latest death ended it (the drown names its whirlpool). */
+function tentacleDeathWhy(r, at) {
+    const d = CONTACT_FIDELITY.whirlpoolDrown ? (r.ledger('playerDeaths') ?? []).at(-1) : null;
+    return d?.source === 'whirlpool' ? `the player drowned in ${d.id} ${at}` : `the player died ${at}`;
+}
 function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {}) {
     const mem = createTentacleBeastPolicy(params);
-    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    const deathsBefore = tentacleDeaths(r);
     // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
     const hitsBefore = (r.ledger('playerHits') ?? []).length;
     const hitsNow = () => (r.ledger('playerHits') ?? []).length - hitsBefore;
@@ -16276,8 +16405,7 @@ function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {
             fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
                 + 'Tentacled Beast\'s fight. The fight is per visit.');
         }
-        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
-        if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
+        if (tentacleDeaths(r) > deathsBefore) return { ok: false, why: tentacleDeathWhy(r, `at spent ${spent}`), spent };
     }
     return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
 }
@@ -16303,8 +16431,9 @@ function settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deaths
             fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} while `
                 + 'settling the Tentacled Beast\'s whirlpools. The fight is per visit.');
         }
-        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
-        if (deaths > deathsBefore) return { ok: false, why: `the player died settling at spent ${spent + settled}`, spent: spent + settled };
+        if (tentacleDeaths(r) > deathsBefore) {
+            return { ok: false, why: tentacleDeathWhy(r, `settling at spent ${spent + settled}`), spent: spent + settled };
+        }
         view = r.entities('tentacleBeastFight');
     }
     return { ok: true, spent: spent + settled, settled, report, log: mem.log, hits: hitsNow() };
@@ -18707,6 +18836,11 @@ export const DRILL_TIMED_PASS = Object.freeze({
     stall: 100,
     /** …and this many ticks after its first arrival with no arrival whose stand holds: three of a drill's 15-tick cycles. */
     arrivalStall: 45,
+    /**
+     * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`): the found walks a search's `accept` may pass over before it
+     * refuses (each one a fork certificate with the exit's pass behind it).
+     */
+    acceptMax: 24,
 });
 
 /** The nine key sets a pass is searched over, in a fixed order (the beam's ties keep it). */
@@ -18775,8 +18909,17 @@ function drillPassRowsRefused(rows) {
  * SEARCH a no-contact walk from the run's state to `stance` with `tail` contact-free standing ticks there (see
  * `DRILL_TIMED_PASS`). Pure: the run is only read (its forecast and stepper). Returns `{keys, ticks, expanded}` or
  * `{why, expanded}`.
+ *
+ * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`; both options absent OFF, so the search is byte-identical):
+ *   · `cross` `{level, index}` — the goal is the CROSSING, not a stand: a child whose stepped state carries the
+ *     stepper's `transition` through teleporter `index` to `level` ends the walk on that tick
+ *     (the drills update against the tick before it, which its parent's forecast step already read). `stances` is
+ *     then the one door centre the distance field aims at; any other crossing still refuses.
+ *   · `accept(keys, i)` — asked of each walk the search would return (a stand that holds, or a crossing); a non-null
+ *     answer (why) passes it over and the search runs on, at most `acceptMax` times. The cut's certificate with the
+ *     exit's pass behind it (`execDrillTimedPass`).
  */
-function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
+function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS, { cross = null, accept = null } = {}) {
     const fc0 = run.corridorBodyForecast?.({ drillPass: true }) ?? null;
     if (fc0 === null) return { why: 'the run hands no drill forecast (no stepped drill, or noclip)', expanded: 0 };
     const stepper = run.previewStepper();
@@ -18789,9 +18932,24 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
     const h = (p) => Math.min(...[...active].map((i) => fields[i](p)));
     const at = (st) => [...active].find((i) => hasArrived(st, stances[i], DEFAULT_TOLERANCE)) ?? -1;
     const NONE = DRILL_PASS_KEYS[0];
+    const crossed = (q) => cross !== null && q.transition?.kind === 'teleporter'
+        && q.transition.to_level === cross.level && q.transition.index === cross.index;
+    const passed = [];
+    // a walk passed over is not asked again in the same (8 px cell, drill configuration): its way out is the same
+    const passedGroups = new Set();
+    const accepted = (keys, i, group = null) => {
+        if (accept === null) return true;
+        if (passed.length >= P.acceptMax || (group !== null && passedGroups.has(group))) return false;
+        const why = accept(keys, i);
+        if (why === null) return true;
+        passed.push(why);
+        if (group !== null) passedGroups.add(group);
+        return false;
+    };
     const stepSafe = (st, k) => {
         try {
             const q = stepper(st, k);
+            if (crossed(q)) return q;
             return drillPassStateRefused(q, inventory) ? null : q;
         } catch (e) {
             if (!(e instanceof PhysicsV2Error)) throw e;
@@ -18826,6 +18984,11 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
             for (const k of DRILL_PASS_KEYS) {
                 const st = stepSafe(n.st, k);
                 if (st === null) continue;
+                if (crossed(st)) {
+                    const keys = [...n.keys, k];
+                    if (accepted(keys, 0)) return { keys, ticks: keys.length, stance: 0, expanded, stalled, passed };
+                    continue;
+                }
                 const key = `${Math.round(st.x * 2)},${Math.round(st.y * 2)},${Math.round(st.vx * 10)},`
                     + `${Math.round(st.vy * 10)}|${dk}`;
                 if (next.has(key)) continue;
@@ -18852,15 +19015,26 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
         if (layer.length === 0) {
             return { why: `every walk meets a drill by search tick ${t + 1} (${deaths} state(s) contacted)`, expanded };
         }
-        const arrived = layer.map((n) => ({ n, i: at(n.st) })).filter((x) => x.i >= 0);
+        // (a crossing's goal is not a stand: no arrival is tracked, and its door never drops out)
+        const arrived = cross !== null ? [] : layer.map((n) => ({ n, i: at(n.st) })).filter((x) => x.i >= 0);
         for (const x of arrived) if (!firstArrival.has(x.i)) firstArrival.set(x.i, t);
-        const done = arrived.find((x) => tailHolds(x.n.st, x.n.fc, stances[x.i]));
-        if (done) return { keys: done.n.keys, ticks: done.n.keys.length, stance: done.i, expanded, stalled };
+        const groupOf = (n) => `${Math.floor(n.st.x / 8)},${Math.floor(n.st.y / 8)}|${drillKey(n.fc, false)}`;
+        const done = cross !== null ? undefined
+            : arrived.find((x) => tailHolds(x.n.st, x.n.fc, stances[x.i])
+                && accepted(x.n.keys, x.i, accept === null ? null : groupOf(x.n)));
+        if (done) {
+            return { keys: done.n.keys, ticks: done.n.keys.length, stance: done.i, expanded, stalled,
+                ...(accept !== null ? { passed } : {}) };
+        }
+        if (accept !== null && passed.length >= P.acceptMax) {
+            return { why: `${passed.length} found walk(s) passed over — ${passed.slice(0, 3).join(' | ')}`, expanded };
+        }
         for (const [i, t0] of firstArrival) {
             if (!active.has(i) || t - t0 < P.arrivalStall) continue;
             active.delete(i);
             stalled.push({ x: stances[i].x, y: stances[i].y, why: `walks arrive from search tick ${t0 + 1}, and none in `
-                + `${P.arrivalStall} ticks stands ${P.tail} ticks there contact-free` });
+                + `${P.arrivalStall} ticks stands ${P.tail} ticks there contact-free`
+                + `${passed.length > 0 ? ` with a way out (${passed.length} passed over: ${passed.at(-1)})` : ''}` });
             // the beam re-ranks on the stances left (its best distance is theirs from here)
             best = Infinity;
             bestAt = t;
@@ -18933,9 +19107,22 @@ function execDrillTimedPass(run, perTick, resolved, woken, ctx) {
     let found = null;
     // One search per stance, in the cut's own order (a joint beam aimed at the nearest stance chases the drills into a
     // configuration the farther stances cannot stand in — measured: L26's (152,56) pass, found alone at t121, is lost).
+    // ⛓ seedling-fidelity-residue D-A: the segment's next goal is a crossing — a stand is certified only with its pass.
+    const exitAfter = CONTACT_FIDELITY.drillTimedPassExit && typeof ctx.fork === 'function' ? (ctx.exitAfter ?? null)
+        : null;
     for (const a of stances) {
-        const r = searchDrillTimedPass(run, [{ x: a.x, y: a.y }], opts);
+        const accept = exitAfter === null ? null : (keys) => {
+            const f = ctx.fork();
+            if (f === null) return 'the fork stopped (deadline)';
+            return certifyDrillTimedPass(f, keys, resolved, a, ctx) ?? certifyExitAfterCut(f, exitAfter);
+        };
+        const r = searchDrillTimedPass(run, [{ x: a.x, y: a.y }], opts, DRILL_TIMED_PASS,
+            accept === null ? {} : { accept });
         if (!r.keys) { tried.push({ stance: { x: a.x, y: a.y }, why: r.why, expanded: r.expanded }); continue; }
+        if (accept !== null) {
+            found = { a, r, certified: true, exitAfter: { passedOver: r.passed.length } };
+            break;
+        }
         const f = typeof ctx.fork === 'function' ? ctx.fork() : null;
         const cert = f ? certifyDrillTimedPass(f, r.keys, resolved, a, ctx) : null;
         if (cert !== null) {
@@ -18979,6 +19166,91 @@ function execDrillTimedPass(run, perTick, resolved, woken, ctx) {
     return {
         verb: 'drill-pass', drills: woken.map((d) => d.id), stance: { ...found.a }, ticks: perTick.length - from,
         expanded: found.r.expanded, certified: found.certified, skipped: tried,
+        ...(found.exitAfter ? { exitAfter: found.exitAfter } : {}),
+    };
+}
+
+/**
+ * ⛓ seedling-fidelity-residue D-A — the cut's certificate, continued: on the fork `f` the certificate just cut on,
+ * the CROSSING's pass (`exitAfter` `{centre, cross}`, the segment's next `reach-exit`) is searched and played to its
+ * crossing with no hit. Null when it holds, else why. (TIMEDPASS D1: the rope's `FallRock` release can hop the drill
+ * parked under the stance onto it, and from there every continuation is hit — so a stand is worth only the way out it
+ * leaves.)
+ */
+function certifyExitAfterCut(f, exitAfter) {
+    const r = searchDrillTimedPass(f, [exitAfter.centre], solverPlanOpts(f, senseContacts(f)), DRILL_TIMED_PASS,
+        { cross: exitAfter.cross });
+    if (!r.keys) return `after the cut, no pass to the crossing to L${exitAfter.cross.level}: ${r.why}`;
+    return certifyExitPass(f, r.keys, exitAfter.cross);
+}
+
+/** Play a found crossing pass on `f` (a fork, or the run): null when it crosses to `cross` hit-free, else why. */
+function certifyExitPass(f, keys, cross) {
+    const h0 = (f.ledger('playerHits') ?? []).length;
+    for (let i = 0; i < keys.length; i += 1) {
+        const { transition } = f.advance(keys[i]);
+        if ((f.ledger('playerHits') ?? []).length !== h0) {
+            const h = (f.ledger('playerHits') ?? []).at(-1);
+            return `the player was hit at exit-pass tick ${i} (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''})`;
+        }
+        if (transition) {
+            return transition.to_level === cross.level && i === keys.length - 1 ? null
+                : `crossed to level ${transition.to_level} at exit-pass tick ${i} of ${keys.length}`;
+        }
+    }
+    return `the exit pass ended at (${f.state.x.toFixed(2)},${f.state.y.toFixed(2)}) without a crossing`;
+}
+
+/**
+ * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`) — Executor: a `reach-exit` whose planned walk to the door
+ * wakes a live stepped drill, in a run that holds no weapon that kills one, is a TIMED PASS to the crossing: the
+ * pass's own search (`searchDrillTimedPass`, goal `cross`), certified on a fork (`ctx.fork`) and played on the run.
+ * Returns null where it does not apply (the walk then runs as before), the `{record, transition}` it played, or throws
+ * a `SolverRefusal` naming the drill (`obstacle: {kind: 'drill', id}`).
+ */
+function execDrillTimedPassExit(run, perTick, door, ctx) {
+    if (!(CONTACT_FIDELITY.drillTimedPassExit && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive
+        && CONTACT_FIDELITY.drillMixedRooms)) return null;
+    if (liveDrills(run).length === 0 || drillKillWeapon(run) !== null) return null;
+    const opts = solverPlanOpts(run, senseContacts(run));
+    const walk = plannedWalkSamples(run, run.state, door.centre, opts) ?? [{ x: run.state.x, y: run.state.y },
+        door.centre];
+    const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
+    if (woken.length === 0) return null;
+    const from = perTick.length;
+    const cross = { level: door.teleporter.to, index: door.index };
+    const refuseExit = (why, extra = {}) => {
+        throw new SolverRefusal(`${ctx.what}: the walk to the door wakes [${woken.map((d) => d.id).join(', ')}], this run `
+            + `holds no weapon that kills a drill (FIRE CANNOT), and ${why}`,
+        { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, ...extra });
+    };
+    const r = searchDrillTimedPass(run, [door.centre], opts, DRILL_TIMED_PASS, { cross });
+    if (!r.keys) refuseExit(`no timed pass reaches the crossing — ${r.why}`);
+    const f = typeof ctx.fork === 'function' ? ctx.fork() : null;
+    const cert = f ? certifyExitPass(f, r.keys, cross) : null;
+    if (cert !== null) refuseExit(`the crossing's pass (${r.ticks} t) is not certified on the fork: ${cert}`);
+    const hitsBefore = (run.ledger('playerHits') ?? []).length;
+    let transition = null;
+    for (let i = 0; i < r.keys.length; i += 1) {
+        perTick.push(r.keys[i]);
+        ({ transition } = run.advance(r.keys[i]));
+        const hits = run.ledger('playerHits') ?? [];
+        if (hits.length !== hitsBefore) {
+            const h = hits.at(-1);
+            refuseExit(`the crossing's pass was HIT at pass tick ${i} (run tick ${run.ticksCompleted}, source `
+                + `${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) — the forecast's walk did not hold on the run`,
+            { perTick: [...perTick] });
+        }
+        if (transition) break;
+    }
+    if (!transition || transition.to_level !== cross.level) {
+        refuseExit(`the crossing's pass ended ${transition ? `crossing to level ${transition.to_level}` : 'without a '
+            + 'crossing'} on the run`, { perTick: [...perTick] });
+    }
+    return {
+        transition,
+        record: { verb: 'drill-pass-exit', drills: woken.map((d) => d.id), to: cross.level, ticks: perTick.length - from,
+            expanded: r.expanded, certified: f !== null },
     };
 }
 
@@ -22402,6 +22674,9 @@ function solveSegmentUnder({
          */
         const corridorBodyOnly = CONTACT_FIDELITY.corridorBodyPricing && hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'chaser' && s.body !== undefined);
+        // ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown` ON only): every reason is a whirlpool's pull (its clock).
+        const whirlpoolOnly = CONTACT_FIDELITY.whirlpoolDrown && hit.sources.length > 0
+            && hit.sources.every((s) => s.kind === 'whirlpool');
         if (spitOnly && corridor) {
             refused = { rung: 'avoid', why: 'every reason the probe gave is a TurretSpit '
                 + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
@@ -22504,6 +22779,51 @@ function solveSegmentUnder({
             }
             rowFor('dodge', refused);
             refused = { rung: 'dodge', why: dodgeWhy };
+        }
+
+        /**
+         * ── rung 1¼, the WHIRLPOOL arm (seedling-fidelity-residue D-B, `whirlpoolDrown`) ── CONDITIONAL like the spit
+         * arm: only when every reason the probe gave is a whirlpool's pull (`dangerMap.whirlpoolDanger`). A whirlpool
+         * is a CLOCK — it pulls while `dies <= timer < live + dies` and is gone `timer` updates on, and the beast spawns
+         * none after its death — so the answer is to let the named ones run out: one stall at the walk's START, as long
+         * as the latest of them still pulls, certified by the same preview and probe as the spit arm's (the stand is
+         * priced on every tick of it). It drives the stall and hands back `{}`, and the walk re-plans with the
+         * whirlpools as they then stand. Bounded by the spit arm's `maxPerSegment`.
+         */
+        if (whirlpoolOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
+            const named = new Set(hit.sources.map((s) => s.id));
+            const left = Math.max(0, ...(run.entities('tentacleBeastFight')?.whirlpools ?? [])
+                .filter((w) => named.has(w.id)).map((w) => w.timer - WHIRLPOOL.dies + 1));
+            let whirlWhy = null;
+            let walk = null;
+            if (dodgesSpent >= DODGE_RUNG.maxPerSegment) {
+                whirlWhy = `this segment has already stalled ${dodgesSpent} time(s) (DODGE_RUNG.maxPerSegment)`;
+            } else if (left <= 0) {
+                whirlWhy = `the named whirlpool(s) [${[...named].join(', ')}] are not in this room's fight any more`;
+            } else {
+                walk = previewWalk(run, corridor, tolerance, axisAligned
+                    ? { strike: null, axisAligned, stall: { at: 0, ticks: left } }
+                    : { strike: strikePolicyFor(run, { dashMode }), stall: { at: 0, ticks: left } });
+                const bad = walk.truncated && walk.truncated.kind !== 'crossed' ? `the preview truncates (${walk.truncated.kind})`
+                    : walk.samples.length < left ? 'the preview ends inside the stall'
+                        : (() => { const p = probeSamples(walk.samples, dangerExcept); return p ? `the stalled walk still `
+                            + `probes dangerous at (${p.x.toFixed(1)},${p.y.toFixed(1)}) — ${reasonsOf(p)}` : null; })();
+                if (bad) { whirlWhy = `a ${left}-tick stall at the walk's start (the named whirlpools' clock): ${bad}`; walk = null; }
+            }
+            if (walk) {
+                dodgesSpent += 1;
+                rowFor('dodge', refused, { stall: { at: 0, ticks: left }, whirlpools: [...named] });
+                for (const sm of walk.samples.slice(0, left)) {
+                    const held = new Set(sm.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) break;
+                }
+                return { escalations };
+            }
+            rowFor('dodge', refused);
+            refused = { rung: 'dodge', why: whirlWhy };
         }
 
         /**
@@ -24695,6 +25015,8 @@ function solveSegmentUnder({
          * (re-asked per attempt below). No other walk is touched.
          */
         let axisAligned = axisAlignedAsked;
+        // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
+        const deaths0 = deathsNow();
         attempts: for (let attempt = 0; ; attempt += 1) {
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
@@ -24960,6 +25282,10 @@ function solveSegmentUnder({
                                 // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
+                                // ⛓ SEARCHGAPS D-A: a dash's swing would break the bait's SHIELD on the way to the
+                                // stance (measured: rocks gone at t127, the crusher charging before the bait), so this
+                                // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
+                                ...(plan.strategy === 'bait' && plan.resolved.shield ? { undashed: true } : {}),
                             });
                         } finally {
                             stanceWalks.delete(walking);
@@ -25234,6 +25560,7 @@ function solveSegmentUnder({
                 return null;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
+                refuseIfDrowned(deaths0, what, goal);
                 if (attempt >= 1) {
                     refuse(`${what}: the re-planned corridor failed too — ${e.message}`, {
                         goal,
@@ -25253,8 +25580,37 @@ function solveSegmentUnder({
      * ⛓ hammer-phase D1 — a walk is a progress node: its climbs, the frontier verbs it applies and the walks those
      * make nest under it. Every caller (the goals, the rungs, the executors handed `walkTo`) reaches this one.
      */
-    const walkTo = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
+    const walkToRun = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
         : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts)));
+    /**
+     * ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`) — the run's `playerDeaths` count, and a refusal BY NAME when a
+     * whirlpool drowned the player since `d0` (`obstacle: {kind: 'whirlpool', id}`): a walk that died is not a walk that
+     * arrived, whatever the drive did after the respawn. OFF: `deathsNow` is 0 and nothing is asked.
+     */
+    function deathsNow() {
+        return CONTACT_FIDELITY.whirlpoolDrown ? (run.ledger('playerDeaths') ?? []).length : 0;
+    }
+    function refuseIfDrowned(d0, what, goal) {
+        if (!CONTACT_FIDELITY.whirlpoolDrown) return;
+        const d = (run.ledger('playerDeaths') ?? []).slice(d0).find((x) => x.source === 'whirlpool');
+        if (!d) return;
+        refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
+            + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not re-planned '
+            + 'from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+    }
+    const walkTo = (goal, aim, opts) => {
+        if (!CONTACT_FIDELITY.whirlpoolDrown) return walkToRun(goal, aim, opts);
+        const d0 = deathsNow();
+        let out;
+        try {
+            out = walkToRun(goal, aim, opts);
+        } catch (e) {
+            if (e instanceof SolverRefusal || e instanceof BotDriverV2Error) refuseIfDrowned(d0, opts?.what ?? 'walk', goal);
+            throw e;
+        }
+        refuseIfDrowned(d0, opts?.what ?? 'walk', goal);
+        return out;
+    };
 
     /**
      * ⛓⛓⛓ U12-swim D2 — THE PULLS THAT ARE A RIDE INTO PIT (tx, ty): every
@@ -25617,6 +25973,21 @@ function solveSegmentUnder({
         });
     }
 
+    /**
+     * ⛓ seedling-fidelity-residue D-A — a `reach-exit` goal as the pass's crossing (`{centre, cross}`), or null (not a
+     * `reach-exit`, or no such door on this level).
+     */
+    const exitAfterGoal = (g) => {
+        if (g?.kind !== 'reach-exit' || !g.exit) return null;
+        try {
+            const { index, teleporter } = findExitNamed(run.world, g.exit);
+            return { centre: { x: teleporter.rect.x + TILE_SIZE / 2, y: teleporter.rect.y + TILE_SIZE / 2 },
+                cross: { level: teleporter.to, index } };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal || e instanceof SolverBotError || e instanceof BotDriverV2Error)) throw e;
+            return null;
+        }
+    };
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY CLEARTAG — **THE `clear-tag` EXECUTOR: A SAVED
      * OBSTACLE BROKEN FROM ITS OPEN SIDE, FINISHED ON THE RUN'S LEDGER.**
@@ -26034,7 +26405,10 @@ function solveSegmentUnder({
         const drillFirst = verb === 'rope'
             ? execDrillKillsFirst(run, perTick, resolved, { what: `${whatCT} -> ${verb}`, walkTo, goal, equip,
                 // ⛓ fidelity TIMEDPASS D2: the segment's fork, for the pass's certificate (no kill reads it).
-                ...(CONTACT_FIDELITY.drillTimedPass ? { fork } : {}) }) : null;
+                ...(CONTACT_FIDELITY.drillTimedPass ? { fork } : {}),
+                // ⛓ seedling-fidelity-residue D-A: the crossing the segment asks next, for the certificate's way out.
+                ...(CONTACT_FIDELITY.drillTimedPassExit ? { exitAfter: exitAfterGoal(goals[dropKillGoal]) } : {}) })
+            : null;
         // ⛓ fidelity TIMEDPASS D2: a pass record rides beside the kills (`drillPass`), and the cut starts from its stance.
         const drillPass = drillFirst?.find((k) => k.verb === 'drill-pass') ?? null;
         const drillKills = drillPass
@@ -26284,7 +26658,7 @@ function solveSegmentUnder({
         }
         if (goal.kind === 'reach-exit') {
             awaitTentacleMouth(goal);
-            const { index, teleporter } = findExitNamed(run.world, goal.exit);
+            const { index, teleporter } = findExitNamed(run.world, goal.exit, run.state.latched ?? null);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
                 y: teleporter.rect.y + TILE_SIZE / 2,
@@ -26296,14 +26670,19 @@ function solveSegmentUnder({
             // ⛓ FRONTIER3: the walk's aim leaves a centre a pixel mask
             // blocks (`exitAimFor`); the step-off's straight walk back keeps
             // the centre it was witnessed with.
-            const t = (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
+            // ⛓ seedling-fidelity-residue D-A: a door past a drill this run cannot kill is a timed pass (null OFF).
+            const exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
+                { what: whatExit, goal, fork });
+            const t = exitPass?.transition
+                ?? (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
                 ?? walkTo(goal, exitAimFor(run.world, index,
                     solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
                     allowTeleporter: index,
                     crossTo,
                     what: whatExit,
                 });
-            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}) });
+            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}),
+                ...(exitPass ? { drillPass: exitPass.record } : {}) });
             continue;
         }
         // collect-placement

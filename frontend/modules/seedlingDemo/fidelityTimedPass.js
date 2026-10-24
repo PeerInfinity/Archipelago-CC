@@ -9,6 +9,12 @@
  *   timedpass-l28-fire-l26   the solver's plan from the L26 arrival with Fire alone: the pass past `drill@80,96` and
  *                            `drill@128,96` to (152,56), then the fire cut of `rope@160,64`
  *   timedpass-l28-fire-l25   the same from the L25 arrival — its walk wakes `drill@128,96`, so it plans a pass too
+ *
+ * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`): the cut, THEN THE WAY OUT — `TIMEDPASS_EXIT_WITNESSES`, each
+ * planned and replayed with both keys ON (its own `switches`):
+ *   residue-l28-fire-l25-exit-l26   Fire alone from the L25 arrival: the pass, the cut, then a timed pass to the L26
+ *                                   door (0,96) past the drill the rope's FallRock released onto the stance
+ *   residue-l28-fire-l25-exit-l25   the same, leaving by the L25 door (96,0) it came in by
  */
 import { ropeStaging, IDLE_TAIL } from './fidelityRope.js';
 import { dirname, join } from 'node:path';
@@ -21,6 +27,9 @@ export const TIMEDPASS_WITNESS_DIR = join(HERE, 'fixtures', 'timedpass-witness')
 /** The switches every witness is planned and replayed under: this slice's key (the rest at their defaults). */
 export const TIMEDPASS_SWITCHES = Object.freeze({ drillTimedPass: true });
 
+/** ⛓ residue D-A: the exit witnesses' switches — the pass to the cut, and the pass to the crossing after it. */
+export const TIMEDPASS_EXIT_SWITCHES = Object.freeze({ drillTimedPass: true, drillTimedPassExit: true });
+
 const L28_CUT = Object.freeze({ kind: 'clear-tag', tag: { level: 28, tag: 0 }, at: { x: 160, y: 64 },
     obstacle: 'rope@160,64' });
 
@@ -31,7 +40,15 @@ export const TIMEDPASS_WITNESSES = Object.freeze([
         persistence: [], goals: [L28_CUT] }),
 ]);
 
-/** The solver's plan (the key ON) for a witness, via `twoPassSolve` as the page solves it (its `forkRun` too). */
+const exitAt = (x, y) => Object.freeze({ kind: 'reach-exit', exit: Object.freeze({ x, y }) });
+export const TIMEDPASS_EXIT_WITNESSES = Object.freeze([
+    Object.freeze({ name: 'residue-l28-fire-l25-exit-l26', boot: Object.freeze({ level: 28, x: 96, y: 16 }),
+        items: ['hasFire'], persistence: [], goals: [L28_CUT, exitAt(0, 96)], switches: TIMEDPASS_EXIT_SWITCHES }),
+    Object.freeze({ name: 'residue-l28-fire-l25-exit-l25', boot: Object.freeze({ level: 28, x: 96, y: 16 }),
+        items: ['hasFire'], persistence: [], goals: [L28_CUT, exitAt(96, 0)], switches: TIMEDPASS_EXIT_SWITCHES }),
+]);
+
+/** The solver's plan (the key ON; a witness's own `switches` when it names them) for a witness, via `twoPassSolve` as the page solves it (its `forkRun` too). */
 export async function timedPassTape(w) {
     const { atlasLevelSource } = await import('./levelSource.js');
     const { twoPassSolve } = await import('./twoPassSolve.js');
@@ -40,7 +57,7 @@ export async function timedPassTape(w) {
     const { buildStagedTape } = await import('./botDriverV1.js');
     const staging = await ropeStaging(w);
     const levelSource = atlasLevelSource();
-    const solved = await withContactFidelity(TIMEDPASS_SWITCHES, () => twoPassSolve({
+    const solved = await withContactFidelity(w.switches ?? TIMEDPASS_SWITCHES, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: w.goals, name: w.name, boot: staging.boot, dashMode: 'all',
         persistence: staging.persistence, log: () => {},

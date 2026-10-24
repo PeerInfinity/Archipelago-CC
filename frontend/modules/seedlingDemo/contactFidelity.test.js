@@ -99,7 +99,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_GUARD_APPROACH_STANCE || !!process.env.SEEDLING_COVERED_GOAL_REFUSAL
         || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
         || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT
-        || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
+        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -120,8 +121,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) — ⚖ ON since the wave-13 harvest.
             bombPusherLive: true,
             // ⛓ fidelity MOVINGWAIT D2: `movingWait` (`solverBot.MOVING_WAIT`, a latched wait inside a lobber's reach
-            // paces) ships OFF.
-            movingWait: false,
+            // paces) shipped OFF; ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            movingWait: true,
             // ⛓ fidelity MOVINGWAIT D4: `totemShotBlastInt` (the totem shot's Explosion at its int point, r 15) and
             // `rebootShake` (a death reboot settles the camera through the shake) shipped OFF — ⚖ (user, 2026-10-12,
             // "Both ON") ON since the wave-14 flip.
@@ -182,8 +183,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             watcherTalkVerb: true,
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
             walkerBeamTowers: false,
-            // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
-            bombBlastBody: false,
+            // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) shipped OFF;
+            // ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            bombBlastBody: true,
             // ⛓ fidelity APBOSSES D2: `apReportBosses` (the R4 boss-report AS3) shipped OFF; ⛓ APFLIP D6 flipped it ON
             // inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
             apReportBosses: true,
@@ -240,7 +242,25 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             tentacleHitlessFirst: true,
             // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
-            drillTimedPass: true });
+            drillTimedPass: true,
+            // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23) turns it ON.
+            pitTeleporterCrossing: true,
+            // ⛓ fidelity WANDHOLD (wave 28): a cover behind plain Buttons refines to `weigh`; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            coverWeighRefine: true,
+            // ⛓ fidelity SEARCHGAPS D-A (wave 28): the crusher bait's press goal + L41's chains; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            crusherBaitPressGoal: true,
+            // ⛓ fidelity SEARCHGAPS D-B (wave 28): the forced-hit proof asks one hitless witness first; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            forcedHitWitnessFirst: true,
+            // ⛓ seedling-fidelity-residue D-A (wave 28): the timed pass extended to a `reach-exit`; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            drillTimedPassExit: true,
+            // ⛓ seedling-fidelity-residue D-B (wave 28): a whirlpool's drown transcribed, its pull priced; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            whirlpoolDrown: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

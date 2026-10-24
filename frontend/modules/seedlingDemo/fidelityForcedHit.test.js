@@ -6,7 +6,7 @@
  * The measured case is LEASH's leg 622 (L73, the arrival from L74, `lavarunner@72,24` diagonally adjacent): the game
  * bills the walker's crossing at t2 (`leash-l73-622-up-lavarunner`), and every input over 36 held sets is hit by t2.
  */
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
-import { CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
+import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS } from './contactFidelity.js';
 import { FORCED_HITS, FORCED_HIT_ALPHABET, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit,
     withForcedHits, worldHitsOf } from './forcedHit.js';
 import { KNOWN_STRATEGY_VERBS } from './decisionTrace.js';
@@ -79,6 +79,12 @@ describe('FORCEDHIT — the switch, the alphabet, the verb', () => {
 });
 
 describe('FORCEDHIT D1 — the PROOF is a measured fact on the run, never a search that gave up', () => {
+    // ⛓ SEARCHGAPS' flip (⚖ user "Harvest + flip both ON", 2026-10-23): `forcedHitWitnessFirst` ON adds the nine witness forks
+    // to a proof's `nodes` (1,332 → 1,341) and ends a depth-1 row on the witness's verdict; these rows pin the full-tree
+    // proof's own accounting, so they run with it OFF (`fidelityForcedHitWitness.test.js` pins the ON arm).
+    let witnessFirst;
+    beforeEach(() => { witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false; });
+    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; });
     it('leg 622: every input over 36 held sets is hit by t2 — proven at depth 2 (36 + 36² fork steps), least 1 hit', () => {
         const p = proveForcedHit(fork622);
         expect(p).toMatchObject({ proven: true, depth: 2, nodes: 1332, leaves: 1296, deadly: 0, minHits: 1,
@@ -155,6 +161,12 @@ describe('FORCEDHIT D2 — the crossing: least damage, under the budget, never a
 });
 
 describe('FORCEDHIT D2 — leg 622 (L73 → L74): OFF refuses EXHAUSTED; ON bills the one forced hit and crosses', () => {
+    // ⛓ SEARCHGAPS' flip (⚖ user "Harvest + flip both ON", 2026-10-23): `forcedHitWitnessFirst` ON adds the nine witness forks
+    // to a proof's `nodes` (1,332 → 1,341) and ends a depth-1 row on the witness's verdict; these rows pin the full-tree
+    // proof's own accounting, so they run with it OFF (`fidelityForcedHitWitness.test.js` pins the ON arm).
+    let witnessFirst;
+    beforeEach(() => { witnessFirst = CONTACT_FIDELITY.forcedHitWitnessFirst; CONTACT_FIDELITY.forcedHitWitnessFirst = false; });
+    afterEach(() => { CONTACT_FIDELITY.forcedHitWitnessFirst = witnessFirst; });
     it('OFF: the refusal is the BEFORE one (the ladder EXHAUSTED on lavarunner@72,24), and the rung is absent', () => {
         const { res, rows } = withForcedHits(false, () => solve622());
         expect(res.ok).toBe(false);
