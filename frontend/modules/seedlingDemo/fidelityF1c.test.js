@@ -42,7 +42,7 @@ import { loadExpectation, loadTape } from './fixtures/index.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
-import { HAMMER_ESCAPE, HAMMER_PHASE_RUNG, HAMMER_SAFETY, withHammerEscape } from './solverBot.js';
+import { HAMMER_ESCAPE, HAMMER_PHASE_RUNG, HAMMER_SAFETY, withHammerEscape, withStrikeEtaFloor } from './solverBot.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { RESPONDERS, opensOnTick } from './activators.js';
@@ -79,8 +79,11 @@ const TELEPORTER = { x: 176, y: 112 };
  * against (`sweep-seedling-l18-residues --twice`: 45/45 solve, 0 hits, no stall). The rung's own evidence is therefore
  * exercised with the escape OFF, through the switch (`solveOffAt`): the rows below that pin a STALL, or the rebound
  * remainder's refusal, ask the solver the question F1c asked. Beside each, a row pins what the default does there.
+ * ⛓ HAMMER-PHASE SFF — and with `STRIKE_ETA_FLOOR` OFF (⚖ user 2026-10-23 flipped it ON): the rung's evidence is the
+ * game witness `f1c-l18-phase42`, a walk recorded under the floor OFF. ON, residue 42 forms no corner (no stall) and
+ * the rebound residue solves, so F1c's question is asked as it was recorded.
  */
-const solveOffAt = (shift) => withHammerEscape(false, () => solveAt(shift));
+const solveOffAt = (shift) => withStrikeEtaFloor(false, () => withHammerEscape(false, () => solveAt(shift)));
 
 /** `twoPassSolve` exactly as `solve-seedling-r9-campaign` calls it, at a shifted clock. */
 async function solveAt(shift) {
@@ -158,10 +161,12 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
     /**
      * ⛓ HAMMER-PHASE A2: with the escape ON (the default) the corner never forms at 42 — the solve needs no stall
      * (503 t, measured) — and the rebound residue solves (445 t). Both pinned here, beside the rung's OFF rows.
+     * ⛓ HAMMER-PHASE SFF (`STRIKE_ETA_FLOOR` ON): 477 t and 372 t, still with no stall and an escape at each landing.
      */
     it('⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness\'s) and 18 (the rebound\'s), no hit, the crossing to L19', async () => {
         expect(HAMMER_ESCAPE.enabled).toBe(true);
-        for (const [residue, ticks] of [[WITNESS_RESIDUE, 503], [REBOUND_RESIDUE, 445]]) {
+        // 503 / 445 with `STRIKE_ETA_FLOOR` OFF; measured again at SFF's flip (the floor ON)
+        for (const [residue, ticks] of [[WITNESS_RESIDUE, 477], [REBOUND_RESIDUE, 372]]) {
             const r = await solveAt(shiftTo(residue));
             expect(r.out.perTick.length).toBe(ticks);
             expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])).toEqual([]);

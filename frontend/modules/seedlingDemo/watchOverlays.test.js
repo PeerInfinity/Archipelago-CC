@@ -542,16 +542,20 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
          * `r8-solve-18` 520 -> 363. FIVE presses land the six hits again — 44, 77, 110, 159, 192 — and the
          * one at t110 lands on BOTH bodies (`spinner@48,96`'s third, `spinner@112,48`'s first). No press
          * before the last kill (t193) misses.
+         *
+         * ⛓⛓ HAMMER-PHASE SFF — RE-PINNED AT THE FLIP'S RE-RECORD (`STRIKE_ETA_FLOOR` ON, ⚖ user 2026-10-23):
+         * `r8-solve-18` 363 -> 467. SIX presses land the six hits — 33, 127, 160, 240, 273, 306 — so no swing
+         * lands on both bodies again (the A2 double landing was that walk's).
          */
         const landing = collected.run.presses.filter((p) => p.hits.some((h) => h.landed));
         expect([...new Set(landing.map((p) => p.t))].sort((a, b) => a - b))
-            .toEqual([44, 77, 110, 159, 192]);
+            .toEqual([33, 127, 160, 240, 273, 306]);
         expect(landing.reduce((n, p) => n + p.hits.filter((h) => h.landed).length, 0)).toBe(6);
         // …and every press that does NOT land comes after the last kill.
         // ⛓ U6b: the 522-t walk made one press between the kills that landed
-        // nothing (t 161). ⛓ hammer-phase A2: the 363-t walk makes none (measured).
+        // nothing (t 161). ⛓ hammer-phase A2: the 363-t walk makes none (measured), nor does SFF's 467-t walk.
         const lastKill = Math.max(...collected.run.spinnerPressKills.map((k) => k.t));
-        expect(pressTicks.filter((t) => ![44, 77, 110, 159, 192].includes(t) && t <= lastKill))
+        expect(pressTicks.filter((t) => ![33, 127, 160, 240, 273, 306].includes(t) && t <= lastKill))
             .toEqual([]);
 
         // (c) ZERO damage markers — the honest L18 took nothing.

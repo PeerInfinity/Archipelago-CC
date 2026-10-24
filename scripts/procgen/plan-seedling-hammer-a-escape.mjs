@@ -48,7 +48,7 @@ async function main() {
     const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { SPINNER } = await import(join(MODULE, 'spinner.js'));
-    const { withHammerEscape } = await import(join(MODULE, 'solverBot.js'));
+    const { withHammerEscape, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
 
     const BASE = 'r9-solve-18';
     /** Live refusals' residues (the playthrough's `seam.time` 11496 and 11490), each refused at base. */
@@ -74,14 +74,19 @@ async function main() {
         const seam = { ...staging.seam, time: staging.seam.time + shift };
         const makeRun = (persistence) => createRunForStaging(
             { ...staging, seam, persistence, equips: [] }, atlasLevelSource());
-        const solve = () => twoPassSolve({
+        /**
+         * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+         * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the
+         * tape stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+         */
+        const solve = () => withStrikeEtaFloor(false, () => twoPassSolve({
             makeRun,
             goals: [{ kind: 'reach-exit', exit: TELEPORTER }],
             name: NAME,
             boot: staging.boot,
             persistence: staging.persistence.filter((c) => c.at === undefined),
             gameTick: async () => { throw new Error('no game oracle: L18\'s clear is model-sourced'); },
-        });
+        }));
         let refusedOff = null;
         try { await withHammerEscape(false, solve); } catch (e) { refusedOff = e; }
         const r = await withHammerEscape(true, solve);

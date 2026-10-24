@@ -51,8 +51,7 @@ on:
 jobs:
   seedling-wasm:
     name: Pin gate (gating) + boot and read-data (non-gating)
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES. Measured
     # 2026-08-19: this job hung 38 min in `Install Chromium for Playwright`
     # (an apt stall inside `--with-deps`) with the GATING pin gate already
@@ -144,22 +143,23 @@ jobs:
       # workflow, and re-measured locally 2026-08-19 before the fix (`npm ci`
       # on the old lock → 1.57.0 → exactly that refusal; `npx playwright
       # install chromium` installed 1194 and never 1200).
-      # ⇒ `package.json` now pins `playwright` to EXACTLY 1.56.0, the version
-      # `@playwright/test` is pinned to (`9df8ca7b0`: the cloud environment's
-      # cached chromium-1194), so `npm ls playwright` shows ONE of them and
-      # `npx playwright install` would be correct here too.
+      # ⇒ `package.json` pins `playwright` to EXACTLY the version
+      # `@playwright/test` is pinned to (1.56.0 from `9df8ca7b0`; both moved to
+      # 1.63.0, build 1243, by slice ci-ubuntu-2604 for Ubuntu 26.04), so
+      # `npm ls playwright` shows ONE of them and `npx playwright install`
+      # would be correct here too.
       # ⛔ NOT SWITCHED BACK TO `npx`, deliberately. `cli.js` is the CLI of the
       # package the scripts import — it cannot disagree with them however the
       # dependency graph moves. `npx` is correct only while the pin holds, and
       # a step that fails fast reads exactly like one that passed fast. The
       # nine `npx playwright install` call sites in .github/workflows/ drive
-      # @playwright/test suites, which want 1194 either way.
+      # @playwright/test suites, which want the same build either way.
       # ── the browser cache ───────────────────────────────────────────
       # Keyed on the PINNED playwright version rather than on
       # hashFiles('package-lock.json'): the browser build a version wants is
       # a function of that version alone, so an unrelated lockfile edit must
       # not throw the browser away. `package.json` pins `playwright` to
-      # exactly 1.56.0 (build 1194), so this key is stable until somebody
+      # an exact version, so this key is stable until somebody
       # moves the pin — at which point it SHOULD miss.
       - name: Resolve the pinned Playwright version (the cache key)
         id: pwver

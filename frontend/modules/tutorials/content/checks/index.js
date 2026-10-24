@@ -9,7 +9,7 @@
  * ⛔ Imports only content files.
  */
 import { CHECK_STORAGE_PANEL_MODE_KEY } from './storagePanel.js';
-import { CHECK_SEEDLING_SOLVE_PROGRESS_AUTO_SHOW } from './seedlingSolveProgress.js';
+import { CHECK_SEEDLING_SOLVE_PROGRESS_LINE } from './seedlingSolveProgress.js';
 import { CHECK_SEEDLING_DASH_WINDOW } from './seedlingSlowSolve.js';
 import {
     CHECK_REGION_EDIT_APWORLD_EDITOR, CHECK_REGION_EDIT_MAZE_LAB_CLOSED, CHECK_REGION_EDIT_SEEDLING_GENERATED,
@@ -20,7 +20,7 @@ const entry = (source, tutorial) => Object.freeze({ source: `frontend/modules/tu
 
 export const FEATURE_CHECKS = Object.freeze([
     entry('storagePanel.js', CHECK_STORAGE_PANEL_MODE_KEY),
-    entry('seedlingSolveProgress.js', CHECK_SEEDLING_SOLVE_PROGRESS_AUTO_SHOW),
+    entry('seedlingSolveProgress.js', CHECK_SEEDLING_SOLVE_PROGRESS_LINE),
     entry('seedlingSlowSolve.js', CHECK_SEEDLING_DASH_WINDOW),
     entry('regionEditing.js', CHECK_REGION_EDIT_MAZE_LAB_CLOSED),
     entry('regionEditing.js', CHECK_REGION_EDIT_SEEDLING_GENERATED),

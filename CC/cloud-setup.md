@@ -210,7 +210,7 @@ This installs Playwright and other testing dependencies defined in `package.json
 
 ### Step 8: Playwright Browser Setup
 
-The cloud environment typically has cached Playwright browsers from previous sessions. The project uses Playwright 1.56.0 which requires browser build 1194.
+The cloud environment typically has cached Playwright browsers from previous sessions. The project uses Playwright 1.63.0 which requires browser build 1243 (it was 1.56.0 / 1194 until 2026-10; an older cached `chromium-1194` will not do).
 
 **Check for cached browsers first:**
 
@@ -218,7 +218,7 @@ The cloud environment typically has cached Playwright browsers from previous ses
 ls ~/.cache/ms-playwright/
 ```
 
-If you see `chromium-1194` in the output, the browser is already cached and you can skip the download step.
+If you see `chromium-1243` in the output, the browser is already cached and you can skip the download step.
 
 **If cached browsers exist but tests fail:**
 
@@ -228,15 +228,15 @@ If tests fail with "Executable doesn't exist" errors, the Playwright version may
 npx playwright install --dry-run chromium 2>&1 | head -3
 ```
 
-This shows the browser build number Playwright expects (e.g., `chromium-1194`). If it doesn't match the cached version, you have two options:
+This shows the browser build number Playwright expects (e.g., `chromium-1243`). If it doesn't match the cached version, you have two options:
 
 1. **Match Playwright to cached browser** (recommended for cloud environments):
    ```bash
    # Find your cached browser version
    ls ~/.cache/ms-playwright/ | grep chromium
 
-   # If you have chromium-1194, ensure Playwright 1.56.0 is installed
-   npm install @playwright/test@1.56.0 --save-dev
+   # If you have chromium-1243, ensure Playwright 1.63.0 is installed
+   npm install @playwright/test@1.63.0 --save-dev
    ```
 
 2. **Download new browser** (may be blocked in cloud environments):
@@ -248,6 +248,7 @@ This shows the browser build number Playwright expects (e.g., `chromium-1194`). 
 
 | Playwright Version | Browser Build |
 |-------------------|---------------|
+| 1.63.0            | 1243          |
 | 1.56.0            | 1194          |
 | 1.55.0            | 1187          |
 | 1.53.0            | 1178          |
@@ -341,10 +342,10 @@ Error: Download failed: server returned code 403 body 'Host not allowed'
 ls ~/.cache/ms-playwright/ | grep chromium
 ```
 
-Then install a matching Playwright version. For example, if you have `chromium-1194`:
+Then install a matching Playwright version. For example, if you have `chromium-1243`:
 
 ```bash
-npm install @playwright/test@1.56.0 --save-dev
+npm install @playwright/test@1.63.0 --save-dev
 ```
 
 ### Issue: Playwright "Executable doesn't exist" Error
@@ -456,8 +457,8 @@ git submodule update --init frontend/modules/shared
 npm install
 
 # Check for cached Playwright browser
-if [ -d ~/.cache/ms-playwright/chromium-1194 ]; then
-    echo "Found cached Playwright browser (chromium-1194)"
+if [ -d ~/.cache/ms-playwright/chromium-1243 ]; then
+    echo "Found cached Playwright browser (chromium-1243)"
 else
     echo "No cached browser found, attempting download..."
     PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium || \
