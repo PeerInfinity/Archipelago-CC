@@ -24976,3 +24976,33 @@ early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_W
 - A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
 - "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
   window is a 2 px band at each hop.
+
+### Seedling fidelity WANDHOLD — L40's hold is the solver's stillness, not the game's; L39's cover is a wall a plain Button cannot redeem (`coverWeighRefine`, OFF)
+
+Wave 28, `seedling-fidelity-wandhold` (base `d3346cf784`). Report: `CC/docs/cloud-reports/seedling-fidelity-wandhold.md`.
+
+**L40 (sweep legs 368 / 371, `Totem Part 64,144`).** The refusal *"the hold stands still for up to 131 tick(s) … inside
+bombpusher@112,128's 256 px reach"* is the solver's choice of stance, not a game requirement: `buttonroom@272,208` is a
+`room = -1` ButtonRoom, so group 0 LATCHES (*"Can't be reset to false!!"*) and the fade completes whoever stands where.
+The wait the game allows was already built: MOVINGWAIT's paced hold (`movingWait`, OFF). At this base, `movingWait` ON
+solves leg 368 (1601 t); leg 371's walk then throws on a blast that lands on `spinner@192,160` (`bombBlastBody`, OFF).
+With both ON both legs SOLVE (two paced holds each), and the game (p4g, damage on) plays both plans to the part with 0
+hits, the model at 0 px on every sampled tick, every bomb to the bit (`fixtures/bomb-witness/wandhold-l4{1,2}-*-paced`).
+No new key: the licence asked is the pair's flip.
+
+**L39 (js links-b, `Totem Part 72,40` from L38).** Not a planner geometry defect. `wandlock@144,64`'s presser
+`button@112,144` lies under `cover@112,144` {t 2}, whose only presser is the plain `button@160,144`. The outlive
+refinement (`refineStrategy`, slice 3b) asks `KILL_LOCK_TAGS` only, so a cover kept `hold` and guard (iii) hypothesised it
+open; the walk then ground 400 ticks against it. Game witness `wandhold-l39-cover-shuts`: the cover opens while the button
+is held and shuts the moment the player steps off (stop at x 130.25). `coverWeighRefine` (OFF) asks a cover the lock's
+question; ON, L39's four survey steps (66/92/133/153) refuse by name, naming the cover as the wall. The room's real
+answer is Fire: its blocks are `PushableBlockFire` (moved by "Fire" / "Pulse" shots only) and the rules gate
+r2c11 → r0c9 on Fire — a fire-push weigh nobody models yet (handed to the planner; FIREPUSH's family).
+
+**Trap candidates.**
+- A refusal that says a hold "stands still" is quoting the executor's contract, not the game. Ask whether the group
+  latches before asking where to stand.
+- Guard (iii)'s comment says a surviving `hold` must have a latching presser; that was true only for the tags the
+  refinement asks. Any responder outside `KILL_LOCK_TAGS` with an occupancy guard (Cover) needs the same question.
+- A game sample that repeats the previous tick at the end of a collect is the pickup freeze, not a divergence: cut a
+  witness one tick before it.
