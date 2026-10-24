@@ -24765,6 +24765,43 @@ with `=0`. Censuses unmoved.
 **Trap candidates.**
 - A witness row that reproduces a solve pins every switch its premise needs, not only the one it is named for: a
   later default flip moves the solve under it, and the honest fix is to pin, not to re-record a game-witnessed tape.
+
+### Seedling hammer-phase SFF — the strike-timing floor flipped ON
+
+⚖ User, 2026-10-23: *"Yes, please go ahead with that plan"* — the press-kill guards first (GF), then
+`STRIKE_ETA_FLOOR` as one dedicated flip-and-re-record slice. This is that slice. The report is
+`CC/docs/cloud-reports/seedling-hammer-strike-floor-flip.md`.
+
+**The flip.** `solverBot.STRIKE_ETA_FLOOR.enabled` reads `… !== '0'` (the page's worker has no `process`, so it is ON
+there; `=0` opts a node process out), and `STRIKE_ETA_FLOOR_DEFAULT` is `true`.
+
+**The table, re-measured at the guards-ON base.** SF3's table (guards OFF) reproduced at `dbe7668ca7`: the identity
+digests are SF3's OFF and ON byte for byte, the same 8 roster producers go red, and SF3's 29 + 3 gate rows plus one more
+(GF's guards-ON sibling in `hammerGhostKillRung`, 1216 → 778).
+
+**What moved, by kind.**
+- **(m), re-pinned or re-recorded.** The three solve producers re-recorded with their own write mode, and the game
+  recorded their streams (`check-seedling-bot-differential --record --only=…`). `r8-solve-18` 363 → 467 t, `r8-d2`
+  1,669 → 1,773 t, `r9-solve-18` 440 → 390 t (Σ 10,622 → 10,572). Every later campaign seam's clock and RNG moved 50
+  ticks; the game agrees on all 16 moved tapes. The two chains' `{18,0}` provenance rows followed: 305 → 419 and 406 → 355.
+  Gate rows pin the default's new answer, among them `solverSpinnerKill` F2, `procgenScratchPersistence` 142 → 133,
+  HO2 1202 → 788, `watchOverlays` and the B1 / B2 / D3 / B3 lengths.
+- **(w), pinned floor OFF.** The game-witnessed walks: `f1c-l18-phase`, `hammer-a-escape` ×2, `-b1-approach`,
+  `-b2-fight`, `-g1-ghostkill`, `-bw-bombstand` and `l40button-witness`. Every producer `--check` is byte-identical.
+  Their gate rows are pinned the same way, with ON siblings where ON is a claim (escape OFF at residues 21 / 15 now
+  solves in 474 / 540 t). `solveProgress`'s residue-21 room is the escape21 witness's solve and is pinned OFF, with an
+  ON byte-identity row beside it. The pre-flip `r9-solve-18` is kept as `witness-bases/r9-solve-18.flip14.json` for
+  the escape cache's key rows.
+- **(s).** One, handed over: P2 (`STRIKE_SCAN_COST`) keeps every answer under the floor ON, but not the far refusal's
+  `etaSkipped` count (9,149 against 16,202). The row is pinned OFF, and an ON sibling names the difference.
+
+**Gates.** Producer roster 93 run / 0 red, ON and with `=0`. Censuses unmoved.
+
+**Trap candidates.**
+- A test that drives a COMMITTED tape's keys to a tick (a press, a still player) is pinning the walk, not only the
+  state: freeze the walk it means (`witness-bases/`), or it moves with the next re-record of that tape.
+- A re-recorded segment drags its chain's provenance row (`clears[].evidence.removedAt`) and every later seam with it.
+  The producer's write mode does not touch `playthroughWalk.js`: the differential's chain law is what finds it.
 ### Seedling fidelity SPEARRECT — the spear's test as the game runs it, for every spear arm (`spearGameTest`, OFF)
 
 Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "SPEAR-RECT slice" from DRILL's hand-over). The

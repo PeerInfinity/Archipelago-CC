@@ -168,8 +168,8 @@
     "rng": {
         "seed": 1301078681,
         "split": true,
-        "cosmetic": 2083748393,
-        "fp": 885263110
+        "cosmetic": 1970067558,
+        "fp": 1979538806
     },
     "seam": {
         "items": {
@@ -192,7 +192,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 16234,
+        "time": 16184,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 448,

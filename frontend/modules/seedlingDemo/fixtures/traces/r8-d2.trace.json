@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-d2",
-    "tick_count": 1669,
+    "tick_count": 1773,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,11 +49,11 @@
             ]
         },
         {
-            "tick": 306,
+            "tick": 420,
             "saw": {
                 "level": 18,
-                "x": 120.04696464039377,
-                "y": 38.64338968322856,
+                "x": 135.93297272780316,
+                "y": 73.51457120368384,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -70,9 +70,9 @@
                 "waypoints": 2,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 57,
-                    "baseline": 110,
-                    "saved": 53,
+                    "ticks": 47,
+                    "baseline": 81,
+                    "saved": 34,
                     "windows": [
                         {
                             "at": 0,
@@ -84,15 +84,7 @@
                             ]
                         },
                         {
-                            "at": 20,
-                            "prefix": [
-                                0,
-                                2,
-                                8
-                            ]
-                        },
-                        {
-                            "at": 40,
+                            "at": 23,
                             "prefix": [
                                 0,
                                 2,
@@ -102,10 +94,10 @@
                         }
                     ],
                     "legs": [
-                        39,
-                        18
+                        26,
+                        21
                     ],
-                    "scanned": 12,
+                    "scanned": 36,
                     "why": null
                 }
             },
@@ -126,17 +118,16 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "3 of 12 scanned preview(s) — first at walk-offset 0: 110 tick(s) against 110 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "31 of 36 scanned preview(s) — first at walk-offset 0: 81 tick(s) against 81 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
                 "down",
-                "primary",
-                "right"
+                "primary"
             ]
         },
         {
-            "tick": 363,
+            "tick": 467,
             "saw": {
                 "level": 19,
                 "x": 24,
@@ -180,7 +171,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 845,
+            "tick": 949,
             "saw": {
                 "level": 19,
                 "x": 104.42432832535793,
@@ -252,7 +243,7 @@
             ]
         },
         {
-            "tick": 892,
+            "tick": 996,
             "saw": {
                 "level": 19,
                 "x": 105.33520025509253,
@@ -284,7 +275,7 @@
             ]
         },
         {
-            "tick": 931,
+            "tick": 1035,
             "saw": {
                 "level": 19,
                 "x": 105.33520025509253,
@@ -326,7 +317,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 1044,
+            "tick": 1148,
             "saw": {
                 "level": 19,
                 "x": 56.003959587755006,
@@ -423,7 +414,7 @@
             ]
         },
         {
-            "tick": 1109,
+            "tick": 1213,
             "saw": {
                 "level": 20,
                 "x": 200,
@@ -542,7 +533,7 @@
             ]
         },
         {
-            "tick": 1231,
+            "tick": 1335,
             "saw": {
                 "level": 20,
                 "x": 118.68384576779738,
@@ -574,7 +565,7 @@
             ]
         },
         {
-            "tick": 1270,
+            "tick": 1374,
             "saw": {
                 "level": 20,
                 "x": 118.68384576779738,
@@ -624,7 +615,7 @@
             "note": "merged: hold decided on the same tick; merged: walk decided on the same tick"
         },
         {
-            "tick": 1409,
+            "tick": 1513,
             "saw": {
                 "level": 20,
                 "x": 173.8972027629171,
@@ -687,7 +678,7 @@
             ]
         },
         {
-            "tick": 1518,
+            "tick": 1622,
             "saw": {
                 "level": 20,
                 "x": 200.34720276291702,

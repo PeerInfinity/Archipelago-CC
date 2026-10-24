@@ -1,13 +1,13 @@
 /**
  * seedlingDemo/hammerStrikeEtaFloor.test — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED
- * ETA (`STRIKE_ETA_FLOOR`, `solverBot.js`, OFF).
+ * ETA (`STRIKE_ETA_FLOOR`, `solverBot.js`, ON since hammer-phase SFF — the user's flip, 2026-10-23).
  *
  * SC measured `minTicksBetween` (`ceil(cheb / WALK_SPEED)`) inadmissible — an axis runs at up to 2·`moveSpeed` and the
  * arrival tolerance shortens a walk — and measured that an admissible floor ALONE refuses where the base finds a
  * strike (the forty fill with admissible pairs whose real walk is too slow). ON is the floor plus the measured ETA:
  * the bounded pass previews a cell at its first opportunity and skips the pairs its walk cannot make, the budget
  * counted in distinct cells previewed. The rows:
- *   · the switch ships OFF, and its wrapper restores it (also on a throw);
+ *   · the switch ships ON (SFF; `SEEDLING_STRIKE_ETA_FLOOR=0` opts out), and its wrapper restores it (also on a throw);
  *   · the floor's edges: the 1.6 cap, the tolerance, a knocked-back `v0`, ice (a tile, the sticky flag) and a
  *     waterfall — each one a mutant's row (`WALK_SPEED` for 1.6, the tolerance dropped, `v0` ignored);
  *   · two derivations on committed walks: one where ON presses EARLIER at a cell OFF's floor skipped at that tick,
@@ -40,9 +40,9 @@ const stub = ({ x = 0, y = 0, vx = 0, vy = 0, onIce = false, tiles = [] } = {}) 
 const floorTo = (run, x, y) => strikeEtaFloorOf(run)({ x, y });
 
 describe('STRIKE_ETA_FLOOR — the switch', () => {
-    it.skipIf(globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR !== undefined)('ships OFF', () => {
-        expect(STRIKE_ETA_FLOOR_DEFAULT).toBe(false);
-        expect(STRIKE_ETA_FLOOR.enabled).toBe(false);
+    it.skipIf(globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR === '0')('ships ON (the user\'s flip, hammer-phase SFF, 2026-10-23)', () => {
+        expect(STRIKE_ETA_FLOOR_DEFAULT).toBe(true);
+        expect(STRIKE_ETA_FLOOR.enabled).toBe(true);
     });
 
     it('withStrikeEtaFloor sets and restores it, also on a throw', () => {

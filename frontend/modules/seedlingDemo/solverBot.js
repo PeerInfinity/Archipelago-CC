@@ -134,7 +134,7 @@ import {
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect,
     HITBOX, WALK_SPEED,
-    // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
+    // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, ON since SFF).
     SLIDING_SPEED, hazardFlagsFor,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     // ⛓ Seedling DK: the leg pre-check's gain (`dashLegGain`) steps one window over every terrain speed.
@@ -10503,7 +10503,7 @@ function strikeStandBlast(run, walk, cell, until) {
  * 1.595), and `hasArrived`'s tolerance makes a walk SHORTER. Measured (SC):
  * 77 % of the arrived strike previews beat `ceil(cheb / WALK_SPEED)`, by up to
  * 100 ticks, so the floor skips reachable strikes. The admissible floor and
- * the measured ETA are `STRIKE_ETA_FLOOR` (OFF), below.
+ * the measured ETA are `STRIKE_ETA_FLOOR` (ON since SFF), below.
  */
 const STRIKE_CANDIDATES = 40;
 
@@ -10546,7 +10546,8 @@ function minTicksBetween(from, to) {
 export const STRIKE_PREVIEW_CAP = 16;
 
 /**
- * ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — **AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA** (`STRIKE_ETA_FLOOR`, OFF).
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE SF — **AN ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA** (`STRIKE_ETA_FLOOR`, ON since
+ * hammer-phase SFF).
  *
  * SC measured `minTicksBetween` inadmissible (its docblock), and measured that swapping in an admissible floor ALONE
  * is not the fix: the looser floor lets the bounded pass's forty fill with pairs at cells whose real walk is too slow
@@ -10568,19 +10569,26 @@ export const STRIKE_PREVIEW_CAP = 16;
  * keeps its meaning — the pairs the floor dropped — ON and OFF. ⛓ SF2: so are the pairs OFF's floor skips past the
  * preview budget (`capSkipped`): `unreachable` stays the live (admissible) floor's count.
  *
- * ⛓ THE SWITCH — `STRIKE_ETA_FLOOR`, OFF (`SEEDLING_STRIKE_ETA_FLOOR=1` opts a process in, or
- * `withStrikeEtaFloor(true, fn)`). OFF, `deriveStrike` computes exactly what it computed before: the same floor, the
- * same calls in the same order. Its flip is a TAPE MOVE (it changes chosen strikes) and the user's call.
+ * ⛓ THE SWITCH — `STRIKE_ETA_FLOOR`, **ON** since hammer-phase SFF (⚖ user, 2026-10-23: *"Yes, please go ahead with
+ * that plan"* — the press-kill guards first (GF), then this floor as its own flip-and-re-record slice).
+ * `SEEDLING_STRIKE_ETA_FLOOR=0` opts a process out, or `withStrikeEtaFloor(false, fn)`. OFF, `deriveStrike` computes
+ * exactly what it computed before the floor: the same floor, the same calls in the same order. The flip was a TAPE
+ * MOVE (it changes chosen strikes). SF3 measured it at `ef6bdd6d86` (`seedling-hammer-strike-floor-remeasure.md`):
+ * 0 solves gained or lost; the L18 sweep 1.35× OFF's wall, staging A 0.24× / 0.29×, killgate s5 / s9 ~0.5×;
+ * `r8-solve-18` 363 → 467 t, `r8-d2` 1,669 → 1,773 t, `r9-solve-18` 440 → 390 t. A row or producer whose witness is a
+ * game-played walk under OFF pins `withStrikeEtaFloor(false, …)` (`seedling-hammer-strike-floor-flip.md`).
+ * ⛔ Like `STRING_PULL_FAST`, the initialiser is the default: the page's solver worker has no `globalThis.process`,
+ * so `!== '0'` reads ON there.
  * It lives here, beside the strike's other switches, and not in `pressKillCost.js`: nothing in `levelRun.js`'s import
  * closure reads it (the two readers, `deriveStrike` and `strikeScanBox`'s floor, are this file's), so the door
  * (`solverView.js`) does not need it.
  */
 export const STRIKE_ETA_FLOOR = {
-    enabled: globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR === '1',
+    enabled: globalThis.process?.env?.SEEDLING_STRIKE_ETA_FLOOR !== '0',
     /** ⛓ SF2: the bounded pass's preview budget, `STRIKE_PREVIEW_CAP` (a test may set 0 = OFF's pass, ∞ = SF's) */
     previewCap: STRIKE_PREVIEW_CAP,
 };
-export const STRIKE_ETA_FLOOR_DEFAULT = false;
+export const STRIKE_ETA_FLOOR_DEFAULT = true;
 
 /** Run `fn` with `STRIKE_ETA_FLOOR` set to `enabled`, restoring the previous value (also on a throw). */
 export function withStrikeEtaFloor(enabled, fn) {
@@ -10844,7 +10852,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const lines = PRESS_KILL_COST.enabled ? new Map() : null;
     // ⛓ hammer-phase P2: the lines earlier derivations asked (`carriedLineBook`, resolved at the first line), or none OFF
     const carried = STRIKE_SCAN_COST.enabled ? { run, book: undefined } : null;
-    // ⛓ hammer-phase SF: the admissible floor and the measured ETA (`STRIKE_ETA_FLOOR`, OFF ⇒ neither)
+    // ⛓ hammer-phase SF: the admissible floor and the measured ETA (`STRIKE_ETA_FLOOR`; OFF ⇒ neither)
     const measured = STRIKE_ETA_FLOOR.enabled;
     // ⛓ The ETA floor, once per cell — `minTicksBetween` OFF, `strikeEtaFloorOf` ON (see both).
     const floorOf = measured ? strikeEtaFloorOf(run) : null;

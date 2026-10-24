@@ -25,7 +25,7 @@ import {
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS, PRESS_KILL_BOMBS_DEFAULT, resetPressKillBombsCounts,
     withPressKillBombs,
 } from './pressKillCost.js';
-import { deriveRefuge, deriveStrike } from './solverBot.js';
+import { deriveRefuge, deriveStrike, withStrikeEtaFloor } from './solverBot.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -66,8 +66,13 @@ describe('PRESS_KILL_BOMBS — the switch', () => {
 });
 
 describe('PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk)', () => {
+    /**
+     * ⚖ (248,184) is the stance the witness walk took: MOVINGWAIT's solve chose it with `STRIKE_ETA_FLOOR` OFF, and the
+     * game played it into #7's blast. hammer-phase SFF flipped the floor ON (ON, OFF's derivation here picks (248,168)),
+     * so this row pins the floor OFF to keep asking the witness's own question.
+     */
     it('t1099, the kill\'s first tick: OFF stands on (248,184) to press at t1153; ON names #7\'s blast on that '
-        + 'stance and strikes from (232,184)', () => {
+        + 'stance and strikes from (232,184) (the strike floor OFF: the witness walk\'s)', () => withStrikeEtaFloor(false, () => {
         const run = runAt(1099);
         expect(run.ticksCompleted).toBe(1099);
         const off = withPressKillBombs(false, () => deriveStrike(run, BODY, NO_CONTACTS, 0));
@@ -82,7 +87,7 @@ describe('PRESS_KILL_BOMBS — leg 381 (the MOVINGWAIT witness walk)', () => {
         expect(PRESS_KILL_BOMBS_COUNTS.strikeRefused).toBe(8);
         const why = bombWhys(on).find((r) => r.option === 'strike (248,184) at +54');
         expect(why?.why).toMatch(/at \+57 bombpusher@112,128#7's Explosion at \(256,187\) lands on the stance/);
-    }, 120_000);
+    }), 120_000);
 
     it('t1150, #7 in the air: OFF still stands on (248,184); ON has no stance #7 does not reach, and its refuge '
         + 'leaves the blast', () => {

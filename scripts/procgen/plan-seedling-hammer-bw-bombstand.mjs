@@ -64,9 +64,12 @@ export async function bombStandStaging() {
 /**
  * One `solveSegment` with `MOVING_WAIT` ON and `PRESS_KILL_BOMBS` = `enabled`: the executed keys and the outcome.
  * `strikeIframeLapse` is pinned to `lapse` (OFF by default: the INTERIM pin above).
+ * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+ * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the tape
+ * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
  */
 export async function bombStandSolve(staging, enabled, { lapse = false } = {}) {
-    const { solveSegment, withMovingWait } = await import(join(MODULE, 'solverBot.js'));
+    const { solveSegment, withMovingWait, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const { withPressKillBombs } = await import(join(MODULE, 'pressKillCost.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
@@ -78,14 +81,14 @@ export async function bombStandSolve(staging, enabled, { lapse = false } = {}) {
     const advance = run.advance;
     run.advance = (held) => { keys.push(new Set(held)); return advance.call(run, held); };
     let message = null;
-    withContactFidelity({ strikeIframeLapse: lapse }, () => withMovingWait(true, () => withPressKillBombs(enabled, () => {
+    withStrikeEtaFloor(false, () => withContactFidelity({ strikeIframeLapse: lapse }, () => withMovingWait(true, () => withPressKillBombs(enabled, () => {
         try {
             solveSegment({ run, goals: [JSON.parse(JSON.stringify(L40BUTTON_GOAL))], name: NAME, boot: staging.boot,
                 dashMode: 'all' });
         } catch (e) {
             message = String(e?.message ?? e);
         }
-    })));
+    }))));
     return { keys, message, hits: run.ledger('playerHits').map((h) => ({ t: h.t, source: h.source, id: h.id })) };
 }
 
