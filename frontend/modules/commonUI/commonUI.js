@@ -1458,14 +1458,16 @@ class CommonUI {
         const ifDetails = document.createElement('div');
         ifDetails.style.marginLeft = '10px';
 
-        if (rule.condition) {
+        // The exporter writes the if_statement's condition as `test`.
+        const ifCondition = rule.test ?? rule.condition;
+        if (ifCondition) {
           const condLabel = document.createElement('div');
           condLabel.textContent = 'Condition:';
           ifDetails.appendChild(condLabel);
           const condNode = document.createElement('div');
           condNode.style.marginLeft = '10px';
           condNode.appendChild(
-            this.renderLogicTree(rule.condition, useColorblind, stateSnapshotInterface)
+            this.renderLogicTree(ifCondition, useColorblind, stateSnapshotInterface)
           );
           ifDetails.appendChild(condNode);
         }

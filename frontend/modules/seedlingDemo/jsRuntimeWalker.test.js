@@ -11,12 +11,13 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
-import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID, WALK_TOLERANCE, nextWaypoint } from './jsRuntimeWalker.js';
+import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID, WALK_TOLERANCE, nextWaypoint, stepOffPoint } from './jsRuntimeWalker.js';
 import { drive, driveStepHeld, livePerVisitOpts, planTilePath, planWaypoints } from './botDriverV2.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { arrivalStaging } from './fidelityArrival.js';
 import { hasArrived } from './botDriverV1.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
 import { planLevelSetChunks } from './levelSetValidator.js';
@@ -385,4 +386,24 @@ describe('jsRuntimeWalker — an intermediate waypoint on ice (wave 16 waypointS
         expect(r.state).toBe(WALK_STATES.FAILED);
         expect(r.seq).toEqual(legacy(x, y, r.seq.length));
     }));
+});
+
+// ⛓ fidelity PITPORT flip (planning-11; js-9's ruling (b)): standing LATCHED on a door on a Pit tile, `stepOffPoint` (the
+// twin of `solverBot.stepOffCellFor`) finds no step off under `pitTeleporterCrossing` — PITLATCH's game witnesses
+// (`fixtures/pitdoor-witness/pitdoor-l{43,100}-latched.json`): the Pit takes the player at t0 of any step off it, and the door
+// never fires. OFF keeps today's answer (`snapStart` skips the start's pit tile): the KNOWN OFF HOLE, pinned.
+describe('jsRuntimeWalker — the step-off from a LATCHED pit door (PITPORT + PITLATCH)', () => {
+    const DOORS = { 43: { x: 144, y: 64, off: { x: 152, y: 56 } }, 100: { x: 288, y: 96, off: { x: 296, y: 88 } } };
+    const latchedRun = (level) => createRunForStaging(
+        arrivalStaging({ level, x: DOORS[level].x, y: DOORS[level].y }, { items: ['hasSword'] }), atlasLevelSource());
+    it.each([43, 100])('L%i: ON `stepOffPoint` is null (no step off a latched pit door); OFF the known hole plans across the pit', (level) => {
+        for (const on of [true, false]) {
+            withContactFidelity({ pitTeleporterCrossing: on }, () => {
+                const run = latchedRun(level);
+                const [i] = [...run.state.latched];
+                expect(run.world.teleporters[i]).toMatchObject({ x: DOORS[level].x, y: DOORS[level].y });
+                expect(stepOffPoint(run, i), on ? 'ON' : 'OFF').toEqual(on ? null : DOORS[level].off);
+            });
+        }
+    });
 });

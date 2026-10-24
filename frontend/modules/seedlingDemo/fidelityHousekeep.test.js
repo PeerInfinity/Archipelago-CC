@@ -22,6 +22,7 @@ import { SEEDLING_SET_PATCHES, patchedMapDocument } from './seedlingSetPatches.j
 import { REFUSAL_BY_NAME, SolverRefusal, solveSegment } from './solverBot.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { progressKind } from './solveProgress.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 // ⛓ wave-19 harvest: the rules arc's rock removal (main 879bec39a5) delivers L74 and L29 WITHOUT their fallrock and
 // button, so the delivered set no longer reaches the frozen press or the orphan presser. These rows stage the set as it
@@ -64,8 +65,10 @@ describe('housekeep D1: a named throw leaves solveSegment as a SolverRefusal', (
         expect(progressKind(e.cause)).toBe('unmodelled');
     });
 
-    it('survey step 113 (L43\'s door to L37): the teleporter on a pit tile', () => {
-        const e = thrown(PIT);
+    // ⛓ PITPORT's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23): ON a LIVE door on its pit is an exit (the game takes
+    // the door) — this named refusal is the OFF arm's.
+    it('survey step 113 (L43\'s door to L37): the teleporter on a pit tile (pitTeleporterCrossing OFF)', () => {
+        const e = withContactFidelity({ pitTeleporterCrossing: false }, () => thrown(PIT));
         expect(e.name).toBe('SolverRefusal');
         expect(e instanceof SolverRefusal).toBe(true);
         expect(e.obstacle).toEqual({ kind: 'unmodelled-pit-teleporter', id: 'teleporter@144,64', tile: [9, 4] });
@@ -112,7 +115,8 @@ describe('housekeep D1: a named throw leaves solveSegment as a SolverRefusal', (
         let inner = null;
         const e = thrown(() => solve(ATLAS, 74, { x: 288, y: 128 }, { kind: 'reach-exit', exit: { x: 288, y: 144 } },
             // `walk` is emitted inside the outer segment's loop (`segment` is emitted before it is entered)
-            { onProgress: (site) => { if (site === 'walk' && inner === null) inner = thrown(PIT); } }));
+            // ⛓ PITPORT's flip: the inner refusal is the pit door's OFF arm
+            { onProgress: (site) => { if (site === 'walk' && inner === null) inner = withContactFidelity({ pitTeleporterCrossing: false }, () => thrown(PIT)); } }));
         expect(inner?.name).toBe('BotDriverV2Error');
         expect(inner.obstacle?.kind).toBe('unmodelled-pit-teleporter');
         expect(e.name).toBe('SolverRefusal');

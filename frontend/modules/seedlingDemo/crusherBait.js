@@ -169,10 +169,11 @@ export function baitRoom(run, liveOpts) {
  * @param {object} p.inventory
  * @param {object} p.aimRect       a rect the player box must overlap (the pickup, the trigger)
  * @param {number|null} p.allowTeleporter  the teleporter index the aim enters, if any
+ * @param {object} p.latchOpts     ⛓ fidelity PITLATCH: `pitLatchOpts(run)` — the arrival latch for the planner's pit arm
  * @returns {{ordering, chains, stats} | {ordering: null, stats, why}}
  */
 export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
-    allowTeleporter = null, maxStates = BAIT_SEARCH.maxStates }) {
+    allowTeleporter = null, maxStates = BAIT_SEARCH.maxStates, latchOpts = {} }) {
     const room = baitRoom(run, liveOpts);
     if (!room) return { ordering: null, stats: { expanded: 0 }, why: 'the room holds no crusher' };
     const { ids, home, staticSolids } = room;
@@ -215,7 +216,8 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
         if (v === undefined) {
             if (c.opts === null) {
                 c.live = liveMap(c.cfg);
-                c.opts = { ...liveOpts, avoidVolumes: false, ...(inventory ? { inventory } : {}), crushers: c.live };
+                c.opts = { ...liveOpts, avoidVolumes: false, ...(inventory ? { inventory } : {}), crushers: c.live,
+                    ...latchOpts };
             }
             v = plannerObstacleAt(world, cellX(n), cellY(n), tp, c.opts) === null;
             c.free.set(k, v);
