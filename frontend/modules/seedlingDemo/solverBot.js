@@ -7416,7 +7416,21 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
  * @returns {{steps: ?object[], rejected: object[], found: object[], expansions: number,
  *   refused: ?{bound: string, why: string}, census: RouteCensusRow[]}}
  */
-export const MAX_ROUTE_ORDERS = 8;
+/**
+ * ⚖ RAISED 8 → 48 (user, 2026-10-24), on the census. MEASURED on CI with every
+ * search logged (survey `--through=end --route=full`, 21 searches; full
+ * divergence sweep, 1892): at 8/2000 and at 200/100000 the two tables are the
+ * same search for search — none refused on either bound, and none went deeper
+ * than depth 5 (L15). The only live cut on record is swordless L16 (depth 8
+ * still reached 5 new block cells), which exhausts at depth 11 in 828
+ * expansions. 48 covers the 35-order fire-block chain of L40 (fidelity
+ * FIREMOVE) with headroom. `MAX_ROUTE_EXPANSIONS` is unchanged: the largest
+ * spend measured is 828, and a 35-order route's spend is FIREMOVE's to
+ * measure. A stop on "no new cells" is NOT equivalent to exhaustion — L15's
+ * depth 2 reached 0 new block cells and its route finished at depth 5 — so
+ * there is none; a depth with no new STATE already empties the queue.
+ */
+export const MAX_ROUTE_ORDERS = 48;
 export const MAX_ROUTE_EXPANSIONS = 2000;
 
 /**
