@@ -1182,7 +1182,7 @@ export const CONTACT_FIDELITY = {
      * (L40: `button@816,400` → `pulser@592,576` → west into (35,36)). The Fire press is considered and named, not
      * executed. OFF: byte-identical. `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1` for a node measurement.
      */
-    fireBlockPulseShove: false,
+    fireBlockPulseShove: true,
     /**
      * fidelity FIREPUSH (wave 28) — A FIRE PRESS REACHES AN ICE TURRET WHERE IT IS NOW (`presses.fireRespondersIn`).
      * `fire()`'s candidates are `collideRectInto` against each entity's CURRENT hitbox, and a dead `IceTurret` is a
@@ -1193,7 +1193,7 @@ export const CONTACT_FIDELITY = {
      * button. ON: the live rect and origin (`run.entities('turrets')`). OFF: byte-identical.
      * `SEEDLING_FIRE_LIVE_TURRET_REACH=0|1` for a node measurement.
      */
-    fireLiveTurretReach: false,
+    fireLiveTurretReach: true,
     /**
      * fidelity FIREPUSH (wave 28) — A PULSER READS THE FLAG ITS BUTTON PUBLISHED LAST TICK (`levelRun.stepPulsersNow`).
      * `Game.loadlevel` adds `button` (`Game.as:2341`) and `buttonroom` (`:2342`) BEFORE `pulser` (`:2357`), and
@@ -1204,7 +1204,7 @@ export const CONTACT_FIDELITY = {
      * arm is lagged one tick, carried on the pulser's own state (`pressedLast`, in `stateDigestParts`' `visit` through
      * `pulserStates`); a LATCHED group is read as before. OFF: byte-identical. `SEEDLING_PULSER_PUBLISH_LAG=0|1`.
      */
-    pulserPublishLag: false,
+    pulserPublishLag: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
