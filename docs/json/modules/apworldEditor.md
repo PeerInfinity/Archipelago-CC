@@ -78,9 +78,9 @@ shared with the APCalc Generator's `⭳ .apworld` button.
 - **Needs the network** for the Pyodide CDN, even on a local server.
 - **Strict by default; `lossy` is opt-in (rule-node R2c).** `world_generator`
   fails on a rule kind or helper name it has no codegen for, naming it and the
-  game (⚖ D3 of the rule-node registry). In 10 committed presets it fails this
-  way: bomb_rush_cyberfunk, lingo, pokemon_rb, raft, sc2, sm, smz3, soe,
-  yachtdice and yugioh06. Most keep their helper bodies only in a JS
+  game (⚖ D3 of the rule-node registry). In 9 committed presets it fails this
+  way: bomb_rush_cyberfunk, lingo, pokemon_rb, sc2, sm, smz3, soe, yachtdice
+  and yugioh06. All but smz3 keep their helper bodies only in a JS
   `gameLogic/` module. The toolbar's `lossy` checkbox
   (`.apworld-build-lossy`) is the CLI's `--lossy`. It mirrors the module
   setting `moduleSettings.apworldEditor.apworldBuildLossy` (default **false**;
