@@ -79,32 +79,42 @@ def lossy_codegen(enabled: bool = True, game: Optional[str] = None) -> Iterator[
             _codegen_game.reset(game_token)
 
 
-class Speculation:
-    """The scratch record of one speculative conversion; :meth:`keep` folds it into the real record."""
+# Every per-generation record a speculative conversion must not leak into. A new record
+# contextvar (a Counter, None when off) registers here so speculative_record covers it too.
+SPECULATIVE_RECORDS: list = [_lossy_record]
 
-    def __init__(self, outer: Optional[collections.Counter], scratch: Optional[collections.Counter]):
-        self._outer = outer
-        self.scratch = scratch
+
+class Speculation:
+    """The scratch records of one speculative conversion; :meth:`keep` folds them into the real ones."""
+
+    def __init__(self, pairs):
+        self._pairs = pairs  # [(outer Counter or None, scratch Counter or None)], one per record
 
     def keep(self) -> None:
-        if self._outer is not None and self.scratch:
-            self._outer.update(self.scratch)
-            self.scratch.clear()
+        for outer, scratch in self._pairs:
+            if outer is not None and scratch:
+                outer.update(scratch)
+                scratch.clear()
 
 
 @contextlib.contextmanager
 def speculative_record() -> Iterator[Speculation]:
-    """Within the block, lossy placeholders are recorded into a scratch, dropped unless kept.
+    """Within the block, every record in ``SPECULATIVE_RECORDS`` writes to a scratch, dropped unless kept.
 
-    Strict mode is unchanged: an unknown kind still raises inside the block.
+    A record that is off (None) stays off, so strict mode is unchanged: an unknown kind still
+    raises inside the block.
     """
-    outer = _lossy_record.get()
-    spec = Speculation(outer, collections.Counter() if outer is not None else None)
-    token = _lossy_record.set(spec.scratch)
+    pairs, tokens = [], []
+    for var in SPECULATIVE_RECORDS:
+        outer = var.get()
+        scratch = collections.Counter() if outer is not None else None
+        pairs.append((outer, scratch))
+        tokens.append((var, var.set(scratch)))
     try:
-        yield spec
+        yield Speculation(pairs)
     finally:
-        _lossy_record.reset(token)
+        for var, token in reversed(tokens):
+            var.reset(token)
 
 
 def unknown_kind(site: str, kind: str, placeholder: str) -> str:

@@ -269,6 +269,24 @@ class TestSpeculativeHelperExpansionRecordsOnlyWhatIsEmitted(unittest.TestCase):
             self.assertIsNone(generator._try_convert_helper_body_to_rule('outer', []))
         self.assertEqual(record, {})
 
+    def test_every_registered_record_is_scratched(self) -> None:
+        import contextvars
+
+        from world_generator import _unknown_kind
+        other: contextvars.ContextVar = contextvars.ContextVar('r2c_probe_record', default=None)
+        _unknown_kind.SPECULATIVE_RECORDS.append(other)
+        self.addCleanup(_unknown_kind.SPECULATIVE_RECORDS.remove, other)
+        outer = __import__('collections').Counter()
+        token = other.set(outer)
+        self.addCleanup(other.reset, token)
+        for keep in (False, True):
+            with _unknown_kind.speculative_record() as attempt:
+                other.get()['x'] += 1
+                if keep:
+                    attempt.keep()
+            self.assertIs(other.get(), outer)
+        self.assertEqual(outer, {'x': 1})
+
     def test_strict_is_unchanged_the_attempt_is_dropped(self) -> None:
         code = self._generator(self.UNKNOWN)._convert_rule(self.CALL)
         self.assertEqual(code, 'HelperCall(helper_func=outer, helper_name="outer")')
