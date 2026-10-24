@@ -39,8 +39,7 @@ on:
 jobs:
   test-alttp-and-regression:
     name: Test ALTTP Spoiler & Frontend Regression
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
@@ -212,8 +211,7 @@ jobs:
   substrates:
     name: Substrate tests — ${{ matrix.batch }} batch
     needs: batches
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # Sized so the in-app runner's own 600 s budget fires first; the setup
     # below is the bot-walks job's (no Python venv: the in-app substrate tests
     # read only the committed presets and the submodules).
