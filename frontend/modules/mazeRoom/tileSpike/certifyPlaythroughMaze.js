@@ -103,12 +103,16 @@ function apReach(REGIONS, starts, inv) {
     return seen;
 }
 
-/** Does `rule` hold for the item set `inv`, OPTIMISTICALLY: a counted Has asks for one, an unknown kind passes. */
+/**
+ * Does `rule` hold for the item COUNTS `inv` (item → count), OPTIMISTICALLY: an unknown kind passes. ⛓ COUNTED ITEMS: a
+ * counted Has asks for its count (it asked for one while the truth table held sets) — items only grow, so an event
+ * whose rule needs two Shields is never held with one (L71's shieldlock: `Has(Shield, 2)`).
+ */
 const optimistic = (rule, inv) => {
     switch (rule?.rule) {
     case undefined: case 'True_': return true;
     case 'False_': return false;
-    case 'Has': return inv.has(rule.args.item_name);
+    case 'Has': return (inv.get(rule.args.item_name) ?? 0) >= (rule.args.count ?? 1);
     case 'And': return rule.children.every((c) => optimistic(c, inv));
     case 'Or': return rule.children.some((c) => optimistic(c, inv));
     default: return true;
@@ -224,7 +228,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         for (const l of r.locations ?? []) if (l.event) eventRule.set(l.item?.name ?? l.name, l.access_rule ?? { rule: 'True_' });
     }
     const impossible = (inv) => {
-        const held = new Set(inv);
+        const held = pointCounts(inv);
         return inv.some((i) => eventRule.has(i) && !optimistic(eventRule.get(i), held));
     };
     const unproducibleIn = (rule) => [...ruleItems(rule)].filter((i) => unproducible.has(i));

@@ -35,7 +35,7 @@ import { isObstacleCleared } from '../../shared/procgen/library.js';
  * ⚖ "Count map": a lattice POINT is a sorted list of item names in which an item held n times appears n times
  * (`['Progressive Shield', 'Progressive Shield', 'Wand']`); `inventoryOf` turns it into the engine's inventory — a Set
  * when nothing repeats (byte-for-byte the old search), else a `Map<item, count>`.
- * ⚖ "Threshold levels": an item's axis is {0} ∪ the counts the region's rules NAME (Shield 0,1,2; Seal 0,16), not
+ * ⚖ "Threshold levels": an item's axis is {0, 1} ∪ the counts the region's rules NAME (Shield 0,1,2; Seal 0,1,16), not
  * 0..max — the answers only change at a named count. Points are enumerated by increasing RANK (the sum of the level
  * indices; for an all-binary axis, exactly the old subsets by size, in the old order), and a point covering a known
  * minimal one on every item is skipped: clearance is monotone in every count, so the reachable set is.
@@ -78,9 +78,15 @@ export function ruleLevels(rule, out = new Map()) {
     return out;
 }
 
-/** The lattice axis for `items`: `[{item, levels: [n…] ascending}]`; an item `levels` does not count is binary ([1]). */
+/**
+ * The lattice axis for `items`: `[{item, levels: [n…] ascending}]` — ALWAYS level 1, plus every count `levels` names.
+ * ⛔ Level 1 is never dropped (designer-2 review of 970fb3c827): an implicit "at least one" — a strike's item, a
+ * combo_list item, a scripted `state.has`, an event — names no count, so an item whose only NAMED count is n ≥ 2
+ * would otherwise be tested at 0 and n only: the search over-charged a struck rock (Sword×2), and the certifier never
+ * saw a world that crosses with ONE where the AP rule says two (a LOOSER row).
+ */
 export function latticeAxis(items, levels = new Map()) {
-    return [...items].sort().map((item) => ({ item, levels: [...(levels.get(item) ?? [1])].sort((a, b) => a - b) }));
+    return [...items].sort().map((item) => ({ item, levels: [...new Set([1, ...(levels.get(item) ?? [])])].sort((a, b) => a - b) }));
 }
 
 /** The axis's top point: every item at its highest level. */

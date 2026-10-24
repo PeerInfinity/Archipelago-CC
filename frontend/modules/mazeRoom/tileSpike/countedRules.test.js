@@ -26,6 +26,7 @@ import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
 import { buildPlaythroughMaze } from '../../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
 import { readFileSync } from 'node:fs';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
+import { itemActionPicture, SWORD } from '../mazeItemActions.fixtures.js';
 
 const SHIELD = 'Progressive Shield';
 const has = (item, count) => ({ rule: 'Has', args: count ? { item_name: item, count } : { item_name: item } });
@@ -87,7 +88,7 @@ describe('the count model: inventory, clearance, lattice, emission', () => {
         expect(mazeVisitedKey({ ...s, inventory: new Set(['Wand', SHIELD]) })).toBe(`1,2|${SHIELD},Wand`);
     });
 
-    it('threshold levels: {0} ∪ the named counts; an all-binary axis enumerates exactly the old subsets, in order', () => {
+    it('threshold levels: {0, 1} ∪ the named counts; an all-binary axis enumerates exactly the old subsets, in order', () => {
         const binary = latticeAxis(['a', 'b', 'c']);
         const old = [];
         for (let k = 0; k <= 3; k++) {
@@ -98,9 +99,11 @@ describe('the count model: inventory, clearance, lattice, emission', () => {
         }
         expect([...latticePoints(binary)]).toEqual([...new Map(old.map((p) => [p.join(), p])).values()]);
         const counted = latticeAxis(['Seal', SHIELD], new Map([[SHIELD, new Set([1, 2])], ['Seal', new Set([16])]]));
-        expect(counted).toEqual([{ item: SHIELD, levels: [1, 2] }, { item: 'Seal', levels: [16] }]);
+        // ⛓ Every item keeps level 1 (designer-2 review): an implicit "at least one" (a strike, a combo, a scripted
+        // `state.has`) names no count, so the axis must test 1 even when the only NAMED count is 16.
+        expect(counted).toEqual([{ item: SHIELD, levels: [1, 2] }, { item: 'Seal', levels: [1, 16] }]);
         const points = [...latticePoints(counted)].map((p) => inventoryOf(p));
-        expect(points).toHaveLength(3 * 2); // Shield 0/1/2 × Seal 0/16 — not 3 × 17
+        expect(points).toHaveLength(3 * 3); // Shield 0/1/2 × Seal 0/1/16 — not 3 × 17
         expect(points[0]).toEqual(new Set());
         expect(points.at(-1)).toEqual(new Map([[SHIELD, 2], ['Seal', 16]]));
     });
@@ -142,6 +145,43 @@ describe('the count model: inventory, clearance, lattice, emission', () => {
         });
         // ⚖ "Has count ≥2 only": an uncounted rule is spelled as before.
         expect(ruleFromMinimalSets([['Wand']])).toEqual(has('Wand'));
+    });
+});
+
+/**
+ * ⛔ SOUNDNESS (designer-2 review of 970fb3c827): an item's axis came only from the counts rules NAME, so an item
+ * whose one named count is n ≥ 2 had levels {0, n} — count 1, the level every implicit use (a strike's item, a
+ * combo, a scripted `state.has`) clears at, was never tested.
+ */
+describe('count 1 is always a level', () => {
+    it('search: a sword-struck rock costs ONE sword even when another gate names Has(Sword, 2)', () => {
+        const w = itemActionPicture(['########', '#P..rLgX', '#......#', '########']);
+        setObstacle(w, 4, 2, 'rock'); // the way round is struck too
+        w.obstacleLib.gate = { id: 'gate', clear_set_type: 'rule', clear_rule: has(SWORD, 2) };
+        setObstacle(w, 6, 1, 'gate');
+        const out = deriveRegionLogic(w, HELPERS);
+        expect(out.targets.find((t) => t.x === 5 && t.y === 1).minimal).toEqual([[SWORD]]);
+        expect(out.targets.find((t) => t.kind === 'exit').minimal).toEqual([[SWORD, SWORD]]);
+        expect(engineDisagreements(w, out)).toEqual([]);
+    });
+
+    it('certifier: an AP Has(Wand, 2) against a world gate one Wand opens is a LOOSER-world problem at 1 Wand', () => {
+        const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_18'] }).text);
+        const exit = RULES.regions['1'].level_18__r1c1.exits.find((e) => e.connected_region === 'level_18__r7c10');
+        exit.access_rule = { rule: 'Or', children: [has(SHIELD, 2), has('Ghost Spear'), has('Progressive Sword'), has('Wand', 2)] };
+        const { problems } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS, regions: ['level_18__r1c1'] });
+        expect(problems).toContain('level_18__r1c1 → level_18__r7c10 holding [Wand]: derived true, atlas false');
+    });
+
+    // ⛓ …which exposed L71's shieldlock: its gated cell opens on Or(Shield×2, event), and the event's own location
+    // rule is Has(Shield, 2). Holding the event with ONE Shield is no AP state (counts only grow), so the certifier's
+    // `impossible` must read the event's rule with its count — it read "a counted Has asks for one".
+    it('certifier: an event whose own rule counts is never held below that count (L71 shieldlock)', () => {
+        const RULES = JSON.parse(buildPlaythroughMaze({ levels: ['level_71'] }).text);
+        const { problems } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS });
+        const E = 'L71 flag 2: shieldlock@288,256 cleared';
+        expect(problems.filter((p) => p.includes(`${E},${SHIELD}]`)), JSON.stringify(problems)).toEqual([]);
+        expect(RULES.regions['1'].level_71__r0c6.locations.find((l) => l.name === E).access_rule).toEqual(has(SHIELD, 2));
     });
 });
 
