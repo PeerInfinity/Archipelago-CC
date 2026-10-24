@@ -469,7 +469,11 @@ export async function testRegionGraphNodePicker(testController) {
       () => listOf(PICKER.region).options.length > 0 && listOf(PICKER.location).options.length > 0,
       'the pick lists filled', MAX_WAIT_TIME, 100);
     testController.reportCondition('opening the section fills both lists', ready);
-    if (!ready) return testController.getOverallResult();
+    if (!ready) {
+      testController.log(`lists unfilled: ${stateManagerProxySingleton.getStaticData?.()?.regions?.size ?? 0} region(s) in staticData, `
+        + `${listOf(PICKER.region).options.length} region / ${listOf(PICKER.location).options.length} location option(s)`);
+      return testController.getOverallResult();
+    }
     const pick = (box, value) => {
       const input = section.querySelector(box);
       input.value = value;

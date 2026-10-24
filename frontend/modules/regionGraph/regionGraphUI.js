@@ -1010,6 +1010,23 @@ export class RegionGraphUI {
   }
 
   onStateUpdate(data) {
+    // A build needs staticData AND a snapshot. rulesLoaded can arrive before
+    // the first snapshot of those rules reaches the proxy (the proxy clears
+    // its snapshot on a reload; on boot the graph can also be created after
+    // rulesLoaded/ready and miss checkAndLoadInitialData's one look), and
+    // loadGraphData then gives up with "Missing data" — nothing retried, so
+    // the graph stayed empty (or on the previous rules) until the next rules
+    // load. The bundled boot hit this. So a snapshot arriving while the graph
+    // does not reflect the current staticData starts the build instead.
+    const staticData = stateManager.getStaticData();
+    // One attempt per staticData: a build that throws is not retried on
+    // every snapshot.
+    if (this.cy && data?.snapshot && staticData?.regions && this.lastBuiltStaticData !== staticData
+        && this._catchUpBuildFor !== staticData) {
+      this._catchUpBuildFor = staticData;
+      this.loadGraphData();
+      return;
+    }
     return this.dataManager.onStateUpdate(data);
   }
 
