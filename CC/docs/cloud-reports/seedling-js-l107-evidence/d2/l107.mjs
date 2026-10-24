@@ -1,0 +1,10 @@
+const R = new URL('../../../../../frontend/modules/seedlingDemo/', import.meta.url).pathname;
+const { atlasLevelSource } = await import(R + 'levelSource.js');
+const { createRunForStaging } = await import(R + 'tapeRunner.js');
+const { arrivalStaging } = await import(R + 'fidelityArrival.js');
+const run = createRunForStaging(arrivalStaging({ level: 107, x: 288, y: 176 }, { items: [] }), atlasLevelSource());
+const w = run.world;
+console.log('hazards', JSON.stringify((w.combat?.hazards ?? []).map((h) => ({ tag: h.tag, x: h.x, y: h.y, attrs: h.attrs }))));
+console.log('enemies', JSON.stringify((w.combat?.enemies ?? []).map((e) => `${e.tag}@${e.x},${e.y}`)));
+console.log('solids tags', JSON.stringify([...new Set((w.solids ?? []).map((s) => s.tag))]));
+console.log('size', w.world?.width, w.world?.height);

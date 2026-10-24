@@ -1,0 +1,9 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/fidelityWandHold.test.js > WANDHOLD L40 — leg 371 > ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key
+AssertionError: expected 1663 to be 1667 // Object.is equality
+ Test Files  1 failed | 87 passed (88)
+      Tests  1 failed | 3057 passed (3058)
+      Tests  1 failed | 3057 passed (3058)
+   Start at  16:32:36
+   Duration  1058.48s (transform 15.63s, setup 0ms, import 135.35s, tests 2438.13s, environment 18ms)
+

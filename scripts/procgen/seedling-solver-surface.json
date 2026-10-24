@@ -1324,9 +1324,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 564
+        "solverBot.js": 566
       },
-      "sites": 703,
+      "sites": 705,
       "seen": "both",
       "via": [
         "direct",
@@ -1389,9 +1389,9 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 12,
         "lightsVerb.js": 7,
-        "solverBot.js": 113
+        "solverBot.js": 114
       },
-      "sites": 135,
+      "sites": 136,
       "seen": "both",
       "via": [
         "direct",
@@ -2813,9 +2813,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 211
+        "solverBot.js": 212
       },
-      "sites": 281,
+      "sites": 282,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2849,9 +2849,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 215
+        "solverBot.js": 216
       },
-      "sites": 288,
+      "sites": 289,
       "seen": "both",
       "via": [
         "const-alias",
@@ -5829,9 +5829,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 10
+        "solverBot.js": 12
       },
-      "sites": 10,
+      "sites": 12,
       "seen": "static",
       "via": [
         "import"
@@ -5949,11 +5949,11 @@
         "botDriverV2.js": 1,
         "lavaBossPolicy.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 20,
+        "solverBot.js": 21,
         "strikePolicy.js": 2,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 26,
+      "sites": 27,
       "seen": "static",
       "via": [
         "import"

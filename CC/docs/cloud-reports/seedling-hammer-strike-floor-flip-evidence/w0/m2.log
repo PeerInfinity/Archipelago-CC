@@ -1,0 +1,11 @@
+22:23:34 load 0.58 identity off start
+22:35:39 load 1.21 identity off rc=0
+22:42:57 load 1.07 vitest-sf2 off rc=0
+22:45:29 load 1.95 vitest-new off rc=0
+22:48:11 load 3.77 producers off rc=0
+22:48:11 load 3.77 identity on start
+23:02:28 load 1.60 identity on rc=0
+23:05:17 load 4.55 vitest-sf2 on rc=1
+23:07:28 load 1.81 vitest-new on rc=1
+23:10:05 load 3.71 producers on rc=1
+23:10:05 load 3.71 W0-DONE

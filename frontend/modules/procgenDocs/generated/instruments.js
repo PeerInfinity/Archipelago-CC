@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 104,
-            "count": 151,
+            "browser": 105,
+            "count": 152,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 458,
-        "browser": 169,
+        "blockStyle": 459,
+        "browser": 170,
         "cited": 248,
-        "files": 472,
+        "files": 473,
         "lineStyle": 14,
-        "withDocblock": 472,
-        "withFlags": 389
+        "withDocblock": 473,
+        "withFlags": 390
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8102,9 +8102,7 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
         },
         {
-            "argvHelpers": [
-                "check"
-            ],
+            "argvHelpers": [],
             "browser": false,
             "category": "plan",
             "citedBy": [
@@ -8284,7 +8282,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, OFF), ON THE GAME.",
+            "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, ON since hammer-phase SFF), ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs"
         },
         {
@@ -12520,6 +12518,69 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-killlock — ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK, D1/D2: **THE KILL-LOCK ROOMS' BODIES, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-killlock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l107-lane.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "capture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fixed"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "request"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seams"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-l107-lane — measure-only (slice `seedling-js-l107-investigate`): **DOES L107 HAVE A ROUTE AT EVERY ARRIVAL CLOCK, ASKED OF THE GAME?**",
+            "path": "scripts/procgen/probe-seedling-l107-lane.mjs"
         },
         {
             "argvHelpers": [],

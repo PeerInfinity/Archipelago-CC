@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
-import { SolverRefusal } from './solverBot.js';
+import { SolverRefusal, withStrikeEtaFloor } from './solverBot.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
@@ -160,8 +160,11 @@ describe.each(L40_LEGS)('WANDHOLD L40 — leg $leg', (row) => {
             + 'inside bombpusher@112,128\'s 256 px reach');
     }, 120_000);
 
+    // ⚖ THE STRIKE FLOOR IS PINNED OFF (hammer-phase PDS, 2026-10-24): the witness tapes are walks the game played under
+    // the floor OFF (fidelity wave 28, on main's default). `STRIKE_ETA_FLOOR` ships ON since SFF, and ON leg 371's solve
+    // is 1663 ticks, so the plan is no longer the witness (hammer-phase SFF's witness-pin rule).
     it('ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key', async () => {
-        const solved = await withContactFidelity(L40_ON, () => solveL40(row.boot));
+        const solved = await withStrikeEtaFloor(false, () => withContactFidelity(L40_ON, () => solveL40(row.boot)));
         expect(solved.out.records.map((r) => r.strategy)).toEqual(row.verbs);
         expect(solved.out.records.filter((r) => r.paced).length).toBe(2);
         expect(solved.out.perTick.length).toBe(row.ticks);

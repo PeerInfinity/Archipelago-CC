@@ -155,9 +155,11 @@ describe('each component moves with its own state', () => {
     });
     it('a tick moves `place` and `clock`, and the player\'s walk moves `player`', () => {
         const run = runWith(STAGING.persistence);
-        for (let t = 0; t < 30; t += 1) run.advance(heldKeysAt(TAPE, t));
+        // ⛓ t20, inside the tape's opening walk (`down` + `right` held). It was t30 until hammer-phase SFF re-recorded
+        // `r9-solve-18` under `STRIKE_ETA_FLOOR` ON; that walk stands still at t30.
+        for (let t = 0; t < 20; t += 1) run.advance(heldKeysAt(TAPE, t));
         const a = run.stateDigest({ parts: true });
-        run.advance(heldKeysAt(TAPE, 30));
+        run.advance(heldKeysAt(TAPE, 20));
         const b = run.stateDigest({ parts: true });
         const moved = Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k]);
         expect(moved).toEqual(expect.arrayContaining(['place', 'clock', 'player']));

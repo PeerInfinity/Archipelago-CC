@@ -1,0 +1,6 @@
+# box lock: TAKEN by probe-seedling-bombpusher.mjs (browser, pid 11980) — head 15ee7742e, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+game hits at []; model playerHits []
+FAIL: every Bomb's position and velocity, the lobber's anim and the player's hits are the model's at every sampled tick
+      t 1667: player game (72.55519252081059, 141.1571610329478) model (71.55498193219464, 142.67308274132415)
+      t 1667: game has 0 Bomb row(s), the model 1

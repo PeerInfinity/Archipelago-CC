@@ -139,7 +139,8 @@ describe('hammer-phase B2 — HAMMER_FIGHT (OFF by default)', () => {
 
     it('⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end', async () => {
         const off = await withHammerFight(false, () => solveR9At(40));
-        expect(off.out.perTick.length).toBe(518);
+        // 518 with `STRIKE_ETA_FLOOR` OFF; 476 since the floor shipped ON (hammer-phase SFF)
+        expect(off.out.perTick.length).toBe(476);
         expect(off.out.records.filter((x) => x.arm === 'press').every((x) => x.fights === undefined)).toBe(true);
         const on = await withHammerFight(true, () => solveR9At(40));
         expect(HAMMER_FIGHT.enabled).toBe(false);

@@ -33,7 +33,7 @@ import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { DEADLINE_SITES, ESCAPE_CROSS_PASS_CACHE_COUNTS, solveSegment, withEscapeCrossPassCache, withSolveDeadline,
-    withSolveProgress as reExported } from './solverBot.js';
+    withSolveProgress as reExported, withStrikeEtaFloor } from './solverBot.js';
 import {
     BOUND_KINDS, CLEAR_TAG_KINDS, ESCAPE_CACHE_COUNTS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS,
     SOLVE_PROGRESS_VERSION, activeProgress, cacheEntered, dangerKindOf, frameEntered, installSolveProgress, kindEntered,
@@ -59,13 +59,23 @@ function stagingOf(name, residue = null) {
         persistence: base.persistence.filter((c) => c.at === undefined) };
 }
 
+/**
+ * ⚖ `floor` pins `STRIKE_ETA_FLOOR` for one solve (absent: the default). The L18 room at residue 21 IS the witness
+ * `hammer-a-l18-escape21`'s solve, a walk the game played under the floor OFF, and every W0 byte below was taken
+ * there, so hammer-phase SFF (2026-10-23, the floor flipped ON) pins it OFF. ON, the room solves in 367 ticks, and
+ * the last entry holds the hook to byte-identity on that shipped solve too.
+ */
+const floorOf = (s, fn) => (s.floor === undefined ? fn() : withStrikeEtaFloor(s.floor, fn));
+
 const SOLVES = [
-    { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21,
+    { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21, floor: false,
         goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, passes: 3 },
     { what: 'L6 ladder climb', tape: 'r8-solve-6', goals: [{ kind: 'reach-exit', exit: { x: 224, y: 32 } }],
         ticks: 294, passes: 1 },
     { what: 'L3 plain walk', tape: 'r8-solve-3', goals: [{ kind: 'reach-exit', exit: { x: 128, y: 48 } }],
         ticks: 245, passes: 1 },
+    { what: 'L18 hammer room (residue 21), the strike floor at its shipped ON', tape: 'r9-solve-18', residue: 21,
+        floor: true, goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 367, passes: 3 },
 ];
 
 /**
@@ -74,9 +84,9 @@ const SOLVES = [
  */
 function solve(s, { hook = null, deadline = null } = {}) {
     const staging = stagingOf(s.tape, s.residue ?? null);
-    const go = () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
+    const go = () => floorOf(s, () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
         goals: s.goals, name: s.tape, boot: staging.boot, persistence: staging.persistence,
-        gameTick: () => { throw new Error('no game oracle here'); } });
+        gameTick: () => { throw new Error('no game oracle here'); } }));
     const deadlined = () => (deadline === null ? go() : withSolveDeadline(deadline, go));
     let settled = null;
     const p = hook === null ? deadlined() : withSolveProgress(hook, deadlined);
@@ -353,7 +363,7 @@ describe('hammer-phase D1 — progressReason: the solver\'s own words', () => {
  *        (`kindEntered()` moves with no hook) and the source row
  */
 const RK_SOLVES = [
-    { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21, deadline: true,
+    { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21, deadline: true, floor: false,
         goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, shouldStop: 165,
         asks: [{ 'walk': 13, 'hammer-escape': 37 }, { 'walk': 14, 'hammer-escape': 37 },
             { 'walk': 18, 'hammer-escape': 37, 'sword-dash': 9 }],
@@ -372,9 +382,9 @@ const RK_SOLVES = [
 async function solveRk(s, hook = null) {
     const staging = stagingOf(s.tape, s.residue ?? null);
     let shouldStops = 0;
-    const go = () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
+    const go = () => floorOf(s, () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
         goals: s.goals, name: s.tape, boot: staging.boot, persistence: staging.persistence,
-        gameTick: () => { throw new Error('no game oracle here'); } });
+        gameTick: () => { throw new Error('no game oracle here'); } }));
     const deadlined = () => (s.deadline
         ? withSolveDeadline({ shouldStop: () => { shouldStops += 1; return false; }, fineCheckpoints: true }, go) : go());
     let settled = null;
@@ -484,8 +494,8 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
         const f = finalsHook(true);
         let err = null;
         try {
-            solveSegment({ run: createRunForStaging(staging, SOURCE), goals: s.goals, name: s.tape, boot: staging.boot,
-                onProgress: f.hook });
+            floorOf(s, () => solveSegment({ run: createRunForStaging(staging, SOURCE), goals: s.goals, name: s.tape,
+                boot: staging.boot, onProgress: f.hook }));
         } catch (e) { err = e; }
         expect(err).not.toBe(null);
         const last = f.finals.at(-1);

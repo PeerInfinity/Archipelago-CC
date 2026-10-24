@@ -1,0 +1,4 @@
+71c71
+< empty post-sword seed= 30 THREW GenerationAborted: levelGenerator: ABORTED at step 1 try 1 anchor 1/1 placing "water-pool(w=3,h=1)" at (2,3) 
+---
+> empty post-sword seed= 30 level=3b4c4b4093c494347d13b8c2b9433102 kept=acc9f5001df0ac59681cc3702babd8ec stop=TARGET_REACHED attempts=7 ticks=183->178 goal=7,4

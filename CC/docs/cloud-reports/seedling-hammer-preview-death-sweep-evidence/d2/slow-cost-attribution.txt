@@ -1,0 +1,12 @@
+# seeds 7/21/40/57 ON, in parallel: SFF2's config (W0 tree + the deriveRefuge catch only) vs this D2 tree
+seed 7	94.7s	ok	seed 7	96.6s	ok
+total 94.7s	total 96.6s
+seed 21	131.8s	ok	seed 21	131.9s	ok
+total 131.8s	total 131.9s
+seed 40	86.6s	ok	seed 40	83.8s	ok
+total 86.6s	total 83.8s
+seed 57	111.8s	ok	seed 57	113.6s	ok
+total 111.8s	total 113.6s
+# seed 21 ON, in parallel: SFF2's head f5fb6f7bca (shared @218cbbf) + the refuge catch vs this D2 tree
+seed 21	128.5s	ok	seed 21	129.7s	ok
+total 128.5s	total 129.7s
