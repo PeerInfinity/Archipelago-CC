@@ -24976,3 +24976,35 @@ early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_W
 - A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
 - "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
   window is a 2 px band at each hop.
+
+### Seedling fidelity RESIDUE — TIMEDPASS's pass to the exit (`drillTimedPassExit`, OFF); whirlpools in the walk (`whirlpoolDrown`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 28. The report is `CC/docs/cloud-reports/seedling-fidelity-residue.md`.
+
+**D-A — the cut, then the way out.** With `drillTimedPass` ON, Fire alone cuts L28's rope hit-free, and the rope's
+`FallRock` release hops the drill parked under the stance onto it: the `reach-exit` after the cut refused at its first
+gate, and from that state EVERY continuation is hit (81 of 81 two-tick key sequences). So "the same search, goal = the
+crossing" is half of it: `searchDrillTimedPass` gained `cross` (the goal is the stepper's transition through one door)
+and `accept` (a found stand may be passed over), and a pass to the cut's stance whose segment's next goal is a
+`reach-exit` is certified only with that crossing's pass behind the cut. From L25 both doors SOLVE hit-free (182 t,
+134 t; two stands passed over, 59 → 60 t to the stance); from L26 the only stand in the window has no way out — refused
+by name. Its forced-hit reading (measured, not built): the hit's knockback lands the player in the other drill's box
+when the 20-tick i-frame (steering blocked throughout) ends — two hits. Witnesses `residue-l28-fire-l25-exit-l2{5,6}`
+(p4g, 0 px, hit-free, `fixtures/timedpass-witness/`).
+
+**D-B — a whirlpool's drown is a death.** `Whirlpool.as`: live, it writes the player's position (r = int(d), then
+int(r × 0.999), a 20° turn); at r ≤ 1 it calls `Player.drown()` on every update — `dying` latched (the player's own
+update then skips its move), the timer −0.5, `die()` on the twentieth. The model threw a plain `Error` there and nothing
+priced the pull. ON: the call is transcribed (`state.drown.dying`, a `playerDeaths` row source `whirlpool`); a walk that
+drowned refuses by name (`obstacle.kind: 'whirlpool'`) instead of re-planning from the respawn; the danger map prices the
+pull (`whirlpoolDanger`, a `dangerVolumes` row) and the DODGE rung's WHIRLPOOL arm stalls the walk out. Witness
+`whirlpool-drown-s15` (p4g, 0 px on 2144 sampled ticks: still for 20 ticks, death t2202, respawn (104,72)). Seed sweep
+(80 seeds): at the defaults (HITLESS's settle) nothing moves; HITLESS OFF, all 15 drown throws now SOLVE, no death.
+
+**Trap candidates.**
+- A pass whose goal is a stand is worth only the way out it leaves: a ceremony after the goal can make the stand a trap,
+  so certify the goal WITH what follows it.
+- An external `drown()` is not the hazard drown: it latches `dying` without `drowning`, so the player stands still but
+  never spins of its own, and a whirlpool that dies first leaves it `dying` for good.
+- A death inside a walk is not a stall to re-plan from: the drive walks on from the respawn, and a re-plan would
+  certify a corridor through a death.
