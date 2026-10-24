@@ -1,0 +1,85 @@
+solverBot.js:1249	stepper(…) [param]	forecastEncounterPlan	-
+solverBot.js:1262	previewStepper()	searchEncounterStrike	-
+solverBot.js:1290	previewStepper()	searchEncounterReposition	-
+solverBot.js:1894	previewStepper()	previewLean	-
+solverBot.js:1899	step(…) [raw]	previewLean	-
+solverBot.js:1904	step(…) [raw]	previewLean	-
+solverBot.js:4870	previewStepper()	stepOffMinimalFor › tryDir	-
+solverBot.js:4875	step(…) [raw]	stepOffMinimalFor › tryDir	P2E
+solverBot.js:5441	previewStepper()	previewWalk	-
+solverBot.js:5822	step(…) [raw]	previewWalk › stallHere	-
+solverBot.js:5948	step(…) [raw]	previewWalk	-
+solverBot.js:6034	step(…) [raw]	previewWalk	-
+solverBot.js:6513	previewWalk	planSwordDash › previewFor	-
+solverBot.js:6514	previewWalk	planSwordDash › previewFor	-
+solverBot.js:6902	previewStepper()	enclosedPitCornerKeys	-
+solverBot.js:6909	step(…) [raw]	enclosedPitCornerKeys	P2E
+solverBot.js:9383	previewStepper()	planPacedWait	-
+solverBot.js:9451	step(…) [raw]	planPacedWait › tick	-
+solverBot.js:10491	previewWalk	deriveRefuge	-
+solverBot.js:10492	previewWalk	deriveRefuge	-
+solverBot.js:11062	previewWalk	deriveStrike › walkTo	P2E
+solverBot.js:11403	previewStepper() [wrapped inline]	trainIsSafeHere	-
+solverBot.js:11407	step(…) [wrapped]	trainIsSafeHere	-
+solverBot.js:11430	previewStepper() [wrapped inline]	trainLineBlockedHere	-
+solverBot.js:11434	step(…) [wrapped]	trainLineBlockedHere	-
+solverBot.js:11481	previewStepper() [wrapped inline]	stepToward	-
+solverBot.js:11511	step(…) [wrapped]	stepToward › survives	-
+solverBot.js:11521	step(…) [wrapped]	stepToward	-
+solverBot.js:11569	step(…) [param]	previewOrDeath › <λ>	P2E
+solverBot.js:11574	step(…) [param]	previewOrDeath › <λ>	-
+solverBot.js:11638	previewStepper() [wrapped inline]	landsClearOfHammers	-
+solverBot.js:11660	previewStepper() [wrapped inline]	landsClearInFlight	-
+solverBot.js:11766	previewStepper()	previewPressApproach	-
+solverBot.js:11791	step(…) [raw]	previewPressApproach	-
+solverBot.js:12476	previewStepper()	pressEscapeOnce	-
+solverBot.js:12486	stepOrNull(…) [wrapped]	pressEscapeOnce	-
+solverBot.js:12495	stepOrNull(…) [wrapped]	pressEscapeOnce	-
+solverBot.js:12501	stepOrNull(…) [wrapped]	pressEscapeOnce	-
+solverBot.js:12536	stepOrNull(…) [wrapped]	pressEscapeOnce › search › <λ>	-
+solverBot.js:12723	previewStepper()	deriveApproach	-
+solverBot.js:12736	step(…) [wrapped]	deriveApproach › stoodAt	-
+solverBot.js:13201	previewStepper()	deriveFight	-
+solverBot.js:13274	step(…) [wrapped]	deriveFight	-
+solverBot.js:13327	step(…) [wrapped]	deriveFight › pressFrom	-
+solverBot.js:13332	step(…) [wrapped]	deriveFight › pressFrom	-
+solverBot.js:13342	step(…) [wrapped]	deriveFight › pressFrom	-
+solverBot.js:13388	step(…) [wrapped]	deriveFight › <λ>	-
+solverBot.js:13399	step(…) [wrapped]	deriveFight	-
+solverBot.js:18021	previewStepper()	previewFaceTap	-
+solverBot.js:18023	step(…) [raw]	previewFaceTap	-
+solverBot.js:18025	step(…) [raw]	previewFaceTap	-
+solverBot.js:18925	previewStepper()	searchDrillTimedPass	-
+solverBot.js:18951	stepper(…) [raw]	searchDrillTimedPass › stepSafe	P2E
+solverBot.js:19502	previewWalk	baitForecastOf	P2E
+solverBot.js:20070	previewWalk	deriveKillByChaser › scoreAll	P2E
+solverBot.js:20298	previewWalk	deriveGuardApproach	P2E
+solverBot.js:22309	previewWalk	solveSegmentUnder › probeCorridor	-
+solverBot.js:22373	previewWalk	solveSegmentUnder › corridorDashRescue	-
+solverBot.js:22752	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:22805	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:22862	previewWalk	solveSegmentUnder › climbLadderUnder › axeStall	-
+solverBot.js:22877	previewWalk	solveSegmentUnder › climbLadderUnder › axeStall › certified	-
+solverBot.js:22916	previewWalk	solveSegmentUnder › climbLadderUnder › axeStall	-
+solverBot.js:22985	previewWalk	solveSegmentUnder › climbLadderUnder › timingBase	-
+solverBot.js:23091	previewWalk	solveSegmentUnder › climbLadderUnder › axeTimingCrossing › certified	-
+solverBot.js:23119	previewWalk	solveSegmentUnder › climbLadderUnder › axeTimingCrossing	-
+solverBot.js:23185	previewWalk	solveSegmentUnder › climbLadderUnder › <λ>	-
+solverBot.js:23320	previewWalk	solveSegmentUnder › climbLadderUnder › phaseStall	-
+solverBot.js:23346	previewWalk	solveSegmentUnder › climbLadderUnder › phaseStall › certified	-
+solverBot.js:23372	previewWalk	solveSegmentUnder › climbLadderUnder › phaseStall	-
+solverBot.js:23417	previewWalk	solveSegmentUnder › climbLadderUnder › <λ>	-
+solverBot.js:24433	previewWalk	solveSegmentUnder › climbLadderUnder › <λ>	-
+solverBot.js:24620	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:24631	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:24638	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:24654	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:24689	previewWalk	solveSegmentUnder › climbLadderUnder	-
+solverBot.js:25665	previewWalk	solveSegmentUnder › stepOffIfLatched	-
+solverBot.js:25874	previewWalk	solveSegmentUnder › returnOntoDoor	-
+arrivalSolid.js:105	previewStepper()	modelStuck	-
+arrivalSolid.js:109	step(…) [raw]	modelStuck	catch-all
+lightsVerb.js:327	previewStepper()	execLights	-
+crusherBait.js:730	previewStepper()	alignmentCandidates	-
+crusherBait.js:736	step(…) [raw]	alignmentCandidates › settle	-
+crusherBait.js:756	step(…) [raw]	alignmentCandidates	-

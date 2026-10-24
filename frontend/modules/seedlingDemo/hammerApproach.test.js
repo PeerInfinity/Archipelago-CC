@@ -128,7 +128,8 @@ describe('hammer-phase B1 — HAMMER_APPROACH (OFF by default)', () => {
 
     it('⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time', async () => {
         const off = await withHammerApproach(false, () => solveR9At(40));
-        expect(off.out.perTick.length).toBe(518);
+        // 518 with `STRIKE_ETA_FLOOR` OFF; 476 since the floor shipped ON (hammer-phase SFF)
+        expect(off.out.perTick.length).toBe(476);
         expect(off.out.records.filter((x) => x.arm === 'press').every((x) => x.approaches === undefined)).toBe(true);
         const on = await withHammerApproach(true, () => solveR9At(40));
         expect(HAMMER_APPROACH.enabled).toBe(false);

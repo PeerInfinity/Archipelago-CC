@@ -93,19 +93,24 @@ export async function l40buttonStaging(boot) {
     return staging;
 }
 
-/** The ON solver's plan from `boot` (default solver behaviour restored after). */
+/**
+ * The ON solver's plan from `boot` (default solver behaviour restored after).
+ * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+ * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the tape
+ * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+ */
 export async function l40buttonPlan(boot, name) {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
-    const { withStanceRocks } = await import(join(MODULE, 'solverBot.js'));
+    const { withStanceRocks, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const staging = await l40buttonStaging(boot);
     const levelSource = atlasLevelSource();
-    const solved = await withStanceRocks(true, () => twoPassSolve({
+    const solved = await withStrikeEtaFloor(false, () => withStanceRocks(true, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: [L40BUTTON_GOAL], name, boot: staging.boot, dashMode: 'all',
         persistence: staging.persistence, log: () => {},
-    }));
+    })));
     return { staging, solved };
 }
 

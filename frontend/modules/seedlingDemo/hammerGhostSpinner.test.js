@@ -207,13 +207,14 @@ describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s s
         + 'from beyond the sword\'s reach', async () => {
         const on = await withGhostSpinnerPress(true, () => solveL18({ hasGhostSword: true }));
         expect(on.verdict).toBe('SOLVED');
-        expect(on.ticks).toBe(336);
+        expect(on.ticks).toBe(328); // 336 with `STRIKE_ETA_FLOOR` OFF (hammer-phase SFF flipped it ON)
         expect(on.run.playerHits).toEqual([]);
         expect(on.run.transitions.map((x) => x.to_level)).toEqual([19]);
         const landed = on.run.spinnerPressHits.filter((h) => h.landed);
         expect(landed.map((h) => [h.t, h.id, h.hits, h.killed])).toEqual([
-            [37, 'spinner@48,96', 2, false], [92, 'spinner@48,96', 4, true],
-            [113, 'spinner@112,48', 2, false], [159, 'spinner@112,48', 4, true]]);
+            // the floor OFF: 37 / 92 / 113 / 159
+            [37, 'spinner@48,96', 2, false], [70, 'spinner@48,96', 4, true],
+            [113, 'spinner@112,48', 2, false], [156, 'spinner@112,48', 4, true]]);
         expect(landed.every((h) => h.weapon === 'ghostsword' && h.reach > SLASH_REACH && h.reach <= GHOST_SWORD_REACH))
             .toBe(true);
     });
@@ -224,10 +225,10 @@ describe('D3 — the spinner press kill with the ghost sword (`r9-solve-18`\'s s
         expect(r.why).toMatch(/holds the GHOST SWORD and not the sword/);
     });
 
-    it('ON leaves the SWORD\'s solve byte-identical (the committed staging, 518 ticks)', async () => {
+    it('ON leaves the SWORD\'s solve byte-identical (the committed staging, 476 ticks; 518 with the strike floor OFF)', async () => {
         const off = await withGhostSpinnerPress(false, () => solveL18({}));
         const on = await withGhostSpinnerPress(true, () => solveL18({}));
-        expect(off.ticks).toBe(518);
+        expect(off.ticks).toBe(476);
         expect(on.keys).toEqual(off.keys);
     }, 300_000); /* two full solves (24 s alone): the 60 s default timed out under a parallel bounded run */
 });

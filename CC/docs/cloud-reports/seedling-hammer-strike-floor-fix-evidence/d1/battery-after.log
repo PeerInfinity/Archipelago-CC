@@ -1,0 +1,13 @@
+01:50:53 load 3.25 identity off start
+01:59:05 load 1.51 identity off rc=0
+01:59:05 load 1.51 producers off start
+02:01:09 load 4.26 producers off rc=0
+02:01:09 load 4.26 vitest off start
+02:07:58 load 5.25 vitest off rc=1
+02:07:58 load 5.25 identity on start
+02:17:49 load 1.42 identity on rc=0
+02:17:49 load 1.42 producers on start
+02:19:55 load 4.10 producers on rc=0
+02:19:55 load 4.10 vitest on start
+02:26:37 load 5.26 vitest on rc=0
+02:26:37 load 5.26 DONE

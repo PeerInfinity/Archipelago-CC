@@ -58,16 +58,21 @@ export async function ghostKillStaging() {
     return staging;
 }
 
-/** One `solveSegment` from the staging; a refusal returns its executed prefix (`e.perTick`) and its message. */
+/**
+ * One `solveSegment` from the staging; a refusal returns its executed prefix (`e.perTick`) and its message.
+ * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+ * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the tape
+ * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+ */
 export async function ghostKillSolve(staging, enabled) {
-    const { solveSegment } = await import(join(MODULE, 'solverBot.js'));
+    const { solveSegment, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
     const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
     const guardsOff = (fn) => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn));
-    return guardsOff(() => withGhostKillRung(enabled, () => {
+    return withStrikeEtaFloor(false, () => guardsOff(() => withGhostKillRung(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,
                 dashMode: 'all' });
@@ -75,7 +80,7 @@ export async function ghostKillSolve(staging, enabled) {
         } catch (e) {
             return { verdict: 'REFUSED', perTick: e.perTick ?? [], message: String(e?.message ?? e) };
         }
-    }));
+    })));
 }
 
 /** The model's account of a walk: the landings, each body's removal tick, the player's hits and deaths. */

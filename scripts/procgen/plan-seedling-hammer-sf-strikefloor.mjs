@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED
- * ETA (`solverBot.STRIKE_ETA_FLOOR`, OFF), ON THE GAME.
+ * ETA (`solverBot.STRIKE_ETA_FLOOR`, ON since hammer-phase SFF), ON THE GAME.
  *
  * `deriveStrike`'s ETA floor OFF is `ceil(cheb / WALK_SPEED)`, which a walk beats (an axis runs at up to 1.6 px/tick,
  * and the tolerance shortens it): the bounded pass skips reachable strikes and spends its forty on pairs too slow to
@@ -107,14 +107,17 @@ async function main() {
     const CHECK = process.argv.includes('--check');
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
-    const { STRIKE_ETA_FLOOR } = await import(join(MODULE, 'solverBot.js'));
+    const { STRIKE_ETA_FLOOR_DEFAULT } = await import(join(MODULE, 'solverBot.js'));
     let failures = 0;
     const check = (name, ok, detail) => {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    check('the switch ships OFF (`STRIKE_ETA_FLOOR`; this script turns it on for its ON solve only)',
-        STRIKE_ETA_FLOOR.enabled === false, `enabled ${STRIKE_ETA_FLOOR.enabled}`);
+    // ⛓ hammer-phase SFF (⚖ user 2026-10-23) flipped the default ON. Both solves below pin the floor explicitly
+    // (`withStrikeEtaFloor(enabled, …)`), so the default reaches neither; this row reads the default, not `.enabled`,
+    // so a `SEEDLING_STRIKE_ETA_FLOOR=0` process stays green.
+    check('the switch ships ON (`STRIKE_ETA_FLOOR_DEFAULT`, hammer-phase SFF; this script pins each solve\'s floor)',
+        STRIKE_ETA_FLOOR_DEFAULT === true, `default ${STRIKE_ETA_FLOOR_DEFAULT}`);
     const staging = await strikeFloorStaging();
     const off = await strikeFloorSolve(staging, false);
     const on = await strikeFloorSolve(staging, true);
