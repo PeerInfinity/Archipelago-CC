@@ -65,6 +65,15 @@ export const A_WEAPON = anyOf(flag('hasSword'), flag('hasSpear'));
 const OPEN = (cite, why) => ({ kind: 'open', cite, why });
 const GATED = (condition, cite, why) => ({ kind: 'gated', condition, cite, why });
 const WALL = (cite, why) => ({ kind: 'wall', cite, why });
+/**
+ * ⛓ RULES location-crossing — a GATED row whose BODY the game makes solid (its `type` is in
+ * `Mobile.solids`, `Mobile.as:17`) and which only its item removes. `solidCite` says where the source
+ * shows both. The playthrough generator counts such a body as an item-gated SOLID the way it counts
+ * the transcription's own (`gameGatedSolidTiles`), so a door or a LOCATION inside it costs it. A row
+ * that only PRICES a policy (a kill-lock, a puzzle) is never marked: its body is not the thing in the
+ * way.
+ */
+const SOLID_BODY = (row, solidCite) => ({ ...row, solidBody: solidCite });
 
 /**
  * ⛔⛔⛔ THE FIRST FINDING OF THIS SLICE, AND IT REFUTES THE BRIEF.
@@ -632,13 +641,15 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     fallrocklarge: OPEN('Scenery/FallRockLarge.as', 'as fallrock.'),
 
     // --- bosses whose BODY is the door (layer 3) ------------------------------
-    shieldboss: GATED(flag('hasSword'),
+    shieldboss: SOLID_BODY(GATED(flag('hasSword'),
         'Enemies/ShieldBoss.as (type "ShieldBoss", which Mobile.as:17 lists in '
         + '`solids`) + Player.as:895',
         'the ShieldBoss body is a real wall until it dies, and killing it needs a '
         + 'weapon. The spear is not an option here: it is D6 and this is D2, so the '
         + 'sword is the only reachable arm — stated as the sword rather than as the '
         + 'disjunction so the row cannot be read as licensing a spear-first route.'),
+        'Enemies/ShieldBoss.as:47-49 (`type = "ShieldBoss"`, `setHitbox(48, 48, 24, 24)`) + Mobile.as:17 '
+        + '(`solids` lists "ShieldBoss") + ShieldBoss.as:56-61 (removed only once its death cleared the tag)'),
     // ⛓ R4b (rules-totem-gate-as3 D3 finding (3)) — THE WAND, NOT A WEAPON. This row said the totem "takes
     // damage from either weapon. ⛔ NOT the wand", and the source says the opposite: the constructor sets
     // `onlyHitBy = "Wand"` (`BossTotem.as:262`) and `Enemy.hit` drops every other `t` (`Enemy.as:149`); the
@@ -654,10 +665,12 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     finalboss: GATED(A_WEAPON,
         'Enemies/FinalBoss.as:231-236 (startDeath) + R6 §19.7 (the 109-tick death schedule)',
         'the Owl dies to shoves and its corpse becomes a Solid; a shove needs a weapon.'),
-    finaldoor: GATED({ seals: 16 },
+    finaldoor: SOLID_BODY(GATED({ seals: 16 },
         'Puzzlements/FinalDoor.as + End/4.oel:131',
         'the FinalDoor opens on all sixteen seals plus the {114,0} clear — the seal '
         + 'count is the item half and the only half a rules row can carry.'),
+        'Scenery/FinalDoor.as:25-26 (`setHitbox(32, 32, 16, 16)`, `type = "Solid"`) + :85-86 (removed when '
+        + 'its "open" animation ends)'),
 
     // --- ⛓⛓⛓ THE NPC THAT IS A DOOR ----------------------------------------
     //
@@ -681,12 +694,14 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
     // the `hasFire` test but is an Enemy (type "Enemy", absent from
     // `Mobile.solids`); `BossKey` and `BossTotemPart` are pickups vanishing
     // once collected. No other solid in the game opens on an item this way.
-    karlore: GATED(flag('hasFire'),
+    karlore: SOLID_BODY(GATED(flag('hasFire'),
         'NPCs/Karlore.as:26-33 (`added()` -> `if (Player.hasFire) FP.world.remove(this)`) '
         + '+ Dungeon5 entrance geometry, L48 tile (7,17)',
         'an NPC that is a DOOR: Sardol seals the north entrance until the player holds '
         + 'Fire, and removes himself entirely once they do. Bounded sweep: he is the only '
         + 'blocking entity in the game with an item-conditional self-removal.'),
+        'NPCs/Karlore.as:23 (`setHitbox(16, 16, 8, 8)`; `extends NPC`, and NPCs/NPC.as:59 types it "Solid") + :29-31 '
+        + '(`if (Player.hasFire) FP.world.remove(this)`)'),
 
     // --- the moonrock: a wall the SHIELD builds ------------------------------
     moonrock: WALL('Scenery/Moonrock.as:88-118 -> Game.moonrockSet -> Main.rockSet '
@@ -943,22 +958,11 @@ export const CHARGED_DOORS = Object.freeze([
     // (7,0) and (8,0). So the door is not BETWEEN anything — it is UNDER the
     // exits, the binding dropped its cost, and AP took The Seed in sphere 5.3
     // holding TWELVE of the sixteen seals. The goal itself was ungated.
-    Object.freeze({
-        level: 113,
-        exitId: 'out_teleporter_112_0',
-        condition: { seals: 16 },
-        cite: 'Scenery/FinalDoor.as:52-64 (`SealController.hasAllSealParts() && talkedToWatcher`) '
-            + '+ End/2.oel finaldoor@112,0 sitting under the L115 teleporters',
-        why: 'the FinalDoor opens on all sixteen seals; the teleporters to the Seed room stand on '
-            + 'its own cells, so the seal count has to ride on the exits.',
-    }),
-    Object.freeze({
-        level: 113,
-        exitId: 'out_teleporter_128_0',
-        condition: { seals: 16 },
-        cite: 'Scenery/FinalDoor.as:52-64 + End/2.oel finaldoor@112,0',
-        why: 'the second of the two cells the FinalDoor covers.',
-    }),
+    //
+    // ⛓ RULES location-crossing — ITS TWO ROWS ARE RETIRED, NOT DROPPED: the `finaldoor` overlay row is a
+    // `solidBody` now (a "Solid" only its seals remove), so the generator's general rule — a door inside an
+    // item-gated solid costs that solid (`chargeSealedDoor`) — charges both exits the same `Has(Seal, 16)`
+    // from the cells the door covers. A hand row on top would charge it twice.
     // ⛓ RULES (B) — the LavaBoss arena's two doors (`LAVABOSS_ARENA`).
     Object.freeze({
         level: LAVABOSS_ARENA.level,
@@ -983,8 +987,10 @@ export const CHARGED_DOORS = Object.freeze([
  * have taken a step towards morality"*. Reaching it is the FinalDoor's
  * condition, which is TWO terms:
  *
- *   1. `SealController.hasAllSealParts()` — all sixteen seals. Carried, as the
- *      `CHARGED_DOORS` rows above.
+ *   1. `SealController.hasAllSealParts()` — all sixteen seals. Carried on L113's
+ *      two exits to L115, which stand inside the FinalDoor: the `finaldoor` row is
+ *      a `solidBody`, so the generator charges them its seals (they were hand rows
+ *      in `CHARGED_DOORS` until RULES location-crossing).
  *   2. `talkedToWatcher = !Game.checkPersistence(0, 114)` — the Watcher's speech
  *      in L114 must have been heard. ⛓ RULES watcher-event: CARRIED as a
  *      game_state event (`CROSS_ROOM_PREREQUISITES` below). It was once named
@@ -1004,7 +1010,7 @@ export const CHARGED_DOORS = Object.freeze([
 export const COMPLETION = Object.freeze({
     goal: 'the bloodless Seed, L115 seed@(4,4)',
     witness: 'the credits — menu_state 2',
-    carried: ['all sixteen seals, via CHARGED_DOORS on L113\'s two exits to L115',
+    carried: ['all sixteen seals, on L113\'s two exits to L115 (inside the FinalDoor, a `solidBody`)',
         'the Watcher\'s speech in L114, via CROSS_ROOM_PREREQUISITES (the event flag:L114:0)'],
     implied: [],
     excludedBranch: 'the BLOODY seed (NPCs/Watcher.as:97-103) — a second ending reachable with no '

@@ -373,17 +373,21 @@ describe('location guards — the gate that is not a door', () => {
 });
 
 describe('the charged doors and the completion condition', () => {
-    it('charges the D7 entrance, BOTH cells the FinalDoor covers, and BOTH LavaBoss arena doors', () => {
+    it('charges the D7 entrance and BOTH LavaBoss arena doors by hand', () => {
         expect(CHARGED_DOORS.map((d) => `${d.level}/${d.exitId}`)).toEqual([
             '12/out_teleporter_32_848',
-            '113/out_teleporter_112_0',
-            '113/out_teleporter_128_0',
             '82/out_teleporter_144_0',
             '96/out_teleporter_32_64',
         ]);
-        for (const door of CHARGED_DOORS.filter((d) => d.level === 113)) {
-            expect(door.condition).toEqual({ seals: 16 });
-        }
+    });
+
+    // ⛓ RULES location-crossing — the FinalDoor's two hand rows retired: the door is a `solidBody`, and the
+    // generator's general sealed-door charge carries its seals (`seedlingPlaythroughLocationCrossing.test.js`
+    // holds the two exit rules byte-identical).
+    it('the FinalDoor is a solidBody gated on all sixteen seals, and no hand row charges it twice', () => {
+        expect(PLAYTHROUGH_ENTITY_OVERLAY.finaldoor.condition).toEqual({ seals: 16 });
+        expect(PLAYTHROUGH_ENTITY_OVERLAY.finaldoor.solidBody).toMatch(/FinalDoor\.as:25-26/);
+        expect(CHARGED_DOORS.filter((d) => d.level === 113)).toEqual([]);
     });
 
     // ⛓ RULES (B) — L82 is wired (⚖ "Lift; gate both ways"), and the logic never

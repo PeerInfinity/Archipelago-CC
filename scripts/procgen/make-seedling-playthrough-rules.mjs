@@ -348,7 +348,11 @@ function gameGatedSolidTiles(level) {
         const base = SEM.entitySemantics(entity);
         const killLock = room?.verdict === 'gated' && Number(entity.attrs?.tset) === -1
             && room.locks.includes(`${entity.type}@${entity.x},${entity.y}`);
-        if (base?.kind !== 'gated' && !killLock) continue;
+        // ⛓ RULES location-crossing — and a body the OVERLAY marks `solidBody`: solid in the game
+        // (`Mobile.solids`) and removed only by its item (the ShieldBoss, the FinalDoor, Karlore). Each
+        // row cites the source for both halves; a policy pricing (a puzzle, a kill-lock) is never marked.
+        const solidBody = Boolean(OV.PLAYTHROUGH_ENTITY_OVERLAY[entity.type]?.solidBody);
+        if (base?.kind !== 'gated' && !killLock && !solidBody) continue;
         for (const [tx, ty] of SEM.entitySealedTiles(entity, base)) tiles.add(`${tx},${ty}`);
     }
     return tiles;
@@ -531,6 +535,7 @@ export function buildPlaythroughAtlas() {
     crossingCharged.length = 0;
     sealedDoorsCharged.length = 0;
     pocketDoorsCharged.length = 0;
+    sealedLocationsCharged.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
     regionAnalyses.clear();
@@ -632,6 +637,11 @@ const CHARGE_CROSSINGS = process.argv.includes('--charge-crossings');
 function applyCrossingCostToBindings(atlas, regionId, analysis) {
     const region = atlas.regions.find((r) => r.region_id === regionId);
     for (const b of analysis.bindings) {
+        if (b.kind === 'location') {
+            if (b.sealedIn) chargeSealedLocation(region, regionId, b);
+            else if (b.conditionSets?.length > 0) countUnchargedLocation(region, regionId, b);
+            continue;
+        }
         if (b.kind !== 'exit' || !b.component || !b.reachable) continue;
         if (!b.conditionSets || b.conditionSets.length === 0) continue;
         // ⛔ DEPARTURES ONLY. The analyzer answers "which component can REACH
@@ -675,7 +685,8 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
  * `tileSolid` oracle), the door is touched only once that solid is gone, so its
  * own cell's conditions are NECESSARY on every way in. L24's two teleporters to
  * L12 sit inside `burnabletree@32,128` and shipped True_; this charges them Fire.
- * Only the transcription's OWN item-gated solids count (`gameGatedSolidTiles`).
+ * Only the transcription's OWN item-gated solids count (`gameGatedSolidTiles`), plus the overlay bodies the
+ * game makes solid that only an item removes (`solidBody`: the ShieldBoss, the FinalDoor, Karlore).
  * The departure is still counted permissive when the rest of its approach costs
  * more than its own cell.
  */
@@ -697,6 +708,50 @@ function chargeSealedDoor(region, regionId, b) {
     note(`${regionId}: exit "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has no `
         + `place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`
         + (whole ? '' : '; the rest of its approach stays uncharged (permissive)'));
+}
+
+/**
+ * ⛓ RULES location-crossing — **A LOCATION INSIDE AN ITEM-GATED SOLID COSTS ITS SOLID.**
+ *
+ * `chargeSealedDoor`'s family, for a location: a pickup is taken only on OVERLAP, so when the physics
+ * model has no place for the body on the location's own tile (`binding.sealedIn`), the solid has to be
+ * gone first and its own cell's conditions are NECESSARY on every way in. Never the binding's whole
+ * `conditionSets` (one path's conjunction — the `--charge-crossings` defect above): only the cell the
+ * body must occupy. L19's Boss Key 0 lies inside `shieldboss@80,32`'s 48x48 body and shipped True_;
+ * this charges it the Sword. Unlike a door it has no direction, so it needs no departure test.
+ */
+function chargeSealedLocation(region, regionId, b) {
+    const own = b.sealedIn.conditions;
+    const parts = own.map((c) => analyzerOptions.resolveCondition(c));
+    const loc = (region.locations ?? []).find((l) => l.name === b.id);
+    if (parts.some((p) => !p) || !loc) {
+        permissiveBindings.push(`${regionId}/${b.id}`);
+        note(`${regionId}: location "${b.id}" sits INSIDE an item-gated solid whose conditions do NOT resolve `
+            + 'to items — left uncharged (permissive)');
+        return;
+    }
+    const cost = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+    loc.access_rule = loc.access_rule === undefined ? cost : { rule: 'And', children: [loc.access_rule, cost] };
+    sealedLocationsCharged.push(`${regionId}/${b.id}`);
+    note(`${regionId}: location "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has `
+        + `no place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`);
+}
+
+/**
+ * ⛓ RULES location-crossing — a location on FREE material that the analyzer binds through a gated way is NOT
+ * charged that way: it is one approach's conjunction (the `--charge-crossings` class), not a cell the body must
+ * occupy. L89's Feather lies on water between two waterfalls; the binder's nearest component climbs the south
+ * one (Swim + Feather), but the arrivals from L90/L91 come DOWN the north one on Swim alone, which every way
+ * into its sub-region already costs. Counted in `permissiveBindings` and named, unless a rule already rides
+ * on the location (a boss kill the overlay rules).
+ */
+function countUnchargedLocation(region, regionId, b) {
+    const loc = (region.locations ?? []).find((l) => l.name === b.id);
+    if (!loc || loc.access_rule !== undefined) return;
+    permissiveBindings.push(`${regionId}/${b.id}`);
+    note(`${regionId}: location "${b.id}" at [${b.tile}] is bound through gated material on one approach `
+        + `(${b.conditionSets.map((s) => s.conditions.map((c) => SEM.conditionKey(c)).join(' + ')).join(' OR ')}) `
+        + '— not charged: a path\'s conjunction, not its own cell (permissive)');
 }
 
 /**
@@ -836,8 +891,10 @@ function applyHandRulings(atlas) {
     // proximity start a conversion that the next level entry rebuilds away, so
     // the ruling now lives in the overlay as `IGNEOUS_IS_FREE` and applies to
     // every igneous tile in the game rather than to one level's leftovers.
-    // ── the hand-charged doors (§14): the two exits whose dropped approach
-    //    cost the SPHERE LOG caught — D7's entrance and the endgame door.
+    // ── the hand-charged doors (§14): the exits whose dropped approach cost
+    //    the SPHERE LOG caught — D7's entrance (the endgame door's two rows
+    //    retired in RULES location-crossing: the FinalDoor is a `solidBody`, so
+    //    `chargeSealedDoor` charges them) — and the LavaBoss arena's doors.
     for (const door of OV.CHARGED_DOORS) {
         const region = atlas.regions.find((r) => r.region_id === regionIdFor(door.level));
         const exit = (region?.exits ?? []).find((e) => e.exit_id === door.exitId);
@@ -988,6 +1045,8 @@ export const sealedDoorsCharged = [];
 
 /** ⛓ RULES obstacle-events — every departure charged the solids that alone open its model pocket. */
 export const pocketDoorsCharged = [];
+/** ⛓ RULES location-crossing — every LOCATION this run charged the item-gated solid it sits inside. */
+export const sealedLocationsCharged = [];
 
 /**
  * Every ARRIVAL exit standing on gated material whose approach cost was NOT
