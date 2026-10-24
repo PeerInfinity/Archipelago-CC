@@ -706,9 +706,9 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "dangerMap.js": 1
+        "dangerMap.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "direct"
@@ -913,12 +913,12 @@
         "arrivalSolid.js": 1,
         "arrowLaneCrossing.js": 2,
         "botDriverV2.js": 31,
-        "dangerMap.js": 13,
+        "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
         "solverBot.js": 118
       },
-      "sites": 168,
+      "sites": 169,
       "seen": "both",
       "via": [
         "direct",
@@ -1332,11 +1332,11 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 3,
-        "dangerMap.js": 12,
+        "dangerMap.js": 13,
         "lightsVerb.js": 7,
-        "solverBot.js": 112
+        "solverBot.js": 113
       },
-      "sites": 134,
+      "sites": 136,
       "seen": "both",
       "via": [
         "direct",
@@ -1469,9 +1469,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 275
+        "solverBot.js": 276
       },
-      "sites": 348,
+      "sites": 349,
       "seen": "both",
       "via": [
         "direct",
@@ -1515,9 +1515,9 @@
       "files": {
         "arrivalSolid.js": 1,
         "arrowLaneCrossing.js": 1,
-        "dangerMap.js": 9
+        "dangerMap.js": 10
       },
-      "sites": 11,
+      "sites": 12,
       "seen": "both",
       "via": [
         "direct"
@@ -4208,10 +4208,10 @@
         "dangerMap.js": 4,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 91,
+        "solverBot.js": 92,
         "strikePolicy.js": 2
       },
-      "sites": 120,
+      "sites": 121,
       "seen": "static",
       "via": [
         "import"
