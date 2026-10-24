@@ -1,0 +1,602 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (94 tests) 11977ms
+     ✓ ⛔ the two exposed tapes are DERIVED by driving the roster, not declared  11300ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (136 tests) 19282ms
+     ✓ ⛓⛓⛓ predicts every arrow position of a committed walk, tick for tick  483ms
+     ✓ ⛔ the second kill takes totalEnemies() to zero and OPENS `lock@144,112`  464ms
+     ✓ r5-l42-part4: the query equals the getter for every family at every tick, and the tape makes crushers, crushersParked, pushables, spinnerBodies, turrets, turretDamage, turretsSettled non-trivial  1039ms
+     ✓ r5-totem-entrance: the query equals the getter for every family at every tick, and the tape makes armedPulsers, latchedGroups, openActivators, openChests, pushesSettled non-trivial  655ms
+     ✓ r9-solve-16: the query equals the getter for every family at every tick, and the tape makes armedArrowTraps, arrowFlights, arrowsInFlight, brokenRocks, chasers, pulledRopes, strikeBodies non-trivial  574ms
+     ✓ r5-bobboss-fire: the query equals the getter for every family at every tick, and the tape makes bobBoss non-trivial  708ms
+     ✓ f4-l8-sandtraps: the query equals the getter for every family at every tick, and the tape makes staticBodies non-trivial  504ms
+     ✓ r8-d2: the query equals the getter for every folded member at every tick, and the tape makes appliedTimedClears, bankedClears, collected, earnedClears, inCeremony, inputRefused, inventory, keyOpens, keys, lockSnaps, presses, roomWrites, saveState, shieldBossKills, shieldBossStabs, slashInfo, spinnerKillLockOpens, spinnerPressHits, spinnerWrites, takenPickups non-trivial  1501ms
+     ✓ r4-walk-5-spear: the query equals the getter for every folded member at every tick, and the tape makes equipsFired, grantsFired, primary, primaryWeapon, unfiredEquipTicks non-trivial  553ms
+     ✓ r5-totem-entrance-control: the query equals the getter for every folded member at every tick, and the tape makes chestOpens, pulserHits, pulserPushes, sealCollections non-trivial  756ms
+     ✓ r9-solve-16: the query equals the getter for every folded member at every tick, and the tape makes arrowVolleys, chaserKillLockOpens, ropePulls non-trivial  535ms
+     ✓ r5-l40-part5-control: the query equals the getter for every folded member at every tick, and the tape makes blastFreezes, frozenTimer, turretKills non-trivial  1002ms
+     ✓ r5-bobboss-fire: the query equals the getter for every folded member at every tick, and the tape makes bobBossEvents non-trivial  1575ms
+     ✓ f4-l8-sandtraps: the query equals the getter for every folded member at every tick, and the tape makes staticBodyDeaths non-trivial  403ms
+     ✓ enc-l12-witch: the query equals the getter for every folded member at every tick, and the tape makes witchEvents non-trivial  927ms
+     ✓ r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query  2141ms
+ ✓ frontend/modules/flashPanel/seedlingSolveProgressView.test.js (57 tests) 144ms
+ ✓ frontend/modules/seedlingDemo/tapeFormat.test.js (149 tests) 262ms
+ ❯ frontend/modules/seedlingDemo/watchOverlays.test.js (88 tests | 1 failed) 10263ms
+     ✓ ⚖ arrow paths are the ONE layer that defaults OFF (kickoff §1.6) 2ms
+     ✓ ⛓ the shape layers are `shape` — this tick, not the walk 2ms
+     ✓ every layer has a distinct id and a human label 1ms
+     ✓ ⛔ every marker source the extractor emits has a GLYPH — no silent marker 1ms
+     ✓ an ABSENT parameter is not an empty one 0ms
+     ✓ selects exactly the named layers 0ms
+     ✓ ⚠ an unknown name is REPORTED, not thrown and not ignored 0ms
+     ✓ ⛔ marks EDGES, not holds — a five-tick swing is one marker 0ms
+     ✓ a key held from tick 0 is an edge at tick 0 0ms
+     ✓ movement keys are not action keys 0ms
+     ✓ accepts arrays as well as Sets — the frame shape is not assumed 0ms
+     ✓ refuses a key name the tape format does not have, BY NAME 1ms
+     ✓ merges chasers and spinners into ONE enemy channel, tagged by kind 1ms
+     ✓ ⛔ a REMOVED pushable has no position to draw and is dropped 0ms
+     ✓ ⚠ null channels (noclip / noDamage) come through EMPTY, never as a throw 0ms
+     ✓ ⛓ SLICE 6: the body COLLIDERS come from the engine, per class 0ms
+     ✓ ⚠ a body whose class has no census hitbox is ABSENT, never boxed by guess 0ms
+     ✓ bodiesAt is THIS TICK ONLY and filtered to the level being drawn 0ms
+     ✓ places every ledger row at the position the run held on ITS tick 0ms
+     ✓ a death is its own glyph and carries the respawn in its label 0ms
+     ✓ ⛓⛓⛓ a CLEAR PLACES now — the ruled tick, at the tick it names 0ms
+     ✓ ⛔ a clear whose feeder has NO tick is still UNPLACED, and says which 0ms
+     ✓ ⛔ a row outside the collected frames is UNPLACED, never clamped 0ms
+     ✓ ⚠ AT OR BEFORE the cursor — a future hit is not drawn 0ms
+     ✓ filtered to the level being drawn — every level is its own space 0ms
+     ✓ and to the ON layers 0ms
+     ✓ accumulates to the cursor and filters to the level 1ms
+     ✓ a cursor past the end is clamped to the samples it has 0ms
+     ✓ channelSummary counts DISTINCT bodies across every level 0ms
+     ✓ is the `traces/` sibling of `tapes/`, keyed by the tape name 0ms
+     ✓ tolerates a leading slash 0ms
+     ✓ ⚠ refuses to GUESS for a path outside a tapes/ directory 0ms
+     ✓ an absent obstacle is an em dash, not an empty cell 0ms
+     ✓ ⛔ the one-line form is the CLI's OWN — one summary, two views 1ms
+     ✓ the active row is the last DECISION at or before the cursor 0ms
+     × ⛓⛓⛓ r8-solve-18: BOTH spinner paths, press markers at the recorded ticks, and ZERO damage markers 547ms
+     ✓ ⛓⛓⛓ r8-hammer-control: exactly ONE damage marker, at tick 247 143ms
+     ✓ ⚠ a tape with no trace sidecar is NAMED — r8-hammer-control has none 1ms
+     ✓ r8-hammer-control tick 247: the DRAWN angle IS the recorded 152° 94ms
+     ✓ ⛔ THE SPLICE IS THE FINDING: one sample gives the wrong angle, the other gives the wrong place 87ms
+     ✓ ⛓ …and over the WHOLE walk: every ledger row reproduced, ZERO extras 113ms
+     ✓ ⚠ a NAMED absence, not an empty one: no clock ⇒ no line, with the reason 12ms
+     ✓ r8-solve-18: a press rect is drawn on its FIRED tick and overlaps the spinner 85ms
+     ✓ ⛔ keyed on `fired`, never on `t` — they differ by one BY TRANSCRIPTION 0ms
+     ✓ r7-act2-4: the box is chaserBoxAt of run.chasers, at three sampled ticks 108ms
+     ✓ ⛓⛓⛓ L8 draws 0 of 2 and says WHY — while L14 draws 6 of 6 and says nothing 4ms
+     ✓ ⛓ the refusal text is `chaserRoomVerdict`'s own, not a paraphrase 1ms
+     ✓ an empty ROOM says so — and it is a different sentence from a refused one 1ms
+     ✓ ⚠ a COMBAT-BLIND run is a fourth answer, not "the room is empty" 1ms
+     ✓ ⛔ "all dead by this tick" is distinct from every other empty 1ms
+     ✓ a sample with no census can be reported as absent but not explained 0ms
+     ✓ ⛓⛓⛓ L16's three armed traps each get a lane, at the engine's own geometry 2ms
+     ✓ ⛔ a room with no trap, a room with none armed, and a walk that cannot tell 2ms
+     ✓ is THIS TICK ONLY and filtered to the level being drawn 0ms
+     ✓ ⛓⛓⛓ L11's chest is unmarked at tick 0 and GONE at tick 6 — and the engine agrees 77ms
+     ✓ ⛓ L37's burnable tree is GONE at tick 105, at the 2x2 box the level built 87ms
+     ✓ ⛔⛔ L39's rope is SWAPPED, not gone — the builder's own shrunk box  3952ms
+     ✓ ⛓⛓⛓ L40's LIVE ice turret is drawn as a wall and is NOT one — from tick 0 17ms
+     ✓ ⚠ four named empties — and "no world" is reported, never explained 1ms
+     ✓ ⛓⛓⛓ a `tset -1` lock cleared at tick t: unmarked at t-1, GONE from t 1ms
+     ✓ ⚠ a run that cannot answer marks nothing — `built: null` is not `[]` 0ms
+     ✓ is THIS TICK ONLY and filtered to the level being drawn 1ms
+     ✓ ⛓⛓⛓ L41's crusher is drawn where the RUN has it, with the scan's own four lanes 136ms
+     ✓ ⛓⛓ the body MOVES off its build cell, and a SHIELDED crusher says so 0ms
+     ✓ ⚠ the two empties are named, and they are different facts 0ms
+     ✓ ⛓⛓⛓ an in-page SOLVE records its own danger queries, at the TAPE's clock 190ms
+     ✓ ⛓⛓⛓ every query a SUCCESSFUL solve records is CLEAR — the purple is a refusal's colour 88ms
+     ✓ ⚖ a REPLAY or MANUAL source says "no solver ran" — it does not recompute 0ms
+     ✓ ⚠ a tick with no query names the count AND the nearest tick that has one 72ms
+     ✓ ⛔ a query WITH sources carries the union's own reason, verbatim 0ms
+     ✓ ⛔ a SWORD press is `SLASH_HIT_TICKS` rows on consecutive ticks — measured 67ms
+     ✓ a SPEAR press is THREE rows with spearGameTest ON: the thrust, then repeats 2 and 4 on T+3 / T+5  1905ms
+     ✓ ⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound (spearGameTest OFF)  1733ms
+     ✓ ⛔⛔ no press row is EVER in both channels, at any cursor 63ms
+     ✓ ⚠ a hold of 0 restores the RAW picture exactly 41ms
+     ✓ the age is STRICTLY after the fired tick and bounded by the hold 1ms
+     ✓ `?attackhold=` reports a bad value by name and never throws 0ms
+     ✓ the swing note quotes the ENGINE's number, not a retyped one 0ms
+     ✓ ⛔ L39's three blocks are counted from tick 0 and NONE is marked until the push 249ms
+     ✓ ⛔⛔ the marked rect walks at `PUSHABLE_SPEED`, one sample per tick 26ms
+     ✓ ⛔⛔⛔ the engine puts the wall at the DRAWN rect and not at the base 157ms
+     ✓ the visible text is the game's own CLIP, clamped 0ms
+     ✓ ⚠ four named absences — and they are four different sentences 6ms
+     ✓ ⛔⛔ a real ceremony types out, page by page, in the game's own words 19ms
+     ✓ ⛓⛓⛓ a WRAPPED page keeps the engine's own break, not the browser's 14ms
+     ✓ ⛔⛔⛔ two ticks of ONE ceremony are two different snapshots 25ms
+     ✓ ⛓⛓⛓ is EQUAL to runTapeToStream — one walk, one vocabulary 84ms
+     ✓ ⛔ a PARTIAL walk has NO stream — `finished` is the whole condition 0ms
+ ✓ frontend/modules/seedlingDemo/playthroughAcceptance.test.js (76 tests) 435ms
+ ✓ frontend/modules/seedlingDemo/director.test.js (108 tests) 322ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 37734ms
+     ✓ ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared  1068ms
+     ✓ ⛓ L8 with its clears UNDECLARED solves on the run's own sandtrap deaths (F4)  643ms
+     ✓ L6: the ladder climbs AVOID -> TIME -> BAIT and the room SOLVES  451ms
+     ✓ ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more  1224ms
+     ✓ L5: a `tset -1` lock is refined from `hold` to `kill` by LIVE STATE  425ms
+     ✓ ⛓ F4: undeclared, L8 derives NO second shove — the walk pushes the block once the sandtrap is gone  506ms
+     ✓ ⛓⛓ the two flag states spend the SAME keys — only a PLAN dashes  374ms
+     ✓ ⛓ …and at §23b.3's stance the certification still TAKES dashes — it is not a blanket no, and the stand is HIT ONCE in 400 ticks  397ms
+     ✓ ⛓⛓ a PLAN presses INSIDE the swing window; neither flag state alone can  629ms
+     ✓ ⛓⛓⛓⛓ R9 slice 12c‴: the KEYS no longer part at all — 207 → the whole stand refused, 79 → the whole stand dashing — and the BOUND is what the BODIES still measure  345ms
+     ✓ ⛔ derives a stance for the body that CANNOT reach where the walk stands  1784ms
+     ✓ ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why  1625ms
+     ✓ ⛓ takes the BEST stance, not the first viable one — and carries the runners-up  1524ms
+     ✓ ⛔ the dwell bound is the forecast's own death tick, not a per-class constant  7934ms
+     ✓ ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned  631ms
+     ✓ ⛓ L18 spends the fade WALKING, and the wait is the subtraction  1896ms
+     ✓ ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin  6306ms
+     ✓ ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room  2055ms
+     ✓ ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell  502ms
+     ✓ ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it  3056ms
+     ✓ ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way  357ms
+ ✓ frontend/modules/seedlingDemo/watchWasm.test.js (79 tests) 75ms
+ ✓ scripts/procgen/ciGatePlan.test.js (83 tests) 26365ms
+     ✓ does NOT refuse a DUAL gate as a Windows row — it has a headless channel  3716ms
+     ✓ REFUSES a gate that is not on the roster at all, exit 5  622ms
+     ✓ REFUSES a @ci-face gate asked under its `gate:` key, exit 5  538ms
+     ✓ ⛔ does NOT refuse any key `ciSourced` selects — arm labels included  8107ms
+     ✓ REFUSES a @ci-shallow gate by name, exit 5, before any network call  731ms
+     ✓ REFUSES a Windows-driving IDENTITY row by name, exit 5, off-network  638ms
+     ✓ does NOT refuse a browser key any more — it goes on to ask CI  535ms
+     ✓ D1 — every producer row Producer --checks runs has no arm, unless the bank quotes CI for it  9734ms
+file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172
+        throw new Error(`boxLock: unknown kind ${JSON.stringify(kind)} — one of `
+              ^
+
+Error: boxLock: unknown kind "gpu-ish" — one of browser, windows, own-port, measure
+    at takeBoxLock (file:///home/user/Archipelago-CC/scripts/procgen/boxLock.js:172:15)
+    at file:///tmp/p3b-boxlock-WyoefD/snippet-11398570.mjs:3:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.22.0
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 19111ms
+     ✓ releases on exit, so the next taker takes it cleanly  326ms
+     ✓ reclaims a stale lock by `kill -0`, naming whom it reclaimed from  350ms
+     ✓ lets exactly ONE of eight simultaneous takers hold the box; the rest refuse  3411ms
+     ✓ serialises four QUEUED simultaneous takers — every one takes, no two hold at once  9196ms
+     ✓ lets a QUEUED taker die on SIGTERM — it never takes the box later  2617ms
+     ✓ passes when nothing moved, and refuses BY ROW when the head does  363ms
+     ✓ makes a REAL browser gate refuse before it spends anything  1041ms
+ ✓ frontend/modules/seedlingDemo/watchManual.test.js (36 tests) 5313ms
+     ✓ ⛓⛓ A DRIVE INTO A LETHAL PIT DIES AND ROUND-TRIPS ITS DEATH — same tick, same respawn  644ms
+     ✓ the pasted bytes replay to the SAME frames, positions and markers  411ms
+     ✓ ⛔ SEVEN clears, SEVEN markers, ZERO unplaced — was 7 unplaced at slice 2  2983ms
+ ✓ frontend/modules/seedlingDemo/tapeRunner.test.js (635 tests) 57117ms
+     ✓ crusher-l42-round-trip: JS stream matches the real game recording, exactly  772ms
+     ✓ l40button-l41-part0: JS stream matches the real game recording, exactly  336ms
+     ✓ l40button-l42-part0: JS stream matches the real game recording, exactly  357ms
+     ✓ r2-walk-full: JS stream matches the real game recording, exactly  682ms
+     ✓ r3-walk-3-torch: JS stream matches the real game recording, exactly  690ms
+     ✓ r3-walk-4-spear: JS stream matches the real game recording, exactly  338ms
+     ✓ r3-walk-full: JS stream matches the real game recording, exactly  816ms
+     ✓ r4-walk-6-health: JS stream matches the real game recording, exactly  397ms
+     ✓ r4-walk-full: JS stream matches the real game recording, exactly  801ms
+     ✓ r5-l40-part5-control: JS stream matches the real game recording, exactly  302ms
+     ✓ r5-l41-part3: JS stream matches the real game recording, exactly  491ms
+     ✓ r5-l41-part3-control: JS stream matches the real game recording, exactly  399ms
+     ✓ r5-l42-part4: JS stream matches the real game recording, exactly  637ms
+     ✓ r5-l42-part4-control: JS stream matches the real game recording, exactly  575ms
+     ✓ r5-shaft: JS stream matches the real game recording, exactly  1136ms
+     ✓ r5-shaft-control: JS stream matches the real game recording, exactly  770ms
+     ✓ r7-act2-full: JS stream matches the real game recording, exactly  588ms
+     ✓ r8-l18-spinner-press: JS stream matches the real game recording, exactly  365ms
+     ✓ apb-l12-witch-reported: stepping to completion == runTape, byte for byte  554ms
+     ✓ apb-l12-witch-server-sword: stepping to completion == runTape, byte for byte  358ms
+     ✓ crusher-l42-round-trip: stepping to completion == runTape, byte for byte  1095ms
+     ✓ l40button-l41-part0: stepping to completion == runTape, byte for byte  588ms
+     ✓ l40button-l42-part0: stepping to completion == runTape, byte for byte  577ms
+     ✓ r2-walk-full: stepping to completion == runTape, byte for byte  965ms
+     ✓ r3-walk-full: stepping to completion == runTape, byte for byte  1432ms
+     ✓ r4-walk-3-torch: stepping to completion == runTape, byte for byte  710ms
+     ✓ r4-walk-4-approach: stepping to completion == runTape, byte for byte  486ms
+     ✓ r4-walk-6-health: stepping to completion == runTape, byte for byte  471ms
+     ✓ r4-walk-full: stepping to completion == runTape, byte for byte  1656ms
+     ✓ r5-bobboss-fire: stepping to completion == runTape, byte for byte  315ms
+     ✓ r5-bobboss-fire-control: stepping to completion == runTape, byte for byte  644ms
+     ✓ r5-l40-join-control: stepping to completion == runTape, byte for byte  528ms
+     ✓ r5-l40-part0: stepping to completion == runTape, byte for byte  475ms
+     ✓ r5-l40-part0-control: stepping to completion == runTape, byte for byte  442ms
+     ✓ r5-l40-part5: stepping to completion == runTape, byte for byte  922ms
+     ✓ r5-l40-part5-control: stepping to completion == runTape, byte for byte  636ms
+     ✓ r5-l41-part3: stepping to completion == runTape, byte for byte  1148ms
+     ✓ r5-l41-part3-control: stepping to completion == runTape, byte for byte  799ms
+     ✓ r5-l42-part4: stepping to completion == runTape, byte for byte  1414ms
+     ✓ r5-l42-part4-control: stepping to completion == runTape, byte for byte  1169ms
+     ✓ r5-shaft: stepping to completion == runTape, byte for byte  615ms
+     ✓ r5-shaft-control: stepping to completion == runTape, byte for byte  584ms
+     ✓ r7-act2-5: stepping to completion == runTape, byte for byte  326ms
+     ✓ r7-act2-full: stepping to completion == runTape, byte for byte  528ms
+ ✓ scripts/procgen/rerecordCampaign.test.js (37 tests) 1924ms
+     ✓ no hand witness duplicates what the producers themselves declare  1853ms
+ ✓ frontend/modules/seedlingDemo/gameClock.test.js (60 tests) 5834ms
+     ✓ 'r9-solve-12' -> 'r9-solve-21': the model reaches the latched `save.time`  311ms
+     ✓ ⛔ MUTATION: dropping the ceremony spans breaks exactly the two segments that have one  1487ms
+     ✓ ⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one  1956ms
+stderr | frontend/modules/flashPanel/seedlingEncounterBinding.test.js > 3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game's flag > (32,4) checks Bob Boss (the Fire drop), (12,1) the Witch (the dark sword), (32,3) Times (the kill)
+[region atlas] the game moved from level 32 to level 12, which region "null" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+
+stderr | frontend/modules/flashPanel/seedlingEncounterBinding.test.js > 3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game's flag > ⛔ the RETIRED flag path: `hasFire` / `hasDarkSword` turning true checks NOTHING, in its own level or not
+[region atlas] the game moved from level 32 to level 12, which region "null" has no marked exit to. The atlas covers part of the map by design, so the AP region was NOT moved — mark this crossing in the Region Marking Tool to make it a real boundary.
+
+ ✓ frontend/modules/flashPanel/seedlingEncounterBinding.test.js (24 tests) 24723ms
+     ✓ ⛔ the RETIRED flag path: `hasFire` / `hasDarkSword` turning true checks NOTHING, in its own level or not  420ms
+     ✓ the staging carries {32,1}; the run builds the rock fallen; the encounter is mapped and solved (no arm leg)  22841ms
+ ✓ frontend/modules/seedlingDemo/watchSolve.test.js (34 tests) 597ms
+ ❯ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (13 tests | 1 failed) 1657ms
+     ✓ two fresh runs of one staging agree at every tick, and no two ticks share one 272ms
+     ✓ reading it changes nothing: a run digested every tick walks the tape as one that never is  350ms
+     ✓ digest EQUAL below T = 355 and DIFFERENT from T on — the clear lands at T, in place and persist only  377ms
+     ✓ ⚠ a reader that CAN tell them apart below T is a LEDGER no escape reads: the kill-lock row's `declaredAt` 89ms
+     ✓ a run with NO row (pass 1) digests equal below T too; its own advance at T is what tells (the kill-lock arm)  386ms
+     ✓ a module switch moves `globals` alone, and only while it is set 3ms
+     ✓ the game clock (`seam.time`) moves `clock` (and the staging that declares it), from tick 0 6ms
+     × a tick moves `place` and `clock`, and the player's walk moves `player` 29ms
+     ✓ a type-31 tile's unturned clock (`igneousStates`) moves `visit` alone 17ms
+     ✓ the King of Fire's fight (`lavaBossFights`, `lavaArenaRocks`) moves `visit` alone 34ms
+     ✓ the guard: each per-visit map `levelRun.js` declares is in a digest part or in DIGEST_EXEMPT, never both 9ms
+     ✓ the guard's mutants: a new `…States` map, a new reset in `freshVisitState`, a stale exemption — each red by name 50ms
+     ✓ the L69 fight (`lightsFights`), built in one run and not the other, moves `visit` alone 32ms
+ ✓ scripts/procgen/reachClosure.test.js (25 tests) 13777ms
+     ✓ names the FOUR identity rows slice 11 sealed as held, and they all moved  2038ms
+     ✓ names the two producers that DID re-record, and their four tapes  1874ms
+     ✓ ⛓ the reached tapes, widened to whole chains, ARE §16.11's rule — as a SET  1552ms
+     ✓ ⚠ and it is an UPPER BOUND: it also names rows slice 11 measured as HELD  1826ms
+     ✓ and the maze byte-identity row, which does NOT reach the solver, is absent  1395ms
+     ✓ a change to the page reaches the browser gates that drive it  1244ms
+     ✓ and the edge is DERIVED from the naming — no name, no edge  1517ms
+     ✓ ⛔⛔ the thirteen series names do NOT drag in the whole tree (the 166 row)  361ms
+     ✓ ⛓ reachReport carries the data reach beside the closure  1379ms
+ ✓ frontend/modules/seedlingDemo/procgenWeigh.test.js (16 tests) 1763ms
+     ✓ hold -> pulse — the flip really happens, and the row says why  505ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (58 tests) 153302ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  18761ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  541ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21), the strike floor at its shipped ON: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  17770ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  8206ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  4886ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  1449ms
+     ✓ ⛓⛓ L6 ladder climb: keys are role paths, stable across the stream; counts never fall  444ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  9644ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  15041ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  2651ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  10834ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  14191ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  10005ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  14764ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  9366ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  12936ms
+ ✓ scripts/procgen/walkMoves.test.js (31 tests) 8763ms
+     ✓ ⛓⛓ the nomination finds the four solvers that EMIT the chain segments  1834ms
+     ✓ ⛓⛓⛓ participation: the five solvers YES, the browser producer NO — and it says why  6898ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests) 2920ms
+     ✓ leg 243 — the shipped defaults: fixed rows at 0 px, residue at its tick  802ms
+ ✓ frontend/modules/seedlingDemo/pressKillCost.test.js (19 tests) 46956ms
+     ✓ answers what hammerHitsPlayer answers, every phase, boxes on and off the line  3741ms
+     ✓ r9-solve-18 (presses land, bodies die): every row equal, and the shift is taken  834ms
+     ✓ r5-press-glide (a block glides while the bodies move): every row equal  5106ms
+     ✓ the kill-start derivation on spinner@880,848, continuation and all: the same strike ON and OFF  3681ms
+     ✓ r9-solve-18 at residue 5: the same keys, records and trace ON and OFF, every cache exercised  13502ms
+     ✓ the kill-start derivation, then two refused ones on the same run (lines carried): the same answers (the strike floor OFF)  2107ms
+     ✓ ⛓ the strike floor ON: P2 keeps the same answers; only the far refusal's `etaSkipped` count moves  3647ms
+     ✓ r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised  14018ms
+ ✓ frontend/modules/seedlingDemo/campaignChain.test.js (18 tests) 91ms
+ ✓ frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js (8 tests) 29919ms
+     ✓ ⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it  29842ms
+ ✓ scripts/procgen/provisionalLatch.test.js (32 tests) 20ms
+ ✓ frontend/modules/seedlingDemo/hammerEscape.test.js (20 tests) 17577ms
+     ✓ ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's)  8086ms
+     ✓ ⛓⛓ hammer-a-l18-escape21's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit  3342ms
+     ✓ ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's)  3742ms
+     ✓ ⛓⛓ hammer-a-l18-escape15's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit  1542ms
+ ❯ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests | 3 failed) 160576ms
+     ✓ ⛓⛓ ON by default (the XC flip; `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0` turns it OFF); the scope is per call and empty 2ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  22340ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  17282ms
+     ✓ ⛓ L6 ladder climb: ON is OFF (no escape is asked; nothing is looked up) 242ms
+     ✓ ⛓ L3 plain walk: ON is OFF (no escape is asked; nothing is looked up) 68ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  28718ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  12326ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  10807ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  13763ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  17205ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  19139ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  8931ms
+     × ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ 73ms
+     ✓ ⛓⛓ the clocked hazard in a beam-tower room (L104): the escape is entered, the two seam times are two entries 38ms
+     × ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches 290ms
+     × ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ 131ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  5054ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  4132ms
+     ✓ ⛓⛓⛓ the digest is per CALL: a call that builds a lazy visit state is never stored, so the next run builds it too (the per-tick mutant's trap) 21ms
+ ✓ frontend/modules/seedlingDemo/ulpDash.test.js (10 tests) 1397ms
+     ✓ ⛓ `knockbackImpulse` IS `pointNormalize` plus the game's two guards  340ms
+     ✓ ⛓⛓ the SPLIT: under the REFUTED spelling an AXIS dash cannot round-trip  409ms
+ ✓ frontend/modules/seedlingDemo/placedTalk.test.js (19 tests) 77ms
+stdout | frontend/modules/seedlingDemo/observationTolerance.test.js > exact mode IS diffObservationStreams > agrees with it on all 289 committed recordings vs the model, and on 3 perturbations of each
+exact-mode equivalence: {"recorded":289,"pass":288,"fail":1,"nudged":289,"late":61,"swapped":289}
+
+ ✓ frontend/modules/seedlingDemo/observationTolerance.test.js (113 tests) 24813ms
+     ✓ agrees with it on all 289 committed recordings vs the model, and on 3 perturbations of each  24735ms
+ ✓ frontend/modules/seedlingDemo/fidelityWatcher.test.js (28 tests) 2628ms
+     ✓ the solver crosses L37 past the silent watcher into L38  1374ms
+     ✓ the solver crosses L37 past the silent watcher into L44  840ms
+ ✓ frontend/modules/seedlingDemo/tapeEnvelope.test.js (23 tests) 1583ms
+     ✓ agrees with parseTape on every envelope field, for every committed tape  1486ms
+ ✓ frontend/modules/seedlingDemo/fixtures/tiers.test.js (22 tests) 115ms
+ ✓ frontend/modules/seedlingDemo/fidelityF6.test.js (23 tests) 862ms
+     ✓ the solver plans L20 from the pressed state: it waits the latched fade out, then crosses to L19  500ms
+ ❯ frontend/modules/seedlingDemo/fidelityF1c.test.js (13 tests | 4 failed) 32015ms
+     ✓ ⛓ its bounds are the hammer's own: one period of horizon, every other phase of hold, one stall per landing 12ms
+     ✓ ⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c)  5799ms
+     ✓ ⛓⛓⛓ the committed window IS at the chain's residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19  9014ms
+     × ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19 2602ms
+     × ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19 4241ms
+     × ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words 1633ms
+     ✓ ⛓⛓ the witness IS the committed boot at its own residue: only the clock and the cosmetic stream moved 5ms
+     × ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock 1802ms
+     ✓ ⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did 20ms
+     ✓ ⛓⛓ under the game-sourced declaration the model crosses when the game did 25ms
+     ✓ ⛓⛓⛓ F5: the model's reading IS the game's — the ledger's own removal spelled v9 crosses when the game did, and the old readings cross one and two ticks late 115ms
+     ✓ ⛓⛓ F5: the game-sourced tick IS the spinner ledger's stamp spelled v9 (the chaser convention, one rule) 0ms
+     ✓ ⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game's spelling — its pending row is the ledger's removal + the v9 fade  6738ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 12216ms
+     ✓ ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press)  606ms
+     ✓ OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press  370ms
+     ✓ ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach  3082ms
+     ✓ ON leaves the SWORD's solve byte-identical (the committed staging, 476 ticks; 518 with the strike floor OFF)  7759ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (12 tests) 93919ms
+     ✓ ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte  6461ms
+     ✓ ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's  45525ms
+     ✓ ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence  4350ms
+     ✓ ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing  7818ms
+     ✓ ⛓⛓ inert while the fight itself is on (the retry would be the same path)  19904ms
+     ✓ ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged  2466ms
+     ✓ ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged  7231ms
+ ✓ scripts/procgen/producerSegments.test.js (12 tests) 1786ms
+     ✓ ⛓⛓ every participating producer answers, and names itself correctly  1706ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 23142ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail  4289ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end  12554ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end  6192ms
+ ❯ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests | 1 failed) 41406ms
+     ✓ ⛓⛓⛓ previewWalk: every output is byte-identical with a hook installed and without, and the hooked walk beats 219ms
+     × ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only 4732ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  35949ms
+     ✓ ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs  486ms
+     ✓ ⛓⛓ every call site is one null check with a literal key of HEARTBEAT_EVERY (unhooked: no allocation, no call) 16ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 248ms
+ ✓ frontend/modules/seedlingDemo/fidelityF7.test.js (18 tests) 1262ms
+     ✓ `level_16 -> level_15__r1c5` SOLVES from the return arrival (it refused at the arrival tile)  943ms
+ ✓ frontend/modules/seedlingDemo/fidelityReturn.test.js (14 tests) 2294ms
+     ✓ with the Conch the same arrival SOLVES (the water is the way round)  1394ms
+     ✓ CONTROL: the forward crossing `level_15 -> level_16` from the L14 door still solves  382ms
+ ✓ scripts/procgen/exportSeedlingView.test.js (19 tests) 10ms
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 13638ms
+     ✓ ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands  483ms
+     ✓ ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time  9274ms
+     ✓ ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time  3745ms
+ ❯ frontend/modules/seedlingDemo/stringPullFast.test.js (13 tests | 1 failed) 66193ms
+     ✓ ON by default, no audit 2ms
+     ✓ `withStringPullFast` restores the previous value: sync, async and throwing 2ms
+     ✓ a crusher step (L42 `crusher@96,144`, one tick of a leftward charge at 1 px/tick) 133ms
+     ✓ a push (L8 `pushableblock@96,112`, one tile down) 78ms
+     ✓ L1 at lattice 16: (124,55) → (55.5,26.5) 6ms
+     ✓ L2 at lattice 8: (45.5,33.5) → (68.5,24.5) 4ms
+     ✓ L3 at lattice 8: (73.5,25.5) → (38.5,42) 10ms
+     ✓ L3 at lattice 16: (67.5,31.5) → (50.5,107.5) 22ms
+     ✓ L40 kill rung (the lever's target)  28640ms
+     × L18 hammer room (residue 21) 10370ms
+     ✓ L6 ladder climb  306ms
+     ✓ L3 plain walk 88ms
+     ✓ the L42 crusher witness (a moving crusher, solved with the bait): OFF = ON, every pull audited  26529ms
+ ✓ frontend/modules/seedlingDemo/addEquips.test.js (4 tests) 64ms
+ ✓ frontend/modules/seedlingDemo/turretSolver.test.js (4 tests) 947ms
+     ✓ the ladder refuses AVOID and DODGEs U14's spit, by name  876ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 7942ms
+     ✓ the SWORD's certificate is the same ON and OFF  5683ms
+     ✓ ⛓⛓⛓ the GHOST OFF is offered only presses from ≤ 16 px; ON it presses from the 16–24 px band and kills sooner  1927ms
+     ✓ reads the row only for its probe and row margins: the ghost's approach at t0 is the same ON and OFF  327ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemo/escapeCrossPassCache.test.js > hammer-phase XC — the key > ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ
+AssertionError: expected '{"ok":F,"claim":T,"bound":"no-landing…' not to be '{"ok":F,"claim":T,"bound":"no-landing…' // Object.is equality
+ ❯ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js:369:38
+    367|         const off0 = pressEscape(l18At(T, 0), opts(l18At(T, 0)));
+    368|         const off1 = pressEscape(l18At(T, 1), opts(l18At(T, 1)));
+    369|         expect(answerText(off0)).not.toBe(answerText(off1));
+       |                                      ^
+    370|         expect(off0.ok).toBe(true);
+    371|         expect(off1.bound).toBe('exhausted');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/escapeCrossPassCache.test.js > hammer-phase XC — the key > ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches
+AssertionError: expected 0 to be greater than 0
+ ❯ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js:457:44
+    455|         }
+    456|         expect(offRows.length).toBe(2);
+    457|         for (const n of offRows) expect(n).toBeGreaterThan(0);
+       |                                            ^
+    458|         expect(offRows[0]).not.toBe(offRows[1]);
+    459|         expect(answerText(off0)).not.toBe(answerText(off1));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/escapeCrossPassCache.test.js > hammer-phase XC — the key > ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ
+AssertionError: expected 0 to be greater than 0
+ ❯ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js:511:44
+    509|             HAMMER_ESCAPE_TRACE.sink = null;
+    510|         }
+    511|         for (const n of offRows) expect(n).toBeGreaterThan(0);
+       |                                            ^
+    512|         expect(offA).not.toBe(offB);
+    513|         scoped((scope) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) > ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19
+AssertionError: expected 0 to be greater than 0
+ ❯ frontend/modules/seedlingDemo/fidelityF1c.test.js:143:31
+    141|         const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
+    142|         const stalls = pressRecords(r.out).flatMap((p) => p.phaseStall…
+    143|         expect(stalls.length).toBeGreaterThan(0);
+       |                               ^
+    144|         for (const s of stalls) {
+    145|             expect(s.corner).toBeGreaterThan(s.from);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) > ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19
+AssertionError: expected 477 to be 503 // Object.is equality
+
+- Expected
++ Received
+
+- 503
++ 477
+
+ ❯ frontend/modules/seedlingDemo/fidelityF1c.test.js:166:42
+    164|         for (const [residue, ticks] of [[WITNESS_RESIDUE, 503], [REBOU…
+    165|             const r = await solveAt(shiftTo(residue));
+    166|             expect(r.out.perTick.length).toBe(ticks);
+       |                                          ^
+    167|             expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ??…
+    168|             expect(pressRecords(r.out).flatMap((p) => p.escapes ?? [])…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) > ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words
+AssertionError: expected undefined to be 'HAMMER_SAFETY' // Object.is equality
+
+- Expected: 
+"HAMMER_SAFETY"
+
++ Received: 
+undefined
+
+ ❯ frontend/modules/seedlingDemo/fidelityF1c.test.js:181:30
+    179|         let raised = null;
+    180|         try { await solveOffAt(shiftTo(REBOUND_RESIDUE)); } catch (e) …
+    181|         expect(raised?.code).toBe(HAMMER_SAFETY);
+       |                              ^
+    182|         expect(raised.message).toMatch(/There is no step out\./);
+    183|         expect(raised.message).toMatch(/LANDED at t\d+: a landing's kn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/fidelityF1c.test.js > F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice) > ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock
+AssertionError: expected 0 to be greater than 0
+ ❯ frontend/modules/seedlingDemo/fidelityF1c.test.js:226:80
+    224|         const wAt = w.persistence.find((p) => p.level === 18 && p.tag …
+    225|         const r = await solveOffAt(shiftTo(WITNESS_RESIDUE));
+    226|         expect(pressRecords(r.out).flatMap((p) => p.phaseStalls ?? [])…
+       |                                                                                ^
+    227|         for (let t = 0; t <= wAt; t += 1) {
+    228|             expect([...heldKeysAt(w, t)].sort()).toEqual([...r.out.per…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/levelRunStateDigest.test.js > each component moves with its own state > a tick moves `place` and `clock`, and the player's walk moves `player`
+AssertionError: expected [ 'place', 'clock', 'visit' ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
+    "place",
+    "clock",
+-   "player",
++   "visit",
+  ]
+
+ ❯ frontend/modules/seedlingDemo/levelRunStateDigest.test.js:163:23
+    161|         const b = run.stateDigest({ parts: true });
+    162|         const moved = Object.keys(a.parts).filter((k) => a.parts[k] !=…
+    163|         expect(moved).toEqual(expect.arrayContaining(['place', 'clock'…
+       |                       ^
+    164|         expect(moved).not.toContain('staging');
+    165|         expect(moved).not.toContain('globals');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js > hammer-phase HB — the heartbeat is emit-only > ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only
+AssertionError: expected 367 to be 445 // Object.is equality
+
+- Expected
++ Received
+
+- 445
++ 367
+
+ ❯ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js:152:50
+    150|             expect(heartbeatEntered()).toBe(entered);
+    151|             expect(off.ok).toBe(true);
+    152|             expect(off.value.out.perTick.length).toBe(s.ticks);
+       |                                                  ^
+    153|             const want = digest(off);
+    154|             for (const ms of [1000, 100, 50, 0]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/stringPullFast.test.js > SP — committed solves: OFF and ON end to end, and every real pull audited > L18 hammer room (residue 21)
+AssertionError: expected '441782e9' to be '230dc0ff' // Object.is equality
+
+Expected: "230dc0ff"
+Received: "441782e9"
+
+ ❯ frontend/modules/seedlingDemo/stringPullFast.test.js:209:58
+    207|             const on = a.out;
+    208|             expect(off.ok).toBe(true);
+    209|             if (s.digest) expect(off.digest.slice(0, 8)).toBe(s.digest…
+       |                                                          ^
+    210|             expect(on.digest).toBe(off.digest);
+    211|             expect(on.shouldStops).toBe(off.shouldStops);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  frontend/modules/seedlingDemo/watchOverlays.test.js > ⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes > ⛓⛓⛓ r8-solve-18: BOTH spinner paths, press markers at the recorded ticks, and ZERO damage markers
+AssertionError: expected [ 33, 127, 160, 240, 273, 306 ] to deeply equal [ 44, 77, 110, 159, 192 ]
+
+- Expected
++ Received
+
+  [
+-   44,
+-   77,
+-   110,
+-   159,
+-   192,
++   33,
++   127,
++   160,
++   240,
++   273,
++   306,
+  ]
+
+ ❯ frontend/modules/seedlingDemo/watchOverlays.test.js:548:14
+    546|         const landing = collected.run.presses.filter((p) => p.hits.som…
+    547|         expect([...new Set(landing.map((p) => p.t))].sort((a, b) => a …
+    548|             .toEqual([44, 77, 110, 159, 192]);
+       |              ^
+    549|         expect(landing.reduce((n, p) => n + p.hits.filter((h) => h.lan…
+    550|         // …and every press that does NOT land comes after the last ki…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  6 failed | 45 passed (51)
+      Tests  11 failed | 2533 passed (2544)
+   Start at  23:53:32
+   Duration  352.93s (transform 13.69s, setup 0ms, import 56.92s, tests 987.36s, environment 7ms)
+

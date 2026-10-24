@@ -8284,7 +8284,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, OFF), ON THE GAME.",
+            "oneLiner": "plan-seedling-hammer-sf-strikefloor — ⛓⛓⛓ SEEDLING HAMMER-PHASE SF: THE ADMISSIBLE STRIKE FLOOR PLUS THE MEASURED ETA (`solverBot.STRIKE_ETA_FLOOR`, ON since hammer-phase SFF), ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs"
         },
         {
