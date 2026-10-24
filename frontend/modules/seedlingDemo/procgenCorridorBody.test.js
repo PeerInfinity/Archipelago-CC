@@ -97,7 +97,8 @@ describe('the corridor body in a generated level', () => {
         const cert = out.summary.elements.certification;
         expect(cert.certified).toBe(true);
         // ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): 223 → 232 t (off, by the switch: 223)
-        expect(cert.ticks).toBe(232);
+        // ⛓ hammer-phase SFF (`STRIKE_ETA_FLOOR` on, ⚖ user 2026-10-23): 232 → 187 t (off, by the switch: 232)
+        expect(cert.ticks).toBe(187);
         expect(cert.strategies).toEqual(['kill', 'collect']);
         const goal = out.record.entities.find((e) => e.type === ROAMING_GOAL_CLASS);
         expect(goal).toBeTruthy();

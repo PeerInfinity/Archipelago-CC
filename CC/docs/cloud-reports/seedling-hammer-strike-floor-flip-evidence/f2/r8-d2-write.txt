@@ -1,0 +1,50 @@
+# box lock: TAKEN by solve-seedling-r8-d2-chain.mjs (windows, pid 6341) — head 9fa65703d, 3 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+  pass 1: DISCOVERED kill-lock clear(s) [{18,0}] at tick 420
+  pass 2: MODEL-sourced {18,0} at 419 — `spinnerKillLockOpens` computed the removal at 319 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100
+  prefix agrees for the first 419 tick(s) below the declared 419 — {18,0}
+  pass 3: SOLVED in 1773 ticks
+PASS: r8-d2: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2: ends at a LEVEL ARRIVAL (§3.5) — [{"t":467,"from_level":18,"to_level":19},{"t":1213,"from_level":19,"to_level":20},{"t":1773,"from_level":20,"to_level":13}]
+PASS: r8-d2: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: ⛓⛓⛓ the headline's first 467 ticks ARE r8-solve-18's walk, key for key — 467 ticks compared, no difference
+PASS: ⛓⛓ the headline declares {18,0} at the SAME tick r8-solve-18 does — headline 419 vs r8-solve-18 419
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=468 dead_frames=40 seconds=17.2 frames_per_sec=29.56
+    drove r8-solve-18: 468 observations, 40 dead, 20s
+PASS: r8-solve-18 ends at a CALM ARRIVAL in the GAME — 46 signature rows latched at tick 467
+PASS: r8-d2-19: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2-19: ends at a LEVEL ARRIVAL (§3.5) — [{"t":746,"from_level":19,"to_level":20}]
+PASS: r8-d2-19: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+    WEBGPU_ADAPTER: google / swiftshader
+    ARM window=0 pending=True armed_at=-1 frame=-4801
+    REPLAY_OK ticks=747 dead_frames=190 seconds=31.7 frames_per_sec=29.57
+    drove r8-d2-19: 747 observations, 190 dead, 34s
+PASS: r8-d2-19 ends at a CALM ARRIVAL in the GAME — 46 signature rows latched at tick 746
+PASS: r8-d2-20: ZERO hits and ZERO deaths — hits 0, deaths 0
+PASS: r8-d2-20: ends at a LEVEL ARRIVAL (§3.5) — [{"t":560,"from_level":20,"to_level":13}]
+PASS: r8-d2-20: the arrival is CALM (v = 0 at the latch) — v=(0,0)
+PASS: ⛓ segment 0 is r8-solve-18's committed length, not a number typed here — 467 against the tape's 467
+PASS: ⛓ the ShieldBoss dies to THREE derived presses, each inside its window — [{"t":198,"hits":1},{"t":322,"hits":2},{"t":446,"hits":3}]
+PASS: ⛓ the boss key is HELD after segment 19 — [0]
+PASS: ⛓ `hasShield` flips NOT-HELD -> HELD inside segment 20 — false -> true
+PASS: ⛓ the chain ENDS in L13, through the westward gates — to L13
+PASS: ⛓ {20,2} is EARNED during the run (shield) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,0} is EARNED during the run (shieldlocknorm) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,4} is EARNED during the run (buttonroom) — [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]
+PASS: ⛓ {20,1} is BANKED, not earned — `Lock.turnOff()`'s write is the NEXT build's — earnedClears [{"level":20,"tag":0,"by":"shieldlocknorm@176,16","t":300},{"level":20,"tag":4,"by":"buttonroom@192,16","t":309},{"level":20,"tag":2,"by":"shield@112,48","t":161}]; the run left L20 at the alcove
+## r8-d2 budget: 340 span(s), 25 KB, 1773 ticks
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r8-d2.json (36366 bytes)
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/traces/r8-d2.trace.json (27406 bytes)
+## r8-solve-18: PROMOTED, not re-authored — 467 ticks read from the committed tape (solve-seedling-r8-l18.mjs owns it)
+## r8-d2-19 budget: 116 span(s), 9 KB, 746 ticks
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json (15415 bytes)
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/traces/r8-d2-19.trace.json (10222 bytes)
+## r8-d2-20 budget: 144 span(s), 11 KB, 560 ticks
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json (17828 bytes)
+  wrote /home/user/Archipelago-CC/frontend/modules/seedlingDemo/fixtures/traces/r8-d2-20.trace.json (13493 bytes)
+PASS: ⛓ sum(segment ticks) === the headline's own tick count — 467 + 746 + 560 = 1773 against 1773
+
+## PLAYTHROUGH_CHAINS.r8-d2: cuts [467, 1213], endsAt 1773
+## r8-d2: headline 1773t = r8-solve-18 467t + r8-d2-19 746t + r8-d2-20 560t, 2 internal seam(s)
+## there is NO hand answer for L18, L19 or L20 westward — the differential is the gate.

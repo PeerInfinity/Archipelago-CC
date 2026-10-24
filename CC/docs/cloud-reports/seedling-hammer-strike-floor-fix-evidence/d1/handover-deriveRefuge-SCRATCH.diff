@@ -1,0 +1,18 @@
+--- solverBot.d2.js	2026-10-24 01:15:31.233948197 +0000
++++ wt3/frontend/modules/seedlingDemo/solverBot.js	2026-10-24 01:20:12.299855221 +0000
+@@ -10371,9 +10371,12 @@
+     // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
+     const cut = REFUGE_ETA_CUT.enabled;
+     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
+-        const walk = cut && best !== null
+-            ? previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
+-            : previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
++        let walk;
++        try {
++            walk = cut && best !== null
++                ? previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
++                : previewWalk(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
++        } catch (e) { if (e instanceof PhysicsV2Error) { globalThis.__REFUGE_DEATHS = (globalThis.__REFUGE_DEATHS ?? 0) + 1; continue; } throw e; }
+         if (cut) {
+             REFUGE_ETA_CUT_COUNTS.previews += 1;
+             if (walk.truncated?.kind === 'stopped') REFUGE_ETA_CUT_COUNTS.cut += 1;

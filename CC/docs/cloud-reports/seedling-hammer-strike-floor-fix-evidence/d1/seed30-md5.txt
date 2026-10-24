@@ -1,0 +1,4 @@
+main floor=0 md5 5f23b6d2d462cb4538d0805ad405101f level-md5 a985aa217fdd01ad93baafcf38ac429d
+fix floor=0 md5 5f23b6d2d462cb4538d0805ad405101f level-md5 a985aa217fdd01ad93baafcf38ac429d
+both floor=0 md5 5f23b6d2d462cb4538d0805ad405101f level-md5 a985aa217fdd01ad93baafcf38ac429d
+both floor=1 md5 b8cd5e9b99c491acf70cb73daf098fa5 level-md5 ab1f88c501a8084931f46100100d9a8b

@@ -10,7 +10,11 @@
  *    the sweep saw); ON the candidates whose preview meets the band are refused by name, and no strike is returned
  *    (the kill then waits, re-deriving each tick).
  *  - HO2 (`PRESS_KILL_REBOOT_GUARD`): `solveSegment` from the boot, its `advance` capped at t1300. OFF the kill
- *    carries on past the first death (t1202) and meets the cap; ON it is refused by name on the death's tick.
+ *    carries on past the first death (t788) and meets the cap; ON it is refused by name on the death's tick.
+ * ⛓ hammer-phase SFF (2026-10-23) flipped `STRIKE_ETA_FLOOR` ON. HO1's keys are the floor-OFF base's solve, and the
+ * shake-band state at t2439 is that walk's, so HO1 pins the floor OFF. HO2 solves from the boot at the shipped
+ * defaults, so it follows the floor: its first death moved t1202 → t788 (SF3 measured the same), and both answers keep
+ * their shape.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -21,7 +25,7 @@ import { fileURLToPath } from 'node:url';
 import { atlasLevelSource } from './levelSource.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
-import { SolverRefusal, deriveStrike, solveSegment } from './solverBot.js';
+import { SolverRefusal, deriveStrike, solveSegment, withStrikeEtaFloor } from './solverBot.js';
 import { progressKind } from './solveProgress.js';
 import {
     PRESS_KILL_REBOOT_GUARD, PRESS_KILL_REBOOT_GUARD_DEFAULT, PRESS_KILL_SHAKE_GUARD, PRESS_KILL_SHAKE_GUARD_DEFAULT,
@@ -69,7 +73,8 @@ describe('hammer-phase LB — the press kill guards', () => {
         expect(isShakeBandThrow(forecast.message)).toBe(false);
     });
 
-    it('HO1: at t2439 the strike preview throws OFF; ON the band\'s candidates are refused by name', () => {
+    it('HO1: at t2439 the strike preview throws OFF; ON the band\'s candidates are refused by name (the strike floor '
+        + 'OFF: the keys\' own)', () => withStrikeEtaFloor(false, () => {
         const run = runAtHo1();
         // ⛔ the precondition, so a drifted fixture fails by name rather than by a missing throw
         expect(run.ticksCompleted).toBe(2439);
@@ -96,7 +101,7 @@ describe('hammer-phase LB — the press kill guards', () => {
             .toEqual({ cell: { x: 664, y: 680 }, pressAt: 3276, fromContinuation: true });
         // ⛔ the run is not touched by the derivation, either way
         expect(run.ticksCompleted).toBe(2439);
-    }, 120_000);
+    }), 120_000);
 
     /** One bounded solve: OFF ⇒ the sentinel's tick; ON ⇒ the refusal. */
     const capped = (on) => {
@@ -116,22 +121,22 @@ describe('hammer-phase LB — the press kill guards', () => {
         return { e: null, t: run.ticksCompleted, deaths: [] };
     };
 
-    it('HO2 OFF: the press kill carries on past the death at t1202', () => {
+    it('HO2 OFF: the press kill carries on past the death at t788', () => {
         const r = capped(false);
         expect(r.e?.sentinel).toBe(true);
         expect(r.t).toBe(1300);
-        expect(r.deaths).toEqual([1202]);
+        expect(r.deaths).toEqual([788]); // t1202 with the strike floor OFF (SFF)
     }, 600_000);
 
     it('HO2 ON: the press kill is refused by name on the tick of the first death', () => {
         const r = capped(true);
         expect(r.e).toBeInstanceOf(SolverRefusal);
-        expect(r.t).toBe(1202);
-        expect(r.deaths).toEqual([1202]);
+        expect(r.t).toBe(788);
+        expect(r.deaths).toEqual([788]); // t1202 with the strike floor OFF (SFF)
         // ⚠ fields, never the whole error (a failing match on a refusal can OOM the pretty-printer)
         expect(r.e.obstacle).toEqual({ kind: 'danger', id: 'bob@736,752' });
-        expect(r.e.perTick.length).toBe(1202);
-        expect(String(r.e.message)).toMatch(/the player died at t1202 \(chaser bob@736,752\) while pressing spinner@880,848, after 1 landing\(s\)/);
+        expect(r.e.perTick.length).toBe(788);
+        expect(String(r.e.message)).toMatch(/the player died at t788 \(chaser bob@736,752\) while pressing spinner@880,848, after 1 landing\(s\)/);
         expect(progressKind(r.e)).toBe('danger');
     }, 600_000);
 });

@@ -18,7 +18,7 @@ import {
 import { atlasLevelSource } from './levelSource.js';
 import { SLASH_REACH } from './presses.js';
 import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGuards.js';
-import { solveSegment } from './solverBot.js';
+import { solveSegment, withStrikeEtaFloor } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
@@ -93,18 +93,21 @@ function stagingA() {
  * ⚖ The witness is ABOUT the kill, which crosses the chaser's death at t1216: hammer-phase GF (2026-10-23) flipped the
  * guards ON, and ON the reboot guard refuses the kill at that death, so the rows that reproduce the witness pin the
  * guards OFF, and a sibling row pins the ON answer (the witness's own first 1216 ticks, then the guard's refusal).
+ * ⚖ Every row here pins `STRIKE_ETA_FLOOR` OFF: the witness is G1's walk under the floor OFF, and hammer-phase SFF
+ * (2026-10-23) flipped the floor ON. ON, this staging's kill moves (t2114 → t1616, the death t1216 → t778); the floor's
+ * own gate, `hammerStrikeEtaFloor.test.js`, pins that answer against its own witness (`hammer-sf-l40-strikefloor`).
  */
 function solveA(enabled, guards = false) {
     const staging = stagingA();
     const run = createRunForStaging(staging, atlasLevelSource());
-    return withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
+    return withStrikeEtaFloor(false, () => withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
         try {
             return { perTick: solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
                 name: NAME, boot: staging.boot, dashMode: 'all' }).perTick, message: null };
         } catch (e) {
             return { perTick: e.perTick ?? [], message: String(e?.message ?? e) };
         }
-    })));
+    }))));
 }
 
 describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phase G1, D2)`, () => {
@@ -149,7 +152,7 @@ describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phas
     }, 120_000);
 
     it('⛓⛓⛓ ON: the rung asks the press kill, and the solve\'s executed prefix IS the witness, key for key (the '
-        + 'press-kill guards OFF: the witness is the kill across the death)', () => {
+        + 'press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)', () => {
         const on = solveA(true, false);
         expect(on.message).not.toContain(GATE);
         expect(on.perTick.length).toBe(2195);
@@ -157,7 +160,7 @@ describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phas
     }, 900_000);
 
     it('⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the '
-        + 'executed prefix is the witness\'s first 1216 ticks', () => {
+        + 'executed prefix is the witness\'s first 1216 ticks (the strike floor OFF)', () => {
         const on = solveA(true, true);
         expect(on.message).not.toContain(GATE);
         expect(on.message).toContain('PRESS_KILL_REBOOT_GUARD');

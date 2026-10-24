@@ -1150,7 +1150,9 @@ const CHAIN_DECLARATIONS = Object.freeze([
                 // game-witnessed by `f1c-l18-lock-removal`; 420 (was 422).
                 // ⛓ hammer-phase A2 (`HAMMER_ESCAPE` on, ⚖ user 2026-10-07): `r8-solve-18` re-recorded
                 // 520 → 363 t; the second Spinner is removed at 205, so 305 (was 420).
-                removedAt: 205,
+                // ⛓ hammer-phase SFF (`STRIKE_ETA_FLOOR` ON, ⚖ user 2026-10-23): `r8-solve-18` re-recorded 363 → 467 t;
+                // the second Spinner is removed at 319, so 419 (was 305).
+                removedAt: 319,
                 fade: 100,
                 why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
                     + 'and `Game.totalEnemies()` reaches zero) plus '
@@ -1296,11 +1298,13 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * the second spinner is removed at 367, so the clear is at 467 (was 450).
              * ⛓ fidelity FLIP14 (`strikeIframeLapse` ON, ⚖ user 2026-10-12): the window re-solved from `r9-solve-16`'s
              * new latch, 518 → 440 t; the second spinner is removed at 306, so the clear is at 406 (was 467).
+             * ⛓ hammer-phase SFF (`STRIKE_ETA_FLOOR` ON, ⚖ user 2026-10-23): the window re-solved 440 → 390 t; the
+             * second spinner is removed at 255, so the clear is at 355 (was 406).
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 306,
+                    removedAt: 255,
                     fade: 100,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '
