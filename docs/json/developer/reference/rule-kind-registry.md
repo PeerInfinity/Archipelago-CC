@@ -109,7 +109,7 @@ The known gaps above are where today's code breaks this policy. Fixing them is t
   `build_apworld(lossy=True)`) is the opt-in way to keep the always-true placeholder; it lists each
   one by `<site>:<kind>`. Committed presets that still need `--lossy`: kh1 (`if_statement`), kh2
   (`AST_comparison`), and smz3 (`Attribute`, `AST_lambda`). The unknown-helper-NAME fallback
-  (`LOSSY FALLBACK: Unknown helper …`) is a separate sink and has not changed.
+  (`LOSSY FALLBACK: Unknown helper …`) was a separate sink then; F1 (below) routed it here too.
 - **rule_builder `ASTRule`** raises `NotImplementedError` naming the AST type, instead of answering
   `True`.
 
@@ -136,5 +136,21 @@ The known gaps above are where today's code breaks this policy. Fixing them is t
   `helper_codegen.ast` handles `t`), which closed 23 gaps. The strict sweep over every committed
   preset now fails on **smz3 only**: its rules are `lambda items: …` over TotalSMZ3's own
   `Progression` object (`Attribute` ×260, `AST_lambda` ×306).
+
+**As built (F1, 2026-10-23): an unknown helper NAME is loud too.** A helper call whose name has no
+body in the rules file's `helpers` block used to become `True_()` / `'True'` at four codegen sites
+with only a stderr print, so a strict run exited 0 with a silently wrong world. It now goes through
+the same switch: strict raises `UnknownHelperNameError` (a subclass of `UnknownRuleKindError`)
+naming the helper, the site and the game; `--lossy` keeps the placeholder and lists it as
+`<site>:helper <name>` next to the kinds. The sites are `rule helper` and `rule_builder helper`
+(`_rule_converters.py`), `helper body` (`_helper_expressions.py`) and `helper lambda`
+(`_helper_statements.py`). A boss `defeat_rule` that raised used to fall back to `return True`
+silently in `_template_rules.py`; that error now propagates. Every committed package and preset
+that did not hit the sink generates byte for byte as before. The committed presets that now need
+`--lossy` for a helper name are bomb_rush_cyberfunk, lingo, pokemon_rb, raft, sc2, sm, soe,
+yachtdice and yugioh06 (smz3 needed it already). All but raft keep the helper bodies in a JS
+`gameLogic` module. raft is an exporter gap: a LogicMixin's `self.has(item, player)` exports as a
+helper named `has`. Each one is on `worldgen_test_exclude_list` with that reason.
+
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.
