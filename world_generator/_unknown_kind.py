@@ -12,6 +12,10 @@ An unknown helper NAME (a helper call whose body the rules file does not carry, 
 helpers live only in its JS logic module) is the same failure one level down and goes through the
 same switch (rule-node F1): :func:`unknown_helper` raises :class:`UnknownHelperNameError` (a
 subclass, so one ``except`` covers both) or, lossy, records ``<site>:helper <name>``.
+
+The record counts only placeholders that reach the OUTPUT. A caller that converts a rule
+speculatively and may throw the result away runs it under :func:`speculative_record` and keeps
+the scratch only when it uses the result (rule-node R2c).
 """
 
 import collections
@@ -73,6 +77,34 @@ def lossy_codegen(enabled: bool = True, game: Optional[str] = None) -> Iterator[
         _lossy_record.reset(token)
         if game_token is not None:
             _codegen_game.reset(game_token)
+
+
+class Speculation:
+    """The scratch record of one speculative conversion; :meth:`keep` folds it into the real record."""
+
+    def __init__(self, outer: Optional[collections.Counter], scratch: Optional[collections.Counter]):
+        self._outer = outer
+        self.scratch = scratch
+
+    def keep(self) -> None:
+        if self._outer is not None and self.scratch:
+            self._outer.update(self.scratch)
+            self.scratch.clear()
+
+
+@contextlib.contextmanager
+def speculative_record() -> Iterator[Speculation]:
+    """Within the block, lossy placeholders are recorded into a scratch, dropped unless kept.
+
+    Strict mode is unchanged: an unknown kind still raises inside the block.
+    """
+    outer = _lossy_record.get()
+    spec = Speculation(outer, collections.Counter() if outer is not None else None)
+    token = _lossy_record.set(spec.scratch)
+    try:
+        yield spec
+    finally:
+        _lossy_record.reset(token)
 
 
 def unknown_kind(site: str, kind: str, placeholder: str) -> str:
