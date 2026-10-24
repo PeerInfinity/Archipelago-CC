@@ -2810,8 +2810,10 @@ function refineStrategy(run, strategy, obstacle) {
      * sentinel is the transcription's and not a `-1` typed here.
      */
     const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
-    if (!row || !KILL_LOCK_TAGS.includes(row.tag ?? obstacle.tag)) return strategy;
-    if (row.t === KILL_LOCK_TSET) return 'kill';
+    // ⛓ fidelity WANDHOLD (behind `coverWeighRefine`, OFF): a Cover joins the outlive question below — see `coverWeighArm`.
+    const coverArm = coverWeighArm(row, obstacle);
+    if (!row || (!KILL_LOCK_TAGS.includes(row.tag ?? obstacle.tag) && !coverArm)) return strategy;
+    if (!coverArm && row.t === KILL_LOCK_TSET) return 'kill';
     /**
      * ⛓⛓⛓ PROCGEN PoC SLICE 3b (⚖ kickoff §1.9) — THE SECOND REFINEMENT, AND
      * IT ASKS WHETHER THE HOLD CAN **OUTLIVE THE WALKER**.
@@ -2853,6 +2855,33 @@ function refineStrategy(run, strategy, obstacle) {
     const group = (run.world.pressers ?? []).filter((p) => p.t === row.t);
     if (group.length === 0) return strategy;
     return group.every((p) => localPublish(p) === null) ? 'weigh' : strategy;
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-wandhold D2 — **A COVER'S HOLD MUST OUTLIVE THE WALKER TOO** (behind
+ * `CONTACT_FIDELITY.coverWeighRefine`, OFF).
+ *
+ *     Cover.as:37-66    while `activate` the alpha falls 0.1 a tick and the type goes "" at 0; the moment the group
+ *                       drops, `reset()` makes it "Solid" again unless a Solid or the Player is inside it (a Chest
+ *                       aside) — the same occupancy guard as `Lock.activationStep` (`Lock.as:76-83`)
+ *     Button.as:27-46   `activate = tempCheck` every update: a plain Button republishes, so stepping off drops it
+ *
+ * The outlive refinement above asks its question of `KILL_LOCK_TAGS` only, and `cover` is not one, so a Cover kept
+ * `hold` whatever its pressers are. Guard (iii) (`stanceHypothesis`) trusts that: *"a `hold` survives here precisely
+ * because its group has a LATCHING presser"*. For a Cover it does not. Measured on L39 from the L38 arrival (js
+ * links-b-onward, Sphere 6.4, `Totem Part 72,40`): `button@112,144` (group 3, `wandlock@144,64`'s opener) lies under
+ * `cover@112,144` {t 2}, whose only presser is the plain `button@160,144`; the stance (120,152) read as reachable with
+ * the cover hypothesised open, and the walk then ground 400 ticks against the shut cover (*"grazing 395 solid(s):
+ * cover at (112,144)"*) — a hypothesis nothing redeems, since standing on `button@160,144` cannot also be standing in
+ * the cover 36 px west.
+ *
+ * ON: a Cover with a group (`t >= 0`) is asked the lock's question — every presser republishing ⇒ `weigh` (a Solid on
+ * the button presses it for ever: `Button.hitables` holds "Solid"), else `hold`. Guard (iii) then DERIVES the weigh,
+ * and a cover no block can weigh is a wall. OFF: byte-identical (`false`, so the arm above is the old one).
+ */
+function coverWeighArm(row, obstacle) {
+    return CONTACT_FIDELITY.coverWeighRefine === true && Boolean(row)
+        && (row.tag ?? obstacle.tag) === 'cover' && row.t >= 0;
 }
 
 /**
