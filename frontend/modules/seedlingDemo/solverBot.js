@@ -23517,9 +23517,20 @@ function solveSegmentUnder({
                     return { at, ticks, walk, door, wps };
                 };
                 const rest = PHASE_DODGE_RUNG.rest;
+                /**
+                 * ⛓ fidelity MISCRES D3 (`CONTACT_FIDELITY.phaseDodgeArrivalStall`, OFF) — in a room holding a type-31
+                 * tile, the walk's START leads the stall candidates: a doorstep stall can stand in a tile's range, and
+                 * standing there is what turns it (L76's (8,6) by `lavachain@128,64`). OFF: the doorstep offsets alone.
+                 */
+                const ats = [];
                 for (let k = 0; k < offsets; k += 1) {
                     const at = door - k * PHASE_DODGE_RUNG.step;
                     if (at < 0) break;
+                    ats.push(at);
+                }
+                if (CONTACT_FIDELITY.phaseDodgeArrivalStall && !ats.includes(0)
+                    && (run.entities('igneousTiles') ?? []).length > 0) ats.unshift(0);
+                for (const at of ats) {
                     let screen = null;
                     for (let ticks = 1; ticks < period; ticks += 1) {
                         if (deadlineReached('phase-dodge')) { tripped = true; return null; }

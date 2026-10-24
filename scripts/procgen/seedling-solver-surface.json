@@ -479,9 +479,9 @@
         "crusherBait.js": 7,
         "dangerMap.js": 25,
         "lightsVerb.js": 1,
-        "solverBot.js": 172
+        "solverBot.js": 173
       },
-      "sites": 310,
+      "sites": 311,
       "seen": "both",
       "via": [
         "direct",
@@ -563,7 +563,8 @@
           "solverBot.js": 2
         },
         "igneousTiles": {
-          "dangerMap.js": 2
+          "dangerMap.js": 2,
+          "solverBot.js": 1
         },
         "latchedGroups": {
           "dangerMap.js": 1,
@@ -4208,10 +4209,10 @@
         "dangerMap.js": 4,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 91,
+        "solverBot.js": 92,
         "strikePolicy.js": 2
       },
-      "sites": 120,
+      "sites": 121,
       "seen": "static",
       "via": [
         "import"

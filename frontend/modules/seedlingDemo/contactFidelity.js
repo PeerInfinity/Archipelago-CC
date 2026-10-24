@@ -1231,6 +1231,20 @@ export const CONTACT_FIDELITY = {
      * 2.742 px at t68; ON it equals it). `SEEDLING_FORECAST_CORPSE_FADE=0|1`.
      */
     forecastCorpseFade: false,
+    /**
+     * fidelity MISCRES D3 (wave 29) — THE PHASE ARM'S FIRST STALL IS THE WALK'S START, IN A ROOM WITH IGNEOUS TILES
+     * (`solverBot`'s dodge rung, LADDER2's phase arm). The arm stalls at the doorstep of a lava chain or beam tower and
+     * up to 7 offsets earlier (step 4) — 28 samples at most. In L76 that doorstep stands within range of the type-31
+     * tile (8,6) by `lavachain@128,64`, and a player in range is what drives the tile's clock (`Tile.as`, IGNEOUS):
+     * every stall long enough to shift the chain's phase turns the tile to lava under the stance, so the arm refuses
+     * at every arrival clock outside an 18-tick window. MEASURED (leg `level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80`,
+     * IGFADE's 650, captured at seam 5603): OFF the room REFUSES on the chain after 11,726 units (the page's 640 /
+     * 2,560 budgets run out at `phase-dodge`); with `igneousLava` OFF it solves (184 units); ON this key, a stall at
+     * the walk's start (out of the tile's range) is asked FIRST and solves in 94 units (727 t). ON: in a room holding a
+     * type-31 tile (`run.entities('igneousTiles')`, `igneousLava` ON), `at = 0` leads the stall candidates; every other
+     * room is unchanged. OFF: byte-identical. `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`.
+     */
+    phaseDodgeArrivalStall: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1466,6 +1480,9 @@ if (globalThis.process?.env?.SEEDLING_NON_CHASER_REMOVAL_BLOCKS === '1') CONTACT
 if (globalThis.process?.env?.SEEDLING_NON_CHASER_REMOVAL_BLOCKS === '0') CONTACT_FIDELITY.nonChaserRemovalBlocks = false;
 if (globalThis.process?.env?.SEEDLING_FORECAST_CORPSE_FADE === '1') CONTACT_FIDELITY.forecastCorpseFade = true;
 if (globalThis.process?.env?.SEEDLING_FORECAST_CORPSE_FADE === '0') CONTACT_FIDELITY.forecastCorpseFade = false;
+// ⛓ fidelity MISCRES D3: `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PHASE_DODGE_ARRIVAL_STALL === '1') CONTACT_FIDELITY.phaseDodgeArrivalStall = true;
+if (globalThis.process?.env?.SEEDLING_PHASE_DODGE_ARRIVAL_STALL === '0') CONTACT_FIDELITY.phaseDodgeArrivalStall = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

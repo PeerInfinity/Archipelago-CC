@@ -269,7 +269,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity MISCRES D1 (wave 29): REMBODY's rule for drills / wallflyers / ice turrets, and the forecast
             // fading a corpse — shipped OFF.
             nonChaserRemovalBlocks: false,
-            forecastCorpseFade: false });
+            forecastCorpseFade: false,
+            // ⛓ fidelity MISCRES D3 (wave 29): the phase arm stalls at the walk's start first in an igneous room — OFF.
+            phaseDodgeArrivalStall: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

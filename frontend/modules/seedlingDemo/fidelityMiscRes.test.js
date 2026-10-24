@@ -24,14 +24,20 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { gunzipSync } from 'node:zlib';
 
 import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { SKINSWING_WITNESS_DIR, compareSkinSwing, skinSwingModelSamples } from './fidelitySkinSwing.js';
 import { DRILLKILL_WITNESS_DIR, DRILLKILL_WITNESSES, DRILLKILL_SWITCHES, compareDrillKillWitness, drillKillModelSamples }
     from './fidelityDrillKill.js';
 import { parseTape } from './tapeFormat.js';
-import { createTapeStepper } from './tapeRunner.js';
-import { atlasLevelSource } from './levelSource.js';
+import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
+import { atlasLevelSource, loadAtlas } from './levelSource.js';
+import { ENTITY_CLASSES } from './levelWorld.js';
+import { arrivalStaging } from './fidelityArrival.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { solveAnytime, ANYTIME_PASSES } from './jsRuntimeSolver.js';
+import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 
 const loadSkin = (name) => JSON.parse(readFileSync(join(SKINSWING_WITNESS_DIR, `${name}.json`), 'utf8'));
 const loadDrill = (name) => JSON.parse(readFileSync(join(DRILLKILL_WITNESS_DIR, `${name}.json`), 'utf8'));
@@ -136,5 +142,104 @@ describe('fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL record
         expect(on.length).toBe(2);
         for (const s of on) expect(s.stamp).toBe(s.t);
         expect(stamps(DRILLKILL_SWITCHES).map((s) => s.stamp)).toEqual([null, null]);
+    }, 120000);
+});
+
+/**
+ * D3 — three unowned model rows, read in the AS3; NONE moves the model, so each is a pinned fact.
+ *   opentree  `ENTITY_CLASSES.opentree.type` is "Solid"; the game's class is `Tree` (`Scenery/Tree.as:24` writes
+ *             `type = "Tree"`, `OpenTree.as` never re-types it). The one model reader that branches on a pixelmask's type
+ *             is `collideLineSolid`, which exempts the class by name (fidelity MASKS, witnessed on p4g:
+ *             `mask-l65-opentree`). Every other pixelmask reader (`collidesSolid`, `collidesBlast`, `collidesArrowCover`)
+ *             tests the mask whatever its type, and each AS3 list it mirrors carries "Tree" (`Mobile.solids`,
+ *             `IceTurretBlast`/`Arrow`/`TurretSpit`/`LavaBall` `hitables`). The AS3 readers that ask "Solid" but not
+ *             "Tree" (`Chest`, `Pole`, `Pull`, the locks, `Droplet`, `Crusher`, `Stick`, `BossTotemShot`) never meet an
+ *             opentree box: pinned below by the rooms' geometry.
+ *   owl       `Game.talkingPic` is read only by `Game.render`'s talk box (`Game.as:1726-1735`). The owl's talk IS
+ *             modelled: `FinalBoss.update`'s `if (!started)` freezes the room (`finalBossFight.introFreeze`) until
+ *             `Input.released(keys[6])` (`levelRun`'s `introRelease`). `run.talkingNow` does not name it (render only:
+ *             handed to the JS skin).
+ */
+
+describe('fidelity MISCRES D3 — `opentree` is typed "Solid", the game says "Tree": no model reader can tell', () => {
+    it('the model row keeps "Solid" and names the class; the sight line exempts it by class', () => {
+        expect(ENTITY_CLASSES.opentree.as3).toBe('OpenTree');
+        expect(ENTITY_CLASSES.opentree.type).toBe('Solid');
+        expect(ENTITY_CLASSES.opentree.collider).toBe('pixelmask');
+        expect(ENTITY_CLASSES.treebare.type).toBe('Tree');
+    });
+    it('the opentrees stand in L12, L27, L65 — and no "Solid"-only AS3 reader of those rooms meets one\'s box (±1 px)', () => {
+        const SOLID_ONLY = ['chest', 'pole', 'pull', 'bosslock', 'lock', 'rocklock', 'cover', 'button', 'buttonroom',
+            'crusher', 'stick', 'bosstotem', 'pulser'];
+        const levels = [];
+        for (const r of loadAtlas().levels) {
+            const trees = r.entities.filter((e) => e.type === 'opentree');
+            if (trees.length === 0) continue;
+            levels.push(r.level);
+            for (const tr of trees) {
+                const box = { x: tr.x - 1, y: tr.y - 1, right: tr.x + 33, bottom: tr.y + 33 };
+                for (const e of r.entities.filter((x) => SOLID_ONLY.includes(x.type))) {
+                    const eb = { x: e.x, y: e.y, right: e.x + 16, bottom: e.y + 16 };
+                    const meets = eb.x < box.right && box.x < eb.right && eb.y < box.bottom && box.y < eb.bottom;
+                    expect([r.level, `${e.type}@${e.x},${e.y}`, meets]).toEqual([r.level, `${e.type}@${e.x},${e.y}`, false]);
+                }
+            }
+        }
+        expect(levels).toEqual([12, 27, 65]);
+    });
+});
+
+describe('fidelity MISCRES D3 — the owl\'s talk (`Game.talkingPic`): modelled as the intro freeze; the portrait is render only', () => {
+    it('L112: the Owl stands frozen until a primary release, and `talkingNow` does not name him (handed to the skin)', () => {
+        const st0 = arrivalStaging({ level: 112, x: 32, y: 208 }, { items: ['hasSword'] });
+        const run = createRunForStaging({ ...st0, rng: { ...(st0.rng ?? {}), seed: 1234567, split: true } }, atlasLevelSource());
+        for (let t = 0; t < 5; t += 1) {
+            run.advance(new Set());
+            expect(run.finalBosses.map((b) => [b.started, b.x, b.y])).toEqual([[false, 72, 104]]);
+            expect(run.talkingNow).toBeNull();
+        }
+        run.advance(new Set(['primary']));
+        run.advance(new Set());
+        expect(run.finalBosses[0].started).toBe(true);
+        expect(run.owlTicks.some((r) => r.phase === 'intro')).toBe(true);
+    });
+});
+
+/**
+ * D3 — IGFADE's leg 650 (`level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80`; id 637 at this base): its verdict is a
+ * function of the ARRIVAL CLOCK. The request is the page's own (captured by the local sweep at seam 5603, p4g, inv,
+ * solver; `fixtures/miscres/leg637-l76-request.json.gz`). OFF the phase arm stalls only near `lavachain@128,64`'s
+ * doorstep, inside the range of L76's type-31 tile (8,6), so every phase-shifting stall turns the tile: 18 of 61 clocks
+ * (5573..5590) solve, the rest run out of the 640 / 2,560 budgets at `phase-dodge` (unbudgeted: refused after 11,726
+ * units). `phaseDodgeArrivalStall` asks a stall at the walk's start first in such a room: 61 / 61 clocks solve within 640.
+ *   m4 the key's `unshift(0)` dropped -> the ON row reds (= OFF).   m5 the igneous gate dropped (every room) -> nothing
+ *   here reds (L76 holds the tiles; the gate is what bounds the movers to the igneous rooms — named, not pinned).
+ */
+
+const LEG637 = JSON.parse(gunzipSync(readFileSync(join(import.meta.dirname, 'fixtures', 'miscres',
+    'leg637-l76-request.json.gz'))).toString('utf8'));
+function solve637(over) {
+    const req = restoreRequest(LEG637.requests[0].request);
+    const { passes = ANYTIME_PASSES, source, ...tape } = req;
+    const answer = withContactFidelity(over, () => solveAnytime({ ...tape, source,
+        levelSource: levelSourceFromAtlas(source.records) }, { passes }));
+    return { seam: tape.staging.seam.time, budget: tape.budgetWork, ok: answer.ok,
+        passes: (answer.passes ?? []).map((p) => ({ pass: p.pass, ok: p.ok, ticks: p.ticks, work: p.work, deadline: p.deadline ?? null })) };
+}
+
+describe('fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE\'s leg 650 (L76), the page\'s own request', () => {
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.phaseDodgeArrivalStall).toBe(false);
+    });
+    it('OFF: the 640-unit request runs out at `phase-dodge` (the doorstep stalls light the type-31 tile)', () => {
+        const r = solve637({ phaseDodgeArrivalStall: false });
+        expect([r.seam, r.budget, r.ok]).toEqual([5603, 640, false]);
+        expect(r.passes.map((p) => [p.pass, p.deadline])).toEqual([['dashless', 'phase-dodge'], ['full', 'walk']]);
+    }, 120000);
+    it('ON: the stall at the walk\'s start is asked first — both passes solve inside the 640 units', () => {
+        const r = solve637({ phaseDodgeArrivalStall: true });
+        expect(r.ok).toBe(true);
+        expect(r.passes.map((p) => [p.pass, p.ok, p.ticks, p.work])).toEqual([
+            ['dashless', true, 727, 94], ['full', true, 706, 180]]);
     }, 120000);
 });
