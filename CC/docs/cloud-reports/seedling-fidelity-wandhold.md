@@ -202,7 +202,7 @@ L38-L41 = 55 legs, keys in `seedling-fidelity-wandhold-evidence/keys-l38-41.txt`
 
 **Branch CI** (`node scripts/procgen/ci-vitest-summary.mjs 79871f41 --wait`, run 40044735717, the last code head):
 the unfiltered vitest suite has **22,435 passed, 0 failed** and the slow battery **267 passed** (⚖ 52: this is the
-suite number). The report commit after it is docs-only; its run is re-read below.
+suite number). The report commits after it are docs-only, and the path filter starts no JavaScript Unit Tests run for them (`ci-vitest-summary.mjs 1c633232`: *"No JavaScript Unit Tests run"*), so 40044735717 is the branch's last code run.
 
 ## What the brief got wrong (measured)
 
