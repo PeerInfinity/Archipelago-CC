@@ -7416,8 +7416,8 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
  * @returns {{steps: ?object[], rejected: object[], found: object[], expansions: number,
  *   refused: ?{bound: string, why: string}, census: RouteCensusRow[]}}
  */
-export const MAX_ROUTE_ORDERS = 8;
-export const MAX_ROUTE_EXPANSIONS = 2000;
+export const MAX_ROUTE_ORDERS = 200;
+export const MAX_ROUTE_EXPANSIONS = 100000;
 
 /**
  * @typedef {{depth: number, newStates: number, newBlockCells: number,
