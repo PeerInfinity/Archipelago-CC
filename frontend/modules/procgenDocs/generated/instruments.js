@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 102,
-            "count": 149,
+            "browser": 103,
+            "count": 150,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 456,
-        "browser": 167,
+        "blockStyle": 457,
+        "browser": 168,
         "cited": 246,
-        "files": 470,
+        "files": 471,
         "lineStyle": 14,
-        "withDocblock": 470,
-        "withFlags": 387
+        "withDocblock": 471,
+        "withFlags": 388
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12135,6 +12135,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity F7 (D-A): **L16 RE-ENTERED WITH ITS ROPE PULLED, ASKED OF THE GAME — AND WITHOUT IT.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page:",
             "path": "scripts/procgen/probe-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check",
+                "onButton"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-fire-move.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-fire-move — ⛓⛓⛓ seedling-fidelity-firemove: THE SOLVER'S OWN FIRE PRESSES (`CONTACT_FIDELITY.fireBlockRoute`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-fire-move.mjs"
         },
         {
             "argvHelpers": [

@@ -265,7 +265,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
             fireBlockPulseShove: false,
             fireLiveTurretReach: false,
-            pulserPublishLag: false });
+            pulserPublishLag: false,
+            // ⛓ fidelity FIREMOVE (wave 29): the solver moves a fire block by Fire presses, and weighs with it — OFF.
+            fireBlockRoute: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
