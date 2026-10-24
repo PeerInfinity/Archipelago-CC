@@ -25180,3 +25180,41 @@ the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) �
 - "Updates before the player" is not the whole order: a reader that updates before its PUBLISHER reads the publish a tick
   late, whatever the player did.
 - A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).
+
+### Seedling fidelity CORPSEBUMP — a block's glide and a turret corpse's slide see the stepped bodies (`blockSweepBodies`); an ice turret's corpse is a weigh's holder (`corpseBumpWeigh`) — both OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-corpsebump.md`.
+
+**W0 — what stops a glide.** `PushableBlock*`'s ctor pushes `"Enemy"` and `"Player"` onto `Mobile.solids`
+(`["Solid","Tree","Rock","Rope","ShieldBoss"]`), and `IceTurret.death()` pushes the same two. Every chaser (Bob, BobSoldier,
+Puncher, Bulb, Flyer) is `type = "Enemy"`, and a live ice turret is too. `Game.loadlevel` adds the chasers (`:2276-2301`) and
+the ice turret (`:2296`) before the blocks (`:2382-2384`), and `addUpdate` prepends, so a block reads every one of them where
+the previous tick left it. A Puncher (`:2301`) is added after the turret, so it updates before the corpse.
+
+**D1 (`blockSweepBodies`).** `levelRun.pushableCtx` also asks every live bridged chaser (none under `noDamage`, where they
+are not stepped) and every unremoved ice turret, alive or a corpse. A turret corpse's slide stops on the spinners and on the
+chasers added before it; a puncher within 4 px of the slide refuses by name. `runFire`'s enemy-room refusals narrow to the
+bodies those sweeps do not consult (`run.blockSweepBodyIds`; `enemiesUnseenByBlockSweep`'s `seenIds`). Witness (p4g, 0 px,
+`corpsebump-l4-bob-wedge`): L4, the block shoved east stops at x 48.5 against `bob@64,64`. With the key OFF the model parts
+from the game at t79.
+
+**D2 (`corpseBumpWeigh`).** `deriveWeigh` asked the pushable roster only, so L40's t2 group (`button@480,384`, whose holder is
+`iceturret@472,400`'s corpse) was a guard-(iii) wall. `deriveWeighSource` adds the corpse as a second source, used only
+where no block reaches and none is parked: a turret whose corpse tile shares an axis with the presser. Each press is audited
+against a corpse at that cell. `execCorpseWeigh` runs the kill (`killForCorpse`), then the Fire bumps (each next stance read
+off where the corpse comes to rest), then the fade, then a wait for the shake to settle. The dangerMap no longer prices a
+dead turret at its placement. Witness (p4g, 0 px over 462 ticks, `corpsebump-l40-t2-holder`): from the pocket, the solver
+kills the turret, bumps the corpse north twice onto t2 (it rests there from t215), and walks west through the opened lock
+into the pit.
+
+**The kill is the finding.** With the Sword alone no standing kill of `iceturret@472,400` is hitless. The model shows no
+hitless one over 72 timings, and the mechanism explains why: the turret starts its next shot on the tick its 30-tick
+i-frame runs out, the third landing comes after that shot fires, and the shield protects only while moving. The Ghost Sword
+(damage 2) kills in two landings, before the shot. The AP rule (`Fire AND (Ghost Spear | Sword)`) admits the Sword.
+
+**Trap candidates.**
+- One update order is not the whole order. The block reads the Puncher a tick late, but the corpse reads it on the same
+  tick, so each mover's sweep needs its own row.
+- A glide's speed equals the corpse's two-cycle step (0.5 px). "Moved at most 0.5 px" is therefore not a rest test; compare
+  against two and four ticks back.
+- One press can carry a corpse two tiles. A plan's tile list is the audit, and the presses follow the corpse.
