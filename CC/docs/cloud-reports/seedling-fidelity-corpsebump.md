@@ -4,7 +4,7 @@
 |---|---|
 | Session | `seedling-fidelity-corpsebump` (planner `seedling-fidelity-planning-12`, wave 29) |
 | Start SHA | `e8d85de8d1` (`fidelity-harvest/firepush` = main `f9342f25b8` + FIREPUSH, its three keys OFF) |
-| Code head | `b2c11d58` (CI: see *Byte-inertia*); this report and its evidence are the commits after it |
+| Code head | `b2c11d58`; docs head `9beaeeb3` (CI: see *Byte-inertia*). This report's last edit is the commit after it |
 | Harness branch | `claude/seedling-corpse-bump-cpcyle` (nothing pushed elsewhere) |
 | Port | 9728 (main tree), 9729 (the head worktree the sweeps served), 8000 (W0 worktree; the probe battery) |
 | Verdicts | **W0 PASS · D1 PASS (p4g, 0 px) behind `blockSweepBodies` (OFF) · D2 PASS behind `corpseBumpWeigh` (OFF) · D3 PASS (p4g, 0 px over 462 ticks) · Movers: STOP for a licence (0 verdict movers measured)** |
@@ -317,8 +317,12 @@ literals (FIREPUSH's three + CORPSEBUMP's two) flipped in a scratch edit and the
   - at `b9ddca8a` (run 40117820269): 22,618 / 22,619. The one red was `seedlingSolverSurface (i)`: the surface json went
     stale behind that commit's own solver change. `b2c11d58` re-seals it (36/36 locally), but a json-only push matches
     no path in the workflow's filter, so no run exists there.
-  - this report's commit also touches `docs/` (the bot-log mover rows), so it runs CI at the final head; read that run
-    first.
+  - **at the final code+docs head `9beaeeb3` (run 40134928420): vitest 22,619 / 22,619, slow 268 / 268, producer
+    `--check`s, the headless gate shards and browser shard 0 green.**
+  - **Browser shard 1 is red on one gate: `concept-trial-play` (24/1, the text-adventure trial's Phase A, *"exit renders
+    tae-link-inaccessible"*).** No file on that path changed: the commits after `b9ddca8a` are a json, docs and this
+    report. It PASSED 25/0 at `b9ddca8a` (run 40117820269), so this is not this branch's; it reads as a flake. I could
+    not re-run it (the job re-run API answers 403 here), so **please re-run that one job once** before the harvest.
 - No committed tape, producer `--check`, or identity row moves, ON or OFF. **ON**, the bounded set moves 5
   `botDriverV2.test.js` L4 shove rows, plus the "ships OFF" rows and FIREPUSH's `iceTurret` control (above).
 
