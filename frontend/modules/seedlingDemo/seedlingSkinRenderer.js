@@ -51,6 +51,11 @@
  * `opts.apItemSprites`, which then replace G1's logo-for-every-item. Without
  * them the list is G1/G2's, op for op.
  *
+ * ⛓ G1.5: `paintOps`' `tileLayer` paints the still tiles ONCE onto an
+ * offscreen canvas (and the animated ones onto a second, only when one of
+ * them changes frame) and blits it, with the same pixels; `roomOps` builds
+ * the tile ops once per (room, art). Room mode on the big rooms is the gain.
+ *
  * ⛔ NOT YET (G4+ of the ladder, and G3's remaining classes): live pushables / broken rocks / opened chests / burned trees (every
  * solid with a run-changeable id stays a rectangle, at its START position —
  * the rect view's known limitation), grass blades, the bridge's opening, the
@@ -252,7 +257,7 @@ function planFor(world, level, mask = autotileMask) {
     const frames = new Map();
     for (const o of trees) frames.set(o, treeFrame(o, trees, room));
     for (const o of poles) frames.set(o, poleFrame(o, poles));
-    const plan = { level, grid, tiles, objects, frames };
+    const plan = { level, grid, tiles, objects, frames, tileEntries: new WeakMap() };
     if (mask === autotileMask) plans.set(world, plan);
     return plan;
 }
@@ -293,23 +298,25 @@ export function roomOps(world, art, {
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
+    const tileCount = tileEntriesFor(plan, art).length;
     const rectOp = (rect, colour, alpha, layer) => ({ rect, colour, alpha, layer });
     const has = (key) => !!art?.has(key);
 
-    for (const { tile: t, img, r, fallbackColour } of plan.tiles) {
-        const fallback = rectOp(t.rect, fallbackColour, 1, TILE_LAYER);
-        const spec = TILE_ART[t.t];
-        if (!spec || !has(spec.key)) { ops.push(fallback); continue; }
-        let choice;
-        if (spec.rule === 'autotile') choice = { frame: img };
-        else if (spec.rule === 'single') choice = { frame: 0 };
-        else if (spec.rule === 'anim') choice = { anim: spec.anim, phase: Math.floor(r[0] * (art.resolve(spec.key).sprite.anims?.[spec.anim]?.frames.length ?? 1)) };
-        else choice = spec.rule(r, { img, column: t.column });
-        const frame = choice.anim ? (art.frameAt(spec.key, choice.anim, tick, choice.phase ?? 0) ?? 0) : choice.frame;
-        ops.push(sprite(art, spec.key, frame, t.rect, { ...choice, layer: TILE_LAYER, fallback }));
-        if (t.t === 25 && TILE_COLUMN_VARIANTS[t.column]?.pit && has('seedling:tile/pitShadow')) {
-            ops.push(sprite(art, 'seedling:tile/pitShadow', 0, t.rect, { layer: TILE_LAYER }));
+    // ⛓ G1.5 — every tile op says whether its picture is the same at every tick (`still`): the static tile layer
+    // (`paintOps`' `tileLayer`) bakes the still ones. `formatOp` does not print it, so the goldens cannot see it.
+    // The ops are built once per (room, art) and SHARED, frozen, across calls — an animated tile's once per frame it
+    // shows; a call reads each (key, anim, phase)'s frame at its tick once.
+    const frameNow = new Map();
+    for (const e of tileEntriesFor(plan, art)) {
+        if (!e.anim) { ops.push(e.op); continue; }
+        const at = `${e.key}|${e.choice.anim}|${e.choice.phase ?? 0}`;
+        if (!frameNow.has(at)) frameNow.set(at, art.frameAt(e.key, e.choice.anim, tick, e.choice.phase ?? 0) ?? 0);
+        const frame = frameNow.get(at);
+        if (!e.byFrame.has(frame)) {
+            const op = sprite(art, e.key, frame, e.rect, { ...e.choice, layer: TILE_LAYER, fallback: e.fallback });
+            e.byFrame.set(frame, op && Object.freeze(Object.assign(op, { still: false })));
         }
+        ops.push(e.byFrame.get(frame));
     }
 
     for (const o of plan.objects) {
@@ -341,9 +348,59 @@ export function roomOps(world, art, {
     if (playerSprites?.length) ops.push(...playerSprites);
     else if (player) ops.push(rectOp(player, PLAYER_COLOUR, 0.95, -player.bottom));
 
-    // FlashPunk renders the highest layer first; ties keep the order above (stable sort).
-    return ops.map((op, i) => [op, i]).sort((a, b) => (b[0].layer - a[0].layer) || (a[1] - b[1])).map(([op]) => op);
+    return layerSorted(ops, tileCount);
 }
+
+/**
+ * FlashPunk renders the highest layer first; ties keep the push order (a stable sort). ⛓ G1.5 — the first
+ * `tileCount` ops are the tiles, every one at `TILE_LAYER` and pushed before the rest, so the stable sort of the
+ * whole list is: the rest's ops above `TILE_LAYER`, then the tiles in push order, then the rest's others — and
+ * only the rest needs sorting. A layer that is not a number (NaN compares as neither) sorts the whole list, as before.
+ */
+function layerSorted(ops, tileCount) {
+    const sortAll = (list) => list.map((op, i) => [op, i]).sort((a, b) => (b[0].layer - a[0].layer) || (a[1] - b[1])).map(([op]) => op);
+    const rest = ops.slice(tileCount);
+    if (rest.some((op) => Number.isNaN(op?.layer)) || ops.slice(0, tileCount).some((op) => op?.layer !== TILE_LAYER)) return sortAll(ops);
+    const sorted = sortAll(rest);
+    let above = 0;
+    while (above < sorted.length && sorted[above].layer > TILE_LAYER) above += 1;
+    return [...sorted.slice(0, above), ...ops.slice(0, tileCount), ...sorted.slice(above)];
+}
+
+/**
+ * ⛓ G1.5 — the room's tile ops for one art, in push order: `{ anim: false, op }` (a still op, frozen and shared by
+ * every call) or `{ anim: true, key, choice, rect, fallback, byFrame }` (its frame read per call; its op per frame
+ * kept in `byFrame`, frozen and shared). Cached on the plan, which
+ * is the world OBJECT's (a tile write is a new world, so a new plan).
+ */
+function tileEntriesFor(plan, art) {
+    const slot = art ?? NO_ART;
+    const hit = plan.tileEntries.get(slot);
+    if (hit) return hit;
+    const entries = [];
+    const has = (key) => !!art?.has(key);
+    const still = (op) => entries.push({ anim: false, op: op && Object.freeze(Object.assign(op, { still: true })) });
+    for (const { tile: t, img, r, fallbackColour } of plan.tiles) {
+        const fallback = Object.freeze({ rect: t.rect, colour: fallbackColour, alpha: 1, layer: TILE_LAYER });
+        const spec = TILE_ART[t.t];
+        if (!spec || !has(spec.key)) { still({ ...fallback }); continue; }
+        let choice;
+        if (spec.rule === 'autotile') choice = { frame: img };
+        else if (spec.rule === 'single') choice = { frame: 0 };
+        else if (spec.rule === 'anim') choice = { anim: spec.anim, phase: Math.floor(r[0] * (art.resolve(spec.key).sprite.anims?.[spec.anim]?.frames.length ?? 1)) };
+        else choice = spec.rule(r, { img, column: t.column });
+        if (choice.anim) entries.push({ anim: true, key: spec.key, choice, rect: t.rect, fallback, byFrame: new Map() });
+        else still(sprite(art, spec.key, choice.frame, t.rect, { ...choice, layer: TILE_LAYER, fallback }));
+        if (t.t === 25 && TILE_COLUMN_VARIANTS[t.column]?.pit && has('seedling:tile/pitShadow')) {
+            still(sprite(art, 'seedling:tile/pitShadow', 0, t.rect, { layer: TILE_LAYER }));
+        }
+    }
+    plan.tileEntries.set(slot, entries);
+    return entries;
+}
+
+/** The `tileEntriesFor` cache slot of a paint with no art (rectangles only). */
+const NO_ART = Object.freeze({});
 
 /**
  * The visible rectangle in room pixels. `room`: the whole room (today's view).
@@ -381,8 +438,25 @@ export function cameraView(mode, world, state, run = null, { jiggle = null } = {
  * cached copy — and untinted without one); `scaleX`/`scaleY`; and
  * `pivotX`/`pivotY`, the frame pixel a rotation and a scale turn about
  * (FlashPunk's origin; the frame's centre when absent, as G1 draws).
+ *
+ * ⛓ G1.5 — `tileLayer` (`createTileLayer`, with `key` and `background`): the
+ * STATIC TILE LAYER. The still tile ops (`roomOps`' `still`) are drawn ONCE
+ * onto an offscreen canvas filled with `background` — the colour the caller
+ * cleared `ctx` to — and every later paint blits that canvas and draws only
+ * the rest. It composites to the SAME PIXELS: an op is baked only if it is
+ * still, sits in the leading run of tile ops, and overlaps no earlier op that
+ * is drawn live (`splitTileLayer`), so every overlapping pair keeps its order,
+ * and each op is drawn by the same `drawOp` either way. The run's LIVE tile
+ * ops (the animated tiles, every one on the world clock) are drawn over a
+ * copy of that layer onto a second canvas, redrawn only when one of them
+ * changes its picture (`frameTileLayer`); a paint then blits that canvas and
+ * draws the ops after the run. ⛔ The layer is
+ * rebuilt whenever its key changes: the caller's `key` (the page passes the
+ * world OBJECT, the art, the level — a tile write is a new world, see
+ * `createTileLayer`) plus the images, the view, the canvas size and the run's
+ * length. Only a FIXED view gains (room mode); a moving view rebuilds.
  */
-export function paintOps(ctx, ops, images, view, canvas, { tinted = null } = {}) {
+export function paintOps(ctx, ops, images, view, canvas, { tinted = null, tileLayer = null } = {}) {
     const scale = Math.min(canvas.width / view.w, canvas.height / view.h);
     const offX = Math.round((canvas.width - view.w * scale) / 2);
     const offY = Math.round((canvas.height - view.h * scale) / 2);
@@ -390,54 +464,205 @@ export function paintOps(ctx, ops, images, view, canvas, { tinted = null } = {})
     const Y = (y) => offY + Math.round((y - view.y) * scale);
     ctx.imageSmoothingEnabled = false;
     const counts = { sprites: 0, rects: 0, fallbacks: 0 };
-    const fillRect = (op) => {
-        ctx.globalAlpha = op.alpha ?? 1;
-        ctx.fillStyle = op.colour;
-        const x = X(op.rect.x);
-        const y = Y(op.rect.y);
-        ctx.fillRect(x, y, X(op.rect.right ?? op.rect.x + op.rect.w) - x, Y(op.rect.bottom ?? op.rect.y + op.rect.h) - y);
+    const pen = { images, view, scale, X, Y, tinted };
+    let from = 0;
+    if (tileLayer) {
+        const layer = bakeTileLayer(tileLayer, ops, pen, canvas);
+        frameTileLayer(layer, ops, pen);
+        ctx.drawImage(layer.frameCanvas, 0, 0);
+        from = layer.baked.length;
+        for (const k of Object.keys(counts)) counts[k] += layer.counts[k] + layer.frameCounts[k];
+    }
+    for (let i = from; i < ops.length; i++) drawOp(ctx, ops[i], pen, counts);
+    return counts;
+}
+
+/** One op onto `ctx` (culled to the view; a sheet not decoded → its fallback). `counts` gains what was drawn. */
+function drawOp(ctx, op, { images, view, scale, X, Y, tinted }, counts) {
+    const fillRect = (rop) => {
+        ctx.globalAlpha = rop.alpha ?? 1;
+        ctx.fillStyle = rop.colour;
+        const x = X(rop.rect.x);
+        const y = Y(rop.rect.y);
+        ctx.fillRect(x, y, X(rop.rect.right ?? rop.rect.x + rop.rect.w) - x, Y(rop.rect.bottom ?? rop.rect.y + rop.rect.h) - y);
         ctx.globalAlpha = 1;
     };
-    for (const op of ops) {
-        const r = op.rect ?? { x: op.dx, y: op.dy, w: op.sw, h: op.sh };
-        const right = r.right ?? r.x + r.w;
-        const bottom = r.bottom ?? r.y + r.h;
-        if (right < view.x || bottom < view.y || r.x > view.x + view.w || r.y > view.y + view.h) continue;
-        if (!op.sheetRef) { fillRect(op); counts.rects += 1; continue; }
-        let img = images?.get(op.sheetRef);
-        if (!img) {
-            if (op.fallback) { fillRect(op.fallback); counts.fallbacks += 1; }
-            continue;
-        }
-        if (op.tint && tinted) img = tinted(img, op.tint) ?? img;
-        if (op.alpha !== undefined) ctx.globalAlpha = op.alpha;
-        const x = X(op.dx);
-        const y = Y(op.dy);
-        const w = X(op.dx + op.sw) - x;
-        const h = Y(op.dy + op.sh) - y;
-        if (op.pivotX !== undefined) {
-            const px = op.pivotX * scale;
-            const py = op.pivotY * scale;
-            ctx.save();
-            ctx.translate(X(op.dx + op.pivotX), Y(op.dy + op.pivotY));
-            if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
-            ctx.scale((op.scaleX ?? 1) * (op.flipX ? -1 : 1), (op.scaleY ?? 1) * (op.flipY ? -1 : 1));
-            ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, -px, -py, op.sw * scale, op.sh * scale);
-            ctx.restore();
-        } else if (op.rot || op.flipX || op.flipY) {
-            ctx.save();
-            ctx.translate(x + w / 2, y + h / 2);
-            if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
-            ctx.scale(op.flipX ? -1 : 1, op.flipY ? -1 : 1);
-            ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, -w / 2, -h / 2, w, h);
-            ctx.restore();
-        } else {
-            ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, x, y, w, h);
-        }
-        if (op.alpha !== undefined) ctx.globalAlpha = 1;
-        counts.sprites += 1;
+    if (isCulled(op, view)) return;
+    if (!op.sheetRef) { fillRect(op); counts.rects += 1; return; }
+    let img = images?.get(op.sheetRef);
+    if (!img) {
+        if (op.fallback) { fillRect(op.fallback); counts.fallbacks += 1; }
+        return;
     }
-    return counts;
+    if (op.tint && tinted) img = tinted(img, op.tint) ?? img;
+    if (op.alpha !== undefined) ctx.globalAlpha = op.alpha;
+    const x = X(op.dx);
+    const y = Y(op.dy);
+    const w = X(op.dx + op.sw) - x;
+    const h = Y(op.dy + op.sh) - y;
+    if (op.pivotX !== undefined) {
+        const px = op.pivotX * scale;
+        const py = op.pivotY * scale;
+        ctx.save();
+        ctx.translate(X(op.dx + op.pivotX), Y(op.dy + op.pivotY));
+        if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
+        ctx.scale((op.scaleX ?? 1) * (op.flipX ? -1 : 1), (op.scaleY ?? 1) * (op.flipY ? -1 : 1));
+        ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, -px, -py, op.sw * scale, op.sh * scale);
+        ctx.restore();
+    } else if (op.rot || op.flipX || op.flipY) {
+        ctx.save();
+        ctx.translate(x + w / 2, y + h / 2);
+        if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
+        ctx.scale(op.flipX ? -1 : 1, op.flipY ? -1 : 1);
+        ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, -w / 2, -h / 2, w, h);
+        ctx.restore();
+    } else {
+        ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, x, y, w, h);
+    }
+    if (op.alpha !== undefined) ctx.globalAlpha = 1;
+    counts.sprites += 1;
+}
+
+function isCulled(op, view) {
+    const r = op.rect ?? { x: op.dx, y: op.dy, w: op.sw, h: op.sh };
+    const right = r.right ?? r.x + r.w;
+    const bottom = r.bottom ?? r.y + r.h;
+    return right < view.x || bottom < view.y || r.x > view.x + view.w || r.y > view.y + view.h;
+}
+
+/**
+ * The device-pixel box `[x0, x1) × [y0, y1)` an op can write: its sprite box (a quarter turn of a non-square
+ * frame swaps its extents about the centre), widened by its fallback's — or `null`, "anywhere", for a pivoted or
+ * off-axis draw. EXACT, not padded: with the bake's closure rule a padded box would make every neighbour of an
+ * animated tile live, and theirs, across the room. Whole-pixel destinations with smoothing off write exactly it.
+ */
+function deviceBox(op, { X, Y }) {
+    const union = (a, b) => (b ? { x0: Math.min(a.x0, b.x0), y0: Math.min(a.y0, b.y0), x1: Math.max(a.x1, b.x1), y1: Math.max(a.y1, b.y1) } : a);
+    const rectBox = (r) => ({ x0: X(r.x), y0: Y(r.y), x1: X(r.right ?? r.x + r.w), y1: Y(r.bottom ?? r.y + r.h) });
+    if (!op.sheetRef) return rectBox(op.rect);
+    if (op.pivotX !== undefined || (op.rot && op.rot % 90 !== 0)) return null;
+    let box = { x0: X(op.dx), y0: Y(op.dy), x1: X(op.dx + op.sw), y1: Y(op.dy + op.sh) };
+    if (op.rot && op.rot % 180 !== 0) {
+        const cx = (box.x0 + box.x1) / 2;
+        const cy = (box.y0 + box.y1) / 2;
+        const hw = (box.y1 - box.y0) / 2;
+        const hh = (box.x1 - box.x0) / 2;
+        box = { x0: Math.floor(cx - hw), y0: Math.floor(cy - hh), x1: Math.ceil(cx + hw), y1: Math.ceil(cy + hh) };
+    }
+    return union(box, op.fallback ? rectBox(op.fallback.rect) : null);
+}
+
+const boxesOverlap = (a, b) => a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+
+/**
+ * ⛓ G1.5 — WHICH OPS THE STATIC LAYER MAY HOLD. The leading run of tile ops
+ * (those with `still` defined — `roomOps` puts them first: FlashPunk draws the
+ * highest layer first, tiles are layer 100, and anything else that ties was
+ * pushed after them); inside it, an op is BAKED when it is still and overlaps
+ * no earlier op of the run that stays live. Drawing the baked ops first and
+ * the rest after then keeps the order of every pair that shares a pixel. An
+ * op culled out of the view draws nothing either way and is never live. A
+ * run that starts later (an op above layer 100) bakes nothing.
+ * Returns `{ run, baked }` (`baked[i]` = 1 for a baked op of the run).
+ */
+export function splitTileLayer(ops, pen) {
+    let run = 0;
+    while (run < ops.length && ops[run]?.still !== undefined) run += 1;
+    const baked = new Uint8Array(run);
+    // live boxes, bucketed by 64-px device cell, so the overlap test is local
+    const CELL = 64;
+    const buckets = new Map();
+    let anywhere = false;
+    const cellsOf = (b, fn) => {
+        for (let cy = Math.floor(b.y0 / CELL); cy <= Math.floor((b.y1 - 1) / CELL); cy++) {
+            for (let cx = Math.floor(b.x0 / CELL); cx <= Math.floor((b.x1 - 1) / CELL); cx++) if (fn(`${cx},${cy}`)) return true;
+        }
+        return false;
+    };
+    for (let i = 0; i < run; i++) {
+        const op = ops[i];
+        if (isCulled(op, pen.view)) { baked[i] = op.still ? 1 : 0; continue; }
+        const box = deviceBox(op, pen);
+        const clear = box && !anywhere && !cellsOf(box, (k) => buckets.get(k)?.some((b) => boxesOverlap(b, box)));
+        if (op.still && clear) { baked[i] = 1; continue; }
+        if (!box) { anywhere = true; continue; }
+        cellsOf(box, (k) => { if (!buckets.has(k)) buckets.set(k, []); buckets.get(k).push(box); return false; });
+    }
+    return { run, baked };
+}
+
+/**
+ * ⛓ G1.5 — a STATIC TILE LAYER's cache, one per painted canvas. `newCanvas(w, h)` makes the offscreen canvas
+ * (the page: a `<canvas>` element). The caller hands `paintOps` `{ layer, key, background }`; `layer` reads back
+ * `builds`, `hits` and the last build's `bakedOps` / `liveOps`.
+ *
+ * ⛔ WHAT INVALIDATES IT. The still tile ops are a function of the room's tiles (`world.tiles`: type, cell, column),
+ * its solids (a tile's fallback colour), the art, the level (the cosmetic draws) and the decoded images — and the
+ * paint's view and canvas. Every mutation the run makes to what the renderer reads arrives as a NEW world object:
+ * a tile write (a Bulb's lava, an igneous tile turning to lava — `levelWorld.withTileWrites` via `levelRun`'s
+ * `visitWorld`), a runtime teleporter, a lights exit, the tentacle mouth; a death restart that drops the visit's
+ * writes hands back the memoised build. No reader mutates a world's tiles in place (`roomOps`' own plan cache is
+ * keyed on the world object for the same reason). The breakable rocks, chests, locks, bridges, burnable trees and
+ * activators are objects or animated tiles, never baked. So the key names the world object; the stale-layer pin
+ * (`seedlingSkinRenderer.test.js`) writes a tile and fails if the layer is not rebuilt.
+ */
+export function createTileLayer(newCanvas) {
+    return {
+        newCanvas, key: null, canvas: null, baked: null, counts: null, builds: 0, hits: 0, bakedOps: 0, liveOps: 0,
+        // the second canvas: the layer plus the run's live tile ops, and the pictures it was drawn with
+        frameCanvas: null, frameSig: null, frameCounts: null, frameBuilds: 0,
+    };
+}
+
+/** What a live tile op's picture is made of — every field `drawOp` reads for a run op. */
+const LIVE_FIELDS = ['sheetRef', 'sx', 'sy', 'sw', 'sh', 'dx', 'dy', 'rot', 'flipX', 'flipY', 'alpha', 'tint', 'colour',
+    'rect', 'pivotX', 'pivotY', 'scaleX', 'scaleY'];
+
+/** Redraw the layer's second canvas when a live op of the run changed its picture (or the layer was rebuilt). */
+function frameTileLayer(layer, ops, pen) {
+    const sig = [];
+    for (let i = 0; i < layer.baked.length; i++) {
+        if (layer.baked[i]) continue;
+        for (const f of LIVE_FIELDS) sig.push(ops[i][f]);
+        sig.push(ops[i].fallback?.colour, ops[i].fallback?.alpha, ops[i].fallback?.rect);
+    }
+    if (layer.frameSig && layer.frameSig.length === sig.length && layer.frameSig.every((v, i) => v === sig[i])) return;
+    const { canvas } = layer;
+    if (!layer.frameCanvas || layer.frameCanvas.width !== canvas.width || layer.frameCanvas.height !== canvas.height) {
+        layer.frameCanvas = layer.newCanvas(canvas.width, canvas.height);
+    }
+    const fctx = layer.frameCanvas.getContext('2d');
+    fctx.globalAlpha = 1;
+    fctx.drawImage(canvas, 0, 0);
+    fctx.imageSmoothingEnabled = false;
+    const counts = { sprites: 0, rects: 0, fallbacks: 0 };
+    for (let i = 0; i < layer.baked.length; i++) if (!layer.baked[i]) drawOp(fctx, ops[i], pen, counts);
+    Object.assign(layer, { frameSig: sig, frameCounts: counts, frameBuilds: layer.frameBuilds + 1 });
+}
+
+function bakeTileLayer({ layer, key, background }, ops, pen, canvas) {
+    let run = 0;
+    while (run < ops.length && ops[run]?.still !== undefined) run += 1;
+    const v = pen.view;
+    const full = [...key, pen.images, v.x, v.y, v.w, v.h, canvas.width, canvas.height, background, run];
+    if (layer.key && layer.key.length === full.length && layer.key.every((k, i) => k === full[i])) {
+        layer.hits += 1;
+        return layer;
+    }
+    if (!layer.canvas || layer.canvas.width !== canvas.width || layer.canvas.height !== canvas.height) {
+        layer.canvas = layer.newCanvas(canvas.width, canvas.height);
+    }
+    const { baked } = splitTileLayer(ops, pen);
+    const lctx = layer.canvas.getContext('2d');
+    lctx.globalAlpha = 1;
+    lctx.fillStyle = background;
+    lctx.fillRect(0, 0, canvas.width, canvas.height);
+    lctx.imageSmoothingEnabled = false;
+    const counts = { sprites: 0, rects: 0, fallbacks: 0 };
+    let n = 0;
+    for (let i = 0; i < run; i++) if (baked[i]) { drawOp(lctx, ops[i], pen, counts); n += 1; }
+    Object.assign(layer, { key: full, baked, counts, builds: layer.builds + 1, bakedOps: n, liveOps: run - n, frameSig: null });
+    return layer;
 }
 
 /** One op as a golden line: `drawImage(sheet, sx, sy, dx, dy)` (+ transforms), or `fillRect(...)`. */

@@ -14049,3 +14049,102 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── .APWORLD BUILD: THE LOSSY TOGGLE (rule-node R2c) ──────────────────────
+import { LOSSY_BUILD_KEY, LOSSY_BUILD_SETTING, lossyBuildOn } from '../../apworldEditor/lossyBuild.js';
+
+/** yachtdice's helper bodies live only in its JS gameLogic module, so world_generator strict-fails on it. */
+const LOSSY_ROW_PRESET = './presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const LOSSY_ROW_HELPER = 'dice_simulation_state_change';
+
+/**
+ * ⛓⛓ **LOSSY IS OPT-IN, AND A LOSSY BUILD IS NEVER SILENT.** On yachtdice (one
+ * of the presets `world_generator` strict-fails on, by name), through the real
+ * toolbar checkbox and the real Pyodide build:
+ *   OFF (the default) → the build fails, the status names the helper and the
+ *   game and points at the toggle; no record is shown.
+ *   ON (a click, which writes the setting) → the build succeeds, the status says
+ *   LOSSY, and the record block lists the helper with its count, the heading's
+ *   total being the record's. Rules.py carries the placeholder.
+ * The setting is put back as it was.
+ */
+export async function apworldBuildLossyToggle(testController) {
+    const realCreate = URL.createObjectURL;
+    const realClick = HTMLAnchorElement.prototype.click;
+    const before = lossyBuildOn(await settingsManager.getSetting(LOSSY_BUILD_SETTING));
+    try {
+        await settingsManager.updateModuleSetting('apworldEditor', LOSSY_BUILD_KEY, false);
+        const panel = await openHub(testController, LOSSY_ROW_PRESET, 20000);
+        if (!panel) return testController.getOverallResult();
+        let captured = null;
+        URL.createObjectURL = function intercept(blob) {
+            captured = blob;
+            return realCreate.call(URL, blob);
+        };
+        HTMLAnchorElement.prototype.click = function noDownload() {};
+
+        const box = panel.apworldLossyInput;
+        const record = panel.apworldLossyRecord;
+        const off = await testController.pollForCondition(() => box?.checked === false,
+            'the lossy checkbox mirrors the OFF setting', 5000, 50);
+        testController.reportCondition('OFF: the checkbox is unchecked', off);
+
+        const strict = await panel._handleApworldDownload();
+        const status = String(panel.statusLabel.textContent);
+        testController.log(`strict status: ${status}`);
+        testController.reportCondition('OFF: the build fails', strict === null && captured === null);
+        testController.reportCondition(`…naming the helper \`${LOSSY_ROW_HELPER}\` and the game`,
+            status.includes(LOSSY_ROW_HELPER) && status.includes('Yacht Dice'));
+        testController.reportCondition('…and pointing at the lossy toggle', status.includes('tick "lossy"'));
+        testController.reportCondition('…with no lossy record shown', record?.hidden === true);
+
+        box.checked = true;
+        box.dispatchEvent(new Event('change', { bubbles: true }));
+        const saved = await testController.pollForCondition(
+            async () => (await settingsManager.getSetting(LOSSY_BUILD_SETTING)) === true,
+            'the checkbox wrote the setting', 5000, 50);
+        testController.reportCondition('ON: a click saves the setting', saved);
+
+        const built = await panel._handleApworldDownload();
+        const lossyStatus = String(panel.statusLabel.textContent);
+        testController.log(`lossy status: ${lossyStatus}`);
+        testController.reportCondition('ON: the build succeeds', !!built && !!captured);
+        if (!built) return testController.getOverallResult();
+        const placeholders = built.lossyPlaceholders ?? {};
+        const name = `rule_builder helper:helper ${LOSSY_ROW_HELPER}`;
+        const count = placeholders[name];
+        testController.reportCondition(`…its record carries \`${name}\` (×${count})`,
+            Number.isInteger(count) && count > 0);
+        const total = Object.values(placeholders).reduce((a, b) => a + b, 0);
+        testController.reportCondition('…the status says LOSSY with the total',
+            lossyStatus.includes(`LOSSY: ${total} always-true placeholder`));
+        testController.reportCondition('…and the record block is SHOWN', record?.hidden === false);
+        testController.assertEqual('…with the record\'s total', String(total), String(record?.dataset.total));
+        const lines = [...(record?.querySelectorAll('.apworld-build-lossy-entry') ?? [])].map(li => li.textContent);
+        testController.reportCondition(`…listing the helper with its count (${lines.join('; ')})`,
+            lines.includes(`${name} ×${count}`) && lines.length === Object.keys(placeholders).length);
+
+        const JSZip = await loadJSZipBrowser({ src: JSZIP_SCRIPT });
+        const zip = await JSZip.loadAsync(await captured.arrayBuffer());
+        const rules = await zip.file(`${built.gameDirectory}/Rules.py`)?.async('string');
+        testController.reportCondition('Rules.py carries the always-true placeholder', !!rules && rules.includes('True_()'));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('lossy toggle test error-free', false);
+    } finally {
+        URL.createObjectURL = realCreate;
+        HTMLAnchorElement.prototype.click = realClick;
+        await settingsManager.updateModuleSetting('apworldEditor', LOSSY_BUILD_KEY, before);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-build-lossy-toggle',
+    name: 'APWorld hub: the .apworld build is strict by default (errors by name) and lossy only through the toggle, which shows its record',
+    description: 'rule-node R2c. yachtdice: OFF fails naming the helper + game and points at the toggle; '
+               + 'ON (the real checkbox, saved as a setting) builds, says LOSSY, and lists every placeholder with its count.',
+    testFunction: apworldBuildLossyToggle,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

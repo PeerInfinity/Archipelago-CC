@@ -10,7 +10,7 @@ import logging
 import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from ._unknown_kind import unknown_kind
+from ._unknown_kind import speculative_record, unknown_kind
 
 from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
@@ -471,14 +471,17 @@ class RuleCodeGenerator(
 
         expanded_body = self._expand_helper_refs(expanded_body)
 
-        # Try to convert the expanded body
-        try:
-            rule_code = self._convert_rule(expanded_body)
-            # Verify it's not just True_() placeholder (which means conversion failed)
-            if rule_code and rule_code != 'True_()':
-                return rule_code
-        except Exception:
-            pass
+        # Try to convert the expanded body. A discarded attempt must not count its lossy
+        # placeholders, so they go to a scratch record kept only when the expansion is used.
+        with speculative_record() as attempt:
+            try:
+                rule_code = self._convert_rule(expanded_body)
+                # Verify it's not just True_() placeholder (which means conversion failed)
+                if rule_code and rule_code != 'True_()':
+                    attempt.keep()
+                    return rule_code
+            except Exception:
+                pass
 
         return None
 

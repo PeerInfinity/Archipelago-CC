@@ -6,6 +6,7 @@ import {
   REGION_GENERATION_TIMEOUT_KEY, REGION_GENERATION_TIMEOUT_SCHEMA,
 } from './regionGenerationRun.js';
 import { SHOW_MENU_ON_MAP_KEY, SHOW_MENU_ON_MAP_SCHEMA } from './menuMarker.js';
+import { LOSSY_BUILD_KEY, LOSSY_BUILD_SCHEMA } from './lossyBuild.js';
 
 // Direct hand-off channel (§2.2): procgen's "Open in APWorld Editor" publishes
 // this with { jsonData } instead of the global files:jsonLoaded, so handing a
@@ -156,6 +157,9 @@ export function register(registrationApi) {
       // choice, never a document key). Read by the panel at each Map draw as
       // `moduleSettings.apworldEditor.showMenuOnMap`; default ON.
       [SHOW_MENU_ON_MAP_KEY]: { ...SHOW_MENU_ON_MAP_SCHEMA },
+      // ⛓ rule-node R2c — the .apworld build's lossy toggle (default OFF, ⚖ D3).
+      // Mirrored by the toolbar's `lossy` checkbox, read at each build.
+      [LOSSY_BUILD_KEY]: { ...LOSSY_BUILD_SCHEMA },
     },
   });
 }

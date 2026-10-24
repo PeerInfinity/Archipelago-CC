@@ -229,6 +229,74 @@ class TestUnknownHelperName(unittest.TestCase):
         self.assertIn(b"Has('Key', 1)", strict['Rules.py'])
 
 
+class TestSpeculativeHelperExpansionRecordsOnlyWhatIsEmitted(unittest.TestCase):
+    """rule-node R2c: the body_rule expansion of a helper call is speculative (it is thrown away when
+    it converts to a bare ``True_()`` or raises), so its lossy placeholders count only when kept.
+
+    The old code recorded them anyway: a lossy record listing a placeholder the output never had.
+    """
+
+    UNKNOWN = {'rule': 'helper', 'args': {'name': 'no_such_helper_r2c'}}  # convertible, then a placeholder
+    CALL = {'type': 'helper', 'name': 'outer', 'args': []}
+
+    def _generator(self, body):
+        generator = RuleCodeGenerator('Test')
+        generator.set_helpers({'outer'}, {'outer': body})
+        return generator
+
+    def test_a_discarded_expansion_records_nothing(self) -> None:
+        with lossy_codegen() as record:
+            code = self._generator(self.UNKNOWN)._convert_rule(self.CALL)
+        self.assertEqual(code, 'HelperCall(helper_func=outer, helper_name="outer")')
+        self.assertEqual(record, {})
+
+    def test_a_kept_expansion_records_its_placeholder(self) -> None:
+        body = {'rule': 'And', 'children': [{'rule': 'Has', 'args': {'item_name': 'Key'}}, self.UNKNOWN]}
+        with lossy_codegen() as record:
+            code = self._generator(body)._convert_rule(self.CALL)
+        self.assertIn('body_rule=And(True_(), ', code)
+        self.assertEqual(record, {'rule dispatch:helper': 1})
+
+    def test_an_expansion_that_raises_after_recording_records_nothing(self) -> None:
+        from world_generator._unknown_kind import unknown_kind
+        generator = self._generator({'rule': 'Has', 'args': {'item_name': 'Key'}})
+
+        def record_then_raise(rule):
+            unknown_kind('rule dispatch', 'r2c_probe', 'True_()')
+            raise RuntimeError('after recording')
+        generator._convert_rule = record_then_raise
+        with lossy_codegen() as record:
+            self.assertIsNone(generator._try_convert_helper_body_to_rule('outer', []))
+        self.assertEqual(record, {})
+
+    def test_every_registered_record_is_scratched(self) -> None:
+        import contextvars
+
+        from world_generator import _unknown_kind
+        other: contextvars.ContextVar = contextvars.ContextVar('r2c_probe_record', default=None)
+        _unknown_kind.SPECULATIVE_RECORDS.append(other)
+        self.addCleanup(_unknown_kind.SPECULATIVE_RECORDS.remove, other)
+        outer = __import__('collections').Counter()
+        token = other.set(outer)
+        self.addCleanup(other.reset, token)
+        for keep in (False, True):
+            with _unknown_kind.speculative_record() as attempt:
+                other.get()['x'] += 1
+                if keep:
+                    attempt.keep()
+            self.assertIs(other.get(), outer)
+        self.assertEqual(outer, {'x': 1})
+
+    def test_the_unobtainable_record_is_registered(self) -> None:
+        from world_generator import _unknown_kind
+        self.assertIn(_unknown_kind._unobtainable_record, _unknown_kind.SPECULATIVE_RECORDS)
+        self.assertIn(_unknown_kind._lossy_record, _unknown_kind.SPECULATIVE_RECORDS)
+
+    def test_strict_is_unchanged_the_attempt_is_dropped(self) -> None:
+        code = self._generator(self.UNKNOWN)._convert_rule(self.CALL)
+        self.assertEqual(code, 'HelperCall(helper_func=outer, helper_name="outer")')
+
+
 class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
     """rule-kind F2: a mixed count_true with C(n, count) > 120 used to sink to True_() with a warning.
 

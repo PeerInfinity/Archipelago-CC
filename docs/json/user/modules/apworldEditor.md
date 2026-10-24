@@ -31,12 +31,21 @@ Put that file in an Archipelago install's `custom_worlds/` folder and it is a ga
 | **⭳ Download** | Saves the working copy as a rules file (`<Game>_AP_<seed>_rules.json`). |
 | *apworld game name* | The game name for the `.apworld`. Blank keeps the world's own name. |
 | **⭳ .apworld** | Builds and saves a `.apworld` from the working copy. |
+| **lossy** | Off by default. See [Lossy builds](#lossy-builds) below. |
 | **Clear** | Removes all regions, exits, locations and items (it asks first). Can be undone. |
 | **Reload** | Throws away your edits and reloads the world the app has loaded (it asks first). |
 | **↶ Undo (N edits)** | Takes back the last edit. **Ctrl+Z** (**Cmd+Z**) does the same when you are not typing in a box. |
 | **Player** | In a multiworld, which player's world the tabs show and edit. |
 
 The status line at the right names the game and sums up the open tab.
+
+### Lossy builds
+
+Some worlds use a rule the world generator cannot turn into Python. This happens, for example, when a game's helper functions exist only in the app's JavaScript and not in its rules file. By default, building such a world **fails**. The status line names the rule or helper, and the game.
+
+If you tick **lossy**, the build goes ahead anyway. It replaces each of those rules with one that is always true. The status line then says **LOSSY** and gives the number of replacements, and a yellow box under the toolbar lists each one with a count. ⚠ Every location or exit guarded by a replaced rule is **free** in that world, so a lossy `.apworld` may be much easier than the real game, or broken. Use it to try a world out, not to play it for real. The box stays until the next build.
+
+The tick is saved, like a setting. Untick it to go back to strict builds.
 
 ⚠ **Nothing is saved automatically.** Edits live in the panel until you press **Apply**, **⭳ Download** or **⭳ .apworld**; a page reload loses them.
 
@@ -95,7 +104,7 @@ These show the rest of the world's file, for those who want to look underneath: 
 
 ## Settings
 
-In the Settings panel, under *apworldEditor*: how long room generation (60 s) and *Initialise procgen data* (300 s) may run before they give up, and whether the Map shows the starting menu.
+In the Settings panel, under *apworldEditor*: how long room generation (60 s) and *Initialise procgen data* (300 s) may run before they give up, whether the Map shows the starting menu, and whether `.apworld` builds are lossy (the toolbar's **lossy** tick).
 
 ## Learn more
 
