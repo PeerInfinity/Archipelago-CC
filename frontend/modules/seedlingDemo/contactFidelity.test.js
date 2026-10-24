@@ -265,7 +265,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
             fireBlockPulseShove: false,
             fireLiveTurretReach: false,
-            pulserPublishLag: false });
+            pulserPublishLag: false,
+            // ⛓ fidelity MISCRES D1 (wave 29): REMBODY's rule for drills / wallflyers / ice turrets, and the forecast
+            // fading a corpse — shipped OFF.
+            nonChaserRemovalBlocks: false,
+            forecastCorpseFade: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
