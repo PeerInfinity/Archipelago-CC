@@ -183,8 +183,7 @@ jobs:
     needs: plan
     # ⛓ RULE 3 — skipped when the plan found a green run with the same key.
     if: needs.plan.outputs.reuse == ''
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
     strategy:
       # ⛓ every shard reports; one red shard must not cancel the others' evidence.
@@ -291,8 +290,7 @@ jobs:
     # ⛓ ALWAYS, so a failed or missing shard is NAMED here rather than the run
     # ending with a skipped merge that says nothing.
     if: always() && needs.plan.result == 'success' && needs.plan.outputs.reuse == ''
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # ⛓ Derived like a shard's: a merge that must replay a failed shard's tapes
     # is bounded by one shard's price.
     timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
