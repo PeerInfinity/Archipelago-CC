@@ -1,0 +1,545 @@
+t=1..2 l=74 a=0.72 n=202 s=268 m=0 eb29132f1827
+    drawImage(seedling/IgneousTile, 32, 0, 288, 144) alpha=0.25
+    drawImage(seedling/IgneousTile, 128, 0, 288, 128) alpha=0.25
+    drawImage(seedling/IgneousTile, 64, 0, 272, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 80, 0, 256, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 112, 0, 208, 96) alpha=0.25
+    drawImage(seedling/IgneousTile, 48, 0, 192, 96) alpha=0.25
+    drawImage(seedling/IgneousTile, 240, 0, 192, 80) alpha=0.25
+    drawImage(seedling/IgneousTile, 16, 0, 176, 80) alpha=0.25
+    drawImage(seedling/IgneousTile, 160, 0, 64, 96) alpha=0.25
+    drawImage(seedling/IgneousTile, 80, 0, 48, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 80, 0, 32, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 160, 0, 16, 128) alpha=0.25
+    drawImage(seedling/IgneousTile, 32, 0, 16, 144) alpha=0.25
+    drawImage(seedling/IgneousTile, 224, 0, 64, 80) alpha=0.25
+    drawImage(seedling/IgneousTile, 240, 0, 64, 64) alpha=0.25
+    drawImage(seedling/IgneousTile, 128, 0, 208, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 224, 0, 208, 64) alpha=0.25
+    drawImage(seedling/IgneousTile, 240, 0, 208, 80) alpha=0.25
+    drawImage(seedling/IgneousTile, 192, 0, 224, 80) alpha=0.25
+    drawImage(seedling/IgneousTile, 144, 0, 192, 64) alpha=0.25
+    drawImage(seedling/IgneousTile, 64, 0, 80, 64) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 176, 64) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 176, 48) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 176, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 160, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 160, 48) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 144, 48) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 144, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 144, 16) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 128, 16) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 112, 16) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 128, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 112, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 96, 48) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 96, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 80, 32) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 80, 48) alpha=0.25
+    drawImage(seedling/IgneousLava, 0, 0, 192, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 96, 0, 64, 112) alpha=0.25
+    drawImage(seedling/Lava2, 0, 0, 16, 80)
+    drawImage(seedling/Lava2, 48, 0, 16, 96)
+    drawImage(seedling/Lava2, 16, 0, 0, 144)
+    drawImage(seedling/Lava2, 48, 0, 0, 128)
+    drawImage(seedling/Lava2, 0, 0, 0, 112)
+    drawImage(seedling/Lava2, 0, 0, 0, 96)
+    drawImage(seedling/Lava2, 48, 0, 0, 80)
+    drawImage(seedling/Lava2, 32, 0, 0, 64)
+    drawImage(seedling/Lava2, 48, 0, 0, 48)
+    drawImage(seedling/Lava2, 48, 0, 0, 32)
+    drawImage(seedling/Lava2, 0, 0, 16, 32)
+    drawImage(seedling/Lava2, 48, 0, 32, 16)
+    drawImage(seedling/Lava2, 0, 0, 16, 16)
+    drawImage(seedling/Lava2, 48, 0, 0, 16)
+    drawImage(seedling/Lava2, 48, 0, 0, 0)
+    drawImage(seedling/Lava2, 16, 0, 16, 0)
+    drawImage(seedling/Lava2, 0, 0, 32, 0)
+    drawImage(seedling/Lava2, 48, 0, 48, 0)
+    drawImage(seedling/Lava2, 0, 0, 64, 0)
+    drawImage(seedling/Lava2, 16, 0, 80, 16)
+    drawImage(seedling/Lava2, 16, 0, 80, 0)
+    drawImage(seedling/Lava2, 16, 0, 96, 0)
+    drawImage(seedling/Lava2, 16, 0, 96, 16)
+    drawImage(seedling/Lava2, 48, 0, 96, 64)
+    drawImage(seedling/Lava2, 48, 0, 112, 48)
+    drawImage(seedling/Lava2, 16, 0, 112, 64)
+    drawImage(seedling/Lava2, 0, 0, 128, 48)
+    drawImage(seedling/Lava2, 16, 0, 128, 64)
+    drawImage(seedling/Lava2, 48, 0, 128, 80)
+    drawImage(seedling/Lava2, 32, 0, 112, 80)
+    drawImage(seedling/Lava2, 16, 0, 96, 80)
+    drawImage(seedling/Lava2, 0, 0, 96, 96)
+    drawImage(seedling/Lava2, 16, 0, 96, 112)
+    drawImage(seedling/Lava2, 0, 0, 96, 128)
+    drawImage(seedling/Lava2, 0, 0, 80, 128)
+    drawImage(seedling/Lava2, 0, 0, 80, 144)
+    drawImage(seedling/Lava2, 32, 0, 64, 144)
+    drawImage(seedling/Lava2, 16, 0, 48, 144)
+    drawImage(seedling/Lava2, 48, 0, 32, 144)
+    drawImage(seedling/Lava2, 0, 0, 32, 128)
+    drawImage(seedling/Lava2, 32, 0, 96, 144)
+    drawImage(seedling/Lava2, 16, 0, 112, 144)
+    drawImage(seedling/Lava2, 48, 0, 128, 144)
+    drawImage(seedling/Lava2, 32, 0, 144, 144)
+    drawImage(seedling/Lava2, 16, 0, 160, 144)
+    drawImage(seedling/Lava2, 16, 0, 176, 144)
+    drawImage(seedling/Lava2, 0, 0, 192, 144)
+    drawImage(seedling/Lava2, 32, 0, 208, 144)
+    drawImage(seedling/Lava2, 16, 0, 224, 144)
+    drawImage(seedling/Lava2, 48, 0, 240, 144)
+    drawImage(seedling/Lava2, 0, 0, 272, 144)
+    drawImage(seedling/Lava2, 32, 0, 256, 144)
+    drawImage(seedling/Lava2, 0, 0, 256, 128)
+    drawImage(seedling/Lava2, 16, 0, 240, 128)
+    drawImage(seedling/Lava2, 0, 0, 224, 128)
+    drawImage(seedling/Lava2, 32, 0, 208, 128)
+    drawImage(seedling/Lava2, 32, 0, 192, 128)
+    drawImage(seedling/Lava2, 48, 0, 176, 128)
+    drawImage(seedling/Lava2, 48, 0, 160, 128)
+    drawImage(seedling/Lava2, 32, 0, 144, 128)
+    drawImage(seedling/Lava2, 16, 0, 112, 128)
+    drawImage(seedling/Lava2, 32, 0, 128, 128)
+    drawImage(seedling/Lava2, 32, 0, 128, 112)
+    drawImage(seedling/Lava2, 48, 0, 144, 112)
+    drawImage(seedling/Lava2, 48, 0, 160, 112)
+    drawImage(seedling/Lava2, 32, 0, 176, 112)
+    drawImage(seedling/Lava2, 32, 0, 192, 112)
+    drawImage(seedling/Lava2, 48, 0, 208, 112)
+    drawImage(seedling/Lava2, 32, 0, 176, 96)
+    drawImage(seedling/Lava2, 16, 0, 160, 96)
+    drawImage(seedling/Lava2, 0, 0, 144, 96)
+    drawImage(seedling/Lava2, 16, 0, 128, 96)
+    drawImage(seedling/Lava2, 32, 0, 112, 96)
+    drawImage(seedling/Lava2, 16, 0, 112, 112)
+    drawImage(seedling/Lava2, 16, 0, 160, 80)
+    drawImage(seedling/Lava2, 32, 0, 144, 80)
+    drawImage(seedling/Lava2, 32, 0, 144, 64)
+    drawImage(seedling/Lava2, 0, 0, 160, 64)
+    drawImage(seedling/Lava2, 0, 0, 160, 16)
+    drawImage(seedling/Lava2, 16, 0, 160, 0)
+    drawImage(seedling/Lava2, 32, 0, 144, 0)
+    drawImage(seedling/Lava2, 32, 0, 128, 0)
+    drawImage(seedling/Lava2, 48, 0, 112, 0)
+    drawImage(seedling/Lava2, 32, 0, 176, 0)
+    drawImage(seedling/Lava2, 0, 0, 176, 16)
+    drawImage(seedling/Lava2, 32, 0, 192, 0)
+    drawImage(seedling/Lava2, 48, 0, 192, 16)
+    drawImage(seedling/Lava2, 32, 0, 192, 32)
+    drawImage(seedling/Lava2, 16, 0, 208, 32)
+    drawImage(seedling/Lava2, 32, 0, 208, 16)
+    drawImage(seedling/Lava2, 32, 0, 208, 0)
+    drawImage(seedling/Lava2, 16, 0, 224, 0)
+    drawImage(seedling/Lava2, 48, 0, 224, 16)
+    drawImage(seedling/Lava2, 48, 0, 224, 32)
+    drawImage(seedling/Lava2, 16, 0, 224, 48)
+    drawImage(seedling/Lava2, 48, 0, 224, 64)
+    drawImage(seedling/Lava2, 48, 0, 240, 64)
+    drawImage(seedling/Lava2, 32, 0, 240, 48)
+    drawImage(seedling/Lava2, 32, 0, 240, 32)
+    drawImage(seedling/Lava2, 0, 0, 240, 16)
+    drawImage(seedling/Lava2, 16, 0, 240, 0)
+    drawImage(seedling/Lava2, 32, 0, 256, 0)
+    drawImage(seedling/Lava2, 0, 0, 256, 16)
+    drawImage(seedling/Lava2, 48, 0, 256, 32)
+    drawImage(seedling/Lava2, 0, 0, 256, 48)
+    drawImage(seedling/Lava2, 32, 0, 256, 64)
+    drawImage(seedling/Lava2, 16, 0, 256, 80)
+    drawImage(seedling/Lava2, 48, 0, 272, 80)
+    drawImage(seedling/Lava2, 0, 0, 272, 64)
+    drawImage(seedling/Lava2, 32, 0, 272, 48)
+    drawImage(seedling/Lava2, 0, 0, 272, 32)
+    drawImage(seedling/Lava2, 0, 0, 272, 16)
+    drawImage(seedling/Lava2, 0, 0, 272, 0)
+    drawImage(seedling/Lava2, 0, 0, 288, 0)
+    drawImage(seedling/Lava2, 0, 0, 288, 16)
+    drawImage(seedling/Lava2, 16, 0, 288, 32)
+    drawImage(seedling/Lava2, 48, 0, 288, 48)
+    drawImage(seedling/Lava2, 16, 0, 288, 64)
+    drawImage(seedling/Lava2, 0, 0, 288, 80)
+    drawImage(seedling/Lava2, 0, 0, 288, 96)
+    drawImage(seedling/Lava2, 16, 0, 304, 144)
+    drawImage(seedling/Lava2, 16, 0, 304, 128)
+    drawImage(seedling/Lava2, 16, 0, 304, 112)
+    drawImage(seedling/Lava2, 16, 0, 304, 96)
+    drawImage(seedling/Lava2, 48, 0, 304, 80)
+    drawImage(seedling/Lava2, 0, 0, 304, 64)
+    drawImage(seedling/Lava2, 0, 0, 304, 48)
+    drawImage(seedling/Lava2, 16, 0, 304, 32)
+    drawImage(seedling/Lava2, 16, 0, 304, 16)
+    drawImage(seedling/Lava2, 0, 0, 304, 0)
+    drawImage(seedling/IgneousTile, 144, 0, 16, 112) alpha=0.25
+    drawImage(seedling/DarkTile, 48, 0, 32, 96) alpha=0.7129
+    drawImage(seedling/DarkTile, 64, 0, 48, 96) alpha=0.7129
+    drawImage(seedling/DarkTile, 32, 0, 80, 112) alpha=0.7129
+    drawImage(seedling/DarkTile, 160, 0, 80, 96) alpha=0.7129
+    drawImage(seedling/DarkTile, 64, 0, 64, 128) alpha=0.7129
+    drawImage(seedling/DarkTile, 16, 0, 48, 128) alpha=0.7129
+    drawImage(seedling/IgneousTile, 48, 0, 48, 80) alpha=0.25
+    drawImage(seedling/DarkTile, 128, 0, 32, 80) alpha=0.7129
+    drawImage(seedling/DarkTile, 128, 0, 80, 80) alpha=0.7129
+    drawImage(seedling/IgneousTile, 240, 0, 48, 64) alpha=0.25
+    drawImage(seedling/DarkTile, 32, 0, 64, 32) alpha=0.7129
+    drawImage(seedling/DarkTile, 0, 0, 272, 128) alpha=0.7129
+    drawImage(seedling/IgneousLava, 0, 0, 288, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 240, 0, 48, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 192, 0, 64, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 240, 0, 32, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 144, 0, 32, 32) alpha=0.25
+    drawImage(seedling/IgneousTile, 192, 0, 48, 32) alpha=0.25
+    drawImage(seedling/DarkTile, 16, 0, 48, 16) alpha=0.7129
+    drawImage(seedling/DarkTile, 192, 0, 64, 16) alpha=0.7129
+    drawImage(seedling/IgneousTile, 112, 0, 32, 64) alpha=0.25
+    drawImage(seedling/IgneousTile, 144, 0, 16, 48) alpha=0.25
+    drawImage(seedling/IgneousTile, 48, 0, 16, 64) alpha=0.25
+    drawImage(seedling/Lava2, 16, 0, 256, 96)
+    drawImage(seedling/Lava2, 16, 0, 240, 80)
+    drawImage(seedling/IgneousTile, 80, 0, 240, 112) alpha=0.25
+    drawImage(seedling/IgneousTile, 224, 0, 224, 96) alpha=0.25
+    drawImage(seedling/IgneousTile, 48, 0, 224, 112) alpha=0.25
+    drawImage(seedling/Lava2, 0, 0, 240, 96)
+    drawImage(seedling/Lava2, 32, 0, 272, 96)
+    circle(#ffff00, 56, 25, 30) alpha=0.5
+    circle(#ffff00, 56, 25, 24) alpha=0.5
+    --
+    drawImage(seedling/Lava2, 0, 0, 16, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 16, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 16, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 16, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 0, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 0, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 0, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 0, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 0, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 0, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 0, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 0, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 16, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 16, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 32, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 32, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 16, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 16, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 0, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 16, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 16, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 32, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 32, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 48, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 48, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 64, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 64, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 80, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 80, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 80, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 80, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 96, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 96, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 112, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 112, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 128, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 128, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 128, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 128, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 128, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 128, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 112, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 112, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 96, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 96, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 96, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 96, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 96, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 80, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 80, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 80, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 80, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 64, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 64, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 48, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 48, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 32, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 32, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 32, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 32, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 96, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 96, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 128, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 128, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 176, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 176, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 192, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 192, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 240, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 240, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 224, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 224, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 176, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 176, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 160, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 160, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 144, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 144, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 160, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 160, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 208, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 208, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 144, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 144, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 128, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 128, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 112, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 112, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 112, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 160, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 160, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 160, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 160, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 160, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 144, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 128, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 112, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 112, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 176, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 176, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 176, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 192, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 192, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 192, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 208, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 208, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 208, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 224, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 224, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 240, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 240, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 240, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 240, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 240, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 240, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 240, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 240, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 256, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 256, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 256, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 256, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 256, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 256, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 272, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 272, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 272, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 272, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 272, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 288, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 288, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 288, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 288, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 288, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 288, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 288, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 144) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 144) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 128) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 128) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 112) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 112) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 304, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 48, 0, 304, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 64) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 64) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 48) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 48) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 32) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 32) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 16) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 304, 16) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 0) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 304, 0) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 256, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 256, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 80) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 16, 0, 240, 80) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 240, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 0, 0, 240, 96) scale=1.25x1.25 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 272, 96) scale=1.5x1.5 alpha=0.4 tint=#ffff00
+    drawImage(seedling/Lava2, 32, 0, 272, 96) scale=1.25x1.25 tint=#ffff00
+    --
+t=3..5 l=74 a=0.72 n=202 s=268 m=0 d1262201749b
+t=6..7 l=74 a=0.72 n=202 s=268 m=0 2badeb27e007
+t=8..9 l=74 a=0.72 n=202 s=268 m=0 30b63317783d
+t=10 l=74 a=0.72 n=202 s=268 m=0 64fe6039bb1b
+t=11 l=74 a=0.72 n=202 s=268 m=0 c22c0d5c864f
+t=12 l=74 a=0.72 n=202 s=268 m=0 ee095a9c93ee
+t=13..14 l=74 a=0.72 n=202 s=268 m=0 21664be9c628
+t=15..17 l=74 a=0.72 n=202 s=268 m=0 52bdf3ff946c
+t=18..19 l=74 a=0.72 n=202 s=268 m=0 19743888b8e2
+t=20 l=74 a=0.72 n=202 s=268 m=0 0f4036c86a19
+t=21 l=74 a=0.72 n=202 s=268 m=0 0db5c3575ad0
+t=22 l=74 a=0.72 n=202 s=268 m=0 812d65e046ff
+t=23 l=74 a=0.72 n=202 s=268 m=0 876142526094
+t=24..26 l=74 a=0.72 n=202 s=268 m=0 73f58947a05b
+t=27 l=74 a=0.72 n=202 s=268 m=0 0b02358efab6
+t=28 l=74 a=0.72 n=202 s=268 m=0 fc459d5893eb
+t=29..30 l=74 a=0.72 n=202 s=268 m=0 2bd9928e4dd0
+t=31..32 l=74 a=0.72 n=202 s=268 m=0 39d1ea1756aa
+t=33 l=74 a=0.72 n=202 s=268 m=0 00057d0cd600
+t=34..35 l=74 a=0.72 n=202 s=268 m=0 ff4adb58929c
+t=36..37 l=74 a=0.72 n=202 s=268 m=0 d8705b9ffb55
+t=38..39 l=74 a=0.72 n=202 s=268 m=0 ff4adb58929c
+t=40..41 l=74 a=0.72 n=202 s=268 m=0 b6b12e32ecc5
+t=42 l=74 a=0.72 n=202 s=268 m=0 f11f050a5bcd
+t=43..44 l=74 a=0.72 n=202 s=268 m=0 760835d51e5f
+t=45..46 l=74 a=0.72 n=202 s=268 m=0 9c92de9c9086
+t=47..48 l=74 a=0.72 n=202 s=268 m=0 d11064e9b31a
+t=49..50 l=74 a=0.72 n=202 s=268 m=0 b256940275ee
+t=51..52 l=74 a=0.72 n=202 s=268 m=0 b2321be07e20
+t=53 l=74 a=0.72 n=202 s=268 m=0 a7cfa55599d1
+t=54..55 l=74 a=0.72 n=202 s=268 m=0 b00199086780
+t=56 l=74 a=0.72 n=202 s=268 m=0 05419f8cdc23
+t=57 l=74 a=0.72 n=202 s=268 m=0 65d726266ae8
+t=58..59 l=74 a=0.72 n=202 s=268 m=0 44d6e178cb7f
+t=60..62 l=74 a=0.72 n=202 s=268 m=0 482337ce2e7b
+t=63 l=74 a=0.72 n=202 s=268 m=0 07a0aea25198
+t=64 l=74 a=0.72 n=202 s=268 m=0 ab835705a793
+t=65 l=74 a=0.72 n=202 s=268 m=0 23810b9f486d
+t=66 l=74 a=0.72 n=202 s=268 m=0 ddd0d31576e4
+t=67 l=74 a=0.72 n=202 s=268 m=0 5b3f64e1b600
+t=68 l=74 a=0.72 n=202 s=268 m=0 1efbed9c2acf
+t=69..71 l=74 a=0.72 n=202 s=268 m=0 6c84eebb47ff
+t=72 l=74 a=0.72 n=202 s=268 m=0 20270ca41447
+t=73 l=74 a=0.72 n=202 s=268 m=0 06237b9e3ba1
+t=74..75 l=74 a=0.72 n=202 s=268 m=0 4e3b0d5df730
+t=76..77 l=74 a=0.72 n=202 s=268 m=0 65b152a1dece
+t=78 l=74 a=0.72 n=202 s=268 m=0 4feead8aa2d0
+t=79..80 l=74 a=0.72 n=202 s=268 m=0 5dde5dbefb18
+t=81..82 l=74 a=0.72 n=202 s=268 m=0 44e82df77557
+t=83..84 l=74 a=0.72 n=202 s=268 m=0 0137cdeeea21
+t=85..87 l=74 a=0.72 n=202 s=268 m=0 16fbd1afd4e5
+t=88..89 l=74 a=0.72 n=202 s=268 m=0 9d829c13ee0e
+t=90 l=74 a=0.72 n=202 s=268 m=0 30f3aed01eb0
+t=91 l=74 a=0.72 n=202 s=268 m=0 c3c3ddede51a
+t=92..93 l=74 a=0.72 n=202 s=268 m=0 c647501b8f9c
+t=94..96 l=74 a=0.72 n=202 s=268 m=0 70fb04ee25a2
+t=97 l=74 a=0.72 n=202 s=268 m=0 f1dde6c15e2b
+t=98 l=74 a=0.72 n=202 s=268 m=0 188c91024df3
+t=99 l=74 a=0.72 n=202 s=268 m=0 f8c8229a24af
+t=100 l=74 a=0.72 n=202 s=268 m=0 1fef4d8d3d00
+t=101 l=74 a=0.72 n=202 s=268 m=0 f5728dcdc9d7
+t=102 l=74 a=0.72 n=202 s=268 m=0 4c86f01f43e2
+t=103..105 l=74 a=0.72 n=202 s=268 m=0 c8dc5aa4d6a8
+t=106..107 l=74 a=0.72 n=202 s=268 m=0 d566330b2d2c
+t=108..109 l=74 a=0.72 n=202 s=268 m=0 924b126645b6
+t=110 l=74 a=0.72 n=202 s=268 m=0 b7820a97729c
+t=111 l=74 a=0.72 n=202 s=268 m=0 37da7c49173e
+t=112 l=74 a=0.72 n=202 s=268 m=0 24002257398d
+t=113..114 l=74 a=0.72 n=202 s=268 m=0 52a61de926ec
+t=115..116 l=74 a=0.72 n=202 s=268 m=0 251713d29357
+t=117..118 l=74 a=0.72 n=202 s=268 m=0 3f3cdb63f2f9
+t=119..120 l=74 a=0.72 n=202 s=268 m=0 3dd2ccaddf82

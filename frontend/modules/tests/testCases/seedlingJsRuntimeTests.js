@@ -912,6 +912,82 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓ GRAPHICS G5 — the night layer in a real browser: `jsRuntime.html?graphics=seedling` (room mode; the lights are ON
+ * by default under a stack) mounted STANDALONE in the row's own iframe and driven through its own `__swfBridge` to
+ * `Game(40, 928, 96)` — Dungeon 4/2 (`lightalpha` 0.1: the composite at 0.72, fourteen torches, four orbs). No panel,
+ * preset or AP state is touched; the iframe is removed however the row ends.
+ *
+ * It asserts what node cannot: the night canvas is drawn and MULTIPLIED over the room (the canvas is darker than the
+ * same ops painted without it), the switch turns it off LIVE, and with the lights OFF the canvas is byte-identical to
+ * the pre-G5 paint of the same ops (`checkNight`, 0 differing channels); then ON again; and nothing errs.
+ */
+export async function seedlingJsRuntimeGraphicsLights(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [40, 928, 96] }]);
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const lit = await tc.pollForValue(() => (rt.run?.level === 40 && g.lights.circles > 0 && g.lights.paints > 2 ? g.lights : null),
+            'the page drew level 40\'s night layer (its lights) and composited it', 15000, 100);
+        tc.log(`lights: ${JSON.stringify(lit)}`);
+        tc.assertEqual('the lights are ON by default under a stack', 'on/true', `${lit?.setting}/${lit?.on}`);
+        tc.assertEqual('level 40 composites at 1 − 0.9·0.2 − 0.1 = 0.72', '0.72', lit ? lit.alpha.toFixed(2) : null);
+        const on = g.checkNight();
+        tc.log(`checkNight ON: ${JSON.stringify(on)}`);
+        tc.assertEqual('lights ON: the canvas differs from the paint without the night layer, and is darker', 'true/true',
+            `${(on?.differ ?? 0) > 0}/${on?.darker}`);
+        await g.set({ lights: 'off' });
+        const offPaints = await tc.pollForValue(() => (!g.lights.on && g.lights.alpha === 0 && g.frames > 0 ? g.frames : null),
+            'the switch turned the lights off live', 5000, 50);
+        tc.reportCondition('the lights switch applied live (no re-mount)', !!offPaints);
+        await tc.pollForCondition(() => g.frames >= (offPaints ?? 0) + 2, 'two paints with the lights off', 5000, 50);
+        const off = g.checkNight();
+        tc.log(`checkNight OFF: ${JSON.stringify(off)}`);
+        tc.assertEqual('lights OFF: the canvas is byte-identical to the pre-G5 paint of the same ops', '0', String(off?.differ));
+        await g.set({ lights: 'on' });
+        const back = await tc.pollForValue(() => (g.lights.on && g.lights.alpha > 0 ? g.lights : null), 'the lights came back on live', 5000, 50);
+        tc.reportCondition('the lights switched back on live', !!back);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 40 and did not halt', '40/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-lights',
+    name: 'Seedling JS runtime: the night layer (lights) in the original graphics (G5)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 40 (Dungeon 4/2, '
+        + 'lightalpha 0.1) through its own __swfBridge, and asserts the night layer is drawn and composited at 0.72 (the '
+        + 'canvas darker than the same ops painted without it), the lights switch off LIVE and the canvas is then '
+        + 'byte-identical to the pre-G5 paint, the lights switch back on, every sheet decodes, and no console error. '
+        + 'Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsLights,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }

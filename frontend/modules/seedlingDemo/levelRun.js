@@ -19023,6 +19023,16 @@ export function createLevelRun({
          * anything as a dialogue waiting for a press.
          */
         /**
+         * ⛓ JS G5 (cleared by fidelity-12 through planning-10, 2026-10-24): this level's `LightPole`s as their
+         * `Light` sees them — `{id, x, y0, lit, hitsTimer, rect}` (`darkTrapPolesFor`: `activate` XOR `invert`).
+         * ⚠ It reads through `poleStateFor`, which builds the visit's pole entries on a first read — the same pure
+         * boot value a tick builds (and `darkTrapsNow` already reads it lazily); `poleStates` is DIGEST_EXEMPT.
+         * COPIES only: the rows are fresh, and each `rect` is copied.
+         */
+        get lightPolesNow() {
+            return darkTrapPolesFor(level).map((p) => ({ ...p, rect: p.rect ? { ...p.rect } : null }));
+        },
+        /**
          * ⛓ JS G4b-dialogue: the NPC whose `Game.talk()` draws NOW (`Game.talking`), or null.
          * ⛔ READ-ONLY: `.get()` on the per-level maps as they stand — never the lazy
          * `talkerStateFor`/`watcherStateFor`/`bobArenaNow` builders; writes nothing, builds
