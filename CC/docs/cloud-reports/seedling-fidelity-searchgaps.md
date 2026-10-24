@@ -4,7 +4,7 @@
 |---|---|
 | Session | `seedling-fidelity-searchgaps` (planner `seedling-fidelity-planning-11`, wave 28) |
 | Start SHA | `d3346cf784` (= main `d3346cf784`; the harness branch already stood there) |
-| Code head | `efb0be4a` (D-B `039fe2d8`, D-A `0fe4f6d5` + its FAMILY_BLOCKS fix `efb0be4a`); the evidence commits sit between them, and this report is the last commit |
+| Code head | `efb0be4a` (D-B `039fe2d8`, D-A `0fe4f6d5` + its FAMILY_BLOCKS fix `efb0be4a`); records head `bdc706bb`; this report's final text is the last commit |
 | Harness branch | `claude/seedling-fidelity-searchgaps-sjna6n` (nothing pushed elsewhere) |
 | Port | 9727 (the dev server on this tree); 9728 for the ON-arm probe battery (a scratch worktree, both literals flipped) |
 | Verdicts | **W0 PASS · D-A PASS behind `crusherBaitPressGoal` (OFF) — one p4g witness at 0 px; the room's NEXT wall is FIREPUSH's · D-B PASS behind `forcedHitWitnessFirst` (OFF) — the honest fix was NOT a budget · Movers: STOP for a licence (listed below)** |
@@ -243,10 +243,14 @@ the identity block at head, and the bounded vitest AFTER.
 
 ## Rows to BANK
 
-- Identity at head = W0 on every md5 row, six `--check`s exit 0 (`evidence/identity-after.txt`).
+- Identity at head (`efb0be4a` code) = W0 on every md5 row, six `--check`s exit 0 (`evidence/identity-after.txt`); the
+  reference back to the base's 4 box-artifact differences after the docs index was regenerated (`bdc706bb`).
 - tapeRunner pairs 635 `88fc7df4dd05d11dfd84ebbea675cc8e` (W0 = AFTER = ON); roster 289; surface GREEN 345 (re-written);
   constants PASS 6,908; entities 566; profile 138.
-- Bounded vitest AFTER: `evidence/rows-after.txt`.
+- Bounded vitest AFTER: 90 files, **2,361 tests, 0 red** (`evidence/rows-after.txt`; the first AFTER run found the two
+  `entityBlocks` rows, fixed in `efb0be4a`).
 - Game witness `crusherpress-l41-bait` (p4g, 1,575 ticks, 0 px, never hit); instrument `probe-seedling-crusher-press.mjs`
   (box lock; `boxLock.test.js` roster row added); tests `fidelityCrusherPress.test.js`, `fidelityForcedHitWitness.test.js`.
-- CI at the last head: see the closing line.
+- **CI `JavaScript Unit Tests` at `bdc706bb` (run 40055398244): success — vitest 22,441 passed, 0 failed; slow 267 passed.**
+  (At `2f36f246`, run 40045973330, the only reds were the two `entityBlocks` rows that `efb0be4a` fixes; the report commit
+  after `bdc706bb` changes this file only.)
