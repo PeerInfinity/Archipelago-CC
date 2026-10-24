@@ -211,8 +211,9 @@ describe('fidelity MISCRES D3 — the owl\'s talk (`Game.talkingPic`): modelled 
  * solver; `fixtures/miscres/leg637-l76-request.json.gz`). OFF the phase arm stalls only near `lavachain@128,64`'s
  * doorstep, inside the range of L76's type-31 tile (8,6), so every phase-shifting stall turns the tile: 18 of 61 clocks
  * (5573..5590) solve, the rest run out of the 640 / 2,560 budgets at `phase-dodge` (unbudgeted: refused after 11,726
- * units). `phaseDodgeArrivalStall` asks a stall at the walk's start first in such a room: 61 / 61 clocks solve within 640.
- *   m4 the key's `unshift(0)` dropped -> the ON row reds (= OFF).   m5 the igneous gate dropped (every room) -> nothing
+ * units). `phaseDodgeArrivalStall` asks a stall at the walk's start right after the doorstep's own in such a room: every one
+ * of the 61 clocks solves within 640.
+ *   m4 the key's `splice(1, 0, 0)` dropped -> the ON row reds (= OFF).   m5 the igneous gate dropped (every room) -> nothing
  *   here reds (L76 holds the tiles; the gate is what bounds the movers to the igneous rooms — named, not pinned).
  */
 
@@ -236,10 +237,10 @@ describe('fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE\'s leg 650 (L
         expect([r.seam, r.budget, r.ok]).toEqual([5603, 640, false]);
         expect(r.passes.map((p) => [p.pass, p.deadline])).toEqual([['dashless', 'phase-dodge'], ['full', 'walk']]);
     }, 120000);
-    it('ON: the stall at the walk\'s start is asked first — both passes solve inside the 640 units', () => {
+    it('ON: the stall at the walk\'s start is asked second — both passes solve inside the 640 units', () => {
         const r = solve637({ phaseDodgeArrivalStall: true });
         expect(r.ok).toBe(true);
         expect(r.passes.map((p) => [p.pass, p.ok, p.ticks, p.work])).toEqual([
-            ['dashless', true, 727, 94], ['full', true, 706, 180]]);
+            ['dashless', true, 727, 183], ['full', true, 706, 269]]);
     }, 120000);
 });

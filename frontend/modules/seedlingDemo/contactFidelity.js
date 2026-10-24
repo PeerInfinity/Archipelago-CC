@@ -1240,8 +1240,9 @@ export const CONTACT_FIDELITY = {
      * at every arrival clock outside an 18-tick window. MEASURED (leg `level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80`,
      * IGFADE's 650, captured at seam 5603): OFF the room REFUSES on the chain after 11,726 units (the page's 640 /
      * 2,560 budgets run out at `phase-dodge`); with `igneousLava` OFF it solves (184 units); ON this key, a stall at
-     * the walk's start (out of the tile's range) is asked FIRST and solves in 94 units (727 t). ON: in a room holding a
-     * type-31 tile (`run.entities('igneousTiles')`, `igneousLava` ON), `at = 0` leads the stall candidates; every other
+     * the walk's start (out of the tile's range) is asked right after the doorstep's own and solves in 183 units (727 t).
+     * ON: in a room holding a type-31 tile (`run.entities('igneousTiles')`, `igneousLava` ON), `at = 0` is the second
+     * stall candidate (the doorstep stays first, so a short doorstep stall that clears is still the answer); every other
      * room is unchanged. OFF: byte-identical. `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`.
      */
     phaseDodgeArrivalStall: false,
