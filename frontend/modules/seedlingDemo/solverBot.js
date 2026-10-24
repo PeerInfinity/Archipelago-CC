@@ -177,11 +177,11 @@ import {
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
-    AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
+    AXE_UPDATE_OFFSET, axeVisitClock, phaseBeamTowerAt, phaseHazardCanReach, phaseHazardHit,
     // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along a previewed walk.
     igneousWalkDanger,
 } from './dangerMap.js';
-import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
+import { axeCanReach, axeHitsPlayer, BEAM_BOB_SPAN, SPINNING_AXE } from './hazards.js';
 import { planDash } from './mover.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
@@ -5631,7 +5631,14 @@ export function previewWalk(run, wps, tolerance = 0,
          * presses nothing — while the slash windows already in flight still step. `null` (every other caller)
          * changes nothing.
          */
-        standKeys = null } = {}) {
+        standKeys = null,
+        /**
+         * ⛓ fidelity BEAMLANE D1 — an OPT-IN steered aim: `(state, wp, tick, intermediate) => true | {x, y}`, asked
+         * once per transit tick (`tick` = the tick whose sample is about to be taken). `true` = this waypoint is
+         * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
+         * (`beamLaneSteer`) rides a moving band-to-band lane with it. `null` (every other caller) changes nothing.
+         */
+        steer = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -6033,7 +6040,10 @@ export function previewWalk(run, wps, tolerance = 0,
         let spent = 0;
         // ⛓ fidelity SMALLGAPS D2: `drive`'s own predicate (`waypointReached`), the walk's last waypoint excepted.
         const intermediate = wpIndex < wps.length - 1;
-        while (!waypointReached(st, wp, tolerance, intermediate)) {
+        // ⛓ BEAMLANE D1: the steered aim of this tick (`steer`); `wp` itself when there is no steer.
+        let aim = wp;
+        while (steer === null ? !waypointReached(st, wp, tolerance, intermediate)
+            : (aim = steer(st, wp, tick + 1, intermediate)) !== true) {
             if (!stalled && tick - startTick === stall.at) {
                 stallHere();
                 if (truncated) break;
@@ -6099,7 +6109,7 @@ export function previewWalk(run, wps, tolerance = 0,
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
             // fall would schedule ticks the game ignores.
-            let held = st.fall ? new Set() : chooseHeld(st, wp, tolerance);
+            let held = st.fall ? new Set() : chooseHeld(st, aim, tolerance);
             /**
              * ⛓⛓⛓ R9 SLICE 12b — **THE OPPORTUNISTIC STRIKE, ON THE PROBE
              * SIDE OF THE ONE POLICY** (⚖ ruling 30(c)).
@@ -19572,6 +19582,130 @@ export const AXE_TIMING_RUNG = Object.freeze({ rest: AXE_DODGE_RUNG.rest, offset
 export const PHASE_DODGE_RUNG = Object.freeze({ ...AXE_DODGE_RUNG, period: 90 });
 
 /**
+ * ⛓ fidelity BEAMLANE D1 — the lane walk's bounds: a band is GATED (its firing checked over the crossing) once the
+ * player's centre is within `gateReach` px of the y range the band blocks; the crossing is priced at `crossSpeed` px a
+ * tick (measured from rest on L107: 0.8–1.55 px a tick, so 0.6 over-counts) plus `crossSlack` ticks; a lane holds the
+ * player `margin` px inside its open interval.
+ */
+export const BEAM_LANE_RUNG = Object.freeze({ gateReach: 6, crossSpeed: 0.6, crossSlack: 2, margin: 2 });
+
+/**
+ * ⛓⛓ fidelity BEAMLANE D1 (`CONTACT_FIDELITY.beamLaneWalk`) — **A CORRIDOR ALONG A BEAM TOWER'S BAND RIDES THE LANE
+ * BETWEEN THE BANDS, AT THE TOWERS' LIVE `y`.**
+ *
+ * A tower's horizontal beam is a 4 px band along the whole row ([y-19, y-15] for a left/right side, `beamRect`), and
+ * its `y` bobs by `0.3·sin(worldFrame(100, 2)…)` on `Game.time` — so the ARRIVAL clock fixes where every band sits for
+ * the visit (js `seedling-js-l107-investigate` Q1), and a corridor planned along the tile centre is inside a band at
+ * most clocks. The lane between two bands is open at EVERY clock (L107: 12 px, the 4x5 box fits with 7 px to spare),
+ * but it moves with the bob by more than its slack, so no fixed `y` and no stall rides it (js Q3: fixed lanes 114..138
+ * pass at most 3 of 30 clocks). The game is ridden by a walk that READS THE TOWERS (js Q2: 61/61 clocks on the game).
+ *
+ * This is that walk, as `previewWalk`'s `steer`: per tick `T`, the bands whose x span covers the player are read at
+ * `T + 1` (the update that tests the box this tick's keys move) off `dangerMap.phaseBeamTowerAt` — the timeline
+ * `phaseHazardHit` prices — whether or not they fire, and the blocked centre-y ranges (box [y-2, y+3], tested
+ * inclusively) split the column into open intervals.
+ *   - AIM: a waypoint whose y is blocked, or that sits in a lane bounded on both sides, is aimed at that interval's
+ *     centre (the nearest open interval when blocked); an open-ended interval keeps the waypoint's own y. Reached when
+ *     x is within tolerance and stopped and the player is in the aimed interval.
+ *   - CROSSING: a band between the player's interval and the aim's is crossed only when the band does not fire on
+ *     any update of the crossing (`BEAM_LANE_RUNG`), asked once the player is within `gateReach` px of it; until
+ *     then the aim holds the player in its own interval (x still advances) — the wait at the doorstep the game's
+ *     walk does, re-synced to each band's own firing.
+ * `null` when a band's live `y` is unknown (`phaseBeamTowerAt` refuses: no visit clock or no `Game.time`).
+ */
+export function beamLaneSteer(run, towers, clock, tolerance) {
+    const sides = towers.map((h) => {
+        const out = new Set();
+        const rate = Number(h.attrs?.rate ?? 1);
+        for (let d = Number(h.attrs?.direction ?? 0), i = 0; i < 4; i += 1, d = (d + rate + 4) % 4) {
+            if (d === 0 || d === 2) out.add(d);
+        }
+        return [...out];
+    });
+    for (const h of towers) if (phaseBeamTowerAt(run, h, clock, run.ticksCompleted + 1) === null) return null;
+    /** The centre-y ranges the bands at update `t` block for a box over [xL, xR]: `[{lo, hi, towers: [[i, d]]}]`, sorted. */
+    const zonesAt = (t, xL, xR) => {
+        const raw = [];
+        towers.forEach((h, i) => {
+            const at = phaseBeamTowerAt(run, h, clock, t);
+            for (const d of sides[i]) {
+                const r = at.band(d);
+                if (r.x > xR || r.x + r.w < xL) continue;
+                raw.push({ lo: r.y - 3, hi: r.y + r.h + 2, towers: [[i, d]] });
+            }
+        });
+        raw.sort((a, b) => a.lo - b.lo);
+        const zones = [];
+        for (const z of raw) {
+            const last = zones.at(-1);
+            if (last && z.lo <= last.hi) { last.hi = Math.max(last.hi, z.hi); last.towers.push(...z.towers); }
+            else zones.push({ ...z, towers: [...z.towers] });
+        }
+        return zones;
+    };
+    /** The open interval (lo, hi) containing `y`, or null inside a zone. */
+    const intervalOf = (zones, y) => {
+        let lo = -Infinity;
+        for (const z of zones) {
+            if (y < z.lo) return { lo, hi: z.lo };
+            if (y <= z.hi) return null;
+            lo = z.hi;
+        }
+        return { lo, hi: Infinity };
+    };
+    const bounded = (iv) => Number.isFinite(iv.lo) && Number.isFinite(iv.hi);
+    /**
+     * The interval a waypoint is aimed into. One within a band's REACH (its zone widened by the bob's whole span,
+     * `BEAM_BOB_SPAN`: the band crosses it at some phase of the visit) is aimed into a bounded LANE beside that zone
+     * first, else the side nearer the waypoint; any other waypoint keeps its own interval.
+     */
+    const nearest = (zones, y) => {
+        const z = zones.find((zz) => y >= zz.lo - BEAM_BOB_SPAN && y <= zz.hi + BEAM_BOB_SPAN);
+        if (!z) return intervalOf(zones, y);
+        const above = intervalOf(zones, z.lo - 1e-6);
+        const below = intervalOf(zones, z.hi + 1e-6);
+        if (bounded(above) !== bounded(below)) return bounded(above) ? above : below;
+        return (y - z.lo) <= (z.hi - y) ? above : below;
+    };
+    const m = BEAM_LANE_RUNG.margin;
+    const holdIn = (iv, y) => (bounded(iv) ? (iv.lo + iv.hi) / 2 : Math.min(Math.max(y, iv.lo + m), iv.hi - m));
+    const fires = (i, d, t) => {
+        const at = phaseBeamTowerAt(run, towers[i], clock, t);
+        return at.rect !== null && at.direction === d;
+    };
+    return (st, wp, tick, intermediate) => {
+        const next = tick + 1;
+        const zones = zonesAt(next, st.x - 2, st.x + 2);
+        if (zones.length === 0) return waypointReached(st, wp, tolerance, intermediate) ? true : wp;
+        const target = nearest(zones, wp.y);
+        const own = intervalOf(zones, wp.y);
+        const steered = !own || own.lo !== target.lo || bounded(target);
+        let aimY = steered ? holdIn(target, wp.y) : wp.y;
+        const here = intervalOf(zones, st.y);
+        if (here && here.lo !== target.lo) {
+            // The band between: the zone that bounds `here` on the target's side.
+            const up = target.hi <= here.lo;
+            const zone = zones.find((z) => (up ? z.hi === here.lo : z.lo === here.hi));
+            const gap = up ? st.y - zone.hi : zone.lo - st.y;
+            if (gap <= BEAM_LANE_RUNG.gateReach) {
+                const span = gap + (zone.hi - zone.lo);
+                const ticks = Math.ceil(span / BEAM_LANE_RUNG.crossSpeed) + BEAM_LANE_RUNG.crossSlack;
+                let open = true;
+                for (let t = next; t <= next + ticks && open; t += 1) {
+                    if (zone.towers.some(([i, d]) => fires(i, d, t))) open = false;
+                }
+                // Closed: hold in this interval — a lane's centre, else where the player stands (a brake).
+                if (!open) aimY = holdIn(here, st.y);
+            }
+            return { x: wp.x, y: aimY };
+        }
+        if (!steered) return waypointReached(st, wp, tolerance, intermediate) ? true : wp;
+        if (here && Math.abs(st.x - wp.x) <= tolerance && st.vx === 0) return true;
+        return { x: wp.x, y: aimY };
+    };
+}
+
+/**
  * ⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG's bounds, beside DODGE's and
  * DERIVED, not tuned (`hammerPhaseRung`):
  *   · `horizon` = `SPINNER.hammerPeriod` (45): one revolution of the line. A
@@ -23621,12 +23755,56 @@ function solveSegmentUnder({
             };
             const phased = hit.sources.map((s) => s.id).join(', ');
             let viaWhy = null;
+            let laneWhy = null;
             if (dodgesSpent >= PHASE_DODGE_RUNG.maxPerSegment) {
                 dodgeWhy = `this segment has already stalled ${dodgesSpent} time(s) for a `
                     + `clocked danger (PHASE_DODGE_RUNG.maxPerSegment ${PHASE_DODGE_RUNG.maxPerSegment}) — `
                     + 'a walk that keeps meeting one is not converging';
             } else {
-                dodge = phaseStall(corridor, hit, PHASE_DODGE_RUNG.offsets);
+                /**
+                 * ⛓ fidelity BEAMLANE D1 (`CONTACT_FIDELITY.beamLaneWalk`, OFF: skipped) — THE LANE before the stall
+                 * grid: when every reason is a beam tower's beam, the corridor is previewed ONCE with its aim
+                 * steered into the band-to-band lane at the towers' live `y` (`beamLaneSteer`), and certified by the
+                 * same `probeSamples`. An uncertified lane falls through to the grid, its reason kept for the refusal.
+                 */
+                if (CONTACT_FIDELITY.beamLaneWalk && !axisAligned
+                    && hit.sources.every((s) => s.phase?.tag === 'beamtower')) {
+                    const steer = beamLaneSteer(run, roomPhase.filter((x) => x.tag === 'beamtower'), clock, tolerance);
+                    if (steer === null) {
+                        laneWhy = 'a tower\'s live `y` is unknown (no visit clock or no `Game.time`), and a lane is '
+                            + 'read off it, never guessed';
+                    } else if (deadlineReached('phase-dodge')) {
+                        tripped = true;
+                    } else {
+                        previews += 1;
+                        const walk = previewWalk(run, corridor, tolerance,
+                            { strike: strikePolicyFor(run, { dashMode }), steer });
+                        const met = walk.truncated && walk.truncated.kind !== 'crossed'
+                            ? null : probeSamples(walk.samples, dangerExcept);
+                        if (walk.truncated && walk.truncated.kind !== 'crossed') {
+                            laneWhy = `the lane walk stopped (${walk.truncated.kind}: ${walk.truncated.why})`;
+                        } else {
+                            /**
+                             * The arm's PROGRESS rule (the stall's `partial`, above): a lane walk whose first danger
+                             * is NOT a phase source, on a walk no sample of which a beam hits (`hitsPhase`, the
+                             * update-exact price), is driven up to that danger, and the next probe meets it alone.
+                             */
+                            const at = met ? walk.samples.findIndex((sm) => sm.tick === met.tick) : walk.samples.length;
+                            const beamFree = !walk.samples.some((sm) => hitsPhase(sm.x, sm.y, sm.tick));
+                            if (met && !(met.sources.every((x) => !x.phase) && beamFree && at > 0)) {
+                                laneWhy = `the lane walk meets ${reasonsOf(met)} at `
+                                    + `(${met.x.toFixed(1)},${met.y.toFixed(1)}) on tick ${met.tick}`;
+                            } else {
+                                dodge = { at: 0, ticks: at, walk, door: null, wps: corridor,
+                                    ...(met ? { partial: met.sources.map((x) => x.id) } : {}),
+                                    lane: { ticks: at, walked: walk.samples.length,
+                                        towers: roomPhase.filter((x) => x.tag === 'beamtower')
+                                            .map((x) => `${x.tag}@${x.x},${x.y}`) } };
+                            }
+                        }
+                    }
+                }
+                if (!dodge && !tripped) dodge = phaseStall(corridor, hit, PHASE_DODGE_RUNG.offsets);
                 if (!dodge && !tripped) {
                     const stalls = new Map();
                     const detour = deriveChaserDetour(run, {
@@ -23664,12 +23842,15 @@ function solveSegmentUnder({
                             + `${PHASE_DODGE_RUNG.offsets - 1} earlier walk-offset(s) (step `
                             + `${PHASE_DODGE_RUNG.step}) clears the corridor of ${reasonsOf(hit)} `
                             + `(${previews} preview(s))${viaWhy ? `; and bent through via cells: ${viaWhy}` : ''}`;
+                    // ⛓ BEAMLANE D1: the lane's own reason, named (absent OFF).
+                    if (laneWhy) dodgeWhy += `; and the band-to-band lane: ${laneWhy}`;
                 }
             }
             if (dodge) {
                 dodgesSpent += 1;
-                rowFor('dodge', refused, { stall: dodge.at === null ? null : { at: dodge.at, ticks: dodge.ticks },
+                rowFor('dodge', refused, { stall: dodge.at === null || dodge.lane ? null : { at: dodge.at, ticks: dodge.ticks },
                     phase: hit.sources[0].id, previews, ...(dodge.vias ? { vias: dodge.vias } : {}),
+                    ...(dodge.lane ? { lane: dodge.lane } : {}),
                     ...(dodge.partial ? { partial: dodge.partial } : {}) });
                 if (dodge.at === null) return { wps: dodge.wps, escalations };
                 const upto = dodge.at + dodge.ticks;
