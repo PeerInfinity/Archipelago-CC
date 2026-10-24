@@ -115,6 +115,8 @@ import {
     SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
+// ⛓ HOLD-SEAM IMP (scratch A/B, never landed): the module imported, nothing called — the boot's extra fetch alone.
+import '../seedlingDemo/wasmHoldSeam.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
 import { applyDashOnlyWindow, parseDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
