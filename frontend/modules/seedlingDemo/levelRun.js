@@ -1426,7 +1426,8 @@ export function createLevelRun({
      * never-read run did not have yet: an empty Map in a room without the family, and `stateDigestParts`' `visit`
      * part hashes these maps whole, so the read moved the digest (30 getters; `bobBoss` moved `player`).
      *
-     * ⛔ So while a getter runs (`readingDepth > 0`, set by `readingGetters` on every getter of the run object) a
+     * ⛔ So while a getter runs (`readingDepth > 0`, raised by `reading(…)` in each run getter whose
+     * reach holds a lazy build; `levelRunDigestRead.test.js` reads EVERY getter, so a new one that builds reds there) a
      * builder hands back what it built WITHOUT keeping it (`keptUnlessReading`), and the tick builds the same state
      * from the same inputs when it first asks. A state already kept is read as it is. Methods (`entities`, the
      * forecasts, `previewStepper`) are not getters and still build — DA's `lightsFights` row builds on purpose.
@@ -1435,6 +1436,14 @@ export function createLevelRun({
     const keptUnlessReading = (map, n, built) => {
         if (readingDepth === 0) map.set(n, built);
         return built;
+    };
+    const reading = (read) => {
+        readingDepth += 1;
+        try {
+            return read();
+        } finally {
+            readingDepth -= 1;
+        }
     };
     /**
      * ⛓⛓ SEEDLING FIDELITY F7: a new `Game`'s activator state is the build's
@@ -17913,31 +17922,7 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
-    /**
-     * ⛓ DIGESTREAD D2: every getter of the run object runs with `readingDepth` raised, so a lazy `…StateFor` it reaches
-     * keeps nothing (`keptUnlessReading`). Wrapped from the object's own descriptors, so a getter added later is a
-     * reader the day it lands (`levelRunDigestRead.test.js` reads them all).
-     */
-    const readingGetters = (api) => {
-        for (const [k, d] of Object.entries(Object.getOwnPropertyDescriptors(api))) {
-            if (typeof d.get !== 'function') continue;
-            const read = d.get;
-            Object.defineProperty(api, k, {
-                ...d,
-                get() {
-                    readingDepth += 1;
-                    try {
-                        return read.call(this);
-                    } finally {
-                        readingDepth -= 1;
-                    }
-                },
-            });
-        }
-        return api;
-    };
-
-    return readingGetters({
+    return {
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
@@ -18101,7 +18086,7 @@ export function createLevelRun({
             return {
                 beam: moonrockBeam,
                 rockSet: moonrockSet,
-                rocks: noclip ? [] : [...moonrockStateFor(level).values()].map((r) => ({ ...r })),
+                rocks: noclip ? [] : [...reading(() => moonrockStateFor(level)).values()].map((r) => ({ ...r })),
                 events: moonrockEvents.map((e) => ({ ...e, ...(e.flag ? { flag: { ...e.flag } } : {}) })),
             };
         },
@@ -18145,7 +18130,7 @@ export function createLevelRun({
          * on. Reporting only the undying ones would make a press at a corpse
          * read as a press at nothing.
          */
-        get spinnerBodies() { return spinnerBodiesNow(); },
+        get spinnerBodies() { return reading(spinnerBodiesNow); },
         /**
          * ⛓⛓ R5 SLICE 13: WHERE THE SPINNERS WILL BE, for the next `n` ticks.
          *
@@ -19179,7 +19164,7 @@ export function createLevelRun({
          * ⛓ seedling-fidelity-bosskills D2 — the King of Fire's fight in this room (`lavaBoss.lavaBossView`: the body,
          * the balls in flight, the report), or null: the switch is off, or the room holds no fight. A copy.
          */
-        get lavaBossFight() { return lavaBossFightNow(); },
+        get lavaBossFight() { return reading(lavaBossFightNow); },
         /** ⛓ bosskills D3: the Tentacled Beast's fight (`tentacleBeast.tentacleBeastView`) or null. A copy. */
         get tentacleBeastFight() { return tentacleBeastFightNow(); },
         /** ⛓ bosskills D3: the Tentacled Beast's event rows, a copy. */
@@ -19189,12 +19174,12 @@ export function createLevelRun({
         get shakeWritersHere() {
             if (noclip) return [];
             const out = [];
-            if (bossStateFor(level).size > 0) out.push('totemLaser', 'totemDeath');
+            if (reading(() => bossStateFor(level)).size > 0) out.push('totemLaser', 'totemDeath');
             if (owlStateFor(level).bosses.size > 0) out.push('rockFallLanding');
             // ⛓ bosskills D2: the King of Fire's sweep (null OFF, so the list is unchanged there).
-            if (lavaBossFightFor(level)?.boss.destroy === false) out.push('lavaBossSweep');
+            if (reading(() => lavaBossFightFor(level))?.boss.destroy === false) out.push('lavaBossSweep');
             // ⛓ U14-swim D1: a rock still to land this visit.
-            if (moonrockBeam && !moonrockSet && moonrockStateFor(level).size > 0) {
+            if (moonrockBeam && !moonrockSet && reading(() => moonrockStateFor(level)).size > 0) {
                 out.push('moonrockLanding');
             }
             return out.filter((w) => BOSS_CLASS_SHAKE_WRITERS.includes(w));
@@ -19254,7 +19239,7 @@ export function createLevelRun({
          * the walkTo-divergence lesson, one mechanic later. Reading it off
          * the run means the two cannot disagree.
          */
-        get openActivators() { return openActivatorsNow(); },
+        get openActivators() { return reading(openActivatorsNow); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.
@@ -19266,8 +19251,8 @@ export function createLevelRun({
          * the push opened and then walk the executor into the block it did
          * not move — the `openActivators` lesson, one mechanic later.
          */
-        get openBridges() { return openBridgesNow(); },
-        get pushables() { return pushablesNow(); },
+        get openBridges() { return reading(openBridgesNow); },
+        get pushables() { return reading(pushablesNow); },
         /**
          * R5 slice 5: which of this level's BreakableRocks are GONE right
          * now — the planner's only legitimate view of a broken one.
@@ -19278,7 +19263,7 @@ export function createLevelRun({
          * wall it watched shatter. The `openBridges` lesson, one mechanic
          * later — which is now the fifth time this file has had to make it.
          */
-        get brokenRocks() { return brokenRocksNow(); },
+        get brokenRocks() { return reading(brokenRocksNow); },
         /**
          * ⛓⛓ R5 SLICE 14: which of this level's `BurnableTree`s are GONE
          * right now — the EIGHTH family's answer to the same question, and
@@ -19298,9 +19283,9 @@ export function createLevelRun({
          * `tag = -1` tree is rebuilt by the next `new Game` however this
          * reads, and a `tag >= 0` one is not rebuilt at all (`check()`).
          */
-        get burnedTrees() { return burnedTreesNow(); },
+        get burnedTrees() { return reading(burnedTreesNow); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
-        get pulledRopes() { return pulledRopesNow(); },
+        get pulledRopes() { return reading(pulledRopesNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 15: WHERE EVERY CRUSHER IN THIS ROOM IS RIGHT NOW —
          * the NINTH family's answer to the question the other eight answer
@@ -19315,13 +19300,13 @@ export function createLevelRun({
          * makes the two-phase doctrine a rule and not a style —
          * `crusherIsParked` is the predicate a phase-2 plan has to check.
          */
-        get crushers() { return crushersNow(); },
+        get crushers() { return reading(crushersNow); },
         /**
          * ⛓ Is every crusher in this room at rest? The precondition a
          * phase-2 (static-world) plan has to hold, asked of the run rather
          * than assumed by it.
          */
-        get crushersParked() { return crushersParkedNow(); },
+        get crushersParked() { return reading(crushersParkedNow); },
         /**
          * ⛔⛔ Every tick a crusher's body overlapped the player. `Bot.noDamage`
          * is why the run continues; this list is why "the route stayed out of
@@ -19381,7 +19366,7 @@ export function createLevelRun({
          */
         get talkCircles() { return talkCirclesNow(); },
         /** ⛓ Swim U5: L32's encounter, by role — see `bobBossNow`. */
-        get bobBoss() { return bobBossNow(); },
+        get bobBoss() { return reading(bobBossNow); },
         get strikeBodies() { return strikeBodiesNow(); },
         get chasers() { return chasersNow(); },
         /**
@@ -19443,7 +19428,7 @@ export function createLevelRun({
          * after the press that shoved it, so a route flooded against it is
          * only sound once `turretsSettled` is true.
          */
-        get turrets() { return turretsNow(); },
+        get turrets() { return reading(turretsNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 23 — the boss totems, as `collidesSolid` sees them.
          *
@@ -19453,11 +19438,11 @@ export function createLevelRun({
          * questions", and `liveRectOf` then falls through to `s.rect`, which
          * for an unwoken boss is the right answer anyway.
          */
-        get bosses() { return bossesNow(); },
+        get bosses() { return reading(bossesNow); },
         /** ⛓ Has the wand's publication woken the room's boss? */
         get bossesWoken() {
             if (noclip) return [];
-            return [...bossStateFor(level).values()]
+            return [...reading(() => bossStateFor(level)).values()]
                 .filter((b) => b.activated)
                 .map((b) => ({
                     x: b.x, y: b.y,
@@ -19506,14 +19491,14 @@ export function createLevelRun({
          * `iceTurretSettled`, which uses the FLOOR tile because the
          * two-cycle straddles `Math.round`'s boundary.
          */
-        get turretsSettled() { return turretsSettledNow(); },
+        get turretsSettled() { return reading(turretsSettledNow); },
         /**
          * ⛓ The kill ledger's other half: `IceTurret` writes NO persistence,
          * so the only witness that it died is this.
          */
         get turretsDead() {
             if (noclip) return [];
-            return [...turretStateFor(level).values()]
+            return [...reading(() => turretStateFor(level)).values()]
                 .filter((t) => t.dead)
                 .map((t) => ({ id: t.id, x: t.x, y: t.y, solid: t.solid, removed: t.removed }));
         },
@@ -19537,7 +19522,7 @@ export function createLevelRun({
          */
         get shieldBumps() { return shieldBumpsNow(); },
         /** ⛓ U12-swim D1: the room's pulls, in update order — see `pullsNow`. */
-        get pulls() { return pullsNow(); },
+        get pulls() { return reading(pullsNow); },
         /** ⛓ U15-swim D1: the room's turrets and their spits — see `shootersNow`. */
         get shooters() { return shootersNow(); },
         /** ⛓ F4: the static bodies an arrow has reached (see `staticBodiesNow`). */
@@ -19548,7 +19533,7 @@ export function createLevelRun({
         get bombPushers() { return bombPushersNow(); },
         get bombs() { return bombsNow(); },
         get igneousTiles() { return igneousTilesNow(); },
-        get lightsFight() { return lightsFightNow(); },
+        get lightsFight() { return reading(lightsFightNow); },
         /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
         get bombEvents() { return bombEventsNow(); },
         /** ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` per tick (`LEDGER_KINDS.beamTowerTrace`; empty OFF). */
@@ -19594,7 +19579,7 @@ export function createLevelRun({
          * that presses too fast can be told WHICH press was refused rather
          * than being told the enemy did not die.
          */
-        get turretDamage() { return turretDamageNow(); },
+        get turretDamage() { return reading(turretDamageNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT
          * NOW, ASKED OF THE RUN.
@@ -19624,8 +19609,8 @@ export function createLevelRun({
              * per-crusher rebuild was pure cost — and it is cost a live
              * sensing policy pays on every tick it polls this getter.
              */
-            const scanOpts = normalizeLiveOpts(liveSolidOpts());
-            for (const [id, c] of crusherStateFor(level)) {
+            const scanOpts = normalizeLiveOpts(reading(liveSolidOpts));
+            for (const [id, c] of reading(() => crusherStateFor(level))) {
                 const ctx = crusherCtx(c, scanOpts);
                 out.set(id, {
                     ...scanCrusher({ x: c.x, y: c.y }, ctx.playerBox, ctx.playerPoint,
@@ -19638,7 +19623,7 @@ export function createLevelRun({
             return out;
         },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
-        get openChests() { return openChestsNow(); },
+        get openChests() { return reading(openChestsNow); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
         get chestOpens() { return chestOpensNow(); },
 
@@ -19690,7 +19675,7 @@ export function createLevelRun({
          * "the hold opened something" has to be asked of this instead, and
          * `runHold` does.
          */
-        get armedPulsers() { return armedPulsersNow(); },
+        get armedPulsers() { return reading(armedPulsersNow); },
         /**
          * ⛓⛓⛓ THE ARROW TRAPS WHOSE GROUP IS PUBLISHED RIGHT NOW.
          *
@@ -19705,7 +19690,7 @@ export function createLevelRun({
          * the flag — a set built from the flag alone would report L16 and
          * L67 backwards, and would report them backwards SILENTLY.
          */
-        get armedArrowTraps() { return armedArrowTrapsNow(); },
+        get armedArrowTraps() { return reading(armedArrowTrapsNow); },
         /**
          * ⛓⛓⛓ R9 SLICE L16 — THE GROUPS A PUBLICATION HAS LATCHED, THIS VISIT.
          *
@@ -19715,7 +19700,7 @@ export function createLevelRun({
          * — the live run's own map, never a flag the verb set itself. `null`
          * under `noclip`, like its neighbours.
          */
-        get latchedGroups() { return latchedGroupsNow(); },
+        get latchedGroups() { return reading(latchedGroupsNow); },
         /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
         get arrowVolleys() { return arrowVolleysNow(); },
         /**
@@ -19995,7 +19980,7 @@ export function createLevelRun({
          */
         get arrowCoverAt() {
             if (noclip) return null;
-            const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const solidOpts = normalizeLiveOpts(reading(liveSolidOpts));
             const w = world;
             return (box) => w.collidesArrowCover(box, solidOpts);
         },
@@ -20026,9 +20011,9 @@ export function createLevelRun({
             return out;
         },
         /** Which blocks are no longer where the level built them, this visit. */
-        get pushedBlocks() { return noclip ? [] : movedPushables(pushableStateFor(level)); },
+        get pushedBlocks() { return noclip ? [] : movedPushables(reading(() => pushableStateFor(level))); },
         /** Is every block at rest? The `spear` leg's "the push has landed" test. */
-        get pushesSettled() { return pushesSettledNow(); },
+        get pushesSettled() { return reading(pushesSettledNow); },
         /**
          * One record per press that FIRED its rect: `{t, fired, level,
          * weapon, direction, rect, hits}`.
@@ -20177,7 +20162,7 @@ export function createLevelRun({
         get shieldBossFlags() { return [...shieldBossFlags.values()].map((f) => ({ ...f })); },
         /** The live bodies, for a stance that has to plan around the wall. */
         get shieldBosses() {
-            const st = shieldBossStateFor(level);
+            const st = reading(() => shieldBossStateFor(level));
             return [...st.values()].map((b) => ({
                 id: b.id,
                 x: b.x,
@@ -20404,7 +20389,7 @@ export function createLevelRun({
         get finalDoorGate() { return finalDoorGateNow(); },
         /** The live door(s), for a stance that has to plan around the wall. */
         get finalDoors() {
-            const st = finalDoorStateFor(level);
+            const st = reading(() => finalDoorStateFor(level));
             return [...st.values()].map((d) => ({
                 id: d.id,
                 x: d.ex,
@@ -22813,5 +22798,5 @@ export function createLevelRun({
             });
             return { transition: record, grant, ...hits };
         },
-    });
+    };
 }

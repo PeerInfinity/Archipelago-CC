@@ -87,6 +87,19 @@ describe('fidelity DIGESTREAD — reading every getter of the run leaves stateDi
         });
     }
 
+    // ⚠ The rows above read cumulatively, so a getter whose build an EARLIER getter already made is hidden behind it
+    // (D2 measured one: `armedArrowTraps` on L16, behind `pushables`). Here each getter reads a run of its own.
+    it('each getter alone, on a fresh boot of its own (L16 and L41, before the first tick): no part moves', () => {
+        const moved = {};
+        for (const n of [16, 41]) {
+            for (const g of runGetters(boot(n))) {
+                const m = digestMovesOnRead(boot(n), [g]);
+                if (Object.keys(m).length > 0) moved[`${n}:${g}`] = m[g];
+            }
+        }
+        expect(moved).toEqual({});
+    }, 120_000);
+
     // a level entry rebuilds the visit (`freshVisitState`), and the read lands before that visit's first advance
     for (const [name, entries] of [['f7-l16-walkin', 1], ['r2-two-teleporters', 2]]) {
         it(`a level entry (\`${name}\`): on the tick each entry lands, no getter moves a part`, () => {
