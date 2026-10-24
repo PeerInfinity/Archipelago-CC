@@ -13,6 +13,9 @@
  *   `corpsebump-l4-bob-wedge` (D1) — L4 from `r8-solve-4`'s boot: walk down onto the button tile and shove
  *     `pushableblock@32,64` east while `bob@64,64` is still alive and chasing. The game's block stops against the
  *     Bob's 8x8 body; the model OFF glides it through.
+ *   `corpsebump-l40-t2-holder` (D3) — L40 from the pocket boot (`l40PocketBootTape`): the SOLVER's whole plan with
+ *     `corpseBumpWeigh` ON — kill `iceturret@472,400` hitless (the Ghost Sword), bump its corpse north twice onto
+ *     `button@480,384` {t 2}, wait out `wandlock@448,432`'s fade, walk west into the pit (24,27) and on to L43.
  */
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,8 +45,86 @@ export async function l4WedgeTape() {
             + '(probe-seedling-corpse-bump.mjs)' };
 }
 
+/**
+ * D2/D3's switches: both CORPSEBUMP keys and FIREPUSH's three (the corpse weigh needs `fireLiveTurretReach`; the other
+ * two are ON as the planner's flip will have them).
+ */
+export const CORPSEBUMP_D2_SWITCHES = Object.freeze({ blockSweepBodies: true, corpseBumpWeigh: true,
+    fireLiveTurretReach: true, fireBlockPulseShove: true, pulserPublishLag: true });
+
+/**
+ * The L40 pocket boot: `prox-l40-turret-volley`'s committed header (the survey's `r8-solve-11` staging re-pointed at
+ * L40 (480,456), inside `iceturret@472,400`'s pocket) with ONE declared change, `seam.items.hasGhostSword` — the AP
+ * rule `level_40__r23c29 -> level_40__r32c36` is `Fire AND (Ghost Spear | Sword)`, and only the Ghost Sword's 2-damage
+ * blade kills the turret hitless (`killForCorpse`; the Sword's third landing always follows the turret's next shot).
+ */
+export async function l40PocketBootTape() {
+    const { readFileSync } = await import('node:fs');
+    const base = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tapes', 'prox-l40-turret-volley.json'), 'utf8'));
+    return { ...base, name: 'corpsebump-l40-t2-holder-boot', tick_count: 0, inputs: [],
+        seam: { ...base.seam, items: { ...base.seam.items, hasGhostSword: true } } };
+}
+
+/** The D3 goal: the pit west of `wandlock@448,432` {t 2} (24,27), whose only corridor from the pocket is that lock. */
+export const L40_POCKET_GOAL = Object.freeze({ kind: 'reach-pit', pit: Object.freeze({ tx: 24, ty: 27, x: 384, y: 432 }) });
+
+/** The solver's plan from the end of the prefix (`solveSegment` with the prefix and a fork per try), under `over`. */
+export async function l40PocketTail(prefixTape, over = CORPSEBUMP_D2_SWITCHES) {
+    const { parseTape, heldKeysAt } = await import('./tapeFormat.js');
+    const { createRunForStaging, stagingFromTape } = await import('./tapeRunner.js');
+    const { atlasLevelSource } = await import('./levelSource.js');
+    const { solveSegment } = await import('./solverBot.js');
+    const { withContactFidelity } = await import('./contactFidelity.js');
+    const tape = parseTape(JSON.stringify(prefixTape));
+    const levelSource = atlasLevelSource();
+    const staging = stagingFromTape(tape);
+    const prefix = [];
+    for (let t = 0; t < tape.tick_count; t += 1) prefix.push(new Set(heldKeysAt(tape, t)));
+    return withContactFidelity(over, () => {
+        const run = createRunForStaging(staging, levelSource);
+        for (const k of prefix) run.advance(k);
+        try {
+            const out = solveSegment({ run, goals: [L40_POCKET_GOAL], name: 'corpsebump-l40-t2-holder',
+                boot: staging.boot, prefix, dashMode: 'all', forkRun: () => createRunForStaging(staging, levelSource) });
+            return { out, refusal: null };
+        } catch (e) {
+            return { out: null, refusal: e };
+        }
+    });
+}
+
+/** `corpsebump-l40-t2-holder`: the solver's whole plan from the pocket boot (D2 ON), folded onto the boot's header. */
+export async function l40HolderTape() {
+    const { buildTape } = await import('./botDriverV1.js');
+    const bootTape = await l40PocketBootTape();
+    const { out, refusal } = await l40PocketTail(bootTape);
+    if (!out) throw refusal;
+    const folded = buildTape(out.perTick, bootTape.boot, 'corpsebump-l40-t2-holder',
+        { noclip: false, noDamage: false, noHazards: [], grants: [] });
+    return { ...bootTape, name: 'corpsebump-l40-t2-holder', equips: [...(bootTape.equips ?? []), ...(out.equips ?? [])],
+        tick_count: out.perTick.length, inputs: folded.inputs,
+        description: 'seedling-fidelity-corpsebump D3: L40 from the pocket boot (prox-l40-turret-volley\'s, with the '
+            + 'Ghost Sword) — the SOLVER (corpseBumpWeigh ON): kill iceturret@472,400 hitless, bump its corpse north '
+            + 'onto button@480,384 {t 2}, wait out wandlock@448,432\'s fade, walk west into the pit (24,27) '
+            + '(probe-seedling-corpse-bump.mjs)' };
+}
+
 export const CORPSEBUMP_WITNESSES = Object.freeze({
     'corpsebump-l4-bob-wedge': Object.freeze({ tape: l4WedgeTape, switches: CORPSEBUMP_D1_SWITCHES }),
+    'corpsebump-l40-t2-holder': Object.freeze({ tape: l40HolderTape, switches: CORPSEBUMP_D2_SWITCHES,
+        checks: (samples) => {
+            const onT2 = (g) => (g.bodies ?? []).some((b) => b.cls === 'IceTurret' && b.anim === 'dead' && b.y < 400);
+            const first = samples.find(onT2);
+            const end = samples.at(-1);
+            return [{
+                name: 'the game\'s ice-turret corpse comes to rest on button@480,384 {t 2} and stays there while L40 lasts',
+                ok: first !== undefined && samples.filter((g) => g.t >= first.t && g.level === 40).every(onT2),
+                detail: first ? `on it from t${first.t}` : 'never on it',
+            }, {
+                name: 'the game\'s player leaves L40 by the pit west of wandlock@448,432 (the t2 lock opened)',
+                ok: end?.level === 43, detail: end ? `ends in L${end.level} at (${end.x}, ${end.y})` : 'no sample',
+            }];
+        } }),
 });
 
 const BLOCK_CLASS = /(^|:)(PushableBlockFire|PushableBlockSpear|PushableBlock)$/;
