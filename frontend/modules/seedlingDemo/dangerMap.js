@@ -84,6 +84,8 @@ import {
     CONTACT_FIDELITY,
     // ⛓ seedling-fidelity-residue D-B: the Tentacled Beast's whirlpools.
     WHIRLPOOL, whirlpoolRect,
+    // ⛓ fidelity FIREPUSH: a quiet pulser's ring is not priced (`pulserQuiet`).
+    playerBoxAt, pulserCycle,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -941,6 +943,8 @@ export function hazardDanger(run, box, tick = null, mode = 'wait') {
                 continue;
             }
         }
+        // ⛓ fidelity FIREPUSH: a pulser that cannot hit at this sample is not a disc (`pulserQuiet`).
+        if (h.tag === 'pulser' && CONTACT_FIDELITY.fireBlockPulseShove && pulserQuiet(run, h, box, tick)) continue;
         const vol = hazardVolume(h, world.world);
         const hit = volumeHitsBox(vol, box);
         if (hit) {
@@ -949,6 +953,45 @@ export function hazardDanger(run, box, tick = null, mode = 'wait') {
         }
     }
     return out;
+}
+
+/**
+ * ⛓⛓⛓ fidelity FIREPUSH — **A QUIET PULSER IS NOT A DISC** (behind `CONTACT_FIDELITY.fireBlockPulseShove`, OFF).
+ *
+ * `Pulser.update` hits (`hit()`, whose Player arm is the 22 px ring) only `if (activate || radius > radiusMin)`, and
+ * `activate` is its group's flag. The census volume prices the ring unconditionally — which L40 measured as a wall: the
+ * one corridor to Boss Key 2 runs past `pulser@592,576`'s west and south faces, inside the ring, while its publisher is
+ * a MOMENTARY `button@816,400` 14 tiles away. Released, that pulser cannot hit. So the ring is LOUD at a sample iff
+ *   · the sample's box presses one of its group's pressers (a walk onto its own button arms it), or
+ *   · the pulser is armed now by something OTHER than the player's current press (a latched group, or a Solid on
+ *     the button: `armedPulsers` with the player's box off every presser of the group), or
+ *   · it is armed by the player now, or `hit()` ran on the latest tick (`pulserHits`), and the sample is within one
+ *     pulse (`pulserCycle().pulseTicks`) of now — a ring mid-expansion finishes after its flag drops.
+ * Otherwise it is skipped. A WAIT sample (`tick` null) is now. ⚠ Bounds, named: a Solid pushed onto its button DURING
+ * the walk is not foreseen (the run's `armedPulsers` sees it the tick it lands), and a ring a walk leaves running is
+ * covered for one pulse from NOW, not from the release — exact wherever the button is more than a pulse's walk from
+ * the ring (L40: 14 tiles).
+ */
+function pulserQuiet(run, h, box, tick) {
+    const id = `pulser@${h.x},${h.y}`;
+    const pulser = (run.world.pulsers ?? []).find((p) => p.id === id);
+    if (!pulser) return false;
+    const group = (run.world.pressers ?? []).filter((p) => p.t === pulser.t);
+    if (group.some((p) => rectsOverlap(box, p.rect))) return false;
+    const now = run.ticksCompleted;
+    const armed = Boolean(run.entities('armedPulsers')?.has(id));
+    const here = playerBoxAt(run.state.x, run.state.y);
+    const byPlayer = group.some((p) => rectsOverlap(here, p.rect))
+        && !(run.entities('latchedGroups')?.has(pulser.t));
+    if (armed && !byPlayer) return false;
+    const hits = run.ledger('pulserHits') ?? [];
+    let last = null;
+    for (let i = hits.length - 1; i >= 0; i -= 1) {
+        if (hits[i].id === id && hits[i].level === run.level) { last = hits[i]; break; }
+    }
+    const ringing = armed || (last !== null && last.t >= now);
+    if (ringing && (tick === null || !Number.isFinite(tick) || tick <= now + pulserCycle().pulseTicks)) return false;
+    return true;
 }
 
 /**

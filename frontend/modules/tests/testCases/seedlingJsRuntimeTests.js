@@ -612,6 +612,16 @@ export async function seedlingJsRuntimeGraphicsPackBoots(tc) {
         tc.assertEqual('camera = room, applied live', 'room', live);
         tc.assertEqual('the same runtime is still mounted (a cosmetic switch never re-mounts)', true,
             frameOf(getActivePanelInstance())?.__seedlingJsRuntime === rt);
+        // ── ⛓ G1.5: room mode paints through the static tile layer, and it composites to the same pixels ──
+        const layer = await tc.pollForValue(() => (g.tileLayer?.builds > 0 && g.tileLayer.hits > 2 ? g.tileLayer : null),
+            'room mode built the static tile layer and reused it', 10000, 100);
+        tc.log(`tile layer: ${JSON.stringify(g.tileLayer)}`);
+        tc.assertEqual('the static tile layer is on, holds tiles and is reused across paints', true,
+            !!layer && layer.on && layer.bakedOps > 0);
+        const check = g.checkTileLayer();
+        tc.log(`tile layer pixel check: ${JSON.stringify(check)}`);
+        tc.assertEqual('the last paint through the layer = every op drawn, byte for byte (0 differing channels)', '0',
+            `${check?.differ}`);
         tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
         tc.assertEqual('no death and no halt', '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
     } finally {
@@ -629,7 +639,7 @@ registerTest({
         + 'seedling_atlas_location: the page boots with the seedling + archipelago pack stack, decodes every sheet, '
         + 'draws sprites in the 160×160 follow view with no console error; the player is drawn from the pack '
         + '(seedling:player/shrum) and walks/mirrors with the keys (G2); switching the camera to room is applied live '
-        + '(no re-mount).',
+        + '(no re-mount), and room mode paints through the static tile layer with the same pixels as every op drawn (G1.5).',
     testFunction: seedlingJsRuntimeGraphicsPackBoots,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode

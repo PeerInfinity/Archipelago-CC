@@ -144,3 +144,20 @@ def test_builds_a_hand_written_rules_file_without_world_attributes(tmp_path):
     init_source = _entries(built["data"])["tiny_mod/__init__.py"].decode()
     compile(init_source, "tiny_mod/__init__.py", "exec")
     assert "_ShopWrapper" not in init_source
+
+
+def test_strict_is_the_default_and_lossy_returns_its_record():
+    """rule-node R2c: the browser's lossy toggle is ``build_apworld(lossy=True)``, and the
+    record it shows the user is the one ``build_apworld`` returns."""
+    from world_generator._unknown_kind import UnknownHelperNameError
+    found = sorted((ROOT / "frontend" / "presets" / "yachtdice").glob("AP_*/AP_*_rules.json"))
+    if not found:
+        pytest.skip("no yachtdice preset (its helper bodies live only in JS) to build from")
+    with pytest.raises(UnknownHelperNameError, match="'dice_simulation_state_change'.*game 'Yacht Dice'"):
+        build_apworld(found[0])
+    built = build_apworld(found[0], lossy=True)
+    record = built["lossy_placeholders"]
+    assert set(record) == {"rule_builder helper:helper dice_simulation_state_change"}
+    assert all(isinstance(n, int) and n > 0 for n in record.values())
+    assert "True_()" in _entries(built["data"])[f"{built['game_directory']}/Rules.py"].decode()
+    assert build_apworld(_a_preset_rules_file())["lossy_placeholders"] == {}

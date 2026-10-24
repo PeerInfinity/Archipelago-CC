@@ -99,6 +99,15 @@
  * unchanged; only the wall clock waits. With no stack nothing here runs.
  * `__seedlingJsGraphics.effects` reads them back.
  *
+ * ⛓ G1.5 — THE STATIC TILE LAYER: with a stack on, ROOM mode draws the room's
+ * still tiles once onto an offscreen canvas and blits it each paint
+ * (`seedlingSkinRenderer.paintOps`' `tileLayer`, rebuilt on a new world, art,
+ * level, view or canvas size). The same pixels as drawing every tile, by
+ * construction; follow mode (a moving view) does not use it. `?tileLayer=off`
+ * turns it off (the A/B arm). `__seedlingJsGraphics.tileLayer` reads back its
+ * builds/hits and how many ops it holds; `checkTileLayer()` paints the last
+ * frame both ways onto two offscreen canvases and compares their pixels.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -119,7 +128,7 @@ import { createLifetime } from './watchLifetime.js';
 import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
-import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import { CAMERA_MODES, cameraView, createTileLayer, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
@@ -131,6 +140,8 @@ import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/cont
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
 export const TICKS_PER_SECOND = 30;
+/** The colour every paint clears the canvas to (and the static tile layer is filled with). */
+const BACKGROUND = '#101014';
 const TICK_MS = 1000 / TICKS_PER_SECOND;
 /** At most this many ticks per frame — a long stall is skipped, not replayed. */
 const MAX_TICKS_PER_FRAME = 5;
@@ -223,6 +234,8 @@ export function mountJsRuntimePage(win = window) {
         hazardSkin: null, hazards: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
+        // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
+        tileLayer: params.get('tileLayer') === 'off' ? null : createTileLayer(newCanvas), lastPaint: null,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -280,6 +293,11 @@ export function mountJsRuntimePage(win = window) {
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
+        get tileLayer() {
+            const l = graphics.tileLayer;
+            return l ? { on: true, builds: l.builds, hits: l.hits, frameBuilds: l.frameBuilds, bakedOps: l.bakedOps, liveOps: l.liveOps } : { on: false };
+        },
+        checkTileLayer,
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -367,7 +385,7 @@ export function mountJsRuntimePage(win = window) {
     // ── paint ─────────────────────────────────────────────────────────────
     function paint() {
         const view = runtime.view();
-        ctx.fillStyle = '#101014';
+        ctx.fillStyle = BACKGROUND;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         if (!view) {
             status.textContent = runtime.halted
@@ -467,7 +485,12 @@ export function mountJsRuntimePage(win = window) {
                 ops: effectSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })),
                 screen: overlays.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, colour: o.colour ?? null, alpha: o.alpha ?? 1, glyph: o.glyph ?? null })) }
             : null;
-        graphics.counts = { ops: ops.length + overlays.length, ...paintOps(ctx, [...ops, ...overlays], art ? graphics.images : null, view, canvas, { tinted }) };
+        const images = art ? graphics.images : null;
+        // ⛓ G1.5 — a still view only: room mode. The key's world is the run's binding, a new object on every tile write.
+        const tileLayer = graphics.tileLayer && roomMode ? { layer: graphics.tileLayer, key: [world, art, level], background: BACKGROUND } : null;
+        const all = [...ops, ...overlays];
+        graphics.lastPaint = { ops: all, images, view, key: [world, art, level] };
+        graphics.counts = { ops: all.length, ...paintOps(ctx, all, images, view, canvas, { tinted, tileLayer }) };
         const ms = win.performance.now() - t0;
         graphics.frames += 1;
         const pm = graphics.paintMs;
@@ -476,6 +499,36 @@ export function mountJsRuntimePage(win = window) {
         pm.avg = pm.avg + (ms - pm.avg) / Math.min(graphics.frames, 60);
         const label = graphics.stack ? ` · graphics ${graphics.stack}${graphics.status === 'ready' ? '' : ` (${graphics.status})`}` : '';
         writeStatus(level, label);
+    }
+
+    function newCanvas(w, h) {
+        const c = doc.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        return c;
+    }
+
+    /**
+     * ⛓ G1.5 — the layer's PIXEL check: the last paint's ops drawn onto two fresh offscreen canvases, every op
+     * (no layer) and through a fresh layer, and their bytes compared. `{ same, pixels, differ, bakedOps }`.
+     */
+    function checkTileLayer() {
+        const lp = graphics.lastPaint;
+        if (!lp) return null;
+        const paintOnce = (layer) => {
+            const c = newCanvas(canvas.width, canvas.height);
+            const cx = c.getContext('2d');
+            cx.fillStyle = BACKGROUND;
+            cx.fillRect(0, 0, c.width, c.height);
+            paintOps(cx, lp.ops, lp.images, lp.view, c, { tinted, tileLayer: layer ? { layer, key: lp.key, background: BACKGROUND } : null });
+            return cx.getImageData(0, 0, c.width, c.height).data;
+        };
+        const layer = createTileLayer(newCanvas);
+        const a = paintOnce(null);
+        const b = paintOnce(layer);
+        let differ = 0;
+        for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) differ += 1;
+        return { same: differ === 0, pixels: a.length / 4, differ, bakedOps: layer.bakedOps, liveOps: layer.liveOps };
     }
 
     /**

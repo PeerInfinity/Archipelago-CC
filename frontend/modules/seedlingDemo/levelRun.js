@@ -6241,7 +6241,7 @@ export function createLevelRun({
         const { pressTick } = fire;
         const player = { x: state.x, y: state.y };
         const pushState = pushableStateFor(level);
-        const audit = auditFire(world, player, { pushables: pushableRects(pushState) });
+        const audit = auditFire(world, player, { pushables: pushableRects(pushState), turrets: turretRectsNow() });
         if (audit.refused.length > 0) {
             throw new Error(`levelRun: the fire press at tick ${pressTick} in level `
                 + `${level} reaches `
@@ -9244,10 +9244,14 @@ export function createLevelRun({
         // false!!"). Link 2 of L38's chain is exactly such a latch, which is
         // why the latched set is not an optional extra here.
         const pressed = pressedGroups(world, playerBoxAt(state.x, state.y), movingSolidsNow());
+        // ⛓ fidelity FIREPUSH (`pulserPublishLag`): a Pulser updates BEFORE its Button (`Game.as:2341` < `:2357`), so
+        // the momentary arm it reads is the one published LAST tick — carried on its own state as `pressedLast`.
+        const lag = CONTACT_FIDELITY.pulserPublishLag;
         for (const [id, p] of st) {
-            const armed = pressed.has(p.t) || activators.latched.get(p.t) === true;
+            const pressedNow = pressed.has(p.t);
+            const armed = (lag ? p.pressedLast === true : pressedNow) || activators.latched.get(p.t) === true;
             const r = stepPulser(p, armed);
-            st.set(id, r.state);
+            st.set(id, lag ? { ...r.state, pressedLast: pressedNow } : r.state);
             if (!r.hit) continue;
             pulserHits.push({ t: ticksCompleted + 1, level, id });
             // The candidates: every block, and the player.

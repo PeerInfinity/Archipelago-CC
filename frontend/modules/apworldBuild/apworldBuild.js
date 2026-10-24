@@ -82,8 +82,14 @@ export function sharedBuildWorker() {
 
 /**
  * Build an `.apworld` from a rules document. Resolves to
- * `{ fileName, gameName, gameDirectory, bytes: Uint8Array, ms }`; rejects with
- * the Python error's text when the generator refuses the document.
+ * `{ fileName, gameName, gameDirectory, lossyPlaceholders, bytes: Uint8Array, ms }`;
+ * rejects with the Python error's text when the generator refuses the document.
+ *
+ * `lossy` (default false: strict, ⚖ D3) is `world_generator`'s `--lossy`: a
+ * rule kind or helper name it has no codegen for becomes an always-true
+ * placeholder instead of an error. `lossyPlaceholders` is the record of every
+ * one emitted, `{'<site>:<kind>': count}` (empty when strict); a caller that
+ * offers lossy SHOWS it (`describeLossyRecord`), never drops it.
  *
  * `onProgress(stage)` receives `'loading-python'`, `'loading-generator'`,
  * `'generating'`. The worker is shared across calls (Pyodide boots once);
@@ -92,6 +98,7 @@ export function sharedBuildWorker() {
 export function buildApworld(doc, {
     gameName = null,
     playerId = '1',
+    lossy = false,
     onProgress = () => {},
     worker = sharedBuildWorker(),
     packageBaseUrl = worldGeneratorBaseUrl(),
@@ -113,6 +120,7 @@ export function buildApworld(doc, {
                     fileName: msg.fileName,
                     gameName: msg.gameName,
                     gameDirectory: msg.gameDirectory,
+                    lossyPlaceholders: msg.lossyPlaceholders ?? {},
                     bytes: new Uint8Array(msg.bytes),
                     ms: msg.ms,
                 });
@@ -135,9 +143,23 @@ export function buildApworld(doc, {
             rulesText: JSON.stringify(doc),
             gameName: normaliseGameName(gameName),
             playerId: String(playerId ?? '1'),
+            lossy: lossy === true,
             packageBaseUrl,
         });
     });
+}
+
+/**
+ * A lossy record as a person reads it: the total number of placeholders, and
+ * one entry per `<site>:<kind>` (most-replaced first, then by name) with its
+ * count. `{ total: 0, entries: [] }` for an empty or missing record.
+ */
+export function describeLossyRecord(record) {
+    const entries = Object.entries(record ?? {})
+        .filter(([, count]) => Number.isInteger(count) && count > 0)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+    return { total: entries.reduce((sum, e) => sum + e.count, 0), entries };
 }
 
 /** Save bytes as a file — `downloadJson`'s four DOM lines, for a zip. */

@@ -81,9 +81,11 @@ def build_apworld(
 ) -> dict:
     """Generate a world from a rules file and pack it, entirely in a temp dir.
 
-    Returns ``{"file_name", "game_name", "game_directory", "data"}`` where
-    ``data`` is the .apworld's bytes and ``file_name`` is the only name AP
-    will load it under.
+    Returns ``{"file_name", "game_name", "game_directory", "data",
+    "lossy_placeholders"}`` where ``data`` is the .apworld's bytes,
+    ``file_name`` is the only name AP will load it under, and
+    ``lossy_placeholders`` is the lossy record (``{"<site>:<kind>": count}``,
+    empty when strict or when nothing was replaced).
     """
     from .generator import WorldGenerator
 
@@ -97,7 +99,7 @@ def build_apworld(
         # generate() prints "next steps" naming the temp directory, which is
         # gone by the time anyone reads them.
         with contextlib.redirect_stdout(io.StringIO()):
-            WorldGenerator(
+            generator = WorldGenerator(
                 str(rules_path),
                 output_dir=str(world_dir),
                 game_name=game_name,
@@ -105,7 +107,8 @@ def build_apworld(
                 canonical_seed=canonical_seed,
                 player_id=player_id,
                 lossy=lossy,
-            ).generate()
+            )
+            generator.generate()
         buffer = io.BytesIO()
         pack_world_dir(world_dir, buffer)
 
@@ -114,4 +117,5 @@ def build_apworld(
         "game_name": metadata.game_name,
         "game_directory": metadata.game_directory,
         "data": buffer.getvalue(),
+        "lossy_placeholders": dict(generator.lossy_placeholders),
     }

@@ -21,6 +21,27 @@ from .base import BaseVisitorMixin
 logger = logging.getLogger(__name__)
 
 
+def self_is_collection_state(rule_func, method: str) -> bool:
+    """True when ``self.<method>(...)`` in ``rule_func`` is a CollectionState method call.
+
+    A LogicMixin subclass's methods are merged onto CollectionState (AutoLogicRegister), so
+    inside them ``self`` IS the state: ``self.has("X", player)`` is ``state.has("X", player)``.
+    The mixin's own methods (``self.raft_can_smelt_items(player)``) stay helper calls.
+    """
+    qualname = getattr(rule_func, '__qualname__', '')
+    owner_name, _, _ = qualname.rpartition('.')
+    if not owner_name or '<locals>' in owner_name:
+        return False
+    module = sys.modules.get(getattr(rule_func, '__module__', None) or '')
+    owner = getattr(module, owner_name, None)
+    from worlds.AutoWorld import LogicMixin
+    if not (isinstance(owner, type) and issubclass(owner, LogicMixin)):
+        return False
+    from BaseClasses import CollectionState
+    state_method = getattr(CollectionState, method, None)
+    return callable(state_method) and getattr(state_method, '__qualname__', '').startswith('CollectionState.')
+
+
 class CallVisitorMixin(BaseVisitorMixin):
     """
     Mixin containing the visit_Call method for handling function calls.
@@ -1459,7 +1480,10 @@ class CallVisitorMixin(BaseVisitorMixin):
 
         # 2. State method call (e.g., state.has)
         elif (func_info and func_info.get('type') == 'attribute' and
-              func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state'):
+              func_info['object'].get('type') == 'name' and
+              (func_info['object'].get('name') == 'state' or
+               (func_info['object'].get('name') == 'self' and
+                self_is_collection_state(getattr(self, 'rule_func', None), func_info['attr'])))):
                 method = func_info['attr']
                 logging.debug(f"Processing state method: {method}")
 

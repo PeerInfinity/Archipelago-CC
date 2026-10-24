@@ -168,5 +168,34 @@ that call's only use is `Or(has_combat_reqs("Swamp"), Not(0))`, which is true wi
 The rule-tree display (`commonUI.js`) never evaluates statements. It now reads the condition from
 `test`, the field the exporter writes; before, it read `condition` and so never showed one.
 
+**As built (R2c, 2026-10-24): the remaining silent-wrong-answer gaps.**
+
+- **Loops follow F4's rule** (`shared/ruleEngine/loopUndetermined.test.js`). A `while_loop` whose
+  condition is undetermined, a `for_iter` over a value that is not an array (undetermined included),
+  and a `for_range` with a non-integer bound or a zero step now make the enclosing function
+  undetermined. Before, the loop was skipped as if its body never ran: `while_loop` read `undefined`
+  as false and ran its `orelse`. A loop with no effect at all is still skipped. Measured over every
+  committed preset × player (empty inventory and whole item pool): no loop ever reaches an
+  undetermined value, and reachability is identical everywhere. The corpus has 0 `while_loop`, 32
+  `for_iter` and 13 `for_range` nodes.
+- **`count_true` with a non-integer `count`** (an expression dict, say) used to crash codegen with a
+  `TypeError`. It now goes through `unknown_kind`: strict raises naming the rule, and `--lossy` keeps
+  `True_()` and records `count_true:count_true with non-integer count …`. An integral float is read
+  as its integer. No committed preset has one.
+- **A `Has` on an item the rules file never creates** (no item definition, pool entry, placement or
+  starting item) becomes `False_()`. That is exact, not a placeholder, because the generated world
+  can never hold the item. So it never raises. It used to be a stderr print only; now it is recorded
+  by name in both modes as `WorldGenerator.unobtainable_items` (`Has:<item>`), with an
+  `UNOBTAINABLE:` warning. Committed hits: `Progressive Swim` in seedling_atlas (8),
+  seedling_atlas_maze (8) and seedling_playthrough_maze (4).
+- **raft's exporter gap is fixed in the generic analyzer.** Inside a LogicMixin method, `self` is the
+  CollectionState (AutoLogicRegister merges the mixin's methods onto it). So `self.<CollectionState
+  method>(...)` is now a state method (`self.has("Smelter", player)` → `item_check`), while the
+  mixin's own methods stay helper calls and a `self.has` on a class that is not a LogicMixin stays a
+  helper. raft's preset re-exported 26 `has` helpers as item checks, and strict world_generator now
+  generates it. The JS already answered these correctly, through genericLogic's `has` fallback, so
+  reachability did not move. wargroove and tww, the other presets with LogicMixin `self.has`,
+  re-export byte for byte.
+
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.
