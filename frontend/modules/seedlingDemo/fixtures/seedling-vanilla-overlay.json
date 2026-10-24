@@ -61,7 +61,10 @@
           "vanilla_item": "Seal"
         }
       ],
-      "rules": { "loc:Shieldspire": { "rule": "Has", "args": { "item_name": "Progressive Sword" } } }
+      "rules": {
+        "loc:Boss Key 0": { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+        "loc:Shieldspire": { "rule": "Has", "args": { "item_name": "Progressive Sword" } }
+      }
     },
     "20": {
       "locations": [
@@ -579,6 +582,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "ce861fd8" },
-  "overlay_id": "seedling-vanilla-overlay-ce861fd8"
+  "provenance": { "content_hash": "f9c6d0ec" },
+  "overlay_id": "seedling-vanilla-overlay-f9c6d0ec"
 }

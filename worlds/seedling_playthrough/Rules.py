@@ -2788,6 +2788,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 019 - Boss Key 0", player),
+        Has('Progressive Sword', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L24 flag 0: burnabletree@32,128 cleared", player),
         Has('Fire', 1)
     )
