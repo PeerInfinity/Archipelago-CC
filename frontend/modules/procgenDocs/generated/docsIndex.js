@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1172,
+        "headings": 1173,
         "indexHeadings": 2,
-        "lines": 32172,
+        "lines": 32180,
         "pages": 4,
-        "words": 444420
+        "words": 444645
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -86,8 +86,8 @@ export const DOCS_INDEX = frz({
             "description": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 40,
-            "lines": 217,
+            "headings": 41,
+            "lines": 225,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -98,7 +98,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 3376
+            "words": 3601
         },
         {
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
