@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 99,
-            "count": 146,
+            "browser": 100,
+            "count": 147,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 453,
-        "browser": 164,
-        "cited": 243,
-        "files": 467,
+        "blockStyle": 454,
+        "browser": 165,
+        "cited": 244,
+        "files": 468,
         "lineStyle": 14,
-        "withDocblock": 467,
-        "withFlags": 384
+        "withDocblock": 468,
+        "withFlags": 385
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12096,6 +12096,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity F7 (D-A): **L16 RE-ENTERED WITH ITS ROPE PULLED, ASKED OF THE GAME — AND WITHOUT IT.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page:",
             "path": "scripts/procgen/probe-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-fire-push.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-fire-push — ⛓⛓⛓ seedling-fidelity-firepush: L40's BOSS KEY 2 BEHIND `pushableblockfire@576,576`, THE ROOM'S PULSER MOVING IT (`CONTACT_FIDELITY.fireBlockPulseShove`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-fire-push.mjs"
         },
         {
             "argvHelpers": [
