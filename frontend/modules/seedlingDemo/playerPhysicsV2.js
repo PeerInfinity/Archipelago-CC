@@ -1336,6 +1336,11 @@ export function step(state, held, opts = {}) {
     // game: `r3-drown` holds (311.15, 144) from observation 84 to 103 and
     // respawns on 104; `r3-lava` the same from 10 (it was already still).
     const dying = drown.drowning === true;
+    // ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`): `Player.drown()` called from OUTSIDE the player — a whirlpool,
+    // before the player updates (`levelRun.stepTentacleRuntimeNow`) — latches `dying` alone (`drown.dying`): no spin of
+    // the player's own (`checkDrowning` spins only on `drowning`), but `if (!dying) super.update()` skips the move, and
+    // the `v` the whirlpool's call wrote stands unspent. Never set OFF.
+    const dyingOutside = drown.dying === true && !dying;
     let steerNow = steerBlocked;
     if (dying) {
         const spun = drownStep(drown);
@@ -1487,6 +1492,8 @@ export function step(state, held, opts = {}) {
     // spiral's `v` is written and nothing spends it.
     const next = dying ? {
         x: state.x, y: state.y, vx: drownV.x, vy: drownV.y, hitX: null, hitY: null,
+    } : dyingOutside ? {
+        x: state.x, y: state.y, vx: state.vx ?? 0, vy: state.vy ?? 0, hitX: null, hitY: null,
     } : stepV1(state, fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
         frozen,

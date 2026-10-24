@@ -306,6 +306,7 @@ import {
     arriveFromFall,
     arriveIn,
     deathRefusal,
+    drownStep,
     initialLatch,
     playerBoxAt,
     step as stepV2,
@@ -16887,6 +16888,21 @@ export function createLevelRun({
                 const w = body.body;
                 const r = stepWhirlpool(w, { player: { x: state.x, y: state.y, box: playerBoxAt(state.x, state.y) } });
                 if (r.pull) {
+                    if (r.drown && CONTACT_FIDELITY.whirlpoolDrown) {
+                        // ⛓ seedling-fidelity-residue D-B: `player.drown()` (`Whirlpool.as:81`), transcribed. The pull's
+                        // write first (`:66-71`), then the call: the timer −0.5 (mod `drownTimerMax`), the spiral `v`,
+                        // `dying` (the player's own update then skips its move), and `die()` when the timer reaches 0.
+                        const spun = drownStep(state.drown ?? { timer: 0, drowning: false });
+                        state = { ...state, x: r.pull.x, y: r.pull.y, vx: spun.v.x, vy: spun.v.y,
+                            drown: { ...(state.drown ?? {}), timer: spun.drown.timer,
+                                drowning: state.drown?.drowning === true, dying: true } };
+                        tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'drown', id: w.id, x: r.pull.x,
+                            y: r.pull.y, timer: spun.drown.timer });
+                        if (spun.dead && !pendingDeath) {
+                            pendingDeath = { t: ticksCompleted + 1, level, source: 'whirlpool', id: w.id, hits: damage.hits };
+                        }
+                        continue;
+                    }
                     if (r.drown) {
                         throw new Error(`levelRun: ${w.id} pulls the player to its centre at tick ${ticksCompleted + 1} in `
                             + `level ${level} and calls \`Player.drown()\` from outside the player — not transcribed; `
@@ -21993,7 +22009,7 @@ export function createLevelRun({
             // whole, `input()` and its `useItem` with it — so a press there is
             // lost like a frozen one.
             const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk || bobNoInput
-                || state.drown?.drowning === true)
+                || state.drown?.drowning === true || state.drown?.dying === true)
                 ? NO_KEYS : held;
             // ── R4: the thrust the last tick's press scheduled ────────
             // After the blocks' own update (the block's `hit` refuses while

@@ -169,6 +169,8 @@ import {
     canonicalDigestText,
     // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
     TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
+    // ⛓ seedling-fidelity-residue D-B: the whirlpool's clock (the DODGE rung's whirlpool arm).
+    WHIRLPOOL,
     // ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
     YETI_PORTAL_TAG,
 } from './solverView.js';
@@ -16220,9 +16222,22 @@ function resolveTentacleBeastStrategy(run, obstacle) {
 const TENTACLE_BEAST_FIGHT_BOUND = 6000;
 /** ⛓ HITLESS: the settle's bound — a whirlpool lives 150 + 60 + 30 updates (`Whirlpool.as`), and none spawns after. */
 const TENTACLE_BEAST_SETTLE_BOUND = 300;
+/**
+ * The deaths a play counts: a hit's (`playerHits` `died`), and ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`) a
+ * whirlpool's drown, which ON is a `playerDeaths` row (source `whirlpool`) instead of a thrown `Error`.
+ */
+function tentacleDeaths(r) {
+    return (r.ledger('playerHits') ?? []).filter((h) => h.died).length + (CONTACT_FIDELITY.whirlpoolDrown
+        ? (r.ledger('playerDeaths') ?? []).filter((d) => d.source === 'whirlpool').length : 0);
+}
+/** Why a play's latest death ended it (the drown names its whirlpool). */
+function tentacleDeathWhy(r, at) {
+    const d = CONTACT_FIDELITY.whirlpoolDrown ? (r.ledger('playerDeaths') ?? []).at(-1) : null;
+    return d?.source === 'whirlpool' ? `the player drowned in ${d.id} ${at}` : `the player died ${at}`;
+}
 function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {}) {
     const mem = createTentacleBeastPolicy(params);
-    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    const deathsBefore = tentacleDeaths(r);
     // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
     const hitsBefore = (r.ledger('playerHits') ?? []).length;
     const hitsNow = () => (r.ledger('playerHits') ?? []).length - hitsBefore;
@@ -16238,8 +16253,7 @@ function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {
             fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
                 + 'Tentacled Beast\'s fight. The fight is per visit.');
         }
-        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
-        if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
+        if (tentacleDeaths(r) > deathsBefore) return { ok: false, why: tentacleDeathWhy(r, `at spent ${spent}`), spent };
     }
     return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
 }
@@ -16265,8 +16279,9 @@ function settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deaths
             fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} while `
                 + 'settling the Tentacled Beast\'s whirlpools. The fight is per visit.');
         }
-        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
-        if (deaths > deathsBefore) return { ok: false, why: `the player died settling at spent ${spent + settled}`, spent: spent + settled };
+        if (tentacleDeaths(r) > deathsBefore) {
+            return { ok: false, why: tentacleDeathWhy(r, `settling at spent ${spent + settled}`), spent: spent + settled };
+        }
         view = r.entities('tentacleBeastFight');
     }
     return { ok: true, spent: spent + settled, settled, report, log: mem.log, hits: hitsNow() };
@@ -22507,6 +22522,9 @@ function solveSegmentUnder({
          */
         const corridorBodyOnly = CONTACT_FIDELITY.corridorBodyPricing && hit.sources.length > 0
             && hit.sources.every((s) => s.kind === 'chaser' && s.body !== undefined);
+        // ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown` ON only): every reason is a whirlpool's pull (its clock).
+        const whirlpoolOnly = CONTACT_FIDELITY.whirlpoolDrown && hit.sources.length > 0
+            && hit.sources.every((s) => s.kind === 'whirlpool');
         if (spitOnly && corridor) {
             refused = { rung: 'avoid', why: 'every reason the probe gave is a TurretSpit '
                 + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
@@ -22609,6 +22627,51 @@ function solveSegmentUnder({
             }
             rowFor('dodge', refused);
             refused = { rung: 'dodge', why: dodgeWhy };
+        }
+
+        /**
+         * ── rung 1¼, the WHIRLPOOL arm (seedling-fidelity-residue D-B, `whirlpoolDrown`) ── CONDITIONAL like the spit
+         * arm: only when every reason the probe gave is a whirlpool's pull (`dangerMap.whirlpoolDanger`). A whirlpool
+         * is a CLOCK — it pulls while `dies <= timer < live + dies` and is gone `timer` updates on, and the beast spawns
+         * none after its death — so the answer is to let the named ones run out: one stall at the walk's START, as long
+         * as the latest of them still pulls, certified by the same preview and probe as the spit arm's (the stand is
+         * priced on every tick of it). It drives the stall and hands back `{}`, and the walk re-plans with the
+         * whirlpools as they then stand. Bounded by the spit arm's `maxPerSegment`.
+         */
+        if (whirlpoolOnly && corridor) {
+            if (activeProgress !== null) progressRung('dodge');
+            const named = new Set(hit.sources.map((s) => s.id));
+            const left = Math.max(0, ...(run.entities('tentacleBeastFight')?.whirlpools ?? [])
+                .filter((w) => named.has(w.id)).map((w) => w.timer - WHIRLPOOL.dies + 1));
+            let whirlWhy = null;
+            let walk = null;
+            if (dodgesSpent >= DODGE_RUNG.maxPerSegment) {
+                whirlWhy = `this segment has already stalled ${dodgesSpent} time(s) (DODGE_RUNG.maxPerSegment)`;
+            } else if (left <= 0) {
+                whirlWhy = `the named whirlpool(s) [${[...named].join(', ')}] are not in this room's fight any more`;
+            } else {
+                walk = previewWalk(run, corridor, tolerance, axisAligned
+                    ? { strike: null, axisAligned, stall: { at: 0, ticks: left } }
+                    : { strike: strikePolicyFor(run, { dashMode }), stall: { at: 0, ticks: left } });
+                const bad = walk.truncated && walk.truncated.kind !== 'crossed' ? `the preview truncates (${walk.truncated.kind})`
+                    : walk.samples.length < left ? 'the preview ends inside the stall'
+                        : (() => { const p = probeSamples(walk.samples, dangerExcept); return p ? `the stalled walk still `
+                            + `probes dangerous at (${p.x.toFixed(1)},${p.y.toFixed(1)}) — ${reasonsOf(p)}` : null; })();
+                if (bad) { whirlWhy = `a ${left}-tick stall at the walk's start (the named whirlpools' clock): ${bad}`; walk = null; }
+            }
+            if (walk) {
+                dodgesSpent += 1;
+                rowFor('dodge', refused, { stall: { at: 0, ticks: left }, whirlpools: [...named] });
+                for (const sm of walk.samples.slice(0, left)) {
+                    const held = new Set(sm.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) break;
+                }
+                return { escalations };
+            }
+            rowFor('dodge', refused);
+            refused = { rung: 'dodge', why: whirlWhy };
         }
 
         /**
@@ -24800,6 +24863,8 @@ function solveSegmentUnder({
          * (re-asked per attempt below). No other walk is touched.
          */
         let axisAligned = axisAlignedAsked;
+        // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
+        const deaths0 = deathsNow();
         attempts: for (let attempt = 0; ; attempt += 1) {
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
@@ -25339,6 +25404,7 @@ function solveSegmentUnder({
                 return null;
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
+                refuseIfDrowned(deaths0, what, goal);
                 if (attempt >= 1) {
                     refuse(`${what}: the re-planned corridor failed too — ${e.message}`, {
                         goal,
@@ -25358,8 +25424,37 @@ function solveSegmentUnder({
      * ⛓ hammer-phase D1 — a walk is a progress node: its climbs, the frontier verbs it applies and the walks those
      * make nest under it. Every caller (the goals, the rungs, the executors handed `walkTo`) reaches this one.
      */
-    const walkTo = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
+    const walkToRun = (goal, aim, opts) => (activeProgress === null ? walkToUnder(goal, aim, opts)
         : progressRun('walk', 'walk', 'walk', () => walkToUnder(goal, aim, opts)));
+    /**
+     * ⛓ seedling-fidelity-residue D-B (`whirlpoolDrown`) — the run's `playerDeaths` count, and a refusal BY NAME when a
+     * whirlpool drowned the player since `d0` (`obstacle: {kind: 'whirlpool', id}`): a walk that died is not a walk that
+     * arrived, whatever the drive did after the respawn. OFF: `deathsNow` is 0 and nothing is asked.
+     */
+    function deathsNow() {
+        return CONTACT_FIDELITY.whirlpoolDrown ? (run.ledger('playerDeaths') ?? []).length : 0;
+    }
+    function refuseIfDrowned(d0, what, goal) {
+        if (!CONTACT_FIDELITY.whirlpoolDrown) return;
+        const d = (run.ledger('playerDeaths') ?? []).slice(d0).find((x) => x.source === 'whirlpool');
+        if (!d) return;
+        refuse(`${what}: the player DROWNED in ${d.id} at run tick ${d.t} in level ${d.level} — its pull reached the `
+            + 'centre and `Player.drown()` ran out (`Whirlpool.as:73-82`); a walk that died is refused, not re-planned '
+            + 'from the respawn', { goal, obstacle: { kind: 'whirlpool', id: d.id } });
+    }
+    const walkTo = (goal, aim, opts) => {
+        if (!CONTACT_FIDELITY.whirlpoolDrown) return walkToRun(goal, aim, opts);
+        const d0 = deathsNow();
+        let out;
+        try {
+            out = walkToRun(goal, aim, opts);
+        } catch (e) {
+            if (e instanceof SolverRefusal || e instanceof BotDriverV2Error) refuseIfDrowned(d0, opts?.what ?? 'walk', goal);
+            throw e;
+        }
+        refuseIfDrowned(d0, opts?.what ?? 'walk', goal);
+        return out;
+    };
 
     /**
      * ⛓⛓⛓ U12-swim D2 — THE PULLS THAT ARE A RIDE INTO PIT (tx, ty): every

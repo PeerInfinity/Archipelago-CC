@@ -21,6 +21,26 @@
  *   a2  the cut's certificate ignores the way out (`accept` null) → the L25 rows red: the first stand (59 t) is the one
  *                                                                  the release dooms, so the exit refuses
  *   a3  the search's crossing accepts any teleporter              → the L25-door row red (the pass crosses to L26)
+ *
+ * D-B — WHIRLPOOLS IN THE WALK (`CONTACT_FIDELITY.whirlpoolDrown`, OFF). `Whirlpool.as:61-83`: a LIVE whirlpool (timer in
+ * [dies, live + dies) after its decrement) writes the player's position whenever the player's box overlaps its 32x32
+ * box with the player's point inside the radius 16 — r = int(d), then int(r * 0.999), a 20° turn — and once r <= 1 it
+ * calls `Player.drown()` on EVERY update (`Player.as:1431`: the timer −0.5 mod 10, the spiral `v`, `dying`, and
+ * `die()` on the twentieth). OFF the model threw a plain `Error` at the first call, and nothing priced the pull. ON:
+ *   (1) the call is transcribed (`levelRun.stepTentacleRuntimeNow` → `state.drown.dying`, `drownStep`; the player's
+ *       step stands still while `dying`, `playerPhysicsV2.step`) and the twentieth is a `playerDeaths` row (source
+ *       `whirlpool`) and the room's reboot;
+ *   (2) a walk that drowned is refused by name (`obstacle: {kind: 'whirlpool', id}`), never re-planned from the
+ *       respawn; the Tentacled Beast verb's plays count the drown as a death;
+ *   (3) `dangerMap.whirlpoolDanger` prices the pull (WAIT: any update to the question's tick; TRANSIT: the ETA's own),
+ *       `dangerVolumes` a row per whirlpool not yet dying, and the DODGE rung's WHIRLPOOL arm answers a corridor whose
+ *       every reason is a whirlpool with one stall at the walk's start that outlasts them.
+ * Measured (the HITLESS seed sweep, 1..40, door + s2 stagings): with `tentacleHitlessFirst` OFF every seed whose walk
+ * threw the drown now SOLVES with no death; at the defaults (HITLESS ON, the settle) nothing moves.
+ *
+ * Mutants (D-B): b1 the drown throws again (the transcription dropped) → the ON drown rows and the seed-15 solve red;
+ * b2 `whirlpoolDanger` returns nothing → seed 15 REFUSES "DROWNED in whirlpool#78" (the walk's refusal by name, no
+ * re-plan); b3 the DODGE arm's stall one tick short → seed 15 refused (the stalled walk still probes the pull).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
@@ -33,6 +53,10 @@ import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from
 import { solveSegment, SolverRefusal } from './solverBot.js';
 import { compareDrillKillWitness, drillKillModelSamples } from './fidelityDrillKill.js';
 import { TIMEDPASS_EXIT_WITNESSES, TIMEDPASS_WITNESS_DIR, timedPassTape } from './fidelityTimedPass.js';
+import { parseTape } from './tapeFormat.js';
+import { createTapeStepper, stagingFromTape } from './tapeRunner.js';
+import { dangerAt, dangerVolumes } from './dangerMap.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 
 const SRC = atlasLevelSource();
 const L28_CUT = Object.freeze({ kind: 'clear-tag', tag: { level: 28, tag: 0 }, at: { x: 160, y: 64 },
@@ -140,4 +164,87 @@ describe('fidelity RESIDUE D-A — the game witnesses (p4g), replayed against th
     it('every exit witness file exists', () => {
         for (const w of TIMEDPASS_EXIT_WITNESSES) expect(existsSync(path(w.name))).toBe(true);
     });
+});
+
+// ── D-B ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+const HERE = new URL('.', import.meta.url).pathname;
+const DOOR_TAPE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'tentaclebeast-witness', 'tb-hitless-door.json'), 'utf8')).tape;
+const L57_FIGHT = Object.freeze({ kind: 'clear-tag', tag: { level: 57, tag: 0 }, at: { x: 80, y: 48 },
+    obstacle: 'tentaclebeast@80,48' });
+const L57_MOUTH = Object.freeze({ kind: 'reach-exit', exit: { x: 96, y: 64 } });
+const doorStaging = (seed) => stagingFromTape(parseTape(JSON.stringify({ ...DOOR_TAPE, rng: { ...DOOR_TAPE.rng, seed },
+    inputs: [], tick_count: 0 })));
+/** The L57 solve at the door's staging, `seed`, with HITLESS (`tentacleHitlessFirst`) and this key as asked. */
+function solve57(seed, { hitless, drown, goals = [L57_FIGHT, L57_MOUTH] }) {
+    return withContactFidelity({ tentacleHitlessFirst: hitless, whirlpoolDrown: drown }, () => {
+        const staging = doorStaging(seed);
+        const run = createRunForStaging(staging, SRC);
+        try {
+            const out = solveSegment({ run, goals, name: `residue-s${seed}`, boot: staging.boot,
+                forkRun: () => createRunForStaging(staging, SRC) });
+            return { run, out, error: null };
+        } catch (e) {
+            return { run, out: null, error: e };
+        }
+    });
+}
+
+describe('fidelity RESIDUE D-B — the switch', () => {
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.whirlpoolDrown).toBe(false);
+        expect(CONTACT_FIDELITY.whirlpoolDrown).toBe(false);
+    });
+});
+
+describe('fidelity RESIDUE D-B — the pull, priced (door staging, seed 15, HITLESS OFF: the fight leaves three alive)', () => {
+    const fight = () => solve57(15, { hitless: false, drown: true, goals: [L57_FIGHT] });
+    it('the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60', () => {
+        const { run, error } = fight();
+        expect(error).toBeNull();
+        expect(run.entities('tentacleBeastFight').whirlpools).toEqual([
+            { id: 'whirlpool#78', x: 107, y: 116, timer: 174 }, { id: 'whirlpool#77', x: 165, y: 153, timer: 132 },
+            { id: 'whirlpool#76', x: 50, y: 174, timer: 86 }]);
+    }, 120000);
+    it('WAIT prices the disc from the update it is live; TRANSIT the ETA\'s own; the box is a volume; OFF nothing', () => {
+        const { run } = fight();
+        const now = run.ticksCompleted;
+        const at = (x, y, tick, mode) => withContactFidelity({ whirlpoolDrown: true }, () => dangerAt(run, now + tick,
+            playerBoxAt(x, y), { mode }).sources.filter((s) => s.kind === 'whirlpool').map((s) => s.id));
+        expect(at(107, 116, 0, 'wait')).toEqual([]);           // the next update reads 173: still growing
+        expect(at(107, 116, 84, 'wait')).toEqual([]);          // …and update +84 reads 90
+        expect(at(107, 116, 85, 'wait')).toEqual(['whirlpool#78']);
+        expect(at(107, 116, 104, 'transit')).toEqual(['whirlpool#78']);
+        expect(at(107, 116, 145, 'transit')).toEqual([]);      // +145 reads 29: dying, no pull
+        expect(at(107, 132.5, 104, 'transit')).toEqual([]);    // 16.5 px off: the box overlaps, the point is out
+        expect(at(107, 131.5, 104, 'transit')).toEqual(['whirlpool#78']);   // 15.5 px: inside the radius
+        const vols = withContactFidelity({ whirlpoolDrown: true }, () => dangerVolumes(run, 0))
+            .filter((v) => /^whirlpool#/.test(v.id)).map((v) => [v.id, v.rect.x, v.rect.y, v.rect.right, v.rect.bottom]);
+        expect(vols).toEqual([['whirlpool#78', 91, 100, 123, 132], ['whirlpool#77', 149, 137, 181, 169],
+            ['whirlpool#76', 34, 158, 66, 190]]);
+        expect(withContactFidelity({ whirlpoolDrown: false }, () => dangerVolumes(run, 0))
+            .filter((v) => /^whirlpool#/.test(v.id))).toEqual([]);
+        expect(withContactFidelity({ whirlpoolDrown: false }, () => dangerAt(run, now + 104, playerBoxAt(107, 116),
+            { mode: 'transit' }).sources.filter((s) => s.kind === 'whirlpool'))).toEqual([]);
+    }, 120000);
+});
+
+describe('fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool)', () => {
+    it('OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal', () => {
+        const r = solve57(15, { hitless: false, drown: false });
+        expect(r.error).not.toBeNull();
+        expect(r.error).not.toBeInstanceOf(SolverRefusal);
+        expect(r.error.message).toMatch(/whirlpool#78 pulls the player to its centre at tick 2188 .*not transcribed/);
+    }, 120000);
+    it('ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE\'s whirlpool arm), no death, into L58', () => {
+        const r = solve57(15, { hitless: false, drown: true });
+        expect(r.error).toBeNull();
+        expect([r.run.level, r.out.perTick.length, r.run.ledger('playerDeaths').length]).toEqual([58, 2416, 0]);
+    }, 180000);
+    it('at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick', () => {
+        const off = solve57(15, { hitless: true, drown: false });
+        const on = solve57(15, { hitless: true, drown: true });
+        expect(off.error).toBeNull();
+        expect(on.error).toBeNull();
+        expect(keys(on.out)).toEqual(keys(off.out));
+    }, 240000);
 });
