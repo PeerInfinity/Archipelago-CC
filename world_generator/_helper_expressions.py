@@ -3,9 +3,9 @@ Helper expression mixin — all _expr_* handler methods and expression utility w
 """
 
 import math
-import sys
 from typing import Any, Dict, List, Set, Optional
 
+from ._unknown_kind import unknown_helper
 from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
@@ -872,16 +872,8 @@ class HelperExpressionMixin:
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{class_name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - return True as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown helpers are typically progression checks that evaluate to true
-        # under default/normal game settings
-        print(
-            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
-            f"using True (always accessible) as fallback",
-            file=sys.stderr
-        )
-        return 'True'
+        # Unknown helper name: loud (rule-node F1); lossy mode keeps the always-true placeholder
+        return unknown_helper('helper body', name, 'True')
 
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""

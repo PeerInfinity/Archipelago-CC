@@ -276,6 +276,15 @@ export const SHAKE_WRITERS = Object.freeze({
         who: 'the moonrock\'s landing, once per game — inside its own freeze',
     }),
     /**
+     * ⛓ fidelity TIMEDPASS D1 — a `FallRock`'s landing (`levelRun.fallRockFrozenFrame`, under
+     * `CONTACT_FIDELITY.drillTimedPass`): `Game.shake = 30`, inside its own freeze, 90 frames before the release —
+     * decayed to 0 by the first live tick (measured: `timedpass-l28-fire-l26`, `camera.shake` 0 at t127).
+     */
+    fallRockLanding: Object.freeze({
+        op: '=', value: 30, src: 'Scenery/FallRock.as:88',
+        who: 'a FallRock\'s landing — inside its own freeze',
+    }),
+    /**
      * ⛓ fidelity BEAMTOWER D3 — the tower's beam on the player (`levelRun.stepBeamTowersNow`, under
      * `CONTACT_FIDELITY.beamTowerBeamHit`): `if (p) { p.hit(null, force, (x, y), damage); Game.shake = 15; }` — an
      * ASSIGNMENT, written whether or not the hit lands (i-frames), on every update the beam touches the player.

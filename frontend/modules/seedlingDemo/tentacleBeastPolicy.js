@@ -75,6 +75,38 @@ function swingLands(x, y, dir, t) {
     return distanceRectPoint(x, y, box) <= REACH;
 }
 
+/** The one key that leaves every threatening band and whirlpool keep-out soonest (up, down, left, right), or null. */
+function stepOutKey(view, p, P) {
+    let best = null;
+    for (const [dx, dy, k] of [[0, -1, 'up'], [0, 1, 'down'], [-1, 0, 'left'], [1, 0, 'right']]) {
+        for (let d = 1; d <= 40; d += 1) {
+            const x = p.x + dx * d;
+            const y = p.y + dy * d;
+            if (y < 98 || y > 200 || x < 12 || x > 196) break;
+            if (!inDanger(view, x, y, P) && !nearWhirl(view, x, y, P)) {
+                if (best === null || d < best.d) best = { d, k };
+                break;
+            }
+        }
+    }
+    return best ? best.k : null;
+}
+
+/**
+ * ⛓ fidelity HITLESS — ONE tick of the SETTLE after the mouth stands (`solverBot.execTentacleBeast` under
+ * `CONTACT_FIDELITY.tentacleHitlessFirst`). The beast spawns no whirlpool once it is dead, but the ones it left live
+ * on (`Whirlpool.as`: 150 + 60 + 30 updates) and a walk across one is pulled to its centre and drowned. Settling keeps
+ * the player out of every whirlpool's keep-out (the fight's own step (2)) and otherwise holds still. Returns a Set.
+ */
+export function tentacleBeastSettleStep(mem, { view, p }) {
+    mem.tick += 1;
+    const keys = new Set();
+    if (view === null || !nearWhirl(view, p.x, p.y, mem.params)) return keys;
+    const k = stepOutKey(view, p, mem.params);
+    if (k) keys.add(k);
+    return keys;
+}
+
 /**
  * A fresh memory for one fight. `lastPress` keeps a swing from re-pressing inside its own window (a second press
  * restarts the window, `swordWindowReplace`).
@@ -115,19 +147,8 @@ export function tentacleBeastPolicyStep(mem, { view, p, slashing }) {
     }
     // (2) inside a swipe band (or a whirlpool's keep-out): step out, up or down, whichever is clear soonest.
     if (inDanger(view, p.x, p.y, P) || nearWhirl(view, p.x, p.y, P)) {
-        let best = null;
-        for (const [dx, dy, k] of [[0, -1, 'up'], [0, 1, 'down'], [-1, 0, 'left'], [1, 0, 'right']]) {
-            for (let d = 1; d <= 40; d += 1) {
-                const x = p.x + dx * d;
-                const y = p.y + dy * d;
-                if (y < 98 || y > 200 || x < 12 || x > 196) break;
-                if (!inDanger(view, x, y, P) && !nearWhirl(view, x, y, P)) {
-                    if (best === null || d < best.d) best = { d, k };
-                    break;
-                }
-            }
-        }
-        if (best) keys.add(best.k);
+        const k = stepOutKey(view, p, P);
+        if (k) keys.add(k);
         return keys;
     }
     // (3) the nearest sitting tentacle with a safe strike spot: walk to the spot.

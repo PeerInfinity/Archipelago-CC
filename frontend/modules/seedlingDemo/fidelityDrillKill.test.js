@@ -59,6 +59,9 @@ function solve(arrival, items) {
 }
 const ON = (fn) => withContactFidelity({ drillKillFirst: true }, fn);
 const OFF = (fn) => withContactFidelity({ drillKillFirst: false }, fn);
+// ⛓ TIMEDPASS's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON a Fire-only run PASSES the drills (Fire L26 SOLVES,
+// Fire L25 plans 70 t; `fidelityTimedPass.test.js`), so DRILLKILL's own Fire rows read the kill strategy alone.
+const ON_NO_PASS = (fn) => withContactFidelity({ drillKillFirst: true, drillTimedPass: false }, fn);
 const drills = (run) => Object.fromEntries(run.drills.bodies.map((d) => [d.id, { x: d.x, y: d.y, hits: d.hits,
     removed: d.removed }]));
 
@@ -116,14 +119,14 @@ describe('fidelity DRILLKILL — D2: L28\'s rope cut from both arrivals (rules-2
         expect((run.ledger('playerHits') ?? []).length).toBe(0);
         expect((run.ledger('ropePulls') ?? []).some((p) => p.id === 'rope@160,64')).toBe(true);
     }), 120000);
-    it('ON: Fire from L25 plans what OFF plans — its stance wakes no drill, so nothing is killed', () => {
+    it('ON (drillTimedPass OFF): Fire from L25 plans what OFF plans — its stance wakes no drill, so nothing is killed', () => {
         const off = OFF(() => solve('L25', ['hasFire']));
-        const on = ON(() => solve('L25', ['hasFire']));
+        const on = ON_NO_PASS(() => solve('L25', ['hasFire']));
         expect(on.kills).toEqual([]);
         expect(on.out.perTick.length).toBe(89);
         expect(on.out.perTick.map((h) => [...h].join('+'))).toEqual(off.out.perTick.map((h) => [...h].join('+')));
     }, 120000);
-    it('ON: Fire from L26 is still REFUSED on `drill@80,96` — and the refusal says Fire cannot kill a drill', () => ON(() => {
+    it('ON (drillTimedPass OFF): Fire from L26 is still REFUSED on `drill@80,96` — and the refusal says Fire cannot kill a drill', () => ON_NO_PASS(() => {
         const { refusal } = solve('L26', ['hasFire']);
         expect(refusal).not.toBeNull();
         expect(refusal.obstacle).toMatchObject({ kind: 'solid', id: 'rope@160,64', drill: 'drill@80,96' });

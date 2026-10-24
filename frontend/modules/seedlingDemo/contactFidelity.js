@@ -988,6 +988,82 @@ export const CONTACT_FIDELITY = {
      * probes standard ON green.
      */
     drillKillFirst: true,
+    /**
+     * fidelity REMBODY (wave 27) — A BODY REMOVED THIS FRAME STILL BLOCKS THE BODIES THAT UPDATE AFTER IT, UNTIL THE FRAME
+     * ENDS. `World.remove` (`net/flashpunk/World.as:118-124`) only queues the entity in `_remove`; `World.updateLists`
+     * (`:895-911`) takes it out of the type lists after `World.update` has run every entity. So the chaser whose
+     * `Mobile.death` fade ends this frame (`FP.world.remove(this)`, `Mobile.as:68`) — or a bulb whose "die" ends — is still
+     * an "Enemy" in `collideTypes(solids, …)` for every body stepped after it this frame (`Bob.solids` and
+     * `LavaRunner.solids` carry "Enemy": `Bob.as:39`, `LavaRunner.as:43`). ON: `stepChasersNow` and its mirror
+     * `chaserForecastNow` keep each body removed in this frame as a sibling wall for the rest of that frame (`removed`
+     * is still set at once: every other reader is unchanged). OFF: the body stops blocking at once (byte-identical).
+     * Witnessed on p4g (SKINSWING's `skinswing-l71-resite`: t63, three bodies removed, the game's `lavarunner@64,192`
+     * held at y 203.303 — ON reproduces it to the end of the tape at 0 px). `SEEDLING_REMOVED_BODY_BLOCKS=0|1` for a node
+     * measurement. NOT here (named in the REMBODY report): the other families' removals (drill, wallflyer, turret,
+     * spinner, the static bodies) as walls to a mover stepped after them in the same frame.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, REMBODY "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): the route survey (full) ON = OFF; 220 chaser-pair-room sweep legs ×2 per arm: 0 settled;
+     * probes standard ON green.
+     */
+    removedBodyBlocks: true,
+    /**
+     * ⛓ seedling-fidelity-slowfix D-A (wave 27) — THE LIGHTS VERB'S SORTIE PORTFOLIO (`lightsVerb.execLights`). The verb
+     * picks each sortie greedily (the earliest wait that lands, the most hits, the fewest ticks), and its ties fall to the
+     * candidate order (`back` before `!back`). The fight's length is chaotic in that choice: across ten arrival clocks
+     * (seam.time ±60) the spear solve runs 324..473 t either way and neither order wins on average (MEASURED; the
+     * forecast equals the live run at every plan — the forecast is not wrong, the greedy is). At the committed
+     * `lights-solve-spear` staging with `spearGameTest` ON the first tie (t165, `left3` back vs not) lands the 494 t fight
+     * where OFF's forecast had only the one candidate and ran 361 t.
+     * ON: before the fight's first decision the verb ROLLS OUT the whole fight in its own forecast once per tie order
+     * (`LIGHTS_VERB.tieOrders`), and executes the shortest (the current order wins a tie) — never longer than the greedy
+     * alone, since that greedy is one of the rollouts; each plan is still checked against the live run, as before.
+     * A rollout carries the forecast ACROSS plans, which exposed one forecast fault the greedy never reads (it re-clones
+     * from the run at every decision): a spear press set the sword's `slashTimer` (20) and `slashing`; `set spearing`
+     * sets neither (`Player.as:810-822`), so ON the spear's press leaves both alone. Measured at the committed staging:
+     * the spear solve 303 t (rollouts 421 | 239; `lights-solve-spear-portfolio`, recorded on p4g at 0 px), the sword's
+     * two rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+     * Two EXACT prunes ride the switch and pay for the second rollout (a sortie that has landed nothing by its last test
+     * is rejected either way; the first dodge unhit to the horizon scores Infinity, which nothing beats): the same answers
+     * on all twenty perturbed solves, and the portfolio solve costs less than the greedy alone (15 s vs 23-27 s, node).
+     * Without them both L69 sweep legs ran out the 90 s leg budget ON (×2, local).
+     * OFF: byte-identical. `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SLOWFIX "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): survey full ON = OFF; the L69 legs ×2 per arm done (ON 38–85 s vs the 90 s budget —
+     * thin headroom); probes standard ON green; the L69 spear solve 494 → 303 t (`lights-solve-spear-portfolio`).
+     */
+    lightsSortiePortfolio: true,
+    /**
+     * fidelity HITLESS (wave 27, ⚖ user 2026-10-22 "Flip now, hitless later") — THE TENTACLED BEAST'S FIGHT PREFERS A
+     * VARIANT THAT TAKES NO HIT (`solverBot.execTentacleBeast`). The fork (BOSSFORK) committed the FIRST
+     * `TENTACLE_BEAST_POLICY_VARIANTS` row that opened the mouth without a death, so a variant that took a swipe
+     * could win over a later hitless one. ON: every variant is played on its own fork and the committed one is ranked
+     * no hit first, then the fewest hits, then the fewest ticks (the list order breaks a tie); a hit stays ACCEPTABLE
+     * when no variant is hitless (the verb's record names how many were tried and each one's hits). Only deaths are
+     * refused, as before. OFF: byte-identical (first-without-a-death). `SEEDLING_TENTACLE_HITLESS_FIRST=0|1` for a
+     * node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, HITLESS "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): survey only L57 step 110 SOLVED 2060 → 1389 t; the L57/L58 sweep legs ×2 per arm: 492/493
+     * game hits 1 → 0, verdicts equal; probes standard ON green.
+     */
+    tentacleHitlessFirst: true,
+    /**
+     * fidelity TIMEDPASS (wave 27) — THE SOLVER WALKS PAST A HOPPING DRILL IT CANNOT KILL (`solverBot.execDrillTimedPass`).
+     * ⚖ The user (2026-10-23): *"Keep Fire; timed pass."* L28's rope rule stays Sword | Spear | Fire, and Fire cannot kill
+     * a drill (DRILLKILL W0), so Fire alone from the L26 arrival needs a no-hit walk past `drill@80,96` (and
+     * `drill@128,96`). `Drill.update` hops one tile toward a player within `runRange` from "sit" (every 15 ticks while
+     * awake: "drill" 7 + "undrill" 7 + the "sit" check), and `hitPlayer` is the 10x10 box against the player's 4x5 on every
+     * tick — so a pass is a POSITION question at each hop (a player 8-9 px off on an axis is jumped over, landing 7-8 px
+     * behind), which a waypoint walk cannot answer. ON: before a `rope` clear-tag whose planned walk wakes a live stepped
+     * drill and whose run holds no weapon that kills one (the kill stays first, ⚖ "fight the drills first"), the solver
+     * SEARCHES a tick-by-tick walk to one of the cut's stances on the run's own drill forecast (`corridorBodyForecast`,
+     * asked with `drillPass`) and the player preview (`previewStepper`), with a standing tail for the cut; certifies it on a
+     * fork of the run with the cut itself; and plays it. OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, TIMEDPASS "Harvest + flip ON" — "Keep Fire; timed pass") turns it ON.
+     * Measured movers (CI, the DRILLKILL harvest + the slice): survey full ON = OFF; 42 L28 + FallRock-room sweep legs ×2
+     * per arm: ends identical; probes standard ON green. Plan movers: Fire alone L28 from L26 REFUSED → SOLVED 132 t;
+     * Fire from L25 89 → 70 t.
+     */
+    drillTimedPass: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1182,6 +1258,18 @@ if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.
 // ⛓ fidelity DRILLKILL: `SEEDLING_DRILL_KILL_FIRST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '1') CONTACT_FIDELITY.drillKillFirst = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY.drillKillFirst = false;
+// ⛓ fidelity REMBODY: `SEEDLING_REMOVED_BODY_BLOCKS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '1') CONTACT_FIDELITY.removedBodyBlocks = true;
+if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '0') CONTACT_FIDELITY.removedBodyBlocks = false;
+// ⛓ seedling-fidelity-slowfix D-A: `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '1') CONTACT_FIDELITY.lightsSortiePortfolio = true;
+if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '0') CONTACT_FIDELITY.lightsSortiePortfolio = false;
+// ⛓ fidelity HITLESS: `SEEDLING_TENTACLE_HITLESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '1') CONTACT_FIDELITY.tentacleHitlessFirst = true;
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FIDELITY.tentacleHitlessFirst = false;
+// ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

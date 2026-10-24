@@ -24830,3 +24830,149 @@ with the Sword and the Spear from the L25 and L26 arrivals (both drills from L26
 - A weapon that "hits" an enemy may not DAMAGE it: `Enemy.hit` has a per-type gate (`hitByFire`), so "every weapon can kill
   it" must be read off the receiver, not the rules.
 - A stance rule written in px ("outside the range") can have no solution in a small room: measure the room before the rule.
+
+### Seedling fidelity REMBODY — a body removed this frame still blocks the bodies stepped after it (`removedBodyBlocks`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27, from SKINSWING's hand-over (the L71 re-site's t63 gap). The report is
+`CC/docs/cloud-reports/seedling-fidelity-rembody.md`.
+
+**The game's rule.** `World.remove` (`net/flashpunk/World.as:118-124`) only queues the entity in `_remove`;
+`World.updateLists` (`:895-911`) drains the queue after `World.update` has run every entity (and `Entity.collide` walks
+the type list with no `_world` test). So a body whose `Mobile.death` fade ends in its own update (`FP.world.remove(this)`,
+`Mobile.as:68`) is still an "Enemy" to `collideTypes(solids, …)` for every body that updates after it that frame, and is
+gone the next. `Bob.solids` and `LavaRunner.solids` carry "Enemy" (`Bob.as:39`, `LavaRunner.as:43`). The model set
+`c.removed = true` in `stepChaserEntity`'s fade, and the siblings stepped after it skipped it at once.
+
+**The model (switch ON).** `stepChasersNow` keeps a per-CALL set of the bodies its loop removed (the fade, a bulb's
+"die") and a sibling's sweep still meets them for the rest of that call. Per call, not per model tick, because a
+ceremony's stepped dead frames call it once per frame. `chaserForecastNow` mirrors it for the removals it steps (a
+BobSoldier corpse, a bulb). `removed` is still set at once, so every other reader is unchanged. OFF: byte-identical. No
+run state was added: the sets are locals, so no digest part is owed.
+
+**Witness (p4g, SKINSWING's `skinswing-l71-resite`).** L71, the player at (80,208) in FIGHT for 300 ticks. On t63 three
+lavarunners are removed and the game's `lavarunner@64,192` stays at y 203.303. OFF the model moves it to 204.467; ON it
+reproduces the whole tape at 0 px. The other three SKINSWING tapes: ON = OFF = the game.
+
+**Trap candidates.**
+- `World.add`/`remove` are DEFERRED in FlashPunk. A body leaving the world mid-frame is still in its type lists for
+  every later collide that frame, and a body added mid-frame does not update until the next. The shield boss and the
+  totem already modelled the remove half (`removeRequested`); the chasers did not.
+- The forecast's corpses never fade (its destroy branch steps only a BobSoldier's), so OFF the FORECAST agreed with the
+  game on the removal tick and the LIVE step did not. A mirror that "agrees" may be agreeing for another reason.
+- `addUpdate` PREPENDS: the update order is the REVERSE of the add order (the model already reversed the `.oel` order;
+  the brief's "add order" was wrong).
+
+### Seedling fidelity SLOWFIX — the Lights sortie portfolio (`lightsSortiePortfolio`, OFF); the L15 post-chest walk is a hold seam (`run.stepHeldFrames`)
+
+Planner `seedling-fidelity-planning-11`, wave 27. The report is `CC/docs/cloud-reports/seedling-fidelity-slowfix.md`.
+
+**D-A — the L69 spear solve, 494 t ON vs 361 t OFF.** Not the forecast: the forecast equals the live run at every plan
+(both arms, every decision). ON and OFF part at t165 on two sorties of equal cost and equal hits (`left3`, back or stay)
+that only ON's spear rect admits, and the greedy keeps the first in its candidate order. The fight's length is chaotic in
+that choice: over ten arrival clocks (seam.time −24..+60) the spear solve runs 324..473 t and neither tie order wins on
+average (374 vs 367). With the switch ON the verb rolls the whole fight out in its forecast once per tie order
+(`LIGHTS_VERB.tieOrders`, `rolloutLightsFight`) and plays the shortest plan by plan, each still checked against the live
+run — never longer than the greedy, which is one of the rollouts (measured: min of the two on all twenty perturbed
+solves; the spear's mean 374 → 357, the sword's unchanged). Carrying the forecast across plans exposed one forecast fault
+the greedy never reads (it re-clones from the run): a spear press set the sword's `slashTimer`/`slashing`; `set spearing`
+sets neither (`Player.as:810-822`). At the committed staging: the spear 303 t (rollouts 421 | 239), recorded on p4g at
+0 px as `lights-solve-spear-portfolio`; the sword's rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+Two rollouts cost twice the greedy (both L69 sweep legs ran out the 90 s leg budget ON); two EXACT prunes ride the switch
+— a sortie that has landed nothing by its last test stops forecasting, and the first dodge unhit to the horizon
+(`Infinity`, unbeatable under `>`) ends the dodge search — the same answers everywhere measured, and the portfolio now
+costs less than the greedy alone (L69 legs done/done ×2).
+
+**D-B — the L15 post-chest walk (`l15-post-chest-walk`, model 115.05 / game 115.30 at t18).** Not the chest and not the
+walk's sub-pixel. In AP play the chest is the page's `apitem` {tag 1, look chest}, and the player ends the chest leg
+swimming at (152.6, 103.45). Played as ONE tape the two legs are the model's at 0 px on p4g (343 observations; the game
+reads 115.05). Played as the engine ships them — the chest leg `hold: true`, a hold, then the continuation — `game_time`
+and the player stay frozen through the hold but the pinned Swim channel runs (33 → 44 over 300 ms: `Bot.update` steps
+`Music.pinStep()` above the armed check), the boost window `soundPosition("Swim") < 0.1` shifts, and the walk reads
+115.30 at t18. `levelRun.stepHeldFrames(n)` steps the swim channel by a hold's frames (doors and ceremonies already carry
+theirs); with the game's 10 the held continuation is the model's at 0 px (`fixtures/hold-seam-witness/`,
+`fidelityHoldSeam.test.js`). Nothing calls it yet: the continuation that holds the game must hand it the frames.
+
+**Trap candidates.**
+- A greedy search's result is a SAMPLE of a chaotic function of its tie order: a rule change that flips one tie can move
+  the result by 30 %, and the comparison of two single solves says nothing about either rule. Measure a distribution
+  (perturbed starts) before reading a "regression" into one solve.
+- A forecast that is re-cloned from the live run at every decision hides any state it mis-steps across a decision
+  boundary; a rollout that carries it exposes the fault (the spear's dash timer).
+- The swim pin is a mixer, and a mixer does not stop for a bot hold: any seam that holds the game (a held end, a held
+  arrival) costs the swim channel its frames while `Game.time` stands still, so a divergence after a wet seam is
+  measured against the HELD frames, not the ticks.
+
+### Seedling fidelity HITLESS — the Tentacled Beast's fork prefers a variant that takes no hit (`tentacleHitlessFirst`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (⚖ the user, 2026-10-22: *"Flip now, hitless later"*). The report is
+`CC/docs/cloud-reports/seedling-fidelity-hitless.md`.
+
+**What it was.** BOSSFORK's fork (`execTentacleBeast`) played `TENTACLE_BEAST_POLICY_VARIANTS` in order and committed
+the FIRST that opened the mouth without a death. Variant 0 often takes a swipe where a later one takes none: on
+`tb-solve-s2`'s staging (seed 2) it swipes at t393 — and the game's own witness of that plan ends at `hits` 1 — and on
+the divergence sweep's L57 pit legs (492/493) the game takes one hit at t1257.
+
+**The model (switch ON).** Every variant is played on its own fork; `chooseTentacleVariant` (exported, pure) commits no
+hit first, then the fewest hits, then the fewest ticks, then list order. A hit stays acceptable when no variant is
+hitless (the door staging at seed 35: 0 of 5 hitless, one swipe committed). The verb's record gains `choice` {rule,
+variant, hits, tried, hitless} and each `tried` row its `hits`. Two consequences of playing all five, both ON only:
+- a fork whose play meets the whirlpool drown (`Player.drown()` from outside the player, which the run refuses by name)
+  rejects that variant as a death, where the throw ended the whole solve;
+- the verb SETTLES: once the mouth stands it holds out of every live whirlpool's keep-out until none is left (≤ 300 t;
+  the beast spawns none after its death). Measured: the faster hitless variant on leg 494 (L58 door → the mouth) left
+  one alive and the walk to the mouth drowned in it at t928.
+OFF: byte-identical.
+
+**Witnesses (p4g, 0 px; `probe-seedling-bosskills.mjs --record --dir=tentaclebeast-witness`).** The solver's ON answer
+from the route's pit arrival (`tb-hitless-pit`, survey step 110's staging), the L58 door's arrival (`tb-hitless-door`)
+and `tb-solve-s2`'s staging (`tb-hitless-s2`): the game takes no hit on any sampled tick, writes {57,0}, and leaves into
+L58; ON re-plans each witness's tape tick for tick.
+
+**Trap candidates.**
+- "Only deaths are rejected" plus "first that passes" is a ranking by list order: a search that stops at the first
+  acceptable answer inherits whatever order its list was written in.
+- Playing MORE candidates on forks meets MORE of the model's refused-by-name interactions (here the drown): a refusal
+  that was rare when one candidate was played becomes common, and a throw that is not a `SolverRefusal` ends the solve.
+- A verb's finish is not the room's: the mouth stands while the whirlpools the fight left still drown, so a faster fight
+  can hand the next walk a hazard the slower one had outlived.
+
+### Seedling fidelity TIMEDPASS — the solver walks past a hopping drill it cannot kill (`drillTimedPass`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (⚖ the user, 2026-10-23: *"Keep Fire; timed pass."*). The report is
+`CC/docs/cloud-reports/seedling-fidelity-timedpass.md`.
+
+**W0 — what a pass has to beat.** `Drill.update` hops one tile toward a player within `runRange` (48) on a clear "Solid"
+line, from "sit" only; awake, it reaches "sit" every **15** ticks ("drill" 7 + "undrill" 7, then the check — measured on
+the game, `drillkill-l28-fire-l26`: hops at t15, t30, t45), not the 27 a 60 fps frame count gives. `Enemy.hitPlayer` runs
+inside `super.update()`, ABOVE the hop, on every tick the drill is not dying and its `hitsTimer` is out: the 10x10 box
+(origin 5,5) against the player's 4x5 (origin 2,2). So there is no timing window in the contact — a pass is a POSITION
+question at each hop: a player 8-9 px off on the hop's axis is jumped over (the drill lands 7-8 px past, outside the boxes'
+7 px overlap; the game's 8.05 → 7.95), and a player walking away gains ~2 px a cycle (1.2 px a tick against 16 per 15).
+
+**The pass (switch ON).** Where DRILLKILL finds no killing weapon (the kill stays first), `execDrillTimedPass` SEARCHES a
+tick-by-tick walk to one of the cut's stances on the run's own forecast — the player by `previewStepper`, every drill by
+`corridorBodyForecast({drillPass: true})` (the CORRIDOR forecast, asked with `corridorBodyPricing` OFF; it gained `fork()`
+and `drills()`) — a beam over the nine key sets (400 states a tick, kept two per 8 px cell and drill configuration so that
+waiting survives rushing, ranked by the floor distance to the stance), with a 14-tick contact-free stand at the stance for
+the cut. One search per stance in the cut's own order (a joint beam aimed at the nearest stance chased the drills into a
+configuration the farther stance could not stand in). The found walk is certified on the segment's fork WITH the cut
+itself, then played; the cut starts from its stance (`drillPass` on the clear-tag record). Fire alone from L26: the pass to
+(152,56) past both drills, 121 t, the cut done at 132 t, 0 hits (~13 s of search: (152,88) and (152,72) have none).
+
+**D1 — the witnesses found a model gap (p4g, 0 px; `probe-seedling-timed-pass.mjs`, `fixtures/timedpass-witness/`).**
+L28's rope publishes its group to `fallrock@112,240`, whose frozen span (181 dead frames, one tape tick) the model resolved
+stepping the rock alone. On the game the drills' ENTITY update is frozen but their GRAPHIC is not, so each anim plays on to
+"sit"; the camera pans to the rock and holds (`Game.cameraTarget` every falling frame, `Game.shake = 30` on the landing)
+and returns after the release; and the release frame runs the drills live (the rock updates first and clears the freeze),
+so the drill parked under the stance hops onto it in the pull's own tick. Its contact waits for the returning camera
+(`Enemy.update`'s off-screen return): 2 ticks after the L26 goal, 1 after L25's. `dropRock` now steps those per frame
+behind the key (`view()` first: the camera reads the previous frame's target — the other order lands the contact a tick
+early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_WRITERS`.
+
+**Trap candidates.**
+- A frozen span is not a stopped clock: `Game.freezeObjects` gates an entity's `update()`, not its graphic, so every anim
+  (and anything an `endAnim` callback drives) runs through it — a body comes out of a ceremony in a different state than it
+  went in, and acts on the first live frame.
+- A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
+- "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
+  window is a 2 px band at each hop.

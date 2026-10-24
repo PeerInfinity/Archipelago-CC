@@ -1,0 +1,78 @@
+### probe-seedling-wasm-logical-links.mjs --only=B,R
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 25  FAIL rows: 0
+rc=0
+### probe-seedling-wasm-vanilla-map.mjs 
+### probe-seedling-wasm-vanilla-map.mjs 
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 0 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 23  FAIL rows: 0
+rc=0
+### probe-seedling-wasm-arrival-composites.mjs 
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 95  FAIL rows: 0
+rc=0
+### probe-seedling-wasm-midroom-replan.mjs --only=D
+INFO: 2 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 10  FAIL rows: 0
+rc=0
+### probe-seedling-restart-route.mjs --only=W,J
+INFO: 2 page error(s): [pageerror] A valid external Instance reference no longer exists. | [pageerror] A valid external Instance reference no longer exists.
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 18  FAIL rows: 0
+rc=0
+### probe-seedling-restart-warp.mjs --only=W,J
+INFO: 2 page error(s)
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 28  FAIL rows: 0
+rc=0
+### probe-seedling-wasm-adopt.mjs 
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 51  FAIL rows: 0
+rc=0
+### probe-seedling-obstacle-events.mjs --only=W,J
+INFO: 2 page error(s): [pageerror] A valid external Instance reference no longer exists. | [pageerror] A valid external Instance reference no longer exists.
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 22  FAIL rows: 0
+rc=0
+### probe-seedling-wasm-generated-playback.mjs 
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+INFO: 2 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 35  FAIL rows: 0
+rc=0
+### probe-seedling-loop-restart.mjs 
+INFO: 2 page error(s):
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 30  FAIL rows: 0
+rc=0
+### probe-seedling-seal-delivery.mjs --only=A
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 6  FAIL rows: 0
+rc=0
+BATTERY-DONE

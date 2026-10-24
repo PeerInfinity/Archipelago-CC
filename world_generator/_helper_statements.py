@@ -2,10 +2,9 @@
 Helper statement mixin — statement generators, expression dispatcher, and _indent.
 """
 
-import sys
 from typing import Any, Dict, Set, Optional
 
-from ._unknown_kind import unknown_kind
+from ._unknown_kind import unknown_helper, unknown_kind
 
 from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
@@ -555,16 +554,8 @@ class HelperStatementMixin:
                         arg_exprs = [self._generate_expression(a) for a in args]
                         return f'{func_name}(state, player, {", ".join(arg_exprs)})'
                     return f'{func_name}(state, player)'
-                else:
-                    # Unknown helper - return True as placeholder
-                    # This makes locations more accessible, which is appropriate for worldgen
-                    # since unknown helpers are typically progression checks
-                    print(
-                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
-                        f"using True (always accessible) as fallback",
-                        file=sys.stderr
-                    )
-                    return 'True'
+                # Unknown helper name: loud (rule-node F1); lossy mode keeps the placeholder
+                return unknown_helper('helper lambda', helper_name, 'True')
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
