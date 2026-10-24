@@ -1075,7 +1075,7 @@ export const CONTACT_FIDELITY = {
      * stance whose segment's NEXT goal is a `reach-exit` is certified only when the cut leaves that crossing's pass open
      * (the search tries further stands until one does). OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`.
      */
-    drillTimedPassExit: false,
+    drillTimedPassExit: true,
     /**
      * seedling-fidelity-residue D-B (wave 28) — A WHIRLPOOL'S DROWN IS A DEATH THE SOLVER SEES, AND ITS PULL IS PRICED
      * (`Puzzlements/Whirlpool.as:61-83`, `Player.as:1431-1444`). A live whirlpool (timer in [dies, live + dies)) writes
@@ -1092,7 +1092,7 @@ export const CONTACT_FIDELITY = {
      * 32x32 box), so the walk's probe and its AVOID / WAIT rungs see it. OFF: byte-identical.
      * `SEEDLING_WHIRLPOOL_DROWN=0|1`.
      */
-    whirlpoolDrown: false,
+    whirlpoolDrown: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
