@@ -62,8 +62,8 @@ export async function stagingAt(seam, { capture = DEFAULT_CAPTURE, request = 1 }
     return { staging: req.staging, levelSource: levelSourceFromAtlas(req.source.records) };
 }
 
-/** The lane walk (or `fixed`'s control) on the model at `seam`: `{ok, hits, perTick, ticks, waits, to}`. */
-export async function laneWalk(seam, { fixed = NaN, capture, request } = {}) {
+/** The lane walk (or `fixed`'s control; `stall` extra ticks under the corridor first) on the model at `seam`: `{ok, hits, perTick, ticks, waits, to}`. */
+export async function laneWalk(seam, { fixed = NaN, stall = 0, capture, request } = {}) {
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { staging, levelSource } = await stagingAt(seam, { capture, request });
     const run = createRunForStaging(staging, levelSource);
@@ -127,7 +127,7 @@ export async function laneWalk(seam, { fixed = NaN, capture, request } = {}) {
     };
     drive(176, 184, 2);                 // x first: a diagonal steps on the landing's own teleporter pad
     drive(176, 152, 1);
-    for (let i = 0; i < 4 && !done; i += 1) step([]);
+    for (let i = 0; i < 4 + stall && !done; i += 1) step([]);   // `stall`: extra still ticks under the corridor
     waitFor(T2, 'band2');
     drive(176, 0, 1, 60, true);
     for (let i = 0; i < 30 && !done && Math.abs(run.state.y - laneY()) > 1; i += 1) drive(run.state.x, 0, 99, 1, true);
