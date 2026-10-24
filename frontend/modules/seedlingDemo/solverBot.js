@@ -10995,12 +10995,26 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
      * previewed only if the pair is an opportunity, so a cell is previewed at most once per derivation.
      * ⛓ hammer-phase SF2 — once `previewCap` cells are previewed, an unknown cell's pair is asked OFF's question
      * instead: OFF's floor (`minTicksBetween`), then `opportunityAt`, no preview (the walk loop previews it, as OFF).
+     * ⛓ hammer-phase SFF2 — `etaSkipped` and `capSkipped` count only the pairs IN THE PRESS'S REACH (`inReach`,
+     * `opportunityAt`'s first test): a pair out of reach is no opportunity whatever its walk, so it is not a pair the
+     * measured ETA or the budget dropped. Counting it made both counters depend on how many cells were ASKED, not on
+     * the room: P2's box (`STRIKE_SCAN_COST`) asks fewer, and the far refusal of `pressKillCost`'s staging A read
+     * `etaSkipped` 9,149 with P2 ON against 16,202 OFF — the 7,053 between them every one out of reach, the 8,084 in
+     * reach equal. Counting only: the pair is refused either way, so no answer moves.
      */
+    const inReach = (c, mine) => !Number.isFinite(mine.x) || !Number.isFinite(mine.y) || !Number.isFinite(mine.right)
+        || !Number.isFinite(mine.bottom) || distanceRectPoint(c.x, c.y, mine) <= press.reach;
     const measuredPair = (i, c, mine) => {
         const known = walks.get(c);
-        if (known !== undefined && walkRefuses(known, i)) { etaSkipped += 1; return false; }
+        if (known !== undefined && walkRefuses(known, i)) {
+            if (inReach(c, mine)) etaSkipped += 1;
+            return false;
+        }
         if (known === undefined && scanned >= previewCap) {
-            if (i - 1 < minTicksBetween(run.state, c)) { capSkipped += 1; return false; }
+            if (i - 1 < minTicksBetween(run.state, c)) {
+                if (inReach(c, mine)) capSkipped += 1;
+                return false;
+            }
             return opportunityAt(i, c, mine);
         }
         if (!opportunityAt(i, c, mine)) return false;

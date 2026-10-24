@@ -372,11 +372,13 @@ describe('strikeScanCost (P2) — derivations on L40 (C1\'s staging A), P2 ON ag
 
     /**
      * ⛓ hammer-phase SFF — the same three derivations with the strike floor at its shipped ON. P2 keeps every answer
-     * (the cells, `unreachable`, the press ticks). ⚠ It does NOT keep `etaSkipped` on the far refusal (measured 9,149
-     * with P2 ON against 16,202 OFF): the cells P2's box skips are never asked the measured ETA, so they are not counted
-     * as its skips. That counter is a refusal's diagnostic, not an answer; it is named here, not hidden.
+     * (the cells, `unreachable`, the press ticks). ⛓ hammer-phase SFF2 — and now every count too: SFF measured the far
+     * refusal's `etaSkipped` 9,149 with P2 ON against 16,202 OFF, because the counter counted pairs out of the press's
+     * reach and P2's box asks fewer of them (the 7,053 between them every one out of reach, the 8,084 in reach equal).
+     * `deriveStrike` counts only the pairs in reach (`inReach`), so the whole refusal is P2-invariant.
      */
-    it('⛓ the strike floor ON: P2 keeps the same answers; only the far refusal\'s `etaSkipped` count moves', () => {
+    it('⛓ the strike floor ON: P2 keeps the same answers and the same counts (the far refusal\'s `etaSkipped` 8,084 '
+        + 'both ways)', () => {
         const staging = view();
         const derivations = (on) => withPressKillCost(true, () => withStrikeScanCost(on, () => {
             const run = createRunForStaging(staging, atlasLevelSource());
@@ -387,13 +389,12 @@ describe('strikeScanCost (P2) — derivations on L40 (C1\'s staging A), P2 ON ag
         }));
         const on = derivations(true);
         const off = derivations(false);
-        const answers = (d) => JSON.stringify(d, (k, v) => (k === 'etaSkipped' ? undefined : v));
-        expect(answers(on)).toBe(answers(off));
+        expect(JSON.stringify(on)).toBe(JSON.stringify(off));
         expect(on.first.cell).toEqual({ x: 728, y: 680 });
         expect(on.again.cell).toEqual({ x: 728, y: 680 });
         expect(on.far.cell).toBe(null);
         expect(on.far.unreachable).toBe(off.far.unreachable);
-        expect([on.far.etaSkipped, off.far.etaSkipped]).toEqual([9149, 16202]);
+        expect([on.far.etaSkipped, off.far.etaSkipped]).toEqual([8084, 8084]);
     }, 90_000);
 });
 

@@ -5758,9 +5758,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 10
+        "solverBot.js": 11
       },
-      "sites": 10,
+      "sites": 11,
       "seen": "static",
       "via": [
         "import"
@@ -5877,11 +5877,11 @@
         "botDriverV2.js": 1,
         "lavaBossPolicy.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 18,
+        "solverBot.js": 19,
         "strikePolicy.js": 2,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 24,
+      "sites": 25,
       "seen": "static",
       "via": [
         "import"
