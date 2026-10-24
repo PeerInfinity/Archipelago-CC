@@ -18,9 +18,13 @@
  *
  * Mutants (predicted first; copy + edit + run + restore), the results in the report:
  *   a1  `execDrillTimedPassExit` not called                     → the two ON exit rows red (the gate refusal returns)
+ *                                                                  (measured: those two + both witnesses' re-plans, 4 red)
  *   a2  the cut's certificate ignores the way out (`accept` null) → the L25 rows red: the first stand (59 t) is the one
- *                                                                  the release dooms, so the exit refuses
- *   a3  the search's crossing accepts any teleporter              → the L25-door row red (the pass crosses to L26)
+ *                                                                  the release dooms, so the exit refuses (measured: 6
+ *                                                                  red — those, the re-plans, and both L26 wordings)
+ *   a3  the search's crossing accepts any teleporter              → predicted the L25-door row red; MEASURED: SURVIVES —
+ *                                                                  no L28 pass reaches another door first, and the fork's
+ *                                                                  certificate checks the level anyway (named)
  *
  * D-B — WHIRLPOOLS IN THE WALK (`CONTACT_FIDELITY.whirlpoolDrown`, OFF). `Whirlpool.as:61-83`: a LIVE whirlpool (timer in
  * [dies, live + dies) after its decrement) writes the player's position whenever the player's box overlaps its 32x32
@@ -38,9 +42,10 @@
  * Measured (the HITLESS seed sweep, 1..40, door + s2 stagings): with `tentacleHitlessFirst` OFF every seed whose walk
  * threw the drown now SOLVES with no death; at the defaults (HITLESS ON, the settle) nothing moves.
  *
- * Mutants (D-B): b1 the drown throws again (the transcription dropped) → the ON drown rows and the seed-15 solve red;
- * b2 `whirlpoolDanger` returns nothing → seed 15 REFUSES "DROWNED in whirlpool#78" (the walk's refusal by name, no
- * re-plan); b3 the DODGE arm's stall one tick short → seed 15 refused (the stalled walk still probes the pull).
+ * Mutants (D-B): b1 the drown throws again (the transcription dropped) → predicted the ON witness row and the seed-15
+ * solve red; MEASURED: the witness row alone (the priced walk never meets the pull); b2 `whirlpoolDanger` returns
+ * nothing → seed 15 REFUSES "DROWNED in whirlpool#78" (the walk's refusal by name, no re-plan; as predicted, with the
+ * pricing row: 2 red); b3 the DODGE arm's stall one tick short → seed 15 refused (as predicted, 1 red).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync, existsSync } from 'node:fs';
