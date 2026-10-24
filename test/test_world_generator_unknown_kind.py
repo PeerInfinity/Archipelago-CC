@@ -8,7 +8,7 @@ EntranceAccessRuleCall, group_count, (AST_)weighted_count_true, HasGroup(Unique)
 import unittest
 
 from world_generator._helper_codegen import HelperCodeGenerator
-from world_generator._unknown_kind import UnknownRuleKindError, lossy_codegen
+from world_generator._unknown_kind import UnknownHelperNameError, UnknownRuleKindError, lossy_codegen
 from world_generator.rule_codegen import RuleCodeGenerator
 
 UNKNOWN_RB = {'rule': 'NoSuchKind_r2a'}
@@ -126,3 +126,104 @@ class TestR2bHelperBodies(unittest.TestCase):
         wrapped = {'rule': 'AST_no_such_kind_r2b', 'args': {'_original_ast_type': 'no_such_kind_r2b'}}
         with self.assertRaisesRegex(UnknownRuleKindError, 'no_such_kind_r2b'):
             HelperCodeGenerator('Test')._generate_expression(wrapped)
+
+
+def _world_rules(exit_rule, dungeons=None) -> dict:
+    """A two-region rules file: Menu -> Room through ``exit_rule``, one location in Room."""
+    rules = {
+        'schema_version': 3, 'game_name': 'F1 Fixture', 'game_directory': 'f1_fixture',
+        'archipelago_version': '0.0.0', 'generation_seed': 1, 'seed_name': 'AP_1',
+        'player_names': {'1': 'Player1'},
+        'regions': {'1': {
+            'Menu': {'name': 'Menu', 'locations': [],
+                     'exits': [{'name': 'Go', 'connected_region': 'Room', 'access_rule': exit_rule}]},
+            'Room': {'name': 'Room', 'exits': [], 'locations': [
+                {'name': 'Prize', 'id': 1, 'access_rule': {'rule': 'True_'}}]}}},
+        'start_regions': {'1': {'default': ['Menu'], 'available': []}},
+        'items': {'1': {'Key': {'name': 'Key', 'id': 1, 'groups': [], 'classification': 'progression',
+                                'type': None, 'max_count': 1}}},
+        'item_groups': {'1': []}, 'itempool_counts': {'1': {'Key': 1}},
+        'world': {'1': {'game': 'F1 Fixture'}}, 'helpers': {},
+        'game_info': {'1': {'completion_condition': {'type': 'constant', 'value': True}}},
+    }
+    if dungeons is not None:
+        rules['dungeons'] = {'1': dungeons}
+    return rules
+
+
+class TestUnknownHelperName(unittest.TestCase):
+    """rule-node F1: a helper NAME with no definition is loud too, through the same --lossy switch.
+
+    It used to become ``True_()`` / ``'True'`` with only a stderr print, so a strict run exited 0
+    with a silently wrong world (9 committed presets: their helper bodies live in JS only).
+    """
+
+    UNKNOWN_RB_HELPER = {'rule': 'no_such_helper_f1', '_original_ast_type': 'helper', 'args': []}
+    UNKNOWN_AST_HELPER = {'type': 'helper', 'name': 'no_such_helper_f1', 'args': []}
+
+    def test_every_site_raises_naming_the_helper(self) -> None:
+        sites = {
+            'rule helper': lambda: RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_AST_HELPER),
+            'rule_builder helper': lambda: RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_RB_HELPER),
+            'helper body': lambda: HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_AST_HELPER),
+            'helper lambda': lambda: HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_RB_HELPER),
+        }
+        for site, convert in sites.items():
+            with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'") as caught:
+                convert()
+            self.assertEqual((caught.exception.site, caught.exception.name), (site, 'no_such_helper_f1'))
+            self.assertIsInstance(caught.exception, UnknownRuleKindError)  # one except covers both
+
+    def test_lossy_keeps_the_placeholder_and_lists_it_with_the_kinds(self) -> None:
+        with lossy_codegen() as record:
+            self.assertEqual(RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_RB_HELPER), 'True_()')
+            self.assertEqual(HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_AST_HELPER), 'True')
+            RuleCodeGenerator('Test')._convert_rule(UNKNOWN_AST)
+        self.assertEqual(record, {'rule_builder helper:helper no_such_helper_f1': 1,
+                                  'helper body:helper no_such_helper_f1': 1,
+                                  'rule dispatch:no_such_kind_r2a': 1})
+
+    def _generate(self, rules: dict, lossy: bool):
+        import json
+        import tempfile
+        from pathlib import Path
+
+        from world_generator.generator import WorldGenerator
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(__import__('shutil').rmtree, tmp, True)
+        path = tmp / 'rules.json'
+        path.write_text(json.dumps(rules), encoding='utf-8')
+        out = tmp / ('lossy' if lossy else 'strict')
+        generator = WorldGenerator(str(path), output_dir=str(out), force=True, lossy=lossy)
+        generator.generate()
+        files = {p.relative_to(out).as_posix(): p.read_bytes()
+                 for p in sorted(out.rglob('*')) if p.is_file() and '__pycache__' not in p.parts}
+        return generator, files
+
+    def test_a_world_fails_strict_naming_the_game_and_lists_it_lossy(self) -> None:
+        rules = _world_rules(self.UNKNOWN_RB_HELPER)
+        with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'.*game 'F1 Fixture'"):
+            self._generate(rules, lossy=False)
+        generator, files = self._generate(rules, lossy=True)
+        self.assertEqual(generator.lossy_placeholders, {'rule_builder helper:helper no_such_helper_f1': 1})
+        self.assertIn(b'True_()', files['Rules.py'])
+
+    def test_a_boss_defeat_rule_no_longer_falls_back_to_true_silently(self) -> None:
+        # _template_rules caught every exception there and wrote `return True`
+        dungeons = {'Keep': {'name': 'Keep', 'regions': ['Room'], 'medallion_check': None,
+                             'bosses': {'None': {'name': 'Ogre', 'defeat_rule': self.UNKNOWN_AST_HELPER}}}}
+        rules = _world_rules({'rule': 'True_'}, dungeons=dungeons)
+        with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'"):
+            self._generate(rules, lossy=False)
+        generator, _ = self._generate(rules, lossy=True)
+        self.assertEqual(generator.lossy_placeholders, {'helper body:helper no_such_helper_f1': 1})
+
+    def test_a_world_with_no_unknown_name_generates_the_same_bytes_strict_and_lossy(self) -> None:
+        rules = _world_rules({'rule': 'Has', 'args': {'item_name': 'Key'}})
+        strict_gen, strict = self._generate(rules, lossy=False)
+        lossy_gen, lossy = self._generate(rules, lossy=True)
+        self.assertEqual(lossy_gen.lossy_placeholders, {})
+        self.assertEqual(sorted(strict), sorted(lossy))
+        for name in strict:
+            self.assertEqual(strict[name], lossy[name], name)
+        self.assertIn(b"Has('Key', 1)", strict['Rules.py'])
