@@ -1227,7 +1227,7 @@ export const CONTACT_FIDELITY = {
      * ⚠ NO GAME WITNESS: no AP_1 recording has a drill, wallflyer or turret removed beside a later "Enemy" mover
      * sweeping into its box (named in the MISCRES report). `SEEDLING_NON_CHASER_REMOVAL_BLOCKS=0|1`.
      */
-    nonChaserRemovalBlocks: false,
+    nonChaserRemovalBlocks: true,
     /**
      * fidelity MISCRES D1 (wave 29) — THE CHASER FORECAST FADES A CORPSE. `chaserForecastNow` cloned a live corpse
      * (`destroy`) or a body in its "die" (`dying`) and never stepped either on: only a BobSoldier's corpse faded, so
@@ -1239,7 +1239,7 @@ export const CONTACT_FIDELITY = {
      * the forecast taken at t58: OFF it leaves the live run, which is the game at 0 px, by 1.164 px at t64 and
      * 2.742 px at t68; ON it equals it). `SEEDLING_FORECAST_CORPSE_FADE=0|1`.
      */
-    forecastCorpseFade: false,
+    forecastCorpseFade: true,
     /**
      * fidelity MISCRES D3 (wave 29) — THE PHASE ARM'S FIRST STALL IS THE WALK'S START, IN A ROOM WITH IGNEOUS TILES
      * (`solverBot`'s dodge rung, LADDER2's phase arm). The arm stalls at the doorstep of a lava chain or beam tower and
@@ -1254,7 +1254,7 @@ export const CONTACT_FIDELITY = {
      * stall candidate (the doorstep stays first, so a short doorstep stall that clears is still the answer); every other
      * room is unchanged. OFF: byte-identical. `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`.
      */
-    phaseDodgeArrivalStall: false,
+    phaseDodgeArrivalStall: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
