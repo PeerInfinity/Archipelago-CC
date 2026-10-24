@@ -152,5 +152,21 @@ yachtdice and yugioh06 (smz3 needed it already). All but raft keep the helper bo
 `gameLogic` module. raft is an exporter gap: a LogicMixin's `self.has(item, player)` exports as a
 helper named `has`. Each one is on `worldgen_test_exclude_list` with that reason.
 
+**As built (F4, 2026-10-23): an `if_statement` with an undetermined test is undetermined.** It used
+to run neither branch and carry on, so the function answered with whatever its later statements
+said. Now the enclosing function's answer is undetermined (the `if` returns `undefined` as a
+return), and a data helper whose body gives that falls through to its JS fallback as before. Two
+cases still decide, because both branches would leave the answer the same: identical branches (that
+branch runs), and branches with no effect at all (no return, break, continue or assignment at any
+depth: skipped, as before; a nested loop's variable binding is tolerated). Determined tests behave
+exactly as before (`shared/ruleEngine/ifStatementUndetermined.test.js`). Measured over every
+committed preset × player, with an empty inventory and with the whole item pool: only tunic reaches
+an undetermined test. Its `has_combat_reqs("Swamp")` with the whole pool answered `true` before,
+because `has_required_stats(None)` skipped all four stat checks and answered the money check alone
+(Python would raise there). It is now undetermined. Reachability is identical everywhere, because
+that call's only use is `Or(has_combat_reqs("Swamp"), Not(0))`, which is true with combat logic off.
+The rule-tree display (`commonUI.js`) never evaluates statements. It now reads the condition from
+`test`, the field the exporter writes; before, it read `condition` and so never showed one.
+
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.
