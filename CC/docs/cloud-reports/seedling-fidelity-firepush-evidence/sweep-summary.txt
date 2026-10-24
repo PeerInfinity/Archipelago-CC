@@ -1,0 +1,14 @@
+A1 62 {'done': 43, 'failed': 16, 'timeout': 2, 'skipped': 1}
+A2 62 {'done': 43, 'failed': 16, 'timeout': 2, 'skipped': 1}
+B1 62 {'done': 44, 'failed': 15, 'timeout': 2, 'skipped': 1}
+B2 62 {'done': 43, 'failed': 17, 'timeout': 1, 'skipped': 1}
+785 A1/A2/B1/B2 ['failed', 'failed', 'done', 'failed'] level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48
+    A1 the solver ran out of 640, then 2560 work units on its held 
+    A2 the solver ran out of 640, then 2560 work units on its held 
+    B1 
+    B2 the solver ran out of 640, then 2560 work units on its held 
+404 A1/A2/B1/B2 ['timeout', 'timeout', 'timeout', 'failed'] level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+    A1 
+    A2 
+    B1 
+    B2 the solver declined Level 040 - Chest in level 40 (refusal):

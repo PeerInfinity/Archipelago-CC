@@ -1299,7 +1299,7 @@ export const FIRE_ARM_POLICY = Object.freeze({
  * all. Including it and then filtering would make the audit's `live` list
  * disagree with what the game dispatches.
  */
-export function fireRespondersIn(world, player, { pushables: live = null } = {}) {
+export function fireRespondersIn(world, player, { pushables: live = null, turrets = null } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`fireRespondersIn: level ${world.level} was built without `
             + `the "blocking" role (${(world.roles ?? []).join(', ') || 'none'}), so its `
@@ -1308,20 +1308,30 @@ export function fireRespondersIn(world, player, { pushables: live = null } = {})
     const targets = [];
     for (const r of world.pressResponders) {
         let rect = r.rect;
+        let origin = { x: r.originX ?? 0, y: r.originY ?? 0 };
         if (live && r.pushableId && live.has(r.pushableId)) {
             const now = live.get(r.pushableId);
             if (now.removed) continue;
             rect = now.rect;
+        }
+        // ⛓ fidelity FIREPUSH: an ice turret is tested where it is NOW (its corpse moves; `fireLiveTurretReach`).
+        if (CONTACT_FIDELITY.fireLiveTurretReach && turrets && r.as3 === 'IceTurret') {
+            const now = turrets.get(`${r.tag}@${r.x},${r.y}`);
+            if (now) {
+                if (now.removed) continue;
+                rect = now.rect;
+                origin = { x: now.x - now.rect.x, y: now.y - now.rect.y };
+            }
         }
         targets.push({
             ...r,
             rect,
             // `fireHits` wants the raw entity fields, because which origin
             // gets subtracted from which coordinate is the whole finding.
-            x: rect.x + (r.originX ?? 0),
-            y: rect.y + (r.originY ?? 0),
-            originX: r.originX ?? 0,
-            originY: r.originY ?? 0,
+            x: rect.x + origin.x,
+            y: rect.y + origin.y,
+            originX: origin.x,
+            originY: origin.y,
             // ⚠ FROM THE EDGES, not from `rect.w`. A `RopeStart`'s width is
             // `_xend - _x + 16` — computed from its last `<node>` — and the
             // census's rect carries `right` without a `w`. `fireHits`
@@ -1373,8 +1383,8 @@ export const FIRE_HITABLE_TYPE_BY_ARM = Object.freeze({
  * `auditPress` for the fire weapon: everything the rect reaches, split by
  * what this rung does with it.
  */
-export function auditFire(world, player, { pushables = null } = {}) {
-    const live = fireRespondersIn(world, player, { pushables });
+export function auditFire(world, player, { pushables = null, turrets = null } = {}) {
+    const live = fireRespondersIn(world, player, { pushables, turrets });
     const verdict = (r) => FIRE_ARM_POLICY[r.as3];
     const refused = live.filter((r) => (verdict(r)?.policy ?? 'refused') === 'refused');
     const modelled = live.filter((r) => verdict(r)?.policy === 'modelled');
