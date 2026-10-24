@@ -141,7 +141,7 @@ describe('fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL record
         const on = stamps(ONK);
         expect(on.length).toBe(2);
         for (const s of on) expect(s.stamp).toBe(s.t);
-        expect(stamps(DRILLKILL_SWITCHES).map((s) => s.stamp)).toEqual([null, null]);
+        expect(stamps({ ...DRILLKILL_SWITCHES, nonChaserRemovalBlocks: false }).map((s) => s.stamp)).toEqual([null, null]);
     }, 120000);
 });
 
