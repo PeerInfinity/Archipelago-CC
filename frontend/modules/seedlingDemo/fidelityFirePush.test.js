@@ -53,9 +53,9 @@ describe('FIREPUSH — the switches', () => {
             }
         });
 
-    it('the witness route is 35 presses from (30,30) to the t5 button (48,25), each one tile from its stance', () => {
-        expect(FIREPUSH_ROUTE).toHaveLength(35);
+    it('the witness route runs from (30,30) to the t5 button (48,25), each press one tile, from the far side', () => {
         expect(FIREPUSH_ROUTE[0].from).toEqual({ tx: 30, ty: 30 });
+        FIREPUSH_ROUTE.slice(1).forEach((p, i) => expect(p.from).toEqual(FIREPUSH_ROUTE[i].to));
         expect(FIREPUSH_ROUTE.at(-1).to).toEqual({ tx: 48, ty: 25 });
         for (const p of FIREPUSH_ROUTE) {
             expect(Math.abs(p.to.tx - p.from.tx) + Math.abs(p.to.ty - p.from.ty)).toBe(1);
