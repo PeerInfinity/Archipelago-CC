@@ -265,7 +265,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
             fireBlockPulseShove: false,
             fireLiveTurretReach: false,
-            pulserPublishLag: false });
+            pulserPublishLag: false,
+            // ⛓ fidelity CORPSEBUMP (wave 29): the block's glide and the corpse's slide see the stepped bodies — shipped OFF.
+            blockSweepBodies: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -4567,6 +4567,27 @@ export function createLevelRun({
         return st.byId.size === 0 ? null : spinnerRects(st);
     };
     /**
+     * ⛓ fidelity CORPSEBUMP D1 (`CONTACT_FIDELITY.blockSweepBodies`) — the "Enemy" bodies a `mover`'s sweep consults beyond
+     * the spinners, as `{id, kind, rect}`:
+     *   `block`  a pushable's glide: every live bridged chaser (none under `noclip`/`noDamage`, where `stepChasersNow`
+     *            does not run and a chaser has no position) and every unremoved ice turret, alive or a corpse (a live one
+     *            is `type = "Enemy"`, which `collidesSolid`'s turret arm — the PLAYER's list — rightly skips);
+     *   `corpse` a turret corpse's slide: the chasers only (the turret arm and the spinners are its caller's).
+     * A chaser counts until `removed` (`Mobile.death`'s fade keeps the body in the type list; `chaserRectsNow`).
+     */
+    const blockSweepBodiesNow = (mover) => {
+        const out = [];
+        if (!noclip && !noDamage) {
+            for (const c of chaserRectsNow() ?? []) out.push({ id: c.id, kind: 'chaser', tag: c.tag, rect: c.rect });
+        }
+        if (mover === 'block') {
+            for (const [id, t] of turretStateFor(level)) {
+                if (!t.removed) out.push({ id, kind: 'turret', tag: 'iceturret', rect: iceTurretRect(t) });
+            }
+        }
+        return out.length === 0 ? null : out;
+    };
+    /**
      * ⛓⛓⛓ R8 SLICE 6: the press census's join — `id -> {rect, removed}` over
      * EVERY body this visit built, the drained ones included.
      *
@@ -5846,6 +5867,13 @@ export function createLevelRun({
         // blocks — see the step site), so these are this tick's positions,
         // which is exactly what the game's block collides against.
         const spinners = spinnerRectsNow();
+        /**
+         * ⛓ fidelity CORPSEBUMP D1 (`CONTACT_FIDELITY.blockSweepBodies`, OFF): the OTHER "Enemy" bodies the run steps —
+         * the bridged chasers (unstepped under `noDamage`, so none then) and the ice turrets, alive or dead. Both update
+         * AFTER the blocks (`Game.as:2276-2301` vs `:2382-2384`, `addUpdate` prepends), so these are where the previous
+         * tick left them: this ctx is built before either is stepped. OFF: null, never asked.
+         */
+        const sweepBodies = CONTACT_FIDELITY.blockSweepBodies ? blockSweepBodiesNow('block') : null;
         // ⚠ BUILT ONCE PER TICK, NOT PER PROBE. `collides` is called for
         // every 1 px step of every block on both axes, and `liveSolidOpts`
         // rebuilds eight per-visit views — hoisting it is the difference
@@ -5884,6 +5912,11 @@ export function createLevelRun({
                 if (spinners) {
                     for (const s of spinners) {
                         if (rectsOverlap(rect, s.rect)) return { tag: 'Enemy', id: s.id, spinner: true };
+                    }
+                }
+                if (sweepBodies) {
+                    for (const b of sweepBodies) {
+                        if (rectsOverlap(rect, b.rect)) return { tag: 'Enemy', id: b.id, body: b.kind };
                     }
                 }
                 // The player, at the position the PREVIOUS tick left — which
@@ -13885,6 +13918,8 @@ export function createLevelRun({
         }
     }
 
+    /** ⛓ fidelity CORPSEBUMP D1: a puncher's reach in one update, px — `moveSpeed` 1 plus knockback headroom (a bound). */
+    const CORPSE_PUNCHER_PAD = 4;
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -13917,7 +13952,32 @@ export function createLevelRun({
                     // ⛓ R4-swim D2: a CORPSE's `solids` gains "Enemy"
                     // (`IceTurret.as:148`), so a chaser in its slide would stop
                     // it — an arm no witness has measured. Refused by name.
-                    if (t.dead && !noclip && !noDamage) {
+                    if (t.dead && CONTACT_FIDELITY.blockSweepBodies) {
+                        /**
+                         * ⛓ fidelity CORPSEBUMP D1 (ON): the corpse's `solids` carries "Enemy", so the bodies
+                         * stop it. A spinner updates FIRST (`Game.as:2416`) — this tick's position, which
+                         * `spinnerRectsNow` is here; a Bob / BobSoldier / Flyer / Bulb is added BEFORE the turret
+                         * (`:2276-2288` vs `:2296`) and so updates AFTER it — the previous tick's, which is what the
+                         * chaser record still holds. A `Puncher` (`:2301`) updates BEFORE it, a position this model
+                         * steps later: refused by name within `CORPSE_PUNCHER_PAD` px rather than read a tick late.
+                         */
+                        if ((spinnerRectsNow() ?? []).some((r) => rectsOverlap(b, r.rect))) return true;
+                        for (const c of blockSweepBodiesNow('corpse') ?? []) {
+                            if (c.tag === 'puncher') {
+                                const p = CORPSE_PUNCHER_PAD;
+                                if (rectsOverlap(b, { x: c.rect.x - p, y: c.rect.y - p,
+                                    right: c.rect.right + p, bottom: c.rect.bottom + p })) {
+                                    throw new Error(`levelRun: the IceTurret corpse ${t.id} slides within `
+                                        + `${p} px of the puncher ${c.id} at tick ${ticksCompleted + 1} in level `
+                                        + `${level} — a Puncher updates BEFORE the turret (\`Game.as:2301\` vs `
+                                        + '`:2296`) and this model steps it after, so whether it stops the slide this '
+                                        + 'tick is not derivable here. Refused by name (fidelity CORPSEBUMP).');
+                                }
+                                continue;
+                            }
+                            if (rectsOverlap(b, c.rect)) return true;
+                        }
+                    } else if (t.dead && !noclip && !noDamage) {
                         const c = chaserRectsNow()?.find((r) => rectsOverlap(b, r.rect));
                         if (c) {
                             throw new Error(`levelRun: the IceTurret corpse ${t.id} slides `
@@ -19077,6 +19137,21 @@ export function createLevelRun({
          */
         get unfiredGrantLevels() { return unfiredGrantLevelsNow(); },
         get noDamage() { return noDamage; },
+        /**
+         * ⛓ fidelity CORPSEBUMP D1: the ids of the census bodies a `mover`'s sweep (`'block'` | `'corpse'`) consults
+         * beyond the spinners (`blockSweepBodiesNow`, removed bodies included so a census row is answered either way),
+         * or `null` with `CONTACT_FIDELITY.blockSweepBodies` OFF. `runFire`'s enemy-room refusals read it.
+         */
+        blockSweepBodyIds(mover) {
+            if (!CONTACT_FIDELITY.blockSweepBodies) return null;
+            const ids = new Set();
+            if (!noclip && !noDamage) for (const id of chaserStateFor(level).keys()) ids.add(id);
+            if (mover === 'block') for (const id of turretStateFor(level).keys()) ids.add(id);
+            // A `BombPusher` is `type = "Solid"` (`BombPusher.as:31`), static and immortal (`hit` is empty): a census
+            // solid both sweeps already meet through `collidesSolid`.
+            for (const id of bombPusherStateFor(level).keys()) ids.add(id);
+            return ids;
+        },
         /**
          * ⛓⛓⛓ R6 SLICE 3: THE DAMAGE LEDGERS.
          *
