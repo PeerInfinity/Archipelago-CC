@@ -1064,6 +1064,18 @@ export const CONTACT_FIDELITY = {
      * Fire from L25 89 → 70 t.
      */
     drillTimedPass: true,
+    /**
+     * seedling-fidelity-residue D-A (wave 28) — TIMEDPASS's PASS TO THE EXIT (`solverBot.execDrillTimedPassExit`). With
+     * `drillTimedPass` ON, Fire alone cuts L28's rope hit-free, but the rope's `FallRock` ceremony releases the drill
+     * parked under the stance ONTO it (TIMEDPASS D1), so the walk that follows refuses at its first gate ("the danger map
+     * forbids (151.87,55.81) — enemy:drill@128,96"), and from that state every continuation is hit (measured: 81 of 81
+     * two-tick key sequences). ON: (1) a `reach-exit` whose planned walk wakes a live stepped drill, in a run that holds no
+     * weapon that kills one, is SEARCHED as the pass is — the same beam, on the same forecast, with the goal the CROSSING
+     * (the stepper's transition through that teleporter) — certified on a fork, then played; and (2) a pass to a cut's
+     * stance whose segment's NEXT goal is a `reach-exit` is certified only when the cut leaves that crossing's pass open
+     * (the search tries further stands until one does). OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`.
+     */
+    drillTimedPassExit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1270,6 +1282,9 @@ if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FI
 // ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
+// ⛓ seedling-fidelity-residue D-A: `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '1') CONTACT_FIDELITY.drillTimedPassExit = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '0') CONTACT_FIDELITY.drillTimedPassExit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

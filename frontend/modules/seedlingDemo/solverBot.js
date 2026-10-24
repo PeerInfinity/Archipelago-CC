@@ -18669,6 +18669,11 @@ export const DRILL_TIMED_PASS = Object.freeze({
     stall: 100,
     /** …and this many ticks after its first arrival with no arrival whose stand holds: three of a drill's 15-tick cycles. */
     arrivalStall: 45,
+    /**
+     * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`): the found walks a search's `accept` may pass over before it
+     * refuses (each one a fork certificate with the exit's pass behind it).
+     */
+    acceptMax: 24,
 });
 
 /** The nine key sets a pass is searched over, in a fixed order (the beam's ties keep it). */
@@ -18737,8 +18742,17 @@ function drillPassRowsRefused(rows) {
  * SEARCH a no-contact walk from the run's state to `stance` with `tail` contact-free standing ticks there (see
  * `DRILL_TIMED_PASS`). Pure: the run is only read (its forecast and stepper). Returns `{keys, ticks, expanded}` or
  * `{why, expanded}`.
+ *
+ * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`; both options absent OFF, so the search is byte-identical):
+ *   · `cross` `{level, index}` — the goal is the CROSSING, not a stand: a child whose stepped state carries the
+ *     stepper's `transition` through teleporter `index` to `level` ends the walk on that tick
+ *     (the drills update against the tick before it, which its parent's forecast step already read). `stances` is
+ *     then the one door centre the distance field aims at; any other crossing still refuses.
+ *   · `accept(keys, i)` — asked of each walk the search would return (a stand that holds, or a crossing); a non-null
+ *     answer (why) passes it over and the search runs on, at most `acceptMax` times. The cut's certificate with the
+ *     exit's pass behind it (`execDrillTimedPass`).
  */
-function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
+function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS, { cross = null, accept = null } = {}) {
     const fc0 = run.corridorBodyForecast?.({ drillPass: true }) ?? null;
     if (fc0 === null) return { why: 'the run hands no drill forecast (no stepped drill, or noclip)', expanded: 0 };
     const stepper = run.previewStepper();
@@ -18751,9 +18765,24 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
     const h = (p) => Math.min(...[...active].map((i) => fields[i](p)));
     const at = (st) => [...active].find((i) => hasArrived(st, stances[i], DEFAULT_TOLERANCE)) ?? -1;
     const NONE = DRILL_PASS_KEYS[0];
+    const crossed = (q) => cross !== null && q.transition?.kind === 'teleporter'
+        && q.transition.to_level === cross.level && q.transition.index === cross.index;
+    const passed = [];
+    // a walk passed over is not asked again in the same (8 px cell, drill configuration): its way out is the same
+    const passedGroups = new Set();
+    const accepted = (keys, i, group = null) => {
+        if (accept === null) return true;
+        if (passed.length >= P.acceptMax || (group !== null && passedGroups.has(group))) return false;
+        const why = accept(keys, i);
+        if (why === null) return true;
+        passed.push(why);
+        if (group !== null) passedGroups.add(group);
+        return false;
+    };
     const stepSafe = (st, k) => {
         try {
             const q = stepper(st, k);
+            if (crossed(q)) return q;
             return drillPassStateRefused(q, inventory) ? null : q;
         } catch (e) {
             if (!(e instanceof PhysicsV2Error)) throw e;
@@ -18788,6 +18817,11 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
             for (const k of DRILL_PASS_KEYS) {
                 const st = stepSafe(n.st, k);
                 if (st === null) continue;
+                if (crossed(st)) {
+                    const keys = [...n.keys, k];
+                    if (accepted(keys, 0)) return { keys, ticks: keys.length, stance: 0, expanded, stalled, passed };
+                    continue;
+                }
                 const key = `${Math.round(st.x * 2)},${Math.round(st.y * 2)},${Math.round(st.vx * 10)},`
                     + `${Math.round(st.vy * 10)}|${dk}`;
                 if (next.has(key)) continue;
@@ -18814,15 +18848,26 @@ function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
         if (layer.length === 0) {
             return { why: `every walk meets a drill by search tick ${t + 1} (${deaths} state(s) contacted)`, expanded };
         }
-        const arrived = layer.map((n) => ({ n, i: at(n.st) })).filter((x) => x.i >= 0);
+        // (a crossing's goal is not a stand: no arrival is tracked, and its door never drops out)
+        const arrived = cross !== null ? [] : layer.map((n) => ({ n, i: at(n.st) })).filter((x) => x.i >= 0);
         for (const x of arrived) if (!firstArrival.has(x.i)) firstArrival.set(x.i, t);
-        const done = arrived.find((x) => tailHolds(x.n.st, x.n.fc, stances[x.i]));
-        if (done) return { keys: done.n.keys, ticks: done.n.keys.length, stance: done.i, expanded, stalled };
+        const groupOf = (n) => `${Math.floor(n.st.x / 8)},${Math.floor(n.st.y / 8)}|${drillKey(n.fc, false)}`;
+        const done = cross !== null ? undefined
+            : arrived.find((x) => tailHolds(x.n.st, x.n.fc, stances[x.i])
+                && accepted(x.n.keys, x.i, accept === null ? null : groupOf(x.n)));
+        if (done) {
+            return { keys: done.n.keys, ticks: done.n.keys.length, stance: done.i, expanded, stalled,
+                ...(accept !== null ? { passed } : {}) };
+        }
+        if (accept !== null && passed.length >= P.acceptMax) {
+            return { why: `${passed.length} found walk(s) passed over — ${passed.slice(0, 3).join(' | ')}`, expanded };
+        }
         for (const [i, t0] of firstArrival) {
             if (!active.has(i) || t - t0 < P.arrivalStall) continue;
             active.delete(i);
             stalled.push({ x: stances[i].x, y: stances[i].y, why: `walks arrive from search tick ${t0 + 1}, and none in `
-                + `${P.arrivalStall} ticks stands ${P.tail} ticks there contact-free` });
+                + `${P.arrivalStall} ticks stands ${P.tail} ticks there contact-free`
+                + `${passed.length > 0 ? ` with a way out (${passed.length} passed over: ${passed.at(-1)})` : ''}` });
             // the beam re-ranks on the stances left (its best distance is theirs from here)
             best = Infinity;
             bestAt = t;
@@ -18895,9 +18940,22 @@ function execDrillTimedPass(run, perTick, resolved, woken, ctx) {
     let found = null;
     // One search per stance, in the cut's own order (a joint beam aimed at the nearest stance chases the drills into a
     // configuration the farther stances cannot stand in — measured: L26's (152,56) pass, found alone at t121, is lost).
+    // ⛓ seedling-fidelity-residue D-A: the segment's next goal is a crossing — a stand is certified only with its pass.
+    const exitAfter = CONTACT_FIDELITY.drillTimedPassExit && typeof ctx.fork === 'function' ? (ctx.exitAfter ?? null)
+        : null;
     for (const a of stances) {
-        const r = searchDrillTimedPass(run, [{ x: a.x, y: a.y }], opts);
+        const accept = exitAfter === null ? null : (keys) => {
+            const f = ctx.fork();
+            if (f === null) return 'the fork stopped (deadline)';
+            return certifyDrillTimedPass(f, keys, resolved, a, ctx) ?? certifyExitAfterCut(f, exitAfter);
+        };
+        const r = searchDrillTimedPass(run, [{ x: a.x, y: a.y }], opts, DRILL_TIMED_PASS,
+            accept === null ? {} : { accept });
         if (!r.keys) { tried.push({ stance: { x: a.x, y: a.y }, why: r.why, expanded: r.expanded }); continue; }
+        if (accept !== null) {
+            found = { a, r, certified: true, exitAfter: { passedOver: r.passed.length } };
+            break;
+        }
         const f = typeof ctx.fork === 'function' ? ctx.fork() : null;
         const cert = f ? certifyDrillTimedPass(f, r.keys, resolved, a, ctx) : null;
         if (cert !== null) {
@@ -18941,6 +18999,91 @@ function execDrillTimedPass(run, perTick, resolved, woken, ctx) {
     return {
         verb: 'drill-pass', drills: woken.map((d) => d.id), stance: { ...found.a }, ticks: perTick.length - from,
         expanded: found.r.expanded, certified: found.certified, skipped: tried,
+        ...(found.exitAfter ? { exitAfter: found.exitAfter } : {}),
+    };
+}
+
+/**
+ * ⛓ seedling-fidelity-residue D-A — the cut's certificate, continued: on the fork `f` the certificate just cut on,
+ * the CROSSING's pass (`exitAfter` `{centre, cross}`, the segment's next `reach-exit`) is searched and played to its
+ * crossing with no hit. Null when it holds, else why. (TIMEDPASS D1: the rope's `FallRock` release can hop the drill
+ * parked under the stance onto it, and from there every continuation is hit — so a stand is worth only the way out it
+ * leaves.)
+ */
+function certifyExitAfterCut(f, exitAfter) {
+    const r = searchDrillTimedPass(f, [exitAfter.centre], solverPlanOpts(f, senseContacts(f)), DRILL_TIMED_PASS,
+        { cross: exitAfter.cross });
+    if (!r.keys) return `after the cut, no pass to the crossing to L${exitAfter.cross.level}: ${r.why}`;
+    return certifyExitPass(f, r.keys, exitAfter.cross);
+}
+
+/** Play a found crossing pass on `f` (a fork, or the run): null when it crosses to `cross` hit-free, else why. */
+function certifyExitPass(f, keys, cross) {
+    const h0 = (f.ledger('playerHits') ?? []).length;
+    for (let i = 0; i < keys.length; i += 1) {
+        const { transition } = f.advance(keys[i]);
+        if ((f.ledger('playerHits') ?? []).length !== h0) {
+            const h = (f.ledger('playerHits') ?? []).at(-1);
+            return `the player was hit at exit-pass tick ${i} (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''})`;
+        }
+        if (transition) {
+            return transition.to_level === cross.level && i === keys.length - 1 ? null
+                : `crossed to level ${transition.to_level} at exit-pass tick ${i} of ${keys.length}`;
+        }
+    }
+    return `the exit pass ended at (${f.state.x.toFixed(2)},${f.state.y.toFixed(2)}) without a crossing`;
+}
+
+/**
+ * ⛓ seedling-fidelity-residue D-A (`drillTimedPassExit`) — Executor: a `reach-exit` whose planned walk to the door
+ * wakes a live stepped drill, in a run that holds no weapon that kills one, is a TIMED PASS to the crossing: the
+ * pass's own search (`searchDrillTimedPass`, goal `cross`), certified on a fork (`ctx.fork`) and played on the run.
+ * Returns null where it does not apply (the walk then runs as before), the `{record, transition}` it played, or throws
+ * a `SolverRefusal` naming the drill (`obstacle: {kind: 'drill', id}`).
+ */
+function execDrillTimedPassExit(run, perTick, door, ctx) {
+    if (!(CONTACT_FIDELITY.drillTimedPassExit && CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive
+        && CONTACT_FIDELITY.drillMixedRooms)) return null;
+    if (liveDrills(run).length === 0 || drillKillWeapon(run) !== null) return null;
+    const opts = solverPlanOpts(run, senseContacts(run));
+    const walk = plannedWalkSamples(run, run.state, door.centre, opts) ?? [{ x: run.state.x, y: run.state.y },
+        door.centre];
+    const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
+    if (woken.length === 0) return null;
+    const from = perTick.length;
+    const cross = { level: door.teleporter.to, index: door.index };
+    const refuseExit = (why, extra = {}) => {
+        throw new SolverRefusal(`${ctx.what}: the walk to the door wakes [${woken.map((d) => d.id).join(', ')}], this run `
+            + `holds no weapon that kills a drill (FIRE CANNOT), and ${why}`,
+        { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, ...extra });
+    };
+    const r = searchDrillTimedPass(run, [door.centre], opts, DRILL_TIMED_PASS, { cross });
+    if (!r.keys) refuseExit(`no timed pass reaches the crossing — ${r.why}`);
+    const f = typeof ctx.fork === 'function' ? ctx.fork() : null;
+    const cert = f ? certifyExitPass(f, r.keys, cross) : null;
+    if (cert !== null) refuseExit(`the crossing's pass (${r.ticks} t) is not certified on the fork: ${cert}`);
+    const hitsBefore = (run.ledger('playerHits') ?? []).length;
+    let transition = null;
+    for (let i = 0; i < r.keys.length; i += 1) {
+        perTick.push(r.keys[i]);
+        ({ transition } = run.advance(r.keys[i]));
+        const hits = run.ledger('playerHits') ?? [];
+        if (hits.length !== hitsBefore) {
+            const h = hits.at(-1);
+            refuseExit(`the crossing's pass was HIT at pass tick ${i} (run tick ${run.ticksCompleted}, source `
+                + `${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) — the forecast's walk did not hold on the run`,
+            { perTick: [...perTick] });
+        }
+        if (transition) break;
+    }
+    if (!transition || transition.to_level !== cross.level) {
+        refuseExit(`the crossing's pass ended ${transition ? `crossing to level ${transition.to_level}` : 'without a '
+            + 'crossing'} on the run`, { perTick: [...perTick] });
+    }
+    return {
+        transition,
+        record: { verb: 'drill-pass-exit', drills: woken.map((d) => d.id), to: cross.level, ticks: perTick.length - from,
+            expanded: r.expanded, certified: f !== null },
     };
 }
 
@@ -25580,6 +25723,21 @@ function solveSegmentUnder({
     }
 
     /**
+     * ⛓ seedling-fidelity-residue D-A — a `reach-exit` goal as the pass's crossing (`{centre, cross}`), or null (not a
+     * `reach-exit`, or no such door on this level).
+     */
+    const exitAfterGoal = (g) => {
+        if (g?.kind !== 'reach-exit' || !g.exit) return null;
+        try {
+            const { index, teleporter } = findExitNamed(run.world, g.exit);
+            return { centre: { x: teleporter.rect.x + TILE_SIZE / 2, y: teleporter.rect.y + TILE_SIZE / 2 },
+                cross: { level: teleporter.to, index } };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal || e instanceof SolverBotError || e instanceof BotDriverV2Error)) throw e;
+            return null;
+        }
+    };
+    /**
      * ⛓⛓⛓ SEEDLING FIDELITY CLEARTAG — **THE `clear-tag` EXECUTOR: A SAVED
      * OBSTACLE BROKEN FROM ITS OPEN SIDE, FINISHED ON THE RUN'S LEDGER.**
      *
@@ -25996,7 +26154,10 @@ function solveSegmentUnder({
         const drillFirst = verb === 'rope'
             ? execDrillKillsFirst(run, perTick, resolved, { what: `${whatCT} -> ${verb}`, walkTo, goal, equip,
                 // ⛓ fidelity TIMEDPASS D2: the segment's fork, for the pass's certificate (no kill reads it).
-                ...(CONTACT_FIDELITY.drillTimedPass ? { fork } : {}) }) : null;
+                ...(CONTACT_FIDELITY.drillTimedPass ? { fork } : {}),
+                // ⛓ seedling-fidelity-residue D-A: the crossing the segment asks next, for the certificate's way out.
+                ...(CONTACT_FIDELITY.drillTimedPassExit ? { exitAfter: exitAfterGoal(goals[dropKillGoal]) } : {}) })
+            : null;
         // ⛓ fidelity TIMEDPASS D2: a pass record rides beside the kills (`drillPass`), and the cut starts from its stance.
         const drillPass = drillFirst?.find((k) => k.verb === 'drill-pass') ?? null;
         const drillKills = drillPass
@@ -26258,14 +26419,19 @@ function solveSegmentUnder({
             // ⛓ FRONTIER3: the walk's aim leaves a centre a pixel mask
             // blocks (`exitAimFor`); the step-off's straight walk back keeps
             // the centre it was witnessed with.
-            const t = (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
+            // ⛓ seedling-fidelity-residue D-A: a door past a drill this run cannot kill is a timed pass (null OFF).
+            const exitPass = stepOff?.dir ? null : execDrillTimedPassExit(run, perTick, { index, teleporter, centre },
+                { what: whatExit, goal, fork });
+            const t = exitPass?.transition
+                ?? (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
                 ?? walkTo(goal, exitAimFor(run.world, index,
                     solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
                     allowTeleporter: index,
                     crossTo,
                     what: whatExit,
                 });
-            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}) });
+            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}),
+                ...(exitPass ? { drillPass: exitPass.record } : {}) });
             continue;
         }
         // collect-placement
