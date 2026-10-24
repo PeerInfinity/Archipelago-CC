@@ -281,8 +281,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         // `rope` row is switch-gated (non-enumerable), so `strategies` stays the enumerated table's answer.
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'pulled rope ids (`levelRun.js:10582`) — an obstacle\'s state, not a block.' },
+    // ⛓ fidelity TURRETCIRCLE D2: `solverBot.circleKillIceTurret` reads the i-frame to time a swing on the move.
     { family: 'turretDamage', kind: RUN_ENTITIES, blocks: ['hp', 'emitter'],
-        solverReads: ['botDriverV2'], strategies: [],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'each ice turret\'s `hits`/`hitsMax`/`hitsTimer` and its volley clock (`shootTimer`, `angle`, `volleys`) (`levelRun.js:10672`).' },
     { family: 'turretsSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
         solverReads: ['botDriverV2'], strategies: [],

@@ -90,7 +90,7 @@ describe('TURRETCIRCLE D2 — the solver kills on the move with the Sword alone'
     const swordBoot = () => l40PocketBoot({});
 
     it('OFF (CORPSEBUMP\'s set): the Sword alone refuses by name, as CORPSEBUMP left it', async () => {
-        const r = await l40PocketTail(await swordBoot(), CORPSEBUMP_D2_SWITCHES);
+        const r = await l40PocketTail(await swordBoot(), { ...CORPSEBUMP_D2_SWITCHES, turretCircleKill: false });
         expect(r.refusal.message).toMatch(/no start delay 0 … 100 kills iceturret@472,400 from the up side .* without a hit/);
     }, 120000);
 
