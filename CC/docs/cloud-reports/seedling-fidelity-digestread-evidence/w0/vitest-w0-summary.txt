@@ -1,0 +1,133 @@
+ ✓ frontend/modules/seedlingDemo/r5Totem.test.js (133 tests) 5885ms
+ ✓ frontend/modules/seedlingDemo/levelRun.test.js (136 tests) 9636ms
+ ✓ frontend/modules/seedlingDemo/levelWorld.test.js (127 tests) 381ms
+ ✓ frontend/modules/seedlingDemo/r8Acceptance.test.js (94 tests) 4938ms
+ ✓ frontend/modules/seedlingDemo/watchOverlays.test.js (88 tests) 6509ms
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 17227ms
+ ✓ frontend/modules/seedlingDemo/activators.test.js (49 tests) 345ms
+ ✓ frontend/modules/seedlingDemo/dangerMap.test.js (62 tests) 10965ms
+ ✓ frontend/modules/seedlingDemo/iceTurret.test.js (45 tests) 1208ms
+ ✓ frontend/modules/seedlingDemo/arrowTrap.test.js (49 tests) 96ms
+ ✓ scripts/procgen/boxLock.test.js (26 tests) 17480ms
+ ✓ frontend/modules/seedlingDemo/seedlingHazardSkin.test.js (42 tests) 5229ms
+ ✓ frontend/modules/seedlingDemo/seedlingEffectSkin.test.js (40 tests) 5142ms
+ ✓ frontend/modules/seedlingDemo/enemyDamage.test.js (47 tests) 21ms
+ ✓ frontend/modules/seedlingDemo/seedlingPlayerSkin.test.js (31 tests) 1364ms
+ ✓ frontend/modules/seedlingDemo/bossTotemFight.test.js (54 tests) 46ms
+ ✓ frontend/modules/seedlingDemo/seedlingEnemySkin.test.js (47 tests) 4189ms
+ ✓ scripts/procgen/seedlingSolverSurface.test.js (36 tests) 37521ms
+ ✓ frontend/modules/seedlingDemo/seedlingRoomBodySkin.test.js (31 tests) 1656ms
+ ✓ frontend/modules/seedlingDemo/contactFidelity.test.js (62 tests) 2362ms
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (13 tests) 1267ms
+ ✓ frontend/modules/seedlingDemo/procgenRoam.test.js (22 tests) 2944ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (57 tests) 96486ms
+ ✓ frontend/modules/seedlingDemo/solverDeadline.test.js (16 tests) 6200ms
+ ✓ frontend/modules/seedlingDemo/pressKillCost.test.js (18 tests) 20626ms
+ ✓ frontend/modules/seedlingDemo/watchGenOverlay.test.js (16 tests) 387ms
+ ✓ frontend/modules/seedlingDemo/r5Shaft.test.js (28 tests) 183ms
+ ✓ frontend/modules/seedlingDemo/procgenCountableClock.test.js (11 tests) 460ms
+ ✓ frontend/modules/seedlingDemo/shieldBossFight.test.js (39 tests) 37ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 120933ms
+ ✓ frontend/modules/seedlingDemo/campaignChain.test.js (18 tests) 37ms
+ ✓ frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js (8 tests) 14969ms
+ ✓ frontend/modules/seedlingDemo/crusher.test.js (28 tests) 36ms
+ ✓ frontend/modules/seedlingDemo/fidelityResidue.test.js (24 tests) 49727ms
+ ✓ frontend/modules/seedlingDemo/seedlingDialogueSkin.test.js (13 tests) 3866ms
+ ✓ frontend/modules/seedlingDemo/fidelityKingOfFire.test.js (25 tests) 5935ms
+ ✓ frontend/modules/seedlingDemo/observationTolerance.test.js (113 tests) 23380ms
+ ✓ frontend/modules/seedlingDemo/fidelityStagedHits.test.js (26 tests) 11758ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js (36 tests) 366ms
+ ✓ frontend/modules/seedlingDemo/fidelityApBosses.test.js (22 tests) 23702ms
+ ✓ frontend/modules/seedlingDemo/shieldL20.test.js (11 tests) 123ms
+ ✓ frontend/modules/seedlingDemo/decisionTrace.test.js (25 tests) 27ms
+ ✓ frontend/modules/seedlingDemo/entityBlocks.test.js (30 tests) 2696ms
+ ✓ frontend/modules/seedlingDemo/seedlingCanCross.test.js (17 tests) 15867ms
+ ✓ frontend/modules/seedlingDemo/fidelityMovingWait.test.js (25 tests) 8190ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js (6 tests) 1504ms
+ ✓ frontend/modules/seedlingDemo/fidelityLapseCost.test.js (13 tests) 17625ms
+ ✓ frontend/modules/seedlingDemo/fidelityLadder2.test.js (12 tests) 775ms
+ ✓ frontend/modules/seedlingDemo/fidelityWatcher.test.js (28 tests) 1960ms
+ ✓ scripts/procgen/seedlingConstantsCensus.test.js (24 tests) 6580ms
+ ✓ frontend/modules/seedlingDemo/totemFight.test.js (23 tests) 15ms
+ ✓ frontend/modules/seedlingDemo/fidelityClearTag.test.js (37 tests) 1926ms
+ ✓ frontend/modules/seedlingDemo/fidelityLeash.test.js (10 tests) 4179ms
+ ✓ frontend/modules/seedlingDemo/blockRoute.test.js (8 tests) 1539ms
+ ✓ frontend/modules/seedlingDemo/breakableRocks.test.js (22 tests) 97ms
+ ✓ frontend/modules/seedlingDemo/seedlingSkinRenderer.test.js (21 tests) 975ms
+ ✓ frontend/modules/seedlingDemo/fidelityForcedHit.test.js (14 tests) 4578ms
+ ✓ frontend/modules/seedlingDemo/tapeEnvelope.test.js (23 tests) 1173ms
+ ✓ frontend/modules/seedlingDemo/finalDoorL113.test.js (12 tests) 167ms
+ ✓ frontend/modules/seedlingDemo/fidelityF6.test.js (23 tests) 909ms
+ ✓ frontend/modules/seedlingDemo/wandL43.test.js (18 tests) 72ms
+ ✓ frontend/modules/seedlingDemo/ropeSword.test.js (9 tests) 2328ms
+ ✓ frontend/modules/seedlingDemo/fidelityTimedPass.test.js (23 tests) 48832ms
+ ✓ frontend/modules/seedlingDemo/fidelityLights.test.js (22 tests) 1106ms
+ ✓ frontend/modules/seedlingDemo/fidelityDrillKill.test.js (28 tests) 2027ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrival.test.js (94 tests) 617ms
+ ✓ frontend/modules/seedlingDemo/bobBoss.test.js (22 tests) 11ms
+ ✓ frontend/modules/seedlingDemo/fidelityBeamTower.test.js (15 tests) 346ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 208ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Contact.test.js (8 tests) 3224ms
+ ✓ frontend/modules/seedlingDemo/fidelityL74Leg624.test.js (13 tests) 164ms
+ ✓ frontend/modules/seedlingDemo/fidelityFrontier3.test.js (14 tests) 1386ms
+ ✓ frontend/modules/seedlingDemo/fidelityApFlip.test.js (17 tests) 455ms
+ ✓ frontend/modules/seedlingDemo/fidelityF1.test.js (11 tests) 1248ms
+ ✓ frontend/modules/seedlingDemo/fidelityCrusher.test.js (12 tests) 16551ms
+ ✓ frontend/modules/seedlingDemo/bobSoldier.test.js (17 tests) 127ms
+ ✓ frontend/modules/seedlingDemo/fidelityBobSoldier2.test.js (13 tests) 6527ms
+ ✓ frontend/modules/seedlingDemo/fidelityBombPusher.test.js (12 tests) 5229ms
+ ✓ frontend/modules/seedlingDemo/fidelityArrowLane.test.js (10 tests) 710ms
+ ✓ frontend/modules/seedlingDemo/fidelityDarkTrap.test.js (18 tests) 612ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxeTiming.test.js (24 tests) 12457ms
+ ✓ frontend/modules/seedlingDemo/stringPullFast.test.js (13 tests) 54766ms
+ ✓ frontend/modules/seedlingDemo/pulser.test.js (17 tests) 33ms
+ ✓ frontend/modules/seedlingDemo/fidelityCeremonyShove.test.js (17 tests) 940ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Guard.test.js (9 tests) 4498ms
+ ✓ frontend/modules/seedlingDemo/chest.test.js (24 tests) 21ms
+ ✓ scripts/procgen/oneSpelling.test.js (11 tests) 10599ms
+ ✓ frontend/modules/seedlingDemo/fidelityRope.test.js (14 tests) 6519ms
+ ✓ frontend/modules/seedlingDemo/ghostSword.test.js (13 tests) 392ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters.test.js (15 tests) 63229ms
+ ✓ frontend/modules/seedlingDemo/fidelitySpinningAxe.test.js (15 tests) 22026ms
+ ✓ frontend/modules/seedlingDemo/fidelityReturn.test.js (14 tests) 1906ms
+ ✓ frontend/modules/seedlingDemo/fidelityCorridorBody.test.js (8 tests) 74573ms
+ ✓ frontend/modules/seedlingDemo/moverTotem.test.js (9 tests) 141ms
+ ✓ frontend/modules/seedlingDemo/bossTotem.test.js (15 tests) 14ms
+ ✓ frontend/modules/seedlingDemo/fidelityFirePush.test.js (10 tests) 60216ms
+ ✓ frontend/modules/seedlingDemo/fidelitySealDoor.test.js (20 tests) 411ms
+ ✓ frontend/modules/seedlingDemo/fidelityUnbilledGate.test.js (7 tests) 4732ms
+ ✓ frontend/modules/seedlingDemo/fidelityL74Arrival.test.js (13 tests) 670ms
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js (7 tests | 6 failed) 1906ms
+ ✓ frontend/modules/seedlingDemo/fidelityRopeStance.test.js (18 tests) 150329ms
+ ✓ frontend/modules/seedlingDemo/fidelityCrusherPress.test.js (10 tests) 25034ms
+ ✓ frontend/modules/seedlingDemo/fidelityL40Button.test.js (7 tests) 9064ms
+ ✓ frontend/modules/seedlingDemo/levelWorldBroadPhase.test.js (2 tests) 2305ms
+ ✓ frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js (6 tests) 3655ms
+ ✓ frontend/modules/seedlingDemo/fidelityKillLock.test.js (14 tests) 16ms
+ ✓ frontend/modules/seedlingDemo/fidelityAxe.test.js (10 tests) 3594ms
+ ✓ frontend/modules/seedlingDemo/fidelityEncounters2.test.js (9 tests) 4255ms
+ ✓ frontend/modules/seedlingDemo/moonrock.test.js (14 tests) 71ms
+ ✓ frontend/modules/seedlingDemo/solverReachPit.test.js (9 tests) 428ms
+ ✓ frontend/modules/seedlingDemo/pull.test.js (8 tests) 159ms
+ ✓ frontend/modules/seedlingDemo/fidelityLightsArr.test.js (9 tests) 435ms
+ ✓ frontend/modules/seedlingDemo/jsRuntimeLightsWiring.test.js (6 tests) 54ms
+ ✓ frontend/modules/seedlingDemo/fidelityStatueTalk.test.js (6 tests) 233ms
+ ✓ frontend/modules/seedlingDemo/tapeIndexManifest.test.js (292 tests) 79ms
+ ✓ frontend/modules/seedlingDemo/fidelityStaticSword.test.js (14 tests) 982ms
+ ✓ frontend/modules/seedlingDemo/shoveWeighParity.test.js (5 tests) 510ms
+ ✓ frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js (7 tests) 19771ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD — reading every getter of the run leaves stateDigest() and every part equal > a fresh boot, before its first tick: no getter moves a part
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:86:27
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD — reading every getter of the run leaves stateDigest() and every part equal > a fresh boot, after one tick: no getter moves a part
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:86:27
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD — reading every getter of the run leaves stateDigest() and every part equal > a level entry (`f7-l16-walkin`): on the tick each entry lands, no getter moves a part
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:108:27
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD — reading every getter of the run leaves stateDigest() and every part equal > a level entry (`r2-two-teleporters`): on the tick each entry lands, no getter moves a part
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:108:27
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD — reading every getter of the run leaves stateDigest() and every part equal > and reading changes nothing a tick produces: a run read every tick walks a tape as one never read
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:119:40
+ FAIL  frontend/modules/seedlingDemo/levelRunDigestRead.test.js > fidelity DIGESTREAD D3 — the page's G3c read pattern, every tick for 120 ticks on L63 > a run read every tick and a run never read digest equal (all parts) at every tick, from tick 0
+ ❯ frontend/modules/seedlingDemo/levelRunDigestRead.test.js:148:24
+ Test Files  1 failed | 117 passed (118)
+      Tests  6 failed | 3342 passed (3348)
