@@ -91,6 +91,13 @@ const { TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { L40_ARRIVAL, L40_CORPSE } = await import(join(MODULE, 'r5Totem.js'));
 const { ICE_TURRET } = await import(join(MODULE, 'iceTurret.js'));
 const { KILL_PRESS_CADENCE } = await import(join(MODULE, 'combatVerbs.js'));
+// ⛓ PINNED `fireLiveTurretReach` OFF (fidelity planning-12, the FIREPUSH flip, ⚖ user 2026-10-24): this pair was
+// recorded on the CENSUS-RECT model, where the second `fire.bumps` press from (488,440) still "reaches" the corpse. The
+// GAME (p4g, FIREPUSH's `firepush-l40-bosskey2` witness) says it does not: the corpse at (488,407.5) is above the flame,
+// it rests one tile short, and t2 never opens on the game. So "the t2 group opens" is MODEL-ONLY here; the game-true
+// chain presses that bump from (488,424) (`fidelityFirePush.firePushPrefixTape`). Re-recording this pair is queued.
+const { CONTACT_FIDELITY } = await import(join(MODULE, 'contactFidelity.js'));
+CONTACT_FIDELITY.fireLiveTurretReach = false;
 
 const WRITE = process.argv.includes('--write');
 const CHECK = process.argv.includes('--check');
