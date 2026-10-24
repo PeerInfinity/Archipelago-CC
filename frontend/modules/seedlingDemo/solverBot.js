@@ -23805,10 +23805,16 @@ function solveSegmentUnder({
                         previews += 1;
                         const walk = previewWalk(run, corridor, tolerance,
                             { strike: strikePolicyFor(run, { dashMode }), steer });
-                        const met = walk.truncated && walk.truncated.kind !== 'crossed'
+                        const met = walk.truncated && (walk.truncated.kind !== 'crossed'
+                            || (walk.samples.at(-1)?.wp ?? -1) < corridor.length - 1)
                             ? null : probeSamples(walk.samples, dangerExcept);
-                        if (walk.truncated && walk.truncated.kind !== 'crossed') {
-                            laneWhy = `the lane walk stopped (${walk.truncated.kind}: ${walk.truncated.why})`;
+                        // ⛔ A crossing is the walk ARRIVING only on the corridor's last leg; anywhere else the steered walk
+                        // left the room by another door (measured: leg 776, L105's arrival door, then a plan in L104).
+                        const crossedEarly = walk.truncated?.kind === 'crossed'
+                            && (walk.samples.at(-1)?.wp ?? -1) < corridor.length - 1;
+                        if (walk.truncated && (walk.truncated.kind !== 'crossed' || crossedEarly)) {
+                            laneWhy = `the lane walk stopped (${walk.truncated.kind}`
+                                + `${crossedEarly ? ` before the corridor's last leg` : ''}: ${walk.truncated.why})`;
                         } else {
                             /**
                              * The arm's PROGRESS rule (the stall's `partial`, above): a lane walk whose first danger
@@ -23884,7 +23890,9 @@ function solveSegmentUnder({
                     const held = new Set(sm.held);
                     perTick.push(held);
                     const { transition } = run.advance(held);
-                    if (transition) return { escalations };
+                    // ⛓ BEAMLANE: the lane walk crosses only on the corridor's last leg — the walk ARRIVED (FORCEDHIT's
+                    // shape: `walkTo` returns the transition). Measured: leg 776 re-planned L105's exit inside L106.
+                    if (transition) return dodge.lane ? { forced: { transition }, escalations } : { escalations };
                 }
                 const wpAt = dodge.walk.samples[upto - 1]?.wp ?? 0;
                 // ⛓ fidelity SPINNINGAXE D2: a PARTIAL stall says so, so the walk re-probes (`partialDodgeReprobe`).
