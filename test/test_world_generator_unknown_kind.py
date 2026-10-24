@@ -279,3 +279,71 @@ class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
         rule = eval(self.convert(5, self.ITEMS + self.REGIONS), vars(rule_builder)).resolve(World())
         names = ['I0', 'R0', 'I1', 'R1', 'I2', 'R2']  # mixes both condition kinds
         self.assertEqual([rule(State(set(names[:k]))) for k in (4, 5, 6)], [False, True, True])
+
+
+class TestCountTrueWithANonIntegerCount(unittest.TestCase):
+    """rule-node R2c: a count_true whose count is not a number (e.g. an expression dict) crashed
+    with a TypeError (``dict <= int``). It is now loud by name, the F1 way: strict raises naming
+    the rule, lossy keeps ``True_()`` and records it. 0 corpus hits (F2's measure).
+    """
+    CONDITIONS = [{'type': 'item_check', 'item': 'A'}, {'type': 'item_check', 'item': 'B'}]
+    COUNT = {'type': 'attribute', 'object': {'type': 'name', 'name': 'options'}, 'attr': 'needed'}
+
+    def shapes(self):
+        return ({'type': 'count_true', 'count': self.COUNT, 'conditions': self.CONDITIONS},
+                {'rule': 'AST_count_true', 'args': {'count': self.COUNT, 'conditions': self.CONDITIONS}})
+
+    def test_strict_raises_naming_the_rule_in_both_shapes(self) -> None:
+        for rule in self.shapes():
+            with self.assertRaisesRegex(UnknownRuleKindError, 'count_true with non-integer count') as caught:
+                RuleCodeGenerator('Test')._convert_rule(rule)
+            self.assertEqual(caught.exception.site, 'count_true')
+
+    def test_lossy_keeps_true_and_records_it(self) -> None:
+        with lossy_codegen() as record:
+            for rule in self.shapes():
+                gen = RuleCodeGenerator('Test')
+                self.assertEqual(gen._convert_rule(rule), 'True_()')
+                self.assertIn('True_', gen.required_imports)
+        self.assertEqual(sum(record.values()), 2)
+        self.assertTrue(all(key.startswith('count_true:count_true with non-integer count') for key in record), record)
+
+    def test_an_integral_float_count_is_its_integer(self) -> None:
+        rule = {'type': 'count_true', 'count': 2.0, 'conditions': self.CONDITIONS}
+        self.assertEqual(RuleCodeGenerator('Test')._convert_rule(rule),
+                         RuleCodeGenerator('Test')._convert_rule({**rule, 'count': 2}))
+
+
+class TestUnobtainableItemIsANamedRecord(unittest.TestCase):
+    """rule-node R2c: a Has on an item the rules file never creates (no item definition, pool entry,
+    placement or starting item) becomes False_(), which is EXACT (the generated world can never
+    hold it), so it is not a lossy placeholder and never raises. It used to be a stderr print only;
+    it is now recorded by name in both modes (``WorldGenerator.unobtainable_items``).
+    Corpus: 3 presets, all 'Progressive Swim' (seedling_atlas 8, seedling_atlas_maze 8,
+    seedling_playthrough_maze 4).
+    """
+    PHANTOM = {'rule': 'Has', 'args': {'item_name': 'Phantom', 'count': 1}}
+
+    def _generate(self, rules, lossy):
+        return TestUnknownHelperName._generate(self, rules, lossy)
+
+    def test_the_converter_records_it_and_emits_false(self) -> None:
+        from world_generator._unknown_kind import unobtainable_record
+        gen = RuleCodeGenerator('Test')
+        gen.set_obtainable_items({'Key'})
+        with unobtainable_record() as record:
+            self.assertEqual(gen._convert_rule(self.PHANTOM), 'False_()')
+            self.assertEqual(gen._convert_rule({'rule': 'Has', 'args': {'item_name': 'Key', 'count': 1}}),
+                             "Has('Key', 1)")
+        self.assertEqual(record, {'Has:Phantom': 1})
+
+    def test_a_world_records_it_in_both_modes_with_the_same_bytes(self) -> None:
+        rules = _world_rules(self.PHANTOM)
+        strict_gen, strict = self._generate(rules, lossy=False)
+        lossy_gen, lossy = self._generate(rules, lossy=True)
+        for generator in (strict_gen, lossy_gen):
+            self.assertEqual(generator.unobtainable_items, {'Has:Phantom': 1})
+            self.assertEqual(generator.lossy_placeholders, {})
+        self.assertEqual(strict, lossy)
+        self.assertIn(b'False_()', strict['Rules.py'])
+        self.assertNotIn(b"Has('Phantom'", strict['Rules.py'])
