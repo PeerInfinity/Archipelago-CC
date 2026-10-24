@@ -12,12 +12,10 @@
  *   v4 (a defect the in-app row found, 2026-10-11) the feed's open-state getter shares the name of its `open()`
  *        method, which replaces it — `isOpen` reads a function (always truthy), so the panel never opens the view
  *        -> 'close() UNSUBSCRIBES …' reds (`feed.isOpen` before open / after close)
- *   v5 ⛓ AUTO-SHOW: the final note does not hide the view in `auto` (`autoVisibility` keeps `visible`)
- *        -> 'auto: two solves in a row …' and 'autoVisibility …' red
- *   v6 ⛓ AUTO-SHOW: hiding on the final note CLOSES the feed (unsubscribes), so the next solve is not asked
- *        -> 'auto: two solves in a row …' reds (the second solve is never shown; the service has no listener)
- *   v7 ⛓ AUTO-SHOW: a stored legacy `true` reads as the default instead of `always`
- *        -> 'solveProgressMode …' reds
+ *   v5 ⛓ PANEL LAYOUT: a note shows the view in `listen` (the section closed)
+ *        -> 'listen: two solves in a row …' reds
+ *   v6 ⛓ PANEL LAYOUT: `listen` CLOSES the feed (unsubscribes), so a solve with the Solver section closed is not asked
+ *        -> 'listen: two solves in a row …' reds (the service has no listener)
  *   (⛓ S2's Tier A mutants a1–a8 are listed in seedlingSolveProgressView.test.js; the Tier A rows below run the
  *   model on D1's real streams)
  */
@@ -27,9 +25,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    activePath, applyProgress, asksBySite, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf,
-    nextSolveProgressMode, reasonsText, SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode, tileIndex, tileShade, treeRows,
-    workCounters,
+    activePath, applyProgress, asksBySite, createSolveProgressFeed, emptyProgress, meterOf, reasonsText,
+    SOLVE_PROGRESS_MODES, tileIndex, tileShade, treeRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { SolveProgressView } from './seedlingSolveProgressView.js';
 
@@ -253,28 +250,11 @@ describe('createSolveProgressFeed — subscribe while open, UNSUBSCRIBE on close
     });
 });
 
-// ── ⛓ AUTO-SHOW (slice `solve-progress-auto`, ⚖ the user 2026-10-15) ──
+// ── ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24) — it replaced AUTO-SHOW's setting ──
 
-describe('⛓ AUTO-SHOW — the setting\'s modes', () => {
-    it('solveProgressMode: off | auto | always; a legacy boolean keeps its choice; anything else is the default auto', () => {
-        expect(SOLVE_PROGRESS_DEFAULT_MODE).toBe('auto');
-        expect(['off', 'auto', 'always'].map(solveProgressMode)).toEqual(['off', 'auto', 'always']);
-        expect([true, false].map(solveProgressMode)).toEqual(['always', 'off']);
-        expect([undefined, null, '', 'on', 1].map(solveProgressMode)).toEqual(['auto', 'auto', 'auto', 'auto', 'auto']);
-    });
-
-    it('the button cycles off → auto → always → off (a legacy value enters the cycle at its mode)', () => {
-        expect(['off', 'auto', 'always', true, false].map(nextSolveProgressMode))
-            .toEqual(['auto', 'always', 'off', 'off', 'auto']);
-    });
-
-    it('autoVisibility: always shows, off hides, auto shows on a running note and hides on the final one', () => {
-        const run = { final: false };
-        const fin = { final: true };
-        expect([autoVisibility('always', false, fin), autoVisibility('off', true, run)]).toEqual([true, false]);
-        expect([autoVisibility('auto', false, run), autoVisibility('auto', true, run), autoVisibility('auto', true, fin)])
-            .toEqual([true, true, false]);
-        expect(autoVisibility('auto', true, null)).toBe(true);
+describe('⛓ PANEL LAYOUT — the view\'s modes', () => {
+    it('off | listen | always — the Solver section\'s states, no longer a setting', () => {
+        expect(SOLVE_PROGRESS_MODES).toEqual(['off', 'listen', 'always']);
     });
 });
 
@@ -289,7 +269,7 @@ function stubDocument() {
     return { createElement: node, createDocumentFragment: () => node('#fragment'), createTextNode: (data) => ({ data }) };
 }
 
-describe('⛓ AUTO-SHOW — the view\'s lifecycle (SolveProgressView over a fake service)', () => {
+describe('⛓ PANEL LAYOUT — the view\'s lifecycle (SolveProgressView over a fake service)', () => {
     const snap = (seq, outcome = 'running') => ({ v: 1, seq, segment: { name: 't', index: 0, level: 6, outcome },
         tree: null, tiles: null, budget: { work: { shouldStop: seq } } });
     function setup() {
@@ -307,35 +287,31 @@ describe('⛓ AUTO-SHOW — the view\'s lifecycle (SolveProgressView over a fake
         emit({ solveId, snapshot: snap(5, 'solved'), final: true });
     };
 
-    it('auto: two solves in a row — each SHOWN on its first note and HIDDEN on its final; the feed listens throughout', () => {
+    it('listen: two solves in a row — never SHOWN by a note; the feed listens throughout', () => {
         const { view, listeners, emit, restore } = setup();
         try {
-            view.setMode('auto');
+            view.setMode('listen');
             expect([view.isOpen, view.isListening, listeners.size]).toEqual([false, true, 1]);
-            emit({ solveId: 1, snapshot: snap(1), final: false });
-            expect(view.isOpen).toBe(true);
-            emit({ solveId: 1, snapshot: snap(5), final: false });
-            emit({ solveId: 1, snapshot: snap(5, 'solved'), final: true });
+            solve(emit, 1);
             expect([view.isOpen, view.isListening, listeners.size, view.state.final]).toEqual([false, true, 1, true]);
             solve(emit, 2);
-            expect(view.lifecycle.map((e) => `${e.event}:${e.solveId}:${e.seq}:${e.final}`))
-                .toEqual(['show:1:1:false', 'hide:1:5:true', 'show:2:1:false', 'hide:2:5:true']);
-            expect([view.isOpen, listeners.size]).toEqual([false, 1]);
+            expect([view.isOpen, listeners.size, view.lifecycle.length, view.state.solveId]).toEqual([false, 1, 0, 2]);
         } finally { restore(); }
     });
 
-    it('a dropped note (a repeat, an older solve) neither shows nor hides the view', () => {
+    it('a dropped note (a repeat, an older solve) changes nothing', () => {
         const { view, emit, restore } = setup();
         try {
-            view.setMode('auto');
+            view.setMode('always');
             solve(emit, 2);
+            const received = view.state.received;
             emit({ solveId: 1, snapshot: snap(9), final: false });   // older solve: dropped
             emit({ solveId: 2, snapshot: snap(5), final: false });   // repeated seq: dropped
-            expect([view.isOpen, view.lifecycle.length]).toEqual([false, 2]);
+            expect([view.isOpen, view.lifecycle.length, view.state.received]).toEqual([true, 1, received]);
         } finally { restore(); }
     });
 
-    it('always never auto-hides; off hides and UNSUBSCRIBES; auto → always mid-solve shows at once', () => {
+    it('always never hides on a note; off hides and UNSUBSCRIBES; listen → always mid-solve shows at once', () => {
         const { view, listeners, emit, restore } = setup();
         try {
             view.setMode('always');
@@ -344,14 +320,12 @@ describe('⛓ AUTO-SHOW — the view\'s lifecycle (SolveProgressView over a fake
             expect(view.isOpen).toBe(true);
             view.setMode('off');
             expect([view.isOpen, view.isListening, listeners.size]).toEqual([false, false, 0]);
-            view.setMode('auto');
+            view.setMode('listen');
             emit({ solveId: 3, snapshot: snap(1), final: false });
             view.setMode('always');
-            expect(view.isOpen).toBe(true);
-            view.setMode('auto');
-            expect(view.isOpen).toBe(true);   // a solve is still running: auto keeps it up until its final note
-            emit({ solveId: 3, snapshot: snap(2, 'solved'), final: true });
-            expect(view.isOpen).toBe(false);
+            expect([view.isOpen, view.state.solveId]).toEqual([true, 3]);
+            view.setMode('listen');
+            expect([view.isOpen, listeners.size]).toEqual([false, 1]);
         } finally { restore(); }
     });
 });

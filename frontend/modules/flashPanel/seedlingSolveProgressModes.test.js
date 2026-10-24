@@ -1,17 +1,18 @@
 /**
- * ⛓ AUTO-SHOW (slice `solve-progress-auto`, ⚖ the user 2026-10-15) — the view's three modes on a REAL L6 solve
- * through the real worker entry (`jsRuntimeSolveWorker.js`, node `worker_threads`), with the panel's real
- * `SolveProgressView` (over a stub DOM) as the subscriber.
+ * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24; it re-pointed AUTO-SHOW's rows) — the
+ * view's three modes on a REAL L6 solve through the real worker entry (`jsRuntimeSolveWorker.js`, node
+ * `worker_threads`), with the panel's real `SolveProgressView` (over a stub DOM) as the subscriber.
  *
- * The default became `auto`, so every panel solve now asks for the progress stream. Pinned here (js-6's gate):
- *   - the solve REQUEST is byte-identical with the view `off`, `auto` and `always` (the ask rides the ENVELOPE),
+ * The panel's view always listens (`listen` with the Solver section closed, `always` with it open), so every panel
+ * solve asks for the progress stream. Pinned here (js-6's gate):
+ *   - the solve REQUEST is byte-identical with the view `off`, `listen` and `always` (the ask rides the ENVELOPE),
  *     and so are the plan, the keys played and the end digest;
- *   - `off` asks nothing; `auto` and `always` ask; `auto` shows the view on the first note and hides it on the
- *     final one, `always` keeps it shown.
+ *   - `off` asks nothing; `listen` and `always` ask; `listen` never shows the view (its progress line still hears
+ *     every note), `always` keeps it shown.
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *   a1 the progress flag leaks into the request (`msg.request.progress = true` in `jsRuntimeSolveService.js`)
- *        -> 'off / auto / always: the REQUEST …' reds
+ *        -> 'off / listen / always: the REQUEST …' reds
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -72,7 +73,8 @@ async function solveL6(mode) {
     const service = createWorkerSolveService({ createWorker: () => nodeWorker(log) });
     const prev = globalThis.document;
     globalThis.document = stubDocument();
-    const view = new SolveProgressView({ getServices: () => [service], now: () => Date.now() });
+    const heard = [];
+    const view = new SolveProgressView({ getServices: () => [service], now: () => Date.now(), onState: (st) => heard.push(st) });
     cleanups.push(() => { view.close(); service.dispose(); globalThis.document = prev; });
     view.setMode(mode);
     const stage = solveDemoStage(MAP, 'l6-enemy-room');
@@ -92,16 +94,16 @@ async function solveL6(mode) {
     const solves = log.sent.filter((m) => m.type === 'solve');
     const plans = log.got.filter((m) => m.type === 'result')
         .map((m) => JSON.stringify(m.plan, (k, v) => (/^ms$|Ms$/.test(k) ? undefined : v)));
-    return { rt, view, solves, plans };
+    return { rt, view, solves, plans, heard };
 }
 
-describe('⛓ AUTO-SHOW — the view\'s modes on a real L6 solve (the panel\'s solve demo)', () => {
-    it('off / auto / always: the REQUEST is byte-identical (the ask rides the envelope), and so is the plan; auto shows then hides, always stays shown', async () => {
+describe('⛓ PANEL LAYOUT — the view\'s modes on a real L6 solve (the panel\'s solve demo)', () => {
+    it('off / listen / always: the REQUEST is byte-identical (the ask rides the envelope), and so is the plan; listen never shows, always stays shown', async () => {
         const off = await solveL6('off');
-        const auto = await solveL6('auto');
+        const listen = await solveL6('listen');
         const always = await solveL6('always');
         expect(off.solves.length).toBeGreaterThan(0);
-        for (const run of [auto, always]) {
+        for (const run of [listen, always]) {
             expect(run.solves.length).toBe(off.solves.length);
             for (let i = 0; i < off.solves.length; i += 1) {
                 expect(JSON.stringify(run.solves[i].request)).toBe(JSON.stringify(off.solves[i].request));
@@ -113,12 +115,12 @@ describe('⛓ AUTO-SHOW — the view\'s modes on a real L6 solve (the panel\'s s
         }
         for (const m of off.solves) expect(m).not.toHaveProperty('progress');
         expect([off.view.lifecycle.length, off.view.state.received]).toEqual([0, 0]);
-        // auto: shown on a RUNNING note, hidden on the final one (one show/hide per solve), still listening
-        const ev = auto.view.lifecycle.map((e) => `${e.event}:${e.final}`);
-        expect(ev.length).toBe(2 * auto.solves.length);
-        expect(ev.every((e, i) => e === (i % 2 === 0 ? 'show:false' : 'hide:true'))).toBe(true);
-        expect([auto.view.isOpen, auto.view.isListening, auto.view.state.final]).toEqual([false, true, true]);
-        expect(auto.view.state.snapshot?.segment?.outcome).toBe('solved');
+        // listen (the Solver section closed): never shown, still listening; every accepted note reached `onState`
+        expect([listen.view.lifecycle.length, listen.view.stats.renders]).toEqual([0, 0]);
+        expect([listen.view.isOpen, listen.view.isListening, listen.view.state.final]).toEqual([false, true, true]);
+        expect(listen.heard.length).toBe(listen.view.state.received);
+        expect(listen.heard.at(-1)).toBe(listen.view.state);
+        expect(listen.view.state.snapshot?.segment?.outcome).toBe('solved');
         // always: never hidden
         expect([always.view.isOpen, always.view.lifecycle.map((e) => e.event)]).toEqual([true, ['show']]);
         // ⛓ STAMPS VIEW — the real tap's Tier B stamps, drawn: the request KEPT from the first post to the final one,
