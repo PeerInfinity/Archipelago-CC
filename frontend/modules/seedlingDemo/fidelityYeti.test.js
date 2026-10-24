@@ -173,9 +173,10 @@ describe('YETI D3 — the clear-tag on {58,1} names the Yeti and talks', () => {
         expect(c.obstacle).toMatchObject({ kind: 'clear-tag', reason: 'cannot-act' });
     });
 
+    // ⛓ fidelity PITPORT: with `pitTeleporterCrossing` OFF (its ON arm is `fidelityPitPort.test.js`'s).
     it('ON: the door after the talk is the PIT-teleporter refusal by name (the next gap, not this slice\'s)', async () => {
         const staging = await yetiStaging();
-        const r = withContactFidelity({ yetiTalk: true }, () => {
+        const r = withContactFidelity({ yetiTalk: true, pitTeleporterCrossing: false }, () => {
             try {
                 solveSegment({ run: createRunForStaging(staging, atlasLevelSource()), name: 'yeti', boot: staging.boot,
                     goals: [YETI_CLEAR, { kind: 'reach-exit', exit: { x: 80, y: 16 } }] });

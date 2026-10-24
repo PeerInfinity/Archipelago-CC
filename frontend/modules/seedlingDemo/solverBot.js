@@ -66,7 +66,7 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
-    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
+    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, pitLatchOpts, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
@@ -936,7 +936,7 @@ function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
     const aimRect = { x: aim.x - 4, y: aim.y - 4, right: aim.x + 4, bottom: aim.y + 4 };
     const found = searchBaitOrdering({
         run, liveOpts: run.liveGeometryOpts(), inventory: run.progress('inventory'),
-        aimRect, allowTeleporter,
+        aimRect, allowTeleporter, latchOpts: pitLatchOpts(run),
     });
     if (!found.ordering) {
         refuse(`the ordering search found nothing: ${found.why} (${found.stats.expanded} state(s) `
@@ -4785,7 +4785,7 @@ export function stepOffMinimalFor(run, index, tolerance = DEFAULT_TOLERANCE) {
     return [...STEP_OFF_DIAGONALS.map(tryDir).sort(byCost), ...cardinal];
 }
 
-function solverPlanOpts(run, contacts, extra = {}) {
+export function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
         avoidVolumes: true,
@@ -4794,6 +4794,7 @@ function solverPlanOpts(run, contacts, extra = {}) {
         lattice: DEFAULT_LATTICE,
         inventory: run.progress('inventory'),
         noHazards: run.noHazards,
+        ...pitLatchOpts(run),
         ...extra,
     };
 }
@@ -9124,10 +9125,12 @@ function execHold(run, perTick, resolved, ctx) {
  * ⛓ housekeep D1 — a `reach-exit` goal's door, with `findExit`'s PIT-tile throw named: the teleporter's tile is a pit
  * (`level.pitTiles`, `findExit`'s own test), whose trigger and fall edge fire on one tick — FlashPunk bookkeeping the
  * physics does not transcribe (survey steps 113 / 191: L43's door to L37, L100's to L101).
+ * ⛓ fidelity PITPORT (`CONTACT_FIDELITY.pitTeleporterCrossing`): ON, `findExit` admits a LIVE door on a pit that the
+ * run is not latched on (the door wins the race), so this names only a latched one (the pit takes the player).
  */
-function findExitNamed(level, exit) {
+function findExitNamed(level, exit, latched = null) {
     try {
-        return findExit(level, exit);
+        return findExit(level, exit, { latched });
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
         const tp = level.teleporters.find((t) => t.x === exit.x && t.y === exit.y);
@@ -26246,7 +26249,7 @@ function solveSegmentUnder({
         }
         if (goal.kind === 'reach-exit') {
             awaitTentacleMouth(goal);
-            const { index, teleporter } = findExitNamed(run.world, goal.exit);
+            const { index, teleporter } = findExitNamed(run.world, goal.exit, run.state.latched ?? null);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
                 y: teleporter.rect.y + TILE_SIZE / 2,
