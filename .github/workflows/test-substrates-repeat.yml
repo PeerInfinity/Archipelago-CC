@@ -64,8 +64,7 @@ on:
 jobs:
   repeat:
     name: Repeat ×${{ inputs.repeat }} — ${{ inputs.test || inputs.batch || 'whole roster' }} (${{ inputs.mode }}${{ inputs.bundled && ', bundled' || '' }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # 20 runs × (bot-walks 375 s in-app + ~40 s launch) ≈ 140 min, plus setup.
     # A solo row is ~30–60 s a run, so the cap only binds on a batch.
     timeout-minutes: 180
