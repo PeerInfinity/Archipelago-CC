@@ -8102,9 +8102,7 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-hammer-b2-fight.mjs"
         },
         {
-            "argvHelpers": [
-                "check"
-            ],
+            "argvHelpers": [],
             "browser": false,
             "category": "plan",
             "citedBy": [
