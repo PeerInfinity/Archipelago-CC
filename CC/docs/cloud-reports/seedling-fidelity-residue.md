@@ -18,9 +18,11 @@ so the cut's STAND must be chosen for the way out it leaves. ON, the pass to the
 behind it: **from the L25 arrival both L28 doors SOLVE hit-free (182 t / 134 t), game-witnessed at 0 px; from the L26
 arrival the only stand the search finds leaves no way out and the clear-tag refuses by name** (its forced-hit reading:
 two hits, over the budget — measured, not built). **D-B: the whirlpool drown is transcribed and witnessed at 0 px, a walk
-that drowns refuses by name, and the pull is priced — but at the defaults (HITLESS's settle) no measured walk meets a live
-whirlpool, so D-B moves nothing today**: it is coverage (the 15 seed/staging pairs that threw a plain `Error` with HITLESS
-OFF now solve, no death).
+that drowns refuses by name, and the pull is priced. It moves ONE sweep row at the defaults, and that row is HITLESS's R1
+live: leg `level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48`'s CONTINUATION request (the page interrupts the
+plan mid-fight) threw the plain drown `Error` OFF (`whirlpool#36 … tick 928`, at every seam time −3..+3) and the page
+re-ran its old 1212-t plan; ON it SOLVES 372 t (`dodge`, then the walk), game room hits 0, ×2.** With HITLESS OFF the 15
+seed/staging pairs that threw now solve, no death.
 
 ## W0 (PASS)
 
@@ -150,9 +152,23 @@ SEEDLING_WHIRLPOOL_DROWN=1`): **239 rows, SOLVED 186 / REFUSED 53 in both; 0 row
 verdict, refusal, ticks, replans, passes and replay (`evidence/survey-full-{off,on}.txt`). The full route has no Fire-only
 L28 step; its L57 step (110) runs HITLESS's settle.
 
-**Keyed sweep ×2** (local, `probe-seedling-divergence-sweep.mjs --mode=inv --producer=solver --page-legs=1
+**Keyed sweep ×2** (local, p4g, `probe-seedling-divergence-sweep.mjs --mode=inv --producer=solver --page-legs=1
 --leg-budget-ms=240000`, the 16 L28/L57/L58 legs of `evidence/sweep-leg-keys.txt` derived at the base; arm A =
-`evidence/sweep-arm-A.txt` (the 54 defaults), arm B = `sweep-arm-B.txt` (+ both keys)): SWEEP_TABLE
+`evidence/sweep-arm-A.txt` (the 54 defaults), arm B = `sweep-arm-B.txt` (+ both keys); `evidence/sweep-{A,B}{1,2}.jsonl`):
+**every verdict equal in all four runs; game room hits 0 in every row of every run.** The 8 L28 legs are tick-identical
+(every L28 leg's inventory holds the Sword, so D-A never runs there). The two L58 legs from the mouth via r4c1
+(`… ~> level_58__r4c1 -> exit:out_teleporter_80_16`, `… -> location:L58 flag 1: yeti@56,56 cleared`) fail in every arm
+(base behaviour, not this slice's). Two rows differ, both L57 continuations:
+
+| leg (key) | A1 | A2 | B1 | B2 |
+|---|---|---|---|---|
+| `level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48` | done: 1212 t, interrupted, **resumed** the same plan (the continuation's solve threw the drown) | same | done: 1212 t interrupted, continuation **372 t `dodge`+`walk`** | same, 371 t |
+| `level_57 <- in_pit_L56_6_10 -> exit:out_tentaclebeast_80_48` | 2177 + 258 t | 2177 + 258 t | 2177 + 259 t | 2177 + 259 t |
+
+Decided on captured requests (arm A, `--capture-requests`, replayed in node: `evidence/replay-l57-{off,on}.txt`,
+`evidence/census-494-1-on.jsonl`): leg 494's continuation requests i=1 / i=2 are the drown throw OFF at every seam time
+−3..+3 and SOLVED 372 t ON at every one (1 answer over 7): **a real plan mover, the brief's R1**. Leg 492's continuation
+replays to 259 t OFF as well (the A rows' 258 came at another seam time): **run noise, not this slice's**.
 
 **Probes standard, ON** (local; a scratch worktree at `bda327b4` with both literals flipped, its own server on 9730,
 `--host`): **11/11 ALL CHECKS PASSED** (`evidence/probe-battery-standard-on.txt`: logical-links B,R; vanilla-map;
@@ -160,7 +176,8 @@ arrival-composites; midroom-replan D; restart-route W,J; restart-warp W,J; adopt
 generated-playback; loop-restart; seal-delivery A). The container restarted once mid-battery: logical-links had passed,
 the other ten were re-run from the start.
 
-**Bounded vitest ON**: VITEST_ON
+**Bounded vitest ON** (the scratch tree at `c44e20f5` with both literals flipped; 211 files, `evidence/rows-on.txt`):
+**6,680 tests, 4 red — every one a flip re-pin**; tapeRunner pairs 635 `88fc7df4…` (= W0).
 
 **Please run, on this branch** (my last head):
 1. **Survey full A/B**: `seedling-survey.yml -f through=end -f route=full` at my head (OFF), and the same on a planner commit
@@ -182,7 +199,11 @@ the other ten were re-run from the start.
 - **Run state the skin reads**: `run.state.drown` may carry `dying: true` (ON only, during a whirlpool drown); the
   `tentacleLedger` gains `kind: 'drown'` rows; no field renamed. `seedlingSkinRenderer.test.js` is in the bounded set.
 - **The walker**: untouched; no `producer:walker` row can move (the walker does not read the danger map).
-- **Flip re-pins owed** (ON reds of the bounded set): VITEST_ON_REDS
+- **Flip re-pins owed** (the ON reds of the bounded set — nothing else, no tape, no producer, no control):
+  1. `contactFidelity.test.js` › the shipped defaults (both keys `false` → `true`);
+  2. `fidelityResidue.test.js` › D-A *ships OFF*; 3. › D-B *ships OFF*;
+  4. `fidelityTentacleBeast.test.js` › HITLESS *seed 7: ON, a variant whose fork drowns …* — `tried[1].why` reads
+     *"the player drowned in whirlpool#N at spent …"* instead of the thrown message (the variant is rejected as before).
 
 ## Handed to the hammer arc
 
@@ -202,6 +223,9 @@ proof (`proveForcedHit`, called only in a measurement that was then removed) are
   `whirlpoolRect` re-exported.
 - `fidelityTimedPass.js` (`TIMEDPASS_EXIT_WITNESSES`, per-witness `switches`), `probe-seedling-timed-pass.mjs` (plays both
   lists); new `fidelityResidue.test.js` (24 rows); fixtures `timedpass-witness/residue-*` (2), `whirlpool-witness/` (1).
+- `entityBlocks.js` (`tentacleBeastFight` read by `dangerMap` too) + its doc table in `seedling-solver-surface.md`;
+  `solveProgress.js` (`whirlpool` a forecast source in `dangerKindOf`) + its TC2 pin — the three OFF reds the bounded
+  AFTER found (`c44e20f5`).
 - Censuses: surface **347** GREEN (two classified imports), constants **6,913** PASS (two classified rows re-keyed in
   `seedling-constants-fields.csv` where D-B extended their statements; no retirement). The bot-log entry.
 
@@ -213,9 +237,10 @@ proof (`proveForcedHit`, called only in a measurement that was then removed) are
 - *"From both arrivals to both L28 doors"* — the fix reaches two of the four: L25's.
 - *"the walker (`botDriverV2.*`) changes need the JS arc's review"* — none were needed: the drown is refused in
   `solveSegment`'s `walkTo`, and the walker does not read the danger map, so no `producer:walker` row can move.
-- *"HITLESS's settle avoids it only inside the tentacle verb"* — true, but every walk to the mouth follows that verb: at
-  the defaults no measured walk (80 seeds × 2 stagings, the survey, the keyed sweep) meets a live whirlpool. D-B is
-  coverage, not a mover.
+- *"HITLESS's settle avoids it only inside the tentacle verb"* — true, and it is exactly where it leaks: a page
+  CONTINUATION solved from mid-fight (leg 494, the sweep's interrupted plan) starts outside the verb's settle and walked
+  into a live whirlpool — the drown throw, at the defaults. The 80 seeds × 2 stagings and the survey (whole solves) never
+  meet one.
 
 ## Residue
 
@@ -230,7 +255,15 @@ proof (`proveForcedHit`, called only in a measurement that was then removed) are
 
 ## Byte-inertia (OFF)
 
-BYTE_INERTIA
+- **Identity at head equals W0 on every md5 row and all six producer `--check`s** (exit 0; `evidence/identity-after.txt`
+  diffed against `identity-w0.txt`: identical); the reference differs by the environmental four only (my docs-index
+  region regenerated).
+- tapeRunner pairs 635 `88fc7df4…` (= W0, and = W0 ON); roster 289; surface GREEN 347; constants PASS 6,913; entities
+  PASS 566; profile PASS 138.
+- **Bounded vitest AFTER** (default, 211 files, `evidence/rows-after.txt`): 6,680 tests, 6,677 passed, 3 red at
+  `bda327b4` — the contract tables above, fixed in `c44e20f5` (`entityBlocks` 30/30, `solveProgress` green on re-run).
+  = BEFORE's 6,654 + `fidelityResidue` (24) + `contactFidelityHook`'s per-key rows (2). OFF the solver plans every
+  witness, tape and survey row as at the base (survey 0 diffs; sweep arm A = base behaviour).
 
 ## CI
 
@@ -241,7 +274,8 @@ CI_LINE
 - D-A: after an L28 Fire cut the released drill's hit is unavoidable from that state (81/81); a stand must be certified
   with its way out; Fire from L25 → both doors SOLVED hit-free (182 / 134 t), 2 p4g witnesses at 0 px; L26 refused by name.
 - D-B: `Whirlpool.as`'s external `drown()` (dying without drowning, 20 calls, die) transcribed, p4g witness at 0 px on
-  2144 ticks; the pull priced; at the defaults 0 movers (80 seeds, survey, sweep); HITLESS OFF 15/15 drown throws → solved.
+  2144 ticks; the pull priced; at the defaults one sweep mover (leg 494's continuation: the drown throw → SOLVED 372 t,
+  ×2, captured and replayed at 7 seam times); 80 seeds and the survey unchanged; HITLESS OFF 15/15 drown throws → solved.
 - Trap candidates (bot-log): certify a goal WITH what follows it; an external `drown()` is not the hazard drown; a death
   inside a walk is not a stall to re-plan from.
 - Commits: D-A `afa084bd`, D-B `9ef99e56`, witnesses `8dcc0205` / `c1d5dddc`, censuses `bda327b4`, evidence, this report.

@@ -25000,6 +25000,8 @@ drowned refuses by name (`obstacle.kind: 'whirlpool'`) instead of re-planning fr
 pull (`whirlpoolDanger`, a `dangerVolumes` row) and the DODGE rung's WHIRLPOOL arm stalls the walk out. Witness
 `whirlpool-drown-s15` (p4g, 0 px on 2144 sampled ticks: still for 20 ticks, death t2202, respawn (104,72)). Seed sweep
 (80 seeds): at the defaults (HITLESS's settle) nothing moves; HITLESS OFF, all 15 drown throws now SOLVE, no death.
+At the defaults it moves one sweep row: leg 494's CONTINUATION (a page re-plan from mid-fight, outside the verb's
+settle) threw the drown at every seam time −3..+3 and now SOLVES 372 t (`dodge`, walk), room hits 0, ×2.
 
 **Trap candidates.**
 - A pass whose goal is a stand is worth only the way out it leaves: a ceremony after the goal can make the stand a trap,
