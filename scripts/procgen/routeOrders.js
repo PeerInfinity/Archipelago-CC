@@ -19,6 +19,10 @@
  *    (`routeChooser`'s `pocket`), so pockets are entered last;
  *  - `+pocket-item` — the same, with the row's OWN item (and its break-first events) counted as held: a room its
  *    pickup opens the way out of is no pocket. The bot's live snapshot cannot ask this; the offline measure can.
+ *    ⚠ Measured 2026-10-24 (slice `bot-route-chooser-2a`): on the Seedling playthrough it is WORSE than plain
+ *    `reachable-cheapest` (0 / 318 vs 0 / 292) — a one-way world has few rooms that walk back to the start;
+ *  - `+grab` — GRAB-ON-THE-WAY (`routeChooser.grabOnTheWay`): after the pick, a remaining row reached on the way to
+ *    it at zero detour (no extra hop, no extra Restart) is taken first; the next choice is made from there.
  *
  * Every greedy ordering takes a row holding the completion condition's item (`game_info[p].completion_condition`)
  * last (`routeChooser`'s `goal`).
@@ -27,12 +31,14 @@
 import { RESTART_TARGET, deriveLegs, eventPrerequisites, eventCrossingsOnPath, gameStateEventsOf, regionOfLocation,
     regionPathHops } from './surveyRoute.js';
 import { RESTART_WARP } from '../../frontend/modules/procgenCore/restartWarp.js';
-import { rankCandidates } from '../../frontend/modules/procgenCore/routeChooser.js';
+import { grabOnTheWay, rankCandidates } from '../../frontend/modules/procgenCore/routeChooser.js';
 import { detectBidirectionalMode } from '../../frontend/modules/shared/bidirectionalDetector.js';
 
 export const ORDERINGS = Object.freeze(['listed', 'sphere-cheapest', 'reachable-cheapest',
     'sphere-cheapest+sweep', 'reachable-cheapest+sweep', 'sphere-cheapest+pocket', 'reachable-cheapest+pocket',
-    'sphere-cheapest+pocket-item', 'reachable-cheapest+pocket-item']);
+    'sphere-cheapest+pocket-item', 'reachable-cheapest+pocket-item',
+    'sphere-cheapest+sweep+grab', 'reachable-cheapest+grab', 'sphere-cheapest+sweep+pocket-item',
+    'sphere-cheapest+sweep+pocket-item+grab', 'reachable-cheapest+pocket-item+grab']);
 
 /**
  * The bot's queue rows, from a sphere log's entries (`{type, sphere_index, player_data}`): every `state_update`'s
@@ -107,6 +113,7 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
     const sweep = mods.includes('sweep');
     const pocketItem = mods.includes('pocket-item');
     const pocketAware = pocketItem || mods.includes('pocket');
+    const grab = mods.includes('grab');
     const events = gameStateEventsOf(regions);
     const menuStart = regions[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region ?? null;
     const locRule = new Map();
@@ -115,24 +122,24 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
     const wanted = rows.slice();
     const order = [];
     let here = start;
-    const plan = (row) => {
+    const plan = (row, from = here) => {
         const to = regionOfLocation(regions, row.location);
         if (!ruleHolds(locRule.get(row.location), items)) return null;
-        const walk = here === to ? { path: [here], exits: [] } : regionPathHops(regions, ruleHolds, here, to, items);
+        const walk = from === to ? { path: [from], exits: [] } : regionPathHops(regions, ruleHolds, from, to, items);
         if (walk) return { legs: [walk], restart: false };
         if (restart && menuStart) {
             const onward = regionPathHops(regions, ruleHolds, menuStart, to, items);
             if (onward) {
-                return { legs: [{ path: [here, RESTART_TARGET, ...onward.path],
+                return { legs: [{ path: [from, RESTART_TARGET, ...onward.path],
                     exits: [RESTART_WARP.label, 'GameStart', ...onward.exits] }], restart: true };
             }
         }
         const pre = events.length === 0 ? null
-            : eventPrerequisites({ regions, ruleHolds, here, items, events, target: to, targetRule: locRule.get(row.location) });
+            : eventPrerequisites({ regions, ruleHolds, here: from, items, events, target: to, targetRule: locRule.get(row.location) });
         if (!pre) return null;
         const legs = [];
         const its = { ...items };
-        let cur = here;
+        let cur = from;
         for (const e of pre) {
             const p = regionPathHops(regions, ruleHolds, cur, e.region, its);
             if (!p) return null;
@@ -145,7 +152,9 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
         legs.push(last);
         return { legs, restart: false, prereqs: pre };
     };
-    const price = (p, row) => p && { hops: p.legs.reduce((n, l) => n + l.path.length - 1, 0), restart: p.restart,
+    const hopsOf = (p) => p.legs.reduce((n, l) => n + l.path.length - 1, 0);
+    const endOf = (p) => { const last = p.legs[p.legs.length - 1].path; return last[last.length - 1]; };
+    const price = (p, row) => p && { hops: hopsOf(p), restart: p.restart,
         pocket: pocketAware && restart && !!menuStart && wanted.length > 1 && isPocket(p, row) };
     // ⛓ POCKET — no walk leads from the row's region back to the start with the items held NOW (the bot's live
     //   snapshot has no more than that): leaving it owes a Restart.
@@ -178,7 +187,19 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
             throw new Error(`orderRows(${ordering}): no remaining row has a route from ${here} `
                 + `(remaining: ${wanted.slice(0, 5).map((r) => r.sphere).join(', ')}…)`);
         }
-        const pick = ranked[0].candidate;
+        let pick = ranked[0].candidate;
+        if (grab) {
+            // ⛓ GRAB-ON-THE-WAY — a remaining row this route reaches at zero detour is taken first.
+            const target = pick;
+            const base = cost(target);
+            pick = grabOnTheWay(target, wanted.filter((r) => r !== target), { cost, tieBreak, costVia: (c) => {
+                const pc = cost(c) && plans.get(c);
+                if (!pc) return null;
+                const pt = plan(target, endOf(pc));
+                return pt && { hops: hopsOf(pc) + hopsOf(pt),
+                    restarts: (pc.restart ? 1 : 0) + (pt.restart ? 1 : 0) + (base.pocket ? 1 : 0) };
+            } });
+        }
         const p = plans.get(pick);
         // the walk's own credits, as deriveLegs takes them: events crossed on the way, then the prerequisites broken
         (p.prereqs ?? []).forEach((e, i) => {
