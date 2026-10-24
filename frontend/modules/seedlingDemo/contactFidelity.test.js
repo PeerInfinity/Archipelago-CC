@@ -240,7 +240,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             tentacleHitlessFirst: true,
             // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
-            drillTimedPass: true });
+            drillTimedPass: true,
+            // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23) turns it ON.
+            pitTeleporterCrossing: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

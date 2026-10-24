@@ -19,10 +19,10 @@
  *       L11 — verbs `break, step-off, walk`, a `break` record before the reach-exit one. ⛓ The rules arc's
  *       arrival spawns (2026-10-04) moved seven arrivals OFF their doors, so those legs are PLAIN exit legs
  *       from the new spawn: ⚖ L101 (96,0), L106 (48,48), L109 (144,48) cross ON PLAN (producer `solver`, no
- *       step-off). The other four goals still fail BY NAME — the goal, not the arrival, is what the solver
- *       cannot serve: L43 (144,48) and L100 (288,80) (a door standing ON a pit tile: which of trigger and pit
- *       edge wins is untranscribed), L34 (128,16) (the door under a magical lock), L58 (64,16) (a dead door
- *       over a lethal pit).
+ *       step-off). ⛓ fidelity PITPORT (`pitTeleporterCrossing`, ON since planning-11's flip): L43 (144,48) and L100
+ *       (288,80) — a LIVE door standing ON a pit tile — CROSS on plan: the game takes the door over its pit (PITPORT's
+ *       witnesses). The other two goals still fail BY NAME — the goal, not the arrival, is what the solver cannot
+ *       serve: L34 (128,16) (the door under a magical lock), L58 (64,16) (a dead door over a lethal pit).
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
  *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45): each fails BY NAME after 2 plans
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4. Wave 8 moved two:
@@ -104,8 +104,10 @@ export const LEGS = {
         { name: 'moved L101', at: [101, 96, 0], goal: exit(101, [[6, 1]], 'out_teleporter_104_24'), expect: 'cross', producer: 'solver' },
         { name: 'moved L106', at: [106, 48, 48], goal: exit(106, [[4, 3]], 'L106 door'), expect: 'cross', producer: 'solver' },
         { name: 'moved L109', at: [109, 144, 48], goal: exit(109, [[10, 3]], 'L109 door'), expect: 'cross', producer: 'solver' },
-        { name: 'moved L43 pit door', at: [43, 144, 48], goal: exit(43, [[9, 4]], 'out_teleporter_144_64'), expect: 'named' },
-        { name: 'moved L100 pit door', at: [100, 288, 80], goal: exit(100, [[18, 6]], 'out_teleporter_288_96'), expect: 'named' },
+        // ⛓ fidelity PITPORT flip (planning-11; ⚖ user "Harvest + flip, re-pin"): a LIVE door on its Pit tile is crossed — the
+        // game takes the door over its pit (PITPORT's six p4g witnesses); CI probes ON 39973188819 crossed both, 0 divergences.
+        { name: 'moved L43 pit door', at: [43, 144, 48], goal: exit(43, [[9, 4]], 'out_teleporter_144_64'), expect: 'cross', producer: 'solver' },
+        { name: 'moved L100 pit door', at: [100, 288, 80], goal: exit(100, [[18, 6]], 'out_teleporter_288_96'), expect: 'cross', producer: 'solver' },
         { name: 'moved L34 lock', at: [34, 128, 16], goal: exit(34, [[8, 0]], 'L34 door'), expect: 'named' },
         { name: 'moved L58 dead door', at: [58, 64, 16], goal: exit(58, [[5, 1]], 'out_teleporter_80_16'), expect: 'named' },
         // ⛓ fidelity STEPOFF2 D3 — LAST in the session: the Sword stays granted for the rest of the page.

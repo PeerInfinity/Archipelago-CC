@@ -8,8 +8,10 @@
  * the logic-only channel); every poll reads `botStatus` (the player, `slash.{tests,hits}`) and `botMobiles` (the
  * chaser rows: position, `enemy.hits`, anim), and the model replays the same tape with the key ON and OFF:
  *
- *   skinswing-l71-lavarunner   L71 boot (96,200), FIGHT, 300 t
- *   skinswing-l74-bulb         L74 boot (80,100), FIGHT, 300 t
+ *   skinswing-l71-lavarunner   L71 boot (96,200), FIGHT, 300 t   (the stand's FORMER site; it is at (80,208) now)
+ *   skinswing-l74-bulb         L74 boot (80,100), FIGHT, 300 t   (the stand's FORMER site; it is at [64,100] now)
+ *   skinswing-l71-resite       L71 boot (80,208) — the lavarunner-L71 stand's site
+ *   skinswing-l74-resite       L74 boot (64,100) — the bulb-L74 stand's site
  *
  * Run (the dev server at the repo root, `SEEDLING_PORT`, default 8000):
  *   node scripts/procgen/probe-seedling-skin-swing.mjs                       # every witness: build, play, compare

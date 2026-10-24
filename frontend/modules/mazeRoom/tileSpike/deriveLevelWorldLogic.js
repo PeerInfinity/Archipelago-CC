@@ -15,6 +15,7 @@
 
 import {
     regionItems, reachUnder, regionTargets, cutEvents, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
+    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
@@ -29,7 +30,7 @@ import {
 export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     const w = { ...world, items: new Map() };
     const start = createState(w);
-    start.inventory = new Set(inventory);
+    start.inventory = inventoryOf(inventory);
     // ⚖ never expect tanking a hit: an arrival in an armed lane reaches nothing.
     if (standsInArmedLane(w, start)) return NOTHING_REACHED;
     const ropes = cutEvents(w);
@@ -65,7 +66,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
             if (!cells.has(cell)) cells.set(cell, k);
             for (const r of ropes) if (!cuts.has(r.key) && next.broken?.includes(r.key)) cuts.set(r.key, k);
         }
-        if (seen.size > cap) throw new Error(`level-world logic: native search over ${[...inventory]} exceeded ${cap} states`);
+        if (seen.size > cap) throw new Error(`level-world logic: native search over ${formatPoint(inventory)} exceeded ${cap} states`);
     }
     const planFrom = (k) => {
         if (k === undefined) return null;
@@ -78,15 +79,6 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     };
 }
 
-function* subsetsOfSize(items, k, from = 0, acc = []) {
-    if (acc.length === k) { yield acc.slice(); return; }
-    for (let i = from; i <= items.length - (k - acc.length); i++) {
-        acc.push(items[i]);
-        yield* subsetsOfSize(items, k, i + 1, acc);
-        acc.pop();
-    }
-}
-
 /**
  * `reach(set)` through an optional CACHE (a Map the caller owns, one per world and engine): the pairs and
  * the entry pricing of one region ask the same (arrival, inventory) reach — the certifier shares it.
@@ -94,7 +86,7 @@ function* subsetsOfSize(items, k, from = 0, acc = []) {
 function cachedReach(cache, entered, reach) {
     if (!cache) return reach;
     return (set) => {
-        const key = `${entered.entrance.x},${entered.entrance.y}|${[...set].sort().join('\u0001')}`;
+        const key = `${entered.entrance.x},${entered.entrance.y}|${set.join('\u0001')}`;
         if (!cache.has(key)) cache.set(key, reach(set));
         return cache.get(key);
     };
@@ -127,6 +119,8 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         }
         return null;
     };
+    const levels = regionLevels(world);
+    const axis = latticeAxis(items, levels);
     const pairs = [];
     let searched = 0;
     let states = 0;
@@ -134,7 +128,7 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         const entered = enteredAt(world, from);
         const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
             : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
-        const full = reachOf(items);
+        const full = reachOf(fullPoint(axis));
         searched += 1;
         states += full.states;
         const live = sw.regions.filter((to) => to !== from).map((to) => ({
@@ -142,24 +136,22 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         }));
         pairs.push(...live);
         const open = live.filter((p) => !p.unreachable);
-        const covered = (p, set) => p.minimal.some((m) => m.every((i) => set.includes(i)));
-        for (let k = 0; k <= items.length; k++) {
-            for (const set of subsetsOfSize(items, k)) {
-                if (open.every((p) => covered(p, set))) continue;
-                const reach = reachOf(set);
-                searched += 1;
-                states += reach.states;
-                for (const p of open) {
-                    if (covered(p, set)) continue;
-                    const cell = owned(reach.cells, p.to);
-                    if (cell === null) continue;
-                    p.minimal.push(set);
-                    p.witnesses.push({ inventory: set, plan: reach.planTo(cell), cell });
-                }
+        const covered = (p, set) => p.minimal.some((m) => pointCovers(set, m));
+        for (const set of latticePoints(axis)) {
+            if (open.every((p) => covered(p, set))) continue;
+            const reach = reachOf(set);
+            searched += 1;
+            states += reach.states;
+            for (const p of open) {
+                if (covered(p, set)) continue;
+                const cell = owned(reach.cells, p.to);
+                if (cell === null) continue;
+                p.minimal.push(set);
+                p.witnesses.push({ inventory: set, plan: reach.planTo(cell), cell });
             }
         }
     }
-    return { items, pairs, searched, states };
+    return { items, levels, pairs, searched, states };
 }
 
 /**
@@ -187,6 +179,14 @@ export function deriveEntryLogic(world, region, helpers, {
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
     }
+    // ⛓ COUNTED ITEMS: this world's counts, and those of the landing obstacles the caller judges arrivals by.
+    const levels = regionLevels(world);
+    for (const [item, ns] of arrivalBlocked?.levels ?? []) {
+        if (!levels.has(item)) levels.set(item, new Set([1]));
+        for (const n of ns) levels.get(item).add(n);
+    }
+    const axis = latticeAxis(items, levels);
+    const top = fullPoint(axis);
     const taken = (reach, t, set) => reachedTarget(reach, t, set, entered) && !(t.exit && arrivalBlocked?.(t.exit, set));
     const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
     // ⛓ An event bound by the projection names the AP region whose location it is (`side`); a rope's goes by its cell.
@@ -201,29 +201,27 @@ export function deriveEntryLogic(world, region, helpers, {
     });
     const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
         : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
-    const full = reachOf(items);
+    const full = reachOf(top);
     let searched = 1;
     let states = full.states;
     for (const t of targets) {
         t.minimal = [];
         t.witnesses = [];
-        t.unreachable = !taken(full, t, t.event ? items.filter((i) => i !== t.event) : items);
+        t.unreachable = !taken(full, t, t.event ? top.filter((i) => i !== t.event) : top);
     }
     const live = targets.filter((t) => !t.unreachable);
-    const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
-    for (let k = 0; k <= items.length; k++) {
-        for (const set of subsetsOfSize(items, k)) {
-            if (live.every((t) => covered(t, set))) continue;
-            const reach = reachOf(set);
-            searched += 1;
-            states += reach.states;
-            for (const t of live) {
-                if (covered(t, set) || !taken(reach, t, set)) continue;
-                t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, entered), cell: targetCell(reach, t, set, entered) });
-            }
+    const covered = (t, set) => t.minimal.some((m) => pointCovers(set, m));
+    for (const set of latticePoints(axis)) {
+        if (live.every((t) => covered(t, set))) continue;
+        const reach = reachOf(set);
+        searched += 1;
+        states += reach.states;
+        for (const t of live) {
+            if (covered(t, set) || !taken(reach, t, set)) continue;
+            t.minimal.push(set);
+            t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, entered), cell: targetCell(reach, t, set, entered) });
         }
     }
     for (const t of targets) delete t.exit;
-    return { items, targets, searched, states };
+    return { items, levels, targets, searched, states };
 }

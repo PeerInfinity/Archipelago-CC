@@ -24976,3 +24976,67 @@ early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_W
 - A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
 - "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
   window is a 2 px band at each hop.
+
+### Seedling fidelity PITPORT — a live teleporter on a Pit tile is an exit the walk ends on (`pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 26 (⚖ the user picked "PIT-TELEPORTER slice", 2026-10-22). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitport.md`.
+
+**W0 — the game's order.** `Teleporter.update()` (`Teleporter.as:89-118`) has no fall guard: a live door fires on the
+first frame the player box overlaps its 16x16 rect (`!playerTouching`). The doors update BEFORE the player
+(`addUpdate` prepends; the player is added at `Game.as:2040`, the doors at `:2169`), and `checkFallingInPit`
+(`Player.as:745-771`) fades for 20 frames before its own `FP.world =` / `die()`. The pit edge reads the tile under
+`(x, y + checkOffsetY)`, a point INSIDE the 4x5 box, so on a door that is its own pit tile the box overlaps the door
+no later than the edge fires: the door wins on every approach. Only a door that cannot fire loses: a SHUT one, or one
+the run stands LATCHED on (its arrival overlapped it). The atlas holds exactly three pit doors, each on its own tile
+in a room with no fallthrough: L43 `teleporter@144,64` → L37 (9,4), L58 `teleporter@80,16` → L46 (5,1; the Yeti's
+tag 1), L100 `teleporter@288,96` → L101 (18,6). No room's arrival lands on one. The physics already crossed them
+(YETI's `talk` at 0 px); only the walker's door lookup refused.
+
+**The model (switch ON).** `botDriverV2.liveDoorPitTile`; `findExit` admits a LIVE door on its pit tile that the run
+is not latched on; `plannerObstacleAt`'s pit arm exempts that one tile only while `allowTeleporter` is that door (the
+ring of pits around L100's door stays forbidden). A shut door stays DEACTIVATED; a latched one keeps
+`unmodelled-pit-teleporter`. OFF: byte-identical.
+
+**Witnesses (p4g, `probe-seedling-pit-doors.mjs`, `fixtures/pitdoor-witness/`, all 0 px every tick):** `l43-south`
+(the solver's plan; crosses t360), `l43-north` (down onto the door), `l100-west` (the solver's plan), `l100-east`
+(left onto it), `l58-east` (both flags cleared; diagonally, corner first): each crosses the tick after the box first
+overlaps the door. `l58-shut-east`: the shut door does not cross, the Pit takes the player (respawn t150).
+
+**The next gap (handed over).** L58 after the Yeti's talk: the door is admitted, but the planner's A* edge
+(56,56) → (72,56) passes 0.07 px into `yeti@56,56`'s 10x12 Solid (y 58..70) and the walk holds `right` alone at
+y 55.93 and stalls. An A* edge between two clear tile centres is not checked against a sub-tile Solid (`stringPull`
+keeps consecutive nodes unchecked) — `planWaypoints`' region, not edited here.
+
+**Trap candidates.**
+- A refusal that guards a race the model already resolves (the physics crossed; the lookup refused) hides the next
+  obstacle: lifting it moved three survey refusals' WORDS, not their verdicts.
+- A door a run arrives LATCHED on is not the door it walks onto: the same tile answers "door" or "pit" by the latch.
+
+### Seedling fidelity PITLATCH — one latch predicate for a door on a Pit tile (behind `pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (PITPORT's review condition, js-8). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitlatch.md`.
+
+**The split.** PITPORT's `findExit` admitted a live pit door only when the run was not latched on it, but the
+planner's pit arm (`liveDoorPitTile(level, index)`) ignored the latch. Measured at the base with the switch ON:
+`stepOffCellFor` on a run latched on L43's door planned a walk to (152,56), on L100's to (296,88) — across the very
+tile the game lets the Pit take.
+
+**The game (`probe-seedling-pit-doors.mjs` `l43-latched` / `l100-latched`, p4g headless, 0 px).** Booted ON the door
+(the boot latches it, `Teleporter.check()`), the step off held from the first tick: after 0.72 px the Pit takes the
+player at t0, it respawns ON the door at t20, t40, t60, and the door never fires — a death loop, as PITPORT read off
+the AS3. `stepOffMinimalFor` already said "falls" in every direction, at the game's own t1 position.
+
+**The model.** `liveDoorPitTile(level, index, latched)` → null when `latched.has(index)`; `findExit` asks it (meaning
+unchanged); `plannerObstacleAt` reads `latched` from its opts; `pitLatchOpts(run)` (`{latched}` ON, `{}` OFF) is
+spread into `solverPlanOpts` (now exported), the walker's `planNow`, and the crusher bait search's per-config opts.
+The planner's own memo (SP) is per call and keys on nothing but the point, so no memo key moves. OFF: byte-identical.
+ON vs PITPORT's ON: 0 survey movers (239 steps) — no real arrival lands on a pit door, so only the step-off planner
+ever saw the hole.
+
+**Trap candidates.**
+- Two readers of one rule with two predicates drift: the lookup carried the latch, the planner did not, and the
+  only caller that could tell them apart (the step-off) is one the lookup's refusal hides in every staged room.
+- A guard whose only witness is a staged boot (no atlas arrival lands on a pit door) is still a game witness: stage
+  it on the game, do not argue it from the AS3.
