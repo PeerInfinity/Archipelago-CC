@@ -268,11 +268,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             fireLiveTurretReach: true,
             pulserPublishLag: true,
             // ⛓ fidelity FIREMOVE (wave 29): the solver moves a fire block by Fire presses, and weighs with it — OFF.
-            fireBlockRoute: false,
+            fireBlockRoute: true,
             // ⛓ fidelity CORPSEBUMP (wave 29): the block's glide and the corpse's slide see the stepped bodies — shipped OFF.
-            blockSweepBodies: false,
+            blockSweepBodies: true,
             // ⛓ fidelity CORPSEBUMP D2 (wave 29): an ice turret's corpse bumped onto a button as a weigh's holder — shipped OFF.
-            corpseBumpWeigh: false });
+            corpseBumpWeigh: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

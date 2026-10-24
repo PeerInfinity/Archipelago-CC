@@ -31,14 +31,14 @@ const L4_GAME = L4.samples.map(unpackCorpseBumpSample);
 
 describe('CORPSEBUMP — the switches', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_BLOCK_SWEEP_BODIES)(
-        'blockSweepBodies ships OFF', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.blockSweepBodies).toBe(false);
-            expect(CONTACT_FIDELITY.blockSweepBodies).toBe(false);
+        'blockSweepBodies ships ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.blockSweepBodies).toBe(true);
+            expect(CONTACT_FIDELITY.blockSweepBodies).toBe(true);
         });
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_CORPSE_BUMP_WEIGH)(
-        'corpseBumpWeigh ships OFF', () => {
-            expect(CONTACT_FIDELITY_DEFAULTS.corpseBumpWeigh).toBe(false);
-            expect(CONTACT_FIDELITY.corpseBumpWeigh).toBe(false);
+        'corpseBumpWeigh ships ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+            expect(CONTACT_FIDELITY_DEFAULTS.corpseBumpWeigh).toBe(true);
+            expect(CONTACT_FIDELITY.corpseBumpWeigh).toBe(true);
         });
 });
 

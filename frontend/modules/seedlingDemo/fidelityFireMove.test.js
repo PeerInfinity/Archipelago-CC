@@ -22,7 +22,7 @@ import {
     compareFireMoveWitness, fireMoveModelSamples, unpackFireMoveSample,
 } from './fidelityFireMove.js';
 import { FIREPUSH_ROUTE, firePushPrefixTape } from './fidelityFirePush.js';
-import { MAX_FIRE_ROUTE_ORDERS, MAX_ROUTE_EXPANSIONS, deriveBlockRoute, deriveWeigh } from './solverBot.js';
+import { MAX_ROUTE_EXPANSIONS, MAX_ROUTE_ORDERS, deriveBlockRoute, deriveWeigh } from './solverBot.js';
 import { createRunForStaging, createTapeStepper, stagingFromTape } from './tapeRunner.js';
 import { heldKeysAt, parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -43,9 +43,9 @@ const runAtEnd = (tapeJson, over) => withContactFidelity(over, () => {
 });
 
 describe('FIREMOVE — the switch', () => {
-    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FIRE_BLOCK_ROUTE)('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.fireBlockRoute).toBe(false);
-        expect(CONTACT_FIDELITY.fireBlockRoute).toBe(false);
+    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FIRE_BLOCK_ROUTE)('ships ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.fireBlockRoute).toBe(true);
+        expect(CONTACT_FIDELITY.fireBlockRoute).toBe(true);
     });
 });
 
@@ -66,7 +66,7 @@ describe('FIREMOVE — L40, the t5 holder (from the state after `r5-l40-part5`\'
             { kind: 'press', onto: FIREMOVE_L40.onto }, new Set(FIREMOVE_L40.contacts), []));
         expect(r.refused).toBeNull();
         expect(r.steps.length).toBe(FIREPUSH_ROUTE.length);
-        expect(r.steps.length).toBeLessThanOrEqual(MAX_FIRE_ROUTE_ORDERS);
+        expect(r.steps.length).toBeLessThanOrEqual(MAX_ROUTE_ORDERS);
         expect(r.expansions).toBeLessThan(MAX_ROUTE_EXPANSIONS);
         r.steps.forEach((s, i) => {
             const p = FIREPUSH_ROUTE[i];

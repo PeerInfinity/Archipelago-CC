@@ -7911,15 +7911,8 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
  */
 export const MAX_ROUTE_ORDERS = 48;
 export const MAX_ROUTE_EXPANSIONS = 2000;
-/**
- * ⛓ fidelity FIREMOVE — A FIRE ROUTE'S OWN ORDER BOUND (`fireBlockRoute`). A Fire press moves its block ONE tile, so
- * a route of N tiles is N orders: L40's t5 holder is 35 (FIREPUSH's witness, `FIREPUSH_ROUTE`), L41's wandlock holder 6
- * (`r5Totem.L41_PART3.pushes`). `MAX_ROUTE_ORDERS` counts LEANS, each of which can carry the block `MAX_SHOVE_TILES`, and
- * is the js route census's; this bound is named for the fire arm alone and does not move it. Its value is MEASURED, not
- * argued: the solver's own L40 route is 35 orders (the report, D1), and the expansions it spends are the shared
- * `MAX_ROUTE_EXPANSIONS`'s, which still binds.
- */
-export const MAX_FIRE_ROUTE_ORDERS = 40;
+// ⛓ fidelity FIREMOVE: a fire route (one tile per order; L40's t5 holder 35, L41's 6) shares `MAX_ROUTE_ORDERS`
+// (⚖ js-11, 2026-10-24: route-census raised it 8 → 48 to cover FIREMOVE's 35; one bound per search family).
 
 /**
  * @typedef {{depth: number, newStates: number, newBlockCells: number,
@@ -7950,8 +7943,7 @@ function blockRouteBound(route, row, goalKind) {
     return {
         name, site: 'block-route', goal: goalKind, block: row.id,
         limit: name === 'MAX_ROUTE_EXPANSIONS' ? MAX_ROUTE_EXPANSIONS
-            : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS
-                : name === 'MAX_FIRE_ROUTE_ORDERS' ? MAX_FIRE_ROUTE_ORDERS : null,
+            : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS : null,
         expansions: route.expansions,
         census: route.census ?? [],
     };
@@ -8269,8 +8261,6 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
      * they stood (`press`'s shape). Executed through `runFire`'s `moves` arm (`execFireMovePress`).
      */
     const fireMove = CONTACT_FIDELITY.fireBlockRoute && row.as3 === 'PushableBlockFire';
-    const ordersCap = fireMove ? MAX_FIRE_ROUTE_ORDERS : MAX_ROUTE_ORDERS;
-    const ordersCapName = fireMove ? 'MAX_FIRE_ROUTE_ORDERS' : 'MAX_ROUTE_ORDERS';
     const fireFloorOpts = (bags) => solverPlanOpts(run, bags.exempt,
         { nodeMargin: 0, triggerMargin: 0, liveBag: bags.solid });
     const fireMoves = (state, key, bags, atStart, dir, dirIndex, push) => {
@@ -8480,7 +8470,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
             restart = true;
             break;
         }
-        if (state.steps.length >= ordersCap) { ordersBound = true; continue; }
+        if (state.steps.length >= MAX_ROUTE_ORDERS) { ordersBound = true; continue; }
         // ⛓ SF2: the caller's deadline is a bound too, refused in the same shape.
         if (deadlineReached('block-route')) {
             return { steps: null, rejected, found, expansions, census, refused: {
@@ -8619,9 +8609,9 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     break;
     }
     return { steps: null, rejected, found, expansions, census, refused: ordersBound ? {
-        bound: ordersCapName,
-        why: `every route the search could reach was cut at ${ordersCap} orders `
-            + `(\`${ordersCapName}\`) without meeting the \`${goal.kind}\` post-condition`
+        bound: 'MAX_ROUTE_ORDERS',
+        why: `every route the search could reach was cut at ${MAX_ROUTE_ORDERS} orders `
+            + `(\`MAX_ROUTE_ORDERS\`) without meeting the \`${goal.kind}\` post-condition`
             + routeCensusClause(census),
     } : {
         bound: null,

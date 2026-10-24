@@ -1222,10 +1222,11 @@ export const CONTACT_FIDELITY = {
      * refused *"NO block in this room can reach it"* (L39's opener, L40's t5 holder, L41's wandlock button). ON: one tile
      * per press from the cell on the block's far side, the flame audited to reach nothing else (`presses.auditFire`, the
      * live turret rect when `fireLiveTurretReach` is ON), executed through `runFire`'s `moves` arm; a fire route has its
-     * own order bound (`MAX_FIRE_ROUTE_ORDERS`); a fire block already on a button dwells. OFF: byte-identical.
+     * order bound (the shared `MAX_ROUTE_ORDERS`, 48); a fire block already on a button dwells. OFF: byte-identical.
      * `SEEDLING_FIRE_BLOCK_ROUTE=0|1` for a node measurement.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, w29b "Flip all 3 ON") turns it ON (CI A/B: L41 Totem Part 240,144 SOLVED; 871 failed → done).
      */
-    fireBlockRoute: false,
+    fireBlockRoute: true,
     /**
      * fidelity CORPSEBUMP D1 (wave 29) — A PUSHABLE'S GLIDE AND A TURRET CORPSE'S SLIDE STOP ON THE "Enemy" BODIES THE
      * RUN STEPS. `PushableBlock*`'s ctor does `solids.push("Enemy", "Player")` (`PushableBlock.as:28`,
@@ -1238,8 +1239,9 @@ export const CONTACT_FIDELITY = {
      * (`bob`, `bobsoldier`, `flyer`, `bulb`), and a `Puncher` (added after it, so read one tick late here) refuses by
      * name within a tick's reach. `botDriverV2.runFire`'s enemy-room refusals narrow to the bodies those sweeps do not
      * see (`run.blockSweepBodyIds`). OFF: byte-identical. `SEEDLING_BLOCK_SWEEP_BODIES=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, w29b "Flip all 3 ON") turns it ON (CI A/B: L41 Totem Part 240,144 SOLVED; 871 failed → done).
      */
-    blockSweepBodies: false,
+    blockSweepBodies: true,
     /**
      * fidelity CORPSEBUMP D2 (wave 29) — AN ICE TURRET'S CORPSE IS A WEIGH'S HOLDER (`solverBot.deriveCorpseWeigh`).
      * `IceTurret.bump` moves a corpse one tile away from a Fire press (`IceTurret.as:172-203`), and a corpse on a
@@ -1249,8 +1251,9 @@ export const CONTACT_FIDELITY = {
      * presser is killed (`killIceTurretInPlace`, corpse only) and bumped there press by press (`runFire`'s bump arm),
      * each press audited against the corpse where it will be; then the fade is waited out. Needs `blockSweepBodies` and
      * `fireLiveTurretReach` ON (refused by name otherwise). OFF: byte-identical. `SEEDLING_CORPSE_BUMP_WEIGH=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, w29b "Flip all 3 ON") turns it ON (CI A/B: L41 Totem Part 240,144 SOLVED; 871 failed → done).
      */
-    corpseBumpWeigh: false,
+    corpseBumpWeigh: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
