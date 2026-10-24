@@ -1172,6 +1172,39 @@ export const CONTACT_FIDELITY = {
      * done both arms); probes standard ON green.
      */
     whirlpoolDrown: true,
+    /**
+     * fidelity FIREPUSH (wave 28) — A `PushableBlockFire` ON THE FRONTIER IS SHOVED BY THE ROOM'S PULSER
+     * (`solverBot.resolveFireBlockShove`). `PushableBlockFire.moveTypes` is `["Fire", "Pulse"]` and it has no lean, so
+     * `resolveShoveStrategy` resolved the fire family to nothing and the frontier refused *"Strategy 'shove' failed to
+     * apply"* (L40's Boss Key 2, legs 869/870: `pushableblockfire@576,576` under the walk block, whose Fire push north
+     * stops dead against it). ON: a pulser whose 22 px reach holds the block, whose push (`pulsePushes`) leaves a
+     * corridor to the aim, is driven by holding a publisher of its group until the block is at rest on the destination
+     * (L40: `button@816,400` → `pulser@592,576` → west into (35,36)). The Fire press is considered and named, not
+     * executed. OFF: byte-identical. `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1` for a node measurement.
+     */
+    fireBlockPulseShove: false,
+    /**
+     * fidelity FIREPUSH (wave 28) — A FIRE PRESS REACHES AN ICE TURRET WHERE IT IS NOW (`presses.fireRespondersIn`).
+     * `fire()`'s candidates are `collideRectInto` against each entity's CURRENT hitbox, and a dead `IceTurret` is a
+     * 16x16 corpse that bumps move (`IceTurret.bump`). The audit tested every turret against its CENSUS rect — the
+     * live body's 32x32 at its `.oel` cell — so a corpse pushed out of the flame stayed "reached". MEASURED on the game
+     * (p4g, `firepush-l40-bosskey2`): `r5-l40-part5`'s second `fire.bumps` press from (488,440) leaves the corpse at
+     * (488,407.5) — its box [399.5,415.5) is above the flame's [423.3,455.3) — and the model pushed it on to the t2
+     * button. ON: the live rect and origin (`run.entities('turrets')`). OFF: byte-identical.
+     * `SEEDLING_FIRE_LIVE_TURRET_REACH=0|1` for a node measurement.
+     */
+    fireLiveTurretReach: false,
+    /**
+     * fidelity FIREPUSH (wave 28) — A PULSER READS THE FLAG ITS BUTTON PUBLISHED LAST TICK (`levelRun.stepPulsersNow`).
+     * `Game.loadlevel` adds `button` (`Game.as:2341`) and `buttonroom` (`:2342`) BEFORE `pulser` (`:2357`), and
+     * `World.addUpdate` prepends, so a Pulser updates BEFORE its publisher: its `activate` on tick T is what the Button
+     * wrote on T-1, from the player box the end of T-2 left. The model read the end of T-1 box — ONE TICK EARLY.
+     * MEASURED on the game (p4g, `firepush-l40-bosskey2`): the pulse that pushes `pushableblockfire@576,576` west starts
+     * its glide at t5100 on the game and t5099 in the model, 0 px everywhere else. ON: the momentary (`pressedGroups`)
+     * arm is lagged one tick, carried on the pulser's own state (`pressedLast`, in `stateDigestParts`' `visit` through
+     * `pulserStates`); a LATCHED group is read as before. OFF: byte-identical. `SEEDLING_PULSER_PUBLISH_LAG=0|1`.
+     */
+    pulserPublishLag: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1395,6 +1428,13 @@ if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS_EXIT === '0') CONTACT_FID
 // ⛓ seedling-fidelity-residue D-B: `SEEDLING_WHIRLPOOL_DROWN=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '1') CONTACT_FIDELITY.whirlpoolDrown = true;
 if (globalThis.process?.env?.SEEDLING_WHIRLPOOL_DROWN === '0') CONTACT_FIDELITY.whirlpoolDrown = false;
+// ⛓ fidelity FIREPUSH: `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_PULSE_SHOVE === '1') CONTACT_FIDELITY.fireBlockPulseShove = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_PULSE_SHOVE === '0') CONTACT_FIDELITY.fireBlockPulseShove = false;
+if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '1') CONTACT_FIDELITY.fireLiveTurretReach = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '0') CONTACT_FIDELITY.fireLiveTurretReach = false;
+if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '1') CONTACT_FIDELITY.pulserPublishLag = true;
+if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELITY.pulserPublishLag = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

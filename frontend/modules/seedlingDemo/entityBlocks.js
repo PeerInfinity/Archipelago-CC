@@ -243,8 +243,8 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the stepped spinners (`levelRun.js:10563`, `MODELLED_ENEMY_CLASSES.Spinner`): the bounced body, `dangerMap.spinnerDanger`\'s hammer, `hitsTimer`.' },
     { family: 'armedPulsers', kind: RUN_ENTITIES, blocks: ['stationary', 'pulse', 'channel'],
-        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
-        why: 'the pulsers whose group is pressed or latched (`levelRun.js:10691`).' },
+        solverReads: ['botDriverV2', 'dangerMap', 'solverBot'], strategies: [],
+        why: 'the pulsers whose group is pressed or latched (`levelRun.js:10691`); `dangerMap.pulserQuiet` skips a quiet one\'s ring (fidelity FIREPUSH, `fireBlockPulseShove`).' },
     { family: 'turrets', kind: RUN_ENTITIES, blocks: ['stationary', 'pushable'],
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'the ice turrets\' rects and `solid` flag (`levelRun.js:10656`) — the live body and the pushed corpse; '
@@ -273,7 +273,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'burned tree ids (`levelRun.js:10581`) — a `TILE_TRIGGERS` itemCategory, not a block.' },
     { family: 'latchedGroups', kind: RUN_ENTITIES, blocks: ['channel'],
-        solverReads: ['solverBot'], strategies: [],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the Activators groups a `room = -1` press latched open (`levelRun.js:10718`).' },
     { family: 'pulledRopes', kind: RUN_ENTITIES, blocks: [],
         // ⛓ fidelity ROPE: `solverBot.resolveRopeStrategy` reads it (a rope already pulled is no work order). The

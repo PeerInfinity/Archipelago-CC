@@ -260,7 +260,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             drillTimedPassExit: true,
             // ⛓ seedling-fidelity-residue D-B (wave 28): a whirlpool's drown transcribed, its pull priced; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
-            whirlpoolDrown: true });
+            whirlpoolDrown: true,
+            // ⛓ fidelity FIREPUSH (wave 28): a fire block shoved by the room's pulser, a Fire press reaching a turret
+            // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
+            fireBlockPulseShove: false,
+            fireLiveTurretReach: false,
+            pulserPublishLag: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

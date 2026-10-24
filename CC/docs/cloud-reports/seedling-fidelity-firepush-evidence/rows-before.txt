@@ -1,0 +1,3 @@
+bounded vitest BEFORE (base d3346cf784; one env red: no bulletml-dodge checkout): 122 files, 4238 tests, 4237 passed, 1 failed
+FAIL seedlingAtlasArm.test.js > loadSeedlingRandomizer hands the four pipeline real-room worlds to the atlas arm seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STATE (the committed bytes, rebuilt headless)
+: 1 files, 5 tests, 5 passed, 0 failed
