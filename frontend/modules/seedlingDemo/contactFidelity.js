@@ -1088,6 +1088,20 @@ export const CONTACT_FIDELITY = {
      * PITPORT ON; the doorless key L58 r1c4 failed → done.
      */
     pitTeleporterCrossing: true,
+    /**
+     * fidelity WANDHOLD D2 (wave 28) — A COVER'S HOLD MUST OUTLIVE THE WALKER (`solverBot.coverWeighArm`).
+     *
+     *     Cover.as:37-66    the fade runs while the group is active; the moment it drops, `reset()` makes the Cover
+     *                       "Solid" again unless a Solid or the Player is inside it
+     *     Button.as:27-46   a plain Button republishes every update: stepping off drops its group
+     *
+     * OFF a frontier `cover` keeps `hold` whatever its pressers are (the outlive refinement asks only `KILL_LOCK_TAGS`),
+     * so guard (iii) hypothesises a cover open behind a plain Button the walker leaves — L39 from L38 (js links-b,
+     * `Totem Part 72,40`) then grinds 400 ticks against `cover@112,144` (*"grazing 395 solid(s)"*). ON: a cover with a
+     * group whose pressers all republish refines to `weigh`, as a lock does, so guard (iii) derives the weigh and a
+     * cover no block reaches is a wall. OFF: byte-identical. `SEEDLING_COVER_WEIGH_REFINE=0|1`.
+     */
+    coverWeighRefine: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1297,6 +1311,9 @@ if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY
 // ⛓ fidelity PITPORT: `SEEDLING_PIT_TELEPORTER_CROSSING=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '1') CONTACT_FIDELITY.pitTeleporterCrossing = true;
 if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '0') CONTACT_FIDELITY.pitTeleporterCrossing = false;
+// ⛓ fidelity WANDHOLD: `SEEDLING_COVER_WEIGH_REFINE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '1') CONTACT_FIDELITY.coverWeighRefine = true;
+if (globalThis.process?.env?.SEEDLING_COVER_WEIGH_REFINE === '0') CONTACT_FIDELITY.coverWeighRefine = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

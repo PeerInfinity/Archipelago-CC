@@ -243,7 +243,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             drillTimedPass: true,
             // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23) turns it ON.
-            pitTeleporterCrossing: true });
+            pitTeleporterCrossing: true,
+            // ⛓ fidelity WANDHOLD (wave 28): a cover behind plain Buttons refines to `weigh`; ships OFF.
+            coverWeighRefine: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

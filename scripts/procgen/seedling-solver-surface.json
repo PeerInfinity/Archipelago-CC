@@ -4193,10 +4193,10 @@
         "dangerMap.js": 1,
         "forcedHit.js": 4,
         "lightsVerb.js": 3,
-        "solverBot.js": 74,
+        "solverBot.js": 75,
         "strikePolicy.js": 2
       },
-      "sites": 97,
+      "sites": 98,
       "seen": "static",
       "via": [
         "import"
