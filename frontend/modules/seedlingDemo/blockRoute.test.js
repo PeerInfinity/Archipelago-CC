@@ -20,7 +20,10 @@ import { bootStaging } from './procgenOracle.js';
 import { PRE_SWORD_ITEMS } from './procgenPalette.js';
 import { SEEDLING_DEFAULTS } from './procgenSeedling.js';
 import { stagedRun } from './shoveWeighParity.js';
-import { deriveBlockRoute, solveSegment } from './solverBot.js';
+import {
+    SolverRefusal, deriveBlockRoute, routeCensusClause, solveSegment,
+} from './solverBot.js';
+import { progressKind } from './solveProgress.js';
 import { createRunForStaging } from './tapeRunner.js';
 
 const levelSource = atlasLevelSource();
@@ -173,3 +176,52 @@ describe('R9 slice L15 — the block is the door, the button is the key, the roc
         expect(r.steps[2].stance).toEqual({ x: 280, y: 104 });
     });
 });
+
+/**
+ * ⛓ ROUTE CENSUS (js route-census, 2026-10-24) — "does each extra order reach
+ * a NEW cell?", answered by the search itself, one row per order depth:
+ * `[depth, newStates, newBlockCells, newPlayerCells, expanded]`.
+ */
+describe('the block-route census — what each order depth reached that no shallower one did', () => {
+    const rows = (r) => r.census.map((c) => [c.depth, c.newStates, c.newBlockCells, c.newPlayerCells,
+        c.expanded]);
+
+    it('L15\'s five-order press route: the census by depth, and the route unchanged', () => {
+        const { run } = l15();
+        const r = deriveBlockRoute(run, run.world.pushables[0], { kind: 'press', onto: { tx: 7, ty: 2 } },
+            new Set(), []);
+        expect(r.steps).toHaveLength(5);
+        expect(rows(r)).toEqual([[0, 1, 1, 1, 1], [1, 3, 3, 3, 3], [2, 3, 0, 1, 3], [3, 5, 2, 1, 5],
+            [4, 7, 2, 4, 7], [5, 3, 1, 0, 2]]);
+        // ⛓ The census is the FINAL pass's: a `verifyRoute` restart resets it (as it
+        // resets `rejected`/`found`), while `expansions` counts every pass.
+        expect([r.census.reduce((n, c) => n + c.expanded, 0), r.expansions]).toEqual([21, 94]);
+    });
+
+    /**
+     * ⛔ THE CLAUSE CLASSIFIES AS NOTHING. `progressKind` reads the sentence
+     * (`WHY_KINDS`), so the census clause must not move a cut search's kind:
+     * each bounded refusal, phrased as its callers phrase it, has the same kind
+     * with and without the clause.
+     */
+    it('the census clause leaves every bounded refusal\'s progressKind where it was', () => {
+        const census = [{ depth: 0, newStates: 1, newBlockCells: 1, newPlayerCells: 1, expanded: 1 },
+            { depth: 8, newStates: 0, newBlockCells: 0, newPlayerCells: 0, expanded: 0 }];
+        const whys = [
+            'every route the search could reach was cut at 8 orders (`MAX_ROUTE_ORDERS`) without meeting '
+                + 'the `press` post-condition',
+            'the block-route search expanded 2000 states (`MAX_ROUTE_EXPANSIONS`) without meeting the '
+                + '`clear-path` post-condition — a route this long is a derivation that has lost its room, '
+                + 'not a long puzzle',
+        ];
+        const kind = (why, name) => progressKind(new SolverRefusal('solverBot: the block-route search '
+            + `for pushableblock@0,0 in level 16 hit \`${name}\` — ${why}`,
+        { obstacle: { kind: 'solid', id: 'pushableblock@0,0' }, bound: { name, site: 'block-route' } }));
+        for (const [why, name] of [[whys[0], 'MAX_ROUTE_ORDERS'], [whys[1], 'MAX_ROUTE_EXPANSIONS']]) {
+            expect(routeCensusClause(census)).toMatch(/depth 8 reached 0 new state/);
+            expect(kind(why + routeCensusClause(census), name)).toBe(kind(why, name));
+        }
+        expect(routeCensusClause([])).toBe('');
+    });
+});
+

@@ -7402,11 +7402,41 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
  * @param {Set|Iterable} contacts
  * @param {string[]} blocked  guard (ii) walls
  * @param {{discharged?: string[], phrase?: object}} [opts]
+ * ⛓ ROUTE CENSUS (js route-census, 2026-10-24) — `census` answers "did the
+ * next order reach anything?" with data: one row per order depth, in the
+ * order the search dequeued it (cost is orders-first, so depth never falls),
+ * counting the unseen STATES at that depth and the block cells / player
+ * lattice cells no shallower depth reached. It is keyed on states and cells,
+ * never on a move list, so a new move kind is counted without a change here.
+ * Instrument only: nothing reads it to decide, and a cut search cites its
+ * deepest row in the refusal (`routeCensusClause`). It is the FINAL pass's
+ * census — a `verifyRoute` restart resets it with `rejected`/`found`, while
+ * `expansions` counts every pass.
+ *
  * @returns {{steps: ?object[], rejected: object[], found: object[], expansions: number,
- *   refused: ?{bound: string, why: string}}}
+ *   refused: ?{bound: string, why: string}, census: RouteCensusRow[]}}
  */
 export const MAX_ROUTE_ORDERS = 8;
 export const MAX_ROUTE_EXPANSIONS = 2000;
+
+/**
+ * @typedef {{depth: number, newStates: number, newBlockCells: number,
+ *   newPlayerCells: number, expanded: number}} RouteCensusRow
+ */
+
+/**
+ * The census's deepest row in words, appended to a cut search's `why`. ⛔ Its
+ * words are chosen to classify as nothing (`solveProgress` `WHY_KINDS` reads
+ * the sentence): no "no", no "bound" — `blockRoute.test.js` pins that the
+ * kind is the one the sentence had without it.
+ */
+export function routeCensusClause(census) {
+    const tail = census?.at(-1);
+    if (!tail) return '';
+    return `; the census's deepest order depth ${tail.depth} reached ${tail.newStates} new `
+        + `state(s), ${tail.newBlockCells} new block cell(s) and ${tail.newPlayerCells} new `
+        + `player cell(s), expanding ${tail.expanded}`;
+}
 
 /**
  * ⛓ SEEDLING FIDELITY ROBUST, D1 — a cut block-route search as the refusal's
@@ -7420,6 +7450,7 @@ function blockRouteBound(route, row, goalKind) {
         limit: name === 'MAX_ROUTE_EXPANSIONS' ? MAX_ROUTE_EXPANSIONS
             : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS : null,
         expansions: route.expansions,
+        census: route.census ?? [],
     };
 }
 
@@ -7513,7 +7544,9 @@ function groupsHeldOpenBySolids(run, bag) {
 export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     { discharged = [], phrase = SHOVE_PHRASE } = {}) {
     const live = run.entities('pushables')?.get(row.id);
-    if (!live || live.removed) return { steps: null, rejected: [], found: [], expansions: 0, refused: null };
+    if (!live || live.removed) {
+        return { steps: null, rejected: [], found: [], expansions: 0, refused: null, census: [] };
+    }
     const base = run.liveGeometryOpts();
     const liveRocks = base.brokenRocks ?? new Set();
     const start = {
@@ -7811,12 +7844,13 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
                 + 'not have (SF3: proved before the search, which was not run)';
             return { steps: null, found: [], expansions: 0,
                 rejected: [{ option: `a block route for ${row.id}`, why }],
-                refused: { bound: null, why } };
+                refused: { bound: null, why }, census: [] };
         }
     }
     const refusedMoves = new Set();
     let expansions = 0;
     let ordersBound = false;
+    let census = [];
     for (;;) {
     const queue = [];
     const push = (s) => {
@@ -7830,16 +7864,28 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     let restart = false;
     rejected.length = 0;
     found.length = 0;
+    census = [];
+    const censusBlocks = new Set();
+    const censusPlayers = new Set();
     while (queue.length) {
         const state = queue.shift();
         const key = stateKey(state);
         if (seen.has(key)) continue;
         seen.add(key);
+        const depth = state.steps.length;
+        const layer = census.at(-1)?.depth === depth ? census.at(-1) : (census[census.length] = {
+            depth, newStates: 0, newBlockCells: 0, newPlayerCells: 0, expanded: 0 });
+        layer.newStates += 1;
+        const blockCell = state.block ? `${state.block.tx},${state.block.ty}` : 'sunk';
+        if (!censusBlocks.has(blockCell)) { censusBlocks.add(blockCell); layer.newBlockCells += 1; }
+        const playerCell = `${Math.floor(state.player.x / DEFAULT_LATTICE)},`
+            + `${Math.floor(state.player.y / DEFAULT_LATTICE)}`;
+        if (!censusPlayers.has(playerCell)) { censusPlayers.add(playerCell); layer.newPlayerCells += 1; }
         const bags = bagsOf(state);
         if (state.steps.length > 0 && goalMet(state, bags)) {
             const bad = verifyRoute(state.steps);
             if (bad === null) {
-                return { steps: state.steps, rejected, found, expansions, refused: null };
+                return { steps: state.steps, rejected, found, expansions, refused: null, census };
             }
             refusedMoves.add(bad);
             restart = true;
@@ -7848,7 +7894,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         if (state.steps.length >= MAX_ROUTE_ORDERS) { ordersBound = true; continue; }
         // ⛓ SF2: the caller's deadline is a bound too, refused in the same shape.
         if (deadlineReached('block-route')) {
-            return { steps: null, rejected, found, expansions, refused: {
+            return { steps: null, rejected, found, expansions, census, refused: {
                 bound: 'deadline',
                 why: `the caller's anytime deadline (\`shouldStop\`) was reached after `
                     + `${expansions} expansion(s), before the \`${goal.kind}\` post-condition `
@@ -7857,14 +7903,15 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         }
         expansions += 1;
         if (expansions > MAX_ROUTE_EXPANSIONS) {
-            return { steps: null, rejected, found, expansions, refused: {
+            return { steps: null, rejected, found, expansions, census, refused: {
                 bound: 'MAX_ROUTE_EXPANSIONS',
                 why: `the block-route search expanded ${MAX_ROUTE_EXPANSIONS} states `
                     + `(\`MAX_ROUTE_EXPANSIONS\`) without meeting the \`${goal.kind}\` `
                     + 'post-condition — a route this long is a derivation that has lost its '
-                    + 'room, not a long puzzle',
+                    + `room, not a long puzzle${routeCensusClause(census)}`,
             } };
         }
+        census.at(-1).expanded += 1;
         const atStart = state.steps.length === 0;
         if (state.block && press) {
             dirs.forEach((dir, dirIndex) => pressMoves(state, key, bags, atStart, dir, dirIndex, push));
@@ -7980,10 +8027,11 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     if (restart) continue;
     break;
     }
-    return { steps: null, rejected, found, expansions, refused: ordersBound ? {
+    return { steps: null, rejected, found, expansions, census, refused: ordersBound ? {
         bound: 'MAX_ROUTE_ORDERS',
         why: `every route the search could reach was cut at ${MAX_ROUTE_ORDERS} orders `
-            + `(\`MAX_ROUTE_ORDERS\`) without meeting the \`${goal.kind}\` post-condition`,
+            + `(\`MAX_ROUTE_ORDERS\`) without meeting the \`${goal.kind}\` post-condition`
+            + routeCensusClause(census),
     } : {
         bound: null,
         why: `the block-route search exhausted ${expansions} state(s) — no sequence of `
