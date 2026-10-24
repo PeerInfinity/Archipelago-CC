@@ -1,0 +1,129 @@
+5180 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 19s
+5181 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 19s
+5182 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 29s
+5183 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5184 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 29s
+5185 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 31s
+5186 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 33s
+5187 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 33s
+5188 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5189 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 35s
+5190 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5191 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5192 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5193 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 29s
+5194 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 26s
+5195 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 25s
+5196 SOLVE 090b838e 315 | paced-hold refused (MOVING_WAIT, bomb:bombpusher@112,128#14) 98 | SOLVE 1603 t 217 | {'shakeRefused': 1, 'rebootRefused': 0} 19s
+5197 refusal 8b264b17 547 | reboot@kill t1386 (bomb bombpusher 12) 93 | EXHAUSTED@hold (bomb:bombpusher@112,128#10) 454 | {'shakeRefused': 299, 'rebootRefused': 1} 27s
+5198 refusal 4af59f36 642 | deadline@hold (?) 641 | deadline@? (walk) 1 | {'shakeRefused': 0, 'rebootRefused': 0} 19s
+5199 refusal 66956086 217 | HAMMER_SAFETY@kill t1339 92 | paced-hold refused (MOVING_WAIT, ?) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 99s
+5200 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 14s
+5201 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 15s
+5202 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5203 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 68s
+5204 refusal 6264111c 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 23s
+5205 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 24s
+5206 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 26s
+5207 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 21s
+5208 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 25s
+5209 refusal 7bb3df8b 249 | EXHAUSTED@break (spinner:spinner@192,160) 124 | EXHAUSTED@break (spinner:spinner@192,160) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5210 refusal adde38cb 187 | reboot@kill t1524 (bomb bombpusher 15) 93 | reboot@kill t1524 (bomb bombpusher 15) 94 | {'shakeRefused': 0, 'rebootRefused': 2} 29s
+5211 SOLVE 8b406fa4 349 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 141 | SOLVE 1646 t 208 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5212 SOLVE c3ff091e 314 | SOLVE 1775 t 116 | SOLVE 1681 t 198 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5213 SOLVE c3ff091e 314 | SOLVE 1775 t 116 | SOLVE 1681 t 198 | {'shakeRefused': 0, 'rebootRefused': 0} 34s
+5214 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 56s
+5215 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5216 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 65s
+5217 SOLVE b70d498c 317 | paced-hold refused (MOVING_WAIT, bomb:bombpusher@112,128#12) 91 | SOLVE 1628 t 226 | {'shakeRefused': 0, 'rebootRefused': 0} 30s
+5218 refusal 190d94ad 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 8, 'rebootRefused': 0} 20s
+5219 refusal 1512a5ee 298 | shake-throw(forecast) 93 | EXHAUSTED@? (spinner:spinner@192,144) 205 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5220 refusal fa54ec15 298 | shake-throw(forecast) 93 | EXHAUSTED@? (spinner:spinner@192,144) 205 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5221 refusal 1f701a56 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 8, 'rebootRefused': 0} 21s
+5222 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 26s
+5223 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 25s
+5224 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 24s
+5225 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 22s
+5226 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 21s
+5227 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 33s
+5228 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5229 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 34s
+5230 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 31s
+5231 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 29s
+5232 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5233 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 26s
+5234 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 25s
+5235 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 24s
+5236 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 29s
+5237 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5238 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 28s
+5239 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 27s
+5240 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 26s
+5241 SOLVE 090b838e 315 | paced-hold refused (MOVING_WAIT, bomb:bombpusher@112,128#14) 98 | SOLVE 1603 t 217 | {'shakeRefused': 1, 'rebootRefused': 0} 17s
+5242 refusal 8b264b17 547 | reboot@kill t1386 (bomb bombpusher 12) 93 | EXHAUSTED@hold (bomb:bombpusher@112,128#10) 454 | {'shakeRefused': 299, 'rebootRefused': 1} 30s
+5243 refusal 4af59f36 642 | deadline@hold (?) 641 | deadline@? (walk) 1 | {'shakeRefused': 0, 'rebootRefused': 0} 23s
+5244 refusal 66956086 217 | HAMMER_SAFETY@kill t1339 92 | paced-hold refused (MOVING_WAIT, ?) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 80s
+5245 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 13s
+5246 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 17s
+5247 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5248 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 53s
+5249 refusal 6264111c 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 17s
+5250 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 17s
+5251 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 27s
+5252 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 24s
+5253 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 22s
+5254 refusal c0d4b6b7 249 | EXHAUSTED@break (spinner:spinner@192,160) 124 | EXHAUSTED@break (spinner:spinner@192,160) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 22s
+5255 refusal adde38cb 187 | reboot@kill t1524 (bomb bombpusher 15) 93 | reboot@kill t1524 (bomb bombpusher 15) 94 | {'shakeRefused': 0, 'rebootRefused': 2} 17s
+5256 SOLVE 8b406fa4 349 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 141 | SOLVE 1646 t 208 | {'shakeRefused': 0, 'rebootRefused': 0} 19s
+5257 SOLVE c3ff091e 314 | SOLVE 1775 t 116 | SOLVE 1681 t 198 | {'shakeRefused': 0, 'rebootRefused': 0} 25s
+5258 SOLVE c3ff091e 314 | SOLVE 1775 t 116 | SOLVE 1681 t 198 | {'shakeRefused': 0, 'rebootRefused': 0} 26s
+5259 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5260 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5261 SOLVE 02a48c11 641 | SOLVE 1873 t 119 | deadline@hold (?) 522 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5262 SOLVE b70d498c 317 | paced-hold refused (MOVING_WAIT, bomb:bombpusher@112,128#12) 91 | SOLVE 1628 t 226 | {'shakeRefused': 0, 'rebootRefused': 0} 19s
+5263 refusal 190d94ad 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 8, 'rebootRefused': 0} 13s
+5264 refusal 649a609e 298 | shake-throw(forecast) 93 | EXHAUSTED@? (spinner:spinner@192,144) 205 | {'shakeRefused': 0, 'rebootRefused': 0} 20s
+5265 refusal fa54ec15 298 | shake-throw(forecast) 93 | EXHAUSTED@? (spinner:spinner@192,144) 205 | {'shakeRefused': 0, 'rebootRefused': 0} 20s
+5266 refusal 1f701a56 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 8, 'rebootRefused': 0} 13s
+5267 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 16s
+5268 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 17s
+5269 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 19s
+5270 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 27s
+5271 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 10, 'rebootRefused': 0} 25s
+5272 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 48s
+5273 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 44s
+5274 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5275 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5276 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 46s
+5277 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5278 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 46s
+5279 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5280 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 41s
+5281 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 41s
+5282 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 42s
+5283 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 37s
+5284 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 40s
+5285 refusal 41144cc9 177 | HAMMER_SAFETY@kill t1339 88 | HAMMER_SAFETY@kill t1339 89 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5286 SOLVE 090b838e 315 | paced-hold refused (MOVING_WAIT, bomb:bombpusher@112,128#14) 98 | SOLVE 1603 t 217 | {'shakeRefused': 1, 'rebootRefused': 0} 30s
+5287 refusal 8b264b17 547 | reboot@kill t1386 (bomb bombpusher 12) 93 | EXHAUSTED@hold (bomb:bombpusher@112,128#10) 454 | {'shakeRefused': 299, 'rebootRefused': 1} 34s
+5288 refusal 4af59f36 642 | deadline@hold (?) 641 | deadline@? (walk) 1 | {'shakeRefused': 0, 'rebootRefused': 0} 30s
+5289 refusal 66956086 217 | HAMMER_SAFETY@kill t1339 92 | paced-hold refused (MOVING_WAIT, ?) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 97s
+5290 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 24s
+5291 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 17s
+5292 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 30s
+5293 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5294 refusal 6264111c 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 14s
+5295 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 13s
+5296 refusal c2a61741 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 7, 'rebootRefused': 0} 14s
+
+117 rows; solves 17
+- 42× HAMMER_SAFETY@kill t1339 / HAMMER_SAFETY@kill t1339
+- 20× shake-throw(forecast) / shake-throw(forecast)
+- 17× SOLVE
+- 15× shake-throw(forecast) / paced-hold refused (MOVING_WAIT, ?)
+- 9× HAMMER_SAFETY@kill t1339 / paced-hold refused (MOVING_WAIT, ?)
+- 4× shake-throw(forecast) / EXHAUSTED@? (spinner:spinner@192,144)
+- 3× reboot@kill t1386 (bomb bombpusher 12) / EXHAUSTED@hold (bomb:bombpusher@112,128#10)
+- 3× deadline@hold (?) / deadline@? (walk)
+- 2× EXHAUSTED@break (spinner:spinner@192,160) / EXHAUSTED@break (spinner:spinner@192,160)
+- 2× reboot@kill t1524 (bomb bombpusher 15) / reboot@kill t1524 (bomb bombpusher 15)

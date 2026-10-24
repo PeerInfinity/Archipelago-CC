@@ -1,0 +1,7 @@
+rep seam page(kind work [passes]) | node census at that seam
+1 5242 refusal 547 [93,454] | refusal 547 [93,454]
+2 5254 refusal 249 [124,125] | refusal 249 [124,125]
+3 5218 refusal 165 [82,83] | refusal 165 [82,83]
+4 5187 refusal 177 [88,89] | refusal 177 [88,89]
+5 5226 refusal 165 [82,83] | refusal 165 [82,83]
+6 5209 refusal 249 [124,125] | refusal 249 [124,125]
