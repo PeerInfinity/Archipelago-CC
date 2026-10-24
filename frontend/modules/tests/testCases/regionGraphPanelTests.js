@@ -458,6 +458,14 @@ export async function testRegionGraphNodePicker(testController) {
   const unsubscribe = testController.eventBus.subscribe('regionGraph:nodeSelected', (data) => { selected = data; }, 'tests');
   try {
     testController.eventBus.publish('ui:activatePanel', { panelId: PANEL_ID });
+    // The controls (and the picker in them) are built once the panel's four
+    // Cytoscape scripts have loaded, one after another, on first show. The
+    // bundled boot starts the rows sooner after page load, so that load lands
+    // inside this row: 8 s measured on a loaded box (2026-10-24), past the
+    // 5 s this row once gave the section alone. Wait for it on its own.
+    const libsLoaded = await testController.pollForCondition(
+      () => typeof window.cytoscapeFcose === 'function', 'the Cytoscape libraries loaded', MAX_WAIT_TIME, 100);
+    if (!libsLoaded) throw new Error('the Region Graph\'s Cytoscape libraries did not load');
     const section = await testController.pollForValue(
       () => document.querySelector(`.region-graph-panel-container ${PICKER.section}`),
       'the picker section', 5000, 50);
