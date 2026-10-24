@@ -6,7 +6,9 @@
 # and share one Chromium under ~/.cache/ms-playwright — measured on ubuntu-latest
 # (run 34724984639): Python 1.56.0 launched node's chromium-1194 with no
 # `python -m playwright install` at all. `headlessChromium.test.js` reds when
-# the two pins disagree.
+# the two pins disagree. Moved together 1.56.0 → 1.63.0 (slice ci-ubuntu-2604:
+# 1.61 is the first with Ubuntu 26.04; 1.63.0 is the newest that is two weeks
+# old on BOTH npm and PyPI — PyPI's 1.64.0 was 11 days old). Build 1243.
 #
 #   .venv/bin/pip install -r scripts/procgen/requirements-headless.txt
-playwright==1.56.0
+playwright==1.63.0
