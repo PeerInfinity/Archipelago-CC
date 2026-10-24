@@ -1064,6 +1064,14 @@ export const CONTACT_FIDELITY = {
      * Fire from L25 89 → 70 t.
      */
     drillTimedPass: true,
+    /**
+     * fidelity SEARCHGAPS D-B (wave 28) — THE FORCED-HIT PROOF ASKS ONE HITLESS WITNESS FIRST (`forcedHit.hitlessWitness`).
+     * The breadth-first proof spent its whole depth-2 level (1,332 forks, each replaying the segment) before it could say
+     * "not proven"; one hitless `depthMax`-tick input says the same thing exactly. Measured at sweep leg 908 (L67): 5,328
+     * of the request's 640 work units went to that tree, so the location solve ended on the deadline instead of on the
+     * room's refusal. ON: the witness is asked first; OFF: byte-identical. `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`.
+     */
+    forcedHitWitnessFirst: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1270,6 +1278,9 @@ if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FI
 // ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
+// ⛓ fidelity SEARCHGAPS D-B: `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '1') CONTACT_FIDELITY.forcedHitWitnessFirst = true;
+if (globalThis.process?.env?.SEEDLING_FORCED_HIT_WITNESS_FIRST === '0') CONTACT_FIDELITY.forcedHitWitnessFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
