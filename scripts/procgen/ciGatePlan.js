@@ -14,9 +14,12 @@
  * ── ⛔⛔ WHAT CI CAN RUN, IN ONE PREDICATE ────────────────────────────
  *
  * `ciRunnable` is `!gate.windows && !gate.ciBox`, and the first negative is
- * the whole content of it: `ubuntu-latest` has a browser (SwiftShader, headless Chromium — the
+ * the whole content of it: a GitHub runner has a browser (SwiftShader, headless Chromium — the
  * bank's own 23 browser rows are all banked green from headless WSL Chromium)
- * and it has NO `/mnt/c/Windows/py.exe`. The four Windows rows hold that path
+ * and it has NO `/mnt/c/Windows/py.exe`. ⚠ The browser rows run on `ubuntu-24.04`, PINNED:
+ * since 2026-10-22 `ubuntu-latest` is 26.04, where Playwright refuses to install chromium.
+ * The pin and its reason sit on the browser shard job's `runs-on` in
+ * `.github/workflows/unittests_frontend.yml`. The four Windows rows hold that path
  * as a literal, so they cannot even RESOLVE their driver on a runner; ⚖ 72
  * (a) rules they stay box-measured, and `ci-gates.mjs` names them SKIPPED
  * rather than letting a run imply them green.
@@ -181,8 +184,8 @@ export function readCiArmCosts({ repo = REPO } = {}) {
 }
 
 /**
- * Can CI run this gate at all? See the docblock — `ubuntu-latest` has a
- * browser and no Windows GPU driver.
+ * Can CI run this gate at all? See the docblock — the (pinned `ubuntu-24.04`)
+ * runner has a browser and no Windows GPU driver.
  *
  * ⛓⛓ V3b (⚖ user, 2026-09-05) — **AND THE SECOND CLAUSE IS DECLARED, NOT
  * DETECTED.** A gate carrying `@ci-box <reason>` is one whose answer only this
