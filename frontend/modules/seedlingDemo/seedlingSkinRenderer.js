@@ -477,8 +477,120 @@ export function paintOps(ctx, ops, images, view, canvas, { tinted = null, tileLa
     return counts;
 }
 
+/**
+ * ⛓ G5 — THE NIGHT LAYER (`seedlingNightSkin.nightOps`' `{ alpha, ops, solid }`), drawn the way
+ * `Game.bufferTransforms()` draws it: the night canvas filled `fill` and given `ops` (normal blend unless an op
+ * names one), the `solid` ops on a clear canvas HARDLIGHTed onto it, then the night canvas MULTIPLIED onto `ctx`
+ * at `alpha`, clipped to the view's device rect (in room mode, the room). `cache` (`createNightLayer`) keeps the
+ * two offscreen canvases, and the night canvas is REDRAWN only when its picture changes — a signature of every
+ * field `drawOp` reads of every op, the view, the canvas, the images and the fill (`nightSignature`); otherwise
+ * the paint is the one composite. Returns the counts drawn onto the night canvas (zero on a reused one).
+ */
+export function paintNight(ctx, night, images, view, canvas, { tinted = null, cache, fill }) {
+    const counts = { sprites: 0, rects: 0, fallbacks: 0, circles: 0 };
+    if (!night || !(night.alpha > 0)) return counts;
+    const scale = Math.min(canvas.width / view.w, canvas.height / view.h);
+    const offX = Math.round((canvas.width - view.w * scale) / 2);
+    const offY = Math.round((canvas.height - view.h * scale) / 2);
+    const X = (x) => offX + Math.round((x - view.x) * scale);
+    const Y = (y) => offY + Math.round((y - view.y) * scale);
+    const pen = { images, view, scale, X, Y, tinted };
+    const sig = nightSignature(night, view, canvas, images, fill);
+    const same = !!cache.night && cache.sig && cache.sig.length === sig.length && cache.sig.every((v, i) => v === sig[i]);
+    if (same) cache.reused += 1;
+    else drawNightCanvas(cache, night, pen, canvas, fill, sig, counts);
+    const x0 = X(view.x);
+    const y0 = Y(view.y);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x0, y0, X(view.x + view.w) - x0, Y(view.y + view.h) - y0);
+    ctx.clip();
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.globalAlpha = night.alpha;
+    ctx.drawImage(cache.night, 0, 0);
+    ctx.restore();
+    cache.paints += 1;
+    return counts;
+}
+
+/** ⛓ G5 — (re)draw the night canvas: the fill, the ops, then the solid canvas HARDLIGHTed onto it. */
+function drawNightCanvas(cache, night, pen, canvas, fill, sig, counts) {
+    const sized = (c) => (c && c.width === canvas.width && c.height === canvas.height ? c : cache.newCanvas(canvas.width, canvas.height));
+    cache.night = sized(cache.night);
+    const nctx = cache.night.getContext('2d');
+    nctx.globalCompositeOperation = 'source-over';
+    nctx.globalAlpha = 1;
+    nctx.imageSmoothingEnabled = false;
+    nctx.fillStyle = fill;
+    nctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (const op of night.ops) drawOp(nctx, op, pen, counts);
+    if (night.solid?.length) {
+        // the solid canvas has its own signature: the lava's edges pulse every 9 ticks, its copies more often
+        const solidSig = nightSignature({ ops: night.solid }, pen.view, canvas, pen.images, null);
+        if (!cache.solid || !cache.solidSig || cache.solidSig.length !== solidSig.length || cache.solidSig.some((v, i) => v !== solidSig[i])) {
+            cache.solid = sized(cache.solid);
+            const sctx = cache.solid.getContext('2d');
+            sctx.clearRect(0, 0, canvas.width, canvas.height);
+            sctx.imageSmoothingEnabled = false;
+            for (const op of night.solid) drawOp(sctx, op, pen, counts);
+            cache.solidSig = solidSig;
+            cache.solidRedraws += 1;
+        }
+        nctx.globalCompositeOperation = 'hard-light';
+        nctx.drawImage(cache.solid, 0, 0);
+        nctx.globalCompositeOperation = 'source-over';
+    }
+    cache.sig = sig;
+    cache.redraws += 1;
+}
+
+/** ⛓ G5 — every value the night canvas's pixels depend on, flat (primitives only, compared with `===`). */
+const NIGHT_OP_FIELDS = ['key', 'sheetRef', 'sx', 'sy', 'sw', 'sh', 'dx', 'dy', 'rot', 'flipX', 'flipY', 'alpha', 'tint', 'colour',
+    'pivotX', 'pivotY', 'scaleX', 'scaleY', 'blend'];
+export function nightSignature(night, view, canvas, images, fill) {
+    const sig = [view.x, view.y, view.w, view.h, canvas.width, canvas.height, images, fill, night.ops.length, night.solid?.length ?? 0];
+    for (const list of [night.ops, night.solid ?? []]) {
+        for (const op of list) {
+            for (const f of NIGHT_OP_FIELDS) sig.push(op[f]);
+            const r = op.rect;
+            if (r) sig.push(r.x, r.y, r.w ?? r.right, r.h ?? r.bottom);
+            else sig.push(null, null, null, null);
+            const c = op.circle;
+            if (c) sig.push(c.x, c.y, c.r);
+            else sig.push(null, null, null);
+            const fb = op.fallback;
+            if (fb) sig.push(fb.colour, fb.alpha, fb.rect.x, fb.rect.y, fb.rect.w ?? fb.rect.right, fb.rect.h ?? fb.rect.bottom);
+            else sig.push(null, null, null, null, null, null);
+        }
+    }
+    return sig;
+}
+
+/** ⛓ G5 — the night layer's offscreen canvases, one per painted canvas, and its reuse counters. */
+export function createNightLayer(newCanvas) {
+    return { newCanvas, night: null, solid: null, sig: null, solidSig: null, paints: 0, redraws: 0, reused: 0, solidRedraws: 0 };
+}
+
+/** ⛓ G5 — a circle (`Draw.circlePlus`), or any op under its `blend`. */
+function drawLit(ctx, op, pen, counts) {
+    if (op.blend) ctx.globalCompositeOperation = op.blend;
+    if (op.circle) {
+        ctx.globalAlpha = op.alpha ?? 1;
+        ctx.fillStyle = op.colour;
+        ctx.beginPath();
+        ctx.arc(pen.X(op.circle.x), pen.Y(op.circle.y), op.circle.r * pen.scale, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        counts.circles = (counts.circles ?? 0) + 1;
+    } else {
+        drawOp(ctx, { ...op, blend: undefined }, pen, counts);
+    }
+    if (op.blend) ctx.globalCompositeOperation = 'source-over';
+}
+
 /** One op onto `ctx` (culled to the view; a sheet not decoded → its fallback). `counts` gains what was drawn. */
-function drawOp(ctx, op, { images, view, scale, X, Y, tinted }, counts) {
+function drawOp(ctx, op, pen, counts) {
+    const { images, view, scale, X, Y, tinted } = pen;
     const fillRect = (rop) => {
         ctx.globalAlpha = rop.alpha ?? 1;
         ctx.fillStyle = rop.colour;
@@ -488,6 +600,8 @@ function drawOp(ctx, op, { images, view, scale, X, Y, tinted }, counts) {
         ctx.globalAlpha = 1;
     };
     if (isCulled(op, view)) return;
+    // ⛓ G5 — a light's circle, or a blend mode (a SCREENed part, a light ray); no G1–G4b op carries either.
+    if (op.circle || op.blend) { drawLit(ctx, op, pen, counts); return; }
     if (!op.sheetRef) { fillRect(op); counts.rects += 1; return; }
     let img = images?.get(op.sheetRef);
     if (!img) {

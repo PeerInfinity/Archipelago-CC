@@ -9,7 +9,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    CAMERA_SETTING_VALUES, GRAPHICS_SETTING_VALUES, cameraMode, graphicsPageParams, graphicsSchemaProps, graphicsStack,
+    CAMERA_SETTING_VALUES, GRAPHICS_SETTING_VALUES, LIGHTS_SETTING_VALUES, cameraMode, graphicsPageParams, graphicsSchemaProps, graphicsStack,
+    lightsMode,
 } from './seedlingGraphicsSettings.js';
 import { CAMERA_MODES } from '../seedlingDemo/seedlingSkinRenderer.js';
 import { register } from './index.js';
@@ -43,5 +44,15 @@ describe('seedlingGraphicsSettings', () => {
         register(api);
         expect(schema.properties.seedlingJsGraphics).toMatchObject({ type: 'string', default: 'rects' });
         expect(schema.properties.seedlingJsCamera).toMatchObject({ type: 'string', default: 'room', enum: ['room', 'follow'] });
+        expect(schema.properties.seedlingJsLights).toMatchObject({ type: 'string', default: 'on', enum: ['on', 'off'] });
+    });
+
+    it('⛓ G5 — the lights: ON by default (nothing on the URL), `off` rides as lights=off', () => {
+        const props = graphicsSchemaProps();
+        expect(LIGHTS_SETTING_VALUES).toEqual(['on', 'off']);
+        expect(graphicsPageParams(props.seedlingJsGraphics.default, props.seedlingJsCamera.default, props.seedlingJsLights.default)).toBe('');
+        expect(graphicsPageParams('seedling', 'room', 'off')).toBe('graphics=seedling&lights=off');
+        expect(graphicsPageParams('seedling', 'follow', 'on')).toBe('graphics=seedling&camera=follow');
+        expect([lightsMode('off'), lightsMode('on'), lightsMode('nonsense'), lightsMode(undefined)]).toEqual(['off', 'on', 'on', 'on']);
     });
 });
