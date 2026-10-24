@@ -92,8 +92,8 @@ Examples:
     parser.add_argument(
         '--lossy',
         action='store_true',
-        help='Emit an always-true placeholder for a rule kind with no codegen path, listing each one '
-             '(default: fail, naming the kind)'
+        help='Emit an always-true placeholder for a rule kind with no codegen path or a helper name '
+             'with no definition, listing each one (default: fail, naming the kind or helper)'
     )
 
     parser.add_argument(

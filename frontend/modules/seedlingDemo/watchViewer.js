@@ -3475,23 +3475,44 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
     fields.dataset.bootForm = '1';
     formEl.appendChild(fields);
 
+    /**
+     * ⚠ ONE CONTROL PER `ITEM_FORM_FIELDS` ROW, its kind from the row's type:
+     * a checkbox for a flag, a number field for an int (`health`). Every
+     * control carries `data-boot-field`, so the acceptance rows count
+     * controls rather than checkboxes. An EMPTY number field is the third
+     * state — undeclared — and emptying it removes the key.
+     */
     const boxes = ITEM_FORM_FIELDS.map((f) => {
         const label = document.createElement('label');
         const input = document.createElement('input');
-        input.type = 'checkbox';
         input.id = `${formEl.id}-${f.id}`;
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(` ${f.label}`));
+        input.dataset.bootField = f.id;
+        if (f.type === 'boolean') {
+            input.type = 'checkbox';
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(` ${f.label}`));
+        } else {
+            input.type = 'number';
+            input.min = String(f.min);
+            input.max = String(f.max);
+            input.step = '1';
+            input.placeholder = '—';
+            input.style.width = '4em';
+            label.appendChild(document.createTextNode(`${f.label} `));
+            label.appendChild(input);
+        }
         // The GAME's own property path, so the control says which field it
         // writes rather than only what it is called.
-        label.title = `${f.field}  (writes seam.${f.key})`;
+        label.title = `${f.field}  (writes seam.${f.key})`
+            + (f.type === 'boolean' ? '' : `; ${f.min}..${f.max}, empty = undeclared`);
+        fields.appendChild(document.createTextNode(' '));
         fields.appendChild(label);
         return { f, input };
     });
     const why = document.createElement('span');
     fields.appendChild(why);
 
-    const sync = () => {
+    const sync = (writeRefusal = null) => {
         let staging = null;
         let refusal = null;
         try {
@@ -3502,12 +3523,17 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
         const flags = staging ? itemFlagsOf(staging) : null;
         for (const { f, input } of boxes) {
             input.disabled = !staging;
-            input.indeterminate = Boolean(staging) && flags[f.id] === null;
-            input.checked = flags?.[f.id] === true;
+            if (f.type === 'boolean') {
+                input.indeterminate = Boolean(staging) && flags[f.id] === null;
+                input.checked = flags?.[f.id] === true;
+            } else {
+                input.value = flags?.[f.id] === null || flags?.[f.id] === undefined
+                    ? '' : String(flags[f.id]);
+            }
         }
         why.textContent = refusal
             ? `  ⚠ the block below will not parse, so these are disabled — ${refusal}`
-            : '';
+            : writeRefusal ? `  ⚠ not written — ${writeRefusal}` : '';
         return staging;
     };
 
@@ -3523,7 +3549,19 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
                 sync();
                 return;
             }
-            boxEl.value = JSON.stringify(withItemFlag(parsed, f.id, input.checked), null, 4);
+            const value = f.type === 'boolean' ? input.checked
+                : input.value.trim() === '' ? null : Number(input.value);
+            let next;
+            try {
+                next = withItemFlag(parsed, f.id, value);
+            } catch (e) {
+                // An out-of-range number: say so, and put the field back to
+                // what the block declares rather than leaving a value on
+                // screen the block does not hold.
+                sync(e.message);
+                return;
+            }
+            boxEl.value = JSON.stringify(next, null, 4);
             sync();
             onChange();
         };

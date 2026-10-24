@@ -42,7 +42,7 @@ python -m world_generator rules.json --dry-run
 | `--game-name` | Override game name (useful to avoid conflicts) |
 | `--force` | Overwrite existing files |
 | `--dry-run` | Preview output without writing |
-| `--lossy` | Emit an always-true placeholder for a rule kind with no codegen path, listing each one (default: fail, naming the kind) |
+| `--lossy` | Emit an always-true placeholder for a rule kind with no codegen path or a helper name with no definition, listing each one (default: fail, naming the kind or helper and the game) |
 | `--validate` | Validate JSON and report issues only |
 | `--canonical-seed N` | Enable seed=N canonical placement |
 | `--player-id` | Player ID to extract for multiworld (default: '1') |

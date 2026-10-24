@@ -8,7 +8,7 @@ EntranceAccessRuleCall, group_count, (AST_)weighted_count_true, HasGroup(Unique)
 import unittest
 
 from world_generator._helper_codegen import HelperCodeGenerator
-from world_generator._unknown_kind import UnknownRuleKindError, lossy_codegen
+from world_generator._unknown_kind import UnknownHelperNameError, UnknownRuleKindError, lossy_codegen
 from world_generator.rule_codegen import RuleCodeGenerator
 
 UNKNOWN_RB = {'rule': 'NoSuchKind_r2a'}
@@ -126,3 +126,156 @@ class TestR2bHelperBodies(unittest.TestCase):
         wrapped = {'rule': 'AST_no_such_kind_r2b', 'args': {'_original_ast_type': 'no_such_kind_r2b'}}
         with self.assertRaisesRegex(UnknownRuleKindError, 'no_such_kind_r2b'):
             HelperCodeGenerator('Test')._generate_expression(wrapped)
+
+
+def _world_rules(exit_rule, dungeons=None) -> dict:
+    """A two-region rules file: Menu -> Room through ``exit_rule``, one location in Room."""
+    rules = {
+        'schema_version': 3, 'game_name': 'F1 Fixture', 'game_directory': 'f1_fixture',
+        'archipelago_version': '0.0.0', 'generation_seed': 1, 'seed_name': 'AP_1',
+        'player_names': {'1': 'Player1'},
+        'regions': {'1': {
+            'Menu': {'name': 'Menu', 'locations': [],
+                     'exits': [{'name': 'Go', 'connected_region': 'Room', 'access_rule': exit_rule}]},
+            'Room': {'name': 'Room', 'exits': [], 'locations': [
+                {'name': 'Prize', 'id': 1, 'access_rule': {'rule': 'True_'}}]}}},
+        'start_regions': {'1': {'default': ['Menu'], 'available': []}},
+        'items': {'1': {'Key': {'name': 'Key', 'id': 1, 'groups': [], 'classification': 'progression',
+                                'type': None, 'max_count': 1}}},
+        'item_groups': {'1': []}, 'itempool_counts': {'1': {'Key': 1}},
+        'world': {'1': {'game': 'F1 Fixture'}}, 'helpers': {},
+        'game_info': {'1': {'completion_condition': {'type': 'constant', 'value': True}}},
+    }
+    if dungeons is not None:
+        rules['dungeons'] = {'1': dungeons}
+    return rules
+
+
+class TestUnknownHelperName(unittest.TestCase):
+    """rule-node F1: a helper NAME with no definition is loud too, through the same --lossy switch.
+
+    It used to become ``True_()`` / ``'True'`` with only a stderr print, so a strict run exited 0
+    with a silently wrong world (9 committed presets: their helper bodies live in JS only).
+    """
+
+    UNKNOWN_RB_HELPER = {'rule': 'no_such_helper_f1', '_original_ast_type': 'helper', 'args': []}
+    UNKNOWN_AST_HELPER = {'type': 'helper', 'name': 'no_such_helper_f1', 'args': []}
+
+    def test_every_site_raises_naming_the_helper(self) -> None:
+        sites = {
+            'rule helper': lambda: RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_AST_HELPER),
+            'rule_builder helper': lambda: RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_RB_HELPER),
+            'helper body': lambda: HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_AST_HELPER),
+            'helper lambda': lambda: HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_RB_HELPER),
+        }
+        for site, convert in sites.items():
+            with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'") as caught:
+                convert()
+            self.assertEqual((caught.exception.site, caught.exception.name), (site, 'no_such_helper_f1'))
+            self.assertIsInstance(caught.exception, UnknownRuleKindError)  # one except covers both
+
+    def test_lossy_keeps_the_placeholder_and_lists_it_with_the_kinds(self) -> None:
+        with lossy_codegen() as record:
+            self.assertEqual(RuleCodeGenerator('Test')._convert_rule(self.UNKNOWN_RB_HELPER), 'True_()')
+            self.assertEqual(HelperCodeGenerator('Test')._generate_expression(self.UNKNOWN_AST_HELPER), 'True')
+            RuleCodeGenerator('Test')._convert_rule(UNKNOWN_AST)
+        self.assertEqual(record, {'rule_builder helper:helper no_such_helper_f1': 1,
+                                  'helper body:helper no_such_helper_f1': 1,
+                                  'rule dispatch:no_such_kind_r2a': 1})
+
+    def _generate(self, rules: dict, lossy: bool):
+        import json
+        import tempfile
+        from pathlib import Path
+
+        from world_generator.generator import WorldGenerator
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(__import__('shutil').rmtree, tmp, True)
+        path = tmp / 'rules.json'
+        path.write_text(json.dumps(rules), encoding='utf-8')
+        out = tmp / ('lossy' if lossy else 'strict')
+        generator = WorldGenerator(str(path), output_dir=str(out), force=True, lossy=lossy)
+        generator.generate()
+        files = {p.relative_to(out).as_posix(): p.read_bytes()
+                 for p in sorted(out.rglob('*')) if p.is_file() and '__pycache__' not in p.parts}
+        return generator, files
+
+    def test_a_world_fails_strict_naming_the_game_and_lists_it_lossy(self) -> None:
+        rules = _world_rules(self.UNKNOWN_RB_HELPER)
+        with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'.*game 'F1 Fixture'"):
+            self._generate(rules, lossy=False)
+        generator, files = self._generate(rules, lossy=True)
+        self.assertEqual(generator.lossy_placeholders, {'rule_builder helper:helper no_such_helper_f1': 1})
+        self.assertIn(b'True_()', files['Rules.py'])
+
+    def test_a_boss_defeat_rule_no_longer_falls_back_to_true_silently(self) -> None:
+        # _template_rules caught every exception there and wrote `return True`
+        dungeons = {'Keep': {'name': 'Keep', 'regions': ['Room'], 'medallion_check': None,
+                             'bosses': {'None': {'name': 'Ogre', 'defeat_rule': self.UNKNOWN_AST_HELPER}}}}
+        rules = _world_rules({'rule': 'True_'}, dungeons=dungeons)
+        with self.assertRaisesRegex(UnknownHelperNameError, "'no_such_helper_f1'"):
+            self._generate(rules, lossy=False)
+        generator, _ = self._generate(rules, lossy=True)
+        self.assertEqual(generator.lossy_placeholders, {'helper body:helper no_such_helper_f1': 1})
+
+    def test_a_world_with_no_unknown_name_generates_the_same_bytes_strict_and_lossy(self) -> None:
+        rules = _world_rules({'rule': 'Has', 'args': {'item_name': 'Key'}})
+        strict_gen, strict = self._generate(rules, lossy=False)
+        lossy_gen, lossy = self._generate(rules, lossy=True)
+        self.assertEqual(lossy_gen.lossy_placeholders, {})
+        self.assertEqual(sorted(strict), sorted(lossy))
+        for name in strict:
+            self.assertEqual(strict[name], lossy[name], name)
+        self.assertIn(b"Has('Key', 1)", strict['Rules.py'])
+
+
+class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
+    """rule-kind F2: a mixed count_true with C(n, count) > 120 used to sink to True_() with a warning.
+
+    It is now the Rule Builder's AtLeast (its count_true twin); <= 120 still expands to Or-of-Ands.
+    """
+    ITEMS = [{'type': 'item_check', 'item': f'I{i}'} for i in range(5)]
+    REGIONS = [{'type': 'can_reach', 'region': f'R{i}'} for i in range(5)]
+
+    def convert(self, count, conditions):
+        return RuleCodeGenerator('Test')._convert_rule({'type': 'count_true', 'count': count, 'conditions': conditions})
+
+    def test_above_the_limit_is_atleast_in_both_shapes(self) -> None:
+        conditions = self.ITEMS + self.REGIONS  # C(10, 5) = 252
+        expected = ('AtLeast(5, Has("I0"), Has("I1"), Has("I2"), Has("I3"), Has("I4"), CanReachRegion("R0"), '
+                    'CanReachRegion("R1"), CanReachRegion("R2"), CanReachRegion("R3"), CanReachRegion("R4"))')
+        gen = RuleCodeGenerator('Test')
+        self.assertEqual(gen._convert_rule({'type': 'count_true', 'count': 5, 'conditions': conditions}), expected)
+        self.assertIn('AtLeast', gen.required_imports)
+        self.assertNotIn('True_', gen.required_imports)
+        rb = {'rule': 'AST_count_true', 'args': {'count': 5, 'conditions': conditions}}
+        self.assertEqual(RuleCodeGenerator('Test')._convert_rule(rb), expected)
+
+    def test_at_the_limit_still_expands_unchanged(self) -> None:
+        self.assertEqual(self.convert(2, self.ITEMS[3:] + self.REGIONS[:1]),
+                         '((Has("I3")) & (Has("I4"))) | ((Has("I3")) & (CanReachRegion("R0"))) | '
+                         '((Has("I4")) & (CanReachRegion("R0")))')
+        # C(10, 3) = 120: the largest expansion, still an Or of Ands
+        code = self.convert(3, self.ITEMS + self.REGIONS)
+        self.assertEqual(code.count(') | ('), 119, code[:200])
+        self.assertNotIn('AtLeast', code)
+
+    def test_atleast_evaluates_at_k_minus_1_k_k_plus_1(self) -> None:
+        from collections import Counter
+        import rule_builder
+
+        class World:
+            player = 1
+            rule_caching_enabled = False
+
+        class State:
+            def __init__(self, have):
+                self.have = have
+                self.prog_items = {1: Counter({name: 1 for name in have if name.startswith('I')})}
+
+            def can_reach_region(self, region, player):
+                return region in self.have
+
+        rule = eval(self.convert(5, self.ITEMS + self.REGIONS), vars(rule_builder)).resolve(World())
+        names = ['I0', 'R0', 'I1', 'R1', 'I2', 'R2']  # mixes both condition kinds
+        self.assertEqual([rule(State(set(names[:k]))) for k in (4, 5, 6)], [False, True, True])
