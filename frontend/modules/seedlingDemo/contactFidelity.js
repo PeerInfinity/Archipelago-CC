@@ -1226,8 +1226,9 @@ export const CONTACT_FIDELITY = {
      * tick (`removedTick`, stamped ON only, outside a ceremony). OFF: the body stops blocking at once (byte-identical).
      * ⚠ NO GAME WITNESS: no AP_1 recording has a drill, wallflyer or turret removed beside a later "Enemy" mover
      * sweeping into its box (named in the MISCRES report). `SEEDLING_NON_CHASER_REMOVAL_BLOCKS=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
-    nonChaserRemovalBlocks: false,
+    nonChaserRemovalBlocks: true,
     /**
      * fidelity MISCRES D1 (wave 29) — THE CHASER FORECAST FADES A CORPSE. `chaserForecastNow` cloned a live corpse
      * (`destroy`) or a body in its "die" (`dying`) and never stepped either on: only a BobSoldier's corpse faded, so
@@ -1238,8 +1239,9 @@ export const CONTACT_FIDELITY = {
      * end of that forecast tick, as live. OFF: byte-identical. WITNESSED on p4g (SKINSWING's `skinswing-l71-resite`,
      * the forecast taken at t58: OFF it leaves the live run, which is the game at 0 px, by 1.164 px at t64 and
      * 2.742 px at t68; ON it equals it). `SEEDLING_FORECAST_CORPSE_FADE=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
-    forecastCorpseFade: false,
+    forecastCorpseFade: true,
     /**
      * fidelity MISCRES D3 (wave 29) — THE PHASE ARM'S FIRST STALL IS THE WALK'S START, IN A ROOM WITH IGNEOUS TILES
      * (`solverBot`'s dodge rung, LADDER2's phase arm). The arm stalls at the doorstep of a lava chain or beam tower and
@@ -1253,8 +1255,9 @@ export const CONTACT_FIDELITY = {
      * ON: in a room holding a type-31 tile (`run.entities('igneousTiles')`, `igneousLava` ON), `at = 0` is the second
      * stall candidate (the doorstep stays first, so a short doorstep stall that clears is still the answer); every other
      * room is unchanged. OFF: byte-identical. `SEEDLING_PHASE_DODGE_ARRIVAL_STALL=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
-    phaseDodgeArrivalStall: false,
+    phaseDodgeArrivalStall: true,
     /**
      * fidelity L40RES (wave 29) — A STANCE WALK THAT RE-ENTERS ITS OWN ORDER PASSES TO THE NEXT DOOR ON ITS FRONTIER
      * (`solverBot` walkTo's `STANCE_REENTRY`). MEASURED on L40 from the south (survey step 93, `Totem Part 64,144`):
@@ -1265,8 +1268,9 @@ export const CONTACT_FIDELITY = {
      * refusal stands, the walk's frontier is walked on (the L12KEYLINE `nextPastSealedLock` shape) — an order whose
      * stance walk is already in flight, or whose stance IS this walk's aim, is passed over by name. OFF:
      * byte-identical. `SEEDLING_STANCE_REENTRY_NEXT_DOOR=0|1` for a node measurement.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
-    stanceReentryNextDoor: false,
+    stanceReentryNextDoor: true,
     /**
      * fidelity L40RES (wave 29) — A SPINNER SEES A RESPONDER'S TURN-OFF ONE TICK LATER (`levelRun.spinnerCtx`).
      * `Game.loadlevel` adds the lock family and `cover` (`Game.as:2355-2364`) before `spinner` (`:2416`), and
@@ -1276,8 +1280,9 @@ export const CONTACT_FIDELITY = {
      * the model's passed it (18.4 px apart by t1196). ON: `activators.openActivatorIdsBeforeLatestStep` (no new run
      * state: a fade responder's `held` names its turn-off step). OFF: byte-identical.
      * `SEEDLING_SPINNER_LOCK_LAG=0|1` for a node measurement.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
-    spinnerLockLag: false,
+    spinnerLockLag: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

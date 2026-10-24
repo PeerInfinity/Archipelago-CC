@@ -80,9 +80,9 @@ function forecastBesideLive(over, from, n) {
 const firstOff = (rows) => rows.find((r) => r.worst > 1e-9) ?? null;
 
 describe('fidelity MISCRES D1 — the switches', () => {
-    it('both ship OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.forecastCorpseFade).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.nonChaserRemovalBlocks).toBe(false);
+    it('both ship ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.forecastCorpseFade).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.nonChaserRemovalBlocks).toBe(true);
     });
 });
 
@@ -229,8 +229,8 @@ function solve637(over) {
 }
 
 describe('fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE\'s leg 650 (L76), the page\'s own request', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.phaseDodgeArrivalStall).toBe(false);
+    it('ships ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.phaseDodgeArrivalStall).toBe(true);
     });
     it('OFF: the 640-unit request runs out at `phase-dodge` (the doorstep stalls light the type-31 tile)', () => {
         const r = solve637({ phaseDodgeArrivalStall: false });

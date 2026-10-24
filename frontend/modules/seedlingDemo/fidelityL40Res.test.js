@@ -55,9 +55,9 @@ async function solveStep93() {
 }
 
 describe('L40RES D2 — a stance walk that re-enters its own order walks on along its frontier', () => {
-    it('both of this slice\'s switches are OFF by default', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.stanceReentryNextDoor).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.spinnerLockLag).toBe(false);
+    it('both of this slice\'s switches are ON by default (⚖ user 2026-10-24, planning-12\'s flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.stanceReentryNextDoor).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.spinnerLockLag).toBe(true);
     });
 
     it('the measurement behind it: the south door is in the stance hypothesis, the west door is not', () => {
