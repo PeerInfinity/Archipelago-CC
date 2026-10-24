@@ -510,7 +510,25 @@
             "id": "seedling-js-runtime-solve-progress-view",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; always does not auto-hide; setting it off unsubscribes. seedling-js batch."
+            "_comment": "SOLVE PROGRESS (JS half). flashPanel.runtime = js, the solver mode on and the panel's Solver section open (PANEL LAYOUT: the section replaced the retired seedlingSolveProgressView setting), on seedling_atlas: the view subscribes to the page's worker service before the L6 enemy-room solve, holds its FINAL snapshot (solved) and draws the tree, the tile canvas and the work meter; its 'last update N s ago' advances; the open section never hides it; the progress line reads the final state; closing the section hides the view and keeps it listening. seedling-js batch."
+        },
+        {
+            "id": "seedling-panel-layout-sections",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "PANEL LAYOUT (slice seedling-panel-layout). JS runtime, seedling_atlas: title + status, the game, the progress line, then the Solver / Settings / Tools sections in that order; what lives in each; the old Solve Progress button gone; a section's open state (by call or a click on its title) saved in localStorage flashPanel_sections and read back; the Solver section's state is the view's mode. seedling-js batch."
+        },
+        {
+            "id": "seedling-panel-layout-settings",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "PANEL LAYOUT. JS runtime, seedling_atlas: the Settings section shows runtime (auto named, the runtimes Seedling plays), graphics, camera, lights, solver walk, progress refresh, and no solver budget or fidelity switch; its refresh control writes the setting the Settings panel writes (and the view applies it); a camera setting written elsewhere moves its control. seedling-js batch."
+        },
+        {
+            "id": "seedling-panel-layout-narrow",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "PANEL LAYOUT, MOBILE. JS runtime, seedling_atlas, the panel alone at 360 px with every section open: no horizontal overflow; the game scaled to the width, aspect kept, fully inside, the stage exactly its height; the AP overlay covers the scaled game; never scaled up at a wide width. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-graphics-pack-boots",
@@ -541,6 +559,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GRAPHICS G4. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (Dungeon 6 rain; G3c's stance out of the axes' reach): the page holds the boot build's 20 dead frames (the fade is drawn, the run waits), the rain is drawn as seedling:fx/droplet and three full hearts as seedling:hud/heart from the seedling pack, the cover is gone after the hold, every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-lights",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G5. jsRuntime.html?graphics=seedling (room mode, lights ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 40 (Dungeon 4/2, lightalpha 0.1): the night layer is drawn (its lights) and composited at 0.72 — the canvas darker than the same ops painted without it (checkNight); set({lights:'off'}) applies live and the canvas is then byte-identical to the pre-G5 paint (0 differing channels); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
@@ -1600,10 +1624,10 @@
             "_comment": "FEATURE CHECKS (2026-10-15, \u2696 the user: a category in the Tutorials panel for scripted walks that test a feature, not tutorials). The walk row of feature check storage-panel-mode-key (one row per check, feature-check-<id>; tutorials.test.js checks each has one). Graded by the same ratchet as a tutorial walk. Manual batch feature-checks."
         },
         {
-            "id": "feature-check-seedling-solve-progress-auto-show",
+            "id": "feature-check-seedling-solve-progress-line",
             "enabled": true,
             "category": "Feature checks",
-            "_comment": "SOLVE PROGRESS AUTO-SHOW (slice solve-progress-auto, 2026-10-15). The walk row of feature check seedling-solve-progress-auto-show: runtime js + the solver on + the view on auto (session-only, restored), seedling_atlas loaded, the panel stages the L6 enemy-room solve (flashPanel:stageSolveDemo); the view is hidden but listening, shown on the solve's first running note, hidden after its final (solved) note and still listening. Lifecycle only, never elapsed seconds. Manual batch feature-checks."
+            "_comment": "SOLVE PROGRESS LINE (slice seedling-panel-layout, 2026-10-24; it replaced feature-check-seedling-solve-progress-auto-show with the retired off/auto/always setting). The walk row of feature check seedling-solve-progress-line: runtime js + the solver on (session-only, restored), seedling_atlas loaded, the panel's Solver section closed, the panel stages the L6 enemy-room solve (flashPanel:stageSolveDemo); the progress line under the game follows it to its final (solved) note while the view stays hidden and listening; opening the Solver section shows the view of that solve; the section is put back as found. Data-* mirrors only, never elapsed seconds. Manual batch feature-checks."
         },
         {
             "id": "feature-check-seedling-dash-window",

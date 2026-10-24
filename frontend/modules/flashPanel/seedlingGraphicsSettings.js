@@ -7,6 +7,9 @@
  *     pickup). → the page's `?graphics=<stack>`.
  *   · `seedlingJsCamera` — `room` (the whole room, the default) or `follow` (the original 160×160 view
  *     following the player). → the page's `?camera=follow`.
+ *   · ⛓ G5 `seedlingJsLights` — `on` (the default: with a graphics stack, the room is darkened and lit as the
+ *     game's night layer does) or `off` (the pre-G5 paint, op for op). Without a stack it does nothing.
+ *     → the page's `?lights=off`.
  *
  * ⛔ Cosmetic only: neither reaches the model, a solve request or a plan (the renderer only reads the run), so —
  * unlike the KILLLOCK / CONTACT / AXE_DODGE hooks — a change does NOT re-mount the page. The panel applies it LIVE
@@ -21,6 +24,10 @@ export const GRAPHICS_SETTING_PROP = 'seedlingJsGraphics';
 export const CAMERA_SETTING_PROP = 'seedlingJsCamera';
 export const GRAPHICS_SETTING_KEY = `moduleSettings.flashPanel.${GRAPHICS_SETTING_PROP}`;
 export const CAMERA_SETTING_KEY = `moduleSettings.flashPanel.${CAMERA_SETTING_PROP}`;
+export const LIGHTS_SETTING_PROP = 'seedlingJsLights';
+export const LIGHTS_SETTING_KEY = `moduleSettings.flashPanel.${LIGHTS_SETTING_PROP}`;
+/** ⛓ G5 — the page's `?lights=` values. */
+export const LIGHTS_SETTING_VALUES = Object.freeze(['on', 'off']);
 /** `rects` + every stack in `frontend/packs/packs.json`'s `graphics`. */
 export const GRAPHICS_SETTING_VALUES = Object.freeze(['rects', 'seedling']);
 /** `seedlingSkinRenderer.CAMERA_MODES`. */
@@ -49,6 +56,15 @@ export function graphicsSchemaProps() {
                 + "game's 160×160 view, following the player as the game's own camera does. Purely visual; takes "
                 + 'effect at once.',
         },
+        [LIGHTS_SETTING_PROP]: {
+            type: 'string',
+            enum: [...LIGHTS_SETTING_VALUES],
+            default: 'on',
+            label: 'Seedling JS: lights',
+            description: "Runtime 'js', with a graphics stack only. `on` (the default) darkens the room and draws its "
+                + "lights, glows and shadows the way the original game's night layer does. `off` skips that layer, "
+                + 'which is the most expensive picture to draw. Purely visual; takes effect at once.',
+        },
     };
 }
 
@@ -57,9 +73,13 @@ export const graphicsStack = (value) => (GRAPHICS_SETTING_VALUES.includes(value)
 /** A camera value as the page reads it: `follow`, or `room` for anything else. */
 export const cameraMode = (value) => (value === 'follow' ? 'follow' : 'room');
 
+/** A lights value as the page reads it: `off`, or `on` for anything else. */
+export const lightsMode = (value) => (value === 'off' ? 'off' : 'on');
+
 /** The page's query parameters: '' at the defaults (today's URL exactly). */
-export function graphicsPageParams(graphics, camera) {
+export function graphicsPageParams(graphics, camera, lights) {
     const stack = graphicsStack(graphics);
-    return [stack ? `graphics=${stack}` : '', cameraMode(camera) !== 'room' ? `camera=${cameraMode(camera)}` : '']
+    return [stack ? `graphics=${stack}` : '', cameraMode(camera) !== 'room' ? `camera=${cameraMode(camera)}` : '',
+        lightsMode(lights) === 'off' ? 'lights=off' : '']
         .filter(Boolean).join('&');
 }

@@ -7,8 +7,10 @@
  * The solve is the flash panel's `l12-dash-cut` demo (`flashPanel/seedlingSolveDemo.js`): divergence leg 108, level
  * 12 from level 0's door to the teleporter at (432, 352), sword in hand. The solver plans in two passes: a dashless
  * one, then a full one that may dash, bounded by the upgrade window of 85 work units
- * (`flashPanel.seedlingSolverUpgradeWindowWork`). The Solve Progress view is set to ALWAYS (⚖ the user, 2026-10-16:
- * "for this demo, let's set Solve Progress to Always"), so it stays open between the two solves.
+ * (`flashPanel.seedlingSolverUpgradeWindowWork`). The Solve Progress view is kept OPEN (⚖ the user, 2026-10-16:
+ * "for this demo, let's set Solve Progress to Always"), so it stays open between the two solves: ⛓ PANEL LAYOUT
+ * (slice `seedling-panel-layout`) retired that setting, so the check opens the panel's Solver section instead (a click
+ * on its title, only when it is closed) and leaves it as it found it.
  *
  * ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): what the window COUNTS moved. Before the flip it counted
  * every unit of the solve and stopped the whole full pass (⚖ WINDOW WHOLE PASS); since, it counts only the dash
@@ -28,6 +30,9 @@
 const FLASH = { panel: 'flashPanel' };
 const VIEW = { ...FLASH, selector: '.flash-panel-solve-progress' };
 const ROOT = { ...FLASH, selector: '.flash-panel-container' };
+const SOLVER = { ...FLASH, selector: '.flash-panel-section-solver' };
+// a click on the Solver section's title, only when it is closed (`optional`: already open, nothing to do)
+const OPEN_SOLVER = { ...FLASH, selector: '.flash-panel-section-solver:not([open]) > summary', optional: true };
 const LOG = { ...FLASH, selector: '.flash-panel-log' };
 const SWORD = { panel: 'inventoryPanel', selector: '.item-button[data-item="Progressive Sword"]' };
 // The panel hides items you do not own until "Show unowned" is ticked (the selector names the UNticked state).
@@ -35,7 +40,6 @@ const SHOW_UNOWNED = { panel: 'inventoryPanel', selector: '#show-unowned:not(:ch
 const KEYS = Object.freeze({
     runtime: 'moduleSettings.flashPanel.runtime',
     solver: 'moduleSettings.flashPanel.seedlingSolverWalk',
-    view: 'moduleSettings.flashPanel.seedlingSolveProgressView',
     window: 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork',
     dashOnly: 'moduleSettings.flashPanel.seedlingDashOnlyWindow',
 });
@@ -49,12 +53,15 @@ const SOLVE_DEMO_EVENT = 'flashPanel:stageSolveDemo';
 const CROSSING = /level 12 -> 33: crossing/g;
 
 const view = (ctx) => ctx.query(VIEW)?.dataset ?? {};
+const solverOpen = (ctx) => ctx.query(SOLVER)?.open === true;
+// the Solver section's state when the check started (put back by its last step)
+let solverWasOpen = false;
 const viewText = (ctx) => ctx.text(VIEW);
 const crossings = (ctx) => (ctx.text(LOG).match(CROSSING) ?? []).length;
 const swordCount = (ctx) => Number(ctx.snapshot()?.inventory?.['Progressive Sword'] ?? 0);
 // The crossing count when a walk was staged, so its `done` asks for a NEW crossing.
 let crossingsAtStage = 0;
-// Did the staged solve report a RUNNING note? (On `always` the view never hides, so a final note from the solve before
+// Did the staged solve report a RUNNING note? (The open Solver section never hides the view, so a final note from the solve before
 // would also read as final: the final step asks for this solve's running note first.)
 let sawRunning = false;
 
@@ -122,10 +129,10 @@ const listeningStep = (id, text) => ({
     step: {
         id,
         text,
-        actions: [{ activate: FLASH }],
+        actions: [{ activate: FLASH }, { click: OPEN_SOLVER }],
         done: (ctx) => {
             const d = view(ctx);
-            return d.mode === 'always' && d.listening === 'true' && d.visible === 'true';
+            return solverOpen(ctx) && d.mode === 'always' && d.listening === 'true' && d.visible === 'true';
         },
         doneTimeoutMs: 30000,
     },
@@ -155,22 +162,21 @@ export const CHECK_SEEDLING_DASH_WINDOW = Object.freeze({
                 {
                     step: {
                         id: 'settings',
-                        text: 'Set the flash panel to the **JS** runtime with the **solver** on, **Solve Progress** on **always**, the upgrade window at its default **85** work units, and the **dash-only window** **off**: the window then counts every unit of the solve and stops the whole full pass, the rule before the dash flip (all for this session only).',
+                        text: 'Set the flash panel to the **JS** runtime with the **solver** on, the upgrade window at its default **85** work units, and the **dash-only window** **off**: the window then counts every unit of the solve and stops the whole full pass, the rule before the dash flip (all for this session only).',
                         run: async (ctx) => {
+                            solverWasOpen = solverOpen(ctx);
                             await ctx.setSetting(KEYS.runtime, 'js');
                             await ctx.setSetting(KEYS.solver, true);
-                            await ctx.setSetting(KEYS.view, 'always');
                             await ctx.setSetting(KEYS.window, DEFAULT_WINDOW);
                             await ctx.setSetting(KEYS.dashOnly, 'off');
                         },
-                        done: async (ctx) => (await ctx.getSetting(KEYS.view)) === 'always'
-                            && (await ctx.getSetting(KEYS.runtime)) === 'js'
+                        done: async (ctx) => (await ctx.getSetting(KEYS.runtime)) === 'js'
                             && Number(await ctx.getSetting(KEYS.window)) === DEFAULT_WINDOW
                             && (await ctx.getSetting(KEYS.dashOnly)) === 'off',
                     },
                 },
                 loadStep('load', 'Load **Seedling Playthrough** (seed 1): the whole game as an Archipelago world, whose items reach the game through the item path.'),
-                listeningStep('listening', 'Open the **Flash Panel** tab. The Solve Progress view is open below the game, waiting for a solve.'),
+                listeningStep('listening', 'Open the **Flash Panel** tab and its **Solver** section: the Solve Progress view is open, waiting for a solve.'),
                 swordStep('sword', 'In the **Inventory** panel, tick **Show unowned** if it is off, then click **Progressive Sword**. The sword reaches the game in a slot of its own, which the solver needs to plan a sword-dash.'),
                 stageStep('stage-cut', 'Stage the solve: the player enters level 12 from level 0, holding the sword, and the solver plans a way to the teleporter at (432, 352). The view starts reporting: the tree of goals, the tiles the search has reached, and the work meter against the 640-unit budget.'),
                 finalStep('cut', 'Watch the two passes. The **dashless** pass finds a 561-tick walk at 36 units. The **full** pass, which may dash, gets only the first **85** units of the whole solve, so it is **cut** (the view\'s last note: the full segment, *refused*, "upgrade window 85"). The view keeps that note on screen while the bot plays the dashless walk.', { outcome: 'refused', window: DEFAULT_WINDOW }),
@@ -191,7 +197,7 @@ export const CHECK_SEEDLING_DASH_WINDOW = Object.freeze({
                     },
                 },
                 loadStep('reload', 'Reload the world. This world places an arrival by the region the player came from: from level 33\'s side the player would land beside the teleporter. A fresh world starts on level 0\'s side again.'),
-                listeningStep('listening-full', 'Back on the **Flash Panel** tab, the view is open and waiting again.'),
+                listeningStep('listening-full', 'Back on the **Flash Panel** tab, the Solver section\'s view is open and waiting again.'),
                 swordStep('sword-full', 'The reload dropped the sword: click **Progressive Sword** in the **Inventory** panel again.'),
                 stageStep('stage-full', 'Stage the same solve again. The dashless pass runs exactly as before; this time the full pass runs past 85 units of the solve, and the work meter climbs past 85.'),
                 finalStep('full', 'The **full** pass finishes, at 115 units (151 for the whole solve): the view\'s last note is the full segment, *solved*, "upgrade window 85". Its dash scan reached the window, and kept the dashes it had found, which were all it needed: a **328-tick** walk with dashes, 233 ticks shorter, the same walk the whole budget finds (window 0: 238 units).', { outcome: 'solved', window: DEFAULT_WINDOW }),
@@ -199,12 +205,13 @@ export const CHECK_SEEDLING_DASH_WINDOW = Object.freeze({
                 {
                     step: {
                         id: 'restore',
-                        text: 'Reload the world (dropping the sword), then put the five settings back as they were.',
+                        text: 'Reload the world (dropping the sword), then put the four settings back as they were, and the **Solver** section as you had it.',
                         run: async (ctx) => {
                             await ctx.loadPreset(WORLD.game, WORLD.seed);
                             await ctx.restoreSettings();
+                            if (!solverWasOpen && solverOpen(ctx)) ctx.query(SOLVER).querySelector('summary').click();
                         },
-                        done: (ctx) => ctx.settingsRestored() && swordCount(ctx) === 0,
+                        done: (ctx) => ctx.settingsRestored() && swordCount(ctx) === 0 && solverOpen(ctx) === solverWasOpen,
                         doneTimeoutMs: 30000,
                     },
                 },

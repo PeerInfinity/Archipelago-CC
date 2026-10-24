@@ -2,12 +2,12 @@ import {
   stateManagerProxySingleton as stateManager, getLastRawJsonData,
 } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
   getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue, getSeedlingWasmSolveServices,
 } from './index.js';
 // ⛓ SOLVE PROGRESS — DOM + model only (it imports no solver: the stream arrives as plain snapshots).
-import { SolveProgressView } from './seedlingSolveProgressView.js';
-import { nextSolveProgressMode, SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode } from './seedlingSolveProgress.js';
+import { SolveProgressLine, SolveProgressView } from './seedlingSolveProgressView.js';
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -30,7 +30,9 @@ import { CONTACT_FIDELITY_DEFAULTS, applyContactFidelity, formatContactFidelity 
 import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './seedlingAxeDodgeSettings.js';
 import { DASH_ONLY_WINDOW_SETTING_KEY, dashOnlyWindowOverride, dashOnlyWindowPageParam } from './seedlingDashOnlyWindowSettings.js';
 import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashShapePageParam } from './seedlingDashShapeSettings.js';
-import { CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack } from './seedlingGraphicsSettings.js';
+import {
+  CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack, lightsMode,
+} from './seedlingGraphicsSettings.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -65,8 +67,11 @@ const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
 const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetWork';
 /** ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the upgrade window in WORK units, both runtimes (0 = the budget). */
 const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork';
-/** ⛓ SOLVE PROGRESS — the progress view's on/off (both runtimes); the panel's "Solve Progress" button flips it. */
-const SOLVE_PROGRESS_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
+/**
+ * ⛓ PANEL LAYOUT — the RETIRED progress-view setting (off | auto | always, and before that a boolean). Read once, when
+ * a viewer has no saved section state yet: `always` (or `true`) opens the Solver section. Nothing writes it.
+ */
+const RETIRED_SOLVE_PROGRESS_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
 /** ⛓ SOLVE PROGRESS S1 — the progress refresh rate (ms; on the solve's envelope, never the request). */
 const SOLVE_PROGRESS_INTERVAL_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
 /** ⛓ KILLLOCK HOOK — the model's kill-lock body switches, one setting each (`seedlingKillLockSettings.js`). */
@@ -81,6 +86,31 @@ const CONTACT_SETTING_KEY_SET = new Set(Object.values(CONTACT_SETTING_KEYS));
 const JS_RUNTIME_PAGE = './modules/seedlingDemo/jsRuntime.html';
 /** The one game the JS runtime plays. */
 const JS_RUNTIME_CONFIG = 'seedling.json';
+/**
+ * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24) — the panel's collapsible sections, top to
+ * bottom under the game and its progress line, and the localStorage key that keeps which are open, per viewer
+ * (declared in `moduleInfo.storage`). All start closed.
+ */
+export const PANEL_SECTIONS = Object.freeze(['solver', 'settings', 'tools']);
+const SECTION_TITLES = Object.freeze({ solver: 'Solver', settings: 'Settings', tools: 'Tools' });
+export const SECTIONS_STORAGE_KEY = 'flashPanel_sections';
+/**
+ * ⛓ PANEL LAYOUT — the Settings section's controls, in order. Each writes the SAME setting the Settings panel writes
+ * (`settingsManager.updateSetting`) and follows it back on `settings:changed`, so the two never disagree; its values
+ * and tooltip are the schema's (`centralRegistry`), only the short label is the panel's. `when` says which games /
+ * runtimes it applies to. ⛔ Not the solver budgets (⚖ plans identical on every machine) nor the fidelity switches.
+ */
+const SETTINGS_CONTROLS = Object.freeze([
+  { prop: 'runtime', label: 'Runtime', when: 'always' },
+  { prop: 'seedlingJsGraphics', label: 'Graphics', when: 'js' },
+  { prop: 'seedlingJsCamera', label: 'Camera', when: 'js' },
+  { prop: 'seedlingJsLights', label: 'Lights', when: 'js' },
+  { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
+  { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
+]);
+const SETTING_KEY_PREFIX = 'moduleSettings.flashPanel.';
+const CONTROL_CSS = 'background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;max-width:100%;';
+const BUTTON_CSS = 'background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;';
 
 let instanceCounter = 0;
 let rufflePromise = null;
@@ -167,8 +197,8 @@ export class FlashPanelUI {
     });
 
     this._createBaseUI();
-    this._refreshSolveProgressView();
     this._refreshSolveProgressInterval();
+    this._syncSettingsControls();
 
     // Make this instance available to the dispatcher receivers
     // registered at module scope (index.js). Only one flash panel
@@ -202,14 +232,13 @@ export class FlashPanelUI {
      * switching wasm ↔ js on the loaded preset did nothing at all.
      */
     this._settingsChangedHandler = async (data) => {
+      // ⛓ PANEL LAYOUT — the Settings section's controls follow the setting, whoever wrote it.
+      if (data?.key === '*' || data?.key?.startsWith?.(SETTING_KEY_PREFIX)) this._syncSettingsControls();
       if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
         this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
       }
       if (data?.key === WASM_SOLVER_BUDGET_SETTING_KEY || data?.key === '*') {
         this._refreshWasmSolverBudget(data.key === '*' ? undefined : data.value);
-      }
-      if (data?.key === SOLVE_PROGRESS_SETTING_KEY || data?.key === '*') {
-        this._refreshSolveProgressView(data.key === '*' ? undefined : data.value);
       }
       if (data?.key === SOLVE_PROGRESS_INTERVAL_SETTING_KEY || data?.key === '*') {
         this._refreshSolveProgressInterval(data.key === '*' ? undefined : data.value);
@@ -279,10 +308,11 @@ export class FlashPanelUI {
           return;
         }
       }
-      if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === '*') {
-        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount.
+      if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === LIGHTS_SETTING_KEY
+        || data?.key === '*') {
+        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount (⛓ G5: the lights too).
         await this._refreshJsGraphics(data.key === GRAPHICS_SETTING_KEY ? data.value : undefined,
-          data.key === CAMERA_SETTING_KEY ? data.value : undefined);
+          data.key === CAMERA_SETTING_KEY ? data.value : undefined, data.key === LIGHTS_SETTING_KEY ? data.value : undefined);
         this._applyJsGraphics();
       }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
@@ -454,26 +484,6 @@ export class FlashPanelUI {
     try {
       this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.setSolverWalk?.(this._solverWalk);
     } catch { /* the page is not up yet — the next walkTo carries it */ }
-  }
-
-  /**
-   * ⛓ SOLVE PROGRESS — apply `flashPanel.seedlingSolveProgressView` (`off | auto | always`, ⛓ AUTO-SHOW) to the view.
-   * `off` UNSUBSCRIBES from every solve service, so no later solve installs the solver's hook; `auto` listens while
-   * hidden and shows the view for the length of each solve; `always` keeps it open.
-   */
-  async _refreshSolveProgressView(value) {
-    let next = value;
-    if (next === undefined) {
-      try { next = await settingsManager.getSetting(SOLVE_PROGRESS_SETTING_KEY, SOLVE_PROGRESS_DEFAULT_MODE); } catch { return; }
-    }
-    const view = this._solveProgressView;
-    if (!view) return;
-    const mode = solveProgressMode(next);
-    view.setMode(mode);
-    if (this._solveProgressButton) {
-      this._solveProgressButton.textContent = `Solve Progress: ${mode}`;
-      this._solveProgressButton.style.opacity = mode === 'off' ? '0.6' : '1';
-    }
   }
 
   /**
@@ -673,15 +683,18 @@ export class FlashPanelUI {
    * ⛓ GRAPHICS G1 — cache `flashPanel.seedlingJsGraphics` / `seedlingJsCamera` (`seedlingGraphicsSettings.js`).
    * An argument is a value just heard on `settings:changed`; undefined = read it.
    */
-  async _refreshJsGraphics(graphics, camera) {
+  async _refreshJsGraphics(graphics, camera, lights) {
     let g = graphics;
     let c = camera;
+    let l = lights;
     try {
       if (g === undefined) g = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects');
       if (c === undefined) c = await settingsManager.getSetting(CAMERA_SETTING_KEY, 'room');
+      if (l === undefined) l = await settingsManager.getSetting(LIGHTS_SETTING_KEY, 'on');
     } catch { /* keep the cached values */ }
     if (g !== undefined) this._jsGraphics = graphicsStack(g);
     if (c !== undefined) this._jsCamera = cameraMode(c);
+    if (l !== undefined) this._jsLights = lightsMode(l);
   }
 
   /** ⛓ GRAPHICS G1 — hand the cached switches to a mounted JS page (a no-op on any other transport). */
@@ -690,8 +703,9 @@ export class FlashPanelUI {
     let handle = null;
     try { handle = this.adapter?._getWin?.()?.__seedlingJsGraphics ?? null; } catch { handle = null; }
     if (!handle?.set) return;
-    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room' }))
-      .then((status) => this._panelLog(`JS page graphics: ${this._jsGraphics ?? 'rects'} (${status}), camera ${this._jsCamera ?? 'room'}`))
+    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room', lights: this._jsLights ?? 'on' }))
+      .then((status) => this._panelLog(`JS page graphics: ${this._jsGraphics ?? 'rects'} (${status}), camera ${this._jsCamera ?? 'room'}, `
+        + `lights ${this._jsLights ?? 'on'}`))
       .catch((err) => this._panelLog(`JS page graphics could not be applied: ${err.message}`));
   }
 
@@ -730,12 +744,23 @@ export class FlashPanelUI {
     this.swfContainer.innerHTML = '';
     this.teleportRow.style.display = 'none';
     this.gameConfig = null;
+    this._stageSize = null;
+    this._fitStage?.();
+    this._renderGameScope?.();
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
     this.wasmPath = this.componentState.wasmPath || null;
     this.isInitialized = false;
   }
 
+  /**
+   * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24) — top to bottom: the title and the status;
+   * the game, scaled down to the panel's width (`_fitStage`); the solver's progress line; then three collapsible
+   * sections — **Solver** (the rest of the solve-progress view), **Settings** (`SETTINGS_CONTROLS`) and **Tools**
+   * (Wire Check, Read State, Configure Bridge, the teleport rows, the AP-found readout, the log). Which sections are
+   * open is kept per viewer (`SECTIONS_STORAGE_KEY`). The panel serves every Flash game: what does not apply to the
+   * loaded one is hidden (`_renderGameScope`). The class names and fields the tests read are unchanged.
+   */
   _createBaseUI() {
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('flash-panel-container', 'panel-container');
@@ -749,49 +774,68 @@ export class FlashPanelUI {
       font-family: monospace;
       padding: 8px;
       box-sizing: border-box;
+      min-width: 0;
     `;
 
+    const section = (id, body) => `
+      <details class="flash-panel-section flash-panel-section-${id}" data-section="${id}" style="flex-shrink: 0; margin-top: 6px; min-width: 0;">
+        <summary style="cursor: pointer; color: #e94560; font-size: 12px; user-select: none;">${SECTION_TITLES[id]}</summary>
+        ${body}
+      </details>`;
     this.rootElement.innerHTML = `
-      <div class="flash-panel-header" style="flex-shrink: 0; margin-bottom: 6px;">
-        <span style="color: #e94560;">Flash Panel</span>
-        <span class="flash-panel-status" style="margin-left: 12px; color: #aaa; font-size: 12px;">initializing…</span>
+      <div class="flash-panel-header" style="flex-shrink: 0; margin-bottom: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; min-width: 0;">
+        <span class="flash-panel-title" style="color: #e94560;">Flash Panel</span>
+        <span class="flash-panel-status" style="color: #aaa; font-size: 12px; overflow-wrap: anywhere;">initializing…</span>
       </div>
-      <div class="flash-panel-swf" style="flex-shrink: 0; position: relative;"></div>
-      <div class="flash-panel-controls" style="flex-shrink: 0; margin-top: 6px; font-size: 12px;">
-        <button class="flash-panel-wirecheck" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Wire Check</button>
-        <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
-        <button class="flash-panel-configure" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Configure Bridge</button>
-        <button class="flash-panel-solve-progress-toggle" title="The solver's progress view: off, auto (shown while a solve runs) or always (setting flashPanel.seedlingSolveProgressView); click to cycle" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;opacity:0.6;">Solve Progress</button>
+      <div class="flash-panel-stage" style="flex-shrink: 0; width: 100%; overflow: hidden;">
+        <div class="flash-panel-swf" style="position: relative; transform-origin: 0 0;"></div>
       </div>
-      <div class="flash-panel-teleport" style="flex-shrink: 0; margin-top: 6px; font-size: 12px; display: none;">
-        <span style="color:#aaa;margin-right:4px;">Teleport:</span>
-        <input class="flash-panel-tp-level" type="number" placeholder="level" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
-        <input class="flash-panel-tp-x" type="number" placeholder="x" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
-        <input class="flash-panel-tp-y" type="number" placeholder="y" style="width:55px;background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;" />
-        <button class="flash-panel-tp-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
-        <span class="flash-panel-tp-region-wrap" style="display:none;">
-          <span style="margin-left:10px;color:#aaa;">Region:</span>
-          <select class="flash-panel-tp-region" style="background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;"></select>
-          <button class="flash-panel-tp-region-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
-        </span>
-        <span style="margin-left:10px;color:#aaa;">Location:</span>
-        <select class="flash-panel-tp-location" style="background:#333;color:#e0e0e0;border:1px solid #555;padding:2px 4px;border-radius:3px;"></select>
-        <button class="flash-panel-tp-location-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
-        <label style="margin-left:10px;color:#aaa;"><input class="flash-panel-tp-on-click" type="checkbox" /> TP on UI click</label>
-      </div>
-      <div class="flash-panel-ap-found" style="flex-shrink: 0; margin-top: 6px; font-size: 11px; background:#111; border:1px solid #333; border-radius:4px; padding:6px; display:none;"><div class="flash-panel-ap-found-headline" style="color:#e94560;"></div><div class="flash-panel-ap-found-rows" style="color:#aaa; white-space:pre-wrap;"></div></div>
-      <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
+      ${section('solver', '')}
+      ${section('settings', '<div class="flash-panel-settings" style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px; font-size: 12px;"></div>')}
+      ${section('tools', `
+        <div class="flash-panel-controls" style="margin-top: 6px; font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px;">
+          <button class="flash-panel-wirecheck" style="${BUTTON_CSS}">Wire Check</button>
+          <button class="flash-panel-readstate" style="${BUTTON_CSS}">Read State</button>
+          <button class="flash-panel-configure" style="${BUTTON_CSS}">Configure Bridge</button>
+        </div>
+        <div class="flash-panel-teleport" style="margin-top: 6px; font-size: 12px; display: none;">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
+            <span style="color:#aaa;">Teleport:</span>
+            <input class="flash-panel-tp-level" type="number" placeholder="level" style="width:55px;${CONTROL_CSS}" />
+            <input class="flash-panel-tp-x" type="number" placeholder="x" style="width:55px;${CONTROL_CSS}" />
+            <input class="flash-panel-tp-y" type="number" placeholder="y" style="width:55px;${CONTROL_CSS}" />
+            <button class="flash-panel-tp-go" style="${BUTTON_CSS}">Go</button>
+          </div>
+          <div class="flash-panel-tp-region-wrap" style="display:none; margin-top: 4px; flex-wrap: wrap; align-items: center; gap: 4px;">
+            <span style="color:#aaa;">Region:</span>
+            <select class="flash-panel-tp-region" style="${CONTROL_CSS}"></select>
+            <button class="flash-panel-tp-region-go" style="${BUTTON_CSS}">Go</button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 4px; min-width: 0;">
+            <span style="color:#aaa;">Location:</span>
+            <select class="flash-panel-tp-location" style="${CONTROL_CSS}flex: 1 1 120px; min-width: 0;"></select>
+            <button class="flash-panel-tp-location-go" style="${BUTTON_CSS}">Go</button>
+          </div>
+        </div>
+        <div class="flash-panel-ap-found" style="margin-top: 6px; font-size: 11px; background:#111; border:1px solid #333; border-radius:4px; padding:6px; display:none;"><div class="flash-panel-ap-found-headline" style="color:#e94560;"></div><div class="flash-panel-ap-found-rows" style="color:#aaa; white-space:pre-wrap;"></div></div>
+        <div class="flash-panel-log" style="margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; max-height: 320px; white-space: pre-wrap; overflow-wrap: anywhere;"></div>
+      `)}
     `;
 
-    // ⛓ SOLVE PROGRESS — the view sits above the log; the button cycles the SETTING (the one source of truth).
-    this._solveProgressView = new SolveProgressView({ getServices: () => this._solveServices() });
-    this.rootElement.insertBefore(this._solveProgressView.element, this.rootElement.querySelector('.flash-panel-log'));
-    this._solveProgressButton = this.rootElement.querySelector('.flash-panel-solve-progress-toggle');
-    this._solveProgressButton.addEventListener('click', () => {
-      const next = nextSolveProgressMode(this._solveProgressView.mode);
-      settingsManager.updateSetting(SOLVE_PROGRESS_SETTING_KEY, next)
-        .catch(() => this._refreshSolveProgressView(next));
+    this.titleElement = this.rootElement.querySelector('.flash-panel-title');
+    this.stageElement = this.rootElement.querySelector('.flash-panel-stage');
+    this.sections = {};
+    for (const id of PANEL_SECTIONS) this.sections[id] = this.rootElement.querySelector(`.flash-panel-section-${id}`);
+
+    // ⛓ SOLVE PROGRESS — the view fills the Solver section; ⛓ PANEL LAYOUT: the section's state is its mode (open =
+    // `always`, closed = `listen`), and the progress line under the game hears every note either way.
+    this._solveProgressLine = new SolveProgressLine();
+    this._solveProgressView = new SolveProgressView({
+      getServices: () => this._solveServices(),
+      onState: (state) => this._solveProgressLine.update(state),
     });
+    this.stageElement.after(this._solveProgressLine.element);
+    this.sections.solver.append(this._solveProgressView.element);
 
     this.apFoundElement = this.rootElement.querySelector('.flash-panel-ap-found');
     this.apFoundHeadline = this.rootElement.querySelector('.flash-panel-ap-found-headline');
@@ -805,7 +849,6 @@ export class FlashPanelUI {
     this.teleportYInput = this.rootElement.querySelector('.flash-panel-tp-y');
     this.teleportRegionSelect = this.rootElement.querySelector('.flash-panel-tp-region');
     this.teleportLocationSelect = this.rootElement.querySelector('.flash-panel-tp-location');
-    this.teleportOnClickCheckbox = this.rootElement.querySelector('.flash-panel-tp-on-click');
 
     this.rootElement.querySelector('.flash-panel-wirecheck')
       .addEventListener('click', () => this._wireCheck());
@@ -820,7 +863,222 @@ export class FlashPanelUI {
     this.rootElement.querySelector('.flash-panel-tp-location-go')
       .addEventListener('click', () => this._locationTeleport());
 
+    this._buildSettingsControls();
+    this._restoreSections();
+    for (const id of PANEL_SECTIONS) {
+      this.sections[id].addEventListener('toggle', () => this._onSectionToggle(id));
+    }
+    this._renderGameScope();
+
+    // ⛓ PANEL LAYOUT — the game follows the panel's width (a phone, a narrow column): re-fit on every resize.
+    if (typeof ResizeObserver === 'function') {
+      this._stageObserver = new ResizeObserver(() => this._fitStage());
+      this._stageObserver.observe(this.stageElement);
+    }
+
     this.container.element.appendChild(this.rootElement);
+  }
+
+  /**
+   * ⛓ PANEL LAYOUT — the game at the panel's width: the embed keeps its NATIVE size (`gameConfig.stage_size`: every
+   * runtime's page draws at it, and the wasm page cannot be restyled from here) and is SCALED down by a CSS transform
+   * when the stage is narrower, never up; the stage takes the scaled height. The game reads only the keyboard, and a
+   * transform scales pointer hit-testing with it (the wasm page's ▶ Start), so nothing is remapped. The loading
+   * overlay is inside the scaled box (`inset: 0`), so it covers the game at any scale.
+   */
+  _fitStage() {
+    const stage = this.stageElement;
+    const box = this.swfContainer;
+    if (!stage || !box?.style) return;
+    const size = this._stageSize;
+    if (!size) {
+      Object.assign(box.style, { width: '', height: '', transform: '' });
+      stage.style.height = '';
+      delete stage.dataset.scale;
+      return;
+    }
+    const [w, h] = size;
+    const avail = stage.clientWidth;
+    if (!(avail > 0)) return; // a hidden tab: keep the last fit until it is shown
+    const k = Math.min(1, avail / w);
+    Object.assign(box.style, { width: `${w}px`, height: `${h}px`, transform: k < 1 ? `scale(${k})` : '' });
+    stage.style.height = `${Math.round(h * k * 100) / 100}px`;
+    stage.dataset.scale = String(Math.round(k * 1000) / 1000);
+  }
+
+  /** ⛓ PANEL LAYOUT — the sections' open state, as saved for this viewer (or, the first time, the retired setting). */
+  _restoreSections() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(SECTIONS_STORAGE_KEY) ?? 'null'); } catch { saved = null; }
+    this._applySections(saved && typeof saved === 'object' ? saved : {});
+    // the baseline: restoring fires `toggle` events too, and those must not count as the viewer's choice
+    this._savedSections = JSON.stringify(this.sectionState());
+    if (saved && typeof saved === 'object') return;
+    // ⛓ MIGRATION — the retired `seedlingSolveProgressView`: a viewer who had pinned the view open (`always`, or the
+    // boolean `true` before AUTO-SHOW) finds the Solver section open. Read once: the first toggle saves the state.
+    settingsManager.getSetting(RETIRED_SOLVE_PROGRESS_SETTING_KEY, null)
+      .then((old) => { if ((old === 'always' || old === true) && !this._sectionsTouched) this.setSectionOpen('solver', true); })
+      .catch(() => { /* no settings: the default (closed) */ });
+  }
+
+  _applySections(state) {
+    this._applyingSections = true;
+    try {
+      for (const id of PANEL_SECTIONS) this.sections[id].open = state[id] === true;
+    } finally { this._applyingSections = false; }
+    this._solveProgressView.setMode(this.sections.solver.open ? 'always' : 'listen');
+  }
+
+  /** Which sections are open now: `{solver, settings, tools}`. */
+  sectionState() {
+    return Object.fromEntries(PANEL_SECTIONS.map((id) => [id, this.sections[id].open === true]));
+  }
+
+  /** Open or close a section, as a click on its title does (and saved the same way). */
+  setSectionOpen(id, open) {
+    const el = this.sections?.[id];
+    if (!el) return false;
+    if (el.open !== !!open) el.open = !!open;
+    // `toggle` is queued: apply (and save) now, so the caller sees the new state at once
+    this._onSectionToggle(id);
+    return true;
+  }
+
+  _onSectionToggle(id) {
+    if (this._applyingSections) return;
+    if (id === 'solver') this._solveProgressView.setMode(this.sections.solver.open ? 'always' : 'listen');
+    const state = this.sectionState();
+    const key = JSON.stringify(state);
+    if (key === this._savedSections) return;
+    this._sectionsTouched = true;
+    this._savedSections = key;
+    try { localStorage.setItem(SECTIONS_STORAGE_KEY, key); } catch { /* storage unavailable: the state lasts this page */ }
+  }
+
+  /** ⛓ PANEL LAYOUT — the Settings section: one row per `SETTINGS_CONTROLS` entry, plus the panel's own TP switch. */
+  _buildSettingsControls() {
+    const host = this.rootElement.querySelector('.flash-panel-settings');
+    let specs = new Map();
+    try {
+      specs = new Map((centralRegistry.getModuleSettingSchema?.('flashPanel') ?? []).map((r) => [r.prop, r.spec]));
+    } catch { /* no registry (a unit test): the controls carry no options until the schema is there */ }
+    this._settingsControls = [];
+    for (const c of SETTINGS_CONTROLS) {
+      const spec = specs.get(c.prop) ?? {};
+      const row = document.createElement('label');
+      row.className = 'flash-panel-setting';
+      row.dataset.setting = c.prop;
+      row.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;color:#aaa;min-width:0;';
+      row.title = [spec.label, spec.description].filter(Boolean).join(' — ');
+      const name = document.createElement('span');
+      name.textContent = c.label;
+      name.style.cssText = 'flex:0 0 auto;';
+      let input;
+      if (spec.type === 'boolean') {
+        input = document.createElement('input');
+        input.type = 'checkbox';
+        input.addEventListener('change', () => this._writeSetting(c.prop, input.checked));
+        row.append(input, name);
+      } else {
+        input = document.createElement('select');
+        input.style.cssText = CONTROL_CSS;
+        for (const v of spec.enum ?? []) {
+          const opt = document.createElement('option');
+          opt.value = String(v);
+          opt.textContent = String(v);
+          input.append(opt);
+        }
+        input.addEventListener('change', () => {
+          const raw = input.value;
+          this._writeSetting(c.prop, spec.type === 'number' ? Number(raw) : raw);
+        });
+        row.append(name, input);
+      }
+      input.classList.add('flash-panel-setting-input');
+      host.append(row);
+      this._settingsControls.push({ ...c, spec, row, input, key: SETTING_KEY_PREFIX + c.prop });
+    }
+    // "TP on UI click" — the panel's own switch (not a setting), shown when the game can teleport
+    const tp = document.createElement('label');
+    tp.className = 'flash-panel-setting flash-panel-setting-tp';
+    tp.style.cssText = 'display:none;align-items:center;gap:8px;color:#aaa;';
+    tp.title = 'A click on a region or location in another panel teleports the player there';
+    tp.innerHTML = '<input class="flash-panel-tp-on-click" type="checkbox" /> <span>TP on UI click</span>';
+    host.append(tp);
+    this.teleportOnClickRow = tp;
+    this.teleportOnClickCheckbox = tp.querySelector('.flash-panel-tp-on-click');
+  }
+
+  _writeSetting(prop, value) {
+    settingsManager.updateSetting(SETTING_KEY_PREFIX + prop, value)
+      .catch((err) => this._panelLog(`setting ${prop} could not be written: ${err?.message ?? err}`, 'error'));
+  }
+
+  /** ⛓ PANEL LAYOUT — each control shows its setting's value now (`settings:changed` and at construction). */
+  async _syncSettingsControls() {
+    for (const c of this._settingsControls ?? []) {
+      let value;
+      try { value = await settingsManager.getSetting(c.key); } catch { continue; }
+      if (c.input.type === 'checkbox') {
+        c.input.checked = value === true;
+        continue;
+      }
+      const v = value === undefined || value === null ? '' : String(value);
+      // a value the list does not offer (a game this runtime does not play, an old value) is shown, not hidden
+      if (v !== '' && ![...c.input.options].some((o) => o.value === v)) {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        opt.dataset.extra = 'true';
+        c.input.append(opt);
+      }
+      if (c.input.value !== v) c.input.value = v;
+    }
+    this._renderGameScope();
+  }
+
+  /** The runtimes the loaded game's wiring can play (`flash`, `wasm`, `js`), or null before a game is resolved. */
+  _supportedRuntimes() {
+    if (!this.configPath) return null;
+    const fp = stateManager.getStaticData?.()?.flash_panel ?? null;
+    const out = [];
+    if (this.swfPath) out.push('flash');
+    if (this.componentState.wasmPath || fp?.wasm) out.push('wasm');
+    if (this.configPath.endsWith(`/${JS_RUNTIME_CONFIG}`)) out.push('js');
+    return out;
+  }
+
+  /**
+   * ⛓ PANEL LAYOUT — what applies to the loaded game: the title (its config's `game`), the progress line and the
+   * Solver section (Seedling only: its solver is the only one), each settings row's `when`, the runtime's choices
+   * (`auto` + what the wiring plays; `auto` names the runtime it picks) and the TP switch (a game that teleports).
+   */
+  _renderGameScope() {
+    if (!this.rootElement || !this._settingsControls) return;
+    const game = this.gameConfig?.game ?? null;
+    if (this.titleElement) this.titleElement.textContent = game ?? 'Flash Panel';
+    const seedling = !!this.configPath?.endsWith?.(`/${JS_RUNTIME_CONFIG}`);
+    const runtimes = this._supportedRuntimes();
+    const transport = this.isInitialized && this._initRuntime !== undefined ? this.transport : null;
+    if (this._solveProgressLine) this._solveProgressLine.element.style.display = seedling ? 'flex' : 'none';
+    if (this.sections?.solver) this.sections.solver.style.display = seedling ? '' : 'none';
+    for (const c of this._settingsControls) {
+      const applies = c.when === 'always' || (c.when === 'seedling' && seedling) || (c.when === 'js' && transport === 'js');
+      c.row.style.display = applies ? 'flex' : 'none';
+      if (c.prop !== 'runtime') continue;
+      for (const opt of c.input.options) {
+        const v = opt.value;
+        const offered = v === 'auto' || runtimes === null || runtimes.includes(v);
+        opt.hidden = !offered && opt.selected !== true;
+        if (v === 'auto') {
+          const picks = runtimes === null ? null : (runtimes.includes('wasm') ? 'wasm' : (runtimes.includes('flash') ? 'flash' : null));
+          opt.textContent = picks ? `auto (→ ${picks})` : 'auto';
+        } else {
+          opt.textContent = offered ? v : `${v} (not for this game)`;
+        }
+      }
+    }
+    if (this.teleportOnClickRow) this.teleportOnClickRow.style.display = this.gameConfig?.teleport ? 'flex' : 'none';
   }
 
   _setupTeleportUI() {
@@ -936,6 +1194,8 @@ export class FlashPanelUI {
         <div style="padding:12px;color:#e94560;">Flash Player not available. Install Basilisk + Clean Flash NPAPI, or Ruffle.</div>
       </object>
     `;
+    this._stageSize = [Number(width), Number(height)];
+    this._fitStage();
   }
 
   _embedWasmIframe(width, height) {
@@ -945,6 +1205,8 @@ export class FlashPanelUI {
           style="border:0;background:#000;display:block;"
           allow="autoplay"></iframe>
     `;
+    this._stageSize = [Number(width), Number(height)];
+    this._fitStage();
   }
 
   /**
@@ -966,6 +1228,7 @@ export class FlashPanelUI {
     this.gameConfig = gameConfig;
     this._panelLog(`config loaded: ${this.gameConfig.game} (${this.transport} transport)`);
     this._setupTeleportUI();
+    this._renderGameScope();
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
     this._embedWasmIframe(w, h);
@@ -1341,7 +1604,7 @@ export class FlashPanelUI {
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
             dashShapePageParam(this._jsPageDashShape),
-            graphicsPageParams(this._jsGraphics, this._jsCamera)].filter(Boolean);
+            graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);
@@ -1355,6 +1618,7 @@ export class FlashPanelUI {
       }
 
       if (!this.configPath || !this.swfPath) {
+        this._renderGameScope();
         this._panelLog('no flash game configured in rules data');
         this._setStatus('no game configured');
         return;
@@ -1387,6 +1651,7 @@ export class FlashPanelUI {
     this.gameConfig = gameConfig;
     this._panelLog(`config loaded: ${this.gameConfig.game}`);
     this._setupTeleportUI();
+    this._renderGameScope();
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
 
@@ -1668,6 +1933,8 @@ export class FlashPanelUI {
     this._initEpoch = (this._initEpoch ?? 0) + 1;
     this._heldKeys?.uninstall();
     this._solveProgressView?.close();
+    this._stageObserver?.disconnect();
+    this._stageObserver = null;
     if (this._focusTimer) { clearTimeout(this._focusTimer); this._focusTimer = null; }
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);

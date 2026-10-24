@@ -108,6 +108,15 @@
  * builds/hits and how many ops it holds; `checkTileLayer()` paints the last
  * frame both ways onto two offscreen canvases and compares their pixels.
  *
+ * ⛓ G5 — THE NIGHT LAYER: with a stack on and the lights ON (`?lights=on|off`,
+ * the flash panel's `seedlingJsLights`; ON by default under a stack, nothing
+ * without one), the room is darkened as `Game.bufferTransforms()` darkens it —
+ * the night canvas (the lights, the glows, every `nightBmp` copy) MULTIPLIED
+ * over the room, after the bodies and before the overlays
+ * (`seedlingNightSkin.js`, `seedlingSkinRenderer.paintNight`). OFF is the
+ * pre-G5 paint, op for op. `set({ lights })` switches it live;
+ * `__seedlingJsGraphics.lights` reads it back.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -128,7 +137,7 @@ import { createLifetime } from './watchLifetime.js';
 import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
-import { CAMERA_MODES, cameraView, createTileLayer, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import { CAMERA_MODES, cameraView, createNightLayer, createTileLayer, paintNight, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
@@ -136,6 +145,8 @@ import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from '.
 import {
     effectOps, effectSkinView, holdEffectSkin, holdOwed, jiggleCam, primeEffectSkin, screenOps, stepEffectSkin,
 } from './seedlingEffectSkin.js';
+import { EFFECT_RULES } from './seedlingEffectSkin.js';
+import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -236,9 +247,15 @@ export function mountJsRuntimePage(win = window) {
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
         tileLayer: params.get('tileLayer') === 'off' ? null : createTileLayer(newCanvas), lastPaint: null,
+        // ⛓ G5 — the lights switch (`?lights=off`; ON by default), the night layer's state and canvases, the last paint's.
+        lights: params.get('lights') === 'off' ? 'off' : 'on', nightSkin: null, nightLayer: createNightLayer(newCanvas), night: null,
     };
     let graphicsLoad = 0;
-    function setGraphics({ graphics: stack, camera } = {}) {
+    function setGraphics({ graphics: stack, camera, lights } = {}) {
+        if (lights !== undefined) {
+            if (lights !== 'on' && lights !== 'off') throw new Error(`?lights=${lights}: one of on | off`);
+            if (lights !== graphics.lights) Object.assign(graphics, { lights, nightSkin: null, night: null });
+        }
         if (camera !== undefined) {
             if (!CAMERA_MODES.includes(camera)) throw new Error(`?camera=${camera}: one of ${CAMERA_MODES.join(' | ')}`);
             graphics.camera = camera;
@@ -293,11 +310,22 @@ export function mountJsRuntimePage(win = window) {
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
+        /** ⛓ G5 — the lights switch and the last paint's night layer (`alpha` 0 = this room is not darkened). */
+        get lights() {
+            const n = graphics.night;
+            return { setting: graphics.lights, on: !!graphics.stack && graphics.lights === 'on',
+                alpha: n ? n.alpha : 0, ops: n ? n.ops.length : 0, solid: n ? n.solid.length : 0,
+                circles: n ? n.ops.filter((o) => o.circle).length : 0, counts: n?.counts ? { ...n.counts } : null,
+                playerLight: graphics.nightSkin?.playerLight ? { ...graphics.nightSkin.playerLight } : null,
+                paints: graphics.nightLayer.paints, redraws: graphics.nightLayer.redraws, reused: graphics.nightLayer.reused,
+                solidRedraws: graphics.nightLayer.solidRedraws };
+        },
         get tileLayer() {
             const l = graphics.tileLayer;
             return l ? { on: true, builds: l.builds, hits: l.hits, frameBuilds: l.frameBuilds, bakedOps: l.bakedOps, liveOps: l.liveOps } : { on: false };
         },
         checkTileLayer,
+        checkNight,
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -360,6 +388,7 @@ export function mountJsRuntimePage(win = window) {
                 graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
                 graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
                 graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks);
+                if (graphics.lights === 'on') graphics.nightSkin = stepNightSkin(graphics.nightSkin, nightView(), runtime.ticks);
             }
             acc -= TICK_MS;
             n += 1;
@@ -369,6 +398,11 @@ export function mountJsRuntimePage(win = window) {
     function effectView() {
         const run = runtime.run;
         return effectSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
+    }
+    /** ⛓ G5 — the night layer's view: the run, and the room's level record (its lights, shadows and rays). */
+    function nightView() {
+        const run = runtime.run;
+        return nightSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
     }
     function frame(now) {
         lastFrameAt = now;
@@ -458,7 +492,11 @@ export function mountJsRuntimePage(win = window) {
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         const fv = art && graphics.effectSkin ? effectView() : null;
         const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...effectSprites];
+        // ⛓ G5 — the lights' MAIN-buffer ops (a ray's rects, an unlit pole's darkLight), Y-sorted with the bodies
+        const lit = art && graphics.lights === 'on' ? nightView() : null;
+        const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
+        const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -490,7 +528,18 @@ export function mountJsRuntimePage(win = window) {
         const tileLayer = graphics.tileLayer && roomMode ? { layer: graphics.tileLayer, key: [world, art, level], background: BACKGROUND } : null;
         const all = [...ops, ...overlays];
         graphics.lastPaint = { ops: all, images, view, key: [world, art, level] };
-        graphics.counts = { ops: all.length, ...paintOps(ctx, all, images, view, canvas, { tinted, tileLayer }) };
+        // ⛓ G5 — the night layer goes between the room and the overlays (`Game.render()`: `bufferTransforms()` then `talk()`)
+        const night = lit ? nightOps(lit, art, { skin: graphics.nightSkin, ops, hazard: hv ? { view: hv, skin: graphics.hazardSkin } : null,
+            whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam }) : null;
+        if (night) {
+            const room = paintOps(ctx, ops, images, view, canvas, { tinted, tileLayer });
+            night.counts = paintNight(ctx, night, images, view, canvas, { tinted, cache: graphics.nightLayer, fill: NIGHT.fill });
+            const top = paintOps(ctx, overlays, images, view, canvas, { tinted });
+            graphics.counts = { ops: all.length, ...Object.fromEntries(Object.keys(room).map((k) => [k, room[k] + top[k]])) };
+        } else {
+            graphics.counts = { ops: all.length, ...paintOps(ctx, all, images, view, canvas, { tinted, tileLayer }) };
+        }
+        graphics.night = night;
         const ms = win.performance.now() - t0;
         graphics.frames += 1;
         const pm = graphics.paintMs;
@@ -529,6 +578,32 @@ export function mountJsRuntimePage(win = window) {
         let differ = 0;
         for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) differ += 1;
         return { same: differ === 0, pixels: a.length / 4, differ, bakedOps: layer.bakedOps, liveOps: layer.liveOps };
+    }
+
+    /**
+     * ⛓ G5 — the night layer's PIXEL check: the canvas as the last paint left it vs the last paint's ops drawn onto a
+     * fresh canvas WITHOUT the night layer (every op, no tile layer). Lights OFF: the same bytes (the pre-G5 paint);
+     * lights ON in a dark room: they differ. `{ lights, alpha, pixels, differ, darker }` (`darker` = the canvas's
+     * channel sum below the fresh paint's).
+     */
+    function checkNight() {
+        const lp = graphics.lastPaint;
+        if (!lp) return null;
+        const c = newCanvas(canvas.width, canvas.height);
+        const cx = c.getContext('2d');
+        cx.fillStyle = BACKGROUND;
+        cx.fillRect(0, 0, c.width, c.height);
+        paintOps(cx, lp.ops, lp.images, lp.view, c, { tinted });
+        const a = cx.getImageData(0, 0, c.width, c.height).data;
+        const b = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let differ = 0;
+        let sumA = 0;
+        let sumB = 0;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) differ += 1;
+            if ((i & 3) !== 3) { sumA += a[i]; sumB += b[i]; }
+        }
+        return { lights: graphics.lights, alpha: graphics.night?.alpha ?? 0, pixels: a.length / 4, differ, darker: sumB < sumA };
     }
 
     /**

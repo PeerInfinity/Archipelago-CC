@@ -1850,7 +1850,7 @@ function burnWindowTiles(tree) {
  *   refused arm throws in `applyFire`.
  */
 function fireReachFrom(run, at) {
-    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables'), turrets: run.entities('turrets') });
     const trees = [];
     const others = [];
     for (const r of audit.modelled) {
@@ -3934,7 +3934,11 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
          * table maps both families to `shove` because both are the same
          * OBSTACLE; the two verbs are what differ, and a resolver that quietly
          * leaned on a fire block would emit its ticks and move nothing.
+         * ⛓ FIREPUSH: behind `fireBlockPulseShove`, the room's pulser moves it.
          */
+        if (CONTACT_FIDELITY.fireBlockPulseShove && row.as3 === 'PushableBlockFire') {
+            return resolveFireBlockShove(run, row, contacts, aim, allowTeleporter, blocked);
+        }
         return null;
     }
     /**
@@ -4070,6 +4074,197 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
         ...(derived.route ? { route: derived.route } : {}),
         rejected: rejections,
     };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY FIREPUSH (wave 28) — RESOLVE a `shove` of a `PushableBlockFire`: `clear-path`, by the
+ * room's own PULSER (behind `CONTACT_FIDELITY.fireBlockPulseShove`, OFF).
+ *
+ * `PushableBlockFire.moveTypes` is `["Fire", "Pulse"]` and the class has no lean (`input()` reads only its own
+ * `tile`, which only `hit()` writes). Two callers pass those types: `Player.fire()` (`genericHit(e, "Fire")`,
+ * `Player.as:1125`) and `Pulser.hit()` (`hit(new Point(x, y), "Pulse")`, `Pulser.as:96`). Both take the ABSOLUTE arm:
+ * the block's target moves one tile AWAY from the source point, on each axis whose `atan2` band admits it
+ * (`pushables.hitPushableFromPoint`; `pulser.pulsePushes`).
+ *
+ * ⛔ MEASURED FIRST (L40, legs 869/870): `pushableblockfire@576,576` stands at (36,36) under the walk block
+ * `pushableblock@576,560` (36,35), in a one-tile corridor whose walls are (35,37) and (37,37). The only Fire stance is
+ * south of it, and a Fire press from there sets the target NORTH — into the walk block, which is `"Solid"` to it, so
+ * the first sweep stops the glide and nothing moves. The room's answer is `pulser@592,576` (37,36), published by the
+ * MOMENTARY `button@816,400` (t=4): its pulse source is (600,584), due east of the block's centre, so the push is WEST
+ * into the pocket (35,36); the corridor north then belongs to the walk block's own `shove`.
+ *
+ * So this resolves, per pulser (id order) whose 22 px reach holds the block (`Pulser.as:90-93`):
+ *   · the push (`pulsePushes`); a DIAGONAL-band push is refused (two axes, two sweeps — not planned here);
+ *   · the destination not Solid to the block (`blockBlockedAt`) and a corridor from the live position to the aim with
+ *     the block there (guard (i)'s `discharged` hypothesis, as `deriveShove`'s own corridor question);
+ *   · no OTHER live fire block in the same reach (the pulse has no aim; a second push is a side effect not planned);
+ *   · a publisher of the pulser's group, held as an ordinary `hold` (its stance, exemption and prerequisite are
+ *     `resolveHoldStrategy`'s), whose stop is the block AT REST on the destination — so the next plan sees the
+ *     corridor, not a block mid-glide. The bound is two pulser cycles plus the glide plus `HOLD_SLACK`.
+ * A group already latched needs no press: the hold is a wait where the player stands.
+ *
+ * The Fire press is CONSIDERED and named in `rejected` (its stance, its push, why it does not plan); it is not
+ * executed by this slice — a fire-press shove that WOULD plan is refused by name (residue).
+ */
+function resolveFireBlockShove(run, row, contacts, aim, allowTeleporter, blocked = []) {
+    const live = run.entities('pushables').get(row.id);
+    if (!live || live.removed) return null;
+    const base = run.liveGeometryOpts();
+    const discharged = dischargedPushables(run, row, blocked);
+    const here = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
+    const block = newPushable({ ...row, x: live.rect.x, y: live.rect.y });
+    const cellOf = (target) => ({ tx: Math.floor(target.x / TILE_SIZE), ty: Math.floor(target.y / TILE_SIZE) });
+    const plansWith = (cell, destroys) => {
+        const solid = bagWithBlockAt(base, row.id, cell, destroys);
+        const corridor = discharged.length ? bagWithBlockAt(solid, row.id, cell, destroys, discharged) : solid;
+        return corridorPlans(run.world, run.state, aim, allowTeleporter ?? null,
+            solverPlanOpts(run, contacts, { liveBag: corridor }));
+    };
+    /** The push's destination question, shared by both sources. `null` = it plans; else the reason it does not. */
+    const destinationFails = (push) => {
+        if (!push.moved) return push.why;
+        if (push.both) {
+            return `the source is inside the diagonal band (\`bothRange\` ${BOTH_RANGE_NOTE}), so one hit moves the `
+                + 'block on BOTH axes — two sweeps this slice does not plan';
+        }
+        const cell = cellOf(push.block.target);
+        if (cell.tx < 0 || cell.ty < 0 || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+            return `(${cell.tx},${cell.ty}) is off the map`;
+        }
+        const destroys = blockSinksOn(run.world, cell);
+        if (!destroys && blockBlockedAt(run, base, row.id, cell)) {
+            return `(${cell.tx},${cell.ty}) is Solid to the block, so the first sweep stops the glide and \`tile\` is `
+                + 'reset to the block\'s own cell — nothing moves';
+        }
+        if (!plansWith(cell, destroys)) {
+            return `no corridor to (${aim.x},${aim.y}) with the block at (${cell.tx},${cell.ty})`
+                + `${destroys ? ' (destroyed there)' : ''}`;
+        }
+        return null;
+    };
+    const rejected = [];
+    // (a) THE FIRE PRESS — considered, never executed here.
+    const inv = run.progress('inventory') ?? {};
+    for (const [dir, step] of Object.entries(SHOVE_STEP)) {
+        const stance = nodeCentre(here.tx - step.dx, here.ty - step.dy, DEFAULT_LATTICE);
+        const option = `fire press ${dir} from (${stance.x},${stance.y})`;
+        if (plannerObstacleAt(run.world, stance.x, stance.y, null,
+            solverPlanOpts(run, contacts, { liveBag: base, nodeMargin: 0, triggerMargin: 0 }))) {
+            rejected.push({ option, why: `(${stance.x},${stance.y}) is not floor` });
+            continue;
+        }
+        // the Fire arm is the pulse's own absolute arm (`Player.as:1125`); only `t` differs and `moveTypes` admits both
+        const failed = destinationFails(pulsePushes(stance, block));
+        if (failed) { rejected.push({ option, why: failed }); continue; }
+        rejected.push({ option, why: `${inv.hasFire ? '' : 'the run holds no Fire — and '}it WOULD plan, but the `
+            + 'fire-press shove is not executed by this slice (FIREPUSH residue): only the pulser arm is' });
+    }
+    // (b) THE PULSER.
+    const latchedGroups = run.entities('latchedGroups') ?? new Set();
+    for (const pulser of [...(run.world.pulsers ?? [])].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+        const at = { x: pulser.x + TILE_SIZE / 2, y: pulser.y + TILE_SIZE / 2 };
+        const option = `pulse ${row.id} from ${pulser.id}`;
+        const inReach = (b) => pulseRectDistance(at.x, at.y, b.x, b.y, TILE_SIZE, TILE_SIZE) <= PULSER.radiusHit;
+        if (!inReach(block)) {
+            rejected.push({ option, why: `${row.id} is outside its ${PULSER.radiusHit} px reach (\`Pulser.as:90-93\`)` });
+            continue;
+        }
+        const push = pulsePushes(at, block);
+        const failed = destinationFails(push);
+        if (failed) { rejected.push({ option, why: failed }); continue; }
+        const others = (run.world.pushables ?? []).filter((p) => p.id !== row.id && p.family === 'fire')
+            .filter((p) => {
+                const o = run.entities('pushables').get(p.id);
+                return o && !o.removed && inReach({ x: o.rect.x, y: o.rect.y });
+            });
+        if (others.length) {
+            rejected.push({ option, why: `the pulse has no aim and also reaches [${others.map((p) => p.id).join(', ')}]` });
+            continue;
+        }
+        const cell = cellOf(push.block.target);
+        const destroys = blockSinksOn(run.world, cell);
+        const dir = push.axes[0];
+        const rests = (r) => {
+            const b = r.entities('pushables')?.get(row.id);
+            if (!b) return false;
+            if (destroys) return b.removed;
+            return !b.removed && b.rect.x === cell.tx * TILE_SIZE && b.rect.y === cell.ty * TILE_SIZE;
+        };
+        const hold = {
+            // two cycles (the first may be under way), the 16 px glide at 0.5 px/tick, and the slack
+            ticks: 2 * pulserCycle().totalTicks + 2 * TILE_SIZE + HOLD_SLACK,
+            until: {
+                why: `${row.id} is at rest on (${cell.tx},${cell.ty}) — ${pulser.id}'s pulse pushed it ${dir}`,
+                test: rests,
+            },
+        };
+        const firePulse = { pulser: pulser.id, group: pulser.t, block: row.id, to: { ...cell }, dir,
+            ...(destroys ? { destroys: true } : {}) };
+        const record = (extra) => ({
+            strategy: 'shove',
+            postCondition: 'clear-path',
+            discharged,
+            k: 1,
+            shove: { block: { x: row.x, y: row.y }, dir, to: { ...cell }, ...(destroys ? { destroys: true } : {}) },
+            firePulse,
+            ...extra,
+            rejected: [...(extra.rejected ?? []), ...rejected, ...hypothesisRejection(discharged)],
+        });
+        if (latchedGroups.has(pulser.t)) {
+            return record({ target: null, stance: null, latched: true, hold: { ...hold, latched: true },
+                rejected: [{ option: 'press a publisher', why: `group t=${pulser.t} is already LATCHED in the live run` }] });
+        }
+        const publishers = (run.world.pressers ?? []).filter((p) => p.t === pulser.t)
+            .sort((a, b) => (`${a.tag}@${a.x},${a.y}` < `${b.tag}@${b.x},${b.y}` ? -1 : 1));
+        if (!publishers.length) {
+            rejected.push({ option, why: `nothing in level ${run.level} publishes group t=${pulser.t}` });
+            continue;
+        }
+        for (const p of publishers) {
+            const id = `${p.tag}@${p.x},${p.y}`;
+            const held = resolveHoldStrategy(run, { kind: 'proximity-hazard', tag: p.tag, id }, contacts, blocked);
+            if (!held) { rejected.push({ option: `${option} via ${id}`, why: 'no hold resolves for it' }); continue; }
+            const standAt = held.stance ?? { x: run.state.x, y: run.state.y };
+            if (pulseRectDistance(at.x, at.y, ...boxXYWH(playerBoxAt(standAt.x, standAt.y))) <= PULSER.radiusHit) {
+                rejected.push({ option: `${option} via ${id}`, why: `its stance (${standAt.x},${standAt.y}) is inside `
+                    + `the pulse's ${PULSER.radiusHit} px ring, whose Player arm is a hit` });
+                continue;
+            }
+            const latch = localPublish(p);
+            return record({
+                target: { x: p.x, y: p.y },
+                stance: held.stance,
+                exempt: held.exempt,
+                ...(held.prerequisite ? { prerequisite: held.prerequisite } : {}),
+                hold: { ...hold, latched: latch !== null },
+                rejected: [{
+                    option: `hold ${id} for its own group`,
+                    why: `group t=${p.t}'s only responder is ${pulser.id}; ${id} is ${latch === null
+                        ? 'a momentary `Button` (it republishes every tick), so the hold lasts until the pushed block '
+                            + 'is at rest' : 'latching'}`,
+                }, ...(held.rejected ?? [])],
+            });
+        }
+    }
+    return null;
+}
+
+const BOTH_RANGE_NOTE = '0.1';
+const boxXYWH = (b) => [b.x, b.y, b.right - b.x, b.bottom - b.y];
+
+/**
+ * ⛓ FIREPUSH — the executor's arm for a pulser shove: the publisher's hold (`execHold`, the verb's own runner), whose
+ * stop is the block at rest on its destination. A hold that runs out is a measurement that the pulse did not push the
+ * block where `pulsePushes` predicted (`runHold` refuses it by name).
+ */
+function execFirePulseShove(run, perTick, resolved, ctx) {
+    const fp = resolved.firePulse;
+    const what = `${ctx.what} (${resolved.target ? `${resolved.target.x},${resolved.target.y} -> ` : ''}${fp.pulser} `
+        + `-> ${fp.block} -> (${fp.to.tx},${fp.to.ty}))`;
+    const from = run.ticksCompleted;
+    const hold = execHold(run, perTick, resolved, { ...ctx, what });
+    return { verb: 'shove', via: 'pulse', target: fp.block, pulser: fp.pulser, to: { ...fp.to }, dir: fp.dir,
+        hold, from, ticks: run.ticksCompleted - from };
 }
 
 /**
@@ -9552,6 +9747,8 @@ function execShove(run, perTick, resolved, ctx) {
         throw new SolverRefusal(`${ctx.what}: ${resolved.target.id} cannot be pushed by this run — `
             + `${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.target.id } });
     }
+    // ⛓ FIREPUSH: a pulser shove is the publisher's hold (`resolveFireBlockShove`).
+    if (resolved.firePulse) return execFirePulseShove(run, perTick, resolved, ctx);
     return execRoute(run, perTick, resolved, ctx, ctx.what);
 }
 
@@ -18015,7 +18212,7 @@ function ropeOel(ropeId) {
 
 /** What a fire press from `at` does to the rope: `hit` (it is cut), and every OTHER responder it acts on or refuses. */
 function ropeFireReach(run, at, ropeId) {
-    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables'), turrets: run.entities('turrets') });
     const isRope = (r) => r.as3 === 'RopeStart' && r.id === ropeId;
     return {
         hit: audit.modelled.some(isRope),

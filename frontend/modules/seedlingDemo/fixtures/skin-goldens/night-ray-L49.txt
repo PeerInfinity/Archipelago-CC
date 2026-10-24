@@ -1,0 +1,57 @@
+t=1 l=49 a=0.72 n=31 s=0 m=2 b01b937c0c57
+    drawImage(seedling/IceWall, 0, 0, 0, 80) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 96) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 112) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 128) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 16, 128) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 48, 128) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 128) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 112) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 96) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 80) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 0) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 16, 0) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 48, 0) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 32, 0) alpha=0.325
+    drawImage(seedling/IceWallLit, 0, 0, 16, 80) alpha=0.325
+    drawImage(seedling/IceWallLit, 0, 0, 48, 80) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 64) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 64) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 48) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 32) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 16) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 0, 0) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 48) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 32) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 64, 16) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 16, 96) alpha=0.325
+    drawImage(seedling/IceWall, 0, 0, 48, 96) alpha=0.325
+    fillRect(#000000, 16, 0, 48, 16) alpha=0.2471
+    fillRect(#44ccff, 32, -8, 16, 56) alpha=0.1 blend=screen
+    fillRect(#000000, 16, 96, 16, 16) alpha=0.2471
+    fillRect(#000000, 48, 96, 16, 16) alpha=0.2471
+    --
+    --
+    fillRect(#44ccff, 32, -8, 16, 56) alpha=0.2
+    fillRect(#44ccff, 32, 32, 16, 16) alpha=0.05 blend=screen
+t=2..5 l=49 a=0.72 n=31 s=0 m=2 cbbe9a083f36
+t=6..8 l=49 a=0.72 n=31 s=0 m=2 2d8ecf5a98bb
+t=9..11 l=49 a=0.72 n=31 s=0 m=2 0af43264928d
+t=12 l=49 a=0.72 n=31 s=0 m=2 7da3068e552b
+t=13..16 l=49 a=0.72 n=31 s=0 m=2 f96614fc780f
+t=17..20 l=49 a=0.72 n=31 s=0 m=2 7c8fd451a28d
+t=21..22 l=49 a=0.72 n=31 s=0 m=2 1f400995c893
+t=23 l=49 a=0.72 n=31 s=0 m=2 5ea8fb21a143
+t=24..27 l=49 a=0.72 n=31 s=0 m=2 4446e838742a
+t=28..31 l=49 a=0.72 n=31 s=0 m=2 4a0bbe58f988
+t=32..33 l=49 a=0.72 n=31 s=0 m=2 7c334fbd949c
+t=34..35 l=49 a=0.72 n=31 s=0 m=2 f9dfe46582e4
+t=36..38 l=49 a=0.72 n=31 s=0 m=2 c087dd8d39bb
+t=39..42 l=49 a=0.72 n=31 s=0 m=2 12ca87d530a4
+t=43..44 l=49 a=0.72 n=31 s=0 m=2 1e6c9de29559
+t=45..46 l=49 a=0.72 n=31 s=0 m=2 263b364c2624
+t=47..50 l=49 a=0.72 n=31 s=0 m=2 ed4d229deeb7
+t=51..53 l=49 a=0.72 n=31 s=0 m=2 875eb030e682
+t=54..56 l=49 a=0.72 n=31 s=0 m=2 e82117c329ab
+t=57 l=49 a=0.72 n=31 s=0 m=2 1bd4f78edfaf
+t=58..60 l=49 a=0.72 n=31 s=0 m=2 b71f1f1d5ecb

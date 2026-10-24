@@ -15,7 +15,7 @@
  *        -> 'COALESCING: ten notes in one frame …' reds
  *   r2 `flush` renders a hidden view
  *        -> 'HIDDEN SKIP: …' reds
- *   r3 `setMode` does not invalidate (a view shown by the setting never catches up)
+ *   r3 `setMode` does not invalidate (a view shown by opening the Solver section never catches up)
  *        -> 'HIDDEN SKIP: … showing it renders the NEWEST state' reds
  *   r4 `_sizeCanvas` assigns width/height on every render
  *        -> 'SIZE-ONLY RESIZE: …' reds
@@ -93,7 +93,8 @@ import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 
 import {
-    cellColour, DANGER_GLYPHS, DANGER_KINDS, frameTargetTile, levelColour, recentLevel, shadeLevel, SolveProgressView,
+    cellColour, DANGER_GLYPHS, DANGER_KINDS, frameTargetTile, levelColour, recentLevel, shadeLevel, SolveProgressLine,
+    SolveProgressView,
 } from './seedlingSolveProgressView.js';
 import { SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
@@ -217,22 +218,27 @@ describe('⛓ S1 — COALESCING', () => {
     });
 
     it('the lifecycle (show/hide, data-*) stays SYNCHRONOUS: only the drawing waits for the frame', () => {
-        const t = setup('auto');
+        const t = setup('listen');
         try {
+            // ⛓ PANEL LAYOUT — a note never shows the view: only the Solver section (setMode) does
             t.emit({ solveId: 1, snapshot: snap(1), final: false });
-            expect([t.view.isOpen, t.view.element.dataset.visible]).toEqual([true, 'true']);
+            expect([t.view.isOpen, t.view.element.dataset.visible, t.view.element.dataset.listening]).toEqual([false, 'false', 'true']);
             t.emit({ solveId: 1, snapshot: snap(2, { outcome: 'solved' }), final: true });
             expect([t.view.isOpen, t.view.element.dataset.final, t.view.element.dataset.outcome]).toEqual([false, 'true', 'solved']);
+            t.view.setMode('always');
+            expect([t.view.isOpen, t.view.element.dataset.visible, t.view.element.dataset.mode]).toEqual([true, 'true', 'always']);
+            t.view.setMode('listen');
+            expect([t.view.isOpen, t.view.isListening, t.view.element.dataset.hides]).toEqual([false, true, '1']);
         } finally { t.restore(); }
     });
 });
 
 describe('⛓ S1 — HIDDEN SKIP', () => {
     it('HIDDEN SKIP: a hidden view renders nothing; showing it renders the NEWEST state at the next frame', () => {
-        const t = setup('auto');
+        const t = setup('listen');
         try {
             const before = t.view.stats.renders;
-            // a solve shows the view and hides it on its final note before the frame comes: nothing is drawn
+            // a whole solve while the Solver section is closed: nothing is drawn
             t.emit({ solveId: 1, snapshot: snap(1), final: false });
             t.emit({ solveId: 1, snapshot: snap(4, { outcome: 'solved' }), final: true });
             t.runFrames();
@@ -1440,6 +1446,53 @@ describe('⛓ CACHES VIEW — the view never writes into what was posted', () =>
                 expect(JSON.stringify(n)).toBe(before);
             }
             expect(t.view.stats.renders - renders).toBe(notes.length);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ PANEL LAYOUT — the progress line under the game', () => {
+    const lineSetup = (mode) => {
+        const t = setup(mode);
+        const line = new SolveProgressLine({ now: () => 7, frame: (fn) => t.frames.push(fn) });
+        t.view.onState = (state) => line.update(state);
+        return { ...t, line };
+    };
+
+    it('the line hears every accepted note with the Solver section CLOSED, one render per frame; the view draws nothing', () => {
+        const t = lineSetup('listen');
+        try {
+            expect(t.line.text.textContent).toBe('solver: no solve yet');
+            const renders = t.view.stats.renders;
+            const lineRenders = t.line.renders;
+            for (let i = 1; i <= 4; i += 1) {
+                t.emit({ solveId: 3, snapshot: { ...snap(i), budget: { spent: { shouldStop: 10 * i }, limit: { shouldStop: 640 } } },
+                    final: false });
+            }
+            expect(t.line.element.dataset).toMatchObject({ solveId: '3', seq: '4', final: 'false', outcome: 'running',
+                updates: '4', updatedAt: '7' });
+            t.runFrames();
+            expect(t.line.renders - lineRenders).toBe(1);
+            expect(t.view.stats.renders).toBe(renders);
+            expect(t.line.text.textContent).toBe('solver: solving #3 · L4 · work 40 / 640 · best: none yet');
+            expect(t.line.fill.style.width).toBe('6.3%');
+            // a dropped note (an older seq) is not heard
+            t.emit({ solveId: 3, snapshot: snap(2), final: false });
+            expect(t.line.updates).toBe(4);
+            t.emit({ solveId: 3, snapshot: { ...snap(5, { outcome: 'solved' }), best: { ok: true, ticks: 99 },
+                budget: { spent: { shouldStop: 64 }, limit: { shouldStop: 640 } } }, final: true });
+            t.runFrames();
+            expect(t.line.text.textContent).toBe('solver: solved (solve #3) · work 64 / 640 · best: ok · 99 ticks');
+            expect(t.line.element.dataset).toMatchObject({ final: 'true', outcome: 'solved' });
+            expect([t.view.isOpen, t.view.stats.renders]).toEqual([false, renders]);
+        } finally { t.restore(); }
+    });
+
+    it('an unknown mode is `listen` (the retired setting\'s `auto` included): subscribed, never shown', () => {
+        const t = setup('auto');
+        try {
+            expect([t.view.mode, t.view.isListening, t.view.isOpen]).toEqual(['listen', true, false]);
+            t.emit({ solveId: 1, snapshot: snap(1), final: false });
+            expect(t.view.isOpen).toBe(false);
         } finally { t.restore(); }
     });
 });

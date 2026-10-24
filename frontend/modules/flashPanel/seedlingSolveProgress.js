@@ -21,11 +21,9 @@
  *  - `treeRows(tree, {expanded, cap})` — the tree flattened for display: a FINISHED subtree (no active node in it)
  *    is collapsed unless the viewer expanded it, an active path is always open, and at most `cap` rows are listed
  *    (the rest counted).
- *  - `solveProgressMode(value)` and `autoVisibility(mode, visible, note)` — ⛓ AUTO-SHOW (slice `solve-progress-auto`,
- *    ⚖ the user 2026-10-15): the setting is `off | auto | always` (default `auto`). In `auto` the feed stays
- *    SUBSCRIBED while the view is hidden (the progress ask rides the solve's envelope, so a listener made mid-solve
- *    would only hear the NEXT solve); a solve's first note shows the view and its FINAL note hides it at once. Hiding
- *    is NOT closing: the feed keeps listening, so the next solve is asked too. `always` never auto-hides.
+ *  - `SOLVE_PROGRESS_MODES` — the view's `off | listen | always` (⛓ PANEL LAYOUT; it replaced AUTO-SHOW's setting).
+ *    In `listen` the feed stays SUBSCRIBED while the view is hidden (the progress ask rides the solve's envelope, so a
+ *    listener made mid-solve would only hear the NEXT solve).
  *  - ⛓ TIER A (slice S2, ⚖ the user 2026-10-17 — what the snapshot ALREADY carries, shown; no schema change):
  *    `asksBySite` (the deadline sites' asks, which under a deadline are the work units), `workCounters` (the
  *    segment's other counters), `activePath` (the active path and its climb depth) and `reasonsText` (a node's
@@ -459,33 +457,11 @@ export function createSolveProgressFeed({ getServices, onNote, tick = () => {}, 
     };
 }
 
-/** ⛓ AUTO-SHOW — the setting's values, in the order the panel's button cycles them. */
-export const SOLVE_PROGRESS_MODES = Object.freeze(['off', 'auto', 'always']);
-/** ⛓ AUTO-SHOW — the schema default (⚖ the user 2026-10-15). */
-export const SOLVE_PROGRESS_DEFAULT_MODE = 'auto';
-
 /**
- * A stored setting as a mode. The setting was a boolean before AUTO-SHOW: a stored `true` (the view opened by hand)
- * reads as `always`, a stored `false` as `off`, so an explicit choice survives; anything else is the default.
+ * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24) — the VIEW's modes, no longer a setting: the
+ * panel's collapsible Solver section is the switch. `off` = not subscribed (the panel torn down), `listen` = subscribed
+ * and hidden (the section closed: the progress line under the game still hears every solve), `always` = subscribed
+ * and shown (the section open). It replaces AUTO-SHOW's `off | auto | always` setting
+ * (`moduleSettings.flashPanel.seedlingSolveProgressView`, retired with its button).
  */
-export function solveProgressMode(value) {
-    if (value === true) return 'always';
-    if (value === false) return 'off';
-    return SOLVE_PROGRESS_MODES.includes(value) ? value : SOLVE_PROGRESS_DEFAULT_MODE;
-}
-
-/** The button's next mode: off → auto → always → off. */
-export const nextSolveProgressMode = (mode) =>
-    SOLVE_PROGRESS_MODES[(SOLVE_PROGRESS_MODES.indexOf(solveProgressMode(mode)) + 1) % SOLVE_PROGRESS_MODES.length];
-
-/**
- * ⛓ AUTO-SHOW — whether the view is shown after a note the model ACCEPTED (a dropped note changes nothing):
- * `always` shows, `off` hides, `auto` shows on a running note and hides on the final one. A solve that only ever
- * posts its final note (none in practice: the worker posts at its first hook call) is never shown.
- */
-export function autoVisibility(mode, visible, note) {
-    if (mode === 'always') return true;
-    if (mode !== 'auto') return false;
-    if (!note) return visible;
-    return note.final !== true;
-}
+export const SOLVE_PROGRESS_MODES = Object.freeze(['off', 'listen', 'always']);
