@@ -1214,6 +1214,18 @@ export const CONTACT_FIDELITY = {
      * `button@816,400`); OFF = main row-for-row.
      */
     pulserPublishLag: true,
+    /**
+     * fidelity FIREMOVE (wave 29) — THE SOLVER MOVES A `PushableBlockFire` BY FIRE PRESSES (`deriveBlockRoute`'s fire
+     * arm) AND A FIRE BLOCK PARKS ON A BUTTON (`deriveWeigh`). `Player.genericHit`'s Fire arm (`Player.as:1125`) is
+     * `hit(new Point(x, y), t)`, the absolute arm: one tile away from the player on the axis the `atan2` band admits. The
+     * route search had a lean and a spear thrust and no Fire press, `deriveWeigh` skipped the fire family, and the frontier
+     * refused *"NO block in this room can reach it"* (L39's opener, L40's t5 holder, L41's wandlock button). ON: one tile
+     * per press from the cell on the block's far side, the flame audited to reach nothing else (`presses.auditFire`, the
+     * live turret rect when `fireLiveTurretReach` is ON), executed through `runFire`'s `moves` arm; a fire route has its
+     * own order bound (`MAX_FIRE_ROUTE_ORDERS`); a fire block already on a button dwells. OFF: byte-identical.
+     * `SEEDLING_FIRE_BLOCK_ROUTE=0|1` for a node measurement.
+     */
+    fireBlockRoute: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1444,6 +1456,9 @@ if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '1') CONTACT_FI
 if (globalThis.process?.env?.SEEDLING_FIRE_LIVE_TURRET_REACH === '0') CONTACT_FIDELITY.fireLiveTurretReach = false;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '1') CONTACT_FIDELITY.pulserPublishLag = true;
 if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELITY.pulserPublishLag = false;
+// ⛓ fidelity FIREMOVE: `SEEDLING_FIRE_BLOCK_ROUTE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_ROUTE === '1') CONTACT_FIDELITY.fireBlockRoute = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_ROUTE === '0') CONTACT_FIDELITY.fireBlockRoute = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

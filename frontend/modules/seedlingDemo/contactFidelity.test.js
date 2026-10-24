@@ -266,7 +266,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-12's flip (⚖ user "Flip all 3 ON if A/B clean", 2026-10-24) turns them ON.
             fireBlockPulseShove: true,
             fireLiveTurretReach: true,
-            pulserPublishLag: true });
+            pulserPublishLag: true,
+            // ⛓ fidelity FIREMOVE (wave 29): the solver moves a fire block by Fire presses, and weighs with it — OFF.
+            fireBlockRoute: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

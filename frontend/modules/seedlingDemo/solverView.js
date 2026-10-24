@@ -184,6 +184,8 @@ export {
 export { pressRectTouches, spearHitRect } from './presses.js';
 // ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';
+// ⛓ fidelity FIREMOVE: the fire route's flame audit (what else a Fire press reaches, by its arm's policy).
+export { FIRE_ARM_POLICY } from './presses.js';
 // pull.js — solverBot · seedling 2
 export { pullModelled, pullsDrainingInto } from './pull.js';
 // pulser.js — solverBot · seedling 3
@@ -193,6 +195,8 @@ export { PULSER, pulsePushes, pulserCycle } from './pulser.js';
 export { PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade } from './placedGrenade.js';
 // pushables.js — solverBot · seedling 2
 export { DESTROYING_TILE_TYPES, newPushable } from './pushables.js';
+// ⛓ fidelity FIREMOVE: the Fire press's push (the absolute arm, `Player.as:1125`).
+export { hitPushableFromPoint } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4
 export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule } from './shieldBossFight.js';
 // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb's own transcriptions — the switch, the window, the spawn, the

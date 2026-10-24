@@ -25180,3 +25180,43 @@ the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) �
 - "Updates before the player" is not the whole order: a reader that updates before its PUBLISHER reads the publish a tick
   late, whatever the player did.
 - A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).
+
+### Seedling fidelity FIREMOVE — the solver moves a fire block by Fire presses and weighs with it (`fireBlockRoute`, OFF)
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-firemove.md`.
+
+**W0.** Three of the top unserved edges stopped at one missing link: no Fire press in `deriveBlockRoute` and the fire family
+skipped by `deriveWeigh` — L39's opener (survey steps 66/92/133/153: *"no REACHABLE stance inside button@112,144"*), L40's
+t5 holder (step 67 with FIREPUSH ON: *"wandlock@800,400 … NO block in this room can reach it"*), L41's wandlock button
+(step 94, the walk grazing `wandlock@240,96`). Reproduced at the base with FIREPUSH's keys OFF and ON.
+
+**D1 — the route move.** `deriveBlockRoute`'s fire arm (a `PushableBlockFire`, the key ON): one tile per press, the stance
+the cell centre on the far side, the push `hitPushableFromPoint(…, "Fire")` (the absolute arm, `Player.as:1125`) admitting
+exactly that axis, the flame audited by `auditFire` (the state's block positions, the live turret rect): the block and no
+responder that is not `inert`. No sink move. Its own bound `MAX_FIRE_ROUTE_ORDERS` (40): L40's t5 route is 35 orders and
+188 expansions, under the shared `MAX_ROUTE_EXPANSIONS` (2000), which `MAX_ROUTE_ORDERS` (8) would have cut. A `fire` step
+runs `runFire`'s `moves` arm (`execFireMovePress`).
+
+**D2 — the weigh.** `weighFireBlock`: the `press` goal by the fire arm, and a block already home is `parked`.
+`resolveShoveStrategy` dwells on a fire block already on its shut button before the pulser arm. `execWeigh`: a responder
+opened during the last Fire press's own wait is met inside the route (L39's cover opens on the landing tick, and
+`runDwell`'s shut-before refusal would otherwise call the finished weigh vacuous).
+
+**D3 — witnesses.** L41: the survey's own step-94 plan (crusher bait, six Fire presses (7,9)→(11,11), the part) played on
+p4g reproduces the model at 0 px on all 2,343 ticks (`fixtures/firemove-witness/firemove-l41-part3.json`). L40: the
+solver's route for the t5 holder IS FIREPUSH's game-witnessed `FIREPUSH_ROUTE`, press for press; its execution refuses at
+`runFire`'s unmodelled-enemy arm (Bob, BobSoldier, Puncher, BombPusher are not in the block sweep — CORPSEBUMP's row). L39:
+block 2's route is `SHAFT_PLAN`'s presses 4-8, and a stance whose flame reaches `spinner@224,112` is refused by name.
+
+**Movers (local, FIREPUSH's three ON in both arms).** Survey full: step 94 REFUSED → SOLVED 2,346 t; steps 66/92/133/153
+(L39) refuse three links deeper (`button@144,112`), 0.4 s → 5–7 s; 234 rows equal. Keyed sweep (58 legs, L38–L41 + L107, ×2):
+one key-driven mover, leg 871 (L41 Totem Part 240,144), failed → planned (its 90 s leg budget cut the game playback at
+t2360 of 2505); legs 368/371/404 differ run to run and answer OFF = ON on their captured requests.
+
+**Trap candidates.**
+- A census volume outlives its body: L40's dead turret's attack rect still walls the far-side stances unless the walk
+  carries it as a contact — the route search's floor test is the planner's, contacts and all.
+- A verb's own wait can finish the next verb's condition: a fire press waits its window's tail past the landing, so a
+  responder that opens on the landing tick is already open when the dwell starts.
+- A sweep `timeout` can be a SOLVED plan whose playback outran the leg budget: read `history[].verbs` before calling it a
+  failure.

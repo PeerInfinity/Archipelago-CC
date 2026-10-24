@@ -1,0 +1,8 @@
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the registry matrix is one column per ENTRY and one row per FIELD
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the capability chart is every statement × every registered entry
+ FAIL  frontend/modules/flashPanel/seedlingAtlasArm.test.js > loadSeedlingRandomizer hands the four pipeline real-room worlds to the atlas arm > seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STATE (the committed bytes, rebuilt headless)
+ FAIL  frontend/modules/procgenDocs/docsRender.test.js > ⛓⛓ the anchors — two readers, one answer (the count is in the pin, not here) > the page's heading ids ARE ghSlug's, document by document
+ FAIL  frontend/modules/procgenDocs/docsRender.test.js > ⛓ the biggest document — the one the budget is about > seedling-bot-log.md renders its headings and its slugs are unique
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says > ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files
+ Test Files  3 failed | 120 passed (123)
+      Tests  4 failed | 4462 passed | 10 skipped (4476)

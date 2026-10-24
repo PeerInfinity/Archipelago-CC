@@ -151,6 +151,8 @@ import {
     GHOSTSWORD_PRESS, ghostSwingRefusal,
     // ⛓⛓ seedling-fidelity-pushblock: the spear push's stance audit (what else the thrust's rect reaches).
     auditPress, PRESS_ARM_POLICY,
+    // ⛓ fidelity FIREMOVE: the fire route's push and its flame audit (`deriveBlockRoute`'s fire arm).
+    hitPushableFromPoint, FIRE_ARM_POLICY,
     // ⛓ hammer-phase B2: the fight's no-bump prune (a carried shield)
     shieldBumpTouches,
     // ⛓⛓ fidelity ENCOUNTERS D3: the Witch's talk circle (`NPC.talkRange`).
@@ -3936,9 +3938,18 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
          * leaned on a fire block would emit its ticks and move nothing.
          * ⛓ FIREPUSH: behind `fireBlockPulseShove`, the room's pulser moves it.
          */
-        if (CONTACT_FIDELITY.fireBlockPulseShove && row.as3 === 'PushableBlockFire') {
-            return resolveFireBlockShove(run, row, contacts, aim, allowTeleporter, blocked);
+        // ⛓ FIREMOVE: behind `fireBlockRoute`, a fire block already on its button dwells, and the player's own Fire
+        // presses move it (`deriveBlockRoute`'s fire arm) where the pulser does not.
+        const fireRoute = CONTACT_FIDELITY.fireBlockRoute && row.as3 === 'PushableBlockFire';
+        if (fireRoute) {
+            const dwell = parkedFireBlockDwell(run, row, contacts, blocked);
+            if (dwell) return dwell;
         }
+        if (CONTACT_FIDELITY.fireBlockPulseShove && row.as3 === 'PushableBlockFire') {
+            const pulsed = resolveFireBlockShove(run, row, contacts, aim, allowTeleporter, blocked);
+            if (pulsed || !fireRoute) return pulsed;
+        }
+        if (fireRoute) return resolveFireMoveStrategy(run, row, contacts, aim, allowTeleporter, blocked);
         return null;
     }
     /**
@@ -4249,6 +4260,77 @@ function resolveFireBlockShove(run, row, contacts, aim, allowTeleporter, blocked
     return null;
 }
 
+/**
+ * ⛓ fidelity FIREMOVE — R9 slice L15's "a block already resting on a momentary presser is the key already turned",
+ * for a fire block: the frontier names the block nearer than the lock it holds, and a route that moved it again would
+ * shove the key off the door. The weigh's own dwell arm answers it.
+ */
+function parkedFireBlockDwell(run, row, contacts, blocked) {
+    const live = run.entities('pushables').get(row.id);
+    const pressed = live && !live.removed ? (run.world.pressers ?? []).find(
+        (p) => localPublish(p) === null && rectsOverlapLocal(live.rect, p.rect)) : null;
+    if (!pressed) return null;
+    const shut = (run.world.activators ?? []).find(
+        (a) => a.t === pressed.t && !run.entities('openActivators').has(a.id));
+    if (!shut) return null;
+    const dwell = resolveWeighStrategy(run, { kind: 'solid', tag: shut.tag, id: shut.id }, contacts, blocked);
+    return dwell && dwell.dwellOnly ? dwell : null;
+}
+
+/**
+ * ⛓⛓⛓ fidelity FIREMOVE — RESOLVE a `shove` of a `PushableBlockFire` by the player's own FIRE PRESSES: `clear-path`,
+ * the spear's shape (`resolveSpearPushStrategy`) with the fire arm of the same search. ⛔ No Fire: resolved
+ * `held: false` and the executor refuses BY NAME — the item is the work order.
+ */
+function resolveFireMoveStrategy(run, row, contacts, aim, allowTeleporter, blocked = []) {
+    const target = { x: row.x, y: row.y, id: row.id };
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.fire);
+    if (!run.progress('inventory')?.hasFire || slot < 0) {
+        return {
+            strategy: 'shove', held: false, target, shove: { block: { x: row.x, y: row.y } },
+            rejected: [{
+                option: `fire press at ${row.id}`,
+                why: 'the run holds NO FIRE. A `PushableBlockFire` moves only for "Fire" and "Pulse" (`moveTypes`), '
+                    + 'so without the Fire the player cannot move it ⇒ the Fire is the work order.',
+            }],
+        };
+    }
+    const discharged = dischargedPushables(run, row, blocked);
+    const route = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter }, contacts,
+        blocked, { discharged });
+    if (!route.steps) {
+        if (route.refused?.bound) {
+            throw new SolverRefusal(`solverBot: the block-route search for ${row.id} in `
+                + `level ${run.level} hit \`${route.refused.bound}\` — ${route.refused.why}`,
+            { obstacle: { kind: 'solid', id: row.id },
+                bound: blockRouteBound(route, row, 'clear-path') });
+        }
+        return null;
+    }
+    const first = route.steps.find((st) => st.verb === 'fire');
+    if (!first) return null; // a route of breaks alone: the rock is the door, not this block
+    return {
+        strategy: 'shove',
+        postCondition: 'clear-path',
+        weapon: 'fire',
+        slot,
+        discharged,
+        target,
+        shove: { block: { x: row.x, y: row.y }, dir: first.dir, to: { ...first.to } },
+        k: route.steps.filter((st) => st.verb === 'fire').length,
+        stance: route.steps[0].stance ?? null,
+        route: route.steps,
+        rejected: [{
+            option: 'a lean (`runShove`)',
+            why: `${row.id} is a \`PushableBlockFire\`: \`input()\` reads only its own target, which only \`hit()\` `
+                + 'writes — a lean moves nothing',
+        }, {
+            option: 'the route',
+            why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
+        }, ...hypothesisRejection(discharged), ...route.rejected],
+    };
+}
+
 const BOTH_RANGE_NOTE = '0.1';
 const boxXYWH = (b) => [b.x, b.y, b.right - b.x, b.bottom - b.y];
 
@@ -4485,7 +4567,10 @@ const describeRoute = (route) => route.map((st, i) => (st.verb === 'shove'
     : (st.verb === 'press'
         ? `${i + 1}. thrust ${st.dir} -> (${st.to.tx},${st.to.ty})${st.destroys
             ? ' (DESTROYED there)' : ''}${st.stance ? ` from (${st.stance.x},${st.stance.y})` : ''}`
-        : `${i + 1}. break ${st.rock} (wait ${st.wait})`))).join(' · ');
+        : (st.verb === 'fire'
+            // ⛓ FIREMOVE: a Fire press, one tile, from the far side.
+            ? `${i + 1}. fire ${st.dir} -> (${st.to.tx},${st.to.ty}) from (${st.stance.x},${st.stance.y})`
+            : `${i + 1}. break ${st.rock} (wait ${st.wait})`)))).join(' · ');
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — RESOLVE a `weigh` work order: ⚖ §11.8a's
@@ -4679,6 +4764,8 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
         k: plan.k,
         stance,
         ...(plan.route ? { route: plan.route } : {}),
+        // ⛓ FIREMOVE: a fire route's presses select the Fire's slot (`execFireMovePress`).
+        ...(plan.weapon ? { weapon: plan.weapon, slot: plan.slot } : {}),
         dwell: {
             ticks: hold.ticks,
             until: hold.until,
@@ -4727,7 +4814,8 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
  * `deriveShove` asks — asked here of a cell it was handed rather than of one
  * it chose.
  */
-function deriveWeigh(run, onto, contacts, blocked = []) {
+/** ⛓ FIREMOVE: exported for the fire-weigh rows (`fidelityFireMove.test.js`); `resolveWeighStrategy` stays its caller. */
+export function deriveWeigh(run, onto, contacts, blocked = []) {
     const bag = run.liveGeometryOpts();
     const planOpts = solverPlanOpts(run, contacts);
     const found = [];
@@ -4737,6 +4825,11 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
     const dirs = Object.keys(SHOVE_STEP);
     for (const row of (run.world.pushables ?? [])) {
         if (blocked.includes(row.id)) continue;
+        // ⛓ FIREMOVE: behind `fireBlockRoute`, a fire block is weighed by its own route (or dwells, parked).
+        if (CONTACT_FIDELITY.fireBlockRoute && row.as3 === 'PushableBlockFire') {
+            weighFireBlock(run, row, onto, contacts, blocked, found, rejected, (p) => { parked = parked ?? p; });
+            continue;
+        }
         if (row.family !== 'walk') {
             /**
              * ⛔ A `pushableblockfire` MOVES ON A PRESS, NOT ON A LEAN —
@@ -4920,6 +5013,50 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
             ...rejected,
         ],
     };
+}
+
+/**
+ * ⛓⛓⛓ fidelity FIREMOVE — `deriveWeigh`'s row for a `PushableBlockFire` (behind `fireBlockRoute`). The skip this
+ * replaces said "it moves on a PRESS, not on a lean"; the press is now a move of the route search, so the block is
+ * asked the `press` goal directly — a fire route is ONE TILE PER ORDER, so even a straight run is a route, and the
+ * one-lean arithmetic has nothing to say about it. A block already on `onto` is `parked` (the dwell arm), exactly as a
+ * walk block is. ⛔ No Fire held: a rejection naming the item, never a silent skip.
+ */
+function weighFireBlock(run, row, onto, contacts, blocked, found, rejected, park) {
+    const live = run.entities('pushables')?.get(row.id);
+    if (!live || live.removed) return;
+    const from = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
+    if (from.tx === onto.tx && from.ty === onto.ty) {
+        park({ blockId: row.id, from });
+        rejected.push({
+            option: `weigh with ${row.id}`,
+            why: `it is ALREADY on (${onto.tx},${onto.ty}), so there is no press to order — the press it is already `
+                + 'making is what a DWELL waits out, reported as `parked`',
+        });
+        return;
+    }
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.fire);
+    if (!run.progress('inventory')?.hasFire || slot < 0) {
+        rejected.push({ option: `weigh with ${row.id}`, why: 'it is a `PushableBlockFire` and the run holds NO FIRE — '
+            + 'it moves only for "Fire" and "Pulse" (`moveTypes`), so the Fire is the work order' });
+        return;
+    }
+    const r = deriveBlockRoute(run, row, { kind: 'press', onto }, contacts, blocked);
+    if (!r.steps) {
+        if (r.refused?.bound) {
+            throw new SolverRefusal(`solverBot: the block-route search for ${row.id} `
+                + `onto (${onto.tx},${onto.ty}) in level ${run.level} hit `
+                + `\`${r.refused.bound}\` — ${r.refused.why}`,
+            { obstacle: { kind: 'solid', id: row.id }, bound: blockRouteBound(r, row, 'press') });
+        }
+        rejected.push({ option: `weigh with ${row.id}`, why: `no Fire route reaches (${onto.tx},${onto.ty}): `
+            + `${r.refused?.why ?? 'the search found none'}` });
+        return;
+    }
+    const first = r.steps.find((st) => st.verb === 'fire');
+    if (!first) return; // a press route always moves the block — it must ARRIVE
+    found.push({ blockId: row.id, dir: first.dir, dirIndex: first.dirIndex,
+        k: r.steps.filter((st) => st.verb === 'fire').length, from, route: r.steps, weapon: 'fire', slot });
 }
 
 /**
@@ -7627,6 +7764,15 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
  */
 export const MAX_ROUTE_ORDERS = 48;
 export const MAX_ROUTE_EXPANSIONS = 2000;
+/**
+ * ⛓ fidelity FIREMOVE — A FIRE ROUTE'S OWN ORDER BOUND (`fireBlockRoute`). A Fire press moves its block ONE tile, so
+ * a route of N tiles is N orders: L40's t5 holder is 35 (FIREPUSH's witness, `FIREPUSH_ROUTE`), L41's wandlock holder 6
+ * (`r5Totem.L41_PART3.pushes`). `MAX_ROUTE_ORDERS` counts LEANS, each of which can carry the block `MAX_SHOVE_TILES`, and
+ * is the js route census's; this bound is named for the fire arm alone and does not move it. Its value is MEASURED, not
+ * argued: the solver's own L40 route is 35 orders (the report, D1), and the expansions it spends are the shared
+ * `MAX_ROUTE_EXPANSIONS`'s, which still binds.
+ */
+export const MAX_FIRE_ROUTE_ORDERS = 40;
 
 /**
  * @typedef {{depth: number, newStates: number, newBlockCells: number,
@@ -7657,7 +7803,8 @@ function blockRouteBound(route, row, goalKind) {
     return {
         name, site: 'block-route', goal: goalKind, block: row.id,
         limit: name === 'MAX_ROUTE_EXPANSIONS' ? MAX_ROUTE_EXPANSIONS
-            : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS : null,
+            : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS
+                : name === 'MAX_FIRE_ROUTE_ORDERS' ? MAX_FIRE_ROUTE_ORDERS : null,
         expansions: route.expansions,
         census: route.census ?? [],
     };
@@ -7698,7 +7845,7 @@ const SHOVE_PHRASE = Object.freeze({
 const routeCost = (steps) => {
     let sumK = 0; let destroys = 0; const seq = [];
     for (const s of steps) {
-        if (s.verb === 'shove' || s.verb === 'press') {
+        if (s.verb === 'shove' || s.verb === 'press' || s.verb === 'fire') {
             sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex);
         }
         else seq.push(SHOVE_DIR_COUNT);
@@ -7963,8 +8110,94 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         }
         push(next);
     };
+    /**
+     * ⛓⛓⛓ fidelity FIREMOVE — **A `PushableBlockFire` MOVES ON A FIRE PRESS, ONE TILE, AWAY FROM THE PLAYER**
+     * (behind `CONTACT_FIDELITY.fireBlockRoute`, OFF). `Player.genericHit`'s Fire arm (`Player.as:1125`) calls
+     * `hit(new Point(x, y), t)`: the target moves one tile on each axis the `atan2` band admits
+     * (`pushables.hitPushableFromPoint`), so the stance is the cell centre on the block's FAR side, where the band
+     * admits exactly the push axis. The flame has no aim, so the stance is AUDITED (`presses.auditFire`, the bag's own
+     * block positions, and the live turret rect when `fireLiveTurretReach` is ON): the block must be in it and nothing
+     * else but an `inert` responder — another fire block would move too, a tree would burn, a rope would fall, a corpse
+     * would be bumped. A sink is not planned: `runFire`'s `moves` arm names where a block ENDS. The player stays where
+     * they stood (`press`'s shape). Executed through `runFire`'s `moves` arm (`execFireMovePress`).
+     */
+    const fireMove = CONTACT_FIDELITY.fireBlockRoute && row.as3 === 'PushableBlockFire';
+    const ordersCap = fireMove ? MAX_FIRE_ROUTE_ORDERS : MAX_ROUTE_ORDERS;
+    const ordersCapName = fireMove ? 'MAX_FIRE_ROUTE_ORDERS' : 'MAX_ROUTE_ORDERS';
+    const fireFloorOpts = (bags) => solverPlanOpts(run, bags.exempt,
+        { nodeMargin: 0, triggerMargin: 0, liveBag: bags.solid });
+    const fireMoves = (state, key, bags, atStart, dir, dirIndex, push) => {
+        const step = SHOVE_STEP[dir];
+        const from = state.block;
+        const cell = { tx: from.tx + step.dx, ty: from.ty + step.dy };
+        const option = `fire ${dir}`;
+        if (cell.tx < 0 || cell.ty < 0 || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+            if (atStart) rejected.push({ ...phrase.offMap(dir, 1, cell, run), option });
+            return;
+        }
+        if (blockSinksOn(run.world, cell)) {
+            if (atStart) {
+                rejected.push({ option, why: `(${cell.tx},${cell.ty}) is destructive terrain — \`runFire\`'s \`moves\` `
+                    + 'arm names the cell a block ENDS on, so a sink is not a fire route\'s move' });
+            }
+            return;
+        }
+        if (blockBlockedAt(run, bags.solid, row.id, cell)) {
+            if (atStart) rejected.push({ ...phrase.solid(dir, 1, cell), option });
+            return;
+        }
+        if (refusedMoves.has(`${key}|fire:${dir}`)) return;
+        const stance = nodeCentre(from.tx - step.dx, from.ty - step.dy, DEFAULT_LATTICE);
+        const at = `(${stance.x},${stance.y})`;
+        if (stance.x < 0 || stance.y < 0 || plannerObstacleAt(run.world, stance.x, stance.y, null, fireFloorOpts(bags))) {
+            if (atStart) rejected.push({ option, why: `the far-side stance ${at} is not floor` });
+            return;
+        }
+        const hit = hitPushableFromPoint(newPushable({ ...row, x: from.tx * TILE_SIZE, y: from.ty * TILE_SIZE }),
+            stance, 'Fire');
+        if (!hit.moved || hit.both || hit.axes[0] !== dir) {
+            if (atStart) {
+                rejected.push({ option, why: `a Fire press from ${at} ${hit.moved
+                    ? `pushes the block ${hit.axes.join('+')}, not ${dir}` : `moves nothing: ${hit.why}`}` });
+            }
+            return;
+        }
+        const audit = auditFire(run.world, stance, { pushables: bags.solid.pushables ?? null,
+            turrets: run.entities('turrets') });
+        const onBlock = audit.live.some((r) => r.pushableId === row.id);
+        const strays = audit.live.filter((r) => r.pushableId !== row.id
+            && (FIRE_ARM_POLICY[r.as3]?.policy ?? 'refused') !== 'inert');
+        if (!onBlock || strays.length) {
+            if (atStart) {
+                rejected.push({ option, why: !onBlock ? `the flame from ${at} does not reach the block`
+                    : `the flame from ${at} also reaches ${strays.map((r) => r.id).join(', ')} — a press has no aim` });
+            }
+            return;
+        }
+        const exempt = plansOrCrosses(state, state.player, stance, null, bags.solid, bags.exempt);
+        if (!exempt) {
+            if (atStart) rejected.push({ option, why: `no corridor reaches the far-side stance ${at}` });
+            return;
+        }
+        const crossed = exempt === bags.exempt ? [] : [...exempt].filter((c) => !bags.exempt.has(c));
+        const next = {
+            block: cell, rocks: state.rocks, player: stance,
+            steps: [...state.steps, { verb: 'fire', dir, dirIndex, k: 1, from: { ...from }, to: { ...cell },
+                destroys: false, stance, ...(crossed.length ? { exempt: crossed } : {}) }],
+        };
+        if (atStart) {
+            if (goalMet(next, bagsOf(next))) {
+                found.push({ dir, dirIndex, k: 1, to: { ...cell }, destroys: false });
+                push(next);
+                return;
+            }
+            rejected.push({ ...phrase.noGoal(dir, 1, cell, false, goal), option });
+        }
+        push(next);
+    };
     const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}`
-        : (st.verb === 'press' ? `press:${st.dir}` : `break:${st.rock}`));
+        : (st.verb === 'press' ? `press:${st.dir}`
+            : (st.verb === 'fire' ? `fire:${st.dir}` : `break:${st.rock}`)));
     /**
      * Replay a candidate route's prefixes and ask A\* every question the
      * flood answered for it. Returns `null` when every step plans, else the
@@ -7985,8 +8218,8 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
                     player: nodeCentre(st.to.tx - SHOVE_STEP[st.dir].dx,
                         st.to.ty - SHOVE_STEP[st.dir].dy, DEFAULT_LATTICE),
                     steps: steps.slice(0, i + 1) }
-                : (st.verb === 'press'
-                    // ⛓ PUSHBLOCK: a thrust moves the BLOCK; the player stays at the stance.
+                : (st.verb === 'press' || st.verb === 'fire'
+                    // ⛓ PUSHBLOCK: a thrust moves the BLOCK; the player stays at the stance (FIREMOVE: a Fire press too).
                     ? { block: st.destroys ? null : st.to, rocks: state.rocks,
                         player: st.stance ?? state.player, steps: steps.slice(0, i + 1) }
                     : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
@@ -8100,7 +8333,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
             restart = true;
             break;
         }
-        if (state.steps.length >= MAX_ROUTE_ORDERS) { ordersBound = true; continue; }
+        if (state.steps.length >= ordersCap) { ordersBound = true; continue; }
         // ⛓ SF2: the caller's deadline is a bound too, refused in the same shape.
         if (deadlineReached('block-route')) {
             return { steps: null, rejected, found, expansions, census, refused: {
@@ -8124,6 +8357,8 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         const atStart = state.steps.length === 0;
         if (state.block && press) {
             dirs.forEach((dir, dirIndex) => pressMoves(state, key, bags, atStart, dir, dirIndex, push));
+        } else if (state.block && fireMove) {
+            dirs.forEach((dir, dirIndex) => fireMoves(state, key, bags, atStart, dir, dirIndex, push));
         } else if (state.block) {
             dirs.forEach((dir, dirIndex) => {
                 const step = SHOVE_STEP[dir];
@@ -8237,9 +8472,9 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     break;
     }
     return { steps: null, rejected, found, expansions, census, refused: ordersBound ? {
-        bound: 'MAX_ROUTE_ORDERS',
-        why: `every route the search could reach was cut at ${MAX_ROUTE_ORDERS} orders `
-            + `(\`MAX_ROUTE_ORDERS\`) without meeting the \`${goal.kind}\` post-condition`
+        bound: ordersCapName,
+        why: `every route the search could reach was cut at ${ordersCap} orders `
+            + `(\`${ordersCapName}\`) without meeting the \`${goal.kind}\` post-condition`
             + routeCensusClause(census),
     } : {
         bound: null,
@@ -9819,6 +10054,15 @@ function execRoute(run, perTick, resolved, ctx, what) {
                     + `${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} `
                     + `as route step ${i + 1} requires.`);
             }
+        } else if (step.verb === 'fire') {
+            // ⛓ FIREMOVE: one Fire press through `runFire`'s `moves` arm (its exact-set effect check is the post-condition).
+            last = execFireMovePress(run, perTick, { blockId: blockRow(), from: step.from, to: step.to }, ctx, label);
+            const live = run.entities('pushables').get(blockRow());
+            if (!live || live.removed || tileOf(live).tx !== step.to.tx || tileOf(live).ty !== step.to.ty) {
+                refuse(`${label}: after the Fire press the block is ${!live || live.removed
+                    ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not on (${step.to.tx},${step.to.ty}) `
+                    + `as route step ${i + 1} requires.`);
+            }
         } else if (step.verb === 'break') {
             const rec = execBreak(run, perTick, {
                 held: true, rock: step.rock, target: step.target, stance: step.stance,
@@ -9930,6 +10174,38 @@ function execSpearPress(run, perTick, p, ctx, what) {
 }
 
 /**
+ * ⛓⛓⛓ fidelity FIREMOVE — ONE FIRE PRESS AT A `PushableBlockFire`, THROUGH `runFire`'s `moves` ARM.
+ *
+ * SETTLE (the walk's coast; `runFire` refuses a moving stance), SELECT the Fire's slot if another is up (the run's own
+ * `inventorySlots`, as the burn does), then `runFire` with the one move: it refuses an unmodelled enemy room, an awake
+ * crusher and a block that is not on `from` by name, presses, waits the glide out and checks the EXACT set of blocks
+ * that moved. The old slot is selected again after.
+ */
+function execFireMovePress(run, perTick, p, ctx, what) {
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why}`, { obstacle: { kind: 'solid', id: p.blockId } });
+    };
+    const NO_KEYS = new Set();
+    const from = perTick.length;
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > BURN_SETTLE_MAX) refuse('the walk to the Fire stance never came to rest.');
+        perTick.push(NO_KEYS);
+        const { transition } = run.advance(NO_KEYS);
+        if (transition) refuse(`the settle crossed to level ${transition.to_level} — a block is PER VISIT.`);
+    }
+    const prior = run.progress('primary');
+    if (run.progress('primaryWeapon') !== 'fire') {
+        const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.fire);
+        if (slot < 0) refuse('the inventory has no Fire slot.');
+        ctx.equip(slot);
+    }
+    const rec = runFire(run, perTick, { moves: [{ from: { ...p.from }, to: { ...p.to } }] }, what);
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { verb: 'fire', target: p.blockId, from, to: { ...p.to }, pressTick: rec?.pressTick ?? null,
+        weapon: 'fire', restoredSlot: prior, ticks: perTick.length - from };
+}
+
+/**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — Executor: the `weigh` verb, which is TWO
  * EXISTING VERBS AND NO NEW MECHANICS.
  *
@@ -9994,6 +10270,21 @@ function execWeigh(run, perTick, resolved, ctx) {
         };
     }
     const shove = execRoute(run, perTick, resolved, { ...ctx, idleStrike: strike }, `${ctx.what} (park the block)`);
+    /**
+     * ⛓ FIREMOVE — A FIRE PRESS'S OWN WAIT CAN OUTRUN THE FADE. `runFire` waits the glide out and then its window's
+     * tail (`FIRE_WINDOW`), so a responder that opens on the landing tick (L39's `cover@112,144`) is already open when
+     * the route returns, and `runDwell`'s shut-before refusal would call a finished weigh vacuous. Only after a route
+     * whose LAST order is a Fire press, and only because `execRoute` has just asserted the block is on its tile: the
+     * dwell is recorded as met inside the route, with the tick it was asked.
+     */
+    const lastFire = resolved.route?.at(-1)?.verb === 'fire';
+    if (lastFire && resolved.dwell.until.test(run)) {
+        const dwell = { metInRoute: true, ticks: 0, at: run.ticksCompleted, why: resolved.dwell.until.why };
+        return {
+            kind: 'weigh', postCondition: 'press', presser: { ...resolved.target }, shove, dwell,
+            ...(shove.steps ? { steps: shove.steps } : {}), ticks: shove.ticks ?? 0,
+        };
+    }
     const dwell = runDwell(run, perTick, armed(resolved.dwell), `${ctx.what} (fade)`);
     return {
         kind: 'weigh',

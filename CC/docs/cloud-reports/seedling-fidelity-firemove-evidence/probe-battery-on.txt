@@ -1,0 +1,423 @@
+### [standard] probe-seedling-wasm-logical-links.mjs --only=B,R
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`) — {"assumeBidirectional":false,"source":"explicit"}
+PASS: B: the bot is mounted in level_0__r8c0, its first goal in level 10 — {"ok":true,"region":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: B: the Sword's route is 9 hops, opening with r8c0's OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6 — {"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","level_10"],"nextExit":"level_0__r8c0 -> level_2","length":9
+PASS: B: the first move is the stairs walked straight from level_0__r8c0 (`level_0__r8c0 -> level_2`, not logical) — ["level_0__r8c0 -> level_2","level_2 -> level_3__r0c4","level_3__r0c4 -> level_4","level_4 -> level_5__r1c5","level_5__r1c5 -> level_6","level_6 -> level_7"]
+PASS: B: nothing is credited at r1c6 (the sealed link is gone from the rules) — []
+PASS: B: the bot CHECKED the Sword ("Level 010 - Sword") — or, on a base without F4, ends on L8's named sandtrap decline — {"swordAt":102,"checks":["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 
+PASS: B: every location checked once — ["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 0","Level 020 - Shield","Level 025 - Chest","Level 029 - Boss Key 1","Level 030 - Torchpickup","Level 032 - Ti
+PASS: B: every solver leg is named by the PASS that made its plan (dashless / full) — [[0,"dashless"],[2,"dashless"],[3,"dashless"],[4,"dashless"],[5,"dashless"],[6,"dashless"],[7,"dashless"],[8,"dashless"],[9,"dashless"],[10,"dashless"],[10,"full"],[11,"full"],[11,"full"],[3,"full"],[2,"full"],[0
+PASS: B: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above — {"divergences":0,"known":0,"unknown":[]}
+PASS: B: the engine solves under the work budget (640 units, the default) — {"budgetWork":640,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: the engine solves under the upgrade window (85 units, the default) — {"upgradeWindowWork":85,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals' gap — {"adoptClock":[{"level":0,"begin":4802,"model":4824,"live":4853,"shift":29,"refusal":null}],"firstGap":21,"modal":21}
+PASS: B: every Restart that met a playing leg waited for its end (none cut) — [{"from":"level_49","ended":true,"timedOut":false,"waitedMs":1736.0999999996275}]
+PASS: B: every Restart's start-hop arrival is HELD (0 `no-held-arrival` fallbacks; ≥ 1 expected arrival, each ends `held`) — {"forcedBy":{"continuation-declined":1},"expectedArrivals":1,"expect":1,"held":1,"rows":["expect","walkTo","begin-keep","seen","held"]}
+PASS: B: every location leg that ends in another level is HELD at its landing, and its own check settles — {"cross":[],"forcedBy":{"continuation-declined":1},"selfChecks":[]}
+PASS: B: 0 backstops (the wall clock never ended a solve) — {"backstops":0,"backstopMs":300000}
+PASS: B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall — Sphere 6.4 → routing via "level_0__r11c19 -> level_12__r0c19" → level_39__r0c9 (18/48)
+PASS: B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break) — {"eventId":null}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: R: the warm-up leg walked START -> level_2 and the wasm engine exists (then the bot stopped) — {"warmed":{"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","restartDeferrals":[]},"from":"level_2"}
+PASS: R: the player is in the pocket level_17 (the binding and gameState agree) — {"region":"level_17","physicalSub":"level_17","subRegions":true,"logicalMoves":0,"stats":{"loads":3,"teleports":3,"regionMoves":1,"warnings":0,"parks":0,"resumes":0,"setDeliveries":0,"locationChecks":0,"itemsFound":0
+PASS: R: the bot is mounted in level_17 and its route out BEGINS with RESTART (no walk out of the pocket) — {"ok":true,"region":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":null,"plan":{"goal":"level_10","kind":"restart","why":null,"firstSteps":[{"region":"le
+PASS: R: the bot TOOK the Restart out of level_17 (the glue's Restart was taken and the start hop pushed) — {"lastRestart":{"taken":true,"why":null,"start":"level_0__r8c0","substrate":"flash_seedling","stoppedWalks":0,"watching":1,"pushed":true,"at":1792873552946},"restarts":1,"restartPushes":[{"a
+PASS: R: the bot walks on from the start after the Restart (a region past the start, no error) — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","restartDeferrals":[],"restart":{"taken":true,"why":null,"start":"level_0__r8c0","substrate":"
+PASS: R: every Restart's start-hop arrival is HELD (0 `no-held-arrival` fallbacks; ≥ 1 expected arrival, each ends `held`) — {"forcedBy":{},"expectedArrivals":1,"expect":1,"held":1,"rows":["expect","walkTo","begin-keep","seen","held"]}
+PASS: R: 0 divergences (the leg solved from the held start hop stayed on plan) — {"divergences":0}
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-wasm-vanilla-map.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: V: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity — {"arm":"vanilla","entries":41,"refused":["Level 112 - Owl","Level 019 - Shieldspire","Level 032 - Times","Level 057 - Tentacled Beast","Level 043 - Totem of Lac
+PASS: V: the bot is mounted in level_0__r8c0 — {"ok":true,"region":"level_0__r8c0","afterPlay":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: V: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`) — {"assumeBidirectional":false,"source":"explicit","mode":null}
+PASS: V: the walk ends FINISHED, with a NAMED refusal, or still ADVANCING at the budget (never a silent stall) — {"status":"Sphere 5.4 → walking to \"Level 012 - Chest\" (14/48)","quietS":1,"active":true}
+PASS: V: the controller's engine STAGES THE DELIVERED SET (the rooms the game plays) — true
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: D: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity — {"arm":"vanilla","entries":41,"refused":["Level 112 - Owl","Level 019 - Shieldspire","Level 032 - Times","Level 057 - Tentacled Beast","Level 043 - Totem of Lac
+PASS: D: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`) — {"assumeBidirectional":false,"source":"explicit"}
+PASS: D: the bot is mounted in level_0__r8c0 — {"ok":true,"region":"level_0__r8c0","afterPlay":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: D: the sphere queue's first goal (level 10) routes in 9 hops opening with r8c0's OWN stairs — no logical sub-region link on it — {"head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","lev
+PASS: D: the controller's engine STAGES THE DELIVERED SET — true
+PASS: D: the bot CHECKED its first door-only target, each location once — {"legs":[{"target":"Level 086 - Chest","doors":1,"checked":"Level 086 - Chest","seconds":14,"status":"walking to \"Level 086 - Chest\""},{"target":"Level 010 - Sword","doors":10,"checked":"Level 010 - Sword","seconds":98,"st
+PASS: D: every cold start ADOPTED (the fade waited out, §5.19) — 0 forced re-arrivals in total, nothing refused — {"adopted":1,"forced":0,"forcedBy":{},"refused":[],"hostStarts":["adopt","continuation","freeze","plan","continuation","freeze","plan","freeze","plan","freeze","plan","freeze","plan
+PASS: D: 0 divergences, 0 recoveries (a solver DECLINE is recorded as the first refusal, not a divergence) — {"d":0,"r":0,"f":0,"history":[{"goal":"level_0__r8c0 -> level_86","level":0,"outcome":"done","producer":"solver","continuation":true,"divergence":null,"reason":null},{"goal":"Level 086 - Ch
+PASS: J: on the JS runtime the AP load TAKES the vanilla arm — the map bound, no refusal — {"transport":"js","arm":"vanilla","entries":41,"apRefusal":null,"loaded":true,"reset":{"mode":"explicit-start","level":0,"x":16,"y":128,"expectLevel":0,"intro":false,"position":"boot","why":"the set's star
+PASS: J: the page mounted the delivered set as REAL rooms (all of them), and the explicit start booted level 0 — {"levelSet":{"vanilla":116,"active":"seedling-ap-record-01b432a9","mounted":"seedling-ap-record-01b432a9","kind":"real","table_levels":116,"rooms":116,"start_level":0,"error":null},"res
+PASS: J: the reset sent the GAME's boot position (the binding's declared spawn), never (0, 0); the player stands there — {"boot":{"x":16,"y":128,"level":0,"source":"seedlingStartSpawn (the start region's arrival)"},"args":[16,128],"player":{"cls":"Player","x":24,"y":136}}
+PASS: J: a fresh runtime mounts the same delivered set (ok, real, every room) — [{"planMs":37,"mountMs":57,"chunks":9,"lastChunkMs":48,"answer":"ok","kind":"real","rooms":116},{"planMs":41,"mountMs":41,"chunks":9,"lastChunkMs":33,"answer":"ok","kind":"real","rooms":116},{"planMs":38,"mountMs":38,"
+PASS: J: the proxy routes on the directed graph the RULES declare (source `explicit`, as V and D) — {"assumeBidirectional":false,"source":"explicit"}
+PASS: J: the bot is mounted in level_0__r8c0 — {"ok":true,"region":"level_0__r8c0","afterPlay":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: J: the load HELD the glue's position watch (mount + reset) and no position was read inside it; NO logical move at the start (the first route opens with a door) — {"holds":[{"why":"the randomized load (mount + reset)","reads":2,"readsAtRelease":2}],"heldReads":0,"moves":[]}
+PASS: J: the bot CHECKED the starting house's chest (its first door-only target), each location once — {"legs":[{"target":"Level 086 - Chest","doors":1,"checked":"Level 086 - Chest","seconds":12,"status":"walking to \"Level 086 - Chest\"","solves":2,"declines":0,"lastVerbs":["apitem"],"lastGoal":"
+PASS: J: the page's SOLVER drove that leg — the doors solved, the apitem by verb `apitem`, nothing declined — {"target":"Level 086 - Chest","doors":1,"checked":"Level 086 - Chest","seconds":12,"status":"walking to \"Level 086 - Chest\"","solves":2,"declines":0,"lastVerbs":["apitem"],"lastGoal":"
+PASS: J: the walk never HALTED the page (a decline is the first refusal, recorded) — null
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-wasm-arrival-composites.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: D house door (seedling_atlas): the engine staged the arrival at (48, 64) in L86 — {"landed":{"level":86,"x":48,"y":64,"jumps":2,"replaced":{"level":86,"x":48,"y":48}},"arrivedAt":{"level":86,"x":48,"y":64}}
+PASS: D house door (seedling_atlas): crossed ON PLAN out of L86 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":0,"failed":null,"legs":[["stopped","solver",13,13,["step-off","walk"]]]}
+PASS: D house door (seedling_atlas): the solver's plan steps off the latched door itself (verbs step-off, walk) — ["step-off","walk"]
+PASS: D house door (seedling_atlas): the plan is 13 ± 1 t (a sub-pixel step-off, not a walk to a cell centre) — 13
+PASS: D house door (seedling_atlas): nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D L2 stairs_up (seedling_atlas): the engine staged the arrival at (48, 16) in L2 — {"landed":{"level":2,"x":48,"y":16,"jumps":2,"replaced":{"level":2,"x":48,"y":32}},"arrivedAt":{"level":2,"x":48,"y":16}}
+PASS: D L2 stairs_up (seedling_atlas): crossed ON PLAN out of L2 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":0,"failed":null,"legs":[["stopped","solver",12,12,["step-off","walk"]]]}
+PASS: D L2 stairs_up (seedling_atlas): the solver's plan steps off the latched door itself (verbs step-off, walk) — ["step-off","walk"]
+PASS: D L2 stairs_up (seedling_atlas): the plan is 12 ± 1 t (a sub-pixel step-off, not a walk to a cell centre) — 12
+PASS: D L2 stairs_up (seedling_atlas): nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D L3 stairs_up (seedling_atlas): the engine staged the arrival at (64, 0) in L3 — {"landed":{"level":3,"x":64,"y":0,"jumps":1,"replaced":null},"arrivedAt":{"level":3,"x":64,"y":0}}
+PASS: D L3 stairs_up (seedling_atlas): crossed ON PLAN out of L3 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":2,"failed":null,"legs":[["stopped","solver",12,12,["step-off","walk"]]]}
+PASS: D L3 stairs_up (seedling_atlas): the solver's plan steps off the latched door itself (verbs step-off, walk) — ["step-off","walk"]
+PASS: D L3 stairs_up (seedling_atlas): the plan is 12 ± 1 t (a sub-pixel step-off, not a walk to a cell centre) — 12
+PASS: D L3 stairs_up (seedling_atlas): nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D S5 L87: the engine staged the arrival at (432, 304) in L87 — {"landed":{"level":87,"x":432,"y":304,"jumps":1,"replaced":null},"arrivedAt":{"level":87,"x":432,"y":304}}
+PASS: D S5 L87: crossed ON PLAN out of L87 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":88,"failed":null,"legs":[["stopped","solver",13,13,["step-off","walk"]]]}
+PASS: D S5 L87: the solver's plan steps off the latched door itself (verbs step-off, walk) — ["step-off","walk"]
+PASS: D S5 L87: the plan is 13 ± 1 t (a sub-pixel step-off, not a walk to a cell centre) — 13
+PASS: D S5 L87: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D S5 L102: the engine staged the arrival at (224, 96) in L102 — {"landed":{"level":102,"x":224,"y":96,"jumps":1,"replaced":null},"arrivedAt":{"level":102,"x":224,"y":96}}
+PASS: D S5 L102: crossed ON PLAN out of L102 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":107,"failed":null,"legs":[["stopped","solver",12,12,["step-off","walk"]]]}
+PASS: D S5 L102: the solver's plan steps off the latched door itself (verbs step-off, walk) — ["step-off","walk"]
+PASS: D S5 L102: the plan is 12 ± 1 t (a sub-pixel step-off, not a walk to a cell centre) — 12
+PASS: D S5 L102: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D closed L3 bare: the engine staged the arrival at (96, 128) in L3 — {"landed":{"level":3,"x":96,"y":128,"jumps":2,"replaced":{"level":3,"x":64,"y":16}},"arrivedAt":{"level":3,"x":96,"y":128}}
+PASS: D closed L3 bare: refused BY the SOLVER's NAME as a closed pocket (closed — latched, no standable cell) — the solver declined out_teleporter_96_128 in level 3 (refusal): solverBot(wasm-exit-3) reach-exit (96,128)->L11: closed — the run stands LATCHED on teleporter@96,128 in level 3 (`Tel
+PASS: D closed L3 bare: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D closed L37 lava: the engine staged the arrival at (576, 144) in L37 — {"landed":{"level":37,"x":576,"y":144,"jumps":1,"replaced":null},"arrivedAt":{"level":37,"x":576,"y":144}}
+PASS: D closed L37 lava: refused BY the SOLVER's NAME as a closed pocket (closed — latched, no standable cell) — the solver declined out_stairsdown_576_144 in level 37 (refusal): solverBot(wasm-exit-37) reach-exit (576,144)->L97: hazard-floor — every way off stairs@576,144's rect crosses lava 
+PASS: D closed L37 lava: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L101: the engine staged the arrival at (96, 0) in L101 — {"landed":{"level":101,"x":96,"y":0,"jumps":1,"replaced":null},"arrivedAt":{"level":101,"x":96,"y":0}}
+PASS: D moved L101: crossed ON PLAN out of L101 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":110,"failed":null,"legs":[["stopped","solver",13,13,["walk"]]]}
+PASS: D moved L101: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L106: the engine staged the arrival at (48, 48) in L106 — {"landed":{"level":106,"x":48,"y":48,"jumps":1,"replaced":null},"arrivedAt":{"level":106,"x":48,"y":48}}
+PASS: D moved L106: crossed ON PLAN out of L106 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":101,"failed":null,"legs":[["stopped","solver",7,7,["walk"]]]}
+PASS: D moved L106: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L109: the engine staged the arrival at (144, 48) in L109 — {"landed":{"level":109,"x":144,"y":48,"jumps":1,"replaced":null},"arrivedAt":{"level":109,"x":144,"y":48}}
+PASS: D moved L109: crossed ON PLAN out of L109 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":101,"failed":null,"legs":[["stopped","solver",7,7,["walk"]]]}
+PASS: D moved L109: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L43 pit door: the engine staged the arrival at (144, 48) in L43 — {"landed":{"level":43,"x":144,"y":48,"jumps":1,"replaced":null},"arrivedAt":{"level":43,"x":144,"y":48}}
+PASS: D moved L43 pit door: crossed ON PLAN out of L43 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":37,"failed":null,"legs":[["stopped","solver",6,6,["walk"]]]}
+PASS: D moved L43 pit door: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L100 pit door: the engine staged the arrival at (288, 80) in L100 — {"landed":{"level":100,"x":288,"y":80,"jumps":1,"replaced":null},"arrivedAt":{"level":100,"x":288,"y":80}}
+PASS: D moved L100 pit door: crossed ON PLAN out of L100 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":101,"failed":null,"legs":[["stopped","solver",6,6,["walk"]]]}
+PASS: D moved L100 pit door: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L34 lock: the engine staged the arrival at (128, 16) in L34 — {"landed":{"level":34,"x":128,"y":16,"jumps":1,"replaced":null},"arrivedAt":{"level":34,"x":128,"y":16}}
+PASS: D moved L34 lock: the goal door is unreachable from the arrival — NAMED (a failure by name), not fixed — the solver declined L34 door in level 34 (refusal): solverBot(wasm-exit-34) reach-exit (128,0)->L12 -> wand: magicallock@128,0 cannot be opened by this run — this run does not hold th
+PASS: D moved L34 lock: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D moved L58 dead door: the engine staged the arrival at (64, 16) in L58 — {"landed":{"level":58,"x":64,"y":16,"jumps":1,"replaced":null},"arrivedAt":{"level":58,"x":64,"y":16}}
+PASS: D moved L58 dead door: the goal door is unreachable from the arrival — NAMED (a failure by name), not fixed — the solver declined out_teleporter_80_16 in level 58 (refusal): solverBot(wasm-exit-58) reach-pit (5,1): the player fell into a pit in level 58, which has NO control block — `Gam
+PASS: D moved L58 dead door: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: D L3 pocket with the Sword: the engine staged the arrival at (96, 128) in L3 — {"landed":{"level":3,"x":96,"y":128,"jumps":1,"replaced":null},"arrivedAt":{"level":3,"x":96,"y":128}}
+PASS: D L3 pocket with the Sword: crossed ON PLAN out of L3 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":11,"failed":null,"legs":[["stopped","solver",34,34,["break","step-off","walk"]]]}
+PASS: D L3 pocket with the Sword: the solver's plan steps off the latched door itself (verbs break, step-off, walk) — ["break","step-off","walk"]
+PASS: D L3 pocket with the Sword: nothing of ours left armed or held — {"armed":false,"held":false}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: T pit L48: the engine staged the arrival at (176, 48) in L48 — {"landed":{"level":48,"x":176,"y":48,"jumps":1,"replaced":null},"arrivedAt":{"level":48,"x":176,"y":48}}
+PASS: T pit L48: crossed ON PLAN out of L48 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":49,"failed":null,"legs":[["stopped","solver",100,101,["walk"]]]}
+PASS: T pit L48: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: T pit L83: the engine staged the arrival at (32, 48) in L83 — {"landed":{"level":83,"x":32,"y":48,"jumps":1,"replaced":null},"arrivedAt":{"level":83,"x":32,"y":48}}
+PASS: T pit L83: crossed ON PLAN out of L83 (producer solver, 0 divergences, 1 plan) — {"end":"done","level":84,"failed":null,"legs":[["done","solver",91,92,["walk"]]]}
+PASS: T pit L83: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: T pit L84: the engine staged the arrival at (16, 16) in L84 — {"landed":{"level":84,"x":16,"y":16,"jumps":1,"replaced":null},"arrivedAt":{"level":84,"x":16,"y":16}}
+PASS: T pit L84: crossed ON PLAN out of L84 (producer solver, 0 divergences, 1 plan) — {"end":"done","level":85,"failed":null,"legs":[["done","solver",100,101,["walk"]]]}
+PASS: T pit L84: nothing of ours left armed or held — {"armed":false,"held":false}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: X residue L28: the engine staged the arrival at (96, 16) in L28 — {"landed":{"level":28,"x":96,"y":16,"jumps":1,"replaced":null},"arrivedAt":{"level":28,"x":96,"y":16}}
+PASS: X residue L28: crossed ON PLAN out of L28 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":26,"failed":null,"legs":[["stopped","solver",108,108,["walk"]]]}
+PASS: X residue L28: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: X L30 past the BobSoldier: the engine staged the arrival at (16, 128) in L30 — {"landed":{"level":30,"x":16,"y":128,"jumps":1,"replaced":null},"arrivedAt":{"level":30,"x":16,"y":128}}
+PASS: X L30 past the BobSoldier: crossed ON PLAN out of L30 (producer solver, 0 divergences, 1 plan) — {"end":"crossed","level":31,"failed":null,"legs":[["stopped","solver",167,167,["detour"]]]}
+PASS: X L30 past the BobSoldier: the solver's plan is the one node plans (verbs detour) — ["detour"]
+PASS: X L30 past the BobSoldier: the plan is 167 ± 1 t (the solver's own plan, pinned in node) — 167
+PASS: X L30 past the BobSoldier: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: X residue L45: the engine staged the arrival at (112, 288) in L45 — {"landed":{"level":45,"x":112,"y":288,"jumps":1,"replaced":null},"arrivedAt":{"level":45,"x":112,"y":288}}
+PASS: X residue L45: the SOLVER declines BY NAME before any plan ships (no bait stance for jellyfish@224,176 survives the chaser forecast; 0 plans) — {"end":"failed","level":45,"failed":"the solver declined out_teleporter_112_0 in level 45 (refusal): solverBot(wasm-exit-45) reach-exit (112,0)->L46
+PASS: X residue L45: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: X residue L88 a: the engine staged the arrival at (96, 288) in L88 — {"landed":{"level":88,"x":96,"y":288,"jumps":1,"replaced":null},"arrivedAt":{"level":88,"x":96,"y":288}}
+PASS: X residue L88 a: the SOLVER declines BY NAME before any plan ships (enemy:drill@128,160 (a stepped drill; 0 plans) — {"end":"failed","level":88,"failed":"the solver declined out_teleporter_32_0 in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (32,0)->L87: the danger map forbids (104
+PASS: X residue L88 a: nothing of ours left armed or held — {"armed":false,"held":false}
+PASS: X residue L88 b: the engine staged the arrival at (96, 288) in L88 — {"landed":{"level":88,"x":96,"y":288,"jumps":1,"replaced":null},"arrivedAt":{"level":88,"x":96,"y":288}}
+PASS: X residue L88 b: the SOLVER declines BY NAME before any plan ships (enemy:drill@128,160 (a stepped drill; 0 plans) — {"end":"failed","level":88,"failed":"the solver declined out_teleporter_192_0 in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (192,0)->L87: the danger map forbids (1
+PASS: X residue L88 b: nothing of ours left armed or held — {"armed":false,"held":false}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: E burn L24 → L12 (the Sword, then Fire): the engine staged the arrival at (96, 80) in L24 — {"landed":{"level":24,"x":96,"y":80,"jumps":1,"replaced":null},"arrivedAt":{"level":24,"x":96,"y":80}}
+PASS: E burn L24 → L12 (the Sword, then Fire): crossed ON PLAN out of L24 (0 divergences, 1 plan) — {"end":"crossed","level":12,"failed":null,"legs":[["stopped",124,124,null]]}
+PASS: E burn L24 → L12 (the Sword, then Fire): the plan tape shipped TWO slot selections — Fire's slot (1), then the sword's (0) — [{"name":"wasm-exit-24","ticks":124,"equips":[{"t":60,"slot":1},{"t":114,"slot":0}]}]
+PASS: E burn L24 → L12 (the Sword, then Fire): the tree burned on the game ({24,0} cleared) — [{"tag":0,"level":24}]
+PASS: E burn L24 → L12 (the Sword, then Fire): the sword's slot is selected again (primary 0) — 0
+PASS: E burn L24 → L12 (the Sword, then Fire): nothing of ours left armed or held — {"armed":false,"held":false}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: F burn L24 → L12 (Fire, then the Sword): the engine staged the arrival at (96, 80) in L24 — {"landed":{"level":24,"x":96,"y":80,"jumps":1,"replaced":null},"arrivedAt":{"level":24,"x":96,"y":80}}
+PASS: F burn L24 → L12 (Fire, then the Sword): the game holds [1, 0] (the sword appended after Fire) — [1,0]
+PASS: F burn L24 → L12 (Fire, then the Sword): crossed ON PLAN out of L24 (0 divergences, 1 plan) — {"end":"crossed","level":12,"failed":null,"legs":[["stopped",124,124,null]]}
+PASS: F burn L24 → L12 (Fire, then the Sword): the plan tape shipped THREE selections in the GAME's indices — the sword (1), Fire (0), the sword (1) — [{"name":"wasm-exit-24","ticks":124,"equips":[{"t":0,"slot":1},{"t":60,"slot":0},{"t":114,"slot":1}]}]
+PASS: F burn L24 → L12 (Fire, then the Sword): the tree burned on the game ({24,0} cleared) — [{"tag":0,"level":24}]
+PASS: F burn L24 → L12 (Fire, then the Sword): the sword's slot is selected again (primary 1) — 1
+PASS: F burn L24 → L12 (Fire, then the Sword): nothing of ours left armed or held — {"armed":false,"held":false}
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-wasm-midroom-replan.mjs --only=D
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: D: the bot is mounted in level_0__r8c0 — {"ok":true,"region":"level_0__r8c0"}
+PASS: D: "Progressive Shield" arrived through the AP receive path (ReceivedItems from player 2) while a plan played mid-room — {"at":1562,"before":{"forcedBy":{},"forced":0,"divergences":0,"done":0,"level":0,"goal":"level_0__r8c0 -> level_2","ticks":247,"drained":12},"got":{"ok":true,"id":30000009
+PASS: D: the gate HELD the item until the room froze (one delivery, mid-tape, at a named tick) — {"level":0,"goal":"level_0__r8c0 -> level_2","phase":"playing","tick":15,"of":247,"items":[{"property":"hasShield","from":false,"to":true}],"save":[],"heldKeys":["right","down"],"outcome":"replanned","
+PASS: D: the item LANDED while the room was frozen, and the game holds it — {"landMs":73,"items":{"hitsMax":3,"hasTorch":false,"hasDarkSuit":false,"hasSpear":false,"hasFeather":false,"canSwim":false,"hasFireWand":false,"hasWand":false,"hasFire":false,"hasDarkShield":false,"hasShield":true,"hasGhos
+PASS: D: the goal was REPLANNED in the room (or the interrupted plan resumed, by name) — never re-entered — {"outcome":"replanned","forcedBy":{},"forced":0}
+PASS: D: the frozen game == the shadow at the replan (the held check) — {"level":0,"shipped":16,"shadow":{"level":0,"x":41.22090302008954,"y":151.41456601434277,"deaths":0,"primary":0},"game":{"level":0,"x":41.22090302008954,"y":151.41456601434277},"held":false,"frozen":true,"equal":true}
+PASS: D: the delivered goal finished in its own room, as a continuation from the frozen tick — {"level":0,"continuation":true,"prefix":16}
+PASS: D: 0 divergences — {"divergences":0}
+PASS: D: freeze and replan times measured — {"freezeMs":352,"replanMs":237}
+PASS: D: stopping the bot removes the gate — null
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-restart-route.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: W: the page's rules carry return_to_menu ON — true
+PASS: W: the player is in the pocket level_17 (game level 17; the binding and gameState agree)
+PASS: W: the Playback Bot is mounted and its head is outside the pocket — {"locationName":"Level 010 - Sword","regionName":"level_10","sphereIndex":"0.1","fractionalIndex":null}
+PASS: W: the planner's route from level_17 BEGINS with RESTART (no walk out of the pocket) — {"kind":"restart","why":null,"firstSteps":[{"region":"level_17","exitUsed":null},{"region":"Menu","exitUsed":null,"restart":true},{"region":"level_0__r8c0","exitUsed":"GameStart"}]}
+PASS: W: the bot TOOK the Restart — "restarting (no walk from level_17)" is in its log — ["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/48)","restarted at Menu — waiting for the start hop","Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1/48)"]
+PASS: W: ⛔ no exit walkTo out of the pocket — the bot never routed via an exit while in level_17 — ["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/48)","restarted at Menu — waiting for the start hop","Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1
+PASS: W: the warp settled — gameState and the binding read "level_0__r8c0", the game at seedlingStartSpawn — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"lastRe
+PASS: W: no location check fired by the Restart — []
+PASS: W: the bot WALKS ON from the start after the Restart (within 300 s) — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","active":true,"pending":null,"cursor":0,"log":["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/4
+PASS: J: the page's rules carry return_to_menu ON — true
+PASS: J: the player is in the pocket level_17 (game level 17; the binding and gameState agree)
+PASS: J: the Playback Bot is mounted and its head is outside the pocket — {"locationName":"Level 010 - Sword","regionName":"level_10","sphereIndex":"0.1","fractionalIndex":null}
+PASS: J: the planner's route from level_17 BEGINS with RESTART (no walk out of the pocket) — {"kind":"restart","why":null,"firstSteps":[{"region":"level_17","exitUsed":null},{"region":"Menu","exitUsed":null,"restart":true},{"region":"level_0__r8c0","exitUsed":"GameStart"}]}
+PASS: J: the bot TOOK the Restart — "restarting (no walk from level_17)" is in its log — ["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/48)","restarted at Menu — waiting for the start hop","Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1/48)","Spher
+PASS: J: ⛔ no exit walkTo out of the pocket — the bot never routed via an exit while in level_17 — ["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/48)","restarted at Menu — waiting for the start hop","Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1
+PASS: J: the warp settled — gameState and the binding read "level_0__r8c0", the game at seedlingStartSpawn — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"lastRe
+PASS: J: no location check fired by the Restart — []
+PASS: J: the bot WALKS ON from the start after the Restart (within 300 s) — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","active":true,"pending":null,"cursor":0,"log":["Sphere 0.1 → restarting (no walk from level_17) → level_10 (1/4
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-restart-warp.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: W: the binding holds the start region "level_0__r8c0" and remembers it — {"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"lastLevel":0,"startSpawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: W: seedlingStartSpawn IS where the randomized load's reset put the new game — {"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"reset":{"level":0,"x":16,"y":128,"landed":true,"mode":"explicit-start","boot":{"x":16,"y":128,"level"
+PASS: W: the game's constructor position is seedlingStartSpawn — {"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}
+PASS: W: the player is in level_13 (game level 13, the binding and gameState agree)
+PASS: W: Restart — gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":1,"lastLevel":0,"startSpawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_telepo
+PASS: W: Restart — the game stands where the new game stood (level, constructor, live position) — {"now":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"newGame":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}}
+PASS: W: Restart — no location check fired — []
+PASS: W: Restart — the glue re-took the start hop (one restart counted) — {"taken":true,"why":null,"start":"level_0__r8c0","substrate":"flash_seedling","stoppedWalks":0,"watching":0,"pushed":true,"at":1792874695668}
+PASS: W: walking out of the start works — the west door crosses into "level_94__r2c16" and gameState follows — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: W: the Playback Bot is mounted at the start — {"ok":true,"region":"level_0__r8c0","status":"Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1/48)"}
+PASS: W: the bot walked out of the start and a walk is in flight — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","busy":true,"glueRegion":"level_2","engine":{"phase":"latching","driving":true,"gate":{"pending":false,"deferred":null},"fro
+PASS: W: Restart mid-walk — the player landed at the start spawn and the walk re-routes from the start — {"r":{"taken":true,"why":null,"start":"level_0__r8c0","substrate":"flash_seedling","stoppedWalks":0,"watching":1,"pushed":true,"at":1792874710773},"game":{"level":0,"x":24,"y":136,"ctor":{"le
+PASS: W: Restart mid-walk — no location check fired by the warp — []
+PASS: W: the bot RE-PLANS from the start — it walks out of it again (or names its refusal), never a silent stall — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","busy":true,"glueRegion":"level_2","engine":{"phase":"latching","driving":
+PASS: J: the binding holds the start region "level_0__r8c0" and remembers it — {"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"lastLevel":0,"startSpawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: J: seedlingStartSpawn IS where the randomized load's reset put the new game — {"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"reset":{"level":0,"x":16,"y":128,"landed":true,"mode":"explicit-start","boot":{"x":16,"y":128,"level"
+PASS: J: the game's constructor position is seedlingStartSpawn — {"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}
+PASS: J: the player is in level_13 (game level 13, the binding and gameState agree)
+PASS: J: Restart — gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":1,"lastLevel":0,"startSpawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_telepo
+PASS: J: Restart — the game stands where the new game stood (level, constructor, live position) — {"now":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"newGame":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}}
+PASS: J: Restart — no location check fired — []
+PASS: J: Restart — the glue re-took the start hop (one restart counted) — {"taken":true,"why":null,"start":"level_0__r8c0","substrate":"flash_seedling","stoppedWalks":0,"watching":0,"pushed":true,"at":1792874739328}
+PASS: J: walking out of the start works — the west door crosses into "level_94__r2c16" and gameState follows — {"region":"level_94__r2c16","game":{"level":94,"x":293.84999999999997,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: J: the Playback Bot is mounted at the start — {"ok":true,"region":"level_0__r8c0","status":"Sphere 0.1 → routing via \"level_0__r8c0 -> level_2\" → level_10 (1/48)"}
+PASS: J: the bot walked out of the start and a walk is in flight — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","busy":true,"glueRegion":"level_2","engine":null}
+PASS: J: Restart mid-walk — the player landed at the start spawn and the walk re-routes from the start — {"r":{"taken":true,"why":null,"start":"level_0__r8c0","substrate":"flash_seedling","stoppedWalks":2,"watching":0,"pushed":true,"at":1792874751527},"game":{"level":0,"x":24,"y":136,"ctor":{"le
+PASS: J: Restart mid-walk — no location check fired by the warp — []
+PASS: J: the bot RE-PLANS from the start — it walks out of it again (or names its refusal), never a silent stall — {"status":"Sphere 0.1 → routing via \"level_2 -> level_3__r0c4\" → level_10 (1/48)","region":"level_2","busy":true,"glueRegion":"level_2","engine":null}
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-wasm-adopt.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: H: idle in the house the rng takes NO draw — [1410304934,1410304934,1410304934,1410304934,1410304934]
+PASS: H: p4f — the live rng EQUALS the begin record at rest (the tapeless build drew only cosmetic; echo split false) — LFSR distance 0
+PASS: H: nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits: ALL true — {"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}
+PASS: H: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,102,""],[1,102,""],[19,102,""],[147,102,""],[2000,102,""]]
+PASS: H: the adopted plan (N=147) played ON PLAN to its held end — {"outcome":"held","rows":103,"keys":102,"div":null,"endLevel":86}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: P: idle in the house the rng takes NO draw — [1410304934,1410304934,1410304934,1410304934,1410304934]
+PASS: P: p4f — the live rng EQUALS the begin record at rest (the tapeless build drew only cosmetic; echo split false) — LFSR distance 0
+PASS: P: after the person the brief's clauses PASS — back on the spawn to the bit, v 0 (the latch), no rng draw, persistence unchanged — {"c":{"atSpawn":true,"vZero":true,"facingDown":false,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true},"rngFromBegin":0}
+PASS: P: …but the player is TURNED: the facing clause (botMobiles' stand animation) FAILS — the model's shadow faces down — {"anim":"side-stand","shadow":{"x":56,"y":56,"direction":3}}
+PASS: P: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,102,""],[1,102,""],[19,102,""],[227,102,""],[2000,102,""]]
+PASS: P: the adopted plan (N=227) played ON PLAN to its held end — {"outcome":"held","rows":103,"keys":102,"div":null,"endLevel":86}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: R L7: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L7: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,95,""],[1,95,""],[72,95,""],[2000,95,""]]
+PASS: R L7: the adopted plan (N=72) played ON PLAN out of the room — {"outcome":"left-room","rows":95,"keys":95,"div":null,"endLevel":8}
+PASS: R L9: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L9: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,66,""],[1,66,""],[71,66,""],[2000,66,""]]
+PASS: R L9: the adopted plan (N=71) played ON PLAN out of the room — {"outcome":"left-room","rows":66,"keys":66,"div":null,"endLevel":10}
+PASS: R L13: unwatched, nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits — {"c":{"atSpawn":true,"vZero":true,"facingDown":true,"rngEqBegin":true,"noOtherMobiles":true,"noHits":true}}
+PASS: R L13: every N ≥ 1 → the SAME shadow (minus the tick count) and the SAME plan — [[0,82,""],[1,82,""],[72,82,""],[2000,82,""]]
+PASS: R L13: the adopted plan (N=72) played ON PLAN out of the room — {"outcome":"left-room","rows":82,"keys":82,"div":null,"endLevel":14}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: W: the bot is mounted in region_2_2 — {"ok":true,"region":"region_2_2"}
+PASS: W: the bot FINISHED — status "finished — 3 locations visited"
+PASS: W: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: W: 0 divergences, 0 recoveries — {"d":0,"r":0}
+PASS: W: the cold start was ADOPTED — 0 forced re-arrivals IN TOTAL, 0 host new Game — {"adopted":1,"forced":0,"forcedBy":{},"refused":[],"swaps":{"hostNewGame":0}}
+PASS: W: chest and door are both CONTINUATIONS (prefix 1 = the idle tick; then 1 + the chest's keys), each after an exact held check — {"legs":[{"goal":"Starting House - Chest","outcome":"done","continuation":true,"prefix":1,"ticks":102,"divergence":null,"heldEnd":true},{"goal":"exit_S","outcome":
+PASS: W: world swaps = 1 (the door) — W7 walked 2 (the cold start's new Game + the door) — host 0 + doors 1
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: K: a person's real ArrowRight moved the player before the bot drove — {"moved":true,"before":{"x":56,"y":56},"after":{"x":58.15,"y":56}}
+PASS: K: the bot is mounted in region_2_2 — {"ok":true,"region":"region_2_2"}
+PASS: K: the bot FINISHED — status "finished — 3 locations visited"
+PASS: K: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: K: 0 divergences, 0 recoveries — {"d":0,"r":0}
+PASS: K: the adoption was REFUSED by name (the moved player is not "the arrival + idle ticks") — [{"level":86,"clause":"position","why":"the player stands at (61.150000000000006, 56), the arrival's shadow at (56, 56)"}]
+PASS: K: …and the named cold-start re-arrival served the walk (forced 1, cold-start) — {"cold-start":1}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: L: level 0 holds exactly introchar + statue2, v 0, idle, at (152,296) / (208,160) — unchanged over 2.5 s of ticks — [{"cls":"NPCs::Statue","x":208,"y":160,"vx":0,"vy":0,"anim":"","type":"Solid","destroy":false,"collidable":true},{"cls":"NPCs::IntroCharacter","x":152,"y":296,"vx":0,"vy":0,"
+PASS: L: idle in level 0 the rng takes NO draw and the player stays put — [[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296],[1930500710,168,296]]
+PASS: L: the bot is mounted in overworld_start__r8c0 — {"ok":true,"region":"overworld_start__r8c0"}
+PASS: L: the bot FINISHED the seedling_atlas walk from the hub — status "finished — 1 location visited"
+PASS: L: level 0's cold start ADOPTED — 0 forced re-arrivals IN TOTAL, nothing refused; host new Game 1 = the glue's redirect only — {"adopted":1,"forced":0,"forcedBy":{},"refused":[],"swaps":{"hostNewGame":1}}
+PASS: L: every held check equal (the adopted level 0 == the shadow "arrival + 1 idle tick") — [{"level":0,"shipped":1,"shadow":{"level":0,"x":168,"y":296,"deaths":0,"primary":0},"game":{"level":0,"x":168,"y":296},"held":true,"frozen":false,"equal":true}]
+PASS: L: the chest checked EXACTLY ONCE — ["Starting House - Chest"]
+PASS: L: 0 divergences, 0 recoveries — {"d":0,"r":0}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: N: the reset SKIPPED the intro — the explicit start into level 0 at the game's boot position — {"mode":"explicit-start","intro":false,"level":0,"landed":true,"args":{"x":16,"y":128},"boot":{"x":16,"y":128,"level":0,"source":"seedlingStartSpawn (the start region's arrival)"}}
+PASS: N: the begin record reads level 0 (not the arm's −1), the set starts in level 0, the game stands in level 0 — {"begin":{"begin.level":0,"begin.tick":0,"rng.gameplay":1930500710,"rng.cosmetic":1968467108,"fp.seed":1861733589,"save.time":4806},"level":0,"x":24,"y":136,"gt":4856,"cutscene":[f
+PASS: N: no ceremony on the page — no wind cutscene, input taken, no freeze (no Help) — {"cutscene":[false,false,false,false],"receive":true,"freeze":false}
+PASS: N: the vanilla arm binds the flash_seedling name → cell map (§5.16; the generated report stays null) — {"atlas":"vanilla","report":false}
+PASS: N: the first goal ADOPTED straight through — no ceremony entered, nothing dismissed — {"answer":{"ok":true,"action":"adopt"},"ceremonies":[],"dismissed":[],"hostStarts":["adopt","continuation","freeze","plan","freeze"]}
+PASS: N: both legs crossed — level 0 → L13, then out of L13 — [{"leg":"out_stairsdown_32_192","level":13,"ms":5167},{"leg":"out_stairsdown_32_32","level":14,"ms":3405}]
+PASS: N: 0 forced re-arrivals IN TOTAL, nothing refused — {"forced":0,"forcedBy":{},"refused":[]}
+PASS: N: the adoption's held check equal (the adopted room == the shadow "arrival + 1 idle tick"); the L13 and L14 arrivals HELD — {"heldChecks":[{"level":0,"shipped":1,"shadow":{"level":0,"x":24,"y":136,"deaths":0,"primary":0},"game":{"level":0,"x":24,"y":136},"held":true,"frozen":false,"equal":t
+PASS: N: 0 divergences, 0 recoveries, 0 failed — {"d":0,"r":0,"f":0,"history":[{"goal":"out_stairsdown_32_192","outcome":"done","continuation":true,"prefix":1,"divergence":null,"reason":null},{"goal":"out_stairsdown_32_32","outcome":"done","continuation":false,"prefix":0,"divergence":null,"reason"
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-obstacle-events.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: W: the Sword landed in the game (hasSword) — {"level":0,"x":24,"y":136,"hasSword":true,"cleared":[]}
+PASS: W: the collector is wired, and its load read found the rock standing (not cleared) — {"collector":{"reports":0,"restores":0,"other":0,"live":0,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":0},"cleared":[]}
+PASS: W: ⛔ NEVER ON REACH — "L0 flag 1: breakablerock@288,176 cleared" sits in a reachable region with its rule held, and is NOT collected — {"reach":{"sideReachable":true,"accessible":"reachable"},"checked":false}
+PASS: W: the game BROKE breakablerock@288,176 on the walk — its flag {0,1} is in persistence_cleared — [{"tag":1,"level":0}]
+PASS: W: the collector collected "L0 flag 1: breakablerock@288,176 cleared" LIVE (checked + its event item held in the state manager) — {"collector":{"reports":2,"restores":0,"other":0,"live":1,"load":0,"repeats":0,"armingWindow":1,"loadReads":1,"reconcile":0,"reconcileReads":1},"eventsCollected":
+PASS: W: …as a LOCAL event check — no user:locationCheck named it — []
+PASS: W: the walk went on through the far side's door into level_12__r0c19 — {"region":"level_12__r0c19","level":12}
+PASS: W: the walk took "level_12__r0c19 -> level_0__r11c19" — the player in level_0__r11c19, level 0 — {"region":"level_0__r11c19","game":{"level":0,"x":296,"y":184,"hasSword":true,"cleared":[{"tag":1,"level":0}]}}
+PASS: W: the game's readout at the landing carries the flag (the arrival read the staging stages) — {"cleared":[{"tag":1,"level":0}],"reads":[{"level":0,"cleared":[]},{"level":12,"cleared":[{"tag":1,"level":0}]},{"level":0,"cleared":[{"tag":1,"level":0}]}]}
+PASS: W: the leg FROM the landing is solved and walked — no arrival-inside-solid (the flag staged) — {"obstacle":null,"status":"routing via \"level_0__r11c19 -> level_12__r0c19\""}
+PASS: W: the LOAD read collects "L0 flag 1: breakablerock@288,176 cleared" from the game's persistence_cleared — {"effects":[{"type":"eventCollect","location":"L0 flag 1: breakablerock@288,176 cleared","eventId":"flag:L0:1","level":0,"tag":1,"at":"load"}],"stats":{"reports":6,"restores":0,"other":
+PASS: J: the Sword landed in the game (hasSword) — {"level":0,"x":24,"y":136,"hasSword":true,"cleared":[]}
+PASS: J: the collector is wired, and its load read found the rock standing (not cleared) — {"collector":{"reports":0,"restores":0,"other":0,"live":0,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":0},"cleared":[]}
+PASS: J: ⛔ NEVER ON REACH — "L0 flag 1: breakablerock@288,176 cleared" sits in a reachable region with its rule held, and is NOT collected — {"reach":{"sideReachable":true,"accessible":"reachable"},"checked":false}
+PASS: J: the game BROKE breakablerock@288,176 on the walk — its flag {0,1} is in persistence_cleared — [{"level":0,"tag":1}]
+PASS: J: the collector collected "L0 flag 1: breakablerock@288,176 cleared" LIVE (checked + its event item held in the state manager) — {"collector":{"reports":1,"restores":0,"other":0,"live":1,"load":0,"repeats":0,"armingWindow":0,"loadReads":1,"reconcile":0,"reconcileReads":1},"eventsCollected":
+PASS: J: …as a LOCAL event check — no user:locationCheck named it — []
+PASS: J: the walk went on through the far side's door into level_12__r0c19 — {"region":"level_12__r0c19","level":12}
+PASS: J: the walk took "level_12__r0c19 -> level_0__r11c19" — the player in level_0__r11c19, level 0 — {"region":"level_0__r11c19","game":{"level":0,"x":296,"y":184,"hasSword":true,"cleared":[{"level":0,"tag":1}]}}
+PASS: J: the game's readout at the landing carries the flag (the JS boot's clears) — {"cleared":[{"level":0,"tag":1}]}
+PASS: J: the leg FROM the landing is solved and walked — no arrival-inside-solid (the flag staged) — {"obstacle":null,"status":"routing via \"level_0__r11c19 -> level_12__r0c19\""}
+PASS: J: the LOAD read collects "L0 flag 1: breakablerock@288,176 cleared" from the game's persistence_cleared — {"effects":[{"type":"eventCollect","location":"L0 flag 1: breakablerock@288,176 cleared","eventId":"flag:L0:1","level":0,"tag":1,"at":"load"}],"stats":{"reports":1,"restores":0,"other":
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-wasm-generated-playback.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the fresh world: nothing checked — []
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_0_0__key_blue_pickup"],"region":"region_0_0","GEN_LOCS":["region_0_0__key_blue_pickup"]}
+PASS: R: the Playback Bot completed seedling_generated_room from its sphere log on WASM (finished, no error:) — status "finished — 1 location visited", errors []
+PASS: R: every sphere-log location is checked in the state manager — []
+PASS: R: every generated location checked EXACTLY ONCE on the flash panel's dispatcher, nothing else on it — {"once":[],"checks":["region_0_0__key_blue_pickup"]}
+PASS: R: 0 fake checks — the binding made exactly the generated checks and caught nothing in a host botStart window — checks 1, armingWindow 0
+PASS: R: the engine stages the GENERATED set (the mounted set) and served the apitem by the SOLVER (verb apitem), on plan — {"goal":{"kind":"location","level":0,"tag":0,"name":"region_0_0__key_blue_pickup"},"outcome":"stopped","producer":"solver","phase":"playing","ticks":266,"drained":256,"verbs"
+PASS: R: no walker-producer leg anywhere (⛓ §5.36) — [["location","stopped","solver"]]
+PASS: R: 0 divergences, 0 recoveries — {"divergences":0,"recoveries":0}
+PASS: R: every host botStart bracketed by seq reads (freeze + plan per attempt) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0}]
+PASS: R: the bot took the cross-region tile target into the maze — {"ok":true}
+PASS: R: the bot arrived in the maze region (gameState) — region_1_1
+PASS: R: the generated door (→ region_0_1) and the parking door (→ region_1_1) each reported ONCE — ["region_0_1","region_1_1"]
+PASS: R: both exit legs were SOLVER tapes (verb walk), every planned tick stepped, none off the plan — [{"o":"done","p":"solver","ticks":7,"drained":7,"div":null},{"o":"stopped","p":"solver","ticks":7,"drained":7,"div":null}]
+PASS: R: no error: status at any point — []
+PASS: R: still exactly one check after the crossings (no door leg re-declared a fake one) — {"reports":5,"malformed":0,"restores":0,"unknown":0,"checks":1,"repeats":4,"armingWindow":0,"reconcile":0,"reconcileReads":1,"checked":["region_0_0__key_blue_pickup"]}
+PASS: R: every host botStart bracketed (all legs) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0},{"label":"freeze","from":1,"to":2},{"label":"plan","from":2,"to":3},{"label":"freeze","from":3,"to":4},{"label":"plan","from":4,"to":5}]
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the fresh world: nothing checked — []
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_2_2__loc_0__5_4","region_2_3__loc_0__5_1","region_3_3__loc_0"],"region":"region_2_2","GEN_LOCS":["region_3_3__loc_0"]}
+PASS: L: the Playback Bot completed seedling_generated_leaf from its sphere log on WASM (finished, no error:) — status "finished — 3 locations visited", errors []
+PASS: L: every sphere-log location is checked in the state manager — []
+PASS: L: every generated location checked EXACTLY ONCE on the flash panel's dispatcher, nothing else on it — {"once":[],"checks":["region_3_3__loc_0"]}
+PASS: L: 0 fake checks — the binding made exactly the generated checks and caught nothing in a host botStart window — checks 1, armingWindow 0
+PASS: L: the engine stages the GENERATED set (the mounted set) and served the apitem by the SOLVER (verb apitem), on plan — {"goal":{"kind":"location","level":0,"tag":0,"name":"region_3_3__loc_0"},"outcome":"stopped","producer":"solver","phase":"playing","ticks":140,"drained":129,"verbs":["apitem"
+PASS: L: no walker-producer leg anywhere (⛓ §5.36) — [["location","stopped","solver"]]
+PASS: L: 0 divergences, 0 recoveries — {"divergences":0,"recoveries":0}
+PASS: L: every host botStart bracketed by seq reads (freeze + plan per attempt) — [{"label":"freeze","from":0,"to":0},{"label":"plan","from":0,"to":0}]
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: the fresh world: nothing checked — []
+PASS: P: the divergence injector is armed on the game window — true
+PASS: the bot is mounted, in the start region, with the embedded sphere log naming a generated location — {"ok":true,"sphere":["region_0_0__key_blue_pickup"],"region":"region_0_0","GEN_LOCS":["region_0_0__key_blue_pickup"]}
+PASS: P: the bot shows the engine's named failure (error:; the bound — or ⛓ W4 an exact repeat — named) — status "error: region_0_0: the bot cannot walk to location "region_0_0__key_blue_pickup" — the wasm playback failed: the game left the plan on region_0_0__key_blue_pickup in level 0 at
+PASS: P: 1 recovery then the failure, on SOLVER tapes (2 plans, 2 injections) — {"recoveries":1,"outcomes":[["diverged","solver"],["failed",null]],"ships":2,"injected":2}
+PASS: P: no STALE key at any divergence (the release pair after each botReset) — {"stale":[[]],"keyReleases":[["down"],["down"]]}
+PASS: P: NO check fired and AP state intact — {"checks":[],"binding":{"reports":0,"malformed":0,"restores":0,"unknown":0,"checks":0,"repeats":0,"armingWindow":0,"reconcile":0,"reconcileReads":0,"checked":[]}}
+PASS: P: nothing of ours left armed or held; the engine idle — {"armed":false,"held":false,"engine":"idle"}
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-loop-restart.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: W: the new game stands at seedlingStartSpawn in "level_0__r8c0" — {"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}}
+PASS: W: loop mode is on and the queue is Menu → "level_0__r8c0" → "level_94__r2c16" — {"exit":"level_0__r8c0 -> level_94__r2c16","queue":["regionMove Menu -> level_0__r8c0","regionMove level_0__r8c0 -> level_94__r2c16"]}
+PASS: W: run 1 — the player walked out of the start (the game left L0; gameState reads "level_94__r2c16") — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: W: loops Restart — after the replay's first move gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"arrivedByStartHop":true,"lastLevel":0,"startSpawn":{"le
+PASS: W: loops Restart — the game stands at seedlingStartSpawn (level, constructor position) — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: W: loops Restart — the first move's load was the start hop (Menu → "level_0__r8c0") — [{"region":"level_0__r8c0","startHop":true,"restart":false,"from":"Menu"}]
+PASS: W: loops Restart — exactly ONE teleport (the replay's arrival), no fallback warp on the reset — {"teleports":1,"lastLoopReset":{"taken":false,"why":null,"start":"Menu","substrate":null,"at":1792875098044}}
+PASS: W: loops Restart — no location check fired — []
+PASS: W: run 2 — the player walked out of the start (the game left L0; gameState reads "level_94__r2c16") — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: W: the Menu panel's Restart (loop mode) moved nobody and landed PAUSED at index 0 — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}},"loop":{"index":0,"processing":false,"paused":true,"state":"paused","length":2},"lastRestart":{"taken":false
+PASS: W: menu Restart — after the replay's first move gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"arrivedByStartHop":true,"lastLevel":0,"startSpawn":{"lev
+PASS: W: menu Restart — the game stands at seedlingStartSpawn (level, constructor position) — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: W: menu Restart — the first move's load was the start hop (Menu → "level_0__r8c0") — [{"region":"level_0__r8c0","startHop":true,"restart":false,"from":"Menu"}]
+PASS: W: menu Restart — exactly ONE teleport (the replay's arrival), no fallback warp on the reset — {"teleports":1,"lastLoopReset":{"taken":false,"why":null,"start":"Menu","substrate":null,"at":1792875102302}}
+PASS: W: menu Restart — no location check fired — []
+PASS: J: the new game stands at seedlingStartSpawn in "level_0__r8c0" — {"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"},"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}}}
+PASS: J: loop mode is on and the queue is Menu → "level_0__r8c0" → "level_94__r2c16" — {"exit":"level_0__r8c0 -> level_94__r2c16","queue":["regionMove Menu -> level_0__r8c0","regionMove level_0__r8c0 -> level_94__r2c16"]}
+PASS: J: run 1 — the player walked out of the start (the game left L0; gameState reads "level_94__r2c16") — {"region":"level_94__r2c16","game":{"level":94,"x":290.84999999999985,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: J: loops Restart — after the replay's first move gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"arrivedByStartHop":true,"lastLevel":0,"startSpawn":{"le
+PASS: J: loops Restart — the game stands at seedlingStartSpawn (level, constructor position) — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: J: loops Restart — the first move's load was the start hop (Menu → "level_0__r8c0") — [{"region":"level_0__r8c0","startHop":true,"restart":false,"from":"Menu"}]
+PASS: J: loops Restart — exactly ONE teleport (the replay's arrival), no fallback warp on the reset — {"teleports":1,"lastLoopReset":{"taken":false,"why":null,"start":"Menu","substrate":null,"at":1792875132740}}
+PASS: J: loops Restart — no location check fired — []
+PASS: J: run 2 — the player walked out of the start (the game left L0; gameState reads "level_94__r2c16") — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}}}
+PASS: J: the Menu panel's Restart (loop mode) moved nobody and landed PAUSED at index 0 — {"region":"level_94__r2c16","game":{"level":94,"x":296,"y":168,"ctor":{"level":94,"x":288,"y":160}},"loop":{"index":0,"processing":false,"paused":true,"state":"paused","length":2},"lastRestart":{"taken":false
+PASS: J: menu Restart — after the replay's first move gameState and the binding read the start region "level_0__r8c0" — {"region":"level_0__r8c0","binding":{"region":"level_0__r8c0","active":true,"startRegion":"level_0__r8c0","restarts":0,"arrivedByStartHop":true,"lastLevel":0,"startSpawn":{"lev
+PASS: J: menu Restart — the game stands at seedlingStartSpawn (level, constructor position) — {"game":{"level":0,"x":24,"y":136,"ctor":{"level":0,"x":16,"y":128}},"spawn":{"level":0,"x":16,"y":128,"source":"arrival","exitId":"out_teleporter_0_128","landing":"return-spawn"}}
+PASS: J: menu Restart — the first move's load was the start hop (Menu → "level_0__r8c0") — [{"region":"level_0__r8c0","startHop":true,"restart":false,"from":"Menu"}]
+PASS: J: menu Restart — exactly ONE teleport (the replay's arrival), no fallback warp on the reset — {"teleports":1,"lastLoopReset":{"taken":false,"why":null,"start":"Menu","substrate":null,"at":1792875136621}}
+PASS: J: menu Restart — no location check fired — []
+ALL CHECKS PASSED
+rc=0
+### [standard] probe-seedling-seal-delivery.mjs --only=A
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: A: CONTROL — before the jump "Starting House - Chest" is NOT checked — []
+PASS: A: CONTROL — 16 seals in the game, still outside L86: "Starting House - Chest" is NOT checked — {"level":0,"checked":[]}
+PASS: A: 16 seals in the game, the player in L86 — {"level":86,"x":48,"y":64,"jumps":2,"replaced":{"level":86,"x":48,"y":48}}
+PASS: A: Chest.checkBySeal REMOVED the unopened chest — its flag {86,0} is cleared — [{"tag":0,"level":86}]
+PASS: A: the game REPORTED the removal — pendingCheck "<seq>|86|0|0" — "3|86|0|0"
+PASS: A: ⚖ the removal AWARDS the check — the binding marked "Starting House - Chest" checked — ["Starting House - Chest"]
+ALL CHECKS PASSED
+rc=0
+### [long] probe-seedling-wasm-logical-links.mjs --only=B --budget-s=1200
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`) — {"assumeBidirectional":false,"source":"explicit"}
+PASS: B: the bot is mounted in level_0__r8c0, its first goal in level 10 — {"ok":true,"region":"level_0__r8c0","head":{"location":"Level 010 - Sword","region":"level_10"},"route":{"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","
+PASS: B: the Sword's route is 9 hops, opening with r8c0's OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6 — {"steps":["level_0__r8c0","level_2","level_3__r0c4","level_4","level_5__r1c5","level_6","level_7","level_8","level_9","level_10"],"nextExit":"level_0__r8c0 -> level_2","length":9
+PASS: B: the first move is the stairs walked straight from level_0__r8c0 (`level_0__r8c0 -> level_2`, not logical) — ["level_0__r8c0 -> level_2","level_2 -> level_3__r0c4","level_3__r0c4 -> level_4","level_4 -> level_5__r1c5","level_5__r1c5 -> level_6","level_6 -> level_7"]
+PASS: B: nothing is credited at r1c6 (the sealed link is gone from the rules) — []
+PASS: B: the bot CHECKED the Sword ("Level 010 - Sword") — or, on a base without F4, ends on L8's named sandtrap decline — {"swordAt":103,"checks":["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 
+PASS: B: every location checked once — ["Level 010 - Sword","Level 011 - Chest","Level 086 - Chest","Level 036 - Chest","Level 017 - Chest","Level 019 - Shieldspire","Level 019 - Boss Key 0","Level 020 - Shield","Level 025 - Chest","Level 029 - Boss Key 1","Level 030 - Torchpickup","Level 032 - Ti
+PASS: B: every solver leg is named by the PASS that made its plan (dashless / full) — [[0,"dashless"],[2,"dashless"],[3,"dashless"],[4,"dashless"],[5,"dashless"],[6,"dashless"],[7,"dashless"],[8,"dashless"],[9,"dashless"],[10,"dashless"],[10,"full"],[11,"full"],[11,"full"],[3,"full"],[2,"full"],[0
+PASS: B: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above — {"divergences":0,"known":0,"unknown":[]}
+PASS: B: the engine solves under the work budget (640 units, the default) — {"budgetWork":640,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: the engine solves under the upgrade window (85 units, the default) — {"upgradeWindowWork":85,"defaults":{"budgetWork":640,"upgradeWindowWork":85}}
+PASS: B: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals' gap — {"adoptClock":[{"level":0,"begin":4803,"model":4825,"live":4853,"shift":28,"refusal":null}],"firstGap":21,"modal":21}
+PASS: B: every Restart that met a playing leg waited for its end (none cut) — [{"from":"level_49","ended":true,"timedOut":false,"waitedMs":1616.6000000014901}]
+PASS: B: every Restart's start-hop arrival is HELD (0 `no-held-arrival` fallbacks; ≥ 1 expected arrival, each ends `held`) — {"forcedBy":{"continuation-declined":1},"expectedArrivals":1,"expect":1,"held":1,"rows":["expect","walkTo","begin-keep","seen","held"]}
+PASS: B: every location leg that ends in another level is HELD at its landing, and its own check settles — {"cross":[],"forcedBy":{"continuation-declined":1},"selfChecks":[]}
+PASS: B: 0 backstops (the wall clock never ended a solve) — {"backstops":0,"backstopMs":300000}
+PASS: B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall — error: level_39__r0c9: the bot cannot walk to location "Level 039 - Totem Part 72,40" — the wasm playback failed: the solver declined Level 039 - Totem Part 72,40 in level 39 (pass dashless): solve
+PASS: B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break) — {"eventId":null}
+ALL CHECKS PASSED
+rc=0

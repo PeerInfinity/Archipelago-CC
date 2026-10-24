@@ -71,8 +71,12 @@ const centre = (c) => ({ x: c.tx * 16 + 8, y: c.ty * 16 + 8 });
  */
 export const FIREPUSH_IDLE = 500;
 
-/** The scripted prefix (steps 1 and 2): `r5-l40-part5`'s targets, then the 35 presses and the t5 wait. */
-export async function firePushPrefixTape(idle = FIREPUSH_IDLE) {
+/**
+ * The scripted prefix (steps 1 and 2): `r5-l40-part5`'s targets, then the 35 presses and the t5 wait.
+ * ⛓ FIREMOVE: `{ route: false }` stops after the t2 wait — the state the SOLVER plans the t5 holder from
+ * (`fidelityFireMove.js`).
+ */
+export async function firePushPrefixTape(idle = FIREPUSH_IDLE, { route = true } = {}) {
     const { synthesizeLegs } = await import('./botDriverV2.js');
     const { atlasLevelSource } = await import('./levelSource.js');
     const { L40_ARRIVAL, L40_CORPSE } = await import('./r5Totem.js');
@@ -98,10 +102,11 @@ export async function firePushPrefixTape(idle = FIREPUSH_IDLE) {
         { ...STANCE, wait: { opens: 'wandlock@448,432', ticks: 140,
             why: 'the ICE TURRET CORPSE is standing on button@480,384 {t 2}' } },
         // FIREPUSH: the 35 presses
-        ...FIREPUSH_ROUTE.map((p) => ({ ...centre(p.stance),
+        ...(route ? [...FIREPUSH_ROUTE.map((p) => ({ ...centre(p.stance),
             fire: { moves: [{ from: { ...p.from }, to: { ...p.to } }], enemyRoom: ENEMY_ROOM } })),
         { ...centre(last.from), wait: { opens: 'wandlock@800,400', ticks: 200,
-            why: '`pushableblockfire@480,480` is standing on button@768,400 {t 5}, a `"Solid"` in `Button.hitables`' } },
+            why: '`pushableblockfire@480,480` is standing on button@768,400 {t 5}, a `"Solid"` in `Button.hitables`' } }]
+            : []),
     ];
     const { withContactFidelity } = await import('./contactFidelity.js');
     const out = withContactFidelity(FIREPUSH_SWITCHES, () => synthesizeLegs([{ level: 40, targets }], {
@@ -120,7 +125,7 @@ export async function firePushPrefixTape(idle = FIREPUSH_IDLE) {
             pins: ['dead_frames'],
             roles: ['blocking', 'trigger', 'pickup', 'proximity-hazard', 'combat'],
         },
-        name: `${FIREPUSH_WITNESS}-prefix`,
+        name: route ? `${FIREPUSH_WITNESS}-prefix` : `${FIREPUSH_WITNESS}-prefix-t2`,
         lattice: L40_ARRIVAL.lattice,
         allowGrazes: true,
         maxTicksPerTarget: 6000,
