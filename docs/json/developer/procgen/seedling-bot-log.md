@@ -25180,3 +25180,40 @@ the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) �
 - "Updates before the player" is not the whole order: a reader that updates before its PUBLISHER reads the publish a tick
   late, whatever the player did.
 - A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).
+
+### Seedling fidelity MISCRES — REMBODY's residue (`forecastCorpseFade`, `nonChaserRemovalBlocks`), leg 785's work (a budget: handed over), three unowned rows (`phaseDodgeArrivalStall`) — all OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-miscres.md`.
+
+**D1 — the forecast fades a corpse (`forecastCorpseFade`).** `chaserForecastNow` cloned a live corpse (`destroy`) or a body
+in its "die" and never stepped either on: only a BobSoldier's corpse faded, so every other corpse stayed a sibling wall to
+the end of the forecast. ON the clone runs `Mobile.death`'s fade (on screen, removed at alpha <= 0, a wall to the rest of
+that tick under `removedBodyBlocks`) and its "die" anim to `destroy` (its own copy). Witnessed on p4g with SKINSWING's
+`skinswing-l71-resite`: the forecast seeded at t50..t62, the tape's sword presses mirrored through the forecast's own
+`hit`, equals the live run (= the game at 0 px) through t94; OFF it leaves at t64 (1.164 px; 10.5 px by t80). The
+mirrored presses matter: without them the t65 hits on both survivors read as a 4.5 px forecast error at t66.
+**D1 — non-chaser removals (`nonChaserRemovalBlocks`).** A drill, wallflyer or ice turret removed in its update is still in
+the "Enemy" list for the movers stepped after it that frame; ON a `removedTick` stamp keeps it in `drillWallsNow`,
+`drillEnemyBodiesTest` and `chaserStaticEnemyBoxesNow` for that tick. Unwitnessed: no AP_1 recording has such a removal
+beside a later mover sweeping into its box (mutant m3 survives every row — named).
+
+**D2 — leg 785 (L107) is a budget.** Per-site census of the page's own captured requests: the work is the dodge rung's
+phase arm (`phase-dodge`), one full 89x8 stall scan = 712 units. The leg solves (dodge + walk, 387..390 t) at 12 of 61
+arrival clocks at 731 units — above the first request's 640, inside the held retry's 2,560 — which is the done/failed flip
+between CI repeats; at the other 49 the room REFUSES unbudgeted (`beamtower@208,120`, the ladder exhausted) after 7,656
+units a pass. The beam towers' cycle is 52 t, inside the stall window: the bound is not the cause. Handed to the JS arc.
+
+**D3.** `opentree` typed "Solid" vs the game's "Tree": no reader can tell (pinned). The owl's `Game.talkingPic` is render
+only; the talk is the modelled intro freeze; `run.talkingNow` does not name it (handed to the skin). IGFADE's leg 650
+(L76 from L77, id 637 here): the verdict is the ARRIVAL CLOCK's — 18 of 61 solve; elsewhere every doorstep stall of the
+phase arm stands in range of the type-31 tile (8,6) by `lavachain@128,64`, and standing there turns it (with `igneousLava`
+OFF the same request solves). `phaseDodgeArrivalStall` asks a stall at the walk's start first in a room with type-31
+tiles: the captured request solves in 94 units (727 t), 61 / 61 clocks inside 640.
+
+**Trap candidates.**
+- A forecast compared against a live tape is only a witness of what the forecast is TOLD: mirror the tape's presses
+  (`hit`), or the first knockback reads as a model error.
+- A stall bound measured against the hazard's period can still be the wrong place: the stall's POSITION is part of the
+  question when something in the room is driven by the player's presence (an Igneous tile).
+- A verdict that flips between CI repeats is often a function of the arrival clock: census the captured request across
+  `seam.time` before calling it noise.
