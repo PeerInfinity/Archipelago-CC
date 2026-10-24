@@ -7541,7 +7541,30 @@ function groupsHeldOpenBySolids(run, bag) {
     return opened;
 }
 
-export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
+/** ⛔ SCRATCH MEASUREMENT ONLY (never landed): one line per block-route search. */
+export function deriveBlockRoute(run, row, goal, ...rest) {
+    const r = deriveBlockRouteInner(run, row, goal, ...rest);
+    try {
+        const line = JSON.stringify({ level: run.level, block: row.id, goal: goal.kind,
+            onto: goal.onto ?? null, aim: goal.aim ?? null, steps: r.steps?.length ?? null,
+            bound: r.refused?.bound ?? (r.steps ? 'route' : 'exhausted'), expansions: r.expansions,
+            census: (r.census ?? []).map((c) => [c.depth, c.newStates, c.newBlockCells, c.newPlayerCells,
+                c.expanded]),
+            caps: [MAX_ROUTE_ORDERS, MAX_ROUTE_EXPANSIONS],
+            argv: globalThis.process?.argv?.slice(2).join(' ').slice(0, 200) ?? null });
+        const fs = globalThis.process?.getBuiltinModule?.('node:fs');
+        const ws = globalThis.process?.env?.GITHUB_WORKSPACE;
+        if (fs && ws) {
+            const d = ['test-results/divergence-sweep', 'out'].find((x) => fs.existsSync(`${ws}/${x}`));
+            if (d) fs.appendFileSync(`${ws}/${d}/route-census.jsonl`, `${line}\n`);
+        } else if (!globalThis.process) {
+            console.log(`ROUTE-CENSUS ${line}`);
+        }
+    } catch { /* measurement only */ }
+    return r;
+}
+
+function deriveBlockRouteInner(run, row, goal, contacts, blocked = [],
     { discharged = [], phrase = SHOVE_PHRASE } = {}) {
     const live = run.entities('pushables')?.get(row.id);
     if (!live || live.removed) {

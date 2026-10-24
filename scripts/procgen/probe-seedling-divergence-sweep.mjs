@@ -585,6 +585,11 @@ async function main() {
         const page = await step('newPage', () => browser.newPage({ viewport: { width: 1400, height: 900 } }));
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
+        // ⛔ SCRATCH MEASUREMENT ONLY: forward the route census lines (page and workers)
+        page.on('console', (msg) => { if (msg.text().startsWith('ROUTE-CENSUS ')) console.log(`PAGE ${msg.text()}`); });
+        page.on('worker', (w) => w.on?.('console', (msg) => {
+            if (msg.text().startsWith('ROUTE-CENSUS ')) console.log(`WORKER ${msg.text()}`);
+        }));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
         const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: `div-${MODE}-${pageNo}` });
         // ⛓ only a build OTHER than the preset's is routed. ⛔ And a response that is not the rules JSON passes
