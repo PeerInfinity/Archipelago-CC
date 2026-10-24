@@ -814,11 +814,29 @@ export function createState(world) {
     return state;
 }
 
+/**
+ * ⛓ COUNTED ITEMS (session tile-primitives-counted-rules, ⚖ 2026-10-23 "Count map"): an inventory is a Set (every
+ * item held once) or a `Map<item, count>` (keys only at count ≥ 1) — the shared evaluator reads a Map count-aware
+ * (`inventoryRuleContext`), and `.has` answers "at least one" for both. Every copy goes through here so a Map stays one.
+ */
+export function copyInventory(inventory) {
+    return inventory instanceof Map ? new Map(inventory) : new Set(inventory);
+}
+
+/** Add one held item to a copied inventory: a Set adds it, a Map holds it at least once (a latch, not a counter). */
+export function holdInInventory(inventory, item) {
+    if (inventory instanceof Map) {
+        if (!inventory.has(item)) inventory.set(item, 1);
+    } else {
+        inventory.add(item);
+    }
+}
+
 function cloneState(state) {
     const next = {
         player_pos: { x: state.player_pos.x, y: state.player_pos.y },
         turn: state.turn,
-        inventory: new Set(state.inventory),
+        inventory: copyInventory(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
     if (state.facing !== undefined) next.facing = state.facing;
@@ -940,7 +958,7 @@ function heldTokens(world, playerPos, blocks) {
  * whichever inventory was chosen, because a held button is a fact about the
  * WORLD's current configuration and not about what the player is carrying.
  *
- * The caller's Set is never mutated.
+ * The caller's inventory is never mutated; a counted Map comes back a Map (`copyInventory`).
  *
  * ⛓ EXPORTED BY SLICE R-b, and ⛔ for ONE reason: `deriveRequires` has to ask
  * WHICH combination of an obstacle's `clear_set` was satisfied at the turn the
@@ -953,9 +971,9 @@ export function effectiveInventory(world, inventory, playerPos, blocks, broken) 
     const held = heldTokens(world, playerPos, blocks);
     const cut = ropeTokens(world, inventory, broken);
     if (held === null && cut === null) return inventory;
-    const out = new Set(inventory);
-    for (const token of held ?? []) out.add(token);
-    for (const token of cut ?? []) out.add(token);
+    const out = copyInventory(inventory);
+    for (const token of held ?? []) holdInInventory(out, token);
+    for (const token of cut ?? []) holdInInventory(out, token);
     return out;
 }
 
@@ -1166,7 +1184,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     }
     if (inventoryOverride === undefined) {
         const itemId = getItem(world, nx, ny);
-        if (itemId) next.inventory.add(itemId);
+        if (itemId) holdInInventory(next.inventory, itemId);
     }
     return next;
 }
@@ -1460,10 +1478,16 @@ export function detectStepEvents(world, oldPos, newPos, _inventory) {
 // appended as `|k1;k2` ONLY when `state.blocks` is present, so on every world
 // that has no blocks the returned string is byte-identical to the one this
 // function returned before arc 2 (asserted literally in the tests, both ways).
+/** The inventory segment of a visited key: sorted names; a COUNTED Map entry above 1 is spelled `name×n` (a Set's is unchanged). */
+function inventoryKeyPart(inventory) {
+    if (!(inventory instanceof Map)) return [...inventory].sort().join(',');
+    return [...inventory].map(([item, n]) => (n > 1 ? `${item}×${n}` : item)).sort().join(',');
+}
+
 export function mazeVisitedKey(state) {
     const base = state.inventory.size === 0
         ? `${state.player_pos.x},${state.player_pos.y}|`
-        : `${state.player_pos.x},${state.player_pos.y}|${[...state.inventory].sort().join(',')}`;
+        : `${state.player_pos.x},${state.player_pos.y}|${inventoryKeyPart(state.inventory)}`;
     const withBlocks = state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
     // ⛓ ITEM ACTIONS append `|f<dir>|<broken>` ONLY when the state has a facing,
     // so a key on any world without an `action_lib` is unchanged, byte for byte.

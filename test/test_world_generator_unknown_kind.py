@@ -227,3 +227,55 @@ class TestUnknownHelperName(unittest.TestCase):
         for name in strict:
             self.assertEqual(strict[name], lossy[name], name)
         self.assertIn(b"Has('Key', 1)", strict['Rules.py'])
+
+
+class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
+    """rule-kind F2: a mixed count_true with C(n, count) > 120 used to sink to True_() with a warning.
+
+    It is now the Rule Builder's AtLeast (its count_true twin); <= 120 still expands to Or-of-Ands.
+    """
+    ITEMS = [{'type': 'item_check', 'item': f'I{i}'} for i in range(5)]
+    REGIONS = [{'type': 'can_reach', 'region': f'R{i}'} for i in range(5)]
+
+    def convert(self, count, conditions):
+        return RuleCodeGenerator('Test')._convert_rule({'type': 'count_true', 'count': count, 'conditions': conditions})
+
+    def test_above_the_limit_is_atleast_in_both_shapes(self) -> None:
+        conditions = self.ITEMS + self.REGIONS  # C(10, 5) = 252
+        expected = ('AtLeast(5, Has("I0"), Has("I1"), Has("I2"), Has("I3"), Has("I4"), CanReachRegion("R0"), '
+                    'CanReachRegion("R1"), CanReachRegion("R2"), CanReachRegion("R3"), CanReachRegion("R4"))')
+        gen = RuleCodeGenerator('Test')
+        self.assertEqual(gen._convert_rule({'type': 'count_true', 'count': 5, 'conditions': conditions}), expected)
+        self.assertIn('AtLeast', gen.required_imports)
+        self.assertNotIn('True_', gen.required_imports)
+        rb = {'rule': 'AST_count_true', 'args': {'count': 5, 'conditions': conditions}}
+        self.assertEqual(RuleCodeGenerator('Test')._convert_rule(rb), expected)
+
+    def test_at_the_limit_still_expands_unchanged(self) -> None:
+        self.assertEqual(self.convert(2, self.ITEMS[3:] + self.REGIONS[:1]),
+                         '((Has("I3")) & (Has("I4"))) | ((Has("I3")) & (CanReachRegion("R0"))) | '
+                         '((Has("I4")) & (CanReachRegion("R0")))')
+        # C(10, 3) = 120: the largest expansion, still an Or of Ands
+        code = self.convert(3, self.ITEMS + self.REGIONS)
+        self.assertEqual(code.count(') | ('), 119, code[:200])
+        self.assertNotIn('AtLeast', code)
+
+    def test_atleast_evaluates_at_k_minus_1_k_k_plus_1(self) -> None:
+        from collections import Counter
+        import rule_builder
+
+        class World:
+            player = 1
+            rule_caching_enabled = False
+
+        class State:
+            def __init__(self, have):
+                self.have = have
+                self.prog_items = {1: Counter({name: 1 for name in have if name.startswith('I')})}
+
+            def can_reach_region(self, region, player):
+                return region in self.have
+
+        rule = eval(self.convert(5, self.ITEMS + self.REGIONS), vars(rule_builder)).resolve(World())
+        names = ['I0', 'R0', 'I1', 'R1', 'I2', 'R2']  # mixes both condition kinds
+        self.assertEqual([rule(State(set(names[:k]))) for k in (4, 5, 6)], [False, True, True])

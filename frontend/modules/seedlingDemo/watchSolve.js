@@ -27,7 +27,9 @@
  * geometry, and it would look perfectly fine on screen.
  */
 
-import { parseTape, requiredTapeVersion } from './tapeFormat.js';
+import {
+    ITEM_NAMES, ITEM_PROPERTIES, parseTape, requiredTapeVersion, SEAM_BOOT_SPEC,
+} from './tapeFormat.js';
 import {
     checkSolveDespawns, createRunForStaging, solveStaging, stagingFromTape,
 } from './tapeRunner.js';
@@ -183,8 +185,9 @@ export function stagingFromJson(json) {
 }
 
 /**
- * ⛓⛓⛓ THE BOOT FORM v1 — the fields a checkbox may edit (slice 5, kickoff
- * §12.4), and the one place their JSON PATH is written.
+ * ⛓⛓⛓ THE BOOT FORM — the fields a form control may edit (slice 5, kickoff
+ * §12.4; v2 2026-10-23: the WHOLE inventory), and the one place their JSON
+ * PATH is joined to their name.
  *
  * ⛔⛔ THE CHARTER SAYS `save.hasSword` AND THE TAPE HAS NO SUCH FIELD, and
  * the difference is not cosmetic. A tape's version-6 `save` block is
@@ -197,21 +200,52 @@ export function stagingFromJson(json) {
  * and both load-bearing". So the form's label comes from one space and its
  * write lands in the other, and this table is the only place that is said.
  *
- * ⚠ TWO FIELDS, NOT THIRTEEN. `SEAM_BOOT_SPEC` carries all thirteen item
- * flags and rendering the lot would be four lines less code — and a form
- * offering `hasDarkSuit` on a page whose solver has no policy for it is
- * trap 119's family in UI clothes. Sword and shield are what the ruling
- * asked for and what the route to the shield needs; the JSON editor is
- * right there for anything else, which is ⚖ §1.7's whole point.
+ * ⛓ DERIVED, NOT LISTED: one row per `ITEM_PROPERTIES` entry (the item
+ * table the model applies), joined to the `SEAM_BOOT_SPEC` row that carries
+ * `save.<property>`. Fourteen rows: the thirteen boolean flags and
+ * `health`, whose property is `hitsMax` — an INT (`hits_max`, 1..99), so it
+ * gets a number field, not a checkbox.
+ *
+ * ⚠ WHY ALL FOURTEEN IS NOT trap 119 IN UI CLOTHES. v1 offered two, on the
+ * grounds that a control the run ignores is worse than none. Every row here
+ * is `modelled: true`, and `levelRun` applies every `ITEM_PROPERTIES`
+ * property from the seam to `run.inventory` BEFORE the first world builds
+ * (its `seamFieldsFromBlock(seam)` loop) — so each control reaches the run,
+ * which `watchSolve.test.js` asserts per field at `run.inventory`. What the
+ * SOLVER then does with an item is the solver's business; the form only
+ * declares the boot.
+ *
+ * ⚠ NOT HERE: the v6 `save` arrays (boss keys, totem parts, seal parts) are
+ * per-level PROGRESS indices, not inventory, and `beam`/`rock_set` are the
+ * moonrock's state — the JSON editor is right there for those (⚖ §1.7).
  */
-export const ITEM_FORM_FIELDS = Object.freeze([
-    Object.freeze({ id: 'sword', key: 'items.hasSword', field: 'save.hasSword', label: 'sword' }),
-    Object.freeze({ id: 'shield', key: 'items.hasShield', field: 'save.hasShield', label: 'shield' }),
-]);
+export const ITEM_FORM_FIELDS = Object.freeze(ITEM_NAMES.map((id) => {
+    const field = `save.${ITEM_PROPERTIES[id].property}`;
+    const row = SEAM_BOOT_SPEC.find((s) => s.field === field);
+    if (!row || !row.modelled || (row.type !== 'boolean' && row.type !== 'int')) {
+        throw new Error(`watchSolve: item "${id}" (${field}) has no modelled boolean/int `
+            + 'SEAM_BOOT_SPEC row, so the boot form cannot offer it');
+    }
+    return Object.freeze({
+        id, key: row.key, field, label: id, type: row.type,
+        ...(row.type === 'int' ? { min: row.min, max: row.max } : {}),
+    });
+}));
+
+const formField = (id) => {
+    const f = ITEM_FORM_FIELDS.find((x) => x.id === id);
+    if (!f) {
+        throw new Error(`watchSolve: "${id}" is not a boot-form field; the form covers `
+            + `${ITEM_FORM_FIELDS.map((x) => x.id).join(', ')}. Everything else is the `
+            + 'JSON editor, which is the spine (⚖ kickoff §1.7).');
+    }
+    return f;
+};
 
 /**
- * The form's reading of a staging block: `{sword, shield}`, each `true`,
- * `false` or **`null`** for "this block declares nothing about it".
+ * The form's reading of a staging block: `{sword, shield, …, health}`, each
+ * its declared value (`true`/`false`, or an int for `health`) or **`null`**
+ * for "this block declares nothing about it".
  *
  * ⚠ THREE STATES, NOT TWO, because the seam has three. `parseSeam` keeps
  * only the keys a tape DECLARED — "not declared" and "declared false" are
@@ -224,41 +258,58 @@ export function itemFlagsOf(staging) {
     const seam = staging?.seam ?? null;
     const out = {};
     for (const f of ITEM_FORM_FIELDS) {
-        const [group, leaf] = f.key.split('.');
-        const v = seam?.[group]?.[leaf];
+        const v = f.key.split('.').reduce((o, k) => (o == null ? undefined : o[k]), seam);
         out[f.id] = v === undefined || v === null ? null : v;
     }
     return out;
 }
 
 /**
- * The same block with ONE item flag set — the checkbox's whole write.
+ * The same block with ONE item field set — a control's whole write. `value`
+ * is a boolean for a flag, an int for `health`, or `null` to UNDECLARE it
+ * (the key is removed, and an `items` group left empty goes with it).
  *
  * ⛔ IT RETURNS A STAGING BLOCK AND NOT TEXT. The form's source of truth is
- * the PARSED block: the checkbox edits it, the page re-serialises, and the
- * textarea re-derives the checkboxes from whatever it then parses. A
+ * the PARSED block: the control edits it, the page re-serialises, and the
+ * textarea re-derives the controls from whatever it then parses. A
  * function that edited the JSON STRING would be a second serialiser, and
  * the two would agree until somebody's block had a comment in it.
  *
  * ⚠ It CREATES the seam when there is none — `r7-act2-1`, the page's own
  * default, declares `seam: null`. A partial seam is legal (`parseSeam` skips
  * every absent key) and a partial one is the honest thing to write: filling
- * in the other twelve flags would be the page claiming state nobody
- * measured.
+ * in the other flags would be the page claiming state nobody measured.
+ *
+ * ⛔ An int outside the spec row's bounds is a NAMED refusal here rather
+ * than text the parser refuses a keystroke later (which would disable the
+ * form that wrote it).
  */
-export function withItemFlag(staging, id, on) {
-    const f = ITEM_FORM_FIELDS.find((x) => x.id === id);
-    if (!f) {
-        throw new Error(`watchSolve: "${id}" is not a boot-form field; the form covers `
-            + `${ITEM_FORM_FIELDS.map((x) => x.id).join(', ')}. Everything else is the `
-            + 'JSON editor, which is the spine (⚖ kickoff §1.7).');
+export function withItemFlag(staging, id, value) {
+    const f = formField(id);
+    let v = value;
+    if (v !== null && v !== undefined) {
+        if (f.type === 'boolean') {
+            v = Boolean(v);
+        } else if (!Number.isInteger(v) || v < f.min || v > f.max) {
+            throw new Error(`watchSolve: ${id} (seam.${f.key}) must be an integer in `
+                + `${f.min}..${f.max}, or null to leave it undeclared; got ${JSON.stringify(value)}`);
+        }
+    } else {
+        v = null;
     }
     const [group, leaf] = f.key.split('.');
-    const seam = staging.seam ?? {};
-    return {
-        ...staging,
-        seam: { ...seam, [group]: { ...(seam[group] ?? {}), [leaf]: Boolean(on) } },
-    };
+    const seam = { ...(staging.seam ?? {}) };
+    if (leaf === undefined) {
+        if (v === null) delete seam[group];
+        else seam[group] = v;
+    } else {
+        const inner = { ...(seam[group] ?? {}) };
+        if (v === null) delete inner[leaf];
+        else inner[leaf] = v;
+        if (Object.keys(inner).length === 0) delete seam[group];
+        else seam[group] = inner;
+    }
+    return { ...staging, seam };
 }
 
 /**
