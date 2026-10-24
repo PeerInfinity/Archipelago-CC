@@ -5041,6 +5041,18 @@ function deriveCorpseWeigh(run, onto, blocked = []) {
             rejected.push({ option: `${option}: ${id}`, why });
             continue;
         }
+        /**
+         * ⛔ AND THE CORPSE MUST BE ON THIS SIDE: the first press's stance (the kill's side is beside it) plans from
+         * where the player stands. Measured without it (survey step 93, L40 from the arrival): the weigh was raised
+         * for `wandlock@448,432` from OUTSIDE the turret's pocket, and its walk to the kill stance met the same lock
+         * and raised the same weigh until the strategy bound ran out.
+         */
+        const first = presses[0].stance;
+        if (planWaypointsOrNull(run.world, run.state, first, null, planOpts) === null) {
+            rejected.push({ option: `${option}: ${id}`, why: `its first press's stance (${first.x},${first.y}) plans no `
+                + `corridor from (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}) — the corpse is not on this side` });
+            continue;
+        }
         return { plan: { turret: id, alive: !t.dead, from, dir: d, k, presses }, rejected };
     }
     return { plan: null, rejected };
