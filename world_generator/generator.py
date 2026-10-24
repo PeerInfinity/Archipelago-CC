@@ -10,7 +10,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 
-from ._unknown_kind import lossy_codegen
+from ._unknown_kind import lossy_codegen, unobtainable_record
 from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
     generate_items_py,
@@ -69,6 +69,9 @@ class WorldGenerator:
         # '<site>:<kind>' (or '<site>:helper <name>') -> count of always-true placeholders
         # emitted (lossy mode only)
         self.lossy_placeholders: Dict[str, int] = {}
+        # '<site>:<item>' -> count of Has rules on an item the world never creates, emitted as the
+        # exact False_() (both modes)
+        self.unobtainable_items: Dict[str, int] = {}
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -203,9 +206,16 @@ class WorldGenerator:
         if self.data is None:
             self.load()
         assert self.data is not None
-        with lossy_codegen(self.lossy, game=self.data.metadata.game_name) as record:
+        with lossy_codegen(self.lossy, game=self.data.metadata.game_name) as record, \
+                unobtainable_record() as unobtainable:
             self._generate(dry_run)
         self.lossy_placeholders = dict(record)
+        self.unobtainable_items = dict(unobtainable)
+        if unobtainable:
+            logger.warning(
+                "UNOBTAINABLE: False_() for Has rules on items the rules file never creates (no item "
+                "definition, pool entry, placement or starting item): "
+                + ", ".join(f"{k} x{n}" for k, n in sorted(unobtainable.items())))
         if record:
             logger.warning(
                 "LOSSY: always-true placeholders for rule kinds with no codegen path "

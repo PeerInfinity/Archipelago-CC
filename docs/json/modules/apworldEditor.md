@@ -44,7 +44,8 @@ document.
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid`; (M2) `mapBoundsFor`, the grid's size in cells, shared with the map moves |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
-| `../apworldBuild/apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId})` (the page side of the worker protocol), `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
+| `../apworldBuild/apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId, lossy})` (the page side of the worker protocol; resolves with the build's `lossyPlaceholders` record), `describeLossyRecord`, `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
+| `lossyBuild.js` | (rule-node R2c) the `.apworld` build's **lossy toggle** — the setting `apworldBuildLossy` (`LOSSY_BUILD_KEY` / `_SETTING` / `_DEFAULT` = false / `_SCHEMA`, registered by `index.js`), `isLossyRefusal` (a strict error lossy would have replaced), `lossyRecordView` (the record block's heading and lines) |
 | `../apworldBuild/apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json` (both via the shared `../pyodideRuntime/pyodideRuntime.js`, which also holds the version pin); calls `world_generator.apworld.build_apworld` |
 | `../apworldBuild/worldGeneratorFiles.json` | GENERATED (`node scripts/build/world-generator-files.mjs --write`, from `git ls-files world_generator`) — the files the worker fetches; `apworldBuild.test.js` fails when it is stale |
 
@@ -75,12 +76,33 @@ shared with the APCalc Generator's `⭳ .apworld` button.
   site cannot list a directory, so the worker fetches the files
   `worldGeneratorFiles.json` names.
 - **Needs the network** for the Pyodide CDN, even on a local server.
+- **Strict by default; `lossy` is opt-in (rule-node R2c).** `world_generator`
+  fails on a rule kind or helper name it has no codegen for, naming it and the
+  game (⚖ D3 of the rule-node registry). In 9 committed presets it fails this
+  way: bomb_rush_cyberfunk, lingo, pokemon_rb, sc2, sm, smz3, soe, yachtdice
+  and yugioh06. All but smz3 keep their helper bodies only in a JS
+  `gameLogic/` module. The toolbar's `lossy` checkbox
+  (`.apworld-build-lossy`) is the CLI's `--lossy`. It mirrors the module
+  setting `moduleSettings.apworldEditor.apworldBuildLossy` (default **false**;
+  a change writes it through `updateModuleSetting`, so it lives in the
+  settings blob, not in a localStorage key of its own). A press reads the box,
+  and only a checked box sends `lossy: true`. When it is off, a refusal that lossy
+  would have replaced also tells the user to tick `lossy`. When it is on, the
+  worker returns `build_apworld`'s `lossy_placeholders`
+  (`{'<site>:<kind>': count}`). The status says `LOSSY: N always-true
+  placeholders`, and `.apworld-build-lossy-record` (under the toolbar,
+  `data-total`) lists every entry, most-replaced first, as
+  `.apworld-build-lossy-entry`. A lossy build is never silent, even one that
+  replaced nothing ("nothing was replaced"). The block is cleared at the next press.
 
 Tests: `apworldBuild.test.js` (the URL rule, the protocol, the manifest's
 freshness); `test/test_world_generator_apworld.py` (the archive's shape and
 stamp, and that the package builds with only the standard library — all
-Pyodide has); the in-app row `apworld-build-downloads-a-loadable-apworld`
-(real Pyodide; reads the saved zip back).
+Pyodide has; and that `lossy=True` returns the record strict refuses); the in-app
+row `apworld-build-downloads-a-loadable-apworld` (real Pyodide; reads the saved
+zip back); `lossyBuild.test.js`; and the in-app row `apworld-build-lossy-toggle`
+(yachtdice: OFF fails naming the helper and the game; ON, through the real
+checkbox, builds and lists the record).
 
 ## The document is a session, and the only way in is an op
 
