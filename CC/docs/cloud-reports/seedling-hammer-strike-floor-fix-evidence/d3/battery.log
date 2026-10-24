@@ -1,0 +1,9 @@
+03:22:47 load 3.13 producers on start
+03:25:01 load 4.48 producers on rc=0
+03:25:01 load 4.48 identity on start
+03:34:38 load 1.58 identity on rc=0
+03:34:38 load 1.58 DONE
+03:34:38 load 1.58 producers off start
+03:36:40 load 4.34 producers off rc=0
+03:36:40 load 4.34 DONE
+ALLDONE
