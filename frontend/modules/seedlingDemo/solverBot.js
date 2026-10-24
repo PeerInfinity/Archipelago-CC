@@ -19613,7 +19613,7 @@ export const BEAM_LANE_RUNG = Object.freeze({ gateReach: 6, crossSpeed: 0.6, cro
  *     walk does, re-synced to each band's own firing.
  * `null` when a band's live `y` is unknown (`phaseBeamTowerAt` refuses: no visit clock or no `Game.time`).
  */
-export function beamLaneSteer(run, towers, clock, tolerance) {
+export function beamLaneSteer(run, towers, clock, tolerance, wps = []) {
     const sides = towers.map((h) => {
         const out = new Set();
         const rate = Number(h.attrs?.rate ?? 1);
@@ -19661,11 +19661,34 @@ export function beamLaneSteer(run, towers, clock, tolerance) {
      */
     const nearest = (zones, y) => {
         const z = zones.find((zz) => y >= zz.lo - BEAM_BOB_SPAN && y <= zz.hi + BEAM_BOB_SPAN);
-        if (!z) return intervalOf(zones, y);
+        if (!z) return [intervalOf(zones, y)];
         const above = intervalOf(zones, z.lo - 1e-6);
         const below = intervalOf(zones, z.hi + 1e-6);
-        if (bounded(above) !== bounded(below)) return bounded(above) ? above : below;
-        return (y - z.lo) <= (z.hi - y) ? above : below;
+        if (bounded(above) !== bounded(below)) return bounded(above) ? [above, below] : [below, above];
+        return (y - z.lo) <= (z.hi - y) ? [above, below] : [below, above];
+    };
+    // An aim is taken only on FLOOR: the box at the aimed y is no planner obstacle (a wall, a pit) anywhere along the
+    // x span from the player to the waypoint, sampled every 4 px. Measured: L103's space between its bands is a Pit
+    // row, and an aim checked at the two ends only walked into it at (184,200).
+    const planOpts = solverPlanOpts(run, new Set(), {});
+    const floorMemo = new Map();
+    const floorOk = (x, y) => {
+        const k = `${Math.round(x * 4)},${Math.round(y * 4)}`;
+        if (!floorMemo.has(k)) floorMemo.set(k, plannerObstacleAt(run.world, x, y, null, planOpts) === null);
+        return floorMemo.get(k);
+    };
+    // The x span a waypoint's aim must hold floor over: from the player (or the previous waypoint) through the
+    // waypoint to the NEXT one — a lane waypoint is reached at the lane's y, so the next leg starts there.
+    const spanOf = (st, wp) => {
+        const i = wps.indexOf(wp);
+        const xs = [st.x, wp.x, ...(i > 0 ? [wps[i - 1].x] : []), ...(i >= 0 && i + 1 < wps.length ? [wps[i + 1].x] : [])];
+        return { lo: Math.min(...xs), hi: Math.max(...xs) };
+    };
+    const floorAlong = (x0, x1, y) => {
+        const lo = Math.min(x0, x1);
+        const hi = Math.max(x0, x1);
+        for (let x = lo; x < hi; x += 4) if (!floorOk(x, y)) return false;
+        return floorOk(hi, y);
     };
     const m = BEAM_LANE_RUNG.margin;
     const holdIn = (iv, y) => (bounded(iv) ? (iv.lo + iv.hi) / 2 : Math.min(Math.max(y, iv.lo + m), iv.hi - m));
@@ -19677,8 +19700,10 @@ export function beamLaneSteer(run, towers, clock, tolerance) {
         const next = tick + 1;
         const zones = zonesAt(next, st.x - 2, st.x + 2);
         if (zones.length === 0) return waypointReached(st, wp, tolerance, intermediate) ? true : wp;
-        const target = nearest(zones, wp.y);
         const own = intervalOf(zones, wp.y);
+        const target = nearest(zones, wp.y).find((iv) => (own && iv.lo === own.lo && !bounded(iv))
+            || floorAlong(spanOf(st, wp).lo, spanOf(st, wp).hi, holdIn(iv, wp.y)));
+        if (!target) return waypointReached(st, wp, tolerance, intermediate) ? true : wp;
         const steered = !own || own.lo !== target.lo || bounded(target);
         let aimY = steered ? holdIn(target, wp.y) : wp.y;
         const here = intervalOf(zones, st.y);
@@ -23769,7 +23794,8 @@ function solveSegmentUnder({
                  */
                 if (CONTACT_FIDELITY.beamLaneWalk && !axisAligned
                     && hit.sources.every((s) => s.phase?.tag === 'beamtower')) {
-                    const steer = beamLaneSteer(run, roomPhase.filter((x) => x.tag === 'beamtower'), clock, tolerance);
+                    const steer = beamLaneSteer(run, roomPhase.filter((x) => x.tag === 'beamtower'), clock, tolerance,
+                        corridor);
                     if (steer === null) {
                         laneWhy = 'a tower\'s live `y` is unknown (no visit clock or no `Game.time`), and a lane is '
                             + 'read off it, never guessed';
