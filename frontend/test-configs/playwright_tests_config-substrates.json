@@ -681,6 +681,12 @@
             "_comment": "The hub's .apworld button: real world_generator under Pyodide (CDN, booted on first build). Reads the saved Blob back as a zip: named after its root dir, manifest stamped + renamed, a session edit in Locations.py."
         },
         {
+            "id": "apworld-build-lossy-toggle",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "rule-node R2c. The .apworld build's lossy toggle on yachtdice (strict-fails: its helper bodies are JS-only). OFF (default): fails naming the helper + game. ON (the real checkbox, saved as a setting): builds, says LOSSY, and the record block lists every placeholder with its count."
+        },
+        {
             "id": "apworld-apply-keeps-the-sphere-log",
             "enabled": true,
             "category": "apworldEditor",

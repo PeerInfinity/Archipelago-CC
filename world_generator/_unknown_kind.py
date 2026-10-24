@@ -16,6 +16,10 @@ subclass, so one ``except`` covers both) or, lossy, records ``<site>:helper <nam
 A ``Has`` on an item the rules file never creates (no item definition, pool entry, placement or
 starting item) is NOT a placeholder: the generated world can never hold that item, so ``False_()``
 is the exact answer. It is recorded by name in BOTH modes (:func:`unobtainable_item`), never raised.
+
+The record counts only placeholders that reach the OUTPUT. A caller that converts a rule
+speculatively and may throw the result away runs it under :func:`speculative_record` and keeps
+the scratch only when it uses the result (rule-node R2c).
 """
 
 import collections
@@ -79,6 +83,44 @@ def lossy_codegen(enabled: bool = True, game: Optional[str] = None) -> Iterator[
             _codegen_game.reset(game_token)
 
 
+# Every per-generation record a speculative conversion must not leak into. A new record
+# contextvar (a Counter, None when off) registers here so speculative_record covers it too.
+SPECULATIVE_RECORDS: list = [_lossy_record]
+
+
+class Speculation:
+    """The scratch records of one speculative conversion; :meth:`keep` folds them into the real ones."""
+
+    def __init__(self, pairs):
+        self._pairs = pairs  # [(outer Counter or None, scratch Counter or None)], one per record
+
+    def keep(self) -> None:
+        for outer, scratch in self._pairs:
+            if outer is not None and scratch:
+                outer.update(scratch)
+                scratch.clear()
+
+
+@contextlib.contextmanager
+def speculative_record() -> Iterator[Speculation]:
+    """Within the block, every record in ``SPECULATIVE_RECORDS`` writes to a scratch, dropped unless kept.
+
+    A record that is off (None) stays off, so strict mode is unchanged: an unknown kind still
+    raises inside the block.
+    """
+    pairs, tokens = [], []
+    for var in SPECULATIVE_RECORDS:
+        outer = var.get()
+        scratch = collections.Counter() if outer is not None else None
+        pairs.append((outer, scratch))
+        tokens.append((var, var.set(scratch)))
+    try:
+        yield Speculation(pairs)
+    finally:
+        for var, token in reversed(tokens):
+            var.reset(token)
+
+
 def unknown_kind(site: str, kind: str, placeholder: str) -> str:
     """Raise for an unknown kind, or (lossy mode) record it and return ``placeholder``."""
     record = _lossy_record.get()
@@ -119,3 +161,7 @@ def unobtainable_item(site: str, item: str, placeholder: str) -> str:
     if record is not None:
         record[f'{site}:{item}'] += 1
     return placeholder
+
+
+# A discarded speculative conversion must not count here either (rule-node R2c).
+SPECULATIVE_RECORDS.append(_unobtainable_record)

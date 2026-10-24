@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import {
   buildApworld,
+  describeLossyRecord,
   normaliseGameName,
   worldGeneratorBaseUrl,
 } from './apworldBuild.js';
@@ -93,7 +94,22 @@ describe('buildApworld (the page side of the worker protocol)', () => {
     expect(sent.gameName).toBe('G X');
     expect(sent.playerId).toBe('2');
     expect(sent.packageBaseUrl).toBe('http://h/world_generator/');
+    expect(sent.lossy).toBe(false); // strict unless asked (⚖ D3)
+    expect(built.lossyPlaceholders).toEqual({});
     expect(worker.listenerCount()).toBe(0);
+  });
+
+  it('asks for lossy only when told to, and resolves with the record', async () => {
+    const record = { 'rule_builder helper:helper h': 3 };
+    const worker = fakeWorker(msg => [{
+      type: 'result', id: msg.id, ok: true, fileName: 'g.apworld', gameName: 'G',
+      gameDirectory: 'g', lossyPlaceholders: msg.lossy ? record : {}, bytes: new ArrayBuffer(0), ms: 1,
+    }]);
+    const opts = { worker, packageBaseUrl: 'http://h/world_generator/' };
+    expect((await buildApworld({}, { ...opts, lossy: true })).lossyPlaceholders).toEqual(record);
+    expect(worker.posted[0].lossy).toBe(true);
+    await buildApworld({}, { ...opts, lossy: 'yes' });
+    expect(worker.posted[1].lossy).toBe(false); // only `true` opts in
   });
 
   it('rejects with the generator\'s error line', async () => {
@@ -103,5 +119,19 @@ describe('buildApworld (the page side of the worker protocol)', () => {
     await expect(buildApworld({}, { worker, packageBaseUrl: 'http://h/world_generator/' }))
       .rejects.toThrow("KeyError: 'regions'");
     expect(worker.listenerCount()).toBe(0);
+  });
+});
+
+describe('describeLossyRecord', () => {
+  it('totals the record and lists it most-replaced first, then by name', () => {
+    expect(describeLossyRecord({ 'b:y': 2, 'a:x': 2, 'c:z': 5, 'd:none': 0 })).toEqual({
+      total: 9,
+      entries: [{ name: 'c:z', count: 5 }, { name: 'a:x', count: 2 }, { name: 'b:y', count: 2 }],
+    });
+  });
+
+  it('is empty for an empty or missing record', () => {
+    expect(describeLossyRecord({})).toEqual({ total: 0, entries: [] });
+    expect(describeLossyRecord(undefined)).toEqual({ total: 0, entries: [] });
   });
 });
