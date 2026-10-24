@@ -191,7 +191,7 @@ All diff files are in `docs/json/developer/diffs/diff-files/`:
 | File | Lines | Contents |
 |------|-------|----------|
 | `core-files.diff` | 41 | `settings.py` modifications |
-| `config-files.diff` | ~413 | `.gitattributes`, `.gitignore`, `.github/` configs, `pytest.ini`, `README.md` |
+| `config-files.diff` | 727 | `.gitattributes`, `.gitignore`, `.github/` configs, `pytest.ini`, `README.md` |
 | `alttp-bunny-rules.diff` | 25 | `worlds/alttp/Rules.py` bug fix |
 | `world-minor-fixes.diff` | 22 | `worlds/lufia2ac/Options.py`, `worlds/landstalker/Hints.py` |
 | `test-files.diff` | 62 | `test/general/test_implemented.py`, `test_items.py`, `test_reachability.py` |
