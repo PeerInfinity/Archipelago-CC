@@ -509,7 +509,8 @@ describe('who takes the box', () => {
          * fidelity SKINSWING the art-stand swing witnesses,
          * `probe-seedling-skin-swing.mjs`;
          * fidelity TIMEDPASS the timed-pass witnesses, `probe-seedling-timed-pass.mjs`; tile-l19-bosskey L19's boss key under
-         * the ShieldBoss body, with and without the sword, `probe-seedling-l19-bosskey.mjs`.)
+         * the ShieldBoss body, with and without the sword, `probe-seedling-l19-bosskey.mjs`; fidelity FIREPUSH the L40
+         * pulser-shove witness, `probe-seedling-fire-push.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -550,7 +551,8 @@ describe('who takes the box', () => {
             'probe-seedling-spearrect.mjs', 'probe-seedling-drill-kill.mjs',
             'probe-seedling-skin-swing.mjs',
             'probe-seedling-timed-pass.mjs',
-            'probe-seedling-l19-bosskey.mjs'];
+            'probe-seedling-l19-bosskey.mjs',
+            'probe-seedling-fire-push.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
