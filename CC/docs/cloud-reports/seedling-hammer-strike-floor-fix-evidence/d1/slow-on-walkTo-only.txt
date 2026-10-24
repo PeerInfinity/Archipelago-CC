@@ -1,0 +1,66 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/10647883-4400-56c1-99d0-f964881444b6/scratchpad/wt
+
+stdout | frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+G9 census pre-sword: extra re-rolls to seat 30 → {"0":23,"1":16,"2":9,"3":7,"4":2,"6":1,"10 (grown)":2}
+
+ ❯ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js (2 tests | 1 failed) 270294ms
+     ✓ pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  24156ms
+     × post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused 246136ms
+ ❯ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test | 1 failed) 38497ms
+     × ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown) 38495ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js > hammer-phase A2 — a previewed death is a step not taken > ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)
+GenerationAborted: levelGenerator: ABORTED at step 1 try 1 anchor 1/1 placing "water-pool(w=3,h=1)" at (2,3) — the oracle threw a PhysicsV2Error, which is NOT one of the three verdict classes and is therefore not a rejected candidate. The trace up to here is attached; the engine said: the player DROWNED in level 900 at (39.635469616095364, 59.61177955736648) — terrain state 1. An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): `drownTimer` is never reset off-hazard, so eleven cumulative ticks on water without canSwim (the conch, R5) or lava without the dark suit ends the run. Re-route, or coerce the hazard in `noHazards`.
+ ❯ onAbort frontend/modules/procgenCore/levelGenerator.js:820:27
+    818|                 onAbort: ({ error, at, anchorTry, anchorsOffered, rows…
+    819|                     for (const r of rows) trace.push(r);
+    820|                     throw new GenerationAborted(
+       |                           ^
+    821|                         `levelGenerator: ABORTED at step ${step} try $…
+    822|                         + `${anchorTry}/${anchorsOffered} placing "${r…
+ ❯ walkAnchors frontend/modules/procgenCore/levelGenerator.js:508:13
+ ❯ generateLevel frontend/modules/procgenCore/levelGenerator.js:810:26
+ ❯ generateSeedlingLevel frontend/modules/seedlingDemo/procgenSeedling.js:4762:30
+ ❯ gen frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js:23:48
+ ❯ withHammerEscape frontend/modules/seedlingDemo/solverBot.js:11838:21
+ ❯ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js:25:36
+
+Caused by: PhysicsV2Error: the player DROWNED in level 900 at (39.635469616095364, 59.61177955736648) — terrain state 1. An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): `drownTimer` is never reset off-hazard, so eleven cumulative ticks on water without canSwim (the conch, R5) or lava without the dark suit ends the run. Re-route, or coerce the hazard in `noHazards`.
+ ❯ deathRefusal frontend/modules/seedlingDemo/playerPhysicsV2.js:786:12
+ ❯ step frontend/modules/seedlingDemo/levelRun.js:19782:52
+ ❯ previewWalk frontend/modules/seedlingDemo/solverBot.js:5834:18
+ ❯ deriveRefuge frontend/modules/seedlingDemo/solverBot.js:10376:15
+ ❯ refugeNow frontend/modules/seedlingDemo/solverBot.js:15363:35
+ ❯ refuge frontend/modules/seedlingDemo/solverBot.js:15371:31
+ ❯ noStrikeMove frontend/modules/seedlingDemo/solverBot.js:11929:9
+ ❯ moveNow frontend/modules/seedlingDemo/solverBot.js:15367:35
+ ❯ execKillByPressOnce frontend/modules/seedlingDemo/solverBot.js:15471:34
+ ❯ execKillByPress frontend/modules/seedlingDemo/solverBot.js:15112:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+Error: generated Seedling room 'census' (seed 30, 10x10): the Seedling generator refused this room — levelGenerator: ABORTED at step 1 try 1 anchor 1/1 placing "water-pool(w=3,h=1)" at (2,3) — the oracle threw a PhysicsV2Error, which is NOT one of the three verdict classes and is therefore not a rejected candidate. The trace up to here is attached; the engine said: the player DROWNED in level 900 at (39.635469616095364, 59.61177955736648) — terrain state 1. An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): `drownTimer` is never reset off-hazard, so eleven cumulative ticks on water without canSwim (the conch, R5) or lava without the dark suit ends the run. Re-route, or coerce the hazard in `noHazards`.
+ ❯ drawRoom frontend/modules/seedlingDemo/seedlingGenRoom.js:474:15
+    472|     } catch (e) {
+    473|         if (e.message.startsWith('generated Seedling room')) throw e;
+    474|         throw new Error(GEN_ROOM_REFUSALS.generator(regionId, seed, si…
+       |               ^
+    475|     }
+    476|     const record = coreLevelRecord(out.record);
+ ❯ Module.generateGenRoom frontend/modules/seedlingDemo/seedlingGenRoom.js:553:15
+ ❯ genRoom frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js:22:39
+ ❯ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js:34:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 1 passed (3)
+   Start at  01:14:17
+   Duration  313.32s (transform 2.51s, setup 0ms, import 4.15s, tests 308.79s, environment 0ms)
+
+rc=1

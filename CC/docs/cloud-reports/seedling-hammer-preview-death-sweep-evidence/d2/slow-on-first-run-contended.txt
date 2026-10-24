@@ -1,0 +1,26 @@
+ RUN  v4.0.15 /home/user/Archipelago-CC
+stdout | frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+G9 census pre-sword: extra re-rolls to seat 30 → {"0":23,"1":16,"2":9,"3":7,"4":2,"6":1,"10 (grown)":2}
+stdout | frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+G9 census post-sword: extra re-rolls to seat 30 → {"0":29,"1":10,"2":14,"3":3,"4":2,"5":1,"7":1}
+ ❯ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js (2 tests | 1 failed) 1022691ms
+     ✓ pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  46230ms
+     × post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused 976458ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 73800ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  73797ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+Error: Test timed out in 900000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js:30:11
+     28| describe('⛓⛓ at the default knobs every draw seed seats the ceiling, a…
+     29|     for (const biome of ['pre-sword', 'post-sword']) {
+     30|         it(`${biome}, drawn seeds 1–60: 30 locations seat (re-rolls re…
+       |           ^
+     31|             const extra = {};
+     32|             const unseated = [];
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 2 passed (3)
+   Start at  17:31:12
+   Duration  1103.69s (transform 4.14s, setup 0ms, import 6.82s, tests 1096.49s, environment 0ms)

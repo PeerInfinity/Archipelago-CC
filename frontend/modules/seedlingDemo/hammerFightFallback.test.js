@@ -203,11 +203,13 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
             const off = await refusalOf(solveR9At(4));
             expect(off).toBeInstanceOf(SolverBotError);
             expect(off.code).toBe(HAMMER_SAFETY);
-            expect(off.message).toMatch(/There is no step out\. The corner formed/);
+            // `STRIKE_ETA_FLOOR` OFF: "There is no step out. The corner formed …"; ON (hammer-phase SFF) the rung names it first
+            expect(off.message).toMatch(/There is no step out\. the HAMMER-PHASE rung first saw this corner at t263/);
             expect(off.message).not.toMatch(/HAMMER_FIGHT_FALLBACK/);
             expect(off.fightFallback).toBe(undefined);
             const on = await withHammerFightFallback(true, () => solveR9At(4));
-            expect(on.out.fightFallbacks).toEqual([{ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 267,
+            // refusedAt 267 with `STRIKE_ETA_FLOOR` OFF, 266 ON (SFF); the retry's ticks and the solve are unmoved
+            expect(on.out.fightFallbacks).toEqual([{ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 266,
                 bodies: ['spinner@48,96', 'spinner@112,48'], verdict: 'solved', ticks: 324, fights: 1 }]);
             const kill = on.out.records.find((r) => r.strategy === 'kill');
             expect(kill.fightFallback.verdict).toBe('solved');
@@ -239,7 +241,7 @@ describe('hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default)', () => {
             expect(on.message.startsWith(`${off.message} The fight fallback (\`HAMMER_FIGHT_FALLBACK\`) rewound to `
                 + 'the kill\'s first tick (t0) and redid the kill with the fight on; it did not solve (HAMMER_SAFETY: '))
                 .toBe(true);
-            expect(on.fightFallback).toMatchObject({ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 267,
+            expect(on.fightFallback).toMatchObject({ t: 0, how: 'rewind', refused: HAMMER_SAFETY, refusedAt: 266,
                 verdict: 'refused', retryRefused: HAMMER_SAFETY });
         });
     }, 300_000);
