@@ -5,7 +5,6 @@ import { axeDodgeSchemaProps } from './seedlingAxeDodgeSettings.js';
 import { dashOnlyWindowSchemaProps } from './seedlingDashOnlyWindowSettings.js';
 import { dashShapeSchemaProps } from './seedlingDashShapeSettings.js';
 import { graphicsSchemaProps } from './seedlingGraphicsSettings.js';
-import { SOLVE_PROGRESS_DEFAULT_MODE, SOLVE_PROGRESS_MODES } from './seedlingSolveProgress.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_INTERVALS_MS } from '../seedlingDemo/solveProgressTap.js';
 import { SOLVE_DEMO_EVENT } from './seedlingSolveDemo.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -78,6 +77,7 @@ export const moduleInfo = {
   requires: ['stateManager'],
   storage: [
     { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
+    { key: 'flashPanel_sections', kind: STORAGE_KINDS.state, label: 'Flash panel: which sections are open (Solver, Settings, Tools)' },
   ],
 };
 
@@ -220,23 +220,11 @@ export function register(registrationApi) {
           + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
       },
       // ⛓ SOLVE PROGRESS — the panel's live view of the solver's progress stream (the tree, the tile map and the
-      // work meter, `seedlingSolveProgressView.js`). ⛓ AUTO-SHOW: `off | auto | always`, default `auto` — the view
-      // listens while hidden and is shown for the length of each solve. Only `off` leaves no solve asking its worker
-      // for the stream. A value stored while this was a boolean reads `true` → always, `false` → off
-      // (`solveProgressMode`). The panel's "Solve Progress" button cycles it.
-      seedlingSolveProgressView: {
-        type: 'string',
-        enum: [...SOLVE_PROGRESS_MODES],
-        default: SOLVE_PROGRESS_DEFAULT_MODE,
-        label: 'Seedling: show the solver\'s progress',
-        description: "Both runtimes, solver rooms. Shows what the Playback Bot's solver is doing while it solves: "
-          + "the goals, rungs and searches it tried (with how often each succeeded or was rejected, and why), the "
-          + "tiles its previews reached, and the work it has spent against its budget. Updated at most as often as "
-          + "the solve progress refresh rate allows, and only at the solver's own checkpoints. `auto` shows it while "
-          + "a solve runs and hides it "
-          + "when the solve ends; `always` keeps it open; `off` hides it and stops the solver reporting. Watching "
-          + "never changes the plan the solver finds.",
-      },
+      // work meter, `seedlingSolveProgressView.js`). ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user
+      // 2026-10-24): RETIRED `seedlingSolveProgressView` (off | auto | always) and its "Solve Progress" button. The view
+      // always listens; the panel's collapsible Solver section shows it (its open state is per viewer, in
+      // `flashPanel_sections`), and the progress line under the game shows every solve. A value saved under the old
+      // key is read ONCE, as the section's first state (`always` → open), and never again.
       // ⛓ SOLVE PROGRESS S1 — ⚖ the user 2026-10-17: the refresh rate is a SETTING (1000 / 250 / 100 / 50 ms, default
       // 100 "for now"). It rides the solve's ENVELOPE as `progressIntervalMs` beside `progress: true`, never the
       // request (plans stay byte-identical), and the worker's tap clamps it to the list (`progressIntervalMs`). One

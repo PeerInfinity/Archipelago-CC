@@ -1199,7 +1199,6 @@ registerTest({
 
 // ── ⛓ SOLVE PROGRESS (JS half): the panel's progress view on a real solve ──
 
-const SOLVE_PROGRESS_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressView';
 /** ⛓ SOLVE PROGRESS S1 — the progress refresh rate (ms); this row pins it to the default it was written against. */
 const SOLVE_PROGRESS_INTERVAL_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
 const SOLVE_PROGRESS_ROW_INTERVAL_MS = 100;
@@ -1207,18 +1206,17 @@ const SOLVE_PROGRESS_ROW_INTERVAL_MS = 100;
 export async function seedlingJsRuntimeSolveProgressView(tc) {
     let previousRuntime = 'auto';
     let previousSolver = true;
-    let previousView = 'auto';
+    let previousSections = null;
+    let panelUsed = null;
     let previousInterval = SOLVE_PROGRESS_ROW_INTERVAL_MS;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
-    try { previousView = await settingsManager.getSetting(SOLVE_PROGRESS_KEY, 'auto'); } catch { /* keep the default (auto) */ }
     try { previousInterval = await settingsManager.getSetting(SOLVE_PROGRESS_INTERVAL_KEY, SOLVE_PROGRESS_ROW_INTERVAL_MS); } catch { /* keep the default */ }
     let svc = null;
     try {
-        // ⚖ This row SETS its own state: solver mode on, the view pinned open — `always`, so it never auto-hides
-        // (session-only overrides, restored below).
+        // ⚖ This row SETS its own state: solver mode on (a session-only override) and, once the panel is up, the
+        // Solver section OPEN (⛓ PANEL LAYOUT: the section is the view's switch) — both restored below.
         await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
-        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, 'always', { persist: false });
         await settingsManager.updateSetting(SOLVE_PROGRESS_INTERVAL_KEY, SOLVE_PROGRESS_ROW_INTERVAL_MS, { persist: false });
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
         const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
@@ -1226,8 +1224,11 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         const up = await atlasPanelOnJs(tc, staleAdapter);
         if (!up) return tc.getOverallResult();
         const { rt, panel } = up;
+        panelUsed = panel;
+        previousSections = panel.sectionState();
+        panel.setSectionOpen('solver', true);
         const view = panel._solveProgressView;
-        tc.assertEqual('the progress view is open (the setting is on)', true, !!view?.isOpen);
+        tc.assertEqual('the progress view is open (the Solver section is open)', true, !!view?.isOpen);
         svc = rt.playback.solveService;
         tc.assertEqual('the JS page solves in its WORKER service', true, typeof svc?.subscribeProgress === 'function');
         // the feed re-resolves the page's service each second: wait until it listens, BEFORE the solve starts
@@ -1339,16 +1340,24 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         const aged = await tc.pollForCondition(() => /last update [1-9]\d* s ago/.test(view.header.textContent),
             'the header\'s "last update N s ago" advanced', 5000, 100);
         tc.reportCondition('the age indicator advances while nothing arrives', !!aged);
-        tc.assertEqual('`always` never auto-hid the view after the final note', true, view.isOpen);
+        tc.assertEqual('the open Solver section never hid the view after the final note', true, view.isOpen);
+        // ⛓ PANEL LAYOUT — the progress line under the game read the same final state
+        const line = panel._solveProgressLine;
+        await tc.pollForCondition(() => /^solver: solved \(solve #\d+\) · work \d+ \/ \d+ · best: /.test(line.text.textContent),
+            'the progress line drew the final state', 3000, 100);
+        tc.assertEqual('the progress line reads the final state (solved, work against the budget, best)', true,
+            /^solver: solved \(solve #\d+\) · work \d+ \/ \d+ · best: /.test(line.text.textContent));
+        tc.assertEqual('the progress line mirrors the final note', 'true/solved', `${line.element.dataset.final}/${line.element.dataset.outcome}`);
 
-        // ⛔ `off` closes the view and UNSUBSCRIBES: the next solve installs no hook (set here, so the check does
-        // not depend on the mode this row restores — the default `auto` keeps listening while hidden)
-        await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, 'off', { persist: false });
-        const off = await tc.pollForCondition(() => svc.progressSubscribed === false && !view.isOpen,
-            'the view set off left no listener on the service', 3000, 100);
-        tc.reportCondition('setting the view off unsubscribed it', !!off);
+        // ⛓ PANEL LAYOUT — closing the Solver section HIDES the view but keeps it LISTENING (the progress line needs
+        // the next solve); only the panel's teardown unsubscribes (pinned in seedlingSolveProgress.test.js)
+        panel.setSectionOpen('solver', false);
+        tc.assertEqual('a closed Solver section hides the view and keeps its listener', 'false/true',
+            `${view.isOpen}/${svc.progressSubscribed === true}`);
     } finally {
-        try { await settingsManager.updateSetting(SOLVE_PROGRESS_KEY, previousView, { persist: false }); } catch { /* best effort */ }
+        if (panelUsed && previousSections) {
+            for (const [id, open] of Object.entries(previousSections)) panelUsed.setSectionOpen(id, open);
+        }
         try { await settingsManager.updateSetting(SOLVE_PROGRESS_INTERVAL_KEY, previousInterval, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
@@ -1359,12 +1368,248 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
 registerTest({
     id: 'seedling-js-runtime-solve-progress-view',
     name: 'Seedling JS runtime: the panel\'s SOLVE PROGRESS view on a real solve (L6, past the bobs)',
-    description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on '
+    description: 'With flashPanel.runtime = js, the solver mode on and the panel\'s Solver section open, on '
         + 'seedling_atlas: the view subscribes to the page\'s worker service before the solve, the L6 enemy-room solve '
         + 'streams its progress, and the view holds the FINAL snapshot (solved), draws its tree, its tile canvas and '
-        + 'its work meter and its caches/churn lines, and its "last update N s ago" advances; `always` does not '
-        + 'auto-hide; setting it off unsubscribes.',
+        + 'its work meter and its caches/churn lines, and its "last update N s ago" advances; the open section never '
+        + 'hides it; the progress line under the game reads the final state; closing the section hides the view and '
+        + 'keeps it listening.',
     testFunction: seedlingJsRuntimeSolveProgressView,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24): the Seedling panel's sections ──
+
+const SECTIONS_STORAGE_KEY = 'flashPanel_sections';
+const PROGRESS_INTERVAL_KEY = 'moduleSettings.flashPanel.seedlingSolveProgressIntervalMs';
+
+/**
+ * The panel on the JS runtime, seedling_atlas (the rows below need a Seedling game, so every section applies), with
+ * its sections and their saved state captured for the restore. ⚖ Each row SETS its own state and puts it back.
+ */
+async function layoutPanel(tc) {
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+    if (!ready) return null;
+    const up = await atlasPanelOnJs(tc, staleAdapter);
+    if (!up) return null;
+    let saved = null;
+    try { saved = localStorage.getItem(SECTIONS_STORAGE_KEY); } catch { saved = null; }
+    return { ...up, sections: up.panel.sectionState(), saved };
+}
+
+function restoreLayout(ctx) {
+    if (!ctx) return;
+    for (const [id, open] of Object.entries(ctx.sections)) ctx.panel.setSectionOpen(id, open);
+    try {
+        if (ctx.saved === null) localStorage.removeItem(SECTIONS_STORAGE_KEY); else localStorage.setItem(SECTIONS_STORAGE_KEY, ctx.saved);
+    } catch { /* storage unavailable */ }
+}
+
+const savedSections = () => { try { return JSON.parse(localStorage.getItem(SECTIONS_STORAGE_KEY) ?? 'null'); } catch { return null; } };
+
+export async function seedlingPanelLayoutSections(tc) {
+    let ctx = null;
+    let previousRuntime = 'auto';
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        ctx = await layoutPanel(tc);
+        if (!ctx) return tc.getOverallResult();
+        const { panel } = ctx;
+        const root = panel.rootElement;
+        // the order, top to bottom: the title + status, the game, the progress line, Solver, Settings, Tools
+        const order = [root.querySelector('.flash-panel-header'), root.querySelector('.flash-panel-stage'),
+            root.querySelector('.flash-panel-solve-progress-line'), ...['solver', 'settings', 'tools'].map((id) => panel.sections[id])];
+        tc.assertEqual('every part is there', true, order.every(Boolean));
+        tc.assertEqual('they are the root\'s children in the order asked for', true,
+            order.every((el, i) => el.parentNode === root && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING))));
+        tc.assertEqual('the header holds only the title (the game\'s name) and the status', 'Seedling|2',
+            `${panel.titleElement.textContent}|${root.querySelector('.flash-panel-header').children.length}`);
+        tc.assertEqual('the game (the iframe) is inside the stage', true, panel.stageElement.contains(document.getElementById(panel.flashObjectId)));
+        tc.assertEqual('the solve-progress view is in the Solver section; the log, the controls and the teleport rows in Tools', true,
+            panel.sections.solver.contains(panel._solveProgressView.element) && panel.sections.tools.contains(panel.logElement)
+            && panel.sections.tools.contains(root.querySelector('.flash-panel-wirecheck')) && panel.sections.tools.contains(panel.teleportRow)
+            && panel.sections.tools.contains(panel.apFoundElement));
+        tc.assertEqual('the "Solve Progress" off/auto/always button is gone', null, root.querySelector('.flash-panel-solve-progress-toggle'));
+        tc.assertEqual('a Seedling game shows the progress line and the Solver section', 'flex/',
+            `${panel._solveProgressLine.element.style.display}/${panel.sections.solver.style.display}`);
+
+        // collapse: the section's state is the view's mode, and it is SAVED per viewer
+        panel.setSectionOpen('solver', true);
+        panel.setSectionOpen('settings', false);
+        panel.setSectionOpen('tools', true);
+        tc.assertEqual('saved: {solver open, settings closed, tools open}', JSON.stringify({ solver: true, settings: false, tools: true }),
+            JSON.stringify(savedSections()));
+        tc.assertEqual('an open Solver section shows the view (mode always)', 'true/always',
+            `${panel._solveProgressView.isOpen}/${panel._solveProgressView.mode}`);
+        // a click on a section's title toggles it, and the toggle is saved
+        panel.sections.settings.querySelector('summary').click();
+        const clicked = await tc.pollForCondition(() => savedSections()?.settings === true,
+            'a click on "Settings" opened it and the state was saved', 3000, 50);
+        tc.reportCondition('a click on a section title opens it and saves the state', !!clicked);
+        panel.setSectionOpen('solver', false);
+        tc.assertEqual('a closed Solver section hides the view and keeps it listening (mode listen)', 'false/listen/true',
+            `${panel._solveProgressView.isOpen}/${panel._solveProgressView.mode}/${panel._solveProgressView.isListening}`);
+        // the saved state is what a panel (re)built for this viewer opens with
+        localStorage.setItem(SECTIONS_STORAGE_KEY, JSON.stringify({ solver: true, settings: false, tools: false }));
+        panel._restoreSections();
+        tc.assertEqual('a restore reads the saved state', JSON.stringify({ solver: true, settings: false, tools: false }),
+            JSON.stringify(panel.sectionState()));
+        tc.assertEqual('the restored Solver section is the view\'s state', true, panel._solveProgressView.isOpen);
+    } finally {
+        restoreLayout(ctx);
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-panel-layout-sections',
+    name: 'Seedling panel layout: the sections, in order, collapsible, saved per viewer',
+    description: 'On the JS runtime, seedling_atlas: the panel is the title + status, the game, the solver\'s progress line, '
+        + 'then the Solver, Settings and Tools sections, in that order; the view is in Solver, the log, buttons, teleport rows '
+        + 'and AP readout in Tools; the old Solve Progress button is gone; opening/closing a section (by call or a click on '
+        + 'its title) is saved in localStorage and read back; the Solver section\'s state is the view\'s (always / listen).',
+    testFunction: seedlingPanelLayoutSections,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingPanelLayoutSettings(tc) {
+    let ctx = null;
+    let previousRuntime = 'auto';
+    let previousCamera = 'room';
+    let previousInterval = null;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousCamera = await settingsManager.getSetting(CAMERA_SETTING_KEY, 'room'); } catch { /* keep room */ }
+    try { previousInterval = await settingsManager.getSetting(PROGRESS_INTERVAL_KEY); } catch { /* keep the default */ }
+    try {
+        ctx = await layoutPanel(tc);
+        if (!ctx) return tc.getOverallResult();
+        const { panel } = ctx;
+        panel.setSectionOpen('settings', true);
+        const control = (prop) => panel.rootElement.querySelector(`.flash-panel-setting[data-setting="${prop}"] .flash-panel-setting-input`);
+        const row = (prop) => panel.rootElement.querySelector(`.flash-panel-setting[data-setting="${prop}"]`);
+        const shown = ['runtime', 'seedlingJsGraphics', 'seedlingJsCamera', 'seedlingJsLights', 'seedlingSolverWalk',
+            'seedlingSolveProgressIntervalMs'].map((p) => `${p}:${row(p)?.style.display}`);
+        tc.assertEqual('on the JS runtime every control is shown', true, shown.every((x) => x.endsWith(':flex')));
+        tc.assertEqual('the solver budgets and the fidelity switches are NOT in the section', 0,
+            panel.rootElement.querySelectorAll('.flash-panel-setting[data-setting*="Budget"], .flash-panel-setting[data-setting*="UpgradeWindow"], '
+                + '.flash-panel-setting[data-setting*="KillLock"], .flash-panel-setting[data-setting*="Contact"]').length);
+        const runtime = control('runtime');
+        const offered = [...runtime.options].filter((o) => !o.hidden).map((o) => o.textContent);
+        tc.log(`runtime choices: ${offered.join(' | ')}`);
+        tc.assertEqual('the runtime offers auto (naming what it picks) and the runtimes Seedling\'s wiring plays', true,
+            offered[0] === 'auto (→ wasm)' && ['wasm', 'js'].every((r) => offered.includes(r)));
+        tc.assertEqual('the runtime control shows the setting', 'js', runtime.value);
+
+        // control → setting: the refresh rate (applies from the next solve), the same key the Settings panel writes
+        const interval = control('seedlingSolveProgressIntervalMs');
+        const target = [...interval.options].map((o) => o.value).find((v) => v !== interval.value);
+        interval.value = target;
+        interval.dispatchEvent(new Event('change'));
+        const wrote = await tc.pollForCondition(async () => Number(await settingsManager.getSetting(PROGRESS_INTERVAL_KEY)) === Number(target),
+            `the control wrote ${PROGRESS_INTERVAL_KEY} = ${target}`, 3000, 50);
+        tc.reportCondition('the Settings section\'s control writes the setting', !!wrote);
+        const applied = await tc.pollForCondition(() => panel._solveProgressView.intervalMs === Number(target),
+            'the panel applied the written rate to its view', 3000, 50);
+        tc.reportCondition('the written setting is applied (the view\'s rate)', !!applied);
+
+        // setting → control: the camera, written the way the Settings panel writes it
+        const camera = control('seedlingJsCamera');
+        const next = previousCamera === 'follow' ? 'room' : 'follow';
+        await settingsManager.updateSetting(CAMERA_SETTING_KEY, next, { persist: false });
+        const followed = await tc.pollForCondition(() => camera.value === next,
+            `the camera control follows the setting (${next})`, 3000, 50);
+        tc.reportCondition('the control follows a setting written elsewhere', !!followed);
+    } finally {
+        try { await settingsManager.updateSetting(CAMERA_SETTING_KEY, previousCamera, { persist: false }); } catch { /* best effort */ }
+        try {
+            if (previousInterval !== null && previousInterval !== undefined) await settingsManager.updateSetting(PROGRESS_INTERVAL_KEY, previousInterval);
+        } catch { /* best effort */ }
+        restoreLayout(ctx);
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-panel-layout-settings',
+    name: 'Seedling panel layout: the Settings section writes and follows the settings',
+    description: 'On the JS runtime, seedling_atlas: the Settings section shows the runtime (auto named, the runtimes Seedling '
+        + 'plays), graphics, camera, lights, the solver walk and the progress refresh, and no solver budget or fidelity '
+        + 'switch; changing the refresh control writes moduleSettings.flashPanel.seedlingSolveProgressIntervalMs (and the '
+        + 'view applies it); writing the camera setting elsewhere moves the camera control.',
+    testFunction: seedlingPanelLayoutSettings,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingPanelLayoutNarrow(tc) {
+    let ctx = null;
+    let previousRuntime = 'auto';
+    let rootCss = null;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        ctx = await layoutPanel(tc);
+        if (!ctx) return tc.getOverallResult();
+        const { panel } = ctx;
+        const root = panel.rootElement;
+        rootCss = root.style.cssText;
+        // a phone: the panel alone, 360 px wide, every section open (the widest the panel gets)
+        for (const id of ['solver', 'settings', 'tools']) panel.setSectionOpen(id, true);
+        root.style.position = 'fixed';
+        root.style.left = '0';
+        root.style.top = '0';
+        root.style.width = '360px';
+        root.style.height = '100vh';
+        root.style.zIndex = '100000';
+        const [w, h] = panel._stageSize ?? [0, 0];
+        tc.assertEqual('the game\'s native size is the config\'s stage_size', JSON.stringify(panel.gameConfig?.stage_size ?? [480, 480]),
+            JSON.stringify([w, h]));
+        const fitted = await tc.pollForCondition(() => Number(panel.stageElement.dataset.scale) < 1,
+            'the stage re-fitted to the narrow panel', 3000, 50);
+        tc.reportCondition('the game scaled down to the panel\'s width', !!fitted);
+        const frame = document.getElementById(panel.flashObjectId).getBoundingClientRect();
+        const rr = root.getBoundingClientRect();
+        const stage = panel.stageElement.getBoundingClientRect();
+        const k = Number(panel.stageElement.dataset.scale);
+        tc.log(`360 px: scale ${k}; frame ${Math.round(frame.left)},${Math.round(frame.top)} ${frame.width.toFixed(1)}×${frame.height.toFixed(1)}; `
+            + `root ${rr.width}; overflow ${root.scrollWidth - root.clientWidth}`);
+        tc.assertEqual('no horizontal overflow at 360 px, every section open', true, root.scrollWidth <= root.clientWidth);
+        tc.assertEqual('the game is fully inside the panel (left and right)', true, frame.left >= rr.left - 0.5 && frame.right <= rr.right + 0.5);
+        tc.assertEqual('the game keeps its aspect ratio', true, Math.abs(frame.width / frame.height - w / h) < 0.01);
+        tc.assertEqual('the game fills the stage\'s width', true, Math.abs(frame.width - stage.width) < 1);
+        tc.assertEqual('the stage is exactly as tall as the scaled game (nothing under it is covered)', true, Math.abs(frame.height - stage.height) < 1);
+        // the AP loading overlay sits over the scaled game exactly (it is inside the scaled box)
+        const overlay = panel._seedlingOverlay();
+        overlay.show();
+        const or = overlay.element.getBoundingClientRect();
+        overlay.remove();
+        tc.assertEqual('the loading overlay covers the scaled game exactly', true,
+            ['left', 'top', 'width', 'height'].every((p) => Math.abs(or[p] - frame[p]) < 1));
+        // back to a wide panel: never scaled UP past the native size
+        root.style.width = `${w + 200}px`;
+        const wide = await tc.pollForCondition(() => panel.stageElement.dataset.scale === '1', 'the stage re-fitted to a wide panel', 3000, 50);
+        tc.reportCondition('a wide panel shows the game at its native size, not larger', !!wide
+            && Math.abs(document.getElementById(panel.flashObjectId).getBoundingClientRect().width - w) < 1);
+    } finally {
+        if (ctx && rootCss !== null) ctx.panel.rootElement.style.cssText = rootCss;
+        restoreLayout(ctx);
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-panel-layout-narrow',
+    name: 'Seedling panel layout: at 360 px the whole panel fits and the game is fully visible',
+    description: 'On the JS runtime, seedling_atlas, the panel alone at 360 px with every section open: no horizontal '
+        + 'overflow; the game is scaled down to the panel\'s width, aspect ratio kept, fully inside the panel, the stage '
+        + 'exactly as tall as it; the AP loading overlay covers the scaled game exactly; at a wide width the game is '
+        + 'its native size (never scaled up).',
+    testFunction: seedlingPanelLayoutNarrow,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

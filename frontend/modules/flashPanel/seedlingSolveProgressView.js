@@ -65,20 +65,23 @@
  * a pending frame now; `stats` counts notes, renders, coalesced and hidden-skipped notes, resizes, cells painted
  * and rows written (and ⛓ FRAME VIEW's frame counts) — what the pins read.
  *
- * ⛓ AUTO-SHOW — `setMode(off | auto | always)` (the panel's setting). `isOpen` is whether the view is SHOWN,
- * `isListening` whether its feed is subscribed: in `auto` the feed listens while the view is hidden, the first note
- * of a solve shows it and the final note hides it (the feed keeps listening). `lifecycle` keeps the last
- * `LIFECYCLE_CAP` show/hide transitions `{event, mode, solveId, seq, final, at}`. The element mirrors them as
- * `data-*` attributes (`mode`, `visible`, `listening`, `shows`, `hides`, `shown-at`, `hidden-at`, `shown-final`,
- * `final`, `outcome`) — what the feature check `seedling-solve-progress-auto-show` reads.
+ * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24; it replaced AUTO-SHOW's `off | auto |
+ * always` setting) — `setMode(off | listen | always)`, driven by the panel's collapsible Solver section: `always` =
+ * the section is open (shown, subscribed), `listen` = it is closed (hidden, still subscribed), `off` = the panel is
+ * gone (UNSUBSCRIBED). A note never shows or hides the view. `isOpen` is whether the view is SHOWN, `isListening`
+ * whether its feed is subscribed. `lifecycle` keeps the last `LIFECYCLE_CAP` show/hide transitions `{event, mode,
+ * solveId, seq, final, at}`. The element mirrors them as `data-*` attributes (`mode`, `visible`, `listening`,
+ * `shows`, `hides`, `shown-at`, `hidden-at`, `shown-final`, `final`, `outcome`). `onState(state)` (an option) hears
+ * every ACCEPTED note's state, shown or not: the panel's progress line (`SolveProgressLine`) is fed by it — what the
+ * feature check `seedling-solve-progress-line` reads.
  *
  * The panel's own idiom: inline styles on its dark monospace palette, no stylesheet.
  */
 
 import {
-    activePath, applyProgress, asksBySite, autoVisibility, bestText, clampText, createSolveProgressFeed, emptyProgress,
+    activePath, applyProgress, asksBySite, bestText, clampText, createSolveProgressFeed, emptyProgress,
     cachesText, churnText, etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
-    tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
+    SOLVE_PROGRESS_MODES, tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
@@ -225,10 +228,12 @@ const nextFrame = (fn) => (typeof globalThis.requestAnimationFrame === 'function
  * @param {() => object[]} o.getServices  the solve services the panel can reach now
  * @param {() => number} [o.now]
  * @param {(fn: () => void) => void} [o.frame]  schedules a render (default: the next animation frame)
+ * @param {(state: object) => void} [o.onState]  hears every accepted note's state (⛓ PANEL LAYOUT: the progress line)
  */
 export class SolveProgressView {
-    constructor({ getServices, now = () => Date.now(), frame = nextFrame }) {
+    constructor({ getServices, now = () => Date.now(), frame = nextFrame, onState = null }) {
         this.now = now;
+        this.onState = onState;
         // the option is named `frame` (an animation frame); kept as `scheduleRender` so it never reads as the
         // snapshot's `frame` (⛓ FRAME VIEW)
         this.scheduleRender = frame;
@@ -360,14 +365,16 @@ export class SolveProgressView {
 
     /** Whether the view is SHOWN. */
     get isOpen() { return this.visible; }
-    /** Whether the feed is subscribed (`auto` listens while hidden). */
+    /** Whether the feed is subscribed (`listen` listens while hidden). */
     get isListening() { return this.feed.isOpen; }
 
     /**
-     * ⛓ AUTO-SHOW — apply the setting. `off` closes (UNSUBSCRIBES every service); `auto` subscribes and stays hidden
-     * until a solve reports; `always` shows and subscribes (a solve already in flight reports from the next solve on).
+     * ⛓ PANEL LAYOUT — apply the Solver section's state. `off` closes (UNSUBSCRIBES every service); `listen`
+     * subscribes and stays hidden; `always` shows and subscribes (a solve already in flight reports from the next
+     * solve on). An unknown mode is `listen`.
      */
-    setMode(mode) {
+    setMode(value) {
+        const mode = SOLVE_PROGRESS_MODES.includes(value) ? value : 'listen';
         if (mode === this.mode) return;
         const was = this.mode;
         this.mode = mode;
@@ -382,7 +389,7 @@ export class SolveProgressView {
             this.expanded = new Set();
         }
         this.feed.open();
-        this._setVisible(mode === 'always' || (mode === 'auto' && this.visible && !this.state.final), null);
+        this._setVisible(mode === 'always', null);
         this._mirror();
         // ⛓ INCREMENTAL — the catch-up: a view shown here draws the newest state (kept while it was hidden)
         this._invalidate();
@@ -431,9 +438,9 @@ export class SolveProgressView {
         this.state = next;
         this.stats.notes += 1;
         if (note?.snapshot?.frame) this.stats.framesReceived += 1;
-        this._setVisible(autoVisibility(this.mode, this.visible, note), note);
         this._mirror();
         this._invalidate();
+        this.onState?.(this.state);
     }
 
     /** ⛓ INCREMENTAL — the state changed: render it at the next frame (once, however many notes arrive first). */
@@ -937,5 +944,78 @@ export class SolveProgressView {
         if (this._moreLine.textContent !== moreText) this._moreLine.textContent = moreText;
         if (more && (added || this._moreLine.parentNode !== this.tree)) this.tree.append(this._moreLine);
         else if (!more && this._moreLine.parentNode === this.tree) this._moreLine.remove();
+    }
+}
+
+/**
+ * ⛓ PANEL LAYOUT (slice `seedling-panel-layout`, ⚖ the user 2026-10-24: "right below the canvas: the solver's
+ * progress line") — ONE line under the game: a work bar and `solver: ‹what› · work ‹spent› / ‹limit› · ‹eta› ·
+ * ‹best›`, read from the same state the view holds (`SolveProgressView`'s `onState`), drawn whether the Solver section
+ * is open or not. At most one render per animation frame (the view's `frame` idiom); the text is one clipped line
+ * (the whole of it in the tooltip), so its moving digits never change the panel's height. The element mirrors the
+ * newest state as `data-*` (`solve-id`, `seq`, `final`, `outcome`, `updates`, `updated-at`) — what the feature check
+ * `seedling-solve-progress-line` reads.
+ */
+export class SolveProgressLine {
+    constructor({ now = () => Date.now(), frame = nextFrame } = {}) {
+        this.now = now;
+        this.scheduleRender = frame;
+        this.state = null;
+        this.updates = 0;
+        this.renders = 0;
+        this._pending = false;
+        this.element = el('div', 'flex-shrink:0;display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;'
+            + 'min-width:0;');
+        this.element.className = 'flash-panel-solve-progress-line';
+        this.bar = el('div', 'position:relative;flex:0 0 64px;height:6px;background:#222;border:1px solid #444;'
+            + 'border-radius:2px;');
+        this.fill = el('div', `position:absolute;left:0;top:0;bottom:0;background:${ACCENT};width:0;`);
+        this.bar.append(this.fill);
+        this.text = el('div', 'flex:1 1 auto;min-width:0;color:#aaa;white-space:nowrap;overflow:hidden;'
+            + 'text-overflow:ellipsis;');
+        this.text.className = 'flash-panel-solve-progress-line-text';
+        this.element.append(this.bar, this.text);
+        this.render();
+    }
+
+    /** The view's state after an accepted note: kept at once (and mirrored), drawn at the next frame. */
+    update(state) {
+        this.state = state;
+        this.updates += 1;
+        const d = this.element.dataset;
+        d.solveId = String(state?.solveId ?? '');
+        d.seq = String(state?.seq ?? '');
+        d.final = String(state?.final === true);
+        d.outcome = state?.snapshot?.segment?.outcome ?? '';
+        d.updates = String(this.updates);
+        d.updatedAt = String(this.now());
+        if (this._pending) return;
+        this._pending = true;
+        this.scheduleRender(() => { this._pending = false; this.render(); });
+    }
+
+    /** The line's text for the state now. */
+    lineText() {
+        const s = this.state;
+        const snap = s?.snapshot;
+        if (!snap) return 'solver: no solve yet';
+        const seg = snap.segment ?? {};
+        const m = meterOf(snap);
+        const what = s.final ? `${seg.outcome ?? '?'} (solve #${s.solveId})`
+            : `solving #${s.solveId} · L${seg.level ?? '?'}${seg.pass ? ` ${seg.pass}` : ''}`;
+        const work = m.limit === null ? `work ${m.spent}` : `work ${m.spent} / ${m.limit}`;
+        return [`solver: ${what}`, work, s.final ? null : etaText(snap), bestText(snap.best)].filter(Boolean).join(' · ');
+    }
+
+    render() {
+        this.renders += 1;
+        const text = this.lineText();
+        if (this.text.textContent !== text) {
+            this.text.textContent = text;
+            this.text.title = text;
+        }
+        const m = meterOf(this.state?.snapshot);
+        const width = m.fraction === null ? '0' : `${(m.fraction * 100).toFixed(1)}%`;
+        if (this.fill.style.width !== width) this.fill.style.width = width;
     }
 }
