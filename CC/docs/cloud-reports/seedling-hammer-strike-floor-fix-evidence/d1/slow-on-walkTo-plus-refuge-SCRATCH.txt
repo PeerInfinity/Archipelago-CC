@@ -1,0 +1,21 @@
+
+ RUN  v4.0.15 /tmp/claude-0/-home-user-Archipelago-CC/10647883-4400-56c1-99d0-f964881444b6/scratchpad/wt3
+
+stdout | frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+G9 census pre-sword: extra re-rolls to seat 30 → {"0":23,"1":16,"2":9,"3":7,"4":2,"6":1,"10 (grown)":2}
+
+stdout | frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js > ⛓⛓ at the default knobs every draw seed seats the ceiling, and refuses one past it by name > post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused
+G9 census post-sword: extra re-rolls to seat 30 → {"0":29,"1":10,"2":14,"3":3,"4":2,"5":1,"7":1}
+
+ ✓ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js (2 tests) 509398ms
+     ✓ pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  27756ms
+     ✓ post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  481640ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 35145ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  35143ms
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  01:20:12
+   Duration  549.52s (transform 2.83s, setup 0ms, import 4.74s, tests 544.54s, environment 1ms)
+
+rc=0
