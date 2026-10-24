@@ -59,9 +59,10 @@ const solve = async () => {
 };
 
 describe('fidelity SEARCHGAPS D-A — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.crusherBaitPressGoal).toBe(false);
-        expect(CONTACT_FIDELITY.crusherBaitPressGoal).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23).
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.crusherBaitPressGoal).toBe(true);
+        expect(CONTACT_FIDELITY.crusherBaitPressGoal).toBe(true);
     });
 });
 

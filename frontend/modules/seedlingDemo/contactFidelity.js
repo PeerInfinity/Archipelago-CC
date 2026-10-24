@@ -1121,16 +1121,22 @@ export const CONTACT_FIDELITY = {
      * now (the round trip kept) is the answer — a PRESS goal, and the frontier re-plans from the room it leaves; and the
      * choreography lookup also reads R5's three L41 chains (`BAIT_CHOREOGRAPHIES_L41`, recorded on the game as
      * `r5-l41-part3`). OFF: byte-identical. `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SEARCHGAPS "Harvest + flip both ON") turns it ON — L41's bait keeps R5's ordering and refuses honestly at the fire-block's wandlock. Measured (CI,
+     * main d3346cf784 + SEARCHGAPS): survey 0 verdict movers, 6 refusal-text movers; the 23-key sweep ×2: 0 end movers;
+     * probes standard ON green.
      */
-    crusherBaitPressGoal: false,
+    crusherBaitPressGoal: true,
     /**
      * fidelity SEARCHGAPS D-B (wave 28) — THE FORCED-HIT PROOF ASKS ONE HITLESS WITNESS FIRST (`forcedHit.hitlessWitness`).
      * The breadth-first proof spent its whole depth-2 level (1,332 forks, each replaying the segment) before it could say
      * "not proven"; one hitless `depthMax`-tick input says the same thing exactly. Measured at sweep leg 908 (L67): 5,328
      * of the request's 640 work units went to that tree, so the location solve ended on the deadline instead of on the
      * room's refusal. ON: the witness is asked first; OFF: byte-identical. `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SEARCHGAPS "Harvest + flip both ON") turns it ON — the forced-hit proof asks one hitless witness first (1 fork vs 1,332). Measured (CI,
+     * main d3346cf784 + SEARCHGAPS): survey 0 verdict movers, 6 refusal-text movers; the 23-key sweep ×2: 0 end movers;
+     * probes standard ON green.
      */
-    forcedHitWitnessFirst: false,
+    forcedHitWitnessFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

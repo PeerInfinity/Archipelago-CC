@@ -249,10 +249,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WANDHOLD (wave 28): a cover behind plain Buttons refines to `weigh`; shipped OFF;
             // ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
             coverWeighRefine: true,
-            // ⛓ fidelity SEARCHGAPS D-A (wave 28): the crusher bait's press goal + L41's chains; ships OFF.
-            crusherBaitPressGoal: false,
-            // ⛓ fidelity SEARCHGAPS D-B (wave 28): the forced-hit proof asks one hitless witness first; ships OFF.
-            forcedHitWitnessFirst: false });
+            // ⛓ fidelity SEARCHGAPS D-A (wave 28): the crusher bait's press goal + L41's chains; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            crusherBaitPressGoal: true,
+            // ⛓ fidelity SEARCHGAPS D-B (wave 28): the forced-hit proof asks one hitless witness first; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            forcedHitWitnessFirst: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

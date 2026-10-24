@@ -15,9 +15,10 @@ import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from
 import { FORCED_HITS, proveForcedHit } from './forcedHit.js';
 
 describe('fidelity SEARCHGAPS D-B — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.forcedHitWitnessFirst).toBe(false);
-        expect(CONTACT_FIDELITY.forcedHitWitnessFirst).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23).
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.forcedHitWitnessFirst).toBe(true);
+        expect(CONTACT_FIDELITY.forcedHitWitnessFirst).toBe(true);
     });
 });
 
@@ -38,7 +39,7 @@ describe('fidelity SEARCHGAPS D-B — the forced-hit proof\'s hitless witness', 
     };
     it('OFF: a room that never hits costs the whole depth-2 tree, then gives up at depth 3', () => {
         const f = fakeFork(() => false);
-        const p = proveForcedHit(f.fork, { replayTicks: 134 });
+        const p = withContactFidelity({ forcedHitWitnessFirst: false }, () => proveForcedHit(f.fork, { replayTicks: 134 }));
         expect(p.proven).toBe(false);
         expect(f.forks()).toBe(36 + 36 * 36);
         expect(p.why).toMatch(/depth 3 needs 46656 fork/);
@@ -52,7 +53,7 @@ describe('fidelity SEARCHGAPS D-B — the forced-hit proof\'s hitless witness', 
         expect(p.why).toMatch(new RegExp(`survives ${FORCED_HITS.depthMax} tick`));
     });
     it('ON: a room that hits every input at tick 1 is proven exactly as OFF proves it (the witnesses all hit)', () => {
-        const off = proveForcedHit(fakeFork(() => true).fork);
+        const off = withContactFidelity({ forcedHitWitnessFirst: false }, () => proveForcedHit(fakeFork(() => true).fork));
         const on = withContactFidelity({ forcedHitWitnessFirst: true }, () => proveForcedHit(fakeFork(() => true).fork));
         expect(on.proven).toBe(true);
         expect({ ...on, nodes: null, advances: null }).toEqual({ ...off, nodes: null, advances: null });
