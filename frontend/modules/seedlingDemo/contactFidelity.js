@@ -1075,7 +1075,7 @@ export const CONTACT_FIDELITY = {
      * choreography lookup also reads R5's three L41 chains (`BAIT_CHOREOGRAPHIES_L41`, recorded on the game as
      * `r5-l41-part3`). OFF: byte-identical. `SEEDLING_CRUSHER_BAIT_PRESS_GOAL=0|1` for a node measurement.
      */
-    crusherBaitPressGoal: false,
+    crusherBaitPressGoal: true,
     /**
      * fidelity SEARCHGAPS D-B (wave 28) — THE FORCED-HIT PROOF ASKS ONE HITLESS WITNESS FIRST (`forcedHit.hitlessWitness`).
      * The breadth-first proof spent its whole depth-2 level (1,332 forks, each replaying the segment) before it could say
@@ -1083,7 +1083,7 @@ export const CONTACT_FIDELITY = {
      * of the request's 640 work units went to that tree, so the location solve ended on the deadline instead of on the
      * room's refusal. ON: the witness is asked first; OFF: byte-identical. `SEEDLING_FORCED_HIT_WITNESS_FIRST=0|1`.
      */
-    forcedHitWitnessFirst: false,
+    forcedHitWitnessFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
