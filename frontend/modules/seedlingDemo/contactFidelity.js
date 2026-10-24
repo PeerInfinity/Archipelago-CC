@@ -282,7 +282,7 @@ export const CONTACT_FIDELITY = {
      * wait paces an out-and-back cycle from the stance, chosen only when every previewed sample is clean
      * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
      */
-    movingWait: false,
+    movingWait: true,
     /**
      * fidelity MOVINGWAIT D4 — THE TOTEM SHOT'S EXPLOSION IS AN `int` (`bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadiusInt`).
      *
@@ -701,7 +701,7 @@ export const CONTACT_FIDELITY = {
      * static census body in the square (no stepped state) still refuses by name. OFF: byte-identical.
      * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
      */
-    bombBlastBody: false,
+    bombBlastBody: true,
     /**
      * fidelity APBOSSES D2 — THE R4 BOSS-REPORT AS3 (`apReportBosses.js`; PeerInfinity/Seedling `r4-boss-report`
      * @ `0eda15f785`, ⚖ user 2026-10-19 Q1–Q3: all seven bosses report, Bob is always fought, every map).
