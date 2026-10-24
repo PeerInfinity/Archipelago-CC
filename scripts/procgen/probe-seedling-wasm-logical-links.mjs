@@ -374,6 +374,8 @@ async function main() {
                 // ⛓ CROSS-LEVEL END — location legs ending in another level, the goals held behind them, the bot's self-checks
                 crossLevelEnds: st.crossLevelEnds ?? null, staleGoals: st.staleGoals ?? null, selfChecks: st.selfChecks ?? null,
                 held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries,
+                // ⛓ HOLD SEAM — each continuation's swim channel across its hold (the model's, the game's pin, the frames stepped)
+                holdSeams: st.holdSeams ?? null,
                 failed: st.failed, done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
                 // ⛓ ANYTIME — the budget the engine solves under, its expiries / provisional plays / held retries
                 budgetWork: e.budgetWork, upgradeWindowWork: e.upgradeWindowWork ?? null, backstopMs: e.backstopMs, backstops: st.backstops,

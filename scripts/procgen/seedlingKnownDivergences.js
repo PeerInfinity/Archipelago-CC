@@ -8,22 +8,11 @@
  * demands 0 again).
  */
 
-export const KNOWN_DIVERGENCES = Object.freeze([
-    Object.freeze({
-        id: 'l15-post-chest-walk',
-        // The message the probe prints, loudly, for each match.
-        finding: 'fidelity finding: L15 post-chest walk +0.25 px x @ t18',
-        // The leg: the exit continuation right after this location's leg.
-        goal: 'level_15__r1c5 -> level_14',
-        after: 'Level 015 - Chest',
-        level: 15,
-        t: 18,
-        // |got.x − expected.x| ≤ this (measured +0.25: battery 39870675057, repeat 39873208691), y equal.
-        maxDx: 0.5,
-        // The recovered re-solve of the same goal is done, on plan, within this many ticks (measured 5).
-        maxRecoveryTicks: 10,
-    }),
-]);
+// ⛓ RETIRED — `l15-post-chest-walk` (§5.124: L15 post-chest exit, +0.25 px x @ t18) was the HOLD SEAM, not a model gap
+// (fidelity SLOWFIX D-B): the held chest leg's frames stepped the game's pinned swim channel. js slice
+// `seedling-js-hold-seam` steps the shadow across the hold (`wasmHoldSeam.js`); logical-links B at c2390b3e8b played
+// the leg on plan (`divergences 0`, battery 40042527104). The row demands 0 again.
+export const KNOWN_DIVERGENCES = Object.freeze([]);
 
 /** Whether the history entry at `i` (a diverged play) is `entry`'s divergence, else the why not. */
 function matchEntry(history, i, entry) {
