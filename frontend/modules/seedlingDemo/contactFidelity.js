@@ -1181,8 +1181,11 @@ export const CONTACT_FIDELITY = {
      * corridor to the aim, is driven by holding a publisher of its group until the block is at rest on the destination
      * (L40: `button@816,400` → `pulser@592,576` → west into (35,36)). The Fire press is considered and named, not
      * executed. OFF: byte-identical. `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1` for a node measurement.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, FIREPUSH "Flip all 3 ON if A/B clean") turns it ON. Measured (CI,
+     * main f9342f25b8 + FIREPUSH): survey ON vs OFF one row (L40 step 67's refusal one link deeper, at
+     * `button@816,400`); OFF = main row-for-row.
      */
-    fireBlockPulseShove: false,
+    fireBlockPulseShove: true,
     /**
      * fidelity FIREPUSH (wave 28) — A FIRE PRESS REACHES AN ICE TURRET WHERE IT IS NOW (`presses.fireRespondersIn`).
      * `fire()`'s candidates are `collideRectInto` against each entity's CURRENT hitbox, and a dead `IceTurret` is a
@@ -1192,8 +1195,11 @@ export const CONTACT_FIDELITY = {
      * (488,407.5) — its box [399.5,415.5) is above the flame's [423.3,455.3) — and the model pushed it on to the t2
      * button. ON: the live rect and origin (`run.entities('turrets')`). OFF: byte-identical.
      * `SEEDLING_FIRE_LIVE_TURRET_REACH=0|1` for a node measurement.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, FIREPUSH "Flip all 3 ON if A/B clean") turns it ON. Measured (CI,
+     * main f9342f25b8 + FIREPUSH): survey ON vs OFF one row (L40 step 67's refusal one link deeper, at
+     * `button@816,400`); OFF = main row-for-row.
      */
-    fireLiveTurretReach: false,
+    fireLiveTurretReach: true,
     /**
      * fidelity FIREPUSH (wave 28) — A PULSER READS THE FLAG ITS BUTTON PUBLISHED LAST TICK (`levelRun.stepPulsersNow`).
      * `Game.loadlevel` adds `button` (`Game.as:2341`) and `buttonroom` (`:2342`) BEFORE `pulser` (`:2357`), and
@@ -1203,8 +1209,11 @@ export const CONTACT_FIDELITY = {
      * its glide at t5100 on the game and t5099 in the model, 0 px everywhere else. ON: the momentary (`pressedGroups`)
      * arm is lagged one tick, carried on the pulser's own state (`pressedLast`, in `stateDigestParts`' `visit` through
      * `pulserStates`); a LATCHED group is read as before. OFF: byte-identical. `SEEDLING_PULSER_PUBLISH_LAG=0|1`.
+     * ⛓ planning-12's flip (⚖ user, 2026-10-24, FIREPUSH "Flip all 3 ON if A/B clean") turns it ON. Measured (CI,
+     * main f9342f25b8 + FIREPUSH): survey ON vs OFF one row (L40 step 67's refusal one link deeper, at
+     * `button@816,400`); OFF = main row-for-row.
      */
-    pulserPublishLag: false,
+    pulserPublishLag: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

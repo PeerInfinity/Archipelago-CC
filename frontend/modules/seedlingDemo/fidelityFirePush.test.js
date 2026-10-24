@@ -46,10 +46,10 @@ const runAt = (tapeJson, upto, over) => withContactFidelity(over, () => {
 describe('FIREPUSH — the switches', () => {
     it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_FIRE_BLOCK_PULSE_SHOVE
         || process.env.SEEDLING_FIRE_LIVE_TURRET_REACH || process.env.SEEDLING_PULSER_PUBLISH_LAG)(
-        'all three ship OFF', () => {
+        'all three ship ON (⚖ user 2026-10-24, planning-12\'s flip)', () => {
             for (const k of ['fireBlockPulseShove', 'fireLiveTurretReach', 'pulserPublishLag']) {
-                expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(false);
-                expect(CONTACT_FIDELITY[k]).toBe(false);
+                expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(true);
+                expect(CONTACT_FIDELITY[k]).toBe(true);
             }
         });
 

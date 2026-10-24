@@ -262,10 +262,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
             whirlpoolDrown: true,
             // ⛓ fidelity FIREPUSH (wave 28): a fire block shoved by the room's pulser, a Fire press reaching a turret
-            // where it is now, a pulser reading its button's last-tick publish — shipped OFF.
-            fireBlockPulseShove: false,
-            fireLiveTurretReach: false,
-            pulserPublishLag: false });
+            // where it is now, a pulser reading its button's last-tick publish — shipped OFF;
+            // ⛓ planning-12's flip (⚖ user "Flip all 3 ON if A/B clean", 2026-10-24) turns them ON.
+            fireBlockPulseShove: true,
+            fireLiveTurretReach: true,
+            pulserPublishLag: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
