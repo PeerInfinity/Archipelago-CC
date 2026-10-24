@@ -53,7 +53,8 @@ describe('fidelity SKINSWING — the witnesses are the skin test\'s stands', () 
     });
 
     // ⛓ js skin-stands moved `bulb-L74` to [64,100]: its stand witness is `skinswing-l74-resite` now (planning-11).
-    it.each(['skinswing-l71-lavarunner', 'skinswing-l74-resite'])('%s: the staged tape run IS the stand\'s createJsRuntime boot, tick for tick (key ON)', async (name) => {
+    // ⛓ js l71-resite moved `lavarunner-L71` to (80,208): its stand witness is `skinswing-l71-resite` now.
+    it.each(['skinswing-l71-resite', 'skinswing-l74-resite'])('%s: the staged tape run IS the stand\'s createJsRuntime boot, tick for tick (key ON)', async (name) => {
         const w = W[name];
         const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
         const GAME = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));

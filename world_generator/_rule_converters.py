@@ -221,7 +221,7 @@ class RuleConverterMixin:
         - count == 1: Any condition must be true (Or of all conditions)
         - count == len(conditions): All must be true (And of all conditions)
         - count > len(conditions): Never possible (False_())
-        - General case: Generate combinations using Or/And
+        - General case: Or of the C(n, count) Ands when C(n, count) <= 120, else AtLeast
 
         For the general case with many conditions, we generate Python code that
         counts conditions. If all conditions are simple item_checks, we use a
@@ -290,15 +290,13 @@ class RuleConverterMixin:
                 combo_exprs.append(f'({and_expr})')
             return ' | '.join(combo_exprs)
 
-        # Fallback for truly complex cases: generate True_() with a warning
-        # This is conservative - locations will be accessible earlier than they should be
-        import logging
-        logging.getLogger(__name__).warning(
-            f"count_true rule with count={count} of {n} conditions ({num_combos} combinations) "
-            f"is too complex to expand, falling back to True_() - tracking may be inaccurate"
-        )
-        self.required_imports.add('True_')
-        return 'True_()'
+        # Above the limit, emit the Rule Builder's own "at least count of" node instead of
+        # expanding (code size explodes) or sinking to True_() (locations open early).
+        # AtLeast is the twin of count_true (rule_builder/ast_format.py parses one into the
+        # other); the exporter and the JS ruleBuilderEvaluator both evaluate it.
+        converted = [self._convert_rule(c) for c in conditions]
+        self.required_imports.add('AtLeast')
+        return f'AtLeast({count}, {", ".join(converted)})'
 
     def _convert_can_reach_region(self, rule: Dict[str, Any]) -> str:
         """Convert can_reach to CanReachRegion()."""

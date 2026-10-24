@@ -144,7 +144,7 @@ const armState = () => page.evaluate(() => ({
     editorManual: window.__editorManual ?? null,
     bootBox: document.getElementById('bootBox').value,
     bootNote: document.getElementById('bootNote').textContent,
-    bootFormControls: document.querySelectorAll('#bootForm input[type=checkbox]').length,
+    bootFormControls: document.querySelectorAll('#bootForm [data-boot-field]').length,
     swordTicked: document.getElementById('bootForm-sword')?.checked ?? null,
 }));
 
