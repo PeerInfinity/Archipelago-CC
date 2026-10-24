@@ -1225,7 +1225,7 @@ export const CONTACT_FIDELITY = {
      * own order bound (`MAX_FIRE_ROUTE_ORDERS`); a fire block already on a button dwells. OFF: byte-identical.
      * `SEEDLING_FIRE_BLOCK_ROUTE=0|1` for a node measurement.
      */
-    fireBlockRoute: false,
+    fireBlockRoute: true,
     /**
      * fidelity CORPSEBUMP D1 (wave 29) — A PUSHABLE'S GLIDE AND A TURRET CORPSE'S SLIDE STOP ON THE "Enemy" BODIES THE
      * RUN STEPS. `PushableBlock*`'s ctor does `solids.push("Enemy", "Player")` (`PushableBlock.as:28`,
@@ -1239,7 +1239,7 @@ export const CONTACT_FIDELITY = {
      * name within a tick's reach. `botDriverV2.runFire`'s enemy-room refusals narrow to the bodies those sweeps do not
      * see (`run.blockSweepBodyIds`). OFF: byte-identical. `SEEDLING_BLOCK_SWEEP_BODIES=0|1`.
      */
-    blockSweepBodies: false,
+    blockSweepBodies: true,
     /**
      * fidelity CORPSEBUMP D2 (wave 29) — AN ICE TURRET'S CORPSE IS A WEIGH'S HOLDER (`solverBot.deriveCorpseWeigh`).
      * `IceTurret.bump` moves a corpse one tile away from a Fire press (`IceTurret.as:172-203`), and a corpse on a
@@ -1250,7 +1250,7 @@ export const CONTACT_FIDELITY = {
      * each press audited against the corpse where it will be; then the fade is waited out. Needs `blockSweepBodies` and
      * `fireLiveTurretReach` ON (refused by name otherwise). OFF: byte-identical. `SEEDLING_CORPSE_BUMP_WEIGH=0|1`.
      */
-    corpseBumpWeigh: false,
+    corpseBumpWeigh: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
