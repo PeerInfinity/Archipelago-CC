@@ -25013,3 +25013,35 @@ early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_W
 - A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
 - "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
   window is a 2 px band at each hop.
+
+### Seedling hammer-phase SFF2 — a previewed drown in the strike scan is a skipped candidate
+
+⚖ User, 2026-10-23: *"Yes please"*: fix the (s) defect SFF handed over, merge current main into SFF, and re-check what
+SFF re-recorded, so the `STRIKE_ETA_FLOOR` flip can land. The report is
+`CC/docs/cloud-reports/seedling-hammer-strike-floor-fix.md`.
+
+**The fix (D1).** `deriveStrike`'s `walkTo` caught only the shake band, so a strike preview that drowned (`deathRefusal`,
+a `PhysicsV2Error`) left the whole solve. It now reads the death as a truncated walk that names it (A2's
+`previewOrDeath` rule and its test, `instanceof PhysicsV2Error`): no pass picks the candidate, and the walk loop refuses
+it as "the preview DIED". The walk loop calls `walkTo` OFF too, so the throw was OFF's as well, not only the floor-ON
+bounded pass's. OFF did not move: the identity block, the producer roster and the bounded set at `=0` are the same
+before and after.
+
+**Not enough on its own.** With the fix, `empty post-sword seed 30` still aborts ON: the same drown now leaves through
+`deriveRefuge`'s previews (the executor refuges once `deriveStrike` stops throwing). That site is outside the slice, so
+it is handed over. Measured in a scratch tree, the same catch there turns both slow rows green ON.
+
+**The counter (D2).** `etaSkipped` and `capSkipped` counted pairs out of the press's reach, so P2's box changed them
+(9,149 vs 16,202 on staging A's far refusal; the 8,084 in reach were equal). They now count in-reach pairs only, which
+makes the refusal P2-invariant. Counting only: no answer moved.
+
+**SFF's residue found at W0.** The 13 continuation tapes whose seam clock SFF's re-record moved kept their pre-flip
+v11 `tick0` latch, the game measurement the page writes on a continuation. `check-seedling-wasm-ship`'s CHAIN and
+CAMPAIGN arms refused (red at SFF's own head in CI). Re-derived on the game with `derive-seedling-tick0.mjs --only=…`:
+the gate is green.
+
+**Trap candidates.**
+- A preview that THROWS is a site-by-site defect: every `previewWalk` caller that is not wrapped can carry a previewed
+  death out of the solve. Fixing one caller moves the throw to the next one the executor reaches.
+- Re-recording a segment's seam clock leaves its `tick0` latch stale. No model gate reads `tick0` (the model drops it),
+  so only the browser gate or `derive-seedling-tick0 --check` catches it.
