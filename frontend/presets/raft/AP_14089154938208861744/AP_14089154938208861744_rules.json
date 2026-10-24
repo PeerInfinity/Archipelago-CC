@@ -7085,14 +7085,8 @@
             "name": "raft_can_drive"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Balboa Island Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Balboa Island Frequency"
           }
         ]
       },
@@ -7108,14 +7102,8 @@
             "name": "raft_can_drive"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Caravan Island Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Caravan Island Frequency"
           }
         ]
       },
@@ -7135,14 +7123,8 @@
             "name": "raft_can_drive"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Tangaroa Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Tangaroa Frequency"
           }
         ]
       },
@@ -7158,14 +7140,8 @@
             "name": "raft_can_drive"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Temperance Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Temperance Frequency"
           }
         ]
       },
@@ -7209,14 +7185,8 @@
             "name": "raft_can_access_temperance"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Utopia Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Utopia Frequency"
           },
           {
             "type": "helper",
@@ -7236,14 +7206,8 @@
             "name": "raft_can_drive"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Varuna Point Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Varuna Point Frequency"
           }
         ]
       },
@@ -7255,14 +7219,8 @@
             "name": "raft_can_navigate"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Vasagatan Frequency"
-              }
-            ]
+            "type": "item_check",
+            "item": "Vasagatan Frequency"
           }
         ]
       },
@@ -7299,14 +7257,8 @@
             "name": "raft_can_craft_bolt"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Antenna"
-              }
-            ]
+            "type": "item_check",
+            "item": "Antenna"
           }
         ]
       },
@@ -7318,26 +7270,14 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Battery"
-              }
-            ]
+            "type": "item_check",
+            "item": "Battery"
           }
         ]
       },
       "raft_can_craft_birdNest": {
-        "type": "helper",
-        "name": "has",
-        "args": [
-          {
-            "type": "constant",
-            "value": "Birds nest"
-          }
-        ]
+        "type": "item_check",
+        "item": "Birds nest"
       },
       "raft_can_craft_bolt": {
         "type": "and",
@@ -7347,14 +7287,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Bolt"
-              }
-            ]
+            "type": "item_check",
+            "item": "Bolt"
           }
         ]
       },
@@ -7366,14 +7300,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Circuit board"
-              }
-            ]
+            "type": "item_check",
+            "item": "Circuit board"
           }
         ]
       },
@@ -7389,14 +7317,8 @@
             "name": "raft_can_craft_circuitBoard"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Engine"
-              }
-            ]
+            "type": "item_check",
+            "item": "Engine"
           }
         ]
       },
@@ -7408,14 +7330,8 @@
             "name": "raft_can_get_dirt"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Grass plot"
-              }
-            ]
+            "type": "item_check",
+            "item": "Grass plot"
           }
         ]
       },
@@ -7427,14 +7343,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Hinge"
-              }
-            ]
+            "type": "item_check",
+            "item": "Hinge"
           }
         ]
       },
@@ -7450,14 +7360,8 @@
             "name": "raft_can_craft_bolt"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Machete"
-              }
-            ]
+            "type": "item_check",
+            "item": "Machete"
           }
         ]
       },
@@ -7469,14 +7373,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Net canister"
-              }
-            ]
+            "type": "item_check",
+            "item": "Net canister"
           }
         ]
       },
@@ -7492,14 +7390,8 @@
             "name": "raft_can_craft_bolt"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Net launcher"
-              }
-            ]
+            "type": "item_check",
+            "item": "Net launcher"
           }
         ]
       },
@@ -7511,14 +7403,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Empty bottle"
-              }
-            ]
+            "type": "item_check",
+            "item": "Empty bottle"
           }
         ]
       },
@@ -7534,14 +7420,8 @@
             "name": "raft_can_craft_hinge"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Receiver"
-              }
-            ]
+            "type": "item_check",
+            "item": "Receiver"
           }
         ]
       },
@@ -7557,14 +7437,8 @@
             "name": "raft_can_craft_hinge"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Shear"
-              }
-            ]
+            "type": "item_check",
+            "item": "Shear"
           }
         ]
       },
@@ -7576,14 +7450,8 @@
             "name": "raft_can_smelt_items"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Shovel"
-              }
-            ]
+            "type": "item_check",
+            "item": "Shovel"
           },
           {
             "type": "helper",
@@ -7607,14 +7475,8 @@
             "name": "raft_can_craft_hinge"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Steering Wheel"
-              }
-            ]
+            "type": "item_check",
+            "item": "Steering Wheel"
           }
         ]
       },
@@ -7630,14 +7492,8 @@
             "name": "raft_can_craft_bolt"
           },
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Zipline tool"
-              }
-            ]
+            "type": "item_check",
+            "item": "Zipline tool"
           }
         ]
       },
@@ -7667,14 +7523,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "helper",
-            "name": "has",
-            "args": [
-              {
-                "type": "constant",
-                "value": "Metal detector"
-              }
-            ]
+            "type": "item_check",
+            "item": "Metal detector"
           },
           {
             "type": "helper",
@@ -7717,14 +7567,8 @@
         ]
       },
       "raft_can_smelt_items": {
-        "type": "helper",
-        "name": "has",
-        "args": [
-          {
-            "type": "constant",
-            "value": "Smelter"
-          }
-        ]
+        "type": "item_check",
+        "item": "Smelter"
       },
       "raft_paddleboard_mode_enabled": {
         "type": "helper",

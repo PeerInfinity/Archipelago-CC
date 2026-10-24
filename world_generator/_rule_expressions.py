@@ -5,7 +5,7 @@ Rule expression mixin — complex expression conversion methods.
 import logging
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from ._unknown_kind import unknown_kind
+from ._unknown_kind import unknown_kind, unobtainable_item
 
 from ._codegen_utils import (
     is_placement_lookup,
@@ -63,15 +63,14 @@ class RuleExpressionMixin:
             # - Phantom items used as permanent blocks (e.g., Messenger's closed portal items)
             # - Event items that are never created (e.g., Landstalker's event_visited_tibor
             #   when teleport_tree_requirements != clear_tibor)
+            # The generated world can never hold such an item, so False_() is exact, not a
+            # placeholder: recorded by name in both modes, never raised.
             if (self.obtainable_items is not None
                     and item_name
                     and item_name not in self.obtainable_items
                     and isinstance(count, int) and count > 0):
-                import sys
-                print(f"LOSSY FALLBACK: Has('{item_name}', {count}) references unobtainable item, "
-                      f"using False_() (never accessible) as fallback", file=sys.stderr)
                 self.required_imports.add('False_')
-                return 'False_()'
+                return unobtainable_item('Has', item_name, 'False_()')
 
             self.required_imports.add('Has')
 
