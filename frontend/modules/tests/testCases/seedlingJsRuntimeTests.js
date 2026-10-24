@@ -2153,9 +2153,25 @@ async function seedlingLoopBotQueue(tc, label, steps, { maxMs = 120000, substrat
         gs.refillMana();
         const manaBefore = gs.getCurrentMana();
         const completed = tc.waitForEvent('loopState:queueCompleted', maxMs).catch(() => null);
+        // DIAG (seedling-js-batch-stuck, NOT FOR LANDING): loopState's frame-loop internals before/while parking.
+        const ls = loopStateSingleton;
+        const diagState = () => ({ proc: ls.isProcessing, paused: ls.isPaused, pur: ls._queuePausedUntilReset,
+            idx: ls.currentActionIndex, cur: ls.currentAction ? queueLine(ls.currentAction) : null,
+            prog: ls.currentAction?.progress ?? null, bot: ls._botExecutedAction ? queueLine(ls._botExecutedAction) : null,
+            del: ls._delegatedAction ? queueLine(ls._delegatedAction) : null, raf: ls._animationFrameId ?? null,
+            lft: ls._lastFrameTime ?? null, speed: ls.gameSpeed, man: ls._manualActionEntered ?? null,
+            mode: ls._blockForCurrentAction?.() ? ls.getBlockMode(ls._blockForCurrentAction().region, ls._blockForCurrentAction().instance) : null });
+        tc.log(`[${label}] DIAG before start: ${JSON.stringify(diagState())}`);
+        const diagFrames = { n: 0, maxGap: 0, last: performance.now() };
+        let diagRaf = requestAnimationFrame(function f(t) { diagFrames.n += 1; diagFrames.maxGap = Math.max(diagFrames.maxGap, t - diagFrames.last); diagFrames.last = t; diagRaf = requestAnimationFrame(f); });
+        const diagSamples = [];
+        const diagTimer = setInterval(() => diagSamples.push({ t: Math.round(performance.now() - t0), f: diagFrames.n, ...diagState() }), 1000);
         loopStateSingleton.startProcessing();
+        tc.log(`[${label}] DIAG after start: ${JSON.stringify(diagState())}`);
         const parked = await tc.pollForCondition(() => seedlingRegions.includes(loopStateSingleton.botSolverRegion?.()),
             `[${label}] a Bot block parked on a Seedling region (walkTo handed over)`, 15000, 20);
+        clearInterval(diagTimer); cancelAnimationFrame(diagRaf);
+        tc.log(`[${label}] DIAG park ${!!parked} at ${Math.round(performance.now() - t0)} ms; frames ${JSON.stringify(diagFrames)}; samples ${JSON.stringify(diagSamples)}; now ${JSON.stringify(diagState())}`, parked ? 'info' : 'error');
         tc.reportCondition(`[${label}] a Bot block parked on a Seedling region and handed its action to the controller`, !!parked);
         // Every goal the controller took (a link credit is a goal too), sampled as the queue runs.
         const sample = () => {
