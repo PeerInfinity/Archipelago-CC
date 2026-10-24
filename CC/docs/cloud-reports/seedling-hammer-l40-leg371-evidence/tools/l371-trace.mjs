@@ -33,6 +33,7 @@ const r2 = (v) => Math.round(v * 100) / 100;
 let passIdx = 0;
 let seenBomb = 0;
 let lastName = null;
+let lastLive = null;
 sb.REWIND_PROBE.ticks = { has: () => true };
 sb.REWIND_PROBE.sink = ({ t, kind, name, live }) => {
     const pass = passes[passIdx]?.pass;
@@ -42,6 +43,8 @@ sb.REWIND_PROBE.sink = ({ t, kind, name, live }) => {
         return;
     }
     lastName = name;
+    if (pass === want) lastLive = { t, hits: live.ledger('playerHits').length, deaths: live.ledger('playerDeaths').length,
+        bodyHits: (live.ledger('bombEvents') ?? []).filter((e) => e.what === 'body-hit').map((e) => `t${e.t}:${e.id.split('#')[1]}→${e.body}`) };
     if (pass !== want) return;
     const ev = live.ledger('bombEvents') ?? [];
     const news = ev.slice(seenBomb);
@@ -52,6 +55,7 @@ sb.REWIND_PROBE.sink = ({ t, kind, name, live }) => {
     console.log(`T ${t} ${name} p=${r2(live.state.x)},${r2(live.state.y)} d=${live.ledger('playerDeaths').length} hits=${live.ledger('playerHits').length} ${sp.join(' ')}${ne.length ? ` | ${ne.join(' ')}` : ''}`);
 };
 const answer = solveAnytime({ ...tape, source, levelSource }, { passes, onPass: (one) => {
+    if (one.pass === want) console.log(`LAST ${JSON.stringify(lastLive)}`);
     console.log(`PASS ${one.pass} ok=${one.ok} ${one.ok ? `${one.plan.solution.length} t` : String(one.message).slice(0, 400)}`);
     passIdx += 1;
     seenBomb = 0;

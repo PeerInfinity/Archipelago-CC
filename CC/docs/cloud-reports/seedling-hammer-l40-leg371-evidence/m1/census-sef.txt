@@ -1,0 +1,65 @@
+5226 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 33s
+5227 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5228 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5229 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 44s
+5230 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 41s
+5231 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 54s
+5232 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 44s
+5233 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5234 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 54s
+5235 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5236 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 51s
+5237 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 44s
+5238 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 39s
+5239 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5240 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 42s
+5241 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 42s
+5242 SOLVE 21e3fe5e 539 | SOLVE 1888 t 123 | EXHAUSTED@hold (bomb:bombpusher@112,128#13) 416 | {'shakeRefused': 0, 'rebootRefused': 0} 37s
+5243 refusal 4af59f36 642 | deadline@hold (?) 641 | deadline@? (walk) 1 | {'shakeRefused': 0, 'rebootRefused': 0} 35s
+5244 refusal 66956086 217 | HAMMER_SAFETY@kill t1339 92 | paced-hold refused (MOVING_WAIT, ?) 125 | {'shakeRefused': 0, 'rebootRefused': 0} 127s
+5245 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 19, 'rebootRefused': 0} 24s
+5246 refusal 5e24993b 204 | shake-throw(forecast) 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 19, 'rebootRefused': 0} 24s
+5247 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 53s
+5248 refusal 6264111c 204 | HAMMER_SAFETY@kill t1339 91 | paced-hold refused (MOVING_WAIT, ?) 113 | {'shakeRefused': 0, 'rebootRefused': 0} 75s
+5249 refusal 9459cdd3 183 | shake-throw(forecast) 91 | shake-throw(forecast) 92 | {'shakeRefused': 38, 'rebootRefused': 0} 29s
+5250 SOLVE 41a33840 321 | SOLVE 1843 t 119 | SOLVE 1780 t 202 | {'shakeRefused': 0, 'rebootRefused': 0} 41s
+5251 refusal 2b108f0c 167 | HAMMER_SAFETY@break 83 | HAMMER_SAFETY@break 84 | {'shakeRefused': 0, 'rebootRefused': 0} 22s
+5252 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 33s
+5253 refusal 93956fd3 173 | shake-throw(forecast) 86 | shake-throw(forecast) 87 | {'shakeRefused': 0, 'rebootRefused': 0} 32s
+5254 refusal 27075304 179 | shake-throw(forecast) 89 | shake-throw(forecast) 90 | {'shakeRefused': 0, 'rebootRefused': 0} 61s
+5255 refusal adde38cb 187 | reboot@kill t1524 (bomb bombpusher 15) 93 | reboot@kill t1524 (bomb bombpusher 15) 94 | {'shakeRefused': 0, 'rebootRefused': 2} 33s
+5256 SOLVE 38f72ec0 383 | reboot@kill t1649 (chaser bob ) 102 | SOLVE 1658 t 281 | {'shakeRefused': 0, 'rebootRefused': 1} 39s
+5257 refusal 93956fd3 169 | shake-throw(forecast) 84 | shake-throw(forecast) 85 | {'shakeRefused': 42, 'rebootRefused': 0} 21s
+5258 refusal 93956fd3 169 | shake-throw(forecast) 84 | shake-throw(forecast) 85 | {'shakeRefused': 42, 'rebootRefused': 0} 22s
+5259 refusal 760e6725 642 | EXHAUSTED@break (bomb:bombpusher@112,128#11) 407 | deadline@break (?) 235 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5260 SOLVE c4ad5e89 544 | SOLVE 1866 t 120 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 424 | {'shakeRefused': 0, 'rebootRefused': 0} 37s
+5261 SOLVE c4ad5e89 544 | SOLVE 1866 t 120 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 424 | {'shakeRefused': 0, 'rebootRefused': 0} 36s
+5262 SOLVE c4ad5e89 544 | SOLVE 1866 t 120 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 424 | {'shakeRefused': 0, 'rebootRefused': 0} 38s
+5263 SOLVE c4ad5e89 544 | SOLVE 1866 t 120 | EXHAUSTED@hold (bomb:bombpusher@112,128#12) 424 | {'shakeRefused': 0, 'rebootRefused': 0} 36s
+5264 refusal b2edb91f 165 | HAMMER_SAFETY@break 82 | HAMMER_SAFETY@break 83 | {'shakeRefused': 0, 'rebootRefused': 0} 23s
+5265 refusal 6bde639a 642 | EXHAUSTED@break (bomb:bombpusher@112,128#11) 412 | deadline@break (?) 230 | {'shakeRefused': 0, 'rebootRefused': 0} 46s
+5266 refusal 1f701a56 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 38, 'rebootRefused': 0} 22s
+5267 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 30s
+5268 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 29s
+5269 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 30s
+5270 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 28s
+5271 refusal 9459cdd3 165 | shake-throw(forecast) 82 | shake-throw(forecast) 83 | {'shakeRefused': 42, 'rebootRefused': 0} 34s
+5272 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5273 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 46s
+5274 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 51s
+5275 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 52s
+5276 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 45s
+5277 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 48s
+5278 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 43s
+5279 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 44s
+5280 SOLVE bb2b890e 328 | SOLVE 1890 t 124 | SOLVE 1736 t 204 | {'shakeRefused': 0, 'rebootRefused': 0} 37s
+
+55 rows; solves 31
+- 31× SOLVE
+- 13× shake-throw(forecast) / shake-throw(forecast)
+- 3× HAMMER_SAFETY@kill t1339 / paced-hold refused (MOVING_WAIT, ?)
+- 2× shake-throw(forecast) / paced-hold refused (MOVING_WAIT, ?)
+- 2× HAMMER_SAFETY@break / HAMMER_SAFETY@break
+- 2× EXHAUSTED@break (bomb:bombpusher@112,128#11) / deadline@break (?)
+- 1× deadline@hold (?) / deadline@? (walk)
+- 1× reboot@kill t1524 (bomb bombpusher 15) / reboot@kill t1524 (bomb bombpusher 15)
