@@ -1,0 +1,23 @@
+   1978 ticks, 85 spans — ends L40 (487.78,439.27) tile (30,27)
+   1937 ticks, 84 spans — ends L40 (487.78,439.27)
+   arms part at tnever (drive 1978 ticks, control 1937)
+   ✓ ⛓⛓⛓ THE FIRST PREDICTED KILL — three presses, three landed hits
+   ✓ ⛓ …and the corpse LATCHED SOLID, which needs the player off its 16x16 box
+   ✓ ⛔⛔ THE KILL-LOCK LEDGER IS NIL — COMPUTED, TWICE OVER, NOT ASSUMED
+      0 `tset == -1` lock(s) scanned in the room and 0 opened. Two independent reasons: every lock in L40 is a `wandlock` at tset 0..5 or a `keyType` bosslock, AND `IceTurret.death()` intercepts the removal so `classCount` never moves at all (totalEnemies 21 before and after). ⛔ The R4 refusal this leg lifts was exactly this consequence; the machinery runs the scan because "there were no kill locks" and "nobody looked" print the same thing.
+   ✓ ⛓ …and the corpse took 2 northward presses to the button
+   ✓ ⛓⛓⛓ LINK 4 IS OPEN, AND NOTHING IS STANDING ON IT BUT A CORPSE
+   ✓ ⛓ …without leaving L40, and without falling into L43
+   ✓ ⛓ …and none of L40's five spinners dies on the way
+   ✓ ⛔ THE ONLY LEDGER ENTRY IS LINK 3's BUTTONROOM — the kill writes NOTHING
+   ✓ ⛓⛓ THE CONTROL KILLS THE SAME TURRET — the field is the PUSH, not the kill
+   ✓ ⛓⛓⛓ …AND THE t2 GROUP NEVER OPENS — one `fire.bumps` PRESS apart
+      [wandlock@480,560] against the drive's [wandlock@448,432 wandlock@480,560 wandlock@512,480]. The corpse is pushed ONE tile instead of two and rests at (30,25): a 16x16 body at [480,496) x [400,416) against a button at [480,496) x [384,400) — ADJACENT and not overlapping, which is the whole margin the claim has. `wait.staysShut` checks it on every one of the 140 ticks, not at the end.
+   ✓ ⛓ …while link 3 still latches in BOTH arms, which is what makes it a control
+   ✓ ⛓ …and both arms come to rest in the same cell
+   ✓ ⛓⛓⛓ …AND THE ARMS ARE BYTE-IDENTICAL FOR THE WHOLE CONTROL
+      the control's 1937 ticks match the drive's first 1937 exactly, and the drive runs 41 longer — the second `fire.bumps` press and its wait. So the control is a PREFIX of the drive and the pair is one press apart in the strongest sense available: not "the same tape minus a span" (which a live shooter makes impossible — its volley clock is a function of whether it died) but the same walk, driven twice, diverging only where the experiment says it should.
+   ✓ ⛓ …and both arms take the SAME two blast freezes, at the same ticks
+      [1614 1722] in both. The kill lands at the same tick in both arms, so the shooter is stopped at the same tick — which is exactly why a control that did NOT kill would have a different clock.
+same r5-l40-part5: 7460 bytes
+same r5-l40-part5-control: 7426 bytes
