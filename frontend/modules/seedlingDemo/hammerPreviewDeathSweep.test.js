@@ -16,6 +16,9 @@
  * `deathRefusal` (SFF2's pool-staging pattern). With the fix the candidate is skipped; without it the search throws
  * (the mutants are in the evidence's `d2/mutants.txt`). ⛔ `probeCorridor`, the gate of the walk the run is about to
  * take, is NOT wrapped: there the death is the live run's.
+ *
+ * ⛓ hammer-phase PKB adds `deriveRefuge`'s other candidate-preview refusal, LB's hand-over 5b: the chaser forecast's
+ * camera shake band, staged the same way (the stepper throws the forecast's own words), under `PRESS_KILL_SHAKE_GUARD`.
  */
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
@@ -25,6 +28,7 @@ import {
     searchEncounterStrike,
 } from './solverBot.js';
 import { deathRefusal } from './playerPhysicsV2.js';
+import { PRESS_KILL_GUARD_COUNTS, withPressKillShakeGuard } from './pressKillGuards.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -103,6 +107,52 @@ describe('deriveRefuge — a refuge whose preview dies is skipped (SFF2\'s hand-
 
     it('a non-death error still throws', () => {
         expect(() => deriveRefuge(poisoned(runAt(G1, 1251), always, defect), new Set(), 45)).toThrow('a defect');
+    }, 120_000);
+});
+
+/**
+ * ⛓ hammer-phase PKB (LB hand-over 5b) — THE REFUGE PREVIEW'S SHAKE BAND. The chaser forecast throws when whether a
+ * chaser is on screen depends on `Game.shake`'s jiggle (`levelRun.js` `chaserForecast`'s `onScreenAt`, a plain
+ * `Error`). L371 traced it out of `deriveRefuge`'s candidate preview (`refugeNow` ← `noStrikeMove` ←
+ * `execKillByPressOnce`) on 16 of leg 371's 45 hammer phases, where `PRESS_KILL_SHAKE_GUARD` caught it only in
+ * `deriveStrike`'s `walkTo`. Staged here as PDS's deaths are: the preview stepper throws the forecast's own words on a
+ * chosen step (the message `isShakeBandThrow` recognises). ON, that candidate is refused and counted; OFF, it throws.
+ */
+const BAND = () => new Error('chaserForecast: whether bob bob@288,80 is on screen depends on where inside '
+    + '`Game.shake`\'s jiggle the camera landed, and the two draws that decide it are not indexable');
+
+describe('deriveRefuge — a refuge whose preview throws the shake band is refused (LB 5b, hammer-phase PKB)', () => {
+    it('G1\'s witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted '
+        + 'in shakeRefused', () => {
+        const was = PRESS_KILL_GUARD_COUNTS.shakeRefused;
+        const banded = withPressKillShakeGuard(true, () => deriveRefuge(
+            poisoned(runAt(G1, 1251), near({ x: 488, y: 872 }), BAND), new Set(), 45));
+        expect(banded).toMatchObject({ x: 488, y: 856, eta: 16 });
+        // six of the twelve candidates' walks pass within 6 px of (488,872) (measured)
+        expect(PRESS_KILL_GUARD_COUNTS.shakeRefused).toBe(was + 6);
+    }, 120_000);
+
+    it('every preview banded: no refuge (the kill\'s "nowhere to be"), not a throw', () => {
+        const was = PRESS_KILL_GUARD_COUNTS.shakeRefused;
+        expect(withPressKillShakeGuard(true, () => deriveRefuge(poisoned(runAt(G1, 1251), always, BAND), new Set(), 45)))
+            .toBeNull();
+        expect(PRESS_KILL_GUARD_COUNTS.shakeRefused - was).toBeGreaterThan(0);
+    }, 120_000);
+
+    it('the shake guard OFF rethrows the band (the pre-PKB behaviour)', () => {
+        const was = PRESS_KILL_GUARD_COUNTS.shakeRefused;
+        expect(() => withPressKillShakeGuard(false, () => deriveRefuge(
+            poisoned(runAt(G1, 1251), near({ x: 488, y: 872 }), BAND), new Set(), 45))).toThrow(/^chaserForecast: /);
+        expect(PRESS_KILL_GUARD_COUNTS.shakeRefused).toBe(was);
+    }, 120_000);
+
+    it('ON, an error that is not the forecast\'s band still throws (the live run\'s own band words included)', () => {
+        const live = () => new Error('levelRun: whether bob@288,80 is on screen at tick 1247 depends on where inside '
+            + '`Game.shake`\'s jiggle the camera landed');
+        expect(() => withPressKillShakeGuard(true, () => deriveRefuge(poisoned(runAt(G1, 1251), always, live),
+            new Set(), 45))).toThrow(/^levelRun: /);
+        expect(() => withPressKillShakeGuard(true, () => deriveRefuge(poisoned(runAt(G1, 1251), always, defect),
+            new Set(), 45))).toThrow('a defect');
     }, 120_000);
 });
 

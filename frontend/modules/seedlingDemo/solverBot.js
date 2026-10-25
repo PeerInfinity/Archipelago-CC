@@ -10762,9 +10762,27 @@ export function deriveRefuge(run, contacts, untilIndex) {
     // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
     const cut = REFUGE_ETA_CUT.enabled;
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
-        const walk = cut && best !== null
-            ? previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
-            : previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+        let walk;
+        try {
+            walk = cut && best !== null
+                ? previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
+                : previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+        } catch (e) {
+            /**
+             * ⛓ hammer-phase PKB — LB's HAND-OVER 5b: A REFUGE PREVIEW THE CAMERA'S SHAKE BAND CANNOT ANSWER IS A
+             * CANDIDATE REFUSED (`PRESS_KILL_SHAKE_GUARD`, ON since GF; OFF rethrows). The chaser forecast throws when
+             * whether a chaser is on screen depends on `Game.shake`'s jiggle (`chaserForecast`'s `onScreenAt`).
+             * `deriveStrike`'s `walkTo` refused that candidate by name since LB (HO1); this preview let it out of the
+             * whole solve. L371 traced it on 16 of L40 leg 371's 45 hammer phases (`onScreenAt ← previewWalk ←
+             * deriveRefuge ← refugeNow ← noStrikeMove ← execKillByPressOnce`, bomb `#9`'s blast at t1247). The test is
+             * HO1's own (`isShakeBandThrow`), the count is HO1's (`shakeRefused`: the guard's one band instrument), and a
+             * death is still `previewWalkOrDeath`'s (PDS). ⚖ The shake value is never modelled; the band stays, and
+             * only the candidate is refused. Every refuge refused ⇒ `null`, the kill's own "nowhere to be".
+             */
+            if (!PRESS_KILL_SHAKE_GUARD.enabled || !isShakeBandThrow(e)) throw e;
+            PRESS_KILL_GUARD_COUNTS.shakeRefused += 1;
+            continue;
+        }
         if (cut) {
             REFUGE_ETA_CUT_COUNTS.previews += 1;
             if (walk.truncated?.kind === 'stopped') REFUGE_ETA_CUT_COUNTS.cut += 1;
