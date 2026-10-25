@@ -25513,3 +25513,35 @@ of the 14 into the kill's named *"nowhere to be"*, at the same units; the other 
 - A band catch at one call site does not cover the band: the same forecast throws from the refuge preview, the walk's
   danger read (`refuseDanger` → `swordTickAt`) and the executor's corridor gate. Find the stack before naming the site.
 - "Nowhere to be" after the band catch is a refusal by the band, but its words still say no cell is clear.
+
+### Seedling hammer-phase BX — the shake band at the executor's checks
+
+⚖ User, 2026-10-25: *"Yes, I approve fast forwarding main, and all of the tasks that belong to this session."* It closes
+PKB's residue 1 (the band throws that still escape at `walkTo`'s own reads) and LB's hand-over 5b's second half (an
+all-banded refuge search says so). The report is `CC/docs/cloud-reports/seedling-hammer-executor-band.md`.
+
+**M — the design check.** Leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`)
+throws the band at the walk's gate (`refuseDanger` → `swordTickAt`, seam 5243 at the defaults) and at its corridor probe
+(`probeCorridor` → `previewWalk`, seams 5252–5254 with `PRESS_KILL_BOMBS=0`). Three treatments per site, by a scratch
+patch: counting the band as danger lets the throw out again from the ladder's rungs; a named refusal moves only the band
+phases, to refusals; standing one tick and asking again (the wait) turns 5252 and 5253 into solves, 5243 into the hold's
+own named refusal, and 5254 into a throw from a third site (`execHold` → `pacedHoldPlan` → `planPacedWait`). No
+treatment lost a solve. The wait was chosen at both sites. On L40's 47 page requests the wait moves one pass (leg 368's dashless, a probe band → the hold's named refusal), no answer;
+the named refusal moves the same pass's text; counting the band as danger moves nothing (the band escapes again).
+
+**I1 — `EXECUTOR_SHAKE_BAND` (OFF).** ON, either throw makes the walk stand one tick with no keys and re-ask its attempt:
+only if the untimed gate clears the standing box, with the live run the oracle of a hit or a crossing, at most
+`EXECUTOR_BAND_WAIT` (45) ticks per walk; each of those ends refuses the walk by name. OFF is byte-identical (371's
+census, both arms; the identity block; the roster). ON at the defaults 371 stays 30 of 45; bombs OFF 22 → 24.
+
+**I2 — the refusal names the band (default).** The press kill's *"nowhere to be"* gains *" (PRESS_KILL_SHAKE_GUARD: N
+refuge candidate(s) whose preview the camera-shake band hid are not counted.)"* when that tick's `deriveRefuge` refused
+any for the band. 371 at the defaults: no text moves; bombs OFF: its 9 *"nowhere to be"* phases (seam 5266: all 12
+candidates banded).
+
+**Trap candidates.**
+- A band catch at the two named sites does not cover the walk: the hold's paced-wait search (`planPacedWait`) throws the
+  same band after the wait (371 5254, bombs OFF). The executor's band sites are found by stack, one at a time.
+- The forecast's band is a camera question, not a danger: counting it as danger hands it to rungs that preview the same
+  forecast and throw it again.
+- Concurrent `>>` appends of long JSON lines tear (a line exceeds the pipe's atomic size): one writer per file.

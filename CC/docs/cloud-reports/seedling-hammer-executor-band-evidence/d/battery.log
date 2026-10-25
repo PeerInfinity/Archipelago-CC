@@ -1,0 +1,13 @@
+17:55:56 load 4.07 identity dflt start
+18:08:29 load 1.49 identity dflt rc=0
+18:08:29 load 1.49 producers dflt start
+18:10:54 load 4.60 producers dflt rc=0
+18:10:54 load 4.60 vitest dflt start
+18:23:19 load 5.71 vitest dflt rc=0
+18:23:19 load 5.71 identity on start
+18:35:58 load 1.68 identity on rc=0
+18:35:58 load 1.68 producers on start
+18:38:35 load 4.16 producers on rc=0
+18:38:35 load 4.16 vitest on start
+18:50:56 load 5.43 vitest on rc=0
+18:50:56 load 5.43 DONE

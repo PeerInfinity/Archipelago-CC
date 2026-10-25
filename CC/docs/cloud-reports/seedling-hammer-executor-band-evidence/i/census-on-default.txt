@@ -1,0 +1,19 @@
+phases solving: 30 of 45
+overlap pairs 10, identical answer+units 10
+- 30x SOLVE
+- 6x other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold 
+- 5x EXHAUSTED
+- 2x HAMMER_SAFETY(step)
+- 2x HAMMER_SAFETY(nowhere)
+bx (period sums): {'gate': 8, 'probe': 3, 'waited': 11, 'refused': 0} maxRun 0
+shakeRefused (period sum): 0
+
+transitions from W0:
+| SOLVE | SOLVE | identical | 30 |
+| other:solverBot(wasm-location-40) apitem | other:solverBot(wasm-location-40) apitem | identical | 5 |
+| EXHAUSTED | EXHAUSTED | identical | 5 |
+| HAMMER_SAFETY(step) | HAMMER_SAFETY(step) | identical | 2 |
+| HAMMER_SAFETY(nowhere) | HAMMER_SAFETY(nowhere) | identical | 2 |
+| band-throw | other:solverBot(wasm-location-40) apitem | moved | 1 |
+moved seams (period): [(5243, 'band-throw', 'other:solverBot(wasm-location-', 641, 641)]
+moved over all 55 seams: [5243]

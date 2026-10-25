@@ -1,0 +1,5 @@
+PASS: CAMPAIGN: no uncaught page errors during the ship — none
+PASS: CAMPAIGN: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+ALL PASS
+PASS lines: 415, FAIL lines: 0

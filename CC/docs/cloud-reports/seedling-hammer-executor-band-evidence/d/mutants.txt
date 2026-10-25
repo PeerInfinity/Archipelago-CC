@@ -1,0 +1,30 @@
+Mutants of solverBot.js in a scratch worktree, each restored byte for byte (cmp), against hammerExecutorShakeBand.test.js:
+m1: waitShakeBand's first line -> 'throw e' (the catch removed)
+m2: the I2 suffix's condition -> false
+m3: waitShakeBand catches any error (the isShakeBandThrow test dropped)
+== m1
+     ✓ ships OFF 1ms
+     ✓ `withExecutorShakeBand` sets it for the call and restores it, a throw included 1ms
+     ✓ with no band, ON walks the keys OFF walks (the first CAP ticks, key for key)  6232ms
+     ✓ OFF: the band escapes the whole solve, before a tick (PKB residue 1, 371 at seam 5243) 8ms
+     × ON: the walk stands one tick (no keys), asks the gate again, and walks on 1938ms
+     ✓ OFF: the band escapes the whole solve, before a tick (PKB residue 1, LB hand-over 5)  304ms
+     × ON: the walk stands one tick (no keys), plans and probes again, and walks on 453ms
+     × seam 5243, the defaults: OFF the gate's band is the answer; ON the walk waits 11 ticks and the hold refuses by name 33861ms
+     × seam 5252, `PRESS_KILL_BOMBS` OFF: OFF the corridor probe's band is the answer; ON the walk waits 18 ticks and the leg SOLVES 24621ms
+     ✓ 371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so  7327ms
+     ✓ 371 at 5265, the defaults: no refuge was banded, and the refusal is the words it was (BW's suffix, no other)  7399ms
+     × a band that never settles: the walk stands EXECUTOR_BAND_WAIT ticks, then refuses by name 10ms
+     ✓ an error that is not the forecast's band still throws: the live run's own band words, and a defect  389ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  5 failed | 8 passed (13)
+== m2
+     × 371 at 5266, `PRESS_KILL_BOMBS` OFF: every one of the 12 previewed refuges is banded, and the refusal says so 9124ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 12 passed (13)
+restored
+== m3
+     × an error that is not the forecast's band still throws: the live run's own band words, and a defect 1559ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 12 passed (13)
+restored

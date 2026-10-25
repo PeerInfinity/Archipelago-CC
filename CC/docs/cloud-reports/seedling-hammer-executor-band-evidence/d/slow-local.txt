@@ -1,0 +1,6 @@
+ ✓ frontend/modules/seedlingDemo/seedlingGenCapacity.slow.test.js (2 tests) 654902ms
+     ✓ pre-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  28333ms
+     ✓ post-sword, drawn seeds 1–60: 30 locations seat (re-rolls reported), 31 is refused  626566ms
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js (1 test) 53768ms
+     ✓ ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)  53766ms
+      Tests  3 passed (3)
