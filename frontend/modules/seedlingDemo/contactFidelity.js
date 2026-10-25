@@ -1382,7 +1382,7 @@ export const CONTACT_FIDELITY = {
      * thrusts), which empties the same cell; the walk then meets a silent lane. OFF: byte-identical.
      * `SEEDLING_LANE_WEIGH=0|1`.
      */
-    laneWeigh: false,
+    laneWeigh: true,
     /**
      * fidelity L67BK4 D2 (wave 31) — THE TOTEM IS FOUGHT, NOT ROUTED AROUND (`solverBot.execTotemBoss`,
      * `bossTotemPolicy.js`).
@@ -1398,7 +1398,7 @@ export const CONTACT_FIDELITY = {
      * the run's own stepped fight on forks, and plays the first variant that kills with no death (hitless first). OFF:
      * no row, byte-identical. `SEEDLING_TOTEM_BOSS_FIGHT=0|1`.
      */
-    totemBossFight: false,
+    totemBossFight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
