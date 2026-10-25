@@ -442,14 +442,14 @@
     },
     {
       "file": "l40button-l41-part0.json",
-      "tickCount": 1543,
+      "tickCount": 1601,
       "bootLevel": 40,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "l40button-l42-part0.json",
-      "tickCount": 1597,
+      "tickCount": 1663,
       "bootLevel": 40,
       "tapeVersion": 8,
       "noHazards": []
@@ -1239,7 +1239,7 @@
     },
     {
       "file": "r5-l40-part5.json",
-      "tickCount": 1978,
+      "tickCount": 2018,
       "bootLevel": 40,
       "tapeVersion": 5,
       "noHazards": []

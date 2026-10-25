@@ -113,6 +113,9 @@ describe('L40BUTTON D3 — the two arrivals\' witnesses (recorded on the game; 0
         it(`${w.name} (leg ${w.leg}): the model replays it to the part, through the cluster, with no hit`, () => {
             const t = tape(w.name);
             expect(t.boot).toEqual(w.boot);
+            // ⛓ L40REREC (wave 31): re-recorded on p4g at the shipped defaults with DAMAGE ON — the hold paced out of
+            // `bombpusher@112,128`'s blasts — so the no-hit row below is a claim, not the `noDamage` gate.
+            expect(t.noDamage).toBe(false);
             const out = runTape(t, { levelSource });
             const last = out.ticks.at(-1);
             expect(last.level).toBe(40);

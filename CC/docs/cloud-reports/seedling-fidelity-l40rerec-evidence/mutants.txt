@@ -1,0 +1,23 @@
+## m1: restore the retired PINNED_FIDELITY table (3 keys OFF). PREDICTED: both --check rows DRIFT (the plans go back to the pinned walks, 1543/1597 t old; the floor now ON may move l42 further)
+PASS: l40button-l41-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","kill","hold","break","hold","collect"], 1543 t, 6 s
+PASS: l40button-l41-part0: the model replays it to the part, damage on, with no hit — 1544 observations, ends {"level":40,"x":72.34285322518913,"y":142.9015638457861}, 0 hit(s)
+FAIL: the committed l40button-l41-part0 is what this script produces today — ⛔ DRIFT — re-run without --check
+## m1 (cont.): l40button-l42-part0 with the retired pins restored does not drift — its solve THROWS (the pins OFF + the strike floor ON, a combination never run before):
+Error: levelRun: a totempart ceremony began in level 40 while the chaser bob@272,112 is DYING. `Enemy.hitUpdate` and `Mobile.death` both sit OUTSIDE `Game.freezeObjects`, so the game advances them through every frozen frame — and this model spends a ceremony's phase A as a LUMP rather than as step
+## m2: r5 BUMP_STANCES[1] = STANCE (the pre-L40REREC second-press stance, the pin NOT restored). PREDICTED: the drive's second bump reaches nothing at the defaults (fireLiveTurretReach ON = the game) — the synthesis refuses the bump or the 'LINK 4 IS OPEN' claim is ✗; --check fails
+⛔ THE DRIVE FAILED, and the failure is the finding:
+
+⛔ THE DRIVE FAILED, and the failure is the finding:
+
+   legs[0] level 40 target 5 fire: iceturret@472,400 reports SETTLED 10 tick(s) after the press, i.e. it never started moving. The five bumps ran and the body is where it was — check the stance is inside the 32x32 fire rect and the 16 px radius cut.
+
+## m2 measured: the drive's synthesis refuses at target 5 (the second fire press) — as predicted
+
+## m3: the committed l40button-l41-part0 tape with noDamage flipped back to true. PREDICTED: r8Acceptance's two exposure rows red (declared, no longer exposed) + fidelityL40Button's l41 D3 row red; tapeRunner's l41 rows stay green (0 hits either way). MEASURED (one more r8 row than predicted: 'reds when the ROOMS move', which runs the same re-derivation):
+failed fidelityL40Button.test.js > L40BUTTON D3 — the two arrivals' witnesses (recorded on the game; 0 px in tapeRunner) l40button-l41-part0 (leg 378): the model replays it to the part,
+passed fidelityL40Button.test.js > L40BUTTON D3 — the two arrivals' witnesses (recorded on the game; 0 px in tapeRunner) l40button-l42-part0 (leg 381): the model replays it to the part,
+failed r8Acceptance.test.js > R8_ENEMY_BRIDGE — the prediction, stated first re-derives the exposed set from the committed roster and its recorded streams
+failed r8Acceptance.test.js > R8_ENEMY_BRIDGE — the prediction, stated first ⛓ K2 ON: the lavarunner rooms join, and exactly the declared `axe-l71-reach-l76` is newly exposed
+failed r8Acceptance.test.js > R8_ENEMY_BRIDGE — the prediction, stated first reds when the ROOMS move under a name that still matches
+passed tapeRunner.test.js > fixture differential l40button-l41-part0: JS stream matches the real game recording, exactly
+passed tapeRunner.test.js > the incremental stepping face (watch page) l40button-l41-part0: stepping to completion == runTape, byte for byte

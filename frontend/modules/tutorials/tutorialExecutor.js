@@ -12,6 +12,8 @@
  *
  * Desktop only for the cursor and outline: on the mobile layout (or with
  * `animate: false`, as the test runs) every action is performed directly.
+ * The mobile layout has no Golden Layout: its panels reach `findItem` as
+ * stand-in items backed by mobileLayoutManager (tutorialLayout.js).
  */
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { actionTarget } from './tutorialShape.js';
