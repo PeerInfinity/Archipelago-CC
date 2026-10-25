@@ -7,8 +7,8 @@
  */
 import { describe, it, expect } from 'vitest';
 
-import { chooseNext, grabOnTheWay, rankCandidates, routeRestarts, routeScore, DEFAULT_RESTART_PENALTY, TIE_BREAKS }
-    from './routeChooser.js';
+import { chooseNext, grabOnTheWay, lookaheadCost, rankCandidates, rankLookahead, routeRestarts, routeScore,
+    DEFAULT_LOOKAHEAD, DEFAULT_RESTART_PENALTY, TIE_BREAKS } from './routeChooser.js';
 
 const priced = (table) => (c) => table[c.name] ?? null;
 const names = (ranked) => ranked.map((r) => r.candidate.name);
@@ -77,5 +77,70 @@ describe('routeChooser', () => {
         const warpTarget = priced({ target: { hops: 6, restart: true }, warp: { hops: 1, restart: true } });
         expect(grabOnTheWay(target, [target, cands[4]], { cost: warpTarget, costVia }).name).toBe('warp');
         expect(grabOnTheWay(target, cands, { cost })).toBe(target);   // no costVia: nothing is grabbed
+    });
+
+    // ⛓ LOOKAHEAD — a one-way distance table: `dist[from][to]` hops (absent = no route), `rs` = routes that Restart.
+    const lookaheadOver = (dist, { rs = new Set(), start = 'S' } = {}) => {
+        const priceAt = (from) => (c) => {
+            const h = dist[from]?.[c.name];
+            return h === undefined ? null : { hops: h, restart: rs.has(`${from}>${c.name}`) };
+        };
+        return (cands, opts = {}) => {
+            const next = (c, state) => {
+                const remaining = (state?.left ?? cands).filter((x) => x !== c);
+                return remaining.length ? { state: { left: remaining }, candidates: remaining, cost: priceAt(c.name) } : null;
+            };
+            return rankLookahead(cands, priceAt(start), { next, ...opts });
+        };
+    };
+
+    it('LOOKAHEAD (k=2): a sequence cheaper than greedy\'s picks a farther first target', () => {
+        expect(DEFAULT_LOOKAHEAD).toEqual({ depth: 2, beam: 6 });
+        const A = { name: 'A' };
+        const B = { name: 'B' };
+        const dist = { S: { A: 1, B: 2 }, A: { B: 10 }, B: { A: 2 } };
+        // greedy: A (1) then B (10) = 11; lookahead: B (2) then A (2) = 4
+        expect(chooseNext([A, B], { cost: (c) => ({ hops: dist.S[c.name], restart: false }) })).toBe(A);
+        const ranked = lookaheadOver(dist)([A, B]);
+        expect(names(ranked)).toEqual(['B', 'A']);
+        expect(ranked[0].price).toEqual({ hops: 4, restarts: 0, lead: 2, restart: false, pocket: false });
+        // depth 1 is greedy
+        expect(names(lookaheadOver(dist)([A, B], { depth: 1 }))).toEqual(['A', 'B']);
+    });
+
+    it('LOOKAHEAD: equal totals go to the nearer first step, then progression-first, then listed', () => {
+        const A = { name: 'A' };
+        const B = { name: 'B' };
+        // A then B = 1 + 3; B then A = 3 + 1: a tie on the total, the nearer lead wins
+        expect(names(lookaheadOver({ S: { A: 1, B: 3 }, A: { B: 3 }, B: { A: 1 } })([B, A]))).toEqual(['A', 'B']);
+        // equal totals AND equal leads: progression first, else listed
+        const P = { name: 'P', progression: true };
+        const Q = { name: 'Q' };
+        const sym = { S: { P: 2, Q: 2 }, P: { Q: 1 }, Q: { P: 1 } };
+        expect(names(lookaheadOver(sym)([Q, P]))).toEqual(['P', 'Q']);
+        expect(names(lookaheadOver(sym)([Q, P], { tieBreak: TIE_BREAKS.listed }))).toEqual(['Q', 'P']);
+    });
+
+    it('LOOKAHEAD: Restarts dominate the sequence; the goal is never a middle step; a dead sequence is dropped', () => {
+        const A = { name: 'A' };
+        const B = { name: 'B' };
+        // A then B owes a Restart (A>B); B then A walks 30 — the walk wins under the infinite penalty
+        const rs = new Set(['A>B']);
+        const ranked = lookaheadOver({ S: { A: 1, B: 20 }, A: { B: 1 }, B: { A: 10 } }, { rs })([A, B]);
+        expect(names(ranked)).toEqual(['B', 'A']);
+        expect(routeRestarts(ranked[1].price)).toBe(1);
+        // the goal G beside A is not taken second: A's sequence continues to B
+        const G = { name: 'G', goal: true };
+        const withGoal = lookaheadOver({ S: { A: 1, B: 5, G: 9 }, A: { G: 0, B: 6 }, B: { A: 6, G: 1 }, G: { A: 1, B: 1 } })([A, B, G]);
+        expect(withGoal[0].candidate).toBe(A);
+        expect(withGoal[0].price.hops).toBe(7);
+        expect(withGoal[withGoal.length - 1].candidate).toBe(G);
+        // A leads nowhere (no route on to B): dropped; B leads on and wins
+        expect(names(lookaheadOver({ S: { A: 1, B: 5 }, A: {}, B: { A: 1 } })([A, B]))).toEqual(['B']);
+        // every sequence dead: the plain ranking
+        expect(names(lookaheadOver({ S: { A: 1, B: 5 }, A: {}, B: {} })([A, B]))).toEqual(['A', 'B']);
+        // the lookahead cost alone answers null for a dead one
+        expect(lookaheadCost(() => ({ hops: 1, restart: false }), {
+            next: () => ({ state: null, candidates: [B], cost: () => null }) })(A)).toBeNull();
     });
 });
