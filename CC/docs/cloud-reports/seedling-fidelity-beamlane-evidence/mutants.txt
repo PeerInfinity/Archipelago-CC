@@ -1,0 +1,15 @@
+BEAMLANE mutants (copy + restore; each predicted before it was made)
+
+M1 — `nearest` without the bob-reach widening (zz.lo/zz.hi instead of ± BEAM_BOB_SPAN)
+  predicted: fidelityBeamLane "seam 5643 solves" FAILS (the measured 5643..5652 refusal); the reach row may survive
+  measured:  5643 red; every other row green (incl. the reach row: the gate holds the lane centre at t229)  -> KILLED
+
+M2 — the crossing gate always open (`if (false && gap <= …)`)
+  predicted: >= 1 ON solve row fails (knocked crossing a band)
+  measured:  5643 and 5656 red  -> KILLED
+
+M3 — D3b's early-crossing guard removed (crossedEarly = false)
+  predicted: ON != OFF on leg 776's captured request
+  measured:  ON == OFF byte-identically on every capture held: base (seam 5591, 63 clocks), the mutant sweep's (6846, 63
+             clocks), B5's (6839, 501 clocks). The failing B1/B2 runs were not captured. SURVIVED (the guard is held by
+             the keyed sweep: B1/B2 failed in L104/L106, B5/B6/B8 done).
