@@ -50,7 +50,7 @@ export function createBossTotemPolicy(params) {
 }
 
 /**
- * One tick's keys. `view` is the body's row of `run.entities('bosses')` (with `totemBossFight` ON: `x`, `y`, `state`,
+ * One tick's keys. `view` is the body's row of the run's `bosses` family (with `totemBossFight` ON: `x`, `y`, `state`,
  * `walking`, `destroy`); `p` the player state; `t` the run's tick.
  */
 export function bossTotemPolicyStep(mem, { view, p, t }) {
