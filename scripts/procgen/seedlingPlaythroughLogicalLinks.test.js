@@ -69,7 +69,18 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
         const modelFree = (x) => [x.row, x.row.split('->').reverse().join('->')]
             .some((row) => modelVerdicts.includes(`${x.region}/${row} WALKABLE [free]`));
         expect(ruleless.filter((x) => modelFree(x)).map((x) => `${x.region} ${x.row}`)).toEqual(['level_94 r2c16->r3c4']);
-        const rest = ruleless.filter((x) => !modelFree(x));
+        // ⛓ RULES l55-waterfall: and a FALL — one-way, its reverse a climb up the same waterfall that costs the
+        // Feather (`dirs: {N: hasFeather}`, `Player.as:1557`). Read off the rows, never typed; only L52's floored pools
+        // (probe-seedling-l55-waterfall's top-swim is the top -> middle fall, on the game).
+        const featherClimb = playthroughAnalyzerOptions.resolveCondition({ flag: 'hasFeather' });
+        const fall = (x) => {
+            const [from, to] = x.row.split('->');
+            const back = regionOf(x.region).subgraph.internal_exits.find((e) => e.from === to && e.to === from);
+            return x.oneWay && JSON.stringify(back?.access_rule) === JSON.stringify(featherClimb);
+        };
+        expect(ruleless.filter((x) => !modelFree(x) && fall(x)).map((x) => `${x.region} ${x.row}`))
+            .toEqual(['level_52 r0c7->r2c2', 'level_52 r0c7->r5c10', 'level_52 r2c2->r5c10']);
+        const rest = ruleless.filter((x) => !modelFree(x) && !fall(x));
         expect(rest.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
         expect(rest.every((x) => x.oneWay)).toBe(true);
     });

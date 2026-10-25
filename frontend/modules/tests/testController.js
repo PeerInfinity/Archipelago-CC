@@ -181,6 +181,15 @@ export class TestController {
    * fraction of them, or shows a gap far larger than its interval, was
    * STARVED. Both readings are generic: they need no knowledge of what
    * the test was waiting for.
+   *
+   * ⛓ FRAME-STARVED: the poll runs on TIMERS, but app work driven by
+   * requestAnimationFrame (the Loops queue's `_processFrame`, a substrate's
+   * frame loop) advances only when the compositor delivers a frame. A poll
+   * whose timers ran on schedule while the page got almost no frames was
+   * not STUCK: the condition never had its chance. `stats.frames` /
+   * `stats.maxFrameGapMs` come from `_startFrameMeter` over the same span.
+   * (slice seedling-js-batch-stuck: a Bot park read STUCK at 750/750 polls
+   * and landed 3.4 s after the timeout, 18.4 s after the start it needed.)
    */
   _pollTimeoutEvidence(stats, timeoutMs, intervalMs) {
     const expected = Math.max(1, Math.floor(timeoutMs / intervalMs));
@@ -200,15 +209,49 @@ export class TestController {
     } else if (ratio < 0.5) {
       verdict = 'STARVED (the page did not get scheduled — app work on the '
         + 'main thread, or machine contention; not necessarily the code under test)';
+    } else if (stats.maxFrameGapMs !== undefined && stats.maxFrameGapMs > elapsedMs / 2) {
+      // Timers on schedule, frames not: rAF-driven work stood still for
+      // over half the budget.
+      verdict = 'FRAME-STARVED (timers ran on schedule but the page got no '
+        + `animation frame for ${(stats.maxFrameGapMs / 1000).toFixed(1)}s — rAF-driven app work `
+        + '(the Loops queue) could not advance; the compositor/GPU, not the condition)';
     } else {
       verdict = 'STUCK (the poll ran its expected iterations; the condition '
         + 'genuinely never became true)';
     }
 
     const errors = stats.checkErrors > 0 ? `, checkFn errors: ${stats.checkErrors}` : '';
+    const frames = stats.maxFrameGapMs === undefined ? ''
+      : `, ${stats.frames} frame(s), max frame gap ${stats.maxFrameGapMs}ms`;
     return `${stats.polls}/${expected} polls in ${(elapsedMs / 1000).toFixed(1)}s `
       + `(max gap ${stats.maxGapMs}ms vs ${intervalMs}ms interval, `
-      + `checkFn ${(stats.checkMs / 1000).toFixed(1)}s)${errors} — ${verdict}`;
+      + `checkFn ${(stats.checkMs / 1000).toFixed(1)}s${frames})${errors} — ${verdict}`;
+  }
+
+  /**
+   * Count animation frames into `stats` (`frames`, `maxFrameGapMs`, the
+   * last gap measured up to `stop()`). Returns `stop`. No rAF (a worker) →
+   * the fields stay undefined and the evidence omits them.
+   */
+  _startFrameMeter(stats) {
+    if (typeof requestAnimationFrame !== 'function') return () => {};
+    stats.frames = 0;
+    stats.maxFrameGapMs = 0;
+    let last = Date.now();
+    let id = null;
+    const tick = () => {
+      const now = Date.now();
+      stats.frames += 1;
+      stats.maxFrameGapMs = Math.max(stats.maxFrameGapMs, now - last);
+      last = now;
+      id = requestAnimationFrame(tick);
+    };
+    id = requestAnimationFrame(tick);
+    return () => {
+      if (id !== null) cancelAnimationFrame(id);
+      id = null;
+      stats.maxFrameGapMs = Math.max(stats.maxFrameGapMs, Date.now() - last);
+    };
   }
 
   // New method: pollForCondition
@@ -222,6 +265,7 @@ export class TestController {
       startTime, polls: 0, maxGapMs: 0, checkErrors: 0,
       checkMs: 0, lastPollAt: startTime,
     };
+    const stopFrameMeter = this._startFrameMeter(stats);
 
     return new Promise((resolve) => {
       const intervalId = setInterval(async () => {
@@ -246,10 +290,12 @@ export class TestController {
 
         if (conditionMet) {
           clearInterval(intervalId);
+          stopFrameMeter();
           this.log(`${logPrefix}Condition met for: \"${description}\".`);
           resolve(true);
         } else if (Date.now() - startTime > timeoutMs) {
           clearInterval(intervalId);
+          stopFrameMeter();
           this.log(
             `${logPrefix}Timeout polling for condition: \"${description}\". `
               + this._pollTimeoutEvidence(stats, timeoutMs, intervalMs),
@@ -271,6 +317,7 @@ export class TestController {
       startTime, polls: 0, maxGapMs: 0, checkErrors: 0,
       checkMs: 0, lastPollAt: startTime,
     };
+    const stopFrameMeter = this._startFrameMeter(stats);
 
     return new Promise((resolve) => {
       const intervalId = setInterval(async () => {
@@ -297,10 +344,12 @@ export class TestController {
         // Resolve if a truthy result is found (and no error occurred)
         if (!errorOccurred && result) {
           clearInterval(intervalId);
+          stopFrameMeter();
           this.log(`${logPrefix}Value found for: \"${description}\".`);
           resolve(result);
         } else if (Date.now() - startTime > timeoutMs) {
           clearInterval(intervalId);
+          stopFrameMeter();
           this.log(
             `${logPrefix}Timeout polling for value: \"${description}\". `
               + this._pollTimeoutEvidence(stats, timeoutMs, intervalMs),
