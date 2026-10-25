@@ -113,6 +113,7 @@
  * survive the SHORTEST fade, a named refusal when it can.
  */
 
+import { shakeJiggle } from './finalBossRng.js';
 import { PROFILE } from './seedlingProfile.js';
 
 /** `Main.as:36` — `super(160, 160, FPS)`. `FP.screen` never changes size. */
@@ -487,8 +488,9 @@ export function stepCameraBand(band, player, world, {
  * One `Game.view()` with the two draws SUPPLIED — the concrete transcription
  * the band is derived from.
  *
- * ⚠ NOTHING IN THE RUN CALLS THIS, and that is deliberate: a caller that had
- * the draws would need the draw INDEX, which is the thing nobody has. It
+ * ⚠ NOTHING IN THE RUN CALLS THIS WITH DRAWS, and that is deliberate: a caller that had
+ * the draws would need the draw INDEX, which is the thing nobody has. (⛓ SHAKEEXACT: `stepCameraSplit` calls it
+ * with the split jiggle's two VALUES, which are no draw.) It
  * exists so the band can be CHECKED rather than argued — `camera.test.js`
  * runs this at the extremes and inside, and asserts the result always lies
  * within `stepCameraBand`'s interval. A band that could not be falsified by
@@ -527,6 +529,44 @@ export function stepCameraJiggled(cam, player, world, {
     }
     return { x: Math.round(x), y: Math.round(y), shake: Math.max(shake - 1, 0) };
 }
+
+/**
+ * ⛓ fidelity SHAKEEXACT D1 — ONE `Game.view()` UNDER `Rng.split`, EXACT.
+ *
+ * ⚖ The user (2026-10-25, "Exact for split"): since AS3 3′c (`vendor/seedling` 0869ede) `view()` under `Rng.split`
+ * jiggles by `shake * Game.shakeJiggle(Game.time, axis) - shake/2` and takes NO draw (`Game.as:2004-2011`) — so on a
+ * split run the "two draws nobody can index" of the band's premise are not draws at all, and the camera is a POINT on
+ * every shaking frame. This is `stepCameraJiggled` with the two values `finalBossRng.shakeJiggle` gives (the one
+ * spelling of `Game.shakeJiggle`, 174/174 shaking frames at 0 px on p4f).
+ *
+ * @param {number} opts.time the `Game.time` this `view()` reads — BEFORE that frame's `time += timeRate`
+ *        (`Game.as:889-890`), i.e. `botStatus.game_time − 1` read after the frame. The caller must KNOW it; a run
+ *        whose clock is not exact keeps the band (`levelRun.stepCameraNow`).
+ * @returns {{x:number, y:number, shake:number}}
+ */
+export function stepCameraSplit(cam, player, world, {
+    shake = 0, time, cameraTarget = null, speedDivisor = CAMERA_SPEED_DIVISOR,
+} = {}) {
+    if (!Number.isFinite(time)) fail(`stepCameraSplit: the jiggle needs the exact Game.time, got ${time}`);
+    return stepCameraJiggled(cam, player, world, {
+        shake, cameraTarget, speedDivisor, r1: shakeJiggle(time, 0), r2: shakeJiggle(time, 1),
+    });
+}
+
+/**
+ * ⛓ fidelity SHAKEEXACT D1 — WHERE THE BAND STAYS ON A SPLIT RUN, by name (`levelRun.stepCameraNow` steps
+ * `stepCameraSplit` everywhere else while `CONTACT_FIDELITY.shakeExactSplit` is ON). Data, not a refusal: each row is
+ * a case where the model cannot know the jiggle, so the camera is a band exactly as before the ruling.
+ */
+export const SHAKE_BAND_KEPT = Object.freeze({
+    unsplit: 'a split:false tape: the jiggle is `Rng.cos()`, which IS `Math.random()` there (a draw nobody indexes)',
+    noClock: 'the run\'s `Game.time` is null (`gameTimeRefusal`: no `save.time`, no `dead_frames` pin, or the wind '
+        + 'cutscene\'s decaying `timeRate`)',
+    bandAlready: 'the camera is already a band: the jiggle is written into `FP.camera` and every later lerp compounds '
+        + 'on it, so only a level load collapses it',
+    acrossLoad: '`shakeAcrossLoad`: a fade is 17..24 frames, so a shake that can survive the shortest is refused',
+    rebootSettle: 'the `rebootShake` settle: its frames are the model\'s settle count, not the game\'s fade',
+});
 
 /**
  * ⛔⛔⛔ THE BAND NEVER CLOSES, AND THIS IS HOW WIDE IT STAYS.
