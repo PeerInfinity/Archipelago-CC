@@ -88,6 +88,19 @@ describe('entry gates — the engine primitive', () => {
         }
     });
 
+    it('a combo_list gate reads the same on both paths (the scripted tile.entry is not rule-only)', () => {
+        const w = deserializeMazeWorld(sidecar({
+            obstacleLib: { ...sidecar().obstacleLib, rope: { id: 'rope', clear_set: [['Rope'], ['Wings']] } },
+            entry_gates: [{ x: 1, y: 1, dir: 'N', gate: 'rope' }],
+        }));
+        for (const inv of [[], ['Rope'], ['Wings'], ['Swim']]) {
+            const s = at(w, 1, 2, new Set(inv));
+            const native = step(w, s, 'N');
+            expect(native !== null, `${inv}`).toBe(inv[0] === 'Rope' || inv[0] === 'Wings');
+            expect(scriptedStep(w, s, 'N', HELPERS, undefined, { latch: false }).next?.player_pos ?? null).toEqual(native?.player_pos ?? null);
+        }
+    });
+
     it('the search axis reads the gates\' items and counts', () => {
         expect(regionItems(world)).toEqual([SWIM]);
         expect(regionLevels(world)).toEqual(new Map([[SWIM, new Set([2])]]));

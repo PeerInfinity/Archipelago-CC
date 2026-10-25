@@ -67,21 +67,14 @@ function callHelper(context, name, cell, tile) {
 function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null) {
     const key = posKey(x, y);
     const obstacle = getObstacle(world, x, y) ?? null;
-    let clearSet = null;
-    if (obstacle !== null) {
-        const entry = world.obstacleLib?.[obstacle];
-        const type = entry?.clear_set_type ?? 'combo_list';
-        if (type === 'rule') clearSet = ruleToClearSet(entry.clear_rule, obstacle);
-        else if (type === 'combo_list') clearSet = (entry?.clear_set ?? []).map((combo) => combo.map((item) => [item, 1]));
-        else throw new Error(`spike: obstacle ${obstacle} is ${type}, only combo_list and rule are modelled`);
-    }
+    const clearSet = obstacle === null ? null : clearSetOf(world, obstacle);
     const lanes = (world.trapLanes?.get(key) ?? []).map((i) => world.trapLib[world.traps[i].id]);
     // ⛓ ENTRY GATES: the gate on entering this cell moving `dir` — its combos, `[]` for no entry that way, null for none.
     const gateKey = dir === null ? null : `${key},${dir}`;
     let entry = null;
     if (gateKey !== null && world.entryGates?.has(gateKey)) {
         const gate = world.entryGates.get(gateKey);
-        entry = gate === null ? [] : ruleToClearSet(world.obstacleLib[gate].clear_rule, gate);
+        entry = gate === null ? [] : clearSetOf(world, gate);
     }
     const rope = obstacle !== null ? world.obstacleLib?.[obstacle] : null;
     return {
@@ -103,6 +96,15 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         event: rope?.activates ? (rope.event ?? null) : null,
         entry,
     };
+}
+
+/** An obstacle-lib entry's clearance as `[item, n]` combos — an obstacle's, or an ENTRY GATE's (either type). */
+function clearSetOf(world, id) {
+    const entry = world.obstacleLib?.[id];
+    const type = entry?.clear_set_type ?? 'combo_list';
+    if (type === 'rule') return ruleToClearSet(entry.clear_rule, id);
+    if (type === 'combo_list') return (entry?.clear_set ?? []).map((combo) => combo.map((item) => [item, 1]));
+    throw new Error(`spike: obstacle ${id} is ${type}, only combo_list and rule are modelled`);
 }
 
 /** Join two `[item, n]` combos: an item named by both needs the larger count. */
