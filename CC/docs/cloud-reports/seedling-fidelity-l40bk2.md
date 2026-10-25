@@ -221,12 +221,40 @@ REFUSED 52. **2 rows differ:**
 - The first B arm (at `28ee2375`) also moved L39's four visits (66/94/135/155), by a suffix I had added to guard (iii)'s
   wall sentence. It was dropped at `39f4415f`, and the re-check matches A.
 
-SWEEP_SECTION
+**Keyed sweep ×2** (local, `probe-seedling-divergence-sweep.mjs --mode=inv --producer=solver --capture-requests`, p4g,
+`--contact-fidelity` arm A / arm B; the 52 legs in or into L40, re-derived at the base, `evidence/l40bk2-leg-keys.txt`;
+rows `evidence/sweep-{A1,B1,A2,B2}.jsonl`, `sweep-summary.txt`). A1 ran at `28ee2375` and A2 at `e5840ab2`, and the arm-A
+code is byte-identical across them (both keys OFF). B1, A2 and B2 ran at `e5840ab2`.
 
-PROBES_SECTION
+| run | done | failed | timeout | unresolved |
+|---|---|---|---|---|
+| A1 | 36 | 14 | 1 | 1 |
+| B1 | 36 | 13 | 2 | 1 |
+| A2 | 36 | 14 | 1 | 1 |
+| B2 | 36 | 14 | 1 | 1 |
+
+- **859 / 860 (Boss Key 2): failed → failed, deeper, in both B runs.** A refuses at `button@816,400` (the W0 text). B's
+  refusals are the south door's links:
+  - the chest ladder's `chaser bob@736,800`;
+  - the shake band at t691;
+  - `bobsoldier@880,832`'s sword;
+  - the press-kill death after 2 landings.
+- **Three legs flip verdict, each decided on B1's captured request replayed in node under each arm**
+  (`evidence/replay-b1-movers.txt`):
+  - **368** (`<- in_L41_0_160 -> Totem Part 64,144`): done / **failed** / done / done. At B1's seam 6147, **arm A plans
+    `1da60bcb4c0d`, the 1600 t plan the game hits at t1222**, and arm B refuses it at the bomb-pusher hold. That is D2's
+    intent, not a regression. At the other three seams the plan is the hitless 1558 t one in both arms.
+  - **371** (`<- in_L42_240_336`): failed / timeout / failed / failed. B1's request answers A = B (SOLVED `21e3fe5e9d55`):
+    noise.
+  - **408** (`level_42 <- in_L40_848_0 -> Totem Part 184,152`): failed / done / failed / failed. B1's request answers A = B
+    (`fced6fc93cf2`): noise.
+- **0 regressions by key; 1 intended mover (368 at a hitting seam).**
+
+**Probes standard, both keys ON** (the two literals flipped in the head worktree at `e5840ab2`, served on 8000, restored
+after; `evidence/probe-battery-standard-on.txt`): **11/11 ALL CHECKS PASSED**, `arrival-composites` included.
 
 **Bounded vitest, both keys ON** (env; 111 files at `e5840ab2`; `evidence/rows-on.txt`): 2,768 / 2,776 (1 skipped). By key
-(each key alone, `evidence/rows-on-{d1,d2}.txt`):
+(each key alone, `evidence/rows-on-{d1,d2}.txt`, measured at `39f4415f`; the final both-ON run is `rows-on.txt`):
 - **D1** — three CONTROLS pinned on guard (iii)'s old walls. A flip owes each a re-pin:
   1. `fidelityFirePush.test.js > OFF: the frontier names the fire block and refuses "Strategy 'shove' failed to apply" (legs
      869/870's answer)`. ON, the round passes to the next door;
@@ -325,7 +353,22 @@ PROBES_SECTION
 - D2's ON answer at the seams OFF hit is a refusal (the bomb hold), not a plan.
 - `nextPastUnbound` is measured on L40 only.
 
-BYTE_SECTION
+## Byte-inertia (OFF)
+
+- **The identity block at the code head `e5840ab2` (a worktree, its own server on 9738) equals W0** on every md5 row and all
+  six producer `--check`s (`evidence/identity-{w0,after}.txt`, a row diff). The only differing line is the reference count
+  (4 → 6 DIFFER in the worktree). That tree predates the docs commit that regenerated `instruments.js`/`docsIndex.js`; the
+  main tree at head reports ALL 7 MODULES AND 5 REGIONS MATCH.
+- **tapeRunner pairs: 635, `88fc7df4dd05d11dfd84ebbea675cc8e`**, base and head (`evidence/tape-runner-pairs-{w0,after}.txt`).
+  Roster 289.
+- **Bounded vitest AFTER** (defaults, 111 files at the code head; `evidence/rows-after.txt`): **2,776 / 2,776**. Against
+  BEFORE, the only differences are added rows: `fidelityL40Bk2` (12) and the two derived flashPanel settings rows.
+  `fidelityL32ArenaPrefix.slow` 5/5 at W0; `fidelityL40Bk2.slow` 1/1.
+- Censuses at head: surface 353 GREEN, constants 6,938 PASS, entities 566, profile 138.
+- **CI `JavaScript Unit Tests` at `55ed5aee` (run 40226629819): success, 22,880 passed, 0 failed; slow battery 269/269.** At
+  `28ee2375` it was red on two `generated.test.js` rows (the instruments index lacked the new probe); `55ed5aee` regenerates
+  it. The report's own commit changes `CC/docs/` only.
+- No committed tape, producer `--check` or identity row moves, ON or OFF. No rules, AS3, wasm or gitlink edit.
 
 ## Rows to BANK
 
