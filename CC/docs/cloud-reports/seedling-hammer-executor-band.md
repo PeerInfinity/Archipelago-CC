@@ -208,7 +208,7 @@ cannot is spend live ticks standing, and the oracle and the bound police that. T
 | `seedling-bot.md` | two paragraphs after *"The press kill's two guards"*: the switch (OFF) and the refusal suffix |
 | `seedling-bot-log.md` | `### Seedling hammer-phase BX — the shake band at the executor's checks` |
 | **JSUT** at I2 `847b4ec8`, run **40219013174** | suite 22,834 passed / **2 failed** / 0 skipped; **slow battery 268 / 268**. The 2 reds are `seedlingSolverSurface.test.js` (i) and (vii), reading the surface table I had not yet rewritten (reproduced locally: 2 red at that blob, 66 / 66 with the `--write`). The D commit carries the table |
-| **JSUT** at D `b9e40efe`, run **40225364377** | **suite 22,836 passed / 0 failed / 0 skipped; slow battery 268 / 268** () |
+| **JSUT** at D `b9e40efe`, run **40225364377** | **suite 22,836 passed / 0 failed / 0 skipped; slow battery 268 / 268** (`d/jsut-40225364377.txt`) |
 
 ## 8. What the planner's harvest A/B should expect
 
