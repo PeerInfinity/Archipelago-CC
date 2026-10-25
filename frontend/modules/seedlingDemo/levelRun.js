@@ -209,6 +209,8 @@ import {
     // ⛓⛓⛓ R6 SLICE 3: the shake half. `stepCameraBand` is what the camera
     // becomes once a hit lands — see `stepCameraNow` below.
     bandIsExact, cameraBand, onScreenUnderShake, shakeAcrossLoad, stepCameraBand,
+    // ⛓ fidelity SHAKEEXACT D1: a split run's shaking `view()`, exact (`CONTACT_FIDELITY.shakeExactSplit`).
+    stepCameraSplit,
     // ⛓ R6 SLICE 4: the writers table, DRIVEN — the totem writes two of the
     // roster's three shakes and both are `=`, not `+=`.
     applyShakeWriter,
@@ -3768,10 +3770,10 @@ export function createLevelRun({
      * ⚠ Not modelled, named: the player's own release-frame step (a player at rest takes none) and the span's other
      * entities (this is reached only with the switch ON; L28's only other bodies are its drills and the bobsoldier).
      */
-    const fallRockFrozenFrame = (r) => {
+    const fallRockFrozenFrame = (r, frame) => {
         // ⚠ `view()` reads the target the PREVIOUS frame's rock wrote (measured: the release frame's camera still
         // stands at the rock; the return starts a tick later — one frame earlier puts the contact a tick early).
-        stepCameraNow(state, worldFor(level).world);
+        stepCameraNow(state, worldFor(level).world, viewTimeInSpan(frame));
         if (r.cameraTarget !== null) bossCameraTarget = { ...r.cameraTarget };
         if (r.landed) shake = applyShakeWriter(shake, 'fallRockLanding');
         if (r.unfroze) {
@@ -3795,7 +3797,7 @@ export function createLevelRun({
                 { cleared: true, ...(spanOn ? { screen: { width: SCREEN_W, height: SCREEN_H } } : {}) });
             s = r.state;
             frames = i;
-            if (spanOn) fallRockFrozenFrame(r);
+            if (spanOn) fallRockFrozenFrame(r, i);
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap
@@ -5143,6 +5145,26 @@ export function createLevelRun({
      */
     let shake = 0;
     let camBand = null;
+    /**
+     * ⛓⛓ fidelity SHAKEEXACT D1 (`CONTACT_FIDELITY.shakeExactSplit`, OFF) — ⚖ the user (2026-10-25, "Exact for split").
+     * Under `Rng.split` `view()` jiggles by `shake * Game.shakeJiggle(Game.time, axis) - shake/2` and takes no draw
+     * (`Game.as:2004-2011`), so a split run's shaking camera is a POINT wherever the run knows the `Game.time` that
+     * `view()` reads. `exactJiggleTime(viewTime)` is that time, or `null` where the band stays — the cases are
+     * `camera.SHAKE_BAND_KEPT`'s, by name.
+     */
+    const rngSplit = rng?.split === true;
+    const exactJiggleTime = (viewTime) => (CONTACT_FIDELITY.shakeExactSplit === true && rngSplit
+        && Number.isFinite(viewTime) ? viewTime : null);
+    /**
+     * The `Game.time` a `view()` reads (`Game.as:889-890`: `view(); time += timeRate;`), from the clock's side of it:
+     * after a tick's `clock.tick()` it is `now() − 1`; inside a dead span not yet paid (`spendFrozen` after the loop),
+     * frame `f` (1-based) reads `now() + f − 1`. `null` while the clock is.
+     */
+    const viewTimeAfterTick = () => { const n = clock.now(); return n === null ? null : n - 1; };
+    const viewTimeInSpan = (frame) => { const n = clock.now(); return n === null ? null : n + frame - 1; };
+    /** Counters for the witness (D2/D3): shaking `view()`s stepped exactly, and bands opened. */
+    let shakeExactViews = 0;
+    let shakeBandOpens = 0;
     // ⛓ K2PREP D2: true from a load's settle until the next `view()` — the game's bot sample on that tick is
     // polled before the settle (measured: (0, 108) where the settled camera is (0, 80)), so a camera witness is
     // not asked there (`assertWitnessCamera`).
@@ -5167,7 +5189,8 @@ export function createLevelRun({
             const w = worldFor(level).world;
             for (let i = 0; i < CAMERA_LOAD_SETTLE_TICKS; i += 1) {
                 if (camBand === null && shake === 0) { cam = stepCamera(cam, state, w); continue; }
-                if (camBand === null) camBand = cameraBand(cam);
+                // ⛓ SHAKEEXACT: the band stays here (`SHAKE_BAND_KEPT.rebootSettle`).
+                if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
                 const r = stepCameraBand(camBand, state, w, { shake });
                 camBand = r.band;
                 shake = r.shake;
@@ -5203,7 +5226,7 @@ export function createLevelRun({
      * other two shake writers are the totem's (slice 4) — so `shake` is 0
      * for all 100 of them and this is `stepCamera` with a branch in front.
      */
-    const stepCameraNow = (player, worldRec) => {
+    const stepCameraNow = (player, worldRec, viewTime = null) => {
         camFresh = false;
         // ⛓⛓⛓ R6 SLICE 4: `Game.cameraTarget`, which the BossTotem
         // overwrites every frame he exists. It REPLACES the follow (and
@@ -5215,7 +5238,16 @@ export function createLevelRun({
             cam = stepCamera(cam, player, worldRec, { cameraTarget });
             return;
         }
-        if (camBand === null) camBand = cameraBand(cam);
+        // ⛓ fidelity SHAKEEXACT D1: a split run that knows this `view()`'s `Game.time` steps the jiggle exactly.
+        const jiggleTime = camBand === null ? exactJiggleTime(viewTime) : null;
+        if (jiggleTime !== null) {
+            const r = stepCameraSplit(cam, player, worldRec, { shake, time: jiggleTime, cameraTarget });
+            cam = { x: r.x, y: r.y };
+            shake = r.shake;
+            shakeExactViews += 1;
+            return;
+        }
+        if (camBand === null) { camBand = cameraBand(cam); shakeBandOpens += 1; }
         const r = stepCameraBand(camBand, player, worldRec, { shake, cameraTarget });
         camBand = r.band;
         shake = r.shake;
@@ -8571,6 +8603,9 @@ export function createLevelRun({
         let fcam = cam ? { ...cam } : null;
         let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
         let fshake = shake;
+        // ⛓ fidelity SHAKEEXACT D1: the `Game.time` the forecast's next `view()` reads — the live tick's own, whose
+        // `view()` the first advance below reproduces (`gameTimeAt`'s no-dead-frame assumption, named there).
+        let fviewTime = clock.now();
         /** ⛓ R9 slice 12b: the forecast's OWN clock, for the death staging. */
         let tickOffset = 0;
         // ⛓ U9-swim: the bag is frozen for a preview (nothing is collected).
@@ -8580,8 +8615,18 @@ export function createLevelRun({
         const target = bossCameraTarget;
         let first = true;
         const advanceCamera = (player) => {
+            const viewTime = fviewTime;
+            if (fviewTime !== null) fviewTime += 1;
             if (fband === null && fshake === 0) {
                 fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
+                return;
+            }
+            // ⛓ fidelity SHAKEEXACT D1: `stepCameraNow`'s exact arm, on the forecast's own camera.
+            const jiggleTime = fband === null ? exactJiggleTime(viewTime) : null;
+            if (jiggleTime !== null) {
+                const r = stepCameraSplit(fcam, player, worldRec, { shake: fshake, time: jiggleTime, cameraTarget: target });
+                fcam = { x: r.x, y: r.y };
+                fshake = r.shake;
                 return;
             }
             if (fband === null) fband = cameraBand(fcam);
@@ -12617,17 +12662,27 @@ export function createLevelRun({
             // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
             fcam: cam ? { ...cam } : null,
             fband: camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null,
-            fshake: shake, first: true }, { sctx, shieldOn, dark, worldRec, target });
+            fshake: shake, fviewTime: clock.now(), first: true }, { sctx, shieldOn, dark, worldRec, target });
     }
     /**
      * ⛓ fidelity TIMEDPASS D2: the forecast's body, over its own state — so `fork()` hands out an independent copy (the
      * timed pass's search branches on it). The state's members are `corridorBodyForecastNow`'s former locals, unchanged.
      */
     function corridorBodyForecastFrom(S, { sctx, shieldOn, dark, worldRec, target }) {
-        let { fl, dr, iframe, fcam, fband, fshake, first } = S;
+        let { fl, dr, iframe, fcam, fband, fshake, fviewTime = null, first } = S;
         const advanceCamera = (player) => {
+            const viewTime = fviewTime;
+            if (fviewTime !== null) fviewTime += 1;
             if (fband === null && fshake === 0) {
                 fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
+                return;
+            }
+            // ⛓ fidelity SHAKEEXACT D1: `stepCameraNow`'s exact arm, on the forecast's own camera.
+            const jiggleTime = fband === null ? exactJiggleTime(viewTime) : null;
+            if (jiggleTime !== null) {
+                const r = stepCameraSplit(fcam, player, worldRec, { shake: fshake, time: jiggleTime, cameraTarget: target });
+                fcam = { x: r.x, y: r.y };
+                fshake = r.shake;
                 return;
             }
             if (fband === null) fband = cameraBand(fcam);
@@ -12746,7 +12801,7 @@ export function createLevelRun({
                     dr: new Map(dr), iframe,
                     fcam: fcam ? { ...fcam } : null,
                     fband: fband ? { x: { ...fband.x }, y: { ...fband.y } } : null,
-                    fshake, first,
+                    fshake, fviewTime, first,
                 }, { sctx, shieldOn, dark, worldRec, target });
             },
             /** ⛓ fidelity TIMEDPASS D2: the forecast's drills as they stand (`{id, x, y, anim, sprite, hitsTimer, …}`). */
@@ -15016,7 +15071,7 @@ export function createLevelRun({
         // frozen frame, which is what can bring an enemy on screen during a
         // ceremony. The same argument as `freezeStep` above, one frame higher
         // up.
-        stepCameraNow(state, world.world);
+        stepCameraNow(state, world.world, viewTimeAfterTick());
         // ⛓ fidelity IGNEOUS D2: and `render()` runs on a frozen frame — the tiles keep counting (OFF: returns at once).
         if (!noclip) renderIgneousNow();
         /**
@@ -15844,7 +15899,8 @@ export function createLevelRun({
                     const d = stepPlayerDamage(damage);
                     damage = d.state;
                     if (damage.directionFace >= 0) state = { ...state, direction: damage.directionFace };
-                    stepCameraNow(state, world.world);
+                    // ⛓ SHAKEEXACT: frame `frames` of the span, before `spendFrozen` pays it.
+                    stepCameraNow(state, world.world, viewTimeInSpan(frames));
                 }
                 spendFrozen(frames, 'moonrock');
                 // The swing's animation ran out inside the span: `slashEnd`.
@@ -15881,7 +15937,7 @@ export function createLevelRun({
                 }
                 state = freed;
                 damage = stepPlayerDamage(damage).state;
-                stepCameraNow(state, world.world);
+                stepCameraNow(state, world.world, viewTimeInSpan(frames));
                 moonrockEvents.push({ t: ticksCompleted, level, id, what: 'released',
                     deadFrames: frames });
             },
@@ -19304,6 +19360,11 @@ export function createLevelRun({
         get stagedDamage() { return stagedDamage === null ? null : { ...stagedDamage }; },
         /** `Game.shake` right now — a static, so it outlives every world. */
         get shake() { return shake; },
+        /**
+         * ⛓ fidelity SHAKEEXACT: `{exactViews, bandOpens, split}` — shaking `view()`s the run stepped exactly (split,
+         * `shakeExactSplit` ON, a known `Game.time`), bands it opened, and whether its `rng` is split. A witness counter.
+         */
+        get shakeExactCounts() { return { exactViews: shakeExactViews, bandOpens: shakeBandOpens, split: rngSplit }; },
         /** ⛓ K2PREP D2: the camera the NEXT update's `onScreen` reads — exact `{x, y}`, or the shake band. */
         get cameraNow() {
             return { cam: cam ? { ...cam } : null,
@@ -22763,7 +22824,7 @@ export function createLevelRun({
             // reconstruction.
             // ⛓ R6 slice 6f booked `view()`'s two jiggle draws here; since p4f
             // (seedling-wasm-leak L4 3′c) the split jiggle takes none.
-            if (!next.transition) stepCameraNow(next, world.world);
+            if (!next.transition) stepCameraNow(next, world.world, viewTimeAfterTick());
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
             if (!noclip) {

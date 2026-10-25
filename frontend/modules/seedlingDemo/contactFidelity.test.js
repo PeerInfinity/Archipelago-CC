@@ -291,7 +291,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // the shot — shipped OFF.
             iceBlastShield: true,
             turretCircleKill: true,
-            iceTurretDeathAnim: true });
+            iceTurretDeathAnim: true,
+            // ⛓ fidelity SHAKEEXACT (wave 31): a split run's camera shake stepped exactly — shipped OFF.
+            shakeExactSplit: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

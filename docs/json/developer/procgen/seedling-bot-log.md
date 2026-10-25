@@ -25624,3 +25624,38 @@ drive steps north.
 - Retiring a `noDamage` flag is an exposure change, not just a re-record: the R8 bridge names the tape on the next run.
 - A combination of pins nobody ran can throw instead of drifting (m1: the retired pins with the floor ON throw a
   ceremony-while-dying refusal on l42).
+
+### Seedling fidelity SHAKEEXACT — a split run's camera shake stepped exactly; the band stays where the model cannot know the jiggle (`shakeExactSplit`, OFF)
+
+⚖ User, 2026-10-25 ("Exact for split"): *"Should the model compute the shake jiggle exactly for split runs, keeping the
+band only for split-off tapes and the fade-length / reboot cases?"* → "Exact for split". It replaces the 10-10 "keep the
+band" ruling for split runs. The report is `CC/docs/cloud-reports/seedling-fidelity-shakeexact.md`.
+
+**The game.** Since AS3 3′c `view()` under `Rng.split` adds `shake * Game.shakeJiggle(Game.time, axis) - shake/2` (no draw),
+reading `Game.time` before that frame's `time += timeRate` (`Game.as:889-890`, `:2004-2011`). Unsplit it is `Rng.cos()`,
+which is `Math.random()` there.
+
+**D1.** `camera.stepCameraSplit` (= `stepCameraJiggled` at `finalBossRng.shakeJiggle`). `levelRun.stepCameraNow` takes it on
+a split run whose clock counts and whose camera is still a point. The time is `clock.now() − 1` after a tick's
+`clock.tick()`, and `now() + f − 1` for frame `f` of a dead span the clock has not paid yet (the moonrock, a FallRock). The
+chaser and corridor-body forecasts step their own cameras the same way. The band stays for `camera.SHAKE_BAND_KEPT`'s
+cases: unsplit, no clock, a band already open, across a load, and the `rebootShake` settle. `run.shakeExactCounts` counts
+the exact views. OFF: byte-identical.
+
+**D2 (p4g, headless, `probe-seedling-shake-exact.mjs`).** Every sampled camera equals the model's point at 0 px, and every
+kept band contains the game's camera. Committed tapes: u14-moonrock-beam (60 exact dead-frame views), u15-turret-spit
+(4/4 shaking frames), r9-solve-0-v3. Walks re-declared split: the L41/L42 bomb and reboot walks (10/10 each, with the
+reboot band kept), the L75 lavarunner grenade (4/4) and chain (12/12), and L40's bomb blast (10/10). Recorded:
+`fixtures/shake-witness/` (3).
+
+**D3.** With the key ON, LB's leg 414 seam census (−10..10) loses its 3 live-run shake throws (5121–5123). They become the
+REBOOT guard's death refusal, and the other 18 seams are identical. The bounded set ON moves only the defaults pin. The
+band-text pins (`fidelityArrowLane`, `fidelityLavaRunner`, `fidelityF7`) run split:false or clockless tapes and stay green.
+
+**Trap candidates.**
+- A frozen bot tick is not a frozen clock: inside a dead span, `botStatus.tick` stands still while `game_time` runs. The
+  first poll at a tick can therefore be mid-span (u14 t2 was 451 frames behind), so join the polls on `game_time`.
+- Every committed camera witness was split:false (12 bomb/blast fixtures and 3 lavarunner fixtures). A split ruling had
+  no game evidence in the tree until a walk was re-declared split.
+- A clockless split tape keeps its band by `noClock` alone (the Owl tapes have no `save.time`). A test of the unsplit arm
+  needs a tape whose clock counts, or it passes for the wrong reason (mutant m3).

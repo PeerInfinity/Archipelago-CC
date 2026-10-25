@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 108,
-            "count": 155,
+            "browser": 109,
+            "count": 156,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 462,
-        "browser": 173,
-        "cited": 249,
-        "files": 476,
+        "blockStyle": 463,
+        "browser": 174,
+        "cited": 250,
+        "files": 477,
         "lineStyle": 14,
-        "withDocblock": 476,
-        "withFlags": 393
+        "withDocblock": 477,
+        "withFlags": 394
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -15044,6 +15044,88 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-seam-chain — ⚖ §6.2's MEASUREMENT.",
             "path": "scripts/procgen/probe-seedling-seam-chain.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-shake-exact.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "off"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "reuse"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "split"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-shake-exact — ⛓ seedling-fidelity-shakeexact D2: THE SHAKING CAMERA, ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-shake-exact.mjs"
         },
         {
             "argvHelpers": [],

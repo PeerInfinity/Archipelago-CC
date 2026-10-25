@@ -567,7 +567,8 @@ describe('who takes the box', () => {
             'probe-seedling-corpse-bump.mjs',
             'probe-seedling-turret-circle.mjs',
             'probe-seedling-l55-waterfall.mjs',
-            'probe-seedling-l0-tighter.mjs'];
+            'probe-seedling-l0-tighter.mjs',
+            'probe-seedling-shake-exact.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
