@@ -8379,6 +8379,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",

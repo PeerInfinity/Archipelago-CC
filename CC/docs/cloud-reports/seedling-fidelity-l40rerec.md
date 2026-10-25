@@ -209,6 +209,16 @@ bob@272,112 is DYING"*. It is not a default combination, so it is only informati
 
 ## CI
 
-This report is the LAST commit, so its push cancels the run at `74b5157`. CI is read at this report's own head with
-`node scripts/procgen/ci-vitest-summary.mjs <head> --wait`, and the result is in the session's final message. The report
-changes only markdown, so the code under test is `74b5157`'s.
+- **Run 40225369466 at `74b5157` was RED, and my own commits caused it.** All four red jobs had one root: the generated
+  procgen reference was stale.
+  - I regenerated it at `7628b19`, BEFORE writing the bot-log entry. The entry's new heading moves `docsIndex.js` /
+    `README.md`'s heading count (1185 → 1186; bot-log slugs 694 → 695).
+  - The evidence probe `probe-r5-pair-corpse.mjs` is enrolled in `instruments.js`.
+  - The red rows: vitest shard 3/3 (`docsRender` ×2), shard 2/3 (`generated.test.js --check`), headless gates shard 1
+    (`identity: generate-procgen-reference.mjs`, UNEXPECTED-RED), and the browser gate shard (`procgen-reference`).
+  - Every other row was green: shard 1/3, the slow battery 268/268, and the vitest suite 22,863 passed / 3 failed, all
+    three of them this cause.
+- **The fix**: the reference is regenerated after the last doc edit (`--check`: ALL MATCH; `procgenDocs/` 493/493
+  locally). It is pushed with this report, and the run at that head is quoted in the session's final message.
+- **Trap candidate**: regenerate the procgen reference AFTER the last markdown edit (the bot log counts), not after the
+  last code edit. A docs-only change can move it.
