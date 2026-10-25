@@ -76,7 +76,13 @@ export const ARRIVAL_INSIDE_SOLID = 'arrival-inside-solid';
 export const REPLAN_EVERY = 8;
 /** Arrival tolerance at a waypoint (botDriverV1's default). */
 export const WALK_TOLERANCE = 1;
-/** A walk that has neither completed nor been replaced after this many driven ticks gives up, by name. */
+/**
+ * A walk that has neither completed nor been replaced after this many ticks THE WALKER DROVE gives up, by name.
+ * ⛓ L12→L21 STALL — a tick the solver's plan drives is not counted: the plan is bounded by its own length, each tick
+ * is checked against its expected row (a mismatch refutes it) and a played-out plan refutes too, up to the solver's
+ * refutation cap (a named failure). Counted, the clock cut a sound plan longer than itself (L12's pit to L21 from
+ * r0c19's door: 2364–2564 planned ticks, failed at 1800 "stalled" mid-plan).
+ */
 export const WALK_GIVE_UP_TICKS = 30 * 60;
 
 export const WALK_STATES = Object.freeze({
@@ -255,6 +261,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let floorOf = null;
     let sincePlan = Infinity;
     let driven = 0;
+    /** ⛓ L12→L21 STALL — the ticks the walker drove itself (the give-up clock); `driven` counts the solver's too. */
+    let walked = 0;
     let plans = 0;
     let planError = null;
     /** ⛓ S4 — how the exit goal was last resolved: `'door'` (a teleporter) or `'pit'`. */
@@ -285,6 +293,14 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         reason = why ?? null;
         waypoints = null;
         emit(next, why, extra);
+    };
+
+    /** ⛓ L12→L21 STALL — the give-up names what the solver did before it: the ticks its plans drove, its last solve's pass. */
+    const solverShare = () => {
+        if (driven === walked) return '';
+        const last = solver?.stats?.lastSolve ?? null;
+        return `; the solver's plan(s) drove ${driven - walked} tick(s) before it`
+            + `${last ? ` (last solve: ${last.keys} tick(s), pass ${last.pass ?? '—'}${last.expired ? ', a later pass cut at its work budget' : ''})` : ''}`;
     };
 
     /** The point and the teleporter (if any) the goal names in the live run, or a refusal. */
@@ -351,7 +367,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         get goal() { return goal ? { ...goal } : null; },
         get playing() { return playing; },
         get stats() {
-            return { plans, driven, planError, declined, retries, retryLog: retryLog.map((r) => ({ ...r })), stepOffs };
+            return { plans, driven, walked, planError, declined, retries, retryLog: retryLog.map((r) => ({ ...r })), stepOffs };
         },
         /** ⛓ S1 — true when the last `heldFor` returned the solver's keys. */
         get solverDriving() { return solverDriving; },
@@ -363,6 +379,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             waypoints = null;
             sincePlan = Infinity;
             driven = 0;
+            walked = 0;
             planError = null;
             declined = null;
             retries = 0;
@@ -402,11 +419,11 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             via = r.pit ? 'pit' : 'door';
             if (state !== WALK_STATES.WALKING) settle(WALK_STATES.WALKING, null);
             if (stepBudget > 0) stepBudget -= 1;
-            if (driven >= giveUpTicks) {
+            if (walked >= giveUpTicks) {
                 settle(WALK_STATES.FAILED, `not reached within ${giveUpTicks} ticks — stalled at `
                     + `(${run.state.x}, ${run.state.y})${planError ? `; the planner said: ${planError}` : ''}`
                     + `${r.latched && stepOff ? `; still latched on the goal teleporter — stepping off to (${stepOff.point.x}, ${stepOff.point.y}) never got there` : ''}`
-                    + `${declined ? `; the solver declined: ${declined}` : ''}`);
+                    + `${declined ? `; the solver declined: ${declined}` : ''}${solverShare()}`);
                 return null;
             }
             if (solver && declined !== null && retries < retryMax && solver.enabled
@@ -472,6 +489,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 }
             }
             driven += 1;
+            walked += 1;
             if (declined !== null) sinceDecline += 1;
             if (waypoints === null || sincePlan >= replanEvery) {
                 try {
