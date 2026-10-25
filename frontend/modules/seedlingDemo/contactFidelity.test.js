@@ -272,7 +272,18 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity CORPSEBUMP (wave 29): the block's glide and the corpse's slide see the stepped bodies — shipped OFF.
             blockSweepBodies: true,
             // ⛓ fidelity CORPSEBUMP D2 (wave 29): an ice turret's corpse bumped onto a button as a weigh's holder — shipped OFF.
-            corpseBumpWeigh: true });
+            corpseBumpWeigh: true,
+            // ⛓ planning-12's flip (⚖ user 2026-10-24) turns the wave-29 MISCRES + L40RES keys ON.
+            // ⛓ fidelity MISCRES D1 (wave 29): REMBODY's rule for drills / wallflyers / ice turrets, and the forecast
+            // fading a corpse — shipped OFF.
+            nonChaserRemovalBlocks: true,
+            forecastCorpseFade: true,
+            // ⛓ fidelity MISCRES D3 (wave 29): the phase arm stalls at the walk's start first in an igneous room — OFF.
+            phaseDodgeArrivalStall: true,
+            // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
+            // spinner sees a responder's turn-off one tick later — shipped OFF.
+            stanceReentryNextDoor: true,
+            spinnerLockLag: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

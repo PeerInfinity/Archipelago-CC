@@ -50,6 +50,7 @@ export class GraphDataManager {
       // debug while a rebuild is pending.
       this.ui.lastBuiltStaticData = staticData;
       this.ui.overlayManager.onGraphRebuilt();
+      this.ui.refreshNodePicker?.();
 
       // Force a re-layout when loading new rules
       if (isReload && this.ui.cy) {

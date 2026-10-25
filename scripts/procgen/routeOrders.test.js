@@ -100,4 +100,43 @@ describe('routeOrders', () => {
         const legs = [{ regions: ['Hub', 'Menu', 'Hub'] }, { regions: ['Pit', 'Menu', 'Hub'] }];
         expect(routeMetrics(legs, [['Hub -> Menu', 'GameStart'], ['Restart', 'GameStart']]).restarts).toBe(1);
     });
+
+    it('`+grab`: a row the pick route crosses at zero detour is taken first, and that saves the Restart', () => {
+        // Start <-> East; Start -> Hall -> Pit one-way. Sphere 0: the Pit and East; sphere 1: the Hall, on the way in.
+        const hall = { name: 'Hall', exits: [{ name: 'Hall -> Pit', connected_region: 'Pit', access_rule: T }],
+            locations: [{ name: 'H Hall Chest', access_rule: T, item: { name: 'Coin', advancement: false } }] };
+        const rules = { regions: { 1: {
+            Menu: { name: 'Menu', exits: [{ name: 'GameStart', connected_region: 'Start', access_rule: T }], locations: [] },
+            Start: { name: 'Start', exits: [{ name: 'Start -> East', connected_region: 'East', access_rule: T },
+                { name: 'Start -> Hall', connected_region: 'Hall', access_rule: T }], locations: [] },
+            East: { name: 'East', exits: [{ name: 'East -> Start', connected_region: 'Start', access_rule: T }],
+                locations: [{ name: 'B East Chest', access_rule: T, item: { name: 'Coin', advancement: false } }] },
+            Hall: hall,
+            Pit: { name: 'Pit', exits: [], locations: [{ name: 'A Pit Chest', access_rule: T, item: { name: 'Coin', advancement: false } },
+                { name: 'Z Pit Chest', access_rule: T, item: { name: 'Coin', advancement: false } }] },
+        } }, exporter: { 1: { return_to_menu: true, assume_bidirectional_exits: false } } };
+        const log = [['0.1', 'A Pit Chest'], ['0.2', 'B East Chest'], ['1.1', 'H Hall Chest'], ['2.1', 'Z Pit Chest']]
+            .map(([sphere_index, n]) => ({ type: 'state_update', sphere_index, player_data: { 1: { sphere_locations: [n] } } }));
+        const { regions } = walkGraphOf(rules);
+        const ctx = { regions, ruleHolds: makeRuleHolds(rules), start: 'Start', restart: true, rows: rowsOfSphereLog(log, regions) };
+        const plain = priceOrdering({ ...ctx, ordering: 'sphere-cheapest+sweep' });
+        expect(plain.order.map((o) => o.location)).toEqual(['B East Chest', 'A Pit Chest', 'Z Pit Chest', 'H Hall Chest']);
+        expect(plain.metrics).toMatchObject({ restarts: 1 });
+        const grab = priceOrdering({ ...ctx, ordering: 'sphere-cheapest+sweep+grab' });
+        expect(grab.order.map((o) => o.location)).toEqual(['B East Chest', 'H Hall Chest', 'A Pit Chest', 'Z Pit Chest']);
+        expect(grab.metrics).toMatchObject({ restarts: 0, hops: 4 });
+    });
+
+    it('`+pocket-item`: a pocket its OWN item opens the way out of is no pocket', () => {
+        // From Hub: the Pit (1 hop, one-way in) and East (1 hop) tie. The Pit's chest holds the Key that opens Pit -> Hub.
+        const rules = rulesDoc();
+        rules.regions[1].Pit.exits = [{ name: 'Pit -> Hub', connected_region: 'Hub', access_rule: { rule: 'Has', args: { item_name: 'Key' } } }];
+        rules.regions[1].Pit.locations[0].item = { name: 'Key', advancement: true };
+        const { regions } = walkGraphOf(rules);
+        const ctx = { regions, ruleHolds: makeRuleHolds(rules), start: 'Hub', restart: true,
+            rows: rowsOfSphereLog(LOG, regions, '1', goalItemOf(rules)).filter((r) => r.location !== 'C Hub Chest') };
+        // items held NOW: the Pit is a pocket, East goes first; with the Pit chest's own Key held it is not
+        expect(orderRows({ ...ctx, ordering: 'reachable-cheapest+pocket' })[0].location).toBe('B East Chest');
+        expect(orderRows({ ...ctx, ordering: 'reachable-cheapest+pocket-item' })[0].location).toBe('A Pit Chest');
+    });
 });

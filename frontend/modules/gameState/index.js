@@ -328,7 +328,9 @@ function handleRemoteAppReady(data, propagationOptions) {
             eventBus.publish('gameState:regionChanged', {
                 newRegion: currentRegion,
                 oldRegion: null,
-                source: 'gameState-init'
+                source: 'gameState-init',
+                // Not a move: tells the newly ready remote where the player is.
+                resync: true
             });
             log('info', `[${moduleId} Module] Published initial region: ${currentRegion}`);
         }

@@ -206,7 +206,9 @@ export class WindowAdapterCore {
                     // Publish region changed event so window can sync
                     this.eventBus.publish('gameState:regionChanged', {
                         oldRegion: null,
-                        newRegion: currentRegion
+                        newRegion: currentRegion,
+                        // Not a move: tells the newly connected page where the player is.
+                        resync: true
                     });
                 } else {
                     log('debug', 'No current region to send to window');

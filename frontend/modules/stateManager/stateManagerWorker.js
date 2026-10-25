@@ -599,6 +599,7 @@ async function handleMessage(message) {
         );
         self.postMessage({
           type: 'rulesLoadedConfirmation',
+          loadSeq: message.payload.loadSeq, // echoed: lets the proxy drop an overtaken load
           initialSnapshot: initialSnapshot,
           // The loaded SLOT's game (rules F4), not the document label.
           gameName: slotGameName(stateManagerInstance),

@@ -22869,6 +22869,63 @@ function solveSegmentUnder({
         return null;
     };
 
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY L40RES — **A STANCE WALK THAT RE-ENTERS ITS OWN ORDER WALKS ON ALONG ITS FRONTIER**,
+     * behind `CONTACT_FIDELITY.stanceReentryNextDoor` (OFF).
+     *
+     * Measured on L40 from the south (survey step 93). The frontier names `wandlock@448,432` (group 2, nearest the
+     * aim); its opener `button@480,384` is inside the room it shuts, so the hold stance (488,392) was derived under
+     * the stance hypothesis THROUGH the room's south door `wandlock@480,560` (group 3: `buttonroom@880,768` latches,
+     * so it is in the hypothesis; group 2 is guard (iii)'s weigh-wall and is not). The walk to that stance asks its
+     * own frontier, nearest to ITS aim, and that is `wandlock@448,432` again: STANCE_REENTRY, with the door the
+     * derivation leaned on never asked. The stance was right; the walk's choice of door was not.
+     *
+     * ⇒ the L12KEYLINE shape (`nextPastSealedLock`), asked where the re-entry would refuse: the next frontier entry
+     * whose strategy resolves is this round's order. Passed over by name: an entry with no registered verb, one whose
+     * resolution refuses or binds nothing, and one that is this walk again (its stance walk is already in flight —
+     * `stanceWalks` — or its stance IS this walk's aim). `null` when none binds, and the refusal stands unchanged.
+     */
+    const nextPastReentry = (reentered, rest, contacts, aim, allowTeleporter) => {
+        const passed = [];
+        for (const alt of rest) {
+            const altKey = alt.tag ? `${alt.kind}:${alt.tag}` : alt.kind;
+            const altStrategy = refineStrategy(run,
+                OBSTACLE_STRATEGIES[altKey] ?? OBSTACLE_STRATEGIES[alt.kind] ?? null, alt);
+            if (!altStrategy || !frontierExecutor(altStrategy)) continue;
+            let resolved = null;
+            try {
+                resolved = resolveObstacleStrategy(run, altStrategy, alt, contacts,
+                    aim, allowTeleporter, [...refusedOrders]);
+            } catch (altError) {
+                if (!(altError instanceof SolverRefusal)) throw altError;
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: `refused: ${String(altError.message).slice(0, 200)}` });
+                continue;
+            }
+            if (!resolved || resolved.held === false) {
+                passed.push({ option: `${altStrategy} ${alt.id}`,
+                    why: resolved?.rejected?.[0]?.why ?? 'did not bind against live state' });
+                continue;
+            }
+            const verb = resolved.strategy ?? altStrategy;
+            const s = resolved.stance;
+            if ((s && s.x === aim.x && s.y === aim.y)
+                || stanceWalks.has(`${verb}(${alt.id})#${perTick.length}`)) {
+                passed.push({ option: `${verb} ${alt.id}`,
+                    why: `its stance walk is this walk again (stance ${s ? `(${s.x},${s.y})` : 'none'})` });
+                continue;
+            }
+            resolved.rejected = [{
+                option: `${reentered.strategy} ${reentered.obstacle.id} (nearer the aim on the frontier)`,
+                why: `STANCE_REENTRY: its \`${reentered.strategy}\` stance (${aim.x},${aim.y}) is on its own far `
+                    + 'side, and this walk to it named it again with nothing spent between. ⛓ L40RES: the next '
+                    + `door on the frontier, ${alt.id}, is this round's order.`,
+            }, ...passed, ...(resolved.rejected ?? [])];
+            return { obstacle: alt, strategy: verb, resolved, key: altKey };
+        }
+        return null;
+    };
+
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
         const opts = solverPlanOpts(run, contacts,
             { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
@@ -23008,7 +23065,9 @@ function solveSegmentUnder({
              * resolution rather than the guess that preceded it.
              */
             if (resolved) {
-                return { obstacle, strategy: resolved.strategy ?? strategy, resolved, key };
+                // ⛓ fidelity L40RES: the rest of the frontier rides out, for `walkTo`'s re-entry (ON only).
+                return { obstacle, strategy: resolved.strategy ?? strategy, resolved, key,
+                    ...(CONTACT_FIDELITY.stanceReentryNextDoor ? { frontierRest: actionable.slice(1) } : {}) };
             }
             /**
              * ⛓⛓⛓ GUARD (ii), FIRED. This order REFUSED — and an earlier
@@ -24315,9 +24374,22 @@ function solveSegmentUnder({
                     return { at, ticks, walk, door, wps };
                 };
                 const rest = PHASE_DODGE_RUNG.rest;
+                /**
+                 * ⛓ fidelity MISCRES D3 (`CONTACT_FIDELITY.phaseDodgeArrivalStall`, OFF) — in a room holding a type-31
+                 * tile, the walk's START is the SECOND stall candidate (after the doorstep itself, before the earlier
+                 * offsets): a doorstep stall can stand in a tile's range, and standing there is what turns it (L76's
+                 * (8,6) by `lavachain@128,64`). Second, not first: a short doorstep stall that clears stays the answer
+                 * (measured: leg 637 at seam 5588 keeps OFF's 553 t). OFF: the doorstep offsets alone.
+                 */
+                const ats = [];
                 for (let k = 0; k < offsets; k += 1) {
                     const at = door - k * PHASE_DODGE_RUNG.step;
                     if (at < 0) break;
+                    ats.push(at);
+                }
+                if (CONTACT_FIDELITY.phaseDodgeArrivalStall && !ats.includes(0)
+                    && (run.entities('igneousTiles') ?? []).length > 0) ats.splice(1, 0, 0);
+                for (const at of ats) {
                     let screen = null;
                     for (let ticks = 1; ticks < period; ticks += 1) {
                         if (deadlineReached('phase-dodge')) { tripped = true; return null; }
@@ -26130,7 +26202,14 @@ function solveSegmentUnder({
                                 if (!(fineError instanceof BotDriverV2Error)) throw fineError;
                             }
                         }
-                        if (!fineWps) {
+                        // ⛓ L40RES (`stanceReentryNextDoor`, OFF): the next door on this walk's frontier first.
+                        const nextDoor = !fineWps && identified.frontierRest
+                            ? nextPastReentry(plan, identified.frontierRest, contacts, aim, allowTeleporter) : null;
+                        if (nextDoor) {
+                            plan = nextDoor.resolved.prerequisite
+                                ? prerequisiteOrder(goal, aim, nextDoor, contacts, allowTeleporter, what)
+                                : nextDoor;
+                        } else if (!fineWps) {
                             refuse(`${what}: STANCE_REENTRY — the walk to ${plan.obstacle.id}'s `
                                 + `\`${plan.strategy}\` stance (${aim.x},${aim.y}) is itself blocked by `
                                 + `${plan.obstacle.id} at tick ${perTick.length}, with nothing spent `
@@ -26139,11 +26218,13 @@ function solveSegmentUnder({
                                 + 'stance is on the far side of the obstacle it is the stance of.',
                             { goal, obstacle: plan.obstacle });
                         }
-                        wps = fineWps;
-                        fine = true;
-                        axisAligned = true;
-                        fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
-                            waypoints: wps.length, refused: `STANCE_REENTRY ${stanceKey}` });
+                        if (!nextDoor) {
+                            wps = fineWps;
+                            fine = true;
+                            axisAligned = true;
+                            fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                                waypoints: wps.length, refused: `STANCE_REENTRY ${stanceKey}` });
+                        }
                     }
                 }
                 if (plan && !fine) {

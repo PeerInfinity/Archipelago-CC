@@ -31,7 +31,7 @@ import { AXE_DODGE_SETTING_KEY, axeDodgeOverride, axeDodgePageParam } from './se
 import { DASH_ONLY_WINDOW_SETTING_KEY, dashOnlyWindowOverride, dashOnlyWindowPageParam } from './seedlingDashOnlyWindowSettings.js';
 import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashShapePageParam } from './seedlingDashShapeSettings.js';
 import {
-  CAMERA_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, graphicsPageParams, graphicsStack, lightsMode,
+  CAMERA_SETTING_KEY, EFFECTS_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, effectsMode, graphicsPageParams, graphicsStack, lightsMode,
 } from './seedlingGraphicsSettings.js';
 
 function log(level, message, ...data) {
@@ -105,6 +105,7 @@ const SETTINGS_CONTROLS = Object.freeze([
   { prop: 'seedlingJsGraphics', label: 'Graphics', when: 'js' },
   { prop: 'seedlingJsCamera', label: 'Camera', when: 'js' },
   { prop: 'seedlingJsLights', label: 'Lights', when: 'js' },
+  { prop: 'seedlingJsEffects', label: 'Effects', when: 'js' },
   { prop: 'seedlingSolverWalk', label: 'Bot uses the solver', when: 'seedling' },
   { prop: 'seedlingSolveProgressIntervalMs', label: 'Progress refresh (ms)', when: 'seedling' },
 ]);
@@ -309,10 +310,11 @@ export class FlashPanelUI {
         }
       }
       if (data?.key === GRAPHICS_SETTING_KEY || data?.key === CAMERA_SETTING_KEY || data?.key === LIGHTS_SETTING_KEY
-        || data?.key === '*') {
-        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount (⛓ G5: the lights too).
+        || data?.key === EFFECTS_SETTING_KEY || data?.key === '*') {
+        // ⛓ GRAPHICS G1 — cosmetic: applied to a mounted JS page LIVE, never a re-mount (⛓ G5: the lights too; G6: the effects).
         await this._refreshJsGraphics(data.key === GRAPHICS_SETTING_KEY ? data.value : undefined,
-          data.key === CAMERA_SETTING_KEY ? data.value : undefined, data.key === LIGHTS_SETTING_KEY ? data.value : undefined);
+          data.key === CAMERA_SETTING_KEY ? data.value : undefined, data.key === LIGHTS_SETTING_KEY ? data.value : undefined,
+          data.key === EFFECTS_SETTING_KEY ? data.value : undefined);
         this._applyJsGraphics();
       }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
@@ -683,18 +685,21 @@ export class FlashPanelUI {
    * ⛓ GRAPHICS G1 — cache `flashPanel.seedlingJsGraphics` / `seedlingJsCamera` (`seedlingGraphicsSettings.js`).
    * An argument is a value just heard on `settings:changed`; undefined = read it.
    */
-  async _refreshJsGraphics(graphics, camera, lights) {
+  async _refreshJsGraphics(graphics, camera, lights, effects) {
     let g = graphics;
     let c = camera;
     let l = lights;
+    let e = effects;
     try {
       if (g === undefined) g = await settingsManager.getSetting(GRAPHICS_SETTING_KEY, 'rects');
       if (c === undefined) c = await settingsManager.getSetting(CAMERA_SETTING_KEY, 'room');
       if (l === undefined) l = await settingsManager.getSetting(LIGHTS_SETTING_KEY, 'on');
+      if (e === undefined) e = await settingsManager.getSetting(EFFECTS_SETTING_KEY, 'on');
     } catch { /* keep the cached values */ }
     if (g !== undefined) this._jsGraphics = graphicsStack(g);
     if (c !== undefined) this._jsCamera = cameraMode(c);
     if (l !== undefined) this._jsLights = lightsMode(l);
+    if (e !== undefined) this._jsEffects = effectsMode(e);
   }
 
   /** ⛓ GRAPHICS G1 — hand the cached switches to a mounted JS page (a no-op on any other transport). */
@@ -703,9 +708,10 @@ export class FlashPanelUI {
     let handle = null;
     try { handle = this.adapter?._getWin?.()?.__seedlingJsGraphics ?? null; } catch { handle = null; }
     if (!handle?.set) return;
-    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room', lights: this._jsLights ?? 'on' }))
+    Promise.resolve(handle.set({ graphics: this._jsGraphics ?? null, camera: this._jsCamera ?? 'room', lights: this._jsLights ?? 'on',
+      effects: this._jsEffects ?? 'on' }))
       .then((status) => this._panelLog(`JS page graphics: ${this._jsGraphics ?? 'rects'} (${status}), camera ${this._jsCamera ?? 'room'}, `
-        + `lights ${this._jsLights ?? 'on'}`))
+        + `lights ${this._jsLights ?? 'on'}, effects ${this._jsEffects ?? 'on'}`))
       .catch((err) => this._panelLog(`JS page graphics could not be applied: ${err.message}`));
   }
 
@@ -1604,7 +1610,7 @@ export class FlashPanelUI {
           const query = [killLockPageQuery(killLock).replace(/^\?/, ''), contactPageParam(contact),
             axeDodgePageParam(this._jsPageAxeDodge), dashOnlyWindowPageParam(this._jsPageDashOnly),
             dashShapePageParam(this._jsPageDashShape),
-            graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights)].filter(Boolean);
+            graphicsPageParams(this._jsGraphics, this._jsCamera, this._jsLights, this._jsEffects)].filter(Boolean);
           this.wasmPath = JS_RUNTIME_PAGE + (query.length ? `?${query.join('&')}` : '');
           this._panelLog(`runtime 'js': the Seedling JS runtime page (${this.wasmPath})`);
           await this._initializeWasm(epoch);
