@@ -1,0 +1,14 @@
+# run 1 (code 28ee2375: all six; the D1 design before e5840ab2)
+m1 (chainWeighHypothesis admits nothing): RED ["ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it", "ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 2
+m2 (stanceReaches ignores the entry exemption): RED ["ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 3
+m3 (nextPastUnbound returns null): RED ["ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 3
+m4 (spinRow attaches no rows): RED ["ON, seam 5290: that plan is not certified — the answer is the bomb-pusher hold's refusal, no hit plan"] | green 3
+m5 (bodyGated always false): RED ["ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte"] | green 3
+m6 (no whole-chain certificate): RED ["ON, seam 5280: OFF's hitless 1558 t plan, the same plan byte for byte"] | green 3
+restored, cmp clean
+# run 2 (code e5840ab2: the final D1 design; m1 re-made as 'return extra' (admits nothing), m7 added)
+m1 (chainWeighHypothesis admits nothing): RED ["ON: t2's two locks (the corpse, behind the south door) and t5's (the fire block's route, across t2) join it", "ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 2
+m2 (stanceReaches ignores the entry exemption): RED ["ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 3
+m3 (nextPastUnbound returns null): RED ["ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 3
+m7 (no chained fallback in deriveHoldStance): RED ["ON: the chain walks the south door's links and ends in the hammer arc's press kill (D3's hand-over)"] | green 3
+restored, cmp clean
