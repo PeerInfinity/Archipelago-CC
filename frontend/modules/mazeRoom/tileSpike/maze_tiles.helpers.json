@@ -97,6 +97,96 @@
       ]
     }
   },
+  "entry_open": {
+    "params": [
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "entry"
+          },
+          "op": "is",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "all_of",
+            "element_rule": {
+              "type": "compare",
+              "left": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "subscript",
+                    "value": {
+                      "type": "name",
+                      "name": "p"
+                    },
+                    "index": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "p"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            },
+            "iterator_info": {
+              "type": "comprehension_details",
+              "target": {
+                "type": "name",
+                "name": "p"
+              },
+              "iterator": {
+                "type": "name",
+                "name": "combo"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "combo"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "entry"
+            }
+          }
+        }
+      ]
+    }
+  },
   "player_may_enter": {
     "params": [
       "cell",
@@ -116,6 +206,16 @@
         {
           "type": "helper",
           "name": "cleared",
+          "args": [
+            {
+              "type": "name",
+              "name": "tile"
+            }
+          ]
+        },
+        {
+          "type": "helper",
+          "name": "entry_open",
           "args": [
             {
               "type": "name",
@@ -162,6 +262,22 @@
               "name": "tile"
             }
           ]
+        },
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "entry"
+          },
+          "op": "is",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
         }
       ]
     }

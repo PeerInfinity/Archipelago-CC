@@ -140,6 +140,12 @@ function createWorldBuilder(grid) {
         },
         /** Register a rule-typed obstacle at (x, y), reusing the lib entry for an identical rule. */
         gate(x, y, rule) {
+            const id = this.ruleEntry(rule);
+            this.obstacles.set(`${x},${y}`, id);
+            return id;
+        },
+        /** The lib entry for `rule` (one per distinct rule), placed nowhere — an ENTRY GATE names it. */
+        ruleEntry(rule) {
             const k = JSON.stringify(rule);
             let id = this.byRule.get(k);
             if (id === undefined) {
@@ -154,7 +160,6 @@ function createWorldBuilder(grid) {
                     display: { mode: 'tree' },
                 };
             }
-            this.obstacles.set(`${x},${y}`, id);
             return id;
         },
     };
@@ -372,6 +377,17 @@ function planCrossings(region, crossings, internalExitRule = null) {
     return { planned, notes };
 }
 
+/** The planned crossings whose exit tile another crossing out of the same sub-region also takes (all but the first). */
+function collidingCrossings(planned) {
+    const first = new Map();
+    const out = [];
+    for (const plan of planned.values()) {
+        const key = `${plan.from}|${plan.tile}`;
+        if (first.has(key)) out.push(plan); else first.set(key, plan);
+    }
+    return out;
+}
+
 /**
  * Project ONE atlas region into maze sidecars — one per AP (sub-)region.
  *
@@ -480,6 +496,25 @@ export function projectRegionToMaze(region, grid, ctx) {
 
     const componentById = new Map(components.map((c) => [c.id, c]));
     const { planned, notes: crossingNotes } = planCrossings(region, analysis.crossings, ctx.internalExitRule);
+    // ⛓ COLLIDING CROSSINGS (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates"). Two
+    // crossings out of one sub-region whose exit tile is the SAME cell (a body of water touching several pieces:
+    // every way out starts on its first cell) cannot be one maze tile each — a tile crosses one way. Such a level
+    // is played as ONE level world instead, where a crossing is the walk itself over the terrain the atlas rows were
+    // priced from. Whole game at the slice: L19 L29 L45 L46 L47 L51 L54 L58 L63 L87 L89 L115. A level world WALKS
+    // terrain, so a crossing priced by hand or by the physics model (`source` other than the analyzer: L80's pit
+    // row) has nothing to walk — such a level stays per sub-region, its collisions named.
+    const colliding = collidingCrossings(planned);
+    const walkable = (region.subgraph?.internal_exits ?? []).every((row) => internalExitSource(row) === 'analyzer');
+    if (colliding.length > 0 && walkable && declared.length > 0 && typeof ctx.levelEntitiesFor === 'function') {
+        const world = projectLevelWorld(region, grid, ctx, entities ?? []);
+        world.notes.unshift({
+            region_id: region.region_id,
+            kind: 'colliding_crossings',
+            message: `${colliding.length} crossing(s) share an exit tile with another out of the same sub-region `
+                + `(${colliding.slice(0, 3).map((c) => `${c.from} -> ${c.to} at [${c.tile}]`).join(', ')}${colliding.length > 3 ? ', …' : ''}) — projected as a level world`,
+        });
+        return world;
+    }
     const notes = crossingNotes.map((n) => ({ region_id: region.region_id, ...n }));
     for (const c of pockets) {
         notes.push({
@@ -510,7 +545,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                     kind: 'exit_id_collision',
                     message: `two exits of "${apName}" both resolve to the AP exit name "${id}" — the second is DROPPED`,
                 });
-                return;
+                return false;
             }
             const occupiedAt = builder.exits.findIndex((e) => e.x === entry.x && e.y === entry.y);
             const occupied = occupiedAt === -1 ? null : builder.exits[occupiedAt];
@@ -553,16 +588,17 @@ export function projectRegionToMaze(region, grid, ctx) {
                     builder.exitIds.delete(occupied.exit_id);
                     builder.exitIds.add(id);
                     builder.exits.push({ exit_id: id, ...entry });
-                    return;
+                    return true;
                 }
                 note({
                     kind: 'exit_tile_collision',
                     message: `exit "${id}" wants tile [${entry.x},${entry.y}], already taken by "${occupied.exit_id}" — DROPPED (one tile can only cross one way)`,
                 });
-                return;
+                return false;
             }
             builder.exitIds.add(id);
             builder.exits.push({ exit_id: id, ...entry });
+            return true;
         };
 
         // --- boundary exits ------------------------------------------------
@@ -581,9 +617,12 @@ export function projectRegionToMaze(region, grid, ctx) {
                 continue;
             }
             const [x, y] = local(exit.entrance_tile);
+            // ⛓ A DROPPED exit leaves its tile's gate as it found it (session tile-primitives-water-exits): the
+            // survivor's rule stands, never the loser's (L89's r11c12 tile named r1c10, Swim×2, and carried Swim).
+            const before = builder.obstacles.get(`${x},${y}`);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             if (exit.access_rule) builder.gate(x, y, exit.access_rule);
-            addExit({
+            const kept = addExit({
                 x,
                 y,
                 side: exit.side ?? null,
@@ -595,6 +634,9 @@ export function projectRegionToMaze(region, grid, ctx) {
                 isTeleporter: exit.kind === 'teleporter',
                 atlas_exit_id: exit.exit_id,
             });
+            if (!kept) {
+                if (before === undefined) builder.obstacles.delete(`${x},${y}`); else builder.obstacles.set(`${x},${y}`, before);
+            }
         }
 
         // --- crossings out of this sub-region -------------------------------
@@ -602,6 +644,7 @@ export function projectRegionToMaze(region, grid, ctx) {
             if (plan.from !== component.id) continue;
             const [x, y] = local(plan.tile);
             builder.floor(x, y);
+            const before = builder.obstacles.get(`${x},${y}`);
             if (plan.rule) builder.gate(x, y, plan.rule);
             const reverse = planned.get(directedKey(plan.to, plan.from));
             if (!reverse) {
@@ -610,7 +653,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                     message: `crossing ${plan.from} -> ${plan.to} has no projected reverse, so arriving in "${plan.to}" lands on its entrance tile rather than at the crossing`,
                 });
             }
-            addExit({
+            const kept = addExit({
                 x,
                 y,
                 side: null,
@@ -621,6 +664,9 @@ export function projectRegionToMaze(region, grid, ctx) {
                 isTeleporter: false,
                 atlas_exit_id: crossingExitId(plan.to),
             });
+            if (!kept) {
+                if (before === undefined) builder.obstacles.delete(`${x},${y}`); else builder.obstacles.set(`${x},${y}`, before);
+            }
         }
 
         // --- locations ------------------------------------------------------
@@ -756,6 +802,65 @@ export function levelHasInteraction(entities) {
         && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap'].includes(e.kind));
 }
 
+/** A step's direction, its delta and the face it crosses on the cell it enters. */
+const MOVES = Object.freeze([['N', 0, -1, 'S'], ['E', 1, 0, 'W'], ['S', 0, 1, 'N'], ['W', -1, 0, 'E']]);
+
+/**
+ * ⛓ ENTRY GATES (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates") — every directed step
+ * between two floor cells of a level world whose terrain gates it, as the region analyzer prices a step
+ * (`regionAtlasAnalyzer.stepCost`): the face it crosses, read from BOTH cells; the direction gate of moving that way,
+ * read from both cells (a two-tile waterfall gates the climb at each); and the entered cell's `enter` gate. Folded
+ * into the cell the step ENTERS (`{x, y, dir, gate}`, `gate` a rule entry of the builder's lib, or null when a face or
+ * direction refuses the step), so the engine reads one cell. The occupancy conditions stay the cell's obstacle.
+ *   - a cell an ENTITY claimed (a block, a button, a held lock, a rock) contributes none of its own: the entity is
+ *     its model (L15/L16's one-way locks are button locks);
+ *   - a LATCHED cell's closed side (`enter` null) costs its lock's AP EVENT (bound by `bindWorldEvents`): the lock
+ *     opened from its open side stays open every way, which is the analyzer's latch condition; with none bound, no entry;
+ *   - a gate condition with no AP item behind it refuses the step (a wall can only make the world harder) and is named;
+ *   - a step in `refused` (`"x,y,dir"`) has no entry at all.
+ */
+function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused, note) {
+    const out = [];
+    const cellAt = (x, y) => grid.cells[y * grid.width + x];
+    const own = (x, y) => !claimed.has(`${x},${y}`);
+    // A latched cell's closed side: entered once its lock was OPENED — the lock's AP event (`bindWorldEvents`, mode
+    // 'latch'), as the analyzer prices it (its `latchEvent`); with no event bound there is no way in that side.
+    const latchEntry = (x, y, gate) => {
+        if (gate !== null) return gate;
+        const events = builder.obstacleLib[builder.obstacles.get(`${x},${y}`)]?.events ?? [];
+        return events.length > 0 ? events.map((e) => ({ ap_event: e.name })) : null;
+    };
+    for (let y = 0; y < grid.height; y += 1) {
+        for (let x = 0; x < grid.width; x += 1) {
+            if (!builder.isFloor(x, y)) continue;
+            const v = cellAt(x, y);
+            for (const [dir, dx, dy, face] of MOVES) {
+                const ux = x - dx;
+                const uy = y - dy;
+                if (!builder.isFloor(ux, uy)) continue;
+                if (refused.has(`${x},${y},${dir}`)) { out.push({ x, y, dir, gate: null }); continue; }
+                const u = cellAt(ux, uy);
+                const gates = [
+                    ...(own(ux, uy) ? [u.faces?.[dir], u.dirs?.[dir]] : []),
+                    ...(own(x, y) ? [v.faces?.[face], v.dirs?.[dir], v.latch ? latchEntry(x, y, v.enter?.[dir]) : v.enter?.[dir]] : []),
+                ].filter((g) => g !== undefined);
+                if (gates.length === 0) continue;
+                if (gates.includes(null)) { out.push({ x, y, dir, gate: null }); continue; }
+                const conditions = gates.flat();
+                const parts = conditions.map((c) => (c.ap_event ? { rule: 'Has', args: { item_name: c.ap_event } } : resolveCondition(c)));
+                if (parts.some((p) => !p)) {
+                    note({ kind: 'unresolved_entry_refused', tile: [x, y], message: `entering [${x},${y}] moving ${dir} has a gate condition with no AP item behind it — REFUSED in the level world` });
+                    out.push({ x, y, dir, gate: null });
+                    continue;
+                }
+                if (parts.length === 0) continue;
+                out.push({ x, y, dir, gate: builder.ruleEntry(simplifyRule(parts.length === 1 ? parts[0] : { rule: 'And', children: parts })) });
+            }
+        }
+    }
+    return out;
+}
+
 /**
  * Project ONE atlas region with an interaction into a shared level world.
  *
@@ -881,10 +986,12 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         if (e.kind === 'lock') {
             const group = String(e.group);
             if (!groupsWithButton.has(group)) {
-                // No button can ever hold it: walled, exactly as the
-                // per-sub-region projection walls an unlabelled crossing.
-                note({ kind: 'lock_without_button', message: `${e.label ?? 'a lock'} (group ${group}) has no button in this level — WALLED` });
-                for (const [x, y] of tiles) claimed.add(keyOf(x, y));
+                // ⛓ No button can ever hold it — a ROOM-CLEAR lock (Seedling's kill-locks, tset -1: ⚖ enemies are
+                // not holders). Not claimed (session tile-primitives-water-exits, ⚖ 2026-10-25 "Lay the grid's own
+                // cell"): the terrain pass lays its cells exactly as the atlas grid has them — a cell the grid gates
+                // (the room's decided rule) is floor plus that gate, a wall stays a wall — the same cell the atlas
+                // rule of its crossing was priced from. L53 (9,13) and L71 (7,12) had walled a crossing AP lays.
+                note({ kind: 'lock_without_button', message: `${e.label ?? 'a lock'} (group ${group}) has no button in this level — laid as the atlas grid has its cells` });
                 continue;
             }
             builder.obstacleLib[lockId(group)] = {
@@ -998,9 +1105,22 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 }
                 continue;
             }
-            // directional / sink / an unmapped puzzle entity (a chest, …).
-            // Walled; a location or exit standing on it is opened below.
-            if (cell.kind === 'directional' || cell.kind === 'sink') {
+            // ⛓ A DIRECTIONAL cell (a waterfall, a cliff face, a one-way lock) is floor — plus its occupancy gate, as
+            // a gated cell — and its direction physics become ENTRY GATES below (session tile-primitives-water-exits,
+            // ⚖ 2026-10-25 "Same entry-gate primitive"): L0's two islands are joined by a waterfall, down free and
+            // up with the Feather.
+            if (cell.kind === 'directional') {
+                const own = occupancyRule(cell, resolveCondition);
+                if (own.unresolved.length > 0) {
+                    note({ kind: 'unresolved_walled', tile: [x + ox, y + oy], message: `a directional cell at [${x + ox},${y + oy}] has a condition with no AP item behind it — WALLED in the level world` });
+                    continue;
+                }
+                builder.floor(x, y);
+                if (own.rule) builder.gate(x, y, own.rule);
+                continue;
+            }
+            // sink / an unmapped puzzle entity (a chest, …). Walled; a location or exit standing on it is opened below.
+            if (cell.kind === 'sink') {
                 note({ kind: 'unmodelled_walled', tile: [x + ox, y + oy], message: `a ${cell.kind} cell at [${x + ox},${y + oy}] is not modelled in a level world — WALLED` });
             }
         }
@@ -1013,11 +1133,52 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
     }
 
-    /** An exit / location tile that is not floor is opened where the atlas puts it. */
+    /**
+     * An exit / location tile that is not floor is opened where the atlas puts it — and, when no floor cell touches
+     * it, reached by a corridor CARVED through the non-wall cells between, the per-sub-region rule
+     * (`openTileTowards`): a door drawn inside a building whose mask is not transcribed (session
+     * tile-primitives-water-exits — L0's door to L86 at (10,17)). A carved cell keeps its occupancy gate; one whose
+     * condition has no AP item stops the carve there.
+     */
     const openAt = ([x, y], label) => {
         if (builder.isFloor(x, y)) return;
         builder.floor(x, y);
         note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
+        if (MOVES.some(([, dx, dy]) => builder.isFloor(x + dx, y + dy))) return;
+        const prev = new Map([[keyOf(x, y), null]]);
+        let frontier = [[x, y]];
+        let hit = null;
+        while (frontier.length > 0 && hit === null) {
+            const next = [];
+            for (const [cx, cy] of frontier) {
+                for (const [, dx, dy] of MOVES) {
+                    const [nx, ny] = [cx + dx, cy + dy];
+                    if (!inGrid([nx, ny]) || prev.has(keyOf(nx, ny))) continue;
+                    prev.set(keyOf(nx, ny), [cx, cy]);
+                    if (builder.isFloor(nx, ny)) { hit = [cx, cy]; break; }
+                    const cell = grid.cells[ny * grid.width + nx];
+                    if (cell.kind === 'wall' || cell.kind === 'sink' || claimed.has(keyOf(nx, ny))) continue;
+                    if (occupancyRule(cell, resolveCondition).unresolved.length > 0) continue;
+                    next.push([nx, ny]);
+                }
+                if (hit !== null) break;
+            }
+            frontier = next;
+        }
+        if (hit === null) {
+            note({ kind: 'unreachable', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] cannot be reached without crossing a wall — isolated in the level world` });
+            return;
+        }
+        const carved = [];
+        for (let at = hit; at !== null && keyOf(...at) !== keyOf(x, y); at = prev.get(keyOf(...at))) {
+            const [cx, cy] = at;
+            const cell = grid.cells[cy * grid.width + cx];
+            builder.floor(cx, cy);
+            const own = occupancyRule(cell, resolveCondition);
+            if (own.rule) builder.gate(cx, cy, own.rule);
+            carved.push(`[${cx + ox},${cy + oy}] ${cell.kind}${own.rule ? ' gated' : ''}`);
+        }
+        note({ kind: 'carved', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] touches no floor — carved ${carved.length} cell(s) to it (${carved.reverse().join(', ')})` });
     };
 
     // ⛓ A cell the partition does not own but an exit or a location was OPENED on
@@ -1054,7 +1215,14 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
         openAt([x, y], `exit "${exit.exit_id}"`);
         if (owner === -1 && bound !== -1) boundAt.set(keyOf(x, y), bound);
-        if (exit.access_rule) builder.gate(x, y, exit.access_rule);
+        // ⛓ The exit's rule JOINS the cell's terrain gate, never replaces it (session tile-primitives-water-exits): a
+        // level world WALKS over an exit tile into its neighbours, so a teleporter in water must still cost the Swim
+        // (L58 r4c1's (3,7) → r6c5's (4,7) walked the water holding only a weapon).
+        const terrain = builder.obstacleLib[builder.obstacles.get(keyOf(x, y))];
+        if (exit.access_rule) {
+            builder.gate(x, y, terrain?.clear_set_type === 'rule' && terrain.clear_rule
+                ? simplifyRule({ rule: 'And', children: [terrain.clear_rule, exit.access_rule] }) : exit.access_rule);
+        }
         exitAt.add(keyOf(x, y));
         exits.push({
             exit_id: wired.apExitName,
@@ -1115,11 +1283,17 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
         rows.push(row);
     }
+    const isSinkTile = ([x, y]) => inGrid([x, y]) && grid.cells[y * grid.width + x].kind === 'sink';
     const entrances = {};
     for (const [i, { sub, apName }] of bindings.entries()) {
         // The arrival a game makes: the first atlas exit bound to this
         // sub-region (its entrance tile), else its first owned floor cell.
-        const exit = (region.exits ?? []).find((x) => boundTo(x, sub));
+        // ⛓ Only an exit on the sub-region's OWN ground — a cell the partition gives it, never a sink
+        // (session tile-primitives-water-exits): an exit opened in water or on a pit is reached from that
+        // ground, and an arrival placed on it priced the region from outside it (L89 r11c12's teleporter in
+        // the water; L58 r1c4's pit, from which a search walked out).
+        const exit = (region.exits ?? []).find((x) => boundTo(x, sub) && ownerOf(x.entrance_tile) === i
+            && !isSinkTile(local(x.entrance_tile)));
         let at = exit ? local(exit.entrance_tile) : null;
         if (!at) {
             const y = rows.findIndex((r) => r.includes(SHARED_WORLD_ALPHABET[i]));
@@ -1143,6 +1317,21 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     }
 
     bindWorldEvents(builder, ctx.eventsFor?.(region), local, inGrid);
+    // ⛓ An exit OPENED on a cell the partition does not own (a pit, a teleporter in water) is bound to one
+    // sub-region (⚖ "Own opened exit cells"), so it is taken from that sub-region only: stepping onto it from
+    // another's ground is refused (session tile-primitives-water-exits — L58 r2c5 fell into r1c4's pit, an
+    // exit AP gives r1c4 alone). A wall can only make the world harder.
+    const refused = new Set();
+    for (const key of exitAt) {
+        if (!boundAt.has(key)) continue;
+        const [x, y] = key.split(',').map(Number);
+        for (const [dir, dx, dy] of MOVES) {
+            const ch = rows[y - dy]?.[x - dx];
+            if (ch && ch !== '.' && ch !== rows[y][x] && builder.isFloor(x - dx, y - dy)) refused.add(`${x},${y},${dir}`);
+        }
+    }
+    const entryGates = levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
+        (n) => note({ ...n, tile: [n.tile[0] + ox, n.tile[1] + oy] }));
 
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;
@@ -1166,6 +1355,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(buttons.length > 0 ? { buttons: buttons.sort(sortRows), buttonLib } : {}),
         ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
+        ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),

@@ -38,6 +38,7 @@ import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.
 import { compileRegionAtlas } from './regionAtlasCompiler.js';
 import {
     projectRegionToMaze,
+    projectLevelWorld,
     projectAtlasToMaze,
     formatMazeProjectionNotes,
     MAZE_TILE_FLOOR,
@@ -70,6 +71,10 @@ const CHARS = {
     '?': () => ({ kind: 'manual', manual: ['a puzzle nobody transcribed'] }),
     v: () => ({ kind: 'sink', labels: ['pit'] }),
     m: () => ({ kind: 'gated', conditions: [MYSTERY], labels: ['mystery mist'] }),
+    // ⛓ ENTRY GATES (session tile-primitives-water-exits): a waterfall (climbing north needs the key) and a cliff
+    // whose WEST face refuses both ways.
+    w: () => ({ kind: 'directional', dirs: { N: [KEY] }, labels: ['waterfall'] }),
+    c: () => ({ kind: 'directional', faces: { W: null }, labels: ['cliff'] }),
 };
 
 /**
@@ -988,3 +993,111 @@ describe('⛓⛓⛓ M2 — the generated 2-room ring survives its own tile colli
         expect(RING.report.substrates).toEqual({ [MAZE_SUBSTRATE]: 2 });
     });
 });
+
+// ─── ⛓ session tile-primitives-water-exits ──────────────────────────────────
+const HAS_LANTERN = { rule: 'Has', args: { item_name: 'Lantern' } };
+// A key door every way out of r1c0 starts on: east to r1c2, south to r2c1 — two crossings, ONE first cell (1,1).
+const FORK_ROWS = [
+    '#####',
+    '.K.##',
+    '#.###',
+];
+const forkRegion = (rows = {}) => clone({
+    region_id: 'fork',
+    bounds: { x: 0, y: 0, w: 5, h: 3 },
+    map_ref: 8,
+    exits: [],
+    locations: [],
+    subgraph: {
+        sub_regions: ['r1c0', 'r1c2', 'r2c1'],
+        internal_exits: [
+            { from: 'r1c0', to: 'r1c2', source: 'analyzer', access_rule: HAS_KEY },
+            { from: 'r1c0', to: 'r2c1', source: 'analyzer', access_rule: { rule: 'And', children: [HAS_KEY, HAS_LANTERN] } },
+            ...(rows.extra ?? []),
+        ],
+    },
+});
+const FORK_PARTITION = () => ({ origin: [0, 0], sub_regions: ['r1c0', 'r1c2', 'r2c1'], rows: ['.....', 'A.B..', '.C...'] });
+const crossings = { internalExitName: (r, f, t) => `${r}__${f} -> ${r}__${t}` };
+
+describe('colliding crossings (session tile-primitives-water-exits)', () => {
+    it('LOOSER first: the survivor\'s tile carries its OWN rule, never the dropped crossing\'s', () => {
+        // Was: the first exit name kept the tile, the LAST crossing's gate overwrote it (L89 r11c12's tile named r1c10,
+        // Swim×2, and carried r6c16's Swim). Here the dropped crossing's rule is the STRICTER one, so the wrong gate
+        // shows as a lantern on a door the key alone opens.
+        const { sidecars, notes } = project(forkRegion(), FORK_ROWS, crossings);
+        const p = sidecars.fork__r1c0.playable_payload;
+        expect(p.exits.map((e) => [e.x, e.y, e.targetRegion])).toEqual([[1, 1, 'fork__r1c2']]);
+        expect(p.obstacleLib[obstacleAt(p, 1, 1).id].clear_rule).toEqual(HAS_KEY);
+        expect(noteKinds(notes)).toContain('exit_tile_collision');
+    });
+
+    it('a dropped BOUNDARY exit leaves the tile as it found it', () => {
+        const region = corridorRegion({
+            exits: [{
+                exit_id: 'on_the_door', kind: 'teleporter', exit_tiles: [[1, 1]], entrance_tile: [1, 1], sub_region: 'r1c0',
+                access_rule: HAS_LANTERN,
+            }],
+        });
+        const { sidecars } = project(region, CORRIDOR_ROWS, {
+            wiredExit: () => ({ apExitName: 'AP:x', targetApRegion: 'elsewhere', targetExitId: 'back' }),
+        });
+        const p = sidecars.vault__r1c0.playable_payload;
+        expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['on_the_door']);
+        expect(p.obstacleLib[obstacleAt(p, 1, 1).id].clear_rule).toEqual(HAS_LANTERN);
+    });
+
+    it('with a level-world builder, the level is ONE level world (the walk is the crossing)', () => {
+        const out = project(forkRegion(), FORK_ROWS, { ...crossings, levelEntitiesFor: () => [], partitionFor: FORK_PARTITION });
+        expect(out.sharedWorld).toBe('fork');
+        expect(noteKinds(out.notes)[0]).toBe('colliding_crossings');
+        const p = out.sidecars.fork__r1c0.playable_payload;
+        expect(p.obstacleLib[obstacleAt(p, 1, 1).id].clear_rule).toEqual(HAS_KEY);
+    });
+
+    it('…unless a crossing row is hand- or model-priced: the level world would have nothing to walk (L80)', () => {
+        const region = forkRegion({ extra: [{ from: 'r2c1', to: 'r1c2', source: 'manual', access_rule: HAS_KEY }] });
+        const out = project(region, FORK_ROWS, { ...crossings, levelEntitiesFor: () => [], partitionFor: FORK_PARTITION });
+        expect(out.sharedWorld).toBeUndefined();
+        expect(noteKinds(out.notes)).not.toContain('colliding_crossings');
+    });
+});
+
+describe('a level world lays the terrain\'s direction physics as ENTRY GATES (session tile-primitives-water-exits)', () => {
+    // (1,1) a waterfall: climbing it north needs the key. (1,0) a cliff whose west face refuses both ways.
+    const ROWS = ['.c.', '#w#', '#.#'];
+    const region = () => ({ region_id: 'falls', bounds: { x: 0, y: 0, w: 3, h: 3 }, map_ref: 9, exits: [], locations: [] });
+    const out = projectLevelWorld(region(), gridFromAscii(ROWS), { ...noWiring, levelEntitiesFor: () => [] }, []);
+    const p = out.sidecars.falls.playable_payload;
+
+    it('the directional cells are floor; their gates are folded into the cell each step enters', () => {
+        expect(at(p, 1, 0)).toBe(TILE_FLOOR);
+        expect(at(p, 1, 1)).toBe(TILE_FLOOR);
+        const gate = 'atlas_gate_0';
+        expect(p.obstacleLib[gate].clear_rule).toEqual(HAS_KEY);
+        expect(p.entry_gates).toEqual([
+            { x: 0, y: 0, dir: 'W', gate: null },
+            { x: 1, y: 0, dir: 'N', gate },
+            { x: 1, y: 0, dir: 'E', gate: null },
+            { x: 1, y: 1, dir: 'N', gate },
+        ]);
+    });
+
+    it('the world plays it: up the fall with the key only, down it free', () => {
+        const world = deserializeMazeWorld(p);
+        const from = (x, y, inv) => ({ player_pos: { x, y }, turn: 0, inventory: new Set(inv) });
+        expect(step(world, from(1, 2, []), 'N')).toBeNull();
+        expect(step(world, from(1, 2, ['Master Key']), 'N')?.player_pos).toEqual({ x: 1, y: 1 });
+        expect(step(world, from(1, 0, []), 'S')?.player_pos).toEqual({ x: 1, y: 1 });
+        expect(step(world, from(0, 0, ['Master Key']), 'E')).toBeNull();
+    });
+
+    it('a room-clear lock (no button in the level) is laid as the grid has its cell, not walled', () => {
+        // Seedling's kill-locks (tset -1): ⚖ enemies are not holders, and the grid already gates the cell.
+        const lock = [{ kind: 'lock', tiles: [[1, 1]], group: '-1', label: 'lock@16,16' }];
+        const world = projectLevelWorld(region(), gridFromAscii(['...', '.K.', '...']), noWiring, lock).sidecars.falls.playable_payload;
+        expect(at(world, 1, 1)).toBe(TILE_FLOOR);
+        expect(world.obstacleLib[obstacleAt(world, 1, 1).id].clear_rule).toEqual(HAS_KEY);
+    });
+});
+
