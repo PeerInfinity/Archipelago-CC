@@ -789,7 +789,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -894,13 +894,10 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
 'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)),
 // ⛓ fidelity ROPE — `rope` (switch-gated on `ropeCutVerb`): the PULL rung's cut as a strategy. See `execRope`.
 'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)),
-<<<<<<< HEAD
 // ⛓ fidelity L67BK4 D2 — `totem` (switch-gated on `totemBossFight`): the L43 fight. See `execTotemBoss`.
-'totem', () => (CONTACT_FIDELITY.totemBossFight ? execTotemBoss : undefined)));
-=======
+'totem', () => (CONTACT_FIDELITY.totemBossFight ? execTotemBoss : undefined)),
 // ⛓ fidelity L39SHAFT — `l39shaft` (switch-gated on `l39ShaftPress`): L39's licensed special case. See `execL39Shaft`.
 'l39shaft', () => (CONTACT_FIDELITY.l39ShaftPress ? execL39Shaft : undefined)));
->>>>>>> origin/fidelity-harvest/l39shaft
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -3040,13 +3037,10 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
     // ⛓ fidelity ROPE — reached only while `ropeCutVerb` registers the verb (the row is switch-gated).
     if (strategy === 'rope') return resolveRopeStrategy(run, obstacle, contacts, blocked);
-<<<<<<< HEAD
     // ⛓ fidelity L67BK4 D2 — reached only while `totemBossFight` registers the verb (the row is switch-gated).
     if (strategy === 'totem') return resolveTotemBossStrategy(run, obstacle);
-=======
     // ⛓ fidelity L39SHAFT — reached only while `l39ShaftPress` refines a shaft member to it (`refineStrategy`).
     if (strategy === 'l39shaft') return resolveL39ShaftStrategy(run, obstacle);
->>>>>>> origin/fidelity-harvest/l39shaft
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
