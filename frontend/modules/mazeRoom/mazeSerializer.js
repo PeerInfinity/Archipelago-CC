@@ -67,8 +67,8 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  *
  * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
- * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope)
- * and `shared_world` on the ONE payload a level world carries
+ * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope), `entry_gates`
+ * (session tile-primitives-water-exits) and `shared_world` on the ONE payload a level world carries
  * (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
@@ -214,6 +214,19 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
         description: 'Trap id → `{kind, name, active, fires}`: armed while its group token `active` is absent '
             + '(`fires: \'unless_active\'`) or present (`\'while_active\'`). A held button derives the token, and so '
             + 'does a cut rope (an obstacle whose lib entry `activates` it). Written beside `traps`.',
+    }),
+    entry_gates: Object.freeze({
+        type: 'array', required: false,
+        description: 'Entry gates (session tile-primitives-water-exits) `{x, y, dir, gate}`: entering cell (x, y) MOVING '
+            + '`dir` (N/S/E/W) needs the clearance of `obstacleLib.<gate>`, or is refused outright when `gate` is null — '
+            + 'the game\'s direction physics (a waterfall climbed north, a cliff face) as the region analyzer prices a step. '
+            + 'Read through `checkEntryGates`. Written by `projectLevelWorld` from the analysis grid; omitted when there are none.',
+        schema: Object.freeze({
+            items: atXY({
+                dir: Object.freeze({ type: 'string' }),
+                gate: Object.freeze({ type: ['string', 'null'] }),
+            }, ['dir', 'gate']),
+        }),
     }),
     shared_world: Object.freeze({
         type: 'object', required: false, derived: true,

@@ -15,7 +15,7 @@
 
 import {
     regionItems, reachUnder, regionTargets, cutEvents, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
-    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint,
+    regionLevels, latticeAxis, latticePoints, fullPoint, pointCovers, inventoryOf, formatPoint, endsWalk,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
@@ -46,7 +46,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     const queue = [start];
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
-        if (head > 0 && getExitAt(w, s.player_pos.x, s.player_pos.y) !== null) continue;
+        if (s.walkedOn) continue;
         const from = reachKey(s);
         for (const macro of inputs) {
             // A use that strikes nothing only turns the player — the same facing-free state: skip it.
@@ -61,7 +61,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
             const k = reachKey(next);
             if (seen.has(k)) continue;
             seen.set(k, { from, input: macro });
-            queue.push(next);
+            queue.push(endsWalk(w, s, next));
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
             for (const r of ropes) if (!cuts.has(r.key) && next.broken?.includes(r.key)) cuts.set(r.key, k);
