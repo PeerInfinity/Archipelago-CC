@@ -1377,7 +1377,7 @@ export const CONTACT_FIDELITY = {
      * between them and fires once (`runFire`'s exact set: all three blocks onto the three outer buttons), then waits out
      * the locks' fade. The game witness: `fidelityL39Shaft.js`. OFF: byte-identical. `SEEDLING_L39_SHAFT_PRESS=0|1`.
      */
-    l39ShaftPress: false,
+    l39ShaftPress: true,
     /**
      * fidelity L39SHAFT D2b (wave 31) — A COLLECT FROM A STANCE ALREADY IN THE PICKUP'S SPAN CLOSES ON ONE AXIS.
      * `runCollect` aims at the pickup's centre; `totempart@72,40` straddles x = 80 under its only free cell, and the line
@@ -1385,7 +1385,7 @@ export const CONTACT_FIDELITY = {
      * collect aims straight along the axis the box does not yet overlap (`solverBot.collectSpanAim`). OFF:
      * byte-identical. `SEEDLING_COLLECT_SPAN_AIM=0|1`.
      */
-    collectSpanAim: false,
+    collectSpanAim: true,
     /**
      * fidelity L39SHAFT D2c (wave 31) — `Spinner.friction()`'s `Point` arithmetic as the runtime spells it:
      * `v.normalize(Math.max(v.length - f, moveSpeed))` is `sqrt(x*x + y*y)` and a multiply by `t / length`
@@ -1393,7 +1393,7 @@ export const CONTACT_FIDELITY = {
      * drifts one ulp on a decaying knockback (game-measured: D2's step-66 witness, t637). ON: `spinnerPoint.js`. OFF:
      * byte-identical. `SEEDLING_SPINNER_POINT_EXACT=0|1`.
      */
-    spinnerPointExact: false,
+    spinnerPointExact: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
