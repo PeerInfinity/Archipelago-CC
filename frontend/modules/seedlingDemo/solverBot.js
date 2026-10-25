@@ -17546,6 +17546,19 @@ function resolveTotemBossStrategy(run, obstacle) {
     const view = run.entities('bosses')?.get(obstacle.id) ?? null;
     if (!view) return refuse(`fight ${obstacle.id}`, `the run holds no BossTotem ${obstacle.id} in level ${run.level}`);
     if (view.removed || view.destroy) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
+    /**
+     * ⛔ A SLEEPING BODY IS NOT A FIGHT. The wake is `FP.world.classCount(Wand) <= 0 && Player.hasAllTotemParts()`
+     * (`BossTotem.as:291` @ccdf189776): a room whose vanilla `Wand` still stands keeps the body a Solid until the Wand
+     * is collected (its fade, dialogue and the rocks' drop — `r6-totem-kill`). The AP-delivered room holds an `apitem`
+     * there and wakes on entry; the vanilla one needs the pickup first, which this verb does not order.
+     */
+    const taken = run.progress('takenPickups') ?? new Set();
+    const wand = (run.world.pickups ?? []).find((p) => p.tag === 'wand' && !taken.has(`pickup:${p.tag}@${p.x},${p.y}`));
+    if (!view.activated && wand) {
+        return refuse(`fight ${obstacle.id}`, `${obstacle.id} sleeps while wand@${wand.x},${wand.y} stands — it wakes on `
+            + '`classCount(Wand) <= 0` (`BossTotem.as:291`), so the Wand is collected first (its fade, dialogue and the '
+            + 'rocks\' drop); this verb does not order the pickup');
+    }
     const inv = run.progress('inventory') ?? {};
     const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.wand);
     if (!inv.hasWand || slot < 0) {

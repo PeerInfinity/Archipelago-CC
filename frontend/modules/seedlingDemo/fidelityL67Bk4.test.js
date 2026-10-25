@@ -28,6 +28,8 @@ import { solveAnytime } from './jsRuntimeSolver.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
 import { BOSS_TOTEM_POLICY_VARIANTS } from './bossTotemPolicy.js';
+import { vanillaRecordSet } from './levelSetExporter.js';
+import { mountedRecordsOf } from './wasmWalkTape.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -123,7 +125,19 @@ describe('fidelity L67BK4 D2 — L43\'s Totem (legs 862, 872), fought by the `to
         expect(transitions.at(-1)).toMatchObject({ from_level: 43, to_level: 37 });
     });
 
-    it('the first variant is the measured one (the fork keeps it: hitless)', () => {
-        expect(BOSS_TOTEM_POLICY_VARIANTS[0]).toEqual({ d0: 97, dt: 75, burst: 10 });
+    it('ON, a VANILLA L43 (the Wand a real pickup): the verb refuses by name — the body sleeps until the Wand is taken', () => {
+        // the request's own staging, with the game's own rooms (survey step 157's world): the Wand is a `Wand`, not an
+        // apitem, so `classCount(Wand) > 0` keeps the body a Solid
+        const readJson = (rel) => JSON.parse(readFileSync(join(HERE, rel), 'utf8'));
+        const records = mountedRecordsOf(vanillaRecordSet(readJson('fixtures/seedling-vanilla-set.json'),
+            readJson('../flashPanel/atlases/seedling-map.json')).set);
+        const { passes, tape } = request(862);
+        const a = D2(true, () => solveAnytime({ ...tape, levelSource: levelSourceFromAtlas(records) }, { passes }));
+        expect(a.ok).toBe(false);
+        expect(a.message).toMatch(/bosstotem@152,168 sleeps while wand@144,224 stands/);
+    });
+
+    it('the variant table: the prototype\'s first (2 hits on three of the four captured passes), the hitless second', () => {
+        expect(BOSS_TOTEM_POLICY_VARIANTS.slice(0, 2)).toEqual([{ d0: 97, dt: 75, burst: 10 }, { d0: 90, dt: 70, burst: 10 }]);
     });
 });

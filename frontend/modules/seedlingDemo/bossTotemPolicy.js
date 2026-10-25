@@ -33,8 +33,9 @@ export const BOSS_TOTEM_POLICY = Object.freeze({
 
 /**
  * The variants the executor tries, in order. `d0`: the settle's offset below the body; `dt`: the burst's ceiling on
- * `D`; `burst`: the longest burst. The first is the measured one (L43's AP arrivals, hitless on the model); the rest
- * widen the band either way.
+ * `D`; `burst`: the longest burst. The first is the scratch prototype's (hitless from a hand-walked approach); from
+ * the solver's own stance walk it kills with 2 hits on three of the four captured passes of legs 862/872, and the
+ * second is hitless on all four — so the executor's hitless-first ranking is load-bearing, not a tie-break.
  */
 export const BOSS_TOTEM_POLICY_VARIANTS = Object.freeze([
     Object.freeze({ d0: 97, dt: 75, burst: 10 }),
