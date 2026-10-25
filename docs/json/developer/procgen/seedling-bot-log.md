@@ -25599,3 +25599,28 @@ of the 14 into the kill's named *"nowhere to be"*, at the same units; the other 
 - A band catch at one call site does not cover the band: the same forecast throws from the refuge preview, the walk's
   danger read (`refuseDanger` → `swordTickAt`) and the executor's corridor gate. Find the stack before naming the site.
 - "Nowhere to be" after the band catch is a refusal by the band, but its words still say no cell is clear.
+
+### Seedling fidelity L40REREC — the L40 witness tapes re-recorded on the game at the shipped defaults; their INTERIM pins retired (no switch)
+
+Planner `seedling-fidelity-planning-13`, wave 31. ⚖ The user (2026-10-24): *"Queue a re-record slice"*, *"Re-record via
+CORPSEBUMP"*. The report is `CC/docs/cloud-reports/seedling-fidelity-l40rerec.md`. No solver or model code moved: the
+diff is two producers, their tapes and oracle streams, and the rows that consume them.
+
+**D1 — `l40button-l41-part0` / `-l42-part0`.** `plan-seedling-l40button-witness.mjs` ran under an INTERIM table
+(`bombPusherLive`, `strikeIframeLapse`, `spinnerLockLag` OFF) and `withStrikeEtaFloor(false)`. Both are gone. At the
+defaults the plans are WANDHOLD's paced holds (1,601 t / 1,663 t; the strike floor alone moves l42 by 4 t), and the
+witness drops `noDamage`: on p4g with damage on, 0 hits, model = game at 0 px. The tapes are now exposed to the R8
+bridge (`exposedAdded` + 2), and the `bombpusher-L40` skin goldens follow their fixture.
+
+**D2 — `r5-l40-part5`.** The `fireLiveTurretReach` OFF pin is gone. The drive's second `fire.bumps` press stands one tile
+nearer, at (488,424), and its held inputs equal `fidelityFirePush.firePushPrefixTape(0, {route: false})` tick for tick.
+On p4g the drive's corpse rests on `button@480,384` {t 2} from t1838; the control (byte-identical, not re-recorded)
+leaves it one tile short at (488,407.5). The pair is no longer a whole-control prefix: the arms part at t1798, where the
+drive steps north.
+
+**Trap candidates.**
+- A position-only oracle can agree at 0 px with a tape whose claim is false: the old `r5-l40-part5` matched the game
+  tick for tick while its corpse never reached the button. Check the claim on the game, not only the stream.
+- Retiring a `noDamage` flag is an exposure change, not just a re-record: the R8 bridge names the tape on the next run.
+- A combination of pins nobody ran can throw instead of drifting (m1: the retired pins with the floor ON throw a
+  ceremony-while-dying refusal on l42).
