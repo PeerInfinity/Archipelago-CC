@@ -16,7 +16,8 @@ import { join } from 'node:path';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
-    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
+    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withAllItemFlagsToggled,
+    withItemFlag,
 } from './watchSolve.js';
 import {
     ITEM_NAMES, ITEM_PROPERTIES, parseTape, requiredTapeVersion, SEAM_BOOT_SPEC, PIN_NAMES,
@@ -500,6 +501,24 @@ describe('⛓⛓⛓ THE BOOT FORM — the whole inventory (slice 5; v2 2026-10-2
         expect({ ...after.seam, items: before.seam.items }).toEqual(before.seam);
         expect(after.boot).toEqual(before.boot);
         expect(after.rng).toEqual(before.rng);
+    });
+
+    it('⛓ TOGGLE ALL: not all ticked → every flag true; all ticked → every flag false', () => {
+        const bools = ITEM_FORM_FIELDS.filter((f) => f.type === 'boolean').map((f) => f.id);
+        const only = (flags, v) => bools.every((id) => flags[id] === v);
+        // undeclared (the page's default) → all true; health stays undeclared
+        const on = withAllItemFlagsToggled(stagingOf(TRUE_START_SEGMENT));
+        expect(only(itemFlagsOf(on), true)).toBe(true);
+        expect(itemFlagsOf(on).health).toBeNull();
+        // all true → all false, and the block still round-trips
+        const off = stagingFromJson(JSON.parse(JSON.stringify(withAllItemFlagsToggled(on))));
+        expect(only(itemFlagsOf(off), false)).toBe(true);
+        // a MIXED declared block (sword true, rest false, hits_max 3) → all true,
+        // health and every non-item seam field untouched
+        const mixed = stagingOf('r8-solve-11');
+        const toggled = withAllItemFlagsToggled(mixed);
+        expect(only(itemFlagsOf(toggled), true)).toBe(true);
+        expect({ ...toggled.seam, items: mixed.seam.items }).toEqual(mixed.seam);
     });
 
     it('⛔ an unknown field is a NAMED refusal, not a silently ignored tick', () => {
