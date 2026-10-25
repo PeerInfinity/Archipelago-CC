@@ -116,6 +116,8 @@ async function main() {
         writeFileSync(path, `${JSON.stringify(out)}\n`);
         console.log(`RECORDED ${path} (${out.samples.length} samples)`);
     }
+    // The battery's verdict contract (seedling-probe.yml's summary reads this line).
+    console.log(pass ? '\nALL CHECKS PASSED' : '\n1 CHECK(S) FAILED');
     process.exit(pass ? 0 : 1);
 }
 
