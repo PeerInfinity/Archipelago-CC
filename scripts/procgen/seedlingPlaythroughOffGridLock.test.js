@@ -21,7 +21,7 @@ import {
     PLAYTHROUGH_MAP,
 } from './make-seedling-playthrough-rules.mjs';
 import {
-    entitySemantics, entitySealedTiles, entityFootprint, conditionKey,
+    entitySemantics, entitySealedTiles, entityStrandedTiles, entityFootprint, conditionKey,
 } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -82,6 +82,21 @@ describe('a gated solid that claims no whole tile is never skipped', () => {
             }
         }
         expect(uncharged).toEqual([]);
+    });
+
+    it('an open footprint cell is never a stranded one: the player\'s box fits beside the lock (so no charge is owed)', () => {
+        // The reason leaving an OPEN cell uncharged is not looser: `entityStrandedTiles` names every partly-covered
+        // tile whose free remainder is thinner than the 4x5 player box. None, for every census entity.
+        for (const { level, entity, sem } of census()) {
+            expect(entityStrandedTiles(entity, sem), `L${level.level} ${entity.type}@${entity.x},${entity.y}`).toEqual([]);
+        }
+        // ⚠ And today the open case is VACUOUS (named, so a new member that brings one is seen): L66's two cells
+        // are building8 `manual`. No game witness covers an open cell; probe-seedling-l66-door witnesses the door.
+        const open = census().flatMap(({ level, tiles }) => {
+            const grid = playthroughGridFor(level);
+            return tiles.filter(([x, y]) => grid.cells[y * grid.width + x].kind === 'open').map((t) => `L${level.level} [${t}]`);
+        });
+        expect(open).toEqual([]);
     });
 
     it('the rounding law holds: an OPEN cell in such a footprint gains nothing (the player\'s box goes round)', () => {

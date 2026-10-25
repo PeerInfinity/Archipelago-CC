@@ -418,6 +418,14 @@ const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = t
  * which is exactly the rounding `entitySealedTiles` protects. Whether the body has a place is still the
  * physics model's answer (`tileSolid`), never this list's. Read off `ENTITY_SEMANTICS` (no overlay), like
  * `gameGatedSolidTiles`.
+ *
+ * ⛔ WHY LEAVING AN OPEN CELL UNCHARGED IS NOT LOOSER. A partly-covered tile is walkable only while the free
+ * remainder fits the player's 4x5 box; `SEM.entityStrandedTiles` names every tile where it does not, and for
+ * these entities it is EMPTY (pinned in `seedlingPlaythroughOffGridLock.test.js`), so on an open footprint cell
+ * the player can stand beside the lock without crossing it, and the cell costs nothing the game charges. Today
+ * the case is vacuous: L66's two footprint cells are both building8 `manual`, so no open cell is in the census
+ * (pinned too), and no game witness covers one; the probe's game truth is the door itself
+ * (`probe-seedling-l66-door.mjs`: `bare` stalls at y 82.05 under the lock, `yellow-key` enters L70).
  */
 export function offGridGatedSolids(level) {
     const out = [];
