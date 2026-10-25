@@ -1,0 +1,5859 @@
+[
+{
+"step": 1,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 183,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 256,
+"y": 272
+},
+"why": "stairsdown@256,272 \u2192 L2"
+}
+],
+"boot": {
+"level": 0,
+"x": 80,
+"y": 128
+}
+},
+{
+"step": 2,
+"level": 2,
+"verdict": "SOLVED",
+"ticks": 47,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 96
+},
+"why": "teleporter@48,96 \u2192 L3"
+}
+],
+"boot": {
+"level": 2,
+"x": 48,
+"y": 32
+}
+},
+{
+"step": 3,
+"level": 3,
+"verdict": "SOLVED",
+"ticks": 245,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 128,
+"y": 48
+},
+"why": "teleporter@128,48 \u2192 L4"
+}
+],
+"boot": {
+"level": 3,
+"x": 64,
+"y": 16
+}
+},
+{
+"step": 4,
+"level": 4,
+"verdict": "SOLVED",
+"ticks": 255,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 16
+},
+"why": "stairsdown@64,16 \u2192 L5"
+}
+],
+"boot": {
+"level": 4,
+"x": 16,
+"y": 16
+}
+},
+{
+"step": 5,
+"level": 5,
+"verdict": "SOLVED",
+"ticks": 403,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 112
+},
+"why": "teleporter@48,112 \u2192 L6"
+}
+],
+"boot": {
+"level": 5,
+"x": 80,
+"y": 32
+}
+},
+{
+"step": 6,
+"level": 6,
+"verdict": "SOLVED",
+"ticks": 294,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 32
+},
+"why": "stairsup@224,32 \u2192 L7"
+}
+],
+"boot": {
+"level": 6,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 7,
+"level": 7,
+"verdict": "SOLVED",
+"ticks": 146,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 192,
+"y": 32
+},
+"why": "stairsdown@192,32 \u2192 L8"
+}
+],
+"boot": {
+"level": 7,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 8,
+"level": 8,
+"verdict": "SOLVED",
+"ticks": 827,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 192
+},
+"why": "teleporter@96,192 \u2192 L9"
+}
+],
+"boot": {
+"level": 8,
+"x": 144,
+"y": 48
+}
+},
+{
+"step": 9,
+"level": 9,
+"verdict": "SOLVED",
+"ticks": 122,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 0
+},
+"why": "teleporter@16,0 \u2192 L10"
+}
+],
+"boot": {
+"level": 9,
+"x": 144,
+"y": 16
+}
+},
+{
+"step": 10,
+"level": 10,
+"verdict": "SOLVED",
+"ticks": 83,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 48,
+"y": 48
+},
+"why": "Level 010 - Sword (sphere 0.1) \u2192 Progressive Sword",
+"location": "Level 010 - Sword"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 16
+},
+"why": "stairsup@48,16 \u2192 L11"
+}
+],
+"boot": {
+"level": 10,
+"x": 48,
+"y": 80
+}
+},
+{
+"step": 11,
+"level": 11,
+"verdict": "SOLVED",
+"ticks": 97,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 32,
+"y": 48
+},
+"why": "Level 011 - Chest (sphere 0.2) \u2192 Seal",
+"location": "Level 011 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L3"
+}
+],
+"boot": {
+"level": 11,
+"x": 32,
+"y": 64
+}
+},
+{
+"step": 12,
+"level": 3,
+"verdict": "SOLVED",
+"ticks": 152,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L2"
+}
+],
+"boot": {
+"level": 3,
+"x": 96,
+"y": 128
+}
+},
+{
+"step": 13,
+"level": 2,
+"verdict": "SOLVED",
+"ticks": 23,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 16
+},
+"why": "stairsup@48,16 \u2192 L0"
+}
+],
+"boot": {
+"level": 2,
+"x": 48,
+"y": 80
+}
+},
+{
+"step": 14,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 111,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 272
+},
+"why": "teleporter@160,272 \u2192 L86"
+}
+],
+"boot": {
+"level": 0,
+"x": 256,
+"y": 256
+}
+},
+{
+"step": 15,
+"level": 86,
+"verdict": "SOLVED",
+"ticks": 101,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 48,
+"y": 16
+},
+"why": "Level 086 - Chest (sphere 0.3) \u2192 Seal",
+"location": "Level 086 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 64
+},
+"why": "teleporter@48,64 \u2192 L0"
+}
+],
+"boot": {
+"level": 86,
+"x": 48,
+"y": 48
+}
+},
+{
+"step": 16,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 186,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L12"
+}
+],
+"boot": {
+"level": 0,
+"x": 160,
+"y": 288
+}
+},
+{
+"step": 17,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 328,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 168,
+"y": 368
+},
+"why": "teleporter@168,368 \u2192 L36"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 18,
+"level": 36,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-18) chest (64,48) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-18) chest (64,48) stance waypoint 1 (72,66): the route entered a proximity-hazard \u2014 chest at (64,48) in level 36 \u2014 at (72.97948572567307,67.99500184538654). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 64,
+"y": 48
+},
+"why": "Level 036 - Chest (sphere 1.1) \u2192 Seal",
+"location": "Level 036 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 128
+},
+"why": "teleporter@32,128 \u2192 L12"
+}
+],
+"boot": {
+"level": 36,
+"x": 32,
+"y": 112
+}
+},
+{
+"step": 19,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 311,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L0"
+}
+],
+"boot": {
+"level": 12,
+"x": 168,
+"y": 384
+}
+},
+{
+"step": 20,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 198,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 192
+},
+"why": "stairsdown@32,192 \u2192 L13"
+}
+],
+"boot": {
+"level": 0,
+"x": 288,
+"y": 176
+}
+},
+{
+"step": 21,
+"level": 13,
+"verdict": "SOLVED",
+"ticks": 36,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 32
+},
+"why": "stairsdown@32,32 \u2192 L14"
+}
+],
+"boot": {
+"level": 13,
+"x": 64,
+"y": 128
+}
+},
+{
+"step": 22,
+"level": 14,
+"verdict": "SOLVED",
+"ticks": 103,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 64
+},
+"why": "stairsdown@32,64 \u2192 L15"
+}
+],
+"boot": {
+"level": 14,
+"x": 160,
+"y": 64
+}
+},
+{
+"step": 23,
+"level": 15,
+"verdict": "SOLVED",
+"ticks": 456,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 16
+},
+"why": "stairsdown@144,16 \u2192 L16"
+}
+],
+"boot": {
+"level": 15,
+"x": 48,
+"y": 64
+}
+},
+{
+"step": 24,
+"level": 16,
+"verdict": "SOLVED",
+"ticks": 273,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 16,
+"tag": 0
+},
+"at": {
+"x": 32,
+"y": 16
+},
+"obstacle": "rope@32,16",
+"why": "L16 flag 0: rope@32,16 cleared (flag:L16:0) \u2014 broken before row 2.1 walks its landing",
+"location": "L16 flag 0: rope@32,16 cleared"
+},
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 12,
+"ty": 3,
+"x": 192,
+"y": 48
+},
+"why": "pit@192,48 (out_pit_7_2, tile 12,3) \u2192 L17"
+}
+],
+"boot": {
+"level": 16,
+"x": 32,
+"y": 64
+}
+},
+{
+"step": 25,
+"level": 17,
+"verdict": "SOLVED",
+"ticks": 131,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 128,
+"y": 16
+},
+"why": "Level 017 - Chest (sphere 2.1) \u2192 Seal",
+"location": "Level 017 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 48
+},
+"why": "stairsup@32,48 \u2192 L16"
+}
+],
+"boot": {
+"level": 17,
+"x": 112,
+"y": 32
+}
+},
+{
+"step": 26,
+"level": 16,
+"verdict": "SOLVED",
+"ticks": 516,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 352,
+"y": 80
+},
+"why": "stairsup@352,80 \u2192 L18"
+}
+],
+"boot": {
+"level": 16,
+"x": 112,
+"y": 48
+}
+},
+{
+"step": 27,
+"level": 18,
+"verdict": "SOLVED",
+"ticks": 467,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 112
+},
+"why": "teleporter@176,112 \u2192 L19"
+}
+],
+"boot": {
+"level": 18,
+"x": 16,
+"y": 32
+}
+},
+{
+"step": 28,
+"level": 19,
+"verdict": "SOLVED",
+"ticks": 746,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 96,
+"y": 64
+},
+"why": "Level 019 - Boss Key 0 (sphere 2.2) \u2192 Red Key",
+"location": "Level 019 - Boss Key 0"
+},
+{
+"kind": "clear-tag",
+"tag": {
+"level": 19,
+"tag": 0
+},
+"at": {
+"x": 80,
+"y": 32
+},
+"obstacle": "shieldboss@80,32",
+"report": {
+"level": 19,
+"tag": 0
+},
+"why": "Level 019 - Shieldspire (sphere 2.3) \u2192 Seal \u2014 the kill's report {19,0} (`fight`)",
+"location": "Level 019 - Shieldspire"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 96
+},
+"why": "stairsup@16,96 \u2192 L20"
+}
+],
+"boot": {
+"level": 19,
+"x": 16,
+"y": 144
+}
+},
+{
+"step": 29,
+"level": 20,
+"verdict": "SOLVED",
+"ticks": 560,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 112,
+"y": 48
+},
+"why": "Level 020 - Shield (sphere 3.1) \u2192 Progressive Shield",
+"location": "Level 020 - Shield"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 48
+},
+"why": "stairsup@16,48 \u2192 L13"
+}
+],
+"boot": {
+"level": 20,
+"x": 192,
+"y": 64
+}
+},
+{
+"step": 30,
+"level": 13,
+"verdict": "SOLVED",
+"ticks": 48,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 144
+},
+"why": "stairsup@64,144 \u2192 L0"
+}
+],
+"boot": {
+"level": 13,
+"x": 96,
+"y": 48
+}
+},
+{
+"step": 31,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 201,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L12"
+}
+],
+"boot": {
+"level": 0,
+"x": 48,
+"y": 192
+}
+},
+{
+"step": 32,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 2364,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 36,
+"ty": 43,
+"x": 576,
+"y": 688
+},
+"why": "pit@576,688 (out_pit_5_5, tile 36,43) \u2192 L21"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 33,
+"level": 21,
+"verdict": "SOLVED",
+"ticks": 26,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 80,
+"y": 160
+},
+"why": "teleporter@80,160 \u2192 L22"
+}
+],
+"boot": {
+"level": 21,
+"x": 80,
+"y": 80
+}
+},
+{
+"step": 34,
+"level": 22,
+"verdict": "SOLVED",
+"ticks": 113,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 128
+},
+"why": "teleporter@0,128 \u2192 L25"
+}
+],
+"boot": {
+"level": 22,
+"x": 96,
+"y": 16
+}
+},
+{
+"step": 35,
+"level": 25,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-35) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) \u2014 a pickup in a solid is an obstacle, not a stance problem. No strategy row exists for this obstacle.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 96,
+"y": 96
+},
+"why": "Level 025 - Chest (sphere 3.2) \u2192 Seal",
+"location": "Level 025 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 32
+},
+"why": "teleporter@144,32 \u2192 L22"
+}
+],
+"boot": {
+"level": 25,
+"x": 128,
+"y": 32
+}
+},
+{
+"step": 36,
+"level": 22,
+"verdict": "SOLVED",
+"ticks": 201,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 192,
+"y": 64
+},
+"why": "teleporter@192,64 \u2192 L29"
+}
+],
+"boot": {
+"level": 22,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 37,
+"level": 29,
+"verdict": "SOLVED",
+"ticks": 257,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 112,
+"y": 64
+},
+"why": "Level 029 - Boss Key 1 (sphere 3.3) \u2192 Green Key",
+"location": "Level 029 - Boss Key 1"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 32
+},
+"why": "stairsdown@112,32 \u2192 L31"
+}
+],
+"boot": {
+"level": 29,
+"x": 16,
+"y": 224
+}
+},
+{
+"step": 38,
+"level": 31,
+"verdict": "SOLVED",
+"ticks": 336,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 384
+},
+"why": "stairsup@160,384 \u2192 L30"
+}
+],
+"boot": {
+"level": 31,
+"x": 384,
+"y": 112
+}
+},
+{
+"step": 39,
+"level": 30,
+"verdict": "SOLVED",
+"ticks": 395,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 64,
+"y": 64
+},
+"why": "Level 030 - Torchpickup (sphere 4.1) \u2192 Light",
+"location": "Level 030 - Torchpickup"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 160
+},
+"why": "stairsup@224,160 \u2192 L32"
+}
+],
+"boot": {
+"level": 30,
+"x": 176,
+"y": 48
+}
+},
+{
+"step": 40,
+"level": 32,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing (`Fire.removed()` @0eda15f785 clears {32,4}; the HOST grants the item): this run holds none.",
+"goals": [
+{
+"kind": "encounter",
+"at": {
+"x": 80,
+"y": 128
+},
+"drop": {
+"item": "Fire"
+},
+"then": null,
+"why": "Level 032 - Bob Boss (sphere 4.2) \u2192 Fire",
+"location": "Level 032 - Bob Boss"
+},
+{
+"kind": "encounter",
+"at": {
+"x": 80,
+"y": 128
+},
+"drop": {
+"item": "Seal"
+},
+"then": "reach-pit",
+"why": "Level 032 - Times (sphere 4.3) \u2192 Seal",
+"location": "Level 032 - Times",
+"report": {
+"level": 32,
+"tag": 3
+}
+}
+],
+"boot": {
+"level": 32,
+"x": 72,
+"y": 120
+}
+},
+{
+"step": 41,
+"level": 30,
+"verdict": "SOLVED",
+"ticks": 320,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L22"
+}
+],
+"boot": {
+"level": 30,
+"x": 224,
+"y": 80
+}
+},
+{
+"step": 42,
+"level": 22,
+"verdict": "SOLVED",
+"ticks": 406,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 0
+},
+"why": "teleporter@96,0 \u2192 L21"
+}
+],
+"boot": {
+"level": 22,
+"x": 96,
+"y": 176
+}
+},
+{
+"step": 43,
+"level": 21,
+"verdict": "SOLVED",
+"ticks": 31,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L23"
+}
+],
+"boot": {
+"level": 21,
+"x": 80,
+"y": 144
+}
+},
+{
+"step": 44,
+"level": 23,
+"verdict": "SOLVED",
+"ticks": 11,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 32
+},
+"why": "stairsup@32,32 \u2192 L24"
+}
+],
+"boot": {
+"level": 23,
+"x": 64,
+"y": 32
+}
+},
+{
+"step": 45,
+"level": 24,
+"verdict": "SOLVED",
+"ticks": 124,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 144
+},
+"why": "teleporter@32,144 \u2192 L12"
+}
+],
+"boot": {
+"level": 24,
+"x": 96,
+"y": 80
+}
+},
+{
+"step": 46,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-46) chest (320,816) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-46) chest (320,816) stance waypoint 13 (328,834): the route entered a proximity-hazard \u2014 chest at (320,816) in level 12 \u2014 at (328.6670530633372,835.8463944777346). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 320,
+"y": 816
+},
+"why": "Level 012 - Chest (sphere 5.1) \u2192 Seal",
+"location": "Level 012 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 592,
+"y": 0
+},
+"why": "teleporter@592,0 \u2192 L37"
+}
+],
+"boot": {
+"level": 12,
+"x": 40,
+"y": 704
+}
+},
+{
+"step": 47,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 316,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 0
+},
+"why": "teleporter@288,0 \u2192 L38"
+}
+],
+"boot": {
+"level": 37,
+"x": 32,
+"y": 288
+}
+},
+{
+"step": 48,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 371,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 144,
+"y": 112
+},
+"why": "Level 038 - Chest (sphere 5.2) \u2192 Seal",
+"location": "Level 038 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 304
+},
+"why": "teleporter@144,304 \u2192 L37"
+}
+],
+"boot": {
+"level": 38,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 49,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 332,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 256
+},
+"why": "teleporter@0,256 \u2192 L44"
+}
+],
+"boot": {
+"level": 37,
+"x": 288,
+"y": 16
+}
+},
+{
+"step": 50,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 212,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L45"
+}
+],
+"boot": {
+"level": 44,
+"x": 128,
+"y": 128
+}
+},
+{
+"step": 51,
+"level": 45,
+"verdict": "SOLVED",
+"ticks": 239,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 0
+},
+"why": "teleporter@112,0 \u2192 L46"
+}
+],
+"boot": {
+"level": 45,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 52,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 208,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 0
+},
+"why": "teleporter@176,0 \u2192 L47"
+}
+],
+"boot": {
+"level": 46,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 53,
+"level": 47,
+"verdict": "SOLVED",
+"ticks": 204,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 216,
+"y": 112
+},
+"why": "teleporter@216,112 \u2192 L48"
+}
+],
+"boot": {
+"level": 47,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 54,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 330,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 11,
+"ty": 3,
+"x": 176,
+"y": 48
+},
+"why": "pit@176,48 (out_pit_2_2, tile 11,3) \u2192 L49"
+}
+],
+"boot": {
+"level": 48,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 55,
+"level": 49,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-55) collect (32,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-55) collect (32,80) stance waypoint 0 (40,72): not reached within 400 ticks; stalled at (40,72.1500000000028) v=(0,-1.5249999999999981) in level 49, aiming at (40,72).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 32,
+"y": 80
+},
+"why": "Level 049 - Conch (sphere 5.3) \u2192 Progressive Swim",
+"location": "Level 049 - Conch"
+}
+],
+"boot": {
+"level": 49,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 56,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 74,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 192
+},
+"why": "stairsdown@32,192 \u2192 L13"
+}
+],
+"boot": {
+"level": 0,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 57,
+"level": 13,
+"verdict": "SOLVED",
+"ticks": 36,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 32
+},
+"why": "stairsdown@32,32 \u2192 L14"
+}
+],
+"boot": {
+"level": 13,
+"x": 64,
+"y": 128
+}
+},
+{
+"step": 58,
+"level": 14,
+"verdict": "SOLVED",
+"ticks": 117,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 64
+},
+"why": "stairsdown@32,64 \u2192 L15"
+}
+],
+"boot": {
+"level": 14,
+"x": 160,
+"y": 64
+}
+},
+{
+"step": 59,
+"level": 15,
+"verdict": "SOLVED",
+"ticks": 326,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 144,
+"y": 96
+},
+"why": "Level 015 - Chest (sphere 6.1) \u2192 Seal",
+"location": "Level 015 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 64
+},
+"why": "stairsup@32,64 \u2192 L14"
+}
+],
+"boot": {
+"level": 15,
+"x": 48,
+"y": 64
+}
+},
+{
+"step": 60,
+"level": 14,
+"verdict": "SOLVED",
+"ticks": 55,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 64
+},
+"why": "stairsup@176,64 \u2192 L13"
+}
+],
+"boot": {
+"level": 14,
+"x": 48,
+"y": 64
+}
+},
+{
+"step": 61,
+"level": 13,
+"verdict": "SOLVED",
+"ticks": 48,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 144
+},
+"why": "stairsup@64,144 \u2192 L0"
+}
+],
+"boot": {
+"level": 13,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 62,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 169,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L12"
+}
+],
+"boot": {
+"level": 0,
+"x": 48,
+"y": 192
+}
+},
+{
+"step": 63,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 953,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 592,
+"y": 0
+},
+"why": "teleporter@592,0 \u2192 L37"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 64,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 314,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 0
+},
+"why": "teleporter@288,0 \u2192 L38"
+}
+],
+"boot": {
+"level": 37,
+"x": 32,
+"y": 288
+}
+},
+{
+"step": 65,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 480,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 39,
+"tag": 8
+},
+"at": {
+"x": 144,
+"y": 592
+},
+"obstacle": "wandlock@144,592",
+"presser": {
+"level": 38,
+"class": "buttonroom",
+"x": 32,
+"y": 48
+},
+"why": "L39 flag 8: wandlock@144,592 cleared (flag:L39:8) \u2014 broken before row 6.2 walks its landing",
+"location": "L39 flag 8: wandlock@144,592 cleared"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L39"
+}
+],
+"boot": {
+"level": 38,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 66,
+"level": 39,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot: no REACHABLE stance inside button@144,112 in level 39 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 \u2014 its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 \u2014 its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 \u2014 its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. \u26d4 SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 72,
+"y": 40
+},
+"why": "Level 039 - Totem Part 72,40 (sphere 6.2) \u2192 Totem Shard",
+"location": "Level 039 - Totem Part 72,40"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L40"
+}
+],
+"boot": {
+"level": 39,
+"x": 144,
+"y": 608
+}
+},
+{
+"step": 67,
+"level": 40,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot: no REACHABLE stance inside button@816,400 in level 40 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (488,904). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@448,432 \u2014 its group t=2 publishes only while a Solid sits on button@480,384, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@512,480 \u2014 its group t=2 publishes only while a Solid sits on button@480,384, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@800,400 \u2014 its group t=5 publishes only while a Solid sits on button@768,400, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; bosslock@480,352 (no presser publishes its tSet group at all, so nothing in this room can open it); pushableblock@576,560 (no shove of it plans the corridor).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 656,
+"y": 528
+},
+"why": "Level 040 - Boss Key 2 (sphere 6.3) \u2192 Purple Key",
+"location": "Level 040 - Boss Key 2"
+},
+{
+"kind": "collect-placement",
+"placement": {
+"x": 880,
+"y": 816
+},
+"why": "Level 040 - Chest (sphere 6.4) \u2192 Seal",
+"location": "Level 040 - Chest"
+},
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 640
+},
+"why": "Level 040 - Totem Part 160,640 (sphere 6.5) \u2192 Totem Shard",
+"location": "Level 040 - Totem Part 160,640"
+}
+],
+"boot": {
+"level": 40,
+"x": 480,
+"y": 896
+}
+},
+{
+"step": 68,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 204,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L12"
+}
+],
+"boot": {
+"level": 0,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 69,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 953,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 592,
+"y": 0
+},
+"why": "teleporter@592,0 \u2192 L37"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 70,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 36,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 256
+},
+"why": "teleporter@0,256 \u2192 L44"
+}
+],
+"boot": {
+"level": 37,
+"x": 32,
+"y": 288
+}
+},
+{
+"step": 71,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 120,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L45"
+}
+],
+"boot": {
+"level": 44,
+"x": 128,
+"y": 128
+}
+},
+{
+"step": 72,
+"level": 45,
+"verdict": "SOLVED",
+"ticks": 358,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 0
+},
+"why": "teleporter@112,0 \u2192 L46"
+}
+],
+"boot": {
+"level": 45,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 73,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 1352,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 424,
+"y": 40
+},
+"why": "Level 046 - Chest (sphere 6.6) \u2192 Seal",
+"location": "Level 046 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 0
+},
+"why": "teleporter@176,0 \u2192 L47"
+}
+],
+"boot": {
+"level": 46,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 74,
+"level": 47,
+"verdict": "SOLVED",
+"ticks": 300,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 216,
+"y": 112
+},
+"why": "teleporter@216,112 \u2192 L48"
+}
+],
+"boot": {
+"level": 47,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 75,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 681,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 152,
+"y": 184
+},
+"why": "Level 048 - Chest (sphere 6.7) \u2192 Seal",
+"location": "Level 048 - Chest"
+},
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 11,
+"ty": 3,
+"x": 176,
+"y": 48
+},
+"why": "pit@176,48 (out_pit_2_2, tile 11,3) \u2192 L49"
+}
+],
+"boot": {
+"level": 48,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 76,
+"level": 49,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-76): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 49 from tile (2,2) to (2,8). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 128
+},
+"why": "teleporter@32,128 \u2192 L50"
+}
+],
+"boot": {
+"level": 49,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 77,
+"level": 50,
+"verdict": "SOLVED",
+"ticks": 608,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 304
+},
+"why": "teleporter@48,304 \u2192 L51"
+}
+],
+"boot": {
+"level": 50,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 78,
+"level": 51,
+"verdict": "SOLVED",
+"ticks": 101,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 144
+},
+"why": "stairsup@176,144 \u2192 L53"
+}
+],
+"boot": {
+"level": 51,
+"x": 144,
+"y": 16
+}
+},
+{
+"step": 79,
+"level": 53,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-79) reach-exit (144,240)->L54: the danger map forbids (104.74873326654372,120.11157546231716) \u2014 chaser:puncher@136,96 (inside leash 80 (d=11.1), box grown 1 px/tick x 0 + pad 8). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 240
+},
+"why": "teleporter@144,240 \u2192 L54"
+}
+],
+"boot": {
+"level": 53,
+"x": 48,
+"y": 144
+}
+},
+{
+"step": 80,
+"level": 54,
+"verdict": "SOLVED",
+"ticks": 579,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 128,
+"y": 464
+},
+"why": "teleporter@128,464 \u2192 L52"
+}
+],
+"boot": {
+"level": 54,
+"x": 144,
+"y": 16
+}
+},
+{
+"step": 81,
+"level": 52,
+"verdict": "SOLVED",
+"ticks": 208,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 48
+},
+"why": "teleporter@0,48 \u2192 L55"
+}
+],
+"boot": {
+"level": 52,
+"x": 112,
+"y": 16
+}
+},
+{
+"step": 82,
+"level": 55,
+"verdict": "SOLVED",
+"ticks": 46,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 40,
+"y": 88
+},
+"why": "Level 055 - Boss Key 3 (sphere 6.8) \u2192 Blue Key",
+"location": "Level 055 - Boss Key 3"
+}
+],
+"boot": {
+"level": 55,
+"x": 64,
+"y": 48
+}
+},
+{
+"step": 83,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 204,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L12"
+}
+],
+"boot": {
+"level": 0,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 84,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 232,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 0
+},
+"why": "teleporter@304,0 \u2192 L88"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 85,
+"level": 88,
+"verdict": "SOLVED",
+"ticks": 476,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L87"
+}
+],
+"boot": {
+"level": 88,
+"x": 96,
+"y": 288
+}
+},
+{
+"step": 86,
+"level": 87,
+"verdict": "SOLVED",
+"ticks": 205,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 144
+},
+"why": "teleporter@0,144 \u2192 L89"
+}
+],
+"boot": {
+"level": 87,
+"x": 272,
+"y": 288
+}
+},
+{
+"step": 87,
+"level": 89,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-87): no corridor for goal collect-placement toward (168,88) in level 89. Obstacle: pickup:feather (feather@160,96); also on the frontier: cliffside0@144,80, cliffside0@144,64, cliffside0@144,96, cliffside2@144,48, tree@96,32, forestchar@80,96, tree@64,32, tree@64,128, tree@240,128, tree@208,160, tree@32,64, tree@272,96, tree@32,96, tree@96,192, tree@64,160, tree@128,192, tree@208,192, tree@240,192, tree@128,224, tree@272,192, tree@128,256, tree@176,256, tree@208,256, pole@288,224, tree@240,256, tree@272,256, tree@176,288, tree@128,288. Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 89 from tile (17,15) to (10,5). \u26d3 The search refused 3 UPWARD step(s) into or out of an armed waterfall (`climbsArmedWaterfall`): without the feather the push (`v.y += 0.8`) beats the climb, so a waterfall is one-way DOWN. The two are in different connected components ",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 96
+},
+"why": "Level 089 - Feather (sphere 6.9) \u2192 Progressive Swim",
+"location": "Level 089 - Feather"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 256,
+"y": 0
+},
+"why": "teleporter@256,0 \u2192 L90"
+}
+],
+"boot": {
+"level": 89,
+"x": 272,
+"y": 240
+}
+},
+{
+"step": 88,
+"level": 90,
+"verdict": "SOLVED",
+"ticks": 137,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 48,
+"y": 32
+},
+"why": "Level 090 - Chest (sphere 6.10) \u2192 Seal",
+"location": "Level 090 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 96
+},
+"why": "teleporter@48,96 \u2192 L89"
+}
+],
+"boot": {
+"level": 90,
+"x": 48,
+"y": 80
+}
+},
+{
+"step": 89,
+"level": 89,
+"verdict": "SOLVED",
+"ticks": 639,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 240
+},
+"why": "teleporter@288,240 \u2192 L87"
+}
+],
+"boot": {
+"level": 89,
+"x": 256,
+"y": 16
+}
+},
+{
+"step": 90,
+"level": 87,
+"verdict": "SOLVED",
+"ticks": 250,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 464,
+"y": 272
+},
+"why": "teleporter@464,272 \u2192 L44"
+}
+],
+"boot": {
+"level": 87,
+"x": 16,
+"y": 144
+}
+},
+{
+"step": 91,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 149,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 128
+},
+"why": "teleporter@144,128 \u2192 L37"
+}
+],
+"boot": {
+"level": 44,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 92,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 522,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 0
+},
+"why": "teleporter@288,0 \u2192 L38"
+}
+],
+"boot": {
+"level": 37,
+"x": 16,
+"y": 256
+}
+},
+{
+"step": 93,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 359,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L39"
+}
+],
+"boot": {
+"level": 38,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 94,
+"level": 39,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot: no REACHABLE stance inside button@144,112 in level 39 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 \u2014 its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 \u2014 its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 \u2014 its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. \u26d4 SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L40"
+}
+],
+"boot": {
+"level": 39,
+"x": 144,
+"y": 608
+}
+},
+{
+"step": 95,
+"level": 40,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-95) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 \u2014 22 walkable candidate(s) in range, 15 of them with an approach to the pickup; the nearest of those is the aim and the walk's own obstacle ladder is what must open it) -> hold stance (wandlock@448,432) -> chest stance (chest@880,816) -> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752) while pressing spinner@880,848, after 1 landing(s) \u2014 a death reboots the room: every body is rebuilt (spinner@880,848's hits with it) and the player respawns at the arrival, so the strike schedule no longer describes the run (PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 64,
+"y": 144
+},
+"why": "Level 040 - Totem Part 64,144 (sphere 7.1) \u2192 Totem Shard",
+"location": "Level 040 - Totem Part 64,144"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 944,
+"y": 96
+},
+"why": "teleporter@944,96 \u2192 L41"
+}
+],
+"boot": {
+"level": 40,
+"x": 480,
+"y": 896
+}
+},
+{
+"step": 96,
+"level": 41,
+"verdict": "SOLVED",
+"ticks": 2346,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 240,
+"y": 144
+},
+"why": "Level 041 - Totem Part 240,144 (sphere 7.2) \u2192 Totem Shard",
+"location": "Level 041 - Totem Part 240,144"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 160
+},
+"why": "teleporter@0,160 \u2192 L40"
+}
+],
+"boot": {
+"level": 41,
+"x": 16,
+"y": 160
+}
+},
+{
+"step": 97,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 70,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 848,
+"y": 0
+},
+"why": "teleporter@848,0 \u2192 L42"
+}
+],
+"boot": {
+"level": 40,
+"x": 928,
+"y": 96
+}
+},
+{
+"step": 98,
+"level": 42,
+"verdict": "SOLVED",
+"ticks": 1294,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 184,
+"y": 152
+},
+"why": "Level 042 - Totem Part 184,152 (sphere 7.3) \u2192 Totem Shard",
+"location": "Level 042 - Totem Part 184,152"
+}
+],
+"boot": {
+"level": 42,
+"x": 240,
+"y": 320
+}
+},
+{
+"step": 99,
+"level": 0,
+"verdict": "SOLVED",
+"ticks": 392,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 240,
+"y": 0
+},
+"why": "teleporter@240,0 \u2192 L89"
+}
+],
+"boot": {
+"level": 0,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 100,
+"level": 89,
+"verdict": "SOLVED",
+"ticks": 135,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 240
+},
+"why": "teleporter@288,240 \u2192 L87"
+}
+],
+"boot": {
+"level": 89,
+"x": 160,
+"y": 288
+}
+},
+{
+"step": 101,
+"level": 87,
+"verdict": "SOLVED",
+"ticks": 250,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 464,
+"y": 272
+},
+"why": "teleporter@464,272 \u2192 L44"
+}
+],
+"boot": {
+"level": 87,
+"x": 16,
+"y": 144
+}
+},
+{
+"step": 102,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 71,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L45"
+}
+],
+"boot": {
+"level": 44,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 103,
+"level": 45,
+"verdict": "SOLVED",
+"ticks": 358,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 0
+},
+"why": "teleporter@112,0 \u2192 L46"
+}
+],
+"boot": {
+"level": 45,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 104,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 347,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 176,
+"y": 0
+},
+"why": "teleporter@176,0 \u2192 L47"
+}
+],
+"boot": {
+"level": 46,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 105,
+"level": 47,
+"verdict": "SOLVED",
+"ticks": 300,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 216,
+"y": 112
+},
+"why": "teleporter@216,112 \u2192 L48"
+}
+],
+"boot": {
+"level": 47,
+"x": 240,
+"y": 448
+}
+},
+{
+"step": 106,
+"level": 48,
+"verdict": "SOLVED",
+"ticks": 295,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 11,
+"ty": 3,
+"x": 176,
+"y": 48
+},
+"why": "pit@176,48 (out_pit_2_2, tile 11,3) \u2192 L49"
+}
+],
+"boot": {
+"level": 48,
+"x": 112,
+"y": 288
+}
+},
+{
+"step": 107,
+"level": 49,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-107): no corridor for goal reach-exit toward (40,136) in level 49. Obstacle: pickup:conch (conch@32,80). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 49 from tile (2,2) to (2,8). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 128
+},
+"why": "teleporter@32,128 \u2192 L50"
+}
+],
+"boot": {
+"level": 49,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 108,
+"level": 50,
+"verdict": "SOLVED",
+"ticks": 608,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 304
+},
+"why": "teleporter@48,304 \u2192 L51"
+}
+],
+"boot": {
+"level": 50,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 109,
+"level": 51,
+"verdict": "SOLVED",
+"ticks": 378,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 256,
+"y": 256
+},
+"why": "teleporter@256,256 \u2192 L52"
+}
+],
+"boot": {
+"level": 51,
+"x": 144,
+"y": 16
+}
+},
+{
+"step": 110,
+"level": 52,
+"verdict": "SOLVED",
+"ticks": 381,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 112
+},
+"why": "teleporter@224,112 \u2192 L56"
+}
+],
+"boot": {
+"level": 52,
+"x": 16,
+"y": 112
+}
+},
+{
+"step": 111,
+"level": 56,
+"verdict": "SOLVED",
+"ticks": 262,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 6,
+"ty": 1,
+"x": 96,
+"y": 16
+},
+"why": "pit@96,16 (out_pit_6_10, tile 6,1) \u2192 L57"
+}
+],
+"boot": {
+"level": 56,
+"x": 16,
+"y": 112
+}
+},
+{
+"step": 112,
+"level": 57,
+"verdict": "SOLVED",
+"ticks": 1389,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 57,
+"tag": 0
+},
+"at": {
+"x": 80,
+"y": 48
+},
+"obstacle": "tentaclebeast@80,48",
+"report": {
+"level": 57,
+"tag": 0
+},
+"why": "Level 057 - Tentacled Beast (sphere 7.4) \u2192 Seal \u2014 the kill's report {57,0} (`tentaclebeast`)",
+"location": "Level 057 - Tentacled Beast"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 64
+},
+"why": "tentaclebeast@80,48 \u2192 L58"
+}
+],
+"boot": {
+"level": 57,
+"x": 96,
+"y": 160
+}
+},
+{
+"step": 113,
+"level": 58,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-113) reach-exit (80,16)->L46: the re-planned corridor failed too \u2014 solverBot(survey-step-113) reach-exit (80,16)->L46 waypoint 1 (72,56): not reached within 400 ticks; stalled at (56.82857242301463,55.93354209545144) v=(1.0500000000000023,0) in level 58, aiming at (72,56), after grazing 400 solid(s): yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56); yeti at (56,56) on the X axis, at (56.82857242301463,55.93354209545144) in level 58, aiming at (72,56).",
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 58,
+"tag": 1
+},
+"at": {
+"x": 56,
+"y": 56
+},
+"obstacle": "yeti@56,56",
+"why": "L58 flag 1: yeti@56,56 cleared (flag:L58:1) \u2014 broken before row 7.5 walks its landing",
+"location": "L58 flag 1: yeti@56,56 cleared"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 80,
+"y": 16
+},
+"why": "teleporter@80,16 \u2192 L46"
+}
+],
+"boot": {
+"level": 58,
+"x": 56,
+"y": 96
+}
+},
+{
+"step": 114,
+"level": 46,
+"verdict": "SOLVED",
+"ticks": 342,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 240,
+"y": 464
+},
+"why": "teleporter@240,464 \u2192 L45"
+}
+],
+"boot": {
+"level": 46,
+"x": 352,
+"y": 128
+}
+},
+{
+"step": 115,
+"level": 45,
+"verdict": "SOLVED",
+"ticks": 360,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 304
+},
+"why": "teleporter@112,304 \u2192 L44"
+}
+],
+"boot": {
+"level": 45,
+"x": 112,
+"y": 16
+}
+},
+{
+"step": 116,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 92,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L87"
+}
+],
+"boot": {
+"level": 44,
+"x": 64,
+"y": 16
+}
+},
+{
+"step": 117,
+"level": 87,
+"verdict": "SOLVED",
+"ticks": 148,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 272,
+"y": 304
+},
+"why": "teleporter@272,304 \u2192 L88"
+}
+],
+"boot": {
+"level": 87,
+"x": 448,
+"y": 272
+}
+},
+{
+"step": 118,
+"level": 88,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-118) reach-exit (96,304)->L12: the combat ladder is EXHAUSTED. The corridor passes through danger at (136.9,144.4) \u2014 enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: the danger-forbidden corridor STILL probes dangerous at (136.9,144.4) \u2014 enemy:drill@128,160 (a stepped drill, priced as a static box where it stands now (136,152) (`drillMixedRooms`: it hops only when the player is in its run range with a clear line)). \u26a0 The AVOID rung routes around RECTS and the probe asks the whole union, which includes the point tests a rect cannot carry (a disc hazard); that gap is why the ladder has a second rung.\n  time: the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [enemy:drill@128,160] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  forced-hit: no forced hit is proven from (136.4,121.3): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 304
+},
+"why": "teleporter@96,304 \u2192 L12"
+}
+],
+"boot": {
+"level": 88,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 119,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 208,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 352
+},
+"why": "teleporter@0,352 \u2192 L95"
+}
+],
+"boot": {
+"level": 12,
+"x": 304,
+"y": 16
+}
+},
+{
+"step": 120,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 490,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L59"
+}
+],
+"boot": {
+"level": 95,
+"x": 608,
+"y": 64
+}
+},
+{
+"step": 121,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 128
+},
+"why": "teleporter@304,128 \u2192 L60"
+}
+],
+"boot": {
+"level": 59,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 122,
+"level": 60,
+"verdict": "SOLVED",
+"ticks": 530,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 80
+},
+"why": "teleporter@160,80 \u2192 L61"
+}
+],
+"boot": {
+"level": 60,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 123,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 296,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 96
+},
+"why": "teleporter@224,96 \u2192 L63"
+}
+],
+"boot": {
+"level": 61,
+"x": 16,
+"y": 160
+}
+},
+{
+"step": 124,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 86,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 62,
+"tag": 0
+},
+"at": {
+"x": 120,
+"y": 200
+},
+"obstacle": "lightpole@120,200",
+"presser": {
+"level": 63,
+"class": "buttonroom",
+"x": 32,
+"y": 64
+},
+"why": "L62 flag 0: lightpole@120,200 cleared (flag:L62:0) \u2014 broken before row 7.5 walks its landing",
+"location": "L62 flag 0: lightpole@120,200 cleared"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 0
+},
+"why": "teleporter@16,0 \u2192 L62"
+}
+],
+"boot": {
+"level": 63,
+"x": 16,
+"y": 96
+}
+},
+{
+"step": 125,
+"level": 62,
+"verdict": "SOLVED",
+"ticks": 266,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 64
+},
+"why": "teleporter@112,64 \u2192 L64"
+}
+],
+"boot": {
+"level": 62,
+"x": 192,
+"y": 288
+}
+},
+{
+"step": 126,
+"level": 64,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "levelRun: a sword press at tick 43 would fire its rect on a FROZEN tick (a pickup ceremony), and `genericHit` returns immediately under `Game.freezeObjects` \u2014 so the press would do nothing at all. Press outside the freeze.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 72,
+"y": 24
+},
+"why": "Level 064 - Ghostspear (sphere 7.5) \u2192 Ghost Spear",
+"location": "Level 064 - Ghostspear"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 96
+},
+"why": "teleporter@32,96 \u2192 L62"
+}
+],
+"boot": {
+"level": 64,
+"x": 32,
+"y": 80
+}
+},
+{
+"step": 127,
+"level": 62,
+"verdict": "SOLVED",
+"ticks": 263,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 304
+},
+"why": "teleporter@48,304 \u2192 L61"
+}
+],
+"boot": {
+"level": 62,
+"x": 112,
+"y": 80
+}
+},
+{
+"step": 128,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 303,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 160
+},
+"why": "teleporter@0,160 \u2192 L60"
+}
+],
+"boot": {
+"level": 61,
+"x": 112,
+"y": 16
+}
+},
+{
+"step": 129,
+"level": 60,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-129) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 179-tick bound (0 guard step(s)); it stands at (121.9,84.6), 31.3 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L59"
+}
+],
+"boot": {
+"level": 60,
+"x": 144,
+"y": 80
+}
+},
+{
+"step": 130,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 304
+},
+"why": "teleporter@144,304 \u2192 L95"
+}
+],
+"boot": {
+"level": 59,
+"x": 288,
+"y": 128
+}
+},
+{
+"step": 131,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 511,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 624,
+"y": 64
+},
+"why": "teleporter@624,64 \u2192 L12"
+}
+],
+"boot": {
+"level": 95,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 132,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 957,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 592,
+"y": 0
+},
+"why": "teleporter@592,0 \u2192 L37"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 352
+}
+},
+{
+"step": 133,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 314,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 0
+},
+"why": "teleporter@288,0 \u2192 L38"
+}
+],
+"boot": {
+"level": 37,
+"x": 32,
+"y": 288
+}
+},
+{
+"step": 134,
+"level": 38,
+"verdict": "SOLVED",
+"ticks": 359,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L39"
+}
+],
+"boot": {
+"level": 38,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 135,
+"level": 39,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot: no REACHABLE stance inside button@144,112 in level 39 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 \u2014 its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 \u2014 its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 \u2014 its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. \u26d4 SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L40"
+}
+],
+"boot": {
+"level": 39,
+"x": 144,
+"y": 608
+}
+},
+{
+"step": 136,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 172,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 320,
+"y": 576
+},
+"why": "stairsdown@320,576 \u2192 L43"
+}
+],
+"boot": {
+"level": 40,
+"x": 480,
+"y": 896
+}
+},
+{
+"step": 137,
+"level": 43,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too \u2014 solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112) waypoint 0 (168,184): not reached within 400 ticks; stalled at (178.5677669529664,423.6215908221288) v=(-0.8270292269908041,-0.8270292269908041) in level 43, aiming at (168,184), after grazing 82 solid(s): tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,449.0516504294495) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,447.7123106012293) in level 43, aiming at (168,184); tile:Blue Wall at (168,456) on the X axis, at (178.5677669529664,446.5497474683058) in level 43, aiming at (168,184).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 144,
+"y": 224
+},
+"why": "Level 043 - Wand (sphere 8.1) \u2192 Wand",
+"location": "Level 043 - Wand"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 64
+},
+"why": "teleporter@144,64 \u2192 L37"
+}
+],
+"boot": {
+"level": 43,
+"x": 176,
+"y": 448
+}
+},
+{
+"step": 138,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 234,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 304
+},
+"why": "teleporter@32,304 \u2192 L12"
+}
+],
+"boot": {
+"level": 37,
+"x": 288,
+"y": 176
+}
+},
+{
+"step": 139,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 352
+},
+"why": "teleporter@0,352 \u2192 L95"
+}
+],
+"boot": {
+"level": 12,
+"x": 592,
+"y": 16
+}
+},
+{
+"step": 140,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 490,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L59"
+}
+],
+"boot": {
+"level": 95,
+"x": 608,
+"y": 64
+}
+},
+{
+"step": 141,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 143,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 128
+},
+"why": "teleporter@0,128 \u2192 L67"
+}
+],
+"boot": {
+"level": 59,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 142,
+"level": 67,
+"verdict": "SOLVED",
+"ticks": 957,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 48,
+"y": 64
+},
+"why": "Level 067 - Boss Key 4 (sphere 8.2) \u2192 Yellow Key",
+"location": "Level 067 - Boss Key 4"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 112
+},
+"why": "teleporter@224,112 \u2192 L59"
+}
+],
+"boot": {
+"level": 67,
+"x": 208,
+"y": 112
+}
+},
+{
+"step": 143,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 151,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 128
+},
+"why": "teleporter@304,128 \u2192 L60"
+}
+],
+"boot": {
+"level": 59,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 144,
+"level": 60,
+"verdict": "SOLVED",
+"ticks": 530,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 80
+},
+"why": "teleporter@160,80 \u2192 L61"
+}
+],
+"boot": {
+"level": 60,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 145,
+"level": 61,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-145): no corridor for goal reach-exit toward (232,216) in level 61. Obstacle: solid:spinningaxe (spinningaxe@160,80); also on the frontier: planttorch@144,80, spinningaxe@64,144. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 61 from tile (1,10) to (14,13). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 208
+},
+"why": "teleporter@224,208 \u2192 L63"
+}
+],
+"boot": {
+"level": 61,
+"x": 16,
+"y": 160
+}
+},
+{
+"step": 146,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 89,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 304
+},
+"why": "teleporter@32,304 \u2192 L65"
+}
+],
+"boot": {
+"level": 63,
+"x": 16,
+"y": 208
+}
+},
+{
+"step": 147,
+"level": 65,
+"verdict": "SOLVED",
+"ticks": 63,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 128
+},
+"why": "teleporter@0,128 \u2192 L66"
+}
+],
+"boot": {
+"level": 65,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 148,
+"level": 66,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-148): no corridor for goal reach-exit toward (80,72) in level 66. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* goal tile (5,4) in level 66 \u2014 for (80,72) \u2014 is not walkable: pixelmask building8 at (48,16). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 72,
+"y": 64
+},
+"why": "teleporter@72,64 \u2192 L70"
+}
+],
+"boot": {
+"level": 66,
+"x": 128,
+"y": 144
+}
+},
+{
+"step": 149,
+"level": 70,
+"verdict": "SOLVED",
+"ticks": 105,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 2,
+"ty": 2,
+"x": 32,
+"y": 32
+},
+"why": "pit@32,32 (out_pit_3_8, tile 2,2) \u2192 L69"
+}
+],
+"boot": {
+"level": 70,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 150,
+"level": 69,
+"verdict": "SOLVED",
+"ticks": 826,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 69,
+"tag": 0
+},
+"at": {
+"x": 72,
+"y": 72
+},
+"obstacle": "lightbosscontroller@72,72",
+"report": {
+"level": 69,
+"tag": 0
+},
+"why": "Level 069 - Lights (sphere 8.3) \u2192 Seal \u2014 the kill's report {69,0} (`lights`)",
+"location": "Level 069 - Lights"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 72,
+"y": 72
+},
+"why": "lightbosscontroller@72,72 \u2192 L36"
+}
+],
+"boot": {
+"level": 69,
+"x": 48,
+"y": 128
+}
+},
+{
+"step": 151,
+"level": 36,
+"verdict": "SOLVED",
+"ticks": 50,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 128
+},
+"why": "teleporter@32,128 \u2192 L12"
+}
+],
+"boot": {
+"level": 36,
+"x": 112,
+"y": 96
+}
+},
+{
+"step": 152,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1189,
+"refusal": null,
+"goals": [
+{
+"kind": "encounter",
+"at": {
+"x": 416,
+"y": 384
+},
+"drop": {
+"item": "Progressive Sword"
+},
+"then": null,
+"why": "Level 012 - Witch (sphere 9.1) \u2192 Progressive Sword",
+"location": "Level 012 - Witch"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 592,
+"y": 0
+},
+"why": "teleporter@592,0 \u2192 L37"
+}
+],
+"boot": {
+"level": 12,
+"x": 168,
+"y": 384
+}
+},
+{
+"step": 153,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 314,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 0
+},
+"why": "teleporter@288,0 \u2192 L38"
+}
+],
+"boot": {
+"level": 37,
+"x": 32,
+"y": 288
+}
+},
+{
+"step": 154,
+"level": 38,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-154) reach-exit (144,0)->L39 -> chest: chest@144,112 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L39"
+}
+],
+"boot": {
+"level": 38,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 155,
+"level": 39,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot: no REACHABLE stance inside button@144,112 in level 39 \u2014 1 cell(s) land the player box in the button and none of them plans a corridor from (120.49007092256514,151.93516637563243). A hold that cannot be stood on is not a strategy for this obstacle. \u26d4 AND THE PREREQUISITES WERE TRIED AND REFUSED, one at a time: wandlock@144,48 \u2014 its group t=4 publishes only while a Solid sits on button@144,112, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@144,32 \u2014 its group t=5 publishes only while a Solid sits on button@176,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@144,112 \u2014 its group t=0 publishes only while a Solid sits on button@128,144, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; cover@176,144 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap; wandlock@48,160 \u2014 its group t=1 publishes only while a Solid sits on button@144,128, and NO block in this room can reach it \u2014 so the only order that could open it is a `hold` the walker shuts again by leaving. \u2696 Guard (iii): a hypothesis nothing can redeem DURABLY is a wall, not an optimistic gap. \u26d4 SEALED BEHIND A WALL: with cover@144,112 discharged a corridor from (120.49007092256514,151.93516637563243) reaches the stance (152,120); with it shut none does. cover@144,112 is a wall nothing on this side can redeem durably (guard iii). From this arrival, with this inventory, the button is out of reach. That is a fact about the room, not a rung the ladder lacks.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L40"
+}
+],
+"boot": {
+"level": 39,
+"x": 144,
+"y": 608
+}
+},
+{
+"step": 156,
+"level": 40,
+"verdict": "SOLVED",
+"ticks": 172,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 320,
+"y": 576
+},
+"why": "stairsdown@320,576 \u2192 L43"
+}
+],
+"boot": {
+"level": 40,
+"x": 480,
+"y": 896
+}
+},
+{
+"step": 157,
+"level": 43,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-157) clear-tag {43,5} bosstotem@152,168 -> totem: totem bosstotem@152,168: no Totem policy variant kills it without a death on a fork of this run \u2014 {\"d0\":97,\"dt\":75,\"burst\":10}: the body is still in the world after 2400 ticks; {\"d0\":90,\"dt\":70,\"burst\":10}: the body is still in the world after 2400 ticks; {\"d0\":97,\"dt\":80,\"burst\":8}: the body is still in the world after 2400 ticks; {\"d0\":97,\"dt\":85,\"burst\":10}: the body is still in the world after 2400 ticks; {\"d0\":80,\"dt\":62,\"burst\":12}: the body is still in the world after 2400 ticks",
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 43,
+"tag": 5
+},
+"at": {
+"x": 152,
+"y": 168
+},
+"obstacle": "bosstotem@152,168",
+"report": {
+"level": 43,
+"tag": 5
+},
+"why": "Level 043 - Totem of Lacste (sphere 9.2) \u2192 Seal \u2014 the kill's report {43,5} (`totem`)",
+"location": "Level 043 - Totem of Lacste"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 64
+},
+"why": "teleporter@144,64 \u2192 L37"
+}
+],
+"boot": {
+"level": 43,
+"x": 176,
+"y": 448
+}
+},
+{
+"step": 158,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 234,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 304
+},
+"why": "teleporter@32,304 \u2192 L12"
+}
+],
+"boot": {
+"level": 37,
+"x": 288,
+"y": 176
+}
+},
+{
+"step": 159,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 352
+},
+"why": "teleporter@0,352 \u2192 L95"
+}
+],
+"boot": {
+"level": 12,
+"x": 592,
+"y": 16
+}
+},
+{
+"step": 160,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 490,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L59"
+}
+],
+"boot": {
+"level": 95,
+"x": 608,
+"y": 64
+}
+},
+{
+"step": 161,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 128
+},
+"why": "teleporter@304,128 \u2192 L60"
+}
+],
+"boot": {
+"level": 59,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 162,
+"level": 60,
+"verdict": "SOLVED",
+"ticks": 497,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 80
+},
+"why": "teleporter@160,80 \u2192 L61"
+}
+],
+"boot": {
+"level": 60,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 163,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 296,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 96
+},
+"why": "teleporter@224,96 \u2192 L63"
+}
+],
+"boot": {
+"level": 61,
+"x": 16,
+"y": 160
+}
+},
+{
+"step": 164,
+"level": 63,
+"verdict": "SOLVED",
+"ticks": 504,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 128,
+"y": 304
+},
+"why": "teleporter@128,304 \u2192 L65"
+}
+],
+"boot": {
+"level": 63,
+"x": 16,
+"y": 96
+}
+},
+{
+"step": 165,
+"level": 65,
+"verdict": "SOLVED",
+"ticks": 546,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 184,
+"y": 64
+},
+"why": "teleporter@184,64 \u2192 L68"
+}
+],
+"boot": {
+"level": 65,
+"x": 128,
+"y": 16
+}
+},
+{
+"step": 166,
+"level": 68,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-166): no corridor for goal collect-placement toward (8,8) in level 68. Obstacle: pickup:health (health@16,16). Strategy 'collect' failed to apply. Planner said: no walkable tile path in level 68 from tile (1,3) to (0,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 16,
+"y": 16
+},
+"why": "Level 068 - Health (sphere 9.3) \u2192 Health",
+"location": "Level 068 - Health"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 80
+},
+"why": "teleporter@16,80 \u2192 L65"
+}
+],
+"boot": {
+"level": 68,
+"x": 16,
+"y": 64
+}
+},
+{
+"step": 167,
+"level": 65,
+"verdict": "SOLVED",
+"ticks": 233,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 128,
+"y": 0
+},
+"why": "teleporter@128,0 \u2192 L63"
+}
+],
+"boot": {
+"level": 65,
+"x": 185,
+"y": 80
+}
+},
+{
+"step": 168,
+"level": 63,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-168): no corridor for goal reach-exit toward (132,268) in level 63. Obstacle: solid:pushableblockspear (pushableblockspear@112,96). Strategy 'shove' failed to apply. Planner said: A* start tile (7,18) in level 63 \u2014 for (123.61554871341427,301.16961173792373) \u2014 is not walkable: pit Pit (t=6) at tile (7,18). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 96
+},
+"why": "teleporter@0,96 \u2192 L61"
+}
+],
+"boot": {
+"level": 63,
+"x": 128,
+"y": 288
+}
+},
+{
+"step": 169,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 227,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 160
+},
+"why": "teleporter@0,160 \u2192 L60"
+}
+],
+"boot": {
+"level": 61,
+"x": 208,
+"y": 96
+}
+},
+{
+"step": 170,
+"level": 60,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-170) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L59"
+}
+],
+"boot": {
+"level": 60,
+"x": 144,
+"y": 80
+}
+},
+{
+"step": 171,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 304
+},
+"why": "teleporter@144,304 \u2192 L95"
+}
+],
+"boot": {
+"level": 59,
+"x": 288,
+"y": 128
+}
+},
+{
+"step": 172,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 511,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 624,
+"y": 64
+},
+"why": "teleporter@624,64 \u2192 L12"
+}
+],
+"boot": {
+"level": 95,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 173,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-173) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 848
+},
+"why": "teleporter@32,848 \u2192 L83"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 352
+}
+},
+{
+"step": 174,
+"level": 83,
+"verdict": "SOLVED",
+"ticks": 85,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 2,
+"ty": 1,
+"x": 32,
+"y": 16
+},
+"why": "pit@32,16 (out_pit_2_2, tile 2,1) \u2192 L84"
+}
+],
+"boot": {
+"level": 83,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 175,
+"level": 84,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-175): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* start tile (2,2) in level 84 \u2014 for (40,40) \u2014 is not walkable: pit Pit (t=6) at tile (2,2). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.",
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 3,
+"ty": 1,
+"x": 48,
+"y": 16
+},
+"why": "pit@48,16 (out_pit_4_3, tile 3,1) \u2192 L85"
+}
+],
+"boot": {
+"level": 84,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 176,
+"level": 85,
+"verdict": "SOLVED",
+"ticks": 18,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 80,
+"y": 0
+},
+"why": "teleporter@80,0 \u2192 L71"
+}
+],
+"boot": {
+"level": 85,
+"x": 64,
+"y": 48
+}
+},
+{
+"step": 177,
+"level": 71,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-177) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 256
+},
+"why": "Level 071 - Chest (sphere 9.4) \u2192 Seal",
+"location": "Level 071 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 0
+},
+"why": "teleporter@96,0 \u2192 L75"
+}
+],
+"boot": {
+"level": 71,
+"x": 16,
+"y": 288
+}
+},
+{
+"step": 178,
+"level": 75,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-178) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) \u2014 hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden \u2014 no walkable tile path in level 75 from tile (4,13) to (4,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water,\n  dodge: no stall of one revolution or less at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) (1711 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 29 the walk can plan to probes clean: 60 candidate corridor(s) previewed with the bodies stepped against each, 2 prefix(es) dangerous before their last via, 60 preview(s) of the 60 bound spent and 355 leg(s) of the 500 planned, 193 candidate(s) left unasked.; and on the axe's clock at dash speed (AXETIMING, 140 preview(s)): no stall of 0..59 at the doorstep (sample 83) \u00d7 10 phase(s) of the dash chain [0,2,8,14] every 20 t crosses spinningaxe@80,144's reach clean\n  time: the aim is 208 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [hazard:spinningaxe@80,144] and this room's live roster is [lavarunner@8,112, lavarunner@104,64]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too \u2014 hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its update 124 of this visit (rate -6, 336\u00b0) \u2014 the exact `collideLine`/`collideRect` at THIS tick, not the disc) at (104.3,160.6)\n  forced-hit: no forced hit is proven from (72.0,216.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 0
+},
+"why": "teleporter@64,0 \u2192 L74"
+}
+],
+"boot": {
+"level": 75,
+"x": 64,
+"y": 208
+}
+},
+{
+"step": 179,
+"level": 74,
+"verdict": "SOLVED",
+"ticks": 321,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 48,
+"y": 32
+},
+"why": "Level 074 - Darkshield (sphere 9.5) \u2192 Progressive Shield",
+"location": "Level 074 - Darkshield"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 144
+},
+"why": "teleporter@16,144 \u2192 L75"
+}
+],
+"boot": {
+"level": 74,
+"x": 16,
+"y": 128
+}
+},
+{
+"step": 180,
+"level": 75,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-180) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) \u2014 hazard:lavachain@96,32 (avoid (phase-band) \u2014 rect: the arm, -x). Slice 2 has NO DODGE POLICY (kickoff \u00a74: combat is slice 3); sensing and refusing loudly is the whole of this slice's danger response.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 224
+},
+"why": "teleporter@64,224 \u2192 L71"
+}
+],
+"boot": {
+"level": 75,
+"x": 64,
+"y": 16
+}
+},
+{
+"step": 181,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 327,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 256
+},
+"why": "teleporter@304,256 \u2192 L76"
+}
+],
+"boot": {
+"level": 71,
+"x": 96,
+"y": 16
+}
+},
+{
+"step": 182,
+"level": 76,
+"verdict": "SOLVED",
+"ticks": 496,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 112
+},
+"why": "teleporter@304,112 \u2192 L77"
+}
+],
+"boot": {
+"level": 76,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 183,
+"level": 77,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-183): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 77 from tile (1,2) to (6,19). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 96,
+"y": 304
+},
+"why": "teleporter@96,304 \u2192 L78"
+}
+],
+"boot": {
+"level": 77,
+"x": 16,
+"y": 32
+}
+},
+{
+"step": 184,
+"level": 78,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-184): no corridor for goal reach-exit toward (40,8) in level 78. Obstacle: proximity-hazard:lavatrap (lavatrap@144,48); also on the frontier: lavatrap@144,96. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 78 from tile (16,1) to (2,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L79"
+}
+],
+"boot": {
+"level": 78,
+"x": 256,
+"y": 16
+}
+},
+{
+"step": 185,
+"level": 79,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-185) collect (40,152) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-185) collect (40,152) stance waypoint 0 (40,152): not reached within 400 ticks; stalled at (54.39673789518503,152.3676028103863) v=(-0.8,0) in level 79, aiming at (40,152).",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 40,
+"y": 152
+},
+"why": "Level 079 - Darksuit (sphere 10.1) \u2192 Dark Suit",
+"location": "Level 079 - Darksuit"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 224
+},
+"why": "teleporter@64,224 \u2192 L78"
+}
+],
+"boot": {
+"level": 79,
+"x": 64,
+"y": 208
+}
+},
+{
+"step": 186,
+"level": 78,
+"verdict": "SOLVED",
+"ticks": 392,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 256,
+"y": 0
+},
+"why": "teleporter@256,0 \u2192 L77"
+}
+],
+"boot": {
+"level": 78,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 187,
+"level": 77,
+"verdict": "SOLVED",
+"ticks": 475,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 32
+},
+"why": "teleporter@0,32 \u2192 L76"
+}
+],
+"boot": {
+"level": 77,
+"x": 96,
+"y": 288
+}
+},
+{
+"step": 188,
+"level": 76,
+"verdict": "SOLVED",
+"ticks": 434,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L71"
+}
+],
+"boot": {
+"level": 76,
+"x": 288,
+"y": 112
+}
+},
+{
+"step": 189,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 193,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 12,
+"ty": 13,
+"x": 192,
+"y": 208
+},
+"why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+}
+],
+"boot": {
+"level": 71,
+"x": 288,
+"y": 256
+}
+},
+{
+"step": 190,
+"level": 82,
+"verdict": "SOLVED",
+"ticks": 1363,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L96"
+}
+],
+"boot": {
+"level": 82,
+"x": 160,
+"y": 272
+}
+},
+{
+"step": 191,
+"level": 96,
+"verdict": "SOLVED",
+"ticks": 5,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 32
+},
+"why": "stairsup@32,32 \u2192 L97"
+}
+],
+"boot": {
+"level": 96,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 192,
+"level": 97,
+"verdict": "SOLVED",
+"ticks": 5,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 16
+},
+"why": "stairsup@32,16 \u2192 L37"
+}
+],
+"boot": {
+"level": 97,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 193,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 780,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 304
+},
+"why": "teleporter@32,304 \u2192 L12"
+}
+],
+"boot": {
+"level": 37,
+"x": 576,
+"y": 144
+}
+},
+{
+"step": 194,
+"level": 12,
+"verdict": "SOLVED",
+"ticks": 1269,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 352
+},
+"why": "teleporter@0,352 \u2192 L95"
+}
+],
+"boot": {
+"level": 12,
+"x": 592,
+"y": 16
+}
+},
+{
+"step": 195,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 490,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L59"
+}
+],
+"boot": {
+"level": 95,
+"x": 608,
+"y": 64
+}
+},
+{
+"step": 196,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 128
+},
+"why": "teleporter@304,128 \u2192 L60"
+}
+],
+"boot": {
+"level": 59,
+"x": 144,
+"y": 288
+}
+},
+{
+"step": 197,
+"level": 60,
+"verdict": "SOLVED",
+"ticks": 497,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 80
+},
+"why": "teleporter@160,80 \u2192 L61"
+}
+],
+"boot": {
+"level": 60,
+"x": 16,
+"y": 80
+}
+},
+{
+"step": 198,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 296,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 96
+},
+"why": "teleporter@224,96 \u2192 L63"
+}
+],
+"boot": {
+"level": 61,
+"x": 16,
+"y": 160
+}
+},
+{
+"step": 199,
+"level": 63,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-199) chest (224,80) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-199) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard \u2014 chest at (224,80) in level 63 \u2014 at (231.07145863495577,99.57690978766065). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 224,
+"y": 80
+},
+"why": "Level 063 - Chest (sphere 11.1) \u2192 Seal",
+"location": "Level 063 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 96
+},
+"why": "teleporter@0,96 \u2192 L61"
+}
+],
+"boot": {
+"level": 63,
+"x": 16,
+"y": 96
+}
+},
+{
+"step": 200,
+"level": 61,
+"verdict": "SOLVED",
+"ticks": 227,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 160
+},
+"why": "teleporter@0,160 \u2192 L60"
+}
+],
+"boot": {
+"level": 61,
+"x": 208,
+"y": 96
+}
+},
+{
+"step": 201,
+"level": 60,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-201) reach-exit (0,80)->L59 -> kill -> chaser kill (jellyfish@56,64) by press: jellyfish@56,64 is still in the world after the whole 191-tick bound (0 guard step(s)); it stands at (121.9,82.5), 31.4 px from the player, and its straight chase line to the player is blocked by lock \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L59"
+}
+],
+"boot": {
+"level": 60,
+"x": 144,
+"y": 80
+}
+},
+{
+"step": 202,
+"level": 59,
+"verdict": "SOLVED",
+"ticks": 150,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 304
+},
+"why": "teleporter@144,304 \u2192 L95"
+}
+],
+"boot": {
+"level": 59,
+"x": 288,
+"y": 128
+}
+},
+{
+"step": 203,
+"level": 95,
+"verdict": "SOLVED",
+"ticks": 511,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 624,
+"y": 64
+},
+"why": "teleporter@624,64 \u2192 L12"
+}
+],
+"boot": {
+"level": 95,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 204,
+"level": 12,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-204) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 848
+},
+"why": "teleporter@32,848 \u2192 L83"
+}
+],
+"boot": {
+"level": 12,
+"x": 16,
+"y": 352
+}
+},
+{
+"step": 205,
+"level": 83,
+"verdict": "SOLVED",
+"ticks": 85,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 2,
+"ty": 1,
+"x": 32,
+"y": 16
+},
+"why": "pit@32,16 (out_pit_2_2, tile 2,1) \u2192 L84"
+}
+],
+"boot": {
+"level": 83,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 206,
+"level": 84,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-206): no corridor for goal reach-pit toward (56,24) in level 84. Obstacle: no-corridor. No strategy row exists for this obstacle. Planner said: A* start tile (2,2) in level 84 \u2014 for (40,40) \u2014 is not walkable: pit Pit (t=6) at tile (2,2). The planner works in whole tiles, so both ends of a route must be tiles the player box fits in at the centre of.",
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 3,
+"ty": 1,
+"x": 48,
+"y": 16
+},
+"why": "pit@48,16 (out_pit_4_3, tile 3,1) \u2192 L85"
+}
+],
+"boot": {
+"level": 84,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 207,
+"level": 85,
+"verdict": "SOLVED",
+"ticks": 18,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 80,
+"y": 0
+},
+"why": "teleporter@80,0 \u2192 L71"
+}
+],
+"boot": {
+"level": 85,
+"x": 64,
+"y": 48
+}
+},
+{
+"step": 208,
+"level": 71,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-208) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find).",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 304
+},
+"why": "teleporter@224,304 \u2192 L80"
+}
+],
+"boot": {
+"level": 71,
+"x": 16,
+"y": 288
+}
+},
+{
+"step": 209,
+"level": 80,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-209) chest (16,128): chest@16,128 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide(\"Solid\", x, y)` \u2014 the chest colliding with whatever shares its cell \u2014 so the usual cause is that the cover above it is still shut. The stance is not the prerequisite; the cover is.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 16,
+"y": 128
+},
+"why": "Level 080 - Chest (sphere 11.2) \u2192 Seal",
+"location": "Level 080 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 0
+},
+"why": "teleporter@32,0 \u2192 L71"
+}
+],
+"boot": {
+"level": 80,
+"x": 32,
+"y": 16
+}
+},
+{
+"step": 210,
+"level": 71,
+"verdict": "SOLVED",
+"ticks": 171,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 12,
+"ty": 13,
+"x": 192,
+"y": 208
+},
+"why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+}
+],
+"boot": {
+"level": 71,
+"x": 224,
+"y": 288
+}
+},
+{
+"step": 211,
+"level": 82,
+"verdict": "SOLVED",
+"ticks": 1363,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 82,
+"tag": 0
+},
+"at": {
+"x": 112,
+"y": 48
+},
+"obstacle": "lavaboss@112,48",
+"report": {
+"level": 82,
+"tag": 0
+},
+"why": "Level 082 - King of Fire (sphere 11.3) \u2192 Seal \u2014 the kill's report {82,0} (`lavaboss`)",
+"location": "Level 082 - King of Fire"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 0
+},
+"why": "teleporter@144,0 \u2192 L96"
+}
+],
+"boot": {
+"level": 82,
+"x": 160,
+"y": 272
+}
+},
+{
+"step": 212,
+"level": 96,
+"verdict": "SOLVED",
+"ticks": 5,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 32
+},
+"why": "stairsup@32,32 \u2192 L97"
+}
+],
+"boot": {
+"level": 96,
+"x": 32,
+"y": 48
+}
+},
+{
+"step": 213,
+"level": 97,
+"verdict": "SOLVED",
+"ticks": 5,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 32,
+"y": 16
+},
+"why": "stairsup@32,16 \u2192 L37"
+}
+],
+"boot": {
+"level": 97,
+"x": 32,
+"y": 32
+}
+},
+{
+"step": 214,
+"level": 37,
+"verdict": "SOLVED",
+"ticks": 767,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 256
+},
+"why": "teleporter@0,256 \u2192 L44"
+}
+],
+"boot": {
+"level": 37,
+"x": 576,
+"y": 144
+}
+},
+{
+"step": 215,
+"level": 44,
+"verdict": "SOLVED",
+"ticks": 86,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 80
+},
+"why": "teleporter@0,80 \u2192 L87"
+}
+],
+"boot": {
+"level": 44,
+"x": 128,
+"y": 128
+}
+},
+{
+"step": 216,
+"level": 87,
+"verdict": "SOLVED",
+"ticks": 223,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 368,
+"y": 0
+},
+"why": "teleporter@368,0 \u2192 L93"
+}
+],
+"boot": {
+"level": 87,
+"x": 448,
+"y": 272
+}
+},
+{
+"step": 217,
+"level": 93,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-217): no corridor for goal reach-exit toward (120,88) in level 93. Obstacle: solid:dungeonspire (dungeonspire@128,240); also on the frontier: dungeonspire@96,240, tree@128,256, tree@80,256. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 93 from tile (7,16) to (7,5). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 80
+},
+"why": "teleporter@112,80 \u2192 L98"
+}
+],
+"boot": {
+"level": 93,
+"x": 112,
+"y": 256
+}
+},
+{
+"step": 218,
+"level": 98,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-218) chest (160,32) stance: the re-planned corridor failed too \u2014 solverBot(survey-step-218) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard \u2014 chest at (160,32) in level 98 \u2014 at (167.74495030824033,51.25719294972813). spawns a special SealPiece (150 frozen frames), writes persistence, and consumes an unbounded number of Math.random() draws for the seal index Nothing in the game stops the player here, so this is the only place it can be caught.",
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 32
+},
+"why": "Level 098 - Chest (sphere 11.4) \u2192 Seal",
+"location": "Level 098 - Chest"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 112
+},
+"why": "stairsup@112,112 \u2192 L99"
+}
+],
+"boot": {
+"level": 98,
+"x": 112,
+"y": 176
+}
+},
+{
+"step": 219,
+"level": 99,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-219) reach-exit (48,96)->L100 -> kill: the count is still waiting on [lavarunner@192,64, lavarunner@160,32, lavarunner@176,64] and no stance derives for any of them \u2014 no stance derives for lavarunner@176,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 35 of those reachable, and 35 of THOSE refused by the forecast [(120,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,136): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@176,64 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 1 of those with no corridor here or onward, +35 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@176,64 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 35 asked [(120,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,136) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. | no stance derives for lavarunner@160,32 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 26 of those reachable, and 26 of THOSE refused by the forecast [(120,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@160,32 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 4 of those with no corridor here or onward, +26 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@160,32 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 26 asked [(120,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. | no stance derives for lavarunner@192,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 30 of those reachable, and 30 of THOSE refused by the forecast [(136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (152,120): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@192,64 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 4 of those with no corridor here or onward, +30 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@192,64 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 30 asked [(136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (152,120) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026].",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 96
+},
+"why": "stairsup@48,96 \u2192 L100"
+}
+],
+"boot": {
+"level": 99,
+"x": 96,
+"y": 112
+}
+},
+{
+"step": 220,
+"level": 100,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-220): no corridor for goal reach-exit toward (296,104) in level 100. Obstacle: pixelmask:cliffside0 (cliffside0@112,96); also on the frontier: cliffside0@112,112, cliffside0@112,80, cliffside0@112,128, cliffside0@112,64, cliffside0@112,144, cliffside0@112,48, cliffside1@64,64, cliffside1@48,112, cliffside1@48,160. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 100 from tile (2,6) to (18,6). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 288,
+"y": 96
+},
+"why": "teleporter@288,96 \u2192 L101"
+}
+],
+"boot": {
+"level": 100,
+"x": 32,
+"y": 96
+}
+},
+{
+"step": 221,
+"level": 101,
+"verdict": "SOLVED",
+"ticks": 287,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 96
+},
+"why": "stairsup@48,96 \u2192 L102"
+}
+],
+"boot": {
+"level": 101,
+"x": 288,
+"y": 240
+}
+},
+{
+"step": 222,
+"level": 102,
+"verdict": "SOLVED",
+"ticks": 16,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 96
+},
+"why": "teleporter@0,96 \u2192 L103"
+}
+],
+"boot": {
+"level": 102,
+"x": 48,
+"y": 96
+}
+},
+{
+"step": 223,
+"level": 103,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-223) reach-exit (0,64)->L104: the combat ladder is EXHAUSTED. The corridor passes through danger at (103.0,247.5) \u2014 hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) \u2014 the exact `collideRect` at THIS tick, not the volume) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 6 volume(s) forbidden \u2014 no walkable tile path in level 103 from tile (18,9) to (0,4). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water\n  dodge: no stall of 1..89 tick(s) at the doorstep or 7 earlier walk-offset(s) (step 4) clears the corridor of hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) \u2014 the exact `collideRect` at THIS tick, not the volume) (1145 preview(s)); and bent through via cells: no corridor bent through at most 2 via cell(s) of the 56 the walk can plan to probes clean: 41 candidate corridor(s) previewed with the bodies stepped against each, 0 prefix(es) dangerous before their last via, 41 preview(s) of the 60 bound spent and 500 leg(s) of the 500 planned, 510 candidate(s) left unasked.; and the band-to-band lane: the lane walk meets hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) \u2014 the exact `collideRect` at THIS tick, not the volume) at (102.3,247.7) on tick 265\n  time: the aim is 299 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [hazard:beamtower@208,248] and this room's live roster is [flyer@192,144]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  narrow: the corridor walked with the pre-lapse strike admissions is dangerous too \u2014 hazard:beamtower@208,248 (a BeamTower's beam on its update 265 of this visit (side left) \u2014 the exact `collideRect` at THIS tick, not the volume) at (103.3,247.6)\n  forced-hit: no forced hit is proven from (296.0,152.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 64
+},
+"why": "teleporter@0,64 \u2192 L104"
+}
+],
+"boot": {
+"level": 103,
+"x": 288,
+"y": 144
+}
+},
+{
+"step": 224,
+"level": 104,
+"verdict": "SOLVED",
+"ticks": 261,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 16
+},
+"why": "teleporter@0,16 \u2192 L105"
+}
+],
+"boot": {
+"level": 104,
+"x": 128,
+"y": 128
+}
+},
+{
+"step": 225,
+"level": 105,
+"verdict": "SOLVED",
+"ticks": 416,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 80,
+"y": 144
+},
+"why": "teleporter@80,144 \u2192 L106"
+}
+],
+"boot": {
+"level": 105,
+"x": 208,
+"y": 64
+}
+},
+{
+"step": 226,
+"level": 106,
+"verdict": "SOLVED",
+"ticks": 185,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 64,
+"y": 72
+},
+"why": "Level 106 - Ghostsword (sphere 11.5) \u2192 Ghost Sword Fusion",
+"location": "Level 106 - Ghostsword"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 48
+},
+"why": "teleporter@64,48 \u2192 L101"
+}
+],
+"boot": {
+"level": 106,
+"x": 256,
+"y": 16
+}
+},
+{
+"step": 227,
+"level": 101,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-227) reach-exit (144,96)->L102 -> wand: magicallockfire@112,48 cannot be opened by this run \u2014 magicallockfire@112,48 is a FIRE MagicalLock (`lockType 1`): `MagicalLock.hit(t)` opens on `lockType <= t`, and only the Fire Wand's shot is type 1. This run does not hold the Fire Wand.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 144,
+"y": 96
+},
+"why": "stairsup@144,96 \u2192 L102"
+}
+],
+"boot": {
+"level": 101,
+"x": 288,
+"y": 240
+}
+},
+{
+"step": 228,
+"level": 102,
+"verdict": "SOLVED",
+"ticks": 20,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 96
+},
+"why": "teleporter@224,96 \u2192 L107"
+}
+],
+"boot": {
+"level": 102,
+"x": 176,
+"y": 96
+}
+},
+{
+"step": 229,
+"level": 107,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-229) reach-exit (304,176)->L108 -> hold stance (buttonroom@288,176): the combat ladder is EXHAUSTED. The corridor passes through danger at (30.7,56.0) \u2014 crusher:crusher@32,0 (trigger lane S with a clear sight line (LIVE centre 48,16)) \u2014 and every rung of \u2696 \u00a711.8a's order refused:\n  avoid: no admissible corridor with the danger map's 9 volume(s) forbidden \u2014 no walkable tile path in level 107 from tile (1,3) to (18,11). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by wate\n  time: the aim is 301 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff \u00a73.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor \u2014 the danger on this corridor is [crusher:crusher@32,0] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die \u2014 a kill needs a target whose removal the model OBSERVES (a live chaser or spinner the run steps; a live body without a recorded removal is not a target), and \u26d4 a static \"Enemy\" body's own arrow death is REFUSED by name (\u00a711.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models. (F4: the classes whose death the run computes, [SandTrap], are targets of the static arm, not of this one.)\n  forced-hit: no forced hit is proven from (24.0,56.0): the hitless input [\u00b7 \u00b7 \u00b7] survives 3 tick(s) \u2014 no hit is forced inside the bound (the witness, 1 fork(s), before the tree) (1 fork step(s))",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 304,
+"y": 176
+},
+"why": "teleporter@304,176 \u2192 L108"
+}
+],
+"boot": {
+"level": 107,
+"x": 16,
+"y": 48
+}
+},
+{
+"step": 230,
+"level": 108,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-230): no corridor for goal reach-exit toward (232,232) in level 108. Obstacle: proximity-hazard:lavatrap (lavatrap@128,80). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 108 from tile (1,2) to (14,14). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 224,
+"y": 224
+},
+"why": "teleporter@224,224 \u2192 L109"
+}
+],
+"boot": {
+"level": 108,
+"x": 16,
+"y": 32
+}
+},
+{
+"step": 231,
+"level": 109,
+"verdict": "SOLVED",
+"ticks": 158,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 160,
+"y": 72
+},
+"why": "Level 109 - Firewand (sphere 12.1) \u2192 Fire Wand Fusion",
+"location": "Level 109 - Firewand"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 160,
+"y": 48
+},
+"why": "teleporter@160,48 \u2192 L101"
+}
+],
+"boot": {
+"level": 109,
+"x": 16,
+"y": 112
+}
+},
+{
+"step": 232,
+"level": 101,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-232) reach-exit (104,24)->L110 -> wand: magicallockfire@96,48 cannot be opened by this run \u2014 magicallockfire@96,48 needs the FIRE WAND's shot, whose slot is `useItem` case 5 (`wanding` AND `firing` on one press). `levelRun.weaponForPress` refuses that case by name \u2014 two windows on one press are not modelled \u2014 so the shot this lock needs cannot be pressed by this model. \u21d2 the work order is the case-5 press, not a stance.",
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 104,
+"y": 24
+},
+"why": "teleporter@104,24 \u2192 L110"
+}
+],
+"boot": {
+"level": 101,
+"x": 288,
+"y": 240
+}
+},
+{
+"step": 233,
+"level": 110,
+"verdict": "SOLVED",
+"ticks": 173,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-pit",
+"pit": {
+"tx": 4,
+"ty": 4,
+"x": 64,
+"y": 64
+},
+"why": "pit@64,64 (out_pit_3_2, tile 4,4) chained via L0 stairs@256,272 \u2192 L2"
+}
+],
+"boot": {
+"level": 110,
+"x": 48,
+"y": 112
+}
+},
+{
+"step": 234,
+"level": 2,
+"verdict": "SOLVED",
+"ticks": 26,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 48,
+"y": 96
+},
+"why": "teleporter@48,96 \u2192 L3"
+}
+],
+"boot": {
+"level": 2,
+"x": 48,
+"y": 32
+}
+},
+{
+"step": 235,
+"level": 3,
+"verdict": "SOLVED",
+"ticks": 82,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 0,
+"y": 64
+},
+"why": "teleporter@0,64 \u2192 L111"
+}
+],
+"boot": {
+"level": 3,
+"x": 64,
+"y": 16
+}
+},
+{
+"step": 236,
+"level": 111,
+"verdict": "SOLVED",
+"ticks": 112,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 128,
+"y": 48
+},
+"why": "teleporter@128,48 \u2192 L112"
+}
+],
+"boot": {
+"level": 111,
+"x": 288,
+"y": 176
+}
+},
+{
+"step": 237,
+"level": 112,
+"verdict": "REFUSED",
+"ticks": null,
+"refusal": "solverBot(survey-step-237): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on the frontier: planttorch@80,32, pod@112,48, planttorch@208,96, pod@184,120, cliffside1@0,96, pod@40,120, cliffside1@0,112, cliffside0@224,112, cliffside1@0,128, cliffside0@224,128, cliffside1@0,144, planttorch@16,160, pod@112,192, planttorch@144,208, cliffside4@112,224, cliffside4@128,224, cliffside3@64,224, cliffside2@48,224. ENCOUNTER-GATE (rocklock@112,16): no presser in level 112 publishes its group; its opener is finalboss@64,96's death (the `dead` arm: `Button.activateAll(null, 0, true)` and `setPersistence(tag + 1)`, `FinalBoss.as`). The work order is the fight, not the room. Planner said: no walkable tile path in level 112 from tile (2,13) to (7,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game.",
+"goals": [
+{
+"kind": "skip",
+"report": {
+"level": 112,
+"tag": 0
+},
+"why": "Level 112 - Owl (sphere 12.2) \u2192 Seal \u2014 no solver executor fights finalboss@64,96 (no encounter row in L112, no strategy row for solid:finalboss); its report {112,0} is not walked",
+"location": "Level 112 - Owl"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 0
+},
+"why": "teleporter@112,0 \u2192 L113"
+}
+],
+"boot": {
+"level": 112,
+"x": 32,
+"y": 208
+}
+},
+{
+"step": 238,
+"level": 113,
+"verdict": "SOLVED",
+"ticks": 87,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 16,
+"y": 0
+},
+"why": "teleporter@16,0 \u2192 L114"
+}
+],
+"boot": {
+"level": 113,
+"x": 72,
+"y": 128
+}
+},
+{
+"step": 239,
+"level": 114,
+"verdict": "SOLVED",
+"ticks": 406,
+"refusal": null,
+"goals": [
+{
+"kind": "clear-tag",
+"tag": {
+"level": 114,
+"tag": 0
+},
+"at": {
+"x": 72,
+"y": 72
+},
+"obstacle": "watcher@72,72",
+"why": "L114 flag 0: watcher@72,72 cleared (flag:L114:0) \u2014 broken before row 13.1 walks its landing",
+"location": "L114 flag 0: watcher@72,72 cleared"
+},
+{
+"kind": "reach-exit",
+"exit": {
+"x": 64,
+"y": 144
+},
+"why": "teleporter@64,144 \u2192 L113"
+}
+],
+"boot": {
+"level": 114,
+"x": 64,
+"y": 128
+}
+},
+{
+"step": 240,
+"level": 113,
+"verdict": "SOLVED",
+"ticks": 166,
+"refusal": null,
+"goals": [
+{
+"kind": "reach-exit",
+"exit": {
+"x": 112,
+"y": 0
+},
+"why": "teleporter@112,0 \u2192 L115"
+}
+],
+"boot": {
+"level": 113,
+"x": 16,
+"y": 16
+}
+},
+{
+"step": 241,
+"level": 115,
+"verdict": "SOLVED",
+"ticks": 173,
+"refusal": null,
+"goals": [
+{
+"kind": "collect-placement",
+"placement": {
+"x": 72,
+"y": 72
+},
+"why": "Level 115 - The Seed (sphere 13.1) \u2192 The Seed",
+"location": "Level 115 - The Seed"
+}
+],
+"boot": {
+"level": 115,
+"x": 64,
+"y": 128
+}
+}
+]
