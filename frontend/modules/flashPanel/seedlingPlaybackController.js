@@ -360,6 +360,9 @@ export const BOUND_BOSS_FIGHTS = Object.freeze({
     // `solid:tentaclebeast` → `tentaclebeast`, both switch-gated rows): L82's King of Fire {82,0} and L57's beast {57,0}.
     lavaboss: 'kingOfFireFight',
     tentaclebeast: 'tentacleBeastFight',
+    // ⛓ fidelity L67BK4 (wave 31; js-11's wiring, in the harvest): L43's Totem of Lacste {43,5} (`solid:bosstotem` →
+    // `totem`, a switch-gated row), bound only while `totemBossFight` is ON.
+    bosstotem: 'totemBossFight',
 });
 
 /**
