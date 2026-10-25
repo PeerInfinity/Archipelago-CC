@@ -2,7 +2,8 @@
 /**
  * plan-seedling-l40button-witness — Seedling fidelity L40BUTTON (wave 12), D3: the solver's own plan for
  * `Level 040 - Totem Part 64,144` from L40's two NORTH arrivals (sweep-4 legs 378 and 381), written as roster tapes
- * for `check-seedling-bot-differential --record` to record on the game (p4f) and for the model to reproduce.
+ * for `check-seedling-bot-differential --record` to record on the game (p4f; re-recorded on p4g, damage on, at
+ * L40REREC) and for the model to reproduce.
  *
  * ⛓ THE ROUTE (D1, `probe-seedling-l40button.mjs`): from either arrival the part needs only L40's NW cluster —
  * `buttonroom@272,208` {t 0} latches group 0, the three `breakablerock`s {22,23,24} come down, `buttonroom@160,128`
@@ -14,7 +15,7 @@
  * solver's walk and the default solver is untouched. The staging is the survey's construction (`r8-solve-11`'s
  * committed block re-pointed at the atlas arrival) with the leg's sphere-5.3 items and keys.
  *
- * ⚠ SLOW: each arrival is a ~16-minute solve on a cloud box (the walk's chaser previews: L40's bobs), so `--check`
+ * ⚠ Was SLOW (a ~16-minute solve per arrival when recorded); at 89da08f355 each arrival solves in ~7 s, so `--check`
  * costs two of them. The vitest rows replay the committed tapes; they do not re-solve.
  *
  * Usage:
@@ -76,6 +77,11 @@ export const BOMB_REFUTED = Object.freeze({
         + 'CC/docs/cloud-reports/seedling-fidelity-l40button-evidence/.',
 });
 
+/** L40REREC: what the damage-on witness's description says in place of `BOMB_REFUTED.sentence`. */
+export const DAMAGE_ON_SENTENCE = '⛓ DAMAGE ON (L40REREC, wave 31): planned at the shipped contact-fidelity defaults, '
+    + 'the hold on buttonroom@272,208 PACED out of `bombpusher@112,128`\'s blasts (`movingWait` + `bombBlastBody`), '
+    + 'recorded on the game (p4g) with the hit path live: 0 hits, 0 px.';
+
 export const L40BUTTON_GOAL = Object.freeze({ kind: 'collect-placement', placement: Object.freeze({ x: 64, y: 144 }) });
 
 /** The survey-style staging for one witness boot. */
@@ -95,41 +101,37 @@ export async function l40buttonStaging(boot) {
 
 /**
  * The ON solver's plan from `boot` (default solver behaviour restored after).
- * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
- * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the tape
- * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+ * ⛓ L40REREC (wave 31, ⚖ user 2026-10-24 "Queue a re-record slice"): the strike floor is NO LONGER PINNED. Since
+ * hammer-phase SFF (2026-10-23) this solve ran under `withStrikeEtaFloor(false)` so the tape stayed the walk the game
+ * had played under the floor OFF; the re-record plans at the shipped default (`STRIKE_ETA_FLOOR` ON) and the game
+ * witnesses the new walk, so the reason for the pin ("re-recording ON would rewrite a game-witnessed tape from the model
+ * alone") no longer holds. Measured at 89da08f355: the floor moves `l40button-l42-part0` (1,667 t OFF → 1,663 t ON) and
+ * leaves `l40button-l41-part0` byte-equal.
  */
 export async function l40buttonPlan(boot, name) {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
-    const { withStanceRocks, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
+    const { withStanceRocks } = await import(join(MODULE, 'solverBot.js'));
     const staging = await l40buttonStaging(boot);
     const levelSource = atlasLevelSource();
-    const solved = await withStrikeEtaFloor(false, () => withStanceRocks(true, () => twoPassSolve({
+    const solved = await withStanceRocks(true, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: [L40BUTTON_GOAL], name, boot: staging.boot, dashMode: 'all',
         persistence: staging.persistence, log: () => {},
-    })));
+    }));
     return { staging, solved };
 }
 
 /**
- * ⚖ PINNED `bombPusherLive` and `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16). Both
- * tapes were recorded on the game under the pre-flip model. Two flips moved this producer and neither re-pin list named
- * it (no CI job runs it): the wave-13 flip (`3e6f048cd3`, ⚖ user 2026-10-11 "ON at harvest") turned `bombPusherLive`
- * ON, and with the lobber live the cluster's hold inside its reach is refused by name (`lobberHoldRefusal` THROWS from
- * `l40button-l41-part0`'s solve) — `fidelityL40Button` pinned its solve rows OFF for exactly that; the lapse flip
- * (`19aaa5cce4`) then moved both plans again (with only the lobber pinned, `l41-part0` drifts and `l42-part0` throws a
- * `BotDriverV2Error` on its collect stance). With both OFF at d1fbfeffc2 `--check` is green. ⛔ RETIRE THIS PIN with
- * the modelling the ON refusal names (a moving wait, or a priced bomb hit: `movingWait` / `forcedHits`) and a re-record
- * on the game — a roster move, so the user's licence.
- * ⛓ + `spinnerLockLag` OFF (fidelity planning-12, the wave-29 L40RES flip, ⚖ user 2026-10-24 "Flip both ON"): a spinner
- * reading a lock's turn-off one tick later (the game's update order, witnessed by L40RES at 0 px) moves both plans in
- * this NW cluster (Producer --checks at eea1bea316: both tapes DRIFT; every other key of the flip leaves them byte-equal).
- * Same retirement: a re-record on the game (the user's licence).
+ * ⛓ NO PINNED FIDELITY ANY MORE (L40REREC, wave 31, ⚖ user 2026-10-24 "Queue a re-record slice"). From 2026-10-16 to
+ * wave 31 this producer ran under an INTERIM table pinning `bombPusherLive`, `strikeIframeLapse` and (planning-12)
+ * `spinnerLockLag` OFF, so the committed tapes stayed the walks the game had recorded under the pre-flip model. Its
+ * retirement conditions are met: the lobber's hold is paced (`movingWait` + `bombBlastBody`, WANDHOLD, ON since the
+ * wave-28 flip) and `bombBlastBody` is ON (the lapse's condition). The re-record solves at the shipped defaults and the
+ * game (p4g, headless, DAMAGE ON) witnesses it at 0 px; the tapes are no longer `noDamage` (`BOMB_REFUTED` is the
+ * history of why they were).
  */
-const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false, spinnerLockLag: false });
 
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -168,16 +170,16 @@ async function main() {
             + `OFF refusal named, is never touched. ${solved.out.perTick.length} t. The survey's staging `
             + `(\`${L40BUTTON_BASE}\` re-pointed at the arrival; items [${SPHERE_5_3_ITEMS.join(', ')}], keys `
             + `[${SPHERE_5_3_KEYS.join(', ')}]). Authored by scripts/procgen/plan-seedling-l40button-witness.mjs.`;
-        // ⛔ noDamage: the damage-on recording of these exact inputs is REFUTED by an unmodelled hazard — see
-        // `BOMB_REFUTED` — so the witness of the ROUTE is recorded with the hit path off (the R5 cluster tape's own
-        // choice). The inputs are the solver's, unchanged.
-        const witness = { ...built, noDamage: true, description: `${description} ${BOMB_REFUTED.sentence}` };
+        // ⛓ DAMAGE ON (L40REREC): the lobber is modelled and the plan paces its hold, so the witness is the game with
+        // the hit path live. `BOMB_REFUTED` is why the pre-L40REREC tapes were `noDamage`.
+        const witness = { ...built, noDamage: false, description: `${description} ${DAMAGE_ON_SENTENCE}` };
         const tape = parseTape(witness);
         const out = runTape(tape, { levelSource });
         const last = out.ticks.at(-1);
-        check(`${w.name}: the model replays it to the part`, last?.level === 40
-            && Math.abs(last.x - 64) < 24 && Math.abs(last.y - 144) < 24,
-        `${out.ticks.length} observations, ends ${JSON.stringify({ level: last?.level, x: last?.x, y: last?.y })}`);
+        check(`${w.name}: the model replays it to the part, damage on, with no hit`, last?.level === 40
+            && Math.abs(last.x - 64) < 24 && Math.abs(last.y - 144) < 24 && out.playerHits.length === 0,
+        `${out.ticks.length} observations, ends ${JSON.stringify({ level: last?.level, x: last?.x, y: last?.y })}, `
+            + `${out.playerHits.length} hit(s)`);
         const json = `${JSON.stringify(witness, null, 4)}\n`;
         const path = join(TAPES, `${w.name}.json`);
         if (CHECK) {
@@ -196,7 +198,4 @@ async function main() {
     console.log('all checks green');
 }
 
-if (isEntryPoint(import.meta.url)) {
-    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
-    await withContactFidelity(PINNED_FIDELITY, main);
-}
+if (isEntryPoint(import.meta.url)) await main();
