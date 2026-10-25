@@ -25513,3 +25513,30 @@ of the 14 into the kill's named *"nowhere to be"*, at the same units; the other 
 - A band catch at one call site does not cover the band: the same forecast throws from the refuge preview, the walk's
   danger read (`refuseDanger` → `swordTickAt`) and the executor's corridor gate. Find the stack before naming the site.
 - "Nowhere to be" after the band catch is a refusal by the band, but its words still say no cell is clear.
+
+### Seedling hammer-phase FF-HARNESS — the tape solver's recorder follows a rewound run
+
+⚖ User, 2026-10-25: *"Queue FF-HARNESS (Recommended)"*. It fixes the harness defect FF found (class (c)). The report is
+`CC/docs/cloud-reports/seedling-hammer-ff-harness.md`. No solver logic changed, and `HAMMER_FIGHT_FALLBACK` stays OFF.
+
+**The fix.** `jsRuntimeSolver.solveFromTape` builds a plan's `expected` / `equipsAt` / `equipItems` with a recorder
+(`recordingRun`). It now wraps every fork it hands `solveSegment` in the same recorder as the shadow (rows indexed past
+the prefix). When the result carries B3's `liveRun` (a rewind adopted a fresh fork), it reads that fork's recording, and
+it plays the trailing equip's idle tick on that fork too. No `liveRun` (every solve with the switch OFF) means the
+shadow's recording, as before. The lookup covers every `rewind.to`, including the admission arms' un-undone failures.
+
+**Measured.** Leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`, seams 5226–5280)
+with the switch ON goes from 31 of 45 phases solving with 4 divergences to **34 of 45 with 1**. With the switch OFF it is
+byte-identical (55 seams, every field but wall time). The wall-time cost is within noise. The radius (54 fresh L40 and
+spinner-room requests) has no movers.
+
+**The one divergence left is `solverBot.js`'s, not the harness's.** `withSolveDeadline` returns `{ ...out, deadline }`
+when a deadline site tripped, and that spread drops the non-enumerable `liveRun`. At 5251 the full pass rewinds, solves,
+trips its window (`sword-dash`), and the harness is handed no `liveRun`. A scratch copy that carries `liveRun` across the
+spread gives **35 of 45 with 0** (FF's prediction). That is a hand-over (out of this slice's scope).
+
+**Trap candidates.**
+- A non-enumerable result field does not survive `{ ...out }`: every wrapper between the producer and the reader is part
+  of the contract. Here that is `withSolveDeadline`, the one wrapper that spreads, and only when a deadline tripped.
+- A fresh page capture lands where the page's clock puts it: this one put 371 at seam 5262, a phase where no fallback runs,
+  so the radius could not see the fix. The census over a whole hammer period is what exercises it.
