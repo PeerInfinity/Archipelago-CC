@@ -2789,12 +2789,12 @@ for (const [id, name, fn] of [
  * Flash path said `transport: 'flash'`, the surface read 'wasm' and the goal was HELD (no map, no engine) for 60 s.
  */
 /**
- * ⛓ RUFFLE SETTLES IN ITS OWN ROW. Ruffle mounts asynchronously after `_embedSwf` (the wasm module from its CDN, then
- * the SWF fetch, a 404 here). This row's refusal lands in ~1 s, BEFORE that, so its runtime restore used to tear
- * the `<object>` down mid-init ("Unable to lock Ruffle core" / "Ruffle instance destroyed", logged in the NEXT row)
- * — and in a batch the top page then got NO animation frames for 15–18 s, so the next row's rAF-driven Loops queue
- * never parked (FRAME-STARVED; seedling-js batch 7/10 at efed9765a9, 20/20 with this row left out). So the row waits
- * for Ruffle's SWF fetch to resolve before its restore, and for frames to flow again after it.
+ * ⛓ RUFFLE ON CANVAS, SETTLED IN ITS OWN ROW. In a seedling-js batch, the GPU context Ruffle's default `wgpu-webgl`
+ * renderer creates (on top of the batch's WebGPU pages) left the top page with NO animation frames for 15–18 s, so
+ * the NEXT row's rAF-driven Loops queue never parked (FRAME-STARVED; batch 7/10 at efed9765a9, 20/20 with this row
+ * left out). Settling Ruffle inside this row alone did not help (10/20); the canvas renderer did (20/20). The row
+ * needs the Flash PATH, not a renderer — no SWF ever plays. It also waits for Ruffle's SWF fetch (a 404) before its
+ * restore tears the player down, so Ruffle's lifecycle and any stall it causes land HERE, asserted below.
  */
 function watchResourceFetch(url) {
     let seen = false;
@@ -2888,7 +2888,7 @@ async function seedlingFlashRuntimeRowBody(tc, swfFetch) {
     // ⛓ PLAY CLOCK — the Flash (Ruffle) runtime's game is never read for a clock (its SWF calls no setPlayClock).
     tc.assertEqual('[flash] the play clock read nothing on the Flash runtime (loop mode on)', clockReads,
         getSeedlingPlayClock()?.stats.reads ?? null);
-    // ⛓ RUFFLE SETTLES IN ITS OWN ROW (above): its SWF fetch resolves before the restore tears the player down.
+    // ⛓ RUFFLE ON CANVAS, SETTLED IN ITS OWN ROW (above): its SWF fetch resolves before the restore.
     const settled = await tc.pollForCondition(() => swfFetch.seen(),
         '[flash] Ruffle\'s SWF fetch resolved before the runtime restore', 30000, 100);
     if (!settled) tc.log('[flash] Ruffle never fetched the SWF (its CDN script did not load?) — restoring anyway');
