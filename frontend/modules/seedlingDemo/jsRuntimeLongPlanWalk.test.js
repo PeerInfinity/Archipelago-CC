@@ -144,3 +144,62 @@ describe('⛓ L12→L21 STALL — the walker\'s give-up clock counts only the ti
         expect(w.stats).toMatchObject({ driven: 5, walked: 2 });
     });
 });
+
+/**
+ * ⛓ L12→L21 STALL — the bound that replaces the clock for the solver's ticks: a plan is finite, each tick is checked
+ * against its expected row, a played-out plan with the goal not done is refuted, and the `MAX_REFUTATIONS`th refutation
+ * FAILS the goal by name. So a plan that never reaches its goal (or loops off its rows) terminates within
+ * `MAX_REFUTATIONS` × its length — the stub service below answers every solve with the same plan.
+ *   m3 the "played out" refutation dropped (`plan.i >= plan.solution.length` re-solved silently / kept)
+ *        -> "a plan that never reaches its goal …" reds: not FAILED within the bound.
+ */
+describe('⛓ L12→L21 STALL — a solver plan that never reaches its goal still FAILS by name, bounded', () => {
+    const PLAN_TICKS = 700; // 3 × 700 = 2100 solver ticks, past the walker's 1800: the clock is not what stops it
+    /** A settled solve service: every solve answers `PLAN_TICKS` idle ticks whose rows are `rowAt(live, i)`. */
+    const stubService = (rowAt) => {
+        const asked = [];
+        return {
+            asked, kind: 'stub', warm() {}, dispose() {},
+            start(request) {
+                asked.push(request);
+                const expected = Array.from({ length: PLAN_TICKS + 1 }, (_, i) => rowAt(request.live.row, i));
+                const plan = { solution: Array.from({ length: PLAN_TICKS }, () => []), expected, equipsAt: new Map(),
+                    verbs: ['walk'], replayMs: 0, solveMs: 0, prefixLength: request.perTick.length };
+                return { settled: true, started: true, result: { ok: true, plan }, cancel() {} };
+            },
+        };
+    };
+    function standingAt86(service) {
+        const rt = createJsRuntime({ solveService: service });
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [86, 48, 48] }]);
+        rt.tick();
+        rt.playback.setSolverWalk(true);
+        // the Starting House's door (tile [3, 4]): an idle plan never crosses it
+        expect(rt.playback.walkTo({ kind: 'exit', level: 86, tiles: [[3, 4]], name: 'stub door' })).toEqual({ ok: true });
+        rt.playback.play();
+        let t = 0;
+        for (; t < 10_000 && !SETTLED.includes(rt.playback.state); t += 1) rt.tick();
+        return { rt, t };
+    }
+
+    it('a plan that plays out without the goal: refuted 3×, then FAILED by the refutation cap, within 3 × its length', () => {
+        const service = stubService((row) => ({ ...row }));
+        const { rt, t } = standingAt86(service);
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.reason).toBe("the solver's plan was refuted 3 time(s) — last: the plan played out and the goal is not complete");
+        expect(service.asked).toHaveLength(3);
+        expect(rt.playback.stats).toMatchObject({ driven: 3 * PLAN_TICKS, walked: 0 });
+        expect(t).toBeLessThanOrEqual(3 * PLAN_TICKS + 3);
+        expect(rt.run.level).toBe(86);
+    });
+
+    it('a plan off its rows (a loop the run does not follow): refuted at its first wrong row, FAILED by the cap at once', () => {
+        const service = stubService((row, i) => (i === 0 ? { ...row } : { ...row, x: row.x + 1000 }));
+        const { rt, t } = standingAt86(service);
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(rt.playback.reason).toMatch(/^the solver's plan was refuted 3 time\(s\) — last: tick 1 of the plan: live /);
+        expect(rt.playback.stats.driven).toBe(3);
+        expect(t).toBeLessThanOrEqual(6);
+    });
+});
