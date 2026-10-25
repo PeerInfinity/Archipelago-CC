@@ -1479,6 +1479,24 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'to `teleporter@0,352`): 1268 ticks in L12 at >= 150 px from `puncher@416,256`, which stays behind '
                 + 'the shut lock — never inside its reach. Recorded on the game with `hits` 0.',
         }),
+        /**
+         * ⛓⛓⛓ seedling-fidelity-l40rerec — the two L40BUTTON witnesses RETIRE `noDamage` (re-recorded at the shipped
+         * defaults, the lobber's hold paced), so the guard names them; declared in the re-record's own commit.
+         */
+        Object.freeze({
+            name: 'l40button-l41-part0', levels: Object.freeze([40]), bobs: 14, ticks: 1601,
+            addedBy: 'Seedling fidelity L40REREC D1 (L40 from L41 to Totem Part 64,144, damage on, on the game)',
+            why: 'sweep leg 378\'s arrival: brave, the `puncher@816,128` kill, the PACED hold on `buttonroom@272,208` '
+                + 'out of `bombpusher@112,128`\'s blasts, the NW cluster\'s rocks, the t1 latch, the part — 1601 ticks '
+                + 'in L40 with its chasers stepped. Recorded on the game (p4g) with `hits` 0, model = game at 0 px.',
+        }),
+        Object.freeze({
+            name: 'l40button-l42-part0', levels: Object.freeze([40]), bobs: 14, ticks: 1663,
+            addedBy: 'Seedling fidelity L40REREC D1 (L40 from L42 to Totem Part 64,144, damage on, on the game)',
+            why: 'sweep leg 381\'s arrival: brave, the PACED hold, the `spinner@192,128` kill, the rocks, the t1 latch, '
+                + 'the part — 1663 ticks in L40 with its chasers stepped. Recorded on the game (p4g) with `hits` 0, '
+                + 'model = game at 0 px.',
+        }),
     ]),
 
     /**
@@ -3567,7 +3585,9 @@ export const R8_D2_SHIELD = Object.freeze({
                 addedBy: 'Seedling fidelity L40BUTTON D3 (L40 from L42 to Totem Part 64,144, on the game)',
                 why: 'sweep-4 leg 381\'s arrival, the solver\'s own plan with `STANCE_ROCKS` on: on its way to the NW '
                     + 'cluster\'s rocks the walk kills `spinner@192,128` (a `kill` order), then latches t1 and collects. '
-                    + 'Recorded on p4f (noDamage), model = game at 0 px. Named by this assertion driving the roster.',
+                    + 'Recorded on p4f (noDamage), model = game at 0 px; ⛓ re-recorded at L40REREC on p4g with damage '
+                    + 'on (the hold paced out of the lobber\'s blasts), 0 hits, 0 px. Named by this assertion driving '
+                    + 'the roster.',
             }),
         ]),
     }),
