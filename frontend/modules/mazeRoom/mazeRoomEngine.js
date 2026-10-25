@@ -703,7 +703,6 @@ function shutEntryAt(world, x, y, dir, inv, clearanceOpts) {
     return isObstacleCleared(gate, inv, world.obstacleLib, clearanceOpts) ? undefined : gate;
 }
 
-/** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
 /**
  * ⛓ BLOCK SINKS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Sink from grid terrain"): the cells a pushed
  * block SINKS into — `[{x, y}]`. Seedling's `PushableBlock` is destroyed when it comes to rest on water, lava or a pit
@@ -740,6 +739,7 @@ export function blocksAfterPush(world, blocks, from, to) {
     return out.sort();
 }
 
+/** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
 function hasEntryGate(world, x, y, dir) {
     return world.entryGates?.has(`${x},${y},${dir}`) ?? false;
 }

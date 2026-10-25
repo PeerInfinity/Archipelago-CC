@@ -809,20 +809,6 @@ export function levelHasInteraction(entities) {
 const MOVES = Object.freeze([['N', 0, -1, 'S'], ['E', 1, 0, 'W'], ['S', 0, 1, 'N'], ['W', -1, 0, 'E']]);
 
 /**
- * ⛓ ENTRY GATES (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates") — every directed step
- * between two floor cells of a level world whose terrain gates it, as the region analyzer prices a step
- * (`regionAtlasAnalyzer.stepCost`): the face it crosses, read from BOTH cells; the direction gate of moving that way,
- * read from both cells (a two-tile waterfall gates the climb at each); and the entered cell's `enter` gate. Folded
- * into the cell the step ENTERS (`{x, y, dir, gate}`, `gate` a rule entry of the builder's lib, or null when a face or
- * direction refuses the step), so the engine reads one cell. The occupancy conditions stay the cell's obstacle.
- *   - a cell an ENTITY claimed (a block, a button, a held lock, a rock) contributes none of its own: the entity is
- *     its model (L15/L16's one-way locks are button locks);
- *   - a LATCHED cell's closed side (`enter` null) costs its lock's AP EVENT (bound by `bindWorldEvents`): the lock
- *     opened from its open side stays open every way, which is the analyzer's latch condition; with none bound, no entry;
- *   - a gate condition with no AP item behind it refuses the step (a wall can only make the world harder) and is named;
- *   - a step in `refused` (`"x,y,dir"`) has no entry at all.
- */
-/**
  * ⛓ DIRECTIONAL CELLS IN A PER-SUB-REGION WORLD (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Entry gates in
  * every world"; water-exits floored them in LEVEL worlds only). The analyzer's components hold no directional cell —
  * it steps THROUGH them (`stepCost`) — so a sub-region joined by one projected as islands: L94 r3c4's two cells are
@@ -857,6 +843,20 @@ function floorDirectionalCells(builder, grid, tiles, resolveCondition, note) {
     return floored;
 }
 
+/**
+ * ⛓ ENTRY GATES (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates") — every directed step
+ * between two floor cells of a level world whose terrain gates it, as the region analyzer prices a step
+ * (`regionAtlasAnalyzer.stepCost`): the face it crosses, read from BOTH cells; the direction gate of moving that way,
+ * read from both cells (a two-tile waterfall gates the climb at each); and the entered cell's `enter` gate. Folded
+ * into the cell the step ENTERS (`{x, y, dir, gate}`, `gate` a rule entry of the builder's lib, or null when a face or
+ * direction refuses the step), so the engine reads one cell. The occupancy conditions stay the cell's obstacle.
+ *   - a cell an ENTITY claimed (a block, a button, a held lock, a rock) contributes none of its own: the entity is
+ *     its model (L15/L16's one-way locks are button locks);
+ *   - a LATCHED cell's closed side (`enter` null) costs its lock's AP EVENT (bound by `bindWorldEvents`): the lock
+ *     opened from its open side stays open every way, which is the analyzer's latch condition; with none bound, no entry;
+ *   - a gate condition with no AP item behind it refuses the step (a wall can only make the world harder) and is named;
+ *   - a step in `refused` (`"x,y,dir"`) has no entry at all.
+ */
 function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused, note) {
     const out = [];
     const cellAt = (x, y) => grid.cells[y * grid.width + x];
