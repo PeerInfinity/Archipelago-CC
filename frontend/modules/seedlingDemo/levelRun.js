@@ -56,7 +56,7 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    latchAtBuild, pressedGroups, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -5966,7 +5966,13 @@ export function createLevelRun({
      */
     const spinnerCtx = (over = {}) => {
         const openBridges = openBridgeIdsNow();
-        const openActivators = noclip ? null : openActivatorIds(activatorStateFor(level));
+        // ⛓ fidelity L40RES (`spinnerLockLag`, OFF): a responder that turned off on the latest step is still Solid to
+        // a spinner, which updates before it (`activators.openActivatorIdsBeforeLatestStep`). ⚠ `spinnerForecast`
+        // reuses one ctx for its whole horizon, so ON it carries that responder Solid past its first row: the frozen-
+        // world bound it already has (a responder that opens inside the horizon is not foreseen), one tick longer.
+        const openActivators = noclip ? null : (CONTACT_FIDELITY.spinnerLockLag
+            ? openActivatorIdsBeforeLatestStep(activatorStateFor(level), world)
+            : openActivatorIds(activatorStateFor(level)));
         // The blocks where the PREVIOUS tick left them: the spinner updates
         // first, so this is what its sweep reads. (The block then reads the
         // spinner at the position this tick gives it — the two are one tick
@@ -8445,6 +8451,9 @@ export function createLevelRun({
                     dropTile: c.dropTile ? { ...c.dropTile } : null } : {}),
                 // ⛓ fidelity LAPSECOST D2: the Flyer's "fall" Spritemap — its own copy.
                 ...(c.drop !== undefined ? { drop: c.drop ? { ...c.drop } : null } : {}),
+                // ⛓ fidelity MISCRES D1 (`forecastCorpseFade`): the "die" Spritemap the clone steps — its own copy.
+                ...(CONTACT_FIDELITY.forecastCorpseFade && c.bulbPhase === undefined && c.anim
+                    ? { anim: { ...c.anim } } : {}),
             });
         }
         // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
@@ -8617,6 +8626,20 @@ export function createLevelRun({
                      * never in it: the kill arm reads a body's absence from the projection as its death.
                      */
                     if (c.destroy) {
+                        /**
+                         * ⛓⛓ fidelity MISCRES D1 (`forecastCorpseFade`) — A PLAIN CORPSE FADES IN THE FORECAST TOO:
+                         * `stepChaserEntity`'s destroy branch on the clone (`Mobile.death`'s 0.1 a tick, on screen only,
+                         * removed at alpha <= 0 and a wall to the rest of this forecast tick under `removedBodyBlocks`).
+                         * OFF: it stood, a sibling wall, to the end of the forecast.
+                         */
+                        if (CONTACT_FIDELITY.forecastCorpseFade && !c.sword) {
+                            if (onScreenAt(chaserBoxAt(c.tag, c.x, c.y), `${c.tag} ${c.id}`)) {
+                                c.alpha -= MOBILE_DEATH_FADE.alphaStep;
+                                if (c.alpha <= 0) c.removed = true;
+                            }
+                            if (removedThisFrame !== null && c.removed) removedThisFrame.add(c.id);
+                            continue;
+                        }
                         if (!c.sword || !chaserChasesWhileDying(c.tag)) continue;
                         if (onScreenAt(chaserBoxAt(c.tag, c.x, c.y), `${c.tag} ${c.id}`)) {
                             c.alpha -= MOBILE_DEATH_FADE.alphaStep;
@@ -8728,6 +8751,13 @@ export function createLevelRun({
                     c.x = r.x;
                     c.y = r.y;
                     c.v = r.v;
+                    /**
+                     * ⛓ fidelity MISCRES D1 (`forecastCorpseFade`) — the graphic half's `Bob.endAnim`: a clone of a body
+                     * in its "die" sets `destroy` when the anim ends (`stepChasersNow`'s `if (c.anim && stepSpriteAnim(…))`),
+                     * and fades from the next forecast tick. A forecast kill (`dyingAt`) keeps its own schedule.
+                     */
+                    if (CONTACT_FIDELITY.forecastCorpseFade && c.dying && c.dyingAt === undefined && c.anim
+                        && !hasDropDeath(c.tag) && stepSpriteAnim(c.anim)) c.destroy = true;
                     /**
                      * ⛓ fidelity CORRIDOR D1/D2 (`corridorBodyPricing` ON only) — THE CONTACT GATE'S OWN I-FRAME:
                      * `Enemy.update` runs `hitUpdate(); hitPlayer();` at the BODY's update, above the Player, so the
@@ -12353,6 +12383,7 @@ export function createLevelRun({
                 },
             });
             const w = stepWallFlyerGraphic(out.w);
+            stampRemovedThisTick(w, before.removed);
             st.set(id, w);
             if (out.contact) wallFlyerEvents.push({ t, level, id, kind: 'contact', x: w.x, y: w.y,
                 ...(retaliated ? { retaliation: retaliated } : {}) });
@@ -12395,7 +12426,8 @@ export function createLevelRun({
         const chasers = chaserStateFor(level);
         const boxes = [
             ...chaserStaticEnemyBoxesNow().map((b) => b.rect),
-            ...[...wallFlyerStateFor(level).values()].filter((w) => !w.removed).map((w) => wallFlyerRect(w)),
+            ...[...wallFlyerStateFor(level).values()].filter((w) => !w.removed || removedThisTickStillBlocks(w))
+                .map((w) => wallFlyerRect(w)),
             ...(spinnerRectsNow() ?? []).map((b) => b.rect),
         ];
         const unstepped = (world.combat?.enemies ?? []).filter((e) => e.tag !== 'drill' && e.row.speed !== 0
@@ -12409,7 +12441,8 @@ export function createLevelRun({
                     + 'Refused by name rather than passed through (fidelity DRILL D2).');
             }
             for (const [id, o] of drills) {
-                if (id === selfId || o.removed) continue;
+                // ⛓ fidelity MISCRES D1: a drill removed THIS tick (it updated earlier) is still a wall to this one.
+                if (id === selfId || (o.removed && !removedThisTickStillBlocks(o))) continue;
                 if (rectsOverlap(rect, drillRect(o))) return true;
             }
             for (const c of chasers.values()) {
@@ -12422,7 +12455,24 @@ export function createLevelRun({
     /** ⛓ fidelity DRILL D2: the live drills, as "Enemy" walls to a chaser whose list carries the type (`[]` OFF). */
     function drillWallsNow() {
         if (!CONTACT_FIDELITY.drillMixedRooms || !CONTACT_FIDELITY.drillLive) return [];
-        return [...drillStateFor(level).values()].filter((d) => !d.removed).map((d) => ({ id: d.id, rect: drillRect(d) }));
+        return [...drillStateFor(level).values()].filter((d) => !d.removed || removedThisTickStillBlocks(d))
+            .map((d) => ({ id: d.id, rect: drillRect(d) }));
+    }
+    /**
+     * ⛓ fidelity MISCRES D1 (`CONTACT_FIDELITY.nonChaserRemovalBlocks`, OFF) — A DRILL, WALLFLYER OR ICE TURRET REMOVED
+     * THIS TICK IS STILL IN THE "Enemy" LIST (`World.remove` queues; `updateLists` drains after the frame), so the
+     * movers stepped after it this tick still meet it. `removedTick` is stamped (ON only, outside a ceremony) where the
+     * family's step removes the body; it is read only on that same tick. OFF: always false (byte-identical).
+     */
+    function removedThisTickStillBlocks(b) {
+        return CONTACT_FIDELITY.nonChaserRemovalBlocks && b.removed === true && ceremony === null
+            && b.removedTick === ticksCompleted + 1;
+    }
+    /** ⛓ fidelity MISCRES D1: stamp a removal this family step made (`nonChaserRemovalBlocks` ON only). */
+    function stampRemovedThisTick(b, wasRemoved) {
+        if (CONTACT_FIDELITY.nonChaserRemovalBlocks && ceremony === null && b.removed === true && !wasRemoved) {
+            b.removedTick = ticksCompleted + 1;
+        }
     }
     function stepDrillsNow() {
         if (noclip || noDamage) return;
@@ -12462,6 +12512,7 @@ export function createLevelRun({
                 },
             });
             const d = stepDrillGraphic(out.d);
+            stampRemovedThisTick(d, before.removed);
             /**
              * ⛓ fidelity DRILL D2: `Enemy.update`'s terrain switch is not in `drill.js` (L88's drill never leaves
              * ground). A mixed room's drill that hops onto water, lava or a pit is refused by name, not walked on.
@@ -12715,7 +12766,8 @@ export function createLevelRun({
             if (r) out.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
         }
         for (const t of turretStateFor(level).values()) {
-            if (t.removed) continue;
+            // ⛓ fidelity MISCRES D1: a corpse removed THIS tick is still an "Enemy" to the chasers stepped after it.
+            if (t.removed && !removedThisTickStillBlocks(t)) continue;
             // ⛓ fidelity-bobsoldier: the `type == "Solid"` latch rides along — a mover whose list lacks "Enemy"
             // (the BobSoldier's) is stopped by the turret only once it is a Solid corpse.
             out.push({ id: t.id, rect: iceTurretRect(t), solidLatch: t.solid === true });
@@ -14031,6 +14083,8 @@ export function createLevelRun({
              * ⛓ KILLLOCK K4 — THE CORPSE'S REMOVAL MOVES `classCount(IceTurret)`, and the kill-lock ledger runs
              * here, at the removal, exactly as a chaser's does (`assertChaserRemovalIsDeclared`).
              */
+            // ⛓ fidelity MISCRES D1: the loop skips a body already removed, so a removal here is this tick's.
+            stampRemovedThisTick(t, false);
             if (KILLLOCK_BODIES.turretRemovalLedger && t.removed && !t.removalLedgered) {
                 t.removalLedgered = true;
                 assertChaserRemovalIsDeclared({ id }, t.fell ? 'a turret corpse fell' : 'a turret corpse drowned');

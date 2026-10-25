@@ -1,0 +1,14 @@
+SEAM-SWEEP: leg 371: 2 distinct answer(s) over 13 seam time(s) — VARIES WITH seam.time
+  t=5229 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5230 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5231 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5232 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5233 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5234 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5235 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5236 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5237 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5238 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5239 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5240 refusal work=177 [dashless:88,full:89] solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128) -> kill (spinne
+  t=5241 error work=315 [dashless:98,full:217] PLAN
