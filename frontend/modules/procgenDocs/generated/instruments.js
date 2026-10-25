@@ -7181,6 +7181,7 @@ export const INSTRUMENTS = frz({
                 "json",
                 "legs",
                 "log",
+                "orderings",
                 "penalties",
                 "preset",
                 "rules"
@@ -7204,6 +7205,12 @@ export const INSTRUMENTS = frz({
                         "argOf"
                     ],
                     "name": "log"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "orderings"
                 },
                 {
                     "how": [
