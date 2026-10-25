@@ -119,6 +119,10 @@ export const ENEMY_ART = Object.freeze([
         ['BobBoss2', 'BobBoss3Pic', 'NPCs/BobBossNPC.as:21 pics[2]']]
         .map(([who, file, as3]) => ({ pack: 'seedling', key: `seedling:portrait/${who}`, file: `NPCs/${file}.png`, origin: [0, 0],
             as3: `${as3} myPic = new Image(${file}); Game.as:1726-1731 talk() draws it screen-anchored` })),
+    // ⛓ G6 — the Owl's intro portrait: `FinalBoss.as:24` `sprOwlPic = new Spritemap(imgOwlPic, 16, 16)` (never played: frame 0),
+    //    `:91` `Game.talkingPic = sprOwlPic`.
+    { pack: 'seedling', key: 'seedling:portrait/Owl', file: 'NPCs/OwlPic.png', origin: [0, 0],
+        as3: 'Enemies/FinalBoss.as:24 sprOwlPic Spritemap(OwlPic, 16, 16), frame 0; :91 Game.talkingPic; Game.as:1726-1731 talk() draws it screen-anchored' },
     // ── AP item looks: `Pickups/APItem.as:52-66,94-104` (the sheet and frame size each look binds; 0x0 = an Image,
     //    i.e. the whole file) and `:160-172` (`centerOO`, frame 0 — an APItem never advances its frame) ──
     ...[['sword', 'Sword.png', 16, 16], ['shield', 'Shield.png', 7, 7], ['darkshield', 'DarkShield.png', 9, 9, 'Image'],

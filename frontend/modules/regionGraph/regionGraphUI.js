@@ -222,57 +222,42 @@ export class RegionGraphUI {
       }
     } else {
       logger.debug('Loading libraries dynamically');
-      // Load Cytoscape.js first
-      const script1 = document.createElement('script');
-      script1.src = './libs/cytoscape/cytoscape.min.js';
-      script1.onerror = (error) => {
-        logger.error('Error loading cytoscape.min.js:', error);
-        this.updateStatus('Error loading Cytoscape library');
-      };
-      script1.onload = () => {
-        logger.debug('Cytoscape.js loaded');
-        this.cytoscape = window.cytoscape;
-        
-        // Load layout-base dependency
-        const script2 = document.createElement('script');
-        script2.src = './libs/cytoscape/layout-base.js';
-        script2.onload = () => {
-          logger.debug('layout-base.js loaded');
-          // Load cose-base dependency  
-          const script3 = document.createElement('script');
-          script3.src = './libs/cytoscape/cose-base.js';
-          script3.onload = () => {
-            logger.debug('cose-base.js loaded', { coseBase: !!window.coseBase });
-            // Load FCose plugin
-            const script4 = document.createElement('script');
-            script4.src = './libs/cytoscape/cytoscape-fcose.js';
-            script4.onload = () => {
-              logger.debug('cytoscape-fcose.js loaded', { cytoscapeFcose: !!window.cytoscapeFcose });
-              this.cytoscapeFcose = window.cytoscapeFcose;
-              if (this.cytoscape && this.cytoscapeFcose && window.coseBase) {
-                logger.debug('All libraries loaded, registering FCose plugin');
-                try {
-                  this.cytoscapeFcose(this.cytoscape);
-                  logger.debug('FCose plugin registered successfully');
-                } catch (error) {
-                  logger.error('Error registering FCose plugin:', error);
-                }
-              } else {
-                logger.warn('Missing libraries', { cytoscape: !!this.cytoscape, cytoscapeFcose: !!this.cytoscapeFcose, coseBase: !!window.coseBase });
-              }
-              logger.debug('Calling initializeGraph...');
-              this.initializeGraph();
-            };
-            script4.onerror = (error) => logger.error('Error loading cytoscape-fcose.js:', error);
-            document.head.appendChild(script4);
-          };
-          script3.onerror = (error) => logger.error('Error loading cose-base.js:', error);
-          document.head.appendChild(script3);
+      // The four scripts are requested together and run in this order:
+      // dynamic scripts with async = false download in parallel but execute
+      // in insertion order (each depends on the one before). Chained onload
+      // handlers fetched them one after another, which on a busy page (the
+      // bundled boot's first rows) took ~10 s before the graph and its
+      // controls existed.
+      const libs = ['cytoscape.min.js', 'layout-base.js', 'cose-base.js', 'cytoscape-fcose.js'];
+      const scripts = libs.map((file) => {
+        const script = document.createElement('script');
+        script.src = `./libs/cytoscape/${file}`;
+        script.async = false;
+        script.onerror = (error) => {
+          logger.error(`Error loading ${file}:`, error);
+          if (file === 'cytoscape.min.js') this.updateStatus('Error loading Cytoscape library');
         };
-        script2.onerror = (error) => logger.error('Error loading layout-base.js:', error);
-        document.head.appendChild(script2);
+        return script;
+      });
+      scripts[scripts.length - 1].onload = () => {
+        logger.debug('cytoscape-fcose.js loaded', { cytoscapeFcose: !!window.cytoscapeFcose });
+        this.cytoscape = window.cytoscape;
+        this.cytoscapeFcose = window.cytoscapeFcose;
+        if (this.cytoscape && this.cytoscapeFcose && window.coseBase) {
+          logger.debug('All libraries loaded, registering FCose plugin');
+          try {
+            this.cytoscapeFcose(this.cytoscape);
+            logger.debug('FCose plugin registered successfully');
+          } catch (error) {
+            logger.error('Error registering FCose plugin:', error);
+          }
+        } else {
+          logger.warn('Missing libraries', { cytoscape: !!this.cytoscape, cytoscapeFcose: !!this.cytoscapeFcose, coseBase: !!window.coseBase });
+        }
+        logger.debug('Calling initializeGraph...');
+        this.initializeGraph();
       };
-      document.head.appendChild(script1);
+      for (const script of scripts) document.head.appendChild(script);
     }
   }
 
@@ -1010,6 +995,23 @@ export class RegionGraphUI {
   }
 
   onStateUpdate(data) {
+    // A build needs staticData AND a snapshot. rulesLoaded can arrive before
+    // the first snapshot of those rules reaches the proxy (the proxy clears
+    // its snapshot on a reload; on boot the graph can also be created after
+    // rulesLoaded/ready and miss checkAndLoadInitialData's one look), and
+    // loadGraphData then gives up with "Missing data" — nothing retried, so
+    // the graph stayed empty (or on the previous rules) until the next rules
+    // load. The bundled boot hit this. So a snapshot arriving while the graph
+    // does not reflect the current staticData starts the build instead.
+    const staticData = stateManager.getStaticData();
+    // One attempt per staticData: a build that throws is not retried on
+    // every snapshot.
+    if (this.cy && data?.snapshot && staticData?.regions && this.lastBuiltStaticData !== staticData
+        && this._catchUpBuildFor !== staticData) {
+      this._catchUpBuildFor = staticData;
+      this.loadGraphData();
+      return;
+    }
     return this.dataManager.onStateUpdate(data);
   }
 

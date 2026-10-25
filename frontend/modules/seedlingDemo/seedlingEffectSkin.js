@@ -41,12 +41,11 @@
  * every `nightBmp` copy (`Light.render` draws ONLY to `nightBmp` unless
  * `darkLight`: G5); the intro's dust (`Game.cutscene[0]` only, a clock the
  * model refuses); the Wand's kill explosion on a chaser and the LavaBall's
- * (no ledger row carries one); the FinalBoss owl's portrait (`FinalBoss.as:91`
- * sets `Game.talkingPic` itself; the model holds no owl dialogue).
+ * (no ledger row carries one).
  *
  * THE NPC DIALOGUES (G4b-dialogue): the run's read-only `talkingNow` names the
  * placed / temporary NPC whose `talk()` draws (a talker, the Watcher, the Bob
- * Boss's NPC, the lights intro). Its portrait (`NPC.myPic`, `NPC_TALK_LOOK`)
+ * Boss's NPC, the lights intro, ⛓ G6 the Owl's intro). Its portrait (`NPC.myPic`, `NPC_TALK_LOOK`)
  * and its `ALIGN` are the CLASS's, from the AS3, not the model's. A run with
  * no `talkingNow` is the named path `NO_TALKING_NPC_STATE`: only the
  * ceremony's dialogue is drawn, as before.
@@ -85,11 +84,12 @@ export const KEYS = Object.freeze({
 export const EFFECT_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Explosion (totem shot, totem death, bomb)', 'SlashHit (press kills: chasers, spinners)', 'Droplet (rain)',
         'BossTotem white-out cover', 'hearts (drawHealth)', 'blackCover (load fade)', 'talk() bars + typed text (pickup ceremonies; the authored SeedlingFont, G4b)',
-        'NPC dialogues + portraits + ALIGN (talkingNow: talkers, the Watcher, the Bob Boss NPC, the lights intro; G4b-dialogue)']),
+        'NPC dialogues + portraits + ALIGN (talkingNow: talkers, the Watcher, the Bob Boss NPC, the lights intro; G4b-dialogue)',
+        "the Owl's intro + its portrait (talkingNow 'owlIntro'; G6)"]),
     modelled: Object.freeze([]),
     remaining: Object.freeze(['Coin (dead code: never spawned)', 'the grenade light + every Light / nightBmp copy (G5)',
         'DustParticle (intro cutscene only)', 'the Wand-kill and LavaBall explosions (no ledger row)',
-        'the FinalBoss owl portrait (no run state)', 'the fire / seed / death covers (no run state)']),
+        'the fire / seed / death covers (no run state)']),
 });
 
 // ── constants, each from the AS3 ────────────────────────────────────────
@@ -131,7 +131,13 @@ export const NPC_TALK_LOOK = Object.freeze({
     center: Object.freeze(['Statue', 'LightBossController']),
 });
 /** `talkingNow.tag` → the AS3 class that speaks (a talker's by `PLACED_NPC_TALK`). */
-const SPEAKER_CLASS = Object.freeze({ watcher: 'Watcher', bobboss: 'BobBossNPC', lightboss: 'LightBossController' });
+const SPEAKER_CLASS = Object.freeze({ watcher: 'Watcher', bobboss: 'BobBossNPC', lightboss: 'LightBossController', finalboss: 'FinalBoss' });
+/**
+ * ⛓ G6 — THE OWL'S LOOK: `FinalBoss.update()` sets `Game.talkingPic = sprOwlPic` (`FinalBoss.as:24,91`: `OwlPic.png`,
+ * a 16 × 16 Spritemap that never plays, so frame 0) and never writes `Game.ALIGN`, which is "LEFT" (`Game.as:512`;
+ * every talker and pickup restores it on its end, `NPC.as:260`, `Pickup.as:110`) — ⚠ a named band, as the speed.
+ */
+const OWL_TALK_LOOK = Object.freeze({ portrait: 'Owl', align: 'LEFT' });
 
 /** The named path for a run that exposes no `talkingNow`: the NPC dialogues are not drawn (the ceremony's still are). */
 export const NO_TALKING_NPC_STATE = 'no talking-NPC state';
@@ -229,11 +235,12 @@ function npcDialogueOf(run) {
     if (!now) return null;
     const cls = SPEAKER_CLASS[now.tag] ?? PLACED_NPC_TALK[now.tag]?.as3 ?? null;
     const who = cls === 'BobBossNPC' ? `BobBoss${now.form ?? 0}` : cls;
+    const owl = cls === 'FinalBoss';
     return {
         text: now.text ?? '', currentCharacter: now.currentCharacter,
         speaker: { source: now.source, tag: now.tag, cls },
-        align: NPC_TALK_LOOK.center.includes(cls) ? 'CENTER' : 'LEFT',
-        portrait: NPC_TALK_LOOK.portraits.includes(cls) ? KEYS.portrait(who) : null,
+        align: owl ? OWL_TALK_LOOK.align : NPC_TALK_LOOK.center.includes(cls) ? 'CENTER' : 'LEFT',
+        portrait: owl ? KEYS.portrait(OWL_TALK_LOOK.portrait) : NPC_TALK_LOOK.portraits.includes(cls) ? KEYS.portrait(who) : null,
     };
 }
 
@@ -393,7 +400,7 @@ export const EFFECT_RULES = Object.freeze({
  * `World.update`) is drawn at its first frame on that tick's render and
  * updates from the next tick, as G3c's shots.
  */
-export function stepEffectSkin(prev, view, tick, { rules = EFFECT_RULES, live = true } = {}) {
+export function stepEffectSkin(prev, view, tick, { rules = EFFECT_RULES, live = true, rain = true } = {}) {
     if (!view) return prev;
     const R = rules === EFFECT_RULES ? rules : { ...EFFECT_RULES, ...rules };
     const sameRun = !!prev && prev.epoch.run === view.epoch.run;
@@ -430,8 +437,10 @@ export function stepEffectSkin(prev, view, tick, { rules = EFFECT_RULES, live = 
     // the rain: the drops alive update (they are prepended — before the player), then this frame's spawn
     // (`frame` counts every frame the renderer has seen in this run, live and held: the rain's cosmetic key)
     const frame = (sameRun ? prev.frame : 0) + (live ? 1 : 0);
-    const droplets = live ? (same ? prev.droplets : []).map(R.dropletStep).filter(Boolean) : [];
-    const spawn = live ? R.rainSpawn(view.rain, cam, view.level, frame) : null;
+    // ⛓ G6 — the effects switch OFF (`rain: false`): no drop lives or spawns; `frame` still counts, so the rain
+    // switched back on spawns as an ON run would from that frame
+    const droplets = live && rain ? (same ? prev.droplets : []).map(R.dropletStep).filter(Boolean) : [];
+    const spawn = live && rain ? R.rainSpawn(view.rain, cam, view.level, frame) : null;
     const drop = spawn ? R.makeDroplet(spawn, view.rain, view.world) : null;
     if (drop) droplets.push(drop);
     // the fade: a build's dead frames (the run spends them; it never ticks them) are owed to the page's hold
@@ -463,14 +472,14 @@ export const primeEffectSkin = (view, opts = {}) => stepEffectSkin(null, view, 0
  * the skin with the next cover value showing, or the same skin when nothing
  * is owed. `holdOwed(skin)` says whether the page should hold.
  */
-export function holdEffectSkin(skin, view, { rules = EFFECT_RULES } = {}) {
+export function holdEffectSkin(skin, view, { rules = EFFECT_RULES, rain = true } = {}) {
     if (!skin?.fadeQueue?.length) return skin;
     const R = rules === EFFECT_RULES ? rules : { ...EFFECT_RULES, ...rules };
     const [cover, ...rest] = skin.fadeQueue;
     const frame = skin.frame + 1;
-    const spawn = view ? R.rainSpawn(view.rain, skin.cam, view.level, frame) : null;
+    const spawn = view && rain ? R.rainSpawn(view.rain, skin.cam, view.level, frame) : null;
     const drop = spawn ? R.makeDroplet(spawn, view.rain, view.world) : null;
-    return { ...skin, frame, fadeQueue: rest, cover, droplets: drop ? [...skin.droplets, drop] : skin.droplets };
+    return { ...skin, frame, fadeQueue: rest, cover, droplets: !rain ? [] : drop ? [...skin.droplets, drop] : skin.droplets };
 }
 export const holdOwed = (skin) => !!skin?.fadeQueue?.length;
 
@@ -481,9 +490,9 @@ const boxAt = (x, y, w, h) => ({ x: x - w / 2, y: y - h / 2, w, h, right: x + w 
 /**
  * THE WORLD-SPACE OPS at the tick `skin` was stepped to, Y-sorted with the
  * room by `layer`. FlashPunk turns counter-clockwise: an AS3 `angle` is the
- * canvas's `-angle`.
+ * canvas's `-angle`. ⛓ G6: `rain: false` (the effects switch OFF) draws no drop.
  */
-export function effectOps(view, art, { skin } = {}) {
+export function effectOps(view, art, { skin, rain = true } = {}) {
     if (!view || !art || !skin) return [];
     const ops = [];
     const push = (key, frame, at, box, extra) => {
@@ -504,7 +513,7 @@ export function effectOps(view, art, { skin } = {}) {
     }
     // `Droplet.render` (`:92-101`): alpha (y − startY)/(endY − startY), × the player's fall-off once it has updated
     // (its `player` is set in `update`); frame = int(frame); tinted by its colour. `layer = -startY`.
-    for (const d of skin.droplets) {
+    for (const d of rain ? skin.droplets : []) {
         let alpha = (d.y - d.startY) / (d.endY - d.startY);
         if (d.updated) alpha *= Math.max(1 - Math.hypot(d.x - view.player.x, d.y - view.player.y) / DROP.maxDist, 0);
         if (!(alpha > 0)) continue;

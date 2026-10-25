@@ -567,6 +567,12 @@
             "_comment": "GRAPHICS G5. jsRuntime.html?graphics=seedling (room mode, lights ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 40 (Dungeon 4/2, lightalpha 0.1): the night layer is drawn (its lights) and composited at 0.72 — the canvas darker than the same ops painted without it (checkNight); set({lights:'off'}) applies live and the canvas is then byte-identical to the pre-G5 paint (0 differing channels); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-effects-switch",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G6. jsRuntime.html?graphics=seedling (room mode, lights + effects ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge: at level 61 the rain is drawn, set({effects:'off'}) applies live and no drop is alive or drawn thirty paints on; at level 76 the lava glow's solidBmp edges are drawn ON and gone OFF (fewer night ops, the room still darkened); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
