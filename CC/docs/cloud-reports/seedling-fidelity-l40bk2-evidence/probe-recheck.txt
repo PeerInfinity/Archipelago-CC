@@ -1,0 +1,13 @@
+# box lock: TAKEN by probe-seedling-l40bk2.mjs (browser, pid 20214) — head 89da08f35, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      l40bk2-pocket-chain: 2650 t; switches {"weighHypothesisChain":true}
+PASS: l40bk2-pocket-chain: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l40bk2-pocket-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 2647 sampled tick(s)
+      l40bk2-pocket-chain: OFF the model parts from the game on 0 tick(s)
+PASS: l40bk2-pocket-chain: the game's ice-turret corpse comes to rest on button@480,384 {t 2} and stays — from t289
+PASS: l40bk2-pocket-chain: the game's pushableblockfire@480,480 comes to rest on button@768,400 {t 5} and stays — from t2486
+PASS: l40bk2-pocket-chain: the game's pushableblockfire@576,576 is pushed west toward the pocket (560,576) by pulser@592,576 — leaves (576,576) at t2619; at t2649 x 560.5
+PASS: l40bk2-pocket-chain: the game never hits the player — max hits 0
+PASS: l40bk2-pocket-chain: the game's player ends on button@816,400 (the hold that published the pulser) — ends in L40 at (824.5252382987803, 407.0139161399138)
+
+ALL CHECKS PASSED

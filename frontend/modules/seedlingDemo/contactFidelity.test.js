@@ -100,7 +100,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
         || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
-        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST
+        || !!process.env.SEEDLING_WEIGH_HYPOTHESIS_CHAIN || !!process.env.SEEDLING_DASH_SPINNER_FORECAST)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -303,7 +304,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L39SHAFT D2b (wave 31): a collect from a stance in the pickup's span closes on one axis — OFF.
             collectSpanAim: false,
             // ⛓ fidelity L39SHAFT D2c (wave 31): `Spinner.friction()` in the runtime's `Point` spelling — OFF.
-            spinnerPointExact: false });
+            spinnerPointExact: false,
+            // ⛓ fidelity L40BK2 (wave 31): a weigh's holder derived under the rest of the stance hypothesis (D1), and a
+            // struck spinner priced where the walk's strike left it (D2, ⛓ hammer hand-over 368) — shipped OFF.
+            weighHypothesisChain: false,
+            dashSpinnerForecast: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

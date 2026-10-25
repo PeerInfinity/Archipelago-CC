@@ -25752,3 +25752,42 @@ knockback; the game disagreed at t547 on the last bit of a spinner's x).
   L40 Boss Key 2 at +1023 s, 18 checks — L40BK2's room.
 - Bounded vitest, the keys ON: `l39ShaftPress` moves WANDHOLD's two L39 controls (they pin the old refusal); the defaults
   tables owe their re-pins; `spinnerPointExact` and the narrowed `collectSpanAim` move nothing else.
+
+### Seedling fidelity L40BK2 — a weigh's holder derived under the rest of the stance hypothesis (`weighHypothesisChain`); a struck spinner priced where the walk's strike left it (`dashSpinnerForecast`, ⛓ hammer hand-over 368) — both OFF
+
+Planner `seedling-fidelity-planning-13`, wave 31. The report is `CC/docs/cloud-reports/seedling-fidelity-l40bk2.md`.
+
+**W0 — the first refusal in the chain.** Legs 869/870 (ids 859/860 at the base `89da08f355`) and survey step 67 refuse
+*"no REACHABLE stance inside button@816,400"*: guard (iii) walls `wandlock@448,432`/`@512,480` {t 2} and `wandlock@800,400`
+{t 5}. It asked each `weigh` holder of the world as it is. t2's holder, `iceturret@472,400`'s corpse, has its first press
+stance inside the lock room, behind the latched south door `wandlock@480,560`; t5's holder, `pushableblockfire@480,480`,
+needs the 35-press Fire route across t2. Both holders exist and both are in reach under the hypothesis itself.
+
+**D1 — the chain (`weighHypothesisChain`).** `chainWeighHypothesis` asks the refused holders again under the bag with the
+admitted hypothesis discharged, to a fixed point, and a corpse holder's turret volume rides on its entry as an exemption
+(the fire route's far-side stances sit in the live turret's census rect). The walk to `button@816,400`'s stance then names
+`pushableblockfire@576,576` nearest the aim, whose mover is the pulser that very hold publishes; `nextPastUnbound` passes the
+round to the next door (before guard (ii) demotes it). From the arrival the chain walks the south door's links and dies in
+`kill (spinner@880,848) by press` (three hits from `chaser bob@736,752`, PRESS_KILL_REBOOT_GUARD: the hammer arc's). From
+inside the lock room the solver builds links 4–9 itself (circling kill, corpse on t2, 35 presses onto t5, the hold, the
+pulser's push); `probe-seedling-l40bk2.mjs` plays those ticks on p4g: 0 px on every sampled tick, never hit. Refusals carry
+`equips` under the key, so a refused prefix replays.
+
+**D2 — leg 368 (`dashSpinnerForecast`).** `previewWalk` advances the hammer arc's `spinnerFightForecast` with the walk's
+presses, and `spinnerDanger` prices each sample's own row. Two findings came out of the census: (1) the body arm needs
+`Enemy.hitPlayer`'s gate (`hitsTimer <= 0`, `!destroy`, taken from the previous row: the frame's landing comes after the
+spinner's update) — the drive overlaps a struck spinner's body at t1225 and is not hit; (2) a window-by-window dash
+admission refuses a prefix whose spinner a later window turns back, so the chain is planned press-blind and certified whole.
+Seam census 5276–5310: every hitless OFF plan is the same plan ON; the OFF plans the game hits (5288, 5290–5293) are refused.
+
+**D3 — measured and stopped.** At this base legs 387/404 refuse at the chest's chaser ladder or the shake band on 9 seams
+each, OFF = ON; the press-kill death is reached only by the chain's walk. Its hits are a chaser's, not a spinner's, so the fix
+is `execKillByPress`'s, not the forecast's: handed to the hammer arc.
+
+**Trap candidates.**
+- A guard asked of the world AS IT IS walls a holder the hypothesis itself makes reachable: a quantifier must be asked under
+  the same assumptions it grants.
+- An exact forecast exposes a conservative arm: the body arm never needed the i-frame gate while the forecast put struck
+  bodies elsewhere.
+- A greedy admission refuses a chain whose danger a later window resolves (CORRIDOR D2's shape, a second family).
+- A refused prefix without its slot selections is not replayable.
