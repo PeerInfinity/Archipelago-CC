@@ -1429,6 +1429,39 @@ export function createLevelRun({
      */
     const activatorStates = new Map();
     /**
+     * ⛓⛓ SEEDLING FIDELITY DIGESTREAD D2 — A GETTER READS; IT KEEPS NOTHING IT BUILDS
+     * (`CC/docs/cloud-reports/seedling-fidelity-digestread.md`).
+     *
+     * Every per-visit state is built lazily, by the first `…StateFor(n)` that asks. The tick asks for all of them, so
+     * a run that only ticks holds the same maps whoever asked first — but a GETTER read between a visit's build and
+     * its first `advance` (the page's graphics read `crushers`, `bossesWoken`, … every tick) stored a build the
+     * never-read run did not have yet: an empty Map in a room without the family, and `stateDigestParts`' `visit`
+     * part hashes these maps whole, so the read moved the digest (30 getters; `bobBoss` moved `player`).
+     *
+     * ⛔ So while a getter runs (`readingDepth > 0`, raised by `reading(…)` in each run getter whose
+     * reach holds a lazy build; `levelRunDigestRead.test.js` reads EVERY getter, so a new one that builds reds there) a
+     * builder hands back what it built WITHOUT keeping it (`keptUnlessReading`), and the tick builds the same state
+     * from the same inputs when it first asks. A state already kept is read as it is. Methods (`entities`, the
+     * forecasts, `previewStepper`) are not getters and still build — DA's `lightsFights` row builds on purpose.
+     * ⚠ (hammer-2's review) A read inside `reading()` before a visit's first `advance` gets a FRESH, unkept object on
+     * every call (two reads are `!==`): a reader must not mutate or key on (WeakMap, `===`) the result. And the guard
+     * sees only side effects the digest sees: a builder writing a non-digest cache inside a read (the `worldCtor` case)
+     * is invisible to `levelRunDigestRead.test.js` — correct by reading, not by the row.
+     */
+    let readingDepth = 0;
+    const keptUnlessReading = (map, n, built) => {
+        if (readingDepth === 0) map.set(n, built);
+        return built;
+    };
+    const reading = (read) => {
+        readingDepth += 1;
+        try {
+            return read();
+        } finally {
+            readingDepth -= 1;
+        }
+    };
+    /**
      * ⛓⛓ SEEDLING FIDELITY F7: a new `Game`'s activator state is the build's
      * AND its first frame's `check()` pass — `createActivatorState` boots the
      * pressed ButtonRooms (F6), and `bootPulledRopes` the pulled ropes. ONE
@@ -1442,7 +1475,7 @@ export function createLevelRun({
     };
     const activatorStateFor = (n) => {
         worldFor(n);
-        if (!activatorStates.has(n)) activatorStates.set(n, buildActivatorState(n));
+        if (!activatorStates.has(n)) return keptUnlessReading(activatorStates, n, buildActivatorState(n));
         return activatorStates.get(n);
     };
     const freshActivatorState = (n) => {
@@ -1495,15 +1528,15 @@ export function createLevelRun({
      */
     const burnStates = new Map();
     const bridgeStateFor = (n) => {
-        if (!bridgeStates.has(n)) bridgeStates.set(n, new Map());
+        if (!bridgeStates.has(n)) return keptUnlessReading(bridgeStates, n, new Map());
         return bridgeStates.get(n);
     };
     const rockStateFor = (n) => {
-        if (!rockStates.has(n)) rockStates.set(n, createRockState());
+        if (!rockStates.has(n)) return keptUnlessReading(rockStates, n, createRockState());
         return rockStates.get(n);
     };
     const burnStateFor = (n) => {
-        if (!burnStates.has(n)) burnStates.set(n, createBurnState());
+        if (!burnStates.has(n)) return keptUnlessReading(burnStates, n, createBurnState());
         return burnStates.get(n);
     };
     /**
@@ -1523,7 +1556,7 @@ export function createLevelRun({
      */
     const ropeStates = new Map();
     const ropeStateFor = (n) => {
-        if (!ropeStates.has(n)) ropeStates.set(n, new Set());
+        if (!ropeStates.has(n)) return keptUnlessReading(ropeStates, n, new Set());
         return ropeStates.get(n);
     };
     /**
@@ -1648,7 +1681,7 @@ export function createLevelRun({
                     landed: fallen,
                 });
             }
-            fallRockStates.set(n, st);
+            return keptUnlessReading(fallRockStates, n, st);
         }
         return fallRockStates.get(n);
     };
@@ -1827,7 +1860,7 @@ export function createLevelRun({
                     moonrockSet);
                 st.set(r.id, r);
             }
-            moonrockStates.set(n, st);
+            return keptUnlessReading(moonrockStates, n, st);
         }
         return moonrockStates.get(n);
     };
@@ -1857,7 +1890,7 @@ export function createLevelRun({
             for (const c of worldFor(n).crushers ?? []) {
                 byId.set(c.id, { id: c.id, t: c.t, x: c.ex, y: c.ey, vx: 0, vy: 0 });
             }
-            crusherStates.set(n, byId);
+            return keptUnlessReading(crusherStates, n, byId);
         }
         return crusherStates.get(n);
     };
@@ -1919,7 +1952,7 @@ export function createLevelRun({
                 // spelling it differently.
                 byId.set(b.id, { ...createBossTotem(b.ex, b.ey), id: b.id });
             }
-            bossStates.set(n, byId);
+            return keptUnlessReading(bossStates, n, byId);
         }
         return bossStates.get(n);
     };
@@ -1972,7 +2005,7 @@ export function createLevelRun({
                     id: b.id, x: b.ex, y: b.ey, tag: b.persistTag ?? -1,
                 }));
             }
-            shieldBossStates.set(n, byId);
+            return keptUnlessReading(shieldBossStates, n, byId);
         }
         return shieldBossStates.get(n);
     };
@@ -1996,9 +2029,10 @@ export function createLevelRun({
                 }
                 fight = createLavaBossFight({ x: e[0].x, y: e[0].y, tag: Number(e[0].attrs?.tag ?? -1) });
                 // The ctor writes `playerPosition` (`LavaBoss.as:53`): a death in this room reboots there.
-                if (n === level) worldCtor = { x: LAVA_BOSS.respawn.x, y: LAVA_BOSS.respawn.y };
+                // (DIGESTREAD D2: the build a getter does not keep writes nothing; the tick's build writes it.)
+                if (n === level && readingDepth === 0) worldCtor = { x: LAVA_BOSS.respawn.x, y: LAVA_BOSS.respawn.y };
             }
-            lavaBossFights.set(n, fight);
+            return keptUnlessReading(lavaBossFights, n, fight);
         }
         return lavaBossFights.get(n);
     };
@@ -2359,7 +2393,7 @@ export function createLevelRun({
                     pendingRemove: false,
                 });
             }
-            finalDoorStates.set(n, byId);
+            return keptUnlessReading(finalDoorStates, n, byId);
         }
         return finalDoorStates.get(n);
     };
@@ -2420,7 +2454,7 @@ export function createLevelRun({
             for (const t of worldFor(n).iceTurrets ?? []) {
                 byId.set(t.id, createIceTurret(t.x, t.y));
             }
-            turretStates.set(n, byId);
+            return keptUnlessReading(turretStates, n, byId);
         }
         return turretStates.get(n);
     };
@@ -2567,7 +2601,7 @@ export function createLevelRun({
                     attrs: e.attrs ?? {} }, worldFor(n).world);
                 byId.set(id, Object.assign(t, { id, yKnown: true, animKnown: true, lastClock: null }));
             }
-            beamTowerStates.set(n, byId);
+            return keptUnlessReading(beamTowerStates, n, byId);
         }
         return beamTowerStates.get(n);
     };
@@ -2599,7 +2633,7 @@ export function createLevelRun({
             for (const l of worldFor(n).magicalLocks ?? []) {
                 byId.set(l.id, createMagicalLock(l.id, { tag: l.tag, x: l.x, y: l.y }, l.lockType));
             }
-            magicalLockStates.set(n, byId);
+            return keptUnlessReading(magicalLockStates, n, byId);
         }
         return magicalLockStates.get(n);
     };
@@ -3891,7 +3925,7 @@ export function createLevelRun({
     const chestStates = new Map();
     const chestsOf = (n) => worldFor(n).chests ?? [];
     const chestStateFor = (n) => {
-        if (!chestStates.has(n)) chestStates.set(n, createChestState(chestsOf(n)));
+        if (!chestStates.has(n)) return keptUnlessReading(chestStates, n, createChestState(chestsOf(n)));
         return chestStates.get(n);
     };
     const openChestIdsNow = () => {
@@ -3918,7 +3952,7 @@ export function createLevelRun({
         if (!pulserStates.has(n)) {
             const byId = new Map();
             for (const p of pulsersOf(n)) byId.set(p.id, createPulser(p.x, p.y, p.t));
-            pulserStates.set(n, byId);
+            return keptUnlessReading(pulserStates, n, byId);
         }
         return pulserStates.get(n);
     };
@@ -3979,7 +4013,7 @@ export function createLevelRun({
      */
     let sealPiece = null;
     const pushableStateFor = (n) => {
-        if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
+        if (!pushableStates.has(n)) return keptUnlessReading(pushableStates, n, createPushableState(worldFor(n)));
         return pushableStates.get(n);
     };
     /**
@@ -4004,7 +4038,7 @@ export function createLevelRun({
             // spinner roster comes into existence, so the bound cannot be
             // skipped by a path that forgot to ask.
             assertSpinnerSolidsBound(n);
-            spinnerStates.set(n, createSpinnerState(worldFor(n)));
+            return keptUnlessReading(spinnerStates, n, createSpinnerState(worldFor(n)));
         }
         return spinnerStates.get(n);
     };
@@ -9195,7 +9229,7 @@ export function createLevelRun({
      */
     const pullsByLevel = new Map();
     function pullsFor(n) {
-        if (!pullsByLevel.has(n)) pullsByLevel.set(n, createPulls(recordFor(n).entities));
+        if (!pullsByLevel.has(n)) return keptUnlessReading(pullsByLevel, n, createPulls(recordFor(n).entities));
         return pullsByLevel.get(n);
     }
     function stepPullsNow() {
@@ -15806,10 +15840,9 @@ export function createLevelRun({
     const bobArenaNow = () => {
         if (bobArena && bobArena.level === level) return bobArena;
         const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
-        if (!rock) {
-            bobArena = { level, none: true };
-            return bobArena;
-        }
+        // ⛓ DIGESTREAD D2: a getter's ask (`bobBoss`) reads the arena it would build and keeps none (`player` digests it)
+        const kept = (a) => (readingDepth === 0 ? (bobArena = a) : a);
+        if (!rock) return kept({ level, none: true });
         // ⛓⛓⛓ R3-swim D3: the rock's flag is already false, so the ctor
         // builds it FALLEN (Solid) with `cameraTimer = 0`, and its first live
         // `update()` takes the `cameraTimer == 0` arm at once — see the rock
@@ -15818,7 +15851,7 @@ export function createLevelRun({
         // arrival after a death mid-fight, `levelWorld.arenaRockOf`): the same
         // ctor state, so the same arena.
         const fallen = bobRocksFallen.has(level) || rock.fallenAtBuild === true;
-        bobArena = {
+        return kept({
             level,
             rockId: rock.id,
             persistTag: rock.persistTag,
@@ -15831,8 +15864,7 @@ export function createLevelRun({
             fire: null,
             fireCollected: false,
             faceUp: false,
-        };
-        return bobArena;
+        });
     };
     const bobLedger = (row) => bobBossLedger.push({ t: ticksCompleted, level, ...row });
     /** `new BobBossNPC(72, 72, ...)` -> `NPC`'s `+ Tile/2`: the point the NPC occupies. */
@@ -16475,8 +16507,7 @@ export function createLevelRun({
             fight.totemGone = false;
             fight.pendingEnd = false;
         }
-        lightsFights.set(n, fight);
-        return fight;
+        return keptUnlessReading(lightsFights, n, fight);
     }
 
     /** `liveSolidOpts`' `lightTotems`: the totem's state by its solid's `lightTotemId` (only rooms with a fight). */
@@ -18071,7 +18102,7 @@ export function createLevelRun({
             return {
                 beam: moonrockBeam,
                 rockSet: moonrockSet,
-                rocks: noclip ? [] : [...moonrockStateFor(level).values()].map((r) => ({ ...r })),
+                rocks: noclip ? [] : [...reading(() => moonrockStateFor(level)).values()].map((r) => ({ ...r })),
                 events: moonrockEvents.map((e) => ({ ...e, ...(e.flag ? { flag: { ...e.flag } } : {}) })),
             };
         },
@@ -18115,7 +18146,7 @@ export function createLevelRun({
          * on. Reporting only the undying ones would make a press at a corpse
          * read as a press at nothing.
          */
-        get spinnerBodies() { return spinnerBodiesNow(); },
+        get spinnerBodies() { return reading(spinnerBodiesNow); },
         /**
          * ⛓⛓ R5 SLICE 13: WHERE THE SPINNERS WILL BE, for the next `n` ticks.
          *
@@ -19172,7 +19203,7 @@ export function createLevelRun({
          * ⛓ seedling-fidelity-bosskills D2 — the King of Fire's fight in this room (`lavaBoss.lavaBossView`: the body,
          * the balls in flight, the report), or null: the switch is off, or the room holds no fight. A copy.
          */
-        get lavaBossFight() { return lavaBossFightNow(); },
+        get lavaBossFight() { return reading(lavaBossFightNow); },
         /** ⛓ bosskills D3: the Tentacled Beast's fight (`tentacleBeast.tentacleBeastView`) or null. A copy. */
         get tentacleBeastFight() { return tentacleBeastFightNow(); },
         /** ⛓ bosskills D3: the Tentacled Beast's event rows, a copy. */
@@ -19182,12 +19213,12 @@ export function createLevelRun({
         get shakeWritersHere() {
             if (noclip) return [];
             const out = [];
-            if (bossStateFor(level).size > 0) out.push('totemLaser', 'totemDeath');
+            if (reading(() => bossStateFor(level)).size > 0) out.push('totemLaser', 'totemDeath');
             if (owlStateFor(level).bosses.size > 0) out.push('rockFallLanding');
             // ⛓ bosskills D2: the King of Fire's sweep (null OFF, so the list is unchanged there).
-            if (lavaBossFightFor(level)?.boss.destroy === false) out.push('lavaBossSweep');
+            if (reading(() => lavaBossFightFor(level))?.boss.destroy === false) out.push('lavaBossSweep');
             // ⛓ U14-swim D1: a rock still to land this visit.
-            if (moonrockBeam && !moonrockSet && moonrockStateFor(level).size > 0) {
+            if (moonrockBeam && !moonrockSet && reading(() => moonrockStateFor(level)).size > 0) {
                 out.push('moonrockLanding');
             }
             return out.filter((w) => BOSS_CLASS_SHAKE_WRITERS.includes(w));
@@ -19247,7 +19278,7 @@ export function createLevelRun({
          * the walkTo-divergence lesson, one mechanic later. Reading it off
          * the run means the two cannot disagree.
          */
-        get openActivators() { return openActivatorsNow(); },
+        get openActivators() { return reading(openActivatorsNow); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.
@@ -19259,8 +19290,8 @@ export function createLevelRun({
          * the push opened and then walk the executor into the block it did
          * not move — the `openActivators` lesson, one mechanic later.
          */
-        get openBridges() { return openBridgesNow(); },
-        get pushables() { return pushablesNow(); },
+        get openBridges() { return reading(openBridgesNow); },
+        get pushables() { return reading(pushablesNow); },
         /**
          * R5 slice 5: which of this level's BreakableRocks are GONE right
          * now — the planner's only legitimate view of a broken one.
@@ -19271,7 +19302,7 @@ export function createLevelRun({
          * wall it watched shatter. The `openBridges` lesson, one mechanic
          * later — which is now the fifth time this file has had to make it.
          */
-        get brokenRocks() { return brokenRocksNow(); },
+        get brokenRocks() { return reading(brokenRocksNow); },
         /**
          * ⛓⛓ R5 SLICE 14: which of this level's `BurnableTree`s are GONE
          * right now — the EIGHTH family's answer to the same question, and
@@ -19291,9 +19322,9 @@ export function createLevelRun({
          * `tag = -1` tree is rebuilt by the next `new Game` however this
          * reads, and a `tag >= 0` one is not rebuilt at all (`check()`).
          */
-        get burnedTrees() { return burnedTreesNow(); },
+        get burnedTrees() { return reading(burnedTreesNow); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
-        get pulledRopes() { return pulledRopesNow(); },
+        get pulledRopes() { return reading(pulledRopesNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 15: WHERE EVERY CRUSHER IN THIS ROOM IS RIGHT NOW —
          * the NINTH family's answer to the question the other eight answer
@@ -19308,13 +19339,13 @@ export function createLevelRun({
          * makes the two-phase doctrine a rule and not a style —
          * `crusherIsParked` is the predicate a phase-2 plan has to check.
          */
-        get crushers() { return crushersNow(); },
+        get crushers() { return reading(crushersNow); },
         /**
          * ⛓ Is every crusher in this room at rest? The precondition a
          * phase-2 (static-world) plan has to hold, asked of the run rather
          * than assumed by it.
          */
-        get crushersParked() { return crushersParkedNow(); },
+        get crushersParked() { return reading(crushersParkedNow); },
         /**
          * ⛔⛔ Every tick a crusher's body overlapped the player. `Bot.noDamage`
          * is why the run continues; this list is why "the route stayed out of
@@ -19374,7 +19405,7 @@ export function createLevelRun({
          */
         get talkCircles() { return talkCirclesNow(); },
         /** ⛓ Swim U5: L32's encounter, by role — see `bobBossNow`. */
-        get bobBoss() { return bobBossNow(); },
+        get bobBoss() { return reading(bobBossNow); },
         get strikeBodies() { return strikeBodiesNow(); },
         get chasers() { return chasersNow(); },
         /**
@@ -19436,7 +19467,7 @@ export function createLevelRun({
          * after the press that shoved it, so a route flooded against it is
          * only sound once `turretsSettled` is true.
          */
-        get turrets() { return turretsNow(); },
+        get turrets() { return reading(turretsNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 23 — the boss totems, as `collidesSolid` sees them.
          *
@@ -19446,11 +19477,11 @@ export function createLevelRun({
          * questions", and `liveRectOf` then falls through to `s.rect`, which
          * for an unwoken boss is the right answer anyway.
          */
-        get bosses() { return bossesNow(); },
+        get bosses() { return reading(bossesNow); },
         /** ⛓ Has the wand's publication woken the room's boss? */
         get bossesWoken() {
             if (noclip) return [];
-            return [...bossStateFor(level).values()]
+            return [...reading(() => bossStateFor(level)).values()]
                 .filter((b) => b.activated)
                 .map((b) => ({
                     x: b.x, y: b.y,
@@ -19499,14 +19530,14 @@ export function createLevelRun({
          * `iceTurretSettled`, which uses the FLOOR tile because the
          * two-cycle straddles `Math.round`'s boundary.
          */
-        get turretsSettled() { return turretsSettledNow(); },
+        get turretsSettled() { return reading(turretsSettledNow); },
         /**
          * ⛓ The kill ledger's other half: `IceTurret` writes NO persistence,
          * so the only witness that it died is this.
          */
         get turretsDead() {
             if (noclip) return [];
-            return [...turretStateFor(level).values()]
+            return [...reading(() => turretStateFor(level)).values()]
                 .filter((t) => t.dead)
                 .map((t) => ({ id: t.id, x: t.x, y: t.y, solid: t.solid, removed: t.removed }));
         },
@@ -19530,7 +19561,7 @@ export function createLevelRun({
          */
         get shieldBumps() { return shieldBumpsNow(); },
         /** ⛓ U12-swim D1: the room's pulls, in update order — see `pullsNow`. */
-        get pulls() { return pullsNow(); },
+        get pulls() { return reading(pullsNow); },
         /** ⛓ U15-swim D1: the room's turrets and their spits — see `shootersNow`. */
         get shooters() { return shootersNow(); },
         /** ⛓ F4: the static bodies an arrow has reached (see `staticBodiesNow`). */
@@ -19541,7 +19572,7 @@ export function createLevelRun({
         get bombPushers() { return bombPushersNow(); },
         get bombs() { return bombsNow(); },
         get igneousTiles() { return igneousTilesNow(); },
-        get lightsFight() { return lightsFightNow(); },
+        get lightsFight() { return reading(lightsFightNow); },
         /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
         get bombEvents() { return bombEventsNow(); },
         /** ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` per tick (`LEDGER_KINDS.beamTowerTrace`; empty OFF). */
@@ -19587,7 +19618,7 @@ export function createLevelRun({
          * that presses too fast can be told WHICH press was refused rather
          * than being told the enemy did not die.
          */
-        get turretDamage() { return turretDamageNow(); },
+        get turretDamage() { return reading(turretDamageNow); },
         /**
          * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT
          * NOW, ASKED OF THE RUN.
@@ -19617,8 +19648,8 @@ export function createLevelRun({
              * per-crusher rebuild was pure cost — and it is cost a live
              * sensing policy pays on every tick it polls this getter.
              */
-            const scanOpts = normalizeLiveOpts(liveSolidOpts());
-            for (const [id, c] of crusherStateFor(level)) {
+            const scanOpts = normalizeLiveOpts(reading(() => liveSolidOpts()));
+            for (const [id, c] of reading(() => crusherStateFor(level))) {
                 const ctx = crusherCtx(c, scanOpts);
                 out.set(id, {
                     ...scanCrusher({ x: c.x, y: c.y }, ctx.playerBox, ctx.playerPoint,
@@ -19631,7 +19662,7 @@ export function createLevelRun({
             return out;
         },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
-        get openChests() { return openChestsNow(); },
+        get openChests() { return reading(openChestsNow); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
         get chestOpens() { return chestOpensNow(); },
 
@@ -19683,7 +19714,7 @@ export function createLevelRun({
          * "the hold opened something" has to be asked of this instead, and
          * `runHold` does.
          */
-        get armedPulsers() { return armedPulsersNow(); },
+        get armedPulsers() { return reading(armedPulsersNow); },
         /**
          * ⛓⛓⛓ THE ARROW TRAPS WHOSE GROUP IS PUBLISHED RIGHT NOW.
          *
@@ -19698,7 +19729,7 @@ export function createLevelRun({
          * the flag — a set built from the flag alone would report L16 and
          * L67 backwards, and would report them backwards SILENTLY.
          */
-        get armedArrowTraps() { return armedArrowTrapsNow(); },
+        get armedArrowTraps() { return reading(armedArrowTrapsNow); },
         /**
          * ⛓⛓⛓ R9 SLICE L16 — THE GROUPS A PUBLICATION HAS LATCHED, THIS VISIT.
          *
@@ -19708,7 +19739,7 @@ export function createLevelRun({
          * — the live run's own map, never a flag the verb set itself. `null`
          * under `noclip`, like its neighbours.
          */
-        get latchedGroups() { return latchedGroupsNow(); },
+        get latchedGroups() { return reading(latchedGroupsNow); },
         /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
         get arrowVolleys() { return arrowVolleysNow(); },
         /**
@@ -19988,7 +20019,7 @@ export function createLevelRun({
          */
         get arrowCoverAt() {
             if (noclip) return null;
-            const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const solidOpts = normalizeLiveOpts(reading(() => liveSolidOpts()));
             const w = world;
             return (box) => w.collidesArrowCover(box, solidOpts);
         },
@@ -20019,9 +20050,9 @@ export function createLevelRun({
             return out;
         },
         /** Which blocks are no longer where the level built them, this visit. */
-        get pushedBlocks() { return noclip ? [] : movedPushables(pushableStateFor(level)); },
+        get pushedBlocks() { return noclip ? [] : movedPushables(reading(() => pushableStateFor(level))); },
         /** Is every block at rest? The `spear` leg's "the push has landed" test. */
-        get pushesSettled() { return pushesSettledNow(); },
+        get pushesSettled() { return reading(pushesSettledNow); },
         /**
          * One record per press that FIRED its rect: `{t, fired, level,
          * weapon, direction, rect, hits}`.
@@ -20170,7 +20201,7 @@ export function createLevelRun({
         get shieldBossFlags() { return [...shieldBossFlags.values()].map((f) => ({ ...f })); },
         /** The live bodies, for a stance that has to plan around the wall. */
         get shieldBosses() {
-            const st = shieldBossStateFor(level);
+            const st = reading(() => shieldBossStateFor(level));
             return [...st.values()].map((b) => ({
                 id: b.id,
                 x: b.x,
@@ -20397,7 +20428,7 @@ export function createLevelRun({
         get finalDoorGate() { return finalDoorGateNow(); },
         /** The live door(s), for a stance that has to plan around the wall. */
         get finalDoors() {
-            const st = finalDoorStateFor(level);
+            const st = reading(() => finalDoorStateFor(level));
             return [...st.values()].map((d) => ({
                 id: d.id,
                 x: d.ex,

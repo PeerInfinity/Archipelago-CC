@@ -1,0 +1,38 @@
+== base dd51bd99
+{
+  level: 63,
+  reads: [
+    'world',
+    'crushers',
+    'bossesWoken',
+    'bossShots',
+    'bombPushers',
+    'bombs',
+    'placedGrenades',
+    'cameraNow',
+    'gameTime'
+  ],
+  first: { t: 0, parts: [ 'visit' ] },
+  end: [],
+  visitA: '0bfd3e1b86eb',
+  visitB: '0bfd3e1b86eb'
+}
+== head
+{
+  level: 63,
+  reads: [
+    'world',
+    'crushers',
+    'bossesWoken',
+    'bossShots',
+    'bombPushers',
+    'bombs',
+    'placedGrenades',
+    'cameraNow',
+    'gameTime'
+  ],
+  first: null,
+  end: [],
+  visitA: '0bfd3e1b86eb',
+  visitB: '0bfd3e1b86eb'
+}
