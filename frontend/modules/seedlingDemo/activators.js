@@ -980,6 +980,38 @@ export function openActivatorIds(state) {
 }
 
 /**
+ * ⛓ fidelity L40RES — THE IDS A BODY THAT UPDATES **BEFORE** THE RESPONDERS SEES OPEN: `openActivatorIds` minus a
+ * fade responder that turned off on the LATEST `stepActivators` (`CONTACT_FIDELITY.spinnerLockLag`).
+ *
+ * `Game.loadlevel` adds `lock`/`rocklock`/`cover`/`grasslock`/`wandlock` (`Game.as:2355-2364`) before `spinner`
+ * (`:2416`), and `World.addUpdate` PREPENDS, so a Spinner moves BEFORE them in a frame: on a responder's `turnOff`
+ * frame the spinner has already swept against it Solid. The model steps spinners at the top of a tick and the
+ * responders at its end, so without this a spinner reads the turn-off one tick early. MEASURED on the game (p4g,
+ * `l40res-368-s5290`): `spinner@192,160` reflects off `wandlock@208,160` at t1172; the model's passed it.
+ *
+ * "Turned off on the latest step" is read off the state the step left, with no field of its own: a fade responder's
+ * `held` counts its active steps, and the step that opens it is step `opensOnTick(fade)`. Touch and key responders are
+ * not fade responders here (their opens are their own events) and are returned as `openActivatorIds` does.
+ */
+export function openActivatorIdsBeforeLatestStep(state, world) {
+    const open = openActivatorIds(state);
+    for (const a of (world.activators ?? [])) {
+        const s = state.byId.get(a.id);
+        const responder = RESPONDERS[a.tag];
+        if (!s?.open || !responder || TOUCH_RESPONDERS[a.tag] || KEY_RESPONDERS[a.tag]) continue;
+        if (s.held === opensOnTickOnce(responder.fade)) open.delete(a.id);
+    }
+    return open;
+}
+
+const OPENS_ON_TICK = new Map();
+/** `opensOnTick`, memoised per fade (it runs the fade; this is asked every spinner tick). */
+const opensOnTickOnce = (fade) => {
+    if (!OPENS_ON_TICK.has(fade)) OPENS_ON_TICK.set(fade, opensOnTick(fade));
+    return OPENS_ON_TICK.get(fade);
+};
+
+/**
  * ⚠ THE GUARD THIS MODEL NEEDS AND CANNOT DERIVE.
  *
  * `Button.update` presses on any `["Player", "Enemy", "Solid"]` overlap

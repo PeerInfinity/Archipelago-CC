@@ -1770,6 +1770,7 @@ frontend/modules/seedlingDemo/chasers.js|(module)|h628063d2|0|0,physics,magnitud
 frontend/modules/seedlingDemo/chasers.js|(module)|hf3d441fc|0|0,physics,magnitude,,targetOffset leash centre (BobSoldier: none)
 frontend/modules/seedlingDemo/chasers.js|deathTicks|h05bb1004|0|0,rule,count,,no die animation: Enemy.startDeath sets destroy at the blow (0 ticks)
 frontend/modules/seedlingDemo/levelRun.js|step|hee10ba2a|0|0,rule,bound,,a forecast corpse is removed at alpha <= 0 (Mobile.death)
+frontend/modules/seedlingDemo/levelRun.js|step|hee10ba2a|0|1,rule,bound,,a forecast corpse is removed at alpha <= 0 (Mobile.death; fidelity MISCRES D1 forecastCorpseFade: a plain corpse too)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|0|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|1|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)
 frontend/modules/seedlingDemo/ghostSword.js|(module)|he2cadb9a|2|0,cosmetic,,,ghost sword slash frame index (Player.as:399-400): which sprite frame is drawn; only the LIST LENGTH is a rule (ghostSlashHitTicksFor)

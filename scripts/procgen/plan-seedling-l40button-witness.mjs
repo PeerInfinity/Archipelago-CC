@@ -124,8 +124,12 @@ export async function l40buttonPlan(boot, name) {
  * `BotDriverV2Error` on its collect stance). With both OFF at d1fbfeffc2 `--check` is green. ⛔ RETIRE THIS PIN with
  * the modelling the ON refusal names (a moving wait, or a priced bomb hit: `movingWait` / `forcedHits`) and a re-record
  * on the game — a roster move, so the user's licence.
+ * ⛓ + `spinnerLockLag` OFF (fidelity planning-12, the wave-29 L40RES flip, ⚖ user 2026-10-24 "Flip both ON"): a spinner
+ * reading a lock's turn-off one tick later (the game's update order, witnessed by L40RES at 0 px) moves both plans in
+ * this NW cluster (Producer --checks at eea1bea316: both tapes DRIFT; every other key of the flip leaves them byte-equal).
+ * Same retirement: a re-record on the game (the user's licence).
  */
-const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false });
+const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false, spinnerLockLag: false });
 
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
