@@ -259,7 +259,7 @@ export const TILE_TYPE_SEMANTICS = Object.freeze({
  * myTile.t == 17 || myTile.t == 6` → `destroy = true`). Water and lava are type "Tile", not "Solid" (`Tile.as` `types`),
  * so the block slides onto them. `BLOCK_SINK_LABELS` are those types' analysis-grid labels, the form the grid carries.
  */
-export const BLOCK_SINK_TILE_TYPES = Object.freeze([1, 17, 6]);
+export const BLOCK_SINK_TILE_TYPES = Object.freeze([TILE_TYPE_IDS.water, TILE_TYPE_IDS.lava, TILE_TYPE_IDS.pit]);
 export const BLOCK_SINK_LABELS = Object.freeze(BLOCK_SINK_TILE_TYPES.map((t) => TILE_TYPE_SEMANTICS[t].label));
 
 /** The tile type a tileset column places, or null for an unmapped column. */
