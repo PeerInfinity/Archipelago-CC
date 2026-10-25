@@ -1366,6 +1366,17 @@ export const CONTACT_FIDELITY = {
      * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
      */
     iceTurretDeathAnim: true,
+    /**
+     * fidelity SHAKEEXACT D1 (wave 31) — A SPLIT RUN'S CAMERA SHAKE IS EXACT. ⚖ The user (2026-10-25, "Exact for
+     * split"): under `Rng.split` `view()` jiggles by `shake * Game.shakeJiggle(Game.time, axis) - shake/2` and takes no
+     * draw (`Game.as:2004-2011`, AS3 3′c), so where the run knows `Game.time` the camera is a point on every shaking
+     * frame. ON: `levelRun.stepCameraNow` (and the chaser / corridor forecasts' own cameras) step `camera.stepCameraSplit`
+     * at the exact `Game.time` when the run's `rng.split` is true and its clock counts; the BAND STAYS for a split:false
+     * tape (`Rng.cos()` is `Math.random()` there), a run whose clock is null (`gameTimeRefusal`), a camera already a band
+     * (it never closes inside a visit), `shakeAcrossLoad`'s fade and the `rebootShake` settle (`levelRun`'s
+     * `CAMERA_BAND_KEPT`). OFF: byte-identical. `SEEDLING_SHAKE_EXACT_SPLIT=0|1`.
+     */
+    shakeExactSplit: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1627,6 +1638,9 @@ if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELI
 if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
+// ⛓ fidelity SHAKEEXACT: `SEEDLING_SHAKE_EXACT_SPLIT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SHAKE_EXACT_SPLIT === '1') CONTACT_FIDELITY.shakeExactSplit = true;
+if (globalThis.process?.env?.SEEDLING_SHAKE_EXACT_SPLIT === '0') CONTACT_FIDELITY.shakeExactSplit = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
