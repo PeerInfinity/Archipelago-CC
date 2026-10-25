@@ -61,7 +61,7 @@ const GAME_NAME = 'Seedling Playthrough';
 const { AtlasSession } = await imp('frontend/modules/regionMarkingTool/atlasSession.js');
 const { validateRegionAtlas, derivedRulesSource } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { compactJsonFile } = await imp('frontend/modules/procgenPipeline/compactJson.js');
-const { analyzeRegion, applyRegionAnalysis, simplifyRule } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
+const { analyzeRegion, applyRegionAnalysis, simplifyRule, findComponents, componentForTile } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
 const { compileRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasCompiler.js');
 const { stringifyRulesJson } = await imp('frontend/modules/shared/rulesJsonBuilder.js');
 const SEM = await imp('frontend/modules/flashPanel/seedlingSemantics.js');
@@ -293,7 +293,62 @@ const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === leve
         .map((e) => arrowLane({ id: `${e.peer.type}@${e.peer.x},${e.peer.y}`, t: r.tset, ...arrowTrapEntityPoint(e.peer.x, e.peer.y) }));
     return lanes.length ? ropeLaneCharges(baseGrid, lanes, ropeEventCondition(r), doorTilesOf(level), TILE) : [];
 });
-const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => {
+/**
+ * ⛓ RULES l55-waterfall — **AN ALL-WATER LEVEL IS FLOORED BY ITS ENTRY GATE.**
+ *
+ * The analyzer's components are DRY cells, so a level whose every exit and location stands on water binds
+ * nothing ("binds to NO walkable component") and shipped as ONE undivided region, its crossings never priced.
+ * L52 is three pools split by waterfalls (`dirs: {N: hasFeather}`; `Player.as:1557` adds `v.y += 0.8` on a
+ * waterfall unless the Feather is held and the player climbs): undivided, the bottom pool (L51/L56) reached the
+ * L55 door on Swim alone, where the game needs the Feather (probe-seedling-l55-waterfall.mjs, 8/8).
+ *
+ * So when NO binding of a level reaches a dry component on the base grid, and every binding's own cell carries
+ * the SAME gate set G, the cells gated by exactly G are FLOOR for the analysis. G is already charged on every way
+ * in (a landing on water drowns without Swim: `playthroughLandingGates`), and every other cell keeps its kind,
+ * so a waterfall stays `directional` and the analyzer's own crossings price it per direction. A level whose
+ * bindings sit on different gates (L57: water and the tentacle beast's manual cell) is left as it was.
+ *
+ * Decided HERE, per level and memoized, so every reader of `playthroughGridFor` (the partition, the maze, the
+ * census) sees the grid the atlas was analysed on. A kinds-only call (`arrivals: false`, made from inside the
+ * derivation) is never lifted: lifting needs the derived region, and floor is standable either way.
+ */
+const ENTRY_GATE_PENDING = Symbol('pending');
+const entryGateMemo = new Map();
+let derivedRegionsByLevel = null;
+const gateKeyOf = (cell) => cell.conditions.map((c) => JSON.stringify(c)).sort().join('+');
+function entryGateOf(level, base) {
+    const memo = entryGateMemo.get(level.level);
+    if (memo !== undefined) return memo === ENTRY_GATE_PENDING ? null : memo;
+    entryGateMemo.set(level.level, ENTRY_GATE_PENDING);
+    if (!derivedRegionsByLevel) {
+        const { atlas } = derivePlaythroughLayer(LEVELS, { quiet: true });
+        derivedRegionsByLevel = new Map(atlas.regions.map((r) => [r.map_ref, r]));
+    }
+    const region = derivedRegionsByLevel.get(level.level);
+    const tiles = region ? [...(region.exits ?? []).map((e) => e.entrance_tile), ...(region.locations ?? []).map((l) => l.tile)] : [];
+    const cellAt = ([x, y]) => base.cells[(y - (base.origin?.y ?? 0)) * base.width + (x - (base.origin?.x ?? 0))];
+    let gate = null;
+    if (tiles.length > 0 && tiles.every((t) => cellAt(t)?.kind === 'gated')) {
+        const keys = new Set(tiles.map((t) => gateKeyOf(cellAt(t))));
+        if (keys.size === 1) {
+            const options = playthroughAnalyzerOptionsFor(level);
+            const comps = findComponents(base);
+            if (!tiles.some((t) => componentForTile(base, comps, t, options).component)) gate = [...keys][0];
+        }
+    }
+    entryGateMemo.set(level.level, gate);
+    return gate;
+}
+/** ⛓ RULES l55-waterfall — the gate set a level is floored by (`entryGateOf`), or null. For the unit rows. */
+export const playthroughEntryGate = (level) => entryGateOf(level, baseGridFor(level));
+const gridFor = (level, options = {}) => {
+    const base = baseGridFor(level, options);
+    if (options.arrivals === false) return base;
+    const gate = entryGateOf(level, baseGridFor(level));
+    if (gate === null) return base;
+    return { ...base, cells: base.cells.map((c) => (c.kind === 'gated' && gateKeyOf(c) === gate ? { ...c, kind: 'open', conditions: [] } : c)) };
+};
+const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => {
     const build = (extra) => SEM.buildSeedlingRegionGrid(
         { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
         {
@@ -563,6 +618,11 @@ export function buildPlaythroughAtlas() {
         const level = levelOf(region.map_ref);
         const levelOptions = playthroughAnalyzerOptionsFor(level);
         const analysis = analyzeRegion(region, gridFor(level), levelOptions);
+        const floor = entryGateOf(level, baseGridFor(level));
+        if (floor !== null) {
+            note(`${regionId}: no binding reaches a dry component — FLOORED by its entry gate ${floor} `
+                + `(${analysis.components.length} sub-region(s); the gate is charged on every way in)`);
+        }
         const applied = applyRegionAnalysis(session.atlas, analysis, { stamp: false });
         for (const p of applied.problems) note(`${regionId}: ${p.message}`);
         for (const n of analysis.needs_authoring) {

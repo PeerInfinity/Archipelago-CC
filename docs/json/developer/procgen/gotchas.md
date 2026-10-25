@@ -179,6 +179,12 @@ The solids that count are the transcription's own item-gated rows, the kill-lock
 
 The cost of the WAY to a location is not charged. L89's Feather lies on water between two waterfalls. Its binding carries Swim + Feather (climbing the south fall), but the arrivals from L90 and L91 come down the north fall on Swim alone. Charging one approach's conjunction is the `--charge-crossings` defect that sealed the map, so such a location is counted in `permissiveBindings` instead.
 
+### An all-water level is analysed with its entry gate as floor
+
+The analyzer's components are dry cells. A level whose exits and locations all stand on water reaches none of them ("binds to NO walkable component"), so it used to ship as one region, and its waterfalls were never priced. L52 is three pools split by waterfalls, and a waterfall is one-way down without the Feather (`Player.as:1557`). As one region, the bottom pool reached the L55 door, and Boss Key 3 behind it, on Swim alone.
+
+`make-seedling-playthrough-rules.mjs`'s `gridFor` now checks two things on the base grid: no binding of the level reaches a dry component, and every binding's own cell carries the same gate set. When both hold, the cells gated by exactly that set become floor. That gate is already charged on every way in, because a landing on water drowns without Swim. Every other cell keeps its kind, so a waterfall stays directional and the analyzer prices it per direction: a fall is free and a climb costs the Feather. Today this admits L50 (one pool, so nothing moves) and L52 (three pools). L57 is all water too, but the tentacle beast's manual cell is one of its bindings, so it is left as it was. The decision is made inside `gridFor`, so the partition, the maze and the census read the grid the atlas was analysed on.
+
 ### A maze room session opened from a set lives inside the set arm's lifetime
 
 On the maze lab page, a room opened from a region library draws on the same `#canvas` the `edit` arm uses, but switching `#source` to `edit` would retire the set arm and discard the library session. The room session is mounted under the set arm's lifetime instead. `canvasWorld()` in `mazeLabView.js` is the one answer to which world is on the canvas; the ladder's overlays (area graph, element gadget, solve plan) do not draw over a library room; and the room gets its own palette from the entry's `itemLib` / `obstacleLib`. See [Maze substrate](./maze.md).
