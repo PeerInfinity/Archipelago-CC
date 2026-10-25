@@ -26,6 +26,8 @@ import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { solveAnytime } from './jsRuntimeSolver.js';
 import { createRunForStaging } from './tapeRunner.js';
+import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
+import { BOSS_TOTEM_POLICY_VARIANTS } from './bossTotemPolicy.js';
 import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -54,10 +56,25 @@ function replay(id, a) {
     return { run, transitions };
 }
 const D1 = (on, fn) => withContactFidelity({ laneWeigh: on }, fn);
+const D2 = (on, fn) => withContactFidelity({ totemBossFight: on }, fn);
 
 describe('fidelity L67BK4 — the switches ship OFF', () => {
-    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_LANE_WEIGH)('laneWeigh is OFF', () => {
+    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_LANE_WEIGH
+        || process.env.SEEDLING_TOTEM_BOSS_FIGHT)('laneWeigh and totemBossFight are OFF', () => {
         expect(CONTACT_FIDELITY.laneWeigh).toBe(false);
+        expect(CONTACT_FIDELITY.totemBossFight).toBe(false);
+    });
+
+    it('the totem rows exist only while the switch is ON (non-enumerable, as Lights\')', () => {
+        D2(false, () => {
+            expect(OBSTACLE_STRATEGIES['solid:bosstotem']).toBeUndefined();
+            expect(STRATEGY_EXECUTORS.totem).toBeUndefined();
+        });
+        D2(true, () => {
+            expect(OBSTACLE_STRATEGIES['solid:bosstotem']).toBe('totem');
+            expect(typeof STRATEGY_EXECUTORS.totem).toBe('function');
+            expect(Object.keys(OBSTACLE_STRATEGIES)).not.toContain('solid:bosstotem');
+        });
     });
 });
 
@@ -83,5 +100,30 @@ describe('fidelity L67BK4 D1 — L67 Boss Key 4 (leg 898), the spear block parke
         // the walk ends on the key's cell
         expect(Math.floor(run.state.x / 16)).toBe(3);
         expect(Math.floor(run.state.y / 16)).toBe(4);
+    });
+});
+
+describe('fidelity L67BK4 D2 — L43\'s Totem (legs 862, 872), fought by the `totem` verb', () => {
+    it('OFF: the frontier has no strategy row for solid:bosstotem (the gap, measured)', () => {
+        const a = D2(false, () => solve(862));
+        expect(a.ok).toBe(false);
+        expect(a.message).toMatch(/Obstacle: solid:bosstotem \(bosstotem@152,168\)/);
+        expect(a.message).toMatch(/No strategy row exists for this obstacle/);
+    });
+
+    it.each([862, 872])('ON: leg %s solves inside 640 units, kills the Totem with no hit, and crosses to L37', (id) => {
+        const a = D2(true, () => solve(id));
+        expect(a.ok).toBe(true);
+        expect(a.work).toBeLessThanOrEqual(640);
+        expect(a.plan.verbs[0]).toBe('totem');
+        const { run, transitions } = D2(true, () => replay(id, a));
+        expect(run.ledger('playerHits')).toEqual([]);
+        expect(run.ledger('earnedClears')).toEqual(expect.arrayContaining([
+            expect.objectContaining({ level: 43, tag: 5, by: 'bosstotem@152,168' })]));
+        expect(transitions.at(-1)).toMatchObject({ from_level: 43, to_level: 37 });
+    });
+
+    it('the first variant is the measured one (the fork keeps it: hitless)', () => {
+        expect(BOSS_TOTEM_POLICY_VARIANTS[0]).toEqual({ d0: 97, dt: 75, burst: 10 });
     });
 });
