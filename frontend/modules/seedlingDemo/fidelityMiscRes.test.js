@@ -190,13 +190,14 @@ describe('fidelity MISCRES D3 — `opentree` is typed "Solid", the game says "Tr
 });
 
 describe('fidelity MISCRES D3 — the owl\'s talk (`Game.talkingPic`): modelled as the intro freeze; the portrait is render only', () => {
-    it('L112: the Owl stands frozen until a primary release, and `talkingNow` does not name him (handed to the skin)', () => {
+    // ⛓ js G6 (main 9d951c1685) took the skin hand-over: `talkingNow` now names the Owl's intro (read-only, `owlIntro`).
+    it('L112: the Owl stands frozen until a primary release, and `talkingNow` names his intro (js G6\'s `owlIntro`)', () => {
         const st0 = arrivalStaging({ level: 112, x: 32, y: 208 }, { items: ['hasSword'] });
         const run = createRunForStaging({ ...st0, rng: { ...(st0.rng ?? {}), seed: 1234567, split: true } }, atlasLevelSource());
         for (let t = 0; t < 5; t += 1) {
             run.advance(new Set());
             expect(run.finalBosses.map((b) => [b.started, b.x, b.y])).toEqual([[false, 72, 104]]);
-            expect(run.talkingNow).toBeNull();
+            expect(run.talkingNow).toMatchObject({ source: 'owlIntro', text: 'EEEEP!' });
         }
         run.advance(new Set(['primary']));
         run.advance(new Set());
