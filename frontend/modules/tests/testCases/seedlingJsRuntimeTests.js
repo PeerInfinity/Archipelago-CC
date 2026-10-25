@@ -2788,55 +2788,104 @@ for (const [id, name, fn] of [
  * its CDN, the bridge adapter built) and never gets a game — which is all the refusal needs. Before the panel's
  * Flash path said `transport: 'flash'`, the surface read 'wasm' and the goal was HELD (no map, no engine) for 60 s.
  */
-export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
-    return withRuntimeRestored(tc, async () => {
-        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
-        await settingsManager.updateSetting(RUNTIME_KEY, 'flash', { persist: false });
-        const rulesJson = await (await fetch(ATLAS_LOCATION_PATH)).json();
-        rulesJson.flash_panel['1'] = { ...rulesJson.flash_panel['1'], swf: 'seedling_injected.swf' };
-        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
-        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: `${ATLAS_LOCATION_PATH} (+swf)` });
-        await loaded;
-        await tc.stateManager.pingWorker('after-rules-load', 5000);
-        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
-        const panel = await tc.pollForValue(() => {
-            const p = getActivePanelInstance();
-            return p?.adapter && p.adapter !== staleAdapter && p._initRuntime === 'flash' ? p : null;
-        }, '[flash] the flash panel took the Flash path (a fresh bridge adapter)', 30000, 250);
-        tc.assertEqual('[flash] the playback surface names the Flash runtime', 'flash', panel?.seedlingPlaybackSurface?.()?.transport ?? null);
-        if (!panel) return;
-        const at = await tc.pollForCondition(() => readCurrentRegion() === HOUSE_REGION, `[flash] gameState is in ${HOUSE_REGION}`, 15000, 200);
-        tc.reportCondition(`[flash] gameState is in ${HOUSE_REGION} (the start hop)`, !!at);
-        if (!at) return;
+/**
+ * ⛓ RUFFLE SETTLES IN ITS OWN ROW. Ruffle mounts asynchronously after `_embedSwf` (the wasm module from its CDN, then
+ * the SWF fetch, a 404 here). This row's refusal lands in ~1 s, BEFORE that, so its runtime restore used to tear
+ * the `<object>` down mid-init ("Unable to lock Ruffle core" / "Ruffle instance destroyed", logged in the NEXT row)
+ * — and in a batch the top page then got NO animation frames for 15–18 s, so the next row's rAF-driven Loops queue
+ * never parked (FRAME-STARVED; seedling-js batch 7/10 at efed9765a9, 20/20 with this row left out). So the row waits
+ * for Ruffle's SWF fetch to resolve before its restore, and for frames to flow again after it.
+ */
+function watchResourceFetch(url) {
+    let seen = false;
+    let observer = null;
+    try {
+        observer = new PerformanceObserver((list) => {
+            if (list.getEntries().some((e) => e.name === url)) seen = true;
+        });
+        observer.observe({ type: 'resource', buffered: true });
+    } catch { /* no PerformanceObserver: the wait below just runs out */ }
+    return { seen: () => seen, stop: () => observer?.disconnect() };
+}
 
-        const gs = getGameStateSingleton();
-        gs.setLoopModeActive(true);
-        gs.updatePath(MAZE_CHILD, HOUSE_EXIT, HOUSE_REGION);
-        const block = loopBlockFor(HOUSE_REGION);
-        tc.assertEqual('[flash] resolved the house\'s queue block', true, !!block);
-        if (!block) return;
-        loopStateSingleton.setBlockMode(HOUSE_REGION, block.instance, 'bot');
-        gs.refillMana();
-        const clockReads = getSeedlingPlayClock()?.stats.reads ?? null;
-        const stopped = tc.waitForEvent('loopState:botWalkFailed', 15000).catch(() => null);
-        const t0 = performance.now();
-        loopStateSingleton.startProcessing();
-        const stop = await stopped;
-        const ms = performance.now() - t0;
-        const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
-        tc.log(`[flash] stop after ${ms.toFixed(0)} ms: ${JSON.stringify({ region: stop?.region ?? null, reason: stop?.reason ?? null })}`);
-        tc.assertEqual('[flash] loops named its stop (loopState:botWalkFailed) for the house', HOUSE_REGION, stop?.region ?? null);
-        tc.assertEqual('[flash] the stop carries the controller\'s lastRefusal', controller?.lastRefusal ?? '(none)', stop?.reason ?? null);
-        tc.assertEqual('[flash] …which names the Flash runtime and the two runtimes that walk', true,
-            /^flash_seedling regions are walked only on the Seedling JS or wasm runtime — the Flash Panel is running the flash runtime/
-                .test(stop?.reason ?? ''));
-        tc.assertEqual('[flash] the refusal was synchronous (no held goal, no 60 s give-up)', true, ms < 5000);
-        tc.assertEqual('[flash] the park was dropped and the queue paused (not parked on the house)', 'null/false',
-            `${loopStateSingleton.botSolverRegion?.() ?? null}/${loopStateSingleton.isProcessing}`);
-        // ⛓ PLAY CLOCK — the Flash (Ruffle) runtime's game is never read for a clock (its SWF calls no setPlayClock).
-        tc.assertEqual('[flash] the play clock read nothing on the Flash runtime (loop mode on)', clockReads,
-            getSeedlingPlayClock()?.stats.reads ?? null);
+/** Resolves true once `count` animation frames have arrived, false after `timeoutMs` without them. */
+function animationFramesFlow(count, timeoutMs) {
+    return new Promise((resolve) => {
+        let n = 0;
+        let id = null;
+        const timer = setTimeout(() => { if (id !== null) cancelAnimationFrame(id); resolve(false); }, timeoutMs);
+        const frame = () => {
+            if (++n >= count) { clearTimeout(timer); resolve(true); return; }
+            id = requestAnimationFrame(frame);
+        };
+        id = requestAnimationFrame(frame);
     });
+}
+
+export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
+    const swfUrl = new URL(`./modules/flashPanel/swf/seedling_injected.swf`, location.href).href;
+    const swfFetch = watchResourceFetch(swfUrl);
+    try {
+        await withRuntimeRestored(tc, () => seedlingFlashRuntimeRowBody(tc, swfFetch));
+    } finally {
+        swfFetch.stop();
+    }
+    tc.reportCondition('[flash] the page gets animation frames again after the Ruffle teardown',
+        await animationFramesFlow(5, 30000));
+    return tc.getOverallResult();
+}
+
+async function seedlingFlashRuntimeRowBody(tc, swfFetch) {
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, 'flash', { persist: false });
+    const rulesJson = await (await fetch(ATLAS_LOCATION_PATH)).json();
+    rulesJson.flash_panel['1'] = { ...rulesJson.flash_panel['1'], swf: 'seedling_injected.swf' };
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: `${ATLAS_LOCATION_PATH} (+swf)` });
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.adapter && p.adapter !== staleAdapter && p._initRuntime === 'flash' ? p : null;
+    }, '[flash] the flash panel took the Flash path (a fresh bridge adapter)', 30000, 250);
+    tc.assertEqual('[flash] the playback surface names the Flash runtime', 'flash', panel?.seedlingPlaybackSurface?.()?.transport ?? null);
+    if (!panel) return;
+    const at = await tc.pollForCondition(() => readCurrentRegion() === HOUSE_REGION, `[flash] gameState is in ${HOUSE_REGION}`, 15000, 200);
+    tc.reportCondition(`[flash] gameState is in ${HOUSE_REGION} (the start hop)`, !!at);
+    if (!at) return;
+
+    const gs = getGameStateSingleton();
+    gs.setLoopModeActive(true);
+    gs.updatePath(MAZE_CHILD, HOUSE_EXIT, HOUSE_REGION);
+    const block = loopBlockFor(HOUSE_REGION);
+    tc.assertEqual('[flash] resolved the house\'s queue block', true, !!block);
+    if (!block) return;
+    loopStateSingleton.setBlockMode(HOUSE_REGION, block.instance, 'bot');
+    gs.refillMana();
+    const clockReads = getSeedlingPlayClock()?.stats.reads ?? null;
+    const stopped = tc.waitForEvent('loopState:botWalkFailed', 15000).catch(() => null);
+    const t0 = performance.now();
+    loopStateSingleton.startProcessing();
+    const stop = await stopped;
+    const ms = performance.now() - t0;
+    const controller = substrateRegistry.get('flash_seedling')?.getPlaybackController?.() ?? null;
+    tc.log(`[flash] stop after ${ms.toFixed(0)} ms: ${JSON.stringify({ region: stop?.region ?? null, reason: stop?.reason ?? null })}`);
+    tc.assertEqual('[flash] loops named its stop (loopState:botWalkFailed) for the house', HOUSE_REGION, stop?.region ?? null);
+    tc.assertEqual('[flash] the stop carries the controller\'s lastRefusal', controller?.lastRefusal ?? '(none)', stop?.reason ?? null);
+    tc.assertEqual('[flash] …which names the Flash runtime and the two runtimes that walk', true,
+        /^flash_seedling regions are walked only on the Seedling JS or wasm runtime — the Flash Panel is running the flash runtime/
+            .test(stop?.reason ?? ''));
+    tc.assertEqual('[flash] the refusal was synchronous (no held goal, no 60 s give-up)', true, ms < 5000);
+    tc.assertEqual('[flash] the park was dropped and the queue paused (not parked on the house)', 'null/false',
+        `${loopStateSingleton.botSolverRegion?.() ?? null}/${loopStateSingleton.isProcessing}`);
+    // ⛓ PLAY CLOCK — the Flash (Ruffle) runtime's game is never read for a clock (its SWF calls no setPlayClock).
+    tc.assertEqual('[flash] the play clock read nothing on the Flash runtime (loop mode on)', clockReads,
+        getSeedlingPlayClock()?.stats.reads ?? null);
+    // ⛓ RUFFLE SETTLES IN ITS OWN ROW (above): its SWF fetch resolves before the restore tears the player down.
+    const settled = await tc.pollForCondition(() => swfFetch.seen(),
+        '[flash] Ruffle\'s SWF fetch resolved before the runtime restore', 30000, 100);
+    if (!settled) tc.log('[flash] Ruffle never fetched the SWF (its CDN script did not load?) — restoring anyway');
 }
 
 registerTest({
