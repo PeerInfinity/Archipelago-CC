@@ -1,0 +1,67 @@
+CI gates @ 00d4ea786 — run 40155792788 success, 12 job(s), 61 line(s)
+  same       gate: canonical-placements                   ci=0/0  exit=0
+  not-banked gate: concept-trial-play                     ci=25/0  exit=0
+  same       gate: jta-managed-zone-skip                  ci=6/0  exit=0
+  MOVED      gate: loop-costs-one-model                   ci=5/0  bank=4/0  exit=0
+  same       gate: maze-lab                               ci=265/0  exit=0
+  same       gate: omsi-mana-leg                          ci=13/0  exit=0
+  same       gate: preset-bundle-load                     ci=10/0  exit=0
+  MOVED      gate: procgen-demos                          ci=264/0  bank=261/0  exit=0
+  MOVED      gate: procgen-docs                           ci=194/0  bank=134/0  exit=0
+  MOVED      gate: procgen-help                           ci=471/0  bank=267/0  exit=0
+  same       gate: procgen-lab-hosting                    ci=78/0  exit=0
+  same       gate: procgen-maze-recipe                    ci=3/0  exit=0
+  same       gate: procgen-reference                      ci=21/0  exit=0
+  not-banked gate: regenerate-region-control              ci=0/0  exit=0
+  same       gate: region-step-editing                    ci=14/0  exit=0
+  MOVED      gate: seedling-ap-placement                  ci=93/0/1  bank=84/0/1  exit=0
+  same       gate: seedling-editor-arm                    ci=226/0  exit=0
+  MOVED      gate: seedling-editor-boot                   ci=47/0  bank=41/0  exit=0
+  same       gate: seedling-editor-edit                   ci=71/0  exit=0
+  same       gate: seedling-editor-export                 ci=29/0  exit=0
+  same       gate: seedling-editor-generate               ci=224/0  exit=0
+  same       gate: seedling-editor-generate (own server)  ci=230/0  exit=0
+  same       gate: seedling-editor-lanes                  ci=22/0  exit=0
+  same       gate: seedling-editor-manual                 ci=41/0  exit=0
+  same       gate: seedling-editor-overlays               ci=24/0  exit=0
+  same       gate: seedling-editor-phases                 ci=94/0  exit=0
+  MOVED      gate: seedling-editor-refusal                ci=21/0  bank=20/0  exit=0
+  same       gate: seedling-editor-sequence               ci=35/0  exit=0
+  same       gate: seedling-editor-shapes                 ci=37/0  exit=0
+  same       gate: seedling-editor-solve                  ci=11/0  exit=0
+  same       gate: seedling-editor-switch                 ci=62/0  exit=0
+  same       gate: seedling-editor-world                  ci=50/0  exit=0
+  shallow    gate: seedling-full-tier-owed                ci=2/0/1  bank=5/0  exit=0
+             ⛔ @ci-shallow: every verdict is a diff against a baseline commit, and a depth-1 checkout carries none of them
+  same       gate: seedling-generated-set                 ci=32/0  exit=0
+  same       gate: seedling-rerecord-rehearsal            ci=28/0  exit=0
+  same       gate: seedling-save-stamp                    ci=21/0  exit=0
+  same       gate: seedling-source-pin                    ci=6/0  exit=0
+  not-banked gate: seedling-string-pull-fast              ci=1/0  exit=0
+  same       gate: seedling-vanilla-manifest              ci=24/0  exit=0
+  same       gate: seedling-wasm-element                  ci=11/0  exit=0
+  same       gate: seedling-wasm-pages                    ci=20/0  exit=0
+  same       gate: seedling-wasm-pins                     ci=0/0  exit=0
+  MOVED      gate: seedling-wasm-ship                     ci=415/0  bank=263/0  exit=0
+  same       gate: sidecar-fields                         ci=0/0  exit=0
+  same       gate: ta-mana-leg                            ci=3/0  exit=0
+  not-banked gate: worldgen-package-sidecars              ci=27/0  exit=0
+  MOVED      identity: acceptance batch                   ci=cf54cdf78cac250f6a900a1bca2deff3  bank=933c14f76004ce5822762933714ab185  exit=0
+  same       identity: AREA census default                ci=02b22525a2f36abf8657d996f89b79db  exit=0
+  same       identity: ENEMY census default               ci=f0bec57641e1fd541ddad6f1aa24e883  exit=0
+  same       identity: generate-procgen-reference.mjs     ci=ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE  exit=0
+  same       identity: guard census (elements)            ci=a6d18d49ae256c321d175f45ec76dccc  exit=0
+  MOVED      identity: killgate s2                        ci=7c15ed5742a458fa73fb6f4684755c48  bank=006b063920a079dae670765d2b968c95  exit=0
+  MOVED      identity: killgate s5                        ci=471164051f1a7d267e8cb6bedfc1b240  bank=7d4cb820c71a476abfb89a10b6d1ece6  exit=0
+  MOVED      identity: killgate s9                        ci=4d3bbf17fec9039367f49df031d38b54  bank=49e23d85e2b7b9561385513d82833882  exit=0
+  same       identity: level post-sword s1                ci=fb1a59e5433e71fea436db1ea4b2ae57  exit=0
+  same       identity: level pre-sword s1                 ci=e28c1e5d6522dcca4682c44e7333a32f  exit=0
+  same       identity: maze byte-identity                 ci=57e07d213c90523b1b38d792c55a6a15  exit=0
+  MOVED      producer: plan-seedling-r7-attribution --check ci=acf8236df36d0519d1f79d8972e18f17  bank=7f91f14fadbba36c51fa22ebbbba821e  exit=0
+  MOVED      producer: plan-seedling-r7-ends-meet --check ci=4b4cacffb3d668b6120f2ec7eaf260a3  bank=67bd57b2b92bb70875e944f4d182da37  exit=0
+  not-banked smoke: seedling-bot-differential             ci=28/0/37  exit=0
+  not-banked structure: seedling-producer-boundaries      ci=32/0  exit=0
+  ⚠ 1 job log(s) unreadable: Same SHA already green? (completed/skipped)
+
+40 same, 14 MOVED, 1 shallow (declared, never compared), 6 not-banked, 0 MISSING.
+⚖ 72 (b): the bar is PER ROW — three consecutive runs in which THAT row reads `same`. This exit code is the run-level answer, not the bar; since S4 a `shallow` row is outside BOTH (it is excluded from the CI-sourced set by its own declaration, not by a verdict).
