@@ -1,0 +1,66 @@
+level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+level_42 <- in_L40_848_0 -> exit:out_teleporter_240_336
+level_43__r13c7 <- in_L40_320_576 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_4_20 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_5_20 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_13_20 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_14_20 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_4_21 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_5_21 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_13_21 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_14_21 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_4_22 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_5_22 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_4_23 -> exit:out_stairsup_176_464
+level_43__r13c7 <- in_pit_L40_5_23 -> exit:out_stairsup_176_464
+level_93__r10c7 <- in_L98_112_192 -> exit:out_teleporter_112_80
+level_98 <- in_L93_112_80 -> exit:out_stairsup_112_112
+level_98 <- in_L93_112_80 -> exit:out_teleporter_112_192
+level_98 <- in_L93_112_80 -> location:Level 098 - Chest
+level_98 <- in_L99_112_112 -> exit:out_stairsup_112_112
+level_98 <- in_L99_112_112 -> exit:out_teleporter_112_192
+level_98 <- in_L99_112_112 -> location:Level 098 - Chest
+level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112
+level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2

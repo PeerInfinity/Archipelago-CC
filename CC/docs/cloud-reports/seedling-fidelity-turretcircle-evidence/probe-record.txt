@@ -1,0 +1,26 @@
+# box lock: TAKEN by probe-seedling-turret-circle.mjs (browser, pid 4853) — head 30cb7cf7a, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      turretcircle-l40-sword-circle: 140 t; switches {"iceBlastShield":true}
+PASS: turretcircle-l40-sword-circle: the model (switches ON) replays the tape to its end
+PASS: turretcircle-l40-sword-circle: the game reproduces the model (switches ON) at 0 px — the player, its hits and freeze, the turret, every blast — on all 140 sampled tick(s)
+      turretcircle-l40-sword-circle: OFF the model parts from the game on 0 tick(s)
+PASS: turretcircle-l40-sword-circle: the game's turret dies — dead from t79
+PASS: turretcircle-l40-sword-circle: the game's player is never hit — hits at the end 0
+      turretcircle-l40-shield-stand: 172 t; switches {"iceBlastShield":true}
+PASS: turretcircle-l40-shield-stand: the model (switches ON) replays the tape to its end
+PASS: turretcircle-l40-shield-stand: the game reproduces the model (switches ON) at 0 px — the player, its hits and freeze, the turret, every blast — on all 172 sampled tick(s)
+      turretcircle-l40-shield-stand: OFF the model parts from the game on 192 tick(s), first t 52: blasts game [476.8114725602788,442.9086171203517 500.8114725602788,439.9086171203517] model [476.8114725602788,442.9086171203517 488.8114725602788,441.9086171203517 500.8114725602788,439.9086171203517]
+PASS: turretcircle-l40-shield-stand: the game's shield stops every volley (the player is never hit) — hits at the end 0
+      turretcircle-l40-shield-near: 174 t; switches {"iceBlastShield":true}
+PASS: turretcircle-l40-shield-near: the model (switches ON) replays the tape to its end
+PASS: turretcircle-l40-shield-near: the game reproduces the model (switches ON) at 0 px — the player, its hits and freeze, the turret, every blast — on all 174 sampled tick(s)
+      turretcircle-l40-shield-near: OFF the model parts from the game on 185 tick(s), first t 51: blasts game [476.231197616205,436.9366725861879 500.231197616205,433.9366725861879] model [476.231197616205,436.9366725861879 488.231197616205,435.9366725861879 500.231197616205,433.9366725861879]
+PASS: turretcircle-l40-shield-near: the game's player is hit exactly once (t97: the shield and the player on one tick) — first hit t97, hits at the end 1
+      turretcircle-l40-t2-holder-sword: 518 t; switches {"blockSweepBodies":true,"corpseBumpWeigh":true,"fireLiveTurretReach":true,"fireBlockPulseShove":true,"pulserPublishLag":true,"turretCircleKill":true,"iceTurretDeathAnim":true}
+PASS: turretcircle-l40-t2-holder-sword: the model (switches ON) replays the tape to its end
+PASS: turretcircle-l40-t2-holder-sword: the game reproduces the model (switches ON) at 0 px — the player, its hits and freeze, the turret, every blast — on all 518 sampled tick(s)
+      turretcircle-l40-t2-holder-sword: OFF the model parts from the game on 472 tick(s), first t 77: blasts game [] model [479,415 488,423 496,431] (OFF error: levelRun: a `primary` press at tick 91 lands on a FROZEN tick (frozenTimer 1 after this tick's `freezeStep`). `Player.input()` returns at its first line while `frozenTimer > 0`, and `useItem(Main.prim)
+PASS: turretcircle-l40-t2-holder-sword: the game's player is never hit — hits at the end 0
+PASS: turretcircle-l40-t2-holder-sword: the game's corpse comes to rest on button@480,384 {t 2} and stays while L40 lasts — on it from t289
+PASS: turretcircle-l40-t2-holder-sword: the game's player leaves L40 by the pit west of wandlock@448,432 (the t2 lock opened) — ends in L43 at (232, 326.1)
+
+ALL CHECKS PASSED
