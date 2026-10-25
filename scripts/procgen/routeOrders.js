@@ -22,7 +22,12 @@
  *    ⚠ Measured 2026-10-24 (slice `bot-route-chooser-2a`): on the Seedling playthrough it is WORSE than plain
  *    `reachable-cheapest` (0 / 318 vs 0 / 292) — a one-way world has few rooms that walk back to the start;
  *  - `+grab` — GRAB-ON-THE-WAY (`routeChooser.grabOnTheWay`): after the pick, a remaining row reached on the way to
- *    it at zero detour (no extra hop, no extra Restart) is taken first; the next choice is made from there.
+ *    it at zero detour (no extra hop, no extra Restart) is taken first; the next choice is made from there;
+ *  - `+lookahead` (`+lookaheadK` for depth K; default `routeChooser.DEFAULT_LOOKAHEAD`, 2) — LOOKAHEAD
+ *    (`routeChooser.lookaheadCost`, slice `bot-route-chooser-2b`): a row is priced by the cheapest sequence of K rows
+ *    starting with it, each step walked from where the last ended with its item (and the events it crossed) held,
+ *    its pool the same scope's rows open then. Beam `DEFAULT_LOOKAHEAD.beam`; the plans are cached per
+ *    (from-region, inventory, row) within one choice.
  *
  * Every greedy ordering takes a row holding the completion condition's item (`game_info[p].completion_condition`)
  * last (`routeChooser`'s `goal`).
@@ -31,14 +36,25 @@
 import { RESTART_TARGET, deriveLegs, eventPrerequisites, eventCrossingsOnPath, gameStateEventsOf, regionOfLocation,
     regionPathHops } from './surveyRoute.js';
 import { RESTART_WARP } from '../../frontend/modules/procgenCore/restartWarp.js';
-import { grabOnTheWay, rankCandidates } from '../../frontend/modules/procgenCore/routeChooser.js';
+import { DEFAULT_LOOKAHEAD, grabOnTheWay, rankCandidates, rankLookahead } from '../../frontend/modules/procgenCore/routeChooser.js';
 import { detectBidirectionalMode } from '../../frontend/modules/shared/bidirectionalDetector.js';
 
 export const ORDERINGS = Object.freeze(['listed', 'sphere-cheapest', 'reachable-cheapest',
     'sphere-cheapest+sweep', 'reachable-cheapest+sweep', 'sphere-cheapest+pocket', 'reachable-cheapest+pocket',
     'sphere-cheapest+pocket-item', 'reachable-cheapest+pocket-item',
     'sphere-cheapest+sweep+grab', 'reachable-cheapest+grab', 'sphere-cheapest+sweep+pocket-item',
-    'sphere-cheapest+sweep+pocket-item+grab', 'reachable-cheapest+pocket-item+grab']);
+    'sphere-cheapest+sweep+pocket-item+grab', 'reachable-cheapest+pocket-item+grab',
+    'sphere-cheapest+sweep+lookahead', 'reachable-cheapest+lookahead', 'sphere-cheapest+sweep+lookahead+grab',
+    'reachable-cheapest+lookahead3']);
+
+/** The lookahead depth an ordering's `+lookahead` / `+lookaheadK` modifier asks for, or 0 for none. */
+export function lookaheadDepthOf(mods) {
+    for (const m of mods) {
+        const hit = /^lookahead(\d*)$/.exec(m);
+        if (hit) return hit[1] ? Number(hit[1]) : DEFAULT_LOOKAHEAD.depth;
+    }
+    return 0;
+}
 
 /**
  * The bot's queue rows, from a sphere log's entries (`{type, sphere_index, player_data}`): every `state_update`'s
@@ -114,15 +130,17 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
     const pocketItem = mods.includes('pocket-item');
     const pocketAware = pocketItem || mods.includes('pocket');
     const grab = mods.includes('grab');
+    const lookahead = lookaheadDepthOf(mods);
     const events = gameStateEventsOf(regions);
     const menuStart = regions[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region ?? null;
     const locRule = new Map();
     for (const reg of Object.values(regions)) for (const l of reg.locations ?? []) locRule.set(l.name, l.access_rule ?? null);
-    const items = {};
+    const state = { items: {} };
+    const items = state.items;
     const wanted = rows.slice();
     const order = [];
     let here = start;
-    const plan = (row, from = here) => {
+    const plan = (row, from = here, items = state.items) => {
         const to = regionOfLocation(regions, row.location);
         if (!ruleHolds(locRule.get(row.location), items)) return null;
         const walk = from === to ? { path: [from], exits: [] } : regionPathHops(regions, ruleHolds, from, to, items);
@@ -176,7 +194,30 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
             if (!plans.has(row)) plans.set(row, plan(row));
             return price(plans.get(row), row);
         };
-        let ranked = rankCandidates(pool, { cost, restartPenalty, tieBreak });
+        let ranked;
+        if (lookahead > 1) {
+            // ⛓ LOOKAHEAD — price each row by the cheapest K-row sequence starting with it (`next` = one step).
+            const plans2 = new Map();
+            const planAt = (row, at) => {
+                const key = `${at.here}\u0000${itemsKey(at.items)}\u0000${row.location}`;
+                if (!plans2.has(key)) plans2.set(key, plan(row, at.here, at.items));
+                return plans2.get(key);
+            };
+            const next = (row, at) => {
+                const from = at ?? { here, items, wanted };
+                const p = from === at ? planAt(row, from) : plans.get(row) ?? (cost(row), plans.get(row));
+                if (!p) return null;
+                const after = advance(from, row, p);
+                const left = after.wanted;
+                if (left.length === 0) return null;
+                const lo = Math.min(...left.map(majorOf));
+                const candidates = scope === 'sphere-cheapest' ? left.filter((r) => majorOf(r) === lo) : left;
+                return { state: after, candidates, cost: (r) => price(planAt(r, after), r) };
+            };
+            ranked = rankLookahead(pool, cost, { next, depth: lookahead, beam: DEFAULT_LOOKAHEAD.beam, restartPenalty, tieBreak });
+        } else {
+            ranked = rankCandidates(pool, { cost, restartPenalty, tieBreak });
+        }
         if (sweep && ranked[0]?.price.restart && menuStart && !regionPathHops(regions, ruleHolds, here, menuStart, items)) {
             // ⛓ POCKET SWEEP — no walk leaves this pocket: take what a walk from here reaches before the Restart.
             const walkable = rankCandidates(wanted, { cost, restartPenalty: Infinity, tieBreak })
@@ -200,21 +241,30 @@ export function orderRows({ regions, ruleHolds, start, rows, ordering, restart =
                     restarts: (pc.restart ? 1 : 0) + (pt.restart ? 1 : 0) + (base.pocket ? 1 : 0) };
             } });
         }
-        const p = plans.get(pick);
-        // the walk's own credits, as deriveLegs takes them: events crossed on the way, then the prerequisites broken
-        (p.prereqs ?? []).forEach((e, i) => {
-            for (const c of eventCrossingsOnPath(regions, p.legs[i].path, p.legs[i].exits, events, items)) items[c.event.item] = 1;
-            items[e.item] = 1;
-        });
-        const last = p.legs[p.legs.length - 1];
-        for (const c of eventCrossingsOnPath(regions, last.path, last.exits, events, items)) items[c.event.item] = 1;
-        items[pick.item] = (items[pick.item] ?? 0) + 1;
-        here = last.path[last.path.length - 1];
+        const after = advance({ here, items, wanted }, pick, plans.get(pick));
+        Object.assign(items, after.items);
+        here = after.here;
         order.push(pick);
         wanted.splice(wanted.indexOf(pick), 1);
     }
     return order;
+
+    // ONE STEP of the walk, as deriveLegs takes it: events crossed on the way, then the prerequisites broken, then the
+    // row's own item; the walk ends where the plan's last leg ends. Pure: `at` is not written.
+    function advance(at, pick, p) {
+        const its = { ...at.items };
+        (p.prereqs ?? []).forEach((e, i) => {
+            for (const c of eventCrossingsOnPath(regions, p.legs[i].path, p.legs[i].exits, events, its)) its[c.event.item] = 1;
+            its[e.item] = 1;
+        });
+        const last = p.legs[p.legs.length - 1];
+        for (const c of eventCrossingsOnPath(regions, last.path, last.exits, events, its)) its[c.event.item] = 1;
+        its[pick.item] = (its[pick.item] ?? 0) + 1;
+        return { here: last.path[last.path.length - 1], items: its, wanted: at.wanted.filter((r) => r !== pick) };
+    }
 }
+
+const itemsKey = (items) => Object.keys(items).filter((k) => items[k]).sort().map((k) => `${k}=${items[k]}`).join(',');
 
 /** `level_17__r1c5` → 17; null for a region that names no level (`Menu`, or a world without levels). */
 export function levelOfRegion(region) {

@@ -2,12 +2,18 @@
 import { Config } from '../client/core/config.js'; // Assuming Config might be needed for defaults
 import { createSnapshotInterface } from '../shared/snapshotInterface.js'; // For evaluating rules
 import settingsManager from '../../app/core/settingsManager.js';
+import { PathFinder } from '../shared/pathfinder.js';
+import { frozenFindPath } from '../playbackBot/walkOrder.js';
+import { DEFAULT_TIMER_CHECK_ORDER, TIMER_CHECK_ORDERS, picksByCost, pickTimerCheck } from './checkOrder.js';
 
 // settingsManager key for the batch-checks toggle (schema registered in
 // timer/index.js). When true (default) the timer batch-checks all accessible
 // locations in one tick; when false it dispatches one user:locationCheck per
 // tick through the dispatcher so the loops panel can steer it.
 const BATCH_CHECKS_SETTING_KEY = 'moduleSettings.timer.batchChecks';
+// ⛓ TIMER CHECK ORDER (bot-route-chooser-2b) — which location a no-batch tick
+// checks (checkOrder.js). The default keeps the first accessible one.
+const CHECK_ORDER_SETTING_KEY = 'moduleSettings.timer.checkOrder';
 
 
 // Helper function for logging with fallback
@@ -76,6 +82,7 @@ export class TimerLogic {
     // from moduleSettings.timer.batchChecks in initialize() and kept live via
     // settings:changed.
     this.batchChecks = true;
+    this.checkOrder = DEFAULT_TIMER_CHECK_ORDER;
     this.unsubscribeHandles = [];
 
     // Track locations we've attempted to check during this timer session
@@ -113,14 +120,24 @@ export class TimerLogic {
     settingsManager.getSetting(BATCH_CHECKS_SETTING_KEY, true)
       .then((v) => { this.batchChecks = v !== false; })
       .catch(() => { /* keep default true */ });
+    const readCheckOrder = (v) => (TIMER_CHECK_ORDERS.includes(v) ? v : DEFAULT_TIMER_CHECK_ORDER);
+    settingsManager.getSetting(CHECK_ORDER_SETTING_KEY, DEFAULT_TIMER_CHECK_ORDER)
+      .then((v) => { this.checkOrder = readCheckOrder(v); })
+      .catch(() => { /* keep the default */ });
     const settingsHandler = (data) => {
       if (data?.key === BATCH_CHECKS_SETTING_KEY) {
         this.batchChecks = data.value !== false;
         log('info', `[TimerLogic] batchChecks set to ${this.batchChecks}`);
+      } else if (data?.key === CHECK_ORDER_SETTING_KEY) {
+        this.checkOrder = readCheckOrder(data.value);
+        log('info', `[TimerLogic] checkOrder set to ${this.checkOrder}`);
       } else if (data?.key === '*') {
-        // Bulk write (Settings panel "Apply") — re-read the key.
+        // Bulk write (Settings panel "Apply") — re-read the keys.
         settingsManager.getSetting(BATCH_CHECKS_SETTING_KEY, true)
           .then((v) => { this.batchChecks = v !== false; })
+          .catch(() => {});
+        settingsManager.getSetting(CHECK_ORDER_SETTING_KEY, DEFAULT_TIMER_CHECK_ORDER)
+          .then((v) => { this.checkOrder = readCheckOrder(v); })
           .catch(() => {});
       }
     };
@@ -408,6 +425,20 @@ export class TimerLogic {
     }
   }
 
+  /**
+   * ⛓ TIMER CHECK ORDER — the no-batch pick by route cost (checkOrder.js), from
+   * the player's current region over ONE accessibility map of this snapshot.
+   */
+  _pickByCost(locationsToCheck, snapshotInterface) {
+    const { snapshot, staticData } = snapshotInterface;
+    const here = window.centralRegistry?.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null;
+    if (!this._pathFinder) this._pathFinder = new PathFinder(this.stateManager);
+    const findPath = frozenFindPath(this._pathFinder, { staticData, snapshot, snapshotInterface });
+    const loc = pickTimerCheck(locationsToCheck, { order: this.checkOrder, here, findPath });
+    log('info', `[TimerLogic] checkOrder ${this.checkOrder}: picked ${loc?.name} from ${here}`);
+    return loc;
+  }
+
   async _determineAndDispatchNextLocationCheck() {
     log('info',
       '[TimerLogic] Determining next location to check automatically...'
@@ -478,7 +509,9 @@ export class TimerLogic {
       // The next tick re-evaluates and picks the next location. Only the
       // dispatched one is marked attempted, leaving the rest for later ticks.
       if (!this.batchChecks) {
-        const loc = locationsToCheck[0];
+        const loc = picksByCost(this.checkOrder)
+          ? this._pickByCost(locationsToCheck, snapshotInterface)
+          : locationsToCheck[0];
         this.attemptedChecks.add(loc.name);
         log('info',
           `[TimerLogic] No-batch: dispatching single check ${loc.name} (one per tick)`

@@ -171,7 +171,8 @@ import { goalEarnedWitness, R7_GOAL_LEDGER, seamBootFields } from './r7Acceptanc
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
-    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
+    solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withAllItemFlagsToggled,
+    withItemFlag,
 } from './watchSolve.js';
 import {
     activeTraceIndex, arrowLanesAt, ATTACK_HOLD_DEFAULT, attackHoldsAt, attackRectsAt,
@@ -3509,6 +3510,18 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
         fields.appendChild(label);
         return { f, input };
     });
+    /**
+     * ⛓ TOGGLE ALL (user, 2026-10-25) — every CHECKBOX item at once, through
+     * the same parse → edit-the-block → re-serialise path a single box uses
+     * (`withAllItemFlagsToggled` has the rule). Not a `data-boot-field`: it
+     * writes no field of its own, and the rows that count controls count those.
+     */
+    const toggleAll = document.createElement('button');
+    toggleAll.id = `${formEl.id}-toggleAll`;
+    toggleAll.textContent = 'toggle all';
+    toggleAll.title = 'all ticked → untick every item; otherwise tick every item (health is left alone)';
+    fields.appendChild(document.createTextNode(' '));
+    fields.appendChild(toggleAll);
     const why = document.createElement('span');
     fields.appendChild(why);
 
@@ -3531,6 +3544,7 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
                     ? '' : String(flags[f.id]);
             }
         }
+        toggleAll.disabled = !staging;
         why.textContent = refusal
             ? `  ⚠ the block below will not parse, so these are disabled — ${refusal}`
             : writeRefusal ? `  ⚠ not written — ${writeRefusal}` : '';
@@ -3566,6 +3580,18 @@ function mountBootForm(formEl, boxEl, noteEl, lifetime, onChange = () => {}) {
             onChange();
         };
     }
+    toggleAll.onclick = () => {
+        let parsed;
+        try {
+            parsed = stagingFromJson(JSON.parse(boxEl.value));
+        } catch {
+            sync();
+            return;
+        }
+        boxEl.value = JSON.stringify(withAllItemFlagsToggled(parsed), null, 4);
+        sync();
+        onChange();
+    };
     /**
      * A block edited by hand re-derives the boxes — the other direction.
      *

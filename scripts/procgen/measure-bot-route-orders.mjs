@@ -16,6 +16,7 @@
  *   node scripts/procgen/measure-bot-route-orders.mjs --penalties=0,5,10,inf    # the Restart penalty sweep
  *   node scripts/procgen/measure-bot-route-orders.mjs --legs=13-20              # print legs touching levels 13–20
  *   node scripts/procgen/measure-bot-route-orders.mjs --json=<out.json>
+ *   node scripts/procgen/measure-bot-route-orders.mjs --orderings=listed,reachable-cheapest+lookahead   # a subset
  *
  * A rules file with no `--log` (and no sphere log beside it) gets one from `forwardSimulator.generateSphereLog`, as
  * the bot builds it in page.
@@ -52,6 +53,7 @@ async function main() {
     else targets = ['seedling_playthrough', 'seedling', 'jta', 'wargroove', 'dlcquest', 'codingadventure'].flatMap(seedDir);
 
     const penalties = (argOf('penalties') ?? 'inf').split(',').map((s) => (s === 'inf' ? Infinity : Number(s)));
+    const orderings = argOf('orderings')?.split(',') ?? ORDERINGS;
     const legLevels = argOf('legs')?.split('-').map(Number) ?? null;
     const out = [];
     for (const t of targets) {
@@ -71,7 +73,7 @@ async function main() {
             + `start ${start}, return_to_menu ${restart}, bidirectional ${graph.assumeBidirectional} (${graph.source})`);
         console.log('| ordering | penalty | legs | restarts | hops | level visits |');
         console.log('|---|---|---|---|---|---|');
-        for (const ordering of ORDERINGS) {
+        for (const ordering of orderings) {
             for (const restartPenalty of ordering === 'listed' ? [null] : penalties) {
                 const r = priceOrdering({ regions, ruleHolds, start, rows, ordering, restart,
                     restartPenalty: restartPenalty ?? Infinity });
