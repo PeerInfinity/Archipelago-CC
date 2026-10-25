@@ -351,11 +351,15 @@ function blastFriction(state) {
  * @param {boolean} ctx.frozen        `Game.freezeObjects` — gates the MOVE only
  * @param {?object} ctx.playerBox     the player's 4x5 box, or null
  * @param {?function} ctx.blockedAt   `(rect) => boolean` — does this box hit a
- *   `Tree`/`Solid`/`Shield`? NOT the player's solids list; see the docblock.
+ *   `Tree`/`Solid`? NOT the player's solids list; see the docblock.
+ * @param {?object} ctx.shieldBox     ⛓ fidelity TURRETCIRCLE D1 (`iceBlastShield`): the player's shield ENTITY box
+ *   (`bobBossFight.playerShieldRect`, where the previous frame's `render` left it), or null — `hitables` holds
+ *   `"Shield"` (`IceTurretBlast.as:17`), so a blast that meets the shield and not the player is removed with no hit.
+ *   Null (the default, and every caller with the key OFF) is the byte-identical step.
  * @returns {{hitPlayer: boolean, removed: boolean, hitTypes: ?Array}}
  */
 export function stepIceTurretBlast(state, ctx = {}) {
-    const { frozen = false, playerBox = null, blockedAt = null } = ctx;
+    const { frozen = false, playerBox = null, blockedAt = null, shieldBox = null } = ctx;
     if (state.removed) return { hitPlayer: false, removed: true, hitTypes: state.hitTypes };
 
     if (!frozen) {
@@ -378,6 +382,7 @@ export function stepIceTurretBlast(state, ctx = {}) {
     // player is a complete shield and not a partial one.
     if (playerBox && rectsOverlap(box, playerBox)) types.push('Player');
     if (blockedAt && blockedAt(box)) types.push('Solid');
+    if (shieldBox && rectsOverlap(box, shieldBox)) types.push('Shield');
     if (types.length === 0) return { hitPlayer: false, removed: false, hitTypes: null };
     state.removed = true;
     state.hitTypes = types;

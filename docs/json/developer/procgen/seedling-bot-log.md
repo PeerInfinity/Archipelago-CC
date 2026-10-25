@@ -25487,6 +25487,92 @@ route survey (239 rows, 0 differ in any field but `ms`) all equal W0.
   (here, `armedArrowTraps` behind `pushables`).
 - A source-text census counts CALL text: wrapping `f()` as `reading(f)` removes a call site from the census (R8's
   `liveSolidOpts` count), and wrapping the run's `return { … }` removes the object every AST census parses.
+
+### Seedling fidelity BEAMLANE — a corridor along a BeamTower's band rides the band-to-band lane at the towers' live y (`beamLaneWalk`, OFF)
+
+Wave 29, report `CC/docs/cloud-reports/seedling-fidelity-beamlane.md`. Leg 785 (`level_107 <- in_L108_0_32 ->
+exit:out_teleporter_0_48`) solved at 12/61 arrival clocks of its 2,560-unit retry and none of its 640-unit first ask: L107's
+only way west is rows 7-8, along which BOTH towers' left beams run, and the bob (`0.3·sin(worldFrame(100, 2)…)` on
+`Game.time`) fixes where the bands sit for the whole visit. The tile-centre row is inside band 1 at most clocks; no stall and
+no fixed y rides it (js `seedling-js-l107-investigate`); the game rides the 12 px lane between the bands at 61/61 clocks.
+
+**D1.** `solverBot.beamLaneSteer` — `previewWalk`'s new opt-in `steer` (null = byte-inert) — aims the walk, per tick, into
+the open interval between the bands read off `dangerMap.phaseBeamTowerAt` (the timeline `phaseHazardHit` prices: the tower's
+pre-bob `y`, its side, its rect, at any update, firing or not). A waypoint within a band's bob REACH (zone ± `BEAM_BOB_SPAN`)
+is aimed into a bounded lane beside it; a band between the player and the aim is crossed only when it does not fire over the
+crossing (`BEAM_LANE_RUNG`), else the aim holds the player in its interval. The PHASE arm asks it once, before the stall grid;
+the walk is certified by the same `probeSamples`, a lane whose only danger is a non-phase source on a beam-free walk is driven
+up to it (the arm's `partial` rule: L107's `crusher@32,0` sight lane, which the stall plans also walk through), and an
+uncertified lane falls through to the grid with its reason appended to the refusal. ON, 785's captured request: 93/93
+clocks 5564..5656 solve inside 640 units (122–128; OFF 0/61).
+
+**D2 — the game witness (p4g, 0 px; `CC/docs/cloud-reports/seedling-fidelity-beamlane-evidence/witness.mjs`).** The
+solver's own ON plans at 11 clocks: every one reaches L102 on the game with a stream identical to the model's.
+
+**D3.** L103 (survey step 221) has no lane: its corridor runs along `beamtower@208,248`'s band row, and the space between its
+two bands is a Pit row. A first cut walked into the Pit at (184,200), so an aim is taken only on floor (`plannerObstacleAt`)
+along the x span of the waypoint's incoming and outgoing legs; ON, 221 refuses where OFF does, the lane's reason named.
+L104, L105, L107 eastbound (227), L108 (228): unchanged. The keyed sweep (all 18 BeamTower-room legs, p4g, ON vs OFF ×2)
+found one more: leg 776 (L105) failed ON ×2 — the steered walk left by its arrival door, and on a later run crossed into L106
+and kept planning L105's exit there. A lane walk now crosses only on its corridor's last leg, and that crossing returns
+FORCEDHIT's `{forced: {transition}}` (the walk arrived); ON then = OFF on every leg but 785.
+
+**Trap candidates.**
+- An accumulated bob makes the ARRIVAL clock a property of the whole visit: a stall changes which firing you meet, never
+  where the band is. Read the live `y`, do not search time for it.
+- A waypoint whose own y is free NOW can be inside the band's reach later in the same walk — test the reach, not the moment.
+- A steered waypoint reached off its own y moves the start of the NEXT leg: the floor test belongs to both legs.
+- A preview truncated by `crossed` is the walk arriving only when the crossing is the corridor's own end; a steered walk
+  can find another door.
+
+### Seedling fidelity TURRETCIRCLE — the plain Sword kills an ice turret on the move (`turretCircleKill`); a blast stops on the shield (`iceBlastShield`); a death stops the shot (`iceTurretDeathAnim`) — all OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-turretcircle.md`.
+⚖ The user (2026-10-24): *"The way to not get hit is to keep moving while attacking. Keep circling around the turret."*
+
+**W0 — why standing loses and circling wins.** `IceTurret.update` turns the barrel by a tenth of the angle left per tick,
+and only while neither shot animation plays. `startshot` freezes the aim, and its wrap three ticks later fires three blasts
+12 px apart along it at 6 px a tick. The player's box is 4x5. A player who stands to strike is where the frozen aim points
+when the volley arrives; one who keeps moving is not. CORPSEBUMP's Sword-only refusal staging has NO shield
+(`hasShield: false`), so "the shield protects only while moving" was never what refused it. `IceTurret` sits in a 3-tile
+corridor in L40, and the 8 px lanes beside its 32x32 body hold a ring the player can walk.
+
+**D1 — the model, game-witnessed (p4g, 0 px; `probe-seedling-turret-circle.mjs`).**
+- `turretcircle-l40-sword-circle`: no shield, clockwise round the ring, the press tick holding the movement keys too. The
+  turret is dead on t79 and the player is never hit (140 ticks). The model already agreed, key or no key.
+- `iceBlastShield`: `IceTurretBlast.hitables` holds `"Shield"`; `stepBlastsNow` never passed the shield box, so a shielded
+  player was hit by blasts the game stops. Witnesses `turretcircle-l40-shield-stand` (no hit; OFF parts t52) and
+  `-shield-near` (one hit, t97, the shield and the player on one tick; OFF parts t51).
+
+**D2 — the solver (`turretCircleKill`).** `killForCorpse` with the Sword alone (the Ghost Sword keeps its standing kill)
+calls `killIceTurretInPlace`'s new `circle` option (`circleKillIceTurret`): the ring 4 px / 6.5 px outside the live box,
+the follower holding the axis keys toward the next corner, a swing riding them when the i-frame is out (`run.entities
+('turretDamage')`) within 30 px of the entity point, on until no blast is in flight. Each start delay 0..12, direction and
+first corner (nearest first) is tried on a fork; no ring (L98's turret against its walls) or no hitless try is refused by
+name. CORPSEBUMP's Sword-only pocket goal goes REFUSED → SOLVED (cw from corner 3, delay 0, three swings, one fork).
+
+**D3 — the solver's own t2 holder with the Sword alone** (`turretcircle-l40-t2-holder-sword`, p4g, 0 px on all 518 ticks):
+the circling kill, the corpse bumped onto `button@480,384` (on it from t289), the fade, the pit, L43, never hit. The first
+recording parted at t70: the killing landing came two ticks into a `startshot`, and the model's corpse still fired it.
+`IceTurret.death()` does `play("dead")`, a rate-0 animation whose reset kills the shot clock, and `death()` runs inside
+`e.update()` before that tick's `graphic.update()` — `iceTurretDeathAnim` transcribes it (OFF: a volley from the corpse).
+
+**Trap candidates.**
+- A pickup's flavour text is not a mechanism. "It protects you when moving" read as a rule hid that the refused staging
+  held no shield, and that the blast step had no shield arm at all.
+- A state flag is not the animation. `dead = true` without the `play("dead")` left the shot clock running, and the volley
+  it fired could only be seen by comparing blasts, not bodies.
+- A swing can ride the movement keys: the press tick holding them is still a press, and the turret's box is big enough to
+  be in the rect of a tangential swing.
+
+**Movers (measured locally; the CI dispatches are in the report).**
+- The full survey, A (the 65 defaults + FIREMOVE + CORPSEBUMP) vs B (+ the three keys): all 239 rows equal. The route's L40
+  steps refuse before the corpse weigh.
+- The keyed sweep ×2 over the 66 legs in or into L40 and L98 (the only two ice-turret rooms): 0 key-driven verdicts. Legs
+  368 and 404 flip within arm A too, and B1's captured requests replay A = B byte-identically.
+- Probes standard, all 71 keys ON: 11/11.
+- The bounded vitest ON moves `fidelityCorpseBump.test.js`'s Sword-alone refusal row (it now solves): a flip owes it a re-pin.
+
 ### Seedling hammer-phase PKB — the press kill's waits see the bombs, and the refuge preview refuses the shake band
 
 ⚖ User, 2026-10-24: *"Please queue a slice for both of the tasks you described"*. It answers BW's open licence question

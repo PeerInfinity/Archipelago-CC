@@ -149,10 +149,15 @@ describe('CORPSEBUMP D2/D3 — the ice turret\'s corpse is L40\'s t2 holder (the
         expect(r.refusal.message).toMatch(/hold stance \(wandlock@448,432\)/);
     });
 
-    it('with the Sword alone (no Ghost Sword) the kill is never hitless, and the weigh refuses by name', async () => {
+    // ⛓ control since planning-13's flip: `turretCircleKill` ON circles the turret and SOLVES this goal (the ON truth is
+    // fidelityTurretCircle.test.js's 'ON: SOLVED' row); the standing kill alone still refuses. `iceTurretDeathAnim` is
+    // pinned OFF too: ON, a death stops the volley, so a standing kill CAN be hitless, and the weigh then refuses later,
+    // at the corpse glide's self-check (measured at the flip; residue).
+    it('with the Sword alone (no Ghost Sword) the STANDING kill is never hitless, and the weigh refuses by name (turretCircleKill, iceTurretDeathAnim OFF)', async () => {
         const sw = JSON.parse(readFileSync(join(CORPSEBUMP_WITNESS_DIR, '..', 'tapes', 'prox-l40-turret-volley.json'),
             'utf8'));
-        const r = await l40PocketTail({ ...sw, tick_count: 0, inputs: [] });
+        const r = await l40PocketTail({ ...sw, tick_count: 0, inputs: [] }, { ...CORPSEBUMP_D2_SWITCHES, turretCircleKill: false,
+            iceTurretDeathAnim: false });
         expect(r.refusal.message).toMatch(/no start delay 0 … 100 kills iceturret@472,400 from the up side .* without a hit/);
     });
 
