@@ -227,6 +227,8 @@ function switchGatedRow(table, key, get) {
 }
 // ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
 import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
+// ⛓ fidelity L67BK4 D2 — the Totem's policy (the run steps the fight, `bossTotem.js`).
+import { BOSS_TOTEM_POLICY_VARIANTS, createBossTotemPolicy, bossTotemPolicyStep } from './bossTotemPolicy.js';
 // ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast's policy (the run steps the fight, `tentacleBeast.js`).
 import {
     TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep, tentacleBeastSettleStep,
@@ -506,7 +508,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -715,7 +717,14 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(s
  * to the pulley cell. The verb (`execRope`) is the PULL rung's stance and `execPull`, asked by a `clear-tag` on the
  * rope's own tag or by a frontier corridor. OFF no row: the survey's L39 steps keep "No strategy row exists".
  */
-'solid:rope', () => (CONTACT_FIDELITY.ropeCutVerb ? 'rope' : undefined)));
+'solid:rope', () => (CONTACT_FIDELITY.ropeCutVerb ? 'rope' : undefined)),
+/**
+ * ⛓⛓ fidelity L67BK4 D2 (`CONTACT_FIDELITY.totemBossFight`) — **THE TOTEM IS FOUGHT.** `bosstotem@152,168` spans L43's
+ * 80 px arena: a Solid until it wakes, the clamp after (`bossTotem.js`), so the arena's north half is reached only past
+ * the kill. The verb (`execTotemBoss`) plays `bossTotemPolicy` against the run's own stepped fight. OFF no row: the
+ * frontier keeps *"No strategy row exists for this obstacle"*.
+ */
+'solid:bosstotem', () => (CONTACT_FIDELITY.totemBossFight ? 'totem' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -780,7 +789,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -884,7 +893,9 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
 'lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? execLavaBoss : undefined)),
 'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)),
 // ⛓ fidelity ROPE — `rope` (switch-gated on `ropeCutVerb`): the PULL rung's cut as a strategy. See `execRope`.
-'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)));
+'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)),
+// ⛓ fidelity L67BK4 D2 — `totem` (switch-gated on `totemBossFight`): the L43 fight. See `execTotemBoss`.
+'totem', () => (CONTACT_FIDELITY.totemBossFight ? execTotemBoss : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -3020,6 +3031,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
     // ⛓ fidelity ROPE — reached only while `ropeCutVerb` registers the verb (the row is switch-gated).
     if (strategy === 'rope') return resolveRopeStrategy(run, obstacle, contacts, blocked);
+    // ⛓ fidelity L67BK4 D2 — reached only while `totemBossFight` registers the verb (the row is switch-gated).
+    if (strategy === 'totem') return resolveTotemBossStrategy(run, obstacle);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -4517,7 +4530,18 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
         }
         return null;
     }
-    const first = route.steps.find((st) => st.verb === 'press');
+    /**
+     * ⛓⛓ fidelity L67BK4 D1 (`laneWeigh`, OFF) — **A CLEAR-PATH THAT SINKS THE LANE'S HOLDER IS NOT TAKEN WHILE THE
+     * HOLDER CAN BE PARKED.** The search's cheapest clear-path can push the block into a pit (L67: one thrust W into
+     * (8,7)), and a destroyed block is gone for the visit — the button that silences the room's armed lane then has
+     * no holder, and the corridor to the Boss Key under `arrowtrap@48,48` is lost. ON, such a route yields to a route
+     * that parks the block on a button of an armed lane's own group (`laneHolderRoute`), which leaves the block's old
+     * cell as empty as the sink did. OFF: byte-identical.
+     */
+    const held = CONTACT_FIDELITY.laneWeigh && route.steps.some((st) => st.destroys)
+        ? laneHolderRoute(run, row, contacts, blocked) : null;
+    const steps = held ? held.steps : route.steps;
+    const first = steps.find((st) => st.verb === 'press');
     if (!first) return null; // a route of breaks alone: the rock is the door, not this block
     return {
         strategy: 'shove',
@@ -4533,9 +4557,10 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
             to: { ...first.to },
             ...(first.destroys ? { destroys: true } : {}),
         },
-        k: route.steps.filter((st) => st.verb === 'press').length,
-        stance: route.steps[0].stance ?? null,
-        route: route.steps,
+        k: steps.filter((st) => st.verb === 'press').length,
+        stance: steps[0].stance ?? null,
+        route: steps,
+        ...(held ? { laneHolder: { presser: held.presserId, traps: held.traps } } : {}),
         rejected: [{
             option: 'a lean (`runShove`)',
             why: `${row.id} is a \`PushableBlockSpear\`: \`PushableBlockFire.input()\` reads only its own `
@@ -4546,9 +4571,33 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
                 + 'and the block stays (game-measured)',
         }, {
             option: 'the route',
-            why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
-        }, ...hypothesisRejection(discharged), ...route.rejected],
+            why: `${steps.length} order(s): ${describeRoute(steps)}`,
+        }, ...(held ? [{
+            option: `the clear-path route (${describeRoute(route.steps)})`,
+            why: `it DESTROYS ${row.id}, the only holder for ${held.presserId}, whose press silences `
+                + `[${held.traps.join(', ')}] — the route that parks it there clears the same cell`,
+        }] : []), ...hypothesisRejection(discharged), ...route.rejected],
     };
+}
+
+/**
+ * ⛓ fidelity L67BK4 D1 — a route that parks `row` (a `PushableBlockSpear`) on a `Button` whose press silences an
+ * ARMED lane in this room (`arrowTrapFires(trap, true)` false, `armedArrowTraps` has it), with no order destroying the
+ * block; `null` when none exists. `{steps, presserId, traps}`.
+ */
+function laneHolderRoute(run, row, contacts, blocked = []) {
+    const armed = run.entities('armedArrowTraps') ?? new Set();
+    const lanes = (run.world.arrowTraps ?? []).filter((t) => armed.has(t.id) && !arrowTrapFires(t, true));
+    for (const presser of (run.world.pressers ?? []).filter((p) => p.tag === 'button')) {
+        const traps = lanes.filter((t) => t.t === presser.t).map((t) => t.id);
+        if (traps.length === 0) continue;
+        const onto = { tx: Math.floor(presser.x / TILE_SIZE), ty: Math.floor(presser.y / TILE_SIZE) };
+        const r = deriveBlockRoute(run, row, { kind: 'press', onto }, contacts, blocked);
+        if (r.steps && !r.steps.some((st) => st.destroys)) {
+            return { steps: r.steps, presserId: `${presser.tag}@${presser.x},${presser.y}`, traps };
+        }
+    }
+    return null;
 }
 
 /**
@@ -17480,6 +17529,138 @@ function execLavaBoss(run, perTick, resolved, ctx) {
     }
     return { verb: 'lavaboss', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
         tried, report: r.report };
+}
+
+/**
+ * ⛓⛓ fidelity L67BK4 D2 — RESOLVE the `totem` work order: L43's `bosstotem` on the frontier. The fight is the RUN's
+ * (`run.entities('bosses')`, `bossTotem.js`), so the resolver binds the body and names the stance the policy settles
+ * from — west of the laser's fixed band, `d0` below the body's resting y; `held: false` (a refusal by name) when the
+ * switch is off, when the body is gone, or when the run holds no Wand (`onlyHitBy = "Wand"`).
+ */
+function resolveTotemBossStrategy(run, obstacle) {
+    const refuse = (option, why) => ({ strategy: 'totem', held: false, boss: obstacle.id, rejected: [{ option, why }] });
+    if (!CONTACT_FIDELITY.totemBossFight) {
+        return refuse(`fight ${obstacle.id}`, 'the Totem\'s fight is not played with `CONTACT_FIDELITY.totemBossFight` '
+            + 'off — the body is a wall the solver does not fight');
+    }
+    const view = run.entities('bosses')?.get(obstacle.id) ?? null;
+    if (!view) return refuse(`fight ${obstacle.id}`, `the run holds no BossTotem ${obstacle.id} in level ${run.level}`);
+    if (view.removed || view.destroy) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
+    /**
+     * ⛔ A SLEEPING BODY IS NOT A FIGHT. The wake is `FP.world.classCount(Wand) <= 0 && Player.hasAllTotemParts()`
+     * (`BossTotem.as:291` @ccdf189776): a room whose vanilla `Wand` still stands keeps the body a Solid until the Wand
+     * is collected (its fade, dialogue and the rocks' drop — `r6-totem-kill`). The AP-delivered room holds an `apitem`
+     * there and wakes on entry; the vanilla one needs the pickup first, which this verb does not order.
+     */
+    const taken = run.progress('takenPickups') ?? new Set();
+    const wand = (run.world.pickups ?? []).find((p) => p.tag === 'wand' && !taken.has(`pickup:${p.tag}@${p.x},${p.y}`));
+    if (!view.activated && wand) {
+        return refuse(`fight ${obstacle.id}`, `${obstacle.id} sleeps while wand@${wand.x},${wand.y} stands — it wakes on `
+            + '`classCount(Wand) <= 0` (`BossTotem.as:291`), so the Wand is collected first (its fade, dialogue and the '
+            + 'rocks\' drop); this verb does not order the pickup');
+    }
+    const inv = run.progress('inventory') ?? {};
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.wand);
+    if (!inv.hasWand || slot < 0) {
+        return refuse(`fight ${obstacle.id}`, 'the body is `onlyHitBy = "Wand"` (`BossTotem.as:254`); this run holds no '
+            + 'Wand slot');
+    }
+    return {
+        strategy: 'totem',
+        postCondition: 'removal',
+        target: { x: view.x, y: view.y },
+        boss: obstacle.id,
+        slot,
+        stance: { x: view.x - 20.5, y: Math.max(view.y + BOSS_TOTEM_POLICY_VARIANTS[0].d0, (view.clampY ?? 0) + 4) },
+        rejected: [{
+            option: 'route around the body',
+            why: `${obstacle.id}'s 80x32 box spans the arena's five open columns — a Solid before the wake and the clamp `
+                + 'after it (`BossTotem.as:280-330`), so the north half is reached only past its removal',
+        }],
+    };
+}
+
+/**
+ * Executor: the `totem` verb. ⛓ fidelity L67BK4 D2.
+ *
+ * The King of Fire's pattern (`execLavaBoss`): the Wand selected, the stance walked (the walk's own planner), then each
+ * variant (`BOSS_TOTEM_POLICY_VARIANTS`) played on a FORK until the body is REMOVED (one tick after the white-out's
+ * request) with no death; a hitless variant is kept over one that takes hits (the first hitless, else the fewest
+ * hits). That one is played on the run and must bill the fork's hits, tick for tick. The completion is OBSERVED.
+ */
+const TOTEM_BOSS_FIGHT_BOUND = 2400;
+function playTotemPolicy(r, perTick, params, ctx, id) {
+    const mem = createBossTotemPolicy(params);
+    const hits0 = (r.ledger('playerHits') ?? []).length;
+    const deaths0 = (r.ledger('playerDeaths') ?? []).length;
+    let removedAt = null;
+    for (let spent = 0; spent <= TOTEM_BOSS_FIGHT_BOUND; spent += 1) {
+        const view = r.entities('bosses')?.get(id) ?? null;
+        if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no ${id} any more`, spent };
+        const hits = (r.ledger('playerHits') ?? []).slice(hits0).map((h) => `${h.t}:${h.source}:${h.id}`);
+        if (view.removed) {
+            if (removedAt === null) removedAt = spent;
+            if (spent > removedAt) return { ok: true, spent, hits, presses: mem.presses, log: mem.log };
+        }
+        const held = bossTotemPolicyStep(mem, { view, p: r.state, t: r.ticksCompleted });
+        if (perTick) perTick.push(held);
+        let transition;
+        try {
+            ({ transition } = r.advance(held));
+        } catch (e) {
+            if (perTick) throw e;
+            return { ok: false, why: `the model refused to step the fight: ${String(e?.message ?? e).slice(0, 200)}`, spent };
+        }
+        if (transition) {
+            if (perTick) {
+                fail(`${ctx.what}: the run crossed to level ${transition.to_level} during the Totem's fight.`);
+            }
+            return { ok: false, why: `the play crossed to level ${transition.to_level}`, spent };
+        }
+        if ((r.ledger('playerDeaths') ?? []).length > deaths0) {
+            return { ok: false, why: `the player died at spent ${spent}`, spent, hits };
+        }
+    }
+    return { ok: false, why: `the body is still in the world after ${TOTEM_BOSS_FIGHT_BOUND} ticks`, spent: TOTEM_BOSS_FIGHT_BOUND };
+}
+function execTotemBoss(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: totem ${resolved.boss}: ${why}`,
+            { obstacle: { kind: 'solid', id: resolved.boss, tag: 'bosstotem' } });
+    };
+    if (resolved.held === false) refuse(resolved.rejected?.[0]?.why ?? 'not held');
+    const from = perTick.length;
+    if (run.progress('primary') !== resolved.slot) ctx.equip(resolved.slot);
+    if (resolved.stance && typeof ctx.walkTo === 'function') {
+        ctx.walkTo(ctx.goal, resolved.stance, { what: `${ctx.what} -> totem stance (${resolved.boss})` });
+    }
+    const tried = [];
+    let params = BOSS_TOTEM_POLICY_VARIANTS[0];
+    if (typeof ctx.fork === 'function') {
+        let best = null;
+        for (const v of BOSS_TOTEM_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            const r = playTotemPolicy(f, null, v, ctx, resolved.boss);
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, hits: r.hits?.length ?? null, why: r.why ?? null });
+            if (r.ok && (best === null || r.hits.length < best.r.hits.length)) best = { v, r };
+            if (best && best.r.hits.length === 0) break;
+        }
+        if (best === null) {
+            refuse(`no Totem policy variant kills it without a death on a fork of this run — `
+                + tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; '));
+        }
+        params = best.v;
+    }
+    const r = playTotemPolicy(run, perTick, params, ctx, resolved.boss);
+    if (!r.ok) refuse(`the policy ${JSON.stringify(params)} did not kill it: ${r.why}`);
+    const want = tried.find((t) => t.ok && JSON.stringify(t.params) === JSON.stringify(params));
+    if (want && want.hits !== r.hits.length) {
+        fail(`${ctx.what}: the Totem fight billed ${r.hits.length} hit(s) on the run where the fork billed ${want.hits} — `
+            + 'the fork is not this run.');
+    }
+    return { verb: 'totem', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params }, tried,
+        hits: r.hits, presses: r.presses };
 }
 
 /**

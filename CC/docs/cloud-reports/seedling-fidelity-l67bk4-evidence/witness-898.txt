@@ -1,0 +1,50 @@
+CONTACT: 78 ON; env SEEDLING_LANE_WEIGH=1
+DELIVER: 116 rooms, 116 from the request; L67 re-assembles exactly
+PASS: seam 5442: the 640-unit request solves ON — work 233
+seam 5442: work 233, plan 801 t, verbs ["shove","walk"]; model rows 802, ends Lnull, hits 0
+PASS: seam 5442: the plan replays on the model with zero hits
+PASS: seam 5455: the 640-unit request solves ON — work 233
+seam 5455: work 233, plan 801 t, verbs ["shove","walk"]; model rows 802, ends Lnull, hits 0
+PASS: seam 5455: the plan replays on the model with zero hits
+PASS: seam 5462: the 640-unit request solves ON — work 233
+seam 5462: work 233, plan 801 t, verbs ["shove","walk"]; model rows 802, ends Lnull, hits 0
+PASS: seam 5462: the plan replays on the model with zero hits
+PASS: seam 5467: the 640-unit request solves ON — work 233
+seam 5467: work 233, plan 801 t, verbs ["shove","walk"]; model rows 802, ends Lnull, hits 0
+PASS: seam 5467: the plan replays on the model with zero hits
+PASS: seam 5475: the 640-unit request solves ON — work 233
+seam 5475: work 233, plan 801 t, verbs ["shove","walk"]; model rows 802, ends Lnull, hits 0
+PASS: seam 5475: the plan replays on the model with zero hits
+# box lock: TAKEN by seedling-fidelity-l67bk4-evidence/witness.mjs (browser, pid 15933) — head c1ded8d6c, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+seam 5442: game 802 rows, levels [67], first differing row -1
+seam 5442: game end {"items":{"hitsMax":3,"hasTorch":true,"hasDarkSuit":false,"hasSpear":true,"hasFeather":true,"canSwim":true,"hasFireWand":false,"hasWand":false,"hasFire":true,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":true},"cleared":[{"tag":0,"level":67},{"tag":1,"level":67}],"grants":[],"level":67,"x":56.10569903544789,"y":72.45704564099212}
+seam 5442: game status hits 0, save.keys [true,true,true,true,false], error ''
+PASS: seam 5442: the GAME plays the solver's plan with no error
+PASS: seam 5442: the game took no hit — hits 0
+PASS: seam 5442: the game's stream equals the model's (0 px) — first differing row -1
+seam 5455: game 802 rows, levels [67], first differing row -1
+seam 5455: game end {"items":{"hitsMax":3,"hasTorch":true,"hasDarkSuit":false,"hasSpear":true,"hasFeather":true,"canSwim":true,"hasFireWand":false,"hasWand":false,"hasFire":true,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":true},"cleared":[{"tag":0,"level":67},{"tag":1,"level":67}],"grants":[],"level":67,"x":56.10569903544789,"y":72.45704564099212}
+seam 5455: game status hits 0, save.keys [true,true,true,true,false], error ''
+PASS: seam 5455: the GAME plays the solver's plan with no error
+PASS: seam 5455: the game took no hit — hits 0
+PASS: seam 5455: the game's stream equals the model's (0 px) — first differing row -1
+seam 5462: game 802 rows, levels [67], first differing row -1
+seam 5462: game end {"items":{"hitsMax":3,"hasTorch":true,"hasDarkSuit":false,"hasSpear":true,"hasFeather":true,"canSwim":true,"hasFireWand":false,"hasWand":false,"hasFire":true,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":true},"cleared":[{"tag":0,"level":67},{"tag":1,"level":67}],"grants":[],"level":67,"x":56.10569903544789,"y":72.45704564099212}
+seam 5462: game status hits 0, save.keys [true,true,true,true,false], error ''
+PASS: seam 5462: the GAME plays the solver's plan with no error
+PASS: seam 5462: the game took no hit — hits 0
+PASS: seam 5462: the game's stream equals the model's (0 px) — first differing row -1
+seam 5467: game 802 rows, levels [67], first differing row -1
+seam 5467: game end {"items":{"hitsMax":3,"hasTorch":true,"hasDarkSuit":false,"hasSpear":true,"hasFeather":true,"canSwim":true,"hasFireWand":false,"hasWand":false,"hasFire":true,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":true},"cleared":[{"tag":0,"level":67},{"tag":1,"level":67}],"grants":[],"level":67,"x":56.10569903544789,"y":72.45704564099212}
+seam 5467: game status hits 0, save.keys [true,true,true,true,false], error ''
+PASS: seam 5467: the GAME plays the solver's plan with no error
+PASS: seam 5467: the game took no hit — hits 0
+PASS: seam 5467: the game's stream equals the model's (0 px) — first differing row -1
+seam 5475: game 802 rows, levels [67], first differing row -1
+seam 5475: game end {"items":{"hitsMax":3,"hasTorch":true,"hasDarkSuit":false,"hasSpear":true,"hasFeather":true,"canSwim":true,"hasFireWand":false,"hasWand":false,"hasFire":true,"hasDarkShield":false,"hasShield":true,"hasGhostSword":false,"hasDarkSword":false,"hasSword":true},"cleared":[{"tag":0,"level":67},{"tag":1,"level":67}],"grants":[],"level":67,"x":56.10569903544789,"y":72.45704564099212}
+seam 5475: game status hits 0, save.keys [true,true,true,true,false], error ''
+PASS: seam 5475: the GAME plays the solver's plan with no error
+PASS: seam 5475: the game took no hit — hits 0
+PASS: seam 5475: the game's stream equals the model's (0 px) — first differing row -1
+ALL CHECKS PASSED

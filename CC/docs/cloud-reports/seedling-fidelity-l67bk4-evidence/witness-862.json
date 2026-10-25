@@ -1,0 +1,209 @@
+[
+  {
+    "seam": 5464,
+    "work": 199,
+    "planTicks": 1054,
+    "verbs": [
+      "totem",
+      "walk",
+      "wand"
+    ],
+    "modelRows": 1055,
+    "modelTo": 37,
+    "modelHits": 0,
+    "game": {
+      "rows": 1055,
+      "to": 37,
+      "levels": [
+        43,
+        37
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": true,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 43
+          },
+          {
+            "tag": 4,
+            "level": 43
+          },
+          {
+            "tag": 5,
+            "level": 43
+          }
+        ],
+        "grants": [],
+        "level": 37,
+        "x": 296,
+        "y": 184
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5473,
+    "work": 199,
+    "planTicks": 1054,
+    "verbs": [
+      "totem",
+      "walk",
+      "wand"
+    ],
+    "modelRows": 1055,
+    "modelTo": 37,
+    "modelHits": 0,
+    "game": {
+      "rows": 1055,
+      "to": 37,
+      "levels": [
+        43,
+        37
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": true,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 43
+          },
+          {
+            "tag": 4,
+            "level": 43
+          },
+          {
+            "tag": 5,
+            "level": 43
+          }
+        ],
+        "grants": [],
+        "level": 37,
+        "x": 296,
+        "y": 184
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5477,
+    "work": 199,
+    "planTicks": 1054,
+    "verbs": [
+      "totem",
+      "walk",
+      "wand"
+    ],
+    "modelRows": 1055,
+    "modelTo": 37,
+    "modelHits": 0,
+    "game": {
+      "rows": 1055,
+      "to": 37,
+      "levels": [
+        43,
+        37
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": true,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 43
+          },
+          {
+            "tag": 4,
+            "level": 43
+          },
+          {
+            "tag": 5,
+            "level": 43
+          }
+        ],
+        "grants": [],
+        "level": 37,
+        "x": 296,
+        "y": 184
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  }
+]

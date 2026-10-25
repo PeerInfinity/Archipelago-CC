@@ -292,8 +292,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap'], strategies: [],
         why: 'live arrows with velocity and lifetime (`levelRun.js:10725`), for `dangerMap.predictArrows`.' },
     { family: 'bosses', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2'], strategies: [],
-        why: 'the boss totems\' rects (`levelRun.js:10660`) — a unique fight (`ENTITY_BLOCKS` bosstotem), so no block.' },
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
+        why: 'the boss totems\' rects (`levelRun.js:10660`) — a unique fight (`ENTITY_BLOCKS` bosstotem), so no block. '
+            + '⛓ fidelity L67BK4 D2: `solverBot`\'s `totem` verb reads the fight (its row is switch-gated, so no strategy here).' },
     { family: 'talkCircles', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['solverBot'], strategies: [],
         why: 'uncleared talker circles (`levelRun.js:10594`) — dialogue, not a behaviour.' },
