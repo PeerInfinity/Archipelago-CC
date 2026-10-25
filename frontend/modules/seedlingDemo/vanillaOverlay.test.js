@@ -386,8 +386,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-location-crossing (32dd7cf1… -> 4825058f): a location inside an item-gated solid is charged it
         //   (L19 Boss Key 0: the Sword), and the FinalDoor's two hand rows retire into the general sealed-door rule
         //   (L113's annotation). No name or exit moves.
+        // ⛓ rules-l55-waterfall (4825058f… -> 59347579): all-water L52 is floored by its entry gate and splits into its
+        //   three pools (sub-regions, sub_region on its exits). No location moves (the overlay fixture rewrites
+        //   byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('4825058f917d20b78e059f6db1f29680');
+            .toBe('59347579255932fd9f5998bd9ed10774');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

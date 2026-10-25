@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 105,
-            "count": 152,
+            "browser": 106,
+            "count": 153,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 459,
-        "browser": 170,
+        "blockStyle": 460,
+        "browser": 171,
         "cited": 248,
-        "files": 473,
+        "files": 474,
         "lineStyle": 14,
-        "withDocblock": 473,
-        "withFlags": 390
+        "withDocblock": 474,
+        "withFlags": 391
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12942,6 +12942,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l40button — Measure-only (seedling fidelity L40BUTTON, wave 12): WHAT GATES `Totem Part 64,144` FROM L40's NORTH ARRIVALS, and why the solver read it as `wandlock@448,432`.",
             "path": "scripts/procgen/probe-seedling-l40button.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l55-waterfall.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L52 → L55 WAY IN, ON THE GAME (slice rules-l55-waterfall): does taking `bosskey@40,88` (keyType 3, \"Level 055 - Boss Key 3\") need the FEATHER when L52 is entered from below?",
+            "path": "scripts/procgen/probe-seedling-l55-waterfall.mjs"
         },
         {
             "argvHelpers": [],

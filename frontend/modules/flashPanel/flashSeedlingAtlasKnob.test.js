@@ -136,7 +136,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         // ⛓ R4b (rules-boss-locations): 178 -> 179 — L69 is lifted from never-enter (⚖ 2026-10-19): `level_69` itself.
         // ⛓ RULES rope-events: 179 -> 181 — L16 splits at its rope-silenced arrow lanes: r1c9 (the seven pits into L17)
         //   and r3c7 (the L17 arrival's pocket, with the stairs back down) hold doors; r6c8 holds none.
-        expect(entry.zoneCount).toBe(181);
+        // ⛓ RULES l55-waterfall: 181 -> 183 — all-water L52 is floored by its entry gate and splits into its three
+        //   pools, each holding doors (r0c7 the L54 door, r2c2 the L55 door, r5c10 the L51/L56 doors).
+        expect(entry.zoneCount).toBe(183);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

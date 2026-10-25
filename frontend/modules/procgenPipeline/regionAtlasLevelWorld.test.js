@@ -150,16 +150,33 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         for (const m of Object.values(refused)) expect(m).toMatch(/hasGhostSword.*not one Has — a strike needs exactly one item/);
     }, 120_000);
 
-    it('an ALL-WATER level (L50: no dry cell) is one level world, every cell of it Swim', () => {
-        const { rules } = compileAlone('level_50');
-        const sc = rules.preset_sidecars['1'].level_50;
-        expect(sc.shared_world).toBe('level_50');
+    // ⛓ RULES l55-waterfall: L50 and L52 are FLOORED by their entry gate now (Swim, charged at every door), so the
+    // all-water level this row reads is L57 — its bindings stand on mixed gates (the tentacle beast), so no floor.
+    it('an ALL-WATER level the entry gate does not floor (L57) is one level world, its water Swim', () => {
+        const { rules } = compileAlone('level_57');
+        const sc = rules.preset_sidecars['1'].level_57;
+        expect(sc.shared_world).toBe('level_57');
         const p = sc.playable_payload;
-        expect(p.shared_world.regions).toEqual(['level_50']);
+        expect(p.shared_world.regions).toEqual(['level_57']);
         const floor = p.tiles.filter((t) => t === MAZE_TILE_FLOOR).length;
         expect(floor).toBeGreaterThan(0);
         const rules_ = new Set(p.obstacles.map((o) => JSON.stringify(p.obstacleLib[o.id].clear_rule ?? p.obstacleLib[o.id].clear_set)));
         expect([...rules_].some((r) => r.includes('Progressive Swim'))).toBe(true);
+    });
+
+    it('an all-water level FLOORED by its entry gate projects as plain regions: L50 one, L52 its three pools', () => {
+        const fifty = compileAlone('level_50').rules.preset_sidecars['1'].level_50;
+        expect(fifty.shared_world).toBeUndefined();
+        expect(fifty.playable_payload.obstacles).toEqual([]);
+        const pools = compileAlone('level_52').rules.preset_sidecars['1'];
+        expect(Object.keys(pools).sort()).toEqual(['level_52__r0c7', 'level_52__r2c2', 'level_52__r5c10']);
+        // The top pool climbs nothing; the middle and bottom pools climb a waterfall: the Feather.
+        const climbs = (id) => [...new Set(pools[id].playable_payload.obstacles
+            .map((o) => JSON.stringify(pools[id].playable_payload.obstacleLib[o.id].clear_rule)))];
+        expect(climbs('level_52__r0c7')).toEqual([]);
+        for (const id of ['level_52__r2c2', 'level_52__r5c10']) {
+            expect(climbs(id)).toEqual([JSON.stringify({ rule: 'Has', args: { item_name: 'Progressive Swim', count: 2 } })]);
+        }
     });
 
     it('a level world emits no ARRIVAL-ONLY exit: a landing spot is not a trigger (it would end a walk)', () => {
