@@ -662,12 +662,18 @@
       <button id="solveGoalClear">clear</button>
       <span id="solveGoals">—</span>
     </div>
-    <!-- ⛓ THE FORM SITS ABOVE THE `<details>`, NOT INSIDE IT (slice 5). Its
-         first cut was inside, where the whole point of it — reaching the two
-         flags WITHOUT opening the raw editor — is undone by having to open
-         the raw editor. Caught by the acceptance row's visibility check, not
-         by looking at it. -->
-    <div class="line" id="bootForm"><span>boot items:</span></div>
+    <!-- ⛓ THE FORM SITS ABOVE THE RAW EDITOR'S `<details>`, NOT INSIDE IT
+         (slice 5). Its first cut was inside, where the whole point of it —
+         reaching the flags WITHOUT opening the raw editor — is undone by
+         having to open the raw editor. Caught by the acceptance row's
+         visibility check, not by looking at it.
+         ⛓ It is its OWN collapsible section (user, 2026-10-25), OPEN by
+         default so the form is still reachable without a click — and so the
+         collapse-all row's default-closed set is unchanged. -->
+    <details id="bootItems" open>
+      <summary data-term="boot-items">boot items</summary>
+      <div class="line" id="bootForm"></div>
+    </details>
     <details>
       <summary data-term="boot-items">starting conditions — the tape v8 staging block, raw</summary>
       <textarea id="bootBox" class="box" rows="12" spellcheck="false"></textarea>

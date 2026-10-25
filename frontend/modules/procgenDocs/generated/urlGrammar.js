@@ -1034,13 +1034,13 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 594,
+                    "line": 595,
                     "role": "read"
                 },
                 {
                     "file": "frontend/modules/seedlingDemo/watchSolve.js",
                     "fn": "readSolveParams",
-                    "line": 535,
+                    "line": 552,
                     "role": "read"
                 },
                 {

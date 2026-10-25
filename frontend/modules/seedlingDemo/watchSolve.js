@@ -313,6 +313,23 @@ export function withItemFlag(staging, id, value) {
 }
 
 /**
+ * The same block with EVERY boolean item flag toggled together — the boot
+ * form's "toggle all" button (user, 2026-10-25).
+ *
+ * ⚠ ONE RULE FOR A THREE-STATE SET: if every flag is declared `true`, all
+ * become `false`; otherwise (any false or undeclared) all become `true`. So a
+ * press always leaves every flag DECLARED, which is what pressing it means.
+ * ⛔ `health` is an int and is left exactly as it was — there is no "toggled"
+ * hit count, and a button that wrote one would be the page inventing state.
+ */
+export function withAllItemFlagsToggled(staging) {
+    const flags = itemFlagsOf(staging);
+    const ids = ITEM_FORM_FIELDS.filter((f) => f.type === 'boolean').map((f) => f.id);
+    const next = !ids.every((id) => flags[id] === true);
+    return ids.reduce((st, id) => withItemFlag(st, id, next), staging);
+}
+
+/**
  * Everything in a built world that the solver's goal vocabulary can name.
  *
  * ⚠ A DEACTIVATED teleporter is LISTED, not dropped. "This level has one
