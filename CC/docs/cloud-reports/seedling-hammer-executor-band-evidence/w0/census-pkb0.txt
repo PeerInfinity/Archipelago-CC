@@ -1,0 +1,67 @@
+phases solving: 22 of 45
+overlap pairs 10, identical answer+units 10
+- 22x SOLVE
+- 9x HAMMER_SAFETY(nowhere)
+- 5x other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold 
+- 3x band-throw
+- 2x HAMMER_SAFETY(step)
+- 2x EXHAUSTED
+- 1x deadline
+- 1x reboot
+bx (period sums): {} maxRun 0
+shakeRefused (period sum): 648
+5226 HAMMER_SAFETY(nowhere) 177 1a945083bb43 None
+5227 SOLVE 340 bb2b890e55aa None
+5228 SOLVE 340 bb2b890e55aa None
+5229 SOLVE 340 bb2b890e55aa None
+5230 SOLVE 340 bb2b890e55aa None
+5231 SOLVE 340 bb2b890e55aa None
+5232 SOLVE 340 bb2b890e55aa None
+5233 SOLVE 340 bb2b890e55aa None
+5234 SOLVE 340 bb2b890e55aa None
+5235 SOLVE 340 bb2b890e55aa None
+5236 SOLVE 340 bb2b890e55aa None
+5237 SOLVE 551 21e3fe5e9d55 None
+5238 SOLVE 551 21e3fe5e9d55 None
+5239 SOLVE 551 21e3fe5e9d55 None
+5240 SOLVE 551 21e3fe5e9d55 None
+5241 SOLVE 551 21e3fe5e9d55 None
+5242 SOLVE 551 21e3fe5e9d55 None
+5243 deadline 642 4af59f364225 None
+5244 other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold  229 669560868f2f {}
+5245 other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold  216 5e24993b40c3 None
+5246 other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold  216 5e24993b40c3 None
+5247 other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold  216 6264111cc999 {}
+5248 other:solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold  216 6264111cc999 {}
+5249 HAMMER_SAFETY(nowhere) 195 dc675a7cd864 {}
+5250 SOLVE 333 41a338401fae {}
+5251 HAMMER_SAFETY(step) 179 2b108f0c6d54 {}
+5252 band-throw 185 93956fd3a7b2 {}
+5253 band-throw 185 93956fd3a7b2 {}
+5254 band-throw 191 2707530419b1 {}
+5255 reboot 199 adde38cbc7b4 {}
+5256 SOLVE 395 38f72ec04c1c {}
+5257 HAMMER_SAFETY(nowhere) 181 1a945083bb43 {}
+5258 HAMMER_SAFETY(nowhere) 181 1a945083bb43 {}
+5259 EXHAUSTED 642 760e6725b2bf {}
+5260 SOLVE 556 c4ad5e891b3f {}
+5261 SOLVE 556 c4ad5e891b3f {}
+5262 SOLVE 556 c4ad5e891b3f {}
+5263 SOLVE 556 c4ad5e891b3f {}
+5264 HAMMER_SAFETY(step) 177 b2edb91fce92 {}
+5265 EXHAUSTED 642 6bde639afc39 {}
+5266 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5267 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5268 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5269 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5270 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5271 HAMMER_SAFETY(nowhere) 177 1a945083bb43 {}
+5272 SOLVE 340 bb2b890e55aa {}
+5273 SOLVE 340 bb2b890e55aa {}
+5274 SOLVE 340 bb2b890e55aa {}
+5275 SOLVE 340 bb2b890e55aa {}
+5276 SOLVE 340 bb2b890e55aa {}
+5277 SOLVE 340 bb2b890e55aa {}
+5278 SOLVE 340 bb2b890e55aa {}
+5279 SOLVE 340 bb2b890e55aa {}
+5280 SOLVE 340 bb2b890e55aa {}

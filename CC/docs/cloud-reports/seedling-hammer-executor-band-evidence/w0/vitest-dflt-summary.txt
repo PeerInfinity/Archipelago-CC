@@ -1,0 +1,8 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  scripts/procgen/boxLock.test.js > the box lock > lets exactly ONE of eight simultaneous takers hold the box; the rest refuse
+ Test Files  1 failed | 148 passed (149)
+      Tests  1 failed | 4678 passed (4679)
+   Duration  1884.24s (transform 37.56s, setup 0ms, import 344.99s, tests 4948.17s, environment 36ms)
+--- solo re-run of the one red file:
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
