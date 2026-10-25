@@ -9,7 +9,9 @@
  *
  * The sample: both shared level worlds the parity was built on (L15, L16), one per-sub-region level (L14), and L18 —
  * the preset's first COUNTED rule (r1c1 ↔ r7c10 = Or(Shield×2, …)), once scripted ≠ native (⚖ user 2026-10-25, session
- * tile-primitives-grow-l18: "Add L18 to sample"; 0.35 s scripted).
+ * tile-primitives-grow-l18: "Add L18 to sample"; 0.35 s scripted), and one region per ring-2 level (⚖ user 2026-10-25, session
+ * tile-primitives-grow-ring2: "+L0 r8c0, L19 r5c5, L20 r1c4") — L0's shared world (the preset's start; 6.1 s scripted, any
+ * member certifies it whole), L19 r5c5 (once "not priced", a crossing collision) and L20's Shield location (~0.05 s together).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
  * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
@@ -25,7 +27,7 @@ const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21',
-    'level_18__r1c1', 'level_18__r7c10'];
+    'level_18__r1c1', 'level_18__r7c10', 'level_0__r8c0', 'level_19__r5c5', 'level_20__r1c4'];
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
 const withExitRule = (from, to, rule) => {

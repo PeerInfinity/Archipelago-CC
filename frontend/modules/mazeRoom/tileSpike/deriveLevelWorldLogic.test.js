@@ -71,7 +71,7 @@ describe('L15 level world — the oracle crossing r1c5 → r1c9', () => {
  * The preset's growth (⚖ "L14 + L16", user 2026-10-21; session tile-primitives-levels-gap3) — the default
  * tier's cut. The whole preset at every subset is the slow file.
  */
-describe('L13–L18 — the doors and the second level world', () => {
+describe('L0 + L13–L20 — the doors and the second level world', () => {
     // ⛓ rules-rope-events (⚖ user 2026-10-22 "Land with exact exemptions"): the L16 rope lane splits the level, so
     // the rocks crossing leaves from r1c9 (atlas row r1c9 → r4c21 = Or(Sword, Ghost Spear)) — still a weapon,
     // never Swim alone. r1c1 reaches r4c21 only THROUGH the rope-gated r1c9.
@@ -90,9 +90,24 @@ describe('L13–L18 — the doors and the second level world', () => {
     // entered only from r4c21, so it joins that set.
     const RESTORED_REGIONS = ['level_16__r1c9', 'level_16__r3c7', 'level_16__r4c21', 'level_16__r6c8', 'level_17',
         'level_18__r1c1', 'level_18__r7c10'];
+    // ⛓ Each item held at the HIGHEST count the preset's rules name (a count Map; a Set holds one of each): L0's
+    // islands r1c6 / r2c13 / r4c16 are reached only by the waterfall climb, Has(Progressive Swim, 2) (session
+    // tile-primitives-grow-ring2 — the preset's first counted rule that alone opens a region).
+    const maxCount = new Map();
+    const countsIn = (rule) => {
+        if (rule?.rule === 'Has') {
+            const n = rule.args.count ?? 1;
+            maxCount.set(rule.args.item_name, Math.max(maxCount.get(rule.args.item_name) ?? 1, n));
+        }
+        for (const c of rule?.children ?? []) countsIn(c);
+    };
+    for (const r of Object.values(RULES.regions['1'])) {
+        for (const e of r.exits) countsIn(e.access_rule);
+        for (const l of r.locations ?? []) countsIn(l.access_rule);
+    }
     const reachFromStart = (items) => {
         const REGIONS = RULES.regions['1'];
-        const inv = new Set(items);
+        const inv = new Map(items.map((i) => [i, maxCount.get(i) ?? 1]));
         const holds = (rule) => evaluateRuleAgainstInventory(rule ?? { rule: 'True_' }, inv);
         const seen = new Set(['Menu']);
         const got = new Set();
@@ -105,7 +120,7 @@ describe('L13–L18 — the doors and the second level world', () => {
                 for (const l of REGIONS[from].locations ?? []) {
                     if (got.has(l.name) || !holds(l.access_rule)) continue;
                     got.add(l.name);
-                    if (l.event) { inv.add(l.item.name); grew = true; }
+                    if (l.event) { inv.set(l.item.name, 1); grew = true; }
                 }
             }
         }
@@ -132,8 +147,16 @@ describe('L13–L18 — the doors and the second level world', () => {
         }
         const REAL = [...asked].filter((i) => i !== ROPE);
         expect(reachFromStart(REAL)).toEqual({ unreached: [], unchecked: [] });
+        // Ring 2 (session tile-primitives-grow-ring2) brings weapon gates of its own: L0's rocks (Sword | Spear) close
+        // r11c19 and, past it, r1c6 (and their two rock events); L19's crossings into r1c5 / r5c5 are the Sword (and its
+        // Boss Key and Shieldspire with them). Without the three weapons that set is cut off beside the rope's.
+        const RING2_WEAPON_GATED = ['level_0__r11c19', 'level_0__r1c6', 'level_19__r1c5', 'level_19__r5c5'];
         expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
-            .toEqual({ unreached: RESTORED_REGIONS, unchecked: [ROPE, 'Level 017 - Chest'] });
+            .toEqual({
+                unreached: [...RESTORED_REGIONS, ...RING2_WEAPON_GATED].sort(),
+                unchecked: ['L0 flag 1: breakablerock@288,176 cleared', 'L0 flag 4: breakablerock@80,112 cleared', ROPE,
+                    'Level 017 - Chest', 'Level 019 - Boss Key 0', 'Level 019 - Shieldspire'],
+            });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
     });
 
@@ -192,6 +215,8 @@ describe('L13–L18 — the doors and the second level world', () => {
         const pit = ([name]) => name.startsWith('level_16__r1c9 -> level_17');
         expect(priced.filter((d) => !pit(d)).map(([name, free]) => [name, free])).toEqual([
             ['level_13 -> level_14', true],
+            ['level_13 -> level_0__r8c0', true],
+            ['level_13 -> level_20__r3c1', true],
             ['level_14 -> level_15__r1c5', true],
             ['level_14 -> level_13', true],
             ['level_15__r1c5 -> level_14', true],

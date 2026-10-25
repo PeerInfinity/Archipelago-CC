@@ -53,12 +53,16 @@ const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 
 /** ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above). */
-export const LEVELS = Object.freeze(['level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18']);
+export const LEVELS = Object.freeze([
+    'level_0', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20',
+]);
 
 /**
  * Where the preset starts while the playthrough's own start (level_0) is not listed. Pinned rather than "the
  * first listed": growing LEVELS outward (⚖ "L13 + L17", session tile-primitives-grow-levels) put L13 first in
- * atlas order, and the start is what the in-app row and the sphere log are measured from.
+ * atlas order, and the start is what the in-app row and the sphere log are measured from. With level_0 listed
+ * (ring 2, ⚖ "level_0, row walks in", session tile-primitives-grow-ring2) the preset starts where the game does
+ * and this is only the fallback for a batch without it.
  */
 export const START_LEVEL = 'level_14';
 
