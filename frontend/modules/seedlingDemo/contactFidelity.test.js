@@ -283,7 +283,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
             // spinner sees a responder's turn-off one tick later — shipped OFF.
             stanceReentryNextDoor: true,
-            spinnerLockLag: true });
+            spinnerLockLag: true,
+            // ⛓ fidelity BEAMLANE (wave 29): a corridor along a beam band rides the band-to-band lane — shipped OFF.
+            beamLaneWalk: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

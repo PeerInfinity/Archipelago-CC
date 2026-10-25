@@ -795,6 +795,43 @@ export function phaseHazardHit(run, h, clock, tick, box) {
 }
 
 /**
+ * ⛓ fidelity BEAMLANE D1 (`CONTACT_FIDELITY.beamLaneWalk`) — **A BEAM TOWER AT UPDATE `u` OF THE VISIT, WHETHER OR NOT
+ * IT FIRES**: the `y` its beam test reads on that update (pre-bob), the side it faces, the rect it tests when it fires
+ * (`null` when it does not), and `band(d)` — side `d`'s rect at that `y`, the band the beam occupies whenever it fires
+ * there. The same timeline `phaseHazardHit` prices against (ctor at V, `Game.time` read off the run's clock), so a
+ * lane planned on these `y`s is the lane the certification prices. `null` where `phaseHazardHit` would widen by the
+ * bob (no visit clock, no `Game.time`): a lane needs the live `y`, and an unknown one is refused, never guessed.
+ */
+const BEAM_LANE_TIMELINES = new Map();
+
+export function phaseBeamTowerAt(run, h, clock, tick) {
+    if (h.tag !== 'beamtower' || clock.v === null) return null;
+    const now = run.gameTime;
+    if (!Number.isFinite(now)) return null;
+    const u = tick - clock.v;
+    if (u < 1) return null;
+    const timeAtV = now + (clock.v + 1 - run.ticksCompleted - 1);
+    const size = run.worldFor(run.level).world;
+    const key = `${h.x},${h.y}|${clock.v}|${timeAtV}`;
+    let tl = BEAM_LANE_TIMELINES.get(key);
+    if (!tl) {
+        if (BEAM_LANE_TIMELINES.size >= PHASE_TIMELINE_CAP) BEAM_LANE_TIMELINES.clear();
+        tl = { rows: [null], state: createBeamTower(h, size) };
+        BEAM_LANE_TIMELINES.set(key, tl);
+    }
+    while (tl.rows.length <= u) {
+        const k = tl.rows.length;
+        const y = tl.state.y;
+        const direction = tl.state.direction;
+        const rect = stepBeamTower(tl.state, timeAtV + k - 1);
+        tl.rows.push({ y, direction, rect });
+    }
+    const row = tl.rows[u];
+    const at = { ...tl.state, y: row.y };
+    return { u, y: row.y, direction: row.direction, rect: row.rect, band: (d) => beamRectAt(at, d) };
+}
+
+/**
  * Can this chain or beam reach the box at ANY phase? The union of its rects:
  * the chain's one arm; every side a tower's `rate` visits, each widened by the
  * bob both ways. ⚠ A conservative "yes" — the DOORSTEP test of the ladder's

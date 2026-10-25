@@ -25487,3 +25487,40 @@ route survey (239 rows, 0 differ in any field but `ms`) all equal W0.
   (here, `armedArrowTraps` behind `pushables`).
 - A source-text census counts CALL text: wrapping `f()` as `reading(f)` removes a call site from the census (R8's
   `liveSolidOpts` count), and wrapping the run's `return { … }` removes the object every AST census parses.
+
+### Seedling fidelity BEAMLANE — a corridor along a BeamTower's band rides the band-to-band lane at the towers' live y (`beamLaneWalk`, OFF)
+
+Wave 29, report `CC/docs/cloud-reports/seedling-fidelity-beamlane.md`. Leg 785 (`level_107 <- in_L108_0_32 ->
+exit:out_teleporter_0_48`) solved at 12/61 arrival clocks of its 2,560-unit retry and none of its 640-unit first ask: L107's
+only way west is rows 7-8, along which BOTH towers' left beams run, and the bob (`0.3·sin(worldFrame(100, 2)…)` on
+`Game.time`) fixes where the bands sit for the whole visit. The tile-centre row is inside band 1 at most clocks; no stall and
+no fixed y rides it (js `seedling-js-l107-investigate`); the game rides the 12 px lane between the bands at 61/61 clocks.
+
+**D1.** `solverBot.beamLaneSteer` — `previewWalk`'s new opt-in `steer` (null = byte-inert) — aims the walk, per tick, into
+the open interval between the bands read off `dangerMap.phaseBeamTowerAt` (the timeline `phaseHazardHit` prices: the tower's
+pre-bob `y`, its side, its rect, at any update, firing or not). A waypoint within a band's bob REACH (zone ± `BEAM_BOB_SPAN`)
+is aimed into a bounded lane beside it; a band between the player and the aim is crossed only when it does not fire over the
+crossing (`BEAM_LANE_RUNG`), else the aim holds the player in its interval. The PHASE arm asks it once, before the stall grid;
+the walk is certified by the same `probeSamples`, a lane whose only danger is a non-phase source on a beam-free walk is driven
+up to it (the arm's `partial` rule: L107's `crusher@32,0` sight lane, which the stall plans also walk through), and an
+uncertified lane falls through to the grid with its reason appended to the refusal. ON, 785's captured request: 93/93
+clocks 5564..5656 solve inside 640 units (122–128; OFF 0/61).
+
+**D2 — the game witness (p4g, 0 px; `CC/docs/cloud-reports/seedling-fidelity-beamlane-evidence/witness.mjs`).** The
+solver's own ON plans at 11 clocks: every one reaches L102 on the game with a stream identical to the model's.
+
+**D3.** L103 (survey step 221) has no lane: its corridor runs along `beamtower@208,248`'s band row, and the space between its
+two bands is a Pit row. A first cut walked into the Pit at (184,200), so an aim is taken only on floor (`plannerObstacleAt`)
+along the x span of the waypoint's incoming and outgoing legs; ON, 221 refuses where OFF does, the lane's reason named.
+L104, L105, L107 eastbound (227), L108 (228): unchanged. The keyed sweep (all 18 BeamTower-room legs, p4g, ON vs OFF ×2)
+found one more: leg 776 (L105) failed ON ×2 — the steered walk left by its arrival door, and on a later run crossed into L106
+and kept planning L105's exit there. A lane walk now crosses only on its corridor's last leg, and that crossing returns
+FORCEDHIT's `{forced: {transition}}` (the walk arrived); ON then = OFF on every leg but 785.
+
+**Trap candidates.**
+- An accumulated bob makes the ARRIVAL clock a property of the whole visit: a stall changes which firing you meet, never
+  where the band is. Read the live `y`, do not search time for it.
+- A waypoint whose own y is free NOW can be inside the band's reach later in the same walk — test the reach, not the moment.
+- A steered waypoint reached off its own y moves the start of the NEXT leg: the floor test belongs to both legs.
+- A preview truncated by `crossed` is the walk arriving only when the crossing is the corridor's own end; a steered walk
+  can find another door.

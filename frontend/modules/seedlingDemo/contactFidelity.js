@@ -1323,6 +1323,19 @@ export const CONTACT_FIDELITY = {
      * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
     spinnerLockLag: true,
+    /**
+     * fidelity BEAMLANE (wave 29) — A CORRIDOR ALONG A BEAM TOWER'S BAND RIDES THE BAND-TO-BAND LANE AT THE TOWERS'
+     * LIVE `y` (`solverBot.beamLaneSteer`, the dodge rung's PHASE arm). The bob `y += 0.3·sin(worldFrame(100, 2)…)`
+     * reads `Game.time`, so the arrival clock fixes where the bands sit for the whole visit, and a corridor walked at
+     * the tile centre is inside a band at most clocks (L107's rows 7-8, leg 785: 12/61 clocks solved, the rest refused
+     * on `beamtower@208,120`'s beam after ten 89x8 stall grids). MEASURED on the game (js `seedling-js-l107-investigate`,
+     * CI 40130832484): the lane walk reaches L102 at 61/61 clocks, streams = model. ON: before the stall grid, the arm
+     * previews the corridor with its aim steered into the free band-to-band interval at each tick's live tower `y`
+     * (`dangerMap.phaseBeamTowerAt`, the timeline `phaseHazardHit` prices), crossing a band only when it does not fire
+     * for the crossing; the walk is certified by the same `probeSamples`, and an uncertified lane falls through to the
+     * stall grid, its reason named. OFF: byte-identical. `SEEDLING_BEAM_LANE_WALK=0|1`.
+     */
+    beamLaneWalk: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1574,6 +1587,9 @@ if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '1') CONTACT_
 if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '0') CONTACT_FIDELITY.stanceReentryNextDoor = false;
 if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '1') CONTACT_FIDELITY.spinnerLockLag = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '0') CONTACT_FIDELITY.spinnerLockLag = false;
+// ⛓ fidelity BEAMLANE: `SEEDLING_BEAM_LANE_WALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BEAM_LANE_WALK === '1') CONTACT_FIDELITY.beamLaneWalk = true;
+if (globalThis.process?.env?.SEEDLING_BEAM_LANE_WALK === '0') CONTACT_FIDELITY.beamLaneWalk = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
