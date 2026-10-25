@@ -1366,6 +1366,23 @@ export const CONTACT_FIDELITY = {
      * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
      */
     iceTurretDeathAnim: true,
+    /**
+     * fidelity L67BK4 D1 (wave 31) — A SPEAR BLOCK THAT IS THE ONLY HOLDER FOR AN ARMED LANE'S BUTTON IS PARKED ON THE
+     * BUTTON, NOT SUNK (`solverBot.laneHolderRoute`, asked by `resolveSpearPushStrategy`).
+     *
+     *     ArrowTrap.as:31-41   fires while `activate XOR shootDefault`; `Button.update` re-collides
+     *                          `["Player","Enemy","Solid"]` every tick and publishes its group (`Button.as:27-39`)
+     *
+     * L67 (`Dungeon6/8.oel`) is the room built for it: `arrowtrap@48,48 tset 0 shoot 1` stands over `bosskey4` at
+     * (48,64), `button@96,112 tset 0` silences it while pressed, and `pushableblockspear@144,112` stands in the only
+     * corridor west. OFF the clear-path search took its cheapest route — one thrust W into the pit at (8,7) — and the
+     * key's corridor then climbed to an EXHAUSTED ladder on the armed lane (divergence leg `level_67__r3c2 <-
+     * in_L59_0_128 ~> level_67__r6c11 -> location:Level 067 - Boss Key 4`, survey step 140). ON: a clear-path route that
+     * DESTROYS the block yields to a route that parks it on a button of an armed lane's own group (L67: N W W S W, five
+     * thrusts), which empties the same cell; the walk then meets a silent lane. OFF: byte-identical.
+     * `SEEDLING_LANE_WEIGH=0|1`.
+     */
+    laneWeigh: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1627,6 +1644,9 @@ if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELI
 if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
+// ⛓ fidelity L67BK4 D1: `SEEDLING_LANE_WEIGH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LANE_WEIGH === '1') CONTACT_FIDELITY.laneWeigh = true;
+if (globalThis.process?.env?.SEEDLING_LANE_WEIGH === '0') CONTACT_FIDELITY.laneWeigh = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

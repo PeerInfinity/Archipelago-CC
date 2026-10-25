@@ -4517,7 +4517,18 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
         }
         return null;
     }
-    const first = route.steps.find((st) => st.verb === 'press');
+    /**
+     * ⛓⛓ fidelity L67BK4 D1 (`laneWeigh`, OFF) — **A CLEAR-PATH THAT SINKS THE LANE'S HOLDER IS NOT TAKEN WHILE THE
+     * HOLDER CAN BE PARKED.** The search's cheapest clear-path can push the block into a pit (L67: one thrust W into
+     * (8,7)), and a destroyed block is gone for the visit — the button that silences the room's armed lane then has
+     * no holder, and the corridor to the Boss Key under `arrowtrap@48,48` is lost. ON, such a route yields to a route
+     * that parks the block on a button of an armed lane's own group (`laneHolderRoute`), which leaves the block's old
+     * cell as empty as the sink did. OFF: byte-identical.
+     */
+    const held = CONTACT_FIDELITY.laneWeigh && route.steps.some((st) => st.destroys)
+        ? laneHolderRoute(run, row, contacts, blocked) : null;
+    const steps = held ? held.steps : route.steps;
+    const first = steps.find((st) => st.verb === 'press');
     if (!first) return null; // a route of breaks alone: the rock is the door, not this block
     return {
         strategy: 'shove',
@@ -4533,9 +4544,10 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
             to: { ...first.to },
             ...(first.destroys ? { destroys: true } : {}),
         },
-        k: route.steps.filter((st) => st.verb === 'press').length,
-        stance: route.steps[0].stance ?? null,
-        route: route.steps,
+        k: steps.filter((st) => st.verb === 'press').length,
+        stance: steps[0].stance ?? null,
+        route: steps,
+        ...(held ? { laneHolder: { presser: held.presserId, traps: held.traps } } : {}),
         rejected: [{
             option: 'a lean (`runShove`)',
             why: `${row.id} is a \`PushableBlockSpear\`: \`PushableBlockFire.input()\` reads only its own `
@@ -4546,9 +4558,33 @@ function resolveSpearPushStrategy(run, row, contacts, aim, allowTeleporter, bloc
                 + 'and the block stays (game-measured)',
         }, {
             option: 'the route',
-            why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
-        }, ...hypothesisRejection(discharged), ...route.rejected],
+            why: `${steps.length} order(s): ${describeRoute(steps)}`,
+        }, ...(held ? [{
+            option: `the clear-path route (${describeRoute(route.steps)})`,
+            why: `it DESTROYS ${row.id}, the only holder for ${held.presserId}, whose press silences `
+                + `[${held.traps.join(', ')}] — the route that parks it there clears the same cell`,
+        }] : []), ...hypothesisRejection(discharged), ...route.rejected],
     };
+}
+
+/**
+ * ⛓ fidelity L67BK4 D1 — a route that parks `row` (a `PushableBlockSpear`) on a `Button` whose press silences an
+ * ARMED lane in this room (`arrowTrapFires(trap, true)` false, `armedArrowTraps` has it), with no order destroying the
+ * block; `null` when none exists. `{steps, presserId, traps}`.
+ */
+function laneHolderRoute(run, row, contacts, blocked = []) {
+    const armed = run.entities('armedArrowTraps') ?? new Set();
+    const lanes = (run.world.arrowTraps ?? []).filter((t) => armed.has(t.id) && !arrowTrapFires(t, true));
+    for (const presser of (run.world.pressers ?? []).filter((p) => p.tag === 'button')) {
+        const traps = lanes.filter((t) => t.t === presser.t).map((t) => t.id);
+        if (traps.length === 0) continue;
+        const onto = { tx: Math.floor(presser.x / TILE_SIZE), ty: Math.floor(presser.y / TILE_SIZE) };
+        const r = deriveBlockRoute(run, row, { kind: 'press', onto }, contacts, blocked);
+        if (r.steps && !r.steps.some((st) => st.destroys)) {
+            return { steps: r.steps, presserId: `${presser.tag}@${presser.x},${presser.y}`, traps };
+        }
+    }
+    return null;
 }
 
 /**

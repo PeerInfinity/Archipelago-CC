@@ -1,0 +1,87 @@
+/**
+ * ⛓⛓ SEEDLING FIDELITY L67BK4 (wave 31) — L67's Boss Key 4 and L43's Totem, two rooms whose answer the solver could not
+ * reach, each behind its own `CONTACT_FIDELITY` switch (OFF).
+ *
+ * D1 `laneWeigh` — L67 (`Dungeon6/8.oel`): `arrowtrap@48,48 tset 0 shoot 1` stands over `bosskey4`, `button@96,112
+ * tset 0` silences it while pressed, and `pushableblockspear@144,112` stands in the only corridor west. OFF the
+ * clear-path search sinks the block (one thrust W into the pit) and the key's corridor climbs to an EXHAUSTED ladder on
+ * the armed lane. ON the block is parked on the button (N W W S W) and the key is walked to under a silent trap.
+ *
+ * D2 `totemBossFight` — L43 (`Dungeon4/Boss.oel`): `bosstotem@152,168` spans the arena. OFF the frontier reads *"No
+ * strategy row exists for this obstacle"*; ON the `totem` verb plays `bossTotemPolicy` (the `r6-totem-kill` cycle) on
+ * forks and the leg crosses to L37 with no hit.
+ *
+ * The fixtures are the divergence sweep's own captures (request 0) at the slice's base: leg 898 (L67 Boss Key 4), 862
+ * (L43 from the L40 stairs) and 872 (L43 from an L40 pit). Each plan was played on p4g at 0 px
+ * (`CC/docs/cloud-reports/seedling-fidelity-l67bk4.md`).
+ */
+
+import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { gunzipSync } from 'node:zlib';
+
+import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { solveAnytime } from './jsRuntimeSolver.js';
+import { createRunForStaging } from './tapeRunner.js';
+import { restoreRequest } from '../../../scripts/procgen/seedlingSolveRequestCodec.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const capture = (id) => JSON.parse(gunzipSync(readFileSync(join(HERE, 'fixtures', 'l67bk4-witness', `cap${id}.jsonl.gz`)))
+    .toString('utf8').trim().split('\n')[0]);
+
+function request(id) {
+    const { passes, source, ...tape } = restoreRequest(capture(id).requests.find((r) => r.i === 0).request);
+    const levelSource = levelSourceFromAtlas(source.records);
+    return { passes, tape: { ...tape, source, levelSource }, levelSource };
+}
+const solve = (id) => {
+    const { passes, tape } = request(id);
+    return solveAnytime(tape, { passes });
+};
+/** The plan's keys and equips stepped on a fresh run of the request's staging; the run at the end. */
+function replay(id, a) {
+    const { tape, levelSource } = request(id);
+    const run = createRunForStaging(tape.staging, levelSource, { scratchPersistence: true });
+    const transitions = [];
+    a.plan.solution.forEach((k, i) => {
+        if (a.plan.equipsAt.has(i)) run.equipNow(a.plan.equipsAt.get(i));
+        const { transition } = run.advance(new Set(k));
+        if (transition) transitions.push(transition);
+    });
+    return { run, transitions };
+}
+const D1 = (on, fn) => withContactFidelity({ laneWeigh: on }, fn);
+
+describe('fidelity L67BK4 — the switches ship OFF', () => {
+    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_LANE_WEIGH)('laneWeigh is OFF', () => {
+        expect(CONTACT_FIDELITY.laneWeigh).toBe(false);
+    });
+});
+
+describe('fidelity L67BK4 D1 — L67 Boss Key 4 (leg 898), the spear block parked on the trap\'s button', () => {
+    it('OFF: the ladder is EXHAUSTED on arrowtrap@48,48\'s armed lane (the gap, measured)', () => {
+        const a = D1(false, () => solve(898));
+        expect(a.ok).toBe(false);
+        expect(a.message).toMatch(/combat ladder is EXHAUSTED/);
+        expect(a.message).toMatch(/arrowLane:arrowtrap@48,48/);
+    });
+
+    it('ON: the 640-unit request solves (shove, walk), and the replay parks the block on the button with no hit', () => {
+        const a = D1(true, () => solve(898));
+        expect(a.ok).toBe(true);
+        expect(a.work).toBeLessThanOrEqual(640);
+        expect(a.plan.verbs).toEqual(['shove', 'walk']);
+        const { run } = D1(true, () => replay(898, a));
+        expect(run.ledger('playerHits')).toEqual([]);
+        // the block's five thrusts end on button@96,112's tile (6,7), and the trap is silent there
+        expect(run.entities('pushables').get('pushableblockspear@144,112')).toMatchObject({
+            removed: false, rect: { x: 96, y: 112 } });
+        expect(run.entities('armedArrowTraps').has('arrowtrap@48,48')).toBe(false);
+        // the walk ends on the key's cell
+        expect(Math.floor(run.state.x / 16)).toBe(3);
+        expect(Math.floor(run.state.y / 16)).toBe(4);
+    });
+});
