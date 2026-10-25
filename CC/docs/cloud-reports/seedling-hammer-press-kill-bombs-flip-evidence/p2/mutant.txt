@@ -1,0 +1,3 @@
+     × G1's witness at t1251: the band on (488,872) skips it for (488,856) at eta 16, every banded candidate counted in shakeRefused 706ms
+     × every preview banded: no refuge (the kill's "nowhere to be"), not a throw 584ms
+      Tests  2 failed | 13 passed (15)
