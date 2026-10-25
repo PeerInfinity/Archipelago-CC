@@ -34,9 +34,10 @@ const OFF = { iceBlastShield: false, turretCircleKill: false, iceTurretDeathAnim
 describe('TURRETCIRCLE — the switches', () => {
     for (const [k, env] of [['iceBlastShield', 'SEEDLING_ICE_BLAST_SHIELD'],
         ['turretCircleKill', 'SEEDLING_TURRET_CIRCLE_KILL'], ['iceTurretDeathAnim', 'SEEDLING_ICE_TURRET_DEATH_ANIM']]) {
-        it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env[env])(`${k} ships OFF`, () => {
-            expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(false);
-            expect(CONTACT_FIDELITY[k]).toBe(false);
+        // ⛓ planning-13's flip: the three shipped OFF, now ON by default.
+        it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env[env])(`${k} ships ON`, () => {
+            expect(CONTACT_FIDELITY_DEFAULTS[k]).toBe(true);
+            expect(CONTACT_FIDELITY[k]).toBe(true);
         });
     }
 });
@@ -90,7 +91,10 @@ describe('TURRETCIRCLE D2 — the solver kills on the move with the Sword alone'
     const swordBoot = () => l40PocketBoot({});
 
     it('OFF (CORPSEBUMP\'s set): the Sword alone refuses by name, as CORPSEBUMP left it', async () => {
-        const r = await l40PocketTail(await swordBoot(), { ...CORPSEBUMP_D2_SWITCHES, turretCircleKill: false });
+        // ⛓ planning-13's flip: `iceTurretDeathAnim` pinned OFF too (CORPSEBUMP's set) — ON, a standing kill can be
+        // hitless and the weigh refuses later, at the corpse glide's self-check.
+        const r = await l40PocketTail(await swordBoot(), { ...CORPSEBUMP_D2_SWITCHES, turretCircleKill: false,
+            iceTurretDeathAnim: false });
         expect(r.refusal.message).toMatch(/no start delay 0 … 100 kills iceturret@472,400 from the up side .* without a hit/);
     }, 120000);
 

@@ -46,8 +46,9 @@ const solveAt = (seam, i = 0) => {
 };
 
 describe('fidelity BEAMLANE — L107 leg 785, the band-to-band lane at the towers\' live y', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.beamLaneWalk).toBe(false);
+    // ⛓ planning-13's flip: shipped OFF, now ON by default.
+    it.skipIf(process.env.SEEDLING_CONTACT_FIDELITY || process.env.SEEDLING_BEAM_LANE_WALK)('ships ON', () => {
+        expect(CONTACT_FIDELITY.beamLaneWalk).toBe(true);
     });
 
     it('OFF: the 640-unit request runs out at the PHASE arm\'s stall grid (the gap, measured)', () => {
