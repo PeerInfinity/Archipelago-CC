@@ -1002,9 +1002,9 @@
       "files": {
         "botDriverV2.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 15
+        "solverBot.js": 16
       },
-      "sites": 18,
+      "sites": 19,
       "seen": "both",
       "via": [
         "direct"
@@ -1344,9 +1344,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 581
+        "solverBot.js": 586
       },
-      "sites": 720,
+      "sites": 725,
       "seen": "both",
       "via": [
         "direct",
@@ -1544,9 +1544,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 294
+        "solverBot.js": 295
       },
-      "sites": 367,
+      "sites": 368,
       "seen": "both",
       "via": [
         "direct",
@@ -1781,9 +1781,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 4
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "both",
       "via": [
         "direct"
@@ -2833,9 +2833,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 218
+        "solverBot.js": 223
       },
-      "sites": 288,
+      "sites": 293,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2869,9 +2869,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 222
+        "solverBot.js": 227
       },
-      "sites": 295,
+      "sites": 300,
       "seen": "both",
       "via": [
         "const-alias",
@@ -5873,10 +5873,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 67,
+        "solverBot.js": 68,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 88,
+      "sites": 89,
       "seen": "static",
       "via": [
         "import"

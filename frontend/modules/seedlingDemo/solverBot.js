@@ -17497,7 +17497,9 @@ function execCollect(run, perTick, resolved, ctx) {
  * `l39ShaftPress` ON: *"the sweep was blocked by tile:Blue Wall (dark) at (72,24)"*) — the same geometry R5 slice 13
  * declared by hand (`r5Shaft.TOTEM_PART_2.aim`). ON: when the player's box already overlaps the rect's span on ONE
  * axis, the aim keeps that axis' coordinate and takes the rect's centre on the other, so the walk closes on a single
- * axis; any other stance (both or neither span) keeps the centre. `runCollect` still requires real contact.
+ * axis — and only where the centre approach's own path (45° until the shorter axis arrives, then straight), the box
+ * swept along it, meets a Solid; any other stance (both or neither span, or a clear path) keeps the centre. `runCollect`
+ * still requires real contact.
  */
 function collectSpanAim(run, target) {
     const rect = target.rect ?? (run.world.pickups ?? []).find((p) => p.x === target.x && p.y === target.y)?.rect;
@@ -17506,6 +17508,26 @@ function collectSpanAim(run, target) {
     const xOver = box.x < rect.right && box.right > rect.x;
     const yOver = box.y < rect.bottom && box.bottom > rect.y;
     if (xOver === yOver) return null;
+    // ⛔ only where the CENTRE approach is the one that fails: `chooseHeld` holds both axes until the shorter one arrives
+    // (45° first, then the remaining axis — the driver's own shape), so that path's box, swept at 0.5 px, must meet a
+    // Solid (measured: without this the rule moved 10 bounded rows whose centre approach is clear)
+    const cx = (rect.x + rect.right) / 2;
+    const cy = (rect.y + rect.bottom) / 2;
+    const dx = cx - run.state.x;
+    const dy = cy - run.state.y;
+    const diag = Math.min(Math.abs(dx), Math.abs(dy));
+    const corner = { x: run.state.x + Math.sign(dx) * diag, y: run.state.y + Math.sign(dy) * diag };
+    const opts = run.liveGeometryOpts();
+    const sweep = (a, b) => {
+        const n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 0.5);
+        for (let i = 1; i <= n; i += 1) {
+            if (run.world.collidesSolid(playerBoxAt(a.x + (b.x - a.x) * (i / n), a.y + (b.y - a.y) * (i / n)), opts)) {
+                return true;
+            }
+        }
+        return false;
+    };
+    if (!sweep(run.state, corner) && !sweep(corner, { x: cx, y: cy })) return null;
     const why = `the stance's box already overlaps the pickup's ${xOver ? 'x' : 'y'} span [${xOver ? rect.x : rect.y}, `
         + `${xOver ? rect.right : rect.bottom}), so the approach closes on the other axis alone (\`collectSpanAim\`)`;
     return xOver ? { x: run.state.x, y: (rect.y + rect.bottom) / 2, why }
