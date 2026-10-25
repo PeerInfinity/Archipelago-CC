@@ -25290,6 +25290,169 @@ the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) �
   late, whatever the player did.
 - A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).
 
+### Seedling fidelity FIREMOVE — the solver moves a fire block by Fire presses and weighs with it (`fireBlockRoute`, OFF)
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-firemove.md`.
+
+**W0.** Three of the top unserved edges stopped at one missing link: no Fire press in `deriveBlockRoute` and the fire family
+skipped by `deriveWeigh` — L39's opener (survey steps 66/92/133/153: *"no REACHABLE stance inside button@112,144"*), L40's
+t5 holder (step 67 with FIREPUSH ON: *"wandlock@800,400 … NO block in this room can reach it"*), L41's wandlock button
+(step 94, the walk grazing `wandlock@240,96`). Reproduced at the base with FIREPUSH's keys OFF and ON.
+
+**D1 — the route move.** `deriveBlockRoute`'s fire arm (a `PushableBlockFire`, the key ON): one tile per press, the stance
+the cell centre on the far side, the push `hitPushableFromPoint(…, "Fire")` (the absolute arm, `Player.as:1125`) admitting
+exactly that axis, the flame audited by `auditFire` (the state's block positions, the live turret rect): the block and no
+responder that is not `inert`. No sink move. Its own bound `MAX_FIRE_ROUTE_ORDERS` (40): L40's t5 route is 35 orders and
+188 expansions, under the shared `MAX_ROUTE_EXPANSIONS` (2000), which `MAX_ROUTE_ORDERS` (8) would have cut. A `fire` step
+runs `runFire`'s `moves` arm (`execFireMovePress`).
+
+**D2 — the weigh.** `weighFireBlock`: the `press` goal by the fire arm, and a block already home is `parked`.
+`resolveShoveStrategy` dwells on a fire block already on its shut button before the pulser arm. `execWeigh`: a responder
+opened during the last Fire press's own wait is met inside the route (L39's cover opens on the landing tick, and
+`runDwell`'s shut-before refusal would otherwise call the finished weigh vacuous).
+
+**D3 — witnesses.** L41: the survey's own step-94 plan (crusher bait, six Fire presses (7,9)→(11,11), the part) played on
+p4g reproduces the model at 0 px on all 2,343 ticks (`fixtures/firemove-witness/firemove-l41-part3.json`). L40: the
+solver's route for the t5 holder IS FIREPUSH's game-witnessed `FIREPUSH_ROUTE`, press for press; its execution refuses at
+`runFire`'s unmodelled-enemy arm (Bob, BobSoldier, Puncher, BombPusher are not in the block sweep — CORPSEBUMP's row). L39:
+block 2's route is `SHAFT_PLAN`'s presses 4-8, and a stance whose flame reaches `spinner@224,112` is refused by name.
+
+**Movers (local, FIREPUSH's three ON in both arms).** Survey full: step 94 REFUSED → SOLVED 2,346 t; steps 66/92/133/153
+(L39) refuse three links deeper (`button@144,112`), 0.4 s → 5–7 s; 234 rows equal. Keyed sweep (58 legs, L38–L41 + L107, ×2):
+one key-driven mover, leg 871 (L41 Totem Part 240,144), failed → planned (its 90 s leg budget cut the game playback at
+t2360 of 2505); legs 368/371/404 differ run to run and answer OFF = ON on their captured requests.
+
+**Trap candidates.**
+- A census volume outlives its body: L40's dead turret's attack rect still walls the far-side stances unless the walk
+  carries it as a contact — the route search's floor test is the planner's, contacts and all.
+- A verb's own wait can finish the next verb's condition: a fire press waits its window's tail past the landing, so a
+  responder that opens on the landing tick is already open when the dwell starts.
+- A sweep `timeout` can be a SOLVED plan whose playback outran the leg budget: read `history[].verbs` before calling it a
+  failure.
+
+### Seedling fidelity CORPSEBUMP — a block's glide and a turret corpse's slide see the stepped bodies (`blockSweepBodies`); an ice turret's corpse is a weigh's holder (`corpseBumpWeigh`) — both OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-corpsebump.md`.
+
+**W0 — what stops a glide.** `PushableBlock*`'s ctor pushes `"Enemy"` and `"Player"` onto `Mobile.solids`
+(`["Solid","Tree","Rock","Rope","ShieldBoss"]`), and `IceTurret.death()` pushes the same two. Every chaser (Bob, BobSoldier,
+Puncher, Bulb, Flyer) is `type = "Enemy"`, and a live ice turret is too. `Game.loadlevel` adds the chasers (`:2276-2301`) and
+the ice turret (`:2296`) before the blocks (`:2382-2384`), and `addUpdate` prepends, so a block reads every one of them where
+the previous tick left it. A Puncher (`:2301`) is added after the turret, so it updates before the corpse.
+
+**D1 (`blockSweepBodies`).** `levelRun.pushableCtx` also asks every live bridged chaser (none under `noDamage`, where they
+are not stepped) and every unremoved ice turret, alive or a corpse. A turret corpse's slide stops on the spinners and on the
+chasers added before it; a puncher within 4 px of the slide refuses by name. `runFire`'s enemy-room refusals narrow to the
+bodies those sweeps do not consult (`run.blockSweepBodyIds`; `enemiesUnseenByBlockSweep`'s `seenIds`). Witness (p4g, 0 px,
+`corpsebump-l4-bob-wedge`): L4, the block shoved east stops at x 48.5 against `bob@64,64`. With the key OFF the model parts
+from the game at t79.
+
+**D2 (`corpseBumpWeigh`).** `deriveWeigh` asked the pushable roster only, so L40's t2 group (`button@480,384`, whose holder is
+`iceturret@472,400`'s corpse) was a guard-(iii) wall. `deriveWeighSource` adds the corpse as a second source, used only
+where no block reaches and none is parked: a turret whose corpse tile shares an axis with the presser. Each press is audited
+against a corpse at that cell. `execCorpseWeigh` runs the kill (`killForCorpse`), then the Fire bumps (each next stance read
+off where the corpse comes to rest), then the fade, then a wait for the shake to settle. The dangerMap no longer prices a
+dead turret at its placement. Witness (p4g, 0 px over 462 ticks, `corpsebump-l40-t2-holder`): from the pocket, the solver
+kills the turret, bumps the corpse north twice onto t2 (it rests there from t215), and walks west through the opened lock
+into the pit.
+
+**The kill is the finding.** With the Sword alone no standing kill of `iceturret@472,400` is hitless. The model shows no
+hitless one over 72 timings, and the mechanism explains why: the turret starts its next shot on the tick its 30-tick
+i-frame runs out, the third landing comes after that shot fires, and the shield protects only while moving. The Ghost Sword
+(damage 2) kills in two landings, before the shot. The AP rule (`Fire AND (Ghost Spear | Sword)`) admits the Sword.
+
+**Trap candidates.**
+- One update order is not the whole order. The block reads the Puncher a tick late, but the corpse reads it on the same
+  tick, so each mover's sweep needs its own row.
+- A glide's speed equals the corpse's two-cycle step (0.5 px). "Moved at most 0.5 px" is therefore not a rest test; compare
+  against two and four ticks back.
+- One press can carry a corpse two tiles. A plan's tile list is the audit, and the presses follow the corpse.
+
+**Movers (ON, measured locally; the CI dispatches are in the report).**
+- The full survey, A (FIREPUSH's three ON) vs B (+ both keys): one row differs, L69 step 148, a timeout in A that solves
+  alone in A.
+- The keyed sweep ×2 over 104 legs (L4, L16, L22, L25, L40, L65, L98): 0 key-driven verdicts; the two B2-only legs replay
+  A = B byte-identically.
+- Probes standard ON: 11/11.
+- The bounded vitest ON moves `botDriverV2.test.js`'s five L4-shove rows. They shove past a living `bob@64,64` after an
+  8-tick hold, and the game stops that block, so a flip owes them a re-pin.
+
+### Seedling fidelity MISCRES — REMBODY's residue (`forecastCorpseFade`, `nonChaserRemovalBlocks`), leg 785's work (a budget: handed over), three unowned rows (`phaseDodgeArrivalStall`) — all OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-miscres.md`.
+
+**D1 — the forecast fades a corpse (`forecastCorpseFade`).** `chaserForecastNow` cloned a live corpse (`destroy`) or a body
+in its "die" and never stepped either on: only a BobSoldier's corpse faded, so every other corpse stayed a sibling wall to
+the end of the forecast. ON the clone runs `Mobile.death`'s fade (on screen, removed at alpha <= 0, a wall to the rest of
+that tick under `removedBodyBlocks`) and its "die" anim to `destroy` (its own copy). Witnessed on p4g with SKINSWING's
+`skinswing-l71-resite`: the forecast seeded at t50..t62, the tape's sword presses mirrored through the forecast's own
+`hit`, equals the live run (= the game at 0 px) through t94; OFF it leaves at t64 (1.164 px; 10.5 px by t80). The
+mirrored presses matter: without them the t65 hits on both survivors read as a 4.5 px forecast error at t66.
+**D1 — non-chaser removals (`nonChaserRemovalBlocks`).** A drill, wallflyer or ice turret removed in its update is still in
+the "Enemy" list for the movers stepped after it that frame; ON a `removedTick` stamp keeps it in `drillWallsNow`,
+`drillEnemyBodiesTest` and `chaserStaticEnemyBoxesNow` for that tick. Unwitnessed: no AP_1 recording has such a removal
+beside a later mover sweeping into its box (mutant m3 survives every row — named).
+
+**D2 — leg 785 (L107) is a budget.** Per-site census of the page's own captured requests: the work is the dodge rung's
+phase arm (`phase-dodge`), one full 89x8 stall scan = 712 units. The leg solves (dodge + walk, 387..390 t) at 12 of 61
+arrival clocks at 731 units — above the first request's 640, inside the held retry's 2,560 — which is the done/failed flip
+between CI repeats; at the other 49 the room REFUSES unbudgeted (`beamtower@208,120`, the ladder exhausted) after 7,656
+units a pass. The beam towers' cycle is 52 t, inside the stall window: the bound is not the cause. Handed to the JS arc.
+
+**D3.** `opentree` typed "Solid" vs the game's "Tree": no reader can tell (pinned). The owl's `Game.talkingPic` is render
+only; the talk is the modelled intro freeze; `run.talkingNow` does not name it (handed to the skin). IGFADE's leg 650
+(L76 from L77, id 637 here): the verdict is the ARRIVAL CLOCK's — 18 of 61 solve; elsewhere every doorstep stall of the
+phase arm stands in range of the type-31 tile (8,6) by `lavachain@128,64`, and standing there turns it (with `igneousLava`
+OFF the same request solves). `phaseDodgeArrivalStall` asks a stall at the walk's start right after the doorstep's
+own in a room with type-31 tiles: the captured request solves in 183 units (727 t), 61 / 61 clocks inside 640, and the 18
+clocks OFF already solves keep OFF's plans (asked FIRST, it pre-empted short doorstep stalls: 553 -> 722 t at 5587..5590).
+
+**Trap candidates.**
+- A forecast compared against a live tape is only a witness of what the forecast is TOLD: mirror the tape's presses
+  (`hit`), or the first knockback reads as a model error.
+- A stall bound measured against the hazard's period can still be the wrong place: the stall's POSITION is part of the
+  question when something in the room is driven by the player's presence (an Igneous tile).
+- A verdict that flips between CI repeats is often a function of the arrival clock: census the captured request across
+  `seam.time` before calling it noise.
+
+### Seedling fidelity L40RES — a stance walk that re-enters its own order walks on along its frontier (`stanceReentryNextDoor`); a spinner sees a lock's turn-off one tick later (`spinnerLockLag`) — both OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-l40res.md`.
+
+**D2 — the STANCE_REENTRY (survey step 93, L40 `Totem Part 64,144` from the L39 teleporter).** The lock room (tiles
+29-31 × 23-34) has four doors: W `wandlock@448,432` and E `wandlock@512,480` (group 2, opened only by `button@480,384`
+INSIDE the room), S `wandlock@480,560` (group 3, `buttonroom@880,768`, latched, behind `chest@880,816` and
+`burnabletree@872,784`), N the bosslock. The stance hypothesis holds the S door (its opener latches) and not group 2
+(guard (iii)'s weigh-wall: a plain Button, no block). So the W door's hold stance (488,392) was derived reachable THROUGH the
+S door. That stance is right, but the walk to it asked its own frontier nearest-to-aim and named the W door again.
+`stanceReentryNextDoor` (OFF): before the refusal stands, the walk passes to the next frontier entry that resolves
+(`nextPastReentry`, the L12KEYLINE shape), passing over by name an entry whose stance walk is this walk again. Step 93 then
+walks to the chest (the S door's chain: chest, tree, buttonroom) and ends 1,266 ticks in, in the chest walk's
+`kill (spinner@880,848) by press` (`PRESS_KILL_REBOOT_GUARD`): the hammer arc's region.
+
+**D1 — leg 368's seam-variant hit (`in_L41_0_160`, seam time 5290).** Re-staged from a captured request, the solver plans
+1600 t (seams 5290-5292; 5280-5287 give 1558, 5288 gives 1584, 5289 refuses on the shake band). On p4g the game hits the
+player once at t1222 (209.20,147.77), the sweep's tick and point. **The model replay takes the same hit to the bit**
+(`spinner@192,144`'s hammer line; the walk's own press struck that spinner on tick 1204), and the solver's expected
+trajectory carries the knockback. The plan was not hit-free in the model. It passed because the dashed walk's
+certificate (`probeSamples` → `dangerDuringTransit`) carries the walk's chasers, arrows, spits and grenades per sample
+but no spinners, so the hammer is priced from the press-blind `run.spinnerForecast`, 28.31 px from the struck body.
+That is the hit-aware spinner forecast: handed to the hammer arc. The same witness found a model divergence elsewhere:
+`spinner@192,160` reflects off `wandlock@208,160` at t1172 on the game and passes it in the model. `Game.loadlevel` adds
+the lock family and `cover` (`Game.as:2355-2364`) before `spinner` (`:2416`) and `World.addUpdate` prepends, so a Spinner
+sweeps a responder Solid on its turn-off frame. `spinnerLockLag` (OFF): `spinnerCtx` leaves out a fade responder that
+turned off on the latest step (`activators.openActivatorIdsBeforeLatestStep`: `held === opensOnTick(fade)`, no new run
+state). ON, every spinner of the room matches the game t1160-1230 (`fixtures/l40res-witness/`).
+
+**Trap candidates.**
+- A hit the sweep calls a "game hit" can be the model's own: replay the plan before reading it as a contact divergence.
+- A certificate that previews the walk's presses must price every body family those presses move. A sample that carries
+  the chasers but not the spinners prices a struck spinner where it was never going to be.
+- "Updates before the responders" is a third order: a body added after the lock family sweeps a lock Solid on its
+  turn-off frame, even though the player (added first) walks through it on that same frame.
+- A STANCE_REENTRY whose stance was derived under the hypothesis names a door the walk never asked: read the hypothesis
+  before calling the stance wrong.
+
 ### Seedling fidelity DIGESTREAD — a run getter read no longer moves `run.stateDigest()` (no switch; byte-identical ticks)
 
 Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-digestread.md`.

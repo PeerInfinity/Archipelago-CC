@@ -3118,3 +3118,229 @@ for (const [id, name, fn, description] of [
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/**
+ * ⛓ GRAPHICS G6 — the effects switch in a real browser: `jsRuntime.html?graphics=seedling` (room mode; lights and
+ * effects ON by default under a stack) mounted STANDALONE in the row's own iframe and driven through its own
+ * `__swfBridge`: to `Game(61, 104, 144)` (Dungeon 6's rain), where `set({ effects: 'off' })` LIVE leaves no drop
+ * alive and no drop op drawn; then to `Game(76, 152, 92)` (the lava room), where the lava glow's `solidBmp` edges are
+ * drawn with the effects ON and gone with them OFF (fewer night ops, the room still darkened); and back ON. No panel,
+ * preset or AP state is touched; the iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeGraphicsEffectsSwitch(tc) {
+    const frame = document.createElement('iframe');
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const enter = (args) => win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args }]);
+        tc.assertEqual('the effects are ON by default under a stack (rain + lava glow)', 'on/true/rain,lavaGlow',
+            `${g.effectsSwitch.setting}/${g.effectsSwitch.on}/${g.effectsSwitch.families.join(',')}`);
+        const drops = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:fx/droplet').length;
+        enter([61, 104, 144]);
+        const rain = await tc.pollForValue(() => (rt.run?.level === 61 && drops(g.effects) > 0 ? g.effects : null),
+            'the page drew level 61\'s rain', 15000, 100);
+        tc.log(`rain ON: ${rain?.droplets} drop(s) alive, ${drops(rain)} drawn`);
+        tc.reportCondition('effects ON: the rain is drawn', !!rain);
+        await g.set({ effects: 'off' });
+        const dry = await tc.pollForValue(() => (g.effects && g.effects.droplets === 0 && drops(g.effects) === 0 ? g.frames : null),
+            'the switch stopped the rain live', 5000, 50);
+        tc.reportCondition('effects OFF (live): no drop alive, none drawn', !!dry);
+        await tc.pollForCondition(() => g.frames >= (dry ?? 0) + 30, 'thirty more paints with the effects off', 5000, 50);
+        tc.assertEqual('effects OFF: still no drop after thirty paints', '0/0', `${g.effects?.droplets}/${drops(g.effects)}`);
+        await g.set({ effects: 'on' });
+        enter([76, 152, 92]);
+        const glow = await tc.pollForValue(() => (rt.run?.level === 76 && g.lights.solid > 0 && g.lights.paints > 2 ? g.lights : null),
+            'the page drew level 76\'s lava glow (its solidBmp edges)', 15000, 100);
+        tc.log(`lava ON: ${JSON.stringify(glow)}`);
+        tc.reportCondition('effects ON: the lava glow is drawn', !!glow);
+        await g.set({ effects: 'off' });
+        const dark = await tc.pollForValue(() => (g.lights.solid === 0 && g.lights.alpha > 0 ? g.lights : null),
+            'the switch removed the lava glow live', 5000, 50);
+        tc.log(`lava OFF: ${JSON.stringify(dark)}`);
+        tc.assertEqual('effects OFF: no lava edge, fewer night ops, the room still darkened', 'true/true',
+            `${!!dark && dark.ops < glow.ops}/${(dark?.alpha ?? 0) > 0}`);
+        await g.set({ effects: 'on' });
+        const back = await tc.pollForValue(() => (g.lights.solid > 0 ? g.lights : null), 'the lava glow came back on live', 5000, 50);
+        tc.reportCondition('the effects switched back on live', !!back);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 76 and did not halt', '76/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-effects-switch',
+    name: 'Seedling JS runtime: the effects switch (rain, lava glow) in the original graphics (G6)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe and drives it through its own '
+        + '__swfBridge: at level 61 the rain is drawn with the effects ON and stops LIVE with them OFF; at level 76 the lava '
+        + 'glow\'s edges are drawn ON and gone OFF (the room still darkened); back ON; every sheet decodes, no console error. '
+        + 'Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsEffectsSwitch,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── ⛓ EVENT GOALS (slice `seedling-js-event-goals`): the JS runtime walks a saved-obstacle EVENT to its flag ──
+
+/**
+ * L16's rope (`flag:L16:0`, `rope@32,16` — the break leg the walk-order probe's J stalled on, `level_36 →
+ * level_16__r1c1`): on `seedling_playthrough` (the preset whose rules carry the event), runtime js + the solver mode
+ * ON, the sword granted through the AP item path (removed after), the page teleported to the event's side region's
+ * own arrival spawn. The Playback Bot asks for the event location BY NAME (`_publishWalkTo`, its break step's own
+ * call), the controller maps it (`atlasEventGoal`), the page walks the solver's `clear-tag`, and the leg completes
+ * on the GAME's flag: `{16,0}` in `persistence_cleared`, reported once as `pendingCheck <seq>|16|0|0`, collected by
+ * the event collector as a LOCAL check of the event location. The row sets its own state: the preset load is a
+ * fresh game (the flag is asserted unset first).
+ */
+const ROPE_EVENT = Object.freeze({ eventId: 'flag:L16:0', side: 'level_16__r1c1', flag: { level: 16, tag: 0 } });
+
+/**
+ * `botOnSeedlingPreset`'s steps (the bot mounted first, the PRODUCTION load path, a fresh adapter on the js transport)
+ * for a preset whose rules load outlives that helper's 8 s wait: `seedling_playthrough` (measured: no
+ * `stateManager:rulesLoaded` inside 8 s on the box). Appended, not a parameter of the shared helper.
+ */
+async function botOnLargeSeedlingPreset(tc, presetPath, { rulesLoadMs = 60000 } = {}) {
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const botPanel = await tc.pollForValue(() => getBotPanel(), 'playback bot panel instance', 5000, 100);
+    const bot = botPanel?.getBot?.() ?? null;
+    tc.reportCondition('the playback bot is mounted', !!bot);
+    if (!bot) return null;
+    bot.reset?.();
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+    tc.log(`runtime = js (session override); loading ${presetPath}…`);
+    const rulesJson = await (await fetch(presetPath)).json();
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', rulesLoadMs);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 10000);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === 'js' && p.adapter && p.adapter !== staleAdapter && p._initRuntime === 'js' ? p : null;
+    }, 'the flash panel mounted the js transport (a fresh adapter)', 30000, 250);
+    tc.assertEqual('the panel is on the js transport', 'js', panel?.transport ?? null);
+    return panel ? { bot, panel } : null;
+}
+
+export async function seedlingJsRuntimeSolverCutsRopeEvent(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    let rt = null;
+    let granted = false;
+    try {
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        const ready = await botOnLargeSeedlingPreset(tc, PLAYTHROUGH_PATH);
+        if (!ready) return tc.getOverallResult();
+        const { bot, panel } = ready;
+        const rules = await (await fetch(new URL(PLAYTHROUGH_PATH, document.baseURI).href)).json();
+        const pl = rules.preset_sidecars?.['1']?.[ROPE_EVENT.side]?.playable_payload ?? null;
+        const spawn = pl?.exits?.find((e) => e.entrance_spawn)?.entrance_spawn ?? null;
+        tc.reportCondition(`seedling_playthrough has region ${ROPE_EVENT.side} with an arrival spawn`, !!spawn);
+        if (!spawn) return tc.getOverallResult();
+        const bound = await tc.pollForValue(() => (panel._apLoadResult && panel.seedlingPlaybackSurface()?.atlas ? panel : null),
+            'the panel finished its AP load and holds the name → goal map', 30000, 250);
+        tc.reportCondition('the panel\'s AP load finished', !!bound);
+        const event = (panel.seedlingPlaybackSurface()?.atlas?.events ?? []).find((e) => e.eventId === ROPE_EVENT.eventId) ?? null;
+        tc.reportCondition(`the map carries the event ${ROPE_EVENT.eventId}`, !!event);
+        if (!bound || !event) return tc.getOverallResult();
+        rt = await tc.pollForValue(() => {
+            const r = frameOf(panel)?.__seedlingJsRuntime ?? null;
+            return r?.run && r.vanilla ? r : null;
+        }, 'the JS runtime page is running a room of the vanilla map', 15000, 200);
+        tc.reportCondition('the JS page runs the vanilla map', !!rt);
+        if (!rt) return tc.getOverallResult();
+        const win = frameOf(panel);
+        const flagSet = () => (JSON.parse(rt.game.botStatus()).persistence_cleared ?? [])
+            .some((c) => c.level === ROPE_EVENT.flag.level && c.tag === ROPE_EVENT.flag.tag);
+        tc.assertEqual('fresh game: the flag {16,0} is unset and the event location unchecked', 'false/false',
+            `${flagSet()}/${snapshotFacts(tc).checked.has(event.location)}`);
+        const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+            'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+        tc.reportCondition('the page is in solver mode', !!pushed);
+
+        await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+        granted = true;
+        await tc.stateManager.pingWorker('after-item-grant', 5000);
+        const armed = await tc.pollForCondition(() => rt.flags?.hasSword === true,
+            'the host delivered the sword to the page (Main.hasSword)', 10000, 100);
+        tc.reportCondition('the page holds the sword', !!armed);
+        if (!armed) return tc.getOverallResult();
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [pl.level, spawn.x, spawn.y] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === pl.level && rt.flags?.hasSword === true,
+            `the page is in level ${pl.level} with the sword`, 10000, 100);
+        // (A host teleport is no crossing: the region binding does not follow it, and an event resolves BY NAME.)
+        tc.log(`the bot's region: ${bot.getCurrentRegion?.() ?? '?'}`);
+        tc.reportCondition(`teleported into level ${pl.level}`, !!there);
+        if (!there) return tc.getOverallResult();
+
+        const checksBefore = reportedChecks(win).length;
+        const collectedBefore = getSeedlingRegionGlue()?.stats?.eventsCollected ?? 0;
+        bot._publishWalkTo({ kind: 'location', name: event.location });
+        const accepted = await tc.pollForCondition(() => rt.playback.goal?.event?.tag?.level === ROPE_EVENT.flag.level,
+            'the page took the event goal (it used to refuse it: "walked on the wasm runtime")', 10000, 100);
+        tc.assertEqual('the page accepted the EVENT goal', true, !!accepted);
+        if (!accepted) {
+            tc.log(`controller refusal: ${JSON.stringify(bot._resolveController?.()?.lastRefusal ?? null)}`, 'error');
+            return tc.getOverallResult();
+        }
+        const s = await settledSolverWalk(tc, rt, 90000);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('the walk is DONE', 'done', rt.playback.state);
+        tc.assertEqual('… on the game\'s own flag {16,0} (persistence_cleared)', true, flagSet());
+        tc.assertEqual('the SOLVER drove it: solved once, no decline, no refutation', '1/0/0',
+            `${s.solves}/${s.declines}/${s.refutations}`);
+        tc.assertEqual('the solver goal was clear-tag {16,0} rope@32,16', 'clear-tag|16|0|rope@32,16',
+            `${s.lastSolve?.goal?.kind}|${s.lastSolve?.goal?.tag?.level}|${s.lastSolve?.goal?.tag?.tag}|${s.lastSolve?.goal?.obstacle}`);
+        tc.assertEqual('the flag\'s clear was reported once as pendingCheck <seq>|16|0|0', 1,
+            reportedChecks(win).slice(checksBefore).filter((c) => c.level === 16 && c.tag === 0).length);
+        const collected = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(event.location),
+            `the event collector collected "${event.location}" (a LOCAL check)`, 10000, 100);
+        tc.assertEqual('the event location is checked in the state manager', true, !!collected);
+        tc.assertEqual('… by the glue\'s event collector, once', 1,
+            (getSeedlingRegionGlue()?.stats?.eventsCollected ?? 0) - collectedBefore);
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-cuts-rope-event',
+    name: 'Seedling JS runtime: the solver mode walks a saved-obstacle EVENT to its flag (L16\'s rope, clear-tag)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_playthrough: the sword is granted '
+        + 'through the AP item path (removed after), the page teleported to level_16__r1c1\'s arrival, and the Playback '
+        + 'Bot asks for "L16 flag 0: rope@32,16 cleared" by name. The page walks the solver\'s clear-tag (it used to '
+        + 'refuse every event: "walked on the wasm runtime"), and the leg completes on the game\'s own flag {16,0}: '
+        + 'persistence_cleared, one pendingCheck <seq>|16|0|0, and the event collector\'s LOCAL check of the location. '
+        + '0 HALT, no refutation.',
+    testFunction: seedlingJsRuntimeSolverCutsRopeEvent,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

@@ -567,6 +567,12 @@
             "_comment": "GRAPHICS G5. jsRuntime.html?graphics=seedling (room mode, lights ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 40 (Dungeon 4/2, lightalpha 0.1): the night layer is drawn (its lights) and composited at 0.72 — the canvas darker than the same ops painted without it (checkNight); set({lights:'off'}) applies live and the canvas is then byte-identical to the pre-G5 paint (0 differing channels); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-effects-switch",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G6. jsRuntime.html?graphics=seedling (room mode, lights + effects ON by default) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge: at level 61 the rain is drawn, set({effects:'off'}) applies live and no drop is alive or drawn thirty paints on; at level 76 the lava glow's solidBmp edges are drawn ON and gone OFF (fewer night ops, the room still darkened); back on live; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -2019,6 +2025,12 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "seedling-js-runtime-solver-cuts-rope-event",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-event-goals. Runtime js + the solver mode ON on seedling_playthrough: the sword granted, the page teleported to level_16__r1c1, and the Playback Bot asks for the L16 rope EVENT by name; the page walks the solver's clear-tag and completes on the game's flag {16,0} (persistence_cleared, one pendingCheck <seq>|16|0|0, the event collector's local check). Batch seedling-js."
         }
     ]
 }

@@ -1,0 +1,57 @@
+598	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_96_0	failed	5463	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:false:kill-chaser:	the solver declined level_71__r0c6 -> level_75 in level 71 (pass dashless): solverBot(wasm-exit-71) reach-exit (96,0)->L75: the combat ladder is EXHAUSTED. The corridor passes through danger at (280.2
+599	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_224_304	done	5555	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:true::	
+600	level_71__r0c6 <- in_L72_0_256 -> exit:out_teleporter_304_96	done	5769	dashless:true:: full:true::	
+603	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_96_0	done	5843	dashless:true:: full:true::	
+604	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_224_304	done	5920	dashless:true:: full:true:sword-dash:	
+605	level_71__r0c6 <- in_L75_64_224 -> exit:out_teleporter_304_96	done	6303	dashless:true:: full:true::	
+613	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_96_0	done	6727	dashless:true:: full:true:sword-dash:	
+614	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_224_304	done	7147	dashless:true:: full:true::	
+615	level_71__r0c6 <- in_L80_32_0 -> exit:out_teleporter_304_96	done	7222	dashless:true:: full:true::	
+618	level_71__r13c7 <- in_L85_80_0 -> exit:out_teleporter_16_304	done	7494	dashless:true:: full:true::	
+625	level_74 <- in_L73_64_0 -> exit:out_teleporter_16_144	done	7572	dashless:true:: full:false:detour:	
+626	level_74 <- in_L73_64_0 -> exit:out_teleporter_288_144	done	8064	dashless:true:: full:true::	
+628	level_74 <- in_L75_64_0 -> exit:out_teleporter_16_144	done	8135	dashless:true:: full:true::	
+629	level_74 <- in_L75_64_0 -> exit:out_teleporter_288_144	done	8211	dashless:true:: full:true:sword-dash:	
+661	level_85 <- in_L71_16_304 -> exit:out_teleporter_80_0	done	8672	dashless:true:: full:true::	
+662	level_85 <- in_pit_L84_2_3 -> exit:out_teleporter_80_0	done	8743	dashless:true:: full:true::	
+663	level_85 <- in_pit_L84_3_3 -> exit:out_teleporter_80_0	done	8850	dashless:true:: full:true::	
+664	level_85 <- in_pit_L84_2_4 -> exit:out_teleporter_80_0	done	8938	dashless:true:: full:true::	
+665	level_85 <- in_pit_L84_4_3 -> exit:out_teleporter_80_0	done	9036	dashless:true:: full:true::	
+666	level_85 <- in_pit_L84_3_4 -> exit:out_teleporter_80_0	done	9123	dashless:true:: full:true::	
+667	level_85 <- in_pit_L84_4_4 -> exit:out_teleporter_80_0	done	9224	dashless:true:: full:true::	
+668	level_85 <- in_pit_L84_4_5 -> exit:out_teleporter_80_0	done	9315	dashless:true:: full:true::	
+669	level_85 <- in_pit_L84_2_5 -> exit:out_teleporter_80_0	done	9415	dashless:true:: full:true::	
+670	level_85 <- in_pit_L84_3_5 -> exit:out_teleporter_80_0	done	9516	dashless:true:: full:true::	
+636	level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112	done	9737	dashless:true:: full:true:sword-dash:	
+638	level_76 <- in_L77_0_32 -> exit:out_teleporter_304_112	done	10492	dashless:true:: full:true::	
+639	level_77 <- in_L76_304_112 -> exit:out_teleporter_0_32	done	10562	dashless:true:: full:true::	
+640	level_77 <- in_L76_304_112 -> exit:out_teleporter_96_304	failed	10637	dashless:false:: full:false::	the solver declined level_77 -> level_78__r0c16 in level 77 (refusal): solverBot(wasm-exit-77): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavat
+641	level_77 <- in_L78_256_0 -> exit:out_teleporter_0_32	failed	10707	dashless:false:: full:false::	the solver declined level_77 -> level_76 in level 77 (refusal): solverBot(wasm-exit-77): no corridor for goal reach-exit toward (8,40) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192
+642	level_77 <- in_L78_256_0 -> exit:out_teleporter_96_304	done	10768	dashless:true:: full:true::	
+643	level_78__r0c2 <- in_L79_64_224 -> exit:out_teleporter_32_0	done	10841	dashless:true:: full:true::	
+644	level_78__r0c16 <- in_L77_96_304 -> exit:out_teleporter_256_0	done	10918	dashless:true:: full:true::	
+914	level_71__r16c19 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_teleporter_304_256	done	10998	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:true::	
+915	level_71__r16c19 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_teleporter_304_256	done	11279	dashless:true:: full:true::	
+917	level_71__r16c19 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_teleporter_304_256	done	11574	dashless:true:: full:true::	
+754	level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96	done	11700	dashless:true:: full:true::	
+755	level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112	done	11783	dashless:true:: full:true::	
+910	level_71__r14c12 <- in_L72_0_256 ~> level_71__r0c6 -> exit:out_pit_10_17	failed	11861	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:false:detour:	the solver declined level_71__r14c12 -> level_82 in level 71 (pass dashless): solverBot(wasm-exit-71) reach-pit (12,13)->L82: the combat ladder is EXHAUSTED. The corridor passes through danger at (280
+911	level_71__r14c12 <- in_L75_64_224 ~> level_71__r0c6 -> exit:out_pit_10_17	done	11955	dashless:true:: full:true:sword-dash:	
+913	level_71__r14c12 <- in_L80_32_0 ~> level_71__r0c6 -> exit:out_pit_10_17	done	12460	dashless:true:: full:true:sword-dash:	
+601	level_71__r0c6 <- in_L72_0_256 -> location:Level 071 - Chest	done	5474	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:true::	
+627	level_74 <- in_L73_64_0 -> location:Level 074 - Darkshield	done	5749	dashless:true:: full:true:sword-dash:	
+602	level_71__r0c6 <- in_L72_0_256 -> location:L71 flag 2: shieldlock@288,256 cleared	done	6220	dashless:false:axe-dodge: full:false:walk: || dashless:false:: full:true::	
+606	level_71__r0c6 <- in_L75_64_224 -> location:Level 071 - Chest	done	5470	dashless:true:: full:true:sword-dash:	
+630	level_74 <- in_L75_64_0 -> location:Level 074 - Darkshield	done	5947	dashless:true:: full:true::	
+607	level_71__r0c6 <- in_L75_64_224 -> location:L71 flag 2: shieldlock@288,256 cleared	done	6386	dashless:true:: full:true:sword-dash:	
+616	level_71__r0c6 <- in_L80_32_0 -> location:Level 071 - Chest	done	5470	dashless:true:: full:true::	
+612	level_71__r0c6 <- in_L76_0_80 -> location:L71 flag 2: shieldlock@288,256 cleared	skipped			
+617	level_71__r0c6 <- in_L80_32_0 -> location:L71 flag 2: shieldlock@288,256 cleared	done	5591	dashless:true:: full:true::	
+608	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_96_0	done	5482	dashless:true:: full:true:sword-dash:	
+609	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_224_304	done	5473	dashless:true:: full:true::	
+610	level_71__r0c6 <- in_L76_0_80 -> exit:out_teleporter_304_96	done	5469	dashless:true:: full:true::	
+611	level_71__r0c6 <- in_L76_0_80 -> location:Level 071 - Chest	done	5475	dashless:true:: full:true::	
+916	level_71__r16c19 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_teleporter_304_256	done	5582	dashless:true:: full:true::	
+635	level_76 <- in_L71_304_256 -> exit:out_teleporter_0_80	done	5593	dashless:true:: full:true::	
+637	level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80	done	5597	dashless:true:: full:true:sword-dash:	
+912	level_71__r14c12 <- in_L76_0_80 ~> level_71__r0c6 -> exit:out_pit_10_17	done	5613	dashless:true:: full:true:sword-dash:	

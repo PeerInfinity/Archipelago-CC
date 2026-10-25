@@ -140,7 +140,9 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
     }, 120_000);
 
     it('ON: refused by name with no 400-tick grind — the cover is a wall guard (iii) cannot redeem durably', async () => {
-        const e = await withContactFidelity({ coverWeighRefine: true }, () => caught(solveL39()));
+        // ⛓ fireBlockRoute named OFF (planning-12's w29b flip): ON a fire block reaches button@112,144 and the refusal
+        // moves three links deeper (button@144,112, fidelityFireMove); this row pins coverWeighRefine's own refusal.
+        const e = await withContactFidelity({ coverWeighRefine: true, fireBlockRoute: false }, () => caught(solveL39()));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain('no REACHABLE stance inside button@112,144 in level 39');
         expect(e.message).toContain('cover@112,144 — its group t=2 publishes only while a Solid sits on button@160,144, '

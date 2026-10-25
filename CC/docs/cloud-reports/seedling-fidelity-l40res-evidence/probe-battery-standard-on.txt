@@ -1,0 +1,70 @@
+### probe-seedling-wasm-logical-links.mjs --only=B,R
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 24 rc=0
+### probe-seedling-wasm-vanilla-map.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 23 rc=0
+### probe-seedling-wasm-arrival-composites.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 95 rc=0
+### probe-seedling-wasm-midroom-replan.mjs --only=D
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 10 rc=0
+### probe-seedling-restart-route.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 18 rc=0
+### probe-seedling-restart-warp.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 28 rc=0
+### probe-seedling-wasm-adopt.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 51 rc=0
+### probe-seedling-obstacle-events.mjs --only=W,J
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 22 rc=0
+### probe-seedling-wasm-generated-playback.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 35 rc=0
+### probe-seedling-loop-restart.mjs 
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 30 rc=0
+### probe-seedling-seal-delivery.mjs --only=A
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+PASS rows: 6 rc=0
+RESTORED

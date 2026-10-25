@@ -9,7 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    CAMERA_SETTING_VALUES, GRAPHICS_SETTING_VALUES, LIGHTS_SETTING_VALUES, cameraMode, graphicsPageParams, graphicsSchemaProps, graphicsStack,
+    CAMERA_SETTING_VALUES, EFFECTS_SETTING_VALUES, GRAPHICS_SETTING_VALUES, LIGHTS_SETTING_VALUES, cameraMode, effectsMode, graphicsPageParams, graphicsSchemaProps, graphicsStack,
     lightsMode,
 } from './seedlingGraphicsSettings.js';
 import { CAMERA_MODES } from '../seedlingDemo/seedlingSkinRenderer.js';
@@ -45,6 +45,7 @@ describe('seedlingGraphicsSettings', () => {
         expect(schema.properties.seedlingJsGraphics).toMatchObject({ type: 'string', default: 'rects' });
         expect(schema.properties.seedlingJsCamera).toMatchObject({ type: 'string', default: 'room', enum: ['room', 'follow'] });
         expect(schema.properties.seedlingJsLights).toMatchObject({ type: 'string', default: 'on', enum: ['on', 'off'] });
+        expect(schema.properties.seedlingJsEffects).toMatchObject({ type: 'string', default: 'on', enum: ['on', 'off'] });
     });
 
     it('⛓ G5 — the lights: ON by default (nothing on the URL), `off` rides as lights=off', () => {
@@ -54,5 +55,15 @@ describe('seedlingGraphicsSettings', () => {
         expect(graphicsPageParams('seedling', 'room', 'off')).toBe('graphics=seedling&lights=off');
         expect(graphicsPageParams('seedling', 'follow', 'on')).toBe('graphics=seedling&camera=follow');
         expect([lightsMode('off'), lightsMode('on'), lightsMode('nonsense'), lightsMode(undefined)]).toEqual(['off', 'on', 'on', 'on']);
+    });
+
+    it('⛓ G6 — the effects: ON by default (nothing on the URL), `off` rides as effects=off', () => {
+        const props = graphicsSchemaProps();
+        expect(EFFECTS_SETTING_VALUES).toEqual(['on', 'off']);
+        expect(graphicsPageParams(props.seedlingJsGraphics.default, props.seedlingJsCamera.default, props.seedlingJsLights.default,
+            props.seedlingJsEffects.default)).toBe('');
+        expect(graphicsPageParams('seedling', 'room', 'on', 'off')).toBe('graphics=seedling&effects=off');
+        expect(graphicsPageParams('seedling', 'room', 'off', 'off')).toBe('graphics=seedling&lights=off&effects=off');
+        expect([effectsMode('off'), effectsMode('on'), effectsMode('nonsense'), effectsMode(undefined)]).toEqual(['off', 'on', 'on', 'on']);
     });
 });

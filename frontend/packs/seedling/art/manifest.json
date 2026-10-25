@@ -628,6 +628,11 @@
       "w": 16,
       "h": 16
     },
+    "NPCs/OwlPic": {
+      "file": "sheets/NPCs/OwlPic.png",
+      "w": 16,
+      "h": 16
+    },
     "Sword": {
       "file": "sheets/Sword.png",
       "w": 48,
@@ -2955,6 +2960,17 @@
         0
       ],
       "as3": "NPCs/BobBossNPC.as:21 pics[2] myPic = new Image(BobBoss3Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Owl": {
+      "sheet": "NPCs/OwlPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Enemies/FinalBoss.as:24 sprOwlPic Spritemap(OwlPic, 16, 16), frame 0; :91 Game.talkingPic; Game.as:1726-1731 talk() draws it screen-anchored"
     },
     "seedling:pickup/sword": {
       "sheet": "Sword",

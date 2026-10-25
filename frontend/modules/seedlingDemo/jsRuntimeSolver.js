@@ -1169,6 +1169,8 @@ export function createRuntimeSolver({
             const mapped = solverGoalFor(goal, {
                 run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null, levelSource: getLevelSource(),
             });
+            // ⛓ EVENT GOALS — an event's refusal (`wrong-level`, `no-verb`) FAILS the goal by that name: no walk sets a flag.
+            if (mapped.walker && goal?.event && mapped.refusal) { cancel(); return { failed: mapped.walker }; }
             if (mapped.walker) { cancel(); return null; }
             if (plan) {
                 if (plan.run !== run) refute('the run was re-booted (an item flag or a host teleport) — a new session');

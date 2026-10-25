@@ -1327,7 +1327,18 @@ function spinnersTheRunSteps(run) {
  * verdict (`darkTraps` is `null` while `CONTACT_FIDELITY.darkTrapLight` is off, so this set is empty then).
  */
 function darkTrapsHarmless(run) {
-    return new Set((run.entities('darkTraps') ?? []).filter((b) => b.startDying || b.removed).map((b) => b.id));
+    const out = new Set((run.entities('darkTraps') ?? []).filter((b) => b.startDying || b.removed).map((b) => b.id));
+    /**
+     * ⛓ fidelity CORPSEBUMP D2 (`CONTACT_FIDELITY.corpseBumpWeigh`, OFF): AND A DEAD ICE TURRET. `IceTurret.hitPlayer`
+     * and `.hit` both return on the "dead" anim (`IceTurret.as:119-133`), so a corpse has no contact; its body is a
+     * Solid the planner already meets (`collidesSolid`'s turret arm), and it MOVES when bumped, so its placement is
+     * not where it is. The corpse weigh's bump stance is beside the placement (measured: L40, (488,424) refused as
+     * "a static Enemy body at its placement"). OFF: priced at its placement, as before.
+     */
+    if (CONTACT_FIDELITY.corpseBumpWeigh) {
+        for (const [id, t] of (run.entities('turrets') ?? [])) if (t.dead || t.removed) out.add(id);
+    }
+    return out;
 }
 
 export function staticEnemyDanger(run, box) {
