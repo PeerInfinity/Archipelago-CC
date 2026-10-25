@@ -12,6 +12,10 @@
  *   2. The OFF goldens (`effects-off-*.txt`): per tick, the OFF frame's md5 — change detectors, recorded from this
  *      renderer. Re-record after a deliberate change: `UPDATE_SKIN_GOLDENS=1 npx vitest run <this file>`.
  *   3. The rain switched back ON spawns from that frame as an all-ON run does (its cosmetic key is the frame count).
+ *   4. ⛔ STATE IDENTITY, DIRECTLY against pure-off (fidelity's DIGESTREAD is on main, so the G5 control arm is no
+ *      longer needed): `stateDigest()` at every tick, and the end state, equal for a run never drawn, a run drawn
+ *      with the effects and the lights ON (every skin view the page reads, `talkingNow` included), and one with
+ *      the effects OFF.
  */
 import { beforeAll, describe, expect, it } from 'vitest';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -67,16 +71,19 @@ function boot(level, [x, y]) {
 }
 
 function drive(tape, each) {
-    withContactFidelity(tape.fidelity ?? {}, () => {
+    return withContactFidelity(tape.fidelity ?? {}, () => {
         if (tape.fixture) {
-            runFixtureTape(fixture(tape.fixture), { levelSource: atlasLevelSource(), onTick: (t, now, held, run) => each(t, run) });
-            return;
+            let last = null;
+            const out = runFixtureTape(fixture(tape.fixture), { levelSource: atlasLevelSource(),
+                onTick: (t, now, held, run) => { last = run; each(t, run); } });
+            return JSON.stringify([out.ticks, out.final, last?.stateDigest()]);
         }
         const rt = boot(tape.level, tape.at);
         for (let i = 0; i < tape.n; i += 1) {
             rt.tick(new Set());
             each(rt.ticks, rt.run);
         }
+        return JSON.stringify([rt.ticks, rt.run?.state, rt.game.readState(), rt.run?.stateDigest()]);
     });
 }
 
@@ -204,4 +211,34 @@ describe('2. the switch is live', () => {
         const skin = { ...stepEffectSkin(null, fv, 0, { live: false }), fadeQueue: [1, 0.5] };
         expect(holdEffectSkin(skin, fv, { rain: false }).droplets).toEqual([]);
     });
+});
+
+describe('4. ⛔ state identity: stateDigest equal with the effects and the lights ON, OFF, and never drawn', () => {
+    /** One run of `tape`; `paint` (an `arm(…)` painter, or null = never drawn) runs every tick before the digest. */
+    const digestsOf = (tape, paint) => {
+        const digests = [];
+        let hskin = null;
+        const end = drive(tape, (tick, run) => {
+            if (paint) {
+                const hv = hazardSkinView(run);
+                hskin = stepHazardSkin(hskin, hv, tick);
+                paint(tick, run, hv, hskin);
+                void run.talkingNow;
+            }
+            digests.push(run.stateDigest());
+        });
+        return { digests, end };
+    };
+    for (const tape of TAPES) {
+        it(`${tape.name}: every tick's stateDigest() and the end state`, () => {
+            const never = digestsOf(tape, null);
+            const on = digestsOf(tape, arm(true));
+            const off = digestsOf(tape, arm(false));
+            expect(never.digests.length).toBeGreaterThan(0);
+            expect(on.digests).toEqual(never.digests);
+            expect(off.digests).toEqual(never.digests);
+            expect(on.end).toBe(never.end);
+            expect(off.end).toBe(never.end);
+        });
+    }
 });
