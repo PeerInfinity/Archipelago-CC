@@ -9783,7 +9783,7 @@ function chainWeighHypothesis(run, chained, out, walls, contacts, blocked) {
                 + 'and NO block in this room can reach it — so the only order '
                 + 'that could open it is a `hold` the walker shuts again by '
                 + 'leaving. ⚖ Guard (iii): a hypothesis nothing can redeem '
-                + 'DURABLY is a wall, not an optimistic gap (⛓ L40BK2: asked under the rest of the hypothesis too)',
+                + 'DURABLY is a wall, not an optimistic gap',
         });
     }
 }
