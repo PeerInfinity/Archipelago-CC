@@ -517,7 +517,9 @@ describe('who takes the box', () => {
          * fidelity FIREMOVE the L41 fire-route witness, `probe-seedling-fire-move.mjs`;
          * fidelity CORPSEBUMP the block/corpse sweep and corpse-weigh witnesses, `probe-seedling-corpse-bump.mjs`;
          * fidelity TURRETCIRCLE the L40 circling-kill and shield witnesses, `probe-seedling-turret-circle.mjs`;
-         * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`.)
+         * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`;
+         * fidelity L39SHAFT the three-block shaft's witnesses (the scripted solution, the solver's plan),
+         * `probe-seedling-l39-shaft.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -565,7 +567,8 @@ describe('who takes the box', () => {
             'probe-seedling-fire-move.mjs',
             'probe-seedling-corpse-bump.mjs',
             'probe-seedling-turret-circle.mjs',
-            'probe-seedling-l55-waterfall.mjs'];
+            'probe-seedling-l55-waterfall.mjs',
+            'probe-seedling-l39-shaft.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
