@@ -26,6 +26,15 @@
  * "every reachable row" (the sphere order; on `reachable-cheapest` the nearest-first pick already takes a zero-detour
  * row). Coding Adventure, sphere order: 137 / 129 / 121 → 127 / 123 / 113 with grab.
  *
+ * LOOKAHEAD (slice `bot-route-chooser-2b`): `reachable-cheapest+lookahead` prices each row by the cheapest sequence of
+ * TWO rows starting with it (`routeChooser.lookaheadCost`, beam `DEFAULT_LOOKAHEAD.beam`): the second step is priced
+ * from the first row's region over a hypothetical state with its item held (`hypotheticalFindPath`), its candidates
+ * the rows accessible there. Measured offline 2026-10-25 (`measure-bot-route-orders.mjs`), Restarts / region
+ * transitions: Seedling playthrough `reachable-cheapest` 0 / 299 → **0 / 294** (the best order measured there);
+ * ⚠ NOT MONOTONE elsewhere — wargroove 44 → 46, Coding Adventure 127 / 123 / 103 → 129 / 127 / 107, and Baking
+ * Adventure's greedy-worse seed stays at 27 (listed 23); only a 4-row lookahead fixes that one (21), too costly to
+ * ship. On the sphere order lookahead was worse with grab (313 → 333), so it is not offered there.
+ *
  * Cheapest = `procgenCore/routeChooser.js` over the bot's own route price (`planRoute`'s hops, and whether it begins
  * with a Restart): fewest Restarts first, then fewest region transitions, the GOAL row last, ties progression-first
  * then listed. Measured offline first (`scripts/procgen/measure-bot-route-orders.mjs`): on the Seedling playthrough,
@@ -38,7 +47,7 @@
  * Pure: the caller supplies the queue, what is checked, what is accessible and the route price.
  */
 
-import { grabOnTheWay, rankCandidates } from '../procgenCore/routeChooser.js';
+import { DEFAULT_LOOKAHEAD, grabOnTheWay, rankCandidates, rankLookahead } from '../procgenCore/routeChooser.js';
 
 export const WALK_ORDERS = Object.freeze({
     inOrder: 'sphere-in-order',
@@ -47,6 +56,7 @@ export const WALK_ORDERS = Object.freeze({
     sphereCheapestGrab: 'sphere-cheapest+sweep+grab',
     reachablePocketItem: 'reachable-cheapest+pocket-item',
     reachablePocketItemGrab: 'reachable-cheapest+pocket-item+grab',
+    reachableLookahead: 'reachable-cheapest+lookahead',
 });
 export const WALK_ORDER_LABELS = Object.freeze({
     'sphere-in-order': 'Sphere log, in order',
@@ -55,12 +65,21 @@ export const WALK_ORDER_LABELS = Object.freeze({
     'sphere-cheapest+sweep+grab': 'Cheapest in the current sphere, grabbing on the way',
     'reachable-cheapest+pocket-item': 'Cheapest reachable, avoiding pockets its item does not open',
     'reachable-cheapest+pocket-item+grab': 'Cheapest reachable, avoiding pockets, grabbing on the way',
+    'reachable-cheapest+lookahead': 'Cheapest reachable, looking two locations ahead',
 });
 
-/** A walk order's scope (`sphere-cheapest` / `reachable-cheapest` / `sphere-in-order`) and its `+` modifiers. */
+/**
+ * A walk order's scope (`sphere-cheapest` / `reachable-cheapest` / `sphere-in-order`) and its `+` modifiers;
+ * `lookahead` is the depth `+lookahead` / `+lookaheadK` asks for (0 = none), as `routeOrders.lookaheadDepthOf` reads it.
+ */
 export function parseWalkOrder(order) {
     const [scope, ...mods] = String(order ?? '').split('+');
-    return { scope, pocketItem: mods.includes('pocket-item'), grab: mods.includes('grab') };
+    let lookahead = 0;
+    for (const m of mods) {
+        const hit = /^lookahead(\d*)$/.exec(m);
+        if (hit) lookahead = hit[1] ? Number(hit[1]) : DEFAULT_LOOKAHEAD.depth;
+    }
+    return { scope, pocketItem: mods.includes('pocket-item'), grab: mods.includes('grab'), lookahead };
 }
 
 /**
@@ -135,16 +154,20 @@ export function walkCandidates({ order, queue, checked, isAccessible = null }) {
  *   held (no walk from it to the restart home). Asked only while more than one row is open.
  * @param {(from: object, to: object) => ({hops: number, restart: boolean}|null)} [args.priceBetween] `+grab`: the
  *   route price from `from`'s region to `to`'s
+ * @param {(entry: object, at: any) => ({at: any, isAccessible: Function, price: Function}|null)} [args.step]
+ *   `+lookahead`: ONE step of the walk — the state after walking to `entry` (from the state `at`, undefined = now)
+ *   and collecting its item: what is accessible there, and the route price from there. Hypothetical; never the live
+ *   state.
  * @param {number} [args.restartPenalty]
  * @returns {{entry: object|null, ranked: Array, swept: boolean, grabbed: object|null}}
  *   `entry` falls back to the first open row in listed order when no candidate has a route, so the walk loop's own
  *   refusal ("no path …") names it, as it does today.
  */
 export function chooseWalkTarget({ order, queue, checked, isAccessible = null, meta = new Map(), price,
-    inPocket = () => false, isPocket = null, priceBetween = null, restartPenalty = Infinity }) {
+    inPocket = () => false, isPocket = null, priceBetween = null, step = null, restartPenalty = Infinity }) {
     const open = (queue ?? []).filter((e) => !checked.has(e.locationName));
     if (open.length === 0) return { entry: null, ranked: [], swept: false, grabbed: null };
-    const { scope, pocketItem, grab } = parseWalkOrder(order);
+    const { scope, pocketItem, grab, lookahead } = parseWalkOrder(order);
     const decorate = (e) => ({ ...e, ...(meta.get(e.locationName) ?? {}), entry: e });
     const memo = new Map();
     const pocketPriced = pocketItem && typeof isPocket === 'function' && open.length > 1;
@@ -156,7 +179,27 @@ export function chooseWalkTarget({ order, queue, checked, isAccessible = null, m
         return memo.get(c.locationName);
     };
     const candidates = walkCandidates({ order, queue, checked, isAccessible }).map(decorate);
-    let ranked = rankCandidates(candidates, { cost, restartPenalty });
+    let ranked;
+    if (lookahead > 1 && typeof step === 'function') {
+        // ⛓ LOOKAHEAD — each row priced by the cheapest `lookahead`-row sequence starting with it; `next` = one step.
+        const next = (c, at) => {
+            const done = new Set([...(at?.checked ?? checked), c.locationName]);
+            const s = step(c.entry, at?.at);
+            if (!s) return null;
+            const stepMemo = new Map();
+            return {
+                state: { checked: done, at: s.at },
+                candidates: walkCandidates({ order, queue, checked: done, isAccessible: s.isAccessible }).map(decorate),
+                cost: (x) => {
+                    if (!stepMemo.has(x.locationName)) stepMemo.set(x.locationName, s.price(x.entry));
+                    return stepMemo.get(x.locationName);
+                },
+            };
+        };
+        ranked = rankLookahead(candidates, cost, { next, depth: lookahead, beam: DEFAULT_LOOKAHEAD.beam, restartPenalty });
+    } else {
+        ranked = rankCandidates(candidates, { cost, restartPenalty });
+    }
     let swept = false;
     if (scope === WALK_ORDERS.sphereCheapest && ranked[0]?.price?.restart && inPocket()) {
         // ⛓ POCKET SWEEP — no walk leaves this room: take what a walk from here reaches (logic-legal now) first.
@@ -237,7 +280,13 @@ export function hypotheticalFindPath(pathFinder, { staticData, snapshot, makeInt
         }
     }
     const state = stateOf();
-    return frozenFindPath(pathFinder, { staticData, snapshot: state, snapshotInterface: makeInterface(state) });
+    const iface = makeInterface(state);
+    const findPath = frozenFindPath(pathFinder, { staticData, snapshot: state, snapshotInterface: iface });
+    // ⛓ LOOKAHEAD — what is accessible in the hypothetical state (the snapshot interface's own test, over its regions)
+    findPath.isLocationAccessible = (name) => {
+        try { return iface?.isLocationAccessible?.(name) === true; } catch { return false; }
+    };
+    return findPath;
 }
 
 /**
