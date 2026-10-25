@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 109,
-            "count": 156,
+            "browser": 111,
+            "count": 158,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 463,
-        "browser": 174,
-        "cited": 250,
-        "files": 477,
+        "blockStyle": 465,
+        "browser": 176,
+        "cited": 252,
+        "files": 479,
         "lineStyle": 14,
-        "withDocblock": 477,
-        "withFlags": 394
+        "withDocblock": 479,
+        "withFlags": 396
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13055,6 +13055,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l39-shaft — ⛓⛓⛓ seedling-fidelity-l39shaft: L39'S THREE-BLOCK SHAFT, THE USER'S SOLUTION, PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-l39-shaft.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l40bk2.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "from-fixture"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-l40bk2 — ⛓⛓⛓ seedling-fidelity-l40bk2: L40'S BOSS KEY 2 CHAIN AS THE SOLVER BUILDS IT FROM INSIDE THE LOCK ROOM (the Sword's circling kill, the corpse on t2, 35 Fire presses onto t5, the hold on `button@816,400`, the pulser's push), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-l40bk2.mjs"
         },
         {
             "argvHelpers": [],
