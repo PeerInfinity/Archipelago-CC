@@ -538,6 +538,26 @@
       "w": 128,
       "h": 16
     },
+    "Stairs": {
+      "file": "sheets/Stairs.png",
+      "w": 32,
+      "h": 16
+    },
+    "PushableBlock": {
+      "file": "sheets/PushableBlock.png",
+      "w": 64,
+      "h": 16
+    },
+    "PushableBlockFire": {
+      "file": "sheets/PushableBlockFire.png",
+      "w": 64,
+      "h": 16
+    },
+    "SandTrap": {
+      "file": "sheets/SandTrap.png",
+      "w": 140,
+      "h": 14
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -2736,6 +2756,76 @@
         }
       },
       "as3": "Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)"
+    },
+    "seedling:puzzlement/stairs": {
+      "sheet": "Stairs",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Stairs.as:13-14 Spritemap(16, 16); :26 frame int(!up); :31 originX = 8 (the flip's pivot, the frame centre); :35 scaleX = -1 when flip; :45 layer = -y"
+    },
+    "seedling:puzzlement/pushableblock": {
+      "sheet": "PushableBlock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Puzzlements/PushableBlock.as:15-16 Spritemap(16, 16); :119 frame = Game.worldFrame(frameCount); Mobile.as:52-71 layer, death fade"
+    },
+    "seedling:puzzlement/pushableblockfire": {
+      "sheet": "PushableBlockFire",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Puzzlements/PushableBlockFire.as:16-17 Spritemap(16, 16); :29 color 0xFF0000 (PushableBlockSpear.as:16 0x8822FF); :166 frame = Game.worldFrame(frameCount); :168-170 the same picture onto nightBmp"
+    },
+    "seedling:enemy/sandtrap": {
+      "sheet": "SandTrap",
+      "fw": 14,
+      "fh": 14,
+      "frames": 10,
+      "origin": [
+        7,
+        7
+      ],
+      "anims": {
+        "chomp": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            2,
+            1
+          ],
+          "fps": 10
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/SandTrap.as:14 Spritemap(14, 14, endAnim); :29 centerOO; :31 chomp [0,1,2,3,2,1] fps 10; :32 hit [1] (never played); :33 die [4..9] fps 10; :68-71 \"\" → frame Game.worldFrame(2)"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

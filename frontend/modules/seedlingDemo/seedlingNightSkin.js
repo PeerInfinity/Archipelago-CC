@@ -304,6 +304,8 @@ export const NIGHT_COPIES = Object.freeze({
     'seedling:scenery/building8': { alpha: 'same' },
     // `Crusher.as:107-123`: the picture (and its four lanes, `crusherLanes`).
     'seedling:puzzlement/crusher': { alpha: 'same' },
+    // ⛓ G7 — `PushableBlockFire.as:163-171`: the same picture again onto nightBmp (`PushableBlockSpear` inherits it).
+    'seedling:puzzlement/pushableblockfire': { alpha: 'same' },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });
@@ -590,14 +592,14 @@ export const NIGHT_COVERAGE = Object.freeze({
         'the night composite (lightalpha, daynight; Game.bufferTransforms)',
         'Light: Torch, BoneTorch, PlantTorch (player-distance alpha), Orb (float), LightPole (lit / darkLight, lightPolesNow), the grenade light, PlayerLight (hasTorch)',
         'tile glows: darkStone, igneousStone, lava (+ solidBmp edges, HARDLIGHT), iceWall(s) unless snowing, ghostTile(s), bridge, igneousToLava, fuchsiaTile',
-        'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit)',
+        'copies: the dark-suit body, the slash, LavaRunner, BossTotemShot, Explosion, SlashHit, Droplet, TurretSpit, Grenade, the mound (building 8), Crusher (+ its lanes), LavaChain (hit), PushableBlockFire / PushableBlockSpear (G7)',
         'the Boss Totem: its parts SCREENed, its LASER, its white-out rect',
         'Shadow, LightRay (night shaft + its two screen rects)',
     ]),
     remaining: Object.freeze([
         'the PlayerLight sprite (PlayerLight.png is not in the pack)', 'Wire (not drawn by G1)', 'DarkTrap\'s die1 copy (no dark-trap picture)',
         'the copies of classes G1–G4b draw as rectangles or not at all: Lock, RockLock, BossLock, BossKey, the pickups (GhostSword, FireWand, Wand, '
-            + 'TorchPickup, HealthPickup), Pulser, BeamTower, Pull, PushableBlockFire, LavaTrap, LavaBoss, LightBoss, LightBossTotem, Moonrock, '
+            + 'TorchPickup, HealthPickup), Pulser, BeamTower, Pull, LavaTrap, LavaBoss, LightBoss, LightBossTotem, Moonrock, '
             + 'TreeLarge, FrozenBoss, FinalDoor, SealController, Help, WandShot, RayShot, LavaBall, the spear / fire / death ray / dark shield',
         'the slash-narrow blur copies (Player.as:1201-1212)', 'snow, the blizzard and the black-and-white pass (not nightBmp)',
         'the underwater colour transform', 'Teleporter: no graphic (renderLight copies an empty graphic)',

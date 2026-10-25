@@ -56,7 +56,11 @@
  * them changes frame) and blits it, with the same pixels; `roomOps` builds
  * the tile ops once per (room, art). Room mode on the big rooms is the gain.
  *
- * ⛔ NOT YET (G4+ of the ladder, and G3's remaining classes): live pushables / broken rocks / opened chests / burned trees (every
+ * ⛓ G7: the stairs, the live pushable blocks and the sand traps (`seedlingPuzzleSkin.puzzleOps`) come through
+ * `opts.entitySprites`; the blocks' build-time rectangles through `drawnObjects` and the stairs' teleporter
+ * rectangles through `drawnTeleporters` are then not painted.
+ *
+ * ⛔ NOT YET (G4+ of the ladder, and G3's remaining classes): broken rocks / opened chests / burned trees (every
  * solid with a run-changeable id stays a rectangle, at its START position —
  * the rect view's known limitation), grass blades, the bridge's opening, the
  * lighting passes, and the torches' `flip` attribute (the world does not keep
@@ -290,11 +294,13 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {function} [opts.drawnObjects] `(objectSolid) → boolean`: a static solid the caller draws itself as a body
  *   (G3c's crushers, axes, chains, totem, bomb pusher — `seedlingHazardSkin.HAZARD_OBJECT_TAGS`), so its build-time
  *   rectangle is not painted under (or, for a crusher that has moved, beside) the sprite. Omitted: every object is drawn.
+ * @param {function} [opts.drawnTeleporters] `(teleporter) → boolean`: a teleporter the caller draws itself (G7's
+ *   stairs — `seedlingPuzzleSkin`), so its stand-in rectangle is not painted. Omitted: every active one is.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
-    drawnObjects = null,
+    drawnObjects = null, drawnTeleporters = null,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -334,7 +340,7 @@ export function roomOps(world, art, {
         ops.push(sprite(art, spec.key, frame, o, { layer: spec.layer(o), fallback }));
     }
 
-    for (const tp of world.teleporters) if (!tp.deactivated) ops.push(rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity));
+    for (const tp of world.teleporters) if (!tp.deactivated && !drawnTeleporters?.(tp)) ops.push(rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity));
     for (const p of world.pickups ?? []) ops.push(rectOp(p.rect, AP_ITEM_COLOUR, 0.5, -p.rect.bottom));
     if (apItemSprites) ops.push(...apItemSprites);
     else for (const a of apItems) {
