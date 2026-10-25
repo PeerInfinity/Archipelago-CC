@@ -7,7 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 
-import { chooseNext, rankCandidates, routeRestarts, routeScore, DEFAULT_RESTART_PENALTY, TIE_BREAKS }
+import { chooseNext, grabOnTheWay, rankCandidates, routeRestarts, routeScore, DEFAULT_RESTART_PENALTY, TIE_BREAKS }
     from './routeChooser.js';
 
 const priced = (table) => (c) => table[c.name] ?? null;
@@ -57,5 +57,25 @@ describe('routeChooser', () => {
         const cost = () => ({ hops: 4, restart: false });
         expect(names(rankCandidates(cands, { cost }))).toEqual(['b', 'a', 'c']);
         expect(names(rankCandidates(cands, { cost, tieBreak: TIE_BREAKS.listed }))).toEqual(['a', 'b', 'c']);
+    });
+
+    it('GRAB-ON-THE-WAY: the nearest zero-detour candidate is taken first; a detour, an extra Restart or the goal is not', () => {
+        // the target is 6 hops away; `on` and `near` sit on its route, `off` is 2 hops away but 3 hops off the route
+        const target = { name: 'target' };
+        const cands = [target, { name: 'on' }, { name: 'near' }, { name: 'off' }, { name: 'warp' }, { name: 'seed', goal: true }];
+        const cost = priced({ target: { hops: 6, restart: false }, on: { hops: 4, restart: false }, near: { hops: 1, restart: false },
+            off: { hops: 2, restart: false }, warp: { hops: 1, restart: true }, seed: { hops: 3, restart: false } });
+        const via = { on: { hops: 6, restarts: 0 }, near: { hops: 6, restarts: 0 }, off: { hops: 9, restarts: 0 },
+            warp: { hops: 6, restarts: 1 }, seed: { hops: 6, restarts: 0 } };
+        const costVia = (c) => via[c.name] ?? null;
+        expect(grabOnTheWay(target, cands, { cost, costVia }).name).toBe('near');
+        expect(grabOnTheWay(target, cands.filter((c) => c.name !== 'near'), { cost, costVia }).name).toBe('on');
+        // only detours, a Restart the direct route does not take, and the goal are left: the target stands
+        const rest = cands.filter((c) => !['on', 'near'].includes(c.name));
+        expect(grabOnTheWay(target, rest, { cost, costVia })).toBe(target);
+        // a target whose own route Restarts lets a Restart-priced grab ride along
+        const warpTarget = priced({ target: { hops: 6, restart: true }, warp: { hops: 1, restart: true } });
+        expect(grabOnTheWay(target, [target, cands[4]], { cost: warpTarget, costVia }).name).toBe('warp');
+        expect(grabOnTheWay(target, cands, { cost })).toBe(target);   // no costVia: nothing is grabbed
     });
 });

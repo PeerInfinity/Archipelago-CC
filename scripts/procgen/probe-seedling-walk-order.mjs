@@ -18,6 +18,9 @@
  * chest, L17's chest, a Restart to L10's Sword, L11, L36, L19's Boss Key 0 and Shieldspire, L20's Shield — ONE Restart
  * (in order: two).
  *
+ * The `result` row carries the walk-order choices' wall time (`getChoiceTimings`: choices, totalMs, maxMs, and the
+ * hypothetical states `+pocket-item` built).
+ *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
  *
@@ -25,7 +28,8 @@
  * `flashPanel/wasm` submodule), or W SKIPs.
  *
  * Run: node scripts/procgen/probe-seedling-walk-order.mjs [--host=http://localhost:8000] [--only=J,W]
- *      [--order=reachable-cheapest|sphere-cheapest|sphere-in-order] [--until=<location>] [--budget-s=1800]
+ *      [--order=reachable-cheapest|sphere-cheapest|sphere-in-order|sphere-cheapest+sweep+grab|
+ *       reachable-cheapest+pocket-item|reachable-cheapest+pocket-item+grab] [--until=<location>] [--budget-s=1800]
  *      [--expect=<loc>,<loc>,…] [--max-restarts=<n>]
  */
 import { chromium } from 'playwright';
@@ -95,6 +99,7 @@ async function main() {
             const checked = window.stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? [];
             return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null,
                 active: bot?.isActive?.() ?? null, stats: bot?.getRouteStats?.() ?? null, order: bot?.getWalkOrder?.() ?? null,
+                timings: bot?.getChoiceTimings?.() ?? null,
                 checks: [...(window.__checks ?? [])], checked: [...checked], log: (bot?.getLog?.() ?? []).slice(-8) };
         });
 
@@ -173,7 +178,7 @@ async function main() {
             }, BUDGET_MS).catch(() => null);
             const end = done ?? await botState();
             out('result', { ms: Date.now() - t0, reached: end.checked.includes(UNTIL), status: end.status, region: end.region,
-                stats: end.stats, checks: end.checks, log: end.log });
+                stats: end.stats, timings: end.timings, checks: end.checks, log: end.log });
             check(`${S}: "${UNTIL}" checked within ${BUDGET_MS / 1000} s`, end.checked.includes(UNTIL), JSON.stringify({ status: end.status, log: end.log }));
             if (EXPECT) {
                 const head = end.checks.slice(0, EXPECT.length);
