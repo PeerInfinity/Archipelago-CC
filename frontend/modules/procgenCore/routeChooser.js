@@ -24,9 +24,9 @@
  * an item that opens something before one that does not — and otherwise keeps the listed order, so with equal costs
  * the sphere log's own order decides. `listed` keeps the listed order only.
  *
- * ⛓ PLUG-IN POINT — the extras are written against this signature: a lookahead ranks by a cost that walks two or
- * three candidates ahead (bot-route-chooser-2b), and GRAB-ON-THE-WAY (`grabOnTheWay`, bot-route-chooser-2a) is a
- * step over the chosen candidate and the candidate list — neither changes `rankCandidates`.
+ * ⛓ PLUG-IN POINT — the extras are written against this signature: LOOKAHEAD (`lookaheadCost`, bot-route-chooser-2b)
+ * is a cost that walks k candidates ahead, and GRAB-ON-THE-WAY (`grabOnTheWay`, bot-route-chooser-2a) is a step over
+ * the chosen candidate and the candidate list — neither changes how `rankCandidates` orders.
  */
 
 /** The default penalty, in hops, a Restart adds to a route's score (`scripts/procgen/measure-bot-route-orders.mjs`). */
@@ -34,8 +34,12 @@ export const DEFAULT_RESTART_PENALTY = Infinity;
 
 export const TIE_BREAKS = Object.freeze({ progressionFirst: 'progression-first', listed: 'listed' });
 
-/** The Restarts a priced route costs: one to take it, and one owed for a pocket it ends in. */
+/**
+ * The Restarts a priced route costs: one to take it, and one owed for a pocket it ends in — or, for a LOOKAHEAD
+ * sequence's price (`lookaheadCost`), its own `restarts` count.
+ */
 export function routeRestarts(price) {
+    if (Number.isFinite(price?.restarts)) return price.restarts;
     return (price?.restart ? 1 : 0) + (price?.pocket ? 1 : 0);
 }
 
@@ -74,6 +78,10 @@ export function rankCandidates(candidates, ctx = {}) {
         if (goal !== 0) return goal;
         if (lexical && a.restarts !== b.restarts) return a.restarts - b.restarts;
         if (a.score !== b.score) return a.score - b.score;
+        // a LOOKAHEAD tie (equal sequence totals) goes to the nearer first step: greedy's own pick when nothing differs
+        if (Number.isFinite(a.price.lead) && Number.isFinite(b.price.lead) && a.price.lead !== b.price.lead) {
+            return a.price.lead - b.price.lead;
+        }
         if (progressionFirst) {
             const p = flag(a.candidate, 'progression') - flag(b.candidate, 'progression');
             if (p !== 0) return p;
@@ -126,4 +134,82 @@ export function grabOnTheWay(target, candidates, ctx = {}) {
         return p && { hops: p.hops, restart: p.restart };
     };
     return rankCandidates(onTheWay, { cost: near, tieBreak })[0]?.candidate ?? target;
+}
+
+/** The default lookahead: the sequences priced are `depth` targets long, and each step past the first tries `beam`. */
+export const DEFAULT_LOOKAHEAD = Object.freeze({ depth: 2, beam: 6 });
+
+/**
+ * ⛓ LOOKAHEAD (slice `bot-route-chooser-2b`) — a COST for `rankCandidates` / `chooseNext` that prices a candidate by
+ * the cheapest SEQUENCE of `depth` targets starting with it, not by its own route alone. Greedy (depth 1) takes the
+ * nearest row even when it strands the walk far from the rest; measured offline on bakingadventure seed
+ * 01043188731678011336, greedy `reachable-cheapest` walks 27 region transitions where the listed order walks 23.
+ *
+ * A sequence's price is `{hops, restarts}` summed over its steps (Restarts still dominate under an infinite penalty:
+ * `routeRestarts` reads the count), with `lead` = the first step's hops, so equal totals go to the nearer first step,
+ * and `restart` / `pocket` = the first step's own flags. The chooser stays state-blind: the caller's `next(candidate,
+ * state)` takes one step — the state after walking to the candidate and collecting its item — and answers the
+ * candidates open there and their route price from there, or null when nothing is left (the sequence ends early, at
+ * no further cost).
+ *
+ * BOUNDS (why it stays cheap): the steps past the first try only the `beam` cheapest-by-own-price candidates (default
+ * 6), so a choice prices N + N·beam·… routes, not N^depth; depth 2 is the default (`depth: 3` is measured offline,
+ * not shipped). The goal row is never a middle step while another row is open (it ends the game). A sequence whose
+ * next state has open rows but no route to any is DEAD and priced null (dropped); `chooseLookahead` falls back to the
+ * plain ranking when every candidate is dead. Caching per (region, inventory) is the caller's, inside `next`.
+ *
+ * @param {(c: object) => ({hops: number, restart: boolean, pocket?: boolean}|null)} cost the first step's price
+ * @param {object} ctx
+ * @param {(c: object, state: any) => ({state: any, candidates: Array<object>, cost: Function}|null)} ctx.next
+ * @param {number} [ctx.depth=2]
+ * @param {number} [ctx.beam=6]
+ * @param {number} [ctx.restartPenalty]
+ * @param {string} [ctx.tieBreak]
+ * @returns {(c: object) => ({hops: number, restarts: number, lead: number, restart: boolean, pocket: boolean}|null)}
+ */
+export function lookaheadCost(cost, ctx = {}) {
+    const { next, depth = DEFAULT_LOOKAHEAD.depth, beam = DEFAULT_LOOKAHEAD.beam,
+        restartPenalty = DEFAULT_RESTART_PENALTY, tieBreak = TIE_BREAKS.progressionFirst } = ctx;
+    const lexical = !Number.isFinite(restartPenalty);
+    const better = (a, b) => {
+        if (!b) return true;
+        if (lexical && a.restarts !== b.restarts) return a.restarts < b.restarts;
+        const sa = lexical ? a.hops : a.hops + a.restarts * restartPenalty;
+        const sb = lexical ? b.hops : b.hops + b.restarts * restartPenalty;
+        return sa < sb;
+    };
+    // the cheapest continuation of `left` more steps after taking `c` (reached in `state`); null = dead
+    const tail = (c, state, left) => {
+        if (left <= 0 || typeof next !== 'function') return { hops: 0, restarts: 0 };
+        const step = next(c, state);
+        const open = step?.candidates ?? [];
+        if (open.length === 0) return { hops: 0, restarts: 0 };
+        const pool = open.some((x) => x?.goal !== true) ? open.filter((x) => x?.goal !== true) : open;
+        const ranked = rankCandidates(pool, { cost: step.cost, restartPenalty, tieBreak }).slice(0, Math.max(1, beam));
+        let best = null;
+        for (const r of ranked) {
+            const rest = tail(r.candidate, step.state, left - 1);
+            if (!rest) continue;
+            const total = { hops: r.price.hops + rest.hops, restarts: routeRestarts(r.price) + rest.restarts };
+            if (better(total, best)) best = total;
+        }
+        return best;
+    };
+    return (c) => {
+        const first = cost(c);
+        if (!first || !Number.isFinite(first.hops)) return null;
+        const rest = tail(c, undefined, depth - 1);
+        if (!rest) return null;
+        return { hops: first.hops + rest.hops, restarts: routeRestarts(first) + rest.restarts, lead: first.hops,
+            restart: !!first.restart, pocket: !!first.pocket };
+    };
+}
+
+/**
+ * The lookahead's ranking (`lookaheadCost` over `rankCandidates`), falling back to the plain ranking by `cost` when
+ * every candidate's sequences are dead — the walk then fails or recovers exactly as greedy would.
+ */
+export function rankLookahead(candidates, cost, ctx = {}) {
+    const ranked = rankCandidates(candidates, { ...ctx, cost: lookaheadCost(cost, ctx) });
+    return ranked.length > 0 ? ranked : rankCandidates(candidates, { ...ctx, cost });
 }
