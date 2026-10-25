@@ -224,6 +224,9 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  * @param {(goal:object) => ({x:number, y:number}|null)} [deps.locationPointOf]
  *   ⛓ J3 — where a location goal is taken; absent = the apitem's centre
  * @param {(level:number, tag:number) => boolean} deps.isCollected
+ * @param {(goal:object) => boolean} [deps.locationServed]  ⛓ EVENT GOALS — whether a LOCATION goal's own check has
+ *   fired (an event goal's is its flag `goal.event.tag`, which `isCollected(goal.level, goal.tag)` cannot answer: its
+ *   `tag` is null); absent = `isCollected(goal.level, goal.tag)`
  * @param {(e:object) => void} [deps.onEvent]  `{type, goal, message}` per
  *   state change — the page logs it, the host controller relays it
  * @param {object} [deps.solver]  ⛓ solver-walk S1 — the solver mode
@@ -237,7 +240,7 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  *   ticks — at most `retryMax` times, each retry named in the status.
  * @param {object} [opts]
  */
-export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, onEvent = () => {}, solver = null } = {}, {
+export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, locationServed = null, onEvent = () => {}, solver = null } = {}, {
     replanEvery = REPLAN_EVERY, giveUpTicks = WALK_GIVE_UP_TICKS,
     retryAfter = SOLVER_RETRY_AFTER_TICKS, retryMax = SOLVER_RETRY_MAX,
 } = {}) {
@@ -335,7 +338,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     }
 
     function done(run) {
-        if (goal.kind === 'location') return isCollected(goal.level, goal.tag);
+        if (goal.kind === 'location') return locationServed ? locationServed(goal) : isCollected(goal.level, goal.tag);
         if (goal.kind === 'tile') {
             return run.level === goal.level && hasArrived(run.state, tileCentrePoint(goal.tile), WALK_TOLERANCE);
         }
@@ -442,6 +445,13 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, { obstacle: s.obstacle });
                     return null;
                 }
+                if (s?.declined && goal.event) {
+                    // ⛓ EVENT GOALS — only the solver's `clear-tag` can set the game's flag: "walking instead" walks to
+                    // the obstacle's cell and clears nothing (measured: L16's rope, no weapon — the walk left by the
+                    // arrival door). The goal FAILS now, by the solver's own reason.
+                    settle(WALK_STATES.FAILED, `the solver declined — ${s.declined}`, s.obstacle ? { obstacle: s.obstacle } : null);
+                    return null;
+                }
                 if (s?.declined) {
                     declined = s.declined;
                     sinceDecline = 0;
@@ -498,7 +508,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         /** Exposed for the page's status line. */
         describe() {
             if (!goal) return 'bot: idle';
-            const what = goal.kind === 'location' ? `apitem tag ${goal.tag}`
+            const what = goal.kind === 'location' ? (goal.event ? `event flag {${goal.event.tag?.level},${goal.event.tag?.tag}}`
+                : `apitem tag ${goal.tag}`)
                 : goal.kind === 'exit' ? `door (${goalTiles(goal).map((t) => t.join(', ')).join(' | ')})` : `tile (${goal.tile.join(', ')})`;
             return `bot: ${state} → ${goal.name ?? what} in level ${goal.level}${reason ? ` — ${reason}` : ''}`
                 + `${playing ? '' : ' (paused)'}`;
