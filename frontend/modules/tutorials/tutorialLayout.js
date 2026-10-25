@@ -19,6 +19,7 @@
 import {
     ResolvedItemConfig, ResolvedStackItemConfig, SizeUnitEnum,
 } from '../../libs/golden-layout/js/esm/golden-layout.js';
+import mobileLayoutManager from '../../app/core/mobileLayoutManager.js';
 
 /** The id of the stack the split creates; the merge looks for it. */
 export const TUTORIAL_STACK_ID = 'tutorial-stack';
@@ -31,9 +32,43 @@ function layout() {
 
 /** The layout's component items for `componentType` (and `title`, when given). */
 export function componentItems(componentType, title) {
-    const items = layout()?.getAllContentItems?.() ?? [];
+    const lm = layout();
+    if (!lm) return mobileItems(componentType);
+    const items = lm.getAllContentItems?.() ?? [];
     return items.filter((it) => it.isComponent && it.componentType === componentType
         && (title === undefined || it.title === title));
+}
+
+/**
+ * The MOBILE layout's panel for `componentType`, as an item shaped like the
+ * Golden Layout component items the executor reads (tutorialExecutor.js): the
+ * panel's element as `container.element`, its tab (when the current column
+ * shows one), and a `parentItem` standing in for the stack — its active item
+ * is the panel mobileLayoutManager shows, and activating it is `showPanel`.
+ * Without this every panel lookup is null on the mobile layout, so no step
+ * that opens a panel or presses a control in one can be performed (slice
+ * seedling-tutorial-bot-refresh, 2026-10-25: the Seedling bot tutorial stuck
+ * at the Flash panel's ▶ Start on the phone layout).
+ *
+ * The mobile layout has ONE instance per panel type, so `title` (which tells
+ * several tabs of one type apart on the desktop) is not matched here.
+ */
+function mobileItems(componentType) {
+    if (typeof document === 'undefined' || !document.querySelector('.mobile-layout-container')) return [];
+    const panel = mobileLayoutManager.panels.get(componentType);
+    if (!panel?.element) return [];
+    const item = {
+        isComponent: true,
+        componentType,
+        title: panel.title,
+        container: { element: panel.element },
+        tab: panel.tabElement?.isConnected ? { element: panel.tabElement } : null,
+        parentItem: {
+            getActiveComponentItem: () => (mobileLayoutManager.activePanel === componentType ? item : null),
+            setActiveComponentItem: () => mobileLayoutManager.showPanel(componentType),
+        },
+    };
+    return [item];
 }
 
 /** True on the desktop (Golden Layout) layout; the mobile layout has no instance. */
