@@ -467,6 +467,12 @@ export class LoopState {
       this._handleManualWake_mana();
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
+      // A `resync` is a newly connected iframe/window being told where the
+      // player already is (iframeAdapter, windowAdapter, gameState's
+      // appReady handler), not a move. Read as one, it hard-paused a parked
+      // queue whose next region differs — the bundled boot connects the
+      // substrate iframes during the first rows (tasw-record-coarse-autoswitch).
+      if (data?.resync) return;
       this._handleManualWake_regionMove({
         targetRegion: data?.newRegion,
         oldRegion: data?.oldRegion,

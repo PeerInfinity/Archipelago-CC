@@ -10,6 +10,9 @@ name: Test ALTTP Spoiler & Frontend Regression
 #     batch is its own job, so one batch's red cannot skip another (on main
 #     before this, a red `fast` step skipped the `apworld` step after it), and
 #     each races its own 600 s in-app budget (AUTO_START_TIMEOUT_MS).
+#   - substrates-bundled: the `fast` batch on the BUNDLED boot
+#     (frontend/dist/bundle.js, what a deployed site serves) — slice
+#     ci-bundled-leg, after two rows were found red only there.
 #   Manual batches run in test-substrates-manual.yml.
 
 on:
@@ -280,6 +283,73 @@ jobs:
         uses: actions/upload-artifact@v7.0.0
         with:
           name: test-results-${{ matrix.batch }}
+          path: |
+            test-results/
+            playwright-report.json
+          retention-days: 7
+
+  # The `fast` batch on the BUNDLED boot (`--bundled` runs `npm run build`
+  # first and drives `?bundled=true`). Slice ci-bundled-leg: two rows
+  # (test_region_graph_node_picker, tasw-record-coarse-autoswitch) were red
+  # only there and CI had no leg to see them. One job, `fast` only: it is the
+  # batch that absorbs every unclassified category, so a bundle-only red in a
+  # new row lands here. Its results file is flavour-stamped `bundled`, so the
+  # headroom grader reads it with `--flavour=bundled` and compare-runs never
+  # diffs it against the unbundled `fast` job's.
+  substrates-bundled:
+    name: Substrate tests — fast batch (bundled boot)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v6.1.0
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          npx playwright install chromium
+
+      - name: Run substrate tests (fast batch, bundled boot)
+        run: |
+          npm test -- --mode=test-substrates --batch=fast --bundled
+
+      - name: Budget headroom (fast batch, bundled boot)
+        if: ${{ !cancelled() }}
+        run: |
+          node scripts/test/check-batch-headroom.js --mode=test-substrates --batch=fast --flavour=bundled
+
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: test-results-fast-bundled
           path: |
             test-results/
             playwright-report.json
