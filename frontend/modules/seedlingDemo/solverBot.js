@@ -7511,6 +7511,45 @@ export function swordTickAt(run, x, y) {
     return fc.step({ ...run.state, x, y }, { slashing: run.progress('slashInfo')?.slashing === true });
 }
 
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE BX — **A WALK WHOSE OWN READ THE CAMERA'S SHAKE BAND HIDES WAITS THE BAND OUT**
+ * (`EXECUTOR_SHAKE_BAND`, OFF by default).
+ *
+ * ⛓ PKB residue 1 and LB (hand-over 5): the chaser forecast throws when whether a body is on screen depends on
+ * `Game.shake`'s jiggle (`levelRun.js` `chaserForecast`'s `onScreenAt`, recognised by `isShakeBandThrow`). GF's and
+ * PKB's catches refuse a CANDIDATE (`deriveStrike`'s walk, `deriveRefuge`'s previews); two reads about the walk the run is
+ * ABOUT TO TAKE still let it out of the whole solve, both in `walkTo`:
+ *   1. the walk's opening gate (`refuseDanger` → `dangerNow` → `swordTickAt`, the timed blade, `SWORD_GATE_TIMED`):
+ *      leg 371 (`level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`) at seam 5243, defaults;
+ *   2. the corridor's probe (`probeCorridor` → `previewWalk`), the executor's gate PDS left bare: 371 at 5252–5254 with
+ *      `PRESS_KILL_BOMBS=0`, and LB's leg 414 rows.
+ * Neither is a candidate to skip: the walk is the run's. ON, either throw makes the walk STAND STILL ONE TICK and ask
+ * again from the top of its attempt (the band is the camera's, and it settles: `Game.shake` decays by one a tick):
+ *   - only if standing is clear by the gate's own UNTIMED question at the standing box (`dangerNow` without the timed
+ *     blade, the gate an executor keeps: no forecast, so no band); otherwise the walk refuses by name;
+ *   - the live run is the oracle: a hit or a crossing during the wait refuses by name;
+ *   - at most `EXECUTOR_BAND_WAIT` ticks per walk, then the walk refuses by name.
+ * A walk that waited carries `executorBandWaits` on the result (`{tick, what, site, ticks}` per walk; absent when none).
+ * ⚖ The shake value is never modelled and the band stays: the walk waits for the camera to answer, it never guesses.
+ *
+ * ⛔ OFF IS THE CODE IT REPLACES: the catch rethrows every error, and nothing else is read. `SEEDLING_EXECUTOR_SHAKE_BAND=1`
+ * turns it ON for a node process; `withExecutorShakeBand(enabled, fn)` for a test or a witness.
+ */
+export const EXECUTOR_SHAKE_BAND = { enabled: globalThis.process?.env?.SEEDLING_EXECUTOR_SHAKE_BAND === '1' };
+export const EXECUTOR_SHAKE_BAND_DEFAULT = false;
+/** What the switch did in this process, by site (measurement only; nothing reads it back). */
+export const EXECUTOR_SHAKE_BAND_COUNTS = { gate: 0, probe: 0, waited: 0, refused: 0 };
+/** The most ticks one walk stands for the band: one hammer period (`SPINNER.hammerPeriod`). Named, not generous. */
+export const EXECUTOR_BAND_WAIT = SPINNER.hammerPeriod;
+
+/** The keys a band wait holds: none (`awaitTentacleMouth`'s idle). */
+const BAND_WAIT_KEYS = new Set();
+
+/** Run `fn` with `EXECUTOR_SHAKE_BAND` set to `enabled`, restoring the previous value. */
+export function withExecutorShakeBand(enabled, fn) {
+    return withSwitch(EXECUTOR_SHAKE_BAND, enabled, fn);
+}
+
 /** A `{enabled}` switch set for the duration of `fn` (sync or async), restored after — `withHammerEscape`'s shape. */
 function withSwitch(sw, enabled, fn) {
     const was = sw.enabled;
@@ -22426,6 +22465,8 @@ function solveSegmentUnder({
     const dashWalks = [];
     /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
     const fineLatticeWalks = [];
+    /** ⛓ hammer-phase BX — the walks that stood for the camera's shake band (`EXECUTOR_SHAKE_BAND` ON only). */
+    const executorBandWaits = [];
     /** ⛓ LAPSECOST D1 — the walks the narrow strike policy certified (`LAPSE_NARROW_RETRY`; empty with the lapse OFF). */
     const lapseNarrowWalks = [];
     /** ⛓ FORCEDHIT D2 — one row per crossing the forced-hit rung billed (`FORCED_HITS`; empty with it OFF). */
@@ -26068,6 +26109,46 @@ function solveSegmentUnder({
         let axisAligned = axisAlignedAsked;
         // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
         const deaths0 = deathsNow();
+        /**
+         * ⛓ hammer-phase BX (`EXECUTOR_SHAKE_BAND`, OFF ⇒ rethrown) — the walk's own read met the camera's shake band
+         * (`isShakeBandThrow`) at `site` (the gate or the corridor probe): stand one tick and ask again, or refuse by name.
+         * Returns only after a clean wait; the caller re-asks from the top of its attempt.
+         */
+        let bandWait = null;
+        const waitShakeBand = (e, site, except) => {
+            if (!EXECUTOR_SHAKE_BAND.enabled || !isShakeBandThrow(e)) throw e;
+            EXECUTOR_SHAKE_BAND_COUNTS[site] += 1;
+            const who = /^chaserForecast: whether (?:\S+ )?(\S+) is on screen/.exec(e.message)?.[1] ?? 'a body';
+            const refuseBand = (why, extra = {}) => {
+                EXECUTOR_SHAKE_BAND_COUNTS.refused += 1;
+                refuse(`${what}: EXECUTOR_SHAKE_BAND — the camera-shake band hides whether ${who} is on screen at the `
+                    + `walk's ${site === 'gate' ? 'gate' : 'corridor probe'} (t${run.ticksCompleted}), and ${why}`,
+                { goal, ...extra });
+            };
+            // one record per walk; `site` is where its first wait was asked
+            if (bandWait === null) {
+                bandWait = { tick: perTick.length, what, site, ticks: 0 };
+                executorBandWaits.push(bandWait);
+            }
+            if (bandWait.ticks >= EXECUTOR_BAND_WAIT) {
+                refuseBand(`the walk has already stood ${bandWait.ticks} tick(s) for it `
+                    + `(EXECUTOR_BAND_WAIT ${EXECUTOR_BAND_WAIT}).`);
+            }
+            const d = dangerNow(run, run.state.x, run.state.y, except);
+            recordDanger('gate', run.state.x, run.state.y, d);
+            if (d.danger) {
+                refuseBand(`standing at (${run.state.x},${run.state.y}) to wait it out is danger too — `
+                    + `${d.sources.map((x) => `${x.kind}:${x.id ?? '?'} (${x.why})`).join('; ')}.`,
+                { obstacle: { kind: 'danger', id: d.sources[0]?.id ?? null } });
+            }
+            const hits = run.ledger('playerHits').length;
+            perTick.push(BAND_WAIT_KEYS);
+            const { transition } = run.advance(BAND_WAIT_KEYS);
+            bandWait.ticks += 1;
+            EXECUTOR_SHAKE_BAND_COUNTS.waited += 1;
+            if (transition) refuseBand(`the run crossed to level ${transition.to_level} while the walk stood for it.`);
+            if (run.ledger('playerHits').length > hits) refuseBand('the player was hit while the walk stood for it.');
+        };
         attempts: for (let attempt = 0; ; attempt += 1) {
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
@@ -26097,7 +26178,12 @@ function solveSegmentUnder({
             if (laneWalk) except = laneCrossingExcept(except, laneWalk.ids);
             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
             // ⛓ AXETIMING D2b: and a spinning axe's blade at the walk's first sample (`axeGateTransit`).
-            refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
+            try {
+                refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
+            } catch (e) {
+                waitShakeBand(e, 'gate', except); // ⛓ hammer-phase BX: OFF (or not the band) rethrows
+                continue attempts;
+            }
             let wps;
             let fine = false;
             try {
@@ -26408,8 +26494,14 @@ function solveSegmentUnder({
              */
             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
-            let hit = probeCorridor(wps, except,
-                { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+            let hit;
+            try {
+                hit = probeCorridor(wps, except,
+                    { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+            } catch (e) {
+                waitShakeBand(e, 'probe', except); // ⛓ hammer-phase BX: OFF (or not the band) rethrows
+                continue attempts;
+            }
             // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
             let narrow = false;
             /**
@@ -26471,7 +26563,12 @@ function solveSegmentUnder({
                 if (climbed.forced) return climbed.forced.transition;
                 if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue attempts; }
                 if (!(CONTACT_FIDELITY.partialDodgeReprobe && climbed.partial)) break climbs;
-                hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+                try {
+                    hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
+                } catch (e) {
+                    waitShakeBand(e, 'probe', except); // ⛓ hammer-phase BX: OFF (or not the band) rethrows
+                    continue attempts;
+                }
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE
@@ -28116,6 +28213,8 @@ function solveSegmentUnder({
          * replaced, cut to 200 characters).
          */
         ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
+        // ⛓ hammer-phase BX — present only when a walk stood for the shake band (`EXECUTOR_SHAKE_BAND`)
+        ...(executorBandWaits.length ? { executorBandWaits } : {}),
         ...(lapseNarrowWalks.length ? { lapseNarrowWalks } : {}),
         /**
          * ⛓ hammer-phase B3 — an optional result field, present only when a press kill's fight fallback ran
