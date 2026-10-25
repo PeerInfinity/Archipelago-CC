@@ -1377,7 +1377,7 @@ export const CONTACT_FIDELITY = {
      * no candidate reaches otherwise is asked under those admissions; a frontier order that cannot bind yet passes the
      * round to the next door; a refusal carries its `equips`. OFF: byte-identical. `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`.
      */
-    weighHypothesisChain: false,
+    weighHypothesisChain: true,
     /**
      * fidelity L40BK2 D2 (wave 31) ⛓ hammer hand-over 368 — A STRUCK SPINNER IS PRICED WHERE THE STRIKE LEFT IT. The
      * transit probe (`probeSamples` → `dangerDuringTransit` → `spinnerDanger`) read the run's press-blind
@@ -1386,7 +1386,7 @@ export const CONTACT_FIDELITY = {
      * hammer arc's `spinnerFightForecast` cursor with the walk's presses and each sample's spinners are priced from its
      * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
      */
-    dashSpinnerForecast: false,
+    dashSpinnerForecast: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
