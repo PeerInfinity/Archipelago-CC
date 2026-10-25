@@ -112,6 +112,9 @@ import { rectsOverlap, SOLIDS_BY_MOVER, TILE_SIZE } from './levelWorld.js';
 import { collideLineSolid } from './crusher.js';
 import { defineRecord } from './entityRecords.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
+// ⛓ fidelity L39SHAFT D2c — `Spinner.friction()` in the runtime's `Point` spelling (behind `spinnerPointExact`, OFF).
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { spinnerFrictionExact } from './spinnerPoint.js';
 
 export class SpinnerError extends Error {
     constructor(message) { super(message); this.name = 'SpinnerError'; }
@@ -271,6 +274,8 @@ export function spinnerRect(s) {
  * rather than being left with a 0.04 px/tick drift.
  */
 export function spinnerFriction(vx, vy) {
+    // ⛓ fidelity L39SHAFT D2c (`spinnerPointExact`, OFF): `Point.length` / `normalize` as the runtime spells them.
+    if (CONTACT_FIDELITY.spinnerPointExact) return spinnerFrictionExact(vx, vy, SPINNER);
     const len = Math.hypot(vx, vy);
     let nx = vx;
     let ny = vy;

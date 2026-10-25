@@ -1366,6 +1366,34 @@ export const CONTACT_FIDELITY = {
      * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
      */
     iceTurretDeathAnim: true,
+    /**
+     * fidelity L39SHAFT (wave 31) — **L39's SHAFT, A LICENSED SPECIAL CASE** (⚖ user 2026-10-25: *"move the three blocks
+     * into the three inner switches, then stand between them and use fire … For this one, we might need to give the
+     * solver a special case, rather than trying to find a general rule"*). L39's three wandlocks (`wandlock@144,64/48/32`)
+     * each answer to an outer button under a cover that only ANOTHER block's inner button opens, so the one-block weigh
+     * parks one block and refuses three links deeper (*"no REACHABLE stance inside button@144,112"*). ON: a frontier
+     * member of `solverBot.L39_SHAFT` (the locks, the covers, the six buttons) refines to `l39shaft`, whose executor
+     * parks a fire block on each inner button in the table's order (each by the fire route search), walks to (9,9)
+     * between them and fires once (`runFire`'s exact set: all three blocks onto the three outer buttons), then waits out
+     * the locks' fade. The game witness: `fidelityL39Shaft.js`. OFF: byte-identical. `SEEDLING_L39_SHAFT_PRESS=0|1`.
+     */
+    l39ShaftPress: false,
+    /**
+     * fidelity L39SHAFT D2b (wave 31) — A COLLECT FROM A STANCE ALREADY IN THE PICKUP'S SPAN CLOSES ON ONE AXIS.
+     * `runCollect` aims at the pickup's centre; `totempart@72,40` straddles x = 80 under its only free cell, and the line
+     * from (88,24) drifts into the wall at (4,1) (`r5Shaft.TOTEM_PART_2.aim` declared it by hand). ON: the solver's
+     * collect aims straight along the axis the box does not yet overlap (`solverBot.collectSpanAim`). OFF:
+     * byte-identical. `SEEDLING_COLLECT_SPAN_AIM=0|1`.
+     */
+    collectSpanAim: false,
+    /**
+     * fidelity L39SHAFT D2c (wave 31) — `Spinner.friction()`'s `Point` arithmetic as the runtime spells it:
+     * `v.normalize(Math.max(v.length - f, moveSpeed))` is `sqrt(x*x + y*y)` and a multiply by `t / length`
+     * (`playerPhysicsV1.pointNormalize`); `spinner.spinnerFriction` spelled it `Math.hypot` and `(v / len) * t`, which
+     * drifts one ulp on a decaying knockback (game-measured: D2's step-66 witness, t637). ON: `spinnerPoint.js`. OFF:
+     * byte-identical. `SEEDLING_SPINNER_POINT_EXACT=0|1`.
+     */
+    spinnerPointExact: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1627,6 +1655,12 @@ if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELI
 if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
+if (globalThis.process?.env?.SEEDLING_L39_SHAFT_PRESS === '1') CONTACT_FIDELITY.l39ShaftPress = true;
+if (globalThis.process?.env?.SEEDLING_L39_SHAFT_PRESS === '0') CONTACT_FIDELITY.l39ShaftPress = false;
+if (globalThis.process?.env?.SEEDLING_COLLECT_SPAN_AIM === '1') CONTACT_FIDELITY.collectSpanAim = true;
+if (globalThis.process?.env?.SEEDLING_COLLECT_SPAN_AIM === '0') CONTACT_FIDELITY.collectSpanAim = false;
+if (globalThis.process?.env?.SEEDLING_SPINNER_POINT_EXACT === '1') CONTACT_FIDELITY.spinnerPointExact = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_POINT_EXACT === '0') CONTACT_FIDELITY.spinnerPointExact = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

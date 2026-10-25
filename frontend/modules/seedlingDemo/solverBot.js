@@ -780,7 +780,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -884,7 +884,9 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
 'lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? execLavaBoss : undefined)),
 'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)),
 // ⛓ fidelity ROPE — `rope` (switch-gated on `ropeCutVerb`): the PULL rung's cut as a strategy. See `execRope`.
-'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)));
+'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)),
+// ⛓ fidelity L39SHAFT — `l39shaft` (switch-gated on `l39ShaftPress`): L39's licensed special case. See `execL39Shaft`.
+'l39shaft', () => (CONTACT_FIDELITY.l39ShaftPress ? execL39Shaft : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -2864,6 +2866,10 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    // ⛓ fidelity L39SHAFT (behind `CONTACT_FIDELITY.l39ShaftPress`, OFF): a member of L39's shaft (`L39_SHAFT`) is the
+    // licensed special case's — the three blocks onto the three inner buttons, one Fire press between them. OFF: the
+    // rows below, byte for byte.
+    if (CONTACT_FIDELITY.l39ShaftPress && l39ShaftMember(run, obstacle)) return 'l39shaft';
     // ⛓ fidelity SEARCHGAPS D-A (behind `CONTACT_FIDELITY.crusherBaitPressGoal`): a rock that SHIELDS a resting crusher
     // (`crusherBait.crusherShieldOf`) is broken by the BAIT whose first chain it triggers, not by a bare `break` — every
     // swing stance is in the lane it opens. OFF: the table's `break`, byte for byte.
@@ -3020,6 +3026,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
     // ⛓ fidelity ROPE — reached only while `ropeCutVerb` registers the verb (the row is switch-gated).
     if (strategy === 'rope') return resolveRopeStrategy(run, obstacle, contacts, blocked);
+    // ⛓ fidelity L39SHAFT — reached only while `l39ShaftPress` refines a shaft member to it (`refineStrategy`).
+    if (strategy === 'l39shaft') return resolveL39ShaftStrategy(run, obstacle);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -4342,6 +4350,270 @@ function resolveFireMoveStrategy(run, row, contacts, aim, allowTeleporter, block
             why: `${route.steps.length} order(s): ${describeRoute(route.steps)}`,
         }, ...hypothesisRejection(discharged), ...route.rejected],
     };
+}
+
+/**
+ * ⛓⛓⛓ fidelity L39SHAFT (wave 31, `CONTACT_FIDELITY.l39ShaftPress`, OFF) — **L39's SHAFT, A LICENSED SPECIAL CASE.**
+ *
+ * ⚖ The user (2026-10-25): *"L39 has a mechanic not used anywhere else in the game. The solution is to move the three
+ * blocks into the three inner switches, then stand between them and use fire, which means that for a moment the blocks
+ * are half on one button and half on another. For this one, we might need to give the solver a special case, rather
+ * than trying to find a general rule that would solve this."* This table is THAT special case, and it is L39's alone:
+ * `l39ShaftIn` answers it only in level 39 and only while every id below is in the built world.
+ *
+ *     inner (each opens a cover)                          outer (each under a cover; each opens a wandlock)
+ *       button@144,128 (9,8)  {t 1} → cover@176,144 + wandlock@48,160    button@144,112 (9,7)  {t 4} → wandlock@144,48
+ *       button@160,144 (10,9) {t 2} → cover@112,144                      button@176,144 (11,9) {t 5} → wandlock@144,32
+ *       button@128,144 (8,9)  {t 0} → cover@144,112                      button@112,144 (7,9)  {t 3} → wandlock@144,64
+ *
+ * A plain `Button` republishes every update (`Button.as:27-39`), so only a Solid parked on an outer button holds its
+ * lock; and each outer button is under a cover that only ANOTHER inner button opens (`Cover.as:37-66`). The one-block
+ * weigh therefore parks one block and refuses three links deeper. The user's answer: the three blocks on the three
+ * INNER buttons, the player at (9,9) between them, ONE Fire press — `Player.fire()`'s 32x32 rect pushes every block in
+ * it `atan2` away (`PushableBlockFire.as:76-123`), so (9,8) goes north, (10,9) east, (8,9) west, each onto the outer
+ * button under the cover the other two hold open. Each block enters its destination cover on the glide's first tick and
+ * stays on the inner button it is leaving for ~22 more: for those ticks every block is on two buttons at once (game-
+ * witnessed at 0 px, `fidelityL39Shaft.js`: t2250..t2260 of `r5-shaft`), and when the inner buttons drop each cover
+ * stays open because a Solid is inside it.
+ *
+ * `inner` is in DEPENDENCY order: t1 first (its group opens `cover@176,144`, the only way out of `pushableblockfire@208,80`'s
+ * region, and `wandlock@48,160`, the pocket's door for `pushableblockfire@48,176`), then t2 (its group opens
+ * `cover@112,144` on row 9), then t0. Which block goes to which inner button is not in the table: the executor asks the
+ * fire route search (`deriveBlockRoute`, `press` goal) for every block not already on an inner button and takes the
+ * cheapest route (`compareCost`), so the plan follows the room's live state — a block already home is not moved, and
+ * blocks already on the three outer buttons need only the fade.
+ */
+export const L39_SHAFT = Object.freeze({
+    level: 39,
+    inner: Object.freeze([
+        Object.freeze({ presser: 'button@144,128', t: 1, onto: Object.freeze({ tx: 9, ty: 8 }) }),
+        Object.freeze({ presser: 'button@160,144', t: 2, onto: Object.freeze({ tx: 10, ty: 9 }) }),
+        Object.freeze({ presser: 'button@128,144', t: 0, onto: Object.freeze({ tx: 8, ty: 9 }) }),
+    ]),
+    outer: Object.freeze([
+        Object.freeze({ presser: 'button@144,112', t: 4, onto: Object.freeze({ tx: 9, ty: 7 }) }),
+        Object.freeze({ presser: 'button@176,144', t: 5, onto: Object.freeze({ tx: 11, ty: 9 }) }),
+        Object.freeze({ presser: 'button@112,144', t: 3, onto: Object.freeze({ tx: 7, ty: 9 }) }),
+    ]),
+    covers: Object.freeze(['cover@144,112', 'cover@176,144', 'cover@112,144']),
+    locks: Object.freeze(['wandlock@144,64', 'wandlock@144,48', 'wandlock@144,32']),
+    /** The press stance: between the three inner buttons. */
+    stance: Object.freeze({ tx: 9, ty: 9 }),
+    /** The press's exact set (`runFire`'s `moves`): each inner block one tile AWAY from (9,9), onto its outer button. */
+    final: Object.freeze([
+        Object.freeze({ from: Object.freeze({ tx: 9, ty: 8 }), to: Object.freeze({ tx: 9, ty: 7 }) }),
+        Object.freeze({ from: Object.freeze({ tx: 10, ty: 9 }), to: Object.freeze({ tx: 11, ty: 9 }) }),
+        Object.freeze({ from: Object.freeze({ tx: 8, ty: 9 }), to: Object.freeze({ tx: 7, ty: 9 }) }),
+    ]),
+});
+
+/** The lock fade's bound after the press: `Lock.activationStep`'s 100 ticks of 0.01 alpha, the glide (32) and slack. */
+export const L39_SHAFT_FADE_BOUND = 200;
+
+/**
+ * ⛓ THE DEPARTURE WAIT — L39's three `Spinner`s are billiards (`spinner.js`: `|v| ≥ moveSpeed` for ever, reflecting
+ * off walls), stepped exactly by the model, and a stance walk across the room can meet one at its ETA where the
+ * ladder has no rung that crosses a room (TIME is a last-mile tool, a billiard bends no line, and its KILL scan finds
+ * no reachable strike). A walk refused at PLAN time (no tick spent) for a live spinner's body is asked again after
+ * `L39_SHAFT_WAIT_STEP` idle ticks (the player standing where the last order left them, every idle tick checked for a
+ * hit), up to `L39_SHAFT_WAIT_MAX`; the walk then taken is the ordinary one, certified by the ordinary probe.
+ */
+export const L39_SHAFT_WAIT_STEP = 16;
+export const L39_SHAFT_WAIT_MAX = 480;
+
+function l39ShaftWalk(run, perTick, ctx, stance, opts, refuse) {
+    const IDLE = new Set();
+    let waited = 0;
+    for (;;) {
+        const t0 = perTick.length;
+        try {
+            ctx.walkTo(ctx.goal, stance, opts);
+            return waited;
+        } catch (e) {
+            const billiard = e instanceof SolverRefusal && e.obstacle?.kind === 'danger'
+                && typeof e.obstacle.id === 'string' && e.obstacle.id.startsWith('spinner@');
+            if (!billiard || perTick.length !== t0 || waited + L39_SHAFT_WAIT_STEP > L39_SHAFT_WAIT_MAX) throw e;
+        }
+        const hits = run.ledger('playerHits').length;
+        for (let i = 0; i < L39_SHAFT_WAIT_STEP; i += 1) {
+            perTick.push(IDLE);
+            const { transition } = run.advance(IDLE);
+            if (transition) refuse(`the departure wait crossed to level ${transition.to_level}.`);
+            if (run.ledger('playerHits').length !== hits) {
+                refuse(`the departure wait before ${opts.what} was HIT after ${waited + i + 1} idle tick(s) at `
+                    + `(${run.state.x},${run.state.y}).`);
+            }
+        }
+        waited += L39_SHAFT_WAIT_STEP;
+    }
+}
+
+const l39Id = (r) => `${r.tag}@${r.x},${r.y}`;
+
+/** Is the run in L39 with the shaft's every presser and responder built? (`null` otherwise: the table does not apply.) */
+export function l39ShaftIn(run) {
+    if (run.level !== L39_SHAFT.level) return false;
+    const pressers = new Set((run.world.pressers ?? []).map(l39Id));
+    const acts = new Set((run.world.activators ?? []).map((a) => a.id));
+    return [...L39_SHAFT.inner, ...L39_SHAFT.outer].every((b) => pressers.has(b.presser))
+        && [...L39_SHAFT.covers, ...L39_SHAFT.locks].every((id) => acts.has(id));
+}
+
+/** A frontier obstacle that is one of the shaft's members (a lock, a cover, one of the six buttons). */
+function l39ShaftMember(run, obstacle) {
+    const id = obstacle?.id;
+    if (typeof id !== 'string') return false;
+    const members = [...L39_SHAFT.locks, ...L39_SHAFT.covers, ...L39_SHAFT.inner.map((b) => b.presser),
+        ...L39_SHAFT.outer.map((b) => b.presser)];
+    return members.includes(id) && l39ShaftIn(run);
+}
+
+/**
+ * ⛓ WHICH STATE THE SHAFT IS IN (⚖ the user's standard: the solver knows which state it is in). Every live fire block's
+ * tile and whether it is at rest on the grid, and which inner and outer buttons a block sits on.
+ */
+export function l39ShaftState(run) {
+    const live = run.entities('pushables');
+    const blocks = (run.world.pushables ?? []).filter((p) => p.as3 === 'PushableBlockFire')
+        .map((p) => ({ row: p, b: live?.get(p.id) })).filter(({ b }) => b && !b.removed)
+        .map(({ row, b }) => ({ id: row.id, row, tx: Math.floor(b.rect.x / TILE_SIZE), ty: Math.floor(b.rect.y / TILE_SIZE),
+            grid: b.rect.x % TILE_SIZE === 0 && b.rect.y % TILE_SIZE === 0 }));
+    const on = (cell) => blocks.find((b) => b.grid && b.tx === cell.tx && b.ty === cell.ty) ?? null;
+    const inner = L39_SHAFT.inner.map((s) => ({ ...s, block: on(s.onto)?.id ?? null }));
+    const outer = L39_SHAFT.outer.map((s) => ({ ...s, block: on(s.onto)?.id ?? null }));
+    const open = run.entities('openActivators') ?? new Set();
+    return {
+        blocks,
+        inner,
+        outer,
+        innerAll: inner.every((s) => s.block !== null),
+        outerAll: outer.every((s) => s.block !== null),
+        locksOpen: L39_SHAFT.locks.every((id) => open.has(id)),
+        label: outer.every((s) => s.block !== null) ? 'outer'
+            : inner.every((s) => s.block !== null) ? 'inner' : `inner ${inner.filter((s) => s.block).length}/3`,
+    };
+}
+
+/**
+ * RESOLVE `l39shaft`: the Fire is the work order (no Fire ⇒ refused by name); the state is read, and the executor does
+ * the rest (each route is derived against the world the previous one left). No stance: the executor walks.
+ */
+function resolveL39ShaftStrategy(run, obstacle) {
+    const slot = (run.progress('inventorySlots') ?? []).indexOf(INVENTORY_ITEM_IDS.fire);
+    if (!run.progress('inventory')?.hasFire || slot < 0) {
+        throw new SolverRefusal(`solverBot: ${obstacle.id} is L39's shaft (\`L39_SHAFT\`), and its blocks are `
+            + '`PushableBlockFire`s, which move only for "Fire" and "Pulse" (`moveTypes`) — the run holds NO FIRE, so the '
+            + 'Fire is the work order.', { obstacle: { kind: obstacle.kind, id: obstacle.id } });
+    }
+    const state = l39ShaftState(run);
+    if (state.blocks.length < 3) {
+        throw new SolverRefusal(`solverBot: L39's shaft needs three fire blocks and ${state.blocks.length} are live `
+            + `([${state.blocks.map((b) => b.id).join(', ')}]) — a block destroyed this visit is not coming back until `
+            + 'the room is re-entered.', { obstacle: { kind: obstacle.kind, id: obstacle.id } });
+    }
+    return {
+        strategy: 'l39shaft',
+        postCondition: 'press',
+        weapon: 'fire',
+        slot,
+        target: { id: obstacle.id },
+        state: state.label,
+        rejected: [{
+            option: 'weigh / hold one presser at a time',
+            why: 'each outer button is under a cover only ANOTHER inner button opens, so a one-block weigh parks one block '
+                + 'and refuses three links deeper (*"no REACHABLE stance inside button@144,112"*); the user\'s solution '
+                + 'is the three inner buttons and one Fire press between them (`L39_SHAFT`)',
+        }],
+    };
+}
+
+/**
+ * EXECUTE `l39shaft`: (1) unless the three outer buttons already hold blocks — for each inner button in the table's
+ * order that holds no block, the cheapest fire route of any block not already on an inner button, walked and pressed
+ * through `execRoute` (its post-condition: the block on the tile); (2) the walk to (9,9), the settle, the Fire's slot,
+ * and ONE press through `runFire`'s `moves` arm, whose exact-set check is the three blocks onto the three outer
+ * buttons; (3) the fade of the three locks (`runDwell`, its shut-before law skipped only where they are already open).
+ */
+function execL39Shaft(run, perTick, resolved, ctx) {
+    const what = `${ctx.what} (L39 shaft)`;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${what}: ${why}`, { obstacle: { kind: 'solid', id: resolved.target?.id ?? null } });
+    };
+    const from = perTick.length;
+    const parks = [];
+    let state = l39ShaftState(run);
+    const start = state.label;
+    if (!state.outerAll) {
+        for (const slot of L39_SHAFT.inner) {
+            state = l39ShaftState(run);
+            if (state.inner.find((s) => s.presser === slot.presser).block) continue;
+            const free = state.blocks.filter((b) => !state.inner.some((s) => s.block === b.id));
+            const contacts = senseContacts(run);
+            let best = null;
+            const refused = [];
+            for (const b of free) {
+                const r = deriveBlockRoute(run, b.row, { kind: 'press', onto: slot.onto }, contacts, []);
+                if (!r.steps) { refused.push(`${b.id} (${b.tx},${b.ty}): ${r.refused?.why ?? 'the search found none'}`); continue; }
+                if (!r.steps.every((st) => st.verb === 'fire')) {
+                    refused.push(`${b.id}: its route holds a non-Fire order (${describeRoute(r.steps)})`);
+                    continue;
+                }
+                if (!best || compareCost(routeCost(r.steps), routeCost(best.steps)) < 0) best = { b, steps: r.steps };
+            }
+            if (!best) {
+                refuse(`no fire block can be routed onto ${slot.presser} (${slot.onto.tx},${slot.onto.ty}) {t ${slot.t}} `
+                    + `from this state (${state.label}): ${refused.join('; ') || 'no block is free'}.`);
+            }
+            const first = best.steps[0];
+            const waited = l39ShaftWalk(run, perTick, ctx, first.stance, { what: `${what} -> ${slot.presser} route stance`,
+                ...(first.exempt ? { contactsOverride: first.exempt } : {}) }, refuse);
+            const rec = execRoute(run, perTick, {
+                shove: { block: { x: best.b.row.x, y: best.b.row.y } }, route: best.steps,
+                target: { id: best.b.id }, weapon: 'fire', slot: resolved.slot,
+            }, ctx, `${what} (park ${best.b.id} on ${slot.presser})`);
+            parks.push({ presser: slot.presser, block: best.b.id, from: { tx: best.b.tx, ty: best.b.ty },
+                orders: best.steps.length, route: describeRoute(best.steps), waited, ticks: rec.ticks });
+        }
+        state = l39ShaftState(run);
+        if (!state.innerAll) {
+            refuse(`after the routes the inner buttons hold [${state.inner.map((s) => `${s.presser}: ${s.block ?? '-'}`)
+                .join(', ')}] — not all three.`);
+        }
+        const stance = nodeCentre(L39_SHAFT.stance.tx, L39_SHAFT.stance.ty, DEFAULT_LATTICE);
+        const waited = l39ShaftWalk(run, perTick, ctx, stance,
+            { what: `${what} -> the press stance (${L39_SHAFT.stance.tx},${L39_SHAFT.stance.ty})` }, refuse);
+        const NO_KEYS = new Set();
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse('the walk to the press stance never came to rest.');
+            perTick.push(NO_KEYS);
+            const { transition } = run.advance(NO_KEYS);
+            if (transition) refuse(`the settle crossed to level ${transition.to_level}.`);
+        }
+        const prior = run.progress('primary');
+        if (run.progress('primaryWeapon') !== 'fire') ctx.equip(resolved.slot);
+        const press = runFire(run, perTick, { moves: L39_SHAFT.final.map((m) => ({ from: { ...m.from }, to: { ...m.to } })) },
+            `${what} (the press between the three: all three blocks onto the outer buttons)`);
+        if (run.progress('primary') !== prior) ctx.equip(prior);
+        parks.push({ press: true, pressTick: press?.pressTick ?? null, at: { x: run.state.x, y: run.state.y }, waited });
+        state = l39ShaftState(run);
+        if (!state.outerAll) {
+            refuse(`after the press the outer buttons hold [${state.outer.map((s) => `${s.presser}: ${s.block ?? '-'}`)
+                .join(', ')}] — not all three.`);
+        }
+    }
+    let dwell = null;
+    if (!state.locksOpen) {
+        const until = {
+            why: `${L39_SHAFT.locks.join(', ')} open`,
+            test: (r) => L39_SHAFT.locks.every((id) => (r.entities('openActivators') ?? new Set()).has(id)),
+        };
+        const strike = strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+        dwell = runDwell(run, perTick, { ticks: L39_SHAFT_FADE_BOUND, until,
+            why: 'three fire blocks sit on the three outer buttons, and a `PushableBlockFire` is a "Solid" '
+                + '(`Button.hitables`), so each group stays published while the locks fade (`Lock.as:62-80`)',
+            ...(strike ? { strike } : {}) }, `${what} (the locks' fade)`);
+    }
+    return { kind: 'l39shaft', postCondition: 'press', start, parks, dwell, ticks: perTick.length - from };
 }
 
 const BOTH_RANGE_NOTE = '0.1';
@@ -17211,8 +17483,55 @@ function execCollect(run, perTick, resolved, ctx) {
                 approach, ceremony: 0, releases: 0, from, axisAligned: true };
         }
     }
-    return runCollect(run, perTick, { pickup: { x: resolved.target.x, y: resolved.target.y } },
+    // ⛓ fidelity L39SHAFT D2b (`CONTACT_FIDELITY.collectSpanAim`, OFF → null): the approach straight along one axis.
+    const aim = CONTACT_FIDELITY.collectSpanAim ? collectSpanAim(run, resolved.target) : null;
+    return runCollect(run, perTick, { pickup: { x: resolved.target.x, y: resolved.target.y }, ...(aim ? { aim } : {}) },
         ctx.maxTicksPerTarget, ctx.what);
+}
+
+/**
+ * ⛓ fidelity L39SHAFT D2b (`CONTACT_FIDELITY.collectSpanAim`, OFF) — **A STANCE ALREADY IN A PICKUP'S SPAN APPROACHES
+ * IT STRAIGHT.** `runCollect` aims at the pickup's centre with `chooseHeld`'s free diagonal. `totempart@72,40`'s rect
+ * [72,88) x [40,56) straddles x = 80 under the one free cell (5,1), and (4,1) is `tile:Blue Wall (dark)`: from the
+ * stance (88,24) the line to (80,48) drifts west and the sweep is blocked at x 82.2 (measured, survey step 66 with
+ * `l39ShaftPress` ON: *"the sweep was blocked by tile:Blue Wall (dark) at (72,24)"*) — the same geometry R5 slice 13
+ * declared by hand (`r5Shaft.TOTEM_PART_2.aim`). ON: when the player's box already overlaps the rect's span on ONE
+ * axis, the aim keeps that axis' coordinate and takes the rect's centre on the other, so the walk closes on a single
+ * axis — and only where the centre approach's own path (45° until the shorter axis arrives, then straight), the box
+ * swept along it, meets a Solid; any other stance (both or neither span, or a clear path) keeps the centre. `runCollect`
+ * still requires real contact.
+ */
+function collectSpanAim(run, target) {
+    const rect = target.rect ?? (run.world.pickups ?? []).find((p) => p.x === target.x && p.y === target.y)?.rect;
+    if (!rect) return null;
+    const box = playerBoxAt(run.state.x, run.state.y);
+    const xOver = box.x < rect.right && box.right > rect.x;
+    const yOver = box.y < rect.bottom && box.bottom > rect.y;
+    if (xOver === yOver) return null;
+    // ⛔ only where the CENTRE approach is the one that fails: `chooseHeld` holds both axes until the shorter one arrives
+    // (45° first, then the remaining axis — the driver's own shape), so that path's box, swept at 0.5 px, must meet a
+    // Solid (measured: without this the rule moved 10 bounded rows whose centre approach is clear)
+    const cx = (rect.x + rect.right) / 2;
+    const cy = (rect.y + rect.bottom) / 2;
+    const dx = cx - run.state.x;
+    const dy = cy - run.state.y;
+    const diag = Math.min(Math.abs(dx), Math.abs(dy));
+    const corner = { x: run.state.x + Math.sign(dx) * diag, y: run.state.y + Math.sign(dy) * diag };
+    const opts = run.liveGeometryOpts();
+    const sweep = (a, b) => {
+        const n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 0.5);
+        for (let i = 1; i <= n; i += 1) {
+            if (run.world.collidesSolid(playerBoxAt(a.x + (b.x - a.x) * (i / n), a.y + (b.y - a.y) * (i / n)), opts)) {
+                return true;
+            }
+        }
+        return false;
+    };
+    if (!sweep(run.state, corner) && !sweep(corner, { x: cx, y: cy })) return null;
+    const why = `the stance's box already overlaps the pickup's ${xOver ? 'x' : 'y'} span [${xOver ? rect.x : rect.y}, `
+        + `${xOver ? rect.right : rect.bottom}), so the approach closes on the other axis alone (\`collectSpanAim\`)`;
+    return xOver ? { x: run.state.x, y: (rect.y + rect.bottom) / 2, why }
+        : { x: (rect.x + rect.right) / 2, y: run.state.y, why };
 }
 
 /** Executor: the `chest` verb, with the shut-before snapshot it demands. */

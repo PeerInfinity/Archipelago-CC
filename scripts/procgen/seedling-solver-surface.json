@@ -27,7 +27,7 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 82
+    "files": 83
   },
   "runObject": {
     "properties": 234,
@@ -152,9 +152,9 @@
       "files": {
         "botDriverV2.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 64
+        "solverBot.js": 66
       },
-      "sites": 92,
+      "sites": 94,
       "seen": "both",
       "via": [
         "direct",
@@ -533,9 +533,9 @@
         "crusherBait.js": 7,
         "dangerMap.js": 26,
         "lightsVerb.js": 1,
-        "solverBot.js": 187
+        "solverBot.js": 189
       },
-      "sites": 326,
+      "sites": 328,
       "seen": "both",
       "via": [
         "direct",
@@ -634,7 +634,7 @@
         "openActivators": {
           "botDriverV2.js": 23,
           "crusherBait.js": 1,
-          "solverBot.js": 19
+          "solverBot.js": 20
         },
         "openBridges": {
           "botDriverV2.js": 4
@@ -652,7 +652,7 @@
         },
         "pushables": {
           "botDriverV2.js": 17,
-          "solverBot.js": 27
+          "solverBot.js": 28
         },
         "pushesSettled": {
           "botDriverV2.js": 5,
@@ -829,9 +829,9 @@
         "dangerMap.js": 3,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 102
+        "solverBot.js": 104
       },
-      "sites": 165,
+      "sites": 167,
       "seen": "both",
       "via": [
         "direct",
@@ -901,7 +901,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 50
+          "solverBot.js": 52
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -973,9 +973,9 @@
         "dangerMap.js": 14,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 120
+        "solverBot.js": 121
       },
-      "sites": 171,
+      "sites": 172,
       "seen": "both",
       "via": [
         "direct",
@@ -1002,9 +1002,9 @@
       "files": {
         "botDriverV2.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 15
+        "solverBot.js": 16
       },
-      "sites": 18,
+      "sites": 19,
       "seen": "both",
       "via": [
         "direct"
@@ -1118,9 +1118,9 @@
         "botDriverV2.js": 29,
         "director.js": 1,
         "lightsVerb.js": 5,
-        "solverBot.js": 128
+        "solverBot.js": 133
       },
-      "sites": 163,
+      "sites": 168,
       "seen": "both",
       "via": [
         "direct",
@@ -1151,10 +1151,10 @@
         "inventory": {
           "botDriverV2.js": 7,
           "lightsVerb.js": 3,
-          "solverBot.js": 48
+          "solverBot.js": 49
         },
         "inventorySlots": {
-          "solverBot.js": 17
+          "solverBot.js": 18
         },
         "keys": {
           "botDriverV2.js": 6,
@@ -1162,12 +1162,12 @@
         },
         "primary": {
           "botDriverV2.js": 1,
-          "solverBot.js": 18
+          "solverBot.js": 20
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
           "lightsVerb.js": 1,
-          "solverBot.js": 20
+          "solverBot.js": 21
         },
         "saveState": {
           "director.js": 1
@@ -1344,9 +1344,9 @@
         "crusherBait.js": 6,
         "dangerMap.js": 2,
         "lightsVerb.js": 7,
-        "solverBot.js": 571
+        "solverBot.js": 586
       },
-      "sites": 710,
+      "sites": 725,
       "seen": "both",
       "via": [
         "direct",
@@ -1544,9 +1544,9 @@
         "dangerMap.js": 3,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
-        "solverBot.js": 290
+        "solverBot.js": 295
       },
-      "sites": 363,
+      "sites": 368,
       "seen": "both",
       "via": [
         "direct",
@@ -1617,9 +1617,9 @@
         "arrivalSolid.js": 1,
         "botDriverV2.js": 10,
         "crusherBait.js": 1,
-        "solverBot.js": 23
+        "solverBot.js": 24
       },
-      "sites": 35,
+      "sites": 36,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1781,9 +1781,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 3
+        "solverBot.js": 4
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "both",
       "via": [
         "direct"
@@ -2056,9 +2056,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2155,9 +2155,9 @@
         "botDriverV2.js": 2,
         "crusherBait.js": 1,
         "dangerMap.js": 1,
-        "solverBot.js": 22
+        "solverBot.js": 23
       },
-      "sites": 26,
+      "sites": 27,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2228,9 +2228,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 12
+        "solverBot.js": 13
       },
-      "sites": 14,
+      "sites": 15,
       "seen": "both",
       "via": [
         "direct",
@@ -2766,9 +2766,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 23
+        "solverBot.js": 24
       },
-      "sites": 34,
+      "sites": 35,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2797,9 +2797,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 9,
-        "solverBot.js": 19
+        "solverBot.js": 20
       },
-      "sites": 30,
+      "sites": 31,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2833,9 +2833,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 214
+        "solverBot.js": 223
       },
-      "sites": 284,
+      "sites": 293,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2869,9 +2869,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
-        "solverBot.js": 218
+        "solverBot.js": 227
       },
-      "sites": 291,
+      "sites": 300,
       "seen": "both",
       "via": [
         "const-alias",
@@ -4283,10 +4283,10 @@
         "dangerMap.js": 5,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 101,
+        "solverBot.js": 104,
         "strikePolicy.js": 2
       },
-      "sites": 131,
+      "sites": 134,
       "seen": "static",
       "via": [
         "import"
@@ -5272,9 +5272,9 @@
         "botDriverV2.js": 49,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
-        "solverBot.js": 209
+        "solverBot.js": 213
       },
-      "sites": 264,
+      "sites": 268,
       "seen": "static",
       "via": [
         "import"
@@ -5873,10 +5873,10 @@
         "dangerMap.js": 1,
         "encounters.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 66,
+        "solverBot.js": 68,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 87,
+      "sites": 89,
       "seen": "static",
       "via": [
         "import"
@@ -6807,7 +6807,7 @@
       "surface": "import",
       "name": "enemiesUnseenByBlockSweep",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 906,
+      "line": 911,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -6825,7 +6825,7 @@
       "surface": "import",
       "name": "hammerHitsPlayer",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 655,
+      "line": 660,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -6844,7 +6844,7 @@
       "surface": "import",
       "name": "MODELLED_ENEMY_CLASSES",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 756,
+      "line": 761,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6862,7 +6862,7 @@
       "surface": "import",
       "name": "SPINNER",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 132,
+      "line": 135,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6881,7 +6881,7 @@
       "surface": "import",
       "name": "spinnerRect",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 251,
+      "line": 254,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -7065,9 +7065,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 21
+        "solverBot.js": 22
       },
-      "sites": 21,
+      "sites": 22,
       "seen": "static",
       "via": [
         "import"
