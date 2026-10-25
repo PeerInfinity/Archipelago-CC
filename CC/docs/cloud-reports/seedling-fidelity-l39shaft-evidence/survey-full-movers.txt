@@ -1,0 +1,5 @@
+A = defaults (77 ON), B = A + l39ShaftPress + collectSpanAim + spinnerPointExact; sequential local runs at head
+step 66 L39: A REFUSED None -> B SOLVED 3496 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 94 L39: A REFUSED None -> B SOLVED 3376 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 135 L39: A REFUSED None -> B SOLVED 3376 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 155 L39: A REFUSED None -> B SOLVED 3253 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr

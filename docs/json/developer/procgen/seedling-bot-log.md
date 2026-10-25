@@ -25700,3 +25700,55 @@ written. Legs 862 and 872: 3/3 clocks each equal to L37; no hit; `{43,0}`, `{43,
   names slot indices that a fresh page does not hold.
 - "The ladder is exhausted on the arrow lane" can be a symptom of an earlier, cheaper move that destroyed the room's
   own answer. Read the run's state at the refusal (the block was `removed`), not just the refusal's words.
+
+### Seedling fidelity L39SHAFT — L39's three-block shaft as a licensed solver special case (`l39ShaftPress`); a collect closes on one axis (`collectSpanAim`); `Spinner.friction()` in the runtime's `Point` spelling (`spinnerPointExact`) — all OFF
+
+Planner `seedling-fidelity-planning-13`, wave 31. The report is `CC/docs/cloud-reports/seedling-fidelity-l39shaft.md`.
+⚖ The user (2026-10-25): *"The solution is to move the three blocks into the three inner switches, then stand between them
+and use fire, which means that for a moment the blocks are half on one button and half on another. For this one, we might
+need to give the solver a special case, rather than trying to find a general rule that would solve this."*
+
+**W0 — the room.** Six plain buttons. The inner three (t1 (9,8), t2 (10,9), t0 (8,9)) each open a cover; the outer three
+(t4 (9,7), t5 (11,9), t3 (7,9)) each sit under one of those covers and each opens one of the three wandlocks on column 9. A
+plain `Button` republishes every update and a `Cover` resets the moment its group drops unless a Solid is inside it, so no
+outer button can be held while the player stands anywhere else, and the one-block weigh parks one block and refuses three
+links deeper (*"no REACHABLE stance inside button@144,112"*, survey steps 66/94/135/155, reproduced at the base).
+`Player.fire()` pushes every block in its 32x32 rect `atan2` away, so from (9,9) with all three inner buttons loaded the
+three blocks go N, E and W at once, each onto the outer button under the cover the other two hold open.
+
+**D1 — the game witness of the user's solution** (`l39shaft-scripted`, `r5-shaft`'s `SHAFT_PLAN` on p4g, the page's own
+levels): 2,763 ticks at 0 px — the player, all three fire blocks, all three spinners, L39's lock tags. The half-on moment is
+t2250..t2260: every block overlaps its inner AND its outer button (the button hitbox is 8x6 in a 16 px cell, the glide is
+0.5 px/tick). The locks write {39,0}/{39,2} at t2349 and {39,1} at t2351; the pocket's {39,7} is written at t648 and taken
+back at t2262. The model already had all of it: no gap.
+
+**D2 — the special case** (`l39ShaftPress`): a frontier member of `L39_SHAFT` refines to `l39shaft`; the executor reads the
+state (`l39ShaftState`), routes a fire block onto each empty inner button in the table's order (each the cheapest fire route
+of any free block, so the plan follows the live room), walks to (9,9), presses once (`runFire`'s exact set), and waits out
+the fade. The solver's plan for step 66 (3,496 t) played on p4g on the delivered set: 3,494 ticks at 0 px, the part
+collected, the exit to L40 taken. Two more gaps came out of that witness, each its own key: `collectSpanAim` (the part's
+rect straddles x = 80 under its only free cell; the centre-aimed approach hit (4,1)'s wall) and `spinnerPointExact`
+(`spinnerFriction` spelled `Point.length`/`normalize` as `Math.hypot` and `(v / len) * t`, one ulp off the runtime's after a
+knockback; the game disagreed at t547 on the last bit of a spinner's x).
+
+**Trap candidates.**
+- A witness on the wrong level set: the survey solves on the DELIVERED set, whose L39 has no `fallrock@144,624`; replaying
+  its walk on the page's own levels diverged at t72 (the vanilla rope publication drops the rock and freezes the room), which
+  read like a sword-dash model gap until the set was matched.
+- A survey diff keyed on (level, goals, boot block) is not a key: many staged visits share all three, and the pairing
+  invented 30 "movers". Two concurrent full runs gave rows identical to a sequential one; pair rows by step.
+- A general rule found in one room is measured everywhere before it ships: `collectSpanAim` as first written (any stance in
+  one span) moved 10 bounded rows and 7 survey steps whose approach was never blocked; narrowed to "the centre approach's
+  own path meets a Solid", it moves none of them and still opens L39.
+- `oneSpelling` visits only files that IMPORT the transcription: `spinner.js` spelled `Point.length` with `Math.hypot`
+  outside the law's bound, and it took a game witness to see the ulp.
+
+**Movers (local; the CI dispatches are in the report).**
+- Full survey, A (the 77 defaults) vs B (+ the three keys), sequential: exactly 4 rows — L39 steps 66/94/135/155 REFUSED →
+  SOLVED (3,496 / 3,376 / 3,376 / 3,253 t). Steps 94/135/155 need `l39ShaftPress` alone; 66 also needs `collectSpanAim`.
+- Keyed sweep ×2 over the 51 legs in the spinner rooms (L18, L39, L40, L92) and L38's two L39 doors: 0 key-driven verdicts;
+  leg 371 flips inside both arms, and its captured requests answer OFF = ON at their own seam times.
+- Probes standard, the three keys ON: 11/11. Long logical-links B: past L39 (Totem Part 72,40 checked, 0 divergences) to
+  L40 Boss Key 2 at +1023 s, 18 checks — L40BK2's room.
+- Bounded vitest, the keys ON: `l39ShaftPress` moves WANDHOLD's two L39 controls (they pin the old refusal); the defaults
+  tables owe their re-pins; `spinnerPointExact` and the narrowed `collectSpanAim` move nothing else.
