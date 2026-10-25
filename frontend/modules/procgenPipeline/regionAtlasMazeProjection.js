@@ -533,6 +533,7 @@ export function projectRegionToMaze(region, grid, ctx) {
         for (const [x, y] of component.tiles) builder.floor(x, y);
 
         const note = (n) => notes.push({ region_id: region.region_id, sub_region: component.id, ...n });
+        const directional = floorDirectionalCells(builder, grid, component.tiles, resolveCondition, note);
         /**
          * `entry.exitName` is the id (see the exit-id invariant above); it is
          * globally unique by construction, so a collision here means the graph
@@ -683,6 +684,7 @@ export function projectRegionToMaze(region, grid, ctx) {
         }
 
         bindWorldEvents(builder, ctx.eventsFor?.(region), local, ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height);
+        const entryGates = directional > 0 ? levelWorldEntryGates(builder, grid, new Set(), resolveCondition, new Set(), note) : [];
 
         // --- assemble --------------------------------------------------------
         const [ex, ey] = component.tiles[0];
@@ -701,6 +703,7 @@ export function projectRegionToMaze(region, grid, ctx) {
                 return { x, y, id: entry.id, locationName: entry.locationName };
             }).sort((a, b) => (a.y - b.y) || (a.x - b.x)),
             obstacleLib: builder.obstacleLib,
+            ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
             // Atlas provenance. The maze runtime ignores these; they are what
             // makes a dumped sidecar traceable back to the map it came from.
             atlas_region: region.region_id,
@@ -819,6 +822,41 @@ const MOVES = Object.freeze([['N', 0, -1, 'S'], ['E', 1, 0, 'W'], ['S', 0, 1, 'N
  *   - a gate condition with no AP item behind it refuses the step (a wall can only make the world harder) and is named;
  *   - a step in `refused` (`"x,y,dir"`) has no entry at all.
  */
+/**
+ * ⛓ DIRECTIONAL CELLS IN A PER-SUB-REGION WORLD (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Entry gates in
+ * every world"; water-exits floored them in LEVEL worlds only). The analyzer's components hold no directional cell —
+ * it steps THROUGH them (`stepCost`) — so a sub-region joined by one projected as islands: L94 r3c4's two cells are
+ * (4,3) and (4,6), joined by the cliffside (4,4)/(4,5) (faces W:null). Every directional cell chained to the
+ * component through directional cells is floored here, with its occupancy gate as a gated cell's; its direction
+ * physics become ENTRY GATES (`levelWorldEntryGates`, the level world's own). A cell whose condition has no AP item
+ * stays a wall, by name. Returns how many were floored (0 ⇒ the world is unchanged and carries no entry gates).
+ */
+function floorDirectionalCells(builder, grid, tiles, resolveCondition, note) {
+    const cellAt = (x, y) => (x >= 0 && y >= 0 && x < grid.width && y < grid.height ? grid.cells[y * grid.width + x] : null);
+    const queue = tiles.map(([x, y]) => [x, y]);
+    const seen = new Set(queue.map(([x, y]) => `${x},${y}`));
+    let floored = 0;
+    for (let head = 0; head < queue.length; head += 1) {
+        const [x, y] = queue[head];
+        for (const [, dx, dy] of MOVES) {
+            const [nx, ny] = [x + dx, y + dy];
+            const key = `${nx},${ny}`;
+            if (seen.has(key) || cellAt(nx, ny)?.kind !== 'directional' || builder.isFloor(nx, ny)) continue;
+            seen.add(key);
+            const own = occupancyRule(cellAt(nx, ny), resolveCondition);
+            if (own.unresolved.length > 0) {
+                note({ kind: 'unresolved_walled', tile: [nx, ny], message: `a directional cell at [${nx},${ny}] has a condition with no AP item behind it — WALLED` });
+                continue;
+            }
+            builder.floor(nx, ny);
+            if (own.rule) builder.gate(nx, ny, own.rule);
+            floored += 1;
+            queue.push([nx, ny]);
+        }
+    }
+    return floored;
+}
+
 function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused, note) {
     const out = [];
     const cellAt = (x, y) => grid.cells[y * grid.width + x];
