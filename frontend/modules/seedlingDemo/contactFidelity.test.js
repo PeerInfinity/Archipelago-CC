@@ -291,7 +291,13 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // the shot — shipped OFF.
             iceBlastShield: true,
             turretCircleKill: true,
-            iceTurretDeathAnim: true });
+            iceTurretDeathAnim: true,
+            // ⛓ fidelity L39SHAFT (wave 31): L39's three-block shaft as a licensed solver special case — shipped OFF.
+            l39ShaftPress: false,
+            // ⛓ fidelity L39SHAFT D2b (wave 31): a collect from a stance in the pickup's span closes on one axis — OFF.
+            collectSpanAim: false,
+            // ⛓ fidelity L39SHAFT D2c (wave 31): `Spinner.friction()` in the runtime's `Point` spelling — OFF.
+            spinnerPointExact: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
