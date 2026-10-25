@@ -2825,10 +2825,16 @@ function animationFramesFlow(count, timeoutMs) {
 export async function seedlingFlashRuntimeLoopBotBlockNamesItsStop(tc) {
     const swfUrl = new URL(`./modules/flashPanel/swf/seedling_injected.swf`, location.href).href;
     const swfFetch = watchResourceFetch(swfUrl);
+    const ruffle = (window.RufflePlayer ??= {});
+    const hadConfig = Object.hasOwn(ruffle, 'config');
+    const previousConfig = ruffle.config;
+    ruffle.config = { ...(previousConfig ?? {}), preferredRenderer: 'canvas' };
     try {
         await withRuntimeRestored(tc, () => seedlingFlashRuntimeRowBody(tc, swfFetch));
     } finally {
         swfFetch.stop();
+        if (hadConfig) ruffle.config = previousConfig;
+        else delete ruffle.config;
     }
     tc.reportCondition('[flash] the page gets animation frames again after the Ruffle teardown',
         await animationFramesFlow(5, 30000));
