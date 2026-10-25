@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { makeRuleHolds } from './surveyRoute.js';
-import { goalItemOf, orderRows, priceOrdering, routeMetrics, rowsOfSphereLog, walkGraphOf } from './routeOrders.js';
+import { goalItemOf, lookaheadDepthOf, orderRows, priceOrdering, routeMetrics, rowsOfSphereLog, walkGraphOf } from './routeOrders.js';
 
 const T = { rule: 'True_' };
 function rulesDoc({ bidir = false } = {}) {
@@ -138,5 +138,35 @@ describe('routeOrders', () => {
         // items held NOW: the Pit is a pocket, East goes first; with the Pit chest's own Key held it is not
         expect(orderRows({ ...ctx, ordering: 'reachable-cheapest+pocket' })[0].location).toBe('B East Chest');
         expect(orderRows({ ...ctx, ordering: 'reachable-cheapest+pocket-item' })[0].location).toBe('A Pit Chest');
+    });
+
+    it('`+lookahead`: the 2-row sequence beats greedy\'s nearest pick, and `+lookaheadK` names the depth', () => {
+        // One-way: Start -> A (1 hop); Start -> Mid -> B (2); B -> A (1); A walks home the long way, A -> C1 -> C2 -> Start.
+        // Greedy takes A (1), then B by 3 + 2 = 6 in all; lookahead takes B (2), then A (1) = 3.
+        const ex = (from, to) => ({ name: `${from} -> ${to}`, connected_region: to, access_rule: T });
+        const chest = (n) => ({ name: n, access_rule: T, item: { name: 'Coin', advancement: false } });
+        const rules = { regions: { 1: {
+            Start: { name: 'Start', exits: [ex('Start', 'A'), ex('Start', 'Mid')], locations: [] },
+            Mid: { name: 'Mid', exits: [ex('Mid', 'B')], locations: [] },
+            A: { name: 'A', exits: [ex('A', 'C1')], locations: [chest('A Chest')] },
+            B: { name: 'B', exits: [ex('B', 'A')], locations: [chest('B Chest')] },
+            C1: { name: 'C1', exits: [ex('C1', 'C2')], locations: [] },
+            C2: { name: 'C2', exits: [ex('C2', 'Start')], locations: [] },
+        } }, exporter: { 1: { assume_bidirectional_exits: false } } };
+        const log = [['0.1', 'A Chest'], ['0.2', 'B Chest']]
+            .map(([sphere_index, n]) => ({ type: 'state_update', sphere_index, player_data: { 1: { sphere_locations: [n] } } }));
+        const { regions } = walkGraphOf(rules);
+        const ctx = { regions, ruleHolds: makeRuleHolds(rules), start: 'Start', restart: false, rows: rowsOfSphereLog(log, regions) };
+        const greedy = priceOrdering({ ...ctx, ordering: 'reachable-cheapest' });
+        expect(greedy.order.map((o) => o.location)).toEqual(['A Chest', 'B Chest']);
+        expect(greedy.metrics).toMatchObject({ restarts: 0, hops: 6 });
+        for (const ordering of ['reachable-cheapest+lookahead', 'sphere-cheapest+sweep+lookahead', 'reachable-cheapest+lookahead3']) {
+            const look = priceOrdering({ ...ctx, ordering });
+            expect(look.order.map((o) => o.location)).toEqual(['B Chest', 'A Chest']);
+            expect(look.metrics).toMatchObject({ restarts: 0, hops: 3 });
+        }
+        expect(lookaheadDepthOf(['sweep', 'lookahead'])).toBe(2);
+        expect(lookaheadDepthOf(['lookahead4'])).toBe(4);
+        expect(lookaheadDepthOf(['grab'])).toBe(0);
     });
 });

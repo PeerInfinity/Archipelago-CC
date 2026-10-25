@@ -1,5 +1,6 @@
 // frontend/modules/timer/index.js
 import { TimerLogic } from './timerLogic.js';
+import { DEFAULT_TIMER_CHECK_ORDER, TIMER_CHECK_ORDERS } from './checkOrder.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js'; // For dependency injection
 
 
@@ -86,6 +87,17 @@ export function register(registrationApi) {
         type: 'boolean',
         default: true,
         label: 'Batch location checks',
+      },
+      // ⛓ TIMER CHECK ORDER (bot-route-chooser-2b) — with batchChecks off, which
+      // accessible location a tick checks (checkOrder.js): the first one (default)
+      // or the cheapest walk from the player's region (routeChooser.chooseNext).
+      checkOrder: {
+        type: 'string',
+        default: DEFAULT_TIMER_CHECK_ORDER,
+        enum: [...TIMER_CHECK_ORDERS],
+        label: 'Unbatched check order',
+        description: "With batch checks off: 'sphere-in-order' checks the first accessible location; "
+          + "'reachable-cheapest' the one with the fewest region transitions from the player's region.",
       },
     },
   });

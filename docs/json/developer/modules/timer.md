@@ -9,6 +9,7 @@
 
 -   `frontend/modules/timer/index.js`: The module's entry point: registration, the settings schema, and the `TimerLogic` instance.
 -   `frontend/modules/timer/timerLogic.js`: The `TimerLogic` class: the timer loop, the delays, and picking the next location to check.
+-   `frontend/modules/timer/checkOrder.js`: The unbatched tick's opt-in pick by route cost (`pickTimerCheck`).
 
 The "Checked: …, Reachable: …" counter that used to sit beside the timer's buttons is `frontend/modules/commonUI/checksLine.js`, a widget the Console mounts.
 
@@ -16,6 +17,7 @@ The "Checked: …, Reachable: …" counter that used to sit beside the timer's b
 
 -   **Timer loop:** `begin()` starts it; each tick waits a random delay in `[minCheckDelay, maxCheckDelay]` seconds (0 by default: as fast as it can), then checks. It stops by itself once every manually-checkable location is checked, or when nothing is reachable (after a short grace period in zero-delay mode, so a just-received item can land).
 -   **Location checking:** With the **Batch location checks** setting on (the default) a tick checks every accessible, unchecked location at once (`stateManager.batchCheckLocations`, and `client.sendBatchLocationChecks` when online). With it off, a tick dispatches one `user:locationCheck`, so loop mode's Loops panel can steer it.
+-   **Unbatched check order:** With batching off, the setting `moduleSettings.timer.checkOrder` (schema default `sphere-in-order`) chooses which location that one check is. `sphere-in-order` takes the first accessible location in the static data's order, the code path it always had. `reachable-cheapest` takes the cheapest walk from the player's current region (`gameState.getCurrentRegion`) by `procgenCore/routeChooser.chooseNext`, over one accessibility map of the tick's snapshot (`timer/checkOrder.js` `pickTimerCheck`). Ties go to progression first, then the timer's order. ⚠ Bounds: the timer has no Restart planner, so a location with no walk from here ranks after every walk. With no current region every price is 0. The goal is not held back (the timer sees no completion condition). In loop mode the Loops panel still steers the dispatched check.
 -   **Quick check:** `determineAndDispatchQuickCheck()` dispatches one `user:locationCheck` for the first accessible, unchecked location, and returns whether it found one.
 -   Every `user:locationCheck` it dispatches carries `fromBot: true`, so the Playback Bot's **Route clicks to bot** intercept passes it through.
 
@@ -31,7 +33,7 @@ The "Checked: …, Reachable: …" counter that used to sit beside the timer's b
 
 #### Events Subscribed To
 
--   **`eventBus`**: `settings:changed` — keeps `batchChecks` live.
+-   **`eventBus`**: `settings:changed` — keeps `batchChecks` and `checkOrder` live.
 
 #### Public Functions (`centralRegistry`)
 
