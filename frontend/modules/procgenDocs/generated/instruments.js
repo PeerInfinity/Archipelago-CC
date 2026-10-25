@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 106,
-            "count": 153,
+            "browser": 107,
+            "count": 154,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 460,
-        "browser": 171,
+        "blockStyle": 461,
+        "browser": 172,
         "cited": 248,
-        "files": 474,
+        "files": 475,
         "lineStyle": 14,
-        "withDocblock": 474,
-        "withFlags": 391
+        "withDocblock": 475,
+        "withFlags": 392
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12518,6 +12518,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-killlock — ⛓⛓⛓ SEEDLING FIDELITY KILLLOCK, D1/D2: **THE KILL-LOCK ROOMS' BODIES, ASKED OF THE GAME.**",
             "path": "scripts/procgen/probe-seedling-killlock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l0-tighter.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r8c0` or `level_0__r11c19` WITHOUT the Feather?",
+            "path": "scripts/procgen/probe-seedling-l0-tighter.mjs"
         },
         {
             "argvHelpers": [
