@@ -47,8 +47,10 @@
  * `fire.bumps` press removed — same walk, same kill, same stance, same
  * 140-tick wait, and a corpse that comes to rest ONE TILE SHORT at (30,25).
  * Its 16x16 box is `[480,496) x [400,416)` against a button at `[480,496) x
- * [384,400)`: adjacent, not overlapping. The control's 1,937 ticks are
- * byte-identical to the drive's first 1,937.
+ * [384,400)`: adjacent, not overlapping. ⛓ L40REREC (wave 31): the drive's
+ * second press now stands at (488,424) (`BUMP_STANCES`), so the arms are
+ * byte-identical until the drive steps north for it (t1798), not for the
+ * control's whole 1,937 ticks.
  *
  * ⛔⛔⛔ AND IT IS NOT SLICE 21's CONTROL, FOR TWO REASONS THAT ARE BOTH
  * FINDINGS. That one deleted the three kill spans from this tape:
@@ -91,13 +93,12 @@ const { TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
 const { L40_ARRIVAL, L40_CORPSE } = await import(join(MODULE, 'r5Totem.js'));
 const { ICE_TURRET } = await import(join(MODULE, 'iceTurret.js'));
 const { KILL_PRESS_CADENCE } = await import(join(MODULE, 'combatVerbs.js'));
-// ⛓ PINNED `fireLiveTurretReach` OFF (fidelity planning-12, the FIREPUSH flip, ⚖ user 2026-10-24): this pair was
-// recorded on the CENSUS-RECT model, where the second `fire.bumps` press from (488,440) still "reaches" the corpse. The
-// GAME (p4g, FIREPUSH's `firepush-l40-bosskey2` witness) says it does not: the corpse at (488,407.5) is above the flame,
-// it rests one tile short, and t2 never opens on the game. So "the t2 group opens" is MODEL-ONLY here; the game-true
-// chain presses that bump from (488,424) (`fidelityFirePush.firePushPrefixTape`). Re-recording this pair is queued.
-const { CONTACT_FIDELITY } = await import(join(MODULE, 'contactFidelity.js'));
-CONTACT_FIDELITY.fireLiveTurretReach = false;
+// ⛓ L40REREC (wave 31, ⚖ user 2026-10-24 "Queue a re-record slice"): NO PIN. From the FIREPUSH flip to wave 31 this
+// producer pinned `fireLiveTurretReach` OFF, because the pair was recorded on the CENSUS-RECT model, where the second
+// `fire.bumps` press from (488,440) still "reaches" the corpse. The GAME (p4g, FIREPUSH's `firepush-l40-bosskey2`
+// witness) says it does not: the corpse at (488,407.5) is above the flame and t2 never opens. The re-record presses the
+// second bump ONE TILE NEARER, from (488,424) — the game-true chain (`fidelityFirePush.firePushPrefixTape`) — at the
+// shipped defaults, so "the t2 group opens" is the game's answer again.
 
 const WRITE = process.argv.includes('--write');
 const CHECK = process.argv.includes('--check');
@@ -149,6 +150,12 @@ const ENEMY_ROOM = 'the corpse glides two tiles NORTH inside col 30, rows 24-26,
 
 /** The stance, due south of the body — see `L40_CORPSE`. */
 const STANCE = { x: 488, y: 440 };
+/**
+ * ⛓ L40REREC: each bump's stance. The first is `STANCE`; the second is ONE TILE NEARER, because from (488,440) the
+ * flame's box [423.3,455.3) no longer reaches the corpse's [399.5,415.5) once it rests on (30,25) (the game, p4g;
+ * `fireLiveTurretReach`, ON).
+ */
+const BUMP_STANCES = [STANCE, { x: 488, y: 424 }];
 /** The corpse's tile after each press: (30,26) -> (30,25) -> (30,24). */
 const STEPS = [{ tx: 30, ty: 25 }, { tx: 30, ty: 24 }];
 
@@ -196,8 +203,8 @@ const targets = (steps) => [
     { ...STANCE, equip: { slot: 0 } },
     { ...STANCE, kill: { id: TURRET, facing: 'N' } },
     { ...STANCE, equip: { slot: 1 } },
-    ...steps.map((to) => ({
-        ...STANCE, fire: { bumps: [{ id: TURRET, to }], enemyRoom: ENEMY_ROOM },
+    ...steps.map((to, i) => ({
+        ...BUMP_STANCES[i], fire: { bumps: [{ id: TURRET, to }], enemyRoom: ENEMY_ROOM },
     })),
     {
         ...STANCE,
@@ -276,7 +283,9 @@ const tape = parseTape(serializeTape({
         + 'is not a block, and the kill stance is inside the links-1-3 component — so the '
         + 'walk that opens link 4 does not need link 4. ⛔⛔ `IceTurret.death()` intercepts '
         + 'the removal, so the kill moves NO `classCount` and writes NO persistence: the '
-        + 'ONLY witness that it died is the button going down.',
+        + 'ONLY witness that it died is the button going down. ⛓ L40REREC (wave 31): the second '
+        + 'press stands ONE TILE NEARER, at (488,424) — from (488,440) the flame does not reach the '
+        + 'corpse on the game (p4g; `fireLiveTurretReach`) — so the t2 group opens on the game too.',
 }));
 
 const run = runTape(tape, { levelSource });
@@ -472,16 +481,18 @@ const controlTape = parseTape(serializeTape({
         + 'player NOT AT ALL in the L60 pair for this reason and it holds here: the '
         + `${KILL_PRESS_CADENCE}-tick cadence clears \`slashTimer\` (20), so no press `
         + 'becomes a DASH and no `knockback` is ever applied to the player.');
-    check(part === null,
-        '⛓⛓⛓ …AND THE ARMS ARE BYTE-IDENTICAL FOR THE WHOLE CONTROL',
-        `the control's ${controlTape.tick_count} ticks match the drive's first `
-        + `${controlTape.tick_count} exactly, and the drive runs `
-        + `${tape.tick_count - controlTape.tick_count} longer — the second `
-        + '`fire.bumps` press and its wait. So the control is a PREFIX of the drive '
-        + 'and the pair is one press apart in the strongest sense available: not '
-        + '"the same tape minus a span" (which a live shooter makes impossible — its '
-        + 'volley clock is a function of whether it died) but the same walk, driven '
-        + 'twice, diverging only where the experiment says it should.');
+    // ⛓ L40REREC: the control is no longer a PREFIX of the whole drive — the drive steps ONE TILE NORTH for its second
+    // bump (`BUMP_STANCES`), so the arms part when it leaves the stance, after the shared first press.
+    const firstPress = out.fires[0]?.pressTick ?? Infinity;
+    check(part !== null && part > firstPress && cOut.fires[0]?.pressTick === firstPress
+        && run.ticks[part].y < c.ticks[part].y,
+    '⛓⛓⛓ …AND THE ARMS ARE BYTE-IDENTICAL UNTIL THE DRIVE STEPS NORTH FOR ITS SECOND PRESS',
+    `the arms match tick for tick through the shared walk, kill and first \`fire.bumps\` press (t${firstPress} in `
+        + `both) and part at t${part}, where the drive walks to (${BUMP_STANCES[1].x},${BUMP_STANCES[1].y}) — the `
+        + 'second press\'s stance, one tile nearer because from the first stance the flame no longer reaches the '
+        + 'corpse (the game, p4g; `fireLiveTurretReach`). ⛔ Before L40REREC both presses stood at the same stance and '
+        + 'the control was a prefix of the whole drive; that pair was the census-rect model\'s, and the game refuted '
+        + 'its second press.');
     check(c.blastFreezes.length === run.blastFreezes.length
         && c.blastFreezes.every((b, i) => b.t === run.blastFreezes[i].t),
         '⛓ …and both arms take the SAME two blast freezes, at the same ticks',

@@ -1,0 +1,605 @@
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cap (js-7 condition 3) ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cap (js-7 condition 3) ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cap (js-7 condition 3) ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cross-pass escape cache: ON is OFF ⛓ L3 plain walk: ON is OFF (no escape is asked; nothing is looked up)
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cross-pass escape cache: ON is OFF ⛓ L6 ladder climb: ON is OFF (no escape is asked; nothing is looked up)
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cross-pass escape cache: ON is OFF ⛓⛓ ON by default (the XC flip; `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0` turns it OFF); the scope is per call and empty
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cross-pass escape cache: ON is OFF ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the cross-pass escape cache: ON is OFF ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the deadline (js-7 condition 1) ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓ the clocked hazard in a beam-tower room (L104): the escape is entered, the two seam times are two entries
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ the digest is per CALL: a call that builds a lazy visit state is never stored, so the next run builds it too (the per-tick mutant's trap)
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the key ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ
+passed	escapeCrossPassCache.test.js > hammer-phase XC — the scope (js-7 condition 4) ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did
+passed	escapeCrossPassCache.test.js > hammer-phase XC — verify mode (js-7 condition 2) ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's
+passed	escapeCrossPassCache.test.js > hammer-phase XC — verify mode (js-7 condition 2) ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass OFF: the ladder EXHAUSTS on the blade, and the priced crossing is not asked
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass ON with spinningAxePlayerHit OFF: refused by name before any preview (the run cannot price the blade)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass ON: certified (every one of the 52 phases in blade contact), then every member priced dies — the same refusal, one clause longer
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — leg 603 under noDamage: the first member is admitted and replayed OFF: still EXHAUSTED (the danger map prices the blade whatever the damage)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — leg 603 under noDamage: the first member is admitted and replayed ON: SOLVED in 359 t through the doorstep stall 2, billing nothing (no forcedHits row)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal a death is refused first, whatever it billed
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal a hit that is not a spinning axe's is refused by name (the certificate prices the axes only)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal a walk that does not reach the crossing's level is refused
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal one axe hit, alive, at the goal: admitted
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal the cap is FORCED_HITS': two hits over one per crossing, one hit with one already taken (margin 1)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the certificate refuses where a gap exists (survey step 152, L61, the AXE TIMING rung OFF) a dash-chain phase crosses free of blade contact: no hit is forced, so nothing is priced
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the switch and its bounds its bounds: a preview bound for the certificate, eight members priced on forks
+passed	fidelityAxePriced.test.js > AXEFORCEDU D2 — the switch and its bounds ships OFF, appended after every older key (wave 18's last, `statueTalkRange`)
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l103-774-member: OFF the model leaves the game at the first hit
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l103-774-member: a game row for each of the tape's 553 ticks and t0; the game's hits rise at 156
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l103-774-member: spinningAxePlayerHit ON replays it at 0 px on every tick, billing the game's hits and the death
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l71-603-member: OFF the model leaves the game at the first hit
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l71-603-member: a game row for each of the tape's 416 ticks and t0; the game's hits rise at 48, 128, 208, 288, 368
+passed	fidelityAxePriced.test.js > AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the death, the respawn axeforcedu-l71-603-member: spinningAxePlayerHit ON replays it at 0 px on every tick, billing the game's hits and the death
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the game witness (p4g, fixtures/crusherpress-witness) the model reproduces the game at 0 px, never hit; the crusher parked on the button and the cover open
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the game witness (p4g, fixtures/crusherpress-witness) the solver still plans the recorded tape (the bait cut, then the probe walk)
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the game witness (p4g, fixtures/crusherpress-witness) the stream DISCRIMINATES: without the shield swing's press the model stops short of the crusher's home
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the ordering search at L41 ON: the PRESS goal — W,S,E, the crusher parked on button@248,232, the round trip kept
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the ordering search at L41 W0: OFF, the search EXHAUSTS 102 states although it reaches R5's W,S,E — the aim is behind the wandlock
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the ordering search at L41 both rocks stand in crusher@240,64's west lane: each is its SHIELD
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the ordering search at L41 the L41 rows are R5's chains, field for field, and are read only while the key is ON
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the solver at L41 OFF: the leg's refusal, after the bare `break` walked into the charge (a death at t147)
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the solver at L41 ON: the shield swing and three chains, then the room refuses at the wandlock (not this key's wall)
+passed	fidelityCrusherPress.test.js > fidelity SEARCHGAPS D-A — the switch is ON by default (flipped)
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l28-cliffside
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l28-pair
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l28-spear-l25
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l28-spear-l25: the game's hit at t59, at the model's point
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l91-bob
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px drill-l91-bob-wall
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px every witness is recorded
+passed	fidelityDrill.test.js > fidelity DRILL — D1: the game witnesses, replayed against the model (the key ON) at 0 px the controls: OFF, the model does not reproduce them (the witnesses discriminate)
+passed	fidelityDrill.test.js > fidelity DRILL — D2: the danger map prices a stepped drill where it stands OFF: at its placement (byte-identical)
+passed	fidelityDrill.test.js > fidelity DRILL — D2: the danger map prices a stepped drill where it stands ON: at its live box, and no longer at the placement it left
+passed	fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key OFF: the L28 spear from the L25 arrival refuses on the interim (byte-identical)
+passed	fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key ON: Fire from the L25 arrival plans what OFF plans
+passed	fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key ON: the Sword from the L25 arrival plans what OFF plans
+passed	fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key ON: the stance (136,72) is walked, and the cut refuses naming drill@128,96 at t59 (the game's tick)
+passed	fidelityDrill.test.js > fidelity DRILL — W0: the drill rooms the atlas holds three drill rooms, and two are mixed
+passed	fidelityDrill.test.js > fidelity DRILL — the switch L28: OFF no drill is stepped; ON every drill is
+passed	fidelityDrill.test.js > fidelity DRILL — the switch L88 (the lone drill) is the same body either way
+passed	fidelityDrill.test.js > fidelity DRILL — the switch L91: OFF no drill is stepped; ON every drill is
+passed	fidelityDrill.test.js > fidelity DRILL — the switch a moving "Enemy" body the run does not step is refused by name when a hop asks for it
+passed	fidelityDrill.test.js > fidelity DRILL — the switch is ON by default (flipped)
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-fire-l26: burned point-blank, the drill's hits never move on the game (`hitByFire` false)
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-fire-l26: the model reproduces the game on every sampled tick
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-spear-l25: the drills die on the game, the rope is cut, and the solver still makes the recorded plan
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-spear-l25: the model reproduces the game on every sampled tick
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-spear-l26: the drills die on the game, the rope is cut, and the solver still makes the recorded plan
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-spear-l26: the model reproduces the game on every sampled tick
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-sword-l25: the drills die on the game, the rope is cut, and the solver still makes the recorded plan
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-sword-l25: the model reproduces the game on every sampled tick
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-sword-l26: the drills die on the game, the rope is cut, and the solver still makes the recorded plan
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px drillkill-l28-sword-l26: the model reproduces the game on every sampled tick
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px every witness is recorded, on the default build
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L25 with ["hasFire"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L25 with ["hasSpear"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L25 with ["hasSword"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L26 with ["hasFire"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L26 with ["hasSpear"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) OFF (byte-identical): from L26 with ["hasSword"] — rules-2's measurement
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON (drillTimedPass OFF): Fire from L25 plans what OFF plans — its stance wakes no drill, so nothing is killed
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON (drillTimedPass OFF): Fire from L26 is still REFUSED on `drill@80,96` — and the refusal says Fire cannot kill a drill
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON: a Fire-selected run holding the Spear selects the spear for the kill (`equip`), and solves from L26
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON: from L25 with the Spear, the drills the walk wakes are killed first, then the cut SOLVES
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON: from L25 with the Sword, the drills the walk wakes are killed first, then the cut SOLVES
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON: from L26 with the Spear, the drills the walk wakes are killed first, then the cut SOLVES
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — D2: L28's rope cut from both arrivals (rules-2's acceptance) ON: from L26 with the Sword, the drills the walk wakes are killed first, then the cut SOLVES
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — W0: what kills a drill (`Enemy.hit`, transcribed in `drill.hitDrill`) FIRE never lands (`hitByFire` false; `fireDamage` 0)
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — W0: what kills a drill (`Enemy.hit`, transcribed in `drill.hitDrill`) the sword kills in 3 landings, the spear in 2
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — the switch is ON by default (flipped), and its prerequisites are ON
+passed	fidelityDrillKill.test.js > fidelity DRILLKILL — the switch the pre-stance is the run range itself, three tiles out
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓ its bounds are the hammer's own: one period of horizon, every other phase of hold, one stall per landing
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c)
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓⛓⛓ the committed window IS at the chain's residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19
+passed	fidelityF1c.test.js > F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer's phases) ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19
+passed	fidelityF1c.test.js > F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice) ⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did
+passed	fidelityF1c.test.js > F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice) ⛓⛓ the witness IS the committed boot at its own residue: only the clock and the cosmetic stream moved
+passed	fidelityF1c.test.js > F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice) ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock
+passed	fidelityF1c.test.js > F1c D2 — L18's spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice) ⛓⛓ F5: the game-sourced tick IS the spinner ledger's stamp spelled v9 (the chaser convention, one rule)
+passed	fidelityF1c.test.js > F1c D2 — L18's spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice) ⛓⛓ under the game-sourced declaration the model crosses when the game did
+passed	fidelityF1c.test.js > F1c D2 — L18's spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice) ⛓⛓⛓ F5: the model's reading IS the game's — the ledger's own removal spelled v9 crosses when the game did, and the old readings cross one and two ticks late
+passed	fidelityF1c.test.js > F1c D2 — L18's spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice) ⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game's spelling — its pending row is the ledger's removal + the v9 fade
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(a) — `crusher-fork` is a FINE site: asked only under `fineCheckpoints` a trip at `crusher-fork` refuses the bait verb by name
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(a) — `crusher-fork` is a FINE site: asked only under `fineCheckpoints` coarse: never asked (L42 dashless: 0 asks at all, the base's sequence); fine: asked, the solve unchanged
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(a) — `crusher-fork` is a FINE site: asked only under `fineCheckpoints` is a row of DEADLINE_SITES, appended
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(b) — the fork replays equips on the RUN clock, not the perTick index `stop` is asked every WALK_CHECK_TICKS advances, and a trip abandons the fork
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(b) — the fork replays equips on the RUN clock, not the perTick index a clock the fork never lands on is not the same run, and says so
+passed	fidelityForkHygiene.test.js > BOBSOLDIER2 D3(b) — the fork replays equips on the RUN clock, not the perTick index across dead frames, every equip lands where the live run made it — and one after the last tick too
+passed	fidelityL12Keyline.test.js > fidelity L12KEYLINE — D2: a lock sealed behind itself passes the frontier to the next door CONTROL — without Fire there is no other door: the SEALED refusal stands, unchanged
+passed	fidelityL12Keyline.test.js > fidelity L12KEYLINE — D2: a lock sealed behind itself passes the frontier to the next door SHUT {12,4} with Fire + Swim: step 134 goes ROUND — burn, swim, L95; the lock stays shut
+passed	fidelityL12Keyline.test.js > fidelity L12KEYLINE — D2: a lock sealed behind itself passes the frontier to the next door the switch ships ON
+passed	fidelityL12Keyline.test.js > fidelity L12KEYLINE — the game witness l12keyline-134-round: the model reproduces the game's recording (0 px)
+passed	fidelityL14.test.js > fidelity L14 — the DETOUR search, refusing by name a certify that never clears spends exactly the preview bound and says so
+passed	fidelityL14.test.js > fidelity L14 — the DETOUR search, refusing by name the bounds are search bounds, named
+passed	fidelityL14.test.js > fidelity L14 — the swordless arrival, solved by the DETOUR rung it solves through KILL's refusal: 173 ticks, no hit, onto L15
+passed	fidelityL14.test.js > fidelity L14 — the swordless arrival, solved by the DETOUR rung the arrival holds no weapon and six bobs
+passed	fidelityL14.test.js > fidelity L14 — the swordless arrival, solved by the DETOUR rung the committed witness IS the solve, and the model replays the game's recording
+passed	fidelityL14.test.js > fidelity L14 — the swordless arrival, solved by the DETOUR rung the ladder lists DETOUR last, and an escalation to it must name KILL
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D1 — the game witnesses `l30keylock-pit224-before`: on the key line at t133, hit at t173 (sword) and t193 (body), open only at t212
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D1 — the game witnesses `l30keylock-pit224`: the body dies first, then the key line, then the crossing into L22 — zero hits
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D1 — the game witnesses `l30keylock-pit240`: the body dies first, then the key line, then the crossing into L22 — zero hits
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings RESCAN alone: (224,80) solves (its corridor probe already climbs); (240,80) still dies on the unpriced wait
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings WAIT alone: nothing is hit — (224,80) a timed detour, (240,80) an honest EXHAUSTED before a tick
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings both OFF, (224,80): the survey's refusal, the keys driven are the BEFORE witness, and they were hit twice
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings both OFF, (240,80): the wait on the key line takes three hits — the walk DIES — before the lock opens
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings both ON, (224,80): the solver's own plan IS the witness `l30keylock-pit224` (kill, lock, crossing)
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the solver, switch by switch, from both pit landings both ON, (240,80): the solver's own plan IS the witness `l30keylock-pit240` (kill, lock, crossing)
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the two mechanisms, asked directly `previewWalk`'s `standKeys` tail presses the stand's keys and no strike; without it the tail is unchanged
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK D2 — the two mechanisms, asked directly the chaser arm at the pit landing: the player's box prices nothing; the body's box finds (88,120)
+passed	fidelityL30KeyLock.test.js > L30KEYLOCK — the switches' contract both are ON by default, and `with…` restores them, on a throw too
+passed	fidelityLights.test.js > fidelity LIGHTS D3 — the clear-tag arm's other answers (ON) a boot holding {69,0} cleared is `already-clear` (the game's `check()` ran `endState()`), 0 ticks
+passed	fidelityLights.test.js > fidelity LIGHTS D3 — the clear-tag arm's other answers (ON) a run whose primary is not the sword or the spear is refused by name (`cannot-act`: the wand arm)
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) CONTROL: with the switch OFF the stand is NOT reproduced (no fight is stepped)
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-revisit: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-solve-spear-on: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-solve-spear-portfolio: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-solve-spear: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-solve-sword: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) lights-stand: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) the revisit: {69,0} cleared — no intro, no fliers, the exit Teleporter at (72,72) to L36 (120,104)
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) the solves: {69,0} lands on the game on the tick after the last flier leaves the world
+passed	fidelityLights.test.js > fidelity LIGHTS — the game's witnesses, reproduced at 0 px (lightsBossFight ON) the stand: the intro's pages are done at t62 (its removal), the six fliers stand at (80,-32) from t63
+passed	fidelityLights.test.js > fidelity LIGHTS — the switch (OFF: byte-identical) OFF: the strategy row and the verb read undefined and are not enumerable
+passed	fidelityLights.test.js > fidelity LIGHTS — the switch (OFF: byte-identical) ON: `solid:lightbosscontroller` names `lights`, a registered verb (rules-2's `bossGoal` route 2)
+passed	fidelityLights.test.js > fidelity LIGHTS — the switch (OFF: byte-identical) the kill-arm row: refused OFF, modelled ON, an `anim` corpse (no fade)
+passed	fidelityLights.test.js > fidelity LIGHTS — the switch (OFF: byte-identical) the world build: OFF no `lightsControllers` key and no totem; ON the totem, or (cleared) the exit
+passed	fidelityLights.test.js > fidelity LIGHTS — two transcription facts, measured MUTANT: the same stand under V8's trig drifts (the musl kernels are load-bearing)
+passed	fidelityLights.test.js > fidelity LIGHTS — two transcription facts, measured `FP.RAD` is π / −180: the controller's spin DECREASES
+passed	fidelityLights.test.js > fidelity LIGHTS — two transcription facts, measured the runtime's cos/sin are musl's: cos(0.7799440094849661) is one ulp above V8's (flier 3, t71)
+passed	fidelityLights.test.js > hammer LD — the step-159 victim's shot, priced at the kill (lightsBossFight ON) CONTROL: OFF, no fight is stepped and no Lights source exists
+passed	fidelityLights.test.js > hammer LD — the step-159 victim's shot, priced at the kill (lightsBossFight ON) asked at t806, `dangerAt` (transit) names shot #75 on the box at t810, and nothing else on the walk
+passed	fidelityLights.test.js > hammer LD — the step-159 victim's shot, priced at the kill (lightsBossFight ON) the tape takes the hit: t811, shot #75, after the kill at t806
+passed	fidelityMasks.test.js > fidelity MASKS — D1: the game witnesses (p4g), replayed at 0 px with the key ON mask-l65-opentree (a control): OFF reproduces the game too, and the t87-89 swings land ON
+passed	fidelityMasks.test.js > fidelity MASKS — D1: the game witnesses (p4g), replayed at 0 px with the key ON mask-l65-opentree: 0 px with the key ON
+passed	fidelityMasks.test.js > fidelity MASKS — D1: the game witnesses (p4g), replayed at 0 px with the key ON mask-l65-wall: 0 px with the key ON
+passed	fidelityMasks.test.js > fidelity MASKS — D1: the game witnesses (p4g), replayed at 0 px with the key ON mask-l65-wall: OFF, the chaser arm asks no line and knocks the bob back at t3; the game does not
+passed	fidelityMasks.test.js > fidelity MASKS — D1: the game witnesses (p4g), replayed at 0 px with the key ON the witness set is the module's
+passed	fidelityMasks.test.js > fidelity MASKS — D2: `collideLineSolid`'s `{masks}` L28: the line drill@128,96 → (164,113) crosses the CliffSide at (160,112)'s pixels only with `{masks: true}`
+passed	fidelityMasks.test.js > fidelity MASKS — D2: `collideLineSolid`'s `{masks}` an OpenTree is type "Tree" (`Scenery/Tree.as:22`): never a blocker, masks or not
+passed	fidelityMasks.test.js > fidelity MASKS — D2: `collideLineSolid`'s `{masks}` byte-inertia: the key OFF, a four-argument line reads the boxes alone
+passed	fidelityMasks.test.js > fidelity MASKS — D2: `collideLineSolid`'s `{masks}` the bounding prefilter answers what every mask, every sample answers (L12, L28, L91: 3,000 lines each)
+passed	fidelityMasks.test.js > fidelity MASKS — the switch is ON by default (flipped)
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `forecastCorpseFade`: the L71 resite witness (p4g), forecast against live seeded at t50..t62 (the corpses cloned while fading): ON holds 0 px to t94 from every seed
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `forecastCorpseFade`: the L71 resite witness (p4g), forecast against live seeded at t58: ON the forecast equals the live run (= the game) through t94; OFF it leaves at t64
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `forecastCorpseFade`: the L71 resite witness (p4g), forecast against live the live run is untouched by the switch: ON the model is the game for all 300 ticks
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse a drill's removal is stamped with its tick ON (and read on that tick only); OFF no stamp is written
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse drillkill-l28-fire-l26: ON the model is still the game on every sampled tick
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse drillkill-l28-spear-l25: ON the model is still the game on every sampled tick
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse drillkill-l28-spear-l26: ON the model is still the game on every sampled tick
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse drillkill-l28-sword-l25: ON the model is still the game on every sampled tick
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — `nonChaserRemovalBlocks`: the DRILLKILL recordings (p4g), byte-inert where no mover meets the corpse drillkill-l28-sword-l26: ON the model is still the game on every sampled tick
+passed	fidelityMiscRes.test.js > fidelity MISCRES D1 — the switches both ship ON (⚖ user 2026-10-24, planning-12's flip)
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — `opentree` is typed "Solid", the game says "Tree": no model reader can tell the model row keeps "Solid" and names the class; the sight line exempts it by class
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — `opentree` is typed "Solid", the game says "Tree": no model reader can tell the opentrees stand in L12, L27, L65 — and no "Solid"-only AS3 reader of those rooms meets one's box (±1 px)
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE's leg 650 (L76), the page's own request OFF: the 640-unit request runs out at `phase-dodge` (the doorstep stalls light the type-31 tile)
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE's leg 650 (L76), the page's own request ON: the stall at the walk's start is asked second — both passes solve inside the 640 units
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — `phaseDodgeArrivalStall`: IGFADE's leg 650 (L76), the page's own request ships ON (⚖ user 2026-10-24, planning-12's flip)
+passed	fidelityMiscRes.test.js > fidelity MISCRES D3 — the owl's talk (`Game.talkingPic`): modelled as the intro freeze; the portrait is render only L112: the Owl stands frozen until a primary release, and `talkingNow` names his intro (js G6's `owlIntro`)
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the one predicate `pitLatchOpts`: `{latched}` (the run's own set) ON, `{}` OFF — an OFF bag is the bag it was
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the one predicate a LATCHED live pit door: `liveDoorPitTile` is null and `plannerObstacleAt` returns {kind: 'pit'} for its tile (ON)
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the one predicate the solver's plan bag carries it (`solverPlanOpts`, every solver planner call's bag): ON `latched`, OFF no key
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the step off a latched pit door, planned as the game behaves `stepOffCellFor` finds NO cell (ON and OFF) — the base, ON, planned (152,56) / (296,88) across the latched pit
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the step off a latched pit door, planned as the game behaves `stepOffMinimalFor` agrees: every direction falls, at the game's own t0 position
+passed	fidelityPitLatch.test.js > PITLATCH D2 — the step off a latched pit door, planned as the game behaves the game: booted ON the door, the Pit takes the player at t0 and respawns it ON the door; it never crosses
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l100-east: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l100-latched: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l100-west: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l43-latched: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l43-north: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l43-south: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l58-east: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px l58-shut-east: every tick of the game's stream (switch ON and OFF alike)
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px the committed tapes are what the producer derives today
+passed	fidelityPitPort.test.js > PITPORT D1 — the game witnesses, reproduced by the model at 0 px the game's verdicts: each live door crosses the tick after the box first overlaps it; the shut or latched one never
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup OFF: L43, L100 and the cleared L58 refuse `unmodelled-pit-teleporter` by name, as at the base
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup ON, L58 after the Yeti's talk: the door is admitted, and the walk then stalls on the Yeti's Solid (the next gap)
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup ON: a run LATCHED on a pit door keeps the named refusal (the door cannot fire; the pit takes the player)
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup ON: the SHUT L58 door stays refused (DEACTIVATED) and its pit stays a pit
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup ON: the solver crosses each live door, and its plan IS the witnessed tape's prefix, key for key
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup is ON by default (flipped)
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup the atlas holds exactly three doors on a Pit tile, each on its own tile, in a room with no fallthrough
+passed	fidelityPitPort.test.js > PITPORT D2 — the switch and the door lookup the planner: ON exempts the allowed live door's pit tile only; OFF, another door, or a shut door keep it
+passed	fidelityProximity.test.js > fidelity PROXIMITY D1 — the census the rows rest on every ButtonRoom's press rect is `setHitbox(8, 6, 4, 3)` at the ctor half-tile (`ButtonRoom.as:30-32`)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D1 — the census the rows rest on the cross-room ButtonRooms are all `flip = 1` (a CLEAR the press writes), named
+passed	fidelityProximity.test.js > fidelity PROXIMITY D1 — the census the rows rest on the ice turret's contact is PRICED (`stepIceTurretsNow`), force 3 / damage 1 (`Enemy.as:20,211-221`)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) THE GAME agrees: prox-l38-chest, observation for observation (0 px)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) THE GAME agrees: prox-l38-reach-l39, observation for observation (0 px)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) `pulseWeighFor`: L38's cover@144,112 is opened by the pulser parking the fire block on button@80,192
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) route step 103: the frontier holds the buttonroom, PULSES, opens the chest and crosses to L39 — the tape IS the plan
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) route step 68: the chest GOAL resolves its cover (uncover, then pulse), collects it and crosses — the tape IS the plan
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38) the table names `hold` for `proximity-hazard:buttonroom`; `pulse` is a refinement, registered and derived
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the trap button skirted OUT and BACK (L29) THE GAME agrees: prox-l29-key-return, observation for observation (0 px), into L22
+passed	fidelityProximity.test.js > fidelity PROXIMITY D2 — the trap button skirted OUT and BACK (L29) route step 57: two skirts on the east lane, the return stance two tiles up, the rock never falls — the tape IS the plan
+passed	fidelityProximity.test.js > fidelity PROXIMITY D3 — the ice turret THE GAME agrees: prox-l40-turret-contact, observation for observation (0 px)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D3 — the ice turret THE GAME agrees: prox-l40-turret-volley, observation for observation (0 px)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D3 — the ice turret `prox-l40-turret-contact`: the run BILLS the live body's contact (it used to refuse it)
+passed	fidelityProximity.test.js > fidelity PROXIMITY D3 — the ice turret `prox-l40-turret-volley`: inside the range a blast FREEZES the walk; nothing walls it
+passed	fidelityProximity.test.js > fidelity PROXIMITY D3 — the ice turret the table names `brave` for `proximity-hazard:iceturret`, registered and derived
+passed	fidelityRemBody.test.js > fidelity REMBODY — D1/D2: the L71 resite witness (p4g) against the model skinswing-l71-lavarunner: ON = OFF = the game at 0 px (no removal beside a later-updating body)
+passed	fidelityRemBody.test.js > fidelity REMBODY — D1/D2: the L71 resite witness (p4g) against the model skinswing-l71-resite: ON = the game at 0 px for all 300 ticks; OFF leaves it at t63, the removal tick
+passed	fidelityRemBody.test.js > fidelity REMBODY — D1/D2: the L71 resite witness (p4g) against the model skinswing-l74-bulb: ON = OFF = the game at 0 px (no removal beside a later-updating body)
+passed	fidelityRemBody.test.js > fidelity REMBODY — D1/D2: the L71 resite witness (p4g) against the model skinswing-l74-resite: ON = OFF = the game at 0 px (no removal beside a later-updating body)
+passed	fidelityRemBody.test.js > fidelity REMBODY — D2: the forecast mirror (`chaserForecastNow`) agrees with the live step on the removal tick OFF: the live step moves the survivor 1.164 px past the forecast (which holds its corpses)
+passed	fidelityRemBody.test.js > fidelity REMBODY — D2: the forecast mirror (`chaserForecastNow`) agrees with the live step on the removal tick ON: the forecast's survivor is the live one at t63 (0 px)
+passed	fidelityRemBody.test.js > fidelity REMBODY — the switch is ON by default (flipped)
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) OFF (byte-identical): the exit after the cut refuses at its first gate — the residue TIMEDPASS named
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: a Sword run is untouched — the exit walk after the kill and the cut is OFF's, tick for tick
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: a cut with no exit after it plans what OFF plans (no way out is asked) — L25, 70 t
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: from the L25 arrival to the L25 door — SOLVED 134 t, 0 hits, the exit a certified pass of 63 t
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: from the L25 arrival to the L26 door — SOLVED 182 t, 0 hits, the exit a certified pass of 111 t
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: from the L26 arrival to the L25 door — REFUSED at the cut by name: the one stand that holds leaves no way out
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — Fire alone: the cut, then the way out (L28) ON: from the L26 arrival to the L26 door — REFUSED at the cut by name: the one stand that holds leaves no way out
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px every exit witness file exists
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l25: recorded on the default build, hit-free, and across the door
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l25: the model (both keys ON) reproduces the game on every sampled tick
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l25: the solver still plans the recorded tape
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l26: recorded on the default build, hit-free, and across the door
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l26: the model (both keys ON) reproduces the game on every sampled tick
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the game witnesses (p4g), replayed against the model at 0 px residue-l28-fire-l25-exit-l26: the solver still plans the recorded tape
+passed	fidelityResidue.test.js > fidelity RESIDUE D-A — the switch is ON by default (flipped), behind `drillTimedPass` (ON)
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px is recorded on the default build; the game holds the player still for the drown and kills it at t2202
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the pull, priced (door staging, seed 15, HITLESS OFF: the fight leaves three alive) WAIT prices the disc from the update it is live; TRANSIT the ETA's own; the box is a volume; OFF nothing
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the pull, priced (door staging, seed 15, HITLESS OFF: the fight leaves three alive) the fight ends with whirlpool#78 at (107,116), timer 174 — growing for 84 updates more, then live for 60
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool) OFF: seed 15 THROWS the drown as a plain Error (bosskills D3) — not a refusal
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool) ON: seed 15 SOLVES — the walk stalls out whirlpool#78 (DODGE's whirlpool arm), no death, into L58
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mouth meets a live whirlpool) at the defaults (HITLESS ON, its settle) seed 15 plans what OFF plans, tick for tick
+passed	fidelityResidue.test.js > fidelity RESIDUE D-B — the switch is ON by default (flipped)
+passed	fidelityRope.test.js > fidelity ROPE — D1: the verb's plans on the game (p4g), at 0 px rope-l16-cut-cross: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRope.test.js > fidelity ROPE — D1: the verb's plans on the game (p4g), at 0 px rope-l16-verb: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRope.test.js > fidelity ROPE — D1: the verb's plans on the game (p4g), at 0 px rope-l28-cut: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRope.test.js > fidelity ROPE — D1: the verb's plans on the game (p4g), at 0 px three witnesses, recorded on p4g
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) L16 from (72,40): the verb's own swing (`execPull`: aim, press t26), written t27, confirmed t28
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) L16 from the L15 arrival: {16,0} cut on the way to the stance (the walk's strike), 112 t, no hit
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) L28 from the L25 arrival: {28,0} cut, 52 t (drillKillFirst OFF)
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) a rope booted pulled (its tag cleared) is `already-clear`, no tick
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) no item: `cannot-act`, naming the sword swing this verb drives (ropeCutAnyWeapon OFF)
+passed	fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) the Spear alone: `cannot-act`, naming the sword swing this verb drives (ropeCutAnyWeapon OFF)
+passed	fidelityRope.test.js > fidelity ROPE — the switch OFF: a clear-tag on L16's rope refuses `no-verb` by name
+passed	fidelityRope.test.js > fidelity ROPE — the switch OFF: no row, no verb — the enumerated tables are what they were (the row is non-enumerable either way)
+passed	fidelityRope.test.js > fidelity ROPE — the switch ON: `solid:rope` selects `rope`, registered — and the JS mapping reads it (`clearTagVerbOf`)
+passed	fidelityRope.test.js > fidelity ROPE — the switch is ON by default (planning-9's flip)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px five witnesses, recorded on p4g
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px ropestance-l16-fire: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px ropestance-l16-spear: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px ropestance-l28-fire: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px ropestance-l28-spear-east: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px ropestance-l28-wand-spear-east: the solver plans the recorded tape today, and the model is the game on every tick
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) L16 from the L15 arrival, Fire: (24,40)'s walk refuses at no tick (bob@16,16), (88,40) cuts at t162
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) L16 from the L15 arrival, the Spear: a thrust north from (40,56), press t26, cut t27, no hit
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) L28 from the L25 arrival, Fire: (152,56), cut t82 (the rock's fall on the same write; drillTimedPass OFF)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) L28 from the L25 arrival, the Spear: refused by name — every stance is in the UNSTEPPED drill's trigger (drillMixedRooms OFF)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) the Wand alone: `cannot-act`, naming the three weapons that cut
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D2: the clear-tag on a rope's own tag, no sword (the switch ON) the Wand selected, the Spear held: the spear's slot is selected for the thrust and the wand's restored
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D3: the PULL rung's silencer cut (L16 from the L15 arrival -> the pit to L17) Fire alone, OFF: the ladder exhausts (the PULL rung asks only a sword)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — D3: the PULL rung's silencer cut (L16 from the L15 arrival -> the pit to L17) Fire alone, ON: the rung cuts rope@32,16 with fire from (88,40), the lanes latch, the walk reaches L17
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — the switch OFF: Fire alone refuses `cannot-act`, naming the sword swing (byte-identical)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — the switch OFF: the Spear alone refuses `cannot-act`, naming the sword swing (byte-identical)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — the switch is ON by default (flipped)
+passed	fidelityRopeStance.test.js > fidelity ROPESTANCE — the switch with the SWORD selected, ON plans what OFF plans, tick for tick
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — D1: the game (p4g) against the model, key ON and OFF skinswing-l71-lavarunner: the game lands NO swing (0 hits, 0 "die"); ON = the game at 0 px; OFF leaves it at t3
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — D1: the game (p4g) against the model, key ON and OFF skinswing-l71-resite (L71 (80,208)): the game lands and kills; at the defaults ON = OFF = the game at 0 px; removedBodyBlocks OFF leaves it at t63
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — D1: the game (p4g) against the model, key ON and OFF skinswing-l74-bulb: the game lands NO swing (0 hits, 0 "die"); ON = the game at 0 px; OFF leaves it at t21
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — D1: the game (p4g) against the model, key ON and OFF skinswing-l74-resite (L74 (64,100), an offer to js): the game lands and kills; ON = OFF = the game at 0 px
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — the witnesses are the skin test's stands FIGHT is the skin test's FIGHT, and each stand's boot and length are its TAPES row
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — the witnesses are the skin test's stands skinswing-l71-resite: the staged tape run IS the stand's createJsRuntime boot, tick for tick (key ON)
+passed	fidelitySkinSwing.test.js > fidelity SKINSWING — the witnesses are the skin test's stands skinswing-l74-resite: the staged tape run IS the stand's createJsRuntime boot, tick for tick (key ON)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses every witness is recorded on p4g, the default build
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l40-turret-corner: OFF, the model parts from the game at t8 (the witness for the key)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l40-turret-corner: ON, the model reproduces the game at 0 px (the player, every IceTurret row)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-block-far-edge: OFF, the model parts from the game at t15 (the witness for the key)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-block-far-edge: ON, the model reproduces the game at 0 px (the player, every PushableBlockSpear row)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-block-truncated-y: OFF, the model parts from the game at t16 (the witness for the key)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-block-truncated-y: ON, the model reproduces the game at 0 px (the player, every PushableBlockSpear row)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-jelly-reach: OFF, the model parts from the game at t9 (the witness for the key)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l63-jelly-reach: ON, the model reproduces the game at 0 px (the player, every Jellyfish row)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l98-jelly-repeat: OFF, the model parts from the game at t39 (the witness for the key)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D1 — the game witnesses spearrect-l98-jelly-repeat: ON, the model reproduces the game at 0 px (the player, every Jellyfish/IceTurret row)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule DRILL's measured case: the player at x 125.13 facing east, a box ending at x 125 — the game's rule hits, the strict float rect misses
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule ON `spearHitRect` is `spearGameRect`: the origin truncated, the four cases of `spear()`
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule `pressRectTouches` is inclusive only for a rect that says so; every other press rect stays strict
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule and the other way: a box the float rect reaches past the truncated origin and the game's does not
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule ships ON (flipped), and OFF `spearHitRect` IS `spearRect` (byte-identical)
+passed	fidelitySpearRect.test.js > fidelity SPEARRECT D2 — the rule the repeats: T+3 and T+5 are offsets 2 and 4 from the first test (`SPEAR_HIT_TICKS`)
+passed	fidelityStance.test.js > fidelity STANCE — D1: what the game punishes every bosslock in the atlas carries a tag, and its key line is the row UNDER it
+passed	fidelityStance.test.js > fidelity STANCE — D1: what the game punishes the two looping chests sit on a HALF tile; their stance row is the band under the probe line
+passed	fidelityStance.test.js > fidelity STANCE — D2: the chest stance on a half tile stance-l46-chest: the route step solves with ONE chest record, on the 8 px lattice (STANCE_REENTRY)
+passed	fidelityStance.test.js > fidelity STANCE — D2: the chest stance on a half tile stance-l48-chest: the route step solves with ONE chest record, on the 8 px lattice (STANCE_REENTRY)
+passed	fidelityStance.test.js > fidelity STANCE — D2: the keylock stance, both states CONTROL: from its own (south) side the keylock stance lands and the lock opens
+passed	fidelityStance.test.js > fidelity STANCE — D2: the keylock stance, both states L12 twin locks (route step 135's arrival): sealed by bosslock@416,240 alone, flag {12,4}
+passed	fidelityStance.test.js > fidelity STANCE — D2: the keylock stance, both states OPEN (flag {48,1} cleared): the build has no lock and the same arrival solves into L47
+passed	fidelityStance.test.js > fidelity STANCE — D2: the keylock stance, both states SHUT (flag {48,1} held): from the L53 door the refusal is SEALED BEHIND ITSELF, by the save
+passed	fidelityStance.test.js > fidelity STANCE — a presser with no stance is the KILL rung's refusal, not the solve's L8 → L7 from the L9 door (the JS arc's sweep leg 85, no items): LADDER, the ceiling presser named
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses stance-l46-chest: the model reproduces the game's recording
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses stance-l48-chest: the model reproduces the game's recording
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses stance-l48-keylock-north: the model reproduces the game's recording
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses stance-l48-keylock-open: the model reproduces the game's recording
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses stance-l48-keylock-south: the model reproduces the game's recording
+passed	fidelityStance.test.js > fidelity STANCE — the game witnesses the north lean holds DOWN for longer than the key timer plus the fade, and the game never lets it through
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px every witness is recorded, on the default build, and plays hit-free through the cut
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l25: OFF the model misses the frozen span — the parked drill does not hop at t64, and the contact lands at t71
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l25: the model (key ON) reproduces the game on every sampled tick
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l25: the solver still plans the recorded tape
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l26: OFF the model misses the frozen span — the parked drill does not hop at t126, and the contact lands at t133
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l26: the model (key ON) reproduces the game on every sampled tick
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px timedpass-l28-fire-l26: the solver still plans the recorded tape
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) OFF (byte-identical): Fire from L26 keeps DRILLKILL's named refusal
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON, without a fork: the same pass, played as found (uncertified), the same plan
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: Fire alone from L26 SOLVES — a certified pass to (152,56) past both drills, then the cut, 0 hits
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: Fire from L25 plans a pass too — its walk wakes `drill@128,96` (89 → 70 t, 0 hits; a mover)
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: from L25 with ["hasSpear"] the kill stays first — the plan is OFF's, tick for tick, and no pass
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: from L25 with ["hasSword"] the kill stays first — the plan is OFF's, tick for tick, and no pass
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: from L26 with ["hasFire","hasSpear"] the kill stays first — the plan is OFF's, tick for tick, and no pass
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: from L26 with ["hasSpear"] the kill stays first — the plan is OFF's, tick for tick, and no pass
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`) ON: from L26 with ["hasSword"] the kill stays first — the plan is OFF's, tick for tick, and no pass
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — W0: the drill's hop cycle and the jump-over band, on the game a player 8-9 px off on the axis is jumped over with no contact: 8.05 in front, then 7.95 behind
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — W0: the drill's hop cycle and the jump-over band, on the game an awake drill hops every 15 ticks: "drill" 7, "undrill" 7, then the "sit" check (p4g)
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — the drill forecast (`corridorBodyForecast`, asked with `drillPass`) `fork()` is independent: stepping the fork leaves the original where it was
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — the drill forecast (`corridorBodyForecast`, asked with `drillPass`) agrees with the run tick by tick on a walk that wakes `drill@80,96` (positions and anims)
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — the drill forecast (`corridorBodyForecast`, asked with `drillPass`) is null with `corridorBodyPricing` OFF unless asked with `drillPass` (every other caller unchanged)
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — the switch is ON by default (flipped), and its prerequisites are ON (the kill first, every drill stepped)
+passed	fidelityTimedPass.test.js > fidelity TIMEDPASS — the switch the search asks a stand long enough for the fire cut (11 ticks from arrival to its end at L26)
+passed	fidelityWand.test.js > WAND_VERB OFF is the base (byte-identical lookups) ON registers the verb on the frontier only while it is on (ON by default)
+passed	fidelityWand.test.js > WAND_VERB OFF is the base (byte-identical lookups) ships ON, and the shared tables keep their words
+passed	fidelityWand.test.js > WAND_VERB OFF is the base (byte-identical lookups) the L68 witness tape, stepped with the switch OFF, opens the lock but folds no flag (ON folds it at the hit)
+passed	fidelityWand.test.js > WAND_VERB ON — the solver L39 (survey step 81): the plug is a KILL-LOCK — refined to `kill`, never to `wand`
+passed	fidelityWand.test.js > WAND_VERB ON — the solver L68 (survey step 147): keylock, then the wand opens magicallock@16,32 (press t122, hit t130, open t145)
+passed	fidelityWand.test.js > WAND_VERB ON — the solver a FIRE MagicalLock (L101, survey step 213) refuses BY NAME: the Fire Wand is the unmodelled case-5 press
+passed	fidelityWand.test.js > the wand witnesses replay at 0 px (the GAME, p4f headless) every witness tape is what the planner script derives today
+passed	fidelityWand.test.js > the wand witnesses replay at 0 px (the GAME, p4f headless) wand-l34-barhouse-exit: a whole reach-exit SOLVED through the verb — the lock on the teleporter, then L12
+passed	fidelityWand.test.js > the wand witnesses replay at 0 px (the GAME, p4f headless) wand-l39-wandlock-shot: the shot dies on the WandLock, no flag is written, the plug holds
+passed	fidelityWand.test.js > the wand witnesses replay at 0 px (the GAME, p4f headless) wand-l68-magicallock: the shot opens the MagicalLock — {68,1} on the hit, the cell 15 ticks later
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px control: every tick of the game's stream
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px revisit: every tick of the game's stream
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px shut: every tick of the game's stream
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px talk: every tick of the game's stream
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px the committed tapes are what the producer derives today
+passed	fidelityYeti.test.js > YETI D1 — the game witnesses, reproduced by the model ON at 0 px the game's verdicts: talk crosses at t202, control and shut keep the flags, revisit crosses at t98
+passed	fidelityYeti.test.js > YETI D2 — the switch and the model OFF: opening the Yeti still refuses by name
+passed	fidelityYeti.test.js > YETI D2 — the switch and the model ON: the close writes both flags, opens the door mid-visit and keeps the Yeti for this visit
+passed	fidelityYeti.test.js > YETI D2 — the switch and the model ships ON (flipped)
+passed	fidelityYeti.test.js > YETI D2 — the switch and the model the build: OFF a cleared {58,0} refuses by name; ON `NPC.check()` removes the Yeti
+passed	fidelityYeti.test.js > YETI D2 — the switch and the model the table row stays REFUSED (byte-identical); the second tag is the DeadBoss portal's
+passed	fidelityYeti.test.js > YETI D3 — the clear-tag on {58,1} names the Yeti and talks OFF: no-verb on solid:yeti, as at the base
+passed	fidelityYeti.test.js > YETI D3 — the clear-tag on {58,1} names the Yeti and talks ON: either flag cleared at the boot is the game's already-clear; the impossible half-state cannot act
+passed	fidelityYeti.test.js > YETI D3 — the clear-tag on {58,1} names the Yeti and talks ON: talks the Yeti out — the plan IS the witnessed talk tape's prefix, key for key
+passed	fidelityYeti.test.js > YETI D3 — the clear-tag on {58,1} names the Yeti and talks ON: the door after the talk is the PIT-teleporter refusal by name (the next gap, not this slice's)
+passed	fidelityYeti.test.js > YETI D3 — the clear-tag on {58,1} names the Yeti and talks ON: {58,0} is the same talk
+passed	hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) ⛓ a negative is never a refusal, and it names its bound: an unknown body, a press in flight that stands into a body
+passed	hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) ⛓⛓ OFF by default, its own deadline site (appended last), the switch restores, the trace off
+passed	hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) ⛓⛓ the bounds are the measured record's: the key, the room's horizon, a budget above every search that ended on its own
+passed	hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the same residue shorter, with no hit, every press planned in space-time
+passed	hammerApproach.test.js > hammer-phase B1 — HAMMER_APPROACH (OFF by default) ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states with no hit, and the press it aims lands
+passed	hammerApproach.test.js > hammer-phase B1 — the game witness hammer-b1-l18-approach40 ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, every press planned in space-time
+passed	hammerApproach.test.js > hammer-phase B1 — the game witness hammer-b1-l18-approach40 ⛓⛓⛓ the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick
+passed	hammerApproach.test.js > hammer-phase B1 — the kernel hands the goal its path ⛓ `goal(state, index, path)`: path() is the certificate that would end at that node, re-stepped exactly
+passed	hammerDashShape.test.js > seedling DB (ii) — DASH_NO_SWING_PREFIX: `all` without the swing-only prefix ON, `all` lacks [0] and keeps every longer prefix, for either weapon; `full` and `none` are unchanged
+passed	hammerDashShape.test.js > seedling DB (ii) — DASH_NO_SWING_PREFIX: `all` without the swing-only prefix ON, the L0 scan previews no swing-only candidate, and names the narrower set
+passed	hammerDashShape.test.js > seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted ON, a trip after k accepted windows ships exactly those k; OFF drops them all
+passed	hammerDashShape.test.js > seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted ON, a trip at another site keeps nothing and drops nothing: the dash scan runs whole
+passed	hammerDashShape.test.js > seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted ON, a trip before any window is accepted still refuses `deadline` (at the entry, and at the first preview)
+passed	hammerDashShape.test.js > seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted ON, an untripped scan is the scan OFF, byte for byte (no `kept` key)
+passed	hammerDashShape.test.js > seedling DB (iii) — DASH_KEEP_PARTIAL: a `sword-dash` trip keeps the windows already accepted the corridor: 7 windows over 64 previews, 237 → 145 t (its committed trace)
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them DASH_KEEP_PARTIAL ships ON
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them DASH_LEG_PRECHECK ships ON
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them DASH_NO_SWING_PREFIX ships OFF
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them the flipped switches name their default (G1's flip shape: `SEEDLING_<NAME>=0` opts a process out)
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them withDASH_KEEP_PARTIAL sets and restores it, also on a throw
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them withDASH_LEG_PRECHECK sets and restores it, also on a throw
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them withDASH_NO_SWING_PREFIX sets and restores it, also on a throw
+passed	hammerDashShape.test.js > seedling DB — the 3 switches ship at their flip defaults, and `with…` restores them ⛓ DK: one window adds at most 48.8 px (derived), and a clean run's floor is its ticks less that ground at its own rate
+passed	hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned ON, the floor-195 corridor still scans, exactly as OFF; the floor-196 one refuses by name with nothing scanned
+passed	hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned a room with a waterfall refuses nothing: DB's L52 corridor, a clean run of 289 ticks (floor 196), scans ON as OFF
+passed	hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned the D2 counter-example whole: ON, `plan-seedling-axe-witness` plans axe-l48-reach-l49 at 368 ticks (K = 40: 585)
+passed	hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned the D2 counter-example: the axe corridor's 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF
+passed	hammerDashShape.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned the boundary corridors measure leg 1 a clean run at floor 195 and at floor 196
+passed	hammerEscape.test.js > hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecastWithPress) ⛓ it reports, it does not assume: a re-press inside the slash timer is a DASH, a press in flight is never this press's landing, a press in the past and a missing point are refused, and spinnerForecast is untouched
+passed	hammerEscape.test.js > hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecastWithPress) ⛓⛓ a carried shield is NAMED unmodelled: its bump at the aim tick is not in the forecast, and from the press tick the walk is exact (the dark-stuff latch through the i-frame included)
+passed	hammerEscape.test.js > hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecastWithPress) ⛓⛓ the game-recorded phase witness (a phase stall in its walk) is exact too
+passed	hammerEscape.test.js > hammer-phase A D1 — the hit-aware forecast (levelRun.spinnerForecastWithPress) ⛓⛓⛓ the committed chain window: at every landing the forecast taken at the aim tick IS the run, byte for byte
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ ON by default, a deadline site of its own (appended), and its bounds are the mechanism's
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ hammer-a-l18-escape15 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's)
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ hammer-a-l18-escape15's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ hammer-a-l18-escape21 IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's)
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ hammer-a-l18-escape21's staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ previewOrDeath: a death is null with no stack captured, a defect re-throws with its trace, the limit restored
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓ the budget bounds the whole reachable set, above every certified and every exhausted escape measured
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓⛓ the game witness hammer-a-l18-escape15: the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick
+passed	hammerEscape.test.js > hammer-phase A D2 — HAMMER_ESCAPE in the press kill ⛓⛓⛓ the game witness hammer-a-l18-escape21: the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick
+passed	hammerEscape.test.js > hammer-phase A D2 — the space-time kernel (spaceTimeReach) ⛓ a negative names its bound: exhausted, the horizon of the earliest mode, the expansions, the deadline
+passed	hammerEscape.test.js > hammer-phase A D2 — the space-time kernel (spaceTimeReach) ⛓ deterministic: the answer depends on its inputs only
+passed	hammerEscape.test.js > hammer-phase A D2 — the space-time kernel (spaceTimeReach) ⛓ the earliest mode answers WHEN: the first index the goal holds, from the first state reaching it
+passed	hammerEscape.test.js > hammer-phase A D2 — the space-time kernel (spaceTimeReach) ⛓⛓ a certificate is tick-exact by construction: its keys, re-stepped, give its states, every one safe
+passed	hammerEscape.test.js > hammer-phase A3 — HAMMER_ESCAPE_FALLBACK: the escape as a preference ⛓ the switch off is A2: the uncertified strike is the refusal it replaced, and nothing above it moves
+passed	hammerEscape.test.js > hammer-phase A3 — HAMMER_ESCAPE_FALLBACK: the escape as a preference ⛓⛓ ON by default
+passed	hammerEscape.test.js > hammer-phase A3 — HAMMER_ESCAPE_FALLBACK: the escape as a preference ⛓⛓ the rank: a certified strike, the certificate in flight, a refuge, then the uncertified strike, then the refusal
+passed	hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) ⛓ a negative is never a refusal, and it names its bound
+passed	hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) ⛓⛓ OFF by default, its own deadline site (appended last), the switch restores, the trace off
+passed	hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) ⛓⛓ the bounds are the measured record's: the tail is the escape's horizon, a budget above the L18 searches
+passed	hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) ⛓⛓⛓ OFF is the switch-off walk byte for byte; ON solves the residue with no hit, the fight followed to its end
+passed	hammerFight.test.js > hammer-phase B2 — HAMMER_FIGHT (OFF by default) ⛓⛓⛓ a certificate is TICK-EXACT on the run: its keys walk the run through its states and landings, every body of the order dies, no hit through the tail
+passed	hammerFight.test.js > hammer-phase B2 — the best-first queue ⛓ pops the least under a total order, ties broken by the caller's insertion number
+passed	hammerFight.test.js > hammer-phase B2 — the forecast cursor (`spinnerFightForecast`) ⛓⛓⛓ one press through the cursor IS `spinnerForecastWithPress`: every row, every body, every test
+passed	hammerFight.test.js > hammer-phase B2 — the game witness hammer-b2-l18-fight40 ⛓⛓ it IS the solve: on, the staging solves to the witness's keys, ONE certificate held to its end
+passed	hammerFight.test.js > hammer-phase B2 — the game witness hammer-b2-l18-fight40 ⛓⛓⛓ the model reproduces the game's recording at 0 px, no hit, the crossing on the game's tick
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓ OFF by default, rewind mode by default, the switch restores; the trigger is the two press-kill codes
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓ inert while the fight itself is on (the retry would be the same path)
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓⛓ a refusal today, OFF: the refusal is byte-identical and carries no fallback; ON: the rewind retry SOLVES it, keys = the fight's
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓⛓ a retry that does not solve is UNDONE: the original refusal stands, its words unchanged plus one sentence
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓⛓ a success never asks it: ON, a solve that succeeds today is byte-identical and records nothing
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓⛓ the admission arm at the kill-lock order: "no weapon" (every arm refused) is SOLVED with the fight on; OFF unchanged
+passed	hammerFightFallback.test.js > hammer-phase B3 — HAMMER_FIGHT_FALLBACK (OFF by default) ⛓⛓⛓ the admission arm: a ladder whose last rung (the press arm) refused its admission is SOLVED with the fight on; OFF unchanged
+passed	hammerFightFallback.test.js > hammer-phase B3 — the replay rewind ⛓⛓ b3b — on a BOOT factory the prefix is replayed too (the factory re-makes the PLAY's equips); skipping it is refused by the clock check
+passed	hammerFightFallback.test.js > hammer-phase B3 — the replay rewind ⛓⛓ b3c — a TAKE after a DEAD-FRAME span replays on the TAPE index, not the run clock
+passed	hammerFightFallback.test.js > hammer-phase B3 — the replay rewind ⛓⛓ b3c — a rewind across a DEAD-FRAME span lands on the straight run: equips on the run clock, cut on it
+passed	hammerFightFallback.test.js > hammer-phase B3 — the replay rewind ⛓⛓ the rewind's replay (`replayOntoFork`, `to`) lands on the straight run, and refuses a factory from another state
+passed	hammerFightFallback.test.js > hammer-phase B3 — the replay rewind ⛓⛓⛓ the rewound run IS the live run: at every kill start and every 50th tick of a solve, byte for byte
+passed	hammerGhostSpinner.test.js > D2 — the forecasts on the game witness `hammer-c2-l18-ghostspinner` OFF (the BEFORE model): a ghost press forecasts NO landing, and the fight cursor leaves the run at the first
+passed	hammerGhostSpinner.test.js > D2 — the forecasts on the game witness `hammer-c2-l18-ghostspinner` ON leaves a SWORD press's forecast byte-identical (`r9-solve-18`, every press)
+passed	hammerGhostSpinner.test.js > D2 — the forecasts on the game witness `hammer-c2-l18-ghostspinner` the walk the game played: two ghost landings, 2 damage each, the second kills
+passed	hammerGhostSpinner.test.js > D2 — the forecasts on the game witness `hammer-c2-l18-ghostspinner` ⛓⛓⛓ ON: each press's forecast is the run's, byte for byte, up to the next press — and its landing is the run's
+passed	hammerGhostSpinner.test.js > D2 — the forecasts on the game witness `hammer-c2-l18-ghostspinner` ⛓⛓⛓ ON: the fight cursor along the whole walk is the run at every tick — bodies, tests, and the outcomes (the ghost dash's 6-tick release swallows +8)
+passed	hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) OFF (the BEFORE model): refused at t0, by name — the kill arm derives a SWORD press
+passed	hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) ON leaves the SWORD's solve byte-identical (the committed staging, 476 ticks; 518 with the strike floor OFF)
+passed	hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) ON: a ghost sword WITHOUT the sword is refused by name (it never tests)
+passed	hammerGhostSpinner.test.js > D3 — the spinner press kill with the ghost sword (`r9-solve-18`'s staging + `hasGhostSword`) ⛓⛓⛓ ON: SOLVED with no hit, crossing to L19; every landing a ghost press, two per body (2 damage each), from beyond the sword's reach
+passed	hammerGhostSpinner.test.js > the switch is ON by default, and `withGhostSpinnerPress` restores it
+passed	hammerGhostSpinner.test.js > the switch the press row is the ghost's only with the switch ON and a ghost primary; its numbers are imported
+passed	hammerPressKillDoneOnWalk.test.js > DD under `strikeIframeLapse` ON (the default since the fidelity lapse flip) — DD is load-bearing (176,48), step 50's own staging: DD OFF refuses the dwell ALREADY TRUE at the body; DD ON solves
+passed	hammerPressKillDoneOnWalk.test.js > DD under `strikeIframeLapse` ON (the default since the fidelity lapse flip) — DD is load-bearing (32,112): the lapse-admitting walk solves to L32 in 509 with DD OFF and ON alike
+passed	hammerPressKillDoneOnWalk.test.js > DD — the body is alive at the stance (step 50's own staging, (176,48)) ON keeps the dwell: the record is the dwell's own, and the solve is OFF's byte for byte
+passed	hammerPressKillDoneOnWalk.test.js > DD — the game witness (`hammer-dd-l30-walkkill`, p4f) the game plays the ON plan as the model does: every tick's level, player and hits, the body's rows, the end
+passed	hammerPressKillDoneOnWalk.test.js > DD — the switch's contract `killedOnWalk` names the press of THIS walk that KILLED the body, and nothing else
+passed	hammerPressKillDoneOnWalk.test.js > DD — the switch's contract `withPressKillDoneOnWalk` restores the previous value, on a throw too
+passed	hammerPressKillDoneOnWalk.test.js > DD — the switch's contract ships ON (the user's flip, 2026-10-14)
+passed	hammerPressKillDoneOnWalk.test.js > DD — the walk killed the body (step 50's staging at (32,112)) OFF: `runDwell` refuses the arm's dwell, already true, at t174 (the BEFORE)
+passed	hammerPressKillDoneOnWalk.test.js > DD — the walk killed the body (step 50's staging at (32,112)) ON: past the dwell — the kill is recorded as the walk's, and the solve reaches L32 as the witness tape
+passed	jsRuntimeSolverForkRun.test.js > every production solve path passes `forkRun` — a FRESH run at the boot, built as `run` was jsRuntimeSolver.solveFromTape (the JS page and the wasm engine, in the worker or in place)
+passed	jsRuntimeSolverForkRun.test.js > every production solve path passes `forkRun` — a FRESH run at the boot, built as `run` was seedlingCanCross.canCross (the can-cross oracle), with its idle prefix replayed by the solver
+passed	jsRuntimeSolverForkRun.test.js > every production solve path passes `forkRun` — a FRESH run at the boot, built as `run` was watchSolve.solveForPage (the editor's SOLVE arm and the procgen oracle)
+passed	jsRuntimeSolverForkRun.test.js > the fork shares no mutable state with the shadow, and re-makes the PLAY's equips a play equip inside the prefix is re-made at its tick, as `replayTape` makes it
+passed	jsRuntimeSolverForkRun.test.js > the fork shares no mutable state with the shadow, and re-makes the PLAY's equips two forks and the shadow advance independently
+passed	pressKillCost.test.js > pressKillCost — a press kill solved both ways r9-solve-18 at residue 5: the same keys, records and trace ON and OFF, every cache exercised
+passed	pressKillCost.test.js > pressKillCost — one strike derivation on L40 (C1's staging A) the kill-start derivation on spinner@880,848, continuation and all: the same strike ON and OFF
+passed	pressKillCost.test.js > pressKillCost — the forecast shift r5-press-glide (a block glides while the bodies move): every row equal
+passed	pressKillCost.test.js > pressKillCost — the forecast shift r9-solve-18 (presses land, bodies die): every row equal, and the shift is taken
+passed	pressKillCost.test.js > pressKillCost — the hammer line bound answers what hammerHitsPlayer answers, every phase, boxes on and off the line
+passed	pressKillCost.test.js > pressKillCost — the switch and the key a stored key is a COPY: an in-place change to what it was taken from is a miss
+passed	pressKillCost.test.js > pressKillCost — the switch and the key ships ON (a cost change, not a behaviour change: no flip)
+passed	pressKillCost.test.js > pressKillCost — walkableCells a contact set changed IN PLACE re-derives the cells (the memo keys a copy)
+passed	pressKillCost.test.js > pressKillCost — walkableCells a different world under the same run and the same opts re-derives the cells (the world is keyed by identity)
+passed	pressKillCost.test.js > strikeScanCost (P2) — a press kill solved both ways r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised
+passed	pressKillCost.test.js > strikeScanCost (P2) — derivations on L40 (C1's staging A), P2 ON against OFF the kill-start derivation, then two refused ones on the same run (lines carried): the same answers (the strike floor OFF)
+passed	pressKillCost.test.js > strikeScanCost (P2) — derivations on L40 (C1's staging A), P2 ON against OFF ⛓ the strike floor ON: P2 keeps the same answers and the same counts (the far refusal's `etaSkipped` 8,084 both ways)
+passed	pressKillCost.test.js > strikeScanCost (P2) — the carried line book a bag changed IN PLACE is a new book (the key is a copy): the line is asked again
+passed	pressKillCost.test.js > strikeScanCost (P2) — the carried line book a bag that cannot be copied, or a run that refuses one, gets no book: every line is asked, nothing thrown
+passed	pressKillCost.test.js > strikeScanCost (P2) — the carried line book a line an earlier derivation asked is carried, and answers what the query answers
+passed	pressKillCost.test.js > strikeScanCost (P2) — the carried line book a new bag value, or a new world, is a new book
+passed	pressKillCost.test.js > strikeScanCost (P2) — the row index answers what a filter over the whole list answers a list that is not row-major, or holds a non-finite coordinate, gets no index (the scan reads the whole list)
+passed	pressKillCost.test.js > strikeScanCost (P2) — the row index answers what a filter over the whole list answers every box, in the list order, over random lattices (edges inclusive)
+passed	pressKillCost.test.js > strikeScanCost (P2) — the switch ships ON (a cost change, not a behaviour change: no flip), and OFF is one call away
+passed	solverAxeAsk.test.js > SOLVECOST D2b — the axe-dodge site, asked per preview route step 128: the same plan either way; ON asks `axe-dodge` fewer times, and still asks it
+passed	solverAxeAsk.test.js > SOLVECOST D2b — the axe-dodge site, asked per preview ships ON
+passed	solverBot.test.js > A3 — a kill refusal names the PRESS arm, on a room with no arrow trap ⛓ an un-modelled body's own sentence survives the fallthrough
+passed	solverBot.test.js > A3 — a kill refusal names the PRESS arm, on a room with no arrow trap ⛔ reports BOTH arms, the PRESS arm FIRST
+passed	solverBot.test.js > A3 — a kill refusal names the PRESS arm, on a room with no arrow trap ⛔ the ceiling sentence is never the ONLY why the room gives
+passed	solverBot.test.js > R8 slice 3: `hold` registered — the derived-parameter executor ⛓ the executor is registered, and the frontier still selects it
+passed	solverBot.test.js > R8 slice 3: `hold` registered — the derived-parameter executor ⛓⛓ the hold stops on its OBSERVED condition — the body being gone
+passed	solverBot.test.js > R8 slice 3: `hold` registered — the derived-parameter executor ⛔ the frontier ADVANCED from the button to the block, and the block MOVED
+passed	solverBot.test.js > R9 12d″: the touch lean is the mechanism OWN probe ⚖ 48: every measured arrival is inside the drive OWN tolerance
+passed	solverBot.test.js > R9 12d″: the touch lean is the mechanism OWN probe ⛓ ...and the stance it is scattered around gives the SAME answer
+passed	solverBot.test.js > R9 12d″: the touch lean is the mechanism OWN probe ⛓ the pixel that was FATAL under the dominant axis now snaps
+passed	solverBot.test.js > R9 12d″: the touch lean is the mechanism OWN probe ⛔ a responder with NO transcribed probe REFUSES BY NAME
+passed	solverBot.test.js > R9 L16: a touch lock without its item REFUSES by name ⛓ r8-d2-20's boot, straight for the L13 exit: a SolverRefusal naming Player.hasShield
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers AIMS one tick and PRESSES the next — `slashDirection` is latched, not read
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers is INERT where it cannot help — no sword, and no bodies
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers reads the per-CLASS policy row, not the family arm
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers refuses a second press while MY OWN last press still has hit tests to run
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers the PREVIEW and the DRIVE spend the same keys, tick for tick
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers …and the walk that strikes takes NO hits where the same walk without one does
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers ⛓⛓ the two flag states spend the SAME keys — only a PLAN dashes
+passed	solverBot.test.js > R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers ⛔ an ARMED dwell kills the body that walks in; the UNARMED one is hit
+passed	solverBot.test.js > R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name ⛓ takes the BEST stance, not the first viable one — and carries the runners-up
+passed	solverBot.test.js > R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why
+passed	solverBot.test.js > R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name ⛔ derives a stance for the body that CANNOT reach where the walk stands
+passed	solverBot.test.js > R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name ⛔ the chaser arm re-orders by INTERCEPT; the chooser's own head is untouched
+passed	solverBot.test.js > R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name ⛔ the dwell bound is the forecast's own death tick, not a per-class constant
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓ `slashPressForecast` reproduces `r9-l0-sword-dash`'s own schedule, from the state alone
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓ …and at §23b.3's stance the certification still TAKES dashes — it is not a blanket no, and the stand is HIT ONCE in 400 ticks
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓ `previewStepper` spends a dash impulse — and without one it is unchanged
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓ a PLAN presses INSIDE the swing window; neither flag state alone can
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓ a body inside an i-frame that COVERS the dash is CONTACT-FREE — certified, and the row quotes the predicate that said so
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓ the policy is handed the bodies of tick `t - CONTACT_READING_LAG`, measured
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓⛓ at rest with `right` STARTING, the dash is priced along the KEY — the 9 px the pre-key direction could not see
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓⛓ every press the policy calls a DASH is a dash in the run — tick for tick
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES — over the WHOLE STAND — the parting is CURED
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓⛓ the dash carries 9 px over 8 ticks, DERIVED from the two constants
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛓⛓⛓⛓ R9 slice 12c‴: the KEYS no longer part at all — 207 → the whole stand refused, 79 → the whole stand dashing — and the BOUND is what the BODIES still measure
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔ `hitsTimer` 3 against an 8-tick window refuses AT THE EXPIRY OFFSET
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔ a press the model says will be SWALLOWED costs no aim tick and no press
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔ certification of a dash AT REST with NO key is trivially true — (0,0)
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔ the harmless reading is EXACTLY `DASH_HARMLESS_TIMER` — one below it refuses
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔⛔ `uncertain` and `off` price as DANGER — where `enemyHitPlayerFires` says "does not fire"
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔⛔ a DYING body with `hitsTimer` 0 is contact-free — the `die anim` term, not the timer
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔⛔ a PLAN with no slash state presses NOTHING — a blind dash is impossible now
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔⛔ a PLANNED dash chain takes L14's boot to ZERO hits THROUGH 120 — and is HIT by 130, which is the horizon this slice measured
+passed	solverBot.test.js > R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it ⛔⛔ no previewed tick spends `secondary`, so the two aged windows only ever CLOSE
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓ `previewWalk` NAMES its truncation — a crossing and a stall are not one field
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓ the two roster-wide permissions are SEPARATELY SET at this head, and neither reads the other
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ R9 slice 12i: `planSwordDash` REFUSES `none` rather than scanning an empty set
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ R9 slice 12i: a mode outside the set FAILS BY NAME, in every reader
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ R9 slice 12i: at `--dash=full` every candidate is the WHOLE chain and `scanned` counts one per start tick
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ a PLANNED press names every body its rect covers — and no committed press covers two
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ the boss-class shake roster is DERIVED from the table, and the room predicate names writers where they exist and none where they do not
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ the scan is BOUNDED and every rejected window carries a kind and a why
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓ ⚖ ruling 45(b): EVERY prefix is previewed at every start tick, and `scanned` says so
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓⛓ R9 slice 12i: `DEFAULT_DASH_MODE` is `all`, and the set is DERIVED from the pattern in all 3 states
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓⛓ a swing over a body I have just knocked is NOT a hit — `strikeCandidates` rejects an i-framed target by name
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓⛓ it PLANS — `r9-solve-2`'s own room, on ONE dash window, and the walk gets shorter
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛓⛓⛓ ⚖ ruling 45(a): a covered body is MODELLED, not refused — no `would-hit` row survives in a room with no boss-class shake writer
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛔ a dashPlan on a REFUSING policy is refused by name
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛔ no sword is refused FIRST and by name — twelve of the chain's segments are
+passed	solverBot.test.js > R9 slice 12c′: the PLANNER dashes toward the exit ⛔⛔⛔ a body-free room takes the WHOLE schedule, not just its first press
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor already reaches ⛓ the L10 sword stance is the near-side cell, not the one across the volume
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor already reaches ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor already reaches ⛔ the L11 chest stance is still the band the mechanism derives
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic ⛓ L18 spends the fade WALKING, and the wait is the subtraction
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin
+passed	solverBot.test.js > R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room
+passed	solverBot.test.js > R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way
+passed	solverBot.test.js > R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell
+passed	solverBot.test.js > R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it
+passed	solverBot.test.js > R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission ⛓⛓⛓ R9 slice 12i: `none` emits no `swordDash` key, `full` names itself, `all` says nothing because it is the default
+passed	solverBot.test.js > the battery rooms, in-model (the differential is the game-side gate) a collect goal whose pickup is already taken is met in passing, not re-walked
+passed	solverBot.test.js > the battery rooms, in-model (the differential is the game-side gate) solves segment 10 (L10, the SWORD collect) — strategy selection is real
+passed	solverBot.test.js > the battery rooms, in-model (the differential is the game-side gate) solves segment 11 (L11, the chest) — the other selection arm
+passed	solverBot.test.js > the battery rooms, in-model (the differential is the game-side gate) solves segment 2 (L2) and the transition is the tape's end
+passed	solverBot.test.js > the full-bag path (⚖ §8.3.1 ruled resolution) liveBag forwards ALL FOURTEEN families — derived with sentinels
+passed	solverBot.test.js > the full-bag path (⚖ §8.3.1 ruled resolution) refuses an unbranded liveBag by name
+passed	solverBot.test.js > the full-bag path (⚖ §8.3.1 ruled resolution) refuses liveGeometryOpts on a noclip run BY NAME
+passed	solverBot.test.js > the full-bag path (⚖ §8.3.1 ruled resolution) run.liveGeometryOpts() is BRANDED and covers all fourteen families
+passed	solverBot.test.js > the refusal shapes — never a silent stall L4: `hold` then `shove` — the room SOLVES, and both decisions are traced
+passed	solverBot.test.js > the refusal shapes — never a silent stall L5: a `tset -1` lock is refined from `hold` to `kill` by LIVE STATE
+passed	solverBot.test.js > the refusal shapes — never a silent stall L6: the ladder climbs AVOID -> TIME -> BAIT and the room SOLVES
+passed	solverBot.test.js > the refusal shapes — never a silent stall a COMBAT-BLIND run is refused at the door — the slice's own defect, institutionalised
+passed	solverBot.test.js > the refusal shapes — never a silent stall a collect-placement with nothing standing there refuses as a MACRO-layer error
+passed	solverBot.test.js > the refusal shapes — never a silent stall an unknown goal kind is refused at the door (the solver's vocabulary is closed)
+passed	solverBot.test.js > the refusal shapes — never a silent stall ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more
+passed	solverBot.test.js > the refusal shapes — never a silent stall ⛓ L8 with its clears UNDECLARED solves on the run's own sandtrap deaths (F4)
+passed	solverBot.test.js > the refusal shapes — never a silent stall ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared
+passed	solverBot.test.js > the shove scan's off-the-map bound — units, measured ⛓ F4: undeclared, L8 derives NO second shove — the walk pushes the block once the sandtrap is gone
+passed	solverBot.test.js > the shove scan's off-the-map bound — units, measured ⛔ `world.width/height` are TILES and `world.world.*` are PIXELS
+passed	solverBot.test.js > the strategy catalog seam (slice 3 extends, never restructures) every registered executor answers a selector row; unregistered rows are the work orders
+passed	solverBot.test.js > the trace producer — the first real producer of the slice-0 schema the produced trace validates, agrees with its own tape per row, and is sparse
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⚠ a DANGEROUS row survives the throw verbatim — pinned synthetically, and said so
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⚠ a refusal raised outside the solve loop carries an EMPTY record — a BOUND, not a verdict
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⛓ the field exists and DEFAULTS to an empty list, never undefined
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⛓ …and EVERY gate this refusal reached answered CLEAR — the population, then the zero
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⛔ a REFUSED segment carries the queries the bot was told, with both clocks
+passed	solverBot.test.js > ⚖ slice 10: `SolverRefusal` carries the danger record ⛔ the carried list is a COPY of the recorder's, not the live array
+passed	solverBot.test.js > ⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED ⚠ …and the two differ in exactly ONE thing — the decision they record
+passed	solverBot.test.js > ⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED ⛓ the selector row names the verb that was ALREADY registered
+passed	solverBot.test.js > ⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED ⛓⛓⛓ …and the walk it earns is the GOAL-DIRECTED collect's, key for key
+passed	solverBot.test.js > ⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED ⛔ a solid with NO row still refuses by name — the claim is not widened
+passed	solverBot.test.js > ⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECTED ⛔ the frontier names the chest as a SOLID and the trace says which verb
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛓ with an oracle, the loop converges — and every pass is a MEASURE or a SOLVE
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛓⛓ F4: L8 itself now SOLVES in one pass — no declaration, no oracle (the run computes the sandtraps' death)
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛔ a declaration that unblocks NOTHING is named at the SECOND occurrence
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛔ a tick measured PAST the end of the measuring walk is refused
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛔ an oracle that answers with a non-integer is refused
+passed	twoPassSolve.test.js > the GAME-sourced arm, and the refusal to substitute ⛔ refuses to substitute the MODEL for a game-sourced tick, BY NAME
+passed	twoPassSolve.test.js > the MODEL-sourced arm — L5, derived and then WALLED ⛓ the derived tick is the removal plus the responder's own fade
+passed	twoPassSolve.test.js > the MODEL-sourced arm — L5, derived and then WALLED ⛓⛓⛓ discovers the kill-lock, DERIVES its tick, and CROSSES the room
+passed	twoPassSolve.test.js > the sentinel, and the loop's own shape checks refuses a caller that hands one run instead of a builder
+passed	twoPassSolve.test.js > the sentinel, and the loop's own shape checks the pass bound is named and one more than the deepest room on the arc
+passed	twoPassSolve.test.js > the sentinel, and the loop's own shape checks ⛓ the sentinel is unreachable by construction
+passed	twoPassSolve.test.js > the sentinel, and the loop's own shape checks ⛔ no emitted tape may carry the PENDING sentinel
