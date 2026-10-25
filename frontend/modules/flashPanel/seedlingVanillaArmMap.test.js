@@ -356,7 +356,10 @@ describe('⛓ LIGHTS WIRING — leg 608: a wired boss kill is its fight\'s clear
     it('the map\'s boss row: the report address and the body the DELIVERED room holds (only the listed fights)', () => {
         // ⛓ BOSS WIRING — and fidelity BOSSKILLS' two (the rows are listed whatever the switches; only the resolve binds)
         const byType = new Map(MAP.bosses.map((b) => [b.entityType, b]));
-        expect(MAP.bosses.length).toBe(3);
+        // ⛓ fidelity L67BK4 (wave 31): + the Totem of Lacste row (listed whatever its switch, as the others).
+        expect(MAP.bosses.length).toBe(4);
+        expect(byType.get('bosstotem')).toEqual({ location: 'Level 043 - Totem of Lacste', level: 43, entityType: 'bosstotem',
+            address: { level: 43, tag: 5 }, at: { x: 152, y: 168 } });
         expect(byType.get('lightbosscontroller')).toEqual({ location: LIGHTS.location, level: 69, entityType: 'lightbosscontroller',
             address: { level: 69, tag: 0 }, at: { x: 72, y: 72 } });
         expect(byType.get('lavaboss')).toEqual({ location: 'Level 082 - King of Fire', level: 82, entityType: 'lavaboss',
@@ -386,12 +389,14 @@ describe('⛓ LIGHTS WIRING — leg 608: a wired boss kill is its fight\'s clear
  *   m2 the row's switch name misspelt      -> the PIN row above reds (registered OFF / not ON).
  *   m3 wiredBossOf ignores the switch      -> the "OFF" row reds (a goal where the refusal stood).
  */
-describe('⛓ BOSS WIRING — legs 506/508 + 665/667: the Tentacled Beast and the King of Fire', () => {
+describe('⛓ BOSS WIRING — legs 506/508 + 665/667: the Tentacled Beast and the King of Fire (+ L67BK4\'s Totem of Lacste)', () => {
     const ROWS = [
         { type: 'tentaclebeast', sw: 'tentacleBeastFight', level: 57, at: { x: 80, y: 48 } },
         { type: 'lavaboss', sw: 'kingOfFireFight', level: 82, at: { x: 112, y: 48 } },
+        // ⛓ fidelity L67BK4 (wave 31): L43's Totem of Lacste {43,5}, the `totem` verb's clear-tag on `bosstotem@152,168`.
+        { type: 'bosstotem', sw: 'totemBossFight', level: 43, tag: 5, at: { x: 152, y: 168 } },
     ];
-    for (const { type, sw, level, at } of ROWS) {
+    for (const { type, sw, level, tag = 0, at } of ROWS) {
         const report = LOADED.reports.find((r) => r.entityType === type);
         const resolve = (on) => withContactFidelity({ [sw]: on },
             () => resolveSeedlingAtlasGoal({ kind: 'location', name: report.location }, MAP, {}));
@@ -405,9 +410,9 @@ describe('⛓ BOSS WIRING — legs 506/508 + 665/667: the Tentacled Beast and th
             const obstacle = `${type}@${at.x},${at.y}`;
             const r = resolve(true);
             expect(r).toEqual({ goal: { kind: 'location', level, tag: null, entityType: null, name: report.location,
-                event: { eventId: null, tag: { level, tag: 0 }, at, obstacle } } });
+                event: { eventId: null, tag: { level, tag }, at, obstacle } } });
             const mapped = withContactFidelity({ [sw]: true }, () => solverGoalFor(r.goal, { run: { level } }));
-            expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level, tag: 0 }, at, obstacle } });
+            expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level, tag }, at, obstacle } });
         });
     }
 });

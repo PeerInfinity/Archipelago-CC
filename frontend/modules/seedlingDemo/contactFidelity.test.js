@@ -293,7 +293,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             turretCircleKill: true,
             iceTurretDeathAnim: true,
             // ⛓ fidelity SHAKEEXACT (wave 31): a split run's camera shake stepped exactly — shipped OFF.
-            shakeExactSplit: false });
+            shakeExactSplit: false,
+            // ⛓ fidelity L67BK4 (wave 31): a spear block that holds an armed lane's button is parked, not sunk; and the
+            // Totem is fought — both shipped OFF.
+            laneWeigh: false,
+            totemBossFight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

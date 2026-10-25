@@ -1,0 +1,317 @@
+[
+  {
+    "seam": 5442,
+    "work": 233,
+    "planTicks": 801,
+    "verbs": [
+      "shove",
+      "walk"
+    ],
+    "modelRows": 802,
+    "modelTo": null,
+    "modelHits": 0,
+    "game": {
+      "rows": 802,
+      "to": 67,
+      "levels": [
+        67
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 67
+          },
+          {
+            "tag": 1,
+            "level": 67
+          }
+        ],
+        "grants": [],
+        "level": 67,
+        "x": 56.10569903544789,
+        "y": 72.45704564099212
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5455,
+    "work": 233,
+    "planTicks": 801,
+    "verbs": [
+      "shove",
+      "walk"
+    ],
+    "modelRows": 802,
+    "modelTo": null,
+    "modelHits": 0,
+    "game": {
+      "rows": 802,
+      "to": 67,
+      "levels": [
+        67
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 67
+          },
+          {
+            "tag": 1,
+            "level": 67
+          }
+        ],
+        "grants": [],
+        "level": 67,
+        "x": 56.10569903544789,
+        "y": 72.45704564099212
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5462,
+    "work": 233,
+    "planTicks": 801,
+    "verbs": [
+      "shove",
+      "walk"
+    ],
+    "modelRows": 802,
+    "modelTo": null,
+    "modelHits": 0,
+    "game": {
+      "rows": 802,
+      "to": 67,
+      "levels": [
+        67
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 67
+          },
+          {
+            "tag": 1,
+            "level": 67
+          }
+        ],
+        "grants": [],
+        "level": 67,
+        "x": 56.10569903544789,
+        "y": 72.45704564099212
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5467,
+    "work": 233,
+    "planTicks": 801,
+    "verbs": [
+      "shove",
+      "walk"
+    ],
+    "modelRows": 802,
+    "modelTo": null,
+    "modelHits": 0,
+    "game": {
+      "rows": 802,
+      "to": 67,
+      "levels": [
+        67
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 67
+          },
+          {
+            "tag": 1,
+            "level": 67
+          }
+        ],
+        "grants": [],
+        "level": 67,
+        "x": 56.10569903544789,
+        "y": 72.45704564099212
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "seam": 5475,
+    "work": 233,
+    "planTicks": 801,
+    "verbs": [
+      "shove",
+      "walk"
+    ],
+    "modelRows": 802,
+    "modelTo": null,
+    "modelHits": 0,
+    "game": {
+      "rows": 802,
+      "to": 67,
+      "levels": [
+        67
+      ],
+      "firstDiff": -1,
+      "error": "",
+      "gameAt": null,
+      "modelAt": null,
+      "hits": 0,
+      "end": {
+        "items": {
+          "hitsMax": 3,
+          "hasTorch": true,
+          "hasDarkSuit": false,
+          "hasSpear": true,
+          "hasFeather": true,
+          "canSwim": true,
+          "hasFireWand": false,
+          "hasWand": false,
+          "hasFire": true,
+          "hasDarkShield": false,
+          "hasShield": true,
+          "hasGhostSword": false,
+          "hasDarkSword": false,
+          "hasSword": true
+        },
+        "cleared": [
+          {
+            "tag": 0,
+            "level": 67
+          },
+          {
+            "tag": 1,
+            "level": 67
+          }
+        ],
+        "grants": [],
+        "level": 67,
+        "x": 56.10569903544789,
+        "y": 72.45704564099212
+      },
+      "keys": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ]
+    }
+  }
+]

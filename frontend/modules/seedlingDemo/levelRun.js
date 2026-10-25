@@ -1983,6 +1983,12 @@ export function createLevelRun({
                 // it is `collidable`-gated (the jump and the top wait are
                 // both un-hittable from the un-restored flag — §8.11).
                 bodyRect: b.activated ? bossTotemBodyRect(b) : null,
+                // ⛓ fidelity L67BK4 D2 (`totemBossFight`): the fight's own reads for `solverBot.execTotemBoss` — the
+                // body's y and state, its hit pacer, `collidable` (the jump is un-hittable) and the kill's ends.
+                ...(CONTACT_FIDELITY.totemBossFight ? {
+                    x: b.x, y: b.y, state: b.state, walking: b.walking, collidable: b.collidable, hits: b.hits,
+                    hitsTimer: b.hitsTimer, destroy: b.destroy, removed: b.removed === true,
+                } : {}),
             });
         }
         return out;

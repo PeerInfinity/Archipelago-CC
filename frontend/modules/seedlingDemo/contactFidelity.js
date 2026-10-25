@@ -1377,6 +1377,39 @@ export const CONTACT_FIDELITY = {
      * `CAMERA_BAND_KEPT`). OFF: byte-identical. `SEEDLING_SHAKE_EXACT_SPLIT=0|1`.
      */
     shakeExactSplit: false,
+    /**
+     * fidelity L67BK4 D1 (wave 31) — A SPEAR BLOCK THAT IS THE ONLY HOLDER FOR AN ARMED LANE'S BUTTON IS PARKED ON THE
+     * BUTTON, NOT SUNK (`solverBot.laneHolderRoute`, asked by `resolveSpearPushStrategy`).
+     *
+     *     ArrowTrap.as:31-41   fires while `activate XOR shootDefault`; `Button.update` re-collides
+     *                          `["Player","Enemy","Solid"]` every tick and publishes its group (`Button.as:27-39`)
+     *
+     * L67 (`Dungeon6/8.oel`) is the room built for it: `arrowtrap@48,48 tset 0 shoot 1` stands over `bosskey4` at
+     * (48,64), `button@96,112 tset 0` silences it while pressed, and `pushableblockspear@144,112` stands in the only
+     * corridor west. OFF the clear-path search took its cheapest route — one thrust W into the pit at (8,7) — and the
+     * key's corridor then climbed to an EXHAUSTED ladder on the armed lane (divergence leg `level_67__r3c2 <-
+     * in_L59_0_128 ~> level_67__r6c11 -> location:Level 067 - Boss Key 4`, survey step 140). ON: a clear-path route that
+     * DESTROYS the block yields to a route that parks it on a button of an armed lane's own group (L67: N W W S W, five
+     * thrusts), which empties the same cell; the walk then meets a silent lane. OFF: byte-identical.
+     * `SEEDLING_LANE_WEIGH=0|1`.
+     */
+    laneWeigh: false,
+    /**
+     * fidelity L67BK4 D2 (wave 31) — THE TOTEM IS FOUGHT, NOT ROUTED AROUND (`solverBot.execTotemBoss`,
+     * `bossTotemPolicy.js`).
+     *
+     *     BossTotem.as:280-330  `type = "Solid"` until it wakes; once `fullyActivated` the player is assigned below it
+     *     BossTotem.as:254      `onlyHitBy = "Wand"`, `hitsMax = 5`, `hitsTimerMax = 20`
+     *
+     * L43's arena (`Dungeon4/Boss.oel`) is one 80 px shaft and `bosstotem@152,168` spans it: the wall before the wake
+     * and the clamp after, so the north half (the magical lock, the teleporter to L37) is reached only past the kill.
+     * OFF the frontier read *"no strategy row exists for solid:bosstotem"* (13 divergence legs `level_43__r3c8 <-
+     * … -> exit:out_teleporter_144_64`). ON: `solid:bosstotem` → `totem`, a verb that plays the R6 witness's cycle
+     * (`r6-totem-kill`: a stance west of the laser's fixed band, the wand every 22 ticks, the descent tracked) against
+     * the run's own stepped fight on forks, and plays the first variant that kills with no death (hitless first). OFF:
+     * no row, byte-identical. `SEEDLING_TOTEM_BOSS_FIGHT=0|1`.
+     */
+    totemBossFight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1641,6 +1674,12 @@ if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FID
 // ⛓ fidelity SHAKEEXACT: `SEEDLING_SHAKE_EXACT_SPLIT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SHAKE_EXACT_SPLIT === '1') CONTACT_FIDELITY.shakeExactSplit = true;
 if (globalThis.process?.env?.SEEDLING_SHAKE_EXACT_SPLIT === '0') CONTACT_FIDELITY.shakeExactSplit = false;
+// ⛓ fidelity L67BK4 D1: `SEEDLING_LANE_WEIGH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LANE_WEIGH === '1') CONTACT_FIDELITY.laneWeigh = true;
+if (globalThis.process?.env?.SEEDLING_LANE_WEIGH === '0') CONTACT_FIDELITY.laneWeigh = false;
+// ⛓ fidelity L67BK4 D2: `SEEDLING_TOTEM_BOSS_FIGHT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TOTEM_BOSS_FIGHT === '1') CONTACT_FIDELITY.totemBossFight = true;
+if (globalThis.process?.env?.SEEDLING_TOTEM_BOSS_FIGHT === '0') CONTACT_FIDELITY.totemBossFight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
