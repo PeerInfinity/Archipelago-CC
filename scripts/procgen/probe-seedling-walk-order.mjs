@@ -29,7 +29,8 @@
  *
  * Run: node scripts/procgen/probe-seedling-walk-order.mjs [--host=http://localhost:8000] [--only=J,W]
  *      [--order=reachable-cheapest|sphere-cheapest|sphere-in-order|sphere-cheapest+sweep+grab|
- *       reachable-cheapest+pocket-item|reachable-cheapest+pocket-item+grab] [--until=<location>] [--budget-s=1800]
+ *       reachable-cheapest+pocket-item|reachable-cheapest+pocket-item+grab|reachable-cheapest+lookahead]
+ *      [--until=<location>] [--budget-s=1800]
  *      [--expect=<loc>,<loc>,…] [--max-restarts=<n>]
  */
 import { chromium } from 'playwright';

@@ -268,6 +268,10 @@ registerTest({
  * `sphere-cheapest` (offline 5 < 7: the row the sphere's pick passes is grabbed), and the two `+pocket-item` orders no
  * more than the listed order (offline 5 and 5; Adventure has no `return_to_menu`, so no row is priced as a pocket —
  * the pocket query itself is validated on Seedling, `probe-seedling-walk-order.mjs`).
+ *
+ * bot-route-chooser-2b adds `reachable-cheapest+lookahead`: no more transitions than the listed order (offline 5,
+ * the same as plain `reachable-cheapest` on this seed), and the lookahead's hypothetical step must actually run
+ * (`getChoiceTimings().hypotheticals` > 0) — on Adventure it is the only proof the second step was priced.
  */
 const WALK_ORDER_RULES = './presets/adventure/AP_84719271504320872445/AP_84719271504320872445_rules.json';
 
@@ -288,7 +292,7 @@ async function playbackBotWalkOrderTest(testController) {
   const runs = {};
   try {
     for (const order of ['sphere-in-order', 'reachable-cheapest', 'sphere-cheapest', 'sphere-cheapest+sweep+grab',
-      'reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab']) {
+      'reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab', 'reachable-cheapest+lookahead']) {
       bot.reset();
       bot.setWalkOrder(order);
       await testController.loadRulesFromFile(WALK_ORDER_RULES);
@@ -302,7 +306,7 @@ async function playbackBotWalkOrderTest(testController) {
         `${order}: bot reaches a terminal status`, 120000, 250);
       const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
       const missing = sphereLocations.filter((n) => !checked.has(n));
-      runs[order] = bot.getRouteStats();
+      runs[order] = { ...bot.getRouteStats(), hypotheticals: bot.getChoiceTimings().hypotheticals };
       testController.reportCondition(`${order}: finished with every sphere-log location checked (status "${bot.getStatus()}", `
         + `missing: ${missing.slice(0, 5).join(', ') || 'none'}; ${JSON.stringify(runs[order])})`,
         finished && (bot.getStatus() || '').startsWith('finished') && missing.length === 0 && sphereLocations.length > 0);
@@ -317,10 +321,12 @@ async function playbackBotWalkOrderTest(testController) {
     testController.reportCondition('sphere-cheapest+sweep+grab walks fewer region transitions than sphere-cheapest '
       + `(${runs['sphere-cheapest+sweep+grab']?.transitions} < ${sphere})`,
       (runs['sphere-cheapest+sweep+grab']?.transitions ?? Infinity) < sphere);
-    for (const order of ['reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab']) {
+    for (const order of ['reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab', 'reachable-cheapest+lookahead']) {
       testController.reportCondition(`${order} walks no more region transitions than the listed order `
         + `(${runs[order]?.transitions} ≤ ${listed})`, (runs[order]?.transitions ?? Infinity) <= listed);
     }
+    testController.reportCondition('reachable-cheapest+lookahead priced its second step over hypothetical states '
+      + `(${runs['reachable-cheapest+lookahead']?.hypotheticals} > 0)`, (runs['reachable-cheapest+lookahead']?.hypotheticals ?? 0) > 0);
   } finally {
     bot.stop();
     bot.setWalkOrder(orderBefore);
@@ -334,7 +340,7 @@ registerTest({
   name: 'Playback Bot: walk orders (Adventure, direct play)',
   description:
     'Plays an Adventure seed to the end once per walk order — listed, cheapest reachable, cheapest in the sphere, and '
-    + 'the opt-in grab / pocket-item modifiers — and asserts each finishes with every location checked, cheapest '
+    + 'the opt-in grab / pocket-item / lookahead modifiers — and asserts each finishes with every location checked, cheapest '
     + 'reachable and the grab in fewer region transitions.',
   testFunction: playbackBotWalkOrderTest,
   category: 'Playback Bot',

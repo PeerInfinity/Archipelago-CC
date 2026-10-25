@@ -944,7 +944,7 @@ export class PlaybackBotUI {
         };
         const price = (entry) => priceFrom(here, entry);
         const home = returnToMenu(rules, playerId) ? this._restartHome(rules, playerId) : null;
-        const { pocketItem, grab } = parseWalkOrder(this._walkOrder);
+        const { pocketItem, grab, lookahead } = parseWalkOrder(this._walkOrder);
         // ⛓ POCKET-ITEM — "could I walk out of the row's region WITH its item?": the PathFinder over a hypothetical
         //   state (`hypotheticalFindPath`), one per distinct extra-item set within this choice.
         const hypothetical = new Map();
@@ -965,6 +965,48 @@ export class PlaybackBotUI {
             const walkOut = hypothetical.get(key);
             return !!walkOut && !walkOut(entry.regionName, home);
         } : null;
+        // ⛓ LOOKAHEAD — one step of the walk, hypothetically: walk to `entry` (from `at`, undefined = here), credit the
+        //   events its route crosses or breaks and the row's own item, and price the next targets from its region over
+        //   that state (`hypotheticalFindPath`, cached per extra-item set like the pocket test's). The live state is
+        //   never touched.
+        const regions = rules?.regions?.[playerId] ?? {};
+        const events = lookahead > 1 ? gameStateEventsOf(rules, playerId) : [];
+        const hypotheticalFor = (extra) => {
+            const key = extra.join('\u0000');
+            if (!hypothetical.has(key)) {
+                hypotheticals += 1;
+                hypothetical.set(key, hypotheticalFindPath(this._pathFinder, { staticData, snapshot, extra,
+                    makeInterface: (s) => createSnapshotInterface(s, staticData), evaluate: evaluateRule }));
+            }
+            return hypothetical.get(key);
+        };
+        const step = lookahead > 1 ? (entry, at) => {
+            const base = at?.extra ?? [...this._creditedEvents];
+            const route = at ? this._planRoute(at.region, entry.regionName, at.findPath).route : routes.get(entry.locationName);
+            const credited = new Set(base);
+            let cur = at?.region ?? here;
+            for (const st of (route?.steps ?? []).slice(1)) {
+                if (isBreakStep(st)) { if (st.event?.item) credited.add(st.event.item); continue; }
+                if (events.length > 0 && cur && st.exitUsed) {
+                    for (const e of creditsOfHop({ regions, events, from: cur, step: st, held: [...credited] })) credited.add(e.item);
+                }
+                cur = st.region ?? cur;
+            }
+            const extra = [...credited].sort();
+            const item = this._rowMeta.get(entry.locationName)?.item;
+            const withItem = item ? [...extra, item] : extra;
+            const findNext = hypotheticalFor(withItem);
+            if (!findNext) return null;
+            return {
+                at: { region: entry.regionName, extra: withItem, findPath: findNext },
+                isAccessible: (name) => findNext.isLocationAccessible?.(name) === true,
+                price: (next) => {
+                    if (next.regionName === entry.regionName) return { hops: 0, restart: false };
+                    const { route: r, kind } = this._planRoute(entry.regionName, next.regionName, findNext);
+                    return r ? { hops: r.length, restart: kind === 'restart' } : null;
+                },
+            };
+        } : null;
         const { entry, swept, grabbed } = chooseWalkTarget({
             order: this._walkOrder,
             queue: this._queue,
@@ -977,6 +1019,7 @@ export class PlaybackBotUI {
             inPocket: () => !!home && !!here && here !== home && !findPath(here, home),
             isPocket,
             priceBetween: grab ? (from, to) => priceFrom(from.regionName, to) : null,
+            step,
         });
         if (swept && entry) this._log.push(`sweeping "${entry.locationName}" before the Restart out of ${here}`);
         if (grabbed) this._log.push(`grabbing "${grabbed.locationName}" on the way`);

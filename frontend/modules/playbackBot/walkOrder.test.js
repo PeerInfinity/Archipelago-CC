@@ -147,7 +147,7 @@ describe('walkOrder — pure', () => {
         // without the modifier the pocket is not priced, and the listed head wins the tie
         expect(chooseWalkTarget({ order: WALK_ORDERS.reachableCheapest, queue: q, checked: new Set(),
             price: () => ({ hops: 1, restart: false }), isPocket: () => true }).entry.locationName).toBe('P');
-        expect(parseWalkOrder(WALK_ORDERS.reachablePocketItemGrab)).toEqual({ scope: 'reachable-cheapest', pocketItem: true, grab: true });
+        expect(parseWalkOrder(WALK_ORDERS.reachablePocketItemGrab)).toEqual({ scope: 'reachable-cheapest', pocketItem: true, grab: true, lookahead: 0 });
     });
 
     it('+grab: a row on the route at zero detour goes first; a row off it does not', () => {
@@ -162,6 +162,48 @@ describe('walkOrder — pure', () => {
         // the same queue without the modifier: the sphere's own row
         expect(chooseWalkTarget({ order: WALK_ORDERS.sphereCheapest, queue: q, checked: new Set(),
             price: (e) => between('Start', e.regionName) }).entry.locationName).toBe('T');
+    });
+
+    // ⛓ LOOKAHEAD (bot-route-chooser-2b) — `step` = one hypothetical step: accessibility and prices from the row's region.
+    const hopsTable = { Start: { RA: 1, RB: 2, RN: 5 }, RA: { RB: 10, RN: 0 }, RB: { RA: 2, RN: 9 }, RN: { RB: 10 } };
+    const between = (from, to) => (from === to ? { hops: 0, restart: false }
+        : hopsTable[from]?.[to] !== undefined ? { hops: hopsTable[from][to], restart: false } : null);
+    const lookQueue = [row('A', 'RA', '0.1', null), row('B', 'RB', '0.2', null), row('N', 'RN', '0.3', null)];
+    const choose = (order, { accessibleAfterA = false, steps = null } = {}) => chooseWalkTarget({
+        order, queue: lookQueue, checked: new Set(), isAccessible: (n) => n !== 'N', price: (e) => between('Start', e.regionName),
+        step: (entry, at) => {
+            steps?.push([entry.locationName, at]);
+            return { at: { region: entry.regionName },
+                isAccessible: (n) => n !== 'N' || (accessibleAfterA && entry.locationName === 'A'),
+                price: (next) => between(entry.regionName, next.regionName) };
+        },
+    });
+
+    it('+lookahead: the 2-row sequence beats the nearest row; a row the first item opens counts in the second step', () => {
+        expect(parseWalkOrder(WALK_ORDERS.reachableLookahead)).toEqual({ scope: 'reachable-cheapest', pocketItem: false, grab: false, lookahead: 2 });
+        expect(parseWalkOrder('reachable-cheapest+lookahead3').lookahead).toBe(3);
+        // greedy: A (1). Lookahead: A then B = 11, B then A = 4 → B
+        expect(choose(WALK_ORDERS.reachableCheapest).entry.locationName).toBe('A');
+        const steps = [];
+        const look = choose(WALK_ORDERS.reachableLookahead, { steps });
+        expect(look.entry.locationName).toBe('B');
+        expect(look.ranked[0].price).toMatchObject({ hops: 4, restarts: 0, lead: 2 });
+        expect(steps.map(([n, at]) => [n, at])).toEqual([['A', undefined], ['B', undefined]]);   // one step per candidate (k=2)
+        // A's item opens N, 0 hops from A: A then N = 1 beats B then A = 4 — the step's own accessibility counts
+        expect(choose(WALK_ORDERS.reachableLookahead, { accessibleAfterA: true }).entry.locationName).toBe('A');
+        // no step hook: plain greedy
+        expect(chooseWalkTarget({ order: WALK_ORDERS.reachableLookahead, queue: lookQueue, checked: new Set(),
+            isAccessible: (n) => n !== 'N', price: (e) => between('Start', e.regionName) }).entry.locationName).toBe('A');
+    });
+
+    it('hypotheticalFindPath answers location accessibility in the hypothetical state', () => {
+        const staticData = { regions: REGIONS };
+        const makeInterface = (snap) => ({ inventory: snap.inventory,
+            isLocationAccessible: (name) => name === 'Ledge Chest' && snap.regionReachability?.Ledge === true });
+        const live = hypotheticalFindPath(fakePathFinder, { staticData, snapshot: liveSnapshot(), makeInterface, evaluate, extra: [] });
+        const withKey = hypotheticalFindPath(fakePathFinder, { staticData, snapshot: liveSnapshot(), makeInterface, evaluate, extra: ['Key'] });
+        expect(live.isLocationAccessible('Ledge Chest')).toBe(false);
+        expect(withKey.isLocationAccessible('Ledge Chest')).toBe(true);
     });
 });
 
