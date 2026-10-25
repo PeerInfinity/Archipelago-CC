@@ -128,7 +128,7 @@ import {
     PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue,
     // ⛓⛓⛓ hammer-phase P2: the strike scan's two exact levers (behind `STRIKE_SCAN_COST`, ON; OFF bypasses both).
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, cellRowsOf, cellsInBox,
-    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, OFF).
+    // ⛓⛓⛓ hammer-phase BW: the press kill's waits see the lobber's bombs (behind `PRESS_KILL_BOMBS`, ON since PKB).
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
@@ -10757,7 +10757,7 @@ export function deriveRefuge(run, contacts, untilIndex) {
      */
     clear.sort((a, b) => a.d - b.d || b.clearance - a.clearance);
     let best = null;
-    // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, OFF)
+    // ⛓ hammer-phase BW — the lobber's forecast, asked of each previewed refuge (`PRESS_KILL_BOMBS`, ON since PKB)
     const bombs = PRESS_KILL_BOMBS.enabled && bombsInPlay(run);
     // ⛓ hammer-phase RE — the best-ETA cut (`REFUGE_ETA_CUT`, ON by default): a later candidate's preview stops once it cannot win
     const cut = REFUGE_ETA_CUT.enabled;

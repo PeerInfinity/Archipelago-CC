@@ -1,6 +1,8 @@
 /**
  * seedlingDemo/hammerPressBombs.test — ⛓⛓⛓ SEEDLING HAMMER-PHASE BW: THE PRESS KILL'S WAITS SEE THE LOBBER'S BOMBS
- * (`PRESS_KILL_BOMBS`, `pressKillCost.js`, OFF).
+ * (`PRESS_KILL_BOMBS`, `pressKillCost.js`, shipped OFF by BW, ON by default since hammer-phase PKB's flip).
+ * Every row below but the switch's own names the arm it asks (`withPressKillBombs(false | true, …)`), so the flip moved
+ * none of them.
  *
  * Fidelity MOVINGWAIT's hand-over: with `SEEDLING_MOVING_WAIT=1`, divergence leg 381 (L40) walks to the strike cell
  * (248,184) on `spinner@192,128` that `deriveStrike` chose at t1099 and stands there until the press; the lobber's `#7`,
@@ -54,9 +56,10 @@ function runAt(upto) {
 const bombWhys = (d) => (d?.rejected ?? []).filter((r) => /the STAND meets a bomb/.test(r.why));
 
 describe('PRESS_KILL_BOMBS — the switch', () => {
-    it.skipIf(globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== undefined)('ships OFF', () => {
-        expect(PRESS_KILL_BOMBS_DEFAULT).toBe(false);
-        expect(PRESS_KILL_BOMBS.enabled).toBe(false);
+    it.skipIf(globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== undefined)('ships ON (the user\'s flip, '
+        + 'hammer-phase PKB, 2026-10-24)', () => {
+        expect(PRESS_KILL_BOMBS_DEFAULT).toBe(true);
+        expect(PRESS_KILL_BOMBS.enabled).toBe(true);
     });
 
     it('withPressKillBombs sets and restores it, also on a throw', () => {

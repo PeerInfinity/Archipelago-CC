@@ -289,13 +289,20 @@ export function sameValue(a, b) {
  * refused once (0 of 66 asks) — the derivation's forecast already holds the stance — and alone neither removes the hit
  * (the re-derivation picks the same stance). Unmeasured behaviour is not shipped (the BW report, D1).
  *
- * ⛓ THE SWITCH — `PRESS_KILL_BOMBS`, OFF (`SEEDLING_PRESS_KILL_BOMBS=1` opts a process in, or
- * `withPressKillBombs(true, fn)`). OFF, nothing here is asked and every walk is byte-identical. It reads nothing
+ * ⛓ THE SWITCH — `PRESS_KILL_BOMBS`, ON by default since the user's flip (hammer-phase PKB, 2026-10-24: *"Please
+ * queue a slice for both of the tasks you described"*, answering BW's licence question on L371's measurement: divergence
+ * leg `level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144`, whose answer is a function of
+ * `seam.time mod 45`, solves 22 of 45 hammer phases OFF and 30 of 45 ON at PKB's base, losing none; its press kill's
+ * strike dwell stood in `bombpusher@112,128#11`'s blast OFF). Its preconditions are ON: fidelity's `bombBlastBody`
+ * (wave 28) and `MOVING_WAIT`. `SEEDLING_PRESS_KILL_BOMBS=0` opts a node process out (the page's worker has no
+ * `process`, so it is ON there; before the flip the env-only switch never reached the page, BW residue 6), and
+ * `withPressKillBombs(false, fn)` is for a test or a witness about the OFF kill. OFF, nothing here is asked and every
+ * walk is byte-identical to the pre-PKB solver. It reads nothing
  * while the room holds no lobber and no bomb (`solverBot.bombsInPlay`), and the forecast is `null` while
  * `CONTACT_FIDELITY.bombPusherLive` is OFF, so ON it is inert outside the lobber's rooms too.
  *
  * ⛔ A BEHAVIOUR SWITCH IN A COST FILE, AND WHY HERE. P1/P2 above move not one plan; this one does, so it is its own
- * switch, OFF, and the P1/P2 A/B stays theirs alone. It lives in this file because of the solver's door
+ * switch (shipped OFF by BW, flipped ON by PKB), and the P1/P2 A/B stays theirs alone. It lives in this file because of the solver's door
  * (`solverView.js`): the door re-exports only modules in `levelRun.js`'s import closure, and this file is one; a new
  * module only `solverBot` imports would be a solver-FAMILY file instead (`census-seedling-solver-surface`). The two
  * reads (`solverBot.bombsInPlay`, `solverBot.firstBlastOn`) read the run, so they live in the solver.
@@ -304,9 +311,9 @@ export function sameValue(a, b) {
  */
 
 export const PRESS_KILL_BOMBS = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS === '1',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_BOMBS !== '0',
 };
-export const PRESS_KILL_BOMBS_DEFAULT = false;
+export const PRESS_KILL_BOMBS_DEFAULT = true;
 
 /** Run `fn` with `PRESS_KILL_BOMBS` set to `enabled`, restoring the previous value (`withPressKillCost`'s shape). */
 export function withPressKillBombs(enabled, fn) {
