@@ -52,9 +52,15 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 
-/** ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above). */
+/**
+ * ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above) — since session
+ * tile-primitives-sphere-order-1 in the FIRST-REACH order of the `seedling_playthrough` seed-1 sphere log (⚖ 2026-10-25:
+ * "Start adding levels, and the features they require, in the order of the other playthrough's sphere log"): sphere 0's
+ * L2–L11 + L94 joined L0 + L13–L20 (L86, also sphere 0, waits on its landing under L0's untranscribed building).
+ */
 export const LEVELS = Object.freeze([
-    'level_0', 'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20',
+    'level_0', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11',
+    'level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18', 'level_19', 'level_20', 'level_94',
 ]);
 
 /**
