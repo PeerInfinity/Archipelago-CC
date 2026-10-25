@@ -439,6 +439,11 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.traps !== undefined) {
         Object.assign(world, checkTraps(sidecar.traps, sidecar.trapLib, width, height, 'deserializeMazeWorld'));
     }
+    // ⛓ ENTRY GATES: absent on every other sidecar, so `world.entryGates` stays
+    // undefined and `step` never looks.
+    if (sidecar.entry_gates !== undefined) {
+        world.entryGates = checkEntryGates(sidecar.entry_gates, obstacleLib, width, height, 'deserializeMazeWorld');
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -620,6 +625,48 @@ export function checkSharedWorld(sw, width, height, who) {
     };
 }
 
+/**
+ * ⛓ ENTRY GATES (session tile-primitives-water-exits, ⚖ 2026-10-25 "Level world + step gates"): a gate on ENTERING
+ * a cell while MOVING one way — `[{x, y, dir, gate}]`, `dir` the move's direction (N/S/E/W), `gate` the id of a
+ * `obstacleLib` entry whose clearance that move needs, or `null` (no entry that way at all). It is the game's
+ * DIRECTION physics as the region analyzer prices a step (`regionAtlasAnalyzer.stepCost`: a waterfall climbed north
+ * costs the Feather, a cliff face refuses): the projection folds both cells' gates of a directed step into the cell
+ * it enters, so the engine reads one cell. Returns `Map<"x,y,dir", id|null>`.
+ */
+export function checkEntryGates(gates, lib, width, height, who) {
+    const bad = (why) => new Error(`${who}: "entry_gates" ${why}`);
+    if (!Array.isArray(gates)) throw bad('must be a list');
+    const out = new Map();
+    for (const g of gates) {
+        if (!Number.isInteger(g?.x) || !Number.isInteger(g?.y) || g.x < 0 || g.y < 0 || g.x >= width || g.y >= height) {
+            throw bad(`entry ${JSON.stringify(g)} is not a cell of the ${width}x${height} grid`);
+        }
+        if (!DELTAS[g.dir]) throw bad(`entry at (${g.x},${g.y}) has dir "${g.dir}", not one of N/S/E/W`);
+        if (g.gate !== null && !lib?.[g.gate]) throw bad(`entry at (${g.x},${g.y}) moving ${g.dir} names gate "${g.gate}", which the obstacleLib does not hold`);
+        const key = `${g.x},${g.y},${g.dir}`;
+        if (out.has(key)) throw bad(`lists (${g.x},${g.y}) moving ${g.dir} twice`);
+        out.set(key, g.gate);
+    }
+    return out;
+}
+
+/**
+ * The entry gate that refuses entering (x, y) moving `dir` with `inv`: `undefined` when the move is open, `null`
+ * when no entry that way exists, else the shut gate's id.
+ */
+function shutEntryAt(world, x, y, dir, inv, clearanceOpts) {
+    const key = `${x},${y},${dir}`;
+    if (!world.entryGates?.has(key)) return undefined;
+    const gate = world.entryGates.get(key);
+    if (gate === null) return null;
+    return isObstacleCleared(gate, inv, world.obstacleLib, clearanceOpts) ? undefined : gate;
+}
+
+/** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
+function hasEntryGate(world, x, y, dir) {
+    return world.entryGates?.has(`${x},${y},${dir}`) ?? false;
+}
+
 /** The AP region owning cell (x, y) of a shared level world, or `null` ("no news" / not shared). */
 export function sharedWorldOwnerAt(world, x, y) {
     const sw = world?.sharedWorld;
@@ -696,6 +743,12 @@ export function serializeMazeEntities(world) {
             x: t.x, y: t.y, id: t.id, label: t.label, lane: t.lane.map(unposKey),
         }));
         out.trapLib = { ...world.trapLib };
+    }
+    if (world.entryGates?.size) {
+        out.entry_gates = [...world.entryGates].map(([key, gate]) => {
+            const [x, y, dir] = key.split(',');
+            return { x: Number(x), y: Number(y), dir, gate };
+        });
     }
     return out;
 }
@@ -1151,6 +1204,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
         return null;
     }
+    if (world.entryGates && shutEntryAt(world, nx, ny, input, inv, clearanceOpts) !== undefined) return null;
     let pushedFrom = null;
     let pushedTo = null;
     if (state.blocks !== undefined) {
@@ -1164,6 +1218,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
             if (shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
                 return null;
             }
+            if (hasEntryGate(world, bx, by, input)) return null;
             pushedFrom = targetKey;
             pushedTo = beyondKey;
         }
@@ -1303,6 +1358,9 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (obstacleId !== null) {
         return shutBecause(world, obstacleId, inv);
     }
+    const entry = world.entryGates ? shutEntryAt(world, nx, ny, input, inv, clearanceOpts) : undefined;
+    if (entry === null) return `no entry into (${nx},${ny}) moving ${input}`;
+    if (entry !== undefined) return `entry into (${nx},${ny}) moving ${input} is shut — ${shutBecause(world, entry, inv)}`;
     if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
         const bx = nx + delta.dx;
         const by = ny + delta.dy;
@@ -1316,6 +1374,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         if (beyond !== null) {
             return `${cannot}: ${shutBecause(world, beyond, inv)}`;
         }
+        if (hasEntryGate(world, bx, by, input)) return `${cannot}: (${bx},${by}) is gated moving ${input}, which a block never crosses`;
     }
     if (world.trapLanes) {
         // `step`'s last guard, on the stance after the move (a push moves the block too).

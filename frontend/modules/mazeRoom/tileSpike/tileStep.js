@@ -14,6 +14,8 @@
  *   lane   — ARROW TRAPS: the player may not END a move on a cell of an armed lane
  *            condition: tileLib.trap.armed, asked of the destination with the stance AFTER the move
  *   cut    — ROPES: a rope obstacle activates its group token while cut      condition: tileLib.rope.cut
+ *   entry  — ENTRY GATES: entering a cell MOVING one way (a waterfall climbed north) needs its gate; read by
+ *            the enter / push conditions through `tile.entry` (the gate's combos for THIS move's direction)
  *
  * Helpers are called as `f(cell, tile)` with `state`/`player` ambient (⚖ Q4 v1): `state.has` reads
  * the EFFECTIVE inventory — carried plus held tokens — through the context's `hasItem`.
@@ -62,18 +64,18 @@ function callHelper(context, name, cell, tile) {
  * The facts a v1 (cell-local) helper sees about one cell. `broken` is the state's per-visit list;
  * `actionId` is the use being asked about (`struck` = the obstacle lists it in `struck_by`).
  */
-function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null) {
+function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null, dir = null) {
     const key = posKey(x, y);
     const obstacle = getObstacle(world, x, y) ?? null;
-    let clearSet = null;
-    if (obstacle !== null) {
-        const entry = world.obstacleLib?.[obstacle];
-        const type = entry?.clear_set_type ?? 'combo_list';
-        if (type === 'rule') clearSet = ruleToClearSet(entry.clear_rule, obstacle);
-        else if (type === 'combo_list') clearSet = (entry?.clear_set ?? []).map((combo) => combo.map((item) => [item, 1]));
-        else throw new Error(`spike: obstacle ${obstacle} is ${type}, only combo_list and rule are modelled`);
-    }
+    const clearSet = obstacle === null ? null : clearSetOf(world, obstacle);
     const lanes = (world.trapLanes?.get(key) ?? []).map((i) => world.trapLib[world.traps[i].id]);
+    // ⛓ ENTRY GATES: the gate on entering this cell moving `dir` — its combos, `[]` for no entry that way, null for none.
+    const gateKey = dir === null ? null : `${key},${dir}`;
+    let entry = null;
+    if (gateKey !== null && world.entryGates?.has(gateKey)) {
+        const gate = world.entryGates.get(gateKey);
+        entry = gate === null ? [] : clearSetOf(world, gate);
+    }
     const rope = obstacle !== null ? world.obstacleLib?.[obstacle] : null;
     return {
         floor: isFloor(world, x, y),
@@ -92,7 +94,17 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         lane_while: lanes.filter((e) => e.fires === 'while_active').map((e) => e.active),
         // ROPES: the event a cut of this obstacle is (null when it is not a rope).
         event: rope?.activates ? (rope.event ?? null) : null,
+        entry,
     };
+}
+
+/** An obstacle-lib entry's clearance as `[item, n]` combos — an obstacle's, or an ENTRY GATE's (either type). */
+function clearSetOf(world, id) {
+    const entry = world.obstacleLib?.[id];
+    const type = entry?.clear_set_type ?? 'combo_list';
+    if (type === 'rule') return ruleToClearSet(entry.clear_rule, id);
+    if (type === 'combo_list') return (entry?.clear_set ?? []).map((combo) => combo.map((item) => [item, 1]));
+    throw new Error(`spike: obstacle ${id} is ${type}, only combo_list and rule are modelled`);
 }
 
 /** Join two `[item, n]` combos: an item named by both needs the larger count. */
@@ -216,7 +228,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     const ny = state.player_pos.y + delta.dy;
     const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
     const ctx = makeContext(helpers, inv);
-    const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken);
+    const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken, null, input);
     if (!callHelper(ctx, tileLib.cell.enter, { x: nx, y: ny }, target)) {
         return { next: null, refused: { primitive: 'enter', cell: { x: nx, y: ny }, helper: tileLib.cell.enter } };
     }
@@ -225,7 +237,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     if (target.block) {
         const bx = nx + delta.dx;
         const by = ny + delta.dy;
-        const beyond = tileAt(world, bx, by, state.blocks, state.player_pos, state.broken);
+        const beyond = tileAt(world, bx, by, state.blocks, state.player_pos, state.broken, null, input);
         if (!callHelper(ctx, tileLib.block.may_enter, { x: bx, y: by }, beyond)) {
             return { next: null, refused: { primitive: 'push', cell: { x: bx, y: by }, helper: tileLib.block.may_enter } };
         }
