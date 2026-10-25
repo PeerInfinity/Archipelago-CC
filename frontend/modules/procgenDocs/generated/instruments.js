@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 106,
-            "count": 153,
+            "browser": 108,
+            "count": 155,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 460,
-        "browser": 171,
-        "cited": 248,
-        "files": 474,
+        "blockStyle": 462,
+        "browser": 173,
+        "cited": 249,
+        "files": 476,
         "lineStyle": 14,
-        "withDocblock": 474,
-        "withFlags": 391
+        "withDocblock": 476,
+        "withFlags": 393
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12534,6 +12534,59 @@ export const INSTRUMENTS = frz({
             "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "repeat"
+            ],
+            "file": "probe-seedling-l0-tighter.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "repeat"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L0 WAY UP to `out_teleporter_240_0` (tile [15,0], the L89 door), ON THE GAME (slice rules-l0-tighter-probe): can the player reach it from `level_0__r8c0` or `level_0__r11c19` WITHOUT the Feather?",
+            "path": "scripts/procgen/probe-seedling-l0-tighter.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-l107-lane.mjs",
             "flags": [
@@ -15633,6 +15686,53 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-timed-pass — ⛓⛓⛓ seedling-fidelity-timedpass: THE SOLVER WALKS PAST L28's HOPPING DRILLS WITH FIRE ALONE (`CONTACT_FIDELITY.drillTimedPass`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
             "path": "scripts/procgen/probe-seedling-timed-pass.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-turret-circle.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-turret-circle — ⛓⛓⛓ seedling-fidelity-turretcircle: L40'S ICE TURRET KILLED WITH THE PLAIN SWORD, HITLESS, BY CIRCLING IT (⚖ the user, 2026-10-24: \"keep moving while attacking\"), AND A BLAST STOPPED BY THE PLAYER'S SHIELD (`CONTACT_FIDELITY.iceBlastShield`), PLAYED ON THE GAME AND COMPARED WITH THE MO…",
+            "path": "scripts/procgen/probe-seedling-turret-circle.mjs"
         },
         {
             "argvHelpers": [],

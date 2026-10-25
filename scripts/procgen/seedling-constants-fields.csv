@@ -646,6 +646,7 @@ frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|10,physics,
 frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|0,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|1,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|iceTurretAnimStep|iceTurretAnimStep,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|interceptIceTurretDeath|interceptIceTurretDeath,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h9cc43ce0|1|0,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h88927f2f|1|0,rule,bound,,alpha clamp and <= 0 removal test
 frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h88927f2f|1|1,rule,bound,,alpha clamp and <= 0 removal test

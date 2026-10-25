@@ -79,6 +79,8 @@ import { spawnVolley } from './iceTurretBlast.js';
 import { FP_ELAPSED } from './chasers.js';
 import { defineRecord } from './entityRecords.js';
 import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
+// ⛓ fidelity TURRETCIRCLE D3: the corpse's `play("dead")` (`CONTACT_FIDELITY.iceTurretDeathAnim`).
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class IceTurretError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretError'; }
@@ -402,6 +404,18 @@ function interceptIceTurretDeath(state) {
     if (state.dead) return false;
     state.dead = true;
     state.destroy = false;
+    /**
+     * ⛓ fidelity TURRETCIRCLE D3 (`iceTurretDeathAnim`): AND `play("dead")` — `Spritemap.play` resets `_index` and
+     * `_timer`, and "dead" runs at rate 0, so a `startshot` in progress NEVER wraps and its `endAnim` never fires the
+     * volley. `death()` runs inside `e.update()`, before `World.update` calls `graphic.update()` that tick, so a death on
+     * the very tick the startshot would wrap fires nothing either. Measured on the game (`turretcircle-l40-t2-holder-
+     * sword`, t70: the killing landing two ticks into a startshot; the game spawns no blast, the model OFF three).
+     */
+    if (CONTACT_FIDELITY.iceTurretDeathAnim) {
+        state.anim = 'dead';
+        state.animIndex = 0;
+        state.animTimer = 0;
+    }
     return true;
 }
 
