@@ -746,6 +746,8 @@ const L15_PRESET_PATH = './presets/seedling_playthrough_maze/AP_1/AP_1_rules.jso
 const L15_R1C5 = 'level_15__r1c5';
 const L15_R1C9 = 'level_15__r1c9';
 
+const L0_R8C0 = 'level_0__r8c0';
+const L13 = 'level_13';
 const L14 = 'level_14';
 const L16_R1C1 = 'level_16__r1c1';
 
@@ -774,7 +776,9 @@ function planToExit(panel, target, inventory) {
 
 /**
  * Seedling L14 → L15 → L16 in the maze (tile-primitives Stage 2; grown to L14 + L16 by session
- * tile-primitives-levels-gap3, ⚖ "L14 + L16"). The preset starts in L14; its stairs land the player in L15,
+ * tile-primitives-levels-gap3, ⚖ "L14 + L16"). The preset starts where the game does, in L0 r8c0 (session
+ * tile-primitives-grow-ring2, ⚖ "level_0, row walks in"): the player walks empty-handed down L0's stairs to L13
+ * and on to L14 (the atlas: True_ both). L14's stairs land the player in L15,
  * which plays as ONE shared level world: the sword is refused before it is held; once granted through
  * stateManager, the player breaks both rocks, pushes the block onto the button and walks through the held
  * lock — and crossing into r1c9 changes the AP region (dispatcher, procgenPlayer, gameState) while the panel
@@ -783,18 +787,36 @@ function planToExit(panel, target, inventory) {
  * is planned off the LIVE world (`nativeReachUnder`), never hard-coded.
  */
 async function l15SharedLevelWorld(testController) {
-    testController.log('Loading seedling_playthrough_maze (L14 → L15 → L16; L15 and L16 shared level worlds)…');
+    testController.log('Loading seedling_playthrough_maze (L0 → L13 → L14 → L15 → L16; L15 and L16 shared level worlds)…');
     await testController.loadRulesFromFile(L15_PRESET_PATH);
     await testController.stateManager.pingWorker('after-rules-load', 5000);
     testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
-    const inL14 = await testController.pollForValue(
+    const inL0 = await testController.pollForValue(
         () => {
             const p = getPanelInstance();
-            return (p?.world && p.state && p.currentRegionId === L14) ? p : null;
+            return (p?.world && p.state && p.currentRegionId === L0_R8C0) ? p : null;
         },
-        `maze panel mounted in ${L14}`, 20000, 250);
-    testController.assertEqual('the preset put the player in L14', true, !!inL14);
-    if (!inL14) return testController.getOverallResult();
+        `maze panel mounted in ${L0_R8C0}`, 20000, 250);
+    testController.assertEqual('the preset put the player in L0 r8c0, the game\'s own start', true, !!inL0);
+    if (!inL0) return testController.getOverallResult();
+
+    // ── L0 → L13 → L14, empty-handed: the start's stairs, then L13's ──
+    let here = inL0;
+    for (const [from, to] of [[L0_R8C0, L13], [L13, L14]]) {
+        const leg = planToExit(here, to, []);
+        testController.assertEqual(`${from} reaches its way to ${to} empty-handed (the atlas: True_)`, true, !!leg);
+        if (!leg) return testController.getOverallResult();
+        runPlan(here, here.world, leg);
+        here = await testController.pollForValue(
+            () => {
+                const p = getPanelInstance();
+                return (p?.world && p.state && p.currentRegionId === to && readCurrentRegion() === to) ? p : null;
+            },
+            `the way down moved the player into ${to}`, 20000, 250);
+        testController.assertEqual(`the player is in ${to} (gameState + panel)`, true, !!here);
+        if (!here) return testController.getOverallResult();
+    }
+    const inL14 = here;
 
     // ── L14's stairs down: a door between two worlds ──
     const down = planToExit(inL14, L15_R1C5, []);
@@ -868,8 +890,9 @@ async function l15SharedLevelWorld(testController) {
 
 registerTest({
     id: 'seedling-playthrough-maze-l15-level-world',
-    name: 'Seedling playthrough (maze): L14 → L15 (one shared level world) → L16',
-    description: 'Seedling L14–L16 in the maze (tile-primitives Stage 2 + levels-gap3): L14\'s stairs '
+    name: 'Seedling playthrough (maze): L0 → L13 → L14 → L15 (one shared level world) → L16',
+    description: 'Seedling L0–L16 in the maze (tile-primitives Stage 2 + levels-gap3 + grow-ring2): from the '
+               + 'game\'s own start in L0 the player walks empty-handed to L13 and L14; L14\'s stairs '
                + 'land the player in L15, projected as ONE maze world; the sword is refused before it '
                + 'is held; once granted, the player breaks both rocks, pushes the block onto the button '
                + 'and crosses the held lock into r1c9 — the AP region changes through the real '
