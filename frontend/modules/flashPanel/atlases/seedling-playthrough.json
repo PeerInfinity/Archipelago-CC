@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-80dfce70",
+  "atlas_id": "seedling-65de70ba",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "80dfce70" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "65de70ba" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -4228,53 +4228,90 @@
           "exit_id": "in_L51_256_256",
           "kind": "teleporter",
           "exit_tiles": [[1,7]],
-          "entrance_tile": [1,7]
+          "entrance_tile": [1,7],
+          "sub_region": "r5c10"
         },
         {
           "exit_id": "out_teleporter_0_48",
           "kind": "teleporter",
           "exit_tiles": [[0,3]],
-          "entrance_tile": [0,3]
+          "entrance_tile": [0,3],
+          "sub_region": "r2c2"
         },
         {
           "exit_id": "out_teleporter_0_112",
           "kind": "teleporter",
           "exit_tiles": [[0,7]],
-          "entrance_tile": [0,7]
+          "entrance_tile": [0,7],
+          "sub_region": "r5c10"
         },
         {
           "exit_id": "out_teleporter_112_0",
           "kind": "teleporter",
           "exit_tiles": [[7,0]],
-          "entrance_tile": [7,0]
+          "entrance_tile": [7,0],
+          "sub_region": "r0c7"
         },
         {
           "exit_id": "out_teleporter_224_112",
           "kind": "teleporter",
           "exit_tiles": [[14,7]],
-          "entrance_tile": [14,7]
+          "entrance_tile": [14,7],
+          "sub_region": "r5c10"
         },
         {
           "exit_id": "in_L54_128_464",
           "kind": "teleporter",
           "exit_tiles": [[7,1]],
-          "entrance_tile": [7,1]
+          "entrance_tile": [7,1],
+          "sub_region": "r0c7"
         },
         {
           "exit_id": "in_L55_80_48",
           "kind": "teleporter",
           "exit_tiles": [[1,3]],
-          "entrance_tile": [1,3]
+          "entrance_tile": [1,3],
+          "sub_region": "r2c2"
         },
         {
           "exit_id": "in_L56_0_112",
           "kind": "teleporter",
           "exit_tiles": [[13,7]],
-          "entrance_tile": [13,7]
+          "entrance_tile": [13,7],
+          "sub_region": "r5c10"
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "analyzer" },
+      "subgraph": {
+        "sub_regions": ["r0c7","r2c2","r5c10"],
+        "internal_exits": [
+          { "from": "r0c7", "to": "r2c2", "bidirectional": false, "source": "analyzer" },
+          { "from": "r0c7", "to": "r5c10", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r2c2",
+            "to": "r0c7",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          { "from": "r2c2", "to": "r5c10", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r5c10",
+            "to": "r0c7",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          },
+          {
+            "from": "r5c10",
+            "to": "r2c2",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim", "count": 2 } }
+          }
+        ]
+      }
     },
     {
       "region_id": "level_53",
