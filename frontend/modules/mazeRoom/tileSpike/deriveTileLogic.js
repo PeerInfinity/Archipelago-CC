@@ -208,16 +208,19 @@ function noteCuts(world, ropes, cuts, state, key) {
 /** The reach of an arrival that stands in an armed lane: nothing (no cell, no cut). */
 export const NOTHING_REACHED = Object.freeze({ cells: new Map(), cuts: new Map(), states: 1, planTo: () => null, planToCut: () => null });
 
+/** The obstacle-lib ids a world gates on: its placed obstacles' and its ENTRY GATES' (a null entry gate names none). */
+const gateIds = (world) => new Set([...world.obstacles.values(), ...[...(world.entryGates?.values() ?? [])].filter((g) => g !== null)]);
+
 /**
- * The region's item axis: every item an obstacle's clear set or rule names, plus every rope's event,
- * minus the tokens buttons hold and ropes activate (derived per step, never carried).
+ * The region's item axis: every item an obstacle's (or an entry gate's) clear set or rule names, plus every rope's
+ * event, minus the tokens buttons hold and ropes activate (derived per step, never carried).
  */
 export function regionItems(world) {
     const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
     for (const entry of Object.values(world.obstacleLib ?? {})) if (entry?.activates) held.add(entry.activates);
     for (const r of ropeEvents(world)) held.delete(r.event);
     const out = new Set();
-    for (const id of new Set(world.obstacles.values())) {
+    for (const id of gateIds(world)) {
         const entry = world.obstacleLib?.[id];
         if (!entry) continue;
         const sets = (entry.clear_set_type ?? 'combo_list') === 'rule'
@@ -242,7 +245,7 @@ export function regionItems(world) {
  */
 export function regionLevels(world) {
     const out = new Map();
-    for (const id of new Set(world.obstacles.values())) {
+    for (const id of gateIds(world)) {
         const entry = world.obstacleLib?.[id];
         if ((entry?.clear_set_type ?? 'combo_list') === 'rule') ruleLevels(entry.clear_rule, out);
     }
@@ -322,6 +325,17 @@ export function regionTargets(world) {
 }
 
 /**
+ * A search's next state, marked `walkedOn` when a MOVE put it on an exit tile: every exit tile ends a walk. ⛓ Only
+ * a move does (session tile-primitives-water-exits): an arrival ON its exit tile that turns and strikes has not taken
+ * the exit — L0 r11c19 lands on its exit facing the event rock at (18,11), and the search had ended at the strike.
+ */
+export function endsWalk(world, from, next) {
+    const { x, y } = next.player_pos;
+    if (x === from.player_pos.x && y === from.player_pos.y) return next;
+    return getExitAt(world, x, y) === null ? next : { ...next, walkedOn: true };
+}
+
+/**
  * BFS over `scriptedStep` from the entrance holding `inventory`. Returns the cells stood on
  * (`"x,y"` → the state that first stood there, for the witness plan) and the state count.
  */
@@ -339,7 +353,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         const at = s.player_pos;
-        if (head > 0 && getExitAt(world, at.x, at.y) !== null) continue;
+        if (s.walkedOn) continue;
         const from = reachKey(s);
         for (const macro of inputs) {
             // A use at a cell holding no obstacle breaks nothing — it only turns: the same facing-free state.
@@ -353,7 +367,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
             const k = reachKey(next);
             if (seen.has(k)) continue;
             seen.set(k, { from, input: macro });
-            queue.push(next);
+            queue.push(endsWalk(world, s, next));
             noteCuts(world, ropes, cuts, next, k);
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);

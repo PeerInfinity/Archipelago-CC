@@ -6,19 +6,24 @@
 # EFFECTIVE inventory (carried + held tokens). `tile` facts: floor, block, player, button, obstacle, clear_set (combos
 # of [item, n] pairs — COUNTED ITEMS: `state.count` reads how many are held),
 # broken (struck down this visit), struck (ITEM ACTIONS: the obstacle lists the acting action in `struck_by`),
-# lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event).
+# lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event),
+# entry (ENTRY GATES: the combos entering the cell needs MOVING this way; [] = no entry that way, None = no gate).
 
 
 def cleared(state, player, tile):
     return tile.obstacle is None or tile.broken or any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.clear_set)
 
 
+def entry_open(state, player, tile):
+    return tile.entry is None or any(all(state.count(p[0], player) >= p[1] for p in combo) for combo in tile.entry)
+
+
 def player_may_enter(state, player, cell, tile):
-    return tile.floor and cleared(state, player, tile)
+    return tile.floor and cleared(state, player, tile) and entry_open(state, player, tile)
 
 
 def block_may_enter(state, player, cell, tile):
-    return tile.floor and not tile.block and cleared(state, player, tile)
+    return tile.floor and not tile.block and cleared(state, player, tile) and tile.entry is None
 
 
 def presses(state, player, cell, tile):

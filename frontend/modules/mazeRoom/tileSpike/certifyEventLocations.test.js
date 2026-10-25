@@ -113,10 +113,11 @@ describe('latched-lock events: L19\'s Red Key boss lock', () => {
         expect(JSON.stringify(RULES.preset_sidecars)).not.toContain('CanReachRegion');
     });
 
-    it('certifies: the return needs the event, the event is priced from beside the lock (one OLDER row left)', () => {
-        // On main this sample THREW (r1c1's crossing tile carried CanReachRegion). The row left is in main's
-        // whole-game certifier too, not this slice's: r3c3's way to the Shieldspire arena is not priced.
-        expect(certify(RULES, SAMPLE).problems).toEqual(['level_19__r3c3: its exit(s) to level_19__r5c5 are not priced']);
+    it('certifies: the return needs the event, the event is priced from beside the lock', () => {
+        // On main this sample THREW (r1c1's crossing tile carried CanReachRegion). The one older row (r3c3's way to
+        // the Shieldspire arena not priced: two crossings shared one tile) went with session tile-primitives-water-exits:
+        // L19's colliding crossings make it a level world, whose latched lock's closed side costs the event.
+        expect(certify(RULES, SAMPLE).problems).toEqual([]);
     });
 
     it('a mutant return without the event is caught', () => {
