@@ -869,7 +869,7 @@ function levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
  * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
  *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
  * @param {Array<object>} entities `levelEntitiesFor`'s rows:
- *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item}], label}`
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item} | {action, rule}], label}`
  * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
  */
 export function projectLevelWorld(region, grid, ctx, entities) {
@@ -937,18 +937,24 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const modelled = new Map(); // "x,y" → Set of condition keys
     const groupsWithButton = new Set();
     for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
+    // A strike needs one `item` or, for a fusion, a `rule` (an And of Has — ⚖ 2026-10-25 "action_lib `rule`").
+    const needOf = (strike) => (strike.rule !== undefined ? { rule: strike.rule } : { item: strike.item });
     const actionFor = (strike) => {
         if (!actionLib[strike.action]) {
             const used = Object.keys(actionLib).length;
             actionLib[strike.action] = {
-                item: strike.item,
+                ...needOf(strike),
                 primitive: 'strike',
                 condition: 'strikes',
                 ...(used < LEVEL_WORLD_USE_KEYS.length ? { key: LEVEL_WORLD_USE_KEYS[used] } : {}),
             };
-        } else if (actionLib[strike.action].item !== strike.item) {
-            throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items `
-                + `(${actionLib[strike.action].item}, ${strike.item})`);
+        } else {
+            const { item, rule } = actionLib[strike.action];
+            const had = JSON.stringify(rule ?? item);
+            const now = JSON.stringify(strike.rule ?? strike.item);
+            if (had !== now) {
+                throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items (${had}, ${now})`);
+            }
         }
         return strike.action;
     };

@@ -23,7 +23,7 @@
 
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
-    INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory,
+    INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -204,8 +204,8 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return noInput;
         const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
-        if (entry.item && !inv.has(entry.item)) {
-            return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: entry.item } };
+        if (!actionUsable(entry, inv)) {
+            return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: actionItems(entry).join(' + ') } };
         }
         const d = DELTAS[state.facing];
         const fx = state.player_pos.x + d.dx;

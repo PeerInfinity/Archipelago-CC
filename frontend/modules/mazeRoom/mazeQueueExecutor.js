@@ -26,6 +26,7 @@
 import { fnv1a32, stableStringify } from '../procgenCore/contentIdentity.js';
 import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    actionItems,
     effectiveInventory,
     facingAfterBump,
     getItem,
@@ -442,8 +443,9 @@ export function deriveRequires(world, startState, actions) {
         // ⛓ ITEM ACTIONS: an accepted USE needed its item in hand (a use is
         // refused without it), unless the walk picked it up or a button holds it.
         if (entry.actionType === ACTION_USE) {
-            const item = world.actionLib?.[entry.actionId]?.item;
-            if (item && !held.has(item) && !pickedUp.has(item)) requires.add(item);
+            for (const item of actionItems(world.actionLib?.[entry.actionId])) {
+                if (!held.has(item) && !pickedUp.has(item)) requires.add(item);
+            }
         }
         if (dir !== null) {
             const target = intendedTileFor(from, dir);

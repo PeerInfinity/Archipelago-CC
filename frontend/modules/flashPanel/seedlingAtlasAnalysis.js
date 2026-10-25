@@ -277,7 +277,9 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           with (a minted rope's event), which the trap now MODELS
  *
  * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
- * name — a strike is one item, so an And has no action to bind to.
+ * name. Each flag binds one strike: one item (`item`), or for a ROCK a conjunction
+ * of items (`rule`, an And of Has — the ghost rock's fusion flag); anything else is
+ * refused by name.
  *
  * @param {object} level a map-document level
  * @param {(condition:object)=>object|null} resolveCondition
@@ -321,11 +323,15 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
             }
             row.strike = flags.map((c) => {
                 const rule = resolveCondition(c);
-                if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
-                    throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has — `
-                        + 'a strike needs exactly one item');
+                const one = (h) => h?.rule === 'Has' && (h.args?.count ?? 1) === 1;
+                if (one(rule)) return { action: actionIdOfFlag(c.flag), item: rule.args.item_name };
+                // ⛓ A FUSION (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "action_lib `rule`"): hasGhostSword
+                // resolves to And(Ghost Sword Fusion, Ghost Spear, Progressive Sword) — the strike needs all of them.
+                if (kind === 'rock' && rule?.rule === 'And' && rule.children?.length > 0 && rule.children.every(one)) {
+                    return { action: actionIdOfFlag(c.flag), rule };
                 }
-                return { action: actionIdOfFlag(c.flag), item: rule.args.item_name };
+                throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has or an And `
+                    + 'of Has — a strike needs a set of items');
             });
         }
         rows.push(row);

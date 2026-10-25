@@ -531,6 +531,9 @@ export function clearButton(world, x, y) {
  */
 export function checkActionLib(lib, who) {
     if (lib === undefined || lib === null) return {};
+    for (const [id, entry] of Object.entries(typeof lib === 'object' && !Array.isArray(lib) ? lib : {})) {
+        if (entry && typeof entry === 'object' && entry.rule !== undefined) checkActionRule(entry, id, who);
+    }
     if (typeof lib !== 'object' || Array.isArray(lib)) {
         throw new Error(`${who}: "action_lib" must be an object of action entries, got ${JSON.stringify(lib)}`);
     }
@@ -544,6 +547,40 @@ export function checkActionLib(lib, who) {
         }
     }
     return { ...lib };
+}
+
+/**
+ * ⛓ A STRIKE THAT NEEDS SEVERAL ITEMS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "action_lib `rule`").
+ * An `action_lib` entry needs either one `item` or a `rule` — a `Has`, or an `And` of `Has` (each count 1),
+ * the producer's resolved condition, never hand-written. Seedling's ghost rock breaks only to the Ghost Sword,
+ * a FUSION flag: And(Ghost Sword Fusion, Ghost Spear, Progressive Sword). A conjunction of items keeps the
+ * needed set EXACT, so every reader asks the same two questions (`actionItems`, `actionUsable`). ⛔ An `Or`,
+ * a count, or an entry naming both `item` and `rule` is refused BY NAME.
+ */
+function checkActionRule(entry, id, who) {
+    if (entry.item !== undefined) {
+        throw new Error(`${who}: action_lib.${id} names both an item and a rule — one or the other`);
+    }
+    const has = entry.rule?.rule === 'Has' ? [entry.rule] : entry.rule?.rule === 'And' ? entry.rule.children ?? [] : null;
+    if (!has || has.length === 0 || has.some((h) => h?.rule !== 'Has' || typeof h.args?.item_name !== 'string'
+        || (h.args.count ?? 1) !== 1)) {
+        throw new Error(`${who}: action_lib.${id} rule must be a Has or an And of Has (count 1), got ${JSON.stringify(entry.rule)}`);
+    }
+}
+
+/** The items an `action_lib` entry needs in hand: its `item`, or every item its `rule` names (sorted). */
+export function actionItems(entry) {
+    if (!entry) return [];
+    if (entry.rule !== undefined) {
+        const has = entry.rule.rule === 'Has' ? [entry.rule] : entry.rule.children ?? [];
+        return [...new Set(has.map((h) => h.args.item_name))].sort();
+    }
+    return entry.item ? [entry.item] : [];
+}
+
+/** True iff `inv` (a Set or Map of items) holds every item the `action_lib` entry needs. */
+export function actionUsable(entry, inv) {
+    return actionItems(entry).every((item) => inv.has(item));
 }
 
 /**
@@ -1180,10 +1217,10 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         const actionId = input.slice(USE_PREFIX.length);
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return null;
-        if (entry.item) {
+        if (actionItems(entry).length > 0) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
             const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
-            if (!inv.has(entry.item)) return null;
+            if (!actionUsable(entry, inv)) return null;
         }
         const used = cloneState(state);
         used.turn += 1;
@@ -1338,10 +1375,10 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         const actionId = input.slice(USE_PREFIX.length);
         const entry = world.actionLib?.[actionId];
         if (!entry) return `no action '${actionId}' in this world's action_lib`;
-        if (entry.item) {
+        if (actionItems(entry).length > 0) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
             const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
-            if (!inv.has(entry.item)) return `use ${actionId} needs ${entry.item}`;
+            if (!actionUsable(entry, inv)) return `use ${actionId} needs ${actionItems(entry).join(' + ')}`;
         }
         // ⚖ "Use at air" is legal — a swing that hits nothing still passes a turn.
         return null;
@@ -1838,8 +1875,7 @@ function blockWorldAccessRules(world) {
         if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
         else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
         for (const actionId of entry.struck_by ?? []) {
-            const item = world.actionLib?.[actionId]?.item;
-            if (item) axis.add(item);
+            for (const item of actionItems(world.actionLib?.[actionId])) axis.add(item);
         }
     }
     const inputs = worldInputs(world);
