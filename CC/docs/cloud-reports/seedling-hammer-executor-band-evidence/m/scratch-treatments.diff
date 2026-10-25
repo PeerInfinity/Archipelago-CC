@@ -1,0 +1,248 @@
+diff --git a/frontend/modules/bulletml-dodge b/frontend/modules/bulletml-dodge
+deleted file mode 160000
+index 7423ee86..00000000
+--- a/frontend/modules/bulletml-dodge
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 7423ee86fa14e57b02e86c7f6b868a8b69f25c94
+diff --git a/frontend/modules/bulletml-dodge b/frontend/modules/bulletml-dodge
+new file mode 120000
+index 00000000..2b3cb885
+--- /dev/null
++++ b/frontend/modules/bulletml-dodge
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/bulletml-dodge
+\ No newline at end of file
+diff --git a/frontend/modules/cavernous-ii b/frontend/modules/cavernous-ii
+deleted file mode 160000
+index c351724c..00000000
+--- a/frontend/modules/cavernous-ii
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit c351724ca90f3f75a34b12bec752697483730e24
+diff --git a/frontend/modules/cavernous-ii b/frontend/modules/cavernous-ii
+new file mode 120000
+index 00000000..02660d53
+--- /dev/null
++++ b/frontend/modules/cavernous-ii
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/cavernous-ii
+\ No newline at end of file
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+deleted file mode 160000
+index 9968c7dd..00000000
+--- a/frontend/modules/flashPanel/wasm
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 9968c7dda4c08397e93b0900d73a9e8126cda8b6
+diff --git a/frontend/modules/flashPanel/wasm b/frontend/modules/flashPanel/wasm
+new file mode 120000
+index 00000000..b6ccbebc
+--- /dev/null
++++ b/frontend/modules/flashPanel/wasm
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/flashPanel/wasm
+\ No newline at end of file
+diff --git a/frontend/modules/journey-to-ascension b/frontend/modules/journey-to-ascension
+deleted file mode 160000
+index 6241b770..00000000
+--- a/frontend/modules/journey-to-ascension
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 6241b770a219fadb909caab7f09eff8e0c55ff01
+diff --git a/frontend/modules/journey-to-ascension b/frontend/modules/journey-to-ascension
+new file mode 120000
+index 00000000..99e8a05a
+--- /dev/null
++++ b/frontend/modules/journey-to-ascension
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/journey-to-ascension
+\ No newline at end of file
+diff --git a/frontend/modules/omsi-loops b/frontend/modules/omsi-loops
+deleted file mode 160000
+index a636e9a4..00000000
+--- a/frontend/modules/omsi-loops
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit a636e9a410bca0ebb2f3e3bc491660558e6d09cb
+diff --git a/frontend/modules/omsi-loops b/frontend/modules/omsi-loops
+new file mode 120000
+index 00000000..d602d525
+--- /dev/null
++++ b/frontend/modules/omsi-loops
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/omsi-loops
+\ No newline at end of file
+diff --git a/frontend/modules/seedlingDemo/solverBot.js b/frontend/modules/seedlingDemo/solverBot.js
+index dbe94260..b39ee11b 100644
+--- a/frontend/modules/seedlingDemo/solverBot.js
++++ b/frontend/modules/seedlingDemo/solverBot.js
+@@ -321,6 +321,12 @@ export class SolverBotError extends Error {
+ 
+ /** ⛓ SLICE 2c's `code`: `procgenOracle`'s three hammer-safety sites. */
+ export const HAMMER_SAFETY = 'HAMMER_SAFETY';
++// SCRATCH (BX M): env-selected treatments for the executor's band throws. Not committed.
++export const BX_M = { t1: globalThis.process?.env?.BX_T1 || null, t2: globalThis.process?.env?.BX_T2 || null,
++    max: Number(globalThis.process?.env?.BX_WAIT_MAX ?? 45),
++    counts: { gate: 0, probe: 0, waits: 0, waitRefused: 0, waitDanger: 0, waitHit: 0, maxRun: 0 } };
++globalThis.__BX = BX_M.counts;
++const bxBandId = (e) => (/whether \S+ (\S+@[-\d.]+,[-\d.]+)/.exec(e.message)?.[1] ?? null);
+ 
+ /**
+  * ⛓⛓⛓ ARC 3 SLICE 2d — THE SECOND `code`, AND IT IS A **BUDGET**, NOT A
+@@ -26068,6 +26074,37 @@ function solveSegmentUnder({
+         let axisAligned = axisAlignedAsked;
+         // ⛓ seedling-fidelity-residue D-B: a whirlpool's drown is a death, not a corridor to re-plan from the respawn.
+         const deaths0 = deathsNow();
++        // SCRATCH (BX M)
++        let bxWaits = 0;
++        const bxIdle = new Set();
++        const bxWait = (e, site, except) => {
++            if (bxWaits >= BX_M.max) {
++                BX_M.counts.waitRefused += 1;
++                refuse(`${what}: SCRATCH-C — waited ${bxWaits} tick(s) at the ${site} and the camera-shake band still hides `
++                    + `whether ${bxBandId(e)} is on screen`, { goal, obstacle: { kind: 'danger', id: bxBandId(e) } });
++            }
++            const d = dangerNow(run, run.state.x, run.state.y, except);
++            if (d.danger) {
++                BX_M.counts.waitDanger += 1;
++                refuse(`${what}: SCRATCH-C — the band hid the ${site}, and standing at (${run.state.x},${run.state.y}) is `
++                    + `danger too — ${d.sources.map((x) => x.id).join('; ')}`, { goal, obstacle: { kind: 'danger', id: d.sources[0]?.id ?? null } });
++            }
++            const hits = (run.ledger('playerHits') ?? []).length;
++            perTick.push(bxIdle);
++            const { transition } = run.advance(bxIdle);
++            if (transition) refuse(`${what}: SCRATCH-C — crossed while waiting the band`, { goal });
++            if ((run.ledger('playerHits') ?? []).length > hits) {
++                BX_M.counts.waitHit += 1;
++                refuse(`${what}: SCRATCH-C — hit while waiting the band`, { goal });
++            }
++            bxWaits += 1;
++            BX_M.counts.waits += 1;
++            BX_M.counts.maxRun = Math.max(BX_M.counts.maxRun, bxWaits);
++        };
++        const bxBandHit = (e) => ({ x: run.state.x, y: run.state.y, tick: run.ticksCompleted, eta: 0, danger: true,
++            sources: [{ kind: 'chaser', id: bxBandId(e), why: 'SCRATCH-A: the camera-shake band hid whether it is on screen' }] });
++        const bxFail = (e, site) => fail(`${what}: SCRATCH-B — the camera-shake band hid the ${site}'s read of whether `
++            + `${bxBandId(e)} is on screen`, { code: HAMMER_SAFETY });
+         attempts: for (let attempt = 0; ; attempt += 1) {
+             // ⛓ FIDELITY CHECKPOINTS — the `walk` site, before each attempt plans.
+             if (fineDeadlineReached('walk')) refuseWalkDeadline(`before ${what}'s corridor (attempt ${attempt + 1})`);
+@@ -26097,7 +26134,19 @@ function solveSegmentUnder({
+             if (laneWalk) except = laneCrossingExcept(except, laneWalk.ids);
+             // ⛓ BOBSOLDIER2 D2b: a WALK's gate — the transit probe follows it (`SWORD_GATE_TIMED`).
+             // ⛓ AXETIMING D2b: and a spinning axe's blade at the walk's first sample (`axeGateTransit`).
+-            refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
++            try {
++                refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: true, timedAxe: true });
++            } catch (e) {
++                if (!BX_M.t1 || !isShakeBandThrow(e)) throw e;
++                BX_M.counts.gate += 1;
++                if (BX_M.t1 === 'A') {
++                    refuse(`${what}: the danger map forbids (${run.state.x},${run.state.y}) — chaser:${bxBandId(e)} (SCRATCH-A: `
++                        + 'the camera-shake band hid whether it is on screen)', { goal, obstacle: { kind: 'danger', id: bxBandId(e) } });
++                }
++                if (BX_M.t1 === 'B') bxFail(e, 'gate');
++                if (BX_M.t1 === 'U') refuseDanger(run.state.x, run.state.y, goal, what, except, { timedSword: false, timedAxe: true });
++                if (BX_M.t1 === 'C') { bxWait(e, 'gate', except); continue attempts; }
++            }
+             let wps;
+             let fine = false;
+             try {
+@@ -26408,8 +26457,17 @@ function solveSegmentUnder({
+              */
+             // ⛓ FIDELITY CHECKPOINTS — the `walk` site between the plan and its probe.
+             if (fineDeadlineReached('walk')) refuseWalkDeadline(`after ${what}'s corridor was planned (attempt ${attempt + 1})`);
+-            let hit = probeCorridor(wps, except,
+-                { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
++            let hit;
++            try {
++                hit = probeCorridor(wps, except,
++                    { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
++            } catch (e) {
++                if (!BX_M.t2 || !isShakeBandThrow(e)) throw e;
++                BX_M.counts.probe += 1;
++                if (BX_M.t2 === 'A') hit = bxBandHit(e);
++                if (BX_M.t2 === 'B') bxFail(e, 'corridor probe');
++                if (BX_M.t2 === 'C') { bxWait(e, 'corridor probe', except); continue attempts; }
++            }
+             // ⛓ LAPSECOST D1: set when the ladder's NARROW rung certified this corridor (`climbed.narrow`).
+             let narrow = false;
+             /**
+@@ -26471,7 +26529,15 @@ function solveSegmentUnder({
+                 if (climbed.forced) return climbed.forced.transition;
+                 if (climbed.wps) { wps = climbed.wps; narrow = climbed.narrow === true; } else { continue attempts; }
+                 if (!(CONTACT_FIDELITY.partialDodgeReprobe && climbed.partial)) break climbs;
+-                hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
++                try {
++                    hit = probeCorridor(wps, except, { axisAligned, walkCheck: true, ...(stand ? { stand } : {}) });
++                } catch (e) {
++                    if (!BX_M.t2 || !isShakeBandThrow(e)) throw e;
++                    BX_M.counts.probe += 1;
++                    if (BX_M.t2 === 'A') hit = bxBandHit(e);
++                    if (BX_M.t2 === 'B') bxFail(e, 'corridor re-probe');
++                    if (BX_M.t2 === 'C') { bxWait(e, 'corridor re-probe', except); continue attempts; }
++                }
+             }
+             /**
+              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+deleted file mode 160000
+index daee222c..00000000
+--- a/frontend/modules/shared
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit daee222ce4a38936e0145d5e3b9bc3ae059c8596
+diff --git a/frontend/modules/shared b/frontend/modules/shared
+new file mode 120000
+index 00000000..5f63ff5b
+--- /dev/null
++++ b/frontend/modules/shared
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/shared
+\ No newline at end of file
+diff --git a/frontend/modules/swfRecompilerPanel/browser b/frontend/modules/swfRecompilerPanel/browser
+deleted file mode 160000
+index 6c5b4226..00000000
+--- a/frontend/modules/swfRecompilerPanel/browser
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 6c5b42262674ebe8d8217814cb359438a92e829d
+diff --git a/frontend/modules/swfRecompilerPanel/browser b/frontend/modules/swfRecompilerPanel/browser
+new file mode 120000
+index 00000000..780da3a0
+--- /dev/null
++++ b/frontend/modules/swfRecompilerPanel/browser
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/swfRecompilerPanel/browser
+\ No newline at end of file
+diff --git a/frontend/modules/textAdventureEngine b/frontend/modules/textAdventureEngine
+deleted file mode 160000
+index 8b1f2516..00000000
+--- a/frontend/modules/textAdventureEngine
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 8b1f251625c956634e4eb59c6e76b52c6ce64e5b
+diff --git a/frontend/modules/textAdventureEngine b/frontend/modules/textAdventureEngine
+new file mode 120000
+index 00000000..22a5e70d
+--- /dev/null
++++ b/frontend/modules/textAdventureEngine
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/frontend/modules/textAdventureEngine
+\ No newline at end of file
+diff --git a/vendor/seedling b/vendor/seedling
+deleted file mode 160000
+index ccdf1897..00000000
+--- a/vendor/seedling
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit ccdf189776471fa57be8c0568c6e881a2d5acc18
+diff --git a/vendor/seedling b/vendor/seedling
+new file mode 120000
+index 00000000..7ace5a79
+--- /dev/null
++++ b/vendor/seedling
+@@ -0,0 +1 @@
++/home/user/Archipelago-CC/vendor/seedling
+\ No newline at end of file

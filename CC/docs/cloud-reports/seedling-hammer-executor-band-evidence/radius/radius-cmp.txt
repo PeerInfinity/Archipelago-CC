@@ -1,0 +1,25 @@
+=== base -> A
+47 requests (missing a 0, b 0); identical 47; movers 0
+solves: a 31  b 31
+band-throw answers in a: []
+pass-level answer movers: []
+band-throw passes in a: [((368, 0), 'dashless')]
+=== base -> B
+47 requests (missing a 0, b 0); identical 47; movers 0
+solves: a 31  b 31
+band-throw answers in a: []
+pass-level answer movers: [((368, 0), 'dashless', 'level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Tote')]
+band-throw passes in a: [((368, 0), 'dashless')]
+=== base -> C
+47 requests (missing a 0, b 0); identical 46; movers 1
+solves: a 31  b 31
+- (368, i0) seam 5204 level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144: SOLVE 592u/1584t -> SOLVE 616u/1584t  bx={'gate': 3, 'probe': 10, 'waited': 13, 'refused': 0}
+band-throw answers in a: []
+pass-level answer movers: [((368, 0), 'dashless', 'level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Tote')]
+band-throw passes in a: [((368, 0), 'dashless')]
+=== base -> off
+47 requests (missing a 0, b 0); identical 47; movers 0
+solves: a 31  b 31
+band-throw answers in a: []
+pass-level answer movers: []
+band-throw passes in a: [((368, 0), 'dashless')]
