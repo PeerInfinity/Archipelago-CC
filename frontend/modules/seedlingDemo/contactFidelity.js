@@ -1373,8 +1373,9 @@ export const CONTACT_FIDELITY = {
      * (legs 869/870, survey step 67): `wandlock@512,480`/`@448,432` {t 2}'s holder is `iceturret@472,400`'s corpse,
      * whose stance is behind the latched south door `wandlock@480,560`; and `wandlock@800,400` {t 5}'s holder is
      * `pushableblockfire@480,480`, whose Fire route crosses `wandlock@512,480`. ON: the holders a live derivation
-     * refuses are asked again under the bag with the admitted hypothesis discharged, to a fixed point (a weigh admitted
-     * this way discharges for the next). OFF: byte-identical. `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`.
+     * refuses are asked again under the bag with the hypothesis discharged, to a fixed point, and a hold stance that
+     * no candidate reaches otherwise is asked under those admissions; a frontier order that cannot bind yet passes the
+     * round to the next door; a refusal carries its `equips`. OFF: byte-identical. `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`.
      */
     weighHypothesisChain: false,
     /**

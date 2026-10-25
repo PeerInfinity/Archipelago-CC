@@ -9370,6 +9370,21 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
      * every candidate has already refused, so no walk that plans today pays a
      * probe for it. (Arc-2 §9d's cost work is why that sentence is here.)
      */
+    /**
+     * ⛓ fidelity L40BK2 (`weighHypothesisChain` ON only) — THE CHAINED ADMISSIONS, LAST: every candidate has failed
+     * directly and under the hypothesis, so the weighs whose holders are reachable only under the rest of it are asked
+     * now (`stanceHypothesis`' `chained`), in the candidates' own order. L40's `button@816,400` is the measured stance.
+     */
+    const chainedAdm = CONTACT_FIDELITY.weighHypothesisChain ? (hypothesis().chained ?? []) : [];
+    if (chainedAdm.length) {
+        const wider = [...hypothesis(), ...chainedAdm];
+        for (const c of candidates) {
+            const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, () => wider);
+            if (reached) {
+                return { stance: { x: c.x, y: c.y }, exempt: reached.exempt ?? exempt, discharged: reached.discharged };
+            }
+        }
+    }
     const pre = prerequisites
         ? stancePrerequisite(run, candidates, exempt, hypothesis(), contacts, blocked) : null;
     if (pre) {
@@ -9692,11 +9707,10 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
                 ty: Math.floor(opener.presser.y / TILE_SIZE),
             } : null;
             const derived = onto ? deriveWeighSource(run, onto, contacts, blocked) : null;
-            if (chained && onto && (!derived.plan && !derived.parked && !derived.corpse)) {
-                chained.push({ a, opener, onto });
-                continue;
-            }
             if (!derived || (!derived.plan && !derived.parked && !derived.corpse)) {
+                // ⛓ L40BK2: a refused holder is ALSO asked again under the rest of the hypothesis (`chained`); the wall
+                // stands either way — the base hypothesis does not hold it.
+                if (chained && onto) chained.push({ a, opener, onto });
                 walls.push({
                     id: a.id,
                     tag: a.tag,
@@ -9728,7 +9742,19 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
         out.push({ id: b.id, kind: 'shieldBoss', strategy });
     }
     if (STANCE_ROCKS.enabled) out.push(...rockHypothesis(run, wall));
-    if (chained?.length) chainWeighHypothesis(run, chained, out, walls, contacts, blocked);
+    /**
+     * ⛓ L40BK2: the chained admissions ride BESIDE the hypothesis (`out.chained`, not enumerable), never in it: they are
+     * optimism one link deeper, so a stance asks them only once no candidate reaches otherwise (`deriveHoldStance`).
+     * Measured without the split (leg 368 at seam 5280, the north arrival): a hold stance's first candidate "reached"
+     * through the whole Boss Key 2 chain and preempted the later candidate's direct reach, and the plan was lost.
+     */
+    if (chained) {
+        // ⛔ LAZY, and measured why: asked eagerly, the chain's route searches ran at EVERY hypothesis ask, and leg 368's
+        // dashless pass spent 576 of its 640 work units (185 OFF), so the full pass was cut at the block-route deadline.
+        let extra = null;
+        Object.defineProperty(out, 'chained', { enumerable: false, get: () => (extra ??= chained.length
+            ? chainWeighHypothesis(run, chained, out, contacts, blocked, []) : []) });
+    }
     return out;
 }
 
@@ -9746,27 +9772,43 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
  *   · `wandlock@800,400` {t 5}: the holder is `pushableblockfire@480,480` (FIREMOVE's 35-order Fire route), and the
  *     route crosses `wandlock@512,480` — in the hypothesis once the line above is admitted.
  *
- * ⇒ a FIXED POINT: the bag with the admitted entries discharged (`bagWithDischarged`, and their volumes exempted as
- * `stanceReaches` exempts them) is handed to `deriveWeighSource`; a holder found there admits its activator, which
- * joins the bag for the next pass. What no pass admits is a wall, with guard (iii)'s own sentence. ⛔ It only ever
- * ADDS entries the live ask refused — every entry the live ask admits is unchanged.
+ * ⇒ a FIXED POINT: the bag with the hypothesis and the admitted entries discharged (`bagWithDischarged`, their volumes
+ * exempted as `stanceReaches` exempts them) is handed to `deriveWeighSource`; a holder found there admits its activator,
+ * which joins the bag for the next pass. A bound hit is "not admitted". ⛔ The admissions are RETURNED, never pushed into
+ * the hypothesis, and guard (iii)'s walls are left exactly as the live ask wrote them: `stanceHypothesis` exposes them
+ * as its lazy `chained` list, and only `deriveHoldStance` reads it, once every candidate has failed directly and under
+ * the hypothesis (the measured reasons are at `stanceHypothesis`' `chained`).
  */
-function chainWeighHypothesis(run, chained, out, walls, contacts, blocked) {
+function chainWeighHypothesis(run, chained, out, contacts, blocked, extra) {
     let pending = chained;
     /** The turrets whose corpse an admitted weigh makes: killed under the hypothesis, so their volume is exempt. */
     const killed = new Set();
     for (let progress = true; progress && pending.length;) {
         progress = false;
-        const liveBag = bagWithDischarged(run, run.liveGeometryOpts(), out);
-        const exempt = new Set([...contacts, ...out.filter((h) => h.kind === 'activator' || h.kind === 'rock')
+        const all = [...out, ...extra];
+        const liveBag = bagWithDischarged(run, run.liveGeometryOpts(), all);
+        const exempt = new Set([...contacts, ...all.filter((h) => h.kind === 'activator' || h.kind === 'rock')
             .map((h) => `proximity-hazard:${h.id}`), ...[...killed].map((id) => `proximity-hazard:${id}`)]);
         const still = [];
         for (const p of pending) {
-            const derived = deriveWeighSource(run, p.onto, exempt, blocked, { liveBag });
+            /**
+             * ⛔ A BOUND HIT HERE IS "NOT ADMITTED", NOT A REFUSAL: the live ask already refused this holder, and the
+             * second ask is optimism the hypothesis may grant or withhold. Measured (L40BUTTON's cluster boot): the fire
+             * block's route under the hypothesis bag runs out of `MAX_ROUTE_EXPANSIONS`, and the throw refused the
+             * whole solve from inside guard (iii).
+             */
+            let derived;
+            try {
+                derived = deriveWeighSource(run, p.onto, exempt, blocked, { liveBag });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal) || !e.bound) throw e;
+                still.push(p);
+                continue;
+            }
             if (derived.plan || derived.parked || derived.corpse) {
                 const corpse = derived.corpse && !derived.plan && !derived.parked ? derived.corpse.turret : null;
                 // ⛓ a corpse holder's turret is killed by its weigh: its volume rides out as the entry's exemption
-                out.push({ id: p.a.id, kind: 'activator', tag: p.a.tag, strategy: 'weigh',
+                extra.push({ id: p.a.id, kind: 'activator', tag: p.a.tag, strategy: 'weigh',
                     ...(corpse ? { exempt: [`proximity-hazard:${corpse}`] } : {}) });
                 if (corpse) killed.add(corpse);
                 progress = true;
@@ -9774,18 +9816,7 @@ function chainWeighHypothesis(run, chained, out, walls, contacts, blocked) {
         }
         pending = still;
     }
-    for (const { a, opener } of pending) {
-        walls.push({
-            id: a.id,
-            tag: a.tag,
-            why: `its group t=${opener.group} publishes only while a Solid sits on `
-                + `${opener.presser.tag}@${opener.presser.x},${opener.presser.y}, `
-                + 'and NO block in this room can reach it — so the only order '
-                + 'that could open it is a `hold` the walker shuts again by '
-                + 'leaving. ⚖ Guard (iii): a hypothesis nothing can redeem '
-                + 'DURABLY is a wall, not an optimistic gap',
-        });
-    }
+    return extra;
 }
 
 /**
@@ -9840,7 +9871,9 @@ export function withStanceRocks(enabled, fn) {
  * verbs), the set every stance derivation reads once its direct plan fails. It steps nothing.
  */
 export function stanceHypothesisProbe(run, blocked = []) {
-    return stanceHypothesis(run, blocked).map((h) => ({ id: h.id, kind: h.kind, strategy: h.strategy }));
+    const h = stanceHypothesis(run, blocked);
+    // ⛓ L40BK2: the chained admissions too (`weighHypothesisChain` ON; none OFF)
+    return [...h, ...(h.chained ?? [])].map((x) => ({ id: x.id, kind: x.kind, strategy: x.strategy }));
 }
 
 /**
