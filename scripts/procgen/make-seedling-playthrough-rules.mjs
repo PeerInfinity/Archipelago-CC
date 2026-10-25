@@ -304,7 +304,8 @@ const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === leve
  *
  * So when NO binding of a level reaches a dry component on the base grid, and every binding's own cell carries
  * the SAME gate set G, the cells gated by exactly G are FLOOR for the analysis. G is already charged on every way
- * in (a landing on water drowns without Swim: `playthroughLandingGates`), and every other cell keeps its kind,
+ * in (a landing on water drowns without Swim: `playthroughLandingGates`; CHECKED on the compiled rules by
+ * `playthroughEntryGateUncharged`, which the producer refuses on), and every other cell keeps its kind,
  * so a waterfall stays `directional` and the analyzer's own crossings price it per direction. A level whose
  * bindings sit on different gates (L57: water and the tentacle beast's manual cell) is left as it was.
  *
@@ -314,6 +315,7 @@ const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === leve
  */
 const ENTRY_GATE_PENDING = Symbol('pending');
 const entryGateMemo = new Map();
+const entryGateConditions = new Map();
 let derivedRegionsByLevel = null;
 const gateKeyOf = (cell) => cell.conditions.map((c) => JSON.stringify(c)).sort().join('+');
 function entryGateOf(level, base) {
@@ -333,7 +335,10 @@ function entryGateOf(level, base) {
         if (keys.size === 1) {
             const options = playthroughAnalyzerOptionsFor(level);
             const comps = findComponents(base);
-            if (!tiles.some((t) => componentForTile(base, comps, t, options).component)) gate = [...keys][0];
+            if (!tiles.some((t) => componentForTile(base, comps, t, options).component)) {
+                gate = [...keys][0];
+                entryGateConditions.set(level.level, cellAt(tiles[0]).conditions);
+            }
         }
     }
     entryGateMemo.set(level.level, gate);
@@ -341,6 +346,38 @@ function entryGateOf(level, base) {
 }
 /** ⛓ RULES l55-waterfall — the gate set a level is floored by (`entryGateOf`), or null. For the unit rows. */
 export const playthroughEntryGate = (level) => entryGateOf(level, baseGridFor(level));
+/**
+ * ⛓ RULES l55-waterfall — the floor's PREMISE, checked (tile-primitives-design-2's review): G is charged on every
+ * way in. Lists each exit of the compiled `rules` that enters a floored level (its region or a sub-region) from
+ * OUTSIDE it and whose access rule does not imply every condition of G. A door added later that lands dry would
+ * otherwise admit a G-free walk into cells the analysis treated as floor. The producer refuses on a non-empty list.
+ */
+export function playthroughEntryGateUncharged(rules, levels = LEVELS) {
+    const regions = rules.regions?.['1'] ?? rules.regions;
+    const implies = (rule, want) => {
+        if (!rule) return false;
+        if (want.rule === 'And') return want.children.every((w) => implies(rule, w));
+        if (rule.rule === 'And') return rule.children.some((c) => implies(c, want));
+        if (rule.rule === 'Or') return rule.children.length > 0 && rule.children.every((c) => implies(c, want));
+        return rule.rule === 'Has' && want.rule === 'Has' && rule.args.item_name === want.args.item_name
+            && (rule.args.count ?? 1) >= (want.args.count ?? 1);
+    };
+    const uncharged = [];
+    for (const level of levels) {
+        if (playthroughEntryGate(level) === null) continue;
+        const options = playthroughAnalyzerOptionsFor(level);
+        const wants = entryGateConditions.get(level.level).map((c) => options.resolveCondition(c));
+        const inside = (name) => name === `level_${level.level}` || name.startsWith(`level_${level.level}__`);
+        for (const [from, region] of Object.entries(regions)) {
+            if (inside(from)) continue;
+            for (const exit of region.exits ?? []) {
+                if (!inside(exit.connected_region)) continue;
+                if (!wants.every((w) => implies(exit.access_rule, w))) uncharged.push({ level: level.level, exit: exit.name });
+            }
+        }
+    }
+    return uncharged;
+}
 const gridFor = (level, options = {}) => {
     const base = baseGridFor(level, options);
     if (options.arrivals === false) return base;
@@ -1909,6 +1946,12 @@ function main() {
         exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
     });
     applyBossLocationOptions(rules);
+    // ⛓ RULES l55-waterfall: a floored level is sound only if its entry gate is charged on every way in.
+    const uncharged = playthroughEntryGateUncharged(rules);
+    if (uncharged.length) {
+        console.error(`ERROR: a way into a floored level is not charged its entry gate: ${uncharged.map((u) => u.exit).join(', ')}`);
+        process.exit(1);
+    }
     const rulesText = stringifyRulesJson(rules);
     // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
     // block-path or lane condition would be an item nothing places).
