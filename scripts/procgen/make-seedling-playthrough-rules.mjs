@@ -396,10 +396,61 @@ const baseGridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = t
         },
     );
     const base = build({});
-    if (!ROPES.some((r) => r.level === level.level && !r.verdict.refuse)) return base;
+    if (!ROPES.some((r) => r.level === level.level && !r.verdict.refuse)) return stampOffGridGatedSolids(level, base);
     const cellCharges = ropeChargesFor(level, base);
-    return cellCharges.length ? build({ cellCharges }) : base;
+    return stampOffGridGatedSolids(level, cellCharges.length ? build({ cellCharges }) : base);
 };
+
+/**
+ * ⛓ RULES l66-door — **AN ITEM-GATED SOLID THAT CLAIMS NO WHOLE TILE STILL COSTS THE DOOR UNDER IT.**
+ *
+ * `SEM.entitySealedTiles` claims a tile only when the hitbox covers it COMPLETELY, and that rounding is
+ * right for the grid (a partly-covered tile is walkable; `planttorch@120,152` once sealed L62). But it
+ * left one gated solid with NO tile at all: L66's `bosslock@72,64 {keyType 4}` (`Puzzlements/BossLock.as:29-36`,
+ * 16x16 at 72..88 x 64..80, `normType "Solid"` :17) fills building8's doorway notch (`Building8Mask.png`
+ * x 72-87, y 64-79), half a tile off the grid, so the grid never carried its key and `chargeSealedDoor`
+ * never saw `out_teleporter_72_64` as sealed: the only door into Dungeon 6 shipped True_. The game refuses
+ * it without the Yellow Key (`probe-seedling-l66-door.mjs`, CI 40221632410, 64/0).
+ *
+ * So such an entity contributes its condition to every tile its hitbox OVERLAPS — but only to a cell that
+ * is already material the grid cannot walk on its own (`gated`, `sink`, `manual`: the kinds
+ * `regionAtlasAnalyzer.sealedInOf` reads). An `open` cell is left alone: there the player's box goes round,
+ * which is exactly the rounding `entitySealedTiles` protects. Whether the body has a place is still the
+ * physics model's answer (`tileSolid`), never this list's. Read off `ENTITY_SEMANTICS` (no overlay), like
+ * `gameGatedSolidTiles`.
+ */
+export function offGridGatedSolids(level) {
+    const out = [];
+    for (const entity of level.entities ?? []) {
+        const base = SEM.entitySemantics(entity);
+        if (base?.kind !== 'gated' || !base.condition) continue;
+        if (SEM.entitySealedTiles(entity, base).length > 0) continue;
+        const f = SEM.entityFootprint(entity, base);
+        const tiles = [];
+        for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) tiles.push([tx, ty]);
+        out.push({ entity, condition: base.condition, tiles });
+    }
+    return out;
+}
+const OFF_GRID_STAMPED_KINDS = new Set(['gated', 'sink', 'manual']);
+function stampOffGridGatedSolids(level, grid) {
+    const solids = offGridGatedSolids(level);
+    if (solids.length === 0) return grid;
+    const cells = grid.cells.slice();
+    for (const { condition, tiles } of solids) {
+        const key = SEM.conditionKey(condition);
+        for (const [tx, ty] of tiles) {
+            const x = tx - (grid.origin?.x ?? 0);
+            const y = ty - (grid.origin?.y ?? 0);
+            if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) continue;
+            const cell = cells[y * grid.width + x];
+            if (!OFF_GRID_STAMPED_KINDS.has(cell.kind)) continue;
+            if (cell.conditions.some((c) => SEM.conditionKey(c) === key)) continue;
+            cells[y * grid.width + x] = { ...cell, conditions: [...cell.conditions, condition] };
+        }
+    }
+    return { ...grid, cells };
+}
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
 export const playthroughGridFor = (level, options) => gridFor(level, options);
 /**
@@ -447,6 +498,8 @@ function gameGatedSolidTiles(level) {
         if (base?.kind !== 'gated' && !killLock && !solidBody) continue;
         for (const [tx, ty] of SEM.entitySealedTiles(entity, base)) tiles.add(`${tx},${ty}`);
     }
+    // ⛓ RULES l66-door — and the overlapped tiles of a gated solid that claims no whole tile (`offGridGatedSolids`).
+    for (const { tiles: overlapped } of offGridGatedSolids(level)) for (const [tx, ty] of overlapped) tiles.add(`${tx},${ty}`);
     return tiles;
 }
 
@@ -740,7 +793,12 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
             continue;
         }
         if (b.kind !== 'exit' || !b.component || !b.reachable) continue;
-        if (!b.conditionSets || b.conditionSets.length === 0) continue;
+        if (!b.conditionSets || b.conditionSets.length === 0) {
+            // ⛓ RULES l66-door — a departure bound THROUGH material (no priced way at all) but sealed inside
+            // its own cell still costs that cell: the solid has to be gone before the door is touched.
+            if (b.sealedIn && b.id.startsWith('out_')) chargeSealedDoor(region, regionId, b);
+            continue;
+        }
         // ⛔ DEPARTURES ONLY. The analyzer answers "which component can REACH
         // this tile", which is the DEPARTURE question. Charging an ARRIVAL the
         // same cost measured the wrong direction and sealed the map — 19 of 250
