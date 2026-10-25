@@ -82,7 +82,7 @@ const SCRIPT = {
 const SLOTS = 180;
 
 describe('G7 — one fade per new Game', () => {
-    it('the level start: two `new Game`s (L0, the arrival), two reboots in place, and exactly two ramps', () => {
+    it('the level start: one ramp per `new Game` (L0\'s first frame, the arrival) and none at a reboot in place', () => {
         const rows = play(SCRIPT, SLOTS);
         const boots = rows.at(-1).boots;
         // not vacuous: the runtime really rebooted twice in place, and once more after the arrival's fade
