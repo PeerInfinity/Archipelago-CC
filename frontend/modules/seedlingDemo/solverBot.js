@@ -10630,6 +10630,10 @@ function killForCorpse(run, perTick, c, exempt, ctx) {
             contactsOverride: exempt });
     }
     const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
+    // ⛓ fidelity TURRETCIRCLE D2: the Sword alone kills on the move (`turretCircleKill` ON)
+    if (CONTACT_FIDELITY.turretCircleKill && blade === INVENTORY_ITEM_IDS.sword) {
+        return circleKillForCorpse(run, perTick, c, exempt, ctx, side, refuse);
+    }
     const whys = [];
     for (let d = 0; d <= CORPSE_KILL_DELAY_MAX; d += 1) {
         const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
@@ -10676,6 +10680,79 @@ function killForCorpse(run, perTick, c, exempt, ctx) {
     }
     return refuse(`no start delay 0 … ${CORPSE_KILL_DELAY_MAX} kills ${c.turret} from the ${side.key} side `
         + `(${side.x},${side.y}) without a hit — ${whys.join(' | ')}`);
+}
+
+/** The longest start delay the circling rung tries, ticks: half a volley cycle (the loop itself dodges the rest). */
+const CIRCLE_KILL_DELAY_MAX = 12;
+
+/**
+ * ⛓⛓ fidelity TURRETCIRCLE D2 — `killForCorpse`'s rung for the plain Sword (`turretCircleKill` ON). ⚖ The user
+ * (2026-10-24): *"keep moving while attacking. Keep circling around the turret."* No standing Sword kill is hitless
+ * (the third landing follows the turret's next shot), so the kill rides the loop (`circleKillIceTurret`): each start
+ * delay `d` = 0 … `CIRCLE_KILL_DELAY_MAX`, each direction, each first corner nearest first, is tried on a FORK — `d`
+ * still ticks, then the loop until the turret is dead and no blast is in flight — and the first hitless try is played
+ * on the live run, key for key. None ⇒ refused by name, naming the first refusals.
+ */
+function circleKillForCorpse(run, perTick, c, exempt, ctx, side, refuse) {
+    const r = run.entities('turrets').get(c.turret).rect;
+    const cornerOf = (cw, i) => {
+        const L = r.x - CIRCLE_LANE_X;
+        const R = r.right + CIRCLE_LANE_X;
+        const T = r.y - CIRCLE_LANE_Y;
+        const B = r.bottom + CIRCLE_LANE_Y;
+        return (cw ? [[L, B], [L, T], [R, T], [R, B]] : [[R, B], [R, T], [L, T], [L, B]])[i];
+    };
+    const tries = [];
+    for (const cw of [true, false]) {
+        for (let i = 0; i < 4; i += 1) {
+            const [x, y] = cornerOf(cw, i);
+            tries.push({ cw, start: i, d: Math.hypot(x - run.state.x, y - run.state.y) });
+        }
+    }
+    tries.sort((a, b) => a.d - b.d || Number(b.cw) - Number(a.cw) || a.start - b.start);
+    const noWalk = () => { throw new SolverRefusal('a fork does not walk'); };
+    const whys = [];
+    let forks = 0;
+    for (let d = 0; d <= CIRCLE_KILL_DELAY_MAX; d += 1) {
+        for (const t of tries) {
+            const f = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+            if (f === null) refuse(`deadline at the \`crusher-fork\` site after ${forks} circling tr(ies)`);
+            forks += 1;
+            const hits = f.ledger('playerHits').length;
+            const keys = [];
+            let ok = true;
+            for (let i = 0; i < d && ok; i += 1) {
+                keys.push(NONE_KEYS);
+                if (f.advance(NONE_KEYS).transition || f.ledger('playerHits').length !== hits) ok = false;
+            }
+            if (!ok) break;
+            let rec = null;
+            try {
+                rec = killIceTurretInPlace(f, keys, c.turret,
+                    { contacts: exempt, corpseOnly: true, circle: { cw: t.cw, start: t.start } },
+                    { ...ctx, walkTo: noWalk, what: `${ctx.what} (fork, circle ${t.cw ? 'cw' : 'ccw'} ${t.start}, delay ${d})` });
+            } catch (e) {
+                if (!(e instanceof SolverRefusal) && !/^levelRun: /.test(e?.message ?? '')) throw e;
+                if (whys.length < 3) whys.push(`${t.cw ? 'cw' : 'ccw'} ${t.start} delay ${d}: ${e.message.split('\n')[0].slice(0, 160)}`);
+                continue;
+            }
+            if (!f.entities('turrets').get(c.turret)?.dead || f.ledger('playerHits').length !== hits) continue;
+            const before = run.ledger('playerHits').length;
+            for (const k of keys) {
+                perTick.push(k);
+                const { transition } = run.advance(k);
+                if (transition) refuse(`the circling kill crossed to level ${transition.to_level} on the live run`);
+            }
+            const now = run.entities('turrets').get(c.turret);
+            if (!now?.dead || run.ledger('playerHits').length !== before || run.blastsInFlight.length > 0) {
+                refuse(`the fork's circling kill (${t.cw ? 'cw' : 'ccw'} ${t.start}, delay ${d}) did not replay on the live `
+                    + `run — dead ${Boolean(now?.dead)}, hits ${run.ledger('playerHits').length - before}`);
+            }
+            return { ...rec, delay: d, side: side.key, forks };
+        }
+    }
+    return refuse(`no circling kill of ${c.turret} with the Sword (start delay 0 … ${CIRCLE_KILL_DELAY_MAX}, both `
+        + `directions, every first corner; ${forks} fork(s)) is hitless — ${whys.join(' | ')}`);
 }
 
 /**
@@ -15290,6 +15367,8 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
         throw new SolverRefusal(`${ctx.what}: the count waits on ${id} and this run does not step it`,
             { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.id ?? null }, perTick: [...perTick] });
     }
+    // ⛓ fidelity TURRETCIRCLE D2: the circling kill (`killForCorpse`'s Sword rung, `turretCircleKill` ON) — no stance
+    if (resolved.circle) return circleKillIceTurret(run, perTick, id, resolved, ctx);
     const r = t0.rect;
     const opts = solverPlanOpts(run, resolved.contacts ?? new Set());
     const sides = [
@@ -15400,6 +15479,109 @@ function killIceTurretInPlace(run, perTick, id, resolved, ctx) {
     return { phase: 'turret-kill', target: id, side: side.key, stance: { x: side.x, y: side.y }, presses,
         ticks: perTick.length - from };
 }
+/** The circling loop's clearance outside the LIVE 32x32 box, px: x past the 4 px player box, y past its 2/3 split. */
+const CIRCLE_LANE_X = 4;
+const CIRCLE_LANE_Y = 6.5;
+/** A corner is reached within this, px (the follower's dead band is 1 px per axis). */
+const CIRCLE_CORNER_TOLERANCE = 1.5;
+/** A swing rides the movement keys within this of the turret's entity point, px (the box's half-diagonal and change). */
+const CIRCLE_SWING_REACH = 30;
+/** Ticks between two swings: a press, its swing, and a tick of movement before the next. */
+const CIRCLE_SWING_GAP = 7;
+/** The loop's whole bound, ticks: three landings at the i-frame cadence (31) from any corner, and the volley after. */
+const CIRCLE_TICK_BOUND = 400;
+
+/**
+ * ⛓⛓⛓ fidelity TURRETCIRCLE D2 — THE ICE TURRET KILLED ON THE MOVE (`killIceTurretInPlace`'s `circle` option).
+ *
+ * ⚖ The user (2026-10-24): *"The way to not get hit is to keep moving while attacking. Keep circling around the
+ * turret."* `IceTurret.update` turns the barrel by a tenth of the angle left per tick, and `startshot` freezes it three
+ * ticks before the volley leaves (`IceTurret.as:63-81,153-161`): a player who keeps moving around the body is never
+ * where a frozen aim points when the three blasts arrive, while one who stands to strike is (CORPSEBUMP: no standing
+ * Sword kill in the L40 pocket is hitless). Measured on the game (D1, `turretcircle-l40-sword-circle`, p4g, 0 px):
+ * three landings, no hit.
+ *
+ * The loop is the rectangle `CIRCLE_LANE_X`/`_Y` outside the live box, walked corner to corner (`resolved.circle =
+ * {cw, start}`: the direction and the first corner); the follower holds the axis keys toward the corner. A swing
+ * rides the keys — the press tick holds them too, and `Player.slash` swings the facing that tick STARTED with — when
+ * the i-frame is out (`run.entities('turretDamage')`), `CIRCLE_SWING_GAP` ticks after the last, within `CIRCLE_SWING_REACH` of
+ * the entity point. After the death the loop goes on until no blast is in flight (and `CORPSE_POST_KILL_STAND`
+ * ticks), the volley a `startshot` began before the death included. Every corner and the four edges between them must
+ * be plannable floor (refused by name otherwise). A hit, a door, or the bound refuses (`SolverRefusal`); the caller
+ * tries the next `{cw, start}` on a fork.
+ */
+export function circleKillIceTurret(run, perTick, id, resolved, ctx) {
+    const from = perTick.length;
+    const lockId = resolved.lock?.id ?? null;
+    const refuse = (msg) => {
+        throw new SolverRefusal(`${ctx.what}: ${msg}`,
+            { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: lockId }, perTick: [...perTick] });
+    };
+    const turret = () => run.entities('turrets')?.get?.(id) ?? null;
+    const r = turret().rect;
+    const { cw = true, start = 0 } = resolved.circle;
+    const L = r.x - CIRCLE_LANE_X;
+    const R = r.right + CIRCLE_LANE_X;
+    const T = r.y - CIRCLE_LANE_Y;
+    const B = r.bottom + CIRCLE_LANE_Y;
+    // clockwise on screen from the bottom-left corner: up the left lane, along the top, down the right lane
+    const ring = cw ? [[L, B], [L, T], [R, T], [R, B]] : [[R, B], [R, T], [L, T], [L, B]];
+    const corners = [...ring.slice(start), ...ring.slice(0, start)];
+    const opts = solverPlanOpts(run, new Set([...(resolved.contacts ?? []), `proximity-hazard:${id}`]));
+    for (let i = 0; i < 4; i += 1) {
+        const [ax, ay] = corners[i];
+        const [bx, by] = corners[(i + 1) % 4];
+        for (let k = 0; k <= 8; k += 1) {
+            const x = ax + ((bx - ax) * k) / 8;
+            const y = ay + ((by - ay) * k) / 8;
+            if (plannerObstacleAt(run.world, x, y, null, opts) !== null) {
+                refuse(`no circling loop around ${id}: (${x.toFixed(1)},${y.toFixed(1)}) on its ${cw ? 'clockwise' : 'anticlockwise'} `
+                    + 'ring is not plannable floor');
+            }
+        }
+    }
+    const hitsBefore = run.ledger('playerHits').length;
+    const damage = () => (run.entities('turretDamage') ?? []).find((d) => d.id === id) ?? null;
+    let wi = 0;
+    let presses = 0;
+    let lastPress = -Infinity;
+    let deadAt = null;
+    for (let i = 0; i < CIRCLE_TICK_BOUND; i += 1) {
+        const tu = turret();
+        if (tu?.dead && deadAt === null) deadAt = i;
+        if (deadAt !== null && i - deadAt >= CORPSE_POST_KILL_STAND && run.blastsInFlight.length === 0) {
+            return { phase: 'turret-kill', target: id, circle: { cw, start }, presses, killTick: deadAt,
+                ticks: perTick.length - from, ...(resolved.corpseOnly ? { corpseOnly: true } : {}) };
+        }
+        const { x, y } = run.state;
+        let [tx, ty] = corners[wi % 4];
+        if (Math.abs(x - tx) < CIRCLE_CORNER_TOLERANCE && Math.abs(y - ty) < CIRCLE_CORNER_TOLERANCE) {
+            wi += 1;
+            [tx, ty] = corners[wi % 4];
+        }
+        const keys = new Set();
+        if (tx - x > 1) keys.add('right'); else if (x - tx > 1) keys.add('left');
+        if (ty - y > 1) keys.add('down'); else if (y - ty > 1) keys.add('up');
+        const d = damage();
+        if (!tu?.dead && d && d.hitsTimer <= 0 && i - lastPress >= CIRCLE_SWING_GAP && run.progress('frozenTimer') === 0
+            && Math.hypot(x - tu.x, y - tu.y) < CIRCLE_SWING_REACH) {
+            keys.add('primary');
+            lastPress = i;
+            presses += 1;
+        }
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`the circling kill of ${id} crossed a door (trap 150)`);
+        if (run.ledger('playerHits').length !== hitsBefore) {
+            const h = run.ledger('playerHits').at(-1);
+            refuse(`the player was HIT circling ${id} at run tick ${run.ticksCompleted} (source ${h?.source ?? '?'}`
+                + `${h?.id ? ` ${h.id}` : ''}) at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}), ${presses} swing(s)`);
+        }
+    }
+    return refuse(`${CIRCLE_TICK_BOUND} ticks circling ${id} (${presses} swing(s)) and it is ${turret()?.dead
+        ? 'dead with a blast still in flight' : 'not dead'}`);
+}
+
 /**
  * ⛓⛓ HAMMER-PHASE C3 — THE ICE TURRET'S SPEAR ARM (`ICE_TURRET_SPEAR_ARM`, ON by default since ⚖ the user's flip of 2026-10-11; `=0` opts out).
  *

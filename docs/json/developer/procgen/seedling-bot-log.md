@@ -25524,3 +25524,51 @@ FORCEDHIT's `{forced: {transition}}` (the walk arrived); ON then = OFF on every 
 - A steered waypoint reached off its own y moves the start of the NEXT leg: the floor test belongs to both legs.
 - A preview truncated by `crossed` is the walk arriving only when the crossing is the corridor's own end; a steered walk
   can find another door.
+
+### Seedling fidelity TURRETCIRCLE — the plain Sword kills an ice turret on the move (`turretCircleKill`); a blast stops on the shield (`iceBlastShield`); a death stops the shot (`iceTurretDeathAnim`) — all OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-turretcircle.md`.
+⚖ The user (2026-10-24): *"The way to not get hit is to keep moving while attacking. Keep circling around the turret."*
+
+**W0 — why standing loses and circling wins.** `IceTurret.update` turns the barrel by a tenth of the angle left per tick,
+and only while neither shot animation plays. `startshot` freezes the aim, and its wrap three ticks later fires three blasts
+12 px apart along it at 6 px a tick. The player's box is 4x5. A player who stands to strike is where the frozen aim points
+when the volley arrives; one who keeps moving is not. CORPSEBUMP's Sword-only refusal staging has NO shield
+(`hasShield: false`), so "the shield protects only while moving" was never what refused it. `IceTurret` sits in a 3-tile
+corridor in L40, and the 8 px lanes beside its 32x32 body hold a ring the player can walk.
+
+**D1 — the model, game-witnessed (p4g, 0 px; `probe-seedling-turret-circle.mjs`).**
+- `turretcircle-l40-sword-circle`: no shield, clockwise round the ring, the press tick holding the movement keys too. The
+  turret is dead on t79 and the player is never hit (140 ticks). The model already agreed, key or no key.
+- `iceBlastShield`: `IceTurretBlast.hitables` holds `"Shield"`; `stepBlastsNow` never passed the shield box, so a shielded
+  player was hit by blasts the game stops. Witnesses `turretcircle-l40-shield-stand` (no hit; OFF parts t52) and
+  `-shield-near` (one hit, t97, the shield and the player on one tick; OFF parts t51).
+
+**D2 — the solver (`turretCircleKill`).** `killForCorpse` with the Sword alone (the Ghost Sword keeps its standing kill)
+calls `killIceTurretInPlace`'s new `circle` option (`circleKillIceTurret`): the ring 4 px / 6.5 px outside the live box,
+the follower holding the axis keys toward the next corner, a swing riding them when the i-frame is out (`run.entities
+('turretDamage')`) within 30 px of the entity point, on until no blast is in flight. Each start delay 0..12, direction and
+first corner (nearest first) is tried on a fork; no ring (L98's turret against its walls) or no hitless try is refused by
+name. CORPSEBUMP's Sword-only pocket goal goes REFUSED → SOLVED (cw from corner 3, delay 0, three swings, one fork).
+
+**D3 — the solver's own t2 holder with the Sword alone** (`turretcircle-l40-t2-holder-sword`, p4g, 0 px on all 518 ticks):
+the circling kill, the corpse bumped onto `button@480,384` (on it from t289), the fade, the pit, L43, never hit. The first
+recording parted at t70: the killing landing came two ticks into a `startshot`, and the model's corpse still fired it.
+`IceTurret.death()` does `play("dead")`, a rate-0 animation whose reset kills the shot clock, and `death()` runs inside
+`e.update()` before that tick's `graphic.update()` — `iceTurretDeathAnim` transcribes it (OFF: a volley from the corpse).
+
+**Trap candidates.**
+- A pickup's flavour text is not a mechanism. "It protects you when moving" read as a rule hid that the refused staging
+  held no shield, and that the blast step had no shield arm at all.
+- A state flag is not the animation. `dead = true` without the `play("dead")` left the shot clock running, and the volley
+  it fired could only be seen by comparing blasts, not bodies.
+- A swing can ride the movement keys: the press tick holding them is still a press, and the turret's box is big enough to
+  be in the rect of a tangential swing.
+
+**Movers (measured locally; the CI dispatches are in the report).**
+- The full survey, A (the 65 defaults + FIREMOVE + CORPSEBUMP) vs B (+ the three keys): all 239 rows equal. The route's L40
+  steps refuse before the corpse weigh.
+- The keyed sweep ×2 over the 66 legs in or into L40 and L98 (the only two ice-turret rooms): 0 key-driven verdicts. Legs
+  368 and 404 flip within arm A too, and B1's captured requests replay A = B byte-identically.
+- Probes standard, all 71 keys ON: 11/11.
+- The bounded vitest ON moves `fidelityCorpseBump.test.js`'s Sword-alone refusal row (it now solves): a flip owes it a re-pin.

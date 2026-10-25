@@ -1,0 +1,16 @@
+== id 368 arm A
+ROW {"id":368,"key":"level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144","i":0,"run":0,"seamTime":5870,"budgetWork":640,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":185},{"pass":"full","ok":true,"kind":nul
+REPLAY: leg 368 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+== id 368 arm B
+ROW {"id":368,"key":"level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144","i":0,"run":0,"seamTime":5870,"budgetWork":640,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":185},{"pass":"full","ok":true,"kind":nul
+REPLAY: leg 368 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+== id 404 arm A
+ROW {"id":404,"key":"level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest","i":0,"run":0,"seamTime":5299,"budgetWork":640,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":82},{"pass":"full","ok":false,"kind":"refusal","t
+REPLAY: leg 404 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+== id 404 arm B
+ROW {"id":404,"key":"level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest","i":0,"run":0,"seamTime":5299,"budgetWork":640,"passes":[{"pass":"dashless","ok":false,"kind":"refusal","ticks":null,"work":82},{"pass":"full","ok":false,"kind":"refusal","t
+REPLAY: leg 404 request 0 (budget 640): 1 distinct answer(s) over 1, 1 distinct trace(s)
+368 A 27a3bbdc0cfb [('dashless', False, 'refusal', None, 185), ('full', True, None, 1558, 389)]
+368 B 27a3bbdc0cfb [('dashless', False, 'refusal', None, 185), ('full', True, None, 1558, 389)]
+404 A 8a464707f067 [('dashless', False, 'refusal', None, 82), ('full', False, 'refusal', None, 82)]
+404 B 8a464707f067 [('dashless', False, 'refusal', None, 82), ('full', False, 'refusal', None, 82)]

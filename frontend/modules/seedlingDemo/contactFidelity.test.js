@@ -285,7 +285,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             stanceReentryNextDoor: true,
             spinnerLockLag: true,
             // ⛓ fidelity BEAMLANE (wave 29): a corridor along a beam band rides the band-to-band lane — shipped OFF.
-            beamLaneWalk: false });
+            beamLaneWalk: false,
+            // ⛓ fidelity TURRETCIRCLE (wave 29): a blast stops on the shield, the Sword kills on the move, a death stops
+            // the shot — shipped OFF.
+            iceBlastShield: false,
+            turretCircleKill: false,
+            iceTurretDeathAnim: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
