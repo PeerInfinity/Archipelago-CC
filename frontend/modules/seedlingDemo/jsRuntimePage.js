@@ -127,14 +127,24 @@
  * costs only while someone talks (§5.135's catch-up A/B). `set({ effects })`
  * switches it live; `__seedlingJsGraphics.effectsSwitch` reads it back.
  *
- * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
+ * ⛓ G7 — the stairs, the pushable blocks (at the run's own position, with
+ * their sink fade) and the sand traps (`seedlingPuzzleSkin.js`: `puzzleSkinView`
+ * / `stepPuzzleSkin` after every tick, `puzzleOps` at each paint, Y-sorted with
+ * the rest; the blocks' build-time rectangles and the stairs' teleporter
+ * rectangles are not painted). `__seedlingJsGraphics.puzzles` reads them back.
+ * ⚖ And ONE fade per `new Game`: a reboot in place (an item delivery,
+ * `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) is a new run object but no new world in
+ * the game, so it owes no fade (`seedlingEffectSkin.fadeSlot`); before G7 it
+ * faded in from black a second time.
+ *
+ * ⛓ KILLLOCK HOOK —`?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
  * off-default, and re-mounts the page when they change. The worker gets the
  * set with each solve request (`killLockBodiesStamp`).
  */
 
-import { createJsRuntime } from './jsRuntimeCore.js';
+import { createJsRuntime, IN_PLACE_REBOOT_WHY } from './jsRuntimeCore.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { applyKillLockBodies, parseKillLockBodies } from './killLockBodies.js';
 import { applyContactFidelity, parseContactFidelity } from './contactFidelity.js';
@@ -153,8 +163,9 @@ import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEne
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import {
-    effectOps, effectSkinView, holdEffectSkin, holdOwed, jiggleCam, primeEffectSkin, screenOps, stepEffectSkin,
+    adoptRunEffectSkin, carryThroughReboot, effectOps, effectSkinView, fadeSlot, jiggleCam, screenOps, stepEffectSkin,
 } from './seedlingEffectSkin.js';
+import { PUZZLE_OBJECT_TAGS, puzzleOps, puzzleSkinView, stepPuzzleSkin } from './seedlingPuzzleSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
@@ -253,6 +264,8 @@ export function mountJsRuntimePage(win = window) {
         roomBodySkin: null, roomBodies: null,
         // ⛓ G3c — the puzzlements' and the last bodies' pictures and the last paint's ops.
         hazardSkin: null, hazards: null,
+        // ⛓ G7 — the stairs', pushable blocks' and sand traps' pictures and the last paint's ops.
+        puzzleSkin: null, puzzles: null,
         // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
         effectSkin: null, effects: null, held: 0,
         // ⛓ G1.5 — the static tile layer (room mode; `?tileLayer=off` = none) and the last paint's inputs.
@@ -281,7 +294,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, effectSkin: null, effects: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, puzzleSkin: null, puzzles: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -326,6 +339,8 @@ export function mountJsRuntimePage(win = window) {
         get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
         get roomBodies() { return graphics.roomBodies ? { ...graphics.roomBodies, ops: graphics.roomBodies.ops.map((o) => ({ ...o })) } : null; },
         get hazards() { return graphics.hazards ? { ...graphics.hazards, ops: graphics.hazards.ops.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G7 — the last paint's stairs, pushable blocks and sand traps. */
+        get puzzles() { return graphics.puzzles ? { ...graphics.puzzles, ops: graphics.puzzles.ops.map((o) => ({ ...o })) } : null; },
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
@@ -390,14 +405,13 @@ export function mountJsRuntimePage(win = window) {
         while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
             // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
             if (graphics.stack && runtime.run) {
-                const ev = effectView();
-                // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing
-                if (graphics.effectSkin?.epoch.run !== runtime.run) {
-                    graphics.effectSkin = primeEffectSkin(runtime.run.ticksCompleted === 0 ? ev : { ...ev, loadSpans: [] });
-                    if (runtime.run.ticksCompleted !== 0) graphics.effectSkin.seen.loadSpans = ev.loadSpans.length;
-                }
-                if (holdOwed(graphics.effectSkin)) {
-                    graphics.effectSkin = holdEffectSkin(graphics.effectSkin, ev, { rain: effectsOn() });
+                // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing;
+                // ⛓ G7 — and a reboot in place (an item delivery) owes no new fade: the game builds no world for it
+                const slot = fadeSlot(graphics.effectSkin, effectView(), {
+                    run: runtime.run, fresh: runtime.run.ticksCompleted === 0, inPlace: lastBootInPlace, rain: effectsOn(),
+                });
+                graphics.effectSkin = slot.skin;
+                if (slot.held) {
                     graphics.held += 1;
                     acc -= TICK_MS;
                     n += 1;
@@ -410,7 +424,10 @@ export function mountJsRuntimePage(win = window) {
                 graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
                 graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
                 graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
-                graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks, { rain: effectsOn() });
+                graphics.puzzleSkin = stepPuzzleSkin(graphics.puzzleSkin, puzzleView(), runtime.ticks);
+                const fv = effectView();
+                graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
+                    fv, runtime.ticks, { rain: effectsOn() });
                 if (graphics.lights === 'on') graphics.nightSkin = stepNightSkin(graphics.nightSkin, nightView(), runtime.ticks);
             }
             acc -= TICK_MS;
@@ -421,6 +438,17 @@ export function mountJsRuntimePage(win = window) {
     function effectView() {
         const run = runtime.run;
         return effectSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
+    }
+    /** ⛓ G7 — was the live run's boot a reboot in place (`jsRuntimeCore.IN_PLACE_REBOOT_WHY`)? Asked once per new run. */
+    function lastBootInPlace() {
+        const events = runtime.events;
+        for (let i = events.length - 1; i >= 0; i -= 1) if (events[i].type === 'boot') return events[i].why === IN_PLACE_REBOOT_WHY;
+        return false;
+    }
+    /** ⛓ G7 — the stairs', blocks' and sand traps' view: the run, and the room's level record (the stairs' direction and flip). */
+    function puzzleView() {
+        const run = runtime.run;
+        return puzzleSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
     }
     /** ⛓ G5 — the night layer's view: the run, and the room's level record (its lights, shadows and rays). */
     function nightView() {
@@ -512,14 +540,28 @@ export function mountJsRuntimePage(win = window) {
             ? { bodies: graphics.hazardSkin?.bodies.size ?? 0,
                 ops: hazardSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, rot: o.rot ?? 0, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const pz = art ? puzzleView() : null;
+        const puzzleSprites = pz ? puzzleOps(pz, art, { skin: graphics.puzzleSkin }) : [];
+        graphics.puzzles = pz
+            ? { stairs: pz.stairs.length, blocks: pz.blocks.length, traps: pz.traps.length,
+                ops: puzzleSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, alpha: o.alpha ?? 1, tint: o.tint ?? null, flipX: !!o.flipX,
+                    pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        // ⛓ G7 — a run the effects have not met (booted between two clock slots: the game's own first frame) is adopted
+        // before its first paint, so that paint shows the cover its fade starts from; before G7 it showed the bare room
+        // for a frame. The next slot's `fadeSlot` then meets the same run (the same adoption, so the same fade).
+        if (art && runtime.run && graphics.effectSkin?.epoch.run !== runtime.run) {
+            graphics.effectSkin = adoptRunEffectSkin(graphics.effectSkin, effectView(),
+                { fresh: runtime.run.ticksCompleted === 0, inPlace: lastBootInPlace() });
+        }
         const fv = art && graphics.effectSkin ? effectView() : null;
         const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin, rain: effectsOn() }) : [];
         // ⛓ G5 — the lights' MAIN-buffer ops (a ray's rects, an unlit pole's darkLight), Y-sorted with the bodies
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
         const litMain = lit ? nightMainOps(lit, { cam: modelCam }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...effectSprites, ...litMain];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...puzzleSprites, ...effectSprites, ...litMain];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -528,7 +570,8 @@ export function mountJsRuntimePage(win = window) {
             : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) } : {}),
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) || PUZZLE_OBJECT_TAGS.has(o.tag),
+                drawnTeleporters: (tp) => tp.isStairs === true } : {}),
         });
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
         const view = cameraView(graphics.camera, world, state, runtime.run,

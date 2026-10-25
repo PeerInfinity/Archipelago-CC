@@ -2031,6 +2031,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "seedling-js-event-goals. Runtime js + the solver mode ON on seedling_playthrough: the sword granted, the page teleported to level_16__r1c1, and the Playback Bot asks for the L16 rope EVENT by name; the page walks the solver's clear-tag and completes on the game's flag {16,0} (persistence_cleared, one pendingCheck <seq>|16|0|0, the event collector's local check). Batch seedling-js."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-puzzles",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G7. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 8: the stairs, both pushable blocks and both sand traps drawn from the seedling pack; then an item flag (a reboot in place on the JS runtime) holds no dead frame and owes or shows no cover (one fade per new Game; before G7 it faded in from black again); every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         }
     ]
 }

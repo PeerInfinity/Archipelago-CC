@@ -1,0 +1,120 @@
+t=0..7 L65 [b:pushableblockspear] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 176, 128) tint=#8822ff
+t=8 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 175.5, 128) tint=#8822ff
+t=9 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 175, 128) tint=#8822ff
+t=10 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 174.5, 128) tint=#8822ff
+t=11 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 174, 128) tint=#8822ff
+t=12 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 173.5, 128) tint=#8822ff
+t=13 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 173, 128) tint=#8822ff
+t=14 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 172.5, 128) tint=#8822ff
+t=15 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 172, 128) tint=#8822ff
+t=16 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 171.5, 128) tint=#8822ff
+t=17 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 171, 128) tint=#8822ff
+t=18 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 170.5, 128) tint=#8822ff
+t=19 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 170, 128) tint=#8822ff
+t=20 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 169.5, 128) tint=#8822ff
+t=21 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 169, 128) tint=#8822ff
+t=22 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 168.5, 128) tint=#8822ff
+t=23 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 168, 128) tint=#8822ff
+t=24 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 167.5, 128) tint=#8822ff
+t=25 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 167, 128) tint=#8822ff
+t=26 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 166.5, 128) tint=#8822ff
+t=27 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 166, 128) tint=#8822ff
+t=28 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 165.5, 128) tint=#8822ff
+t=29 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 165, 128) tint=#8822ff
+t=30 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 164.5, 128) tint=#8822ff
+t=31 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 164, 128) tint=#8822ff
+t=32 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 163.5, 128) tint=#8822ff
+t=33 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 163, 128) tint=#8822ff
+t=34 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 162.5, 128) tint=#8822ff
+t=35 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 162, 128) tint=#8822ff
+t=36 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 161.5, 128) tint=#8822ff
+t=37 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 161, 128) tint=#8822ff
+t=38 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160.5, 128) tint=#8822ff
+t=39..44 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160, 128) tint=#8822ff
+t=45..55 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 128) tint=#8822ff
+t=56..66 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 128) tint=#8822ff
+t=67..77 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 128) tint=#8822ff
+t=78..88 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160, 128) tint=#8822ff
+t=89 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160, 127.5) tint=#8822ff
+t=90 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 127) tint=#8822ff
+t=91 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 126.5) tint=#8822ff
+t=92 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 126) tint=#8822ff
+t=93 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 125.5) tint=#8822ff
+t=94 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 125) tint=#8822ff
+t=95 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 124.5) tint=#8822ff
+t=96 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 124) tint=#8822ff
+t=97 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 123.5) tint=#8822ff
+t=98 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 123) tint=#8822ff
+t=99 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 122.5) tint=#8822ff
+t=100 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 122) tint=#8822ff
+t=101 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 121.5) tint=#8822ff
+t=102 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 121) tint=#8822ff
+t=103 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 120.5) tint=#8822ff
+t=104 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 120) tint=#8822ff
+t=105 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 119.5) tint=#8822ff
+t=106 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 119) tint=#8822ff
+t=107 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 118.5) tint=#8822ff
+t=108 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 118) tint=#8822ff
+t=109 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 117.5) tint=#8822ff
+t=110 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 117) tint=#8822ff
+t=111 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 116.5) tint=#8822ff
+t=112 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 116) tint=#8822ff
+t=113 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 115.5) tint=#8822ff
+t=114 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 115) tint=#8822ff
+t=115 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 114.5) tint=#8822ff
+t=116 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 114) tint=#8822ff
+t=117 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 113.5) tint=#8822ff
+t=118 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 113) tint=#8822ff
+t=119 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 112.5) tint=#8822ff
+t=120..122 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 112) tint=#8822ff
+t=123..134 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160, 112) tint=#8822ff
+t=135..145 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 112) tint=#8822ff
+t=146..156 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 112) tint=#8822ff
+t=157..167 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 160, 112) tint=#8822ff
+t=168..179 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 160, 112) tint=#8822ff
+t=180..190 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 160, 112) tint=#8822ff
+t=191..198 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 160, 112) tint=#8822ff
+t=199 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 159.5, 112) tint=#8822ff
+t=200 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 159, 112) tint=#8822ff
+t=201 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 158.5, 112) tint=#8822ff
+t=202 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 158, 112) tint=#8822ff
+t=203 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 157.5, 112) tint=#8822ff
+t=204 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 157, 112) tint=#8822ff
+t=205 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 156.5, 112) tint=#8822ff
+t=206 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 156, 112) tint=#8822ff
+t=207 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 155.5, 112) tint=#8822ff
+t=208 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 155, 112) tint=#8822ff
+t=209 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 154.5, 112) tint=#8822ff
+t=210 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 154, 112) tint=#8822ff
+t=211 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 153.5, 112) tint=#8822ff
+t=212 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#3 drawImage(seedling/PushableBlockFire, 48, 0, 153, 112) tint=#8822ff
+t=213 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 152.5, 112) tint=#8822ff
+t=214 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 152, 112) tint=#8822ff
+t=215 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 151.5, 112) tint=#8822ff
+t=216 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 151, 112) tint=#8822ff
+t=217 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 150.5, 112) tint=#8822ff
+t=218 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 150, 112) tint=#8822ff
+t=219 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 149.5, 112) tint=#8822ff
+t=220 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 149, 112) tint=#8822ff
+t=221 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 148.5, 112) tint=#8822ff
+t=222 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 148, 112) tint=#8822ff
+t=223 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 147.5, 112) tint=#8822ff
+t=224 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#0 drawImage(seedling/PushableBlockFire, 0, 0, 147, 112) tint=#8822ff
+t=225 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 146.5, 112) tint=#8822ff
+t=226 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 146, 112) tint=#8822ff
+t=227 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 145.5, 112) tint=#8822ff
+t=228 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 145, 112) tint=#8822ff
+t=229 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144.5, 112) tint=#8822ff
+t=230 L65 [b:pushableblockspear,b:moved] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) tint=#8822ff
+t=231 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) alpha=0.9 tint=#8822ff
+t=232 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) alpha=0.8 tint=#8822ff
+t=233 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) alpha=0.7 tint=#8822ff
+t=234 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) alpha=0.6 tint=#8822ff
+t=235 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#1 drawImage(seedling/PushableBlockFire, 16, 0, 144, 112) alpha=0.5 tint=#8822ff
+t=236 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 144, 112) alpha=0.4 tint=#8822ff
+t=237 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 144, 112) alpha=0.3 tint=#8822ff
+t=238 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 144, 112) alpha=0.2 tint=#8822ff
+t=239 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 144, 112) alpha=0.1 tint=#8822ff
+t=240..241 L65 [b:pushableblockspear,b:moved,b:sinking] | seedling:puzzlement/pushableblockfire#2 drawImage(seedling/PushableBlockFire, 32, 0, 144, 112) alpha=0 tint=#8822ff
+t=242..344 L65 [] |
+t=345 L68 [] |
