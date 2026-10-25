@@ -80,7 +80,9 @@ describe('L40RES D2 — a stance walk that re-enters its own order walks on alon
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).not.toContain('STANCE_REENTRY');
         expect(e.message).toContain('-> hold stance (wandlock@448,432) -> chest stance (chest@880,816) '
-            + '-> kill (spinner@880,848) by press: the player died at t1266 (chaser bob@736,752)');
+            // ⛓ t780 since hammer's STRIKE_ETA_FLOOR flip (main 6faff978ce; t1266 before it): the floor moves the press
+            // timing, the end (the chest walk's press-kill death on bob@736,752) is the same — hammer's region.
+            + '-> kill (spinner@880,848) by press: the player died at t780 (chaser bob@736,752)');
     }, 300_000);
 });
 
