@@ -7,7 +7,7 @@
 7	L7	SOLVED	146	
 8	L8	SOLVED	827	
 9	L9	SOLVED	122	
-10	L10	SOLVED	81	
+10	L10	SOLVED	83	
 11	L11	SOLVED	97	
 12	L3	SOLVED	152	
 13	L2	SOLVED	23	
@@ -25,8 +25,8 @@
 25	L17	SOLVED	131	
 26	L16	SOLVED	516	
 27	L18	SOLVED	467	
-28	L19	SOLVED	748	
-29	L20	SOLVED	578	
+28	L19	SOLVED	746	
+29	L20	SOLVED	560	
 30	L13	SOLVED	48	
 31	L0	SOLVED	201	
 32	L12	SOLVED	2364	
@@ -34,9 +34,9 @@
 34	L22	SOLVED	113	
 35	L25	REFUSED	None	solverBot(survey-step-35) chest (96,96): the placement is INSIDE solid:rock2 (rock2@80,96) — a pickup in a solid is an obstacle, not a stance problem. No strategy row exists for this obstacle.
 36	L22	SOLVED	201	
-37	L29	SOLVED	259	
+37	L29	SOLVED	257	
 38	L31	SOLVED	336	
-39	L30	SOLVED	382	
+39	L30	SOLVED	395	
 40	L32	REFUSED	None	solverBot(survey-step-40) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing (`Fire.removed()` @0eda15f785 c
 41	L30	SOLVED	320	
 42	L22	SOLVED	406	
@@ -95,7 +95,7 @@
 95	L40	REFUSED	None	solverBot(survey-step-95) collect (64,144) stance (ladder-routed: no corridor from (488,904) to a stance that can collect totempart@64,144 — 22 walkable candidate(s) in range, 15 of them with an appro
 96	L41	SOLVED	2346	
 97	L40	SOLVED	70	
-98	L42	SOLVED	1295	
+98	L42	SOLVED	1294	
 99	L0	SOLVED	392	
 100	L89	SOLVED	135	
 101	L87	SOLVED	250	
@@ -176,7 +176,7 @@
 176	L85	SOLVED	18	
 177	L71	REFUSED	None	solverBot(survey-step-177) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stan
 178	L75	REFUSED	None	solverBot(survey-step-178) reach-exit (64,0)->L74: the combat ladder is EXHAUSTED. The corridor passes through danger at (104.3,160.6) — hazard:spinningaxe@80,144 (a SpinningAxe's 32 px blade on its u
-179	L74	SOLVED	325	
+179	L74	SOLVED	321	
 180	L75	REFUSED	None	solverBot(survey-step-180) reach-exit (64,224)->L71: the danger map forbids (78.24124278936391,35.24504871165134) — hazard:lavachain@96,32 (avoid (phase-band) — rect: the arm, -x). Slice 2 has NO DODG
 181	L71	SOLVED	327	
 182	L76	SOLVED	496	

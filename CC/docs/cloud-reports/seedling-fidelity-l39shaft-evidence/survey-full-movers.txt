@@ -1,12 +1,5 @@
-step 10 L10 v?: A SOLVED 83 -> B SOLVED 81 (47 ms) | A: 
-step 28 L19 v?: A SOLVED 746 -> B SOLVED 748 (295 ms) | A: 
-step 29 L20 v?: A SOLVED 560 -> B SOLVED 578 (326 ms) | A: 
-step 37 L29 v?: A SOLVED 257 -> B SOLVED 259 (297 ms) | A: 
-step 39 L30 v?: A SOLVED 395 -> B SOLVED 382 (604 ms) | A: 
-step 66 L39 v?: A REFUSED None -> B SOLVED 3496 (3205 ms) | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
-step 94 L39 v?: A REFUSED None -> B SOLVED 3376 (3148 ms) | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
-step 98 L42 v?: A SOLVED 1294 -> B SOLVED 1295 (4305 ms) | A: 
-step 135 L39 v?: A REFUSED None -> B SOLVED 3376 (3273 ms) | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
-step 137 L43 v?: A REFUSED None -> B REFUSED None (326 ms) | A: solverBot(survey-step-137) reach-exit (144,64)->L37 -> wand stance (magicallock@144,112): the re-planned corridor failed too — solverBot(sur
-step 155 L39 v?: A REFUSED None -> B SOLVED 3253 (3130 ms) | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
-step 179 L74 v?: A SOLVED 321 -> B SOLVED 325 (411 ms) | A: 
+A = defaults (77 ON), B = A + l39ShaftPress + collectSpanAim + spinnerPointExact; sequential local runs at head
+step 66 L39: A REFUSED None -> B SOLVED 3496 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 94 L39: A REFUSED None -> B SOLVED 3376 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 135 L39: A REFUSED None -> B SOLVED 3376 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr
+step 155 L39: A REFUSED None -> B SOLVED 3253 | A: solverBot: no REACHABLE stance inside button@144,112 in level 39 — 1 cell(s) land the player box in the button and none of them plans a corr

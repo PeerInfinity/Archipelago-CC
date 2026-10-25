@@ -1,0 +1,22 @@
+== SEEDLING_L39_SHAFT_PRESS=1
+      Tests  2 failed | 62 passed (64)
+ FAIL  fidelityWandHold.test.js > WANDHOLD L39 — a cover held by a plain Button does not outlive the walker > OFF (coverWeighRefine OFF): the hold stance is hypothesise
+ FAIL  fidelityWandHold.test.js > WANDHOLD L39 — a cover held by a plain Button does not outlive the walker > ON: refused by name with no 400-tick grind — the cover i
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+== SEEDLING_COLLECT_SPAN_AIM=1
+      Tests  12 failed | 52 passed (64)
+ FAIL  fidelityBobSoldier2.test.js > BOBSOLDIER2 D2 — the solver, switch by switch, on survey step 50's staging > both ON: the dwell kills from the stance (88,56) insid
+ FAIL  fidelityBobSoldier2.test.js > BS2FIX — step 50 at the defaults: the gate decides, the dwell is never reached > D2a alone: the exit walk's gate refuses the LIVE b
+ FAIL  fidelityBobSoldier2.test.js > BS2FIX — step 50 at the defaults: the gate decides, the dwell is never reached > D2b alone: 404 t, the same kill on the walk (the s
+ FAIL  fidelityBobSoldier2.test.js > BS2FIX — step 50 at the defaults: the gate decides, the dwell is never reached > both OFF: the exit walk's gate refuses the LIVE bo
+ FAIL  fidelityBobSoldier2.test.js > BS2FIX — step 50 at the defaults: the gate decides, the dwell is never reached > both ON: the solver's own plan IS the witness `bob
+ FAIL  fidelityCrusher.test.js > fidelity CRUSHER D3 — the witness `crusher-l42-round-trip` > is the solver's own plan with the flag ON, and the flag OFF refuses the sa
+ FAIL  fidelityLeash.test.js > LEASH D2 — `BAIT_FORECAST`: a bait is verified on the chaser forecast > leg 629 (L74 from L75 → the Darkshield): OFF refuses on the dwe
+ FAIL  fidelityStrikeLapse.test.js > STRIKELAPSE D1 — the collect stand and the ceremony arm > OFF: the plan is the pre-lapse witness (the retired 460-t `bobsoldier2-l3
+ FAIL  fidelityStrikeLapse.test.js > STRIKELAPSE D1 — the collect stand and the ceremony arm > ON: survey step 50 solves in 413 t with zero hits; the body dies on the w
+ FAIL  fidelityWandHold.test.js > WANDHOLD L40 — leg 368 > ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key
+ FAIL  fidelityWandHold.test.js > WANDHOLD L40 — leg 371 > ON (movingWait + bombBlastBody): SOLVED, two paced holds, and the plan is the witness tape key for key
+ FAIL  stringPullFast.test.js > SP — committed solves: OFF and ON end to end, and every real pull audited > L40 kill rung (the lever's target)
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+== SEEDLING_SPINNER_POINT_EXACT=1
+      Tests  64 passed (64)
