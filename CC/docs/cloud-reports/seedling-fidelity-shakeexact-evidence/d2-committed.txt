@@ -1,0 +1,19 @@
+=== u15-turret-spit
+game: 101 sampled tick(s) of 101; split=true; unsampled spans: none
+model: {"exactViews":5,"bandOpens":0,"split":true}
+join: 100 sample(s); shaking frames 4 (exact and equal 4); point 100 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== r9-solve-0-v3
+game: 314 sampled tick(s) of 314; split=true; unsampled spans: none
+model: {"exactViews":60,"bandOpens":0,"split":true}
+join: 313 sample(s); shaking frames 0 (exact and equal 0); point 313 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== u14-moonrock-beam
+game: 21 sampled tick(s) of 21; split=true; unsampled spans: none
+model: {"exactViews":60,"bandOpens":0,"split":true}
+join: 20 sample(s); shaking frames 0 (exact and equal 0); point 20 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== u14-moonrock-beam --off
+model: {"exactViews":0,"bandOpens":1,"split":true}
+join: 20 sample(s); shaking frames 0 (exact and equal 0); point 1 equal / 0 unequal; band 19 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree

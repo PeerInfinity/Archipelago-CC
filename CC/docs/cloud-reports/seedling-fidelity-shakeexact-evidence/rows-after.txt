@@ -1,0 +1,3 @@
+passed 3523 failed 1 skipped 0 files 106
+tapeRunner pairs 635 md5 88fc7df4dd05d11dfd84ebbea675cc8e
+  ✗ frontend/modules/seedlingDemo/fidelityLapseCost.test.js :: LAPSECOST D1 — the narrow strike policy ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) :: Error: STACK_TRACE_ERROR

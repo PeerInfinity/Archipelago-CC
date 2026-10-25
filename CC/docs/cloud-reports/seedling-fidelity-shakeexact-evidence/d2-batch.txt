@@ -1,0 +1,36 @@
+=== rebootshake-l41-part0-damage
+model: {"exactViews":10,"bandOpens":1,"split":true}
+join: 1541 sample(s); shaking frames 10 (exact and equal 10); point 1510 equal / 0 unequal; band 31 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== bombpusher-l41-part0-damage
+model: {"exactViews":10,"bandOpens":1,"split":true}
+join: 1540 sample(s); shaking frames 10 (exact and equal 10); point 1509 equal / 0 unequal; band 31 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== bombpusher-l42-part0-damage
+model: {"exactViews":11,"bandOpens":1,"split":true}
+join: 1596 sample(s); shaking frames 10 (exact and equal 10); point 1579 equal / 0 unequal; band 17 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== wandhold-l42-371-paced
+model: {"exactViews":0,"bandOpens":0,"split":true}
+join: 1663 sample(s); shaking frames 0 (exact and equal 0); point 1662 equal / 1 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+FAIL: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== wandhold-l41-368-paced
+model: {"exactViews":0,"bandOpens":0,"split":true}
+join: 1593 sample(s); shaking frames 0 (exact and equal 0); point 1592 equal / 1 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+FAIL: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== movingwait-l42-381-pace
+model: {"exactViews":0,"bandOpens":0,"split":true}
+join: 1148 sample(s); shaking frames 0 (exact and equal 0); point 1148 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== k2prep-l75-grenade-lavarunner
+model: {"exactViews":5,"bandOpens":0,"split":true}
+join: 197 sample(s); shaking frames 4 (exact and equal 4); point 197 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== k2prep-l75-chain-lavarunner
+model: {"exactViews":15,"bandOpens":0,"split":true}
+join: 378 sample(s); shaking frames 12 (exact and equal 12); point 378 equal / 0 unequal; band 0 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
+=== bombblast-l40-bw-idle
+model: {"exactViews":10,"bandOpens":1,"split":true}
+join: 1533 sample(s); shaking frames 10 (exact and equal 10); point 1431 equal / 0 unequal; band 102 inside / 0 outside; clock unequal 0; walk unequal 0
+PASS: every sampled camera is the game's (point at 0 px, or band containing it), the clock and the walk agree
