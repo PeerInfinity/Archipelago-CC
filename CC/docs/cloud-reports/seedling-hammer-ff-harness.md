@@ -161,7 +161,7 @@ So no row was written for it. The code path is the same lookup as `expected`'s.
 | `generate-docs-index --check` | OK |
 | `derive-seedling-tick0 --check` | ALL CHECKS PASSED |
 | `seedling-bot-log.md` | `### Seedling hammer-phase FF-HARNESS — the tape solver's recorder follows a rewound run` |
-| **CI JSUT** | run `40225715353` at `0556c4fb` — PENDING at this commit; the next commit records it |
+| **CI JSUT** | run **`40225715353`** at `0556c4fb` (the last code commit; later commits are this report only): **success**. Suite (unfiltered, quoted from CI per ⚖ 52) **22824 passed, 0 failed, 0 skipped** over 954 files (3 shards); **slow battery 268 / 268** over 23 files |
 
 ## 8. What the planner's harvest A/B should expect
 
