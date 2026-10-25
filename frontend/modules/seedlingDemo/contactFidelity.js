@@ -1335,7 +1335,7 @@ export const CONTACT_FIDELITY = {
      * for the crossing; the walk is certified by the same `probeSamples`, and an uncertified lane falls through to the
      * stall grid, its reason named. OFF: byte-identical. `SEEDLING_BEAM_LANE_WALK=0|1`.
      */
-    beamLaneWalk: false,
+    beamLaneWalk: true,
     /**
      * fidelity TURRETCIRCLE D1 (wave 29) — AN ICE TURRET'S BLAST STOPS ON THE PLAYER'S SHIELD. `IceTurretBlast.hitables`
      * is `["Player", "Tree", "Solid", "Shield"]` (`IceTurretBlast.as:17`), and `Player.addShield` adds a `"Shield"`
@@ -1345,7 +1345,7 @@ export const CONTACT_FIDELITY = {
      * shielded player was hit by blasts the game stops. ON: `stepBlastsNow` passes the shield box. OFF: byte-identical.
      * `SEEDLING_ICE_BLAST_SHIELD=0|1`.
      */
-    iceBlastShield: false,
+    iceBlastShield: true,
     /**
      * fidelity TURRETCIRCLE D2 (wave 29) — THE PLAIN SWORD KILLS AN ICE TURRET ON THE MOVE. ⚖ The user (2026-10-24):
      * *"The way to not get hit is to keep moving while attacking. Keep circling around the turret."* No standing Sword
@@ -1356,7 +1356,7 @@ export const CONTACT_FIDELITY = {
      * first corner; none hitless ⇒ refused by name. OFF: byte-identical (the Sword alone refuses as before).
      * `SEEDLING_TURRET_CIRCLE_KILL=0|1`.
      */
-    turretCircleKill: false,
+    turretCircleKill: true,
     /**
      * fidelity TURRETCIRCLE D3 (wave 29) — AN ICE TURRET'S DEATH STOPS ITS SHOT. `IceTurret.death()`'s first call does
      * `play("dead")` (`IceTurret.as:135-151`), which resets the Spritemap's clock onto a rate-0 animation, so a
@@ -1365,7 +1365,7 @@ export const CONTACT_FIDELITY = {
      * running, so a corpse could fire (game-measured: `turretcircle-l40-t2-holder-sword` t70, no blast on the game, three
      * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
      */
-    iceTurretDeathAnim: false,
+    iceTurretDeathAnim: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
