@@ -26,6 +26,7 @@ import {
     entitySemantics,
     entitySealedTiles,
     entityFootprint,
+    BLOCK_SINK_LABELS,
     SEEDLING_TILE_SIZE as TILE,
 } from './seedlingSemantics.js';
 
@@ -204,6 +205,8 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
                 return level ? seedlingLevelEntities(level, options.resolveCondition, { grid }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
+            // ⛓ BLOCK SINKS: a grid cell of the terrain a pushed block sinks into (water, lava, pit).
+            blockSinkCell: (cell) => (cell.labels ?? []).some((l) => BLOCK_SINK_LABELS.includes(l)),
         } : {}),
     };
 }

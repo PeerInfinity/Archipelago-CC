@@ -444,6 +444,10 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.entry_gates !== undefined) {
         world.entryGates = checkEntryGates(sidecar.entry_gates, obstacleLib, width, height, 'deserializeMazeWorld');
     }
+    // ⛓ BLOCK SINKS: absent on every other sidecar, so `world.blockSinks` stays undefined and a push never sinks.
+    if (sidecar.block_sinks !== undefined) {
+        world.blockSinks = checkBlockSinks(sidecar.block_sinks, width, height, 'deserializeMazeWorld');
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -700,6 +704,42 @@ function shutEntryAt(world, x, y, dir, inv, clearanceOpts) {
 }
 
 /** Does any entry gate stand on entering (x, y) moving `dir`? A pushed block never crosses one (it carries nothing). */
+/**
+ * ⛓ BLOCK SINKS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Sink from grid terrain"): the cells a pushed
+ * block SINKS into — `[{x, y}]`. Seedling's `PushableBlock` is destroyed when it comes to rest on water, lava or a pit
+ * (`PushableBlock.as`: tile t 1 / 17 / 6 → `destroy = true`; water is a "Tile", not "Solid", so the block slides in).
+ * A block pushed onto a sink cell is REMOVED from `state.blocks` for this visit (blocks are per visit); the cell keeps
+ * whatever gate it has for the player (the water stays water). A sink cell takes the block whatever its own obstacle
+ * says — the projection lays sinks only on terrain the game's block enters. Entry gates and walls still refuse it.
+ * Returns the Set of posKeys.
+ */
+export function checkBlockSinks(sinks, width, height, who) {
+    const bad = (why) => new Error(`${who}: "block_sinks" ${why}`);
+    if (!Array.isArray(sinks)) throw bad('must be a list');
+    const out = new Set();
+    for (const c of sinks) {
+        if (!Number.isInteger(c?.x) || !Number.isInteger(c?.y) || c.x < 0 || c.y < 0 || c.x >= width || c.y >= height) {
+            throw bad(`cell ${JSON.stringify(c)} is not a cell of the ${width}x${height} grid`);
+        }
+        const key = posKey(c.x, c.y);
+        if (out.has(key)) throw bad(`lists (${c.x},${c.y}) twice`);
+        out.add(key);
+    }
+    return out;
+}
+
+/** True iff a block pushed onto (x, y) sinks there (see `checkBlockSinks`). */
+export function sinksBlock(world, x, y) {
+    return world.blockSinks?.has(posKey(x, y)) ?? false;
+}
+
+/** The blocks after the one at `from` is pushed to `to`: moved, or GONE when `to` sinks it. Sorted. */
+export function blocksAfterPush(world, blocks, from, to) {
+    const { x, y } = unposKey(to);
+    const out = sinksBlock(world, x, y) ? blocks.filter((k) => k !== from) : blocks.map((k) => (k === from ? to : k));
+    return out.sort();
+}
+
 function hasEntryGate(world, x, y, dir) {
     return world.entryGates?.has(`${x},${y},${dir}`) ?? false;
 }
@@ -786,6 +826,9 @@ export function serializeMazeEntities(world) {
             const [x, y, dir] = key.split(',');
             return { x: Number(x), y: Number(y), dir, gate };
         });
+    }
+    if (world.blockSinks?.size) {
+        out.block_sinks = [...world.blockSinks].map(unposKey).sort(rowMajor);
     }
     return out;
 }
@@ -1252,7 +1295,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
             if (!isFloor(world, bx, by)) return null;
             const beyondKey = posKey(bx, by);
             if (state.blocks.includes(beyondKey)) return null;
-            if (shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
+            if (!sinksBlock(world, bx, by) && shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
                 return null;
             }
             if (hasEntryGate(world, bx, by, input)) return null;
@@ -1265,10 +1308,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     next.player_pos.y = ny;
     next.turn += 1;
     if (next.facing !== undefined) next.facing = input;
-    if (pushedFrom !== null) {
-        next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
-        next.blocks.sort();
-    }
+    if (pushedFrom !== null) next.blocks = blocksAfterPush(world, next.blocks, pushedFrom, pushedTo);
     // ⛓ ARROW TRAPS — LAST, on the stance AFTER the move (see `armedTrapAt`).
     if (world.trapLanes && armedTrapAt(world,
         effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken), nx, ny) !== null) {
@@ -1407,7 +1447,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         }
         if (!isFloor(world, bx, by)) return `${cannot}: beyond is a wall`;
         if (state.blocks.includes(posKey(bx, by))) return `${cannot}: beyond is a block`;
-        const beyond = shutObstacleAt(world, state, bx, by, inv, clearanceOpts);
+        const beyond = sinksBlock(world, bx, by) ? null : shutObstacleAt(world, state, bx, by, inv, clearanceOpts);
         if (beyond !== null) {
             return `${cannot}: ${shutBecause(world, beyond, inv)}`;
         }
@@ -1417,7 +1457,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         // `step`'s last guard, on the stance after the move (a push moves the block too).
         let blocks = state.blocks;
         if (blocks !== undefined && blocks.includes(posKey(nx, ny))) {
-            blocks = blocks.map((k) => (k === posKey(nx, ny) ? posKey(nx + delta.dx, ny + delta.dy) : k));
+            blocks = blocksAfterPush(world, blocks, posKey(nx, ny), posKey(nx + delta.dx, ny + delta.dy));
         }
         const after = effectiveInventory(world, carried, { x: nx, y: ny }, blocks, state.broken);
         const trap = armedTrapAt(world, after, nx, ny);

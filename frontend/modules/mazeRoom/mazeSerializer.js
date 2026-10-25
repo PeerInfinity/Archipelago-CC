@@ -68,8 +68,8 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
  * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope), `entry_gates`
- * (session tile-primitives-water-exits) and `shared_world` on the ONE payload a level world carries
- * (every other sub-region of that level is a payload-less alias entry — see
+ * (session tile-primitives-water-exits), `block_sinks` (session tile-primitives-sphere-order-1) and
+ * `shared_world` on the ONE payload a level world carries (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
  */
@@ -227,6 +227,14 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
                 gate: Object.freeze({ type: ['string', 'null'] }),
             }, ['dir', 'gate']),
         }),
+    }),
+    block_sinks: Object.freeze({
+        type: 'array', required: false,
+        description: 'Block sinks (session tile-primitives-sphere-order-1) `{x, y}`: a block pushed onto one of these cells '
+            + 'SINKS — it leaves `state.blocks` for the visit — whatever the cell\'s own clearance (Seedling\'s water, lava, '
+            + 'pit: `PushableBlock.as` destroys the block there). Read through `checkBlockSinks`. Written by `projectLevelWorld` '
+            + 'from the analysis grid in a world with a block; omitted when there are none.',
+        schema: Object.freeze({ items: atXY({}, []) }),
     }),
     shared_world: Object.freeze({
         type: 'object', required: false, derived: true,

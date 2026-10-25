@@ -1338,6 +1338,18 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     }
     const entryGates = levelWorldEntryGates(builder, grid, claimed, resolveCondition, refused,
         (n) => note({ ...n, tile: [n.tile[0] + ox, n.tile[1] + oy] }));
+    // ⛓ BLOCK SINKS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Sink from grid terrain"): in a world with a
+    // block, every floored terrain cell the game's block sinks into (`ctx.blockSinkCell`: Seedling's water, lava, pit) —
+    // L8's lane block is shoved into the water to clear the lane. An entity's cell is the entity's, never a sink.
+    const blockSinks = [];
+    if (blocks.length > 0 && typeof ctx.blockSinkCell === 'function') {
+        for (let y = 0; y < grid.height; y += 1) {
+            for (let x = 0; x < grid.width; x += 1) {
+                if (claimed.has(keyOf(x, y)) || !builder.isFloor(x, y)) continue;
+                if (ctx.blockSinkCell(grid.cells[y * grid.width + x])) blockSinks.push({ x, y });
+            }
+        }
+    }
 
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;
@@ -1362,6 +1374,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
         ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         ...(entryGates.length > 0 ? { entry_gates: entryGates } : {}),
+        ...(blockSinks.length > 0 ? { block_sinks: blockSinks } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),

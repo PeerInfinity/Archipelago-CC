@@ -253,6 +253,15 @@ export const TILE_TYPE_SEMANTICS = Object.freeze({
     },
 });
 
+/**
+ * ⛓ BLOCK SINKS (session tile-primitives-sphere-order-1, ⚖ 2026-10-25 "Sink from grid terrain") — the tile types a
+ * pushed block is DESTROYED on: water, lava, pit (`PushableBlock.as:81`, `PushableBlockFire.as:43`: `myTile.t == 1 ||
+ * myTile.t == 17 || myTile.t == 6` → `destroy = true`). Water and lava are type "Tile", not "Solid" (`Tile.as` `types`),
+ * so the block slides onto them. `BLOCK_SINK_LABELS` are those types' analysis-grid labels, the form the grid carries.
+ */
+export const BLOCK_SINK_TILE_TYPES = Object.freeze([1, 17, 6]);
+export const BLOCK_SINK_LABELS = Object.freeze(BLOCK_SINK_TILE_TYPES.map((t) => TILE_TYPE_SEMANTICS[t].label));
+
 /** The tile type a tileset column places, or null for an unmapped column. */
 export function tileTypeForColumn(column) {
     return TILE_COLUMN_TO_TYPE[column] ?? null;

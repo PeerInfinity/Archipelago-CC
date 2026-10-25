@@ -14,6 +14,8 @@
  *   lane   — ARROW TRAPS: the player may not END a move on a cell of an armed lane
  *            condition: tileLib.trap.armed, asked of the destination with the stance AFTER the move
  *   cut    — ROPES: a rope obstacle activates its group token while cut      condition: tileLib.rope.cut
+ *   sink   — BLOCK SINKS: a block pushed onto a sink cell is removed (the push primitive's effect); the
+ *            `block_may_enter` condition lets it in through `tile.sink` whatever the cell's own clearance
  *   entry  — ENTRY GATES: entering a cell MOVING one way (a waterfall climbed north) needs its gate; read by
  *            the enter / push conditions through `tile.entry` (the gate's combos for THIS move's direction)
  *
@@ -24,6 +26,7 @@
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
     INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory, actionItems, actionUsable,
+    blocksAfterPush, sinksBlock,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -95,6 +98,8 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         // ROPES: the event a cut of this obstacle is (null when it is not a rope).
         event: rope?.activates ? (rope.event ?? null) : null,
         entry,
+        // BLOCK SINKS: a block pushed here sinks (water, lava, a pit).
+        sink: sinksBlock(world, x, y),
     };
 }
 
@@ -248,10 +253,8 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     next.player_pos = { x: nx, y: ny };
     next.turn += 1;
     if (next.facing !== undefined) next.facing = input;
-    if (pushedFrom !== null) {
-        next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
-        next.blocks.sort();
-    }
+    // ⛓ BLOCK SINKS: the push primitive's effect — onto a sink cell the block is gone (the helper said it may enter).
+    if (pushedFrom !== null) next.blocks = blocksAfterPush(world, next.blocks, pushedFrom, pushedTo);
     if (world.trapLanes && scriptedStandsInArmedLane(world, next, helpers, tileLib)) {
         return { next: null, refused: { primitive: 'lane', cell: { x: nx, y: ny }, helper: tileLib.trap.armed } };
     }

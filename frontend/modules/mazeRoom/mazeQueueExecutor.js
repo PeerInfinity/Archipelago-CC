@@ -31,6 +31,7 @@ import {
     facingAfterBump,
     getItem,
     getObstacle,
+    sinksBlock,
     step,
     turnInput,
     useInput,
@@ -452,7 +453,9 @@ export function deriveRequires(world, startState, actions) {
             const cells = [target];
             const pushed = Array.isArray(engine.blocks)
                 && engine.blocks.includes(`${target.x},${target.y}`);
-            if (pushed) cells.push(intendedTileFor(target, dir));
+            // ⛓ BLOCK SINKS: a block pushed onto a sink cell enters whatever its clearance — nothing is needed there.
+            const beyond = pushed ? intendedTileFor(target, dir) : null;
+            if (beyond && !sinksBlock(world, beyond.x, beyond.y)) cells.push(beyond);
             for (const cell of cells) {
                 const obstacleId = getObstacle(world, cell.x, cell.y);
                 const lib = obstacleId ? world.obstacleLib?.[obstacleId] : undefined;
