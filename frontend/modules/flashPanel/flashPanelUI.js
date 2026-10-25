@@ -143,7 +143,9 @@ function hasFlashPlayer() {
 function ensureRuffleLoaded() {
   if (typeof window === 'undefined') return Promise.resolve();
   if (hasFlashPlayer()) return Promise.resolve();
-  if (window.RufflePlayer) return Promise.resolve();
+  // ⛓ `newest` is the loaded Ruffle. A bare `window.RufflePlayer = { config }` is Ruffle's documented way to
+  // configure it BEFORE its script loads (the script keeps that config) — not a loaded Ruffle to skip the load for.
+  if (window.RufflePlayer?.newest) return Promise.resolve();
   if (rufflePromise) return rufflePromise;
 
   rufflePromise = new Promise((resolve, reject) => {
