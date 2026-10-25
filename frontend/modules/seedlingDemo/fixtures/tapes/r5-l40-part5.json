@@ -2,7 +2,7 @@
   "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-part5",
-  "description": "⛓⛓⛓ THE FIRST KILL THIS MODEL PREDICTS, AND THE LINK IT OPENS. From the L40 arrival: the t3 room latch, then a stance 112 px inside `iceturret@472,400`'s attack range, three sword presses at the 31-tick i-frame cadence, and two `fire.bumps` presses that put the 16x16 corpse on `button@480,384 {t 2}`. ⛔ `L40_ARRIVAL_BREAK` says the chain from this arrival stops at link 4 because \"no block in the level can reach\" that button; a corpse is not a block, and the kill stance is inside the links-1-3 component — so the walk that opens link 4 does not need link 4. ⛔⛔ `IceTurret.death()` intercepts the removal, so the kill moves NO `classCount` and writes NO persistence: the ONLY witness that it died is the button going down.",
+  "description": "⛓⛓⛓ THE FIRST KILL THIS MODEL PREDICTS, AND THE LINK IT OPENS. From the L40 arrival: the t3 room latch, then a stance 112 px inside `iceturret@472,400`'s attack range, three sword presses at the 31-tick i-frame cadence, and two `fire.bumps` presses that put the 16x16 corpse on `button@480,384 {t 2}`. ⛔ `L40_ARRIVAL_BREAK` says the chain from this arrival stops at link 4 because \"no block in the level can reach\" that button; a corpse is not a block, and the kill stance is inside the links-1-3 component — so the walk that opens link 4 does not need link 4. ⛔⛔ `IceTurret.death()` intercepts the removal, so the kill moves NO `classCount` and writes NO persistence: the ONLY witness that it died is the button going down. ⛓ L40REREC (wave 31): the second press stands ONE TILE NEARER, at (488,424) — from (488,440) the flame does not reach the corpse on the game (p4g; `fireLiveTurretReach`) — so the t2 group opens on the game too.",
   "boot": {
     "level": 40,
     "x": 480,
@@ -47,7 +47,7 @@
   "pins": [
     "dead_frames"
   ],
-  "tick_count": 1978,
+  "tick_count": 2018,
   "inputs": [
     {
       "key": "right",
@@ -470,9 +470,44 @@
       "to": 1757
     },
     {
-      "key": "primary",
+      "key": "up",
       "from": 1797,
-      "to": 1798
+      "to": 1808
+    },
+    {
+      "key": "down",
+      "from": 1808,
+      "to": 1809
+    },
+    {
+      "key": "up",
+      "from": 1809,
+      "to": 1810
+    },
+    {
+      "key": "down",
+      "from": 1810,
+      "to": 1811
+    },
+    {
+      "key": "up",
+      "from": 1811,
+      "to": 1812
+    },
+    {
+      "key": "primary",
+      "from": 1816,
+      "to": 1817
+    },
+    {
+      "key": "down",
+      "from": 1857,
+      "to": 1871
+    },
+    {
+      "key": "up",
+      "from": 1872,
+      "to": 1874
     }
   ]
 }

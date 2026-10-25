@@ -8379,6 +8379,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -8406,7 +8407,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "plan-seedling-l40button-witness — Seedling fidelity L40BUTTON (wave 12), D3: the solver's own plan for `Level 040 - Totem Part 64,144` from L40's two NORTH arrivals (sweep-4 legs 378 and 381), written as roster tapes for `check-seedling-bot-differential --record` to record on the game (p4f) and for the model to repr…",
+            "oneLiner": "plan-seedling-l40button-witness — Seedling fidelity L40BUTTON (wave 12), D3: the solver's own plan for `Level 040 - Totem Part 64,144` from L40's two NORTH arrivals (sweep-4 legs 378 and 381), written as roster tapes for `check-seedling-bot-differential --record` to record on the game (p4f; re-recorded on p4g, damag…",
             "path": "scripts/procgen/plan-seedling-l40button-witness.mjs"
         },
         {
