@@ -298,7 +298,7 @@ describe('the talking NPC\'s box, the game\'s way (`Game.talk()`, `Game.as:1726-
         expect(effectSkinView(run)).toMatchObject({ dialogue: null, talkState: NO_TALKING_NPC_STATE });
         expect(effectSkinView(talkingRun(null))).toMatchObject({ dialogue: null, talkState: null });
         expect(EFFECT_COVERAGE.drawn.some((d) => d.startsWith('NPC dialogues + portraits'))).toBe(true);
-        expect(EFFECT_COVERAGE.remaining).toContain('the FinalBoss owl portrait (no run state)');
+        expect(EFFECT_COVERAGE.drawn).toContain("the Owl's intro + its portrait (talkingNow 'owlIntro'; G6)");
     });
 
     it('⛓ the tables are the AS3: who assigns `myPic`, and who sets `align = "CENTER"`', () => {

@@ -568,6 +568,18 @@ export const LEDGER_KIND_NAMES = Object.freeze([
  */
 const PREVIEW_DAMAGE = Symbol('previewDamage');
 
+/** ⛓ JS G6: the Owl's intro line (`FinalBoss.as:89`). */
+export const OWL_INTRO_TEXT = 'EEEEP!';
+/**
+ * ⛓ JS G6: `Game.talk()`'s type-out (`Game.as:1689-1696`) after `n` renders of the Owl's intro. The setter zeroed
+ * `currentCharacter` on the first (the text changed from ""); `framesThisCharacter` is fresh (the intro starts on the
+ * room's first frame, a world swap: `INITIAL_FRAMES_THIS_CHARACTER`); `framesPerCharacter` is the default 4
+ * (`Game.as:654`) — ⚠ a named BAND: the Owl never writes it, and every talker restores it on its end (`NPC.as:259`).
+ * The closed form of `stepDialogue`'s render arm (pinned against it).
+ */
+export const owlIntroTyped = (n) => (n <= INITIAL_FRAMES_THIS_CHARACTER ? 0
+    : 1 + Math.floor((n - INITIAL_FRAMES_THIS_CHARACTER - 1) / (4 + 1)));
+
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY DIGEST (D2) — **A VALUE'S CANONICAL TEXT**, the one spelling `run.stateDigest()` hashes.
  *
@@ -19078,6 +19090,19 @@ export function createLevelRun({
             if (a?.npc?.d && !a.npc.d.done) return row('bobBoss', null, 'bobboss', a.npc.d, { form: a.npc.form });
             const intro = lightsFights.get(level)?.intro;
             if (intro?.talking && intro.d && !intro.d.done) return row('lightsIntro', null, 'lightboss', intro.d);
+            // ⛓ JS G6 (cleared by fidelity-12, 2026-10-24): the Owl's intro. `FinalBoss.update()` re-sets `Game.talking` /
+            // `talkingText = "EEEEP!"` / `talkingPic` every frame while `!started` (:87-91); the X release that ends it
+            // clears them in the same update, so no talk is drawn then.
+            // ⛔ READ-ONLY: `.get()` on `finalBossStates` (never `owlStateFor`), and a backwards scan of `owlTicks` — builds nothing.
+            for (const b of finalBossStates.get(level)?.values() ?? []) {
+                if (b.started || b.destroy) continue;
+                let n = 0; // this visit's intro frames so far: the trailing run of `owlTicks` rows on this level in phase 'intro'
+                for (let i = owlTicks.length - 1; i >= 0 && owlTicks[i].level === level && owlTicks[i].phase === 'intro'; i -= 1) n += 1;
+                if (n > 0) {
+                    return { source: 'owlIntro', id: b.id, tag: 'finalboss', page: 0, pages: 1, text: OWL_INTRO_TEXT,
+                        currentCharacter: owlIntroTyped(n) };
+                }
+            }
             return null;
         },
         get ceremonyNow() {
