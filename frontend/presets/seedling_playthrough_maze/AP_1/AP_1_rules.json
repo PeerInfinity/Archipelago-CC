@@ -508,7 +508,15 @@
       },
       "level_16__r4c21": {
         "name": "level_16__r4c21",
-        "exits": [],
+        "exits": [
+          {
+            "name": "level_16__r4c21 -> level_18__r1c1",
+            "connected_region": "level_18__r1c1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
         "locations": []
       },
       "level_16__r6c8": {
@@ -621,6 +629,93 @@
           }
         ]
       },
+      "level_18__r1c1": {
+        "name": "level_18__r1c1",
+        "exits": [
+          {
+            "name": "level_18__r1c1 -> level_18__r7c10",
+            "connected_region": "level_18__r7c10",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_18__r1c1 -> level_16__r4c21",
+            "connected_region": "level_16__r4c21",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_18__r7c10": {
+        "name": "level_18__r7c10",
+        "exits": [
+          {
+            "name": "level_18__r7c10 -> level_18__r1c1",
+            "connected_region": "level_18__r1c1",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Shield",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
       "Menu": {
         "name": "Menu",
         "exits": [
@@ -705,7 +800,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-ba90183f",
+      "atlas_id": "seedling-868aab48",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -1126,6 +1221,17 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_112_64"
+            },
+            {
+              "exit_id": "level_16__r4c21 -> level_18__r1c1",
+              "x": 22,
+              "y": 5,
+              "side": null,
+              "exitName": "level_16__r4c21 -> level_18__r1c1",
+              "targetRegion": "level_18__r1c1",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_352_80"
             },
             {
               "exit_id": "level_16__r1c9 -> level_17",
@@ -1626,6 +1732,181 @@
           "obstacleLib": {},
           "atlas_region": "level_17",
           "level": 17,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_18__r1c1": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 12,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_18__r1c1 -> level_16__r4c21",
+              "x": 1,
+              "y": 1,
+              "side": null,
+              "exitName": "level_18__r1c1 -> level_16__r4c21",
+              "targetRegion": "level_16__r4c21",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_16_16"
+            },
+            {
+              "exit_id": "level_18__r1c1 -> level_18__r7c10",
+              "x": 9,
+              "y": 7,
+              "side": null,
+              "exitName": "level_18__r1c1 -> level_18__r7c10",
+              "targetRegion": "level_18__r7c10",
+              "targetExitId": "level_18__r7c10 -> level_18__r1c1",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r7c10"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_18",
+          "atlas_sub_region": "r1c1",
+          "level": 18,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_18__r7c10": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 12,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 10,
+            "y": 7
+          },
+          "exits": [
+            {
+              "exit_id": "level_18__r7c10 -> level_18__r1c1",
+              "x": 9,
+              "y": 7,
+              "side": null,
+              "exitName": "level_18__r7c10 -> level_18__r1c1",
+              "targetRegion": "level_18__r1c1",
+              "targetExitId": "level_18__r1c1 -> level_18__r7c10",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c1"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 9,
+              "y": 7,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "(Progressive Shield x2 OR Ghost Spear OR Progressive Sword OR Wand)",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Or",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Shield",
+                      "count": 2
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Sword"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Wand"
+                    }
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_18",
+          "atlas_sub_region": "r7c10",
+          "level": 18,
           "tile_size": 16,
           "origin": {
             "x": 0,

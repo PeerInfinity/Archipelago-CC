@@ -71,7 +71,7 @@ describe('L15 level world — the oracle crossing r1c5 → r1c9', () => {
  * The preset's growth (⚖ "L14 + L16", user 2026-10-21; session tile-primitives-levels-gap3) — the default
  * tier's cut. The whole preset at every subset is the slow file.
  */
-describe('L13–L17 — the doors and the second level world', () => {
+describe('L13–L18 — the doors and the second level world', () => {
     // ⛓ rules-rope-events (⚖ user 2026-10-22 "Land with exact exemptions"): the L16 rope lane splits the level, so
     // the rocks crossing leaves from r1c9 (atlas row r1c9 → r4c21 = Or(Sword, Ghost Spear)) — still a weapon,
     // never Swim alone. r1c1 reaches r4c21 only THROUGH the rope-gated r1c9.
@@ -86,8 +86,10 @@ describe('L13–L17 — the doors and the second level world', () => {
     // item"), which restores what the named gap "the missing rope event location" (rules-rope-events) cut off: from
     // the start, holding every real item, L16's four rope-gated sub-regions, L17 and its placed Seal were
     // unreachable. Now everything is — and the gate is real: without Sword, Spear or Fire exactly that set stays cut
-    // off. The completion condition is constant, so the goal is untouched.
-    const RESTORED_REGIONS = ['level_16__r1c9', 'level_16__r3c7', 'level_16__r4c21', 'level_16__r6c8', 'level_17'];
+    // off. The completion condition is constant, so the goal is untouched. L18 (session tile-primitives-grow-l18) is
+    // entered only from r4c21, so it joins that set.
+    const RESTORED_REGIONS = ['level_16__r1c9', 'level_16__r3c7', 'level_16__r4c21', 'level_16__r6c8', 'level_17',
+        'level_18__r1c1', 'level_18__r7c10'];
     const reachFromStart = (items) => {
         const REGIONS = RULES.regions['1'];
         const inv = new Set(items);

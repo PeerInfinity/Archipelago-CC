@@ -53,7 +53,7 @@ const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 
 /** ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above). */
-export const LEVELS = Object.freeze(['level_13', 'level_14', 'level_15', 'level_16', 'level_17']);
+export const LEVELS = Object.freeze(['level_13', 'level_14', 'level_15', 'level_16', 'level_17', 'level_18']);
 
 /**
  * Where the preset starts while the playthrough's own start (level_0) is not listed. Pinned rather than "the
