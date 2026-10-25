@@ -1376,7 +1376,7 @@ export const CONTACT_FIDELITY = {
      * (it never closes inside a visit), `shakeAcrossLoad`'s fade and the `rebootShake` settle (`levelRun`'s
      * `CAMERA_BAND_KEPT`). OFF: byte-identical. `SEEDLING_SHAKE_EXACT_SPLIT=0|1`.
      */
-    shakeExactSplit: false,
+    shakeExactSplit: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
