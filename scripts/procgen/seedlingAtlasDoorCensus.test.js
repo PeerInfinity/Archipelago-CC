@@ -77,22 +77,27 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // sub-regions, 9 -> 6 exits): 54 -> 52 with a subgraph, 198 -> 194, 292 -> 288; no swim count moves.
         // ⛓ rules-location-crossing — restamped (9570dca8 -> 80dfce70): L19's Boss Key 0 is charged the Sword (it lies
         // inside the ShieldBoss body) and L113's annotation reads `manual`; no door, sub-region or exit count moves.
-        expect(c.atlasId).toBe('seedling-80dfce70');
+        // ⛓ rules-l55-waterfall — restamped (80dfce70 -> 65de70ba): all-water L52 is floored by its entry gate (Swim) and
+        // splits into its three pools (+1 with a subgraph, +3 sub-regions r0c7/r2c2/r5c10, +6 internal exits: the three
+        // falls True_, the three climbs Has(Progressive Swim, 2)), so swim 201 -> 204, Has(Swim, 2) 28 -> 31, and L52
+        // joins the swim levels (21 -> 22, uncertified 16 -> 17).
+        expect(c.atlasId).toBe('seedling-65de70ba');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 52, 194, 288, 201]);
-        expect(c.swimLevels).toHaveLength(21);
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 53, 197, 294, 204]);
+        expect(c.swimLevels).toHaveLength(22);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 165 },
-            { rule: 'Has(Progressive Swim, 2)', count: 28 },
+            { rule: 'Has(Progressive Swim, 2)', count: 31 },
         ]);
     });
 
     // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above). ⛓ RULES footprints: 17 -> 16, L94 neither.
-    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 16 are BOT-UNCERTIFIED', () => {
+    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 17 are BOT-UNCERTIFIED', () => {
         expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
-        expect(c.uncertifiedLevels).toHaveLength(16);
+        // ⛓ rules-l55-waterfall: 16 -> 17, L52's pools are swim rows now (uncertified: probe-seedling-l55-waterfall.mjs is a probe, not a tape).
+        expect(c.uncertifiedLevels).toHaveLength(17);
         expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
         // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
         expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);
