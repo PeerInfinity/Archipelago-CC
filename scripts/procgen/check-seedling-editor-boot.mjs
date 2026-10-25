@@ -99,7 +99,7 @@ const bootBlock = async (page) => JSON.parse(await page.inputValue('#bootBox'));
  * into the textarea has to open it, exactly as a user would.
  */
 const openRawEditor = (page) =>
-    page.$eval('#bootPanel details', (d) => { d.open = true; });
+    page.$eval('#bootBox', (box) => { box.closest('details').open = true; });
 
 // ── ROW 1: the DEFAULT boot is the true game start ───────────────────────
 
@@ -222,6 +222,36 @@ console.log('\n## the boot form — one control per inventory item, over ONE par
     check(cleared.seam?.hits_max === undefined && cleared.seam?.items?.hasShield === true,
         '⚠ …and EMPTYING it undeclares hits_max, leaving the rest of the seam',
         JSON.stringify(cleared.seam));
+
+    // ── toggle all: every CHECKBOX item at once, health left alone ──
+    await page.fill('#bootForm-health', '4');
+    await page.dispatchEvent('#bootForm-health', 'change');
+    const boolIds = ITEM_FORM_FIELDS.filter((f) => f.type === 'boolean').map((f) => f.id);
+    const ticked = () => page.evaluate((ids) => ids.map(
+        (id) => document.getElementById(`bootForm-${id}`).checked), boolIds);
+    await page.click('#bootForm-toggleAll');
+    const allOn = await bootBlock(page);
+    check((await ticked()).every(Boolean)
+        && Object.values(allOn.seam.items).length === boolIds.length
+        && Object.values(allOn.seam.items).every((v) => v === true)
+        && allOn.seam.hits_max === 4,
+        '⛓ TOGGLE ALL from a mixed block ticks EVERY item box and writes them all true — '
+        + 'health untouched', JSON.stringify(allOn.seam));
+    await page.click('#bootForm-toggleAll');
+    const allOff = await bootBlock(page);
+    check((await ticked()).every((v) => !v)
+        && Object.values(allOff.seam.items).every((v) => v === false)
+        && allOff.seam.hits_max === 4,
+        '⛓ …and pressed again with everything ticked, it unticks every one');
+
+    // ── the section collapses, and the form is still the same DOM ──
+    check(await page.$eval('#bootItems', (el) => el.open === true),
+        '⛓ "boot items" is its own collapsible section, OPEN by default');
+    await page.click('#bootItems > summary');
+    check(await page.$eval('#bootItems', (el) => !el.open)
+        && !(await page.isVisible('#bootForm-sword')),
+        '…and clicking its summary collapses it');
+    await page.click('#bootItems > summary');
 
     // ── the refusal: a box that cannot parse disables the controls ──
     await page.fill('#bootBox', '{ not json');
