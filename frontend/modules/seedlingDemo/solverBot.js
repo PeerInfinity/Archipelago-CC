@@ -16630,6 +16630,8 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
              */
             let derived;
             let refugeTaken;
+            // ⛓ hammer-phase BX — how many of this tick's refuge candidates the shake band hid (`shakeRefused`'s delta)
+            let refugeBanded = 0;
             const nextNow = () => {
                 if (derived === undefined) {
                     /**
@@ -16649,7 +16651,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
             };
             const refugeNow = () => {
                 if (refugeTaken === undefined) {
+                    const banded = PRESS_KILL_GUARD_COUNTS.shakeRefused;
                     refugeTaken = deriveRefuge(run, contacts, Math.max(body.hitsTimer, SPINNER.hammerPeriod));
+                    refugeBanded = PRESS_KILL_GUARD_COUNTS.shakeRefused - banded;
                 }
                 return refugeTaken;
             };
@@ -16803,7 +16807,15 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                                 // ⛓ hammer-phase BW — and under `PRESS_KILL_BOMBS` a refuge a forecast blast lands on is none
                                 + (PRESS_KILL_BOMBS.enabled && bombsInPlay(run)
                                     ? ' (PRESS_KILL_BOMBS: a refuge whose walk or wait a forecast Bomb\'s Explosion '
-                                        + 'lands on is not counted.)' : ''), { code: HAMMER_SAFETY });
+                                        + 'lands on is not counted.)' : '')
+                                /**
+                                 * ⛓ hammer-phase BX — LB's hand-over 5b, second half: when `deriveRefuge` refused
+                                 * candidates for the camera's shake band (PKB's catch, `PRESS_KILL_SHAKE_GUARD`), the
+                                 * room did not run out of cells: the band hid them. Absent when none was refused.
+                                 */
+                                + (refugeBanded > 0
+                                    ? ` (PRESS_KILL_SHAKE_GUARD: ${refugeBanded} refuge candidate(s) whose preview the `
+                                        + 'camera-shake band hid are not counted.)' : ''), { code: HAMMER_SAFETY });
                         }
                     }
                 }

@@ -1,0 +1,9 @@
+# MEASURE-ONLY (scratch copy, swapped in by a node loader hook; NOT applied to the tree — solverBot.js is out of this
+# slice's scope). solverBot.js withSolveDeadline (~22248 at af699d39): carry B3's non-enumerable `liveRun` across
+# the `{ ...out, deadline }` spread a tripped deadline makes.
+@@ withSolveDeadline @@
+-        return deadline.first === null ? out : { ...out, deadline: deadlineReport(deadline) };
++        if (deadline.first === null) return out;
++        const kept = { ...out, deadline: deadlineReport(deadline) };
++        if (out?.liveRun !== undefined) Object.defineProperty(kept, 'liveRun', { value: out.liveRun });
++        return kept;
