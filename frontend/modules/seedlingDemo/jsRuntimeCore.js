@@ -136,6 +136,7 @@ import { BUILD_SPAWN, INVENTORY_ITEM_IDS, ITEM_PROPERTIES, SAVE_SLOTS } from './
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
+import { locationGoalServed } from './wasmPlayback.js';
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -397,6 +398,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         // ⛓ J3 — a real room's location is an ENTITY of the room (a chest, a
         // pickup), walked to its own stance; an apitem is still the J1 row.
         locationPointOf: (goal) => {
+            // ⛓ EVENT GOALS — the leg is the solver's `clear-tag`; the walk's own point (only walked on a decline) is the
+            // presser when the flag is pressed from this room (cross-room), else the obstacle's cell.
+            if (goal.event) return goal.event.presser ?? goal.event.at;
             // ⛔ A mounted set's locations are its apitems ONLY (validateGoal's rule).
             if (mounted) {
                 const a = (mounted.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
@@ -405,6 +409,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             return locationPointOf(locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null));
         },
         isCollected: (level, tag) => collected.has(`${level}:${tag}`) || reportedClears.has(`${level}:${tag}`),
+        // ⛓ EVENT GOALS — an event leg completes the wasm runtime's way: `wasmPlayback.locationGoalServed` over the
+        // game's cleared slots (`botStatus().persistence_cleared` — this page's `persistenceCleared()`), never on the
+        // plan finishing. Any other location keeps the J2/J3 check.
+        locationServed: (goal) => (goal.event ? locationGoalServed(goal, { persistence_cleared: persistenceCleared() })
+            : collected.has(`${goal.level}:${goal.tag}`) || reportedClears.has(`${goal.level}:${goal.tag}`)),
         onEvent: (e) => {
             note({ type: 'walk', state: e.state, message: `[js runtime] ${walker.describe()}` });
             for (const fn of walkListeners) { try { fn(e); } catch (err) { log(`[js runtime] a walk listener threw: ${err.message}`); } }
@@ -1028,11 +1037,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 + 'encounter has none — it is walked on the wasm runtime' };
         }
         if (goal.kind === 'location' && goal.event) {
-            // ⛓ EVENT GOALS — likewise: an event's check is the game's persistence flag, not a collected tag; the
-            // solver's `clear-tag` plan is the whole leg, and the wasm runtime walks it.
-            return { ok: false, reason: `"${goal.name ?? 'the location'}" is a saved-obstacle EVENT (clear-tag `
-                + `{${goal.event.tag?.level},${goal.event.tag?.tag}} ${goal.event.obstacle}): the JS page's walker completes a `
-                + 'location by its collected tag, and an event has none — it is walked on the wasm runtime' };
+            // ⛓ EVENT GOALS — the leg is the solver's `clear-tag` (`jsRuntimeSolver.solverGoalFor`, which refuses BY THE
+            // SOLVER'S REASON: `wrong-level`, `no-verb`); its check is the game's persistence flag `goal.event.tag`
+            // turning set (`locationServed`). Without the solver nothing here can clear a flag on purpose.
+            if (!Number.isInteger(goal.event.tag?.level) || !Number.isInteger(goal.event.tag?.tag)) {
+                return { ok: false, reason: `"${goal.name ?? 'the location'}" is a saved-obstacle EVENT that names no flag {level, tag}` };
+            }
+            if (!solver.enabled) {
+                return { ok: false, reason: `"${goal.name ?? 'the location'}" is a saved-obstacle EVENT (clear-tag `
+                    + `{${goal.event.tag.level},${goal.event.tag.tag}} ${goal.event.obstacle}): it is walked by the solver's `
+                    + 'clear-tag, and the solver mode is off (`flashPanel.seedlingSolverWalk`)' };
+            }
+            return { ok: true };
         }
         if (goal.kind === 'location') {
             if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };

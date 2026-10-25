@@ -263,6 +263,11 @@ registerTest({
  * cheapest orders gain most: its graph is bidirectional and direct play cannot cross a synthesized reverse exit
  * ("ServerPath has no exit "ToServerPath" in the static data", in the listed order too). The row sets its own walk
  * order and puts the viewer's back.
+ *
+ * bot-route-chooser-2a adds the opt-in modifiers: `sphere-cheapest+sweep+grab` must walk FEWER transitions than
+ * `sphere-cheapest` (offline 5 < 7: the row the sphere's pick passes is grabbed), and the two `+pocket-item` orders no
+ * more than the listed order (offline 5 and 5; Adventure has no `return_to_menu`, so no row is priced as a pocket —
+ * the pocket query itself is validated on Seedling, `probe-seedling-walk-order.mjs`).
  */
 const WALK_ORDER_RULES = './presets/adventure/AP_84719271504320872445/AP_84719271504320872445_rules.json';
 
@@ -282,7 +287,8 @@ async function playbackBotWalkOrderTest(testController) {
   bot.setTargetSource('sphere');
   const runs = {};
   try {
-    for (const order of ['sphere-in-order', 'reachable-cheapest', 'sphere-cheapest']) {
+    for (const order of ['sphere-in-order', 'reachable-cheapest', 'sphere-cheapest', 'sphere-cheapest+sweep+grab',
+      'reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab']) {
       bot.reset();
       bot.setWalkOrder(order);
       await testController.loadRulesFromFile(WALK_ORDER_RULES);
@@ -307,6 +313,14 @@ async function playbackBotWalkOrderTest(testController) {
       + `(${runs['reachable-cheapest']?.transitions} < ${listed})`, (runs['reachable-cheapest']?.transitions ?? Infinity) < listed);
     testController.reportCondition('sphere-cheapest walks no more region transitions than the listed order '
       + `(${runs['sphere-cheapest']?.transitions} ≤ ${listed})`, (runs['sphere-cheapest']?.transitions ?? Infinity) <= listed);
+    const sphere = runs['sphere-cheapest']?.transitions ?? -Infinity;
+    testController.reportCondition('sphere-cheapest+sweep+grab walks fewer region transitions than sphere-cheapest '
+      + `(${runs['sphere-cheapest+sweep+grab']?.transitions} < ${sphere})`,
+      (runs['sphere-cheapest+sweep+grab']?.transitions ?? Infinity) < sphere);
+    for (const order of ['reachable-cheapest+pocket-item', 'reachable-cheapest+pocket-item+grab']) {
+      testController.reportCondition(`${order} walks no more region transitions than the listed order `
+        + `(${runs[order]?.transitions} ≤ ${listed})`, (runs[order]?.transitions ?? Infinity) <= listed);
+    }
   } finally {
     bot.stop();
     bot.setWalkOrder(orderBefore);
@@ -319,8 +333,9 @@ registerTest({
   id: 'playback-bot-walk-order',
   name: 'Playback Bot: walk orders (Adventure, direct play)',
   description:
-    'Plays an Adventure seed to the end three times — listed order, cheapest reachable, cheapest in the sphere — and '
-    + 'asserts each finishes with every location checked, cheapest reachable in fewer region transitions.',
+    'Plays an Adventure seed to the end once per walk order — listed, cheapest reachable, cheapest in the sphere, and '
+    + 'the opt-in grab / pocket-item modifiers — and asserts each finishes with every location checked, cheapest '
+    + 'reachable and the grab in fewer region transitions.',
   testFunction: playbackBotWalkOrderTest,
   category: 'Playback Bot',
   enabled: false,

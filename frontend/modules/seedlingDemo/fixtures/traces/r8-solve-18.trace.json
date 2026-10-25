@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-solve-18",
-    "tick_count": 363,
+    "tick_count": 467,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,11 +49,11 @@
             ]
         },
         {
-            "tick": 306,
+            "tick": 420,
             "saw": {
                 "level": 18,
-                "x": 120.04696464039377,
-                "y": 38.64338968322856,
+                "x": 135.93297272780316,
+                "y": 73.51457120368384,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -70,9 +70,9 @@
                 "waypoints": 2,
                 "swordDash": {
                     "planned": true,
-                    "ticks": 57,
-                    "baseline": 110,
-                    "saved": 53,
+                    "ticks": 47,
+                    "baseline": 81,
+                    "saved": 34,
                     "windows": [
                         {
                             "at": 0,
@@ -84,15 +84,7 @@
                             ]
                         },
                         {
-                            "at": 20,
-                            "prefix": [
-                                0,
-                                2,
-                                8
-                            ]
-                        },
-                        {
-                            "at": 40,
+                            "at": 23,
                             "prefix": [
                                 0,
                                 2,
@@ -102,10 +94,10 @@
                         }
                     ],
                     "legs": [
-                        39,
-                        18
+                        26,
+                        21
                     ],
-                    "scanned": 12,
+                    "scanned": 36,
                     "why": null
                 }
             },
@@ -126,13 +118,12 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "3 of 12 scanned preview(s) — first at walk-offset 0: 110 tick(s) against 110 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "31 of 36 scanned preview(s) — first at walk-offset 0: 81 tick(s) against 81 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
                 "down",
-                "primary",
-                "right"
+                "primary"
             ]
         }
     ]

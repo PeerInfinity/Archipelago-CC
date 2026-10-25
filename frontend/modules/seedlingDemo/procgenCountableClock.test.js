@@ -46,7 +46,7 @@ import { createRunForStaging, solveStaging } from './tapeRunner.js';
 import { POST_SWORD_ITEMS } from './procgenPalette.js';
 import { SPINNER } from './spinner.js';
 // ⛓ SLICE 2c: the classifier's KEY, read from where it is stamped.
-import { HAMMER_SAFETY, SolverBotError, withHammerEscape } from './solverBot.js';
+import { HAMMER_SAFETY, SolverBotError, withHammerEscape, withStrikeEtaFloor } from './solverBot.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { parseTape } from './tapeFormat.js';
@@ -315,12 +315,15 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
      * ⛓⛓ HAMMER-PHASE A2 — `HAMMER_ESCAPE` ON by default (⚖ user 2026-10-07): a press is taken only with a
      * certified way out of its landing, and (7,2) SOLVES (measured). The row's subject is the CLASSIFICATION of a
      * hammer-safety refusal, so it asks the room with the escape OFF by the switch, where (7,2) still produces it.
+     *
+     * ⛓⛓ HAMMER-PHASE SFF — `STRIKE_ETA_FLOOR` ON by default (⚖ user 2026-10-23): (7,2) SOLVES with the escape OFF
+     * too (CI, the flip's first run). For the same reason the row asks it with the floor OFF by the switch as well.
      */
     it('a hammer-safety `SolverBotError` becomes REFUSED, text carried VERBATIM', () => {
-        const out = withHammerEscape(false, () => solveRoom(room([
+        const out = withStrikeEtaFloor(false, () => withHammerEscape(false, () => solveRoom(room([
             { type: 'lock', ...oelAtTile(5, 5), attrs: { tset: '-1', tag: '1' } },
             { type: 'spinner', ...oelAtTile(7, 2), attrs: { tag: '-1' } },
-        ])));
+        ]))));
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.errorName).toBe('SolverBotError');
         /**

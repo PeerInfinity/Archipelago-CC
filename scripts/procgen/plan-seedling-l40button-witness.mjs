@@ -93,19 +93,24 @@ export async function l40buttonStaging(boot) {
     return staging;
 }
 
-/** The ON solver's plan from `boot` (default solver behaviour restored after). */
+/**
+ * The ON solver's plan from `boot` (default solver behaviour restored after).
+ * ⚖ THE STRIKE FLOOR IS PINNED OFF HERE (hammer-phase SFF, 2026-10-23). `STRIKE_ETA_FLOOR` ships ON since SFF, and
+ * this witness is a walk the game played under the floor OFF: its solve is planned as it was recorded, so the tape
+ * stays byte-identical. ⛔ Re-recording it ON would rewrite a game-witnessed tape from the model alone.
+ */
 export async function l40buttonPlan(boot, name) {
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
-    const { withStanceRocks } = await import(join(MODULE, 'solverBot.js'));
+    const { withStanceRocks, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const staging = await l40buttonStaging(boot);
     const levelSource = atlasLevelSource();
-    const solved = await withStanceRocks(true, () => twoPassSolve({
+    const solved = await withStrikeEtaFloor(false, () => withStanceRocks(true, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: [L40BUTTON_GOAL], name, boot: staging.boot, dashMode: 'all',
         persistence: staging.persistence, log: () => {},
-    }));
+    })));
     return { staging, solved };
 }
 
@@ -119,8 +124,12 @@ export async function l40buttonPlan(boot, name) {
  * `BotDriverV2Error` on its collect stance). With both OFF at d1fbfeffc2 `--check` is green. ⛔ RETIRE THIS PIN with
  * the modelling the ON refusal names (a moving wait, or a priced bomb hit: `movingWait` / `forcedHits`) and a re-record
  * on the game — a roster move, so the user's licence.
+ * ⛓ + `spinnerLockLag` OFF (fidelity planning-12, the wave-29 L40RES flip, ⚖ user 2026-10-24 "Flip both ON"): a spinner
+ * reading a lock's turn-off one tick later (the game's update order, witnessed by L40RES at 0 px) moves both plans in
+ * this NW cluster (Producer --checks at eea1bea316: both tapes DRIFT; every other key of the flip leaves them byte-equal).
+ * Same retirement: a re-record on the game (the user's licence).
  */
-const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false });
+const PINNED_FIDELITY = Object.freeze({ bombPusherLive: false, strikeIframeLapse: false, spinnerLockLag: false });
 
 async function main() {
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));

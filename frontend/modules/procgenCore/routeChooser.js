@@ -24,9 +24,9 @@
  * an item that opens something before one that does not — and otherwise keeps the listed order, so with equal costs
  * the sphere log's own order decides. `listed` keeps the listed order only.
  *
- * ⛓ PLUG-IN POINT — the next slice's extras are written against this signature: a lookahead ranks by a cost that
- * walks two or three candidates ahead, and grab-on-the-way is a caller that passes the candidates a route already
- * crosses. Neither needs this module changed.
+ * ⛓ PLUG-IN POINT — the extras are written against this signature: a lookahead ranks by a cost that walks two or
+ * three candidates ahead (bot-route-chooser-2b), and GRAB-ON-THE-WAY (`grabOnTheWay`, bot-route-chooser-2a) is a
+ * step over the chosen candidate and the candidate list — neither changes `rankCandidates`.
  */
 
 /** The default penalty, in hops, a Restart adds to a route's score (`scripts/procgen/measure-bot-route-orders.mjs`). */
@@ -86,4 +86,44 @@ export function rankCandidates(candidates, ctx = {}) {
 /** The cheapest candidate (`rankCandidates`' first), or null when none has a route. */
 export function chooseNext(candidates, ctx = {}) {
     return rankCandidates(candidates, ctx)[0]?.candidate ?? null;
+}
+
+/**
+ * ⛓ GRAB-ON-THE-WAY (slice `bot-route-chooser-2a`) — a candidate the chosen `target`'s route passes AT NO EXTRA COST,
+ * taken first; else `target`. A candidate is on the way when going there and then on to `target` costs no more hops
+ * and no more Restarts than going to `target` directly (zero detour): `ctx.costVia(c)` prices `here → c → target` as
+ * `{hops, restarts}` (null = no such route), and it lies strictly BEFORE the target (fewer hops from here — a row in
+ * the target's own region gains nothing by going first). Of several, the NEAREST (`ctx.cost(c)`'s hops, its Restart first; ties
+ * progression-first, then listed). The goal and `target` itself are never grabbed.
+ *
+ * Applied once per choice: after the grab is checked, the caller chooses again from where it now stands — the same
+ * replay the offline twin (`scripts/procgen/routeOrders.js`, `+grab`) prices.
+ *
+ * @param {object} target `chooseNext`'s pick
+ * @param {Array<object>} candidates the rows that may be grabbed, in their listed order
+ * @param {object} ctx
+ * @param {(c: object) => ({hops: number, restart: boolean, pocket?: boolean}|null)} ctx.cost the route price from here
+ * @param {(c: object) => ({hops: number, restarts: number}|null)} ctx.costVia the price of here → c → target
+ * @param {string} [ctx.tieBreak='progression-first']
+ * @returns {object} the candidate to walk to now
+ */
+export function grabOnTheWay(target, candidates, ctx = {}) {
+    const { cost, costVia, tieBreak = TIE_BREAKS.progressionFirst } = ctx;
+    if (!target || !Array.isArray(candidates) || typeof cost !== 'function' || typeof costVia !== 'function') return target;
+    const base = cost(target);
+    if (!base || !Number.isFinite(base.hops)) return target;
+    const baseRestarts = routeRestarts(base);
+    const onTheWay = candidates.filter((c) => {
+        if (c === target || c?.goal === true) return false;
+        const own = cost(c);
+        if (!own || !(own.hops < base.hops)) return false;   // strictly before the target: a row beside it gains nothing
+        const via = costVia(c);
+        return !!via && Number.isFinite(via.hops) && via.hops <= base.hops && via.restarts <= baseRestarts;
+    });
+    if (onTheWay.length === 0) return target;
+    const near = (c) => {
+        const p = cost(c);
+        return p && { hops: p.hops, restart: p.restart };
+    };
+    return rankCandidates(onTheWay, { cost: near, tieBreak })[0]?.candidate ?? target;
 }

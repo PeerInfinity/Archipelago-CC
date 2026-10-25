@@ -235,7 +235,9 @@ on-push batch, and at most one per manual batch; deleting the line drops it.
 A batch with `pushPaths` in `testBatches.js` (today `apworld`) is on push but runs
 only when a pushed path hits its globs or the derived import closure of its rows
 (`list-test-batches.js --on-push --changed=`); `test-substrates-manual.yml` takes it
-by name (`-f batch=apworld`).
+by name (`-f batch=apworld`). Its `bundled` input (`-f bundled=true`) runs the picked
+batch on the bundled boot and then takes ANY batch by name — the manual bundled
+`seedling-js`/`apworld` legs (⚖ user, 2026-10-24); only `fast` runs bundled on push.
 
 **Budget headroom.** After each CI batch, `node scripts/test/check-batch-headroom.js
 --mode=test-substrates --batch=<b>` grades the newest results file of that batch:

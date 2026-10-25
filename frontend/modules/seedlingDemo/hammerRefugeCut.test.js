@@ -123,8 +123,8 @@ describe('REFUGE_ETA_CUT — with BW\'s PRESS_KILL_BOMBS ON (leg 381\'s MOVINGWA
             // their previews before the bombs are asked (a refused candidate never bounds the cut: the answer is OFF's)
             expect(PRESS_KILL_BOMBS_COUNTS.refugeRefused).toBe(9);
         });
-        // and with the bombs OFF the cut keeps BW's OFF answer
-        const { off, on } = both(run);
+        // and with the bombs OFF the cut keeps BW's OFF answer (pinned OFF since hammer-phase PKB flipped the bombs ON)
+        const { off, on } = withPressKillBombs(false, () => both(run));
         expect([off.x, off.y]).toEqual([232, 200]);
         expect(on).toEqual(off);
     }, 120_000);

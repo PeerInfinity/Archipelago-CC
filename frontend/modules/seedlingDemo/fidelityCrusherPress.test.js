@@ -110,7 +110,9 @@ describe('fidelity SEARCHGAPS D-A — the solver at L41', () => {
         expect(refusal.message).toMatch(/bait crusher@240,64 in level 41 — the ordering search found nothing/);
     }, 120_000);
     it('ON: the shield swing and three chains, then the room refuses at the wandlock (not this key\'s wall)', async () => {
-        const { out, refusal } = await ON(solve);
+        // ⛓ fireBlockRoute named OFF (planning-12's w29b flip): ON the solver pushes the fire block onto the wandlock's
+        // button and the part SOLVES (fidelityFireMove); this row pins the pre-FIREMOVE refusal.
+        const { out, refusal } = await withContactFidelity({ fireBlockRoute: false }, () => ON(solve));
         expect(out).toBeNull();
         const bait = refusal.rows.find((r) => r.strategy?.verb === 'bait');
         expect(bait.obstacle.id).toBe('breakablerock@224,80');

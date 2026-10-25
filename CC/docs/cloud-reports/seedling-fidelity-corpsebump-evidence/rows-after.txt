@@ -1,0 +1,2 @@
+total 4320 passed 4319 failed 1
+FAILED seedlingAtlasArm.test.js | loadSeedlingRandomizer hands the four pipeline real-room worlds to the atlas arm seedling_atlas_location is a FUNCTION of SEEDLING_ATLAS_LOCATION_STATE (the committed bytes, rebuilt headless)

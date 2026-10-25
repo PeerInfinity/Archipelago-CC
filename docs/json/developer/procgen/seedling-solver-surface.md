@@ -239,7 +239,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `strikeBodies` | `hp` | `botDriverV2`, `solverBot` |
 | `spinnerBodies` | `rebound`, `contact`, `sweep`, `hp` | `dangerMap`, `solverBot` |
 | `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `dangerMap`, `solverBot` |
-| `turrets` | `stationary`, `pushable` | `botDriverV2`, `solverBot` |
+| `turrets` | `stationary`, `pushable` | `botDriverV2`, `dangerMap`, `solverBot` |
 | `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
 | `brokenRocks` | — | `botDriverV2`, `crusherBait`, `solverBot` |
 | `crushersParked` | `lane-charge` | `botDriverV2`, `crusherBait`, `solverBot` |
@@ -261,7 +261,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `darkTraps` | `stationary`, `light` | `dangerMap`, `solverBot` |
 | `bombPushers` | `stationary`, `emitter`, `proximity` | `dangerMap`, `solverBot` |
 | `bombs` | `explode` | `dangerMap`, `solverBot` |
-| `igneousTiles` | `stationary`, `proximity` | `dangerMap` |
+| `igneousTiles` | `stationary`, `proximity` | `dangerMap`, `solverBot` |
 | `lightsFight` | `hp`, `emitter`, `contact` | `dangerMap`, `lightsVerb` |
 | `lavaBossFight` | — | `solverBot` |
 | `tentacleBeastFight` | — | `dangerMap`, `solverBot` |

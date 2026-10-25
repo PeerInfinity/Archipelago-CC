@@ -513,8 +513,10 @@ describe('who takes the box', () => {
          * the ShieldBoss body, with and without the sword, `probe-seedling-l19-bosskey.mjs`;
          * fidelity PITPORT the doors on a Pit tile (L43, L100, L58 live and shut), `probe-seedling-pit-doors.mjs`;
          * fidelity SEARCHGAPS L41's crusher bait on the game, `probe-seedling-crusher-press.mjs`;
-         * fidelity FIREPUSH the L40 pulser-shove witness, `probe-seedling-fire-push.mjs`; rules-l55-waterfall L52's
-         * pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`.)
+         * fidelity FIREPUSH the L40 pulser-shove witness, `probe-seedling-fire-push.mjs`;
+         * fidelity FIREMOVE the L41 fire-route witness, `probe-seedling-fire-move.mjs`;
+         * fidelity CORPSEBUMP the block/corpse sweep and corpse-weigh witnesses, `probe-seedling-corpse-bump.mjs`;
+         * rules-l55-waterfall L52's pools into L55, with and without the Feather, `probe-seedling-l55-waterfall.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -559,6 +561,8 @@ describe('who takes the box', () => {
             'probe-seedling-pit-doors.mjs',
             'probe-seedling-crusher-press.mjs',
             'probe-seedling-fire-push.mjs',
+            'probe-seedling-fire-move.mjs',
+            'probe-seedling-corpse-bump.mjs',
             'probe-seedling-l55-waterfall.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');

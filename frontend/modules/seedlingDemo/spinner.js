@@ -903,11 +903,13 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
  * one meaning to ask the other. `MODELLED_ENEMY_CLASSES` is still the roster;
  * this is one field of it.
  */
-export function enemiesUnseenByBlockSweep(enemies = []) {
+export function enemiesUnseenByBlockSweep(enemies = [], { seenIds = null } = {}) {
     const names = new Set();
     for (const e of enemies) {
         if (e.removed) continue;
         const as3 = e.as3 ?? e.tag;
+        // ⛓ fidelity CORPSEBUMP D1: a body the run's sweep consults by id (`run.blockSweepBodyIds`, key ON) is seen.
+        if (seenIds && seenIds.has(`${e.tag}@${e.x},${e.y}`)) continue;
         if (MODELLED_ENEMY_CLASSES[as3]?.wedgeVisible !== true) names.add(as3);
     }
     return [...names];

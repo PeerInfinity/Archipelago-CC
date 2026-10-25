@@ -1,0 +1,14 @@
+SEAM-SWEEP: leg 368: 4 distinct answer(s) over 13 seam time(s) — VARIES WITH seam.time
+  t=5280 error work=562 [dashless:179,full:383] PLAN
+  t=5281 error work=562 [dashless:179,full:383] PLAN
+  t=5282 error work=562 [dashless:179,full:383] PLAN
+  t=5283 error work=562 [dashless:179,full:383] PLAN
+  t=5284 error work=562 [dashless:179,full:383] PLAN
+  t=5285 error work=562 [dashless:179,full:383] PLAN
+  t=5286 error work=562 [dashless:179,full:383] PLAN
+  t=5287 error work=562 [dashless:179,full:383] PLAN
+  t=5288 error work=580 [dashless:179,full:401] PLAN
+  t=5289 refusal work=642 [dashless:179,full:463/kill-chaser] chaserForecast: whether bob bob@272,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that
+  t=5290 error work=551 [dashless:179,full:372] PLAN
+  t=5291 error work=551 [dashless:179,full:372] PLAN
+  t=5292 error work=551 [dashless:179,full:372] PLAN

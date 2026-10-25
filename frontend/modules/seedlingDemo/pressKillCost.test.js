@@ -21,7 +21,7 @@ import {
     STRIKE_SCAN_COST, STRIKE_SCAN_COST_COUNTS, STRIKE_SCAN_COST_DEFAULT, cellRowsOf, cellsInBox,
     resetStrikeScanCostCounts, withStrikeScanCost,
 } from './pressKillCost.js';
-import { clearOfHammersAt, deriveStrike, lineOnce, walkableCells } from './solverBot.js';
+import { clearOfHammersAt, deriveStrike, lineOnce, walkableCells, withStrikeEtaFloor } from './solverBot.js';
 import { SPINNER, spinnerRect } from './spinner.js';
 import { contactKey } from './botDriverV2.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
@@ -147,7 +147,8 @@ describe('pressKillCost — the forecast shift', () => {
     it('r9-solve-18 (presses land, bodies die): every row equal, and the shift is taken', () => {
         const { diverged, counts } = differential('r9-solve-18', 256);
         expect(diverged).toEqual([]);
-        expect(counts.forecastShifted).toBeGreaterThan(400);
+        // 400 on the floor-OFF walk; `r9-solve-18` was re-recorded under the floor ON (hammer-phase SFF): 382 there
+        expect(counts.forecastShifted).toBeGreaterThan(350);
         expect(counts.forecastCut).toBeGreaterThan(0);
     });
 
@@ -339,7 +340,13 @@ describe('strikeScanCost (P2) — derivations on L40 (C1\'s staging A), P2 ON ag
     const view = () => solveStaging(stagingFromTape(parseTape(readFileSync(
         new URL('./fixtures/hammer-p1-l40-south-boot.json', import.meta.url), 'utf8'))));
 
-    it('the kill-start derivation, then two refused ones on the same run (lines carried): the same answers', () => {
+    /**
+     * ⚖ Pinned `STRIKE_ETA_FLOOR` OFF (hammer-phase SFF flipped it ON): the second derivation was chosen because OFF's
+     * floor refuses it, and its `unreachable` counts OFF's floor's skips. ON, the bounded pass finds (728,680) there
+     * too; the sibling below holds P2 to the same answers under the floor ON.
+     */
+    it('the kill-start derivation, then two refused ones on the same run (lines carried): the same answers (the strike '
+        + 'floor OFF)', () => withStrikeEtaFloor(false, () => {
         const staging = view();
         const derivations = (on) => withPressKillCost(true, () => withStrikeScanCost(on, () => {
             const run = createRunForStaging(staging, atlasLevelSource());
@@ -361,6 +368,33 @@ describe('strikeScanCost (P2) — derivations on L40 (C1\'s staging A), P2 ON ag
         expect(on.far.unreachable).toBeGreaterThan(on.again.unreachable);
         expect(counts.lineCarried).toBeGreaterThan(50);
         expect(counts.cellsSkipped).toBeGreaterThan(100 * counts.cellsBoxed);
+    }), 90_000);
+
+    /**
+     * ⛓ hammer-phase SFF — the same three derivations with the strike floor at its shipped ON. P2 keeps every answer
+     * (the cells, `unreachable`, the press ticks). ⛓ hammer-phase SFF2 — and now every count too: SFF measured the far
+     * refusal's `etaSkipped` 9,149 with P2 ON against 16,202 OFF, because the counter counted pairs out of the press's
+     * reach and P2's box asks fewer of them (the 7,053 between them every one out of reach, the 8,084 in reach equal).
+     * `deriveStrike` counts only the pairs in reach (`inReach`), so the whole refusal is P2-invariant.
+     */
+    it('⛓ the strike floor ON: P2 keeps the same answers and the same counts (the far refusal\'s `etaSkipped` 8,084 '
+        + 'both ways)', () => {
+        const staging = view();
+        const derivations = (on) => withPressKillCost(true, () => withStrikeScanCost(on, () => {
+            const run = createRunForStaging(staging, atlasLevelSource());
+            const first = deriveStrike(run, 'spinner@880,848', new Set(), 0, { continuation: true });
+            const again = deriveStrike(run, 'spinner@880,848', new Set(), 0);
+            const far = deriveStrike(run, 'spinner@192,144', new Set(), 0);
+            return { first, again, far };
+        }));
+        const on = derivations(true);
+        const off = derivations(false);
+        expect(JSON.stringify(on)).toBe(JSON.stringify(off));
+        expect(on.first.cell).toEqual({ x: 728, y: 680 });
+        expect(on.again.cell).toEqual({ x: 728, y: 680 });
+        expect(on.far.cell).toBe(null);
+        expect(on.far.unreachable).toBe(off.far.unreachable);
+        expect([on.far.etaSkipped, off.far.etaSkipped]).toEqual([8084, 8084]);
     }, 90_000);
 });
 

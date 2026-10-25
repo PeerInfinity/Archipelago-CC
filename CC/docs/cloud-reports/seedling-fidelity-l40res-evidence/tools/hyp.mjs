@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+const M='/home/user/Archipelago-CC/frontend/modules/seedlingDemo/';
+const { atlasLevelSource } = await import(M+'levelSource.js');
+const { createRunForStaging } = await import(M+'tapeRunner.js');
+const { stanceHypothesisProbe } = await import(M+'solverBot.js');
+const st = JSON.parse(readFileSync('/home/user/Archipelago-CC/.cache/seedling-survey/through-end/views/step-93-boot.json','utf8'));
+const run = createRunForStaging(st, atlasLevelSource());
+console.log(JSON.stringify(stanceHypothesisProbe(run)));
+console.log('latched', [...(run.entities('latchedGroups')??[])], 'open', [...run.entities('openActivators')]);
+console.log(JSON.stringify(run.world.pressers.map(p=>[p.tag,p.x,p.y,p.t])));
+console.log(JSON.stringify(run.world.activators.map(a=>[a.id,a.t])));

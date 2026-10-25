@@ -4228,7 +4228,8 @@ export function runFire(run, perTick, fire, what) {
          * deleted the refusal for it silently, on the strength of a stepper
          * that has nothing to do with the question.
          */
-        const unmodelled = enemiesUnseenByBlockSweep(enemies);
+        // ⛓ fidelity CORPSEBUMP D1 (`blockSweepBodies`, OFF → null): the bodies the block's sweep consults by id.
+        const unmodelled = enemiesUnseenByBlockSweep(enemies, { seenIds: run.blockSweepBodyIds?.('block') ?? null });
         if (unmodelled.length > 0 && !fire.enemyRoom) {
             fail(`${what}: level ${run.level} holds ${enemies.length} live `
                 + `enem${enemies.length === 1 ? 'y' : 'ies'}, of which `
@@ -4392,8 +4393,16 @@ export function runFire(run, perTick, fire, what) {
                 + '`fire.enemyRoom: "<what the GAME said>"`. An absent census is not an '
                 + 'empty one.');
         }
-        const others = (run.world.combat?.enemies ?? []).filter(
+        const othersAll = (run.world.combat?.enemies ?? []).filter(
             (e) => !e.removed && !live.some((m) => m.id === `${e.tag}@${e.x},${e.y}`));
+        /**
+         * ⛓ fidelity CORPSEBUMP D1 (`blockSweepBodies` ON): the refusal narrows to the bodies the corpse's slide does
+         * NOT consult — `stepIceTurretsNow`'s `blockedAt` stops on the spinners and the chasers it reads (a puncher
+         * near the slide refuses by name there). OFF: every other live body, as before.
+         */
+        const corpseSees = run.blockSweepBodyIds?.('corpse') ?? null;
+        const others = corpseSees === null ? othersAll : othersAll.filter((e) => (e.as3 ?? e.tag) !== 'Spinner'
+            && !corpseSees.has(`${e.tag}@${e.x},${e.y}`));
         if (others.length > 0 && !fire.enemyRoom) {
             fail(`${what}: level ${run.level} holds ${others.length} other enemy/enemies `
                 + `[${[...new Set(others.map((e) => e.tag))].join(', ')}] and a CORPSE `

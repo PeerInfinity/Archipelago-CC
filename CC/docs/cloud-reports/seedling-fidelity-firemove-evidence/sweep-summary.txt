@@ -1,0 +1,29 @@
+A1 58 {'done': 41, 'failed': 17}
+A2 58 {'done': 41, 'failed': 17}
+B1 58 {'done': 42, 'failed': 15, 'timeout': 1}
+B2 58 {'done': 40, 'failed': 16, 'timeout': 2}
+368 ['done', 'done', 'done', 'failed'] level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+    A1 
+    A2 
+    B1 
+    B2 the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.57638423928648,136.39409024522368)
+371 ['failed', 'failed', 'done', 'failed'] level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+    A1 the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (90.5,149.3) — spinner:s
+    A2 the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): chaserForecast: whether bob bob@272,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide
+    B1 
+    B2 the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot(wasm-location-40) apitem (64,144) contact -> hold stance (wandlock@176,80) -> break stance (breakablerock@176,128): the combat ladder is 
+387 ['failed', 'failed', 'failed', 'failed'] level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+    A1 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1332 (chaser bob@736,752) while pressing spinner@8
+    A2 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1607 (chaser bob@736,752) while pressing spinner@8
+    B1 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1332 (chaser bob@736,752) while pressing spinner@8
+    B2 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1337 (chaser bob@736,752) while pressing spinner@8
+404 ['failed', 'failed', 'failed', 'timeout'] level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+    A1 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: every key set — the plan's own and 5 alternative(s) — lands the player
+    A2 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1805 (chaser bob@736,752) while pressing spinner@8
+    B1 the solver declined Level 040 - Chest in level 40 (refusal): solverBot(wasm-location-40) apitem (880,816) contact -> kill (spinner@880,848) by press: the player died at t1165 (chaser bob@736,752) while pressing spinner@8
+    B2 
+871 ['failed', 'failed', 'timeout', 'timeout'] level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144
+    A1 the solver declined Level 041 - Totem Part 240,144 in level 41 (refusal): solverBot(wasm-location-41) apitem (240,144) contact: the re-planned corridor failed too — solverBot(wasm-location-41) apitem (240,144) contact wa
+    A2 the solver declined Level 041 - Totem Part 240,144 in level 41 (refusal): solverBot(wasm-location-41) apitem (240,144) contact: the re-planned corridor failed too — solverBot(wasm-location-41) apitem (240,144) contact wa
+    B1 
+    B2 

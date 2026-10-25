@@ -15,7 +15,7 @@
  * a straight line witnesses nothing about pathing.
  */
 
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { loadExpectation, loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -42,7 +42,7 @@ import {
     tileCentre,
     PRESS_GAP,
 } from './botDriverV2.js';
-import { withContactFidelity } from './contactFidelity.js';
+import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 
 const levelSource = atlasLevelSource();
 const level0 = buildLevelWorld(levelSource(0));
@@ -2008,6 +2008,13 @@ describe('the arrow-trap hold (R7 slice 6b)', () => {
 });
 
 describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => {
+    // ⛓ CONTROL — blockSweepBodies named OFF (fidelity planning-12's w29b flip, ⚖ user 2026-10-24): these rows hold button@16,64
+    // 8 ticks and shove pushableblock@32,64 east past a LIVE bob@64,64 — ON the block stops on the Bob, as the game does
+    // (CORPSEBUMP's p4g witness `corpsebump-l4-bob-wedge`), so they pin the pre-CORPSEBUMP glide. (The solver's own L4
+    // plan holds 108 ticks and is unchanged ON.)
+    let savedSweep;
+    beforeAll(() => { savedSweep = CONTACT_FIDELITY.blockSweepBodies; CONTACT_FIDELITY.blockSweepBodies = false; });
+    afterAll(() => { CONTACT_FIDELITY.blockSweepBodies = savedSweep; });
     const RELAX = {
         noclip: false, noDamage: false, noHazards: [], grants: [],
         persistence: [], equips: [], pins: ['dead_frames'],
@@ -2069,6 +2076,14 @@ describe('R7 slice 6c: `shove` — the walk-family push, and L4\'s door', () => 
         });
         expect(r.transitions).toEqual([
             expect.objectContaining({ from_level: 4, to_level: 5 })]);
+    });
+
+    it('⛓ THE SHIPPED DEFAULT (blockSweepBodies ON): an 8-tick hold leaves bob@64,64 alive, and the block STOPS on '
+        + 'it — the game\'s answer (CORPSEBUMP\'s p4g witness `corpsebump-l4-bob-wedge`, 0 px)', () => {
+        // ⛓ the rows around this one are a ⛓ CONTROL on the driver's hold/shove mechanics (blockSweepBodies OFF in
+        // this describe's hooks); this row is the ON truth on the very case CORPSEBUMP changed (⚖ js-11, 2026-10-24).
+        expect(() => withContactFidelity({ blockSweepBodies: true }, () => planL4(holdShove(8))))
+            .toThrow(/never committed to \(4,4\)/);
     });
 
     it('⛔ the LEAN is the emitted span — a shove looks exactly like a walk', () => {

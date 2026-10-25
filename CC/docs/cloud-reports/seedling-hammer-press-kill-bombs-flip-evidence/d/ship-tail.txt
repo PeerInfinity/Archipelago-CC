@@ -1,0 +1,40 @@
+PASS: CAMPAIGN: ⛔⛔ …and window 30 pays the MODEL'S SHARE EXACTLY — a re-boot would have added blackCover's fade (20) on top — 324 — game 324 vs model 324 (shares [40,20,20,20,20,20,20,20,20,170,351,20,20,20,20,20,20,20,20,170,170,20,471,20,20,20,170,20,20,324])
+PASS: CAMPAIGN: ⛔⛔⛔ CLAIM 7 — the END STATE is where the chain ENDS, and the chain reached it for the first time — L32 (80, 83.45) — agrees · Δx 0 Δy 0 · level 32 vs 32
+
+  CAMPAIGN — per window (30):
+  #   window            ticks  deadFrames  model  k  moved  tick0 time
+   1  r8-solve-1         183          39     39   1      —  — (fresh)
+   2  r8-solve-2          47          20     20   —  false  5002 -> 5023
+   3  r8-solve-3         245          20     20   —  false  5069 -> 5090
+   4  r8-solve-4         255          20     20   —  false  5334 -> 5355
+   5  r8-solve-5         403          20     20   —  false  5609 -> 5630
+   6  r8-solve-6         294          20     20   —  false  6032 -> 6053
+   7  r8-solve-7         146          20     20   —  false  6346 -> 6367
+   8  r8-solve-8         827          20     20   —  false  6512 -> 6533
+   9  r8-solve-9         122          20     20   —  false  7359 -> 7380
+  10  r8-solve-10         83         170    170   —  false  7501 -> 7522
+  11  r9-solve-11         97         351    351   —  false  7754 -> 7775
+  12  r9-solve-3         152          20     20   —  false  8202 -> 8223
+  13  r9-solve-2          23          20     20   —  false  8374 -> 8395
+  14  r9-solve-0         145          20     20   —  false  8417 -> 8438
+  15  r9-solve-13         36          20     20   —  false  8582 -> 8603
+  16  r9-solve-14        103          20     20   —  false  8638 -> 8659
+  17  r9-solve-15        456          20     20   —  false  8761 -> 8782
+  18  r9-solve-16        655          20     20   —  false  9237 -> 9258
+  19  r9-solve-18        390          20     20   —  false  9912 -> 9933
+  20  r9-solve-19        746         170    170   —  false  10322 -> 10343
+  21  r9-solve-20        560         170    170   —  false  11238 -> 11259
+  22  r9-solve-13-v2      48          20     20   —  false  11968 -> 11989
+  23  r9-solve-0-v3      313         471    471   —  false  12036 -> 12057
+  24  r9-solve-12       2364          20     20   —  false  12820 -> 12841
+  25  r9-solve-21         26          20     20   —  false  15124 -> 15145
+  26  r9-solve-22         89          20     20   —  false  15170 -> 15191
+  27  r9-solve-29        379         170    170   —  false  15279 -> 15300
+  28  r9-solve-31        336          20     20   —  false  15828 -> 15849
+  29  r9-solve-30        210          20     20   —  false  16184 -> 16205
+  30  r9-solve-32        839         324    324   —  false  16414 -> 16435
+PASS: CAMPAIGN: no uncaught page errors during the ship — none
+PASS: CAMPAIGN: and nothing the page ASKED FOR came back 4xx/5xx — none (0 ignorable, e.g. the favicon)
+
+ALL PASS
+rc=0

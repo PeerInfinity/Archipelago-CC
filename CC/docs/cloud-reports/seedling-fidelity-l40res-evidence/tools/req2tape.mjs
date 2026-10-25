@@ -1,0 +1,23 @@
+// scratch (L40RES D1): a captured solve request at a seam time -> the solver's plan -> a tape
+import { readFileSync, writeFileSync } from 'node:fs';
+const REPO = '/home/user/Archipelago-CC';
+const P = REPO + '/scripts/procgen/';
+const M = REPO + '/frontend/modules/seedlingDemo/';
+const { restoreRequest } = await import(P + 'seedlingSolveRequestCodec.js');
+const { atSeamTime } = await import(P + 'replay-seedling-solve-request.mjs');
+const { levelSourceFromAtlas } = await import(M + 'atlasSource.js');
+const { solveAnytime, ANYTIME_PASSES } = await import(M + 'jsRuntimeSolver.js');
+const [file, id, at, out] = process.argv.slice(2);
+const line = readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)).find((l) => l.id === +id);
+const c = line.requests[0];
+const req = restoreRequest(at ? atSeamTime(c.request, +at) : c.request);
+const { passes = ANYTIME_PASSES, source, ...tape } = req;
+const levelSource = levelSourceFromAtlas(source.records);
+const answer = solveAnytime({ ...tape, source, levelSource }, { passes });
+console.log('ok', answer.ok, 'kind', answer.kind, answer.ok ? '' : answer.message?.slice(0, 600));
+if (!answer.ok) process.exit(1);
+console.log('plan keys', Object.keys(answer.plan), 'ticks', answer.plan.solution.length);
+const recs = answer.plan.records ?? answer.plan.out?.records;
+if (recs) for (const r of recs) console.log('  ', r.strategy, JSON.stringify(r.paced ?? null)?.slice(0, 160), JSON.stringify(r.target ?? null)?.slice(0, 80));
+console.log('staging keys', Object.keys(tape.staging ?? tape));
+writeFileSync(out, JSON.stringify({ req: { ...tape, source: undefined }, solution: answer.plan.solution.map((k) => [...k]), plan: { ...answer.plan, solution: undefined } }));

@@ -45,7 +45,7 @@ import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import {
     DEADLINE_SITES, HAMMER_ESCAPE, HAMMER_ESCAPE_BOUNDS, HAMMER_ESCAPE_FALLBACK, HAMMER_ESCAPE_MEASURED,
-    HAMMER_ESCAPE_TRACE, HAMMER_PHASE_RUNG, noStrikeMove, previewOrDeath, withHammerEscape,
+    HAMMER_ESCAPE_TRACE, HAMMER_PHASE_RUNG, noStrikeMove, previewOrDeath, withHammerEscape, withStrikeEtaFloor,
 } from './solverBot.js';
 import { PhysicsV2Error } from './playerPhysicsV2.js';
 import {
@@ -175,10 +175,15 @@ describe('hammer-phase A D2 — the space-time kernel (spaceTimeReach)', () => {
 });
 
 const R9 = stagingFromTape(loadTape('r9-solve-18'));
-const solveR9At = (residue) => {
+const seamOf = (residue) => {
     const P = SPINNER.hammerPeriod;
     const was = ((R9.seam.time % P) + P) % P;
-    const seam = { ...R9.seam, time: R9.seam.time + ((((residue - was) % P) + P) % P) - P };
+    return { ...R9.seam, time: R9.seam.time + ((((residue - was) % P) + P) % P) - P };
+};
+/** The escape-OFF solve's length with `STRIKE_ETA_FLOOR` ON, per residue (hammer-phase SFF, measured). */
+const ON_ESCAPE_OFF_TICKS = { 21: 474, 15: 540 };
+const solveR9At = (residue) => {
+    const seam = seamOf(residue);
     const makeRun = (persistence) => createRunForStaging({ ...R9, seam, persistence, equips: [] }, SOURCE);
     return twoPassSolve({ makeRun, goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], name: 'r9-solve-18',
         boot: R9.boot, persistence: R9.persistence.filter((c) => c.at === undefined),
@@ -242,12 +247,16 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
             expect(run.transitions.map((x) => x.t)).toEqual(want.transitions.map((x) => x.t));
         }, 120_000);
 
-        it(`⛓⛓ ${name} IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing`, async () => {
+        /**
+         * ⚖ The witness is the game's walk of the escape-ON solve under `STRIKE_ETA_FLOOR` OFF (recorded before
+         * hammer-phase SFF flipped the floor ON), so this row pins the floor OFF; the sibling below pins the ON answer.
+         */
+        it(`⛓⛓ ${name} IS the solve: off, the staging refuses HAMMER_SAFETY; on, it solves to the witness's keys with an escape at every landing (the strike floor OFF: the witness's)`, async () => {
             let refused = null;
-            try { await withHammerEscape(false, () => solveR9At(residue)); } catch (e) { refused = e; }
+            try { await withStrikeEtaFloor(false, () => withHammerEscape(false, () => solveR9At(residue))); } catch (e) { refused = e; }
             expect(refused?.code).toBe('HAMMER_SAFETY');
             const was = HAMMER_ESCAPE.enabled;
-            const r = await withHammerEscape(true, () => solveR9At(residue));
+            const r = await withStrikeEtaFloor(false, () => withHammerEscape(true, () => solveR9At(residue)));
             expect(HAMMER_ESCAPE.enabled).toBe(was);
             const tape = loadTape(name);
             expect(r.out.perTick.length).toBe(tape.tick_count);
@@ -256,6 +265,16 @@ describe('hammer-phase A D2 — HAMMER_ESCAPE in the press kill', () => {
             }
             const press = r.out.records.filter((x) => x.arm === 'press');
             expect(press.flatMap((x) => x.escapes ?? []).length).toBe(press.flatMap((x) => x.landings).length);
+        }, 300_000);
+
+        it(`⛓⛓ ${name}'s staging with the strike floor at its shipped ON (hammer-phase SFF): the escape OFF no longer refuses HAMMER_SAFETY — it solves with no hit`, async () => {
+            const r = await withHammerEscape(false, () => solveR9At(residue));
+            expect(r.out.perTick.length).toBe(ON_ESCAPE_OFF_TICKS[residue]);
+            const replay = createRunForStaging({ ...R9, seam: seamOf(residue), persistence: r.persistence, equips: [] },
+                SOURCE);
+            for (const held of r.out.perTick) replay.advance(held);
+            expect(replay.playerHits).toEqual([]);
+            expect(replay.transitions.map((x) => x.to_level)).toEqual([R9.boot.level + 1]);
         }, 300_000);
     }
 });

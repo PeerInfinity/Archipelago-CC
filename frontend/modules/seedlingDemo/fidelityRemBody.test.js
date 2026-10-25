@@ -70,7 +70,9 @@ describe('fidelity REMBODY — D1/D2: the L71 resite witness (p4g) against the m
 
 describe('fidelity REMBODY — D2: the forecast mirror (`chaserForecastNow`) agrees with the live step on the removal tick', () => {
     // The forecast taken at t58 and stepped with the live player: on t63 its survivor stands where the live one does.
-    const at63 = (arm) => withContactFidelity(arm, () => {
+    // ⛓ forecastCorpseFade named OFF (planning-12's MISCRES flip, ⚖ user 2026-10-24): these rows pin the PRE-MISCRES
+    // forecast, which holds its cloned corpses; ON the forecast fades them as live does (fidelityMiscRes D1).
+    const at63 = (arm) => withContactFidelity({ ...arm, forecastCorpseFade: false }, () => {
         let run = null;
         const st = createTapeStepper(parseTape(JSON.stringify(load('skinswing-l71-resite').tape)),
             { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });

@@ -1,0 +1,9 @@
+# box lock: TAKEN by probe-seedling-corpse-bump.mjs (browser, pid 4761) — head e8d85de8d, 5 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      corpsebump-l4-bob-wedge: 140 t; switches {"blockSweepBodies":true}
+PASS: corpsebump-l4-bob-wedge: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: corpsebump-l4-bob-wedge: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 115 sampled tick(s)
+      corpsebump-l4-bob-wedge: OFF the model parts from the game on 131 tick(s), first t 79: blocks game [PushableBlock@48.5,64] model [PushableBlock@49,64]
+recorded frontend/modules/seedlingDemo/fixtures/corpsebump-witness/corpsebump-l4-bob-wedge.json — 115 tick(s)
+
+ALL CHECKS PASSED
