@@ -65,6 +65,7 @@
 <script src="dj_swf_bridge.js"></script>
 <script type="module">
 import { injectSwf } from './swf_inject.mjs';
+import { RUFFLE_CDN } from '../../flashPanel/ruffleCdn.js';
 
 const STAGE_W = 600, STAGE_H = 400;
 const ORIGINAL_SWF_URL = 'Doodle_Jump.swf';
@@ -186,7 +187,7 @@ async function bootRuffle() {
     setStatus('loading Ruffle…');
     window.RufflePlayer = window.RufflePlayer || {};
     const rs = document.createElement('script');
-    rs.src = 'https://unpkg.com/@ruffle-rs/ruffle';
+    rs.src = RUFFLE_CDN;
     rs.onload = () => {
         window.RufflePlayer.config = {
             allowScriptAccess: true,
