@@ -1366,6 +1366,27 @@ export const CONTACT_FIDELITY = {
      * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
      */
     iceTurretDeathAnim: true,
+    /**
+     * fidelity L40BK2 D1 (wave 31) — A WEIGH'S HOLDER IS DERIVED UNDER THE REST OF THE HYPOTHESIS. Guard (iii)
+     * (`stanceHypothesis`) asked each `weigh` activator's holder of the world AS IT IS, so a holder that is reachable
+     * only once another hypothesised obstacle is discharged was a WALL. L40's Boss Key 2 chain is the measured case
+     * (legs 869/870, survey step 67): `wandlock@512,480`/`@448,432` {t 2}'s holder is `iceturret@472,400`'s corpse,
+     * whose stance is behind the latched south door `wandlock@480,560`; and `wandlock@800,400` {t 5}'s holder is
+     * `pushableblockfire@480,480`, whose Fire route crosses `wandlock@512,480`. ON: the holders a live derivation
+     * refuses are asked again under the bag with the hypothesis discharged, to a fixed point, and a hold stance that
+     * no candidate reaches otherwise is asked under those admissions; a frontier order that cannot bind yet passes the
+     * round to the next door; a refusal carries its `equips`. OFF: byte-identical. `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`.
+     */
+    weighHypothesisChain: false,
+    /**
+     * fidelity L40BK2 D2 (wave 31) ⛓ hammer hand-over 368 — A STRUCK SPINNER IS PRICED WHERE THE STRIKE LEFT IT. The
+     * transit probe (`probeSamples` → `dangerDuringTransit` → `spinnerDanger`) read the run's press-blind
+     * `spinnerForecast`, so a walk whose own dash struck a spinner was certified against a body the strike had moved
+     * (leg 368, seam 5290: 28.31 px at t1222; the game and the model both hit, L40RES). ON: `previewWalk` advances the
+     * hammer arc's `spinnerFightForecast` cursor with the walk's presses and each sample's spinners are priced from its
+     * row. OFF: byte-identical. `SEEDLING_DASH_SPINNER_FORECAST=0|1`.
+     */
+    dashSpinnerForecast: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1627,6 +1648,11 @@ if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELI
 if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
 if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
+// ⛓ fidelity L40BK2: `SEEDLING_WEIGH_HYPOTHESIS_CHAIN=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '1') CONTACT_FIDELITY.weighHypothesisChain = true;
+if (globalThis.process?.env?.SEEDLING_WEIGH_HYPOTHESIS_CHAIN === '0') CONTACT_FIDELITY.weighHypothesisChain = false;
+if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '1') CONTACT_FIDELITY.dashSpinnerForecast = true;
+if (globalThis.process?.env?.SEEDLING_DASH_SPINNER_FORECAST === '0') CONTACT_FIDELITY.dashSpinnerForecast = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

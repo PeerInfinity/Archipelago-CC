@@ -1,0 +1,24 @@
+=== probe-seedling-wasm-logical-links.mjs --only=B,R
+ALL CHECKS PASSED
+=== probe-seedling-wasm-vanilla-map.mjs 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-arrival-composites.mjs 
+ALL CHECKS PASSED
+=== probe-seedling-wasm-midroom-replan.mjs --only=D
+ALL CHECKS PASSED
+=== probe-seedling-restart-route.mjs --only=W,J
+ALL CHECKS PASSED
+=== probe-seedling-restart-warp.mjs --only=W,J
+ALL CHECKS PASSED
+=== probe-seedling-wasm-adopt.mjs 
+PASS: N: the reset SKIPPED the intro — the explicit start into level 0 at the game's boot position — {"mode":"explicit-start","intro":false,"level":0,"landed":true,"args":{"x":16,"y":128},"boot":{"x":16,"y":128,"level":0,"source":"seedlingStartSpawn (the start region's arrival)"}}
+ALL CHECKS PASSED
+=== probe-seedling-obstacle-events.mjs --only=W,J
+ALL CHECKS PASSED
+=== probe-seedling-wasm-generated-playback.mjs 
+ALL CHECKS PASSED
+=== probe-seedling-loop-restart.mjs 
+ALL CHECKS PASSED
+=== probe-seedling-seal-delivery.mjs --only=A
+ALL CHECKS PASSED
+PROBES-DONE

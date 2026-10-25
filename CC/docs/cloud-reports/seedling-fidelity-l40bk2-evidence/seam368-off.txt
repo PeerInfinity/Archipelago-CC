@@ -1,0 +1,17 @@
+SEAM 5276 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (18324 ms)
+SEAM 5278 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (16787 ms)
+SEAM 5280 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (16653 ms)
+SEAM 5282 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (15570 ms)
+SEAM 5284 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (16486 ms)
+SEAM 5286 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (16665 ms)
+SEAM 5288 SOLVED 1584 t plan 7e00ab597f9d model hits 1 [t1225({"t":1225,"level":40,"source":"spinner-hammer","id":"spinner@192,144","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":0,"dy":3.974362773207205,"la)] (18130 ms)
+SEAM 5289 REFUSED 9459cdd3dd1f chaserForecast: whether bob bob@272,112 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enemy.updat
+SEAM 5290 SOLVED 1600 t plan 1da60bcb4c0d model hits 1 [t1222({"t":1222,"level":40,"source":"spinner-hammer","id":"spinner@192,144","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":0,"dy":3.5964875506782583,"l)] (16271 ms)
+SEAM 5291 SOLVED 1600 t plan 1da60bcb4c0d model hits 1 [t1222({"t":1222,"level":40,"source":"spinner-hammer","id":"spinner@192,144","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":0,"dy":3.5964875506782583,"l)] (18920 ms)
+SEAM 5292 SOLVED 1600 t plan 1da60bcb4c0d model hits 1 [t1222({"t":1222,"level":40,"source":"spinner-hammer","id":"spinner@192,144","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":0,"dy":3.5964875506782583,"l)] (22078 ms)
+SEAM 5293 SOLVED 1584 t plan 7e00ab597f9d model hits 1 [t1225({"t":1225,"level":40,"source":"spinner-hammer","id":"spinner@192,144","hits":1,"hitsMax":3,"died":false,"shake":5,"knockback":{"dx":0,"dy":3.974362773207205,"la)] (17311 ms)
+SEAM 5295 REFUSED 71c409a20e9d levelRun: whether bob bob@272,112 is on screen at tick 1282 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY IT IS A BAND"). `Enem
+SEAM 5298 REFUSED 1ce1955d012a solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.57638423928648,136.39409024522368), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (169,135) 40 
+SEAM 5300 REFUSED 1ce1955d012a solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (168.57638423928648,136.39409024522368), inside bombpusher@112,128's 256 px reach — a Bomb's Explosion at (169,135) 40 
+SEAM 5305 SOLVED 1583 t plan d24f1e7a1150 model hits 0 [] (16192 ms)
+SEAM 5310 SOLVED 1558 t plan 32f29414cd8e model hits 0 [] (16806 ms)

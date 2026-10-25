@@ -1497,12 +1497,18 @@ export function staticEnemyDanger(run, box) {
  * disc slice 6 drew was half a pixel off its own body, invisible under a
  * 13 px pad and NOT invisible to a raycast from the point.
  */
-export function spinnerDanger(run, box, horizon) {
+export function spinnerDanger(run, box, horizon, walkRow = null) {
     const bodies = run.entities('spinnerBodies') ?? [];
     if (bodies.length === 0) return [];
     // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
     // and it is a list of RECTS in the same order `spinnerBodies` reports.
-    const ahead = horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null;
+    /**
+     * ⛓ fidelity L40BK2 D2 ⛓ hammer hand-over 368 (`dashSpinnerForecast`, OFF) — `walkRow` is the walk's OWN row for
+     * this sample (`previewWalk`'s spinner cursor: the same forecast with the walk's presses struck): `{rects, ids}`,
+     * read BY ID (a body the walk killed has no row and prices nothing). `null` (every other caller): the run's
+     * press-blind forecast, as before.
+     */
+    const ahead = walkRow ? null : (horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null);
     /**
      * ⛓⛓ SEEDLING SWIM U6 (D2) — **ROW `h − 1` SWINGS AT `gameTimeAt(h − 1)`.**
      * `advance` steps the spinners, bills their contacts at `clock.now()`, and
@@ -1517,7 +1523,9 @@ export function spinnerDanger(run, box, horizon) {
         ? run.gameTimeAt(Math.max(0, horizon - 1)) : null;
     const out = [];
     bodies.forEach((b, i) => {
-        const r = ahead?.[i] ?? null;
+        const j = walkRow ? walkRow.ids.indexOf(b.id) : i;
+        if (j < 0) return;
+        const r = walkRow ? walkRow.rects[j] : (ahead?.[i] ?? null);
         // ⛔ `+ originX`, not the rect's centre — see the docblock.
         const ex = r ? r.x + SPINNER.originX : b.x;
         const ey = r ? r.y + SPINNER.originY : b.y;
@@ -1544,7 +1552,8 @@ export function spinnerDanger(run, box, horizon) {
         }
         // (1) `Enemy.hitPlayer` — the 7x7 body, at the position this horizon has it.
         const bodyRect = r ?? spinnerRect(b);
-        if (rectsOverlap(box, bodyRect)) {
+        // ⛓ L40BK2 D2: a walk row carries the body arm's own gate (`hitsTimer <= 0`, `!destroy`), as the game takes it.
+        if (rectsOverlap(box, bodyRect) && !(walkRow?.bodyGated?.[j])) {
             out.push({
                 kind: 'spinner',
                 id: b.id,
@@ -2032,7 +2041,7 @@ export function corridorBodyDanger(bodies) {
  */
 export function dangerAt(run, tick, box, {
     mode = 'wait', arrows = null, chasers = null, spits = null, grenades = null, swordTick = null,
-    corridorBodies = null,
+    corridorBodies = null, walkSpinners = null,
 } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
@@ -2067,7 +2076,8 @@ export function dangerAt(run, tick, box, {
             { perTick: mode === 'transit', ...(swordTick !== null && horizon === 0 ? { swordTick } : {}) }),
         // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
         // carried to the cell's own ETA in transit mode exactly as an arrow is.
-        ...spinnerDanger(run, box, horizon),
+        // ⛓ L40BK2 D2: in TRANSIT, the walk's own spinner row when handed (`dashSpinnerForecast`; else null).
+        ...spinnerDanger(run, box, horizon, mode === 'transit' ? walkSpinners : null),
         ...staticEnemyDanger(run, box),
         // ⛓ LADDER2: the placed grenades' blast, at its own update.
         ...grenadeDanger(run, box, tick, mode, mode === 'transit' ? grenades : null),
@@ -2097,9 +2107,9 @@ export function dangerAt(run, tick, box, {
  * schedule nobody drives is a probe of nothing.
  */
 export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null,
-    spits = null, grenades = null, corridorBodies = null) {
+    spits = null, grenades = null, corridorBodies = null, walkSpinners = null) {
     return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits, grenades,
-        ...(corridorBodies ? { corridorBodies } : {}) });
+        ...(corridorBodies ? { corridorBodies } : {}), ...(walkSpinners ? { walkSpinners } : {}) });
 }
 
 /**

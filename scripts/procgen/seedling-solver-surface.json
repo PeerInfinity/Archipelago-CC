@@ -533,9 +533,9 @@
         "crusherBait.js": 7,
         "dangerMap.js": 26,
         "lightsVerb.js": 1,
-        "solverBot.js": 187
+        "solverBot.js": 189
       },
-      "sites": 326,
+      "sites": 328,
       "seen": "both",
       "via": [
         "direct",
@@ -664,7 +664,7 @@
         },
         "spinnerBodies": {
           "dangerMap.js": 2,
-          "solverBot.js": 14
+          "solverBot.js": 16
         },
         "staticBodies": {
           "solverBot.js": 4
@@ -1002,9 +1002,9 @@
       "files": {
         "botDriverV2.js": 2,
         "dangerMap.js": 1,
-        "solverBot.js": 15
+        "solverBot.js": 16
       },
-      "sites": 18,
+      "sites": 19,
       "seen": "both",
       "via": [
         "direct"
@@ -1239,9 +1239,9 @@
       "class": "seedling",
       "form": "forecast",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 3
       },
-      "sites": 1,
+      "sites": 3,
       "seen": "static",
       "via": [
         "direct"
@@ -4283,10 +4283,10 @@
         "dangerMap.js": 5,
         "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 101,
+        "solverBot.js": 108,
         "strikePolicy.js": 2
       },
-      "sites": 131,
+      "sites": 138,
       "seen": "static",
       "via": [
         "import"

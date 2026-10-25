@@ -1,0 +1,6 @@
+A 368 6147 SOLVED 563 1da60bcb4c0d 
+A 371 5602 SOLVED 551 21e3fe5e9d55 
+A 408 6299 SOLVED 433 fced6fc93cf2 
+B 368 6147 refusal 503 32c7b7f741a3 solverBot(wasm-location-40) apitem (64,144) contact -> hold: the hold stands still for up to 131 tick(s) at (1
+B 371 5602 SOLVED 551 21e3fe5e9d55 
+B 408 6299 SOLVED 433 fced6fc93cf2 
