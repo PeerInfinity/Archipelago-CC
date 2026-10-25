@@ -25311,6 +25311,7 @@ recording parted at t70: the killing landing came two ticks into a `startshot`, 
 **Movers (measured locally; the CI dispatches are in the report).**
 - The full survey, A (the 65 defaults + FIREMOVE + CORPSEBUMP) vs B (+ the three keys): all 239 rows equal. The route's L40
   steps refuse before the corpse weigh.
-- The keyed sweep ×2 over the 66 L40/L98 legs: in flight; its rows are in the report.
+- The keyed sweep ×2 over the 66 legs in or into L40 and L98 (the only two ice-turret rooms): 0 key-driven verdicts. Legs
+  368 and 404 flip within arm A too, and B1's captured requests replay A = B byte-identically.
 - Probes standard, all 71 keys ON: 11/11.
 - The bounded vitest ON moves `fidelityCorpseBump.test.js`'s Sword-alone refusal row (it now solves): a flip owes it a re-pin.
