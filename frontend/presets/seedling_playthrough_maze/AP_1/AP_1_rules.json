@@ -10,12 +10,326 @@
   },
   "regions": {
     "1": {
+      "level_0__r1c6": {
+        "name": "level_0__r1c6",
+        "exits": [
+          {
+            "name": "level_0__r1c6 -> level_0__r2c13",
+            "connected_region": "level_0__r2c13",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_0__r2c13": {
+        "name": "level_0__r2c13",
+        "exits": [
+          {
+            "name": "level_0__r2c13 -> level_0__r1c6",
+            "connected_region": "level_0__r1c6",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_0__r2c13 -> level_0__r4c16",
+            "connected_region": "level_0__r4c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_0__r2c13 -> level_0__r8c0",
+            "connected_region": "level_0__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_0__r4c16": {
+        "name": "level_0__r4c16",
+        "exits": [
+          {
+            "name": "level_0__r4c16 -> level_0__r2c13",
+            "connected_region": "level_0__r2c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_0__r4c16 -> level_0__r8c0",
+            "connected_region": "level_0__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_0__r8c0": {
+        "name": "level_0__r8c0",
+        "exits": [
+          {
+            "name": "level_0__r8c0 -> level_0__r11c19",
+            "connected_region": "level_0__r11c19",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_0__r8c0 -> level_0__r14c0",
+            "connected_region": "level_0__r14c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_0__r8c0 -> level_0__r2c13",
+            "connected_region": "level_0__r2c13",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_0__r8c0 -> level_0__r4c16",
+            "connected_region": "level_0__r4c16",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim",
+                "count": 2
+              }
+            }
+          },
+          {
+            "name": "level_0__r8c0 -> level_13",
+            "connected_region": "level_13",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L0 flag 1: breakablerock@288,176 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "L0 flag 1: breakablerock@288,176 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L0:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 0,
+              "tag": 1,
+              "class": "breakablerock",
+              "x": 288,
+              "y": 176
+            },
+            "action": {
+              "verb": "broken by a sword strike",
+              "item": "hasSword"
+            },
+            "side": "level_0__r8c0",
+            "across": [
+              "level_0__r11c19"
+            ]
+          },
+          {
+            "name": "L0 flag 4: breakablerock@80,112 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "L0 flag 4: breakablerock@80,112 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L0:4",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 0,
+              "tag": 4,
+              "class": "breakablerock",
+              "x": 80,
+              "y": 112
+            },
+            "action": {
+              "verb": "broken by a sword strike",
+              "item": "hasSword"
+            },
+            "side": "level_0__r8c0",
+            "across": []
+          }
+        ]
+      },
+      "level_0__r11c19": {
+        "name": "level_0__r11c19",
+        "exits": [
+          {
+            "name": "level_0__r11c19 -> level_0__r8c0",
+            "connected_region": "level_0__r8c0",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_0__r14c0": {
+        "name": "level_0__r14c0",
+        "exits": [
+          {
+            "name": "level_0__r14c0 -> level_0__r8c0",
+            "connected_region": "level_0__r8c0",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_13": {
         "name": "level_13",
         "exits": [
           {
             "name": "level_13 -> level_14",
             "connected_region": "level_14",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_13 -> level_0__r8c0",
+            "connected_region": "level_0__r8c0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_13 -> level_20__r3c1",
+            "connected_region": "level_20__r3c1",
             "access_rule": {
               "rule": "True_"
             }
@@ -712,6 +1026,298 @@
                 }
               ]
             }
+          },
+          {
+            "name": "level_18__r7c10 -> level_19__r5c5",
+            "connected_region": "level_19__r5c5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_19__r1c1": {
+        "name": "level_19__r1c1",
+        "exits": [
+          {
+            "name": "level_19__r1c1 -> level_19__r3c3",
+            "connected_region": "level_19__r3c3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L19 flag 1: bosslock@48,32 cleared"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Red Key"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_19__r1c1 -> level_20__r1c4",
+            "connected_region": "level_20__r1c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_19__r1c5": {
+        "name": "level_19__r1c5",
+        "exits": [
+          {
+            "name": "level_19__r1c5 -> level_19__r3c3",
+            "connected_region": "level_19__r3c3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          },
+          {
+            "name": "level_19__r1c5 -> level_19__r5c5",
+            "connected_region": "level_19__r5c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 019 - Shieldspire",
+            "id": 30000003,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_19__r3c3": {
+        "name": "level_19__r3c3",
+        "exits": [
+          {
+            "name": "level_19__r3c3 -> level_19__r1c5",
+            "connected_region": "level_19__r1c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          },
+          {
+            "name": "level_19__r3c3 -> level_19__r1c1",
+            "connected_region": "level_19__r1c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
+              }
+            }
+          },
+          {
+            "name": "level_19__r3c3 -> level_19__r5c5",
+            "connected_region": "level_19__r5c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "L19 flag 1: bosslock@48,32 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
+              }
+            },
+            "item": {
+              "name": "L19 flag 1: bosslock@48,32 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L19:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 19,
+              "tag": 1,
+              "class": "bosslock",
+              "x": 48,
+              "y": 32
+            },
+            "action": {
+              "verb": "opened by walking its key line with the matching boss key",
+              "item": "hasKey"
+            },
+            "side": "level_19__r3c3",
+            "across": [
+              "level_19__r1c1"
+            ]
+          }
+        ]
+      },
+      "level_19__r5c5": {
+        "name": "level_19__r5c5",
+        "exits": [
+          {
+            "name": "level_19__r5c5 -> level_19__r1c5",
+            "connected_region": "level_19__r1c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          },
+          {
+            "name": "level_19__r5c5 -> level_19__r3c3",
+            "connected_region": "level_19__r3c3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          },
+          {
+            "name": "level_19__r5c5 -> level_18__r7c10",
+            "connected_region": "level_18__r7c10",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 019 - Boss Key 0",
+            "id": 30000002,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            },
+            "item": {
+              "name": "Red Key",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_20__r1c4": {
+        "name": "level_20__r1c4",
+        "exits": [
+          {
+            "name": "level_20__r1c4 -> level_20__r1c12",
+            "connected_region": "level_20__r1c12",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
+            }
+          },
+          {
+            "name": "level_20__r1c4 -> level_20__r3c1",
+            "connected_region": "level_20__r3c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
+            }
+          },
+          {
+            "name": "level_20__r1c4 -> level_19__r1c1",
+            "connected_region": "level_19__r1c1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 020 - Shield",
+            "id": 30000004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Shield",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "level_20__r1c12": {
+        "name": "level_20__r1c12",
+        "exits": [
+          {
+            "name": "level_20__r1c12 -> level_20__r1c4",
+            "connected_region": "level_20__r1c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_20__r3c1": {
+        "name": "level_20__r3c1",
+        "exits": [
+          {
+            "name": "level_20__r3c1 -> level_20__r1c4",
+            "connected_region": "level_20__r1c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Shield"
+              }
+            }
+          },
+          {
+            "name": "level_20__r3c1 -> level_13",
+            "connected_region": "level_13",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -721,7 +1327,7 @@
         "exits": [
           {
             "name": "GameStart",
-            "connected_region": "level_14",
+            "connected_region": "level_0__r8c0",
             "access_rule": {
               "rule": "True_"
             }
@@ -741,13 +1347,62 @@
   },
   "items": {
     "1": {
-      "Seal": {
-        "name": "Seal",
+      "Progressive Shield": {
+        "name": "Progressive Shield",
         "id": 30000000,
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 2
+        "max_count": 1
+      },
+      "Red Key": {
+        "name": "Red Key",
+        "id": 30000001,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      },
+      "Seal": {
+        "name": "Seal",
+        "id": 30000002,
+        "groups": [],
+        "classification": "progression",
+        "type": null,
+        "max_count": 3
+      },
+      "L0 flag 1: breakablerock@288,176 cleared": {
+        "name": "L0 flag 1: breakablerock@288,176 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L0 flag 4: breakablerock@80,112 cleared": {
+        "name": "L0 flag 4: breakablerock@80,112 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "L19 flag 1: bosslock@48,32 cleared": {
+        "name": "L19 flag 1: bosslock@48,32 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "L16 flag 0: rope@32,16 cleared": {
         "name": "L16 flag 0: rope@32,16 cleared",
@@ -767,7 +1422,12 @@
   },
   "itempool_counts": {
     "1": {
-      "Seal": 2,
+      "Seal": 3,
+      "Red Key": 1,
+      "Progressive Shield": 1,
+      "L0 flag 1: breakablerock@288,176 cleared": 1,
+      "L0 flag 4: breakablerock@80,112 cleared": 1,
+      "L19 flag 1: bosslock@48,32 cleared": 1,
       "L16 flag 0: rope@32,16 cleared": 1
     }
   },
@@ -800,13 +1460,630 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-868aab48",
+      "atlas_id": "seedling-8ca69b85",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
   },
   "preset_sidecars": {
     "1": {
+      "level_0__r1c6": {
+        "substrate": "maze",
+        "shared_world": "level_0",
+        "playable_payload": {
+          "width": 20,
+          "height": 20,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 6,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_0__r8c0 -> level_13",
+              "x": 2,
+              "y": 12,
+              "side": null,
+              "exitName": "level_0__r8c0 -> level_13",
+              "targetRegion": "level_13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_32_192"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 15,
+              "y": 0,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 2,
+              "id": "rock_sword_spear"
+            },
+            {
+              "x": 15,
+              "y": 2,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 3,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 4,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 5,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 7,
+              "id": "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared"
+            },
+            {
+              "x": 9,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 10,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 11,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 12,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 13,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 14,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 15,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 16,
+              "y": 8,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 9,
+              "y": 9,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 10,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 18,
+              "y": 11,
+              "id": "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared"
+            },
+            {
+              "x": 7,
+              "y": 12,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 13,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 14,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 15,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 16,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 17,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 18,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 0,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 1,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 3,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 4,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 5,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 6,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 7,
+              "y": 19,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 8,
+              "y": 19,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "rock_sword_spear": {
+              "id": "rock_sword_spear",
+              "name": "rock (sword or spear)",
+              "kind": "rock",
+              "clear_set": [],
+              "struck_by": [
+                "sword",
+                "spear"
+              ],
+              "color": "#7a6a55"
+            },
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Swim",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared": {
+              "id": "rock_sword_spear~L0 flag 1: breakablerock@288,176 cleared",
+              "name": "rock (sword or spear): L0 flag 1: breakablerock@288,176 cleared",
+              "kind": "rock",
+              "clear_set": [
+                [
+                  "L0 flag 1: breakablerock@288,176 cleared"
+                ]
+              ],
+              "struck_by": [
+                "sword",
+                "spear"
+              ],
+              "color": "#7a6a55",
+              "events": [
+                {
+                  "name": "L0 flag 1: breakablerock@288,176 cleared",
+                  "side": "level_0__r8c0"
+                }
+              ],
+              "at": "18,11"
+            },
+            "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared": {
+              "id": "rock_sword_spear~L0 flag 4: breakablerock@80,112 cleared",
+              "name": "rock (sword or spear): L0 flag 4: breakablerock@80,112 cleared",
+              "kind": "rock",
+              "clear_set": [
+                [
+                  "L0 flag 4: breakablerock@80,112 cleared"
+                ]
+              ],
+              "struck_by": [
+                "sword",
+                "spear"
+              ],
+              "color": "#7a6a55",
+              "events": [
+                {
+                  "name": "L0 flag 4: breakablerock@80,112 cleared",
+                  "side": "level_0__r8c0"
+                }
+              ],
+              "at": "5,7"
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Swim x2",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim",
+                  "count": 2
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "action_lib": {
+            "sword": {
+              "item": "Progressive Sword",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "z"
+            },
+            "spear": {
+              "item": "Ghost Spear",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "x"
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 13,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 16,
+              "y": 6,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 13,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            },
+            {
+              "x": 16,
+              "y": 7,
+              "dir": "N",
+              "gate": "atlas_gate_1"
+            }
+          ],
+          "shared_world": {
+            "key": "level_0",
+            "regions": [
+              "level_0__r1c6",
+              "level_0__r2c13",
+              "level_0__r4c16",
+              "level_0__r8c0",
+              "level_0__r11c19",
+              "level_0__r14c0"
+            ],
+            "rows": [
+              "....................",
+              "......AAAAAA........",
+              "....AAAA..AA.BB.....",
+              "....AAAA..AA.BB.....",
+              "........AAAA.BB.CC..",
+              "........AAAA.B..CC..",
+              "........AAAA.....CC.",
+              "..................C.",
+              "DDDDDDDDD.........C.",
+              "DDDDDDDD..DDDDDD..C.",
+              "....DDD..DDD..DD....",
+              "....DDDDDDDDDDDDDD.E",
+              "..DDDDD.DDDDDDD.D...",
+              "..DDDDD..DDDDDDDDD..",
+              "F.DDDD....DDDDDDDD..",
+              "F..D....DDDDDDDDDD..",
+              "F...........D.DDDD..",
+              "............DDDDDD..",
+              "............D..DDD..",
+              "...................."
+            ],
+            "entrances": {
+              "level_0__r1c6": {
+                "x": 6,
+                "y": 1
+              },
+              "level_0__r2c13": {
+                "x": 13,
+                "y": 2
+              },
+              "level_0__r4c16": {
+                "x": 16,
+                "y": 4
+              },
+              "level_0__r8c0": {
+                "x": 0,
+                "y": 8
+              },
+              "level_0__r11c19": {
+                "x": 19,
+                "y": 11
+              },
+              "level_0__r14c0": {
+                "x": 0,
+                "y": 14
+              }
+            },
+            "links": {
+              "level_0__r11c19>level_0__r8c0": "level_0__r11c19 -> level_0__r8c0",
+              "level_0__r8c0>level_0__r11c19": "level_0__r8c0 -> level_0__r11c19",
+              "level_0__r14c0>level_0__r8c0": "level_0__r14c0 -> level_0__r8c0",
+              "level_0__r8c0>level_0__r14c0": "level_0__r8c0 -> level_0__r14c0",
+              "level_0__r1c6>level_0__r2c13": "level_0__r1c6 -> level_0__r2c13",
+              "level_0__r2c13>level_0__r1c6": "level_0__r2c13 -> level_0__r1c6",
+              "level_0__r2c13>level_0__r4c16": "level_0__r2c13 -> level_0__r4c16",
+              "level_0__r4c16>level_0__r2c13": "level_0__r4c16 -> level_0__r2c13",
+              "level_0__r2c13>level_0__r8c0": "level_0__r2c13 -> level_0__r8c0",
+              "level_0__r4c16>level_0__r8c0": "level_0__r4c16 -> level_0__r8c0",
+              "level_0__r8c0>level_0__r2c13": "level_0__r8c0 -> level_0__r2c13",
+              "level_0__r8c0>level_0__r4c16": "level_0__r8c0 -> level_0__r4c16"
+            }
+          },
+          "atlas_region": "level_0",
+          "level": 0,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_0__r2c13": {
+        "substrate": "maze",
+        "shared_world": "level_0"
+      },
+      "level_0__r4c16": {
+        "substrate": "maze",
+        "shared_world": "level_0"
+      },
+      "level_0__r8c0": {
+        "substrate": "maze",
+        "shared_world": "level_0"
+      },
+      "level_0__r11c19": {
+        "substrate": "maze",
+        "shared_world": "level_0"
+      },
+      "level_0__r14c0": {
+        "substrate": "maze",
+        "shared_world": "level_0"
+      },
       "level_13": {
         "substrate": "maze",
         "playable_payload": {
@@ -828,6 +2105,28 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_32_32"
+            },
+            {
+              "exit_id": "level_13 -> level_0__r8c0",
+              "x": 4,
+              "y": 9,
+              "side": null,
+              "exitName": "level_13 -> level_0__r8c0",
+              "targetRegion": "level_0__r8c0",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_64_144"
+            },
+            {
+              "exit_id": "level_13 -> level_20__r3c1",
+              "x": 6,
+              "y": 2,
+              "side": null,
+              "exitName": "level_13 -> level_20__r3c1",
+              "targetRegion": "level_20__r3c1",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_96_32"
             }
           ],
           "obstacles": [],
@@ -1844,6 +3143,17 @@
           },
           "exits": [
             {
+              "exit_id": "level_18__r7c10 -> level_19__r5c5",
+              "x": 11,
+              "y": 7,
+              "side": null,
+              "exitName": "level_18__r7c10 -> level_19__r5c5",
+              "targetRegion": "level_19__r5c5",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_176_112"
+            },
+            {
               "exit_id": "level_18__r7c10 -> level_18__r1c1",
               "x": 9,
               "y": 7,
@@ -1913,6 +3223,463 @@
             "y": 0
           }
         }
+      },
+      "level_19__r1c1": {
+        "substrate": "maze",
+        "shared_world": "level_19",
+        "playable_payload": {
+          "width": 11,
+          "height": 11,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,1,0,0,0,1,1,1,1,0,1,0,0,0,0,0,1,1,1,1,0,1,1,1,0,0,0,1,1,1,1,0,1,1,1,0,0,0,1,1,1,1,0,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 6
+          },
+          "exits": [
+            {
+              "exit_id": "level_19__r5c5 -> level_18__r7c10",
+              "x": 0,
+              "y": 9,
+              "side": null,
+              "exitName": "level_19__r5c5 -> level_18__r7c10",
+              "targetRegion": "level_18__r7c10",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_teleporter_0_144"
+            },
+            {
+              "exit_id": "level_19__r1c1 -> level_20__r1c4",
+              "x": 1,
+              "y": 6,
+              "side": null,
+              "exitName": "level_19__r1c1 -> level_20__r1c4",
+              "targetRegion": "level_20__r1c4",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_16_96"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 3,
+              "y": 2,
+              "id": "atlas_gate_0~L19 flag 1: bosslock@48,32 cleared"
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 3,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "id": "atlas_gate_1"
+            },
+            {
+              "x": 7,
+              "y": 4,
+              "id": "atlas_gate_1"
+            }
+          ],
+          "items": [
+            {
+              "x": 5,
+              "y": 2,
+              "id": "Seal",
+              "locationName": "Level 019 - Shieldspire"
+            },
+            {
+              "x": 6,
+              "y": 4,
+              "id": "Red Key",
+              "locationName": "Level 019 - Boss Key 0"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Red Key",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_1": {
+              "id": "atlas_gate_1",
+              "name": "Progressive Sword",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Sword"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_0~L19 flag 1: bosslock@48,32 cleared": {
+              "id": "atlas_gate_0~L19 flag 1: bosslock@48,32 cleared",
+              "name": "Red Key: L19 flag 1: bosslock@48,32 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Red Key"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              },
+              "events": [
+                {
+                  "name": "L19 flag 1: bosslock@48,32 cleared",
+                  "side": "level_19__r3c3"
+                }
+              ]
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "L19 flag 1: bosslock@48,32 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L19 flag 1: bosslock@48,32 cleared"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "entry_gates": [
+            {
+              "x": 3,
+              "y": 2,
+              "dir": "S",
+              "gate": "atlas_gate_2"
+            }
+          ],
+          "shared_world": {
+            "key": "level_19",
+            "regions": [
+              "level_19__r1c1",
+              "level_19__r1c5",
+              "level_19__r3c3",
+              "level_19__r5c5"
+            ],
+            "rows": [
+              "...........",
+              ".AAA.BBB...",
+              ".A...BBB...",
+              ".A.CC......",
+              ".A....D....",
+              ".A...DDD...",
+              ".A...DDD...",
+              ".....DDD...",
+              ".....DDD...",
+              "DDDDDDDD...",
+              "..........."
+            ],
+            "entrances": {
+              "level_19__r1c1": {
+                "x": 1,
+                "y": 6
+              },
+              "level_19__r1c5": {
+                "x": 5,
+                "y": 1
+              },
+              "level_19__r3c3": {
+                "x": 3,
+                "y": 3
+              },
+              "level_19__r5c5": {
+                "x": 1,
+                "y": 9
+              }
+            },
+            "links": {
+              "level_19__r1c1>level_19__r3c3": "level_19__r1c1 -> level_19__r3c3",
+              "level_19__r1c5>level_19__r3c3": "level_19__r1c5 -> level_19__r3c3",
+              "level_19__r3c3>level_19__r1c5": "level_19__r3c3 -> level_19__r1c5",
+              "level_19__r1c5>level_19__r5c5": "level_19__r1c5 -> level_19__r5c5",
+              "level_19__r5c5>level_19__r1c5": "level_19__r5c5 -> level_19__r1c5",
+              "level_19__r3c3>level_19__r1c1": "level_19__r3c3 -> level_19__r1c1",
+              "level_19__r3c3>level_19__r5c5": "level_19__r3c3 -> level_19__r5c5",
+              "level_19__r5c5>level_19__r3c3": "level_19__r5c5 -> level_19__r3c3"
+            }
+          },
+          "atlas_region": "level_19",
+          "level": 19,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_19__r1c5": {
+        "substrate": "maze",
+        "shared_world": "level_19"
+      },
+      "level_19__r3c3": {
+        "substrate": "maze",
+        "shared_world": "level_19"
+      },
+      "level_19__r5c5": {
+        "substrate": "maze",
+        "shared_world": "level_19"
+      },
+      "level_20__r1c4": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 4,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_20__r1c4 -> level_19__r1c1",
+              "x": 12,
+              "y": 3,
+              "side": null,
+              "exitName": "level_20__r1c4 -> level_19__r1c1",
+              "targetRegion": "level_19__r1c1",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_192_48"
+            },
+            {
+              "exit_id": "level_20__r1c4 -> level_20__r1c12",
+              "x": 11,
+              "y": 1,
+              "side": null,
+              "exitName": "level_20__r1c4 -> level_20__r1c12",
+              "targetRegion": "level_20__r1c12",
+              "targetExitId": "level_20__r1c12 -> level_20__r1c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c12"
+            },
+            {
+              "exit_id": "level_20__r1c4 -> level_20__r3c1",
+              "x": 2,
+              "y": 5,
+              "side": null,
+              "exitName": "level_20__r1c4 -> level_20__r3c1",
+              "targetRegion": "level_20__r3c1",
+              "targetExitId": "level_20__r3c1 -> level_20__r1c4",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r3c1"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 11,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
+              "x": 2,
+              "y": 5,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 7,
+              "y": 3,
+              "id": "Progressive Shield",
+              "locationName": "Level 020 - Shield"
+            }
+          ],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Shield",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Shield"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_20",
+          "atlas_sub_region": "r1c4",
+          "level": 20,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_20__r1c12": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 12,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_20__r1c12 -> level_20__r1c4",
+              "x": 11,
+              "y": 1,
+              "side": null,
+              "exitName": "level_20__r1c12 -> level_20__r1c4",
+              "targetRegion": "level_20__r1c4",
+              "targetExitId": "level_20__r1c4 -> level_20__r1c12",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 11,
+              "y": 1,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Shield",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Shield"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_20",
+          "atlas_sub_region": "r1c12",
+          "level": 20,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "level_20__r3c1": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 15,
+          "height": 9,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "level_20__r3c1 -> level_13",
+              "x": 1,
+              "y": 3,
+              "side": null,
+              "exitName": "level_20__r3c1 -> level_13",
+              "targetRegion": "level_13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_16_48"
+            },
+            {
+              "exit_id": "level_20__r3c1 -> level_20__r1c4",
+              "x": 2,
+              "y": 5,
+              "side": null,
+              "exitName": "level_20__r3c1 -> level_20__r1c4",
+              "targetRegion": "level_20__r1c4",
+              "targetExitId": "level_20__r1c4 -> level_20__r3c1",
+              "isTeleporter": false,
+              "atlas_exit_id": "cross_r1c4"
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 2,
+              "y": 5,
+              "id": "atlas_gate_0"
+            }
+          ],
+          "items": [],
+          "obstacleLib": {
+            "atlas_gate_0": {
+              "id": "atlas_gate_0",
+              "name": "Progressive Shield",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Shield"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            }
+          },
+          "atlas_region": "level_20",
+          "atlas_sub_region": "r3c1",
+          "level": 20,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
       }
     }
   },
@@ -1935,9 +3702,11 @@
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [
+            "level_0__r8c0",
             "level_13",
             "level_14",
             "level_15__r1c5",
+            "level_20__r3c1",
             "Menu"
           ],
           "sphere_locations": []
