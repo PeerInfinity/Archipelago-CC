@@ -1,0 +1,69 @@
+PASS: seam 5564: the 640-unit request solves ON — work 122
+seam 5564: work 122, plan 334 t, verbs ["dodge","walk"]; model rows 335, ends L102, hits 0
+PASS: seam 5564: the plan replays to L102 on the model with zero hits
+PASS: seam 5580: the 640-unit request solves ON — work 122
+seam 5580: work 122, plan 329 t, verbs ["dodge","walk"]; model rows 330, ends L102, hits 0
+PASS: seam 5580: the plan replays to L102 on the model with zero hits
+PASS: seam 5594: the 640-unit request solves ON — work 124
+seam 5594: work 124, plan 383 t, verbs ["dodge","walk"]; model rows 384, ends L102, hits 0
+PASS: seam 5594: the plan replays to L102 on the model with zero hits
+PASS: seam 5599: the 640-unit request solves ON — work 124
+seam 5599: work 124, plan 382 t, verbs ["dodge","walk"]; model rows 383, ends L102, hits 0
+PASS: seam 5599: the plan replays to L102 on the model with zero hits
+PASS: seam 5605: the 640-unit request solves ON — work 124
+seam 5605: work 124, plan 383 t, verbs ["dodge","walk"]; model rows 384, ends L102, hits 0
+PASS: seam 5605: the plan replays to L102 on the model with zero hits
+PASS: seam 5612: the 640-unit request solves ON — work 124
+seam 5612: work 124, plan 380 t, verbs ["dodge","walk"]; model rows 381, ends L102, hits 0
+PASS: seam 5612: the plan replays to L102 on the model with zero hits
+PASS: seam 5622: the 640-unit request solves ON — work 128
+seam 5622: work 128, plan 378 t, verbs ["dodge","walk"]; model rows 379, ends L102, hits 0
+PASS: seam 5622: the plan replays to L102 on the model with zero hits
+PASS: seam 5640: the 640-unit request solves ON — work 122
+seam 5640: work 122, plan 339 t, verbs ["dodge","walk"]; model rows 340, ends L102, hits 0
+PASS: seam 5640: the plan replays to L102 on the model with zero hits
+PASS: seam 5643: the 640-unit request solves ON — work 122
+seam 5643: work 122, plan 332 t, verbs ["dodge","walk"]; model rows 333, ends L102, hits 0
+PASS: seam 5643: the plan replays to L102 on the model with zero hits
+PASS: seam 5652: the 640-unit request solves ON — work 122
+seam 5652: work 122, plan 336 t, verbs ["dodge","walk"]; model rows 337, ends L102, hits 0
+PASS: seam 5652: the plan replays to L102 on the model with zero hits
+PASS: seam 5656: the 640-unit request solves ON — work 122
+seam 5656: work 122, plan 333 t, verbs ["dodge","walk"]; model rows 334, ends L102, hits 0
+PASS: seam 5656: the plan replays to L102 on the model with zero hits
+# box lock: TAKEN by seedling-fidelity-beamlane-evidence/witness.mjs (browser, pid 8849) — head b58c77714, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+seam 5564: game 335 rows, levels [107,102], first differing row -1
+PASS: seam 5564: the GAME reaches L102 on the solver's plan
+PASS: seam 5564: the game's stream equals the model's (0 px) — first differing row -1
+seam 5580: game 330 rows, levels [107,102], first differing row -1
+PASS: seam 5580: the GAME reaches L102 on the solver's plan
+PASS: seam 5580: the game's stream equals the model's (0 px) — first differing row -1
+seam 5594: game 384 rows, levels [107,102], first differing row -1
+PASS: seam 5594: the GAME reaches L102 on the solver's plan
+PASS: seam 5594: the game's stream equals the model's (0 px) — first differing row -1
+seam 5599: game 383 rows, levels [107,102], first differing row -1
+PASS: seam 5599: the GAME reaches L102 on the solver's plan
+PASS: seam 5599: the game's stream equals the model's (0 px) — first differing row -1
+seam 5605: game 384 rows, levels [107,102], first differing row -1
+PASS: seam 5605: the GAME reaches L102 on the solver's plan
+PASS: seam 5605: the game's stream equals the model's (0 px) — first differing row -1
+seam 5612: game 381 rows, levels [107,102], first differing row -1
+PASS: seam 5612: the GAME reaches L102 on the solver's plan
+PASS: seam 5612: the game's stream equals the model's (0 px) — first differing row -1
+seam 5622: game 379 rows, levels [107,102], first differing row -1
+PASS: seam 5622: the GAME reaches L102 on the solver's plan
+PASS: seam 5622: the game's stream equals the model's (0 px) — first differing row -1
+seam 5640: game 340 rows, levels [107,102], first differing row -1
+PASS: seam 5640: the GAME reaches L102 on the solver's plan
+PASS: seam 5640: the game's stream equals the model's (0 px) — first differing row -1
+seam 5643: game 333 rows, levels [107,102], first differing row -1
+PASS: seam 5643: the GAME reaches L102 on the solver's plan
+PASS: seam 5643: the game's stream equals the model's (0 px) — first differing row -1
+seam 5652: game 337 rows, levels [107,102], first differing row -1
+PASS: seam 5652: the GAME reaches L102 on the solver's plan
+PASS: seam 5652: the game's stream equals the model's (0 px) — first differing row -1
+seam 5656: game 334 rows, levels [107,102], first differing row -1
+PASS: seam 5656: the GAME reaches L102 on the solver's plan
+PASS: seam 5656: the game's stream equals the model's (0 px) — first differing row -1
+ALL CHECKS PASSED

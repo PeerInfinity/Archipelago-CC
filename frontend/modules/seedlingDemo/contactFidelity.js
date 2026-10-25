@@ -1323,6 +1323,49 @@ export const CONTACT_FIDELITY = {
      * ⛓ planning-12's flip (⚖ user, 2026-10-24, wave 29) turns it ON (CI A/B on main ae411caa60 + the slice).
      */
     spinnerLockLag: true,
+    /**
+     * fidelity BEAMLANE (wave 29) — A CORRIDOR ALONG A BEAM TOWER'S BAND RIDES THE BAND-TO-BAND LANE AT THE TOWERS'
+     * LIVE `y` (`solverBot.beamLaneSteer`, the dodge rung's PHASE arm). The bob `y += 0.3·sin(worldFrame(100, 2)…)`
+     * reads `Game.time`, so the arrival clock fixes where the bands sit for the whole visit, and a corridor walked at
+     * the tile centre is inside a band at most clocks (L107's rows 7-8, leg 785: 12/61 clocks solved, the rest refused
+     * on `beamtower@208,120`'s beam after ten 89x8 stall grids). MEASURED on the game (js `seedling-js-l107-investigate`,
+     * CI 40130832484): the lane walk reaches L102 at 61/61 clocks, streams = model. ON: before the stall grid, the arm
+     * previews the corridor with its aim steered into the free band-to-band interval at each tick's live tower `y`
+     * (`dangerMap.phaseBeamTowerAt`, the timeline `phaseHazardHit` prices), crossing a band only when it does not fire
+     * for the crossing; the walk is certified by the same `probeSamples`, and an uncertified lane falls through to the
+     * stall grid, its reason named. OFF: byte-identical. `SEEDLING_BEAM_LANE_WALK=0|1`.
+     */
+    beamLaneWalk: true,
+    /**
+     * fidelity TURRETCIRCLE D1 (wave 29) — AN ICE TURRET'S BLAST STOPS ON THE PLAYER'S SHIELD. `IceTurretBlast.hitables`
+     * is `["Player", "Tree", "Solid", "Shield"]` (`IceTurretBlast.as:17`), and `Player.addShield` adds a `"Shield"`
+     * entity whose box `render` places by the facing (`Player.as:1180-1256`; `bobBossFight.playerShieldRect`). A blast
+     * that meets that box and not the player is removed with no freeze and no hit; one that meets both still hits.
+     * The spit and the lava ball already asked it (`stepSpitsNow`, `stepLavaBallsNow`); `stepBlastsNow` did not, so a
+     * shielded player was hit by blasts the game stops. ON: `stepBlastsNow` passes the shield box. OFF: byte-identical.
+     * `SEEDLING_ICE_BLAST_SHIELD=0|1`.
+     */
+    iceBlastShield: true,
+    /**
+     * fidelity TURRETCIRCLE D2 (wave 29) — THE PLAIN SWORD KILLS AN ICE TURRET ON THE MOVE. ⚖ The user (2026-10-24):
+     * *"The way to not get hit is to keep moving while attacking. Keep circling around the turret."* No standing Sword
+     * kill is hitless (the third landing follows the turret's next shot; CORPSEBUMP), while a player circling the body
+     * on the lanes beside it, swinging on the move, is never where a frozen aim points (game-measured,
+     * `turretcircle-l40-sword-circle`, p4g, 0 px). ON: `killForCorpse` with the Sword alone kills by
+     * `killIceTurretInPlace`'s `circle` option (`circleKillIceTurret`), tried on a fork per start delay, direction and
+     * first corner; none hitless ⇒ refused by name. OFF: byte-identical (the Sword alone refuses as before).
+     * `SEEDLING_TURRET_CIRCLE_KILL=0|1`.
+     */
+    turretCircleKill: true,
+    /**
+     * fidelity TURRETCIRCLE D3 (wave 29) — AN ICE TURRET'S DEATH STOPS ITS SHOT. `IceTurret.death()`'s first call does
+     * `play("dead")` (`IceTurret.as:135-151`), which resets the Spritemap's clock onto a rate-0 animation, so a
+     * `startshot` in progress never wraps and `endAnim` never spawns its volley; `death()` runs inside `e.update()`,
+     * before that tick's `graphic.update()`. `iceTurret.interceptIceTurretDeath` set `dead` and left the shot's clock
+     * running, so a corpse could fire (game-measured: `turretcircle-l40-t2-holder-sword` t70, no blast on the game, three
+     * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
+     */
+    iceTurretDeathAnim: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1574,6 +1617,16 @@ if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '1') CONTACT_
 if (globalThis.process?.env?.SEEDLING_STANCE_REENTRY_NEXT_DOOR === '0') CONTACT_FIDELITY.stanceReentryNextDoor = false;
 if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '1') CONTACT_FIDELITY.spinnerLockLag = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_LOCK_LAG === '0') CONTACT_FIDELITY.spinnerLockLag = false;
+// ⛓ fidelity BEAMLANE: `SEEDLING_BEAM_LANE_WALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BEAM_LANE_WALK === '1') CONTACT_FIDELITY.beamLaneWalk = true;
+if (globalThis.process?.env?.SEEDLING_BEAM_LANE_WALK === '0') CONTACT_FIDELITY.beamLaneWalk = false;
+// ⛓ fidelity TURRETCIRCLE: `SEEDLING_ICE_BLAST_SHIELD`, `SEEDLING_TURRET_CIRCLE_KILL` and `SEEDLING_ICE_TURRET_DEATH_ANIM` (`=0|1`), likewise.
+if (globalThis.process?.env?.SEEDLING_ICE_BLAST_SHIELD === '1') CONTACT_FIDELITY.iceBlastShield = true;
+if (globalThis.process?.env?.SEEDLING_ICE_BLAST_SHIELD === '0') CONTACT_FIDELITY.iceBlastShield = false;
+if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELITY.turretCircleKill = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
+if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
+if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
