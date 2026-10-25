@@ -278,6 +278,12 @@ attribute:
   became true. **This one is a real defect.**
 - `STARVED` — the page did not get scheduled (app work on the main thread, or
   machine load). Re-run solo before believing it.
+- `FRAME-STARVED` — the poll's timers ran on schedule, but the page got no
+  animation frame for over half the window, so a rAF-driven condition (the
+  Loops queue's `_processFrame`, a substrate's frame loop) never had its
+  chance. Unlike `STARVED`, the page WAS scheduled; the compositor/GPU was not
+  delivering frames. Look at the PREDECESSOR row first (a renderer still
+  holding the GPU — Ruffle's `wgpu-webgl` did this), then re-run the row solo.
 - `CHECK-BOUND` — the condition function itself ate the poll budget; fix the
   check, not the code under test.
 
