@@ -81,7 +81,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // splits into its three pools (+1 with a subgraph, +3 sub-regions r0c7/r2c2/r5c10, +6 internal exits: the three
         // falls True_, the three climbs Has(Progressive Swim, 2)), so swim 201 -> 204, Has(Swim, 2) 28 -> 31, and L52
         // joins the swim levels (21 -> 22, uncertified 16 -> 17).
-        expect(c.atlasId).toBe('seedling-65de70ba');
+        // ⛓ rules-l66-l57-probe — restamped (65de70ba -> 756a2066): L66's door into Dungeon 6 is charged the off-grid
+        // Yellow-Key lock it stands under (a boundary exit rule); no door, sub-region or internal-exit count moves.
+        expect(c.atlasId).toBe('seedling-756a2066');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.

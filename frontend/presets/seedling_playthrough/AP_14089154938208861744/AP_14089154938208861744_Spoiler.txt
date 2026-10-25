@@ -172,7 +172,6 @@ Playthrough:
 9: {
   Level 043 - Wand: Wand
   Level 067 - Boss Key 4: Yellow Key
-  Level 069 - Lights: Seal
 }
 10: {
   L12 flag 11: bosslock@112,192 cleared: L12 flag 11: bosslock@112,192 cleared
@@ -182,6 +181,7 @@ Playthrough:
   Level 012 - Witch: Progressive Sword
   Level 043 - Totem of Lacste: Seal
   Level 068 - Health: Health
+  Level 069 - Lights: Seal
   Level 071 - Chest: Seal
   Level 074 - Darkshield: Progressive Shield
 }
