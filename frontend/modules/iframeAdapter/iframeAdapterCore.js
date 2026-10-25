@@ -228,7 +228,9 @@ export class IframeAdapterCore {
                         // Publish region changed event so iframe can sync
                         this.eventBus.publish('gameState:regionChanged', {
                             oldRegion: null,
-                            newRegion: currentRegion
+                            newRegion: currentRegion,
+                            // Not a move: tells the newly connected page where the player is.
+                            resync: true
                         });
                     } else {
                         log('debug', 'No current region to send to iframe');

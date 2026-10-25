@@ -1,0 +1,23 @@
+## mutant: helper
+     × a previewed death: a truncated walk with no samples that names the death (`kind: 'death'`) 207ms
+     × G1's witness at t1251: (488,872) at eta 15; a pool there skips it for (488,856) at eta 16 4131ms
+     × a drown latched before the preview (every walk dies): no refuge, not a throw 1579ms
+     × the base walk dies: the STALL refusal names the death 10ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 7 passed (11)
+## mutant: paced
+     × planPacedWait: a pacing that dies is rejected at its tick; with no death it plans 269ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+## mutant: lean
+     × previewLean: a lean that dies is null (a miss); with no death it comes to rest 209ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+## mutant: tap
+     × previewFaceTap: a tap that dies is null; with no death it turns the player 256ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+## mutant: encounter
+     × the encounter (L32, r5-bobboss-fire at t20): a plan that dies is touched there; a key set that dies is safe only until then 1530ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)

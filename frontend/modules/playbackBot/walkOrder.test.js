@@ -7,7 +7,8 @@
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import { WALK_ORDERS, chooseWalkTarget, frozenFindPath, goalItemOf, integerSphereOf, rowMetaOf, walkCandidates } from './walkOrder.js';
+import { WALK_ORDERS, chooseWalkTarget, frozenFindPath, goalItemOf, hypotheticalFindPath, integerSphereOf, parseWalkOrder, rowMetaOf,
+    walkCandidates } from './walkOrder.js';
 import { PlaybackBotUI } from './playbackBotUI.js';
 
 const row = (locationName, regionName, sphereIndex, fractionalIndex) => ({ locationName, regionName, sphereIndex, fractionalIndex });
@@ -85,6 +86,83 @@ describe('walkOrder — pure', () => {
         perCall('S', 'B');
         expect(calls).toEqual([['S', 'B']]);
     });
+
+    // ⛓ POCKET-ITEM — a fake PathFinder with the real one's contract: it links only regions the snapshot holds
+    //   reachable, under exit rules read through the interface (here: `{item}` = that item held).
+    const REGIONS = new Map([
+        ['Home', { exits: [{ name: 'toPit', connected_region: 'Pit' }, { name: 'toEast', connected_region: 'East' }] }],
+        ['East', { exits: [{ name: 'eastHome', connected_region: 'Home' }] }],
+        ['Pit', { exits: [{ name: 'pitLedge', connected_region: 'Ledge', access_rule: { item: 'Key' } }] }],
+        ['Ledge', { exits: [{ name: 'ledgeHome', connected_region: 'Home' }] }],
+    ]);
+    const fakePathFinder = {
+        isRegionReachable: (r, snap) => snap.regionReachability?.[r] === true,
+        buildAccessibilityMap(staticData, snap, iface) {
+            const adj = new Map([...staticData.regions.keys()].map((r) => [r, []]));
+            for (const [r, data] of staticData.regions) {
+                if (!this.isRegionReachable(r, snap)) continue;
+                for (const e of data.exits ?? []) {
+                    if (!this.isRegionReachable(e.connected_region, snap)) continue;
+                    if (!e.access_rule || evaluate(e.access_rule, iface)) adj.get(r).push({ region: e.connected_region, exitName: e.name });
+                }
+            }
+            return adj;
+        },
+    };
+    const evaluate = (rule, iface) => Number(iface.inventory[rule.item] ?? 0) > 0;
+    const liveSnapshot = () => ({ inventory: { Coin: 1 }, regionReachability: { Home: true, East: true, Pit: true } });
+
+    it('hypotheticalFindPath: the Key opens a region the snapshot never reached; the live state is untouched', () => {
+        const snapshot = liveSnapshot();
+        const before = JSON.stringify(snapshot);
+        const interfaces = [];
+        const makeInterface = (snap) => { const i = { inventory: snap.inventory }; interfaces.push(snap); return i; };
+        const staticData = { regions: REGIONS };
+        const live = hypotheticalFindPath(fakePathFinder, { staticData, snapshot, makeInterface, evaluate, extra: [] });
+        expect(live('Pit', 'Home')).toBeNull();
+        const withKey = hypotheticalFindPath(fakePathFinder, { staticData, snapshot, makeInterface, evaluate, extra: ['Key'] });
+        expect(withKey('Pit', 'Home')?.steps.map((st) => st.region)).toEqual(['Pit', 'Ledge', 'Home']);
+        expect(JSON.stringify(snapshot)).toBe(before);
+        // a fresh state object per interface (the rule engine's helper cache is per context, blind to the inventory)
+        expect(new Set(interfaces).size).toBe(interfaces.length);
+        expect(interfaces.every((st) => st !== snapshot)).toBe(true);
+        expect(hypotheticalFindPath(fakePathFinder, { staticData, snapshot, extra: ['Key'] })).toBeNull();   // no interface maker
+    });
+
+    it('+pocket-item: a pocket its own item opens is no pocket; the same pocket holding a Coin is entered last', () => {
+        const q = [row('P', 'Pit', '0.1', null), row('E', 'East', '0.2', null)];
+        const staticData = { regions: REGIONS };
+        const choose = (pitItem) => {
+            const meta = new Map([['P', { item: pitItem }], ['E', { item: 'Coin' }]]);
+            const isPocket = (entry) => {
+                const out = hypotheticalFindPath(fakePathFinder, { staticData, snapshot: liveSnapshot(), evaluate,
+                    makeInterface: (snap) => ({ inventory: snap.inventory }), extra: [meta.get(entry.locationName).item] });
+                return entry.regionName !== 'Home' && !out(entry.regionName, 'Home');
+            };
+            return chooseWalkTarget({ order: WALK_ORDERS.reachablePocketItem, queue: q, checked: new Set(), meta,
+                price: () => ({ hops: 1, restart: false }), isPocket }).entry.locationName;
+        };
+        expect(choose('Key')).toBe('P');     // listed first, and its Key walks out
+        expect(choose('Coin')).toBe('E');    // a pocket owes a Restart: East first
+        // without the modifier the pocket is not priced, and the listed head wins the tie
+        expect(chooseWalkTarget({ order: WALK_ORDERS.reachableCheapest, queue: q, checked: new Set(),
+            price: () => ({ hops: 1, restart: false }), isPocket: () => true }).entry.locationName).toBe('P');
+        expect(parseWalkOrder(WALK_ORDERS.reachablePocketItemGrab)).toEqual({ scope: 'reachable-cheapest', pocketItem: true, grab: true });
+    });
+
+    it('+grab: a row on the route at zero detour goes first; a row off it does not', () => {
+        // Start -> Hall -> Pit (target, 2 hops); Hall is on the way; Side is 1 hop but 3 hops from the Pit
+        const hops = { Start: { Hall: 1, Pit: 2, Side: 1 }, Hall: { Pit: 1 }, Side: { Pit: 3 } };
+        const q = [row('T', 'Pit', '0.1', null), row('H', 'Hall', '1.1', null), row('S', 'Side', '1.2', null)];
+        const between = (from, to) => (hops[from]?.[to] !== undefined ? { hops: hops[from][to], restart: false } : null);
+        const pick = (queue) => chooseWalkTarget({ order: WALK_ORDERS.sphereCheapestGrab, queue, checked: new Set(),
+            price: (e) => between('Start', e.regionName), priceBetween: (a, b) => between(a.regionName, b.regionName) });
+        expect(pick(q)).toMatchObject({ entry: { locationName: 'H' }, grabbed: { locationName: 'H' } });
+        expect(pick(q.filter((e) => e.locationName !== 'H'))).toMatchObject({ entry: { locationName: 'T' }, grabbed: null });
+        // the same queue without the modifier: the sphere's own row
+        expect(chooseWalkTarget({ order: WALK_ORDERS.sphereCheapest, queue: q, checked: new Set(),
+            price: (e) => between('Start', e.regionName) }).entry.locationName).toBe('T');
+    });
 });
 
 // ---- the bot, driven -------------------------------------------------------------------------------------------
@@ -121,13 +199,14 @@ describe('walkOrder — the bot walks by cost', () => {
     };
     const rules = {
         regions: { 1: { Menu: { exits: [{ name: 'GameStart', connected_region: 'Start' }] }, Pit: { locations: [{ name: 'A Pit' }, { name: 'Z Pit' }] },
-            East: { locations: [{ name: 'B East' }] } } },
+            East: { locations: [{ name: 'B East' }] }, Hall: { locations: [{ name: 'H Hall' }] } } },
         start_regions: { 1: { default: ['Menu'] } },
         exporter: { 1: { return_to_menu: true } },
     };
-    const staticData = { regions: new Map([['Pit', { locations: [{ name: 'A Pit' }, { name: 'Z Pit' }] }], ['East', { locations: [{ name: 'B East' }] }]]) };
+    const staticData = { regions: new Map([['Pit', { locations: [{ name: 'A Pit' }, { name: 'Z Pit' }] }], ['East', { locations: [{ name: 'B East' }] }],
+        ['Hall', { locations: [{ name: 'H Hall' }] }]]) };
 
-    function makeBot() {
+    function makeBot({ spheres = null } = {}) {
         const calls = [];
         const controller = new Proxy({}, { get: (_t, m) => (m === 'then' ? undefined : (...args) => { calls.push({ method: m, args }); }) });
         const ref = {};
@@ -138,7 +217,7 @@ describe('walkOrder — the bot walks by cost', () => {
         };
         ref.bot = new PlaybackBotUI({
             // sphereState's own shape: the whole label as `sphereIndex` (the live page's; see `integerSphereOf`)
-            getSphereData: () => [{ sphereIndex: '0.1', locations: ['A Pit'] }, { sphereIndex: '0.2', locations: ['B East'] },
+            getSphereData: () => spheres ?? [{ sphereIndex: '0.1', locations: ['A Pit'] }, { sphereIndex: '0.2', locations: ['B East'] },
                 { sphereIndex: '1.1', locations: ['Z Pit'] }],
             getStaticData: () => staticData,
             getRulesJson: () => rules,
@@ -192,6 +271,24 @@ describe('walkOrder — the bot walks by cost', () => {
             expect(bot.getStatus()).toMatch(/^finished — 3 locations visited/);
         });
     }
+
+    it('sphere-cheapest+sweep+grab: the Hall row (a later sphere) is grabbed on the way into the Pit — no Restart', async () => {
+        const spheres = [{ sphereIndex: '0.1', locations: ['A Pit'] }, { sphereIndex: '0.2', locations: ['B East'] },
+            { sphereIndex: '1.1', locations: ['H Hall'] }, { sphereIndex: '2.1', locations: ['Z Pit'] }];
+        const plain = makeBot({ spheres });
+        plain.bot.setWalkOrder(WALK_ORDERS.sphereCheapest);
+        plain.bot.onRegionMove({ targetRegion: 'Start' });
+        await plain.bot.play();
+        expect(await drive(plain.bot, plain.walkTos)).toEqual(['B East', 'A Pit', 'Z Pit', 'H Hall']);   // swept Z, then Restart
+        expect(plain.bot.getRouteStats()).toMatchObject({ restarts: 1 });
+        const { bot, walkTos } = makeBot({ spheres });
+        bot.setWalkOrder(WALK_ORDERS.sphereCheapestGrab);
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(await drive(bot, walkTos)).toEqual(['B East', 'H Hall', 'A Pit', 'Z Pit']);
+        expect(bot.getRouteStats()).toEqual({ restarts: 0, transitions: 4, legs: 4 });
+        expect(bot.getChoiceTimings()).toMatchObject({ choices: 4, hypotheticals: 0 });
+    });
 
     it('the walk order applies to the sphere source only, and a change stops a running walk', async () => {
         const { bot } = makeBot();

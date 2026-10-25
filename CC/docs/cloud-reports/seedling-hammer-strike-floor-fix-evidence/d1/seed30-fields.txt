@@ -1,0 +1,2 @@
+{"stop":"TARGET_REACHED","finalTicks":158,"kept":["water-pool(w=3,h=1)@{\"tx\":2,\"ty\":3}","water-pool(w=2,h=2)@{\"tx\":2,\"ty\":6}","wall-segment(ori=v,len=4)@{\"tx\":7,\"ty\":5}"]}
+{"stop":"TARGET_REACHED","finalTicks":178,"kept":["water-pool(w=2,h=2)@{\"tx\":2,\"ty\":6}","wall-segment(ori=v,len=4)@{\"tx\":7,\"ty\":5}","water-pool(w=2,h=2)@{\"tx\":4,\"ty\":3}"]}

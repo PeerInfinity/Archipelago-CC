@@ -94,6 +94,9 @@ export class StateManagerProxy {
     this.debugMode = false; // Initialize debugMode
     this.gameNameFromWorker = null; // ADDED: To store game_name from worker confirmation
     this.currentRulesSource = null; // ADDED: To store the source name of the current rules
+    // Numbers each loadRules; the worker echoes it on rulesLoadedConfirmation
+    // so a confirmation a newer loadRules has overtaken can be told apart.
+    this.rulesLoadSeq = 0;
     this.messageCounter = 0; // DEPRECATED or RENAMED? Let's ensure nextMessageId is primary.
     this.nextMessageId = 0; // MODIFIED: Initialize nextMessageId
     this.config = null; // To store initial config like playerId
@@ -389,6 +392,20 @@ export class StateManagerProxy {
           '[StateManagerProxy] Received rulesLoadedConfirmation from worker.',
           message
         );
+        // A load a newer loadRules overtook (the worker runs them in order,
+        // so the newer one's confirmation follows). Publishing it put an
+        // obsolete world on the bus as stateManager:rulesLoaded, labelled
+        // with the NEWER load's source (currentRulesSource is set at request
+        // time): a test waiting on its own load caught the boot preset's,
+        // and the loops module spent the newer world's fresh loop_costs on
+        // it (bundled boot, tasw-record-coarse-autoswitch).
+        if (message.loadSeq !== undefined && message.loadSeq !== this.rulesLoadSeq) {
+          log(
+            'info',
+            `[StateManagerProxy] Dropping rulesLoadedConfirmation for overtaken load #${message.loadSeq} (latest #${this.rulesLoadSeq}).`
+          );
+          break;
+        }
         if (message.newStaticData) {
           const newCache = { ...message.newStaticData };
 
@@ -1403,7 +1420,9 @@ export class StateManagerProxy {
 
     log('info', '[StateManagerProxy] Sending loadRules command to worker...');
     // Send the rules data and player info to the worker
+    this.rulesLoadSeq += 1;
     await this._sendCommand(StateManagerProxy.COMMANDS.LOAD_RULES, {
+      loadSeq: this.rulesLoadSeq,
       rulesData,
       playerInfo: {
         // Ensure playerInfo is structured as expected by the worker

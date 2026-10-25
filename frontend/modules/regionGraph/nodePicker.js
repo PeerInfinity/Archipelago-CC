@@ -95,6 +95,11 @@ export function setupNodePicker(ui) {
         fillList(root.querySelector('#rg-pick-location-list'), locationsOf(ui, regions).keys());
     };
     root.addEventListener('toggle', () => { if (root.open) refresh(); });
+    // An open section opened before the graph's first build (or across a
+    // rules reload) would keep the lists it read then — empty on a cold
+    // boot — until a box is focused. graphDataManager calls this after
+    // every build.
+    ui.refreshNodePicker = () => { if (root.open) refresh(); };
     regionBox.addEventListener('focus', refresh);
     locationBox.addEventListener('focus', refresh);
 

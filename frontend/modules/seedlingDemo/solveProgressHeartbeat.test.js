@@ -69,8 +69,9 @@ function stagingOf(name, residue = null) {
  * arm's stance scan (211 hook calls, 86 % of the solve in gaps over 100 ms). `beats` is L40's floor (`K`).
  */
 const SOLVES = [
+    // 445 t with `STRIKE_ETA_FLOOR` OFF; 367 since hammer-phase SFF shipped the floor ON (the default this row asks)
     { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21,
-        goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445 },
+        goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 367 },
     { what: 'L40 kill rung (the totem part at (160,640))', tape: 'r5-l40-part5',
         goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], ticks: 679, beats: 40 },
 ];
