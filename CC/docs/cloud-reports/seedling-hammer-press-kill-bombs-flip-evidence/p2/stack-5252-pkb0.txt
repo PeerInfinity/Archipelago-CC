@@ -1,0 +1,27 @@
+STACK chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not in
+    at onScreenAt (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:8515:23)
+    at Object.step (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:8675:35)
+    at previewWalk (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:6090:27)
+    at probeCorridor (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22625:22)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25677:23)
+    at walkToRun (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25909:71)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25932:19)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25602:29)
+    at walkToRun (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25909:71)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25932:19)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25602:29)
+    at walkToRun (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25909:71)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:25932:19)
+    at solveSegmentUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:27067:13)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21570:36
+    at refusingByName (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:474:16)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21570:15
+    at withSolveDeadline (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21594:21)
+    at solveSegmentDeadlined (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21569:12)
+    at solveSegment (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21554:12)
+    at solveFromTape (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js:813:17)
+    at file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js:435:42
+    at settleSolve (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js:884:34)
+    at solveAnytime (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/jsRuntimeSolver.js:435:24)
+    at file:///tmp/claude-0/-home-user-Archipelago-CC/a99380a2-6002-5d1d-b8ac-a23d951225da/scratchpad/tools/l371-stack-abs.mjs:34:11
+ANSWER ok=false chaserForecast: whether bob bob@288,80 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY 

@@ -25487,3 +25487,29 @@ route survey (239 rows, 0 differ in any field but `ms`) all equal W0.
   (here, `armedArrowTraps` behind `pushables`).
 - A source-text census counts CALL text: wrapping `f()` as `reading(f)` removes a call site from the census (R8's
   `liveSolidOpts` count), and wrapping the run's `return { … }` removes the object every AST census parses.
+### Seedling hammer-phase PKB — the press kill's waits see the bombs, and the refuge preview refuses the shake band
+
+⚖ User, 2026-10-24: *"Please queue a slice for both of the tasks you described"*. It answers BW's open licence question
+(flip `PRESS_KILL_BOMBS`) and LB's hand-over 5b. The report is
+`CC/docs/cloud-reports/seedling-hammer-press-kill-bombs-flip.md`.
+
+**P1 — the flip.** `pressKillCost.PRESS_KILL_BOMBS` defaults ON (GF's shape: `SEEDLING_PRESS_KILL_BOMBS !== '0'`,
+`PRESS_KILL_BOMBS_DEFAULT = true`). BW's preconditions, fidelity's `bombBlastBody` and `MOVING_WAIT`, are ON. L40's
+divergence leg `level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144` answers as a function of
+`seam.time mod 45`; at the base (the strike floor ON) it solves 22 of 45 hammer phases, and 30 of 45 after the flip,
+losing none. Across all 47 page requests of L40's 42 legs the flip moves only that leg (a solve that stays a solve). The
+re-pins were two: `hammerPressBombs`' "ships OFF" row became "ships ON", and `hammerRefugeCut`'s bombs-OFF arm, which
+read the default, is pinned OFF. `hammer-bw-bombstand`'s tape is byte-identical: every solve there names its arm.
+
+**P2 — the band catch.** `deriveRefuge`'s candidate preview refuses a candidate whose preview throws the chaser
+forecast's `Game.shake` band, under `PRESS_KILL_SHAKE_GUARD` (HO1's test and counter; OFF rethrows). With the bombs ON
+it moves nothing on L40: the flip already takes all 14 of the base's band phases off the band (8 of them solve), and
+the one band phase left (a former deadline phase) throws from `walkTo`'s danger read. With the bombs OFF it turns 11
+of the 14 into the kill's named *"nowhere to be"*, at the same units; the other 3 throw from `probeCorridor`.
+
+**Trap candidates.**
+- An env-only switch never reaches the page's worker (no `process` there): a switch's page effect is measured only by a
+  default flip.
+- A band catch at one call site does not cover the band: the same forecast throws from the refuge preview, the walk's
+  danger read (`refuseDanger` → `swordTickAt`) and the executor's corridor gate. Find the stack before naming the site.
+- "Nowhere to be" after the band catch is a refusal by the band, but its words still say no cell is clear.

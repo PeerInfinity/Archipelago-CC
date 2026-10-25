@@ -1,0 +1,59 @@
+== P2 defaults
+phases solving: 30 of 45  (seams [5226, 5227, 5228, 5229, 5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237, 5238, 5239, 5240, 5241, 5242, 5250, 5252, 5253, 5254, 5256, 5260, 5261, 5262, 5263, 5267, 5268, 5269, 5270])
+overlap pairs: 10; identical answer+units 10; same class+units 10; differing []
+guards: shakeRefused total 0, seams with shakeRefused>0 0
+- 30x SOLVE
+- 5x EXHAUSTED@hold
+- 5x EXHAUSTED@break
+- 2x HAMMER_SAFETY@break
+- 2x HAMMER_SAFETY(refuge)@break
+- 1x shake-throw(forecast)
+55 seams; A solves 40, B solves 40
+| A class | B class | seams |
+|---|---|---|
+| SOLVE | SOLVE | 40 |
+| EXHAUSTED@hold | EXHAUSTED@hold | 5 |
+| EXHAUSTED@break | EXHAUSTED@break | 5 |
+| HAMMER_SAFETY@break | HAMMER_SAFETY@break | 2 |
+| HAMMER_SAFETY(refuge)@break | HAMMER_SAFETY(refuge)@break | 2 |
+| shake-throw(forecast) | shake-throw(forecast) | 1 |
+A-solve -> B-refusal seams: []
+
+== P2 at SEEDLING_PRESS_KILL_BOMBS=0 (the band phases' fate) vs W0 defaults (PKB OFF)
+phases solving: 22 of 45  (seams [5227, 5228, 5229, 5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237, 5238, 5239, 5240, 5241, 5242, 5250, 5256, 5260, 5261, 5262, 5263])
+overlap pairs: 10; identical answer+units 10; same class+units 10; differing []
+guards: shakeRefused total 648, seams with shakeRefused>0 11
+- 22x SOLVE
+- 8x HAMMER_SAFETY(refuge)@break
+- 3x HAMMER_SAFETY@kill t1339
+- 3x HAMMER_SAFETY(refuge)@kill
+- 3x shake-throw(forecast)
+- 2x HAMMER_SAFETY@break
+- 2x EXHAUSTED@break
+- 1x deadline@hold (?)
+- 1x reboot@kill t1524
+55 seams; A solves 31, B solves 31
+| A class | B class | seams |
+|---|---|---|
+| SOLVE | SOLVE | 31 |
+| shake-throw(forecast) | HAMMER_SAFETY(refuge)@break | 9 |
+| HAMMER_SAFETY@kill t1339 | HAMMER_SAFETY@kill t1339 | 3 |
+| shake-throw(forecast) | HAMMER_SAFETY(refuge)@kill | 3 |
+| shake-throw(forecast) | shake-throw(forecast) | 3 |
+| HAMMER_SAFETY@break | HAMMER_SAFETY@break | 2 |
+| EXHAUSTED@break | EXHAUSTED@break | 2 |
+| deadline@hold (?) | deadline@hold (?) | 1 |
+| reboot@kill t1524 | reboot@kill t1524 | 1 |
+A-solve -> B-refusal seams: []
+
+== shake guard OFF, P1 tree vs P2 tree
+55 seams; A solves 40, B solves 40
+| A class | B class | seams |
+|---|---|---|
+| SOLVE | SOLVE | 40 |
+| EXHAUSTED@hold | EXHAUSTED@hold | 5 |
+| EXHAUSTED@break | EXHAUSTED@break | 5 |
+| HAMMER_SAFETY@break | HAMMER_SAFETY@break | 2 |
+| HAMMER_SAFETY(refuge)@break | HAMMER_SAFETY(refuge)@break | 2 |
+| shake-throw(forecast) | shake-throw(forecast) | 1 |
+A-solve -> B-refusal seams: []

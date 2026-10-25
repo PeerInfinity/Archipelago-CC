@@ -1,0 +1,2 @@
+P1 tree, PRESS_KILL_BOMBS =0 vs ON (default), 47 L40 requests at their own seams: identical 46, movers 1; solves OFF 31 ON 31
+(371, 0) level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144 seam 5278 | OFF True 328 SOLVE | ON True 596 SOLVE
