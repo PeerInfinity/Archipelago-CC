@@ -283,7 +283,15 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40RES (wave 29): a stance walk that re-enters its own order walks on along its frontier; a
             // spinner sees a responder's turn-off one tick later — shipped OFF.
             stanceReentryNextDoor: true,
-            spinnerLockLag: true });
+            spinnerLockLag: true,
+            // ⛓ planning-13's flip turns the wave-30 BEAMLANE + TURRETCIRCLE keys ON.
+            // ⛓ fidelity BEAMLANE (wave 29): a corridor along a beam band rides the band-to-band lane — shipped OFF.
+            beamLaneWalk: true,
+            // ⛓ fidelity TURRETCIRCLE (wave 29): a blast stops on the shield, the Sword kills on the move, a death stops
+            // the shot — shipped OFF.
+            iceBlastShield: true,
+            turretCircleKill: true,
+            iceTurretDeathAnim: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
