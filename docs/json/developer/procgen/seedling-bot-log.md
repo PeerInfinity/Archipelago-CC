@@ -25599,3 +25599,44 @@ of the 14 into the kill's named *"nowhere to be"*, at the same units; the other 
 - A band catch at one call site does not cover the band: the same forecast throws from the refuge preview, the walk's
   danger read (`refuseDanger` → `swordTickAt`) and the executor's corridor gate. Find the stack before naming the site.
 - "Nowhere to be" after the band catch is a refusal by the band, but its words still say no cell is clear.
+
+### Seedling fidelity L67BK4 — L67's spear block parked on the trap's button (`laneWeigh`); L43's Totem fought (`totemBossFight`) — both OFF
+
+The planner's wave-31 slice, from SEARCHGAPS' leg 908 (now leg **898** at this base) and PITPORT's 13 `bosstotem` legs. The
+report is `CC/docs/cloud-reports/seedling-fidelity-l67bk4.md`.
+
+**D1 — L67 Boss Key 4 (`laneWeigh`).** L67 (`Dungeon6/8.oel`) is one puzzle: `arrowtrap@48,48 tset 0 shoot 1` stands over
+`bosskey4` at (48,64), `button@96,112 tset 0` silences it while pressed, and `pushableblockspear@144,112` stands in the
+only corridor west. What the ladder "ran out on" was not the arrows. The clear-path block-route search had already SUNK
+the block: its cheapest route was one thrust W into the pit at (8,7), and after that the button has no holder. ON,
+`resolveSpearPushStrategy` drops a clear-path route that destroys the block in favour of `laneHolderRoute`, which parks
+the block on a button of an armed lane's own group: N W W S W, five thrusts. That empties the same cell, and the walk
+then meets a silent lane. Leg 898's captured request solves in 233 units, the same at every arrival clock tried. The
+census says the rule can only fire in L67: of the three `shoot="1"` rooms, only `Dungeon6/8` has a button on the
+trap's own group. `arrowLaneCrossing` ON (the brief's ask) still refuses at the crossing's fork drive (waypoint 5): a
+tank-a-hit crossing is not the room's answer. The local survey moves one row: L67 Boss Key 4 REFUSED → SOLVED (957 t).
+
+**D2 — L43's Totem (`totemBossFight`).** `bosstotem@152,168` spans L43's 80 px arena. It is a Solid before the wake and
+the clamp holds the player below it after, so the north half (the magical lock, the teleporter to L37) can only be
+reached after the kill. The body is a real wall, but not an honest refusal: the model already stepped the whole fight
+(R6), and only the solver had no verb. ON, `solid:bosstotem` → `totem`, a switch-gated row (as Lights'). The verb
+selects the Wand, walks to a stance west of the laser's fixed `[x-17, x+17)` band and plays `bossTotemPolicy.js`, the
+`r6-totem-kill` cycle read off the live body (an up tap, the wand every 22 ticks, the descent tracked in bursts). Each
+variant is played on a fork, and the first kill with no death wins, hitless first. That ranking matters: the first
+variant takes 2 hits on three of the four captured passes. `levelRun`'s `bosses` view carries the fight's reads only
+while the switch is ON. Legs 862 and 872 solve in 199 and 168 units and cross to L37 with no hit. In the VANILLA rooms
+(survey step 157) the Wand is a real pickup and the body never wakes (`classCount(Wand) <= 0`), so the resolver refuses
+by name there (D2b). Ordering the pickup is residue.
+
+**Witnesses (p4g, headless logic-only, 0 px).** `seedling-fidelity-l67bk4-evidence/witness.mjs` solves each captured
+request with the switch ON, folds the plan with its equips into a tape, and plays it with the request's own
+AP-delivered set loaded (`botLoadLevels`). Leg 898: 5/5 clocks equal row for row; no hit; `{67,0}` (the AP check) is
+written. Legs 862 and 872: 3/3 clocks each equal to L37; no hit; `{43,0}`, `{43,4}` and `{43,5}` are written.
+
+**Trap candidates.**
+- A fresh game page plays the VANILLA rooms. An AP leg's plan witnessed there can match for 892 rows and then part, as
+  L43's Totem never woke (the Wand was a real `Wand`) while the model's did (an `apitem`). Deliver the request's records.
+- `inventory_slots` is staging-only: no tape field carries it. A plan solved under the sweep page's acquisition order
+  names slot indices that a fresh page does not hold.
+- "The ladder is exhausted on the arrow lane" can be a symptom of an earlier, cheaper move that destroyed the room's
+  own answer. Read the run's state at the refusal (the block was `removed`), not just the refusal's words.
