@@ -1,0 +1,6 @@
+A1: 51 legs {'done': 40, 'failed': 11}
+B1: 51 legs {'done': 39, 'failed': 12}
+A2: 51 legs {'done': 39, 'failed': 12}
+B2: 51 legs {'done': 40, 'failed': 11}
+legs whose end differs across the four runs:
+371 A1 done A2 failed B1 failed B2 done  level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
