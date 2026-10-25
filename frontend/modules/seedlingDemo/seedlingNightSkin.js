@@ -313,6 +313,8 @@ export const NIGHT_COPIES = Object.freeze({
  * `r0` is the tile's cosmetic draw (`randVal`, ⚖ never modelled: `cosmeticRand`).
  */
 const sinPulse = (time, n, loops, div, phase = 0) => (Math.sin((worldFrame(time, n, loops) / div) * 2 * Math.PI + phase) + 1) / 2;
+/** The lava tile's art key: its night copy and its `myEdges` are the effects switch's LAVA GLOW (G6). */
+export const LAVA_TILE = 'seedling:tile/lava';
 export const TILE_NIGHT = Object.freeze({
     'seedling:tile/darkStone': (time) => sinPulse(time, 100, 5, 100), // `:185-191`
     'seedling:tile/igneousStone': () => 0.25, // `:196-201`, `igneousAlpha`
@@ -417,8 +419,10 @@ function poleAt(p, time) {
  * @param {object} [o.hazard] `{ view, skin }` — G3c's (the chains' anims, the grenades' hit, the totem's pose)
  * @param {object} [o.whiteOut] G4's `effectSkinView(...).whiteOut`, and `o.whiteOutAlpha` its alpha rule
  * @param {object} o.cam    the model's camera rect (the screen-anchored writes)
+ * @param {boolean} [o.lavaGlow] ⛓ G6 — false (the effects switch OFF): the lava tiles' copies and edges are left out
  */
-export function nightOps(view, art, { skin = null, ops = [], hazard = null, whiteOut = null, whiteOutAlpha = null, cam, rules = NIGHT_RULES } = {}) {
+export function nightOps(view, art, { skin = null, ops = [], hazard = null, whiteOut = null, whiteOutAlpha = null, cam, rules = NIGHT_RULES,
+    lavaGlow = true } = {}) {
     if (!view) return null;
     const R = rules === NIGHT_RULES ? rules : { ...NIGHT_RULES, ...rules };
     const time = view.gameTime ?? 0;
@@ -438,10 +442,12 @@ export function nightOps(view, art, { skin = null, ops = [], hazard = null, whit
         if (!op?.key) continue;
         const tileRule = op.layer === TILE_LAYER ? R.tileNight[op.key] : null;
         if (tileRule) {
+            // ⛓ G6 — the effects switch OFF (`lavaGlow: false`): no lava copy and no `solidBmp` edges
+            if (!lavaGlow && op.key === LAVA_TILE) continue;
             const cell = op.fallback?.rect ?? { x: op.dx, y: op.dy };
             const k = tileRule(time, ctx, cosmeticRand(level, Math.round(cell.x / TILE), Math.round(cell.y / TILE), 0));
             if (k !== null && k > 0) night.push(withAlpha(op, k));
-            if (op.key === 'seedling:tile/lava') solid.push(...R.lavaEdges(edgeFrameOf(op, cell, art, level, skin), cell, time));
+            if (op.key === LAVA_TILE) solid.push(...R.lavaEdges(edgeFrameOf(op, cell, art, level, skin), cell, time));
             continue;
         }
         const rule = R.copies[op.key];

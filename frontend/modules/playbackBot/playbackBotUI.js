@@ -24,7 +24,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { LoopModeRunner } from './loopModeRunner.js';
 import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
-import { WALK_ORDERS, WALK_ORDER_LABELS, chooseWalkTarget, frozenFindPath, rowMetaOf } from './walkOrder.js';
+import { WALK_ORDERS, WALK_ORDER_LABELS, chooseWalkTarget, frozenFindPath, hypotheticalFindPath, parseWalkOrder, rowMetaOf } from './walkOrder.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -449,6 +449,7 @@ export class PlaybackBotUI {
         this._pendingManualTarget = null;
         this._chosen = null;
         this._routeStats = { restarts: 0, transitions: 0, legs: 0 };
+        this._choiceTimings = null;
         this._statsHead = null;
         this._restartPending = null;
         this._dropRestartDeferral();
@@ -904,6 +905,12 @@ export class PlaybackBotUI {
     /** The run's route metrics: Restarts taken, region transitions walked, legs (targets) begun. */
     getRouteStats() { return { ...this._routeStats }; }
 
+    /**
+     * ⛓ POCKET-ITEM cost (bot-route-chooser-2a) — the walk-order choices made since the last reset (sticky picks are
+     * not choices), their total and slowest wall time in ms, and how many hypothetical states they built.
+     */
+    getChoiceTimings() { return { ...(this._choiceTimings ?? { choices: 0, totalMs: 0, maxMs: 0, hypotheticals: 0 }) }; }
+
     /** A non-default walk order is in force (the walk loop's sphere source only). */
     _ordersByCost() {
         return this._walkOrder !== WALK_ORDERS.inOrder && this._targetSource === TARGET_SOURCES.sphere;
@@ -923,17 +930,42 @@ export class PlaybackBotUI {
         const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
         let snapshotInterface = null;
         try { snapshotInterface = snapshot && staticData ? createSnapshotInterface(snapshot, staticData) : null; } catch { snapshotInterface = null; }
+        const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now();
         const findPath = frozenFindPath(this._pathFinder, { staticData, snapshot, snapshotInterface });
         if (!this._rowMeta) this._rowMeta = rowMetaOf(rules, playerId);
         const here = this._currentRegion;
-        const price = (entry) => {
-            if (!here) return { hops: 0, restart: false };
-            if (entry.regionName === here) return { hops: 0, restart: false };
-            const { route, kind } = this._planRoute(here, entry.regionName, findPath);
+        const routes = new Map();
+        const priceFrom = (from, entry) => {
+            if (!from) return { hops: 0, restart: false };
+            if (entry.regionName === from) return { hops: 0, restart: false };
+            const { route, kind } = this._planRoute(from, entry.regionName, findPath);
+            if (from === here) routes.set(entry.locationName, route);
             return route ? { hops: route.length, restart: kind === 'restart' } : null;
         };
+        const price = (entry) => priceFrom(here, entry);
         const home = returnToMenu(rules, playerId) ? this._restartHome(rules, playerId) : null;
-        const { entry, swept } = chooseWalkTarget({
+        const { pocketItem, grab } = parseWalkOrder(this._walkOrder);
+        // ⛓ POCKET-ITEM — "could I walk out of the row's region WITH its item?": the PathFinder over a hypothetical
+        //   state (`hypotheticalFindPath`), one per distinct extra-item set within this choice.
+        const hypothetical = new Map();
+        let hypotheticals = 0;
+        const isPocket = (pocketItem && home) ? (entry) => {
+            if (entry.regionName === home) return false;
+            const route = routes.get(entry.locationName);
+            const extra = [...new Set([...this._creditedEvents,
+                ...(route?.steps ?? []).filter(isBreakStep).map((st) => st.event?.item).filter(Boolean)])].sort();
+            const item = this._rowMeta.get(entry.locationName)?.item;
+            if (item) extra.push(item);
+            const key = extra.join('\u0000');
+            if (!hypothetical.has(key)) {
+                hypotheticals += 1;
+                hypothetical.set(key, hypotheticalFindPath(this._pathFinder, { staticData, snapshot, extra,
+                    makeInterface: (s) => createSnapshotInterface(s, staticData), evaluate: evaluateRule }));
+            }
+            const walkOut = hypothetical.get(key);
+            return !!walkOut && !walkOut(entry.regionName, home);
+        } : null;
+        const { entry, swept, grabbed } = chooseWalkTarget({
             order: this._walkOrder,
             queue: this._queue,
             checked: this._checkedSoFar,
@@ -943,8 +975,15 @@ export class PlaybackBotUI {
             meta: this._rowMeta,
             price,
             inPocket: () => !!home && !!here && here !== home && !findPath(here, home),
+            isPocket,
+            priceBetween: grab ? (from, to) => priceFrom(from.regionName, to) : null,
         });
         if (swept && entry) this._log.push(`sweeping "${entry.locationName}" before the Restart out of ${here}`);
+        if (grabbed) this._log.push(`grabbing "${grabbed.locationName}" on the way`);
+        const ms = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
+        const ct = this._choiceTimings ?? { choices: 0, totalMs: 0, maxMs: 0, hypotheticals: 0 };
+        this._choiceTimings = { choices: ct.choices + 1, totalMs: ct.totalMs + ms, maxMs: Math.max(ct.maxMs, ms),
+            hypotheticals: ct.hypotheticals + hypotheticals };
         this._chosen = entry;
         return entry;
     }

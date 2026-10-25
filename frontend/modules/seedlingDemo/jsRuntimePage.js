@@ -117,6 +117,16 @@
  * pre-G5 paint, op for op. `set({ lights })` switches it live;
  * `__seedlingJsGraphics.lights` reads it back.
  *
+ * ⛓ G6 — THE EFFECTS SWITCH (`?effects=on|off`, the flash panel's
+ * `seedlingJsEffects`; ON by default under a stack, nothing without one)
+ * covers the two AMBIENT families that draw every frame whatever the player
+ * does: G4's RAIN (the drops, and so their night copies) and G5's LAVA GLOW
+ * (the lava tiles' night copies and their `solidBmp` edges, the costliest
+ * night draws). OFF is the paint of a stack without those two families, op
+ * for op. ⚖ The talk text is NOT in it: it is the game's dialogue, and it
+ * costs only while someone talks (§5.135's catch-up A/B). `set({ effects })`
+ * switches it live; `__seedlingJsGraphics.effectsSwitch` reads it back.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -249,9 +259,18 @@ export function mountJsRuntimePage(win = window) {
         tileLayer: params.get('tileLayer') === 'off' ? null : createTileLayer(newCanvas), lastPaint: null,
         // ⛓ G5 — the lights switch (`?lights=off`; ON by default), the night layer's state and canvases, the last paint's.
         lights: params.get('lights') === 'off' ? 'off' : 'on', nightSkin: null, nightLayer: createNightLayer(newCanvas), night: null,
+        // ⛓ G6 — the effects switch (`?effects=off`; ON by default): the rain and the lava glow. ⚠ NOT `effects`:
+        // that is G4's last-paint readout.
+        effectsSetting: params.get('effects') === 'off' ? 'off' : 'on',
     };
+    /** ⛓ G6 — the families the effects switch draws, as the skins' options. */
+    const effectsOn = () => graphics.effectsSetting === 'on';
     let graphicsLoad = 0;
-    function setGraphics({ graphics: stack, camera, lights } = {}) {
+    function setGraphics({ graphics: stack, camera, lights, effects } = {}) {
+        if (effects !== undefined) {
+            if (effects !== 'on' && effects !== 'off') throw new Error(`?effects=${effects}: one of on | off`);
+            graphics.effectsSetting = effects;
+        }
         if (lights !== undefined) {
             if (lights !== 'on' && lights !== 'off') throw new Error(`?lights=${lights}: one of on | off`);
             if (lights !== graphics.lights) Object.assign(graphics, { lights, nightSkin: null, night: null });
@@ -310,6 +329,10 @@ export function mountJsRuntimePage(win = window) {
         get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
         /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
         get held() { return graphics.held; },
+        /** ⛓ G6 — the effects switch: the setting, whether it draws (a stack on), and the families it covers. */
+        get effectsSwitch() {
+            return { setting: graphics.effectsSetting, on: !!graphics.stack && effectsOn(), families: ['rain', 'lavaGlow'] };
+        },
         /** ⛓ G5 — the lights switch and the last paint's night layer (`alpha` 0 = this room is not darkened). */
         get lights() {
             const n = graphics.night;
@@ -374,7 +397,7 @@ export function mountJsRuntimePage(win = window) {
                     if (runtime.run.ticksCompleted !== 0) graphics.effectSkin.seen.loadSpans = ev.loadSpans.length;
                 }
                 if (holdOwed(graphics.effectSkin)) {
-                    graphics.effectSkin = holdEffectSkin(graphics.effectSkin, ev);
+                    graphics.effectSkin = holdEffectSkin(graphics.effectSkin, ev, { rain: effectsOn() });
                     graphics.held += 1;
                     acc -= TICK_MS;
                     n += 1;
@@ -387,7 +410,7 @@ export function mountJsRuntimePage(win = window) {
                 graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
                 graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
                 graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
-                graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks);
+                graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks, { rain: effectsOn() });
                 if (graphics.lights === 'on') graphics.nightSkin = stepNightSkin(graphics.nightSkin, nightView(), runtime.ticks);
             }
             acc -= TICK_MS;
@@ -491,7 +514,7 @@ export function mountJsRuntimePage(win = window) {
             : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
         const fv = art && graphics.effectSkin ? effectView() : null;
-        const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin }) : [];
+        const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin, rain: effectsOn() }) : [];
         // ⛓ G5 — the lights' MAIN-buffer ops (a ray's rects, an unlit pole's darkLight), Y-sorted with the bodies
         const lit = art && graphics.lights === 'on' ? nightView() : null;
         const modelCam = lit ? cameraView('follow', world, state, runtime.run) : null;
@@ -530,7 +553,7 @@ export function mountJsRuntimePage(win = window) {
         graphics.lastPaint = { ops: all, images, view, key: [world, art, level] };
         // ⛓ G5 — the night layer goes between the room and the overlays (`Game.render()`: `bufferTransforms()` then `talk()`)
         const night = lit ? nightOps(lit, art, { skin: graphics.nightSkin, ops, hazard: hv ? { view: hv, skin: graphics.hazardSkin } : null,
-            whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam }) : null;
+            whiteOut: fv?.whiteOut ?? null, whiteOutAlpha: EFFECT_RULES.whiteOutAlpha, cam: modelCam, lavaGlow: effectsOn() }) : null;
         if (night) {
             const room = paintOps(ctx, ops, images, view, canvas, { tinted, tileLayer });
             night.counts = paintNight(ctx, night, images, view, canvas, { tinted, cache: graphics.nightLayer, fill: NIGHT.fill });

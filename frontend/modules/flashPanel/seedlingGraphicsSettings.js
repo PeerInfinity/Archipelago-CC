@@ -10,6 +10,8 @@
  *   · ⛓ G5 `seedlingJsLights` — `on` (the default: with a graphics stack, the room is darkened and lit as the
  *     game's night layer does) or `off` (the pre-G5 paint, op for op). Without a stack it does nothing.
  *     → the page's `?lights=off`.
+ *   · ⛓ G6 `seedlingJsEffects` — `on` (the default: with a stack, the rain and the lava glow are drawn) or `off`
+ *     (a stack without those two families, op for op). Without a stack it does nothing. → the page's `?effects=off`.
  *
  * ⛔ Cosmetic only: neither reaches the model, a solve request or a plan (the renderer only reads the run), so —
  * unlike the KILLLOCK / CONTACT / AXE_DODGE hooks — a change does NOT re-mount the page. The panel applies it LIVE
@@ -26,6 +28,10 @@ export const GRAPHICS_SETTING_KEY = `moduleSettings.flashPanel.${GRAPHICS_SETTIN
 export const CAMERA_SETTING_KEY = `moduleSettings.flashPanel.${CAMERA_SETTING_PROP}`;
 export const LIGHTS_SETTING_PROP = 'seedlingJsLights';
 export const LIGHTS_SETTING_KEY = `moduleSettings.flashPanel.${LIGHTS_SETTING_PROP}`;
+export const EFFECTS_SETTING_PROP = 'seedlingJsEffects';
+export const EFFECTS_SETTING_KEY = `moduleSettings.flashPanel.${EFFECTS_SETTING_PROP}`;
+/** ⛓ G6 — the page's `?effects=` values. */
+export const EFFECTS_SETTING_VALUES = Object.freeze(['on', 'off']);
 /** ⛓ G5 — the page's `?lights=` values. */
 export const LIGHTS_SETTING_VALUES = Object.freeze(['on', 'off']);
 /** `rects` + every stack in `frontend/packs/packs.json`'s `graphics`. */
@@ -65,6 +71,15 @@ export function graphicsSchemaProps() {
                 + "lights, glows and shadows the way the original game's night layer does. `off` skips that layer, "
                 + 'which is the most expensive picture to draw. Purely visual; takes effect at once.',
         },
+        [EFFECTS_SETTING_PROP]: {
+            type: 'string',
+            enum: [...EFFECTS_SETTING_VALUES],
+            default: 'on',
+            label: 'Seedling JS: effects',
+            description: "Runtime 'js', with a graphics stack only. `on` (the default) draws the rain and, with the lights "
+                + "on, the lava's glow. `off` leaves those two out (the lava glow is the costliest part of the lights). "
+                + 'Dialogue text is always drawn. Purely visual; takes effect at once.',
+        },
     };
 }
 
@@ -76,10 +91,13 @@ export const cameraMode = (value) => (value === 'follow' ? 'follow' : 'room');
 /** A lights value as the page reads it: `off`, or `on` for anything else. */
 export const lightsMode = (value) => (value === 'off' ? 'off' : 'on');
 
+/** An effects value as the page reads it: `off`, or `on` for anything else. */
+export const effectsMode = (value) => (value === 'off' ? 'off' : 'on');
+
 /** The page's query parameters: '' at the defaults (today's URL exactly). */
-export function graphicsPageParams(graphics, camera, lights) {
+export function graphicsPageParams(graphics, camera, lights, effects) {
     const stack = graphicsStack(graphics);
     return [stack ? `graphics=${stack}` : '', cameraMode(camera) !== 'room' ? `camera=${cameraMode(camera)}` : '',
-        lightsMode(lights) === 'off' ? 'lights=off' : '']
+        lightsMode(lights) === 'off' ? 'lights=off' : '', effectsMode(effects) === 'off' ? 'effects=off' : '']
         .filter(Boolean).join('&');
 }

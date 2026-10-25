@@ -185,6 +185,18 @@ describe('Manual mode — processFrame handling', () => {
         expect(loopState._queuePausedUntilReset).toBe(false);
     });
 
+    it('ignores a resync regionChanged (a newly connected page told where the player is)', () => {
+        setupManualQueue();
+        loopState.currentActionIndex = 1;
+        loopState.currentAction = loopState.getActionQueue()[1];
+        loopState.isProcessing = true;
+        tick(loopState);
+        const entered = loopState._manualActionEntered;
+        bus.publish('gameState:regionChanged', { newRegion: 'wrongRegion', oldRegion: null, resync: true });
+        expect(loopState._queuePausedUntilReset).toBe(false);
+        expect(loopState._manualActionEntered).toBe(entered);
+    });
+
     it('sets _queuePausedUntilReset on mismatched regionChanged', () => {
         setupManualQueue();
         loopState.currentActionIndex = 1;
