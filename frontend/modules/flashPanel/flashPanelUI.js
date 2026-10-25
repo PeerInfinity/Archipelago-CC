@@ -33,6 +33,7 @@ import { DASH_SHAPE_SETTING_KEYS, dashShapeSettingValues, dashShapeSpec, dashSha
 import {
   CAMERA_SETTING_KEY, EFFECTS_SETTING_KEY, GRAPHICS_SETTING_KEY, LIGHTS_SETTING_KEY, cameraMode, effectsMode, graphicsPageParams, graphicsStack, lightsMode,
 } from './seedlingGraphicsSettings.js';
+import { RUFFLE_CDN } from './ruffleCdn.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -49,7 +50,6 @@ const SWF_DIR = './modules/flashPanel/swf/';
 // artifacts are NOT committed (23.8 MB wasm) — see this module's
 // README.md for the copy command that stages them locally.
 const WASM_DIR = './modules/flashPanel/wasm/';
-const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
 // Transport selection, mirroring moduleSettings.bounceDemo.renderer:
 // 'auto' (default) uses the wasm page when the game wiring provides
 // one, real Flash otherwise; 'flash'/'wasm' force a transport; 'js'

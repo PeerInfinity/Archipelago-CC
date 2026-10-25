@@ -26,6 +26,7 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { getActivePanelInstance, getSeedlingPlayClock, getSeedlingRegionGlue } from '../../flashPanel/index.js';
 import { PLAY_CLOCK_EVENT } from '../../flashPanel/seedlingPlayClock.js';
+import { RUFFLE_VERSION } from '../../flashPanel/ruffleCdn.js';
 import { cachesText, churnText } from '../../flashPanel/seedlingSolveProgress.js';
 import { DANGER_COLOUR } from '../../flashPanel/seedlingSolveProgressView.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
@@ -2892,6 +2893,13 @@ async function seedlingFlashRuntimeRowBody(tc, swfFetch) {
     const settled = await tc.pollForCondition(() => swfFetch.seen(),
         '[flash] Ruffle\'s SWF fetch resolved before the runtime restore', 30000, 100);
     if (!settled) tc.log('[flash] Ruffle never fetched the SWF (its CDN script did not load?) — restoring anyway');
+    // ⛓ RUFFLE PINNED (ruffleCdn.js): the loaded Ruffle is the measured version. Its `version` is
+    // `<semver>+<build date>`. A Ruffle that never loaded stays a log above, not a red here.
+    const ruffleVersion = window.RufflePlayer?.newest?.()?.version ?? null;
+    tc.log(`[flash] Ruffle version: ${ruffleVersion}`);
+    if (ruffleVersion !== null) {
+        tc.assertEqual('[flash] the loaded Ruffle is the pinned version', RUFFLE_VERSION, ruffleVersion.split('+')[0]);
+    }
 }
 
 registerTest({
