@@ -3546,3 +3546,112 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+/** ⛓ G9 — mount the standalone graphics page in the row's own iframe and boot `Game(level, x, y)` through its bridge. */
+async function bootGraphicsPage(tc, frame, errors, [level, x, y]) {
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+    document.body.appendChild(frame);
+    const win = await tc.pollForValue(() => {
+        const w = frame.contentWindow;
+        return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+    }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+    tc.reportCondition('the standalone page is up with its pack', !!win);
+    if (!win) return null;
+    const origError = win.console.error.bind(win.console);
+    win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+    win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+    const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+    win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+    win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+        { invocation: 'new_instance', className: 'Game', args: [level, x, y] }]);
+    return win;
+}
+
+/**
+ * ⛓ GRAPHICS G9a — the placed vanilla pickups in a real browser: the standalone page driven to `Game(10, 48, 80)`
+ * (level 10: the Sword on its cell). The Sword is drawn from the seedling pack as its class (`seedlingPickupSkin`), not
+ * the stand-in rectangle. No panel, preset or AP state is touched; the iframe is removed however the row ends.
+ */
+export async function seedlingJsRuntimeGraphicsPickups(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        const win = await bootGraphicsPage(tc, frame, errors, [10, 48, 80]);
+        if (!win) return tc.getOverallResult();
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const drawn = await tc.pollForValue(() => (rt.run?.level === 10 && g.effects?.owed === 0 && g.pickups?.ops.length >= 1 ? g.pickups : null),
+            'level 10 is up, its arrival fade is over and its pickup is drawn', 15000, 100);
+        tc.log(`pickups: ${JSON.stringify(drawn)}`);
+        tc.assertEqual('one placed pickup, none taken', '1/0', `${drawn?.pickups}/${drawn?.taken}`);
+        tc.assertEqual('drawn as the Sword', 'seedling:pickup/sword', (drawn?.ops ?? []).map((o) => o.key).join(','));
+        tc.assertEqual('from the seedling pack', 'seedling', [...new Set((drawn?.ops ?? []).map((o) => o.pack))].join(','));
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 10 and did not halt', '10/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-pickups',
+    name: 'Seedling JS runtime: the placed vanilla pickups drawn as their classes (G9a)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 10 through its own '
+        + '__swfBridge, and asserts the Sword is drawn from the seedling pack as its class, every sheet decodes, and no console '
+        + 'error. Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsPickups,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ GRAPHICS G9b/G9c — the machines and a responder's fade in a real browser: the standalone page driven to
+ * `Game(38, 208, 224)` — on the covered ButtonRoom wired to the pulser (tset 1). The pressed ButtonRoom lights its
+ * twelve wires and arms the pulser, whose ring (`levelRun.machinesNow`) is drawn; the pulse knocks the player onto the
+ * Button, and the cover over the chest it publishes fades (`seedlingSolidsSkin.stepResponder`). No panel, preset or AP
+ * state is touched.
+ */
+export async function seedlingJsRuntimeGraphicsMachines(tc) {
+    const frame = document.createElement('iframe');
+    const errors = [];
+    try {
+        const win = await bootGraphicsPage(tc, frame, errors, [38, 208, 224]);
+        if (!win) return tc.getOverallResult();
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        let fadedCover = false;
+        const lit = await tc.pollForValue(() => {
+            if ((g.solids?.ops ?? []).some((o) => o.key === 'seedling:puzzlement/cover' && o.alpha < 1)) fadedCover = true;
+            return rt.run?.level === 38 && g.effects?.owed === 0 && g.machines?.lit > 0
+                && g.machines.ops.some((o) => o.ring) && fadedCover ? g.machines : null;
+        }, 'level 38: wires lit, a pulser ring drawn, a cover mid-fade', 20000, 50);
+        tc.log(`machines: ${JSON.stringify(lit ? { ...lit, ops: lit.ops.map((o) => o.key ?? (o.ring ? 'ring' : 'line')) } : null)}`);
+        tc.assertEqual('the pulser and its wires are drawn from the seedling pack', 'seedling:machine/pulser,seedling:machine/wire',
+            [...new Set((lit?.ops ?? []).filter((o) => o.key).map((o) => o.key))].sort().join(','));
+        tc.assertEqual('a ButtonRoom lit its wires', true, (lit?.lit ?? 0) > 0);
+        tc.assertEqual('the pulser\'s ring is drawn (machinesNow reached the page)', true, (lit?.ops ?? []).some((o) => o.ring));
+        tc.assertEqual('a cover was drawn mid-fade', true, fadedCover);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 38 and did not halt', '38/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-machines',
+    name: 'Seedling JS runtime: the machines and a responder fade — lit wires, a pulser ring, a fading cover (G9b/G9c)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 38 onto the pulser\'s '
+        + 'ButtonRoom through its own __swfBridge, and asserts the pressed ButtonRoom lights its wires, the pulser ring is drawn from '
+        + 'levelRun.machinesNow, a cover is drawn mid-fade, every sheet decodes, and no console error. Touches no panel, preset '
+        + 'or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsMachines,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
