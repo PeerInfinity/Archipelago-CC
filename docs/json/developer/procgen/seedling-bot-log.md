@@ -25835,3 +25835,41 @@ landed; its branch `claude/seedling-executor-shake-band-tnp9ij` and report stay 
   at the defaults none moves, and none of L40's 47 page requests.
 - **Gate** `hammerRefugeBandText.test.js` (BX's two I2 rows), fixture `fixtures/hammer-bx-371/` (the page's 371 request
   cut to level 40, 10 KB).
+
+### Seedling fidelity CHESTSEAL — a chest `checkBySeal()` removed is not a wall, and its location is checked (`chestSealRemoval`, OFF)
+
+⚖ User, 2026-10-16: a seal-removed chest's location is AUTO-CHECKED (not a refusal). The report is
+`CC/docs/cloud-reports/seedling-fidelity-chestseal.md`.
+
+**The game.** `Chest`'s CONSTRUCTOR runs `checkBySeal()` (`Chest.as:35`, `:47-57`). With all sixteen seal parts held
+(`SealController.hasAllSealParts()`: the save's last slot) it writes `Game.setPersistence(tag, false)` — the AP check
+report — and its `FP.world.remove(this)` is a no-op before the add. `Chest.check()` then removes the tagged chest on the
+first `Game.update` (`Game.as:870-877`, which runs under the `blackCover`); `update`'s own `checkBySeal()` removes an
+untagged one. So no frame the player moves in sees the chest.
+
+**The gap.** `chest.stepChests` marked the chest `gone` but left `solid` true, `levelRun.openChestIdsNow` reads `solid`,
+and `stepChestsNow` dropped the `chestgone` event. The vanished chest was a wall and the solver bound the chest verb:
+*"NEVER OPENED"* (route survey steps 167, 198, 203 at `1e17f44738`).
+
+**D1 (model).** ON: `openChestIdsNow` reads every chest of the level as open from the build — `run.chestsSealRemoved`, a
+derivation of the boot save, so no new run state and no digest row (`chestStates` and `pendingEarnedClears` were
+already IN). `stepChestsNow` banks the `checkBySeal` write into `pendingEarnedClears`, so `run.bankedClears` holds the
+flag from the visit's first tick. Witness (p4g headless, `probe-seedling-chestseal.mjs`, `fixtures/chestseal-witness/`):
+L15 `chest@144,96` with sixteen seals — the player walks up through its cell into L16, {15,1} is cleared, no `open()`;
+model ON 0 px, OFF stops under the chest (first drift t200). The one-seal control agrees in both arms.
+
+**D2 (solver).** ON: a `collect-placement` at such a chest records `{strategy: 'chest', arm: 'seal-removed'}` in 0 ticks;
+`senseContacts` exempts each chest's static `proximity-hazard` line (the world build does not read the save).
+
+**Movers (local, full route).** 191 → 194 SOLVED; exactly six steps move, all after the 16th Seal (step 150): 193 (L63),
+203 (L80), 212 (L98) REFUSED → SOLVED; 167/198 (L12 → L83) NEVER OPENED → KEYLOCK-SEALED `bosslock@112,192`; 171 (L71)
+reaches the reach-exit and keeps the lavarunner refusal. Bounded vitest ON: only the defaults pin. Identity block and
+tapeRunner pairs: ON = OFF.
+
+**Trap candidates.**
+- A removal in a CONSTRUCTOR is not a removal: `FP.world.remove` before `add` does nothing (`World.remove` returns when
+  `e._world !== this`), so the ctor's half of `checkBySeal` is only its persistence write, and the removal is `check()`'s.
+- A chest's static `proximity-hazard` line outlives the chest: the world build has no save, so a state that removes the
+  chest must also exempt its volume, or the walk avoids a line nothing can fire.
+- The run reads the seal count at BOOT only (`sealParts`, `HAS_ALL_SEAL_PARTS`): a run that banks the sixteenth part
+  mid-run and then builds a chest room is not modelled (the JS runtime reboots on a seal delivery).
