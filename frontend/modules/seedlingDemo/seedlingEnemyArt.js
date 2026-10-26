@@ -246,6 +246,9 @@ export const ENEMY_ART = Object.freeze([
     //    etc.): the run carries the frame, so the rows hold the sheet, the frame size and the origin. ──
     { pack: 'seedling', key: 'seedling:boss/shieldboss', file: 'ShieldBoss.png', fw: 56, fh: 80, origin: [28, 40],
         as3: 'Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]' },
+    { pack: 'seedling', key: 'seedling:boss/finalboss', file: 'FinalBoss.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Enemies/FinalBoss.as:20-21 Spritemap(16, 16, endAnim); :40-46 super(_x + 8, _y + 8), centerOO; walk [0..3] fps 15, die [4..11] fps 5, dead [11,11] fps 1, deadframe [11] (fps 0: frame 11, no row); sitFrames [0..3] by worldFrame',
+        anims: { walk: fps([0, 1, 2, 3], 15), die: fps(range(4, 11), 5), dead: fps([11, 11], 1) } },
     { pack: 'seedling', key: 'seedling:boss/frozenboss', file: 'FrozenBoss.png',
         as3: 'Scenery/FrozenBoss.as:13-14 Image; :18 super(_x, _y) (origin 0); :20 layer; :25-30 render, and onto nightBmp' },
     // `Game.as:432-444` `bossKeys` (Spritemap(12, 16), centerOO at `Game.as:811-813`); `APItem.as:155-162` "bosskeyN".

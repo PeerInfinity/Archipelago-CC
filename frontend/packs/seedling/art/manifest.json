@@ -998,6 +998,11 @@
       "w": 1120,
       "h": 80
     },
+    "FinalBoss": {
+      "file": "sheets/FinalBoss.png",
+      "w": 192,
+      "h": 16
+    },
     "FrozenBoss": {
       "file": "sheets/FrozenBoss.png",
       "w": 160,
@@ -4333,6 +4338,51 @@
         40
       ],
       "as3": "Enemies/ShieldBoss.as:15-16 Spritemap(56, 80); :35-41 super(_x + 24, _y + 32), centerOO; sit [0], stab [3..8], moveShield [0,1], movedShield [2], die [9..19]"
+    },
+    "seedling:boss/finalboss": {
+      "sheet": "FinalBoss",
+      "fw": 16,
+      "fh": 16,
+      "frames": 12,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "fps": 5
+        },
+        "dead": {
+          "clock": "fps",
+          "frames": [
+            11,
+            11
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Enemies/FinalBoss.as:20-21 Spritemap(16, 16, endAnim); :40-46 super(_x + 8, _y + 8), centerOO; walk [0..3] fps 15, die [4..11] fps 5, dead [11,11] fps 1, deadframe [11] (fps 0: frame 11, no row); sitFrames [0..3] by worldFrame"
     },
     "seedling:boss/frozenboss": {
       "sheet": "FrozenBoss",

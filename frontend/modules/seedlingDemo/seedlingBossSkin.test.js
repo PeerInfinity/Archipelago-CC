@@ -55,6 +55,8 @@ beforeAll(async () => {
 export const TAPES = Object.freeze([
     { name: 'L19-shield-kill', fixture: 'r6-shield-kill', want: ['shield:sit', 'shield:moveShield', 'shield:movedShield', 'shield:die', 'shield:hit', 'shield:gone'] },
     { name: 'L19-shield-stab', fixture: 'r6-shield-control', want: ['shield:sit', 'shield:moveShield', 'shield:stab'] },
+    { name: 'L112-owl-kill', fixture: 'r6-owl-kill', want: ['owl:intro', 'owl:walk', 'owl:sit', 'owl:hit', 'owl:die', 'owl:dead', 'owl:deadframe'] },
+    { name: 'L112-owl-control', fixture: 'r6-owl-control', want: ['owl:intro', 'owl:walk', 'owl:sit'] },
     { name: 'L111-frozen', level: 111, at: [80, 200], n: 3, want: ['frozen'] },
 ]);
 
@@ -66,7 +68,7 @@ function boot(level, [x, y], onStateChanged = () => {}) {
     return rt;
 }
 
-const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits'];
+const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits', 'finalBossKills', 'owlTicks'];
 const ledgersOf = (run) => (run ? LEDGERS.map((n) => {
     const v = run[n];
     return v instanceof Map ? [...v] : v instanceof Set ? [...v] : v;
@@ -115,6 +117,12 @@ function tagsOf(r) {
         if (b.destroy || b.removed) { out.push('shield:gone'); continue; }
         out.push(`shield:${b.anim}`);
         if (r.skin?.bodies.get(b.id)?.tint) out.push('shield:hit');
+    }
+    for (const b of r.view.finalBosses) {
+        const st = r.skin?.bodies.get(b.id);
+        if (['die', 'dead', 'deadframe'].includes(b.anim)) out.push(`owl:${b.anim}`);
+        else out.push(!b.started ? 'owl:intro' : (st?.sprite.anim === 'walk' ? 'owl:walk' : 'owl:sit'));
+        if (st?.tint) out.push('owl:hit');
     }
     if (r.view.frozenBosses.length) out.push('frozen');
     return out;
@@ -188,7 +196,9 @@ describe('1. golden boss ops (frame CHOICE, not pixels)', () => {
 });
 
 describe('2. by hand from the AS3', () => {
-    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], frozenBosses: [], ...over });
+    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], frozenBosses: [], ...over });
+    const owl = (over) => ({ id: 'owl', x: 72, y: 104, vx: 0, vy: 0, started: true, rockfallTime: -1, hits: 0, hitsTimer: 0, destroy: false,
+        anim: '', animAge: null, ...over });
     const sb = (over) => ({ id: 'sb', x: 104, y: 72, anim: 'sit', frame: 0, hitsTimer: 0, destroy: false, removed: false, ...over });
 
     it('Enemy.hitUpdate under ShieldBoss.update: red from h = 30, white from 20, red from 10, normal at 1 — only on ticks the update ran', () => {
@@ -225,6 +235,34 @@ describe('2. by hand from the AS3', () => {
         expect(op.layer).toBeCloseTo(-(16 + 128 + 64 / 3), 12);
     });
 
+    it('FinalBoss.update: the intro holds frame 0; the walk branch (|v| = 1) walks at 15 fps and its endAnim sits; a rockfall sits on worldFrame(4)', () => {
+        const frames = (seq, start = 900) => {
+            let s = null;
+            return seq.map((o, i) => {
+                s = stepBossSkin(s, V({ gameTime: start + i, finalBosses: [owl(o)] }), i);
+                return [s.bodies.get('owl').sprite.anim, bossOps(V({ gameTime: start + i, finalBosses: [owl(o)] }), art, { skin: s })[0].frame];
+            });
+        };
+        expect(frames([{ started: false }, { started: false }])).toEqual([['', 0], ['', 0]]);
+        // walking: index steps every 2 updates (15 · 0.0333 = 0.4995 → every third? no: 2.002 updates per frame)
+        const walk = frames(Array.from({ length: 10 }, () => ({ vx: 0.6, vy: 0.8 })));
+        expect(walk.map(([a]) => a).slice(0, 8).every((a) => a === 'walk')).toBe(true);
+        expect(new Set(walk.map(([, f]) => f))).toEqual(new Set([0, 1, 2, 3]));
+        // the rockfall (prev rockfallTime > 0): play(""), then the sit frame from Game.time at the update
+        const sit = frames([{ vx: 1, rockfallTime: 240 }, { rockfallTime: 239 }, { rockfallTime: 238 }], 45 * 3);
+        expect(sit[1][0]).toBe('');
+        expect(sit[2][1]).toBe([0, 1, 2, 3][Math.floor(((45 * 3 + 1) % 45) / (45 / 4))]);
+    });
+
+    it('FinalBoss death: "die" [4..11] at 5 fps from the run\'s age, then "dead" 11, "deadframe" 11; no fade, the corpse stays', () => {
+        const skin = stepBossSkin(null, V({ finalBosses: [owl({})] }), 1);
+        const f = (anim, animAge) => bossOps(V({ finalBosses: [owl({ anim, animAge, destroy: true })] }), art, { skin })[0];
+        expect([0, 6, 7, 13, 41].map((a) => f('die', a).frame)).toEqual([4, 4, 5, 6, 10]);
+        expect(f('dead', 30).frame).toBe(11);
+        expect([f('deadframe', null).frame, f('deadframe', null).alpha]).toEqual([11, undefined]);
+        expect(f('die', 0).layer).toBe(-(104 + 6));
+    });
+
     it('a stack without the key draws the stand-in rectangle (the hitbox)', () => {
         const none = { has: () => false };
         const skin = stepBossSkin(null, V({ shieldBosses: [sb({})] }), 1);
@@ -255,6 +293,9 @@ describe('3. one mutant per family turns a golden red', () => {
         ['ShieldBoss — no hit tint', 'L19-shield-kill', { rules: { bossTint: () => null } }],
         ['ShieldBoss — tint on every tick (no update witness)', 'L19-shield-kill', { rules: { bossTint: (st, h) => (h > 0 ? '#ff0000' : st.tint) } }],
         ['ShieldBoss — no HARDLIGHT on "die"', 'L19-shield-kill', { rules: { dieBlend: () => null } }],
+        ['FinalBoss — the walk branch never seen', 'L112-owl-kill', { rules: { owlWalked: () => false } }],
+        ['FinalBoss — sit frame 0 always', 'L112-owl-kill', { rules: { worldFrame: () => 0 } }],
+        ['FinalBoss — death frame 4 always', 'L112-owl-kill', { rules: { owlDeathFrame: () => 4 } }],
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });
