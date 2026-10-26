@@ -1,0 +1,4 @@
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.slow.test.js > seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no window can bring under the bound is not scanned > ON, sweep request 392:0 solved whole ships the same ticks for less work
+ ✓ frontend/modules/seedlingDemo/hammerEscapeGenerated.slow.test.js > hammer-phase A2 — a previewed death is a step not taken > ⛓⛓ empty post-sword seed 30 generates a certified level with the escape ON (it aborted on a preview's drown)
+ Test Files  2 passed (2)
+      Tests  2 passed (2)
