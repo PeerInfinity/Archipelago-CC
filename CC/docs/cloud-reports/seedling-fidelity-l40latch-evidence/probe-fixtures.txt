@@ -1,0 +1,32 @@
+# box lock: TAKEN by probe-seedling-l40latch.mjs (browser, pid 19584) — head 40164ab2f, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      l40latch-stand: 160 t; switches {}
+PASS: l40latch-stand: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l40latch-stand: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 160 sampled tick(s)
+PASS: l40latch-stand: the game's player hit count equals the model's on every sampled tick (model hits t93 sword:bobsoldier@880,832, t113 sword:bobsoldier@880,832, t133 sword:bobsoldier@880,832 DIED)
+      l40latch-stand: OFF the model parts from the game on 0 tick(s)
+PASS: l40latch-stand: the game's bobsoldier@880,832 leaves the pocket and walks up toward the latch (y < 816) — from t49
+PASS: l40latch-stand: the game HITS the still holder on the latch — first hit at t93; max hits 2
+      l40latch-orbit-chain: 271 t; switches {"holdWaitPriced":true,"chaserOrbitKill":true}
+PASS: l40latch-orbit-chain: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l40latch-orbit-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 271 sampled tick(s)
+PASS: l40latch-orbit-chain: the game's player hit count equals the model's on every sampled tick (model hits none)
+      l40latch-orbit-chain: OFF the model parts from the game on 0 tick(s)
+PASS: l40latch-orbit-chain: the game never hits the player — max hits 0
+PASS: l40latch-orbit-chain: the game's bobsoldier@880,832 is killed and removed, and stays gone — gone from t184
+
+ALL CHECKS PASSED
+# box lock: TAKEN by probe-seedling-l40bk2.mjs (browser, pid 19786) — head 40164ab2f, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      l40bk2-pocket-chain: 2650 t; switches {"weighHypothesisChain":true}
+PASS: l40bk2-pocket-chain: the model (switches ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: l40bk2-pocket-chain: the game reproduces the model (switches ON) at 0 px — the player, every block, every chaser and turret — on all 2650 sampled tick(s)
+      l40bk2-pocket-chain: OFF the model parts from the game on 0 tick(s)
+PASS: l40bk2-pocket-chain: the game's ice-turret corpse comes to rest on button@480,384 {t 2} and stays — from t289
+PASS: l40bk2-pocket-chain: the game's pushableblockfire@480,480 comes to rest on button@768,400 {t 5} and stays — from t2486
+PASS: l40bk2-pocket-chain: the game's pushableblockfire@576,576 is pushed west toward the pocket (560,576) by pulser@592,576 — leaves (576,576) at t2619; at t2649 x 560.5
+PASS: l40bk2-pocket-chain: the game never hits the player — max hits 0
+PASS: l40bk2-pocket-chain: the game's player ends on button@816,400 (the hold that published the pulser) — ends in L40 at (824.5252382987803, 407.0139161399138)
+
+ALL CHECKS PASSED
