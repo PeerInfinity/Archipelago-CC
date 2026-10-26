@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 467,
         "browser": 178,
-        "cited": 252,
+        "cited": 253,
         "files": 481,
         "lineStyle": 14,
         "withDocblock": 481,
@@ -13134,7 +13134,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-l40latch.mjs",
