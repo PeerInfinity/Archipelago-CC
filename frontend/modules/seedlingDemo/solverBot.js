@@ -116,7 +116,7 @@ import {
     // receiver's i-frames, in one constant `killSchedule` has refused a smaller
     // value than since R5. The press arm never consulted it; the game found out.
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
-    SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
+    SLASH_ANIM_TICKS, slashPressForecast, slashScaleFor, slashSet, slashTimerTick,
     GHOST_DASH_CHAIN, ghostClockFor, slashEndTicksFor,
     // ⛓⛓⛓ hammer-phase C2: the spinner press kill's per-weapon press (behind `GHOST_SPINNER_PRESS`, ON by default).
     GHOST_SPINNER_PRESS, SWORD_SPINNER_PRESS, spinnerStrikePress,
@@ -132,6 +132,8 @@ import {
     PRESS_KILL_BOMBS, PRESS_KILL_BOMBS_COUNTS,
     // ⛓⛓⛓ hammer-phase PKC: the press kill's step sees the chasers (behind `PRESS_KILL_CHASERS`, OFF).
     PRESS_KILL_CHASERS, PRESS_KILL_CHASERS_COUNTS,
+    // ⛓⛓⛓ hammer-phase OPP: opportunistic strikes in the press kill (behind `OPPORTUNISTIC_STRIKE`, OFF).
+    OPPORTUNISTIC_STRIKE, OPPORTUNISTIC_STRIKE_COUNTS, OPPORTUNISTIC_STRIKE_TRACE,
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
@@ -190,7 +192,7 @@ import { planDash } from './mover.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { arrivalInsideSolid, arrivalsInto, solidsAt, STUCK_TICKS } from './arrivalSolid.js';
 import {
-    STRIKE_PRESS, armIsModelled, createStrikePolicy,
+    STRIKE_AIM, STRIKE_NONE, STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
 // ⛓⛓⛓ seedling-fidelity-bulb D3: a Bulb's kill is PLACED — the strike policy's veto and the segment's needs.
 import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
@@ -6274,7 +6276,13 @@ export function previewWalk(run, wps, tolerance = 0,
          * reached; a point = what `chooseHeld` aims at this tick instead of `wp`. The PHASE arm's lane walk
          * (`beamLaneSteer`) rides a moving band-to-band lane with it. `null` (every other caller) changes nothing.
          */
-        steer = null } = {}) {
+        steer = null,
+        /**
+         * ⛓ hammer-phase OPP — an OPT-IN body offer: `(policy, state, bodies, at) => bodies`, the bodies the strike
+         * policy is asked with on each tick (`oppStrikeOffer`: the press kill offers only the bodies whose strike lands
+         * clear of the spinners, in its preview exactly as in its drive). `null` (every other caller) changes nothing.
+         */
+        strikeOffer = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -6482,7 +6490,8 @@ export function previewWalk(run, wps, tolerance = 0,
          * keys, which is what the skipped call did.
          */
         if (strike && strikeArmed && !state.fall) {
-            decision = strike.decide(state, bodiesForPolicy ?? [], at, walkHeld, {
+            decision = strike.decide(state, strikeOffer !== null ? strikeOffer(strike, state, bodiesForPolicy ?? [], at)
+                : (bodiesForPolicy ?? []), at, walkHeld, {
                 slash: { state: slashState, endsAt: slashEndsAt, gate },
             });
             held = decision.held;
@@ -11930,7 +11939,7 @@ export function discClearanceAt(box, forecast, i) {
  * refuge that cannot cover it is a REFUSAL rather than a shorter window.
  */
 /** ⛓ hammer-phase BW: exported for `hammerPressBombs.test.js` (the refuge, OFF against ON). */
-export function deriveRefuge(run, contacts, untilIndex) {
+export function deriveRefuge(run, contacts, untilIndex, { strikeFor = null } = {}) {
     const forecast = run.spinnerForecast(Math.max(1, untilIndex));
     const clear = [];
     for (const c of walkableCells(run, contacts)) {
@@ -11974,9 +11983,11 @@ export function deriveRefuge(run, contacts, untilIndex) {
     for (const c of clear.slice(0, REFUGE_CANDIDATES)) {
         let walk;
         try {
+            // ⛓ hammer-phase OPP: with `strikeFor` (the press kill under `OPPORTUNISTIC_STRIKE`) the walk strikes as the drive does
+            const strike = strikeFor !== null ? strikeFor() : {};
             walk = cut && best !== null
-                ? previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta) })
-                : previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE);
+                ? previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, { stopWhen: refugeEtaCut(best.eta), ...strike })
+                : previewWalkOrDeath(run, [{ x: c.x, y: c.y }], DEFAULT_TOLERANCE, strikeFor !== null ? strike : undefined);
         } catch (e) {
             /**
              * ⛓ hammer-phase PKB — LB's HAND-OVER 5b: A REFUGE PREVIEW THE CAMERA'S SHAKE BAND CANNOT ANSWER IS A
@@ -12461,7 +12472,7 @@ function strikeScanBox(cells, floor, reach) {
 }
 
 /** ⛓ hammer-phase P1: exported for `pressKillCost.test.js` (one derivation, ON against OFF). */
-export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
+export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false, strikeFor = null } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
@@ -12562,7 +12573,13 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         if (walks.has(cell)) return walks.get(cell);
         let walk;
         try {
-            walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+            // ⛓ hammer-phase OPP: with `strikeFor` (the press kill under `OPPORTUNISTIC_STRIKE`) the walk strikes as the drive does
+            const armed = strikeFor !== null ? strikeFor() : null;
+            walk = armed !== null
+                ? previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE, armed)
+                : previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+            // ⛓ the certifying walk's own strikes (aim and press rows), carried on the strike it certifies
+            if (armed?.strike) walk.previewStrikes = oppStrikeRows(armed.strike);
         } catch (e) {
             // ⛓ hammer-phase SFF2 — A PREVIEWED DEATH IS A STEP NOT TAKEN (A2's `previewOrDeath` rule and its test):
             // the preview stepper THROWS the run's death refusal (`deathRefusal`, a `PhysicsV2Error`) when the walk
@@ -12762,6 +12779,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
             dwelt,
             ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
             ...(bombs ? { bombed } : {}),
+            ...(walk.previewStrikes ? { previewStrikes: walk.previewStrikes } : {}),
         };
     }
     /**
@@ -12833,6 +12851,7 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
                 fromContinuation: true,
                 ...(HAMMER_ESCAPE.enabled ? { escaped } : {}),
                 ...(bombs ? { bombed } : {}),
+                ...(walk.previewStrikes ? { previewStrikes: walk.previewStrikes } : {}),
             };
         }
     }
@@ -13216,6 +13235,56 @@ function landsClearOfChasers(run, keys) {
         return true;
     }
     return chaserDanger(run, playerBoxAt(next.x, next.y), 0, rows, { perTick: true }).length === 0;
+}
+
+/**
+ * ⛓ hammer-phase OPP — THE PRESS KILL'S BODY OFFER, ONE FUNCTION FOR ITS DRIVE AND ITS PREVIEWS (⚖ 30(c)). With a press
+ * owed (`policy.aimed`) every body is offered (the press half reads them for its veto only); otherwise a body within
+ * the sword's reach is offered only when its strike lands clear of the spinners (`oppStrikeLandsClear`), asked of
+ * `previewViewAt`'s view of the run `at − ticksCompleted` ticks on with the player at `state` — the run itself at the
+ * drive's tick, the previewed tick in a preview. `onWithheld` counts the drive's refusals (the instrument).
+ */
+function oppStrikeOffer(run, { onWithheld = null } = {}) {
+    const live = run.entities('spinnerBodies') ?? [];
+    const step = run.previewStepper();
+    return (policy, state, bodies, at) => {
+        if (policy.aimed !== null) return bodies;
+        let view = null;
+        return bodies.filter((b) => {
+            if (distanceRectPoint(state.x, state.y, b.rect) > SLASH_REACH) return true;
+            view ??= previewViewAt(run, at - run.ticksCompleted, state, live, step);
+            if (oppStrikeLandsClear(view, b)) return true;
+            onWithheld?.(b);
+            return false;
+        });
+    };
+}
+
+/** ⛓ hammer-phase OPP — a policy's aim and press rows as `{tick, decision, target}` (the preview = drive comparison). */
+export function oppStrikeRows(policy) {
+    return policy.trace.filter((t) => t.decision === STRIKE_AIM || t.decision === STRIKE_PRESS)
+        .map((t) => ({ tick: t.tick, decision: t.decision, target: t.target ?? null }));
+}
+
+/**
+ * ⛓ hammer-phase OPP — WOULD AN OPPORTUNISTIC STRIKE AT `body` LAND CLEAR OF THE SPINNERS (`OPPORTUNISTIC_STRIKE`)? The
+ * policy's strike is two ticks: the AIM (the facing key toward the body, `strikePolicy`'s own `facingToward` pick) and
+ * the PRESS (`primary` alone). `safeStep` never swaps a press, so both landings are asked here before the body is
+ * offered: the aim's with `safeStep`'s own test (`landsClearOfHammers`, forecast index 1) and the press's from the
+ * stepped aim, against forecast index 2 at `gameTimeAt(2)` — the same pairing one tick further. A step whose preview
+ * dies does not land clear (A2's rule). A room with no spinner is clear (`safeStep`'s early return).
+ */
+function oppStrikeLandsClear(run, body) {
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return true;
+    const aim = new Set([FACING_KEYS[facingToward(run.state, body.rect)]]);
+    if (!landsClearOfHammers(run, aim)) return false;
+    const ahead = run.spinnerForecast(3)[2] ?? null;
+    if (!ahead) return true;
+    const step = previewOrDeath(run.previewStepper());
+    const aimed = step({ ...run.state }, aim);
+    const pressed = aimed ? step({ ...aimed }, new Set(['primary'])) : null;
+    if (!pressed) return false;
+    return clearOfHammersAt({ gameTimeAt: (i) => run.gameTimeAt(i + 2) }, playerBoxAt(pressed.x, pressed.y), [ahead], 0);
 }
 
 /**
@@ -17019,6 +17088,22 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
     let fightLastPress = -KILL_PRESS_CADENCE;
     const fights = [];
     let fightsLeft = 0;
+    /**
+     * ⛓ hammer-phase OPP — THE ONE STRIKE POLICY, ASKED ON THE KILL'S OWN TICKS (`OPPORTUNISTIC_STRIKE`, OFF ⇒ `null`
+     * and nothing below reads it). `strikePolicyFor` is the single construction site (⚖ 30(c)); `strikeFor` hands the
+     * strike and refuge previews a policy from the same site, so the walks they certify strike as this drive does.
+     */
+    const opp = OPPORTUNISTIC_STRIKE.enabled ? strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE })
+        : null;
+    const oppOffer = opp !== null
+        ? oppStrikeOffer(run, { onWithheld: () => { OPPORTUNISTIC_STRIKE_COUNTS.withheld += 1; } }) : null;
+    const oppStrikeFor = (count) => (opp !== null
+        ? () => {
+            OPPORTUNISTIC_STRIKE_COUNTS[count] += 1;
+            return { strike: strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE }),
+                strikeOffer: oppStrikeOffer(run) };
+        }
+        : null);
     if (HAMMER_FIGHT.enabled && resolved.first?.fightRecord) {
         fights.push(resolved.first.fightRecord);
         if (resolved.first.fight && fightHeld(resolved.first.fight, run, landings).keys) fight = resolved.first.fight;
@@ -17140,6 +17225,22 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
             const body = (run.entities('spinnerBodies') ?? []).find((b) => b.id === plan.id);
             if (!body) break;
             let held = NO_KEYS;
+            // ⛓ hammer-phase OPP — an opportunistic aim taken last tick owes its press this tick (the policy's own half)
+            const oppPending = opp !== null && opp.aimed !== null;
+            /**
+             * ⛓ hammer-phase OPP — the kill's own aim WAITS while a press would DASH because of an opportunistic
+             * swing: the train it certified (`pressReadyAt`'s `trainIsSafeHere`) is a plain swing's, and `set
+             * slashing`'s dash branch has no `!slashing` term. Asked of the run's own slash state; never with no
+             * opportunistic press made (so ON with nothing struck reads exactly what OFF reads).
+             */
+            const oppDefers = () => {
+                if (opp === null || opp.lastPressAt === null) return false;
+                const f = slashPressForecast(run.progress('slashInfo'), { tick: run.ticksCompleted, ticksAhead: 1,
+                    direction: run.state.direction ?? 0, vx: run.state.vx ?? 0, vy: run.state.vy ?? 0 });
+                if (f.outcome !== 'dash') return false;
+                OPPORTUNISTIC_STRIKE_COUNTS.deferred += 1;
+                return true;
+            };
             /**
              * ⛓ hammer-phase A — the escape in flight drives the train and the i-frame (`escapeHeld`); at the aim
              * the press is taken only with an escape (`pressEscape`, exact from the run's own state). Off ⇒ both
@@ -17169,14 +17270,16 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                         approachQuiet = lastPressAt;
                     }
                     derived = planned?.ok ? planned.strike
-                        : deriveStrike(run, plan.id, contacts, body.hitsTimer > 0 ? body.hitsTimer : 0);
+                        : deriveStrike(run, plan.id, contacts, body.hitsTimer > 0 ? body.hitsTimer : 0,
+                            opp !== null ? { strikeFor: oppStrikeFor('strikePreviews') } : undefined);
                 }
                 return derived;
             };
             const refugeNow = () => {
                 if (refugeTaken === undefined) {
                     const banded = PRESS_KILL_GUARD_COUNTS.shakeRefused;
-                    refugeTaken = deriveRefuge(run, contacts, Math.max(body.hitsTimer, SPINNER.hammerPeriod));
+                    refugeTaken = deriveRefuge(run, contacts, Math.max(body.hitsTimer, SPINNER.hammerPeriod),
+                        opp !== null ? { strikeFor: oppStrikeFor('refugePreviews') } : undefined);
                     refugeBanded = PRESS_KILL_GUARD_COUNTS.shakeRefused - banded;
                 }
                 return refugeTaken;
@@ -17251,8 +17354,9 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 strike = null;
             } else if (following !== null) {
                 held = following;
-            } else if (pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt, strikePressOf(run))
-                && aimAdmitted()) {
+            } else if (!oppPending
+                && pressReadyAt(run, run.state, body.rect, body.hitsTimer, lastPressAt, strikePressOf(run))
+                && !oppDefers() && aimAdmitted()) {
                 if (aimEscape?.ok) {
                     escape = aimEscape;
                     escapes.push({ body: plan.id, t: run.ticksCompleted, pressAt: aimEscape.pressAt,
@@ -17303,7 +17407,13 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                             ...(next.escape ? { escape: next.escape, escapeBound: next.escapeBound } : {}),
                             // ⛓ hammer-phase B1 — a strike the approach search planned says so
                             ...(next.approach ? { approach: next.approach.index } : {}),
+                            // ⛓ hammer-phase OPP — the strikes the certifying walk took (`OPPORTUNISTIC_STRIKE` ON only)
+                            ...(next.previewStrikes ? { previewStrikes: next.previewStrikes } : {}),
                         });
+                        if (opp !== null) {
+                            OPPORTUNISTIC_STRIKE_TRACE.sink?.({ kind: 'strike', t: run.ticksCompleted, cell: next.cell,
+                                pressAt: next.pressAt, previewStrikes: next.previewStrikes ?? [] });
+                        }
                     } else if (move === 'follow') {
                         /**
                          * ⛓ hammer-phase A — NO STRIKE, AND AN ESCAPE STILL HAS CERTIFIED TICKS: they replace
@@ -17431,9 +17541,32 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
              * own refusal caught it at tick 130, which is the accurate wall
              * doing its job and not a reason to widen anything.
              */
+            /**
+             * ⛓ hammer-phase OPP — THE OPPORTUNISTIC STRIKE (`OPPORTUNISTIC_STRIKE`, OFF ⇒ `opp` is `null`). On a walk
+             * or refuge tick (not the fight's, not the escape's, not a tick the kill aims or presses), or on the tick
+             * an opportunistic aim owes its press, the policy decides with the walk's keys. It is offered only the
+             * bodies whose aim AND press land clear of the spinners (`oppStrikeLandsClear`), so an aim it takes is one
+             * `safeStep` would keep and the press it owes is one `safeStep` cannot refuse.
+             */
+            let oppTook = STRIKE_NONE;
+            if (opp !== null && !run.state.fall && (oppPending
+                || (fightKeys === null && following === null && !aimed && !held.has('primary')))) {
+                OPPORTUNISTIC_STRIKE_COUNTS.asked += 1;
+                const offered = oppOffer(opp, run.state, run.entities('strikeBodies') ?? [], run.ticksCompleted);
+                const d = opp.decide(run.state, offered, run.ticksCompleted, held, { slash: run.progress('slashInfo') });
+                if (d.decision !== STRIKE_NONE) {
+                    held = d.held;
+                    OPPORTUNISTIC_STRIKE_TRACE.sink?.({ kind: 'drive', t: run.ticksCompleted, decision: d.decision,
+                        target: d.target ?? null });
+                    oppTook = d.decision;
+                    if (d.decision === STRIKE_AIM) OPPORTUNISTIC_STRIKE_COUNTS.aimed += 1;
+                    else OPPORTUNISTIC_STRIKE_COUNTS.pressed += 1;
+                }
+            }
             try {
                 const meant = held;
-                held = safeStep(run, held, alternativesNow(), ctx.what, plan.id,
+                // ⛓ hammer-phase OPP: an opportunistic aim was offered only where it lands clear (no swap may drop it)
+                held = oppTook === STRIKE_AIM ? held : safeStep(run, held, alternativesNow(), ctx.what, plan.id,
                     fightKeys !== null ? landsClearInFlight : landsClearOfHammers);
                 // ⛓ hammer-phase A — a certificate `safeStep` overrode no longer describes the walk: it ends.
                 if (escape && held !== meant
@@ -17512,7 +17645,8 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
             ...(escapes.length ? { escapes } : {}),
             ...(fellBack.length ? { fellBack } : {}),
             ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}),
-            ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}) };
+            ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}),
+            ...(opp !== null ? { opportunistic: oppStrikeRows(opp) } : {}) };
     }
     /**
      * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
@@ -17641,7 +17775,8 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 ...(escapes.length ? { escapes } : {}),
                 ...(fellBack.length ? { fellBack } : {}),
                 ...(HAMMER_APPROACH.enabled ? { approaches, approachesLeft } : {}),
-                ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}) };
+                ...(HAMMER_FIGHT.enabled ? { fights, fightsLeft } : {}),
+                ...(opp !== null ? { opportunistic: oppStrikeRows(opp) } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
