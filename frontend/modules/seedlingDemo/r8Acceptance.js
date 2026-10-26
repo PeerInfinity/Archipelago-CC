@@ -1491,11 +1491,12 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'in L40 with its chasers stepped. Recorded on the game (p4g) with `hits` 0, model = game at 0 px.',
         }),
         Object.freeze({
-            name: 'l40button-l42-part0', levels: Object.freeze([40]), bobs: 14, ticks: 1663,
-            addedBy: 'Seedling fidelity L40REREC D1 (L40 from L42 to Totem Part 64,144, damage on, on the game)',
+            name: 'l40button-l42-part0', levels: Object.freeze([40]), bobs: 14, ticks: 1665,
+            addedBy: 'Seedling fidelity L40REREC D1 (L40 from L42 to Totem Part 64,144, damage on, on the game); '
+                + 're-recorded by Seedling fidelity L42REREC D1 at the defaults (`dashSpinnerForecast` ON)',
             why: 'sweep leg 381\'s arrival: brave, the PACED hold, the `spinner@192,128` kill, the rocks, the t1 latch, '
-                + 'the part — 1663 ticks in L40 with its chasers stepped. Recorded on the game (p4g) with `hits` 0, '
-                + 'model = game at 0 px.',
+                + 'the part — 1665 ticks in L40 with its chasers stepped (1663 before L42REREC; the walk parts at '
+                + 't1310, on the approach to the rock break). Recorded on the game (p4g) with `hits` 0, model = game at 0 px.',
         }),
     ]),
 
@@ -3586,8 +3587,9 @@ export const R8_D2_SHIELD = Object.freeze({
                 why: 'sweep-4 leg 381\'s arrival, the solver\'s own plan with `STANCE_ROCKS` on: on its way to the NW '
                     + 'cluster\'s rocks the walk kills `spinner@192,128` (a `kill` order), then latches t1 and collects. '
                     + 'Recorded on p4f (noDamage), model = game at 0 px; ⛓ re-recorded at L40REREC on p4g with damage '
-                    + 'on (the hold paced out of the lobber\'s blasts), 0 hits, 0 px. Named by this assertion driving '
-                    + 'the roster.',
+                    + 'on (the hold paced out of the lobber\'s blasts), 0 hits, 0 px; ⛓ re-recorded again at L42REREC '
+                    + 'at the defaults (`dashSpinnerForecast` ON, 1665 t), p4g, damage on, 0 hits, 0 px. Named by '
+                    + 'this assertion driving the roster.',
             }),
         ]),
     }),
