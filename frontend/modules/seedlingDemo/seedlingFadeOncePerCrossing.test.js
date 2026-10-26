@@ -45,12 +45,12 @@ const doorTo = (run, to) => {
 const FADE = Array.from({ length: 20 }, (_, k) => +Math.max(1 - 0.05 * (k + 1), 0).toFixed(4));
 
 /**
- * The page's clock, one slot per call. `drive(rt, slot)` returns the keys to hold (or starts a walk). The host
- * answers each NEW crossing with `new Game(to, …)` at its arrival, `hostDelay` slots after the slot it saw it
- * (0 = the same slot: measured live), and may queue `extra` items with it (a delivery). `drain` = the page polls
- * the queue on a held frame (the fix; false = today's page); `forget` = the mutant that draws the game's restart.
+ * The page's slot (`jsRuntimePage.slot`), one per call. `drive(rt, slot)` returns the keys to hold (or starts a walk).
+ * The host answers each NEW crossing with `new Game(to, …)` at its arrival through `answer(items)`, and may queue
+ * `extra` items with it (a delivery). `drain` = the page polls the queue on a held frame (the fix; false = today's
+ * page); `forget` = the mutant that draws the game's restart.
  */
-function play(drive, slots, { drain = true, forget = false, hostDelay = 0, extra = [] } = {}) {
+function pageSlots(drive, { drain = true, forget = false, extra = [], answer }) {
     const rt = createJsRuntime({ log: () => {} });
     rt.game.configure(JSON.stringify({ classes: GAME.classes, state_properties: GAME.state_properties }));
     rt.queueItems([{ class: 'game', property: 'menu', value: false }]);
@@ -58,11 +58,10 @@ function play(drive, slots, { drain = true, forget = false, hostDelay = 0, extra
     const view = () => effectSkinView(rt.run, { record: recordOf(rt.run.level) });
     let skin = null;
     let seenCrossings = 0;
-    const answers = new Map();
     const rows = [];
-    for (let slot = 0; slot < slots; slot += 1) {
-        if (answers.has(slot)) rt.queueItems(answers.get(slot));
-        const keys = drive(rt, slot) ?? new Set();
+    const slot = () => {
+        const n = rows.length;
+        const keys = drive(rt, n) ?? new Set();
         const s = fadeSlot(forget && skin?.epoch.run !== rt.run ? null : skin, view(),
             { run: rt.run, fresh: rt.run.ticksCompleted === 0, inPlace: () => lastBootInPlace(rt) });
         skin = s.skin;
@@ -76,15 +75,53 @@ function play(drive, slots, { drain = true, forget = false, hostDelay = 0, extra
         const crossings = rt.events.filter((e) => e.type === 'transition');
         for (const tr of crossings.slice(seenCrossings)) {
             const at = rt.arrival;
-            const answer = [{ invocation: 'new_instance', className: 'Game', args: [tr.to, at.x, at.y] }, ...extra];
-            if (hostDelay === 0) rt.queueItems(answer);
-            else answers.set(slot + hostDelay, answer);
+            answer(rt, [{ invocation: 'new_instance', className: 'Game', args: [tr.to, at.x, at.y] }, ...extra], n);
         }
         seenCrossings = crossings.length;
-        rows.push({ slot, cover: +coverOf(skin).toFixed(4), held: s.held, level: rt.run.level, crossings: crossings.length,
+        rows.push({ slot: n, cover: +coverOf(skin).toFixed(4), held: s.held, level: rt.run.level, crossings: crossings.length,
             boots: rt.events.filter((e) => e.type === 'boot').length });
+    };
+    return { rt, rows, slot };
+}
+
+/** The bare slot loop. The host answers `hostDelay` slots after the slot it saw the crossing (0 = the same slot: measured live). */
+function play(drive, slots, { hostDelay = 0, ...opts } = {}) {
+    const answers = new Map();
+    const page = pageSlots(drive, { ...opts, answer: (rt, items, n) => {
+        if (hostDelay === 0) rt.queueItems(items);
+        else answers.set(n + hostDelay, items);
+    } });
+    for (let n = 0; n < slots; n += 1) {
+        if (answers.has(n)) page.rt.queueItems(answers.get(n));
+        page.slot();
     }
-    return { rows, rt };
+    return { rows: page.rows, rt: page.rt };
+}
+
+/**
+ * ⛓ GAME SPEED — the same slots on the page's REAL clock (`jsRuntimeClock`: one slot per event-loop turn, the first
+ * in the animation frame, the rest as posted tasks) on a 60 Hz display. The host's answer is a `postMessage` from
+ * the panel: a TASK, queued behind the slots already posted, and `hostDelayMs` later when given. At 4× a frame runs
+ * up to four slots, so the answer can land several slots into the door's fade.
+ */
+async function playClocked(drive, slots, speed, { hostDelayMs = 0, ...opts } = {}) {
+    const { createSlotClock, createSlotPump } = await import('./jsRuntimeClock.js');
+    let now = 0;
+    const tasks = [];
+    const later = [];
+    const page = pageSlots(drive, { ...opts, answer: (rt, items) => {
+        const deliver = () => rt.queueItems(items);
+        if (hostDelayMs === 0) tasks.push(deliver);
+        else later.push({ due: now + hostDelayMs, deliver });
+    } });
+    const pump = createSlotPump({ clock: createSlotClock({ speed }), runSlot: page.slot, postTask: (fn) => tasks.push(fn) });
+    for (let f = 0; page.rows.length < slots; f += 1) {
+        now = f * (1000 / 60);
+        for (const l of later.filter((x) => x.due <= now)) { later.splice(later.indexOf(l), 1); tasks.push(l.deliver); }
+        pump.frame(now);
+        while (tasks.length) tasks.shift()();
+    }
+    return { rows: page.rows.slice(0, slots), rt: page.rt };
 }
 
 /** The slots where the cover RISES (a fade starting). */
@@ -178,5 +215,20 @@ describe('one fade per crossing (the JS page)', () => {
     it('MUTANT — the game\'s restart drawn literally (a fresh run\'s fade replaces the one showing): not monotone, red', () => {
         const { rows } = play(script(), SLOTS, { forget: true });
         expect(() => expectOneRampEach(rows, 3)).toThrow();
+    });
+
+    it('GAME SPEED — the page\'s real clock at 1×, 2× and 4×, the host answering by a posted task: ONE ramp each', async () => {
+        for (const speed of [1, 2, 4]) {
+            const { rows, rt } = await playClocked(script(), SLOTS, speed);
+            expect(rt.events.filter((e) => e.type === 'transition').map((e) => `${e.from}→${e.to}`), `${speed}×`).toEqual(['16→15', '15→16', '16→15']);
+            expectOneRampEach(rows, 3);
+        }
+    });
+
+    it('GAME SPEED — the host 100 ms late at 4× (≈ 12 slots into the fade): absorbed, ONE ramp each; today\'s page still TWO', async () => {
+        const { rows } = await playClocked(script(), SLOTS, 4, { hostDelayMs: 100 });
+        expectOneRampEach(rows, 3);
+        const today = (await playClocked(script(), SLOTS, 4, { hostDelayMs: 100, drain: false })).rows;
+        for (const part of stretches(today)) expect(ramps(part).length).toBe(2);
     });
 });

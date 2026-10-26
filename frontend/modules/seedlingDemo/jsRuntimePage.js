@@ -20,6 +20,8 @@
  *     `display:none` frame gets no animation frames, so a timer PUMP keeps the
  *     clock going when rAF has been silent for `PUMP_AFTER_MS` — the panel's
  *     host glue (deliveries, crossings) must not stall behind a tab switch;
+ *     ⛓ GAME SPEED — at 30 × 1 | 2 | 4 ticks a second (`?speed=`), one slot per
+ *     event-loop turn (`jsRuntimeClock.js`: the speed is presentation only);
  *  4. paints the room in rectangles with the watch page's palette
  *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
  *     the player's hitbox.
@@ -186,15 +188,14 @@ import { stepTrapSkin, trapOps, trapSkinView } from './seedlingTrapSkin.js';
 import { lampOps, lampSkinView } from './seedlingLampSkin.js';
 import { EFFECT_RULES } from './seedlingEffectSkin.js';
 import { NIGHT, nightMainOps, nightOps, nightSkinView, stepNightSkin } from './seedlingNightSkin.js';
+import { BASE_TICKS_PER_SECOND, createRateMeter, createSlotClock, createSlotPump, messageChannelPostTask, parseGameSpeed } from './jsRuntimeClock.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
-export const TICKS_PER_SECOND = 30;
+/** At 1× (`jsRuntimeClock.BASE_TICKS_PER_SECOND`; ⛓ GAME SPEED: × the speed). */
+export const TICKS_PER_SECOND = BASE_TICKS_PER_SECOND;
 /** The colour every paint clears the canvas to (and the static tile layer is filled with). */
 const BACKGROUND = '#101014';
-const TICK_MS = 1000 / TICKS_PER_SECOND;
-/** At most this many ticks per frame — a long stall is skipped, not replayed. */
-const MAX_TICKS_PER_FRAME = 5;
 const PUMP_AFTER_MS = 250;
 
 const AP_ITEM_COLOUR = '#e8c040';
@@ -428,52 +429,64 @@ export function mountJsRuntimePage(win = window) {
     life.on(win, 'blur', () => down.clear());
 
     // ── clock ─────────────────────────────────────────────────────────────
-    let last = null;
-    let acc = 0;
+    // ⛓ GAME SPEED — 30 × 1 | 2 | 4 slots a second (`?speed=`, the panel's `seedlingJsSpeed`; live through
+    // `__seedlingJsClock.set`), one slot per event-loop turn (`jsRuntimeClock.createSlotPump` says why).
+    let initialSpeed = 1;
+    try { initialSpeed = parseGameSpeed(params.get('speed')); } catch (err) {
+        win.console?.warn?.(`[js runtime] ${err.message} — playing at 1×`);
+    }
+    const clock = createSlotClock({ speed: initialSpeed });
+    const rateMeter = createRateMeter();
     let lastFrameAt = 0;
-    function advance(now) {
-        if (last === null) last = now;
-        acc += Math.min(now - last, TICK_MS * MAX_TICKS_PER_FRAME);
-        last = now;
-        let n = 0;
-        while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
-            // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
-            if (graphics.stack && runtime.run) {
-                // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing;
-                // ⛓ G7 — and a reboot in place (an item delivery) owes no new fade: the game builds no world for it
-                const slot = fadeSlot(graphics.effectSkin, effectView(), {
-                    run: runtime.run, fresh: runtime.run.ticksCompleted === 0, inPlace: lastBootInPlace, rain: effectsOn(),
-                });
-                graphics.effectSkin = slot.skin;
-                if (slot.held) {
-                    graphics.held += 1;
-                    // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
-                    // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
-                    runtime.drainItems();
-                    acc -= TICK_MS;
-                    n += 1;
-                    continue;
-                }
+    /** One slot of the game's clock: an owed dead frame of a load fade (the run waits), else one run tick. */
+    function slot() {
+        // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
+        if (graphics.stack && runtime.run) {
+            // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing;
+            // ⛓ G7 — and a reboot in place (an item delivery) owes no new fade: the game builds no world for it
+            const slot = fadeSlot(graphics.effectSkin, effectView(), {
+                run: runtime.run, fresh: runtime.run.ticksCompleted === 0, inPlace: lastBootInPlace, rain: effectsOn(),
+            });
+            graphics.effectSkin = slot.skin;
+            if (slot.held) {
+                graphics.held += 1;
+                // ⛓ the game polls the host's queue on a dead frame too (`drainItems`): the arrival teleport that
+                // answers a door lands inside that door's fade, which then plays on (`adoptRunEffectSkin`)
+                runtime.drainItems();
+                return;
             }
-            runtime.tick(heldFromCodes(down));
-            if (graphics.stack) {
-                graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
-                graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
-                graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
-                graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
-                graphics.puzzleSkin = stepPuzzleSkin(graphics.puzzleSkin, puzzleView(), runtime.ticks);
-                graphics.solidsSkin = stepSolidsSkin(graphics.solidsSkin, solidsView(), runtime.ticks);
-                graphics.npcSkin = stepNpcSkin(graphics.npcSkin, npcSkinView(runtime.run), runtime.ticks);
-                graphics.trapSkin = stepTrapSkin(graphics.trapSkin, trapSkinView(runtime.run), runtime.ticks);
-                const fv = effectView();
-                graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
-                    fv, runtime.ticks, { rain: effectsOn() });
-                if (graphics.lights === 'on') graphics.nightSkin = stepNightSkin(graphics.nightSkin, nightView(), runtime.ticks);
-            }
-            acc -= TICK_MS;
-            n += 1;
+        }
+        runtime.tick(heldFromCodes(down));
+        if (graphics.stack) {
+            graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
+            graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
+            graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
+            graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
+            graphics.puzzleSkin = stepPuzzleSkin(graphics.puzzleSkin, puzzleView(), runtime.ticks);
+            graphics.solidsSkin = stepSolidsSkin(graphics.solidsSkin, solidsView(), runtime.ticks);
+            graphics.npcSkin = stepNpcSkin(graphics.npcSkin, npcSkinView(runtime.run), runtime.ticks);
+            graphics.trapSkin = stepTrapSkin(graphics.trapSkin, trapSkinView(runtime.run), runtime.ticks);
+            const fv = effectView();
+            graphics.effectSkin = stepEffectSkin(carryThroughReboot(graphics.effectSkin, fv, { run: runtime.run, inPlace: lastBootInPlace }),
+                fv, runtime.ticks, { rain: effectsOn() });
+            if (graphics.lights === 'on') graphics.nightSkin = stepNightSkin(graphics.nightSkin, nightView(), runtime.ticks);
         }
     }
+    const pump = createSlotPump({ clock, runSlot: slot, postTask: messageChannelPostTask(win) });
+    function advance(now) {
+        pump.frame(now);
+        rateMeter.sample(now, pump.slots, runtime.ticks);
+    }
+    // ⛓ GAME SPEED — the clock's handle: the speed (a readout and the live switch) and the rate it achieves.
+    win.__seedlingJsClock = {
+        get speed() { return clock.speed; },
+        get ticksPerSecond() { return clock.speed * BASE_TICKS_PER_SECOND; },
+        get maxSlotsPerFrame() { return clock.maxSlots; },
+        /** Slots and run ticks per second over the last second (a hold is a slot, not a tick). */
+        get rate() { return rateMeter.rate; },
+        get slots() { return pump.slots; },
+        set: (speed) => clock.setSpeed(speed),
+    };
     /** ⛓ G4 — the effects' view: the run, and the room's level record (the rain row the world does not keep). */
     function effectView() {
         const run = runtime.run;

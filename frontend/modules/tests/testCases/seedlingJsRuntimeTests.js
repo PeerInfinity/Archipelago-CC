@@ -3548,6 +3548,83 @@ registerTest({
 });
 
 /**
+ * ⛓ GAME SPEED (slice `seedling-js-game-speed`) — the speed setting in the real panel. With `flashPanel.runtime = js`
+ * (a session override) and seedling_generated_room loaded, the panel's Settings section shows the "Game speed" row
+ * (a js-only row); a speed saved before the mount (`2x`) is on the page's URL and its clock; `flashPanel.seedlingJsSpeed = 4x` (a session override) reaches the mounted page LIVE: its
+ * clock reads 4, the adapter's item push is re-timed to 100/4 ms, and the page achieves ≈ 120 ticks a second. Back
+ * to `1x`: ≈ 30. The run never halts. Both settings are restored however it ends.
+ */
+export async function seedlingJsRuntimeGameSpeed(tc) {
+    const { SPEED_SETTING_KEY } = await import('../../flashPanel/seedlingGameSpeedSettings.js');
+    const { PUSH_INTERVAL_MS } = await import('../../flashPanel/wasmBridgeAdapter.js');
+    let previousRuntime = 'auto';
+    let previousSpeed = '1x';
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSpeed = await settingsManager.getSetting(SPEED_SETTING_KEY, '1x'); } catch { /* keep 1x */ }
+    try {
+        // the speed is set BEFORE the mount: the mount reads it onto the page's URL
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '2x', { persist: false });
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        const rulesJson = await (await fetch(PRESET_PATH)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const panel = await tc.pollForValue(() => {
+            const p = getActivePanelInstance();
+            return p?.transport === 'js' && p.adapter && p._apLoadResult && frameOf(p)?.__seedlingJsClock && frameOf(p)?.__seedlingJsRuntime?.run ? p : null;
+        }, 'the flash panel mounted the JS runtime page and finished its AP load', 30000, 250);
+        tc.reportCondition('the panel is on the JS runtime with a live run', !!panel);
+        if (!panel) return tc.getOverallResult();
+        const win = frameOf(panel);
+        const clock = win.__seedlingJsClock;
+        const rt = win.__seedlingJsRuntime;
+        const row = panel._settingsControls?.find((c) => c.prop === 'seedlingJsSpeed') ?? null;
+        tc.log(`mounted: wasmPath ${panel.wasmPath}; frame ${win.location.href}; _jsSpeed ${panel._jsSpeed}`);
+        tc.assertEqual('the Settings section has a visible "Game speed" row on the js runtime', 'flex/1x,2x,4x',
+            `${row?.row?.style?.display}/${row ? [...row.input.options].map((o) => o.value).join(',') : null}`);
+        tc.assertEqual('mounted at the saved 2×: the page clock, its URL, the push and the control', `2/2/${PUSH_INTERVAL_MS / 2}/2x`,
+            `${clock.speed}/${new URLSearchParams(win.location.search).get('speed')}/${panel.adapter._pushIntervalMs}/${row?.input?.value}`);
+        const rateOver = async (ms) => {
+            const s0 = clock.slots;
+            const t0 = performance.now();
+            await new Promise((r) => setTimeout(r, ms));
+            return ((clock.slots - s0) * 1000) / (performance.now() - t0);
+        };
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '4x', { persist: false });
+        const at4 = await tc.pollForValue(() => (clock.speed === 4 ? clock : null), 'the page clock took 4× live', 5000, 50);
+        tc.assertEqual('4× live: the page clock, the control and the push (no re-mount)', `4/4x/${PUSH_INTERVAL_MS / 4}/true`,
+            `${at4?.speed}/${row?.input?.value}/${panel.adapter._pushIntervalMs}/${frameOf(panel) === win}`);
+        const r4 = await rateOver(2000);
+        tc.log(`4×: ${r4.toFixed(1)} slots a second (target 120); clock.rate ${JSON.stringify(clock.rate)}`);
+        tc.reportCondition(`4× achieves ≥ 100 slots a second (measured ${r4.toFixed(1)})`, r4 >= 100);
+        await settingsManager.updateSetting(SPEED_SETTING_KEY, '1x', { persist: false });
+        await tc.pollForCondition(() => clock.speed === 1, 'the page clock back at 1×', 5000, 50);
+        const r1 = await rateOver(2000);
+        tc.log(`1×: ${r1.toFixed(1)} slots a second (target 30)`);
+        tc.reportCondition(`1× is 30 slots a second again (measured ${r1.toFixed(1)})`, r1 > 25 && r1 < 35);
+        tc.assertEqual('the run did not halt', 'null', `${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(SPEED_SETTING_KEY, previousSpeed, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-game-speed',
+    name: 'Seedling JS runtime: the game-speed setting — a js-only Settings row, applied live (1× → 4× → 1×)',
+    description: 'With flashPanel.runtime = js (session override) and seedling_generated_room loaded: the panel\'s Settings '
+        + 'section shows the "Game speed" row; a speed set before the mount (2x) mounts the page at ?speed=2; seedlingJsSpeed = 4x (session override) reaches the mounted page live (its '
+        + 'clock reads 4, the item push is re-timed to 25 ms, no re-mount) and it achieves ≥ 100 slots a second; back to '
+        + '1x it is ≈ 30. Both settings are restored.',
+    testFunction: seedlingJsRuntimeGameSpeed,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
  * ⛓ ONE FADE PER CROSSING — the user (2026-10-26): "in js mode, it does a double fade on every room transition. It
  * doesn't do that in wasm mode." With flashPanel.runtime = js and the seedling graphics stack, the Playback Bot walks
  * seedling_atlas's real rooms (into the starting house, out, down the owl's-nest stairs and into the dungeon). The
