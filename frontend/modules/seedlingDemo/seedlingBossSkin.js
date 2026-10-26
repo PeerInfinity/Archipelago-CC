@@ -64,6 +64,21 @@
  *     60, die over 30 — scale and alpha from the run's `timer` — the frame
  *     `whirlFrames[worldFrame(16)]` and 20° more each render from a cosmetic
  *     start (G9b's rule).
+ *   · THE LIGHTS (`Enemies/LightBossController.as`, L69; no body of its own) —
+ *     everything from `run.lightsFight`. Its six LightBoss fliers
+ *     (`Enemies/LightBoss.as`): 17 × 16 centred (FlashPunk's int origin, 8),
+ *     turned to `angleFace` (the run's), "sit" [0], then "die" [1..9] at 20 fps
+ *     and scale 1.1 (the run's `dieAnim`); removed at its end. Their tint is
+ *     `Enemy.hitUpdate`'s toggle between red and a NORMAL colour the flier
+ *     darkens itself (`normalColor = 0xFFFFFF · (1 − hits/3)`, set at the END of
+ *     its update, so a toggle reads the previous update's): transcribed in the
+ *     reducer. Their shots (`Projectiles/LightBossShot.as`): 8 × 8 centred,
+ *     10° more each update from 0 (the ctor's angle went to TurretSpit's own
+ *     sprite), copied onto nightBmp at 0.1 (`TurretSpit.render`). The
+ *     LightBossTotem (`Scenery/LightBossTotem.as`): an Image at the controller's
+ *     point on the pivot (0, 8), `layer = -(y + 8)`, copied onto nightBmp at 0.5;
+ *     once `die` (the run's `totemDie`), each render scales it (x · 0.9, y + 0.1),
+ *     reddens it (`colorLerp(white, red, min(1, scaleY/2))`) and lifts it 10 px.
  *   · FROZEN BOSS (`Scenery/FrozenBoss.as`, L111) — an Image at the placement
  *     (origin 0), `layer = -(y − originY + height·2/3)` with the hitbox's
  *     origin −128 and height 32; `render()` draws it again onto nightBmp.
@@ -85,7 +100,15 @@ export const KEYS = Object.freeze({
     tentacleBeast: 'seedling:boss/tentaclebeast',
     tentacle: 'seedling:boss/tentacle',
     whirlpool: 'seedling:machine/whirlpool',
+    lightBoss: 'seedling:boss/lightboss',
+    lightShot: 'seedling:boss/lightbossshot',
+    lightTotem: 'seedling:boss/lightbosstotem',
 });
+/** `LightBoss.as:39` "die" frames, `:76` the death scale; `LightBossShot.as:15` `angleSpinRate`. */
+const LIGHT_DIE = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+const LIGHT_DIE_SCALE = 1.1;
+const LIGHT_SHOT_SPIN = 10;
+const LIGHT_HITS_MAX = 3;
 /** `TentacleBeast.as:20-21, 40-43`: frames and fps (`[]` → its update's own frame). */
 const BEAST_ANIMS = Object.freeze({
     sink: { frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], fps: 8 }, rise: { frames: [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0], fps: 8 },
@@ -127,7 +150,7 @@ const BOSS_COLOUR = '#e04848';
 
 /** WHAT G10 DRAWS, by AS3 class. */
 export const BOSS_COVERAGE = Object.freeze({
-    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss', 'TentacleBeast']),
+    drawn: Object.freeze(['ShieldBoss', 'FrozenBoss', 'FinalBoss', 'LavaBoss', 'TentacleBeast', 'LightBossController']),
 });
 /** What G10 does not draw yet, and why (the census's `remaining` rows say which classes). */
 export const BOSS_PENDING = Object.freeze({
@@ -136,6 +159,8 @@ export const BOSS_PENDING = Object.freeze({
         + 'impact (the run carries the ball\'s removal, not the blast); a ball\'s "fly" phase counts from the tick the view first sees it',
     TentacleBeast: 'BAND: the beast\'s anim index is counted from the tick the view first shows the anim (the run carries its name); '
         + 'a timed whirlpool\'s start angle is `Rng.cos()` (cosmetic); a Tentacle\'s cut `dieEffects` (G4\'s effects, not drawn here)',
+    LightBossController: 'the fliers\' and the dying totem\'s Lights (night-layer circles G5 does not see: a runtime `Light` per '
+        + 'flier, coloured by its hits, and one per totem render); BAND: a flier\'s tint whose hit landed while it was frozen',
     FinalBoss: 'its RockFall rocks and Grenades in flight (the run keeps them in the Owl\'s closure; a read is a new getter = a '
         + 'design check); BAND: the layer during the intro (AS3 sets it only past the freeze) and a Game.freezeObjects other than '
         + 'the intro (a dialogue), which the reducer does not see',
@@ -181,6 +206,12 @@ export function bossSkinView(run) {
                     destroy: !!t.destroy, alpha: t.alpha ?? 1, hitsTimer: t.hitsTimer ?? 0 })),
                 whirlpools: (f.whirlpools ?? []).map((w) => ({ id: w.id, x: w.x, y: w.y, timer: w.timer })) }];
         })(),
+        lights: (read(run, 'lightsFight', []) ?? []).map((f) => ({
+            id: f.id, x: f.x, y: f.y, totemDie: !!f.totemDie,
+            fliers: (f.bodies ?? []).filter((b) => !b.removed).map((b) => ({ id: b.id, x: b.x, y: b.y, hits: b.hits ?? 0,
+                hitsTimer: b.hitsTimer ?? 0, angleFace: b.angleFace ?? null, dying: !!b.dieAnim, dieIndex: b.dieAnim?.index ?? 0 })),
+            shots: (f.shots ?? []).filter((x) => !x.removed).map((x) => ({ id: x.id, x: x.x, y: x.y })),
+        })),
         frozenBosses: objects.filter((o) => o.tag === 'frozenboss').map((o) => ({ id: `frozenboss@${o.x},${o.y}`, x: o.x, y: o.y })),
     };
 }
@@ -235,6 +266,8 @@ export const BOSS_RULES = Object.freeze({
     lavaScale,
     ballAngle: (s) => (s.vx !== 0 || s.vy !== 0 ? (Math.atan2(-s.vy, s.vx) * 180) / Math.PI : 0),
     beastFrame,
+    flierTint,
+    totemLook,
     tentacleFrame: (t) => (TENTACLE_FRAMES[t.anim] ?? TENTACLE_FRAMES.sit)[t.index] ?? 0,
     whirlLook,
 });
@@ -245,6 +278,33 @@ function beastFrame(st, b, time) {
     const a = BEAST_ANIMS[b.anim];
     if (!a) return 0;
     return a.frames[a.fps > 0 ? animIndex(a.fps, st.age, a.frames.length) : 0];
+}
+
+/** `normalColor = 0xFFFFFF · (1 − hits/hitsMax)` as a uint (`LightBoss.as:63`); white is no tint. */
+const flierNormal = (hits) => {
+    const c = Math.trunc(0xFFFFFF * (1 - hits / LIGHT_HITS_MAX)) >>> 0;
+    return c === 0xFFFFFF ? null : `#${c.toString(16).padStart(6, '0')}`;
+};
+
+/**
+ * `Enemy.hitUpdate` with the flier's own NORMAL colour (`Enemy.as:223-245`): `h` the timer at the top of the update,
+ * `normal` the colour its previous update left. Returns the image's colour after it (null = white).
+ */
+function flierTint(colour, h, now, normal) {
+    if (!(h > 0 && now === h - 1)) return colour;
+    let c = colour;
+    if (h % 10 === 0) c = c === normal ? ENEMY_HIT_TINT : normal;
+    if (h - 1 <= 0) c = normal;
+    return c;
+}
+
+/** `LightBossTotem.render` after `k` dying renders: scale, tint (`colorLerp(white, red, min(1, scaleY / 2))`) and lift. */
+function totemLook(k) {
+    if (k <= 0) return { scaleX: 1, scaleY: 1, tint: null, dy: 0 };
+    const scaleY = 1 + 0.1 * k;
+    const t = Math.min(1, scaleY / 2);
+    const g = Math.trunc(255 - 255 * t).toString(16).padStart(2, '0'); // `uint +=` truncates
+    return { scaleX: 0.9 ** k, scaleY, tint: `#ff${g}${g}`, dy: -10 * k };
 }
 
 /** `Whirlpool.update`: scale and alpha from the timer after it (grow, live, die). */
@@ -317,6 +377,24 @@ export function stepBossSkin(prev, view, tick, { rules = BOSS_RULES } = {}) {
             bodies.set(`whirl:${w.id}`, { renders: (o?.renders ?? 0) + 1 });
         }
     }
+    for (const f of view.lights) {
+        for (const b of f.fliers) {
+            const o = same ? prev.bodies.get(`flier:${b.id}`) : null;
+            const st = o ? { ...o } : { colour: null, normal: null, prevHits: b.hitsTimer, hitsAtUpdate: b.hits };
+            st.colour = R.flierTint(st.colour, st.prevHits, b.hitsTimer, st.normal);
+            // the END of its update: the colour from the hits it had then (a sword lands later, in the player's update)
+            st.normal = flierNormal(st.hitsAtUpdate);
+            st.prevHits = b.hitsTimer;
+            st.hitsAtUpdate = b.hits;
+            bodies.set(`flier:${b.id}`, st);
+        }
+        for (const x of f.shots) {
+            const o = same ? prev.bodies.get(`shot:${x.id}`) : null;
+            bodies.set(`shot:${x.id}`, { updates: o ? o.updates + 1 : 0 });
+        }
+        const o = same ? prev.bodies.get(`totem:${f.id}`) : null;
+        bodies.set(`totem:${f.id}`, { dyingRenders: f.totemDie ? (o?.dyingRenders ?? 0) + 1 : 0 });
+    }
     return { epoch: view.epoch, gameTime: view.gameTime, tick, bodies, rules: R };
 }
 
@@ -385,6 +463,24 @@ export function bossOps(view, art, { skin } = {}) {
             const rot = (cosmeticRand(view.level, w.x, w.y, 61) * 360 + WHIRL.spin * renders) % 360;
             push(KEYS.whirlpool, WHIRL.frames[R.worldFrame(view.gameTime ?? 0, WHIRL.frames.length)], w, boxAround(w.x, w.y, 32, 32),
                 { layer: 0, alpha: look.alpha, rot: -rot, ...(look.scale !== 1 ? { scaleX: look.scale, scaleY: look.scale } : {}) });
+        }
+    }
+    for (const f of view.lights) {
+        // the totem keeps rendering after `type = ""` (`totemGone`): it lifts away 10 px a render
+        const look = R.totemLook(skin.bodies.get(`totem:${f.id}`)?.dyingRenders ?? 0);
+        const at = { x: f.x, y: f.y + look.dy };
+        push(KEYS.lightTotem, 0, at, { x: at.x, y: at.y - 8, w: 16, h: 24, right: at.x + 16, bottom: at.y + 16 }, {
+            layer: -(f.y + 8), tint: look.tint, nightCopy: true,
+            ...(look.scaleX !== 1 || look.scaleY !== 1 ? { scaleX: look.scaleX, scaleY: look.scaleY } : {}) });
+        for (const b of f.fliers) {
+            const st = skin.bodies.get(`flier:${b.id}`);
+            const rot = b.angleFace === null ? 0 : -(b.angleFace * 180) / Math.PI;
+            push(KEYS.lightBoss, b.dying ? LIGHT_DIE[Math.min(b.dieIndex, LIGHT_DIE.length - 1)] : 0, b, boxAround(b.x, b.y, 12, 12), {
+                layer: -(b.y + 6), rot, tint: st?.colour ?? null, ...(b.dying ? { scaleX: LIGHT_DIE_SCALE, scaleY: LIGHT_DIE_SCALE } : {}) });
+        }
+        for (const x of f.shots) {
+            const n = skin.bodies.get(`shot:${x.id}`)?.updates ?? 0;
+            push(KEYS.lightShot, 0, x, boxAround(x.x, x.y, 4, 4), { layer: -(x.y + 2), rot: -((LIGHT_SHOT_SPIN * n) % 360), nightCopy: true });
         }
     }
     for (const f of view.frozenBosses) {

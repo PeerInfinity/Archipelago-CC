@@ -67,6 +67,12 @@ export const TAPES = Object.freeze([
         want: ['beast:under', 'beast:rise', 'beast:sit', 'beast:dying', 'beast:dead', 'tentacle:rise', 'tentacle:sit', 'tentacle:hit', 'tentacle:hitting',
             'tentacle:sink', 'tentacle:cut', 'tentacle:tint', 'whirl:grow', 'whirl:live', 'whirl:die'] },
     { name: 'L57-tb-cleared', witness: 'tentaclebeast-witness/tb-enter-cleared', want: ['beast:dead'] },
+    // ⚠ `digestAcrossRuns: false` — `lightBoss.js`'s MODULE-LEVEL `flierSeq` (G10's finding, for fidelity): a flier's `seq`
+    //    is in `stateDigest`'s `visit` part and counts on across runs in one process, so two identical runs differ. Section 5
+    //    pins the defect (two OFF runs differ) instead of comparing the digest; the stream, end, ledgers and stateLog still do.
+    { name: 'L69-lights-kill', witness: 'lights-witness/lights-solve-sword', digestAcrossRuns: false,
+        want: ['totem', 'flier:sit', 'flier:red', 'flier:dark', 'flier:die', 'shot', 'totem:dying'] },
+    { name: 'L69-lights-stand', witness: 'lights-witness/lights-stand', want: ['totem', 'flier:sit', 'shot'] },
     { name: 'L111-frozen', level: 111, at: [80, 200], n: 3, want: ['frozen'] },
 ]);
 
@@ -79,7 +85,7 @@ function boot(level, [x, y], onStateChanged = () => {}) {
 }
 
 const LEDGERS = ['transitions', 'playerHits', 'playerDeaths', 'earnedClears', 'collected', 'shieldBossKills', 'shieldBossHits', 'finalBossKills', 'owlTicks',
-    'lavaBossEvents', 'tentacleBeastEvents'];
+    'lavaBossEvents', 'tentacleBeastEvents', 'lightsEvents'];
 const ledgersOf = (run) => (run ? LEDGERS.map((n) => {
     const v = run[n];
     return v instanceof Map ? [...v] : v instanceof Set ? [...v] : v;
@@ -148,6 +154,15 @@ function tagsOf(r) {
             if (r.skin?.bodies.get(`tentacle:${t.id}`)?.tint) out.push('tentacle:tint');
         }
         for (const w of b.whirlpools) out.push(w.timer >= 90 ? 'whirl:grow' : (w.timer >= 30 ? 'whirl:live' : 'whirl:die'));
+    }
+    for (const f of r.view.lights) {
+        out.push(r.skin?.bodies.get(`totem:${f.id}`)?.dyingRenders ? 'totem:dying' : 'totem');
+        for (const b of f.fliers) {
+            out.push(b.dying ? 'flier:die' : 'flier:sit');
+            const c = r.skin?.bodies.get(`flier:${b.id}`)?.colour;
+            if (c) out.push(c === '#ff0000' ? 'flier:red' : 'flier:dark');
+        }
+        if (f.shots.length) out.push('shot');
     }
     if (r.view.frozenBosses.length) out.push('frozen');
     return out;
@@ -222,7 +237,7 @@ describe('1. golden boss ops (frame CHOICE, not pixels)', () => {
 });
 
 describe('2. by hand from the AS3', () => {
-    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], tentacleBeasts: [], frozenBosses: [], ...over });
+    const V = (over = {}) => ({ epoch: { run: 1, key: 'k' }, level: 19, gameTime: 900, shieldBosses: [], finalBosses: [], lavaBosses: [], tentacleBeasts: [], lights: [], frozenBosses: [], ...over });
     const kof = (over) => ({ id: 'kof', x: 160, y: 88, anim: 'sit', index: 0, hitsTimer: 0, startAttacking: true, destroy: false, alpha: 1,
         removed: false, balls: [], ...over });
     const owl = (over) => ({ id: 'owl', x: 72, y: 104, vx: 0, vy: 0, started: true, rockfallTime: -1, hits: 0, hitsTimer: 0, destroy: false,
@@ -355,6 +370,44 @@ describe('2. by hand from the AS3', () => {
         expect(BOSS_RULES.whirlLook(15)).toEqual({ scale: 0.5, alpha: 0.25 });
     });
 
+    it('LightBoss: red/normal toggles where normal darkens with the hits its PREVIOUS update saw; "die" frames at 1.1; turned to angleFace', () => {
+        const fl = (over) => ({ id: 'f', x: 80, y: 60, hits: 0, hitsTimer: 0, angleFace: Math.PI / 2, dying: false, dieIndex: 0, ...over });
+        const L = (b, over = {}) => V({ lights: [{ id: 'L', x: 72, y: 72, totemDie: false, fliers: [b], shots: [], ...over }] });
+        let s = stepBossSkin(null, L(fl({})), 0);
+        s = stepBossSkin(s, L(fl({ hits: 1, hitsTimer: 30 })), 1); // the sword lands in the player's update
+        const cs = [];
+        for (let h = 29; h >= 0; h -= 1) {
+            s = stepBossSkin(s, L(fl({ hits: 1, hitsTimer: h })), 31 - h);
+            cs.push(s.bodies.get('flier:f').colour);
+        }
+        // h 30: white == normal (white, hits 0 at that update) → red; h 20: red → normal #aaaaaa; h 10 → red; h 1 → #aaaaaa
+        expect(cs).toEqual([...Array(10).fill('#ff0000'), ...Array(10).fill('#aaaaaa'), ...Array(9).fill('#ff0000'), '#aaaaaa']);
+        const op = bossOps(L(fl({ hits: 1 })), art, { skin: s }).find((o) => o.key === KEYS.lightBoss);
+        expect([op.tint, op.rot, op.dx, op.dy]).toEqual(['#aaaaaa', -90, 72, 52]);
+        const die = bossOps(L(fl({ dying: true, dieIndex: 4 })), art, { skin: s }).find((o) => o.key === KEYS.lightBoss);
+        expect([die.frame, die.scaleX]).toEqual([5, 1.1]);
+    });
+
+    it('LightBossShot spins 10° an update from 0 (not on its spawn tick); the totem lifts 10 px, x·0.9, y+0.1, reddens a render once dying', () => {
+        const L = (over) => V({ lights: [{ id: 'L', x: 72, y: 72, totemDie: false, fliers: [], shots: [{ id: 's', x: 50, y: 50 }], ...over }] });
+        let s = null;
+        const rots = [];
+        for (let i = 0; i < 4; i += 1) {
+            s = stepBossSkin(s, L({}), i);
+            rots.push(bossOps(L({}), art, { skin: s }).find((o) => o.key === KEYS.lightShot).rot);
+        }
+        expect(rots.map((r) => Math.abs(r))).toEqual([0, 10, 20, 30]);
+        const totem = (k) => {
+            let t = stepBossSkin(null, L({ shots: [] }), 0);
+            for (let i = 0; i < k; i += 1) t = stepBossSkin(t, L({ shots: [], totemDie: true }), 1 + i);
+            return bossOps(L({ shots: [], totemDie: k > 0 }), art, { skin: t }).find((o) => o.key === KEYS.lightTotem);
+        };
+        expect([totem(0).dx, totem(0).dy, totem(0).layer, totem(0).nightCopy]).toEqual([72, 64, -80, true]);
+        const t2 = totem(2);
+        expect([t2.scaleX, t2.scaleY, t2.tint, t2.dy]).toEqual([0.81, 1.2, '#ff6666', 44]);
+        expect(totem(1).tint).toBe('#ff7272'); // 255 − 255·0.55 = 114.75 → 114 (`uint +=` truncates)
+    });
+
     it('a stack without the key draws the stand-in rectangle (the hitbox)', () => {
         const none = { has: () => false };
         const skin = stepBossSkin(null, V({ shieldBosses: [sb({})] }), 1);
@@ -395,6 +448,8 @@ describe('3. one mutant per family turns a golden red', () => {
         ['Tentacle — frame 5 always', 'L57-tb-kill', { rules: { tentacleFrame: () => 5 } }],
         ['Whirlpool — full size from its spawn', 'L57-tb-kill', { rules: { whirlLook: () => ({ scale: 1, alpha: 0.5 }) } }],
         ['TentacleBeast — the dead sitting frames never', 'L57-tb-cleared', { rules: { beastFrame: () => 0 } }],
+        ['LightBoss — the plain Enemy tint (no darkening normal)', 'L69-lights-kill', { rules: { flierTint: (c, h, now) => (h > 0 && now === h - 1 && h % 10 === 0 ? (c ? null : '#ff0000') : c) } }],
+        ['LightBossTotem — never dies', 'L69-lights-kill', { rules: { totemLook: () => ({ scaleX: 1, scaleY: 1, tint: null, dy: 0 }) } }],
     ];
     for (const [name, tape, opts] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(0), 240_000);
 });
@@ -427,7 +482,10 @@ describe('5. ⛔ STATE IDENTITY — the boss renderer never touches the run', ()
             expect(md5(on.stream.join('\n'))).toBe(md5(off.stream.join('\n')));
             expect(md5(on.end)).toBe(md5(off.end));
             expect(md5(on.stateLog)).toBe(md5(off.stateLog));
-            expect(on.digest).toBe(off.digest);
+            if (tape.digestAcrossRuns === false) {
+                // the defect, pinned: when `flierSeq` is per run, this turns red — drop the exemption then
+                expect(drive(tape).digest, 'two OFF runs digest differently (flierSeq)').not.toBe(off.digest);
+            } else expect(on.digest).toBe(off.digest);
         }, 240_000);
     }
 });

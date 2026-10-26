@@ -46,7 +46,7 @@ export const SKIN_CENSUS = Object.freeze([
     ['conch', 'Conch', 'drawn'],
     ['ghostspear', 'GhostSpear', 'drawn'],
     ['health', 'HealthPickup', 'drawn'],
-    ['lightbosscontroller', 'LightBossController', 'remaining'],
+    ['lightbosscontroller', 'LightBossController', 'drawn'],
     ['darkshield', 'DarkShield', 'drawn'],
     ['darksuit', 'DarkSuit', 'drawn'],
     ['feather', 'Feather', 'drawn'],

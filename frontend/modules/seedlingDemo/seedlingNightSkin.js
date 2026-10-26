@@ -329,6 +329,9 @@ export const NIGHT_COPIES = Object.freeze({
     //    the LavaBoss's copies differ from its main picture, so they ride `nightExtra`/`solidExtra`).
     'seedling:boss/frozenboss': { alpha: 'same', when: (op) => op.nightCopy === true },
     'seedling:boss/lavaball': { alpha: 'same', when: (op) => op.nightCopy === true },
+    // `TurretSpit.render` (LightBossShot inherits it) at 0.1; `LightBossTotem.render` at 0.5.
+    'seedling:boss/lightbossshot': { alpha: 0.1, when: (op) => op.nightCopy === true },
+    'seedling:boss/lightbosstotem': { alpha: 0.5, when: (op) => op.nightCopy === true },
     // `LavaChain.as:63-73`: only while its anim is "hit".
     'seedling:puzzlement/lavachain': { alpha: 'same', when: (op, ctx) => ctx.hitChains.has(`${opCentre(op).x},${opCentre(op).y}`) },
 });

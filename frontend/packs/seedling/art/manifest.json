@@ -1023,6 +1023,21 @@
       "w": 1680,
       "h": 49
     },
+    "LightBoss": {
+      "file": "sheets/LightBoss.png",
+      "w": 170,
+      "h": 16
+    },
+    "LightBossShot": {
+      "file": "sheets/LightBossShot.png",
+      "w": 8,
+      "h": 8
+    },
+    "LightBossTotem": {
+      "file": "sheets/LightBossTotem.png",
+      "w": 16,
+      "h": 24
+    },
     "FrozenBoss": {
       "file": "sheets/FrozenBoss.png",
       "w": 160,
@@ -4458,6 +4473,39 @@
         47
       ],
       "as3": "Enemies/Tentacle.as:15-16 Spritemap(80, 49, animEnd); :26-29 originX 8 (x = -8), originY 47 (y = -47); rise/hit/hitting/sink/cut fps 10, sit fps 5; scaleX = right ? 1 : -1"
+    },
+    "seedling:boss/lightboss": {
+      "sheet": "LightBoss",
+      "fw": 17,
+      "fh": 16,
+      "frames": 10,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Enemies/LightBoss.as:15-16 Spritemap(17, 16, animEnd); :38 centerOO (FlashPunk's int origin: 17/2 → 8); sit [0], die [1..9] fps 20"
+    },
+    "seedling:boss/lightbossshot": {
+      "sheet": "LightBossShot",
+      "fw": 8,
+      "fh": 8,
+      "frames": 1,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Projectiles/LightBossShot.as:14-15 Spritemap(8, 8); :21 centerOO; :32-38 angle += 10 an update; TurretSpit.render onto nightBmp at 0.1"
+    },
+    "seedling:boss/lightbosstotem": {
+      "sheet": "LightBossTotem",
+      "fw": 16,
+      "fh": 24,
+      "frames": 1,
+      "origin": [
+        0,
+        8
+      ],
+      "as3": "Scenery/LightBossTotem.as:14-15 Image; :21-23 super(_x, _y), originY 8 (y = -8); render: onto nightBmp at 0.5; dying: scaleX ·0.9, scaleY +0.1, y −10 a render"
     },
     "seedling:boss/frozenboss": {
       "sheet": "FrozenBoss",
