@@ -96,6 +96,18 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:enemy/grenade', file: 'Grenade.png', fw: 16, fh: 16, origin: [8, 8],
         as3: 'Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)',
         anims: { explode: fps([0, 1, 0, 2, 0, 3, 4, 3], 12), hit: fps([5, 6, 7], 12), sit: fps([0, 4], 5) } },
+    // ── G7: the stairs, the pushable blocks and the sand traps (`seedlingPuzzleSkin.js`). An unscaled FlashPunk
+    //    `Image` draws at the entity's x, y plus its own `x`/`y` (`Image.render`); `originX`/`Y` is only the pivot
+    //    of a scale or a turn, so a class that sets an origin without moving `x`/`y` keeps origin (0, 0) here. ──
+    { pack: 'seedling', key: 'seedling:puzzlement/stairs', file: 'Stairs.png', fw: 16, fh: 16, origin: [0, 0],
+        as3: 'Stairs.as:13-14 Spritemap(16, 16); :26 frame int(!up); :31 originX = 8 (the flip\'s pivot, the frame centre); :35 scaleX = -1 when flip; :45 layer = -y' },
+    { pack: 'seedling', key: 'seedling:puzzlement/pushableblock', file: 'PushableBlock.png', fw: 16, fh: 16, origin: [0, 0],
+        as3: 'Puzzlements/PushableBlock.as:15-16 Spritemap(16, 16); :119 frame = Game.worldFrame(frameCount); Mobile.as:52-71 layer, death fade' },
+    { pack: 'seedling', key: 'seedling:puzzlement/pushableblockfire', file: 'PushableBlockFire.png', fw: 16, fh: 16, origin: [0, 0],
+        as3: 'Puzzlements/PushableBlockFire.as:16-17 Spritemap(16, 16); :29 color 0xFF0000 (PushableBlockSpear.as:16 0x8822FF); :166 frame = Game.worldFrame(frameCount); :168-170 the same picture onto nightBmp' },
+    { pack: 'seedling', key: 'seedling:enemy/sandtrap', file: 'SandTrap.png', fw: 14, fh: 14, origin: [7, 7],
+        as3: 'Enemies/SandTrap.as:14 Spritemap(14, 14, endAnim); :29 centerOO; :31 chomp [0,1,2,3,2,1] fps 10; :32 hit [1] (never played); :33 die [4..9] fps 10; :68-71 "" → frame Game.worldFrame(2)',
+        anims: { chomp: fps([0, 1, 2, 3, 2, 1], 10), die: fps(range(4, 9), 10) } },
     // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
     //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
     { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],

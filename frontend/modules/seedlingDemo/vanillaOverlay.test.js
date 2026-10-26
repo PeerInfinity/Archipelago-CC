@@ -84,8 +84,10 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         //   r0c37 -> r42c29 (the tree at 480,640 walls r42c29 off).
         //   ⛓ RULES game-truth-gaps: 4 -> 6 — L58's two doors back into the L57 arena carry its kill, and L58
         //   is a split level.
+        //   ⛓ RULES l66-door: 6 -> 7 — L66's door into Dungeon 6 is charged the off-grid Yellow-Key lock it stands
+        //   under, and L66 is a split level (r5c4 / r9c8).
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 6);
+            .toHaveLength(atlasRules.length - 7);
         expect(LIFT.cannotRules).toEqual([
             // ⛓ RULES obstacle-events: L0's door to L1 is charged the rock under the house (split level)
             { region: 'level_0', exit_id: 'out_teleporter_80_96', sub_region: 'r8c0' },
@@ -94,6 +96,8 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
             { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
             { region: 'level_58', exit_id: 'out_teleporter_48_112', sub_region: 'r4c1' },
             { region: 'level_58', exit_id: 'out_teleporter_64_112', sub_region: 'r6c5' },
+            // ⛓ RULES l66-door: the only door into Dungeon 6, under bosslock@72,64 {keyType 4}
+            { region: 'level_66', exit_id: 'out_teleporter_72_64', sub_region: 'r5c4' },
         ]);
     });
 
@@ -389,8 +393,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-l55-waterfall (4825058f… -> 59347579): all-water L52 is floored by its entry gate and splits into its
         //   three pools (sub-regions, sub_region on its exits). No location moves (the overlay fixture rewrites
         //   byte-identical).
+        // ⛓ rules-l66-l57-probe (59347579… -> 5742b57c): L66's door into Dungeon 6 is charged the off-grid Yellow-Key
+        //   lock it stands under (`offGridGatedSolids`). No name, exit or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('59347579255932fd9f5998bd9ed10774');
+            .toBe('5742b57c04332016aefa329fb2df057f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

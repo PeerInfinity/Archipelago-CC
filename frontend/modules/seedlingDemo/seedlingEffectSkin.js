@@ -483,6 +483,47 @@ export function holdEffectSkin(skin, view, { rules = EFFECT_RULES, rain = true }
 }
 export const holdOwed = (skin) => !!skin?.fadeQueue?.length;
 
+/**
+ * ⛓ G7 — THE SKIN FOR A RUN IT HAS NOT SEEN. A fresh run (`fresh`: no tick yet) owes its build's fade; a stack
+ * switched on mid-run owes nothing. ⚖ A REBOOT IN PLACE (`inPlace`: the JS runtime rebuilt its run for an item
+ * flag, a key or a seal part — `jsRuntimeCore.IN_PLACE_REBOOT_WHY`) owes NOTHING NEW: the game writes a `Main.*`
+ * static and builds no new world, so `blackCover` is not reset. What the previous run still owed carries over (a
+ * fade the delivery interrupted plays on). Before G7 the reboot started a second full fade from black.
+ */
+export function adoptRunEffectSkin(prev, view, { fresh = false, inPlace = false } = {}) {
+    if (inPlace && prev) {
+        const s = primeEffectSkin({ ...view, loadSpans: [] });
+        s.seen.loadSpans = view.loadSpans.length;
+        return { ...s, fadeQueue: prev.fadeQueue.slice(), cover: prev.cover };
+    }
+    const s = primeEffectSkin(fresh ? view : { ...view, loadSpans: [] });
+    if (!fresh) s.seen.loadSpans = view.loadSpans.length;
+    return s;
+}
+
+/**
+ * ⛓ G7 — AFTER A TICK: a reboot in place happens INSIDE `tick()` (the item is drained at its top), so the step that
+ * follows meets a new run; carried here first (`adoptRunEffectSkin`, `inPlace`), that step sees the same run and
+ * queues no fade. Any other new run is left to the step (a `new Game`'s fade is queued there, as before G7).
+ * `inPlace` is asked only on a new run, so it may be a function.
+ */
+export function carryThroughReboot(skin, view, { run, inPlace = false } = {}) {
+    if (!skin || !view || skin.epoch.run === run) return skin;
+    return (typeof inPlace === 'function' ? inPlace() : inPlace) ? adoptRunEffectSkin(skin, view, { inPlace: true }) : skin;
+}
+
+/**
+ * ⛓ G7 — ONE SLOT OF THE PAGE'S CLOCK, for the fade: the skin adopts a run it has not seen
+ * (`adoptRunEffectSkin`; `inPlace` is asked only then, so it may be a function), then, when a load's dead frame is
+ * owed, shows it (`holdEffectSkin`) in place of a tick. Returns `{ skin, held }`; `held` = do not tick the run.
+ */
+export function fadeSlot(skin, view, { run, fresh = false, inPlace = false, rain = true, rules = EFFECT_RULES } = {}) {
+    let s = skin;
+    if (s?.epoch.run !== run) s = adoptRunEffectSkin(s, view, { fresh, inPlace: typeof inPlace === 'function' ? inPlace() : inPlace });
+    if (holdOwed(s)) return { skin: holdEffectSkin(s, view, { rain, rules }), held: true };
+    return { skin: s, held: false };
+}
+
 // ── the ops ─────────────────────────────────────────────────────────────
 
 const boxAt = (x, y, w, h) => ({ x: x - w / 2, y: y - h / 2, w, h, right: x + w / 2, bottom: y + h / 2 });
