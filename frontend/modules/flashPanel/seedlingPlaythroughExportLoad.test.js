@@ -92,8 +92,9 @@ describe('the seedling_playthrough seed-1 export drives the wasm page as AP_1 do
         const [goals, real] = AP1_LOAD.locationGoals.split('/');
         const wiredByDefault = Object.values(BOUND_BOSS_FIGHTS).filter((sw) => CONTACT_FIDELITY[sw] === true).length;
         // ⛓ planning-10's lightsBossFight flip (2026-10-22): two default-ON fights (the King of Fire, the Lights);
-        //   its tentacleBeastFight flip (2026-10-22): three (+ the Tentacled Beast).
-        expect(wiredByDefault).toBe(3);
+        //   its tentacleBeastFight flip (2026-10-22): three (+ the Tentacled Beast); planning-13's wave-31 totemBossFight
+        //   flip (2026-10-25): four (+ the Totem of Lacste).
+        expect(wiredByDefault).toBe(4);
         expect(Number(real) - Number(goals)).toBe(7 - wiredByDefault);
     });
 
