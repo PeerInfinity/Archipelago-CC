@@ -56,7 +56,7 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, ropePublish, stepActivators,
+    openActivatorIdsBeforeLatestStep, latchAtBuild, pressedGroups, presserDown, ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -15920,6 +15920,25 @@ export function createLevelRun({
         }));
     };
     const openActivatorsNow = () => noclip ? null : openActivatorIds(activatorStateFor(level));
+    /** ⛓ G8 (⚖ fidelity-13, 2026-10-25): `get activatorsNow`'s body — copies only; read under `reading`. */
+    const activatorsNowRead = () => {
+        if (noclip) return null;
+        const st = activatorStateFor(level);
+        const box = playerBoxAt(state.x, state.y);
+        const moving = movingSolidsNow();
+        return {
+            responders: world.activators.filter((a) => st.byId.has(a.id)).map((a) => {
+                const s = st.byId.get(a.id);
+                return { id: a.id, tag: a.tag, alpha: s.alpha, open: s.open, held: s.held, touched: s.touched };
+            }),
+            pressers: (world.pressers ?? []).map((p) => {
+                const id = `${p.tag}@${p.x},${p.y}`;
+                const now = presserDown(p, box, moving);
+                return { id, tag: p.tag,
+                    down: p.tag === 'buttonroom' ? (now || st.latched.get(p.t) === true || st.roomWritten.has(id)) : now };
+            }),
+        };
+    };
     const openBridgesNow = () => noclip ? null : (openBridgeIdsNow() ?? new Set());
     const pushablesNow = () => noclip ? null : pushableRects(pushableStateFor(level));
     const brokenRocksNow = () => noclip ? null : (brokenRockIdsNow() ?? new Set());
@@ -19413,6 +19432,15 @@ export function createLevelRun({
          * the run means the two cannot disagree.
          */
         get openActivators() { return reading(openActivatorsNow); },
+        /**
+         * ⛓ G8 — WHAT THE ACTIVATORS LOOK LIKE NOW, for the renderer (⚖ fidelity-13 cleared it, 2026-10-25): per
+         * responder its fade (`{id, tag, alpha, open, held, touched}`, `activatorStateFor(level).byId`), per presser
+         * `{id, tag, down}` — a Button's own overlap test (`activators.presserDown`, the one `pressedGroups` uses), a
+         * ButtonRoom's that OR its latch (`latched` for `room = -1`, `roomWritten` for a cross-room one: the setter
+         * cannot go back to false). Fresh copies; `null` under `noclip`. ⚠ Only a responder's OPEN TICK is
+         * game-witnessed; `alpha`/`held` frame by frame are the model's transcription, not yet compared to the game.
+         */
+        get activatorsNow() { return reading(activatorsNowRead); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.

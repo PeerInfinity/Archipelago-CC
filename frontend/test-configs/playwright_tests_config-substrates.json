@@ -2037,6 +2037,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GRAPHICS G7. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 8: the stairs, both pushable blocks and both sand traps drawn from the seedling pack; then an item flag (a reboot in place on the JS runtime) holds no dead frame and owes or shows no cover (one fade per new Game; before G7 it faded in from black again); every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-solids",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G8. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 38: the chest, both covers and all five buttons drawn from the seedling pack; the ButtonRoom the player arrives on drawn PRESSED (levelRun.activatorsNow reaching the page), the wired ButtonRoom on its wired frames; every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         }
     ]
 }

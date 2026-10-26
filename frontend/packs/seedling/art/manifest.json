@@ -558,6 +558,106 @@
       "w": 140,
       "h": 14
     },
+    "Chest": {
+      "file": "sheets/Chest.png",
+      "w": 32,
+      "h": 16
+    },
+    "BreakableRock": {
+      "file": "sheets/BreakableRock.png",
+      "w": 64,
+      "h": 16
+    },
+    "BreakableRockGhost": {
+      "file": "sheets/BreakableRockGhost.png",
+      "w": 64,
+      "h": 16
+    },
+    "BurnableTreeBurn": {
+      "file": "sheets/BurnableTreeBurn.png",
+      "w": 640,
+      "h": 32
+    },
+    "MagicalLock": {
+      "file": "sheets/MagicalLock.png",
+      "w": 220,
+      "h": 21
+    },
+    "MagicalLockFire": {
+      "file": "sheets/MagicalLockFire.png",
+      "w": 220,
+      "h": 21
+    },
+    "Lock": {
+      "file": "sheets/Lock.png",
+      "w": 96,
+      "h": 16
+    },
+    "WandLock": {
+      "file": "sheets/WandLock.png",
+      "w": 96,
+      "h": 16
+    },
+    "GrassLock": {
+      "file": "sheets/GrassLock.png",
+      "w": 80,
+      "h": 16
+    },
+    "ShieldLock": {
+      "file": "sheets/ShieldLock.png",
+      "w": 96,
+      "h": 16
+    },
+    "ShieldLockNorm": {
+      "file": "sheets/ShieldLockNorm.png",
+      "w": 96,
+      "h": 16
+    },
+    "Cover": {
+      "file": "sheets/Cover.png",
+      "w": 128,
+      "h": 16
+    },
+    "BossLock": {
+      "file": "sheets/BossLock.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock1": {
+      "file": "sheets/BossLock1.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock2": {
+      "file": "sheets/BossLock2.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock3": {
+      "file": "sheets/BossLock3.png",
+      "w": 112,
+      "h": 16
+    },
+    "BossLock4": {
+      "file": "sheets/BossLock4.png",
+      "w": 112,
+      "h": 16
+    },
+    "RockLock": {
+      "file": "sheets/RockLock.png",
+      "w": 16,
+      "h": 16
+    },
+    "Button": {
+      "file": "sheets/Button.png",
+      "w": 16,
+      "h": 8
+    },
+    "ButtonRoom": {
+      "file": "sheets/ButtonRoom.png",
+      "w": 64,
+      "h": 16
+    },
     "Explosion": {
       "file": "sheets/Explosion.png",
       "w": 1024,
@@ -717,11 +817,6 @@
       "file": "sheets/BossTotemParts.png",
       "w": 120,
       "h": 24
-    },
-    "Chest": {
-      "file": "sheets/Chest.png",
-      "w": 32,
-      "h": 16
     },
     "Seed": {
       "file": "sheets/Seed.png",
@@ -2826,6 +2921,308 @@
         }
       },
       "as3": "Enemies/SandTrap.as:14 Spritemap(14, 14, endAnim); :29 centerOO; :31 chomp [0,1,2,3,2,1] fps 10; :32 hit [1] (never played); :33 die [4..9] fps 10; :68-71 \"\" → frame Game.worldFrame(2)"
+    },
+    "seedling:puzzlement/chest": {
+      "sheet": "Chest",
+      "fw": 16,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Chest.as:17-18 Spritemap(16, 16); :27-28 super(_x + 8, _y + 8), centerOO; :75 frame 1 on open; :93-104 alpha = min(openTimer / 20, 1), removed at 0"
+    },
+    "seedling:puzzlement/breakablerock": {
+      "sheet": "BreakableRock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "break": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Puzzlements/BreakableRock.as:15-18 Spritemap(BreakableRock.png, 16, 16, endAnim); :37 centerOO; :38 break [0,1,2,3] fps 20 (loops; endAnim removes it)"
+    },
+    "seedling:puzzlement/breakablerockghost": {
+      "sheet": "BreakableRockGhost",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "break": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Puzzlements/BreakableRock.as:15-18 Spritemap(BreakableRockGhost.png, 16, 16, endAnim); :37 centerOO; :38 break [0,1,2,3] fps 20 (loops; endAnim removes it)"
+    },
+    "seedling:scenery/burnabletree": {
+      "sheet": "BurnableTreeBurn",
+      "fw": 32,
+      "fh": 32,
+      "frames": 20,
+      "origin": [
+        16,
+        16
+      ],
+      "anims": {
+        "burn": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Scenery/BurnableTree.as:13-14 Spritemap(BurnableTreeBurn, 32, 32, burnEnd); :23 centerOO; :24 burn [0..19] fps 15 (burnEnd removes it); Tree.as:20 super(_x + 16, _y + 16)"
+    },
+    "seedling:puzzlement/magicallock": {
+      "sheet": "MagicalLock",
+      "fw": 22,
+      "fh": 21,
+      "frames": 10,
+      "origin": [
+        11,
+        10.5
+      ],
+      "anims": {
+        "destroy": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Puzzlements/MagicalLock.as:15-18 Spritemap(MagicalLock.png, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise"
+    },
+    "seedling:puzzlement/magicallockfire": {
+      "sheet": "MagicalLockFire",
+      "fw": 22,
+      "fh": 21,
+      "frames": 10,
+      "origin": [
+        11,
+        10.5
+      ],
+      "anims": {
+        "destroy": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Puzzlements/MagicalLock.as:15-18 Spritemap(MagicalLockFire.png, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise"
+    },
+    "seedling:puzzlement/lock": {
+      "sheet": "Lock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/Lock.as:17-18 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/wandlock": {
+      "sheet": "WandLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/WandLock.as:13-14 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/grasslock": {
+      "sheet": "GrassLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 5,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/GrassLock.as:13-14 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/shieldlock": {
+      "sheet": "ShieldLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ShieldLock.as:17-18 (type 1) Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/shieldlocknorm": {
+      "sheet": "ShieldLockNorm",
+      "fw": 16,
+      "fh": 16,
+      "frames": 6,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ShieldLock.as:15-16 (type 0) Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/cover": {
+      "sheet": "Cover",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/Cover.as:15-16 Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock0": {
+      "sheet": "BossLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:421-422 sprBossLock; Game.as:443 bossLocks[0] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock1": {
+      "sheet": "BossLock1",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:423-424 sprBossLock1; Game.as:443 bossLocks[1] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock2": {
+      "sheet": "BossLock2",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:425-426 sprBossLock2; Game.as:443 bossLocks[2] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock3": {
+      "sheet": "BossLock3",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:427-428 sprBossLock3; Game.as:443 bossLocks[3] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/bosslock4": {
+      "sheet": "BossLock4",
+      "fw": 16,
+      "fh": 16,
+      "frames": 7,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Game.as:429-430 sprBossLock4; Game.as:443 bossLocks[4] Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render"
+    },
+    "seedling:puzzlement/rocklock": {
+      "sheet": "RockLock",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/RockLock.as:16-17 Image; :24-25 super(_x + 8, _y + 8), centerOO; no layer (0)"
+    },
+    "seedling:puzzlement/button": {
+      "sheet": "Button",
+      "fw": 8,
+      "fh": 8,
+      "frames": 2,
+      "origin": [
+        4,
+        4
+      ],
+      "as3": "Puzzlements/Button.as:14-15 Spritemap(8, 8); :20 centerOO; :47 frame int(_active)"
+    },
+    "seedling:puzzlement/buttonroom": {
+      "sheet": "ButtonRoom",
+      "fw": 16,
+      "fh": 16,
+      "frames": 4,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)"
     },
     "seedling:fx/explosion": {
       "sheet": "Explosion",

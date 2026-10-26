@@ -1,0 +1,9 @@
+t=0..29 L43 [m:whole] | seedling:puzzlement/magicallock#0 drawImage(seedling/MagicalLock, 0, 0, 141, 109.5)
+t=30..31 L43 [m:destroying] | seedling:puzzlement/magicallock#3 drawImage(seedling/MagicalLock, 66, 0, 141, 109.5)
+t=32..33 L43 [m:destroying] | seedling:puzzlement/magicallock#4 drawImage(seedling/MagicalLock, 88, 0, 141, 109.5)
+t=34..35 L43 [m:destroying] | seedling:puzzlement/magicallock#5 drawImage(seedling/MagicalLock, 110, 0, 141, 109.5)
+t=36..37 L43 [m:destroying] | seedling:puzzlement/magicallock#6 drawImage(seedling/MagicalLock, 132, 0, 141, 109.5)
+t=38..39 L43 [m:destroying] | seedling:puzzlement/magicallock#7 drawImage(seedling/MagicalLock, 154, 0, 141, 109.5)
+t=40..41 L43 [m:destroying] | seedling:puzzlement/magicallock#8 drawImage(seedling/MagicalLock, 176, 0, 141, 109.5)
+t=42..43 L43 [m:destroying] | seedling:puzzlement/magicallock#9 drawImage(seedling/MagicalLock, 198, 0, 141, 109.5)
+t=44..59 L43 [] |

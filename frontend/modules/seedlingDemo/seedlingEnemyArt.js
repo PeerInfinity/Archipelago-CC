@@ -108,6 +108,33 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:enemy/sandtrap', file: 'SandTrap.png', fw: 14, fh: 14, origin: [7, 7],
         as3: 'Enemies/SandTrap.as:14 Spritemap(14, 14, endAnim); :29 centerOO; :31 chomp [0,1,2,3,2,1] fps 10; :32 hit [1] (never played); :33 die [4..9] fps 10; :68-71 "" → frame Game.worldFrame(2)',
         anims: { chomp: fps([0, 1, 2, 3, 2, 1], 10), die: fps(range(4, 9), 10) } },
+    // ── G8: the changeable solids and the buttons (`seedlingSolidsSkin.js`). Each is `centerOO` on its cell's centre
+    //    (the tree on its 2 × 2's), so the origin is the frame centre; the world-clock frames are frame-only rows. ──
+    { pack: 'seedling', key: 'seedling:puzzlement/chest', file: 'Chest.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Chest.as:17-18 Spritemap(16, 16); :27-28 super(_x + 8, _y + 8), centerOO; :75 frame 1 on open; :93-104 alpha = min(openTimer / 20, 1), removed at 0' },
+    ...[['breakablerock', 'BreakableRock.png'], ['breakablerockghost', 'BreakableRockGhost.png']].map(([k, file]) => ({
+        pack: 'seedling', key: `seedling:puzzlement/${k}`, file, fw: 16, fh: 16, origin: [8, 8],
+        as3: `Puzzlements/BreakableRock.as:15-18 Spritemap(${file}, 16, 16, endAnim); :37 centerOO; :38 break [0,1,2,3] fps 20 (loops; endAnim removes it)`,
+        anims: { break: fps([0, 1, 2, 3], 20) } })),
+    { pack: 'seedling', key: 'seedling:scenery/burnabletree', file: 'BurnableTreeBurn.png', fw: 32, fh: 32, origin: [16, 16],
+        as3: 'Scenery/BurnableTree.as:13-14 Spritemap(BurnableTreeBurn, 32, 32, burnEnd); :23 centerOO; :24 burn [0..19] fps 15 (burnEnd removes it); Tree.as:20 super(_x + 16, _y + 16)',
+        anims: { burn: fps(range(0, 19), 15) } },
+    ...[['magicallock', 'MagicalLock.png'], ['magicallockfire', 'MagicalLockFire.png']].map(([k, file]) => ({
+        pack: 'seedling', key: `seedling:puzzlement/${k}`, file, fw: 22, fh: 21, origin: [11, 10.5],
+        as3: `Puzzlements/MagicalLock.as:15-18 Spritemap(${file}, 22, 21, animEnd); :38 centerOO; :39 destroy [3..9] fps 15; :73-77 frame Game.worldFrame(3) otherwise`,
+        anims: { destroy: fps(range(3, 9), 15) } })),
+    ...[['lock', 'Lock.png', 'Puzzlements/Lock.as:17-18'], ['wandlock', 'WandLock.png', 'Puzzlements/WandLock.as:13-14'],
+        ['grasslock', 'GrassLock.png', 'Puzzlements/GrassLock.as:13-14'], ['shieldlock', 'ShieldLock.png', 'Puzzlements/ShieldLock.as:17-18 (type 1)'],
+        ['shieldlocknorm', 'ShieldLockNorm.png', 'Puzzlements/ShieldLock.as:15-16 (type 0)'], ['cover', 'Cover.png', 'Puzzlements/Cover.as:15-16'],
+        ...['', '1', '2', '3', '4'].map((n, i) => [`bosslock${i}`, `BossLock${n}.png`, `Game.as:${421 + 2 * i}-${422 + 2 * i} sprBossLock${n}; Game.as:443 bossLocks[${i}]`])]
+        .map(([k, file, as3]) => ({ pack: 'seedling', key: `seedling:puzzlement/${k}`, file, fw: 16, fh: 16, origin: [8, 8],
+            as3: `${as3} Spritemap(16, 16); centerOO (Lock.as:32 / Cover.as:27 / Game.as:806-809); frame Game.worldFrame(frameCount) at the render` })),
+    { pack: 'seedling', key: 'seedling:puzzlement/rocklock', file: 'RockLock.png', origin: [8, 8],
+        as3: 'Puzzlements/RockLock.as:16-17 Image; :24-25 super(_x + 8, _y + 8), centerOO; no layer (0)' },
+    { pack: 'seedling', key: 'seedling:puzzlement/button', file: 'Button.png', fw: 8, fh: 8, origin: [4, 4],
+        as3: 'Puzzlements/Button.as:14-15 Spritemap(8, 8); :20 centerOO; :47 frame int(_active)' },
+    { pack: 'seedling', key: 'seedling:puzzlement/buttonroom', file: 'ButtonRoom.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Puzzlements/ButtonRoom.as:14-15 Spritemap(16, 16); :29 centerOO; :47-49,97 frame int(_active) + frameAdd (2 over a Wire)' },
     // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
     //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
     { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],

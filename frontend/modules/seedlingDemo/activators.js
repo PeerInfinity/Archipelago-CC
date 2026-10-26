@@ -707,16 +707,21 @@ export function latchAtBuild(state, group, world) {
  */
 export function pressedGroups(world, playerBox, movingSolids = []) {
     const groups = new Set();
-    for (const p of world.pressers) {
-        if (rectsOverlap(playerBox, p.rect)) {
-            groups.add(p.t);
-            continue;
-        }
-        for (const s of movingSolids) {
-            if (rectsOverlap(s.rect, p.rect)) { groups.add(p.t); break; }
-        }
-    }
+    for (const p of world.pressers) if (presserDown(p, playerBox, movingSolids)) groups.add(p.t);
     return groups;
+}
+
+/**
+ * ONE presser's half of `pressedGroups`: is the player's box, or a moving
+ * solid's, on it? (`Button.update` / `ButtonRoom.update`'s `collideTypesInto`;
+ * a `Cover` is never in `movingSolids`.) Exported for `levelRun.activatorsNow`
+ * (G8, ⚖ fidelity-13 2026-10-25) — the same test, so the drawn frame and the
+ * press cannot disagree.
+ */
+export function presserDown(p, playerBox, movingSolids = []) {
+    if (rectsOverlap(playerBox, p.rect)) return true;
+    for (const s of movingSolids) if (rectsOverlap(s.rect, p.rect)) return true;
+    return false;
 }
 
 /**

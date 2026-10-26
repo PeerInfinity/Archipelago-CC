@@ -9,8 +9,8 @@ GitHub Pages serves only `frontend/`.
 - `seedling/` holds the original Seedling graphics: tiles, cliffsides and static scenery (G1), the player (G2),
   the enemies, the arrow and the AP item looks (G3), the wallflyers, drills, turrets, their shots and the
   Bob Boss (G3b), and the spinning axes, crushers, lava chains, the Boss Totem and its shots, the bomb pusher,
-  its bombs and the grenades (G3c), the explosions, slash hits, rain droplets and hearts (G4), and the stairs, pushable
-  blocks and sand traps (G7; the G3–G7 rows live in
+  its bombs and the grenades (G3c), the explosions, slash hits, rain droplets and hearts (G4), the stairs, pushable
+  blocks and sand traps (G7), and the chests, breakable rocks, burnable trees, locks and buttons (G8; the G3–G8 rows live in
   `frontend/modules/seedlingDemo/seedlingEnemyArt.js`, which the extractor spreads into its table). The art is by
   Connor Ullmann, under the Unlicense (`vendor/seedling/LICENSE`). The ONE exception is the dialogue font
   (`sheets/SeedlingFont.png`, key `seedling:font/default`, G4b): ORIGINAL glyphs authored in this repository, not
