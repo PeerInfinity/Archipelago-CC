@@ -1,0 +1,93 @@
+{
+ "id": 371,
+ "key": "level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144",
+ "seamTime": 5254,
+ "end": "done",
+ "plans": [
+  {
+   "ok": true,
+   "kind": null,
+   "producer": null,
+   "verbs": [
+    "hold",
+    "kill",
+    "walk"
+   ],
+   "ticks": 1684,
+   "prefix": 0,
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal"
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null
+    }
+   ],
+   "split": true
+  }
+ ],
+ "history": [
+  {
+   "producer": "solver",
+   "ticks": 1684,
+   "drained": 1685,
+   "verbs": [
+    "hold",
+    "kill",
+    "walk"
+   ],
+   "solvedMs": 16396,
+   "divergence": null,
+   "recoveries": 0,
+   "end": {
+    "level": 40,
+    "x": 71.5992987421677,
+    "y": 151.18800080372478
+   },
+   "expectedEnd": {
+    "level": 40,
+    "x": 71.5992987421677,
+    "y": 151.18800080372478,
+    "deaths": 0
+   },
+   "continuation": false,
+   "prefix": 0,
+   "heldEnd": true,
+   "equips": [],
+   "pass": "full",
+   "expired": false,
+   "retries": 0,
+   "budgets": [
+    640
+   ],
+   "passes": [
+    {
+     "pass": "dashless",
+     "ok": false,
+     "kind": "refusal",
+     "ticks": null,
+     "ms": 7992,
+     "work": 101
+    },
+    {
+     "pass": "full",
+     "ok": true,
+     "kind": null,
+     "ticks": 1684,
+     "ms": 8367,
+     "work": 291
+    }
+   ],
+   "deadline": null,
+   "outcome": "done"
+  }
+ ],
+ "answer": {
+  "ok": true,
+  "action": "force-re-arrival"
+ }
+}

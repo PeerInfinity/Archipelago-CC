@@ -1,0 +1,2 @@
+{'cells': 7, 'dflt_ok': 7, 'ff_ok': 7, 'ff_div': 0, 'dflt_div': 0, 'ff_any_row': 0, 'ff_rewind_solved': 0, 'identical': 7}
+
