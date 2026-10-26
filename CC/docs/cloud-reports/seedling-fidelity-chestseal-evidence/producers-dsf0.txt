@@ -1,0 +1,12 @@
+  r8-solve-6     solver  294 | hand  355 | -61
+
+all checks green
+## there is NO hand answer for L18, L19 or L20 westward — the differential is the gate.
+
+all checks green
+## there is NO hand answer for L18 — the differential is the entire gate.
+
+all checks green
+## there is NO hand answer for the four new legs — the differential is the gate.
+
+all checks green

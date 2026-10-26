@@ -1,0 +1,5 @@
+     × the shipped defaults: all three ON 19ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) > the shipped defaults: all three ON
+ Test Files  1 failed | 127 passed (128)
+      Tests  1 failed | 3817 passed | 1 skipped (3819)

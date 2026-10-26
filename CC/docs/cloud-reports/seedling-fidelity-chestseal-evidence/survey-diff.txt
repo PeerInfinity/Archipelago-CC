@@ -1,0 +1,26 @@
+168c168
+< 167	12	REFUSED	None	solverBot(survey-step-167) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the u
+---
+> 167	12	REFUSED	None	solverBot: no REACHABLE stance on bosslock@112,192's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (439.99400908767626,258.13123903392494). ⛔ SEALED BEHIND ITSELF: the k
+172c172
+< 171	71	REFUSED	None	solverBot(survey-step-171) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the pla
+---
+> 171	71	REFUSED	None	solverBot(survey-step-171) reach-exit (96,0)->L75 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the pla
+194c194
+< 193	63	REFUSED	None	solverBot(survey-step-193) chest (224,80) stance: the re-planned corridor failed too — solverBot(survey-step-193) chest (224,80) stance waypoint 8 (232,98): the route entered a proximity-hazard — chest at (224,80) in level 63 — at (231.0714
+---
+> 193	63	SOLVED	5	
+199c199
+< 198	12	REFUSED	None	solverBot(survey-step-198) reach-exit (32,848)->L83 -> chest: chest@320,816 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the u
+---
+> 198	12	REFUSED	None	solverBot: no REACHABLE stance on bosslock@112,192's key line in level 12 — 2 cell(s) put the player box on the line when walked into the lock, none with a corridor from (439.53317317243517,258.0649280179577). ⛔ SEALED BEHIND ITSELF: the ke
+204c204
+< 203	80	REFUSED	None	solverBot(survey-step-203) chest (16,128): chest@16,128 NEVER OPENED in 400 ticks of standing on its line. `Chest.update`'s gate is `!collide("Solid", x, y)` — the chest colliding with whatever shares its cell — so the usual cause is that t
+---
+> 203	80	SOLVED	5	
+213c213
+< 212	98	REFUSED	None	solverBot(survey-step-212) chest (160,32) stance: the re-planned corridor failed too — solverBot(survey-step-212) chest (160,32) stance waypoint 3 (168,50): the route entered a proximity-hazard — chest at (160,32) in level 98 — at (167.7449
+---
+> 212	98	SOLVED	724	
+full-off.log:## HEADLINE: 191/235 route steps SOLVE today
+full-on.log:## HEADLINE: 194/235 route steps SOLVE today
