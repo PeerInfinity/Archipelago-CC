@@ -527,10 +527,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas,
             }
             const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
             if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
-            // Two events on ONE cell (L12's magical lock under its boss lock): the world opens it only with both items.
-            const stacked = t.adjacent ? (entered.obstacleLib[entered.obstacles.get(t.cells[0])]?.events ?? []) : [];
-            const why = stacked.length > 1 ? ` — its cell carries ${stacked.length} events, which the world opens only together` : '';
-            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { why, stricterOk: permissiveWhy(name, loc.name) });
+            // Two events on ONE cell (L12's magical lock on its boss lock) each open by their own `rule` (session
+            // tile-primitives-sphere-order-2), so a stacked event is priced like any other.
+            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out, { stricterOk: permissiveWhy(name, loc.name) });
             lines.push(`${name}@${t.locationName}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
